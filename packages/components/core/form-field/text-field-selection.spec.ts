@@ -17,7 +17,7 @@ describe('text field selection', () => {
 
     beforeEach(() => {
         // The ruler measures itself with `scrollWidth`, which jsdom reports as 0 for every element.
-        jest.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
+        vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
             return (this.textContent || '').length * CHAR_WIDTH;
         });
 
@@ -39,7 +39,7 @@ describe('text field selection', () => {
     afterEach(() => {
         input.remove();
         // `clearMocks` only clears call records, so the prototype patch has to be undone by hand.
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
         // Restores the prototype getter for the tests that shadow it on the shared document.
         Reflect.deleteProperty(document, 'defaultView');
     });

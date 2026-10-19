@@ -34,7 +34,7 @@ Available icons: [Icons](/en/icons)
 
 SVG icons render inline and support CSS color theming via `currentColor`. Choose one of the approaches below depending on your needs.
 
-All three fetch their icons over HTTP, so the application has to provide an `HttpClient` — without one the registry reports `HttpClient is required for loading icons from URLs` and the icon falls back to its font class. To register icons with no request at all, add them as inline literals through `KbqIconRegistry.addSvgIconLiteral()`.
+All three fetch their icons over HTTP through `HttpClient`, which Angular injects without any setup: `provideHttpClient()` in the examples below is only needed to configure it. An icon whose request fails keeps its font class. To register icons with no request at all, add them as inline literals through `KbqIconRegistry.addSvgIconLiteral()`.
 
 #### Sprite file
 
@@ -139,7 +139,7 @@ An icon that is the only carrier of its meaning has to opt out and name itself:
 <i kbq-icon="kbq-triangle-exclamation_16" role="img" aria-hidden="false" aria-label="Error"></i>
 ```
 
-`kbq-icon-button` is never hidden — it is interactive, and it needs a name of its own. Give it an `aria-label` (or an `aria-labelledby`); in dev mode it logs a warning when it has neither. On a host that is not a native `<button>` it supplies `role="button"`, Enter/Space activation and `aria-disabled` itself.
+`kbq-icon-button` is not hidden by default — it is interactive, and it needs a name of its own. Give it an `aria-label` (or an `aria-labelledby`); in dev mode it logs a warning when it has neither. On a host that is not a native `<button>` it supplies `role="button"` and `aria-disabled` itself, but not keyboard activation: bind `(keydown.enter)` and `(keydown.space)` next to `(click)`.
 
 ---
 

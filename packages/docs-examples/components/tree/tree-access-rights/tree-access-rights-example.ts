@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     FlatTreeControl,
@@ -227,7 +227,7 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
 
     selectionChangeSubscription: Subscription = Subscription.EMPTY;
 
-    @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
+    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         super();
@@ -243,12 +243,12 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
             }
         };
 
-        this.selectionChangeSubscription = this.tree.selectionModel.changed.subscribe(({ added, removed }) => {
+        this.selectionChangeSubscription = this.tree().selectionModel.changed.subscribe(({ added, removed }) => {
             handleSingleOption(added, (singleItemOrParent: any) => {
                 if (singleItemOrParent.expandable) {
                     const descendants = this.treeControl.getDescendants(singleItemOrParent);
 
-                    if (!allDescendantsSelected(descendants, this.tree.selectionModel.selected)) {
+                    if (!allDescendantsSelected(descendants, this.tree().selectionModel.selected)) {
                         descendants.forEach((descendant) => {
                             const previouslySelected = (descendant as any)?.singleSelected;
 
@@ -256,7 +256,7 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
                                 (descendant as any).disabled = true;
                             }
                         });
-                        setTimeout(() => this.tree.selectionModel.select(...(descendants as any[])));
+                        setTimeout(() => this.tree().selectionModel.select(...(descendants as any[])));
                     }
                 }
 
@@ -274,19 +274,19 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
                 const descendantsForDeselection: any[] = recursiveDeselect(singleItemOrParent, this.treeControl);
 
                 if (descendantsForDeselection.length) {
-                    this.tree.selectionModel.deselect(...descendantsForDeselection);
+                    this.tree().selectionModel.deselect(...descendantsForDeselection);
                     descendantsForDeselection.forEach((descendant) => (descendant.disabled = undefined));
                 }
 
                 // set disabled if any parent selected
                 if (
                     singleItemOrParent.singleSelected &&
-                    parents.some((parent: any) => this.tree.selectionModel.selected.includes(parent))
+                    parents.some((parent: any) => this.tree().selectionModel.selected.includes(parent))
                 ) {
                     singleItemOrParent.disabled = true;
                     // Delay selection for the next loop after parent deselection
                     setTimeout(() => {
-                        this.tree.selectionModel.select(singleItemOrParent);
+                        this.tree().selectionModel.select(singleItemOrParent);
                     }, 0);
                 }
 
@@ -304,8 +304,8 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
 
     onModelChange($event) {
         this.modelValue = $event;
-        this.filteredModel = this.tree.selectionModel.selected
-            .filter((option: any) => !option.disabled)
+        this.filteredModel = this.tree()
+            .selectionModel.selected.filter((option: any) => !option.disabled)
             .map((node: any) => this.treeControl.getValue(node));
     }
 }

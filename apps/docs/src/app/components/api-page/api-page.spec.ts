@@ -4,6 +4,7 @@ import { provideRouter, Router } from '@angular/router';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { BehaviorSubject, map } from 'rxjs';
+import type { Mock } from 'vitest';
 import { DOCS_API_MEMBER_PARAM } from '../../constants/api-page';
 import { DocsLocale } from '../../constants/locale';
 import { DocsClipboardService } from '../../services/clipboard';
@@ -85,10 +86,10 @@ const ENTRY_POINT: DocsApiEntryPoint = {
 };
 
 describe(DocsApiPage.name, () => {
-    let copyWithToast: jest.Mock;
+    let copyWithToast: Mock;
 
     beforeEach(() => {
-        copyWithToast = jest.fn();
+        copyWithToast = vi.fn();
         // Rendered in the browser alone, as a route of `RenderMode.Client` is: the flag the server sets for one.
         document.body.setAttribute('ngcm', '');
 
@@ -253,7 +254,7 @@ describe(DocsApiPage.name, () => {
 
     // The link puts the heading in the URL and copies it; the page stays where the reader is.
     it('copies the address the link to a heading leads to, without moving the page', () => {
-        const scrollIntoView = jest.fn();
+        const scrollIntoView = vi.fn();
 
         // jsdom lays nothing out, and has no scrolling to offer.
         Object.defineProperty(Element.prototype, 'scrollIntoView', { value: scrollIntoView, configurable: true });
@@ -357,7 +358,7 @@ describe(DocsApiPage.name, () => {
 
     // The router only sets the fragment; the list of sections beside the page scrolls to them on its own too.
     it('scrolls to the section a link on this tab points at', () => {
-        const scrollIntoView = jest.fn();
+        const scrollIntoView = vi.fn();
 
         // jsdom lays nothing out, and has no scrolling to offer.
         Object.defineProperty(Element.prototype, 'scrollIntoView', { value: scrollIntoView, configurable: true });

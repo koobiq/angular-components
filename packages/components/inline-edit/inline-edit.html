@@ -64,6 +64,7 @@
                 cdkTrapFocusAutoCapture
                 [class.kbq-inline-edit__panel_select]="isSingleSelect()"
                 [cdkTrapFocus]="false"
+                (keydown.escape)="onPanelEscape($event)"
                 (keydown.tab)="onPanelTab($event, panel, false)"
                 (keydown.shift.tab)="onPanelTab($event, panel, true)"
             >
@@ -81,7 +82,12 @@
                 </div>
 
                 @if (showActions()) {
-                    <div class="kbq-inline-edit__action-buttons" role="group" [@panelAnimation]>
+                    <div
+                        animate.enter="kbq-inline-edit__action-buttons_enter"
+                        class="kbq-inline-edit__action-buttons"
+                        role="group"
+                        [class.kbq-animations-disabled]="animationsDisabled"
+                    >
                         <div class="kbq-inline-edit__action-button">
                             <button
                                 kbq-button

@@ -6,11 +6,11 @@ import {
     Directive,
     inject,
     input,
-    signal,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { KbqIcon } from '@koobiq/components/icon';
+import { map } from 'rxjs/operators';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
 
 /** @docs-private */
@@ -32,7 +32,10 @@ export class KbqTreeNodeToggleBaseDirective<T> {
     readonly disabledInput = input(false, { alias: 'disabled', transform: booleanAttribute });
 
     /** Set while a filter is active: filtering already decides what is expanded. */
-    private readonly filterDisabled = signal(false);
+    private readonly filterDisabled = toSignal(
+        this.tree.treeControl.filterValue.pipe(map((value) => !!value?.length)),
+        { initialValue: false }
+    );
 
     private readonly disabledState = computed(() => this.disabledInput() || this.filterDisabled());
 
@@ -42,12 +45,6 @@ export class KbqTreeNodeToggleBaseDirective<T> {
 
     get iconState(): boolean {
         return this.tree.treeControl.isExpanded(this.node());
-    }
-
-    constructor() {
-        this.tree.treeControl.filterValue
-            .pipe(takeUntilDestroyed())
-            .subscribe((value) => this.filterDisabled.set(!!value?.length));
     }
 
     toggle(event: Event): void {

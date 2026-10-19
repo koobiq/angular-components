@@ -57,7 +57,7 @@ const enum StyleProperty {
 /**
  * @deprecated The mouse-only, `flex-basis` based splitter. Superseded by the rewritten
  * `@koobiq/components/splitter`, which adds panel constraints, collapsing, snapping, keyboard
- * support and the `separator` accessibility pattern. Will be removed in a future major version — an
+ * support and the `separator` accessibility pattern. Will be removed in 22.0.0 — an
  * `ng update` migration rewrites `@koobiq/components/splitter` imports of this API to
  * `@koobiq/components/splitter/deprecated` automatically.
  */
@@ -69,7 +69,7 @@ export enum Direction {
 /**
  * @deprecated The mouse-only, `flex-basis` based splitter. Superseded by the rewritten
  * `@koobiq/components/splitter`, which adds panel constraints, collapsing, snapping, keyboard
- * support and the `separator` accessibility pattern. Will be removed in a future major version — an
+ * support and the `separator` accessibility pattern. Will be removed in 22.0.0 — an
  * `ng update` migration rewrites `@koobiq/components/splitter` imports of this API to
  * `@koobiq/components/splitter/deprecated` automatically.
  */
@@ -159,7 +159,7 @@ export class KbqGutterDirective implements OnInit {
 /**
  * @deprecated The mouse-only, `flex-basis` based splitter. Superseded by the rewritten
  * `@koobiq/components/splitter`, which adds panel constraints, collapsing, snapping, keyboard
- * support and the `separator` accessibility pattern. Will be removed in a future major version — an
+ * support and the `separator` accessibility pattern. Will be removed in 22.0.0 — an
  * `ng update` migration rewrites `@koobiq/components/splitter` imports of this API to
  * `@koobiq/components/splitter/deprecated` automatically.
  */
@@ -252,7 +252,7 @@ export class KbqGutterGhostDirective {
 /**
  * @deprecated The mouse-only, `flex-basis` based splitter. Superseded by the rewritten
  * `@koobiq/components/splitter`, which adds panel constraints, collapsing, snapping, keyboard
- * support and the `separator` accessibility pattern. Will be removed in a future major version — an
+ * support and the `separator` accessibility pattern. Will be removed in 22.0.0 — an
  * `ng update` migration rewrites `@koobiq/components/splitter` imports of this API to
  * `@koobiq/components/splitter/deprecated` automatically.
  */
@@ -584,7 +584,6 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
         this.updateGutter();
 
-        // TODO: The 'emit' function requires a mandatory void argument
         this.gutterPositionChange.emit();
 
         this.changeDetectorRef.markForCheck();
@@ -598,7 +597,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 /**
  * @deprecated The mouse-only, `flex-basis` based splitter. Superseded by the rewritten
  * `@koobiq/components/splitter`, which adds panel constraints, collapsing, snapping, keyboard
- * support and the `separator` accessibility pattern. Will be removed in a future major version — an
+ * support and the `separator` accessibility pattern. Will be removed in 22.0.0 — an
  * `ng update` migration rewrites `@koobiq/components/splitter` imports of this API to
  * `@koobiq/components/splitter/deprecated` automatically.
  */
@@ -609,7 +608,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
         '[class.kbq-splitter-area_resizing]': 'isResizing()'
     }
 })
-export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
+export class KbqSplitterAreaDirective implements OnInit, AfterViewInit, OnDestroy {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private renderer = inject(Renderer2);
     private splitter = inject(KbqSplitterComponent);
@@ -627,9 +626,8 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
         this.renderer.removeStyle(this.elementRef.nativeElement, 'flex');
     }
 
-    ngAfterViewInit() {
-        this.splitter.addArea(this);
-
+    // Before the host bindings of the element apply, so that a component on it keeps the sizes it binds to its host.
+    ngOnInit() {
         this.removeStyle(StyleProperty.MaxWidth);
 
         if (this.splitter.direction === Direction.Vertical) {
@@ -639,6 +637,10 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
             this.setStyle(StyleProperty.Height, '100%');
             this.removeStyle(StyleProperty.Width);
         }
+    }
+
+    ngAfterViewInit() {
+        this.splitter.addArea(this);
 
         this.splitter.gutterPositionChange.subscribe(this.emitSizeChange);
     }

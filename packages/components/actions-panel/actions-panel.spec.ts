@@ -3,18 +3,29 @@ import { OverlayContainer, ScrollStrategy } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { SpyLocation } from '@angular/common/testing';
 import {
+    ApplicationRef,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
     inject,
     Injectable,
     Provider,
+    signal,
     TemplateRef,
     Type,
-    viewChild
+    viewChild,
+    ɵZONELESS_ENABLED
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {
+    createKeyboardEvent,
+    enUSLocaleData,
+    ESCAPE,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    ruRULocaleData
+} from '@koobiq/components/core';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { lastValueFrom } from 'rxjs';
 import { KBQ_ACTIONS_PANEL_DATA, KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR, KbqActionsPanel } from './actions-panel';
 import { KbqActionsPanelConfig, kbqActionsPanelDefaultConfigProvider } from './actions-panel-config';
@@ -24,7 +35,7 @@ import { KbqActionsPanelModule } from './module';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
-        imports: [component, NoopAnimationsModule],
+        imports: [component],
         providers: [{ provide: Location, useClass: SpyLocation }, ...providers]
     });
     const fixture = TestBed.createComponent<T>(component);
@@ -62,6 +73,21 @@ const getActionsPanelCloseButton = (): HTMLElement => {
     return getActionsPanelContainerElement().querySelector('.kbq-actions-panel-container__close-button')!;
 };
 
+/**
+ * Gives `element` an animation that runs until the returned function ends it. jsdom has no Web Animations API, so
+ * without one every transition ends right after the render it starts in.
+ */
+const holdAnimation = (element: HTMLElement): (() => void) => {
+    let finish!: () => void;
+    const finished = new Promise<void>((resolve) => (finish = resolve));
+
+    element.getAnimations = () => [
+        { finished, effect: { getComputedTiming: () => ({ endTime: 300 }) } } as unknown as Animation
+    ];
+
+    return finish;
+};
+
 @Component({
     selector: 'actions-panel-component',
     template: `
@@ -74,6 +100,18 @@ const getActionsPanelCloseButton = (): HTMLElement => {
 export class ActionsPanelComponent {
     readonly data = inject(KBQ_ACTIONS_PANEL_DATA);
     readonly actionsPanelRef = inject(KbqActionsPanelRef);
+}
+
+@Component({
+    selector: 'actions-panel-with-tooltip',
+    imports: [KbqToolTipModule],
+    template: `
+        <button id="actionsPanel-hint" kbqTooltip="Hint">Action</button>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ActionsPanelWithTooltip {
+    readonly tooltip = viewChild.required(KbqTooltipTrigger);
 }
 
 @Component({
@@ -104,6 +142,56 @@ export class ActionsPanelController {
 
     close<R = string>(result?: R): void {
         this.actionsPanel.close(result);
+    }
+}
+
+@Component({
+    selector: 'actions-panel-live-content',
+    template: `
+        <ng-template #actionsPanel>
+            <div id="actionsPanel-counter">{{ counter() }}</div>
+        </ng-template>
+    `,
+    providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ActionsPanelLiveContent {
+    readonly counter = signal(0);
+
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    private readonly template = viewChild.required('actionsPanel', { read: TemplateRef });
+
+    open(): void {
+        this.actionsPanel.open(this.template());
+    }
+}
+
+type ActionsPanelSelection = { selected: number[] };
+
+@Component({
+    selector: 'actions-panel-selection-counter',
+    template: `
+        <div id="actionsPanel-counter">{{ data.selected.length }}</div>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager
+})
+class ActionsPanelSelectionCounter {
+    readonly data = inject<ActionsPanelSelection>(KBQ_ACTIONS_PANEL_DATA);
+}
+
+@Component({
+    selector: 'actions-panel-selection-host',
+    template: '',
+    providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ActionsPanelSelectionHost {
+    readonly selection: ActionsPanelSelection = { selected: [] };
+
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+
+    open(): void {
+        this.actionsPanel.open(ActionsPanelSelectionCounter, { data: this.selection });
     }
 }
 
@@ -165,6 +253,23 @@ describe(KbqActionsPanelModule.name, () => {
         expect(getActionsPanelContainerElement()).toBeNull();
     });
 
+    it('should put the container into the visible state on open and take it out on close', async () => {
+        const fixture = createComponent(ActionsPanelController);
+        const { componentInstance } = fixture;
+
+        componentInstance.openFromTemplate();
+        await fixture.whenStable();
+
+        const container = getActionsPanelContainerElement();
+
+        expect(container.classList).toContain('kbq-actions-panel-container_visible');
+
+        componentInstance.close();
+        await fixture.whenStable();
+
+        expect(container.classList).not.toContain('kbq-actions-panel-container_visible');
+    });
+
     it('should apply width', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
 
@@ -186,12 +291,15 @@ describe(KbqActionsPanelModule.name, () => {
         expect(getOverlayPaneElement().style.minWidth).toBe('50%');
     });
 
-    it('should close on ESCAPE', () => {
-        const { componentInstance } = createComponent(ActionsPanelController);
+    it('should close on ESCAPE', async () => {
+        const fixture = createComponent(ActionsPanelController);
+        const { componentInstance } = fixture;
 
         componentInstance.openFromTemplate();
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         getActionsPanelContainerElement().dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+
+        await fixture.whenStable();
         expect(getActionsPanelContainerElement()).toBeNull();
     });
 
@@ -202,6 +310,52 @@ describe(KbqActionsPanelModule.name, () => {
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         getActionsPanelContainerElement().dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
+    });
+
+    it('should not close on ESCAPE already spent by a control inside it', async () => {
+        const fixture = createComponent(ActionsPanelController);
+
+        fixture.componentInstance.openFromTemplate();
+        await fixture.whenStable();
+
+        const control = getActionsPanelAction2Element();
+
+        control.addEventListener('keydown', (event) => event.preventDefault());
+        control.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+        await fixture.whenStable();
+
+        expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
+    });
+
+    it('should close only the tooltip open inside it on the first ESCAPE, and itself on the next', async () => {
+        const fixture = createComponent(ActionsPanelController);
+
+        fixture.componentInstance.actionsPanel.open(ActionsPanelWithTooltip);
+        await fixture.whenStable();
+
+        const tooltip = (TestBed.inject(Dialog).openDialogs[0].componentInstance as ActionsPanelWithTooltip).tooltip();
+        const pressEscape = () =>
+            getActionsPanelContainerElement()
+                .querySelector('#actionsPanel-hint')!
+                .dispatchEvent(createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape'));
+
+        tooltip.show(0);
+        await new Promise((resolve) => setTimeout(resolve));
+        await fixture.whenStable();
+
+        expect(tooltip.isOpen).toBe(true);
+
+        pressEscape();
+        await new Promise((resolve) => setTimeout(resolve));
+        await fixture.whenStable();
+
+        expect(tooltip.isOpen).toBe(false);
+        expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
+
+        pressEscape();
+        await fixture.whenStable();
+
+        expect(getActionsPanelContainerElement()).toBeNull();
     });
 
     it('should close on close button click', async () => {
@@ -308,7 +462,7 @@ describe(KbqActionsPanelModule.name, () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
         const actionsPanelRef = componentInstance.openFromTemplate();
-        const spy = jest.fn();
+        const spy = vi.fn();
 
         actionsPanelRef.afterClosed.subscribe(spy);
         componentInstance.close();
@@ -344,7 +498,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should complete beforeClosed after it emits', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
         const actionsPanelRef = componentInstance.openFromTemplate();
-        const completeSpy = jest.fn();
+        const completeSpy = vi.fn();
 
         actionsPanelRef.beforeClosed.subscribe({ complete: completeSpy });
         componentInstance.close();
@@ -354,7 +508,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should not emit beforeClosed again when close is called a second time', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
         const actionsPanelRef = componentInstance.openFromTemplate();
-        const spy = jest.fn();
+        const spy = vi.fn();
 
         actionsPanelRef.beforeClosed.subscribe(spy);
         componentInstance.close();
@@ -379,7 +533,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should replay beforeOpened to subscribers that missed the synchronous emission', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
         const actionsPanelRef = componentInstance.openFromTemplate();
-        const spy = jest.fn();
+        const spy = vi.fn();
 
         // open() has already run by the time openFromTemplate() returns, so this subscription
         // happens after the real emission — it should still receive the replayed value.
@@ -390,7 +544,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should complete beforeOpened after it emits', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
         const actionsPanelRef = componentInstance.openFromTemplate();
-        const completeSpy = jest.fn();
+        const completeSpy = vi.fn();
 
         actionsPanelRef.beforeOpened.subscribe({ complete: completeSpy });
         expect(completeSpy).toHaveBeenCalledTimes(1);
@@ -400,11 +554,35 @@ describe(KbqActionsPanelModule.name, () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
         const actionsPanelRef = componentInstance.openFromTemplate();
-        const spy = jest.fn();
+        const spy = vi.fn();
 
         actionsPanelRef.afterOpened.subscribe(spy);
         await fixture.whenStable();
         expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should report an open interrupted by close as opened before reporting it closed', async () => {
+        const fixture = createComponent(ActionsPanelController);
+        const emitted: string[] = [];
+        const actionsPanelRef = fixture.componentInstance.openFromTemplate();
+        const finishAnimation = holdAnimation(getActionsPanelContainerElement());
+
+        actionsPanelRef.beforeOpened.subscribe(() => emitted.push('beforeOpened'));
+        actionsPanelRef.afterOpened.subscribe({
+            next: () => emitted.push('afterOpened'),
+            complete: () => emitted.push('afterOpened complete')
+        });
+        actionsPanelRef.beforeClosed.subscribe(() => emitted.push('beforeClosed'));
+        actionsPanelRef.afterClosed.subscribe(() => emitted.push('afterClosed'));
+
+        await fixture.whenStable();
+        expect(emitted).toEqual(['beforeOpened']);
+
+        actionsPanelRef.close();
+        finishAnimation();
+        await lastValueFrom(actionsPanelRef.afterClosed);
+
+        expect(emitted).toEqual(['beforeOpened', 'afterOpened', 'afterOpened complete', 'beforeClosed', 'afterClosed']);
     });
 
     it('should not autoFocus on open', async () => {
@@ -462,11 +640,56 @@ describe(KbqActionsPanelModule.name, () => {
         expect(getActionsPanelContainerElement()).toBeNull();
     });
 
+    it('should keep template content in sync with the state of the component that declares it', async () => {
+        const fixture = createComponent(ActionsPanelLiveContent);
+        const { componentInstance } = fixture;
+
+        componentInstance.open();
+        await fixture.whenStable();
+        expect(getActionsPanelContainerElement().querySelector('#actionsPanel-counter')!.textContent).toBe('0');
+
+        componentInstance.counter.set(1);
+        await fixture.whenStable();
+        expect(getActionsPanelContainerElement().querySelector('#actionsPanel-counter')!.textContent).toBe('1');
+    });
+
+    it('should refresh component content on the eager strategy on a tick that checks the whole application', () => {
+        // The tick of an application on zone.js, which checks every root view, the panel's included.
+        const fixture = createComponent(ActionsPanelSelectionHost, [{ provide: ɵZONELESS_ENABLED, useValue: false }]);
+        const applicationRef = TestBed.inject(ApplicationRef);
+
+        fixture.componentInstance.open();
+        applicationRef.tick();
+
+        const counter = getActionsPanelContainerElement().querySelector('#actionsPanel-counter')!;
+
+        expect(counter.textContent).toBe('0');
+
+        fixture.componentInstance.selection.selected.push(0);
+        applicationRef.tick();
+
+        expect(counter.textContent).toBe('1');
+    });
+
+    it('should name the close button after the active locale', async () => {
+        const fixture = createComponent(ActionsPanelController, [
+            { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
+        ]);
+
+        fixture.componentInstance.openFromTemplate();
+        await fixture.whenStable();
+        expect(getActionsPanelCloseButton().getAttribute('aria-label')).toBe(ruRULocaleData.actionsPanel.closeTooltip);
+
+        TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+        await fixture.whenStable();
+        expect(getActionsPanelCloseButton().getAttribute('aria-label')).toBe(enUSLocaleData.actionsPanel.closeTooltip);
+    });
+
     it('should apply scrollStrategy', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
         const scrollStrategy: ScrollStrategy = {
             attach: () => {},
-            enable: jest.fn(),
+            enable: vi.fn(),
             disable: () => {}
         };
 
@@ -623,7 +846,7 @@ describe(KbqActionsPanelModule.name, () => {
     });
 
     it('should not reach for the global custom OverlayContainer at all when overlayContainer is provided', () => {
-        const getContainerElement = jest.spyOn(FakeOverlayContainer.prototype, 'getContainerElement');
+        const getContainerElement = vi.spyOn(FakeOverlayContainer.prototype, 'getContainerElement');
         const { componentInstance } = createComponent(ActionsPanelController, [
             { provide: OverlayContainer, useClass: FakeOverlayContainer }
         ]);

@@ -455,10 +455,12 @@ test.describe('docs app', () => {
         await page.goto('/en/components/ag-grid/overview');
         await waitForHydration(page);
 
-        // AG Grid arrives in a chunk of its own once the page is hydrated, and on CI it renders close to the end of
-        // the default 5 seconds of an assertion.
-        await expect(page.locator('docs-live-example-viewer ag-grid-angular').first()).toBeVisible({ timeout: 15000 });
-        await expect(page.locator('docs-live-example-viewer kbq-skeleton')).toHaveCount(0);
+        // The examples load only after hydration, and AG Grid renders them on the main thread: on a busy runner
+        // that alone has taken more than the default expect timeout.
+        const examplesTimeout = { timeout: 15_000 };
+
+        await expect(page.locator('docs-live-example-viewer ag-grid-angular').first()).toBeVisible(examplesTimeout);
+        await expect(page.locator('docs-live-example-viewer kbq-skeleton')).toHaveCount(0, examplesTimeout);
         expect(errors).toEqual([]);
     });
 
@@ -544,10 +546,11 @@ test.describe('migration guide filter', () => {
         await page.goto(MIGRATION_URL + '?from=20.0.0&to=20.2.0');
         await waitForHydration(page);
 
-        const shown = await visibleSteps(page).count();
+        const total = await page.locator('.docs-migration-step').count();
 
-        expect(shown).toBeGreaterThan(0);
-        expect(shown).toBeLessThan(await page.locator('.docs-migration-step').count());
+        // Polled: the filter applies the range after the network goes idle, so a single count can still see every step.
+        await expect.poll(() => visibleSteps(page).count()).toBeLessThan(total);
+        await expect.poll(() => visibleSteps(page).count()).toBeGreaterThan(0);
     });
 
     test('narrows the component review to the picked components', async ({ page }) => {

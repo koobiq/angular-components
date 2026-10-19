@@ -2,7 +2,6 @@
 
 This schematic adds the packages that became mandatory `peerDependencies` of `@koobiq/components`. It includes:
 
-- `@angular/animations`, at the range the project already uses for `@angular/core`
 - `overlayscrollbars`
 - `@koobiq/date-adapter`
 
@@ -10,10 +9,6 @@ npm installs a newly mandatory peer on upgrade by itself, but Yarn does not and 
 `auto-install-peers`. Those projects would otherwise upgrade into a build that fails with
 `Cannot find module 'overlayscrollbars'`, since `ng add` is the only other place that writes these packages and
 `ng update` never runs it.
-
-`@angular/animations` is deliberately taken from the project rather than from the library: every
-`@angular/animations` release pins `@angular/core` exactly, so any other range resolves to a version
-incompatible with the Angular the project is on, and `npm install` fails with `ERESOLVE`.
 
 An entry the project already declares is left untouched, so a `@koobiq/date-adapter` pinned below `3.4.0` keeps
 its version. That one is not an install error but a `TypeError: this.dateAdapter.addCalendarUnits is not a
@@ -66,7 +61,6 @@ ng g ./dist/components/schematics/collection.json:mandatory-peer-dependencies --
 ```json
 {
     "dependencies": {
-        "@angular/animations": "^20.3.0",
         "@angular/core": "^20.3.0",
         "@koobiq/components": "^21.0.0",
         "@koobiq/date-adapter": "^3.5.1",

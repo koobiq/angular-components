@@ -5,31 +5,32 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
+    afterNextRender,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ContentChildren,
+    contentChildren,
     effect,
     ElementRef,
     EventEmitter,
     forwardRef,
     inject,
-    Input,
+    Injector,
     input,
     IterableDiffer,
+    linkedSignal,
     OnDestroy,
-    Output,
     output,
     Provider,
     QueryList,
     signal,
+    untracked,
     viewChild,
-    ViewChild,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
     DOWN_ARROW,
@@ -45,11 +46,15 @@ import {
     isVerticalMovement,
     KBQ_SELECT_LOCALE_CONFIGURATION,
     kbqGetElementHeight,
+    kbqLeaveTabOrderOnTabOut,
     KbqLocaleOverridesDirective,
     KbqMultipleInput,
+    kbqOptionalNumberAttribute,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
+    kbqQueryListFrom,
     KbqSelectAllAdapter,
+    kbqSelectAllHandlerTransform,
     KbqStateSaving,
     LEFT_ARROW,
     MultipleMode,
@@ -179,7 +184,6 @@ interface SelectionModelOption {
         // The active option takes real DOM focus (`KbqTreeOption.focus`) and is advertised here on top
         // of that, so an AT that follows either model reports the same row.
         '[attr.aria-activedescendant]': 'keyManager?.activeItem?.id',
-        '(blur)': 'blur()',
         '(focus)': 'focus($event)',
         '(keydown)': 'onKeyDown($event)',
         '(window:resize)': 'updateScrollSize()'
@@ -192,13 +196,14 @@ interface SelectionModelOption {
     exportAs: 'kbqTreeSelection'
 })
 export class KbqTreeSelection
-    extends KbqTreeBase<any>
+    extends KbqTreeBase<any, FlatTreeControl<any>>
     implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy
 {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private scheduler = inject(AsyncScheduler);
     private clipboard = inject(Clipboard, { optional: true });
     private readonly platform = inject(Platform);
+    private readonly injector = inject(Injector);
     protected readonly focusMonitor = inject(FocusMonitor);
 
     /**
@@ -261,63 +266,76 @@ export class KbqTreeSelection
      */
     ownsKeyboard: boolean = true;
 
-    @ViewChild(KbqTreeNodeOutlet, { static: true }) declare nodeOutlet: KbqTreeNodeOutlet;
-
     /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
     readonly selectAllOption = viewChild(KbqTreeOption);
 
-    @ContentChildren(KbqTreeOption) unorderedOptions: QueryList<KbqTreeOption>;
+    private readonly unorderedOptionsQuery = contentChildren(KbqTreeOption);
+    private readonly unorderedOptionsList = kbqQueryListFrom(this.unorderedOptionsQuery);
 
-    // TODO: Skipped for migration because:
-    //  Class of this input is referenced in the signature of another class.
-    @Input() declare treeControl: FlatTreeControl<any>;
+    get unorderedOptions(): QueryList<KbqTreeOption> {
+        return this.unorderedOptionsList();
+    }
 
     readonly navigationChange = output<KbqTreeNavigationChange<KbqTreeOption>>();
 
-    // Not an `output()`: `KbqTreeSelect` pipes this stream with rxjs, which an `OutputEmitterRef`
-    // cannot feed without wrapping every call site in `outputToObservable`.
-    @Output() readonly selectionChange = new EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>();
+    /**
+     * Emits when the selection changes. A stream rather than an `output()`: `KbqTreeSelect` pipes it with rxjs.
+     */
+    readonly selectionChange = new EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>();
+
+    /** @docs-private */
+    readonly selectionChangeOutput = outputFromObservable(this.selectionChange, { alias: 'selectionChange' });
 
     /** Emits after "select all" ran, with the options it could act on. */
     readonly selectAllChange = output<KbqTreeSelectAllEvent<KbqTreeOption>>();
 
-    /** @deprecated Use `selectAllChange` instead. Will be removed in version 20. */
+    /** @deprecated Use `selectAllChange` instead. Will be removed in 22.0.0. */
     readonly onSelectAll = output<KbqTreeSelectAllEvent<KbqTreeOption>>({ alias: 'onSelectAll' });
 
     /**
      * Emits when the active option is copied with Ctrl/Cmd + C. Subscribing replaces the built-in
      * clipboard handler, so the event has to stay an `EventEmitter`: the decision is made by reading
-     * `observed`, which `OutputEmitterRef` does not have.
+     * `observed`, which `OutputEmitterRef` does not have. A template listener subscribes to it through
+     * the output below.
      */
-    @Output() readonly copyChange = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>();
+    readonly copyChange = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>();
 
-    /** @deprecated Use `copyChange` instead. Will be removed in version 20. */
-    @Output() readonly onCopy = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>();
+    /** @docs-private */
+    readonly copyChangeOutput = outputFromObservable(this.copyChange, { alias: 'copyChange' });
+
+    /** @deprecated Use `copyChange` instead. Will be removed in 22.0.0. */
+    readonly onCopy = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>();
+
+    /** @docs-private */
+    readonly onCopyOutput = outputFromObservable(this.onCopy, { alias: 'onCopy' });
 
     private sortedNodes: KbqTreeOption[] = [];
 
     private lastSyncedDataNodes: readonly any[] | null = null;
+
+    /** @docs-private */
+    readonly autoSelectInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'autoSelect',
+        transform: booleanAttribute
+    });
+
+    /** `undefined` while the value is derived from the mode. Written by `KbqTreeSelect` as well. */
+    private readonly autoSelectState = linkedSignal(() => this.autoSelectInput());
 
     /**
      * Whether clicking a node clears the rest of the selection. Defaults to `true`, and to `false` for
      * `multiple="checkbox"`.
      *
      * Assigning it — from a template binding or imperatively, as `KbqTreeSelect` does — replaces the
-     * derived default for good, so a later {@link multiple} change leaves the value alone.
+     * derived default, so a later {@link multiple} change leaves the value alone.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get autoSelect(): boolean {
-        return this._autoSelect ?? this.mode() !== MultipleMode.CHECKBOX;
+        return this.autoSelectState() ?? this.mode() !== MultipleMode.CHECKBOX;
     }
 
     set autoSelect(value: boolean) {
-        this._autoSelect = coerceBooleanProperty(value);
+        this.autoSelectState.set(coerceBooleanProperty(value));
     }
-
-    /** `null` while the consumer has not set the input, i.e. while the value is derived from the mode. */
-    private _autoSelect: boolean | null = null;
 
     get optionFocusChanges(): Observable<KbqTreeOptionEvent> {
         return merge(...this.renderedOptions.map((option) => option.onFocus));
@@ -343,14 +361,12 @@ export class KbqTreeSelection
      * The getter reports whether more than one node can be selected; read {@link multipleMode} for the mode
      * itself.
      */
-    @Input()
     get multiple(): boolean {
         return !!this.mode();
     }
 
-    set multiple(value: KbqMultipleInput) {
-        this.setMultipleMode(resolveMultipleMode(value));
-    }
+    /** @docs-private */
+    readonly multipleInput = input<KbqMultipleInput | undefined>(undefined, { alias: 'multiple' });
 
     /** Resolved selection mode, or `null` when only one node can be selected. */
     get multipleMode(): MultipleMode | null {
@@ -368,23 +384,26 @@ export class KbqTreeSelection
      */
     private readonly mode = signal<MultipleMode | null>(null);
 
+    /** @docs-private */
+    readonly noUnselectLastInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'noUnselectLast',
+        transform: booleanAttribute
+    });
+
+    /** `undefined` while the value is derived from the mode. Written by `KbqTreeSelect` as well. */
+    private readonly noUnselectLastState = linkedSignal(() => this.noUnselectLastInput());
+
     /**
      * Whether the last selected node can be deselected.
      * Derived from the mode until assigned, like {@link autoSelect}.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get noUnselectLast(): boolean {
-        return this._noUnselectLast ?? this.mode() !== MultipleMode.CHECKBOX;
+        return this.noUnselectLastState() ?? this.mode() !== MultipleMode.CHECKBOX;
     }
 
     set noUnselectLast(value: boolean) {
-        this._noUnselectLast = coerceBooleanProperty(value);
+        this.noUnselectLastState.set(coerceBooleanProperty(value));
     }
-
-    /** `null` while the consumer has not set the input, i.e. while the value is derived from the mode. */
-    private _noUnselectLast: boolean | null = null;
 
     /**
      * Whether typing printable characters moves the focus to the next option whose label starts with
@@ -394,20 +413,22 @@ export class KbqTreeSelection
      * `KbqTreeSelect` routes everything the user types — the search query included — into this key
      * manager, and type-ahead would move the active option out from under the query.
      */
-    // Written imperatively by `KbqTreeSelect`, like `autoSelect` and `noUnselectLast`, so it cannot be a
-    // signal input.
-    @Input({ transform: booleanAttribute })
     get typeAhead(): boolean {
-        return this._typeAhead;
+        return this.typeAheadState();
     }
 
+    // Written imperatively by `KbqTreeSelect`, like `autoSelect` and `noUnselectLast`.
     set typeAhead(value: boolean) {
-        this._typeAhead = value;
-
-        this.applyTypeAhead();
+        this.typeAheadState.set(value);
     }
 
-    private _typeAhead = true;
+    /** @docs-private */
+    readonly typeAheadInput = input<boolean, boolean | string | null | undefined>(true, {
+        alias: 'typeAhead',
+        transform: booleanAttribute
+    });
+
+    private readonly typeAheadState = linkedSignal(() => this.typeAheadInput());
 
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
     readonly selectAllToggle = input(false, { transform: booleanAttribute });
@@ -418,18 +439,22 @@ export class KbqTreeSelection
      * Enabling it also makes Ctrl/Cmd + A a two-way toggle, so the shortcut and the checkbox never
      * disagree (`selectAllToggle` is implied).
      */
-    // Written imperatively by `KbqTreeSelect`, like `autoSelect` and `noUnselectLast`, so it cannot be a
-    // signal input; the signal behind it is what keeps the template in step.
-    @Input({ transform: booleanAttribute })
     get selectAll(): boolean {
         return this.selectAllEnabled();
     }
 
+    // Written imperatively by `KbqTreeSelect`, like `autoSelect` and `noUnselectLast`.
     set selectAll(value: boolean) {
         this.selectAllEnabled.set(value);
     }
 
-    private readonly selectAllEnabled = signal(false);
+    /** @docs-private */
+    readonly selectAllInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'selectAll',
+        transform: booleanAttribute
+    });
+
+    private readonly selectAllEnabled = linkedSignal(() => this.selectAllInput());
 
     /** Whether the "select all" row is currently rendered. */
     protected get showSelectAll(): boolean {
@@ -471,7 +496,7 @@ export class KbqTreeSelection
     // pre-dating this feature (`KbqTreeBase<any>`, `SelectionModel<any>`), so `unknown`
     // here would only relocate the unsafety into a cast at every call site, not remove it.
     private get selectAllTargets(): any[] {
-        // `treeControl` is an `@Input`, so it is still unset on the change-detection pass that sets it:
+        // `treeControl` is an input, so it is still unset on the change-detection pass that sets it:
         // a consumer reading `allOptionsSelected`/`selectAllState` off a template reference — which is
         // exactly how the docs suggest swapping the trigger label — would otherwise get a TypeError
         // before the tree is wired up. Nothing is selectable yet at that point, so an empty set is right.
@@ -506,38 +531,31 @@ export class KbqTreeSelection
         };
     }
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** Whether the tree is disabled, bound with `[disabled]` or set by a form control. */
     get disabled(): boolean {
-        return this._disabled;
+        return this.disabledState();
     }
 
-    set disabled(rawValue: boolean) {
-        const value = coerceBooleanProperty(rawValue);
+    private readonly disabledState = signal(false);
 
-        if (this._disabled !== value) {
-            this._disabled = value;
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: kbqOptionalNumberAttribute
+    });
 
-            this.markOptionsForCheck();
-        }
+    /** Tab index of the tree, `-1` while it is disabled. */
+    get tabIndex(): number {
+        return this.disabled ? -1 : this.tabIndexState();
     }
 
-    private _disabled: boolean = false;
-
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get tabIndex(): any {
-        return this.disabled ? -1 : this._tabIndex;
-    }
-
-    set tabIndex(value: any) {
-        this._tabIndex = value;
-        this.userTabIndex = value;
-    }
-
-    private _tabIndex = 0;
+    private readonly tabIndexState = signal(0);
 
     get showCheckbox(): boolean {
         return this.mode() === MultipleMode.CHECKBOX;
@@ -562,11 +580,33 @@ export class KbqTreeSelection
 
     private selectionModelSubscription: Subscription | null = null;
 
-    /** Pending restore of the tab index after the key manager tabbed out, see `allowFocusEscape`. */
-    private restoreTabIndexTimeout: ReturnType<typeof setTimeout> | undefined;
-
-    /** Whether a value report is already queued for the end of the current tick. */
+    /** Whether a value report is queued for the end of the current tick. Cleared by `writeValue` to cancel it. */
     private pendingValueReport = false;
+
+    /** The `multiple` binding the mode was last set from, see `applyMultipleInput`. */
+    private appliedMultipleInput: KbqMultipleInput | undefined;
+
+    /** The `disabled` binding the state was last set from, see `applyDisabledInput`. */
+    private appliedDisabledInput: boolean | undefined;
+
+    /** Backs {@link syncingSelection}: a change of the selection made by code is no change to report back. */
+    private writingValue = false;
+
+    /**
+     * Whether the tree is changing the selection model itself — to a value the form wrote, or onto the nodes of
+     * reloaded data — rather than acting on the user. A host sharing the model, such as `KbqTreeSelect`, reports
+     * no such change.
+     * @docs-private
+     */
+    get syncingSelection(): boolean {
+        return this.writingValue;
+    }
+
+    /**
+     * The last value the form wrote while some of the nodes it names were not in the data yet. Applied again as the
+     * data changes, until every node is found or the selection is reported to the form.
+     */
+    private unresolvedValue: { value: any } | null = null;
 
     private destroyed = false;
 
@@ -586,13 +626,48 @@ export class KbqTreeSelection
         // `multiple` attribute reaches the input right after the constructor, before any node exists.
         this.selectionModel = this.ownSelectionModel = new SelectionModel<SelectionModelOption>(false);
 
+        effect(() => {
+            this.multipleInput();
+
+            untracked(() => this.applyMultipleInput());
+        });
+
+        effect(() => {
+            this.disabledInput();
+
+            untracked(() => this.applyDisabledInput());
+        });
+
+        // Unbound, the input leaves the default, which follows the rendered options; bound back to `undefined` or
+        // `null`, it restores that default.
+        effect(() => {
+            const tabIndex = this.tabIndexInput();
+
+            untracked(() => {
+                if (tabIndex !== undefined) {
+                    this.userTabIndex = tabIndex;
+                    this.tabIndexState.set(tabIndex);
+                } else if (this.userTabIndex !== null) {
+                    this.userTabIndex = null;
+                    this.updateTabIndex();
+                }
+            });
+        });
+
+        effect(() => {
+            this.typeAheadState();
+
+            untracked(() => this.applyTypeAhead());
+        });
+
         // `unorderedOptions.changes` never fires for the "select all" row — it is a view child — so the
         // rendered list has to be rebuilt whenever the view query resolves or drops it.
         effect(() => {
             this.selectAllOption();
 
             if (this.renderedOptions) {
-                this.updateRenderedOptions();
+                // Untracked: the options are read too, and their changes come through `unorderedOptions.changes`.
+                untracked(() => this.updateRenderedOptions());
             }
         });
     }
@@ -600,6 +675,39 @@ export class KbqTreeSelection
     /** Selects every node "select all" can act on, or deselects them all when they are already selected. */
     protected toggleSelectAll(): void {
         this.selectAllOptions(true);
+    }
+
+    /**
+     * Sets the mode from the `multiple` binding, once per bound value: an unbound input leaves what
+     * `KbqTreeSelect` or the {@link multipleMode} setter wrote, and a value bound back to `undefined` means
+     * single selection.
+     *
+     * Called by an effect, and by `writeValue` ahead of it: a forms directive on this element writes the
+     * value from its own `ngOnChanges`, which runs before any effect of the view.
+     */
+    private applyMultipleInput(): void {
+        const multiple = this.multipleInput();
+
+        if (multiple === this.appliedMultipleInput) return;
+
+        this.appliedMultipleInput = multiple;
+        this.setMultipleMode(resolveMultipleMode(multiple));
+    }
+
+    /**
+     * Sets the disabled state from the `disabled` binding, once per bound value, so that whichever of the binding
+     * and the form control changed last wins. An unbound input leaves what the form control wrote.
+     *
+     * Called by an effect, and by `setDisabledState` ahead of it: a forms directive on this element calls that
+     * from its own `ngOnChanges`, after the binding is set but before any effect of the view runs.
+     */
+    private applyDisabledInput(): void {
+        const disabled = this.disabledInput();
+
+        if (disabled === this.appliedDisabledInput) return;
+
+        this.appliedDisabledInput = disabled;
+        this.disabledState.set(!!disabled);
     }
 
     /**
@@ -626,8 +734,6 @@ export class KbqTreeSelection
         if (rebuildNeeded) {
             this.rebuildSelectionModel(!!next);
         }
-
-        this.changeDetectorRef.markForCheck();
     }
 
     /** Replaces the `SelectionModel` with one of the given multiplicity, keeping what the new one can hold. */
@@ -674,7 +780,7 @@ export class KbqTreeSelection
      * Reports the value once the current change-detection pass is over: a bound `[multiple]` is written
      * during change detection, and reporting straight back to the form control there would raise
      * "Expression has changed after it was checked". Coalesced so that several mode changes in one tick
-     * produce one notification, and dropped if the tree is gone by the time it runs.
+     * produce one notification, and dropped if the form writes a value or the tree is gone by the time it runs.
      */
     private scheduleValueReport(): void {
         if (this.pendingValueReport) {
@@ -684,12 +790,20 @@ export class KbqTreeSelection
         this.pendingValueReport = true;
 
         Promise.resolve().then(() => {
+            if (!this.pendingValueReport) return;
+
             this.pendingValueReport = false;
 
             if (!this.destroyed) {
-                this.onChange(this.getSelectedValues());
+                this.reportValue();
             }
         });
+    }
+
+    /** Reports the selection to the form, which then holds it instead of a value still waiting for its nodes. */
+    private reportValue(): void {
+        this.unresolvedValue = null;
+        this.onChange(this.getSelectedValues());
     }
 
     /** (Re)points the change subscription at the current {@link selectionModel}. */
@@ -699,9 +813,13 @@ export class KbqTreeSelection
         this.selectionModelSubscription = this.selectionModel.changed
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                this.onChange(this.getSelectedValues());
+                if (!this.writingValue) {
+                    this.reportValue();
+                }
 
                 this.renderedOptions.notifyOnChanges();
+                // The "select all" row renders the selection state.
+                this.changeDetectorRef.markForCheck();
             });
     }
 
@@ -735,7 +853,12 @@ export class KbqTreeSelection
             }
         });
 
-        this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.allowFocusEscape());
+        kbqLeaveTabOrderOnTabOut(
+            this.keyManager.tabOut,
+            this.elementRef.nativeElement,
+            () => this.tabIndex,
+            this.destroyRef
+        );
 
         this.bindSelectionModel();
 
@@ -778,14 +901,26 @@ export class KbqTreeSelection
         this.bindSelectionModel();
     }
 
+    override ngAfterContentChecked(): void {
+        // Syncs the list here so `changes` emits after the projected items are bound and before the host bindings.
+        this.unorderedOptionsList();
+
+        super.ngAfterContentChecked();
+    }
+
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.elementRef, true);
+        // Reports the focus leaving only when it lands outside the tree (or nowhere): the host hands it to an option
+        // on entry, and options hand it on to each other or to their action buttons, none of which blurs the tree.
+        this.focusMonitor
+            .monitor(this.elementRef, true)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((origin) => {
+                if (!origin) this.blur();
+            });
     }
 
     ngOnDestroy(): void {
         super.ngOnDestroy();
-
-        clearTimeout(this.restoreTabIndexTimeout);
 
         this.dropSubscriptions();
 
@@ -810,27 +945,31 @@ export class KbqTreeSelection
 
     /** @docs-private */
     highlightSelectedOption(): void {
-        // The selection can hold nodes that are not rendered — collapsed branches, or references left
-        // over from a data replacement. Falling back keeps `focus()` from ending with nothing focused
-        // at all, since it already took the branch that skips `setFirstItemActive`.
-        const target =
-            this.renderedOptions.find((item) => item.data === this.selectionModel.selected[0]) ??
-            this.keyManager.activeItem;
+        untracked(() => {
+            // The selection can hold nodes that are not rendered — collapsed branches, or references left
+            // over from a data replacement. Falling back keeps `focus()` from ending with nothing focused
+            // at all, since it already took the branch that skips `setFirstItemActive`.
+            const target =
+                this.renderedOptions.find((item) => item.data === this.selectionModel.selected[0]) ??
+                this.keyManager.activeItem;
 
-        if (target) {
-            target.focus();
-        } else {
-            this.keyManager.setFirstItemActive();
-        }
+            if (target) {
+                target.focus();
+            } else {
+                this.keyManager.setFirstItemActive();
+            }
+        });
     }
 
     blur() {
-        if (!this.hasFocusedOption() && this.resetFocusedItemOnBlur) {
-            this.keyManager.setActiveItem(-1);
-        }
+        untracked(() => {
+            if (!this.hasFocusedOption() && this.resetFocusedItemOnBlur) {
+                this.keyManager.setActiveItem(-1);
+            }
 
-        this.onTouched();
-        this.changeDetectorRef.markForCheck();
+            this.onTouched();
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     /**
@@ -1062,11 +1201,26 @@ export class KbqTreeSelection
         // Not `super.renderNodeChanges`: that would run change detection over this very view before
         // `sortedNodes` is refreshed, so the "select all" row — which is rendered off `isEmpty` — would
         // need a second pass to catch up. One pass, after the state its template reads is current.
-        this.applyNodeChanges(data, dataDiffer, viewContainer, parentData);
+        const changed = this.applyNodeChanges(data, dataDiffer, viewContainer, parentData);
 
         this.sortedNodes = this.getSortedNodes(viewContainer);
 
         this.changeDetectorRef.detectChanges();
+
+        // The "select all" row is rendered ahead of what its state reads: new rows bind their inputs after it and join
+        // `renderedOptions` only once bound, and `KbqTreeFlatDataSource` assigns `dataNodes` after it emits. Nothing
+        // else in the tree reads that state, so a tree without the row is done in this one pass. Marked for check,
+        // which reaches the views above too: a template reading `allOptionsSelected` by reference reads the same state.
+        if (!this.showSelectAll) return;
+
+        const dataNodes = this.treeControl.dataNodes;
+
+        afterNextRender(
+            () => {
+                if (changed || this.treeControl.dataNodes !== dataNodes) this.changeDetectorRef.markForCheck();
+            },
+            { injector: this.injector }
+        );
     }
 
     /** @docs-private */
@@ -1079,56 +1233,63 @@ export class KbqTreeSelection
         this.selectionChange.emit(new KbqTreeSelectionChange(this, option, [option]));
     }
 
+    /** @docs-private */
+    readonly selectAllHandlerInput = input<
+        ((event: KeyboardEvent, tree: KbqTreeSelection) => void) | undefined,
+        ((event: KeyboardEvent, tree: KbqTreeSelection) => void) | undefined
+    >(undefined, {
+        alias: 'selectAllHandler',
+        transform: kbqSelectAllHandlerTransform
+    });
+
     /**
      * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used,
      * which toggles the selection of all non-disabled, selectable options.
      */
-    @Input()
-    get selectAllHandler() {
-        return this._selectAllHandler;
+    get selectAllHandler(): (event: KeyboardEvent, tree: KbqTreeSelection) => void {
+        return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
     }
 
-    set selectAllHandler(fn: (event: KeyboardEvent, tree: KbqTreeSelection) => void) {
-        if (typeof fn !== 'function') {
-            throw Error('`selectAllHandler` must be a function.');
-        }
-
-        this._selectAllHandler = fn;
-    }
-
-    private _selectAllHandler(event: KeyboardEvent, tree: KbqTreeSelection): void {
+    private defaultSelectAllHandler(event: KeyboardEvent, tree: KbqTreeSelection): void {
         event.preventDefault();
 
         tree.selectAllOptions();
     }
 
-    selectAllOptions(allowDeselect: boolean = this.selectAll || this.selectAllToggle()): void {
-        // The row's own `(click)` and the Ctrl/Cmd + A shortcut both funnel through here, so this is the
-        // single place to refuse acting while the whole tree is disabled — mirrors the guard every other
-        // row already gets via `KbqTreeOption.selectViaInteraction()`.
-        if (this.disabled) return;
+    selectAllOptions(allowDeselect?: boolean): void {
+        // Untracked, its default included, like the other imperative methods: called from a consumer's `effect()`,
+        // the state read on the way — the options, `disabled`, the mode, the inputs — would make the effect run
+        // again whenever it changes.
+        untracked(() => {
+            // The row's own `(click)` and the Ctrl/Cmd + A shortcut both funnel through here, so this is the
+            // single place to refuse acting while the whole tree is disabled — mirrors the guard every other
+            // row already gets via `KbqTreeOption.selectViaInteraction()`.
+            if (this.disabled) return;
 
-        // Selection is applied at the data-node level (incl. collapsed/non-rendered nodes unless a filter
-        // is active), while the emitted events carry the selectable rendered options.
-        const selectableOptions = this.renderedOptions.filter((option) => !option.disabled && option.selectable());
+            // Selection is applied at the data-node level (incl. collapsed/non-rendered nodes unless a filter
+            // is active), while the emitted events carry the selectable rendered options.
+            const selectableOptions = this.renderedOptions.filter((option) => !option.disabled && option.selectable());
 
-        // `toggleSelectAll` returns the data nodes whose selection actually flipped — the source of
-        // truth, unlike the cached `option.selected` which lags until change detection.
-        const changed = toggleSelectAll(this.selectAllAdapter, { allowDeselect });
+            // `toggleSelectAll` returns the data nodes whose selection actually flipped — the source of
+            // truth, unlike the cached `option.selected` which lags until change detection.
+            const changed = toggleSelectAll(this.selectAllAdapter, {
+                allowDeselect: allowDeselect ?? (this.selectAll || this.selectAllToggle())
+            });
 
-        const changedData = new Set(changed);
-        const changedOptions = selectableOptions.filter((option) => changedData.has(option.data));
+            const changedData = new Set(changed);
+            const changedOptions = selectableOptions.filter((option) => changedData.has(option.data));
 
-        // Skip `selectionChange` on a no-op (e.g. Ctrl+A while everything is already selected and
-        // `allowDeselect` is off) so `KbqTreeSelectionChange.option` is never `undefined`.
-        if (changedOptions.length > 0) {
-            this.selectionChange.emit(new KbqTreeSelectionChange(this, changedOptions[0], changedOptions));
-        }
+            // Skip `selectionChange` on a no-op (e.g. Ctrl+A while everything is already selected and
+            // `allowDeselect` is off) so `KbqTreeSelectionChange.option` is never `undefined`.
+            if (changedOptions.length > 0) {
+                this.selectionChange.emit(new KbqTreeSelectionChange(this, changedOptions[0], changedOptions));
+            }
 
-        const selectAllEvent = new KbqTreeSelectAllEvent(this, selectableOptions);
+            const selectAllEvent = new KbqTreeSelectAllEvent(this, selectableOptions);
 
-        this.selectAllChange.emit(selectAllEvent);
-        this.onSelectAll.emit(selectAllEvent);
+            this.selectAllChange.emit(selectAllEvent);
+            this.onSelectAll.emit(selectAllEvent);
+        });
     }
 
     copyActiveOption(event: KeyboardEvent): void {
@@ -1153,14 +1314,47 @@ export class KbqTreeSelection
     }
 
     writeValue(value: any): void {
-        if (this.multiple && value && !Array.isArray(value)) {
-            throw getKbqSelectNonArrayValueError();
-        }
+        untracked(() => {
+            this.applyMultipleInput();
 
-        if (value) {
-            this.setOptionsFromValues(this.multiple ? value : [value]);
-        } else {
-            this.selectionModel.clear();
+            if (this.multiple && value && !Array.isArray(value)) {
+                throw getKbqSelectNonArrayValueError();
+            }
+
+            // The form holds the value it writes, so a mode change has nothing left to report.
+            this.pendingValueReport = false;
+
+            this.applyWrittenValue(value);
+        });
+    }
+
+    /** Selects the nodes of a value the form wrote, and keeps the value for the data still to come if any is missing. */
+    private applyWrittenValue(value: any): void {
+        // A node value can be falsy, `0` or `''`: only a missing value clears the single selection.
+        const values: any[] | null = this.multiple
+            ? Array.isArray(value)
+                ? value
+                : null
+            : value === null || value === undefined
+              ? null
+              : [value];
+
+        this.syncSelection(() => (values ? this.setOptionsFromValues(values) : this.selectionModel.clear()));
+
+        this.unresolvedValue = values?.some((item) => !this.treeControl.hasValue(item)) ? { value } : null;
+    }
+
+    /** Runs a change of the selection made by code, which reports nothing back to the form or to a host. */
+    private syncSelection(change: () => void): void {
+        // Restored rather than cleared: a value written while this one is applied must not end the outer write.
+        const wasWritingValue = this.writingValue;
+
+        this.writingValue = true;
+
+        try {
+            change();
+        } finally {
+            this.writingValue = wasWritingValue;
         }
     }
 
@@ -1188,25 +1382,32 @@ export class KbqTreeSelection
      * Sets the disabled state of the control. Implemented as a part of ControlValueAccessor.
      */
     setDisabledState(isDisabled: boolean): void {
-        this._disabled = isDisabled;
-        this.changeDetectorRef.markForCheck();
+        untracked(() => {
+            this.applyDisabledInput();
+            this.disabledState.set(isDisabled);
+        });
     }
 
     /** @docs-private */
     setOptionsFromValues(values: any[]): void {
-        this.selectionModel.clear();
+        untracked(() => {
+            this.selectionModel.clear();
 
-        const valuesToSelect = values.reduce((result, value) => {
-            return this.treeControl.hasValue(value) ? [...result, this.treeControl.hasValue(value)] : [...result];
-        }, []);
+            const valuesToSelect = values.reduce((result, value) => {
+                return this.treeControl.hasValue(value) ? [...result, this.treeControl.hasValue(value)] : [...result];
+            }, []);
 
-        this.selectionModel.select(...valuesToSelect);
+            this.selectionModel.select(...valuesToSelect);
+        });
     }
 
     /**
      * Rebinds orphan node references in selectionModel to current treeControl.dataNodes by value.
      * Needed after dataSource.data is replaced — selectionModel holds references to old node
      * objects, but options render with new ones, so toggle()/isSelected() break on identity.
+     *
+     * A value the form wrote ahead of its nodes is applied again instead, which resolves every node anew.
+     * Either way the selection only follows the data, so nothing is reported.
      */
     private syncSelectionModelToDataNodes(): void {
         const currentNodes = this.treeControl.dataNodes;
@@ -1215,6 +1416,12 @@ export class KbqTreeSelection
         // Skips work on filter / expand / selection-toggle re-renders where data ref is stable.
         if (currentNodes === this.lastSyncedDataNodes) return;
         this.lastSyncedDataNodes = currentNodes;
+
+        if (this.unresolvedValue) {
+            this.applyWrittenValue(this.unresolvedValue.value);
+
+            return;
+        }
 
         if (this.selectionModel.isEmpty() || !currentNodes?.length) return;
 
@@ -1240,7 +1447,7 @@ export class KbqTreeSelection
             return replacement ?? node;
         });
 
-        this.selectionModel.setSelection(...reconciled);
+        this.syncSelection(() => this.selectionModel.setSelection(...reconciled));
     }
 
     /** @docs-private */
@@ -1256,13 +1463,15 @@ export class KbqTreeSelection
     }
 
     setStateChildren(option: KbqTreeOption, state: boolean) {
-        const valuesToChange = this.treeControl.getDescendants(option.data);
+        untracked(() => {
+            const valuesToChange = this.treeControl.getDescendants(option.data);
 
-        if (state) {
-            this.selectionModel.select(...valuesToChange);
-        } else {
-            this.selectionModel.deselect(...valuesToChange);
-        }
+            if (state) {
+                this.selectionModel.select(...valuesToChange);
+            } else {
+                this.selectionModel.deselect(...valuesToChange);
+            }
+        });
     }
 
     private onCopyDefaultHandler(): void {
@@ -1306,7 +1515,7 @@ export class KbqTreeSelection
 
     /** `-1` is the key manager's way of keeping the letter stream running but never matching on it. */
     private applyTypeAhead(): void {
-        this.keyManager?.withTypeAhead(typeAheadDebounce, this._typeAhead ? 0 : -1);
+        this.keyManager?.withTypeAhead(typeAheadDebounce, this.typeAhead ? 0 : -1);
     }
 
     /**
@@ -1339,8 +1548,9 @@ export class KbqTreeSelection
         return kbqGetElementHeight(this.elementRef.nativeElement);
     }
 
+    /** A tree with nothing rendered leaves the tab order, unless a tab index other than `0` is bound. */
     private updateTabIndex(): void {
-        this._tabIndex = this.renderedOptions.length === 0 ? -1 : 0;
+        this.tabIndexState.set(this.userTabIndex || (this.renderedOptions.length === 0 ? -1 : 0));
     }
 
     private updateRenderedOptions = () => {
@@ -1356,7 +1566,11 @@ export class KbqTreeSelection
         }
 
         this.sortedNodes.forEach((node) => {
-            const found = this.unorderedOptions.find((option) => option.value === this.treeControl.getValue(node));
+            // By node first: nodes do not have to carry distinct values, and a value match would hand every node with
+            // the same value the first option holding it.
+            const found =
+                this.unorderedOptions.find((option) => option.data === node) ??
+                this.unorderedOptions.find((option) => option.value === this.treeControl.getValue(node));
 
             if (found) {
                 orderedOptions.push(found);
@@ -1379,19 +1593,6 @@ export class KbqTreeSelection
         }
 
         return array;
-    }
-
-    private allowFocusEscape() {
-        if (this._tabIndex !== -1) {
-            this._tabIndex = -1;
-
-            clearTimeout(this.restoreTabIndexTimeout);
-
-            this.restoreTabIndexTimeout = setTimeout(() => {
-                this._tabIndex = this.userTabIndex || 0;
-                this.changeDetectorRef.markForCheck();
-            });
-        }
     }
 
     private resetOptions() {
@@ -1423,13 +1624,13 @@ export class KbqTreeSelection
         });
 
         // Moving the active option blurs the one being left, so an option blur alone does not mean the
-        // tree lost the focus — and `blur()` would reset the active option the key manager has just set,
-        // because `KbqTreeOption.hasFocus` is cleared synchronously but only raised a microtask later, so
+        // options lost the focus — and resetting here would drop the active option the key manager has just
+        // set, because `KbqTreeOption.hasFocus` is cleared synchronously but only raised a microtask later, so
         // `hasFocusedOption()` reports nothing focused for the whole move. Only a blur of the option the
-        // key manager still points at is the focus actually leaving the tree.
+        // key manager still points at is the focus actually leaving the options.
         this.optionBlurSubscription = this.optionBlurChanges.subscribe(({ option }) => {
-            if (option === this.keyManager.activeItem) {
-                this.blur();
+            if (option === this.keyManager.activeItem && !this.hasFocusedOption() && this.resetFocusedItemOnBlur) {
+                this.keyManager.setActiveItem(-1);
             }
         });
     }
@@ -1446,10 +1647,6 @@ export class KbqTreeSelection
     /** Checks whether any of the options is focused. */
     private hasFocusedOption() {
         return this.renderedOptions.some((option) => option.hasFocus);
-    }
-
-    private markOptionsForCheck() {
-        this.renderedOptions.forEach((option) => option.markForCheck());
     }
 
     private updateOptionsFocus() {

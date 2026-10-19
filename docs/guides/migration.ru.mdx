@@ -10,6 +10,10 @@
 - **20.0.0**: переход на Angular 20: удаление устаревших API и переименование пакетов.
 - **20.2.0**: переход API filter-bar на сигналы.
 - **20.2.0**: единый механизм ширины выпадающей панели.
+- **21.0.0**: переход на Angular 21: обнаружение изменений без zone.js, CSS-анимации вместо `@angular/animations`, сигнальные входы, выходы и запросы.
+- **21.0.0**: удаление API, устаревших до 21.0.0.
+- **21.0.0**: удаление `ThemePalette`.
+- **21.0.0**: удаление API core, которым не пользовалась библиотека, и устаревание его прежнего API.
 - **21.0.0**: контейнер оверлея панели действий.
 - **21.0.0**: устаревание прежнего splitter.
 - **21.0.0**: удаление механизма понижения оверлея.
@@ -145,7 +149,7 @@ ng g @koobiq/components:v20-upgrade --project "<your project>"
 
 **Методы инстансов:**
 
-- .openPanel() → .open(),
+- KbqAutocompleteTrigger.openPanel() → .open(),
 - .toggleIsCollapsed() → .toggle(),
 - .focusViaKeyboard() → .focus().
 
@@ -175,7 +179,7 @@ ng g @koobiq/components:v20-upgrade --project "<your project>"
 
 **Модалки**: ModalOptions.kbqComponentParams → поле data + inject(KBQ_MODAL_DATA).
 
-**Code block**: устаревшие input `canLoad` / `codeFiles` переименованы в `canDownload` / `files`. Привязки в шаблонах схематик переписывает автоматически; программное обращение (`.canLoad`, `.codeFiles`) нужно поправить вручную.
+**Code block**: устаревшие input `canLoad` / `codeFiles` переименованы в `canDownload` / `files`. Привязки в шаблонах схематик переписывает автоматически, кроме `<kbq-code-block>`, у которого привязана и замена: о нём схематик сообщает, каждую пару сведите к одной привязке. Программное обращение (`.canLoad`, `.codeFiles`) нужно поправить вручную.
 
 ### Обновление filter-bar (20.2.0)
 
@@ -219,7 +223,7 @@ ng g @koobiq/components:filter-bar-signals --project "<your project>"
 
 **Переименования:**
 
-- KbqFilterBarRefresher → KbqFilterRefresher (старое имя пока ре-экспортируется как алиас, поэтому сборку не ломает)
+- KbqFilterBarRefresher → KbqFilterRefresher (старое имя оставалось алиасом до 21.0.0)
 
 Все замены идемпотентны — повторный запуск не удваивает вызов.
 
@@ -227,7 +231,7 @@ ng g @koobiq/components:filter-bar-signals --project "<your project>"
 
 Схематик подсветит предупреждениями то, что нельзя переписать безопасно:
 
-**KbqFilterBar.changes**: устарело → читайте `filterBar.filter()` внутри `effect(...)` или слушайте `(filterChange)`.
+**KbqFilterBar.changes**: устарело, удалено в 21.0.0 → читайте `filterBar.filter()` внутри `effect(...)` или слушайте `(filterChange)`.
 
 **KbqFilters.preparePopover()**: удалён → `openSaveAsNewFilterPopover()` / `openChangeFilterNamePopover()`.
 
@@ -311,6 +315,463 @@ const w = this.select.panelWidth();
 
 **Минимальная ширина `kbq-dropdown` теперь измеряется через `getBoundingClientRect()`** (полный border-box триггера) вместо `getComputedStyle().width` минус границы (старый, некорректно считавшийся content-box). У триггера с отступами или границей панель станет шире, чем раньше, ровно на эту величину; триггер без границ и отступов это не затрагивает.
 
+### Обновление до Angular 21
+
+{/* migration-step-version(21.0.0) */}
+
+В версии 21.0.0 библиотека переведена на Angular 21. Требования: **Angular 21+**, **TypeScript 5.9** и **Node.js 20.19, 22.12 или 24+**. Сначала обновите Angular, затем Koobiq:
+
+```bash
+ng update @angular/core@21 @angular/cli@21 @angular/cdk@21
+ng update @koobiq/components@21
+```
+
+#### Обнаружение изменений без zone.js
+
+Компоненты Koobiq больше не зависят от zone.js: они работают в приложении, запущенном с `provideZonelessChangeDetection()`, и по-прежнему работают с `provideZoneChangeDetection()`. То, что раньше ждало `NgZone.onStable`, теперь выполняется после следующей отрисовки.
+
+- **`MockNgZone` удален** из `@koobiq/components/core`. Он вызывал `onStable` по требованию, а библиотека этого события больше не ждет: уберите подмену `NgZone`, а `simulateZoneExit()` замените на `fixture.detectChanges()` или `await fixture.whenStable()`.
+- **Без zone.js тест отрисовывает компонент только по команде.** Проверке сразу после события нужен `fixture.detectChanges()` или `await fixture.whenStable()`, а `whenStable()` больше не ждет таймеров, запущенных компонентом.
+- **Контейнер панели действий работает в режиме `OnPush`**, как и контейнер боковой панели. В приложении с zone.js компонент, открытый в панели, должен вызывать `markForCheck()` или хранить состояние в сигнале, если меняет свои поля из таймера или подписки.
+
+Схематик `zoneless-change-detection` сообщает обо всех использованиях `MockNgZone` и `simulateZoneExit()`:
+
+```bash
+ng g @koobiq/components:zoneless-change-detection --project "<your project>"
+```
+
+#### Анимации без @angular/animations
+
+Компоненты Koobiq больше не используют `@angular/animations`, который Angular объявил устаревшим: их анимации работают на CSS, а окончания анимации компоненты дожидаются сами. `@angular/animations` больше не входит в peer-зависимости, и компонентам больше не нужен `provideAnimations()`: удалите его вместе с пакетом, если компоненты вашего приложения сами не объявляют `animations: [...]`.
+
+- **Движение отключается при `prefers-reduced-motion: reduce`.** Чтобы отключить его во всем приложении, например в end-to-end тестах, предоставьте `{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }` из `@koobiq/components/core`. `provideNoopAnimations()` по-прежнему его отключает, но относится к устаревшему пакету.
+- **Экспортируемые триггеры удалены**: `fadeAnimation` и `kbqSelectAnimations` из `core`, `kbqDropdownAnimations`, `fadeInItems` и `transformDropdown` из `dropdown`, `kbqTabsAnimations` из `tabs`, `kbqPopoverAnimations` из `popover`, `kbqDatepickerAnimations` из `datepicker`, `KbqNotificationCenterAnimations` из `notification-center` и `kbqAppSwitcherAnimations` из `app-switcher`. `KbqSidepanelAnimationState` больше не экспортируется из `sidepanel`, а `MODAL_ANIMATE_DURATION` — из `modal`: вместо таймера такой длительности реагируйте на `afterOpen` / `afterClose` у `KbqModalRef`.
+- **Члены, принимавшие или отдававшие `AnimationEvent`, удалены.** `KbqPopUp.animationStart()` и `animationDone()`: наследник переопределяет защищенный `afterShowAnimation()`, который вызывается один раз при каждом появлении всплывающего окна и не вызывается снова, когда указатель возвращается к уже открытому. `KbqDropdown.animationDone`, `isAnimating`, `panelAnimationState`, `startAnimation()`, `resetAnimation()`, `onAnimationStart()` и `onAnimationDone()`: собственный триггер вызывает `setOpened()`. `KbqSidebar.animationState`, `onAnimationStart()` и `onAnimationDone()`: подпишитесь на `stateChanged`. `KbqTabBody.onTranslateTabStarted()` и `onTranslateTabComplete()`, `KbqToastService.animation`, `KbqToastComponent.animationState` и `onAnimation()`, `animationStateChanged` контейнеров sidepanel и панели действий, а также `animationState`, `animationTransform` и `setAnimationState()` контейнера sidepanel: следите за панелью через ее ref — `afterOpened()`, `beforeClosed()`, `afterClosed()`. Защищенное `KbqContentPanelContainer.contentAnimationState` питало удаленный триггер `@contentAnimation`: наследник читает `isOpened()`.
+- **Панель dropdown больше не угасает при закрытии**: она закрывается, а ее ленивое содержимое открепляется, как только об этом сообщает триггер.
+- **В тесте то, что ждало обработчика анимации, теперь ждет следующей отрисовки**: `fixture.detectChanges()` или `await fixture.whenStable()`. В jsdom нет Web Animations API, поэтому анимаций там нет.
+
+Схематик `angular-animations-removal` сообщает обо всех использованиях удаленных триггеров и членов:
+
+```bash
+ng g @koobiq/components:angular-animations-removal --project "<your project>"
+```
+
+#### Оверлеи в верхнем слое
+
+CDK 21 открывает оверлеи как popover в верхнем слое браузера (top layer), и компоненты сохраняют это поведение: панель рисуется поверх всей страницы, какой бы контекст наложения ни окружал ее триггер. `z-index` у `.cdk-overlay-container` больше не задает порядок панелей относительно фиксированных и липких элементов приложения, поэтому его переопределение ни на что не влияет. Приложение, которое на это полагалось, отключает popover через `OVERLAY_DEFAULT_CONFIG` из `@angular/cdk/overlay`:
+
+```typescript
+import { OVERLAY_DEFAULT_CONFIG } from '@angular/cdk/overlay';
+
+bootstrapApplication(AppComponent, {
+    providers: [{ provide: OVERLAY_DEFAULT_CONFIG, useValue: { usePopover: false } }]
+});
+```
+
+#### Цвет как сигнал
+
+`color` директивы `KbqColorDirective` стал записываемым сигналом, как и `color` всех компонентов на ее основе: кнопок, чекбокса, переключателя, радиокнопок, иконок, поля формы, подсказок, кнопки очистки, прогресс-бара и спиннера, тега. Привязка `[color]` не изменилась.
+
+- **Чтение — вызов, запись — `.set()`**: `icon.color()`, `button.color.set(KbqComponentColors.Theme)`. Цвет, заданный в коде, как и присвоенный раньше, держится, пока не изменится привязка `[color]`.
+- **Незаданный или пустой `[color]` дает цвет компонента по умолчанию**, `kbq-empty`, если его нет, а не отсутствие класса цвета.
+- **Наследник больше не может переопределить геттер и сеттер `color`.** Задавайте цвет по умолчанию через `setDefaultColor()`, а не присваиванием `color` в конструкторе. `_color` удален, `defaultColor` стал сигналом, а `KbqColorDirective` принимает тип цвета параметром: у кнопок это `KbqColorDirective<KbqButtonColor>`. `CanColor` удален: типизируйте член как `Signal<KbqComponentColors | string>` или используйте `KbqColorDirective`.
+
+Схематик `color-signals` переписывает чтения и записи и сообщает о наследниках:
+
+```bash
+ng g @koobiq/components:color-signals --project "<your project>"
+```
+
+#### Удаленные миксины
+
+`mixinDisabled` и `mixinTabIndex` удалены из `@koobiq/components/core` вместе с `CanDisable`, `CanDisableCtor`, `HasTabIndex` и `HasTabIndexCtor`. Они были устаревшими и внутри библиотеки не использовались: объявите `disabled` и `tabIndex` инпутами самого класса. Схематик `core-mixins-removal` сообщает о каждом использовании:
+
+```bash
+ng g @koobiq/components:core-mixins-removal --project "<your project>"
+```
+
+#### Опции
+
+`KbqOption`, `KbqOptgroup`, действие опции и `KbqTimezoneOption` хранят состояние в сигналах `input()`. Состояние опции по-прежнему читается как свойство — `event.option.value`, `select.selected.disabled`, `option.viewValue` в шаблоне `kbqSelectTagContent`, — поэтому такие чтения не меняются.
+
+- **Программной записи больше нет**: `option.value`, `viewValue`, `disabled`, `showCheckbox` и `KbqTimezoneOption.timezone` задаются привязкой в шаблоне.
+- **`KbqOptgroup.disabled` и `KbqOptionActionComponent.disabled` стали сигналами**: `group.disabled()`.
+- **`KbqOption.stateChanges` больше не срабатывает на `disabled`**, а `textElement` типизирован как `ElementRef | undefined`.
+
+Схематик `option-signals` переписывает чтения у группы и действия и сообщает о записях:
+
+```bash
+ng g @koobiq/components:option-signals --project "<your project>"
+```
+
+#### Числовое поле и тип поля ввода
+
+`KbqNumberInput.value`, `KbqNumberInput.disabled` и `KbqInput.type` стали сигналами `input()` с геттером для чтения: чтение не меняется, а программная запись больше не компилируется. Задавайте `[value]`, `[disabled]` и `[type]` привязкой или пишите через контрол формы. Схематик `input-signals` сообщает о каждой записи:
+
+```bash
+ng g @koobiq/components:input-signals --project "<your project>"
+```
+
+#### Список
+
+Инпуты `KbqListSelection` и `KbqListOption` стали сигналами `input()` с геттером для чтения: чтение не меняется, а программная запись больше не компилируется. Задавайте их привязкой в шаблоне, а список отключайте через контрол формы. `KbqListOption.selected` и `KbqListSelection.multipleMode` по-прежнему доступны для записи. Схематик `list-signals` сообщает о каждой записи:
+
+```bash
+ng g @koobiq/components:list-signals --project "<your project>"
+```
+
+#### Чекбокс, переключатель, радиокнопки, группа кнопок, кнопки, иконки, поиск и всплывающие элементы
+
+Их инпуты стали сигналами `input()` с именем `<член>Input`, а `ngOnChanges` передает значение в прежний член: чтение и запись `checkbox.checked`, `button.disabled`, `icon.iconName` или `tooltip.content` работают как раньше. То же относится к триггерам тултипа, поповера, поповера подтверждения, переключателя приложений и центра уведомлений, к переключателю видимости пароля и к сокращению текста посередине, а также к тегам, загрузке файлов, элементу аккордеона, пункту панели навигации, уведомлению и боковой панели. Исключение — член, который другая миграция перевела на сигнал, например `color` (см. «Цвет как сигнал») или члены тегов и состояние поля формы у списка тегов (см. «Tags»).
+
+- **Наследник**, реализующий `ngOnChanges`, вызывает `super.ngOnChanges(changes)`, а наследник, который объявлял свой `@Input()`, переопределяет сигнал `<член>Input`, например `iconNameInput`.
+- **Булев инпут** принимает в шаблоне `boolean | string | null | undefined`, а не любое значение.
+- **`KbqPopUp.elementRef` стал защищенным геттером.** Панель, которая отрисовывает собственный элемент, переопределяет его поверх `viewChild()`, а не объявляет поле заново через `@ViewChild`.
+
+Схематик `signal-inputs-subclasses` сообщает о каждом наследнике:
+
+```bash
+ng g @koobiq/components:signal-inputs-subclasses --project "<your project>"
+```
+
+#### Поле с датой
+
+Инпуты `KbqDatepicker`, `KbqDatepickerInput`, `KbqDatepickerToggleIconComponent`, `KbqCalendar`, `KbqCalendarHeader` и `KbqMonthView` стали сигналами `input()` с именем `<член>Input`, а `ngOnChanges` передает значение в прежний член: чтение и запись `datepicker.opened`, `datepicker.startAt`, `input.min` или `calendar.minDate` работают как раньше. Исключение — состояние поля формы у `KbqDatepickerInput`: `value`, `id`, `placeholder`, `focused`, `empty`, `required`, `disabled` и `errorState` стали сигналами, их мигрирует `form-field-signals` (см. «Ревью поля формы (21.0.0)»).
+
+- **Наследник**, реализующий `ngOnChanges`, помечает его `override` и вызывает `super.ngOnChanges(changes)`, а наследник, который объявлял свой `@Input()`, переопределяет сигнал `<член>Input`, например `minInput`.
+- **`SimpleChanges`, переданный в `ngOnChanges` вручную**, использует ключи `<член>Input`: `minDateInput`, а не `minDate`.
+- **Булев инпут** — `hasBackdrop`, `disabled` и `opened` — принимает в шаблоне `boolean | string | null | undefined`.
+
+Схематик `datepicker-signals` сообщает о каждом наследнике и каждом прямом вызове `ngOnChanges`:
+
+```bash
+ng g @koobiq/components:datepicker-signals --project "<your project>"
+```
+
+**Без сервиса локали плейсхолдер называет формат, который принимает поле.** Раньше он всегда был из `ru-RU`, в какой бы локали ни разбирал дату адаптер. Теперь он следует адаптеру дат самого поля — `KBQ_DATE_LOCALE` (если токен не предоставлен — `LOCALE_ID` Angular), в том числе заданному на компоненте: с `en-US` по умолчанию это `yyyy-mm-dd`; для локали, строк которой библиотека не поставляет, и для формата, заданного через `KBQ_DATE_FORMATS`, это сам формат, например `yyyy/mm/dd`. Чтобы вернуть прежний, задайте `[placeholder]` или передайте его в `kbqDatepickerLocaleConfigurationProvider()`. С сервисом локали ничего не меняется.
+
+#### Вкладки
+
+Инпуты `KbqTabGroup`, `KbqTab`, `KbqTabNavBar`, `KbqTabLink`, а также заголовка, меток и тел внутри группы вкладок стали сигналами `input()` с именем `<член>Input`, а `ngOnChanges` передает значение в прежний член: чтение и запись `tabGroup.selectedIndex`, `tabGroup.headerPosition`, `tab.disabled` или `tabLink.active` работают как раньше. Их запросы стали сигнальными запросами за геттерами: `KbqTabGroup.tabs` и `KbqTabNavBar.items` остаются `QueryList`, и их `changes` срабатывают как раньше.
+
+- **Наследник**, реализующий `ngOnChanges`, помечает его `override` и вызывает `super.ngOnChanges(changes)`, а наследник, который объявлял свой `@Input()`, переопределяет сигнал `<член>Input`, например `headerPositionInput`. Запрос, который наследник объявлял заново через `@ContentChildren` или `@ViewChild`, — `tabs`, `items`, `templateLabel` — переопределяется геттером.
+- **`SimpleChanges`, переданный в `ngOnChanges` вручную**, использует ключи `<член>Input`: `disabledInput`, а не `disabled`.
+- **Булев инпут** — `disabled`, `active`, `vertical`, `disablePagination` — принимает в шаблоне `boolean | string | null | undefined`.
+- **Привязанное значение `undefined`** возвращает члену значение по умолчанию, а не оставляет прежнее: `headerPosition` становится `'above'`, `animationDuration` — длительностью из `KBQ_TABS_CONFIG`, `tooltipTitle` — `''`, булев инпут — `false`, `selectedIndex` выбирает первую доступную вкладку, а `KbqTabLink` получает `tabIndex` `0` и сгенерированный `id`.
+- **`KbqTab.templateLabel` следует за `kbqTabLabel` в содержимом вкладки**: когда его убирают, вкладка показывает текстовую метку, а не удаленный шаблон.
+
+Схематик `tabs-signals-and-aria` сообщает о каждом наследнике и каждом прямом вызове `ngOnChanges`:
+
+```bash
+ng g @koobiq/components:tabs-signals-and-aria --project "<your project>"
+```
+
+#### Списки запросов
+
+`options` у `KbqSelect`, `KbqAutocomplete` и `KbqListSelection`, `tags` у `KbqSelect` и `KbqTagList`, `KbqListItem.lines`, `KbqRadioGroup.radios`, `KbqTreeSelection.unorderedOptions`, `focusableItems` у `KbqNavbar` и `KbqVerticalNavbar`, а также `textElement` у `KbqTag` и `KbqDropdownItem` стали геттерами поверх сигнальных запросов. Их типы не изменились — это `QueryList`, чей `changes` срабатывает как раньше, или `ElementRef`, — поэтому чтение работает как раньше. До инициализации содержимого `QueryList` пуст, а не равен `undefined`.
+
+- **Наследник**, который объявлял один из них заново через декоратор запроса или как поле, убирает это объявление или переопределяет геттер.
+- **Запись** в любой из них больше не компилируется: элементы задаются в шаблоне.
+- **`KbqCodeBlock.tabLinkTemplate`**, защищенный член, стал сигналом: наследник читает `this.tabLinkTemplate()`.
+
+Схематик `query-list-signals` сообщает о каждом повторном объявлении и каждой записи:
+
+```bash
+ng g @koobiq/components:query-list-signals --project "<your project>"
+```
+
+#### Состояние как сигналы
+
+Состояние, которое компоненты и сервисы отдают для чтения, стало сигналом — раньше это был `BehaviorSubject`, `Observable` или обычное поле. Потоки, сообщающие о событиях, остались observable.
+
+| Член                                                                                                                     | Был                                   | Стал                                         |
+| ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------- | -------------------------------------------- |
+| `silentMode`, `loadingMode`, `errorMode`, `loadingMore`, `loadMoreErrorMode`, `hasMore` у `KbqNotificationCenterService` | `BehaviorSubject<boolean>`            | `Signal<boolean>`, пишется методами `set…()` |
+| `unreadItemsCounter` у `KbqNotificationCenterService` и `KbqNotificationCenterTrigger`                                   | `Observable<string>`                  | `Signal<string>`                             |
+| `KbqNotificationCenterService.groupedItems`                                                                              | `Observable<KbqNotificationsGroup[]>` | `Signal<KbqNotificationsGroup[]>`            |
+| `hovered`, `focused` у `KbqToastService` и `KbqToastComponent`                                                           | `BehaviorSubject<boolean>`            | `Signal<boolean>`                            |
+| `filteredOptions` у `KbqFilters`, `KbqPipeSelectComponent` и `KbqPipeMultiSelectComponent`                               | `Observable`                          | `Signal` только для чтения                   |
+| `KbqSelect.hiddenItems`                                                                                                  | `number`                              | `Signal<number>`, как у `KbqTreeSelect`      |
+| `KbqSearchExpandable.value`                                                                                              | `BehaviorSubject<string>`             | `WritableSignal<string>`                     |
+| `hovered` у `KbqPopUp` и `KbqPopUpTrigger`: подсказки, popover, центр уведомлений и переключатель приложений             | `BehaviorSubject<boolean>`            | `Signal<boolean>`                            |
+
+- **Чтение** — вызовом: `service.silentMode()`, `trigger.unreadItemsCounter()` вместо `.value`, `.getValue()` или `| async`. Где поток все же нужен, оберните сигнал в `toObservable()` из `@angular/core/rxjs-interop`.
+- **Запись**: флаги центра уведомлений меняются их методами `set…()`, значение поиска — через `value.set()`; остальные сигналы только для чтения.
+- **`KbqNotificationCenterService.changes`** больше не срабатывает в момент подписки: обработчик, который на это рассчитывал, один раз вызывается сам перед подпиской.
+- **`KbqFilters.filteredOptions`** теперь следует и за изменением входа `filters`.
+- **Триггер всплывающего элемента больше не помечает свое представление** при открытии и закрытии: OnPush-представление, которое показывает собственное поле, записанное из подписки на `visibleChange`, оформленной в коде, само вызывает `markForCheck()` или хранит поле в сигнале. Для output, привязанного в шаблоне, ничего делать не нужно.
+- **Геттер поверх сигнала отслеживается при чтении.** `isOpen` триггеров всплывающих элементов, `opened` у `KbqDropdownTrigger`, `KbqDatepicker` и `KbqSidebar`, `panelOpen` у `KbqSelect`, `KbqTreeSelect` и `KbqAutocompleteTrigger`, `expanded` у `KbqAccordionItem`, `isOpened` у `KbqSearchExpandable`, `selected` у опций, `selectedIndex` у `KbqTabGroup` и `isActive` у `KbqTab` сохранили тип, но прочитанные внутри `effect()` или `computed()` подписывают его на это состояние: эффект, который открывает или закрывает компонент в зависимости от такого геттера, читает его через `untracked()`. Команды компонентов — `open()`, `close()`, `toggle()`, `select()`, `writeValue()` и подобные — не читают ничего, на что подписался бы вызвавший их эффект.
+- **Числовой вход, привязанный к `undefined` или `null`,** возвращается к значению по умолчанию, а не становится `NaN`: `tabIndex` у `kbq-checkbox`, `kbq-toggle`, `kbq-radio-button`, `kbq-search-expandable` и `kbqTabLink` равен `0` (ссылка вкладки больше не выводит `tabindex="NaN"`), `selectedIndex` у `kbq-tab-group` выбирает первую доступную вкладку, `offset` у `kbqAppSwitcher` принимает отступ по умолчанию, а `tabIndex` у `kbq-list-selection` и `kbq-tree-selection` возвращает позицию обхода по умолчанию (`0`, или `-1` без опций). Так же обрабатывается значение, которое не является конечным числом.
+- **Уход фокуса по Tab из списка, списка тегов или дерева не трогает `tabIndex`.** `kbq-list-selection`, `kbq-tag-list` и `kbq-tree-selection` убирают себя из порядка обхода только в DOM, поэтому `tabIndex` не меняется, пока фокус уходит, а затем возвращают ту позицию обхода, которую выводят. Список тегов с полем ввода снова остаётся без `tabindex`, а не с `-1`, а дерево сохраняет привязанный `[tabIndex]` при изменении показанных узлов.
+- **Наследник** `KbqToastComponent`, `KbqPopUp` или `KbqPopUpTrigger` задает состояние наведения защищенным методом `setHovered()`; наследник `KbqPipeSelectComponent` убирает вызов `super.ngOnInit()`, а наследник `KbqDatepickerToggleIconComponent` — вызовы `super.ngAfterContentInit()` и `super.ngOnDestroy()`: классы их больше не реализуют. Защищенные `isListMode`, `showStartCalendar` и `showEndCalendar` пайпов дат стали сигналами.
+- **`KbqFileItem`** сохраняет subject-ы `loading` и `progress`, которые обновляет приложение.
+
+Схематик `v21-upgrade` сообщает об этих чтениях, записях и вызовах `super`:
+
+```bash
+ng g @koobiq/components:v21-upgrade --project "<your project>"
+```
+
+### Удаление устаревших API (21.0.0)
+
+API, устаревшие в 20.x, удалены в 21.0.0: и те, чья пометка обещала удаление в следующем мажорном релизе, и те, что были помечены без срока. Переименованный член или псевдоним переписывает схематик `v21-upgrade`; об остальном он сообщает с указанием файла и замены.
+
+#### Accordion
+
+| Удалено                               | Что использовать                                                                        | Миграция   |
+| ------------------------------------- | --------------------------------------------------------------------------------------- | ---------- |
+| класс `kbq-accordion-trigger__action` | элемент `kbq-accordion-header__actions` рядом с триггером внутри `kbq-accordion-header` | сообщается |
+
+Действие внутри триггера — это фокусируемый элемент внутри `role="button"`, поэтому действия выносятся из триггера — см. [Интерактивные элементы](/ru/components/accordion/overview#интерактивные-элементы). `v21-upgrade` сообщает о классе в шаблонах, стилях и коде.
+
+#### Code block и icon button
+
+| Удалено                                         | Что использовать                  | Миграция     |
+| ----------------------------------------------- | --------------------------------- | ------------ |
+| `canLoad` у `<kbq-code-block>`                  | `canDownload`                     | переписывает |
+| `codeFiles` у `<kbq-code-block>`                | `files`                           | переписывает |
+| `KbqCodeBlock.canLoadInput` / `.codeFilesInput` | `canDownload()` / `files()`       | сообщает     |
+| `KbqCodeBlock.scrollableCodeContent`            | `scrollTo(options)`               | сообщает     |
+| `small` у icon button                           | `size="compact"`                  | переписывает |
+| класс `kbq-icon-button_small`                   | `kbq-icon-button_compact`         | переписывает |
+| `KbqIconButton.small`                           | `size` (`'compact'` / `'normal'`) | сообщает     |
+
+Псевдонимы больше не подставляются вместо замен: о `<kbq-code-block>`, у которого привязаны и `canLoad`, и `canDownload` либо и `codeFiles`, и `files`, схематик сообщает, и каждую пару нужно свести к одной привязке. Так же он сообщает о `<kbq-code-block>`, у которого дважды привязан `canDownload` или `files`: в это миграция 20.0.0 превращала такую пару, а действует только последняя привязка. Привязка `[small]="expr"` становится `[size]="(expr) ? 'compact' : 'normal'"`. Атрибут `small` без значения никогда не действовал, потому что у входа не было булевой трансформации; о нём схематик сообщает, как и о статическом `small` с любым значением, кроме `"true"`, — такой делал кнопку компактной.
+
+#### Core
+
+| Удалено                                | Что использовать                                                                  | Миграция                    |
+| -------------------------------------- | --------------------------------------------------------------------------------- | --------------------------- |
+| `KbqThemeSelector.Default`             | `KbqThemeSelector.Light`                                                          | переписывается              |
+| `KbqThemeNames.Default`                | `KbqThemeNames.Light`                                                             | переписывается              |
+| `KbqDefaultThemes`                     | `KBQ_DEFAULT_THEMES`                                                              | переписывается              |
+| `KbqTheme`                             | `KbqThemeConfig`: `colorScheme` обязателен, `selected` нет                        | переписывается и сообщается |
+| `ThemeService`                         | `KbqThemeService`                                                                 | сообщается                  |
+| `ThemeService.current` / `.getTheme()` | сигнал `currentTheme()`                                                           | сообщается                  |
+| `ThemeService.themes`                  | `themes()` / `setThemes()`                                                        | сообщается                  |
+| `ThemeService.setTheme(theme)`         | `setMode(theme.colorScheme)` или `selectTheme(theme.name)`, чтобы закрепить тему  | сообщается                  |
+| `getOptionScrollPosition()`            | `KbqOption.focus()` или `kbqFocusAndReveal(element)`: оба прокручивают к элементу | сообщается                  |
+
+`v21-upgrade` сообщает о `ThemeService` и `getOptionScrollPosition` там, где они импортированы из `@koobiq/components/core`, и о каждом файле, где упомянут `KbqTheme`. Задайте каждой своей теме `colorScheme` и сравнивайте тему с `currentTheme()` вместо чтения `selected`. В отличие от `ThemeService`, `KbqThemeService` применяет тему сразу после внедрения и стартует в режиме `'auto'`: приложение, которое при старте вызывало `setTheme()`, чтобы задать тему, теперь задаёт `kbqThemeProvider({ mode: 'light' })`. Остальное о сервисе — в ревью сервиса темизации ниже.
+
+#### Dropdown и select
+
+| Удалено                                                            | Что использовать                                                                                         | Миграция       |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- | -------------- |
+| `KbqDropdown.triggerWidth`, `KbqDropdownPanel.triggerWidth`        | `KbqDropdownTrigger.widthOrigin` — чтобы панель совпадала по ширине не с триггером, а с другим элементом | сообщается     |
+| `offsetY` у `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect`      | CSS-переменная `--kbq-connected-overlay-gap` на `:root` или на панели оверлея                            | сообщается     |
+| `AUTOCOMPLETE_PANEL_HEIGHT`                                        | своя константа: высоту панели ограничивает `--kbq-autocomplete-size-panel-max-height`                    | сообщается     |
+| `DropdownPositionX` / `DropdownPositionY`                          | `KbqDropdownPositionX` / `KbqDropdownPositionY`                                                          | переписывается |
+| `KbqSelectPanelWidth`, `KbqTreeSelectPanelWidth`                   | `KbqPanelWidth` из `@koobiq/components/core`                                                             | переписывается |
+| `clearValue()` у `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect` | вложенный `<kbq-cleaner />`; из кода — сброс привязанного контрола формы                                 | сообщается     |
+| класс `kbq-dropdown__group-header_small`                           | `<kbq-optgroup label="…" />`, `KbqOptgroup` из `@koobiq/components/core`                                 | сообщается     |
+
+Ни один из удалённых членов не был входом, поэтому в шаблонах они не привязываются, а из `triggerWidth`, `offsetY` и `AUTOCOMPLETE_PANEL_HEIGHT` действовал только `offsetY` у `kbq-timezone-select`: он сдвигал панель. `v21-upgrade` сообщает о `.triggerWidth` в файле, где используется dropdown, о `triggerWidth` в реализации `KbqDropdownPanel`, о `.offsetY` в файле, где используется один из селектов, и о поле `offsetY` в их наследнике; вход `offsetY` у `KbqDropdownTrigger` остаётся. Типы позиций миграция переименовывает в файле, где упомянут `@koobiq/components/dropdown`, а типы ширины панели переводит на импорт из ядра; о типах позиций в других файлах, об импорте под псевдонимом и о реэкспорте она сообщает. О `.clearValue` она сообщает в файле, где используется один из селектов, кроме вызовов на `this` и на form field, у которого `clearValue()` остаётся; как и cleaner, метод оставлял выбранными опции, которые сохраняет `clearPredicate`, а сброс контрола снимает все. `<kbq-optgroup>` рисует подзаголовок удалённого модификатора внутри dropdown; сам `kbq-dropdown__group-header` остаётся.
+
+#### Filter bar
+
+| Удалено                               | Что использовать                                                                                            | Миграция                                  |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| `KbqFilterBarRefresher`               | `KbqFilterRefresher`                                                                                        | переписывается                            |
+| `KbqFilterBar.changes`                | чтение `filter()` внутри `effect()` или выход `(filterChange)`: из `changes` ничего не приходило            | сообщается                                |
+| `KbqPipeMinWidth` (`kbqPipeMinWidth`) | ничего: пайп раскладывает имя и значение по сжимаемым колонкам сетки, и короткая часть и так остаётся целой | удаляется; о других обращениях сообщается |
+| `KbqPipe.required`                    | `cleanable: false` и `removable: false`: `KbqFilterBar` никогда не читал `required`                         | сообщается                                |
+
+`v21-upgrade` сообщает о `.changes` в файле, где упомянут `KbqFilterBar`. Он удаляет `KbqPipeMinWidth` из импорта `@koobiq/components/filter-bar` и из массивов `imports`, а атрибут `kbqPipeMinWidth` — из шаблонов, и сообщает об остальных обращениях к директиве. Он сообщает о чтении `data.required` в своём пайпе, а о ключе `required` — только в объектном литерале, где есть и `cleanable`, `removable` или `type: KbqPipeTypes.…`: ключи `required` конфигураций форм и валидаторов в том же файле не затрагиваются.
+
+#### Form field
+
+| Удалено                                                        | Что использовать                                                          | Миграция   |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------- | ---------- |
+| `KbqPasswordHint` (`<kbq-password-hint>`)                      | `KbqReactivePasswordHint` (`<kbq-reactive-password-hint [hasError]="…">`) | сообщается |
+| `PasswordRules`                                                | `PasswordValidators` из `@koobiq/components/core` или свой `ValidatorFn`  | сообщается |
+| `regExpPasswordValidator`                                      | `Validators.pattern` или свой `ValidatorFn`                               | сообщается |
+| `hasPasswordStrengthError()`                                   | ошибки контрола                                                           | сообщается |
+| ошибка `passwordStrength`, которую поле формы ставило контролу | ошибки валидаторов пароля                                                 | сообщается |
+| `KbqFormField.passwordHints` / `.hasPasswordHint`              | `viewChildren(KbqReactivePasswordHint)`                                   | сообщается |
+| `KbqInputPassword.checkRules()` / `.checkRule`                 | `control.updateValueAndValidity()` после замены валидаторов               | сообщается |
+| `KbqFormField.canCleanerClearByEsc`                            | ничего: свойство не использовалось                                        | сообщается |
+| `KbqFormField.onKeyDown()`                                     | ничего: метод ничего не делал                                             | сообщается |
+| `KbqStepper.connectTo()`                                       | ничего: `KbqStepper` сам находит числовое поле в своём `kbq-form-field`   | сообщается |
+
+`KbqReactivePasswordHint` показывает то состояние, которое ему передали: задайте каждое правило как валидатор контрола и привяжите `[hasError]` к его ошибке, например `control.hasError('minLength')`. Аналогов `[rule]`, `[min]`, `[max]`, `[regex]`, `[checkRule]` и `[viewFormField]` у него нет, поэтому размещайте подсказку внутри `kbq-form-field` — так поле связывает её с контролом через `aria-describedby`. `v21-upgrade` сообщает о первых четырёх API там, где они импортированы из `@koobiq/components/form-field`, о `<kbq-password-hint>` и его классах в шаблонах и стилях, о проверке ошибки `passwordStrength`, о `.passwordHints`, `.hasPasswordHint` и `.onKeyDown()` у поля формы, о каждом `canCleanerClearByEsc`, о `checkRules()` в файле, где используется `KbqInputPassword`, и о `connectTo()` в файле, где используется `KbqStepper`.
+
+#### Checkbox и toggle
+
+`KbqCheckbox` и `KbqToggleComponent` больше не реализуют `ControlValueAccessor`. У обоих его уже реализовывала хост-директива `KbqCheckable`, поэтому формы их собственные члены не вызывали; `[(ngModel)]` и `[formControl]` работают как прежде.
+
+| Удалено                                                 | Что использовать                                | Миграция       |
+| ------------------------------------------------------- | ----------------------------------------------- | -------------- |
+| `KbqCheckbox` / `KbqToggleComponent.writeValue()`       | `checked = !!value`                             | сообщается     |
+| `.setDisabledState()` у обоих                           | `disabled = isDisabled`                         | сообщается     |
+| `.registerOnChange()` у обоих                           | выход `(change)`                                | сообщается     |
+| `.registerOnTouched()` у обоих                          | состояние `touched` привязанного контрола       | сообщается     |
+| `KbqCheckbox.onTouched`                                 | ничего: он никогда не вызывался                 | сообщается     |
+| `KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR`                   | ничего: `KbqCheckable` регистрируется сам       | сообщается     |
+| `TransitionCheckState` из `@koobiq/components/checkbox` | то же перечисление из `@koobiq/components/core` | переписывается |
+
+`v21-upgrade` сообщает о таких обращениях в файле, где упомянут любой из классов или его тег, кроме вызовов на `this`. Если вызов нужно сохранить, его можно адресовать хост-директиве: `viewChild(KbqCheckbox, { read: KbqCheckable })`, где `KbqCheckable` берётся из `@koobiq/components/core`. `TransitionCheckState` он переносит из импорта `@koobiq/components/checkbox` в импорт `@koobiq/components/core`, а об импорте под другим именем, реэкспорте и чтении через импорт пространства имён чекбокса сообщает.
+
+`KbqToggleComponent.onLabelTextChange()` теперь ничего не делает, устарел и будет удален в 22.0.0: удалите вызов. `v21-upgrade` сообщает о нем.
+
+Защищенное поле `KbqToggleComponent.currentCheckState` стало `Signal<TransitionCheckState>`, общим с хост-директивой `KbqCheckable`: наследник читает его как `currentCheckState()` и меняет через сеттеры `checked` и `indeterminate`. `v21-upgrade` сообщает о чтении без вызова в наследнике.
+
+#### Navbar, ellipsis center и description list
+
+| Удалено                                   | Что использовать                                                                                              | Миграция               |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| `longTitle` у `kbq-navbar-brand`          | ничего: бренд сам переключается на заголовок в две строки, когда название не помещается в одну                | удаляется и сообщается |
+| `KbqNavbarBrand.longTitle` в коде         | ничего                                                                                                        | сообщается             |
+| `KbqNavbarItem.getTitleWidth()`           | `getOuterElementWidth()` у `KbqNavbarTitle` пункта; сама панель сворачивает пункты по `getCollapsibleWidth()` | сообщается             |
+| `KbqNavbarTitle.outerElementWidth`        | `getOuterElementWidth()`                                                                                      | сообщается             |
+| `KbqEllipsisCenterDirective.resizeStream` | ничего: общий `ResizeObserver` сам пересчитывает размеры                                                      | сообщается             |
+| `minWidth` у `<kbq-dl>`                   | `verticalBreakpoint`                                                                                          | переписывается         |
+| `KbqDlComponent.minWidth` в коде          | `verticalBreakpoint()`                                                                                        | сообщается             |
+
+`[longTitle]="true"` включал компактный заголовок даже для помещающегося названия, а `false` оставлял обычный для непомещающегося; замены у них нет. `outerElementWidth` хранил ширину, измеренную один раз при инициализации, и нужен был только `getTitleWidth()`. `minWidth` имел приоритет над `verticalBreakpoint`, поэтому у `<kbq-dl>`, где заданы оба, `minWidth` остаётся, и схематик о нём сообщает: перенесите значение в `verticalBreakpoint`. Если `[minWidth]` получал `null` или `undefined`, решение оставалось за `verticalBreakpoint`, а `[verticalBreakpoint]` с таким значением никогда не переключает список в вертикальный вид, поэтому привязывайте число. `v21-upgrade` сообщает о каждом переименованном `minWidth`, значение которого — не числовой литерал.
+
+#### Триггер popover
+
+Входы триггера без префикса `kbqPopover` удалены из `KbqPopoverTrigger` и `KbqPopoverConfirmTrigger`. Свойства, которые они задавали, — `defaultPaddings`, `container`, `hasBackdrop`, `hasCloseButton`, `closeOnScroll` и `backdropClass` — остаются публичными, поэтому код, который их читает или записывает, по-прежнему компилируется.
+
+| Удалено                                          | Что использовать                                                       | Миграция       |
+| ------------------------------------------------ | ---------------------------------------------------------------------- | -------------- |
+| вход `hideIfNotInViewPort`                       | `kbqPopoverHideIfNotInViewPort`                                        | переписывается |
+| вход `defaultPaddings`                           | `kbqPopoverDefaultPaddings`                                            | переписывается |
+| вход `container`                                 | `kbqPopoverContainer`                                                  | переписывается |
+| вход `hasBackdrop`                               | `kbqPopoverHasBackdrop`                                                | переписывается |
+| вход `hasCloseButton`                            | `kbqPopoverHasCloseButton`                                             | переписывается |
+| вход `closeOnScroll`                             | `kbqPopoverCloseOnScroll`                                              | переписывается |
+| вход `backdropClass`                             | `kbqPopoverBackdropClass`                                              | переписывается |
+| `KbqPopoverTrigger.hideIfNotInViewPort` (сигнал) | `popoverHideIfNotInViewPort()`                                         | сообщается     |
+| `getKbqPopoverInvalidPositionError()`            | ничего: о неверном размещении выводится предупреждение и берётся `top` | сообщается     |
+
+`v21-upgrade` переписывает привязки, статические атрибуты и атрибуты без значения только на элементе с `kbqPopover` или `kbqPopoverConfirm`: у других компонентов, например у dropdown и select, есть входы с теми же именами. Он сообщает о записи `hostDirectives` с `KbqPopoverTrigger`, которая открывает удалённый вход; открывайте вместо него вход с префиксом, например `'kbqPopoverHasBackdrop: hasBackdrop'`.
+
+#### Стили и темы
+
+| Удалено                                                                                              | Что использовать                                                                                                 | Миграция                                |
+| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| аргументы `koobiq-theme()`, `koobiq-typography()` и `kbq-core-theme()`                               | ничего: они игнорировались                                                                                       | удаляются; с вложенными `()` сообщается |
+| `kbq-contrast()`, `kbq-palette()`, `kbq-color()`                                                     | CSS-переменные темы, например `var(--kbq-foreground-contrast)`                                                   | сообщается                              |
+| `kbq-typography-config()`                                                                            | CSS-переменные `--kbq-typography-*`                                                                              | сообщается                              |
+| `@koobiq/components/core/styles/tokens`                                                              | модули, которые он пробрасывал: `@koobiq/design-tokens/web/variables`, `palette`, `typography` и `md-typography` | сообщается                              |
+| `prebuilt-themes/light-theme.css`, `prebuilt-themes/dark-theme.css`                                  | `prebuilt-themes/theme.css`                                                                                      | переписывается                          |
+| классы `md-h1`…`md-h6`, `md-body`, `md-body-mono`, `md-caption`, `md-table-cell` и `md-table-header` | класс `kbq-md-` с тем же именем, например `kbq-md-h1`                                                            | переписывается, сообщается              |
+
+Светлый и тёмный файлы были копиями `theme.css`, в котором есть обе темы. `v21-upgrade` переписывает их в таблицах стилей, коде, шаблонах и `styles` в `angular.json` и оставляет один `theme.css` там, где подключались оба. Карту темы, собранную только для передачи в `koobiq-theme()`, например `kbq-light-theme($tokens)`, можно удалить вместе с аргументом: `kbq-light-theme()` и `kbq-dark-theme()` устарели и будут удалены в 22.0.0, потому что их карту библиотека не читает. Вместо неё используйте CSS-переменные темы, например `var(--kbq-foreground-contrast)`; схематик сообщает об обеих функциях. Классы markdown переписываются в атрибутах `class`, привязках `[class.…]` и селекторах; о любой другой строке, например `classList.add('md-h1')` или `[ngClass]`, схематик сообщает.
+
+#### Tag input
+
+Валидация принадлежит контролу `<kbq-tag-list>`, поэтому члены поля ввода тегов, связанные с валидацией, удалены. `[formControl]` или `[ngModel]` на `<input kbqTagInputFor>` работают как прежде: через них `kbqAutocomplete` управляет полем ввода.
+
+| Удалено                           | Что использовать                                                                              | Миграция   |
+| --------------------------------- | --------------------------------------------------------------------------------------------- | ---------- |
+| `KbqTagInput.ngControl`           | контрол, который вы привязали к полю ввода                                                    | сообщается |
+| `KbqTagInput.triggerValidation()` | ничего: метод ничего не делал, а контрол списка тегов перепроверяет себя при каждом изменении | сообщается |
+| `KbqTagTextControl.ngControl`     | ничего: библиотека его не читала                                                              | —          |
+
+`v21-upgrade` сообщает о таких обращениях в файле, где упомянут `KbqTagInput` или привязан его `exportAs`, кроме обращений на `this`, а также о наследнике `KbqTagInput`, который упоминает любой из этих членов. `KbqTagTextControl` не экспортируется, а контрол, который передаётся в `KbqTagList.registerInput()` и по-прежнему объявляет `ngControl`, компилируется: свойство было необязательным.
+
+#### Контейнер toast
+
+| Удалено                                          | Что использовать                                                              | Миграция       |
+| ------------------------------------------------ | ----------------------------------------------------------------------------- | -------------- |
+| `--kbq-toast-stack-size-margin-top`              | `--kbq-toast-stack-size-margin-vertical`                                      | переписывается |
+| `--kbq-toast-stack-size-margin-right`            | `--kbq-toast-stack-size-margin-horizontal`                                    | переписывается |
+| `KbqToastContainerComponent.dispatchScrollEvent` | ничего: контейнер сам сообщает о перестроении стека через `elementScrolled()` | сообщается     |
+
+Удалённые свойства и раньше задавали оба края: `-top` задавал и нижний отступ стека внизу экрана, а `-right` — левый отступ стека слева. `v21-upgrade` переименовывает их в стилях, шаблонах и коде и сообщает о файле, где объявлены и удалённое, и новое имя: раньше побеждало новое, после переименования всё решает каскад.
+
+#### Tree option
+
+| Удалено                                            | Что использовать                                      | Миграция   |
+| -------------------------------------------------- | ----------------------------------------------------- | ---------- |
+| `KbqTreeOptionChange.isUserInput`                  | ничего: дерево его не задавало, значение было `false` | сообщается |
+| второй аргумент конструктора `KbqTreeOptionChange` | ничего: `new KbqTreeOptionChange(option)`             | сообщается |
+
+Проверка `isUserInput` у события опции дерева никогда не проходила: удалите её вместе с веткой, которую она охраняла. `v21-upgrade` сообщает о `.isUserInput` в файле, где упомянут `KbqTreeOptionChange`, о `$event.isUserInput` в привязке к выходу `<kbq-tree-option>` и о втором аргументе конструктора или вызова `super()` в наследнике. `isUserInput` у `KbqOptionSelectionChange` и у `KbqTreeSelectChange` остаётся.
+
+| Устарело, удаление в 22.0.0                      | Что использовать                                     | Миграция       |
+| ------------------------------------------------ | ---------------------------------------------------- | -------------- |
+| `(onSelectAll)` у `<kbq-tree-selection>`         | `(selectAllChange)`                                  | переписывается |
+| `(onCopy)` у `<kbq-tree-selection>`              | `(copyChange)`                                       | переписывается |
+| `(onSelectionChange)` у `<kbq-tree-option>`      | `(selectionChange)`                                  | переписывается |
+| `KbqTreeSelection.onSelectAll`, `.onCopy` в коде | `selectAllChange`, `copyChange`                      | сообщается     |
+| `KbqTreeOption.onSelectionChange` в коде         | `selectionChange`                                    | сообщается     |
+| `KbqTreeNode.mostRecentTreeNode`                 | запрос узлов, например `viewChildren(KbqTreeOption)` | сообщается     |
+
+Замены выдают те же события. Выходы `onSelectAll` и `onCopy` у `kbq-list-selection` и выход `onSelectAll` у `kbq-tree-select` не устарели и остаются.
+
+#### Запуск миграции
+
+Схематик `v21-upgrade` зарегистрирован для 21.0.0, поэтому `ng update` до этой версии запускает его:
+
+```bash
+ng g @koobiq/components:v21-upgrade --project "<your project>"
+```
+
+С `--fix false` он только сообщает, что изменил бы.
+
+### Удаление ThemePalette (21.0.0)
+
+`ThemePalette` удален из `@koobiq/components/core`: цвета, которые поддерживают компоненты, описывает `KbqComponentColors`.
+
+| Удалено                                                   | Что использовать                                                        | Миграция       |
+| --------------------------------------------------------- | ----------------------------------------------------------------------- | -------------- |
+| `ThemePalette.Error`, `.Warning`, `.Success`              | `KbqComponentColors.Error`, `.Warning`, `.Success`                      | переписывается |
+| `ThemePalette.Primary`, `.Secondary`, `.Info`, `.Default` | без цвета или член `KbqComponentColors`, который поддерживает компонент | сообщается     |
+| `ThemePalette.Empty`                                      | не задавать `color`                                                     | сообщается     |
+| тип `ThemePalette`                                        | `KbqComponentColors`                                                    | сообщается     |
+
+У `Error`, `Warning` и `Success` в обоих перечислениях одни и те же значения, поэтому замена ничего не меняет на экране. `Primary`, `Secondary` (`Default` — его псевдоним) и `Info` ставят класс `kbq-primary`, `kbq-secondary` или `kbq-info`, который не стилизует ни один компонент, поэтому такой компонент рисовался без своих цветовых правил; без цвета он берет цвет по умолчанию. `Empty` — это `''`, при нем компонент тоже берет цвет по умолчанию, а `KbqComponentColors.Empty` — это `'empty'`, отдельный цвет: не заменяйте одно другим.
+
+`v21-upgrade` переписывает три члена и удаляет импорт `ThemePalette`, когда он больше нигде не упоминается. Об остальных использованиях в файле, который импортирует `ThemePalette` из `@koobiq/components/core`, схематик сообщает — в том числе о поле, через которое шаблон получает перечисление. Реэкспорт `ThemePalette` из `@koobiq/components/core` остается как есть, и схематик о нем сообщает: у `KbqComponentColors` другие члены и значения, поэтому реэкспортируйте его под собственным именем и перенесите файлы, которые импортируют `ThemePalette` через этот реэкспорт.
+
+### Удаление неиспользуемого API core (21.0.0)
+
+Из `@koobiq/components/core` удалены недокументированные экспорты, члены и Sass, которыми библиотека не пользовалась. Устаревшими они не помечались: в основном это остатки удаленных возможностей или детали реализации, попавшие в публичный API.
+
+| Удалено                                                                                                              | Что использовать                                                                                                                                                                                               | Миграция       |
+| -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
+| `POSITION_MAP`, `EXTENDED_OVERLAY_POSITIONS`, `POSITION_PRIORITY_STRATEGY`, двенадцать списков `*_POSITION_PRIORITY` | `kbqPlacement` у триггера; нужное значение скопируйте                                                                                                                                                          | сообщается     |
+| `ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT`, `SELECT_PANEL_VIEWPORT_PADDING`, `NUMBER_FORMAT_REGEXP`, `isWithin()`         | собственное значение или функция                                                                                                                                                                               | сообщается     |
+| `KBQ_SELECT_SCROLL_STRATEGY_PROVIDER`                                                                                | ничего: у `KBQ_SELECT_SCROLL_STRATEGY` есть значение по умолчанию в root; чтобы его изменить, предоставьте сам токен                                                                                           | сообщается     |
+| `KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR`                                                                               | ничего: `KbqCheckable` регистрирует себя сам                                                                                                                                                                   | сообщается     |
+| `KbqHover`                                                                                                           | `(mouseenter)` и `(mouseleave)` или `:hover`                                                                                                                                                                   | сообщается     |
+| `CanColor`                                                                                                           | `Signal<KbqComponentColors \| string>` или `KbqColorDirective`                                                                                                                                                 | сообщается     |
+| `KbqAnimationCurves`, `KbqAnimationDurations`                                                                        | собственные константы: анимации библиотеки теперь на CSS                                                                                                                                                       | сообщается     |
+| `KbqRectangleItem`, `countGroupLabelsBeforeOption()`                                                                 | без замены                                                                                                                                                                                                     | сообщается     |
+| `KbqPopUp.markForCheck()`                                                                                            | ничего после `updateClassMap()` или смены `visibility`: они сами перерисовывают всплывающий элемент; для другого поля — `changeDetectorRef.markForCheck()` в наследнике, `instance.detectChanges()` в триггере | сообщается     |
+| `KbqPopUp.warning`, `.handleBodyInteraction()`, защищенное `closeOnInteraction`                                      | без замены: `warning` ничего не делал, `handleBodyInteraction()` никто не вызывал, а `closeOnInteraction` проверял только он                                                                                   | сообщается     |
+| `KbqDecimalPipe.isSpecialFormatForRULocale()`, `KbqRoundDecimalPipe.roundingOptions`                                 | теперь закрыты: аргументы пайпа и конфигурация локали для форматирования                                                                                                                                       | сообщается     |
+| `KbqFormElement.isRow`                                                                                               | класс `kbq-form__row` у элемента                                                                                                                                                                               | сообщается     |
+| `KbqLineSetter` и классы `kbq-2-line`, `kbq-3-line`, `kbq-multi-line` у пункта списка                                | ничего: их не читал ни один стиль; строки считает `KbqListItem.lines`                                                                                                                                          | сообщается     |
+| атрибут `mcListIcon` у пункта списка                                                                                 | `kbq-list-icon`                                                                                                                                                                                                | переписывается |
+| атрибут `mcLine`                                                                                                     | `kbq-line`                                                                                                                                                                                                     | переписывается |
+
+Удаленный Sass доступен только по глубокому импорту: `@koobiq/components` ничего из него не пробрасывает.
+
+- модули `core/styles/functions` (его индекс, `number` и `string`), `typography/typography-utils`, `common/clearfix` и `common/popup`;
+- `kbq-markdown-typography-config()`, геттеры `typography-utils` (`kbq-typography-level()`, `kbq-font-size()`…), `popup-params`, `input-placeholder`, `rtl-value()` и `kbq-typography-css-variables`;
+- переменные функций плавности из `core/styles/functions/timing`, кроме `$ease-out-circ`, `$ease-in-out-quad` и `$ease-in-out-circ`.
+
+Для типографики используйте CSS-переменные `--kbq-typography-*` или `kbq-typography-level-to-styles-css-variables()` из `core/styles/common/tokens`, остальное скопируйте в свои стили. `v21-upgrade` сообщает о каждой загрузке и каждом использовании. Из скомпилированного CSS также ушли префиксы для браузеров, которые библиотека не поддерживает: `-ms-text-size-adjust`, `-ms-overflow-style`, `-moz-` и `-ms-user-select`, старые значения `display` для flexbox и копия `.layout-fill` в `@-moz-document`.
+
+#### Устаревшее, удаление в 22.0.0
+
+Задокументированный API core, у которого есть замена, вместо удаления помечен устаревшим; `v21-upgrade` сообщает о каждом использовании:
+
+| Устарело                                                                                                     | Что использовать                                                                                             |
+| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| беспрефиксные пайпы дат (`absoluteLongDate`…`durationShort`), их варианты `ImpurePipe` и `BaseFormatterPipe` | пайп `kbq*` того же формата с теми же аргументами, например `kbqAbsoluteLongDate`: он учитывает смену локали |
+| пайп `mcHighlight` (`KbqHighlightPipe`)                                                                      | `kbqHighlightBold` (`KbqHighlightBoldPipe`)                                                                  |
+| `isDigit()`                                                                                                  | `isNumberKey()`                                                                                              |
+| `isBoolean()`                                                                                                | `typeof value === 'boolean'`                                                                                 |
+| `KbqMeasureScrollbarService`                                                                                 | `element.offsetWidth - element.clientWidth` у прокручиваемого элемента                                       |
+| `FocusKeyManager.getFocusOrigin()`                                                                           | источник, переданный в `setFocusOrigin()`                                                                    |
+| `dateInput` в конфигурации локали datepicker                                                                 | `KBQ_DATE_FORMATS`: `dateInput` никто не читает                                                              |
+
 ### Контейнер оверлея панели действий (21.0.0)
 
 {/* migration-step-components(actions-panel) */}
@@ -338,7 +799,7 @@ ng g @koobiq/components:actions-panel-overlay-container --project "<your project
 
 {/* migration-step-components(splitter) */}
 
-`@koobiq/components/splitter` теперь отдаёт переписанный splitter: он раскладывает панели через CSS grid и добавляет ограничения размеров, сворачивание, точки прилипания, работу с клавиатуры и ARIA-шаблон `separator`. Прежняя реализация — `KbqSplitterComponent`, `KbqSplitterAreaDirective`, `KbqGutterDirective`, `KbqGutterGhostDirective`, `KbqSplitterModule` и перечисление `Direction` — переехала в `@koobiq/components/splitter/deprecated` без единого изменения и будет удалена в одной из следующих мажорных версий.
+`@koobiq/components/splitter` теперь отдаёт переписанный splitter: он раскладывает панели через CSS grid и добавляет ограничения размеров, сворачивание, точки прилипания, работу с клавиатуры и ARIA-шаблон `separator`. Прежняя реализация — `KbqSplitterComponent`, `KbqSplitterAreaDirective`, `KbqGutterDirective`, `KbqGutterGhostDirective`, `KbqSplitterModule` и перечисление `Direction` — переехала в `@koobiq/components/splitter/deprecated` без единого изменения и будет удалена в 22.0.0.
 
 **Большинство старых импортов ломается громко.** `KbqSplitterComponent`, `KbqSplitterAreaDirective`, `KbqGutterDirective`, `KbqGutterGhostDirective` и `Direction` живут только по пути `/deprecated`, поэтому сборка останавливается на `TS2305: … has no exported member`.
 
@@ -364,7 +825,7 @@ ng g @koobiq/components:splitter-deprecated-path --project "<your project>"
 
 Механизм удалён целиком: инпут, токен, класс и правило в стилях. Он работал с контейнером, а не с отдельными оверлеями, поэтому не мог понизить одну панель, не понизив вместе с ней все остальные оверлеи — модалки, sidepanel'ы, тосты и тултипы, — и делал это от имени того компонента, который открылся первым.
 
-**Теперь контейнер оверлеев всегда остаётся на `z-index: 1000`, поэтому панели показываются поверх `kbq-navbar` и `kbq-top-bar`, а не уезжают под них.**
+**Теперь панели показываются поверх `kbq-navbar` и `kbq-top-bar`, а не уезжают под них.** Они открываются в верхнем слое браузера (см. «Оверлеи в верхнем слое» в шаге обновления до Angular 21); с `usePopover: false` контейнер оверлеев остаётся на `z-index: 1000`, выше шапок на `990`.
 
 #### Запуск миграции
 
@@ -436,6 +897,7 @@ export class MyTrigger {
 | `header` / `footer`                                                                 | свойства              | удалены                                                                  |
 | `KbqAppSwitcherComponent.isTrapFocus` / `updateTrapFocus()`                         | публичный API         | удалены                                                                  |
 | `KbqAppSwitcherDropdownApp.getIcon()`                                               | публичный метод       | удалён                                                                   |
+| `KbqAppSwitcherComponent.activeSite` / `activeApp`                                  | защищённые            | удалены: контекст шаблона `kbqDropdownContent` выпадающего меню          |
 | `KbqAppSwitcherListItem.collapsed`                                                  | свойство              | `ModelSignal<boolean>`                                                   |
 | Инпуты `app` / `site` у `KbqAppSwitcherListItem` / `-DropdownApp` / `-DropdownSite` | необязательные инпуты | обязательные сигналы `input.required`                                    |
 
@@ -481,6 +943,8 @@ ng g @koobiq/components:app-switcher-signals --project "<your project>"
 **`header` / `footer`**: удалены. Всплывающая панель их никогда не показывала: значение просто уезжало в оверлей и терялось — строку нужно удалить.
 
 **`isTrapFocus` / `updateTrapFocus()`**: удалены из `KbqAppSwitcherComponent`. Его шаблон никогда не привязывал `[cdkTrapFocus]`, поэтому они ничего не делали.
+
+**`activeSite` / `activeApp`** у наследника `KbqAppSwitcherComponent`: удалены. Каждое выпадающее меню другого сайта или группы берёт сайт и приложение из контекста своего шаблона `kbqDropdownContent`, который заполняет `kbqDropdownTriggerData`.
 
 **`KbqAppSwitcherDropdownApp.getIcon()`**: удалён. Инлайновую разметку очищает `KbqAppSwitcherIconSanitizer`, а отрисовывает сам компонент.
 
@@ -744,32 +1208,38 @@ group.emitChangeEvent(toggle);
 
 **`valueChange` больше не повторяет только что присвоенное значение.** Событие отправляется, когда значение группы действительно меняется, а не на каждую запись: присвоение того, что группа уже сообщает, или того, что она возвращает без изменений, не отправляет ничего. Именно это не даёт перезаписать двустороннюю привязку. Код, использовавший `(valueChange)` как признак «было присвоение», и тест, считающий отправки во время инициализации, нужно перепроверить — `(change)` по-прежнему отправляется на каждое действие пользователя.
 
+**Смена `value` у выбранной кнопки меняет значение группы.** Группа следует за ним и сообщает его через `valueChange`, так что `[(value)]` остаётся согласованным; контрол формы сохраняет своё значение, пока пользователь не выберет кнопку, как при любом изменении из кода.
+
 **Группа реализует `OnDestroy` и больше не отправляет события после разрушения.** Выбранная кнопка планирует своё удаление из выборки в микрозадаче, которая раньше переживала группу и доходила до неё с `valueChange` уже после того, как вся группа была уничтожена. Теперь группа игнорирует такую запоздавшую синхронизацию. Тест, проверявший прежнюю отправку, и код, который на неё опирался при очистке после разрушенной группы, нужно перепроверить.
 
 **Стили.** Цвет рамки при фокусе с клавиатуры задаёт только тема, из токена `--kbq-button-toggle-item-states-focused-outline`; структурные стили больше не объявляют его из сырого `--kbq-states-line-focus-theme`, поэтому переопределение токена компонента работает независимо от порядка импортов. Тема также перестала обращаться к классу `.kbq-icon-button`, который `KbqButton` никогда не выставлял, — вместо него используется `.kbq-button-icon`.
 
 ### Ревью поля формы (21.0.0)
 
-{/* migration-step-components(form-field, input, select) */}
+{/* migration-step-components(form-field, input, select, textarea, tree-select, timezone, tag-list, timepicker, datepicker) */}
 
 Ревью `<kbq-form-field>` завершило перевод контейнера и семейства подсказок на сигналы, дало иконочным «крестику» и переключателю пароля настоящую семантику кнопки и удалило устаревший `mixinColor`. Большая часть изменений ломает сборку, но часть, связанная с доступностью, меняет разметку молча.
 
 **Контентные запросы и геттеры `has*` стали сигналами.** `control`, `stepper` и `connectionContainerRef` были сигналами и раньше — они не менялись; остальное переехало в этом релизе:
 
-| Член                                                                                                    | Было               | Стало                    |
-| ------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------ |
-| `cleaner`, `passwordToggle`                                                                             | `T \| null`        | `Signal<T \| undefined>` |
-| `hint`, `passwordHints`, `prefix`, `suffix`                                                             | `QueryList<T>`     | `Signal<readonly T[]>`   |
-| `hasCleaner`, `hasHint`, `hasPasswordHint`, `hasPasswordToggle`, `hasPrefix`, `hasStepper`, `hasSuffix` | геттер             | `Signal<boolean>`        |
-| `hasError`, `hasLabel`, `hasReactivePasswordHint`                                                       | `protected` геттер | `protected` сигнал       |
+| Член                                                                                 | Было               | Стало                    |
+| ------------------------------------------------------------------------------------ | ------------------ | ------------------------ |
+| `cleaner`, `passwordToggle`                                                          | `T \| null`        | `Signal<T \| undefined>` |
+| `hint`, `prefix`, `suffix`                                                           | `QueryList<T>`     | `Signal<readonly T[]>`   |
+| `hasCleaner`, `hasHint`, `hasPasswordToggle`, `hasPrefix`, `hasStepper`, `hasSuffix` | геттер             | `Signal<boolean>`        |
+| `hasError`, `hasLabel`, `hasReactivePasswordHint`                                    | `protected` геттер | `protected` сигнал       |
 
-**Инпуты подсказки стали сигналами.** `fillTextOff` и `compact` — теперь сигнальные инпуты у `KbqHint` и всего, что от него наследуется: `KbqError`, `KbqPasswordHint`, `KbqReactivePasswordHint`. `KbqPasswordHint.regex` стал `model()` — читается вызовом, пишется через `.set()`. Привязки в шаблоне (`[fillTextOff]`, `[compact]`, `[regex]`) не затронуты.
+`passwordHints` и `hasPasswordHint` удалены вместе с `KbqPasswordHint`: см. раздел Form field в «Удалении устаревших API (21.0.0)».
+
+**Инпуты подсказки стали сигналами.** `fillTextOff` и `compact` — теперь сигнальные инпуты у `KbqHint` и всего, что от него наследуется: `KbqError` и `KbqReactivePasswordHint`. Привязки в шаблоне (`[fillTextOff]`, `[compact]`) не затронуты.
 
 **«Крестик» и переключатель пароля теперь кнопки.** Оба были фокусируемыми картинками без роли и без доступного имени. `<kbq-cleaner>` рендерит `role="button"` и локализованный `aria-label` и срабатывает не только на <kbd>Enter</kbd>, но и на <kbd>Space</kbd>. Иконка переключателя рендерит `role="button"`, `aria-label`, зависящий от состояния («Показать пароль» / «Скрыть пароль»), и `aria-pressed`. Поскольку `aria-label` у «крестика» теперь задаётся привязкой на хосте, написанный вручную `[attr.aria-label]` перекрывается — его нужно перенести в новый инпут `[aria-label]`.
 
 **Поле формы описывает свой контрол.** Подсказки и ошибка связаны с контролом через `aria-describedby`, `kbq-error` рендерит `role="alert"`, а `KbqInput` / `KbqInputPassword` / `KbqSelect` — `aria-invalid` (у `KbqSelect` ещё и `aria-required`). Сборку это не ломает — меняется разметка.
 
 **`mixinColor` удалён.** Он был устаревшим, внутри библиотеки не использовался и на каждый экземпляр писал предупреждение в dev-режиме. Замена — `KbqColorDirective` с тем же инпутом `color`.
+
+**`KbqFormFieldControl` перешёл на сигналы.** Раньше поле формы перепроверяло свой контрол на каждое событие `stateChanges`. Теперь `value`, `id`, `placeholder`, `focused`, `empty`, `required`, `disabled` и `errorState` — сигналы, `stateChanges` удалён, а поле формы выводит своё состояние из них. Встроенные контролы тоже отдают это состояние сигналами: `KbqInput`, `KbqInputPassword`, `KbqTextarea`, `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect`, `KbqTagList`, `KbqTimepicker` и `KbqDatepickerInput`. Их `errorStateMatcher` — сигнальный инпут. Привязки в шаблоне (`[value]`, `[disabled]`, `[placeholder]`, `[required]`, `[id]`) не затронуты.
 
 #### Запуск миграции
 
@@ -808,9 +1278,9 @@ if (formField.hasCleaner() && formField.hint().length && hint.fillTextOff()) {
 <span>{{ field.hasHint() }}</span>
 ```
 
-Получатель определяется по явной аннотации типа (`KbqFormField`, `KbqHint`, `KbqError`, `KbqPasswordHint`, `KbqReactivePasswordHint`) — параметры, поля класса вместе с контентными запросами, параметры-свойства конструктора и типизированные локальные переменные.
+Получатель определяется по явной аннотации типа (`KbqFormField`, `KbqHint`, `KbqError`, `KbqReactivePasswordHint`) — параметры, поля класса вместе с контентными запросами, параметры-свойства конструктора и типизированные локальные переменные.
 
-**Записи в `KbqPasswordHint.regex` становятся `.set()`:** `hint.regex = /x/` → `hint.regex.set(/x/)`.
+**Чтения состояния контрола становятся вызовами**, а запись идёт через `.set()` там, где член остался записываемым: `disabled` у `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect`, `KbqTagList`, `KbqTimepicker` и `KbqDatepickerInput` (`select.disabled = true` → `select.disabled.set(true)`), `value` у `KbqInput`, `KbqInputPassword`, `KbqTextarea`, `KbqTagList`, `KbqSelect` и `KbqTimezoneSelect`. Значение, заданное селекту, выбирает его опции при следующем обнаружении изменений и не вызывает `valueChange`. Ссылочная переменная шаблона на `<kbq-select>`, `<kbq-tree-select>`, `<kbq-timezone-select>` или `<kbq-tag-list>` тоже мигрируется.
 
 **Доступное имя «крестика» переезжает в инпут:** `<kbq-cleaner [attr.aria-label]="label" />` → `<kbq-cleaner [aria-label]="label" />`.
 
@@ -818,35 +1288,67 @@ if (formField.hasCleaner() && formField.hint().length && hint.fillTextOff()) {
 
 #### Что нужно исправить вручную
 
-**API `QueryList` больше нет.** `hint`, `passwordHints`, `prefix` и `suffix` — сигналы над readonly-массивом, поэтому `.changes`, `.first`, `.last`, `.toArray()` и `.get(i)` отсутствуют. Реагируйте на запросы через `computed()` / `effect()` вместо подписки на `.changes`, а к элементам обращайтесь по индексу. Каждое вхождение выводится с именем файла.
+**API `QueryList` больше нет.** `hint`, `prefix` и `suffix` — сигналы над readonly-массивом, поэтому `.changes`, `.first`, `.last`, `.toArray()` и `.get(i)` отсутствуют. Реагируйте на запросы через `computed()` / `effect()` вместо подписки на `.changes`, а к элементам обращайтесь по индексу. Каждое вхождение выводится с именем файла.
 
 **`cleaner` и `passwordToggle` возвращают `undefined`, а не `null`.** Строгое сравнение `=== null` молча перестаёт срабатывать — используйте проверку на истинность или `== null`.
 
 **Присваивания в `fillTextOff` и `compact` больше не компилируются.** Это read-only сигнальные инпуты — задавайте их привязкой в шаблоне.
 
-**Присваивания в контент-запросы `KbqFormField` тоже больше не компилируются** — `cleaner`, `passwordToggle`, `hint`, `passwordHints`, `prefix` и `suffix` стали read-only сигналами. `cleaner` был записываемым только из-за внутреннего костыля, которого больше нет, а остальные были `QueryList`, которому в тестах присваивали заглушку, чтобы подменить спроецированный контент. Проецируйте контент в поле формы вместо присваивания.
+**Присваивания в контент-запросы `KbqFormField` тоже больше не компилируются** — `cleaner`, `passwordToggle`, `hint`, `prefix` и `suffix` стали read-only сигналами. `cleaner` был записываемым только из-за внутреннего костыля, которого больше нет, а остальные были `QueryList`, которому в тестах присваивали заглушку, чтобы подменить спроецированный контент. Проецируйте контент в поле формы вместо присваивания.
 
-**`KbqPasswordHint.icon` стал `protected`.** Выводите состояние из `checked` / `hasError`, а не из имени иконки.
+**`hovered` и `onHoverChanged()` удалены.** Их никто не читал, а их обработчики указателя запускали обнаружение изменений при каждом наведении. Привяжите `(mouseenter)` / `(mouseleave)` к `<kbq-form-field>` сами или стилизуйте через `:hover`. Каждое использование выводится с именем файла.
 
-**`KBQ_FORM_FIELD_REF.control` типизирован.** Раньше это был `any`, поэтому `formField.control.placeholder` компилировался и молча давал `undefined` — ровно такая ошибка и была в самой библиотеке. Сначала вызывайте сигнал: `formField.control().placeholder`.
+**`KBQ_FORM_FIELD_REF.control` типизирован.** Раньше это был `any`, поэтому `formField.control.placeholder` компилировался и молча давал `undefined` — ровно такая ошибка и была в самой библиотеке. Сначала вызывайте сигнал: `formField.control().placeholder()` — состояние контрола тоже сигнал.
+
+**Собственный контрол поля формы должен отдавать сигналы.** Объявите каждый член состояния как `Signal` — `input()`, `computed()` или `signal()`, который пишет сам контрол, — и уберите `stateChanges`: поле формы больше ни на что не подписывается. Код, подписанный на `control.stateChanges`, читает сигналы в `computed()` или `effect()`.
+
+```ts
+// Было
+export class ColorInput implements KbqFormFieldControl<string> {
+    readonly stateChanges = new Subject<void>();
+    focused = false;
+    // value, id, placeholder, empty, required, disabled и errorState — обычные свойства
+
+    onFocus() {
+        this.focused = true;
+        this.stateChanges.next();
+    }
+}
+
+// Стало
+export class ColorInput implements KbqFormFieldControl<string> {
+    private readonly focusedState = signal(false);
+    readonly focused = this.focusedState.asReadonly();
+    readonly placeholder = input<string>();
+    // value, id, empty, required, disabled и errorState — тоже сигналы
+
+    onFocus() {
+        this.focusedState.set(true);
+    }
+}
+```
+
+**Остальное состояние контрола доступно только для чтения.** Не компилируются присваивания в `placeholder`, `required` и `id`, а также в `disabled` у контролов на нативном элементе и в `value` у `KbqTreeSelect`, `KbqTimepicker` и `KbqDatepickerInput`: задавайте их привязкой в шаблоне, а значение — через контрол формы. Каждое присваивание выводится с именем файла.
+
+**`KbqInputPassword.elementType` стал сигналом только для чтения.** Раньше это была записываемая строка, теперь — `Signal<'text' | 'password'>`, и меняет его только `toggleType()`. Чтение становится вызовом — схематик переписывает `password.elementType` в `password.elementType()`, в том числе через `#ref="kbqInputPassword"`, — а присваивание больше не компилируется: чтобы показать или скрыть пароль, вызывайте `toggleType()`. Каждое присваивание выводится с именем файла.
+
+**Собственный `KBQ_INPUT_VALUE_ACCESSOR` или `KBQ_TEXTAREA_VALUE_ACCESSOR` может возвращать новый объект при каждом чтении `value`.** `KbqInput`, `KbqInputPassword` и `KbqTextarea` считают значение-объект изменившимся только вместе с изменением текста элемента; примитивное значение сравнивается как есть. Если возвращаемый объект меняется при неизменном тексте, передайте его через `value.set()` контрола.
+
+**Вместе с этим изменились помощники состояния ошибки.** `KbqErrorStateTracker` больше не принимает субъект `stateChanges`, а его `errorState` — как и `CanUpdateErrorState.errorState` — стал `Signal<boolean>`; `CanUpdateErrorState` больше не объявляет `errorStateMatcher`. Устаревшие `mixinErrorState` и `CanUpdateErrorStateCtor` удалены. `KbqIconErrorStateContext` тоже перешёл на сигналы, как и `id`, `placeholder`, `focused` и `empty` у `KbqTagInput`: их чтения становятся вызовами, о записи сообщается.
+
+`KbqInput`, `KbqInputPassword`, `KbqTextarea`, `KbqSelect`, `KbqTreeSelect` и `KbqTagList` вычисляют состояние ошибки этим трекером, который получает `defaultErrorStateMatcher`, `parentForm` и `parentFormGroup` при создании контрола: присваивание этих полей позже ни на что не влияет, поэтому предоставьте `ErrorStateMatcher` или привяжите `errorStateMatcher`. Матчер, вернувший `null` или `undefined`, даёт `false`.
+
+**`KbqDatepicker` больше не контрол поля формы.** Он предоставлял контракт, не реализуя его; теперь поле формы всегда находит поле ввода `kbqDatepicker`. Поле ввода теперь рендерит свой `id`, поэтому метка поля формы связана с ним.
 
 **Кастомным данным локали нужны ещё три ключа в `a11y`** — `clear`, `showPassword` и `hidePassword` — для доступных имён «крестика» и переключателя пароля. Литерал локали без них перестанет проходить проверку типов; данные, зарегистрированные через `KBQ_LOCALE_DATA`, откатятся на строки ru-RU.
-
-**Движок правил `KbqPasswordHint` устарел.** `PasswordRules`, `regExpPasswordValidator` и `hasPasswordStrengthError` будут удалены в следующем мажорном релизе — переходите на `KbqReactivePasswordHint`, который выводит состояние из валидаторов контрола. `regExpPasswordValidator` к тому же типизирован как `Partial<Record<PasswordRules, RegExp>>`, поэтому индексация даёт `RegExp | undefined`; записей для `Length` и `Custom` в нём и не было.
-
-**Три исправленные ошибки меняют поведение.** Провалившаяся проверка стойкости пароля вызывала `setErrors({ passwordStrength: true })`, стирая все остальные ошибки контрола, — теперь они объединяются. Подсказка с `PasswordRules.Length` сравнивала длину с `undefined`, поэтому пароль подходящей длины всегда считался неверным; границы теперь по умолчанию `0` и `Infinity`, а исключение бросается, только если не задан ни `min`, ни `max`. И подсказка теперь проверяет текущее значение контрола, а не ждёт, когда контрол окажется в фокусе со значением, отличным от последнего увиденного, — правило оставалось непроверенным для контрола, уже заполненного к моменту появления подсказки, то есть в обычной форме редактирования.
-
-**Снапшоты и тесты, ищущие узлы в DOM.** Помимо ARIA-атрибутов выше, у генерируемого id `KbqPasswordHint` сменился префикс — с `kbq-hint-N` на `kbq-password-hint-N`, чтобы он перестал совпадать с `KbqHint`. Полагаться на генерируемый id не стоит, но селекторы по нему перестанут срабатывать.
 
 **Стили, боровшиеся с `!important`.** `.kbq-form-field_no-borders` и `.kbq-form-field_in-overlay` использовали `!important`, чтобы перебить тему состояний; теперь они переопределяют токены `--kbq-form-field-*`. Итоговое значение то же, но переопределение, написанное специально ради победы над старым `!important`, можно упростить.
 
 ### Ревью сервиса темизации (21.0.0)
 
-`ThemeService` перешёл на сигналы, получил встроенный режим `auto`, следующий за темой ОС, и теперь сохраняет выбранный режим в `localStorage` из коробки. `ThemeService` продолжает работать под старым именем, а устаревшее поле `KbqTheme.selected` по-прежнему поддерживается в актуальном состоянии — ничего не сломается принудительно, но новый код стоит переводить на `KbqThemeService`.
+`KbqThemeService` заменяет `ThemeService`: его состояние — сигналы, у него есть встроенный режим `auto`, следующий за темой ОС, и он сохраняет выбор из коробки. `ThemeService`, `KbqTheme` и `KbqDefaultThemes` удалены в этом же релизе: что из этого переписывает и о чём сообщает `v21-upgrade`, описано в разделе Core в «Удалении устаревших API (21.0.0)».
 
-**Теперь это `KbqThemeService`.** `ThemeService` экспортируется как `@deprecated`-алиас `KbqThemeService` и будет удалён в одном из будущих мажорных релизов. Схематика `ng update` для переименования нет — замените импорт, когда будет удобно.
-
-**`current` (`BehaviorSubject<KbqTheme | null>`) устарел в пользу нескольких сигналов.** Он по-прежнему существует и остаётся синхронизирован, поэтому `current.value` и `current.pipe(...)` продолжают работать. `selection()` — сырое выбранное значение (`'auto'` либо имя конкретной темы); `auto()` — признак того, что сейчас выбран именно `'auto'`; `currentTheme()` — вычисленный объект `KbqTheme`, эквивалент `current.value`; `colorScheme()` — строго `'light' | 'dark'` полярность `currentTheme()`; используйте именно его, а не `name` темы, когда нужно узнать только светлая тема или тёмная (например, для CSS `light-dark()`).
+**`current` и `getTheme()` становятся сигналами.** `currentTheme()` — активный `KbqThemeConfig`, бывший `current.value`; `colorScheme()` — строго `'light' | 'dark'` полярность этой темы; используйте именно его, а не `name` темы, когда нужно узнать только светлая тема или тёмная (например, для CSS `light-dark()`); `mode()` — выбранный режим: `'light'`, `'dark'` или `'auto'`.
 
 ```ts
 // Было
@@ -856,13 +1358,13 @@ themeService.current.pipe(map((theme) => theme?.className)).subscribe(...);
 themeService.currentTheme(); // читайте напрямую, либо оберните в toObservable(), если нужен поток
 ```
 
-**`setTheme(index | theme)` устарел в пользу `selectTheme(name)`.** Выбор по индексу массива стал ненадёжным, как только `auto` перестал быть обычной зарегистрированной темой. `selectTheme(name)` выбирает любую зарегистрированную тему напрямую, включая встроенные `'light'`/`'dark'`; `setAuto()` и `toggle()` — два метода-помощника, оставленные для реально используемых в библиотеке случаев — `setLight()`/`setDark()` нет.
+**`setTheme(index | theme)` уступает место `setMode()` и `selectTheme()`.** Выбор по индексу массива стал ненадёжным, как только `auto` перестал быть обычной зарегистрированной темой. `setMode('light' | 'dark' | 'auto')` выбирает по полярности, а `toggle()` переключает светлую и тёмную. `selectTheme(name)` закрепляет одну зарегистрированную тему по имени поверх режима до вызова `selectTheme(null)`, `setMode()` или `toggle()`; закреплённое имя читает `staticTheme()`.
 
-**Режим `auto` теперь обрабатывается внутри сервиса.** Если вы сами читали `window.matchMedia('(prefers-color-scheme: …)')` и переопределяли `className` темы, чтобы сымитировать пункт «как в системе» (как раньше делала дока), теперь вызывайте `themeService.setAuto()` и читайте `currentTheme()`/`colorScheme()` — слушатель ОС и обновление DOM теперь внутри сервиса.
+**Режим `auto` теперь обрабатывается внутри сервиса.** Если вы сами читали `window.matchMedia('(prefers-color-scheme: …)')` и переопределяли `className` темы, чтобы сымитировать пункт «как в системе» (как раньше делала дока), теперь вызывайте `themeService.setMode('auto')` и читайте `currentTheme()`/`colorScheme()` — слушатель ОС и обновление DOM теперь внутри сервиса. `'auto'` — режим по умолчанию.
 
-**Сохранение выбора включено по умолчанию.** Выбор теперь сохраняется в `localStorage` (по умолчанию под ключом `kbq-theme-mode`) и восстанавливается при инициализации через токен `KBQ_THEME_STORE` — тот же паттерн подменяемого хранилища, что и у `KBQ_STATE_STORE`. Если вы сохраняли выбор под другим ключом (как дока — под `docs_theme`), настройте `kbqThemeProvider({ storageKey: '…' })` вместо того, чтобы это убирать — так пользователи не потеряют сохранённые настройки, **если старое значение уже было именем режима или темы**. Если раньше вы хранили что-то другое (индекс, булево значение, …), напишите небольшой `KbqThemeStore`, оборачивающий `KbqThemeLocalStorageStore` и преобразующий результат `getSelection()` — пример такого подхода: `DocsThemeStore` в `apps/docs/src/app/services/theme-store.ts`. Также доступен `KbqThemeCookieStore` — для приложений с живым Angular SSR, которым нужно, чтобы уже первый серверный рендер учитывал сохранённый выбор посетителя; сначала прочитайте его doc-комментарий — для статически собранного сайта он не поможет.
+**Сохранение выбора включено по умолчанию.** Режим и закреплённая тема сохраняются в `localStorage` (по умолчанию под ключом `kbq-theme-mode`) и восстанавливаются при инициализации через токен `KBQ_THEME_STORE` — тот же паттерн подменяемого хранилища, что и у `KBQ_STATE_STORE`. Если вы сохраняли выбор под другим ключом (как дока — под `docs_theme`), настройте `kbqThemeProvider({ storageKey: '…' })` вместо того, чтобы это убирать — так пользователи не потеряют сохранённые настройки, **если старое значение уже было режимом** (`'light'`, `'dark'` или `'auto'`). Если раньше вы хранили что-то другое (индекс, булево значение, …), напишите небольшой `KbqThemeStore`, оборачивающий `KbqThemeLocalStorageStore` и преобразующий то, что возвращает `getMode()`. Также доступен `KbqThemeCookieStore` — для приложений с живым Angular SSR, которым нужно, чтобы уже первый серверный рендер учитывал сохранённый выбор посетителя; сначала прочитайте его doc-комментарий — для статически собранного сайта он не поможет.
 
-**Кастомные темы и настройка через DI.** `setThemes()` по-прежнему принимает любой массив объектов `{ name, className, colorScheme? }` — `colorScheme` (`'light' | 'dark'`) необязателен: если задан, это собственная «полярность» темы, независимая от её `name`, и именно на неё опирается `colorScheme()` (а также `toggle()`); если не задан, `colorScheme()` для этой темы откатывается на предпочтение ОС. Новое: `kbqThemeProvider({ themes, mode, storageKey, autoLight, autoDark })` настраивает сервис через DI вместо императивных вызовов `setThemes()`/`setTheme()`. Активная тема всегда применяется как CSS-класс на `<body>` — от этого зависят стили `.kbq-light`/`.kbq-dark` дизайн-токенов, поэтому альтернативы через атрибут нет. `auto` разрешается в тему с именем `autoLight`/`autoDark` (по умолчанию `'light'`/`'dark'`) — задайте их, если ваш набор кастомных тем использует другие имена, иначе `auto` не совпадёт ни с одной зарегистрированной темой.
+**Кастомные темы и настройка через DI.** `setThemes()` принимает массив объектов `KbqThemeConfig` — `{ name, className, colorScheme }`. `colorScheme` (`'light' | 'dark'`) обязателен: это собственная «полярность» темы, независимая от её `name`, и режим разрешается в первую зарегистрированную тему с совпадающим `colorScheme`; на неё же опираются `colorScheme()` и `toggle()`. Новое: `kbqThemeProvider({ themes, mode, theme, storageKey })` настраивает сервис через DI вместо императивных вызовов `setThemes()`/`setTheme()`; `theme` закрепляет тему по имени, пока пользователь ничего не выбрал. Активная тема всегда применяется как CSS-класс на `<body>` — от этого зависят стили `.kbq-light`/`.kbq-dark` дизайн-токенов, поэтому альтернативы через атрибут нет.
 
 ### Явные слоты содержимого тегов (21.0.0)
 
@@ -932,7 +1434,7 @@ ng g @koobiq/components:tag-slots --project "<your project>" --fix=false
 
 {/* cspell:ignore addClassModificatorForIcons */}
 
-**Устаревшее императивное расположение и стили.** Замените вызовы `addClassModificatorForIcons()` явными slot-директивами, а пользовательские селекторы `.kbq-icon_left` — на `.kbq-tag-prefix`. Метод и старый селектор устарели и будут удалены в следующей мажорной версии.
+**Устаревшее императивное расположение и стили.** Замените вызовы `addClassModificatorForIcons()` явными slot-директивами, а пользовательские селекторы `.kbq-icon_left` — на `.kbq-tag-prefix`. Метод и старый селектор устарели и будут удалены в 22.0.0.
 
 ### Устаревание overlayscrollbars-реализации Scrollbar (21.0.0)
 
@@ -940,7 +1442,7 @@ ng g @koobiq/components:tag-slots --project "<your project>" --fix=false
 
 До 21.0.0 `@koobiq/components/scrollbar` оборачивал стороннюю библиотеку `overlayscrollbars`: компонент `KbqScrollbar` (`kbq-scrollbar` / `[kbq-scrollbar]`) и низкоуровневая директива `KbqScrollbarDirective` (`[kbqScrollbar]`) со входами `options`, `events`, `defer` и сырым доступом к `scrollbarInstance`.
 
-В 21.0.0 `@koobiq/components/scrollbar` — это новый, не зависящий от сторонних библиотек компонент `KbqScrollbar` с селектором `<kbq-scrollbar>` и другим публичным API. Прежняя реализация никуда не делась — она переехала без изменений в `@koobiq/components/scrollbar/deprecated` и будет удалена в одном из будущих мажорных релизов.
+В 21.0.0 `@koobiq/components/scrollbar` — это новый, не зависящий от сторонних библиотек компонент `KbqScrollbar` с селектором `<kbq-scrollbar>` и другим публичным API. Прежняя реализация никуда не делась — она переехала без изменений в `@koobiq/components/scrollbar/deprecated` и будет удалена в 22.0.0.
 
 #### Запуск миграции
 
@@ -981,6 +1483,24 @@ import { KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
 ```bash
 npm uninstall overlayscrollbars
 ```
+
+#### Класс kbq-scrollbar
+
+Глобальный класс `kbq-scrollbar`, который стилизует `koobiq-theme()`, и его переменные устарели и будут удалены в 22.0.0. Компоненты библиотеки этот класс больше не используют, поэтому переменные, заданные на `.kbq-scrollbar`, больше не доходят до полос прокрутки autocomplete, блока кода, загрузки файлов, markdown, модального окна, поповера, селекта, боковой панели, вкладок, textarea и tree-select. `v21-upgrade` сообщает о классе, `kbq-scrollbar-theme()` и переменных, которых нет у нового скроллбара.
+
+| Устарело, удаление в 22.0.0                                                                                                                                                                                         | Что использовать                                                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| класс `kbq-scrollbar`, `kbq-scrollbar-theme()`                                                                                                                                                                      | `kbqNativeScrollbar` на прокручиваемом элементе, с `kbqNativeScrollbarDescendants` для полос прокрутки внутри него, как делал класс, или `<kbq-scrollbar>` |
+| `--kbq-scrollbar-size-track-dimension`                                                                                                                                                                              | `--kbq-scrollbar-track-size`                                                                                                                               |
+| `--kbq-scrollbar-size-thumb-width`                                                                                                                                                                                  | `--kbq-scrollbar-thumb-gap`, отступ с каждой стороны ползунка: (размер дорожки - ширина ползунка) / 2                                                      |
+| `--kbq-scrollbar-size-thumb-min-size`                                                                                                                                                                               | `--kbq-scrollbar-thumb-min-size`                                                                                                                           |
+| `--kbq-scrollbar-size-thumb-border-radius`                                                                                                                                                                          | ничего: ползунок берёт `--kbq-size-border-radius`                                                                                                          |
+| `--kbq-scrollbar-thumb-default-background`, `--kbq-scrollbar-thumb-hover-background`, `--kbq-scrollbar-thumb-active-background`                                                                                     | те же переменные                                                                                                                                           |
+| `--kbq-scrollbar-thumb-disabled-background`                                                                                                                                                                         | ничего: у нового скроллбара нет неактивного состояния                                                                                                      |
+| `--kbq-scrollbar-track-default-background`, `--kbq-scrollbar-track-hover-background`, `--kbq-scrollbar-track-active-background`                                                                                     | ничего: класс их не читал; новый скроллбар закрашивает дорожку переменной `--kbq-scrollbar-track-background`                                               |
+| `--kbq-scrollbar-track-default-border`, `--kbq-scrollbar-track-hover-border`, `--kbq-scrollbar-track-active-border`, `--kbq-scrollbar-size-track-padding-vertical`, `--kbq-scrollbar-size-track-padding-horizontal` | ничего: класс их не читал                                                                                                                                  |
+
+Задавайте переменные на элементе с `kbqNativeScrollbar` или на `<kbq-scrollbar>`: значения по умолчанию объявлены на самом этом элементе, как и у класса.
 
 ### Типизация слоя локализации (21.0.0)
 
@@ -1036,11 +1556,13 @@ localeService.getParams('selection'); // не секция - теперь оши
 значения по умолчанию — `KBQ_<SECTION>_DEFAULT_LOCALE_CONFIGURATION`, функция переопределения —
 `kbq<Section>LocaleConfigurationProvider()`, тип — `Kbq<Section>LocaleConfiguration`. Поэтому `navbar`
 потерял `VERTICAL_`, которого не было в его типе, `input` — `NUMBER_`, а `sizeUnits` — свою функцию
-`kbqFilesizeFormatter…`. Имена, попавшие в релиз 20.x, сохранены как устаревшие псевдонимы; схематик
-переводит код на новые. Удалены совсем, потому что дублировали уже существующее имя:
-`KbqFilterBarConfiguration` и `KbqVerticalNavbarConfiguration` (используйте `KbqFilterBarLocaleConfiguration`
-и `KbqNavbarLocaleConfiguration`), устаревшие псевдонимы типов `Kbq*LocaleConfig` и
-`kbqInjectKbqClampedLocaleConfiguration`. Неиспользуемая секция локали `navbarIc` тоже удалена.
+`kbqFilesizeFormatter…`. Имена, попавшие в релиз 20.x, сохранены как устаревшие псевдонимы до 22.0.0; схематик
+переводит код на новые. О `KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION` он только сообщает: это не вся секция, а её
+срез `number` — читайте `KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION.number`, это тот же объект. Удалены совсем, без
+псевдонима, и переименовываются схематиком: `KbqFilterBarConfiguration` (теперь `KbqFilterBarLocaleConfiguration`),
+типы `Kbq*LocaleConfig` (теперь `Kbq*LocaleConfiguration`, а `KbqNumberInputLocaleConfig` стал
+`KbqInputNumberLocaleConfiguration`) и `kbqInjectKbqClampedLocaleConfiguration` (теперь
+`kbqInjectClampedTextLocaleConfiguration`). Неиспользуемая секция локали `navbarIc` тоже удалена.
 
 **Чтение и переопределение больше не делят одно слово.** Компонент разрешает свои строки в
 `localeConfiguration()` — это сигнал; раньше член назывался `configuration` у семи компонентов, и ещё у
@@ -1347,15 +1869,12 @@ if (codeBlock.maxHeight() > 0) { … }          // сравнение с NaN, н
 | `.softWrap` / `.viewAll` / `.canDownload`   | Читать как вызов - переписывается за вас                               |
 | `.files` / `.activeFileIndex` / `.hideTabs` | Читать как вызов - переписывается за вас                               |
 | `.softWrap = …`                             | `.softWrap.set(…)` - переписывается за вас; составная форма сообщается |
-| `.canLoad = …` / `.codeFiles = …`           | Привязать атрибут: оба стали backing-входами                           |
 | `.maxHeight()`                              | `?? 0` для обычного чтения либо явная обработка незаданного значения   |
 | `.file = …` у `KbqCodeBlockHighlight`       | Привязать `[file]`; значение теперь читается как `file()`              |
 
 **`max-height`, который применяется, пока `viewAll` выключен, стал `computed`.** Это был геттер, читаемый из привязки `[style.max-height.px]`, поэтому он пересчитывался только тогда, когда представление помечал грязным кто-то другой.
 
 **`hideTabs` возвращает привязанное значение, а `tabsHidden()` - то, что происходит с заголовком.** Правило «единственный файл без `filename` прячет панель» теперь выводится, а не записывается в `hideTabs`, поэтому чтение самого входа его больше не подмешивает. `tabsHidden` публичен именно ради этого чтения.
-
-**`canLoad` и `codeFiles` теперь подставляются, а не пишут.** Устаревшие алиасы писали в `canDownload` и `files`, поэтому побеждал тот из пары, который стоял в шаблоне позже. Теперь любой из двух атрибутов включает кнопку скачивания, а `codeFiles` применяется, пока `files` пуст.
 
 **`activeFileIndex` за пределами `files` показывает первый файл, а пустой `files` не показывает кода вообще.** Раньше оба случая доходили до `files[activeFileIndex]` и падали на неопределённом результате — хватало `<kbq-code-block />` или `[files]="[]"`. Сам индекс остаётся таким, каким его привязали: сброс писал `activeFileIndexChange` обратно в `[(activeFileIndex)]`, пока родитель ещё обновлялся, и тот получал не тот файл, а при другом порядке привязок — `NG0100`.
 
@@ -1369,11 +1888,11 @@ if (codeBlock.maxHeight() > 0) { … }          // сравнение с NaN, н
 
 {/* migration-subsection-components(dl) */}
 
-`KbqDlComponent` уже был полностью на сигналах, поэтому мигрировать в нём было нечего. Ревью нашло другое: пять входов, которым так и не досталось приведение типов, — рядом с соседями, у которых оно есть:
+`KbqDlComponent` уже был полностью на сигналах, поэтому мигрировать в нём было нечего. Ревью нашло другое: четыре входа, которым так и не досталось приведение типов, — рядом с соседями, у которых оно есть:
 
 ```ts
 readonly verticalBreakpoint = input(400, { transform: numberAttribute });
-readonly minWidth = input<number | undefined>();          // без трансформации
+readonly dtMinWidth = input<number | undefined>();        // без трансформации
 readonly wide = input(false);                              // без трансформации
 ```
 
@@ -1385,7 +1904,7 @@ readonly wide = input(false);                              // без транс�
 
 `vertical` трёхзначный: `null` означает «решай по `verticalBreakpoint`». `booleanAttribute` свернул бы это в `false`, поэтому используется трансформация, сохраняющая `null`.
 
-**`minWidth`, `dtMinWidth` и `ddMinWidth` стали числовыми входами** и возвращают `number | undefined` — именно это и содержал список без привязок. Числовой литерал ведёт себя ровно как раньше: `Math.max` приводит аргументы к числу, поэтому `<kbq-dl dtMinWidth="120">` давал `120` и до, и после изменения. Изменилось другое — значение, не являющееся конечным числом: `<kbq-dl dtMinWidth>` и `<kbq-dl dtMinWidth="abc">` раньше доходили до арифметики строкой и превращались в `0`, а теперь возвращают `undefined`, поэтому раскладка откатывается к измеренной ширине термина, а `?? fallback` на месте вызова срабатывает.
+**`dtMinWidth` и `ddMinWidth` стали числовыми входами** и возвращают `number | undefined` — именно это и содержал список без привязок. Числовой литерал ведёт себя ровно как раньше: `Math.max` приводит аргументы к числу, поэтому `<kbq-dl dtMinWidth="120">` давал `120` и до, и после изменения. Изменилось другое — значение, не являющееся конечным числом: `<kbq-dl dtMinWidth>` и `<kbq-dl dtMinWidth="abc">` раньше доходили до арифметики строкой и превращались в `0`, а теперь возвращают `undefined`, поэтому раскладка откатывается к измеренной ширине термина, а `?? fallback` на месте вызова срабатывает.
 
 **`dtWidth` стал записываемым сигналом вместо `model()`.** Это единственный числовой вход, чьё значение уходит обратно к потребителю через `[(dtWidth)]`, а `model()` не принимает `transform`, поэтому `dtWidth="120"` без приведения доходил до раскладки строкой: `setDtWidth` начинается с `Number.isFinite`, который для строки ложен, так что значение пропускало зажим по `dtMinWidth` и колонка могла нарисоваться уже собственного минимума. Теперь это вход с алиасом плюс `linkedSignal` и явный выход `dtWidthChange`. `[(dtWidth)]` не изменился, чтение и запись `dtWidth()` тоже; поправить нужно только код, который типизировал член как `ModelSignal<number | null>` - там теперь `WritableSignal<number | null>`. Значение, не являющееся конечным числом, читается как `null` - состояние, возвращающее пропорции колонок по умолчанию.
 
@@ -1441,6 +1960,8 @@ readonly wide = input(false);                              // без транс�
 - Фокус возвращается на триггер, только если на момент закрытия он всё ещё был внутри оверлея. Если вы нажали снаружи, фокус останется на том элементе, по которому вы нажали.
 - Клавиши Home и End двигают подсветку в выпадающем списке без поля поиска — раньше они прокручивали страницу.
 - Нажатие на элемент управления внутри `kbqDropdownFooter` больше не закрывает панель.
+- <kbd>Escape</kbd>, который уже обработал всплывающий элемент внутри панели, например подсказка усечённого пункта,
+  закрывает только его; следующий <kbd>Escape</kbd> закрывает выпадающее меню.
 - Отключённые элементы публикуют `aria-disabled`.
 - Соседний элемент, задетый указателем по пути к вложенному меню, остаётся с фоном по умолчанию. Правило для этого было и раньше, но его селектор не совпадал ни с чем.
 - `<kbq-dropdown>` сохраняет классы, которые не были перенесены на панель: вход `class` раньше очищал хост-элемент целиком, унося с собой и привязку `[class.x]` от другой директивы.
@@ -1471,7 +1992,7 @@ readonly wide = input(false);                              // без транс�
 | `panel.classList`                           | Теперь `protected`. Это один `computed`; свои классы задавайте через `class` на `<kbq-dropdown>`        |
 | Класс, реализующий `KbqDropdownPanel`       | Изменились все свойства. Необязательный `adoptItems` заменяет `items.reset(…)`, который вызывал триггер |
 
-На месте осталось одно свойство: `KbqDropdownItem.textElement` — это по-прежнему `@ViewChild`, потому что он реализует `KbqTitleTextRef`, а также его реализуют ещё пять компонентов.
+Одно свойство читается как раньше: `KbqDropdownItem.textElement` — это геттер с типом `ElementRef`, потому что он реализует `KbqTitleTextRef`, а также его реализуют ещё пять компонентов.
 
 `KbqOptionActionParent` в `@koobiq/components/core` описывает триггер структурно, поэтому TypeScript не сверяет его с настоящим классом. Здесь он приведён в соответствие: `restoreFocus` стал `WritableSignal<boolean>`, а `dropdownClosed` — `OutputRef<void>`. Тому, кто реализует этот контракт вручную, нужно сделать то же самое: расхождение проявится во время работы, а не при компиляции.
 
@@ -1555,6 +2076,8 @@ readonly wide = input(false);                              // без транс�
 
 #### Filter bar
 
+{/* migration-subsection-components(filter-bar) */}
+
 Поповер, который сохраняет и переименовывает фильтр, переработан вместе со строками вокруг него.
 
 **`filters.saveChanges` и `filters.saveAsNew` разделены.** Каждый ключ выполнял две роли: подпись пункта дропдауна и заголовок поповера, который этот пункт открывает. Теперь заголовок служит подписью поля названия, у которого нет своей метки, а в пункте дропдауна такая подпись читается неверно. Поэтому каждый ключ стал двумя:
@@ -1622,6 +2145,8 @@ readonly wide = input(false);                              // без транс�
 
 Ещё три изменения доходят до потребителя. `saved` и `canceled` стали публичными, поэтому на них можно подписаться из `viewChild(KbqInlineEdit)`. Панель читает `--kbq-inline-edit-panel-shadow` — токен, который она объявляла и сама же обходила, поэтому его переопределение теперь меняет тень. Приватные классы `.kbq-mask`, `.kbq-mask__fade` и `.kbq-mask__container` переименованы в `.kbq-inline-edit__menu-mask*`: прежние имена выглядели как общее пространство имён, хотя им не были.
 
+Пикеры даты и времени подчиняются тем же правилам: `cancel()` и `rollback()` восстанавливают пикер, привязанный через `[value]` или к контролу формы, а пикер, чей контрол формы отклоняет значение, блокирует сохранение, как и любой другой контрол.
+
 Закрывается схематиком `inline-edit-a11y-and-types`: чтения `modeAsReadonly` переписываются, остальное сообщается в отчёте.
 
 #### Input
@@ -1664,7 +2189,7 @@ readonly wide = input(false);                              // без транс�
 
 Мигрирует `input-number-surface`: переписывает чтения сигналов и сообщает об остальном. Схематика заменяет только у получателя, тип которого в файле указан как `KbqNumberInput`, и по ссылке на шаблон вида `#ref="kbqNumberInput"` — имена `min`, `max` и `step` слишком распространены, чтобы искать их по одному лишь имени свойства. Поэтому получатель с выведенным, а не записанным типом, чтение по индексу и разбор объекта на переменные остаются на вас.
 
-`KbqNumberInput.value` и `disabled` намеренно оставлены парами геттера и сеттера. Оба сеттера делают больше, чем сохраняют значение: `value` переформатирует поле и уведомляет `ControlValueAccessor`, `disabled` снимает фокус с элемента. `model()` не может перехватить запись, поэтому перевод любого из них потерял бы побочный эффект, на который рассчитывает внешняя привязка `[(value)]`.
+`KbqNumberInput.value` и `disabled` — геттеры только для чтения, а не `model()`: новое значение не просто сохраняется. Откуда бы оно ни пришло — из привязки `[value]` или `[disabled]` или от контрола формы, — директива переформатирует поле и отправляет `valueChange`, а для `disabled` отправляет `disabledChange` и при отключении снимает фокус с элемента.
 
 #### Icon
 
@@ -1674,18 +2199,18 @@ readonly wide = input(false);                              // без транс�
 <i kbq-icon="kbq-triangle-exclamation_16" role="img" aria-hidden="false" aria-label="Ошибка"></i>
 ```
 
-`kbq-icon-button` не скрывается никогда, а на элементе, который не является нативным `<button>` — это 129 из 180 мест использования в самом репозитории, — он добавляет недостающую семантику: `role="button"`, `aria-disabled` и активацию по Enter и Space. Если событие уже `defaultPrevented`, он не вмешивается, поэтому обработчик на том же элементе, вызывающий `preventDefault()`, остаётся единственным владельцем клавиши. В режиме разработки компонент предупреждает, если у него нет ни `aria-label`, ни `aria-labelledby`: глиф не даёт ему никакого доступного имени.
+`kbq-icon-button` по умолчанию не скрывается, а на элементе, который не является нативным `<button>` — это 129 из 180 мест использования в самом репозитории, — он добавляет недостающую семантику: `role="button"` и `aria-disabled`. Активацию по Enter и Space он не добавляет: привяжите `(keydown.enter)` и `(keydown.space)` рядом с `(click)`, вызывая `preventDefault()` для Space, чтобы страница не прокручивалась, или поставьте кнопку-иконку на `<button>`. В режиме разработки компонент предупреждает, если у него нет ни `aria-label`, ни `aria-labelledby`: глиф не даёт ему никакого доступного имени.
 
 **`contentChild(KbqIcon)` по-прежнему находит только «голую» иконку.** Метаданные хоста наследуются через `ɵɵInheritDefinitionFeature`, а DI-токены — нет, поэтому такой запрос проходит мимо кнопки-иконки и мимо icon-item, хотя оба несут класс `.kbq-icon`. Регистрацию наследников под этим токеном пробовали и откатили: кнопка-иконка — интерактивный элемент управления, а запросы такого рода ищут декоративную иконку, чтобы расположить или перекрасить её. Когда на такой запрос отвечала кнопка, `KbqAlert` отрисовывал пустой блок под иконку у закрываемого уведомления без статусной иконки и перекрашивал кнопку закрытия в цвет уведомления; когда отвечал icon-item, схлопывалась пара, по которой `KbqAlert` сообщает о двух спроецированных статусных иконках. Хост, которому нужны оба, запрашивает оба — так и делает `KbqAlert`.
 
-| Что было                        | Что делать вручную                                                            |
-| ------------------------------- | ----------------------------------------------------------------------------- |
-| `small` на обычном `[kbq-icon]` | Убрать — его никто не читал; `KbqIconButton.small` не затронут                |
-| `(keydown…)` на кнопке-иконке   | Вызвать `preventDefault()`, чтобы сохранить единоличную обработку клавиши     |
-| `[tabindex]` на кнопке-иконке   | `number \| null` вместо `any`; числовая строка по-прежнему приводится к числу |
-| `.name` у наследника `KbqIcon`  | Переопределять защищённый `appliesMaxHeight`                                  |
+| Что было                                                     | Что делать вручную                                                                 |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| `small` на `[kbq-icon]` или `[kbq-icon-item]`                | Убрать — его никто не читал; на кнопке-иконке `v21-upgrade` заменяет его на `size` |
+| `(click)` без `(keydown…)` на кнопке-иконке не на `<button>` | Привязать `(keydown.enter)` и `(keydown.space)` или использовать `<button>`        |
+| `[tabindex]` на кнопке-иконке                                | `number \| null` вместо `any`; числовая строка по-прежнему приводится к числу      |
+| `.name` у наследника `KbqIcon`                               | Переопределять защищённый `appliesMaxHeight`                                       |
 
-Три исправления, для которых мигрировать нечего. Поток разрешения SVG больше не завершается на первом неразрешённом имени — а конфигурация со шрифтовыми иконками по умолчанию гарантирует его на первом же кадре, — поэтому устаревший `<svg>` удаляется на ветке отката, встроенный `max-height` не только выставляется, но и сбрасывается, и элемент с меняющимся `[kbq-icon]` рисует именно ту иконку и того размера, которые у него запросили. `autoColor` стал реактивным: включение после инициализации подписывается, выключение сбрасывает `hasError`. И токены `--kbq-icon-*-color` больше не объявляются на `.kbq-icon`: они читаются с дизайн-токеном в качестве запасного значения `var()`, поэтому контейнер наконец может перекрасить иконки внутри себя — а чтение такого токена через `getComputedStyle` теперь возвращает пустую строку.
+Три исправления, для которых мигрировать нечего. Поток разрешения SVG больше не завершается на первом неразрешённом имени — а конфигурация со шрифтовыми иконками по умолчанию гарантирует его на первом же кадре, — поэтому устаревший `<svg>` удаляется на ветке отката, встроенный `max-height` не только выставляется, но и сбрасывается, и элемент с меняющимся `[kbq-icon]` рисует именно ту иконку и того размера, которые у него запросили. `autoColor` срабатывает, если его включить после инициализации, и снимает цвет ошибки, когда его выключают. И токены `--kbq-icon-*-color` больше не объявляются на `.kbq-icon`: они читаются с дизайн-токеном в качестве запасного значения `var()`, поэтому контейнер наконец может перекрасить иконки внутри себя — а чтение такого токена через `getComputedStyle` теперь возвращает пустую строку.
 
 Сообщает `icon-semantics-and-api`.
 
@@ -1729,7 +2254,9 @@ readonly wide = input(false);                              // без транс�
 
 `size` и `card` стали сигналами ещё в 20.2.0 и не изменились.
 
-Закрывается схематиком `loader-overlay-signals`: чтения `text` и `caption` переписываются, остальное сообщается в отчёте.
+**`transparent` и `card` устарели в пользу `surface`** и будут удалены в 22.0.0. Заданный `surface` важнее обоих: для прозрачного оверлея используйте `surface="bg"` (или `bg-secondary` / `bg-tertiary` — под то, что лежит под ним), для непрозрачного — `surface="solid"`, а вместо `card` — `surface="card"`. Оверлей без этих привязок по-прежнему отрисовывается как `surface="bg"`.
+
+Закрывается схематиком `loader-overlay-signals`: чтения `text` и `caption` переписываются, остальное сообщается в отчёте. О `transparent` и `card` сообщает `v21-upgrade`.
 
 #### Markdown
 
@@ -1779,7 +2306,7 @@ readonly wide = input(false);                              // без транс�
 
 `KbqModalService.create()` и `confirm()` больше не подставляют в опции пустой обработчик — без привязанного обработчика диалог сам отправляет событие и закрывается.
 
-**У <kbd>Escape</kbd> одна реализация на оба способа открытия.** Раньше клавиша обрабатывалась дважды: сервисный путь фильтровал по `kbqCloseByESC` и проходил через `kbqOnCancel`, но игнорировал отмену закрытия, а декларативный закрывал безусловно — не читая `kbqCloseByESC` вовсе и минуя `kbqOnCancel`. Теперь Escape — это кнопка «Отмена»: он учитывает `kbqCloseByESC`, и `kbqOnCancel`, вернувший `false`, его останавливает. Третья строка таблицы клавиш, «Отправка формы по нажатию Enter в любом текстовом инпуте», описывала поведение, которого никогда не было, и из руководства убрана.
+**У <kbd>Escape</kbd> одна реализация на оба способа открытия.** Раньше клавиша обрабатывалась дважды: сервисный путь фильтровал по `kbqCloseByESC` и проходил через `kbqOnCancel`, но игнорировал отмену закрытия, а декларативный закрывал безусловно — не читая `kbqCloseByESC` вовсе и минуя `kbqOnCancel`. Теперь Escape — это кнопка «Отмена»: он учитывает `kbqCloseByESC`, и `kbqCancelClick`, вернувший `false`, его останавливает. Исключение — Escape, который уже обработал контрол внутри окна, например datepicker, закрывший свой календарь. Третья строка таблицы клавиш, «Отправка формы по нажатию Enter в любом текстовом инпуте», описывала поведение, которого никогда не было, и из руководства убрана.
 
 **Диалог, открытый через сервис, уничтожается вместе с тем, кто его открыл.** `ModalBuilderForService` разрушал свой оверлей ровно в одном месте — в подписке на `kbqAfterClose`, — и ничто не связывало его с вызывающей стороной. Уничтожьте компонент, вызвавший `create()`, — сменой маршрута или через `*ngIf` — и диалог оставался нарисованным поверх следующего экрана, `afterClose` не срабатывал никогда, а `document.body { overflow: hidden }` не снимался, так что страница переставала прокручиваться навсегда. Теперь время жизни диалога привязано к `options.injector`, а если он не передан — к корневому инжектору окружения; оверлей создаётся с `disposeOnNavigation: true`. Блокировка прокрутки снимается и в `ngOnDestroy`, а `KbqModalControlService` освобождает модалку, которая была создана и уничтожена, ни разу не показавшись, — раньше он держал её саму, её представление и её подписки вечно.
 
@@ -1850,6 +2377,8 @@ readonly wide = input(false);                              // без транс�
 
 Добавлено: иконка с атрибутом `kbqNavbarItemSuffix` показывается после заголовка. Без атрибута любая иконка пункта выводится перед заголовком, где бы она ни была написана. Два исправления достаются без изменений в коде: пункт вертикального меню с обрезанным заголовком показывает тултип, а горизонтальное меню сворачивает пункты раньше, чем содержимое переполнится.
 
+**Уход фокуса из `kbq-navbar` по Tab не трогает `tabIndex`.** `kbq-navbar` и `kbq-vertical-navbar` убирают себя из порядка обхода только в DOM, поэтому `(tabIndexChange)` не испускается, а привязанный `[tabIndex]` сохраняется, а не сбрасывается в `0`. `kbq-navbar` без пунктов тоже остаётся вне порядка обхода, не записывая `tabIndex`: `(tabIndexChange)` больше не испускается при появлении и исчезновении пунктов, а привязанный `[tabIndex]` действует, как только появляется пункт.
+
 Закрывается схематиком `navbar-signals-and-aria`: привязка `kbqTooltip`, чтения и записи сигналов и флаги ориентации переписываются, остальное сообщается в отчёте.
 
 #### Notification center
@@ -1880,6 +2409,8 @@ bootstrapApplication(App, {
 Режим по наведению был сломан целиком из-за мёртвого выражения. `this.leaveDelay ?? 500` выглядит как значение по умолчанию, но базовый класс присваивает полю `0`, а `0 ?? 500` — это `0`. Панель закрывалась раньше, чем указатель успевал пересечь зазор в 8px до неё, задокументированное интерактивное содержимое было недостижимо даже для мыши, а таймер автоматического скрытия крутился как `interval(0)` всё время, пока панель открыта.
 
 Теперь задержка выводится из триггера, а `kbqLeaveDelay` — вход только на запись, который запоминает сам факт привязки. Если привязка есть в шаблоне, действует привязанное значение; если нет — сеттер `trigger` пересчитывает задержку при каждом изменении, поэтому поповер, переключённый на `hover` позже, получает значение по умолчанию для наведения, а не `0`, с которым он был создан.
+
+Привязанные `undefined` или `null`, а также значение, которое не является числом, считаются отсутствием привязки: снова действует значение по умолчанию для наведения, тогда как раньше получался `NaN` и панель закрывалась сразу. Так же к значениям по умолчанию возвращаются `kbqEnterDelay` и `kbqPopoverOffset` — к `0` и `8`.
 
 Программное присваивание `trigger.leaveDelay = 500` ничего не запоминает, поэтому следующая запись в `trigger` его перезапишет. Это единственное изменение здесь, за которым не стоит ошибки компиляции.
 
@@ -2014,6 +2545,10 @@ bootstrapApplication(App, {
 
 Ещё два исправления, для которых мигрировать нечего: подписка на локаль, созданная в конструкторе, не отписывалась, и сервис из корневого инжектора держал каждый созданный и уничтоженный селект всё время жизни приложения; а сам селект теперь несёт ARIA-роли combobox/listbox/option и управляемую с клавиатуры кнопку удаления тега, поэтому написанные вручную `role` и `aria-*` на хосте стали дубликатами.
 
+Следом на сигналы перешли остальные инпуты селекта. `hasBackdrop`, `compareWith` и `searchMinOptionsThreshold` — сигналы, читайте их вызовом: `compareWith()(a, b)`; `searchMinOptionsThreshold()` по-прежнему возвращает вычисленное число. `multiple`, `tabIndex` и `selectAllHandler` — сигналы `input()` с геттером для чтения. Присвоить ни один из шести больше нельзя: задавайте их привязкой в шаблоне. Смена `[multiple]` после первой отрисовки по-прежнему бросает ошибку.
+
+`KbqTimezoneSelect` наследует `KbqSelect`, поэтому всё сказанное относится и к нему; о файле, где упоминается только селект часовых поясов, схематик тоже сообщает.
+
 Сообщает `select-signal-inputs`.
 
 #### Sidepanel
@@ -2037,7 +2572,11 @@ bootstrapApplication(App, {
 
 Контейнер наконец стал диалогом для вспомогательных технологий: `role="dialog"`, `aria-modal` у модальной панели и `aria-labelledby` на заголовок `kbq-sidepanel-header`, а для панели без шапки в конфиге есть `ariaLabel` и `ariaLabelledBy`. Пока открыта модальная сайдпанель, остальная страница помечается `aria-hidden`, и скринридер перестаёт по ней ходить. Написанные вручную `role` и `aria-*` на контейнере стали дубликатами.
 
-Ещё четыре исправления, для которых мигрировать нечего: `KbqSidepanelService`, объявленный на уровне компонента, закрывает открытые им панели при уничтожении, а не оставляет висящий оверлей; `closeAll()` больше не разворачивает живой стек на месте; отступ принадлежит только верхней панели стека — при трёх открытых панелях рисовалась полоска на каждом уровне, а закрытие нижней оставляло полоску над панелью, которой уже нет; повторный `close('B')` до конца анимации не перетирает обещанный первым вызовом `'A'`; клик внутри сайдпанели у другого края больше не закрывает чужую панель. `KbqSidepanelService` объявлен с `providedIn: 'root'`, а `KbqSidepanelAnimationState` экспортируется из точки входа.
+Ещё четыре исправления, для которых мигрировать нечего: `KbqSidepanelService`, объявленный на уровне компонента, закрывает открытые им панели при уничтожении, а не оставляет висящий оверлей; `closeAll()` больше не разворачивает живой стек на месте; отступ принадлежит только верхней панели стека — при трёх открытых панелях рисовалась полоска на каждом уровне, а закрытие нижней оставляло полоску над панелью, которой уже нет; повторный `close('B')` до конца анимации не перетирает обещанный первым вызовом `'A'`; клик внутри сайдпанели у другого края больше не закрывает чужую панель. `KbqSidepanelService` объявлен с `providedIn: 'root'`.
+
+**<kbd>Escape</kbd> закрывает по одному слою.** Сайдпанель, панель действий, центр уведомлений и выпадающее меню больше не закрываются по Escape, который уже обработал слой над ними или элемент внутри — подсказка, поповер, диалог подтверждения поверх панели, элемент, закрывший собственное всплывающее окно. Центр уведомлений теперь помечает Escape, по которому закрылся, обработанным (`preventDefault()`), и сайдпанель под ним остаётся открытой. Собственный обработчик, вызывающий `preventDefault()` на Escape, тоже оставляет эти панели открытыми.
+
+**Сайдпанель сообщает о переходах после отрисовки, которая их применяет.** `beforeClosed()` и `afterOpened()` больше не срабатывают синхронно внутри `open()` и `close()`: подписка, сделанная сразу после `close()`, получает уведомление, а сайдпанель, открытая из `afterOpened()` нижней, встаёт на вершину стопки. Код, рассчитывавший, что `beforeClosed()` уже сработал к возврату из `close()`, должен дождаться события.
 
 Сообщает `sidepanel-non-modal-behavior`.
 
@@ -2091,6 +2630,8 @@ if (splitButton.disabled === false) {
 
 #### Tabs
 
+{/* migration-subsection-components(tabs) */}
+
 `KbqTabGroup` не отдавал ни одной части ARIA-паттерна вкладок, хотя `KbqTabNavBar` из того же пакета отдавал его целиком. Теперь его отдаёт и группа: панель ярлыков — это `role="tablist"` (с `aria-orientation="vertical"` при `vertical`), каждый ярлык — `role="tab"` с `aria-selected` и `aria-controls`, а каждая область содержимого — `role="tabpanel"` с `aria-labelledby` и остановкой Tab, пока она активна. Собственные `role` и `aria-*` на этих элементах теперь дублируют встроенные, а ярлык несёт `aria-disabled` вместо голого атрибута `disabled`, который ни одна вспомогательная технология с `div` не читает.
 
 Перемещаемый `tabindex` следует за позицией фокуса в заголовке, а не за выбором, и отключённая вкладка получает `-1` вместо отсутствующего атрибута. У группы с отключённой выбранной вкладкой — а это состояние по умолчанию, если отключена первая вкладка — не было ни одного элемента с `tabindex="0"`, и попасть в неё клавишей <kbd>Tab</kbd> было невозможно.
@@ -2099,15 +2640,14 @@ if (splitButton.disabled === false) {
 
 `resizeStream` и слушатель `(window:resize)` удалены по той же причине, что и в `kbq-title`: на них никто не был подписан. `subscribeToResize()` читал сигнальный вход `vertical` в конструкторе, до того как Angular записывает входы, поэтому выходил раньше времени при каждом создании, а слушатель складывал события в `Subject` без подписчиков — один оконный слушатель в зоне Angular на каждую группу вкладок, и при этом всплывающая подсказка для обрезанного ярлыка никогда не обновлялась. Теперь заголовок наблюдается через CDK `SharedResizeObserver`, который замечает и изменения размера контейнера.
 
-| Что было                   | Что делать вручную                                                      |
-| -------------------------- | ----------------------------------------------------------------------- |
-| `.resizeStream`            | Убрать вызов — общий `ResizeObserver` пересчитывает размеры сам         |
-| `<kbq-tab-group disabled>` | Отключать сами вкладки: `<kbq-tab [disabled]="true">`                   |
-| `.disabled` у `KbqTab`     | Сигнальный вход: читать `tab.disabled()`, писать привязкой `[disabled]` |
-| `.getTabIndex(tab, index)` | `getTabIndex(tab, tabHeader, index)`; вместо `null` теперь `-1`         |
-| `KbqVerticalTabsCssStyler` | Перестать импортировать — класс следует за привязкой `vertical`         |
-| `.kbq-tab-label[disabled]` | Использовать `.kbq-disabled` или `[aria-disabled="true"]` в тестах      |
-| `a[kbqTabLink][disabled]`  | То же: `.kbq-disabled` или `[aria-disabled="true"]`                     |
+| Что было                   | Что делать вручную                                                 |
+| -------------------------- | ------------------------------------------------------------------ |
+| `.resizeStream`            | Убрать вызов — общий `ResizeObserver` пересчитывает размеры сам    |
+| `<kbq-tab-group disabled>` | Отключать сами вкладки: `<kbq-tab [disabled]="true">`              |
+| `.getTabIndex(tab, index)` | `getTabIndex(tab, tabHeader, index)`; вместо `null` теперь `-1`    |
+| `KbqVerticalTabsCssStyler` | Перестать импортировать — класс следует за привязкой `vertical`    |
+| `.kbq-tab-label[disabled]` | Использовать `.kbq-disabled` или `[aria-disabled="true"]` в тестах |
+| `a[kbqTabLink][disabled]`  | То же: `.kbq-disabled` или `[aria-disabled="true"]`                |
 
 `KbqTabGroup.disabled` удалён полностью. Он был опубликован, задокументирован и попадал в таблицу API, но его не привязывал ни один шаблон и не выбирал ни один стиль — `<kbq-tab-group disabled>` компилировался, проходил проверку типов и не делал ничего.
 
@@ -2125,7 +2665,9 @@ if (splitButton.disabled === false) {
 
 {/* migration-subsection-components(tag, tag-list, tag-input, tag-autocomplete) */}
 
-То, что осталось геттером и сеттером, осталось по причине, которую задаёт код, а не из-за трансформации: backing-вход несёт `booleanAttribute`, а сигнал поверх него и читается как сигнал. `KbqTagList` реализует `KbqFormFieldControl`, а `KbqTagInput` — `KbqTagTextControl`; они объявляют `value`, `id`, `placeholder`, `required` и `disabled` обычными свойствами. `KbqTag.disabled` остался обычным `boolean`, потому что менеджер фокуса пропускает элементы, читая его как значение, а сигнал — это функция, она всегда истинна. `disabled`, `tabindex` и `value` у тега и `draggable`, `tabIndex` у списка подмешивают состояние, которое сигнал отследить не может: form control списка, чей `disabled` — обычное свойство, и проецированный текст. У них синтаксис чтения и записи не изменился.
+То, что осталось геттером и сеттером, осталось по причине, которую задаёт код, а не из-за трансформации: backing-вход несёт `booleanAttribute`, а сигнал поверх него и читается как сигнал. `KbqTag.disabled` остался обычным `boolean`, потому что менеджер фокуса пропускает элементы, читая его как значение, а сигнал — это функция, она всегда истинна. `disabled`, `tabindex` и `value` у тега, `draggable`, `tabIndex` у списка и `disabled` у поля ввода тегов сохранили сеттеры; `KbqTag.value` по умолчанию берёт проецированный текст. У них синтаксис чтения и записи не изменился.
+
+Состояние поля формы переехало. `value`, `id`, `placeholder`, `focused`, `empty`, `required`, `disabled` и `errorState` у `KbqTagList` стали сигналами: `form-field-signals` переписывает чтения в вызовы, а запись в `disabled` или `value` — в `.set()`, и сообщает о записи в остальные (см. «Ревью поля формы (21.0.0)»). `id`, `placeholder`, `focused` и `empty` у `KbqTagInput` стали сигналами только для чтения: `form-field-signals` переписывает в вызовы и их чтения, а о записи сообщает.
 
 Всё остальное переехало:
 
@@ -2148,17 +2690,17 @@ if (splitButton.disabled === false) {
 
 #### Textarea
 
-`KbqTextarea` реализует `KbqFormFieldControl`, который объявляет `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` и `errorState` обычными членами — именно через этот интерфейс их читает form-field, поэтому они остались обычными геттерами и сеттерами. Переехали те четыре входа, которые принадлежат самому textarea.
+Члены `KbqFormFieldControl` у `KbqTextarea` — `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` и `errorState` — стали сигналами: `form-field-signals` в TypeScript переписывает чтения в вызовы, а запись в `value` — в `.set()`, и сообщает о записи в остальные (см. «Ревью поля формы (21.0.0)»). Переехали и четыре входа, которые принадлежат самому textarea.
 
 Особый случай — `canGrow`: его геттер возвращал `!maxRowLimitReached && привязанное значение`, поэтому он сообщал `false`, как только textarea упирался в `maxRows`, — хотя потребитель просил рост. Свёрнутое значение стало внутренним computed `growing`, а `canGrow()` возвращает то, что было привязано. На пределе строк элемент остаётся со своей полосой прокрутки, а нативная ручка не появляется: `kbq-textarea_max-row-limit-reached` ставит `resize: unset`, и это правило идёт в стилях после `kbq-textarea-resizable`, побеждая по порядку.
 
-| Что было                                                | Как мигрировать вручную                                                                                                                                                    |
-| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `.maxRows` / `.maxRowLimitReached`                      | Читать как вызовы — переписывается за вас                                                                                                                                  |
-| `.freeRowsHeight`                                       | `freeRowsHeight()`, и ожидать `undefined` без привязки — сообщается                                                                                                        |
-| `.canGrow`                                              | `canGrow()`, и ожидать привязанное значение, а не `false` на пределе строк                                                                                                 |
-| `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Привязать в шаблоне; входы доступны только на чтение                                                                                                                       |
-| `.grow()` / отвязанная ссылка на `.grow`                | Теперь `protected`; textarea сам пересчитывает высоту при каждом изменении значения и входов, а изменение раскладки, которого он не видит, покрывает `stateChanges.next()` |
+| Что было                                                | Как мигрировать вручную                                                                                                                                                              |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `.maxRows` / `.maxRowLimitReached`                      | Читать как вызовы — переписывается за вас                                                                                                                                            |
+| `.freeRowsHeight`                                       | `freeRowsHeight()`, и ожидать `undefined` без привязки — сообщается                                                                                                                  |
+| `.canGrow`                                              | `canGrow()`, и ожидать привязанное значение, а не `false` на пределе строк                                                                                                           |
+| `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Привязать в шаблоне; входы доступны только на чтение                                                                                                                                 |
+| `.grow()` / отвязанная ссылка на `.grow`                | Теперь `protected`; textarea сам пересчитывает высоту при каждом изменении значения и входов, а изменение раскладки, которого он не видит, учитывается при следующем таком изменении |
 
 **`maxRows` и `freeRowsHeight` возвращают `number | undefined`.** Оба были объявлены ненулевыми, хотя непривязанный `maxRows` содержал `undefined`, и `maxRowLimitReached` сравнивался именно с ним: `rowsCount > undefined` ложно — благодаря этому неограниченный рост вообще работал. С `freeRowsHeight` иначе: `ngOnInit` записывал в этот вход измеренную высоту строки, поэтому непривязанное чтение возвращало число, как только отрабатывал первый тик. Теперь подстановка внутренняя, а вход остаётся `undefined`, и место вызова с `gap + 'px'` начинает выдавать `"undefined" + "px"` без единой диагностики — такие чтения схематик сообщает, а не переписывает.
 
@@ -2178,13 +2720,14 @@ if (splitButton.disabled === false) {
 
 Остальная часть релиза — это контракт форм, который компонент никогда не выполнял:
 
-| Что было                                                  | Что делать вручную                                                                             |
-| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `.timepickerList` у `KbqTimeRangeEditor`                  | Удалён вместе с подпиской, которая писала `errorState` вручную; задайте `ErrorStateMatcher`    |
-| `.errorState = …` у `KbqTimeRangeTitleAsControl`          | Теперь вычисляется; управляйте состоянием через привязанный форм-контрол                       |
-| `.value` / `.empty` / `.required` / `.disabled` у него же | То же самое: это геттеры, запись бросает исключение                                            |
-| `.id` / `.placeholder` / `.controlType` / `.stateChanges` | Только для чтения: `id` генерируется, а `stateChanges` эмитится при каждом изменении состояния |
-| `.kbq-radio-group .kbq-time-range-editor__range`          | Блок «от/до» теперь сосед группы радиокнопок, а не её потомок                                  |
+| Что было                                                  | Что делать вручную                                                                                          |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `.timepickerList` у `KbqTimeRangeEditor`                  | Удалён вместе с подпиской, которая писала `errorState` вручную; задайте `ErrorStateMatcher`                 |
+| `.errorState = …` у `KbqTimeRangeTitleAsControl`          | Теперь сигнал только для чтения; управляйте состоянием через привязанный форм-контрол и читайте его вызовом |
+| `.value` / `.empty` / `.required` / `.disabled` у него же | То же самое: сигналы только для чтения, вычисляются из хоста и привязанного контрола                        |
+| `.id` / `.placeholder` / `.focused` / `.controlType`      | Только для чтения: `id` генерируется, `controlType` — константа                                             |
+| `.stateChanges` у него же                                 | Удалён; читайте сигналы в `computed()` или `effect()`                                                       |
+| `.kbq-radio-group .kbq-time-range-editor__range`          | Блок «от/до» теперь сосед группы радиокнопок, а не её потомок                                               |
 
 `setDisabledState` реализован и в `KbqTimeRange`, и в `KbqTimeRangeEditor`. Отключённый контрол выходит из порядка обхода по Tab, отказывается открывать поповер, отключает собственную форму редактора и получает хост-класс `kbq-disabled` — раньше он выглядел и вёл себя как включённый, а Angular молча отбрасывал значение. У `KbqTimeRangeTitle` появился вход `disabled` для встроенного триггера.
 
@@ -2192,7 +2735,7 @@ if (splitButton.disabled === false) {
 
 `valueCorrected` сравнивает результат, а не форму входного значения. Раньше событие срабатывало при каждой записи значения без `startDateTime`, а вариант `allTime` именно такое и порождает, — хост, записывавший значение обратно, зацикливался на этом. Обработчик, считавший количество эмиссий, увидит их меньше.
 
-`KbqTimeRangeTitleAsControl` стал настоящим `KbqFormFieldControl`. Раньше все его члены были объявлены и никогда не присваивались, поэтому `kbq-form-field` вокруг него один раз отрисовывал `undefined`-состояние: не мог поднять подпись, не мог показать состояние ошибки, а клик по полю никуда не переводил фокус. Теперь члены вычисляются из хоста и привязанного `NgControl`, а `stateChanges` эмитится при любом их изменении.
+`KbqTimeRangeTitleAsControl` стал настоящим `KbqFormFieldControl`. Раньше все его члены были объявлены и никогда не присваивались, поэтому `kbq-form-field` вокруг него один раз отрисовывал `undefined`-состояние: не мог поднять подпись, не мог показать состояние ошибки, а клик по полю никуда не переводил фокус. Теперь члены — сигналы только для чтения, вычисляемые из хоста и привязанного `NgControl`, а `stateChanges` удалён вместе с остальным контрактом `KbqFormFieldControl`.
 
 Два изменения в разметке: блок «от/до» вынесен из элемента с `role="radiogroup"` — группа радиокнопок не должна владеть четырьмя полями даты и времени, — а подвал поповера лишился безымянного `role="group"`. Префиксы «от» и «до» получили `id`, на который все четыре поля ссылаются через `aria-labelledby`, вместо `aria-label` на голом `<span>`, где он не работает.
 
@@ -2209,7 +2752,7 @@ if (splitButton.disabled === false) {
 
 #### Timepicker
 
-`KbqTimepicker` реализует `KbqFormFieldControl`, который объявляет `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` и `errorState` обычными членами — они остались обычными геттерами и сеттерами. Переехали четыре входа, которые принадлежат самому `KbqTimepicker`.
+Члены `KbqFormFieldControl` у `KbqTimepicker` — `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` и `errorState` — стали сигналами: `form-field-signals` в TypeScript переписывает чтения в вызовы, а запись в `disabled` — в `.set()`, и сообщает о записи в остальные (см. «Ревью поля формы (21.0.0)»). Переехали и четыре входа, которые принадлежат самому `KbqTimepicker`.
 
 `min` и `max` разбирали значение в сеттерах и возвращали результат разбора, поэтому значение, которое адаптер дат прочитать не смог, читалось обратно как `null`. Теперь они возвращают то, что было привязано; разобранные значения остались внутренними и по-прежнему питают валидаторы.
 
@@ -2247,7 +2790,7 @@ if (splitButton.disabled === false) {
 
 `kbq-timezone-select` отклоняет `multiple` с ошибкой, а не принимает его, и вместе с ним `multiline` — этот вход точно так же включает множественный выбор и оставался способом обойти проверку. Оба руководства всегда говорили, что множественный выбор не поддерживается, но ничто этого не проверяло: вход наследовался, `[multiple]="true"` компилировался без замечаний и переводил компонент в состояние, которое его шаблон отрисовать не может, — пользователь выбирал пять зон, а поле показывало одну. Для множественного выбора используйте `kbq-select`.
 
-Четыре исправления, для которых ничего делать не нужно. Копия шаблона панели снова синхронна с `select.html`: он привязывает `viewportMargin`, `handleClick` и класс панели `kbq-select-overlay`, убирает устаревший no-op `offsetY` и проецирует `kbq-select-footer` и `kbq-select-matcher` — раньше вложенный футер попадал в замыкающий `ng-content` и оказывался _внутри_ прокручиваемого списка опций. Тултип переполнения у опции содержит тот же отфильтрованный список городов, что и сама опция, а не полный список при измерении по отфильтрованному блоку. Плейсхолдер поиска следует активной локали, а не залипает на той, что применилась первой, при этом заданный потребителем плейсхолдер по-прежнему выигрывает. И `UtcOffsetPipe` с `CitiesByFilterPipe` теперь экспортируются, а `KbqTimezoneModule` реэкспортирует `KbqOptionModule`, поэтому документированное использование с `kbq-optgroup` работает из одного модуля.
+Четыре исправления, для которых ничего делать не нужно. Копия шаблона панели снова синхронна с `select.html`: он привязывает `viewportMargin`, `handleClick` и класс панели `kbq-select-overlay`, больше не привязывает `offsetY`, который удалён (см. удаления у селекта выше), и проецирует `kbq-select-footer` и `kbq-select-matcher` — раньше вложенный футер попадал в замыкающий `ng-content` и оказывался _внутри_ прокручиваемого списка опций. Тултип переполнения у опции содержит тот же отфильтрованный список городов, что и сама опция, а не полный список при измерении по отфильтрованному блоку. Плейсхолдер поиска следует активной локали, а не залипает на той, что применилась первой, при этом заданный потребителем плейсхолдер по-прежнему выигрывает. И `UtcOffsetPipe` с `CitiesByFilterPipe` теперь экспортируются, а `KbqTimezoneModule` реэкспортирует `KbqOptionModule`, поэтому документированное использование с `kbq-optgroup` работает из одного модуля.
 
 Поиск по первым буквам находит город. Опция отдавала в качестве метки всю строку, а строка начинается с `UTC`, поэтому набор первых букв города в поле не уводил дальше первой опции, а до зоны западнее UTC — её минус записан символом U+2212, которого нет на клавиатуре, — набором вообще нельзя было добраться. Теперь метка — это город. Цена: набор `utc+03` больше никуда не переводит, смещения ищет поиск.
 
@@ -2296,8 +2839,8 @@ class MyToast extends KbqToastComponent {
 | `.elementRef`                                                        | `inject<ElementRef<HTMLElement>>(ElementRef)`                                                                                                                    |
 | `.ttl` / `.delay`                                                    | Обратный отсчёт переехал в сервис — передавайте время жизни аргументом `duration` метода `show()`                                                                |
 | `.isTemplateRef()` / `.themePalette` / `.toastStyle`                 | Удалены: они существовали только ради прежнего способа отрисовки                                                                                                 |
-| `.style` / `.icon` / `.role` / `.closeButton`                        | Стали `protected`. `data`, `id`, `hovered`, `focused`, `animationState`, `close()` и `onAnimation()` по-прежнему публичны                                        |
-| `service.animation.getValue()` / `.value`                            | Теперь это `Subject<AnimationEvent>`, а не `BehaviorSubject`: позднему подписчику ничего не воспроизводится                                                      |
+| `.style` / `.icon` / `.role` / `.closeButton`                        | Стали `protected`. `data`, `id`, `hovered`, `focused` и `close()` по-прежнему публичны                                                                           |
+| `service.animation.getValue()` / `.value`                            | Удален вместе с `@angular/animations`, см. «Анимации без @angular/animations» выше                                                                               |
 | Компонент из `KBQ_TOAST_FACTORY`, не наследующий `KbqToastComponent` | Отклоняется: `show()` читает числовой `id`, по которому сервис ведёт свой стек, и бросает исключение вместо добавления тоста, который потом нельзя будет закрыть |
 
 **Переданные данные больше не изменяются.** Раньше `show()` подставлял значения по умолчанию — `style` в `contrast` и `icon` в `true` — записывая их прямо в объект вызывающего кода; теперь оба значения вычисляются внутри тоста. Если что-то читало эти ключи обратно после `show()` или выводило тот же объект в другом месте (именно так делает `kbq-notification-center`), значения по умолчанию нужно подставлять самостоятельно.
@@ -2314,15 +2857,18 @@ class MyToast extends KbqToastComponent {
 
 Уже отключено, и делать ничего не нужно: встроенные подсказки для обрезанного текста (`kbq-title`, `kbqEllipsisCenter`, подсказки опций и таймзон) и любой тултип с `kbqTrigger` в значении `manual` или `none` — наведение на такую панель её не открывает и не закрывает, поэтому защищать там нечего.
 
-| Что было                                          | Что делать вручную                                                                                  |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `kbqTooltip` без `ignoreTooltipPointerEvents`     | Добавить `[ignoreTooltipPointerEvents]="true"` там, где панель накрывает кликабельный элемент       |
-| `.scheduler`                                      | Удалён; планируйте на собственном планировщике                                                      |
-| `getMouseLeaveListener(delay)`                    | Убрать аргумент — слушатель читает `leaveDelay` самого триггера                                     |
-| `placementChange`                                 | Отдаёт `KbqPopUpPlacementValues`; чтение не затронуто, ломается отправка обычной `string`           |
-| `.content` / `.header` / `.context` / `.modifier` | Вместо `any` теперь `unknown` и настоящий перечислимый тип; прочитанное значение требует приведения |
+| Что было                                                   | Что делать вручную                                                                                                                                       |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `kbqTooltip` без `ignoreTooltipPointerEvents`              | Добавить `[ignoreTooltipPointerEvents]="true"` там, где панель накрывает кликабельный элемент                                                            |
+| `.scheduler`                                               | Удалён; планируйте на собственном планировщике                                                                                                           |
+| `getMouseLeaveListener(delay)`                             | Убрать аргумент — слушатель читает `leaveDelay` самого триггера                                                                                          |
+| `placementChange`                                          | Отдаёт `KbqPopUpPlacementValues`; чтение не затронуто, ломается отправка обычной `string`                                                                |
+| `.content` / `.header` / `.context` / `.modifier`          | Вместо `any` теперь `unknown` и настоящий перечислимый тип; прочитанное значение требует приведения                                                      |
+| `KBQ_TOOLTIP_OPEN_TIME` / `KBQ_TOOLTIP_OPEN_TIME_PROVIDER` | Устарели и ни на что не влияют, удаляются в 22.0.0: длину окна задаёт `KBQ_TOOLTIP_INSTANT_SHOW_WINDOW`, сбрасывает его `KbqTooltipDelayTracker.reset()` |
 
 Три исправления, для которых мигрировать нечего: панель несёт `role="tooltip"`, а триггер указывает на неё через `aria-describedby`, поэтому хост, добавлявший что-то из этого вручную, может убрать; <kbd>Escape</kbd> закрывает тултип по наведению на элементе, который не получает фокус — раньше это работало, только пока фокус был на самом триггере; и `KbqTooltipTrigger` можно импортировать как standalone, потому что у `KBQ_TOOLTIP_SCROLL_STRATEGY` есть фабрика по умолчанию и NgModule больше ничего не держит.
+
+`[kbqTooltipOffset]`, привязанный к `null`, `undefined` или нечисловому значению, оставляет отступ из стилей, как и описано в документации. Раньше он записывал `NaNpx`, который браузеры отбрасывали, и открытый тултип сохранял прежний отступ; теперь переключение привязки на `null` у открытого тултипа убирает этот отступ.
 
 Сообщает `tooltip-pointer-events-and-types` — причём сообщает об _отсутствии_ входа: файл, который отрисовывает `kbqTooltip` и нигде не пишет `ignoreTooltipPointerEvents`, и есть тот файл, поведение которого изменилось.
 
@@ -2377,6 +2923,10 @@ class MyToast extends KbqToastComponent {
 
 Два случая из шести проявляются молча. `KbqTreeBase` экспортируется и является задокументированной точкой расширения для собственного дерева: наследник, читающий `this.nodeDefs.length`, получит `0` — арность функции-сигнала — вместо количества определений узлов, а `this.nodeDefs.changes.subscribe(…)` бросит исключение. А `KbqTreeNodeToggle` сохранил `disabled` как алиас входа (сам вход объявлен как `disabledInput`), поэтому все привязки в шаблонах продолжают работать и ломаются только программные записи.
 
+Следом за ними `input()` получили `KbqTreeSelection` и `KbqTreeOption`: `treeControl`, `dataSource`, `disabled`, `tabIndex` и `selectAllHandler` дерева, `disabled` и `showCheckbox` опции читаются через геттер. Чтение не меняется, а программная запись больше не компилируется: задавайте их привязкой. `multiple` тоже стал инпутом, а у его геттера никогда не было сеттера: режим выбора задавайте через `multipleMode`, он по-прежнему доступен для записи. `autoSelect`, `noUnselectLast`, `typeAhead` и `selectAll` по-прежнему доступны для записи, потому что в них пишет `KbqTreeSelect`.
+
+`[dataSource]`, привязанный обратно к `undefined`, очищает дерево так же, как `null`; пока источник не задан, `dataSource` возвращает `null`, а не `undefined`.
+
 Сообщает `tree-signals`. Проект, который вообще отрисовывает дерево, получает ещё и сводку по всем шести членам: пять из них видны только там, где в них пишут, а потребитель, который просто читает один из них, получает значение с изменившимся типом и вообще никакой диагностики.
 
 #### Tree select
@@ -2405,6 +2955,12 @@ class MyToast extends KbqToastComponent {
 `KbqTreeSelectChange` стал обобщённым, а его `value` больше не `any` — обработчику, который полагался на неявное расширение типа, нужен аргумент типа.
 
 Три исправления, для которых мигрировать нечего: встроенное дерево настраивается через `KbqTreeSelection.initializeForEmbedding()` вместо второго ручного `ngAfterContentInit()`, который оставлял дублирующиеся подписки на списки запросов, никогда не пересоздаваемые заново, — из-за чего каждое изменение набора опций обрабатывалось по несколько раз, причём на горячем пути фильтрации поиском; мёртвый провайдер `{ provide: KbqTree, useExisting: KbqTreeSelect }` удалён, поскольку `KbqTreeSelect` никогда структурно не соответствовал `KbqTree`, и всё, что внедряло `KbqTree` изнутри tree-select, получало объект, только похожий на нужный; и компонент отрисовывает `id` на хосте и несёт ARIA combobox, поэтому `[attr.for]` подписи поля формы теперь указывает на существующий элемент.
+
+`hasBackdrop` и `searchMinOptionsThreshold` — сигналы, как у `KbqSelect`, а `multiple`, `autoSelect`, `tabIndex` и `selectAllHandler` — сигналы `input()` с геттером для чтения. Присвоить их больше нельзя: задавайте привязкой в шаблоне.
+
+**Значение в режиме `multiple` упорядочивается по панели.** `sortValues()` сравнивал выбранные узлы данных с опциями в панели, совпадений не было, и выбор сохранял порядок записи. Теперь по умолчанию узлы сортируются по месту в дереве, включая свёрнутые ветки; узел, которого нет в данных, идёт последним. Порядок виден в `value()` и в тегах триггера. `[sortComparator]` получает то же, что получал всегда, — два выбранных узла данных, — а третьим аргументом теперь приходят все узлы дерева в порядке панели (`treeControl.dataNodes`) вместо показанных в панели `KbqTreeOption[]`, как описывает тип `KbqTreeSelectSortComparator<T>`. Компаратор, типизированный через `KbqTreeOption`, должен принимать ваш тип узла; `() => 0` сохраняет порядок записи.
+
+Ещё три исправления, для которых мигрировать нечего: значение формы, записанное до загрузки данных дерева (например, по HTTP), применяется, когда узлы приходят, — и в `KbqTreeSelect`, и в `KbqTreeSelection`, пока пользователь не изменит выбор; замена `dataSource.data` равными новыми узлами больше не делает контрол dirty и не вызывает `valueChanges` и `(selectionChange)`; узел со значением `0` или `''` выбирается, а не сбрасывает выбор.
 
 Сообщает `tree-select-signals`.
 
@@ -2553,7 +3109,7 @@ app-root/main/kbq-accordion:1
   сбрасывает то, что было у пользователей. Она никогда не перезаписывается и не удаляется: ключ без
   префикса не обязательно наш, и приложение, хранящее собственный `settings`, не должно потерять его
   из-за компонента с `stateSavingKey="settings"`. Первое же сохранение переносит состояние под префикс.
-  Этот мост убирается в следующем мажоре.
+  Этот мост убирается в 22.0.0.
 
 Схематика `accordion-state-saving-default` сообщает о каждом потребителе, которого затрагивает дефолт.
 Она только предупреждает: разметка, поведение которой изменилось, — это ровно та разметка, где инпут не
@@ -2800,4 +3356,4 @@ ng g @koobiq/components:tag-list-cleaner --project "<your project>" --fix=false
 
 ### После миграции
 
-Миграция работает на регулярных выражениях и не переписывает алиасные импорты, локальные переменные и ре-экспорты — **проверьте диф перед коммитом**, пересоберите проект и прогоните тесты. Полный список ломающих изменений — на странице [Ломающие изменения — Angular 20](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.ru.md).
+Миграция работает на регулярных выражениях и не переписывает алиасные импорты, локальные переменные и ре-экспорты — **проверьте диф перед коммитом**, пересоберите проект и прогоните тесты. Полные списки ломающих изменений — на страницах [Ломающие изменения — Angular 21](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-21-breaking-changes.ru.md) и [Ломающие изменения — Angular 20](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.ru.md).

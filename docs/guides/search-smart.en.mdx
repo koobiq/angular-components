@@ -33,7 +33,7 @@ Users often don't type accents, and data doesn't always carry them consistently 
 
 A diacritic is folded down to its base letter rather than stripped along with everything else. Punctuation like `/`, `-` and `.` is left untouched, so IP ranges and similar values aren't mangled by the same pass.
 
-Highlighting the match, if your UI does that, needs to know about the folding too — a highlighter that compares literally has nothing to mark on a folded hit, since the token and the value differ by exactly the accent that made them match. `kbqHighlightBackground`/`mcHighlight` take a `foldDiacritics` argument for this: pass `true` when the keywords were matched with folding (e.g. via `createSearchPredicate`), and searching `cafe` will mark `Café` rather than leave it bare, as the examples below do.
+Highlighting the match, if your UI does that, needs to know about the folding too — a highlighter that compares literally has nothing to mark on a folded hit, since the token and the value differ by exactly the accent that made them match. `kbqHighlightBackground`/`kbqHighlightBold` take a `foldDiacritics` argument for this: pass `true` when the keywords were matched with folding (e.g. via `createSearchPredicate`), and searching `cafe` will mark `Café` rather than leave it bare, as the examples below do.
 
 ### A token can be checked against several fields at once
 

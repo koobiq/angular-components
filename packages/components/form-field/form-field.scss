@@ -10,11 +10,11 @@
     gap: var(--kbq-form-field-hint-size-gap);
     margin-top: var(--kbq-form-field-hint-size-margin-top);
 
-    &:has(.kbq-reactive-password-hint, .kbq-password-hint) {
+    &:has(.kbq-reactive-password-hint) {
         --kbq-form-field-hint-size-gap: var(--kbq-size-s);
     }
 
-    &:has(:is(.kbq-reactive-password-hint, .kbq-password-hint):first-child) {
+    &:has(.kbq-reactive-password-hint:first-child) {
         --kbq-form-field-hint-size-margin-top: var(--kbq-size-m);
     }
 }
@@ -144,10 +144,6 @@
         --kbq-form-field-states-focused-background: var(--kbq-background-card);
         --kbq-form-field-states-error-background: var(--kbq-background-card);
         --kbq-form-field-states-disabled-background: var(--kbq-background-card);
-    }
-
-    & + .kbq-password-hint {
-        margin-top: var(--kbq-size-m);
     }
 
     .kbq-form-field__prefix,

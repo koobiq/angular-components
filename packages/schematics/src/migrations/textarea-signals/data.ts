@@ -1,9 +1,9 @@
 /**
  * Data for the `textarea-signals` migration.
  *
- * `KbqTextarea` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`,
- * `required`, `disabled`, `focused`, `empty` and `errorState` as plain members — so those stay plain
- * accessors. What moved are the inputs that belong to the textarea itself.
+ * The `KbqFormFieldControl` members of `KbqTextarea` (`value`, `id`, `placeholder`, `required`, `disabled`,
+ * `focused`, `empty`, `errorState`) are signals too, but `form-field-signals` migrates them. This migration
+ * covers the inputs that belong to the textarea itself.
  *
  * - `textarea.canGrow` → a signal whose value changed: the getter folded in the row limit (warn)
  * - `textarea.freeRowsHeight` → a signal whose value changed: the textarea used to write the measured
@@ -107,8 +107,8 @@ export const warnPatterns: WarnPattern[] = [
         message:
             'KbqTextarea.grow is protected now, so a call - `textarea.grow()` - and a detached reference - ' +
             '`setTimeout(textarea.grow, 0)` - no longer compile. The textarea already re-measures on every ' +
-            'value change and whenever one of its inputs changes. A call that compensated for a layout change ' +
-            'it cannot see, such as a width change, can emit `textarea.stateChanges.next()` instead.'
+            'value change and whenever one of its inputs changes; a layout change it cannot see, such as a width ' +
+            'change, is measured at the next one.'
     },
     {
         anchor: TEXTAREA_ANCHOR,

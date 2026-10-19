@@ -16,11 +16,12 @@ import {
     KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
+    KbqSelectSearch,
     kbqSiblingPopupProvider,
     KbqTimezoneLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
-import { kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koobiq/components/form-field';
+import { kbqCleanerFactoryProvider, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqSelect, KbqSelectHiddenItemsMeasurer } from '@koobiq/components/select';
@@ -104,34 +105,20 @@ export const kbqTimezoneLocaleConfigurationProvider = (
 export class KbqTimezoneSelect extends KbqSelect {
     readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
 
-    /**
-     * Not supported: the trigger renders a single value and the panel has no tag list or pseudo-checkboxes
-     * behind it, so a truthy value is rejected instead of half-rendered.
-     */
-    override get multiple(): boolean {
-        return super.multiple;
-    }
-
-    override set multiple(value: boolean) {
-        if (value) {
-            throw getKbqTimezoneSelectMultipleError();
-        }
-
-        super.multiple = value;
-    }
-
     /** Strings currently rendered by the select. */
     readonly timezoneLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'timezone',
         KBQ_TIMEZONE_LOCALE_CONFIGURATION
     );
 
+    /** Form field of the search, whose control carries the placeholder. */
+    private readonly searchFormField = contentChild(KbqSelectSearch, { read: KbqFormField });
+
     /**
-     * Whether the placeholder the search carries is the one this component wrote. `setPlaceholder` writes
-     * straight into the input and `hasPlaceholder()` reads it back, so the guard has to remember the write
-     * instead of probing the DOM — otherwise the effect's own string makes it skip every later locale.
+     * Placeholder this component last wrote into the search. Compared by value: the search control reads back
+     * whatever it carries, and a placeholder the consumer binds after the first render replaces this one.
      */
-    private appliedLocalePlaceholder = false;
+    private appliedLocalePlaceholder: string | null = null;
 
     constructor() {
         super();
@@ -145,22 +132,25 @@ export class KbqTimezoneSelect extends KbqSelect {
 
             if (!search) return;
 
+            const current = this.searchFormField()?.control().placeholder();
+
             // A placeholder supplied by the consumer wins and is never overwritten; one this effect wrote
             // is replaced, so the field follows the active locale.
-            if (search.hasPlaceholder() && !this.appliedLocalePlaceholder) return;
+            if (current && current !== this.appliedLocalePlaceholder) return;
 
             search.setPlaceholder(placeholder);
-            this.appliedLocalePlaceholder = true;
+            this.appliedLocalePlaceholder = placeholder;
         });
     }
 
     /**
-     * Rejects `multiline`, which switches the select to multiple selection as surely as `multiple` does. It is
-     * a signal input, so no setter can intercept it; this is the last point before the selection model is
-     * built from it.
+     * Rejects `multiple` and `multiline`, which switches the select to multiple selection just the same: the
+     * trigger renders a single value and the panel has no tag list or pseudo-checkboxes behind it. This is the
+     * last point before the selection model is built from them, and `KbqSelect` refuses a later change of
+     * `multiple` on its own.
      */
     override ngOnInit(): void {
-        if (this.multiline()) {
+        if (this.multiple || this.multiline()) {
             throw getKbqTimezoneSelectMultipleError();
         }
 

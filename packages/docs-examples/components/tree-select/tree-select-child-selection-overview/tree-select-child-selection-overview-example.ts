@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
@@ -138,8 +138,8 @@ export const DATA_OBJECT = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectChildSelectionOverviewExample {
-    @ViewChild(KbqTreeSelect) select: KbqTreeSelect;
-    @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
+    readonly select = viewChild.required(KbqTreeSelect);
+    readonly tree = viewChild.required(KbqTreeSelection);
 
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
@@ -147,8 +147,6 @@ export class TreeSelectChildSelectionOverviewExample {
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     control = new FormControl(['Downloads', 'rootNode_1']);
-
-    @ViewChild(KbqTreeSelection) selection: KbqTreeSelection;
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
@@ -171,7 +169,7 @@ export class TreeSelectChildSelectionOverviewExample {
         const option: KbqTreeOption = $event.value;
 
         if (option.isExpandable) {
-            this.tree.setStateChildren(option, !option.selected);
+            this.tree().setStateChildren(option, !option.selected);
         }
 
         this.toggleParents($event.value.data.parent);
@@ -183,13 +181,13 @@ export class TreeSelectChildSelectionOverviewExample {
         }
 
         const descendants = this.treeControl.getDescendants(parent);
-        const isParentSelected = this.select.selectionModel.selected.includes(parent);
+        const isParentSelected = this.select().selectionModel.selected.includes(parent);
 
-        if (!isParentSelected && descendants.every((d: any) => this.select.selectionModel.selected.includes(d))) {
-            this.select.selectionModel.select(parent);
+        if (!isParentSelected && descendants.every((d: any) => this.select().selectionModel.selected.includes(d))) {
+            this.select().selectionModel.select(parent);
             this.toggleParents(parent.parent);
         } else if (isParentSelected) {
-            this.select.selectionModel.deselect(parent);
+            this.select().selectionModel.deselect(parent);
             this.toggleParents(parent.parent);
         }
     }

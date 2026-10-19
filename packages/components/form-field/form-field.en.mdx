@@ -116,11 +116,11 @@ To change the tint or switch it off, override the token on the field:
 The state is also tracked in TypeScript. `KbqInput`, `KbqInputPassword`, `KbqTextarea` and `KbqTagInput` (forwarded by `KbqTagList`) each wrap the CDK's `AutofillMonitor` around their own element and expose the result as an `autofilled` signal, which `<kbq-form-field>` reflects as the `kbq-form-field_autofilled` class:
 
 ```ts
-@ViewChild(KbqInput) input: KbqInput;
+readonly input = viewChild.required(KbqInput);
 
 // ...
 
-const filledByBrowser = this.input.autofilled();
+const filledByBrowser = this.input().autofilled();
 ```
 
 The signal is a hook for application code, not the mechanism behind the styling: it arrives a frame or two after the browser paints, where the CSS matches in the same style pass.
@@ -129,7 +129,7 @@ The signal is a hook for application code, not the mechanism behind the styling:
 
 `<kbq-password-toggle>` is a component that adds a _"Show password"_ button for **filled** `<input kbqInputPassword />` fields inside the `<kbq-form-field>` component.
 
-`<kbq-password-hint>` is a component used to add hints to the `<input kbqInputPassword />` field inside the `<kbq-form-field>` component.
+`<kbq-reactive-password-hint>` is a component used to add hints to the `<input kbqInputPassword />` field inside the `<kbq-form-field>` component. The `[hasError]` input sets the state of the hint: bind it to the error of the matching validator of the form control.
 
 The example uses [PasswordValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts) - a set of static methods for password validation.
 

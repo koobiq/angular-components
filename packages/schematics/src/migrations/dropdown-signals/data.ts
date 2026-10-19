@@ -13,7 +13,7 @@ import { SignalMembersConfig, WarnPattern } from '../../utils/signal-members-mig
  * read-only input does not, and is left to become a compile error.
  *
  * `KbqDropdownItem.textElement` is deliberately absent: it implements `KbqTitleTextRef`, a contract five
- * other components implement as a plain property, so it stayed a `@ViewChild`.
+ * other components implement as a plain property, so it is a getter typed `ElementRef`.
  *
  * `KbqDropdownTrigger.dropdownClosed` is an `output()` now. Its reads are not rewritten — it is an event,
  * not a value — but an operator chain over it is reported, the same as over the panel's `closed`.

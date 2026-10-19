@@ -1,14 +1,18 @@
 import {
-    AfterContentInit,
+    AfterContentChecked,
     ChangeDetectionStrategy,
     Component,
-    ContentChildren,
+    DestroyRef,
     ElementRef,
+    Injector,
     QueryList,
     ViewEncapsulation,
-    inject
+    contentChildren,
+    inject,
+    runInInjectionContext,
+    untracked
 } from '@angular/core';
-import { KbqLine, KbqLineSetter } from '@koobiq/components/core';
+import { KbqLine, kbqQueryListFrom } from '@koobiq/components/core';
 
 /**
  * A plain, non-selectable list container.
@@ -40,13 +44,25 @@ export class KbqList {}
     },
     preserveWhitespaces: false
 })
-export class KbqListItem implements AfterContentInit {
+export class KbqListItem implements AfterContentChecked {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly injector = inject(Injector);
+    private readonly destroyRef = inject(DestroyRef);
 
-    @ContentChildren(KbqLine) lines: QueryList<KbqLine>;
+    private readonly linesQuery = contentChildren(KbqLine);
+    // Built on the first read of `lines`: the list costs a root effect, and most items are never asked for it.
+    private linesList: (() => QueryList<KbqLine>) | undefined;
 
-    ngAfterContentInit(): void {
-        new KbqLineSetter(this.lines, this.elementRef);
+    get lines(): QueryList<KbqLine> {
+        this.linesList ??= this.createLinesList();
+
+        return this.linesList();
+    }
+
+    ngAfterContentChecked(): void {
+        // Syncs the list once it is built, so `changes` emits after the projected items are bound and before the
+        // host bindings.
+        this.linesList?.();
     }
 
     getHostElement(): HTMLElement {
@@ -59,5 +75,19 @@ export class KbqListItem implements AfterContentInit {
 
     protected handleBlur(): void {
         this.elementRef.nativeElement.classList.remove('kbq-focused');
+    }
+
+    private createLinesList(): () => QueryList<KbqLine> {
+        if (this.destroyRef.destroyed) {
+            // Nothing is left to sync, and a destroyed view takes no destroy hook.
+            const list = new QueryList<KbqLine>(true);
+
+            list.reset([...untracked(this.linesQuery)]);
+
+            return () => list;
+        }
+
+        // Untracked: an effect cannot be created inside a reactive context, such as a template reading `lines`.
+        return untracked(() => runInInjectionContext(this.injector, () => kbqQueryListFrom(this.linesQuery)));
     }
 }

@@ -50,6 +50,7 @@ const optionalBooleanAttribute = (value: unknown): boolean | null | undefined =>
 @Component({
     selector: 'kbq-dt',
     template: '<ng-content />',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-dt'
@@ -60,6 +61,7 @@ export class KbqDtComponent {}
 @Component({
     selector: 'kbq-dd',
     template: '<ng-content />',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-dd'
@@ -127,13 +129,6 @@ export class KbqDlComponent {
     /** Host width in pixels at or below which the list auto-switches to the vertical layout. */
     readonly verticalBreakpoint = input(400, { transform: numberAttribute });
 
-    /**
-     * Host width in pixels at or below which the list auto-switches to the vertical layout.
-     * @deprecated The name is misleading (it is a breakpoint, not a min width). Use `verticalBreakpoint` instead.
-     * Will be removed in a future major release. When both are set, `minWidth` takes precedence.
-     */
-    readonly minWidth = input<number | undefined, unknown>(undefined, { transform: kbqOptionalNumberAttribute });
-
     /** Whether the list uses the wide two-column layout. */
     readonly wide = input(false, { transform: booleanAttribute });
 
@@ -199,14 +194,13 @@ export class KbqDlComponent {
 
     /**
      * Auto-detected vertical layout. Derived from the measurement rather than written alongside it, so it
-     * cannot go stale when `verticalBreakpoint` or the deprecated `minWidth` changes, and `null` means
-     * "not measured yet" rather than doubling as "skipped the write".
+     * cannot go stale when `verticalBreakpoint` changes, and `null` means "not measured yet" rather than
+     * doubling as "skipped the write".
      */
     private readonly autoVertical = computed(() => {
         const width = this.hostWidth();
 
-        // `minWidth` is the deprecated alias of `verticalBreakpoint`; honor it when a consumer still sets it.
-        return width === null ? null : width <= (this.minWidth() ?? this.verticalBreakpoint());
+        return width === null ? null : width <= this.verticalBreakpoint();
     });
 
     /** @docs-private Effective vertical layout, combining the explicit `vertical` input and the auto-detection. */

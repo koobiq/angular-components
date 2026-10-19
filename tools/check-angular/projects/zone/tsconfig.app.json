@@ -1,0 +1,13 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "types": []
+    },
+    "include": ["src/**/*.ts", "../../shared/**/*.ts"],
+    "exclude": [
+        "src/**/*.spec.ts",
+        "../../shared/**/*.suite.ts",
+        "../../shared/**/*.helpers.ts",
+        "../../shared/testing.ts"
+    ]
+}

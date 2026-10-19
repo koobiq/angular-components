@@ -7,5 +7,10 @@
     "include": [
         "**/*.ts",
         "**/*.html"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/dist",
+        "tools/check-angular"
     ]
 }

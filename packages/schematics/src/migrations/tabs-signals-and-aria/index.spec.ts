@@ -12,164 +12,161 @@ const SCHEMATIC_NAME = 'tabs-signals-and-aria';
 describe(SCHEMATIC_NAME, () => {
     let runner: SchematicTestRunner;
     let appTree: Tree;
-    let projects: workspaces.ProjectDefinitionCollection;
+    let project: string;
+    let file: string;
+    let messages: string[];
 
     beforeEach(async () => {
         runner = new SchematicTestRunner('schematics', collectionPath);
         appTree = await createTestApp(runner, { style: 'scss' });
-        const workspace = await getWorkspace(appTree);
 
-        projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
-    });
+        const projects = (await getWorkspace(appTree)).projects as unknown as workspaces.ProjectDefinitionCollection;
 
-    function paths(project: workspaces.ProjectDefinition) {
-        // The exact file names from @schematics/angular:application vary across versions
-        // (app.ts vs app.component.ts), so discover them from the tree.
-        const root = `/${project.root}/src/app`;
-
-        return { ts: appTree.exists(`${root}/app.ts`) ? `${root}/app.ts` : `${root}/app.component.ts` };
-    }
-
-    function run(project: string) {
-        return runner.runSchematic(SCHEMATIC_NAME, { project } satisfies Schema, appTree);
-    }
-
-    function collectLogs(): string[] {
-        const messages: string[] = [];
-
+        [project] = projects.keys();
+        file = `/${projects.get(project)!.root}/src/app/tabs.ts`;
+        messages = [];
         runner.logger.subscribe((entry) => messages.push(entry.message));
-
-        return messages;
-    }
-
-    it('reports a push into the resize stream, which was subscribed by nothing', async () => {
-        const [first] = projects.keys();
-        const { ts } = paths(projects.get(first)!);
-        const messages = collectLogs();
-
-        appTree.overwrite(
-            ts,
-            "import { KbqTabGroup } from '@koobiq/components/tabs';\n" +
-                'export class App { poke(g: KbqTabGroup) { g.resizeStream.next(new Event("resize")); } }\n'
-        );
-
-        await run(first);
-
-        expect(messages.join('\n')).toContain('resizeStream and the (window:resize) host listener were removed');
     });
 
-    it('reports the group-level disabled attribute, which was read by nothing', async () => {
-        const [first] = projects.keys();
-        const { ts } = paths(projects.get(first)!);
-        const messages = collectLogs();
+    const run = async (content: string, at = file): Promise<string> => {
+        appTree.create(at, content);
+        await runner.runSchematic(SCHEMATIC_NAME, { project } satisfies Schema, appTree);
 
-        appTree.overwrite(ts, 'const template = `<kbq-tab-group disabled><kbq-tab label="A" /></kbq-tab-group>`;\n');
+        return messages.join('\n');
+    };
 
-        await run(first);
+    describe('signal inputs and queries', () => {
+        it('reports a subclass of a tabs class', async () => {
+            const log = await run(
+                "import { KbqTab } from '@koobiq/components/tabs';\n" + 'export class MyTab extends KbqTab {}\n'
+            );
 
-        expect(messages.join('\n')).toContain('KbqTabGroup.disabled was removed');
+            expect(log).toContain('A subclass of a Koobiq tabs class whose inputs became signal inputs');
+            expect(log).not.toContain('declares a decorator query');
+        });
+
+        it('reports a subclass that redeclares a query', async () => {
+            const log = await run(
+                "import { ContentChildren, QueryList } from '@angular/core';\n" +
+                    "import { KbqTab, KbqTabGroup } from '@koobiq/components/tabs';\n" +
+                    'export class MyTabGroup extends KbqTabGroup {\n' +
+                    '    @ContentChildren(KbqTab) override tabs: QueryList<KbqTab>;\n' +
+                    '}\n'
+            );
+
+            expect(log).toContain('declares a decorator query');
+        });
+
+        it('reports a direct call of ngOnChanges', async () => {
+            const log = await run(
+                "import { SimpleChange } from '@angular/core';\n" +
+                    "import { KbqTab } from '@koobiq/components/tabs';\n" +
+                    'export function poke(t: KbqTab) { t.ngOnChanges({ disabled: new SimpleChange(false, true, false) }); }\n'
+            );
+
+            expect(log).toContain('A direct call of ngOnChanges');
+        });
+
+        it('does not report super.ngOnChanges', async () => {
+            const log = await run(
+                "import { SimpleChanges } from '@angular/core';\n" +
+                    "import { KbqTabLink } from '@koobiq/components/tabs';\n" +
+                    'export class MyTabLink extends KbqTabLink {\n' +
+                    '    override ngOnChanges(changes: SimpleChanges) { super.ngOnChanges(changes); }\n' +
+                    '}\n'
+            );
+
+            expect(log).not.toContain('A direct call of ngOnChanges');
+        });
+
+        it('reports no call site where the members are only read and written', async () => {
+            const log = await run(
+                "import { KbqTab, KbqTabGroup } from '@koobiq/components/tabs';\n" +
+                    'export function select(g: KbqTabGroup, tab: KbqTab) {\n' +
+                    '    g.selectedIndex = 1;\n' +
+                    '    g.headerPosition = "below";\n' +
+                    '    tab.disabled = tab.disabled === false;\n' +
+                    '    return g.tabs.length;\n' +
+                    '}\n'
+            );
+
+            expect(log).toContain('0 call site(s) reported');
+            expect(log).toContain('accepts boolean | string | null | undefined');
+        });
     });
 
-    it('separates a write to the tab disabled input from a read', async () => {
-        const [first] = projects.keys();
-        const { ts } = paths(projects.get(first)!);
-        const messages = collectLogs();
+    describe('review', () => {
+        it('reports a push into the resize stream', async () => {
+            const log = await run(
+                "import { KbqTabGroup } from '@koobiq/components/tabs';\n" +
+                    'export class App { poke(g: KbqTabGroup) { g.resizeStream.next(new Event("resize")); } }\n'
+            );
 
-        appTree.overwrite(
-            ts,
-            "import { KbqTab } from '@koobiq/components/tabs';\n" +
-                'export class App { lock(t: KbqTab) { t.disabled = true; } }\n'
-        );
+            expect(log).toContain('resizeStream and the (window:resize) host listener were removed');
+        });
 
-        await run(first);
+        it('reports the group-level disabled attribute in an inline template', async () => {
+            const log = await run(
+                'const template = `<kbq-tab-group disabled><kbq-tab label="A" /></kbq-tab-group>`;\n'
+            );
 
-        expect(messages.join('\n')).toContain('takes no assignment');
-        expect(messages.join('\n')).not.toContain('read it as a call');
-    });
+            expect(log).toContain('KbqTabGroup.disabled was removed');
+        });
 
-    it('reports the changed getTabIndex signature', async () => {
-        const [first] = projects.keys();
-        const { ts } = paths(projects.get(first)!);
-        const messages = collectLogs();
+        it('reports the group-level disabled attribute in an external template', async () => {
+            const log = await run(
+                '<kbq-tab-group [disabled]="locked"><kbq-tab label="A" /></kbq-tab-group>\n',
+                file.replace(/\.ts$/, '.html')
+            );
 
-        appTree.overwrite(
-            ts,
-            "import { KbqTabGroup } from '@koobiq/components/tabs';\n" +
-                'export class App { index(g: KbqTabGroup) { return g.getTabIndex(g.tabs.first, 0); } }\n'
-        );
+            expect(log).toContain('KbqTabGroup.disabled was removed');
+        });
 
-        await run(first);
+        it('reports the changed getTabIndex signature', async () => {
+            const log = await run(
+                "import { KbqTabGroup } from '@koobiq/components/tabs';\n" +
+                    'export class App { index(g: KbqTabGroup) { return g.getTabIndex(g.tabs.first, 0); } }\n'
+            );
 
-        expect(messages.join('\n')).toContain('getTabIndex(tab, tabHeader, index)');
-    });
+            expect(log).toContain('getTabIndex(tab, tabHeader, index)');
+        });
 
-    it('reports the deprecated vertical styler directive', async () => {
-        const [first] = projects.keys();
-        const { ts } = paths(projects.get(first)!);
-        const messages = collectLogs();
+        it('reports the deprecated vertical styler directive', async () => {
+            const log = await run("import { KbqVerticalTabsCssStyler } from '@koobiq/components/tabs';\n");
 
-        appTree.overwrite(ts, "import { KbqVerticalTabsCssStyler } from '@koobiq/components/tabs';\n");
+            expect(log).toContain('KbqVerticalTabsCssStyler is a deprecated no-op');
+        });
 
-        await run(first);
+        it('reports a selector on the disabled attribute of a label', async () => {
+            const log = await run(
+                "import { KbqTabGroup } from '@koobiq/components/tabs';\n" +
+                    "export const label = (host: HTMLElement) => host.querySelector('.kbq-tab-label[disabled]');\n"
+            );
 
-        expect(messages.join('\n')).toContain('KbqVerticalTabsCssStyler is a deprecated no-op');
-    });
+            expect(log).toContain('no longer carries a bare `disabled` attribute');
+        });
 
-    it('always states the ARIA and tabNavPanel facts, which have no call site to match on', async () => {
-        const [first] = projects.keys();
-        const { ts } = paths(projects.get(first)!);
-        const messages = collectLogs();
+        it('always states the ARIA and tabNavPanel facts, which have no call site to match on', async () => {
+            const log = await run('const template = `<kbq-tab-group><kbq-tab label="A" /></kbq-tab-group>`;\n');
 
-        appTree.overwrite(ts, 'const template = `<kbq-tab-group><kbq-tab label="A" /></kbq-tab-group>`;\n');
-
-        await run(first);
-
-        expect(messages.join('\n')).toContain('ARIA tabs pattern');
-        expect(messages.join('\n')).toContain('[tabNavPanel]');
+            expect(log).toContain('ARIA tabs pattern');
+            expect(log).toContain('[tabNavPanel]');
+        });
     });
 
     it('says nothing at all when the project does not use tabs', async () => {
-        const [first] = projects.keys();
-        const { ts } = paths(projects.get(first)!);
-        const messages = collectLogs();
+        const log = await run('export class App { poke(s: any) { return s.resizeStream; } }\n');
 
-        appTree.overwrite(ts, 'export class App { poke(s: any) { return s.resizeStream; } }\n');
-
-        await run(first);
-
-        expect(messages.join('\n')).not.toContain('[tabs-signals-and-aria]');
+        expect(log).not.toContain('[tabs-signals-and-aria]');
     });
 
     it('does not mistake KbqTable for a tabs component', async () => {
-        const [first] = projects.keys();
-        const { ts } = paths(projects.get(first)!);
-        const messages = collectLogs();
-
         // `KbqTable` is a different component in the same library; a greedy `KbqTab\w*` swallows it.
-        appTree.overwrite(
-            ts,
+        const log = await run(
             "import { KbqTable } from '@koobiq/components/table';\n" +
                 'export class App { resizeStream = new Subject<Event>(); table?: KbqTable; }\n'
         );
 
-        await run(first);
-
-        expect(messages.join('\n')).not.toContain('[tabs-signals-and-aria]');
-    });
-
-    it('reports a comparison read of KbqTab.disabled, not just a bare one', async () => {
-        const [first] = projects.keys();
-        const { ts } = paths(projects.get(first)!);
-        const messages = collectLogs();
-
-        appTree.overwrite(
-            ts,
-            "import { KbqTab } from '@koobiq/components/tabs';\n" +
-                'export class App { check(tab: KbqTab) { return tab.disabled === true; } }\n'
-        );
-
-        await run(first);
-
-        expect(messages.join('\n')).toContain('read it as a call, tab.disabled()');
+        expect(log).not.toContain('[tabs-signals-and-aria]');
     });
 });

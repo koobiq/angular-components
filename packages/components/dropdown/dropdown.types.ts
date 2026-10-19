@@ -12,19 +12,9 @@ import { KbqDropdownItem } from './dropdown-item.component';
 
 /** Position of the dropdown panel along the x-axis. */
 export type KbqDropdownPositionX = 'before' | 'after' | 'center';
-/**
- * @deprecated Use `KbqDropdownPositionX` instead.
- * @docs-private
- */
-export type DropdownPositionX = KbqDropdownPositionX;
 
 /** Position of the dropdown panel along the y-axis. */
 export type KbqDropdownPositionY = 'above' | 'below';
-/**
- * @deprecated Use `KbqDropdownPositionY` instead.
- * @docs-private
- */
-export type DropdownPositionY = KbqDropdownPositionY;
 
 /** Reason why the menu was closed. */
 export type DropdownCloseReason = void | 'click' | 'keydown' | 'tab';
@@ -42,11 +32,6 @@ export interface KbqDropdownPanel {
     templateRef: Signal<TemplateRef<any>>;
     closed: OutputEmitterRef<DropdownCloseReason>;
     parent?: KbqDropdownPanel | undefined;
-    /**
-     * @deprecated Has no effect. Use `KbqDropdownTrigger.widthOrigin` to make the panel match
-     * an element other than the trigger. Will be removed in v21.
-     */
-    triggerWidth?: string;
     panelWidth?: Signal<KbqPanelWidth>;
     panelMinWidth?: Signal<KbqPanelMinWidth>;
     panelMaxWidth?: Signal<KbqPanelMaxWidth>;

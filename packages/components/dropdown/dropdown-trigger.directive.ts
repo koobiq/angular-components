@@ -11,24 +11,26 @@ import {
     ScrollStrategy,
     VerticalConnectionPos
 } from '@angular/cdk/overlay';
-import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
+import { _getEventTarget, normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
+    afterNextRender,
+    AfterRenderRef,
     booleanAttribute,
-    ChangeDetectorRef,
     Directive,
     effect,
     ElementRef,
     inject,
     InjectionToken,
+    Injector,
     input,
     model,
-    NgZone,
     numberAttribute,
     OnDestroy,
     output,
+    signal,
     untracked,
     ViewContainerRef
 } from '@angular/core';
@@ -53,7 +55,7 @@ import {
     SPACE
 } from '@koobiq/components/core';
 import { asapScheduler, merge, Observable, of as observableOf, Subscription } from 'rxjs';
-import { delay, filter, map, take, takeUntil } from 'rxjs/operators';
+import { delay, filter, map } from 'rxjs/operators';
 import { throwKbqDropdownMissingError } from './dropdown-errors';
 import { KbqDropdownItem } from './dropdown-item.component';
 import { KbqDropdown } from './dropdown.component';
@@ -89,6 +91,12 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: t
 
 /** Tags whose implicit role always allows `aria-expanded`; `a[href]` is checked separately. */
 const NATIVELY_EXPANDABLE_TAGS = new Set(['BUTTON', 'SUMMARY']);
+
+/** The triggers bound to a panel and their one subscription to its `closed`, see `KbqDropdownTrigger.bindToPanel`. */
+const panelBindings = new WeakMap<
+    KbqDropdownPanel,
+    { readonly triggers: Set<KbqDropdownTrigger>; readonly subscription: Subscription }
+>();
 
 const positionMap = {
     /** Maps CDK overlay x-anchor back to a dropdown x-position label. */
@@ -150,11 +158,10 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     private parent = inject(KbqDropdown, { optional: true })!;
     private dropdownItemInstance = inject(KbqDropdownItem, { optional: true, self: true })!;
     private _dir = inject(Directionality, { optional: true });
-    private changeDetectorRef = inject(ChangeDetectorRef);
     private focusMonitor = inject(FocusMonitor);
     private readonly document = inject(DOCUMENT);
 
-    private readonly ngZone = inject(NgZone);
+    private readonly injector = inject(Injector);
 
     protected readonly isBrowser = inject(Platform).isBrowser;
     lastDestroyReason: DropdownCloseReason;
@@ -234,7 +241,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     /** Whether the dropdown is open. */
     get opened(): boolean {
-        return this._opened;
+        return this.openedState();
     }
 
     /**
@@ -259,15 +266,14 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     /**
      * Whether the dropdown overlay is currently attached. Part of the `KbqSiblingPopup` contract.
      *
-     * `opened` is set synchronously right after the overlay is attached and, on close, only once the exit
-     * animation is done — i.e. it stays `true` for the whole time the trigger is busy with its panel,
-     * including the moment `destroy()` restores focus to the trigger.
+     * Set right after the overlay is attached and cleared right after it is detached, once `destroy()` has
+     * restored focus to the trigger, so a tooltip on the trigger stays muted for that focus.
      */
     get isAttached(): boolean {
-        return this._opened;
+        return this.openedState();
     }
 
-    private _opened: boolean = false;
+    private readonly openedState = signal(false);
 
     private portal: TemplatePortal;
 
@@ -278,10 +284,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     private hoverSubscription = Subscription.EMPTY;
 
-    private widthLockSubscription = Subscription.EMPTY;
-
-    /** Waits for the exit animation to finish a close; must not outlive the trigger, or it emits once destroyed. */
-    private readonly closeAnimationSubscriptions = new Subscription();
+    private widthLockRef: AfterRenderRef | null = null;
 
     constructor() {
         const elementRef = this.elementRef;
@@ -298,17 +301,58 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
             if (!dropdown) return;
 
-            const subscription = outputToObservable(dropdown.closed).subscribe((reason) => {
-                this.destroy(reason);
+            onCleanup(KbqDropdownTrigger.bindToPanel(dropdown, this));
+        });
+    }
 
-                // If a click closed the dropdown, we should close the entire chain of nested dropdowns.
-                if (['click', 'tab'].includes(reason as string) && this.parent) {
-                    untracked(() => this.parent.closed.emit(reason));
+    /**
+     * Subscribes the triggers of a panel to its `closed` once, so that an emission closes the triggers that had the
+     * panel open when it began: a trigger that a `dropdownClosed` handler opens on the way stays open.
+     * @returns Teardown that unbinds the trigger.
+     */
+    private static bindToPanel(dropdown: KbqDropdownPanel, trigger: KbqDropdownTrigger): () => void {
+        let binding = panelBindings.get(dropdown);
+
+        if (!binding) {
+            const triggers = new Set<KbqDropdownTrigger>();
+            const subscription = outputToObservable(dropdown.closed).subscribe((reason) => {
+                const open = [...triggers].filter((candidate) => candidate.openedState());
+
+                for (const candidate of open) {
+                    // Checked again: closing the chain of one trigger can close another one first.
+                    if (candidate.openedState()) candidate.closeFromPanel(dropdown, reason);
                 }
             });
 
-            onCleanup(() => subscription.unsubscribe());
-        });
+            binding = { triggers, subscription };
+            panelBindings.set(dropdown, binding);
+        }
+
+        const { triggers, subscription } = binding;
+
+        triggers.add(trigger);
+
+        return () => {
+            triggers.delete(trigger);
+
+            if (triggers.size) return;
+
+            subscription.unsubscribe();
+            panelBindings.delete(dropdown);
+        };
+    }
+
+    /** Closes the panel this trigger has open on its `closed`, and the chain of panels it is nested in. */
+    private closeFromPanel(dropdown: KbqDropdownPanel, reason: DropdownCloseReason): void {
+        // A click, Tab or an activated item closes the entire chain of nested dropdowns.
+        const closesChain =
+            reason === 'click' || reason === 'tab' || (dropdown instanceof KbqDropdown && dropdown.closingChain);
+
+        this.destroy(reason, closesChain);
+
+        if (closesChain && this.parent) {
+            untracked(() => this.parent.closeChain(reason));
+        }
     }
 
     ngAfterContentInit() {
@@ -338,20 +382,30 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     /** Toggles the dropdown between the open and closed states. */
     toggle(): void {
-        return this._opened ? this.close() : this.open();
+        return untracked(this.openedState) ? this.close() : this.open();
     }
 
     /** Moves an open panel to the current origin and re-applies its position. */
     updatePosition(): void {
-        if (!this._opened || !this.overlayRef) return;
+        untracked(() => {
+            if (!this.openedState() || !this.overlayRef) return;
 
-        this.setPosition(this.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy);
-        this.overlayRef.updatePosition();
+            this.setPosition(this.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy);
+            this.overlayRef.updatePosition();
+        });
     }
 
     /** Opens the dropdown. */
     open(): void {
-        if (this._opened) {
+        // Untracked, as `close()`, `toggle()`, `updatePosition()` and `focus()`: called from a consumer's `effect()`,
+        // the state read on the way — `opened`, the inputs of the trigger and of the panel — would make the effect run
+        // again on every open and close.
+        untracked(() => this.openPanel());
+    }
+
+    /** Body of `open()`. */
+    private openPanel(): void {
+        if (this.openedState()) {
             return;
         }
 
@@ -382,13 +436,18 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             lazyContent.attach(this.data());
         }
 
+        // The overlay positions the pane once its content has rendered, which without zone.js happens in a later
+        // task: the browser can paint a frame in between with the pane at the viewport origin, where the item
+        // under the pointer takes the hover and focus. Placed now, it is re-placed after the render.
+        overlayRef.updatePosition();
+
         this.closingActionsSubscription.unsubscribe();
         this.closingActionsSubscription = this.closingActions().subscribe(() => this.close());
 
         this.init();
 
         if (this.dropdown() instanceof KbqDropdown) {
-            (this.dropdown() as KbqDropdown).startAnimation();
+            (this.dropdown() as KbqDropdown).setOpened(true);
         }
 
         this.lockOverlayWidthForSearch();
@@ -396,19 +455,21 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     /** Closes the dropdown. */
     close(): void {
-        this.dropdown().closed.emit();
+        untracked(() => this.dropdown().closed.emit());
     }
 
     /**
      * Focuses the dropdown trigger.
      */
     focus(origin?: FocusOrigin, options?: FocusOptions) {
-        // The trigger of a nested panel is an item of a search panel: the caret belongs to the query,
-        // not to the item, so hand it back to the field instead of focusing this element.
-        if (this.isNested() && this.parent.restoreFocus?.()) return;
+        untracked(() => {
+            // The trigger of a nested panel is an item of a search panel: the caret belongs to the query,
+            // not to the item, so hand it back to the field instead of focusing this element.
+            if (this.isNested() && this.parent.restoreFocus?.()) return;
 
-        // A programmatic open leaves `openedBy` unset; the host still gets `cdk-program-focused`.
-        this.focusMonitor.focusVia(this.elementRef.nativeElement, origin ?? 'program', options);
+            // A programmatic open leaves `openedBy` unset; the host still gets `cdk-program-focused`.
+            this.focusMonitor.focusVia(this.elementRef.nativeElement, origin ?? 'program', options);
+        });
     }
 
     /** Whether focus is still the overlay's to give back, i.e. an outside click hasn't moved it elsewhere. */
@@ -423,6 +484,20 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             !!overlayElement?.contains(activeElement) ||
             this.elementRef.nativeElement.contains(activeElement)
         );
+    }
+
+    /**
+     * Takes the focus off the detached panel. A renderer can keep its view in the document for a while
+     * (`provideAnimations()` does, until its engine flushes), and the panel this one is nested in would not count
+     * the focus left there as its own to restore.
+     */
+    private releaseFocus(): void {
+        const activeElement = this.document.activeElement as HTMLElement | null;
+        const overlayElement = this.overlayRef?.overlayElement as HTMLElement | null | undefined;
+
+        if (activeElement && overlayElement?.contains(activeElement)) {
+            activeElement.blur();
+        }
     }
 
     /** Handles mouse presses on the trigger. */
@@ -444,7 +519,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
      * sibling item crossed on the way to the submenu doesn't prematurely close it.
      */
     handleMouseLeave(event: MouseEvent): void {
-        if (!this.isNested() || !this._opened || !this.isBrowser || !this.parent.safeArea() || !this.overlayRef) {
+        if (!this.isNested() || !this.openedState() || !this.isBrowser || !this.parent.safeArea() || !this.overlayRef) {
             return;
         }
 
@@ -509,7 +584,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     private handleTouchStart = () => (this.openedBy = 'touch');
 
     /** Closes the dropdown and does the necessary cleanup. */
-    private destroy(reason: DropdownCloseReason) {
+    private destroy(reason: DropdownCloseReason, closesChain = false) {
         if (!this.overlayRef || !this.opened) {
             return;
         }
@@ -523,52 +598,34 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         this.dropdown().resetActiveItem();
 
         this.closingActionsSubscription.unsubscribe();
-        this.widthLockSubscription.unsubscribe();
+        this.widthLockRef?.destroy();
 
         // Read before detaching the overlay.
         const focusIsOurs = this.overlayHoldsFocus();
 
         this.overlayRef.detach();
 
-        if (this.restoreFocus() && focusIsOurs && (reason === 'keydown' || !this.openedBy || !this.isNested())) {
+        // A nested panel closing with the whole chain leaves the focus to the root trigger.
+        const ownsFocus = (reason === 'keydown' && !closesChain) || !this.openedBy || !this.isNested();
+
+        if (this.restoreFocus() && focusIsOurs && ownsFocus) {
             this.focus(this.openedBy);
         }
+
+        this.releaseFocus();
 
         this.openedBy = undefined;
 
         const dropdown = this.dropdown();
-        const lazyContent = dropdown.lazyContent?.();
 
         if (dropdown instanceof KbqDropdown) {
-            dropdown.resetAnimation();
-
-            const animationSubscription = dropdown.animationDone.pipe(
-                filter((event) => event.toState === 'void'),
-                take(1)
-            );
-
-            if (lazyContent) {
-                // Wait for the exit animation to finish before detaching the content.
-                this.closeAnimationSubscriptions.add(
-                    animationSubscription
-                        .pipe(
-                            // Interrupt if the content got re-attached.
-                            takeUntil(lazyContent.attached)
-                        )
-                        .subscribe({
-                            next: () => lazyContent.detach(),
-                            // No matter whether the content got re-attached, reset the dropdown.
-                            complete: () => this.setIsOpened(false)
-                        })
-                );
-            } else {
-                this.closeAnimationSubscriptions.add(animationSubscription.subscribe(() => this.setIsOpened(false)));
-            }
-        } else {
-            this.setIsOpened(false);
-
-            lazyContent?.detach();
+            dropdown.setOpened(false);
         }
+
+        dropdown.lazyContent?.()?.detach();
+
+        // Last: a `dropdownClosed` handler can open the panel again, with this trigger or another one.
+        this.setIsOpened(false);
     }
 
     /**
@@ -597,22 +654,17 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     // set state rather than toggle to support triggers sharing a dropdown
     private setIsOpened(isOpen: boolean): void {
-        if (isOpen !== this._opened) {
-            this.changeDetectorRef.markForCheck();
-        }
-
-        this._opened = isOpen;
-
-        if (this._opened) {
-            // TODO: The 'emit' function requires a mandatory void argument
-            this.dropdownOpened.emit();
-        } else {
-            // TODO: The 'emit' function requires a mandatory void argument
-            this.dropdownClosed.emit();
-        }
+        this.openedState.set(isOpen);
 
         if (this.isNested()) {
             this.dropdownItemInstance.highlighted = isOpen;
+        }
+
+        // Last, for the same reason as in `destroy()`.
+        if (isOpen) {
+            this.dropdownOpened.emit();
+        } else {
+            this.dropdownClosed.emit();
         }
     }
 
@@ -688,9 +740,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     }
 
     /**
-     * Listens to changes in the position of the overlay and sets the correct classes
-     * on the dropdown based on the new position. This ensures the animation origin is always
-     * correct, even if a fallback position is used for the overlay.
+     * Listens to changes in the position of the overlay and sets the matching position classes on the dropdown,
+     * so they follow a fallback position too.
      */
     private subscribeToPositions(position: FlexibleConnectedPositionStrategy): void {
         if (this.dropdown().setPositionClasses) {
@@ -783,25 +834,32 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     private cleanUpSubscriptions(): void {
         this.closingActionsSubscription.unsubscribe();
         this.hoverSubscription.unsubscribe();
-        this.widthLockSubscription.unsubscribe();
-        this.closeAnimationSubscriptions.unsubscribe();
+        this.widthLockRef?.destroy();
     }
 
     /** Returns a stream that emits whenever an action that should close the dropdown occurs. */
     private closingActions() {
         const backdrop = this.overlayRef!.backdropClick();
-        const outsidePointerEvents = this.overlayRef!.outsidePointerEvents();
+        // A click on the trigger is the trigger's own: it toggles a top-level panel and keeps a nested one open. Taken for
+        // an outside click, it closed the nested panel before the click reached the trigger. The trigger does not handle
+        // `contextmenu` and `auxclick`, so those close the panel as they do anywhere else.
+        const outsidePointerEvents = this.overlayRef!.outsidePointerEvents().pipe(
+            filter(
+                (event) =>
+                    event.type !== 'click' || !this.elementRef.nativeElement.contains(_getEventTarget<Node>(event))
+            )
+        );
         const detachments = this.overlayRef!.detachments();
         const parentClose = this.parent ? outputToObservable(this.parent.closed) : observableOf();
         const hover = this.parent
             ? this.parent.hovered().pipe(
                   filter((active) => active !== this.dropdownItemInstance),
-                  filter(() => this._opened),
+                  filter(() => this.openedState()),
                   // While a safe area protects this dropdown, closing is driven by the safe area
                   // itself instead: either it resolves on its own (see `handleMouseLeave()`), or a
                   // forced switch to a different nested trigger closes this one via `onExit` — always
-                  // before the new trigger opens, so the two don't race over animation state shared by
-                  // triggers pointing at the same dropdown (see `KbqDropdown.activateSafeArea()`).
+                  // before the new trigger opens, so the two don't race over the state of a dropdown shared by
+                  // both triggers (see `KbqDropdown.activateSafeArea()`).
                   filter(() => !this.parent.isSafeAreaActive())
               )
             : observableOf();
@@ -844,20 +902,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
                 this.parent.deactivateSafeArea();
 
                 this.openedBy = 'mouse';
-
-                // If the same dropdown is used between multiple triggers, it might still be animating
-                // while the new trigger tries to re-open it. Wait for the animation to finish
-                // before doing so. Also interrupt if the user moves to another item.
-                if (this.dropdown() instanceof KbqDropdown && (this.dropdown() as KbqDropdown).isAnimating) {
-                    // We need the `delay(0)` here in order to avoid
-                    // 'changed after checked' errors in some cases. See #12194.
-                    (this.dropdown() as KbqDropdown).animationDone
-                        .pipe(take(1), delay(0, asapScheduler), takeUntil(this.parent.hovered()))
-                        // eslint-disable-next-line rxjs-x/no-nested-subscribe
-                        .subscribe(() => this.open());
-                } else {
-                    this.open();
-                }
+                this.open();
             });
     }
 
@@ -897,22 +942,16 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             return;
         }
 
-        this.widthLockSubscription = this.ngZone.onStable
-            .asObservable()
-            .pipe(take(1))
-            .subscribe(() => this.pinOverlayWidth());
+        this.widthLockRef = afterNextRender(() => this.pinOverlayWidth(), { injector: this.injector });
     }
 
     /** Freezes the overlay pane at its rendered width. */
     private pinOverlayWidth(): void {
-        if (!this._opened || !this.overlayRef) return;
+        if (!this.openedState() || !this.overlayRef) return;
 
         // An explicit or `'auto'` panelWidth already fixes the pane; only pin content-sized panels.
         if (this.getOverlaySize().width !== '') return;
 
-        // Measure the pane, not `.kbq-dropdown__panel`: the panel scales in via `@transformDropdown`,
-        // so its `getBoundingClientRect()` can read a mid-animation (scaled) width. The pane is
-        // transform-immune and the panel fills it.
         const width = this.overlayRef.overlayElement.getBoundingClientRect().width;
 
         if (width) {

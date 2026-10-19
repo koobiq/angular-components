@@ -1,6 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import {
+    AfterViewChecked,
     AfterViewInit,
     booleanAttribute,
     computed,
@@ -46,12 +47,11 @@ export const baseURLRegex = /^http(s)?:\/\//;
         '[class.kbq-disabled]': 'disabledSignal()',
         '[attr.disabled]': 'nativeDisabledAttribute()',
         '[attr.aria-disabled]': 'ariaDisabledAttribute()',
-        '[attr.tabindex]': 'hostTabIndex()',
-        '[attr.print]': 'printUrl()'
+        '[attr.tabindex]': 'hostTabIndex()'
     },
     exportAs: 'kbqLink'
 })
-export class KbqLink implements AfterViewInit, OnDestroy {
+export class KbqLink implements AfterViewInit, AfterViewChecked, OnDestroy {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly contentObserver = inject(ContentObserver);
     private readonly nativeElement = kbqInjectNativeElement<HTMLAnchorElement>();
@@ -150,19 +150,30 @@ export class KbqLink implements AfterViewInit, OnDestroy {
         });
     }
 
-    /**
-     * The URL printed next to the link text. `href` is DOM state rather than a signal, so it is read
-     * where a binding is evaluated: host bindings run after the template bindings that set `href`, and
-     * again on every check, so a changing `[href]` cannot leave a stale URL behind.
-     *
-     * @docs-private
-     */
-    protected printUrl(): string | undefined {
-        return this.print() || this.nativeElement.href?.replace(baseURLRegex, '');
-    }
+    /** The URL last written to the `print` attribute. */
+    private printedUrl: string | undefined;
 
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.nativeElement, true);
+    }
+
+    /**
+     * Writes the URL printed next to the link text. `href` is DOM state rather than a signal, and a `routerLink` on
+     * the same element sets it from a host binding of its own that may run after this directive's, so it is read
+     * once the view is checked: a binding would print the previous `href` until something re-checked the view.
+     */
+    ngAfterViewChecked(): void {
+        const url = this.print() || this.nativeElement.href?.replace(baseURLRegex, '');
+
+        if (url === this.printedUrl) return;
+
+        this.printedUrl = url;
+
+        if (url === undefined) {
+            this.renderer.removeAttribute(this.nativeElement, 'print');
+        } else {
+            this.renderer.setAttribute(this.nativeElement, 'print', url);
+        }
     }
 
     ngOnDestroy(): void {

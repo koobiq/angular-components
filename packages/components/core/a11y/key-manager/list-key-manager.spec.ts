@@ -2,6 +2,7 @@ import { FocusOrigin, ListKeyManagerModifierKey } from '@angular/cdk/a11y';
 import { DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, TAB, UP_ARROW } from '@angular/cdk/keycodes';
 import { QueryList } from '@angular/core';
 import { take } from 'rxjs/operators';
+import type { MockInstance } from 'vitest';
 import { createKeyboardEvent } from '../../testing';
 import { FocusKeyManager } from './focus-key-manager';
 import { ListKeyManager } from './list-key-manager';
@@ -62,7 +63,7 @@ describe('Key managers', () => {
         let keyManager: Omit<ListKeyManager<FakeFocusable>, 'setActiveItem'> & {
             setActiveItem(index: number): void;
         };
-        let setActiveItemSpyFn: jest.SpyInstance;
+        let setActiveItemSpyFn: MockInstance;
 
         beforeEach(() => {
             itemList.reset([new FakeFocusable('one'), new FakeFocusable('two'), new FakeFocusable('three')]);
@@ -71,7 +72,7 @@ describe('Key managers', () => {
             // first item is already focused
             keyManager.setFirstItemActive();
 
-            setActiveItemSpyFn = jest.spyOn(keyManager, 'setActiveItem');
+            setActiveItemSpyFn = vi.spyOn(keyManager, 'setActiveItem');
             // spyOn(keyManager, 'setActiveItem').and.callThrough();
         });
 
@@ -96,7 +97,7 @@ describe('Key managers', () => {
 
         describe('Key events', () => {
             it('should emit tabOut when the tab key is pressed', () => {
-                const fn = jest.fn();
+                const fn = vi.fn();
 
                 keyManager.tabOut.pipe(take(1)).subscribe(fn);
                 keyManager.onKeydown(fakeKeyEvents.tab);
@@ -105,7 +106,7 @@ describe('Key managers', () => {
             });
 
             it('should emit tabOut when the tab key is pressed with a modifier', () => {
-                const fn = jest.fn();
+                const fn = vi.fn();
 
                 keyManager.tabOut.pipe(take(1)).subscribe(fn);
 
@@ -116,7 +117,7 @@ describe('Key managers', () => {
             });
 
             it('should emit an event whenever the active item changes', () => {
-                const fn = jest.fn();
+                const fn = vi.fn();
                 const subscription = keyManager.change.subscribe(fn);
 
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
@@ -131,7 +132,7 @@ describe('Key managers', () => {
             // Unlike the CDK: autocomplete and tree-select select the active item when `change` fires on a
             // closed panel, so a re-rendered list must not look like navigation.
             it('should not emit if the active item changed, but not the active index', () => {
-                const fn = jest.fn();
+                const fn = vi.fn();
                 const subscription = keyManager.change.subscribe(fn);
 
                 keyManager.setActiveItem(0);
@@ -352,7 +353,7 @@ describe('Key managers', () => {
                 /** Runs the test that asserts that we handle modifier keys correctly. */
                 const runModifierKeyTest = (modifier: ListKeyManagerModifierKey) => {
                     const initialActiveIndex = keyManager.activeItemIndex;
-                    const fn = jest.fn();
+                    const fn = vi.fn();
                     const subscription = keyManager.change.subscribe(fn);
 
                     expect(context.nextKeyEvent.defaultPrevented).toBe(false);
@@ -378,19 +379,19 @@ describe('Key managers', () => {
                 // modified arrow still moves the active item. Enabling these four needs every caller
                 // of onKeydown to opt back in with withAllowedModifierKeys, or shift-range selection
                 // in list, tree and select stops working.
-                xit('should not do anything for arrow keys if the alt key is held down', () => {
+                it.skip('should not do anything for arrow keys if the alt key is held down', () => {
                     runModifierKeyTest('altKey');
                 });
 
-                xit('should not do anything for arrow keys if the control key is held down', () => {
+                it.skip('should not do anything for arrow keys if the control key is held down', () => {
                     runModifierKeyTest('ctrlKey');
                 });
 
-                xit('should not do anything for arrow keys if the meta key is held down', () => {
+                it.skip('should not do anything for arrow keys if the meta key is held down', () => {
                     runModifierKeyTest('metaKey');
                 });
 
-                xit('should not do anything for arrow keys if the shift key is held down', () => {
+                it.skip('should not do anything for arrow keys if the shift key is held down', () => {
                     runModifierKeyTest('shiftKey');
                 });
             };
@@ -448,7 +449,7 @@ describe('Key managers', () => {
             });
 
             it('should be able to set the active item without emitting an event', () => {
-                const fn = jest.fn();
+                const fn = vi.fn();
                 const subscription = keyManager.change.subscribe(fn);
 
                 expect(keyManager.activeItemIndex).toBe(0);
@@ -550,7 +551,7 @@ describe('Key managers', () => {
             });
 
             it('should not emit an event if the item did not change', () => {
-                const fn = jest.fn();
+                const fn = vi.fn();
                 const subscription = keyManager.change.subscribe(fn);
 
                 keyManager.setActiveItem(2);
@@ -659,7 +660,7 @@ describe('Key managers', () => {
 
     describe('FocusKeyManager', () => {
         let keyManager: FocusKeyManager<FakeFocusable>;
-        const focusSpyFn: Record<number, jest.SpyInstance> = {};
+        const focusSpyFn: Record<number, MockInstance> = {};
 
         beforeEach(() => {
             itemList.reset([new FakeFocusable(), new FakeFocusable(), new FakeFocusable()]);
@@ -669,7 +670,7 @@ describe('Key managers', () => {
             keyManager.setFirstItemActive();
 
             itemList.toArray().forEach((item, index) => {
-                focusSpyFn[index] = jest.spyOn(item, 'focus');
+                focusSpyFn[index] = vi.spyOn(item, 'focus');
             });
         });
 

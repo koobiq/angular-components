@@ -149,7 +149,7 @@ describe('KbqTimezone utils', () => {
         it('should sort a zone with an unresolvable offset last', () => {
             // `kbqResolveTimezoneOffset` reports an unknown zone once in dev mode, and the suite fails on
             // console output.
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const broken = zone({ id: 'Nowhere/Nothing', offset: 'not-an-offset', city: 'Nowhere' });
 
             expect(timezonesSortComparator(broken, firstTimezone)).toBeGreaterThan(0);
@@ -191,7 +191,7 @@ describe('KbqTimezone utils', () => {
         });
 
         it('should not read the host time zone', () => {
-            const dateTimeFormat = jest.spyOn(Intl, 'DateTimeFormat');
+            const dateTimeFormat = vi.spyOn(Intl, 'DateTimeFormat');
 
             getZonesGroupedByCountry(worldZones);
 

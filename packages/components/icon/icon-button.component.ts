@@ -4,18 +4,16 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    computed,
     effect,
     inject,
-    Input,
     input,
     isDevMode,
     numberAttribute,
     OnDestroy,
     signal,
+    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { KbqIcon } from './icon.component';
 
 /**
@@ -55,9 +53,7 @@ const NATIVELY_ACTIVATED_NODES = ['BUTTON', 'INPUT'];
         '[attr.aria-disabled]': 'disabled || null',
 
         '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-icon-button_compact]': 'isCompact()',
-        // @deprecated Will be removed in the next major release (#DS-5338)
-        '[class.kbq-icon-button_small]': 'isCompact()'
+        '[class.kbq-icon-button_compact]': "size() === 'compact'"
     }
 })
 export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
@@ -67,35 +63,11 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     protected readonly focusMonitor = inject(FocusMonitor);
     /** Size of the icon button. */
     readonly size = input<KbqIconButtonSize>('normal');
-    /**
-     * @deprecated Use `size` input instead. Will be removed in the next major release (#DS-5338).
-     */
-    readonly small = input(false);
 
     /** @docs-private */
-    protected readonly isCompact = computed(() => this.size() === 'compact' || this.small());
+    override readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon-button' });
 
-    /** Name of an icon within a `@koobiq/icons`. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ alias: 'kbq-icon-button' }) override iconName: string | undefined;
-
-    /**
-     * Position of the button in the tab order. A disabled button is taken out of it entirely.
-     */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    // `numberAttribute` returns NaN for anything it cannot parse, and `tabindex="NaN"` is an invalid
-    // attribute the browser ignores — which silently takes the button out of the tab order.
-    @Input({
-        transform: (value: unknown): number | null => {
-            if (value == null) return null;
-
-            const tabindex = numberAttribute(value);
-
-            return Number.isNaN(tabindex) ? null : tabindex;
-        }
-    })
+    /** Position of the button in the tab order. A disabled button is taken out of it entirely. */
     get tabindex(): number | null {
         return this.disabled ? null : this._tabindex;
     }
@@ -106,21 +78,14 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 
     private _tabindex: number | null = 0;
 
-    // @todo 20 In the next major release this feature will be replaced on the input signal.
     /** Whether the button is disabled. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this._disabled;
+        return this.disabledSignal();
     }
 
     set disabled(value: boolean) {
         this.disabledSignal.set(value);
     }
-
-    // @todo 20 In the next major release this line will be deleted.
-    private _disabled: boolean;
 
     /** @docs-private */
     readonly disabledSignal = signal(false);
@@ -128,11 +93,46 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     /** The button sizes itself through its own padding, so it never gets the bare icon's `max-height`. */
     protected override readonly appliesMaxHeight: boolean = false;
 
+    /** @docs-private */
+    readonly tabindexInput = input<number | null | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabindex',
+        // `numberAttribute` gives NaN for what it cannot parse, and `tabindex="NaN"` is an invalid attribute the
+        // browser ignores, so an unparsable value renders no tabindex at all.
+        transform: (value) => {
+            if (value == null) return undefined;
+
+            const tabindex = numberAttribute(value);
+
+            return Number.isNaN(tabindex) ? null : tabindex;
+        }
+    });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    override ngOnChanges(changes: SimpleChanges): void {
+        super.ngOnChanges(changes);
+
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        // A bound `undefined` or `null` restores the default tabindex instead of dropping the button out of the tab order.
+        if (changes['tabindexInput']) {
+            const tabindex = this.tabindexInput();
+
+            this.tabindex = tabindex === undefined ? 0 : tabindex;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
+
     constructor() {
         super();
-
-        // @todo 20 In the next major release this line will be deleted.
-        toObservable(this.disabledSignal).subscribe((value) => (this._disabled = value));
 
         effect(() => (this.disabledSignal() ? this.stopFocusMonitor() : this.runFocusMonitor()));
     }

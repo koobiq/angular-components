@@ -559,6 +559,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/input').then((m) => m.InputOverviewExample);
         case 'input-password-overview':
             return import('@koobiq/docs-examples/components/input').then((m) => m.InputPasswordOverviewExample);
+        case 'input-password-template-driven':
+            return import('@koobiq/docs-examples/components/input').then((m) => m.InputPasswordTemplateDrivenExample);
         case 'input-with-mask':
             return import('@koobiq/docs-examples/components/input').then((m) => m.InputWithMaskExample);
         case 'layout-flex-alignment':
@@ -625,6 +627,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayBackgroundExample);
         case 'loader-overlay-default':
             return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayDefaultExample);
+        case 'loader-overlay-delay':
+            return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayDelayExample);
         case 'loader-overlay-fixed-top':
             return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayFixedTopExample);
         case 'loader-overlay-large':

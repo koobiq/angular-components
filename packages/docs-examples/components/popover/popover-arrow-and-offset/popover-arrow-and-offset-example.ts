@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { PopUpSizes } from '@koobiq/components/core';
@@ -78,20 +78,20 @@ export class PopoverArrowAndOffsetExample implements AfterViewInit {
     protected offset: number | null = null;
     protected offsetChanged = false;
     protected readonly popoverSize = PopUpSizes.Large;
-    @ViewChild(KbqButtonToggleGroup) protected toggleGroup: KbqButtonToggleGroup;
+    protected readonly toggleGroup = viewChild.required(KbqButtonToggleGroup);
 
     ngAfterViewInit() {
         Promise.resolve().then(() => {
-            this.toggleGroup.buttonToggles().at(3)!.checked = true;
+            this.toggleGroup().buttonToggles().at(3)!.checked = true;
         });
     }
 
     onArrowChange({ checked }: KbqToggleChange) {
         if (!this.offsetChanged) {
             if (checked) {
-                this.toggleGroup.buttonToggles().at(3)!.checked = true;
+                this.toggleGroup().buttonToggles().at(3)!.checked = true;
             } else {
-                this.toggleGroup.buttonToggles().at(2)!.checked = true;
+                this.toggleGroup().buttonToggles().at(2)!.checked = true;
             }
         }
 

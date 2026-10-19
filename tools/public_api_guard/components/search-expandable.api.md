@@ -7,7 +7,6 @@
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DestroyRef } from '@angular/core';
@@ -19,8 +18,10 @@ import { KbqDeepPartial } from '@koobiq/components/core';
 import { KbqSearchExpandableLocaleConfiguration } from '@koobiq/components/core';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 
 // @public (undocumented)
 export const defaultEmitValueTimeout = 200;
@@ -41,7 +42,7 @@ export const KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION: KbqSearchExpand
 export const KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION: InjectionToken<KbqSearchExpandableLocaleConfiguration>;
 
 // @public (undocumented)
-export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy {
+export class KbqSearchExpandable implements OnChanges, ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy {
     constructor();
     protected readonly a11yLocaleConfiguration: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
@@ -49,26 +50,25 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     protected readonly destroyRef: DestroyRef;
     get disabled(): boolean;
     set disabled(value: boolean);
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     readonly emitValueTimeout: _angular_core.InputSignalWithTransform<number, unknown>;
     protected readonly errorStateMatcher: ErrorStateMatcher;
     protected readonly focusMonitor: FocusMonitor;
     readonly isEmitValueByEnterEnabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    isOpened: boolean;
+    get isOpened(): boolean;
+    set isOpened(value: boolean);
     readonly isOpenedChange: _angular_core.OutputEmitterRef<boolean>;
+    readonly isOpenedInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     // (undocumented)
     protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null;
     readonly localeConfiguration: _angular_core.Signal<KbqSearchExpandableLocaleConfiguration>;
     protected readonly nativeElement: HTMLElement;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_isOpened: unknown;
-    // (undocumented)
-    static ngAcceptInputType_tabIndex: unknown;
     ngAfterViewChecked(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     protected readonly ngControl: NgControl | null;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     onChange: (value: string) => void;
@@ -76,20 +76,23 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     onTouch: () => void;
     get placeholder(): string;
     set placeholder(value: string | null);
+    readonly placeholderInput: _angular_core.InputSignal<string | null | undefined>;
     registerOnChange(fn: (value: string) => void): void;
     registerOnTouched(fn: () => void): void;
     protected readonly searchIconName = "kbq-magnifying-glass_16";
     setDisabledState(isDisabled: boolean): void;
     get tabIndex(): number;
     set tabIndex(value: number);
+    readonly tabIndexInput: _angular_core.InputSignalWithTransform<number | undefined, string | number | null | undefined>;
     // (undocumented)
     toggle(): void;
     get tooltipText(): string;
     set tooltipText(value: string | null);
-    value: BehaviorSubject<string>;
+    readonly tooltipTextInput: _angular_core.InputSignal<string | null | undefined>;
+    readonly value: _angular_core.WritableSignal<string>;
     writeValue(value: string): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSearchExpandable, "kbq-search-expandable", never, { "isOpened": { "alias": "isOpened"; "required": false; }; "isEmitValueByEnterEnabled": { "alias": "isEmitValueByEnterEnabled"; "required": false; "isSignal": true; }; "emitValueTimeout": { "alias": "emitValueTimeout"; "required": false; "isSignal": true; }; "tooltipText": { "alias": "tooltipText"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, { "isOpenedChange": "isOpenedChange"; }, never, never, true, [{ directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSearchExpandable, "kbq-search-expandable", never, { "isEmitValueByEnterEnabled": { "alias": "isEmitValueByEnterEnabled"; "required": false; "isSignal": true; }; "emitValueTimeout": { "alias": "emitValueTimeout"; "required": false; "isSignal": true; }; "isOpenedInput": { "alias": "isOpened"; "required": false; "isSignal": true; }; "tooltipTextInput": { "alias": "tooltipText"; "required": false; "isSignal": true; }; "placeholderInput": { "alias": "placeholder"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; }, { "isOpenedChange": "isOpenedChange"; }, never, never, true, [{ directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSearchExpandable, never>;
 }

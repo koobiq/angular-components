@@ -71,6 +71,22 @@ test.describe('KbqToastModule', () => {
             await expect(getToast(page)).toBeHidden();
         });
 
+        test('raises the stack above an overlay opened after it when another toast appears', async ({ page }) => {
+            await page.getByTestId('e2eShowStickyToast').click();
+            await expect(getToast(page)).toBeVisible();
+
+            await page.getByTestId('e2eOpenOverlay').click();
+            await expect(page.getByTestId('e2eOverlay')).toBeVisible();
+
+            await page.getByTestId('e2eShowStickyToast').click();
+            await expect(getToast(page)).toHaveCount(2);
+
+            // The click waits for the button to receive pointer events, which the overlay would intercept.
+            await getCloseButton(page).first().click();
+
+            await expect(getToast(page)).toHaveCount(1);
+        });
+
         test('closes a sticky toast through the close button', async ({ page }) => {
             await page.getByTestId('e2eShowStickyToast').click();
 

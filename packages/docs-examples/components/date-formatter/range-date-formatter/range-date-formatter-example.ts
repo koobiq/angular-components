@@ -1,12 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import {
-    DateAdapter,
-    DateFormatter,
-    KBQ_LOCALE_SERVICE,
-    KbqFormattersModule,
-    KbqLocaleService
-} from '@koobiq/components/core';
+import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE, KbqFormattersModule } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
@@ -22,6 +16,11 @@ import { distinctUntilChanged } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RangeDateFormatterExample {
+    private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
+    private readonly dateFormatter = inject<DateFormatter<DateTime>>(DateFormatter);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly localeService = inject(KBQ_LOCALE_SERVICE);
+
     formats = {
         range: {
             long: {
@@ -164,12 +163,7 @@ export class RangeDateFormatterExample {
         }
     };
 
-    constructor(
-        private adapter: DateAdapter<DateTime>,
-        private dateFormatter: DateFormatter<DateTime>,
-        private changeDetectorRef: ChangeDetectorRef,
-        @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
-    ) {
+    constructor() {
         this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe(this.onLocaleChange);
     }
 

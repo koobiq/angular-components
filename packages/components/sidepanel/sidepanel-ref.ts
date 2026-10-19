@@ -1,5 +1,5 @@
 ﻿import { OverlayRef } from '@angular/cdk/overlay';
-import { signal } from '@angular/core';
+import { signal, untracked } from '@angular/core';
 import { ESCAPE, isHtmlElement, KbqOverflowShadowState } from '@koobiq/components/core';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, take, tap } from 'rxjs/operators';
@@ -17,7 +17,7 @@ export class KbqSidepanelRef<T = any, R = any> {
      * Vertical scroll overflow state of the sidepanel body.
      * Updated on scroll and used for visual adjustments.
      */
-    bodyOverflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
+    readonly bodyOverflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
 
     /** Instance of the component making up the content of the sidepanel. */
     instance: T;
@@ -115,7 +115,9 @@ export class KbqSidepanelRef<T = any, R = any> {
                 filter((event) => event.keyCode === ESCAPE)
             )
             .subscribe((event) => {
-                if (this.config.disableClose) return;
+                // CDK hands the key to this overlay after the layers above it, such as a tooltip, a popover or a
+                // confirm dialog, have handled it: one that closed spent it, and the sidepanel stays open.
+                if (event.defaultPrevented || this.config.disableClose) return;
 
                 event.preventDefault();
                 this.close();
@@ -133,6 +135,13 @@ export class KbqSidepanelRef<T = any, R = any> {
     }
 
     close(result?: R): void {
+        // Untracked, as `KbqSidepanelService.open()`: called from a consumer's `effect()`, the state of the sidepanels
+        // stacked under this one, read and written on the way, would make the effect run again as they move.
+        untracked(() => this.startClosing(result));
+    }
+
+    /** Body of `close()`. */
+    private startClosing(result: R | undefined): void {
         if (this.closing) return;
 
         this.closing = true;

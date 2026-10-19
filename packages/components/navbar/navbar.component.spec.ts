@@ -2,15 +2,16 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, ElementRef, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { Component, DebugElement, effect, ElementRef, signal, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     dispatchKeyboardEvent,
+    DOWN_ARROW,
     ENTER,
     enUSLocaleData,
+    KBQ_ANIMATIONS_CONFIG,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqOverlayLayer,
@@ -61,6 +62,17 @@ const dispatchGlobalShortcut = (keyCode: number): void => {
     window.dispatchEvent(event);
 };
 
+/** A primary-button click. CDK reads a `mousedown` with `buttons` or `detail` of 0 as a screen reader's. */
+const clickWithMouse = (element: HTMLElement): void => {
+    element.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, buttons: 1, detail: 1 }));
+    element.focus();
+    element.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, detail: 1 }));
+    element.click();
+};
+
+const focusableItemElements = (fixture: ComponentFixture<unknown>): HTMLElement[] =>
+    fixture.debugElement.queryAll(By.directive(KbqNavbarFocusableItem)).map(({ nativeElement }) => nativeElement);
+
 /**
  * jsdom performs no layout, so every geometry property reads as 0. These stubs stand in for the browser's
  * answer to "does the text fit?". Defined as getters so a test can observe *when* they are read.
@@ -96,17 +108,20 @@ class MockNavbarBrandResizeObserver {
 
 describe('KbqNavbar', () => {
     beforeEach(() => {
+        vi.useFakeTimers();
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 KbqNavbarModule,
                 KbqIconModule,
                 TestApp,
                 TestItemApp,
+                TestNestedButtonApp,
+                TestBoundTabIndexApp,
                 TestItemSuffixApp,
                 TestTitleApp,
                 TestVerticalApp,
                 TestVerticalItemTitleApp,
+                TestVerticalBentoApp,
                 TestBrandApp,
                 TestBrandLongTitleApp,
                 TestBrandHorizontalApp,
@@ -118,16 +133,21 @@ describe('KbqNavbar', () => {
                 TestCollapseApp,
                 TestTwoContainersApp,
                 TestTooltipApp,
-                TestTooltipSelectorApp
+                TestTooltipSelectorApp,
+                TestVerticalDrivenByEffectApp
             ]
         }).compileComponents();
     });
 
-    it('collapsed elements should have title', fakeAsync(() => {
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it('collapsed elements should have title', async () => {
         const fixture = TestBed.createComponent(TestApp);
 
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
         fixture.detectChanges();
 
         const collapsableItems = fixture.debugElement
@@ -143,7 +163,7 @@ describe('KbqNavbar', () => {
 
         expect(collapsedItems.length).toBeGreaterThan(0);
         expect(collapsedItems.every((item) => !!item.titleText && item.tooltip.content === item.titleText)).toBe(true);
-    }));
+    });
 
     it('items should allow click if not disable', () => {
         const fixture = TestBed.createComponent(TestApp);
@@ -191,114 +211,215 @@ describe('KbqNavbar', () => {
     });
 
     describe('KbqNavbar host', () => {
-        it('should have kbq-navbar class', fakeAsync(() => {
+        it('should have kbq-navbar class', async () => {
             const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.debugElement.query(By.directive(KbqNavbar));
 
             expect(navbar.nativeElement.classList).toContain('kbq-navbar');
-        }));
+        });
 
-        it('tabIndex should be 0 by default', fakeAsync(() => {
+        it('tabIndex should be 0 by default', async () => {
             const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.debugElement.query(By.directive(KbqNavbar));
 
             expect(navbar.nativeElement.getAttribute('tabindex')).toBe('0');
-        }));
+        });
 
-        it('TAB key should set tabIndex to -1 and restore it after setTimeout', fakeAsync(() => {
+        it('TAB key should take the host out of the tab order until the next macrotask', async () => {
             const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const navbarEl: HTMLElement = fixture.debugElement.query(By.directive(KbqNavbar)).nativeElement;
+
+            dispatchKeyboardEvent(navbarEl, 'keydown', TAB, navbarEl);
+
+            expect(navbarEl.getAttribute('tabindex')).toBe('-1');
+
+            fixture.detectChanges();
+
+            expect(navbarEl.getAttribute('tabindex')).toBe('-1');
+
+            await vi.advanceTimersByTimeAsync(0);
+            fixture.detectChanges();
+
+            expect(navbarEl.getAttribute('tabindex')).toBe('0');
+        });
+
+        it('TAB key should restore a bound tabIndex without writing it', async () => {
+            const fixture = TestBed.createComponent(TestBoundTabIndexApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            fixture.componentInstance.tabIndex = 3;
+            fixture.detectChanges();
+
+            const navbarEl: HTMLElement = fixture.debugElement.query(By.directive(KbqNavbar)).nativeElement;
+
+            dispatchKeyboardEvent(navbarEl, 'keydown', TAB, navbarEl);
+            fixture.detectChanges();
+
+            expect(navbarEl.getAttribute('tabindex')).toBe('-1');
+
+            await vi.advanceTimersByTimeAsync(0);
+            fixture.detectChanges();
+
+            expect(navbarEl.getAttribute('tabindex')).toBe('3');
+            expect(fixture.componentInstance.tabIndex).toBe(3);
+            expect(fixture.componentInstance.tabIndexChanges).toEqual([]);
+        });
+
+        it('repeated TAB key presses should not register a destroy callback each', async () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
+            const onDestroy = vi.spyOn((navbarDebugEl.componentInstance as KbqNavbar)['destroyRef'], 'onDestroy');
+
+            for (let i = 0; i < 3; i++) {
+                dispatchKeyboardEvent(navbarDebugEl.nativeElement, 'keydown', TAB, navbarDebugEl.nativeElement);
+                await vi.advanceTimersByTimeAsync(0);
+            }
+
+            expect(onDestroy).not.toHaveBeenCalled();
+        });
+
+        it('repeated TAB key presses should keep one pending restore', async () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
+            const timers = vi.getTimerCount();
+
+            navbar.keyManager.tabOut.next();
+            navbar.keyManager.tabOut.next();
+            navbar.keyManager.tabOut.next();
+
+            expect(vi.getTimerCount()).toBe(timers + 1);
+        });
+
+        it('a navbar without items should stay out of the tab order and leave a bound tabIndex alone', async () => {
+            const fixture = TestBed.createComponent(TestBoundTabIndexApp);
+
+            fixture.componentInstance.showItem = false;
+            fixture.componentInstance.tabIndex = 3;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const navbarEl: HTMLElement = fixture.debugElement.query(By.directive(KbqNavbar)).nativeElement;
+
+            expect(navbarEl.getAttribute('tabindex')).toBe('-1');
+
+            fixture.componentInstance.showItem = true;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(navbarEl.getAttribute('tabindex')).toBe('3');
+            expect(fixture.componentInstance.tabIndex).toBe(3);
+            expect(fixture.componentInstance.tabIndexChanges).toEqual([]);
+        });
+
+        it('a pending tab order restore should not touch a destroyed navbar', async () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const navbarEl: HTMLElement = fixture.debugElement.query(By.directive(KbqNavbar)).nativeElement;
+
+            dispatchKeyboardEvent(navbarEl, 'keydown', TAB, navbarEl);
+            fixture.destroy();
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(navbarEl.getAttribute('tabindex')).toBe('-1');
+        });
+
+        it('RIGHT_ARROW key should pass event to keyManager', async () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
             const navbarInstance = navbarDebugEl.componentInstance as KbqNavbar;
-
-            dispatchKeyboardEvent(navbarDebugEl.nativeElement, 'keydown', TAB, navbarDebugEl.nativeElement);
-            fixture.detectChanges();
-
-            expect(navbarInstance.tabIndex()).toBe(-1);
-
-            tick();
-            fixture.detectChanges();
-
-            expect(navbarInstance.tabIndex()).toBe(0);
-        }));
-
-        it('RIGHT_ARROW key should pass event to keyManager', fakeAsync(() => {
-            const fixture = TestBed.createComponent(TestApp);
-
-            fixture.detectChanges();
-            flush();
-            fixture.detectChanges();
-
-            const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
-            const navbarInstance = navbarDebugEl.componentInstance as KbqNavbar;
-            const spy = jest.spyOn(navbarInstance.keyManager, 'onKeydown');
+            const spy = vi.spyOn(navbarInstance.keyManager, 'onKeydown');
 
             dispatchKeyboardEvent(navbarDebugEl.nativeElement, 'keydown', RIGHT_ARROW, navbarDebugEl.nativeElement);
 
             expect(spy).toHaveBeenCalled();
-        }));
+        });
 
-        it('LEFT_ARROW key should pass event to keyManager', fakeAsync(() => {
+        it('LEFT_ARROW key should pass event to keyManager', async () => {
             const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
             const navbarInstance = navbarDebugEl.componentInstance as KbqNavbar;
-            const spy = jest.spyOn(navbarInstance.keyManager, 'onKeydown');
+            const spy = vi.spyOn(navbarInstance.keyManager, 'onKeydown');
 
             dispatchKeyboardEvent(navbarDebugEl.nativeElement, 'keydown', LEFT_ARROW, navbarDebugEl.nativeElement);
 
             expect(spy).toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('KbqNavbarItem', () => {
-        it('should have kbq-navbar-item_with-title class when title is present', fakeAsync(() => {
+        it('should have kbq-navbar-item_with-title class when title is present', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const itemWithTitle = fixture.debugElement.query(By.css('kbq-navbar-item.kbq-navbar-item_with-title'));
 
             expect(itemWithTitle).toBeTruthy();
-        }));
+        });
 
-        it('should not have kbq-navbar-item_with-title class for icon-only item', fakeAsync(() => {
+        it('should not have kbq-navbar-item_with-title class for icon-only item', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const iconOnlyItem = fixture.debugElement.query(By.css('kbq-navbar-item:not(.kbq-navbar-item_with-title)'));
 
             expect(iconOnlyItem).toBeTruthy();
-        }));
+        });
 
-        it('collapsedText input should override titleText', fakeAsync(() => {
+        it('collapsedText input should override titleText', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             fixture.componentInstance.collapsedText = 'Custom Tooltip';
@@ -307,26 +428,26 @@ describe('KbqNavbar', () => {
             const item = fixture.debugElement.query(By.directive(KbqNavbarItem)).componentInstance as KbqNavbarItem;
 
             expect(item.titleText).toBe('Custom Tooltip');
-        }));
+        });
 
-        it('collapsable should be true by default', fakeAsync(() => {
+        it('collapsable should be true by default', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const item = fixture.debugElement.query(By.directive(KbqNavbarItem)).componentInstance as KbqNavbarItem;
 
             expect(item.collapsable()).toBe(true);
-        }));
+        });
 
-        it('a non-collapsable item keeps its title when the navbar runs out of room', fakeAsync(() => {
+        it('a non-collapsable item keeps its title when the navbar runs out of room', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.componentInstance.collapsable = false;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
@@ -339,25 +460,25 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(item.isCollapsed()).toBe(false);
-        }));
+        });
 
-        it('should not have kbq-navbar-item_collapsed class by default', fakeAsync(() => {
+        it('should not have kbq-navbar-item_collapsed class by default', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const itemDebugEl = fixture.debugElement.query(By.directive(KbqNavbarItem));
 
             expect(itemDebugEl.nativeElement.classList).not.toContain('kbq-navbar-item_collapsed');
-        }));
+        });
 
-        it('should toggle kbq-navbar-item_collapsed class when collapsed changes', fakeAsync(() => {
+        it('should toggle kbq-navbar-item_collapsed class when collapsed changes', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const itemDebugEl = fixture.debugElement.query(By.directive(KbqNavbarItem));
@@ -372,14 +493,14 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(itemDebugEl.nativeElement.classList).not.toContain('kbq-navbar-item_collapsed');
-        }));
+        });
 
-        it('kbqTooltipDisabled should win over the automatic suppression', fakeAsync(() => {
+        it('kbqTooltipDisabled should win over the automatic suppression', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.componentInstance.tooltipDisabled = false;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const item = fixture.debugElement.query(By.directive(KbqNavbarItem)).componentInstance as KbqNavbarItem;
@@ -387,13 +508,13 @@ describe('KbqNavbar', () => {
             // Expanded and not clipped: the item would suppress its own tooltip without the explicit input.
             expect(item.isCollapsed()).toBe(false);
             expect(item.tooltip.disabled).toBe(false);
-        }));
+        });
 
-        it('should enable the tooltip only while the title cannot be read from the item', fakeAsync(() => {
+        it('should enable the tooltip only while the title cannot be read from the item', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const item = fixture.debugElement.query(By.directive(KbqNavbarItem)).componentInstance as KbqNavbarItem;
@@ -404,16 +525,16 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(item.tooltip.disabled).toBe(false);
-        }));
+        });
 
         describe('collapsible width', () => {
             let expandedWidth: number;
 
-            const createItem = () => {
+            const createItem = async () => {
                 const fixture = TestBed.createComponent(TestItemApp);
 
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 const itemDebugEl = fixture.debugElement.query(By.directive(KbqNavbarItem));
@@ -430,18 +551,18 @@ describe('KbqNavbar', () => {
                 return { fixture, host, item: itemDebugEl.componentInstance as KbqNavbarItem };
             };
 
-            it('should measure the width an item frees by collapsing from both presentations', fakeAsync(() => {
-                const { host, item } = createItem();
+            it('should measure the width an item frees by collapsing from both presentations', async () => {
+                const { host, item } = await createItem();
 
                 item.measureWidths();
 
                 expect(item.getCollapsibleWidth()).toBe(124);
                 expect(host.classList).not.toContain('kbq-navbar-item_collapsed');
-            }));
+            });
 
             // Toggled back from collapsed, an item would not render its dropdown chevron and report less.
-            it('should keep the expanded width seen before the item collapsed', fakeAsync(() => {
-                const { fixture, host, item } = createItem();
+            it('should keep the expanded width seen before the item collapsed', async () => {
+                const { fixture, host, item } = await createItem();
 
                 item.measureWidths();
                 item.collapsed = true;
@@ -451,10 +572,10 @@ describe('KbqNavbar', () => {
 
                 expect(item.getCollapsibleWidth()).toBe(124);
                 expect(host.classList).toContain('kbq-navbar-item_collapsed');
-            }));
+            });
 
-            it('should not record widths while the item is hidden', fakeAsync(() => {
-                const { host, item } = createItem();
+            it('should not record widths while the item is hidden', async () => {
+                const { host, item } = await createItem();
                 const getClientRects = host.getClientRects;
 
                 host.getClientRects = () => ({ length: 0 }) as DOMRectList;
@@ -466,16 +587,16 @@ describe('KbqNavbar', () => {
                 item.measureWidths();
 
                 expect(item.getCollapsibleWidth()).toBe(124);
-            }));
+            });
         });
     });
 
     describe('KbqNavbarItemSuffix', () => {
-        const createFixture = (): ComponentFixture<TestItemSuffixApp> => {
+        const createFixture = async (): Promise<ComponentFixture<TestItemSuffixApp>> => {
             const fixture = TestBed.createComponent(TestItemSuffixApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             return fixture;
@@ -484,25 +605,25 @@ describe('KbqNavbar', () => {
         const getItem = (fixture: ComponentFixture<TestItemSuffixApp>, id: string): DebugElement =>
             fixture.debugElement.query(By.css(`#${id}`));
 
-        it('should project the suffix after the title', fakeAsync(() => {
-            const item = getItem(createFixture(), 'suffix-only').nativeElement as HTMLElement;
+        it('should project the suffix after the title', async () => {
+            const item = getItem(await createFixture(), 'suffix-only').nativeElement as HTMLElement;
             const [title, suffix] = Array.from(item.querySelector('.kbq-navbar-item__container')!.children);
 
             expect(title.classList).toContain('kbq-navbar-item__title');
             expect(suffix.classList).toContain('kbq-navbar-item-suffix');
             expect(Array.from(item.children).some((child) => child.classList.contains('kbq-icon'))).toBe(false);
-        }));
+        });
 
-        it('should keep an icon without kbqNavbarItemSuffix before the title', fakeAsync(() => {
-            const item = getItem(createFixture(), 'unmarked').nativeElement as HTMLElement;
+        it('should keep an icon without kbqNavbarItemSuffix before the title', async () => {
+            const item = getItem(await createFixture(), 'unmarked').nativeElement as HTMLElement;
             const [icon, container] = Array.from(item.children);
 
             expect(icon.classList).toContain('kbq-icon');
             expect(container.classList).toContain('kbq-navbar-item__container');
-        }));
+        });
 
-        it('an item whose only icon is a suffix should not collapse', fakeAsync(() => {
-            const fixture = createFixture();
+        it('an item whose only icon is a suffix should not collapse', async () => {
+            const fixture = await createFixture();
             const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
 
             // Far more content than room: every collapsable item would be collapsed.
@@ -516,7 +637,7 @@ describe('KbqNavbar', () => {
             expect(isCollapsed('suffix-only')).toBe(false);
             expect(isCollapsed('wrapped-suffix')).toBe(false);
             expect(isCollapsed('leading-and-suffix')).toBe(true);
-        }));
+        });
     });
 
     describe('owned tooltip', () => {
@@ -529,11 +650,11 @@ describe('KbqNavbar', () => {
             return owners.map(({ componentInstance }) => (componentInstance as KbqNavbarBrand | KbqNavbarItem).tooltip);
         };
 
-        it('should bind [tooltipText] to the owned tooltip when the tooltip directive is imported too', fakeAsync(() => {
+        it('should bind [tooltipText] to the owned tooltip when the tooltip directive is imported too', async () => {
             const fixture = TestBed.createComponent(TestTooltipApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getOwnedTooltips(fixture).map(({ content }) => content)).toEqual([
@@ -542,30 +663,30 @@ describe('KbqNavbar', () => {
                 'Settings'
             ]);
             expect(fixture.debugElement.query(By.css('#plain')).injector.get(KbqTooltipTrigger).content).toBe('Plain');
-        }));
+        });
 
-        it('should not suppress the tooltip of an item or brand without a title', fakeAsync(() => {
+        it('should not suppress the tooltip of an item or brand without a title', async () => {
             const fixture = TestBed.createComponent(TestTooltipApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getOwnedTooltips(fixture).map(({ disabled }) => disabled)).toEqual([false, false, false]);
-        }));
+        });
 
-        it('should keep [tooltipText] of an item or brand without a title while it is collapsed', fakeAsync(() => {
+        it('should keep [tooltipText] of an item or brand without a title while it is collapsed', async () => {
             const fixture = TestBed.createComponent(TestTooltipApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             for (const { injector } of fixture.debugElement.queryAll(By.directive(KbqNavbarRectangleElement))) {
                 injector.get(KbqNavbarRectangleElement).collapsed = true;
             }
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getOwnedTooltips(fixture).map(({ content }) => content)).toEqual([
@@ -573,7 +694,7 @@ describe('KbqNavbar', () => {
                 'Notifications',
                 'Settings'
             ]);
-        }));
+        });
 
         // This is why the input is re-exposed as `tooltipText`: `kbqTooltip` is the tooltip directive's selector,
         // so on a host that already owns a tooltip it matches the same directive twice.
@@ -588,11 +709,11 @@ describe('KbqNavbar', () => {
          * these four members are `model()`s. A read-only input would make the writes compile errors; a
          * write in the wrong lifecycle slot would silently no-op, which nothing else here would catch.
          */
-        it('a vertical navbar item should re-position the dropdown it triggers', fakeAsync(() => {
+        it('a vertical navbar item should re-position the dropdown it triggers', async () => {
             const fixture = TestBed.createComponent(TestVerticalDropdownApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const trigger = fixture.debugElement
@@ -603,13 +724,13 @@ describe('KbqNavbar', () => {
             expect(panel.overlapTriggerX()).toBe(false);
             expect(panel.overlapTriggerY()).toBe(true);
             expect(trigger.offsetX()).toBe(-8);
-        }));
+        });
 
-        it('a navbar item should stop the dropdown opening on Down Arrow', fakeAsync(() => {
+        it('a navbar item should stop the dropdown opening on Down Arrow', async () => {
             const fixture = TestBed.createComponent(TestVerticalDropdownApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const trigger = fixture.debugElement
@@ -618,7 +739,7 @@ describe('KbqNavbar', () => {
 
             // Written in the item's constructor, so this also pins that the binding does not clobber it.
             expect(trigger.openByArrowDown()).toBe(false);
-        }));
+        });
     });
 
     describe('KbqNavbarItem clipped title', () => {
@@ -627,7 +748,7 @@ describe('KbqNavbar', () => {
         beforeEach(() => {
             contentObserverSubject = new Subject<MutationRecord[]>();
 
-            // Driven manually: jsdom delivers MutationObserver records outside the fakeAsync queue.
+            // Driven manually, so a test decides when a change is observed.
             TestBed.overrideProvider(ContentObserver, {
                 useValue: { observe: () => contentObserverSubject.asObservable() }
             });
@@ -653,41 +774,41 @@ describe('KbqNavbar', () => {
         const getItem = (fixture: ComponentFixture<TestVerticalItemTitleApp>): KbqNavbarItem =>
             fixture.debugElement.query(By.directive(KbqNavbarItem)).componentInstance;
 
-        it('should enable the tooltip of a clipped title in a navbar that starts expanded', fakeAsync(() => {
+        it('should enable the tooltip of a clipped title in a navbar that starts expanded', async () => {
             const fixture = TestBed.createComponent(TestVerticalItemTitleApp);
 
             setTitleMetrics(fixture, { scrollWidth: 300, clientWidth: 176 });
             fixture.componentInstance.expanded = true;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getItem(fixture).tooltip.disabled).toBe(false);
             expect(getItem(fixture).tooltip.content).toBe('User Management and Access Control');
-        }));
+        });
 
-        it('should enable the tooltip of a clipped title once the navbar is expanded', fakeAsync(() => {
+        it('should enable the tooltip of a clipped title once the navbar is expanded', async () => {
             const fixture = TestBed.createComponent(TestVerticalItemTitleApp);
 
             setTitleMetrics(fixture, { scrollWidth: 300, clientWidth: 176 });
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             fixture.debugElement.query(By.directive(KbqNavbarToggle)).nativeElement.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getItem(fixture).isCollapsed()).toBe(false);
             expect(getItem(fixture).tooltip.disabled).toBe(false);
-        }));
+        });
 
-        it('should re-measure the title when its text changes', fakeAsync(() => {
+        it('should re-measure the title when its text changes', async () => {
             const fixture = TestBed.createComponent(TestVerticalItemTitleApp);
 
             setTitleMetrics(fixture, { scrollWidth: 120, clientWidth: 176 });
             fixture.componentInstance.titleText = 'Users';
             fixture.componentInstance.expanded = true;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getItem(fixture).tooltip.disabled).toBe(true);
 
@@ -698,15 +819,15 @@ describe('KbqNavbar', () => {
 
             expect(getItem(fixture).tooltip.disabled).toBe(false);
             expect(getItem(fixture).tooltip.content).toBe('User Management and Access Control');
-        }));
+        });
     });
 
     describe('KbqNavbarBrand', () => {
-        it('collapsedText input should override inner kbq-navbar-title in titleText', fakeAsync(() => {
+        it('collapsedText input should override inner kbq-navbar-title in titleText', async () => {
             const fixture = TestBed.createComponent(TestBrandApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             fixture.componentInstance.collapsedText = 'Custom Tooltip';
@@ -715,26 +836,26 @@ describe('KbqNavbar', () => {
             const brand = fixture.debugElement.query(By.directive(KbqNavbarBrand)).componentInstance as KbqNavbarBrand;
 
             expect(brand.titleText).toBe('Custom Tooltip');
-        }));
+        });
 
-        it('titleText should fall back to inner kbq-navbar-title text when collapsedText is empty', fakeAsync(() => {
+        it('titleText should fall back to inner kbq-navbar-title text when collapsedText is empty', async () => {
             const fixture = TestBed.createComponent(TestBrandApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const brand = fixture.debugElement.query(By.directive(KbqNavbarBrand)).componentInstance as KbqNavbarBrand;
 
             expect(brand.titleText).toBe('App Name');
-        }));
+        });
 
-        it('tooltip content should update reactively when collapsedText changes while collapsed', fakeAsync(() => {
+        it('tooltip content should update reactively when collapsedText changes while collapsed', async () => {
             const fixture = TestBed.createComponent(TestBrandApp);
 
             fixture.componentInstance.collapsedText = 'First';
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const brand = fixture.debugElement.query(By.directive(KbqNavbarBrand)).componentInstance as KbqNavbarBrand;
@@ -746,13 +867,13 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(brand.tooltip.content).toBe('Updated');
-        }));
+        });
 
-        it('isLink should be true for an anchor brand and false otherwise', fakeAsync(() => {
+        it('isLink should be true for an anchor brand and false otherwise', async () => {
             const anchorFixture = TestBed.createComponent(TestBrandApp);
 
             anchorFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const anchorBrand = anchorFixture.debugElement.query(By.directive(KbqNavbarBrand))
                 .componentInstance as KbqNavbarBrand;
@@ -762,19 +883,19 @@ describe('KbqNavbar', () => {
             const divFixture = TestBed.createComponent(TestNonAnchorBrandApp);
 
             divFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const divBrand = divFixture.debugElement.query(By.directive(KbqNavbarBrand))
                 .componentInstance as KbqNavbarBrand;
 
             expect(divBrand.isLink).toBe(false);
-        }));
+        });
 
-        it('should apply kbq-navbar-brand_link only to an anchor brand', fakeAsync(() => {
+        it('should apply kbq-navbar-brand_link only to an anchor brand', async () => {
             const anchorFixture = TestBed.createComponent(TestBrandApp);
 
             anchorFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(anchorFixture.nativeElement.querySelector('.kbq-navbar-brand').classList).toContain(
                 'kbq-navbar-brand_link'
@@ -783,74 +904,74 @@ describe('KbqNavbar', () => {
             const divFixture = TestBed.createComponent(TestNonAnchorBrandApp);
 
             divFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(divFixture.nativeElement.querySelector('.kbq-navbar-brand').classList).not.toContain(
                 'kbq-navbar-brand_link'
             );
-        }));
+        });
 
-        it('an anchor brand stays in the roving focus order', fakeAsync(() => {
+        it('an anchor brand stays in the roving focus order', async () => {
             const fixture = TestBed.createComponent(TestBrandApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const focusableItem = fixture.debugElement
                 .query(By.directive(KbqNavbarBrand))
                 .injector.get(KbqNavbarFocusableItem);
 
             expect(focusableItem.disabled).toBe(false);
-        }));
+        });
 
         /**
          * The brand used to be disabled purely on `tagName !== 'A'`, which took a `<div kbq-navbar-brand>`
          * hosting a real button out of the roving focus order and announced it as disabled.
          */
-        it('a non-anchor brand wrapping interactive content stays in the roving focus order', fakeAsync(() => {
+        it('a non-anchor brand wrapping interactive content stays in the roving focus order', async () => {
             const fixture = TestBed.createComponent(TestNonAnchorBrandApp);
 
             fixture.componentInstance.withButton = true;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const focusableItem = fixture.debugElement
                 .query(By.directive(KbqNavbarBrand))
                 .injector.get(KbqNavbarFocusableItem);
 
             expect(focusableItem.disabled).toBe(false);
-        }));
+        });
 
-        it('a purely decorative non-anchor brand is kept out of the roving focus order', fakeAsync(() => {
+        it('a purely decorative non-anchor brand is kept out of the roving focus order', async () => {
             const fixture = TestBed.createComponent(TestNonAnchorBrandApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const focusableItem = fixture.debugElement
                 .query(By.directive(KbqNavbarBrand))
                 .injector.get(KbqNavbarFocusableItem);
 
             expect(focusableItem.disabled).toBe(true);
-        }));
+        });
 
-        it('a purely decorative brand is neither announced nor styled as disabled', fakeAsync(() => {
+        it('a purely decorative brand is neither announced nor styled as disabled', async () => {
             const fixture = TestBed.createComponent(TestNonAnchorBrandApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
 
             expect(brandEl.classList).not.toContain('kbq-disabled');
             expect(brandEl.hasAttribute('aria-disabled')).toBe(false);
-        }));
+        });
 
-        it('a disabled brand swallows clicks, so its link is not followed', fakeAsync(() => {
+        it('a disabled brand swallows clicks, so its link is not followed', async () => {
             const fixture = TestBed.createComponent(TestDisabledBrandApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const click = new MouseEvent('click', { bubbles: true, cancelable: true });
 
@@ -858,7 +979,7 @@ describe('KbqNavbar', () => {
 
             expect(click.defaultPrevented).toBe(true);
             expect(fixture.componentInstance.clicked).toBe(false);
-        }));
+        });
     });
 
     describe('KbqNavbarBrand automatic long title', () => {
@@ -870,27 +991,21 @@ describe('KbqNavbar', () => {
             contentObserverSubject = new Subject<MutationRecord[]>();
 
             TestBed.overrideProvider(SharedResizeObserver, { useValue: resizeObserver });
-            // Driven manually: jsdom delivers MutationObserver records outside the fakeAsync queue.
+            // Driven manually, so a test decides when a change is observed.
             TestBed.overrideProvider(ContentObserver, {
                 useValue: { observe: () => contentObserverSubject.asObservable() }
             });
         });
 
         /** Stubs the title's geometry before the first render, so the initial measurement already sees it. */
-        const render = (
-            metrics: Parameters<typeof setTextMetrics>[1],
-            setup?: (instance: TestBrandLongTitleApp) => void
-        ) => {
+        const render = async (metrics: Parameters<typeof setTextMetrics>[1]) => {
             const fixture = TestBed.createComponent(TestBrandLongTitleApp);
-
-            setup?.(fixture.componentInstance);
-
             const titleEl = fixture.nativeElement.querySelector('.kbq-navbar-title') as HTMLElement;
 
             setTextMetrics(titleEl, metrics);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
@@ -898,42 +1013,24 @@ describe('KbqNavbar', () => {
             return { fixture, brandEl, titleEl };
         };
 
-        it('should apply the long title class when the title does not fit into one line', fakeAsync(() => {
-            const { brandEl } = render({ scrollWidth: 300, clientWidth: 176 });
+        it('should apply the long title class when the title does not fit into one line', async () => {
+            const { brandEl } = await render({ scrollWidth: 300, clientWidth: 176 });
 
             expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
-        }));
+        });
 
-        it('should not apply the long title class when the title fits into one line', fakeAsync(() => {
-            const { brandEl } = render({ scrollWidth: 120, clientWidth: 176 });
-
-            expect(brandEl.classList).not.toContain(LONG_TITLE_CLASS);
-        }));
-
-        it('longTitle=true should force the mode on for a title that fits', fakeAsync(() => {
-            const { brandEl } = render(
-                { scrollWidth: 120, clientWidth: 176 },
-                (instance) => (instance.longTitle = true)
-            );
-
-            expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
-        }));
-
-        it('longTitle=false should force the mode off for a title that does not fit', fakeAsync(() => {
-            const { brandEl } = render(
-                { scrollWidth: 300, clientWidth: 176 },
-                (instance) => (instance.longTitle = false)
-            );
+        it('should not apply the long title class when the title fits into one line', async () => {
+            const { brandEl } = await render({ scrollWidth: 120, clientWidth: 176 });
 
             expect(brandEl.classList).not.toContain(LONG_TITLE_CLASS);
-        }));
+        });
 
         /**
          * The load-bearing invariant: the mode changes the font, so measuring in the applied state would feed
          * the result back into its own input and the mode would toggle forever. Every measurement must
          * therefore read the reference state, with the class removed - and must put it back.
          */
-        it('should always measure with the long title class removed, and restore it afterwards', fakeAsync(() => {
+        it('should always measure with the long title class removed, and restore it afterwards', async () => {
             const classWhenMeasured: boolean[] = [];
             const fixture = TestBed.createComponent(TestBrandLongTitleApp);
             const titleEl = fixture.nativeElement.querySelector('.kbq-navbar-title') as HTMLElement;
@@ -952,7 +1049,7 @@ describe('KbqNavbar', () => {
             });
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
@@ -964,15 +1061,15 @@ describe('KbqNavbar', () => {
             classWhenMeasured.length = 0;
             brandWidth = 300;
             resizeObserver.emit(brandEl);
-            tick(LONG_TITLE_DEBOUNCE_MS);
+            await vi.advanceTimersByTimeAsync(LONG_TITLE_DEBOUNCE_MS);
             fixture.detectChanges();
 
             expect(classWhenMeasured[0]).toBe(false);
             expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
-        }));
+        });
 
-        it('should re-measure when the title text changes', fakeAsync(() => {
-            const { fixture, brandEl, titleEl } = render({ scrollWidth: 120, clientWidth: 176 });
+        it('should re-measure when the title text changes', async () => {
+            const { fixture, brandEl, titleEl } = await render({ scrollWidth: 120, clientWidth: 176 });
 
             expect(brandEl.classList).not.toContain(LONG_TITLE_CLASS);
 
@@ -982,50 +1079,55 @@ describe('KbqNavbar', () => {
             fixture.componentInstance.titleText = 'A considerably longer application name';
             fixture.detectChanges();
             contentObserverSubject.next([]);
-            tick(LONG_TITLE_DEBOUNCE_MS);
+            await vi.advanceTimersByTimeAsync(LONG_TITLE_DEBOUNCE_MS);
             fixture.detectChanges();
 
             expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
-        }));
+        });
 
         /** The brand wraps its title in a horizontal navbar too, where the title is capped at 154px. */
-        it('should apply the long title class in a horizontal navbar', fakeAsync(() => {
+        it('should apply the long title class in a horizontal navbar', async () => {
             const fixture = TestBed.createComponent(TestBrandHorizontalApp);
             const titleEl = fixture.nativeElement.querySelector('.kbq-navbar-title') as HTMLElement;
 
             setTextMetrics(titleEl, { scrollWidth: 300, clientWidth: 154 });
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
 
             expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
-        }));
+        });
 
-        it('should not apply the long title class in a horizontal navbar when the title fits', fakeAsync(() => {
+        it('should not apply the long title class in a horizontal navbar when the title fits', async () => {
             const fixture = TestBed.createComponent(TestBrandHorizontalApp);
             const titleEl = fixture.nativeElement.querySelector('.kbq-navbar-title') as HTMLElement;
 
             setTextMetrics(titleEl, { scrollWidth: 120, clientWidth: 154 });
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
 
             expect(brandEl.classList).not.toContain(LONG_TITLE_CLASS);
-        }));
+        });
 
-        it('hasCroppedText should be true for a title clamped vertically to two lines', fakeAsync(() => {
+        it('hasCroppedText should be true for a title clamped vertically to two lines', async () => {
             // Wrapped text never exceeds its width, so only the height reveals the clamp.
-            const { fixture } = render({ scrollWidth: 176, clientWidth: 176, scrollHeight: 60, clientHeight: 40 });
+            const { fixture } = await render({
+                scrollWidth: 176,
+                clientWidth: 176,
+                scrollHeight: 60,
+                clientHeight: 40
+            });
             const brand = fixture.debugElement.query(By.directive(KbqNavbarBrand)).componentInstance as KbqNavbarBrand;
 
             expect(brand.hasCroppedText).toBe(true);
-        }));
+        });
 
         /**
          * A collapsed title is `display: none`, so it cannot be measured until the navbar expands - which makes
@@ -1033,9 +1135,9 @@ describe('KbqNavbar', () => {
          * event through the debounce paints the default 18px single line for the whole window and only then
          * snaps to the compact two-line one, which reads as a flicker (#DS-4477).
          *
-         * Hence the deliberate absence of `tick(LONG_TITLE_DEBOUNCE_MS)` before the assertion.
+         * Hence the timers are not advanced by `LONG_TITLE_DEBOUNCE_MS` before the assertion.
          */
-        it('should apply the long title class on the first expand without waiting out the debounce', fakeAsync(() => {
+        it('should apply the long title class on the first expand without waiting out the debounce', async () => {
             const fixture = TestBed.createComponent(TestBrandLongTitleApp);
 
             fixture.componentInstance.expanded = false;
@@ -1045,7 +1147,7 @@ describe('KbqNavbar', () => {
             setTextMetrics(titleEl, { scrollWidth: 300, clientWidth: 176 });
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
@@ -1056,13 +1158,13 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
             // Drains microtasks only, which is what the render hooks run on - the browser paints no earlier
             // than that. Virtual time does not advance, so the debounce window is still wide open here.
-            tick(0);
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('KbqNavbarRectangleElement', () => {
@@ -1070,11 +1172,11 @@ describe('KbqNavbar', () => {
          * Orientation is owned by the ambient navbar, which re-asserts it on every change detection pass, so
          * it is checked through the navbar the element actually sits in rather than by writing it by hand.
          */
-        it('a horizontal navbar should mark its elements horizontal', fakeAsync(() => {
+        it('a horizontal navbar should mark its elements horizontal', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const rectDebugEl = fixture.debugElement.query(By.directive(KbqNavbarRectangleElement));
@@ -1082,13 +1184,13 @@ describe('KbqNavbar', () => {
             expect(rectDebugEl.injector.get(KbqNavbarRectangleElement).orientation).toBe('horizontal');
             expect(rectDebugEl.nativeElement.classList).toContain('kbq-horizontal');
             expect(rectDebugEl.nativeElement.classList).not.toContain('kbq-vertical');
-        }));
+        });
 
-        it('a vertical navbar should mark its elements vertical', fakeAsync(() => {
+        it('a vertical navbar should mark its elements vertical', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const rectDebugEl = fixture.debugElement.query(By.directive(KbqNavbarRectangleElement));
@@ -1096,13 +1198,13 @@ describe('KbqNavbar', () => {
             expect(rectDebugEl.injector.get(KbqNavbarRectangleElement).orientation).toBe('vertical');
             expect(rectDebugEl.nativeElement.classList).toContain('kbq-vertical');
             expect(rectDebugEl.nativeElement.classList).not.toContain('kbq-horizontal');
-        }));
+        });
 
-        it('vertical collapsed item should have kbq-collapsed class and expand back', fakeAsync(() => {
+        it('vertical collapsed item should have kbq-collapsed class and expand back', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const rectDebugEl = fixture.debugElement.query(By.directive(KbqNavbarRectangleElement));
@@ -1118,8 +1220,8 @@ describe('KbqNavbar', () => {
             expect(rectDebugEl.nativeElement.classList).toContain('kbq-expanded');
             expect(rectDebugEl.nativeElement.classList).not.toContain('kbq-collapsed');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         it('state Subject should emit when the orientation changes', () => {
             const fixture = TestBed.createComponent(TestItemApp);
@@ -1217,7 +1319,7 @@ describe('KbqNavbar', () => {
                 .injector.get(KbqNavbarRectangleElement);
             const title = fixture.debugElement.query(By.directive(KbqNavbarTitle)).injector.get(KbqNavbarTitle);
 
-            jest.spyOn(window, 'getComputedStyle').mockReturnValue({
+            vi.spyOn(window, 'getComputedStyle').mockReturnValue({
                 width: 'auto',
                 marginLeft: '',
                 marginRight: '10px'
@@ -1226,7 +1328,7 @@ describe('KbqNavbar', () => {
             expect(rect.getOuterElementWidth()).toBe(10);
             expect(title.getOuterElementWidth()).toBe(10);
 
-            jest.restoreAllMocks();
+            vi.restoreAllMocks();
         });
     });
 
@@ -1244,11 +1346,11 @@ describe('KbqNavbar', () => {
     });
 
     describe('KbqNavbarFocusableItem', () => {
-        it('tabIndex should always be -1', fakeAsync(() => {
+        it('tabIndex should always be -1', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const focusableItems = fixture.debugElement.queryAll(By.directive(KbqNavbarFocusableItem));
@@ -1256,7 +1358,7 @@ describe('KbqNavbar', () => {
             focusableItems.forEach((el) => {
                 expect(el.nativeElement.getAttribute('tabindex')).toBe('-1');
             });
-        }));
+        });
 
         it('should apply kbq-disabled class and aria-disabled when disabled=true', () => {
             const fixture = TestBed.createComponent(TestApp);
@@ -1270,11 +1372,27 @@ describe('KbqNavbar', () => {
             expect(disabledItem.nativeElement.hasAttribute('disabled')).toBe(false);
         });
 
-        it('onFocusHandler should not emit onFocus when item is disabled', fakeAsync(() => {
+        it('should reflect a disabled state assigned in code', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const itemDebugEl = fixture.debugElement.query(By.directive(KbqNavbarFocusableItem));
+
+            itemDebugEl.injector.get(KbqNavbarFocusableItem).disabled = true;
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(itemDebugEl.nativeElement.classList).toContain('kbq-disabled');
+            expect(itemDebugEl.nativeElement.getAttribute('aria-disabled')).toBe('true');
+        });
+
+        it('onFocusHandler should not emit onFocus when item is disabled', async () => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const focusableItem = fixture.debugElement
@@ -1290,13 +1408,13 @@ describe('KbqNavbar', () => {
             focusableItem.onFocusHandler();
 
             expect(emitCount).toBe(0);
-        }));
+        });
 
-        it('onFocusHandler should not emit onFocus when item already has focus', fakeAsync(() => {
+        it('onFocusHandler should not emit onFocus when item already has focus', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const focusableItem = fixture.debugElement
@@ -1312,145 +1430,166 @@ describe('KbqNavbar', () => {
             focusableItem.onFocusHandler();
 
             expect(emitCount).toBe(0);
-        }));
+        });
 
-        it('focus(mouse) should not call nestedElement.focusViaKeyboard()', fakeAsync(() => {
+        it('focus(mouse) should not call nestedElement.focusViaKeyboard()', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const focusableItem = fixture.debugElement
                 .query(By.directive(KbqNavbarFocusableItem))
                 .injector.get(KbqNavbarFocusableItem);
 
-            const fakeButton = { focusViaKeyboard: jest.fn(), hasFocus: false } as any;
+            const fakeButton = { focusViaKeyboard: vi.fn(), hasFocus: false } as any;
 
-            jest.spyOn(focusableItem, 'nestedElement', 'get').mockReturnValue(fakeButton);
+            vi.spyOn(focusableItem, 'nestedElement', 'get').mockReturnValue(fakeButton);
 
             focusableItem.focus('mouse');
 
             expect(fakeButton.focusViaKeyboard).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('focus(keyboard) should call nestedElement.focusViaKeyboard()', fakeAsync(() => {
+        it('focus(keyboard) should call nestedElement.focusViaKeyboard()', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const focusableItem = fixture.debugElement
                 .query(By.directive(KbqNavbarFocusableItem))
                 .injector.get(KbqNavbarFocusableItem);
 
-            const fakeButton = { focusViaKeyboard: jest.fn(), hasFocus: false } as any;
+            const fakeButton = { focusViaKeyboard: vi.fn(), hasFocus: false } as any;
 
-            jest.spyOn(focusableItem, 'nestedElement', 'get').mockReturnValue(fakeButton);
+            vi.spyOn(focusableItem, 'nestedElement', 'get').mockReturnValue(fakeButton);
 
             focusableItem.focus('keyboard');
 
             expect(fakeButton.focusViaKeyboard).toHaveBeenCalled();
-        }));
+        });
+
+        it('focus(program) should focus the nested element without a keyboard ring', async () => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const focusableItem = fixture.debugElement
+                .query(By.directive(KbqNavbarFocusableItem))
+                .injector.get(KbqNavbarFocusableItem);
+
+            const fakeButton = { focus: vi.fn(), focusViaKeyboard: vi.fn(), hasFocus: false } as any;
+
+            vi.spyOn(focusableItem, 'nestedElement', 'get').mockReturnValue(fakeButton);
+
+            focusableItem.focus('program');
+
+            expect(fakeButton.focus).toHaveBeenCalled();
+            expect(fakeButton.focusViaKeyboard).not.toHaveBeenCalled();
+        });
     });
 
     describe('KbqFocusableComponent focus origin gating', () => {
-        it('mouse-origin focus on KbqNavbar host should not activate first item', fakeAsync(() => {
+        it('mouse-origin focus on KbqNavbar host should not activate first item', async () => {
             const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
             const navbarInstance = navbarDebugEl.componentInstance as KbqNavbar;
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const spy = jest.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
+            const spy = vi.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
 
             focusMonitor.focusVia(navbarDebugEl.nativeElement, 'mouse');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(spy).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('keyboard-origin focus on KbqNavbar host should activate first item', fakeAsync(() => {
+        it('keyboard-origin focus on KbqNavbar host should activate first item', async () => {
             const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
             const navbarInstance = navbarDebugEl.componentInstance as KbqNavbar;
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const spy = jest.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
+            const spy = vi.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
 
             focusMonitor.focusVia(navbarDebugEl.nativeElement, 'keyboard');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(spy).toHaveBeenCalled();
-        }));
+        });
 
-        it('touch-origin focus on KbqNavbar host should not activate first item', fakeAsync(() => {
+        it('touch-origin focus on KbqNavbar host should not activate first item', async () => {
             const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
             const navbarInstance = navbarDebugEl.componentInstance as KbqNavbar;
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const spy = jest.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
+            const spy = vi.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
 
             focusMonitor.focusVia(navbarDebugEl.nativeElement, 'touch');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(spy).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('mouse-origin focus on KbqVerticalNavbar host should not activate first item', fakeAsync(() => {
+        it('mouse-origin focus on KbqVerticalNavbar host should not activate first item', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqVerticalNavbar));
             const navbarInstance = navbarDebugEl.componentInstance as KbqVerticalNavbar;
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const spy = jest.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
+            const spy = vi.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
 
             focusMonitor.focusVia(navbarDebugEl.nativeElement, 'mouse');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(spy).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('keyboard-origin focus on KbqVerticalNavbar host should activate first item', fakeAsync(() => {
+        it('keyboard-origin focus on KbqVerticalNavbar host should activate first item', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqVerticalNavbar));
             const navbarInstance = navbarDebugEl.componentInstance as KbqVerticalNavbar;
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const spy = jest.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
+            const spy = vi.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
 
             focusMonitor.focusVia(navbarDebugEl.nativeElement, 'keyboard');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(spy).toHaveBeenCalled();
-        }));
+        });
 
-        it('the roving key manager should skip disabled items', fakeAsync(() => {
+        it('the roving key manager should skip disabled items', async () => {
             const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
@@ -1462,19 +1601,17 @@ describe('KbqNavbar', () => {
             navbar.keyManager.setFirstItemActive();
 
             expect(navbar.keyManager.activeItem).toBe(items[1]);
-        }));
+        });
 
         /**
          * The host owns the tab stop and hands focus straight to an item, which reads as the host being
-         * blurred unless the focus monitor watches its children too. Losing the keyboard origin there left
-         * every later arrow key moving the key manager's active item while nothing moved in the DOM — the
-         * item only takes focus for a keyboard origin.
+         * blurred unless the focus monitor watches its children too.
          */
-        it('arrow keys should keep moving real focus after the hand-off to the first item', fakeAsync(() => {
+        it('arrow keys should keep moving real focus after the hand-off to the first item', async () => {
             const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
@@ -1482,7 +1619,7 @@ describe('KbqNavbar', () => {
             const focusMonitor = TestBed.inject(FocusMonitor);
 
             focusMonitor.focusVia(navbarDebugEl.nativeElement, 'keyboard');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const first = navbar.keyManager.activeItem;
 
@@ -1490,21 +1627,155 @@ describe('KbqNavbar', () => {
 
             dispatchKeyboardEvent(navbarDebugEl.nativeElement, 'keydown', RIGHT_ARROW, navbarDebugEl.nativeElement);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const next = navbar.keyManager.activeItem;
 
             expect(next).not.toBe(first);
             expect(next?.hasFocus).toBe(true);
-        }));
-    });
+        });
 
-    describe('KbqVerticalNavbar', () => {
-        it('should start collapsed and expand its container on toggle()', fakeAsync(() => {
+        it('arrow keys should move real focus, with its keyboard ring, from an item focused by a click', async () => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const [first, second] = focusableItemElements(fixture);
+
+            clickWithMouse(first);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(first);
+            expect(first.classList).toContain('cdk-mouse-focused');
+
+            dispatchKeyboardEvent(first, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(second);
+            expect(second.classList).toContain('cdk-keyboard-focused');
+        });
+
+        it('arrow keys should move real focus from an item of the vertical navbar focused by a click', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const [first, second] = focusableItemElements(fixture);
+
+            clickWithMouse(first);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(first);
+            expect(first.classList).toContain('cdk-mouse-focused');
+
+            dispatchKeyboardEvent(first, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(second);
+            expect(second.classList).toContain('cdk-keyboard-focused');
+        });
+
+        it('focusing the host by code should hand real focus to the first item, without a keyboard ring', async () => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const [first, second] = focusableItemElements(fixture);
+
+            fixture.debugElement.query(By.directive(KbqNavbar)).nativeElement.focus();
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(first);
+            expect(first.classList).toContain('cdk-program-focused');
+
+            dispatchKeyboardEvent(first, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(second);
+        });
+
+        it('focusing the vertical navbar host by code should hand real focus to the first item', async () => {
+            const fixture = TestBed.createComponent(TestVerticalApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const [first, second] = focusableItemElements(fixture);
+
+            fixture.debugElement.query(By.directive(KbqVerticalNavbar)).nativeElement.focus();
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(first);
+            expect(first.classList).toContain('cdk-program-focused');
+
+            dispatchKeyboardEvent(first, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(second);
+        });
+
+        it('an item handing focus to its nested button should stay active for the arrow keys', async () => {
+            const fixture = TestBed.createComponent(TestNestedButtonApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
+            const [first, withButton, last] = focusableItemElements(fixture);
+            const button = withButton.querySelector('button')!;
+
+            clickWithMouse(first);
+            fixture.detectChanges();
+
+            dispatchKeyboardEvent(first, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(document.activeElement).toBe(button);
+            expect(navbar.keyManager.activeItemIndex).toBe(1);
+
+            dispatchKeyboardEvent(button, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(last);
+        });
+    });
+
+    describe('KbqVerticalNavbar', () => {
+        it('repeated toggles should keep one pending refresh of the button icons', async () => {
+            const fixture = TestBed.createComponent(TestVerticalApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
+                .componentInstance as KbqVerticalNavbar;
+            const onDestroy = vi.spyOn(navbar['destroyRef'], 'onDestroy');
+            const timers = vi.getTimerCount();
+
+            for (let i = 0; i < 3; i++) {
+                navbar.toggle();
+                fixture.detectChanges();
+            }
+
+            expect(onDestroy).not.toHaveBeenCalled();
+            expect(vi.getTimerCount()).toBe(timers + 1);
+        });
+
+        it('should start collapsed and expand its container on toggle()', async () => {
+            const fixture = TestBed.createComponent(TestVerticalApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
@@ -1519,13 +1790,13 @@ describe('KbqNavbar', () => {
 
             expect(navbar.expanded()).toBe(true);
             expect(container.classList).toContain('kbq-expanded');
-        }));
+        });
 
-        it('expanding should un-collapse every projected rectangle element', fakeAsync(() => {
+        it('expanding should un-collapse every projected rectangle element', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
@@ -1535,16 +1806,16 @@ describe('KbqNavbar', () => {
 
             navbar.expanded.set(true);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(navbar.rectangleElements().every((element) => !element.collapsed)).toBe(true);
-        }));
+        });
 
-        it('openOver should toggle the host class', fakeAsync(() => {
+        it('openOver should toggle the host class', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const host = fixture.nativeElement.querySelector('.kbq-vertical-navbar') as HTMLElement;
@@ -1555,44 +1826,44 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(host.classList).toContain('kbq-vertical-navbar_open-over');
-        }));
+        });
 
-        it('configuration should fall back to the default when no locale service is provided', fakeAsync(() => {
+        it('configuration should fall back to the default when no locale service is provided', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
                 .componentInstance as KbqVerticalNavbar;
 
             expect(navbar.localeConfiguration()).toEqual(KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION);
-        }));
+        });
 
         /** The locale service is optional, so a configuration provided through the token applies without it. */
-        it('configuration should use the value provided through the token', fakeAsync(() => {
+        it('configuration should use the value provided through the token', async () => {
             const fixture = TestBed.createComponent(TestExternalConfigApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
                 .componentInstance as KbqVerticalNavbar;
 
             expect(navbar.localeConfiguration()).toBe(EXTERNAL_NAVBAR_CONFIGURATION);
-        }));
+        });
 
-        it('configuration should follow the locale service', fakeAsync(() => {
+        it('configuration should follow the locale service', async () => {
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, KbqNavbarModule, KbqIconModule, TestVerticalApp],
+                imports: [KbqNavbarModule, KbqIconModule, TestVerticalApp],
                 providers: [{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }]
             });
 
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
                 .componentInstance as KbqVerticalNavbar;
@@ -1602,18 +1873,40 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(navbar.localeConfiguration()).toEqual(localeService.getParams('navbar'));
-        }));
+        });
+
+        describe('bento title', () => {
+            const getBentoTitle = async (): Promise<HTMLElement> => {
+                const fixture = TestBed.createComponent(TestVerticalBentoApp);
+
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                return fixture.nativeElement.querySelector('.kbq-navbar-bento .kbq-navbar-item__title');
+            };
+
+            it('should slide in by default', async () => {
+                expect((await getBentoTitle()).classList).not.toContain('kbq-animations-disabled');
+            });
+
+            it('should appear without motion when animations are disabled', async () => {
+                TestBed.overrideProvider(KBQ_ANIMATIONS_CONFIG, { useValue: { animationsDisabled: true } });
+
+                expect((await getBentoTitle()).classList).toContain('kbq-animations-disabled');
+            });
+        });
     });
 
     describe('KbqNavbarToggle', () => {
         const getToggle = (fixture: { debugElement: DebugElement }) =>
             fixture.debugElement.query(By.directive(KbqNavbarToggle));
 
-        it('click should toggle the navbar', fakeAsync(() => {
+        it('click should toggle the navbar', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
@@ -1623,13 +1916,13 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(navbar.expanded()).toBe(true);
-        }));
+        });
 
-        it('SPACE and ENTER should toggle the navbar and swallow the event', fakeAsync(() => {
+        it('SPACE and ENTER should toggle the navbar and swallow the event', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
@@ -1647,13 +1940,13 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(navbar.expanded()).toBe(false);
-        }));
+        });
 
-        it('should publish role, name and expanded state', fakeAsync(() => {
+        it('should publish role, name and expanded state', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const toggleEl = getToggle(fixture).nativeElement as HTMLElement;
@@ -1669,13 +1962,13 @@ describe('KbqNavbar', () => {
 
             expect(toggleEl.getAttribute('aria-expanded')).toBe('true');
             expect(toggleEl.getAttribute('aria-label')).toBe(configuration.toggle.collapse);
-        }));
+        });
 
-        it('the tooltip should name the action the toggle performs', fakeAsync(() => {
+        it('the tooltip should name the action the toggle performs', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const toggle = getToggle(fixture).componentInstance as KbqNavbarToggle;
@@ -1689,17 +1982,17 @@ describe('KbqNavbar', () => {
             tooltip.visibleChange.emit(false);
 
             expect(tooltip.content).toBe(configuration.toggle.collapse);
-        }));
+        });
 
         /**
          * Every toggle listens on the window. Toggling unconditionally collapsed *every* vertical navbar on
          * the page at once - and the shipped e2e fixture renders four of them.
          */
-        it('Ctrl+/ should only toggle the navbar that holds focus', fakeAsync(() => {
+        it('Ctrl+/ should only toggle the navbar that holds focus', async () => {
             const fixture = TestBed.createComponent(TestTwoVerticalNavbarsApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const [first, second] = fixture.debugElement
@@ -1719,13 +2012,13 @@ describe('KbqNavbar', () => {
             expect(first.expanded()).toBe(false);
 
             fixture.nativeElement.remove();
-        }));
+        });
 
-        it('Ctrl+/ should fall back to the first navbar when focus is elsewhere', fakeAsync(() => {
+        it('Ctrl+/ should fall back to the first navbar when focus is elsewhere', async () => {
             const fixture = TestBed.createComponent(TestTwoVerticalNavbarsApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const [first, second] = fixture.debugElement
@@ -1737,27 +2030,27 @@ describe('KbqNavbar', () => {
 
             expect(first.expanded()).toBe(true);
             expect(second.expanded()).toBe(false);
-        }));
+        });
 
-        it('should stop reacting to the shortcut once destroyed', fakeAsync(() => {
+        it('should stop reacting to the shortcut once destroyed', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
                 .componentInstance as KbqVerticalNavbar;
-            const spy = jest.spyOn(navbar, 'toggle');
+            const spy = vi.spyOn(navbar, 'toggle');
 
             fixture.destroy();
 
             dispatchGlobalShortcut(SLASH);
 
             expect(spy).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('tooltip content should follow a runtime locale change', fakeAsync(() => {
+        it('tooltip content should follow a runtime locale change', async () => {
             TestBed.configureTestingModule({
                 providers: [{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }]
             });
@@ -1765,7 +2058,7 @@ describe('KbqNavbar', () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const tooltip = getToggle(fixture).injector.get(KbqTooltipTrigger);
@@ -1778,9 +2071,9 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(tooltip.content).toBe(enUSLocaleData.navbar.toggle.expand);
-        }));
+        });
 
-        it('tooltip content should follow an override registered through the provider', fakeAsync(() => {
+        it('tooltip content should follow an override registered through the provider', async () => {
             const expand = '*unit_test* Open the menu';
 
             TestBed.configureTestingModule({
@@ -1793,7 +2086,7 @@ describe('KbqNavbar', () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const tooltip = getToggle(fixture).injector.get(KbqTooltipTrigger);
@@ -1816,15 +2109,49 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(tooltip.content).toBe(ruRULocaleData.navbar.toggle.collapse);
-        }));
+        });
+    });
+
+    describe('called from an effect', () => {
+        const setup = async (): Promise<ComponentFixture<TestVerticalDrivenByEffectApp>> => {
+            const fixture = TestBed.createComponent(TestVerticalDrivenByEffectApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            return fixture;
+        };
+
+        it('should not loop when an effect toggles the vertical navbar', async () => {
+            const fixture = await setup();
+            const host = fixture.componentInstance;
+
+            host.action.set('navbar');
+            fixture.detectChanges();
+
+            expect(host.navbar().expanded()).toBe(true);
+            expect(host.runs).toBe(1);
+        });
+
+        it('should not loop when an effect toggles the navbar through its toggle', async () => {
+            const fixture = await setup();
+            const host = fixture.componentInstance;
+
+            host.action.set('toggle');
+            fixture.detectChanges();
+
+            expect(host.navbar().expanded()).toBe(true);
+            expect(host.runs).toBe(1);
+        });
     });
 
     describe('responsive collapse', () => {
-        it('should collapse just enough items to fit the navbar width', fakeAsync(() => {
+        it('should collapse just enough items to fit the navbar width', async () => {
             const fixture = TestBed.createComponent(TestCollapseApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
@@ -1840,13 +2167,13 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(items.map((item) => item.isCollapsed())).toEqual([false, false, true]);
-        }));
+        });
 
-        it('should expand items again once the navbar has room', fakeAsync(() => {
+        it('should expand items again once the navbar has room', async () => {
             const fixture = TestBed.createComponent(TestCollapseApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
@@ -1865,13 +2192,13 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(items.every((item) => !item.isCollapsed())).toBe(true);
-        }));
+        });
 
-        it('should count the gap between containers as content', fakeAsync(() => {
+        it('should count the gap between containers as content', async () => {
             const fixture = TestBed.createComponent(TestTwoContainersApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
@@ -1886,13 +2213,13 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(items.map((item) => item.isCollapsed())).toEqual([false, true, false]);
-        }));
+        });
 
-        it('should leave the items alone while the navbar is not rendered', fakeAsync(() => {
+        it('should leave the items alone while the navbar is not rendered', async () => {
             const fixture = TestBed.createComponent(TestTwoContainersApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
@@ -1907,17 +2234,17 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(items.some((item) => item.isCollapsed())).toBe(false);
-        }));
+        });
 
-        it('a burst of resize events should trigger a single debounced recompute', fakeAsync(() => {
+        it('a burst of resize events should trigger a single debounced recompute', async () => {
             const fixture = TestBed.createComponent(TestCollapseApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
-            const spy = jest.spyOn(navbar, 'updateExpandedStateForItems');
+            const spy = vi.spyOn(navbar, 'updateExpandedStateForItems');
 
             for (let i = 0; i < 20; i++) {
                 window.dispatchEvent(new Event('resize'));
@@ -1925,62 +2252,62 @@ describe('KbqNavbar', () => {
 
             expect(spy).not.toHaveBeenCalled();
 
-            tick(RESIZE_DEBOUNCE_MS);
+            await vi.advanceTimersByTimeAsync(RESIZE_DEBOUNCE_MS);
 
             expect(spy).toHaveBeenCalledTimes(1);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('accessibility', () => {
-        it('KbqNavbar should expose a navigation landmark with a name', fakeAsync(() => {
+        it('KbqNavbar should expose a navigation landmark with a name', async () => {
             const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.nativeElement.querySelector('.kbq-navbar') as HTMLElement;
 
             expect(navbar.getAttribute('role')).toBe('navigation');
             expect(navbar.getAttribute('aria-label')).toBe('Main');
-        }));
+        });
 
-        it('KbqVerticalNavbar should expose a navigation landmark', fakeAsync(() => {
+        it('KbqVerticalNavbar should expose a navigation landmark', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const navbar = fixture.nativeElement.querySelector('.kbq-vertical-navbar') as HTMLElement;
 
             expect(navbar.getAttribute('role')).toBe('navigation');
-        }));
+        });
 
-        it('a bare item should be announced as a button', fakeAsync(() => {
+        it('a bare item should be announced as a button', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const item = fixture.nativeElement.querySelector('kbq-navbar-item') as HTMLElement;
 
             expect(item.getAttribute('role')).toBe('button');
-        }));
+        });
 
         /**
          * An icon-only item (no projected `kbq-navbar-title`) has no visible label of its own in either
          * state, collapsed or not — unlike a titled item, whose title text names it while expanded and is
          * published as `aria-label` only once collapsed. The `aria-label` input is the only way to name it.
          */
-        it('an icon-only item needs its own aria-label to be an accessible button', fakeAsync(() => {
+        it('an icon-only item needs its own aria-label to be an accessible button', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const items = fixture.nativeElement.querySelectorAll('kbq-navbar-item');
@@ -1988,27 +2315,27 @@ describe('KbqNavbar', () => {
 
             expect(iconOnlyItem.getAttribute('role')).toBe('button');
             expect(iconOnlyItem.getAttribute('aria-label')).toBe('Play');
-        }));
+        });
 
-        it('an item wrapping a native control should keep its own semantics', fakeAsync(() => {
+        it('an item wrapping a native control should keep its own semantics', async () => {
             const fixture = TestBed.createComponent(TestCollapseApp);
 
             fixture.componentInstance.asLinks = true;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const item = fixture.nativeElement.querySelector('a[kbq-navbar-item]') as HTMLElement;
 
             expect(item.hasAttribute('role')).toBe(false);
-        }));
+        });
 
         /** A tooltip is a transient overlay; on its own it never names the control it is attached to. */
-        it('a collapsed item should carry its title as an accessible name', fakeAsync(() => {
+        it('a collapsed item should carry its title as an accessible name', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const itemDebugEl = fixture.debugElement.query(By.directive(KbqNavbarItem));
@@ -2020,38 +2347,38 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(itemDebugEl.nativeElement.getAttribute('aria-label')).toBe('Item with title');
-        }));
+        });
 
-        it('a collapsed brand should carry its title as an accessible name', fakeAsync(() => {
+        it('a collapsed brand should carry its title as an accessible name', async () => {
             const fixture = TestBed.createComponent(TestBrandApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
 
             expect(brandEl.getAttribute('aria-label')).toBe('App Name');
-        }));
+        });
 
-        it('the divider should be a separator oriented across the navbar', fakeAsync(() => {
+        it('the divider should be a separator oriented across the navbar', async () => {
             const fixture = TestBed.createComponent(TestCollapseApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const divider = fixture.debugElement.query(By.directive(KbqNavbarDivider)).nativeElement as HTMLElement;
 
             expect(divider.getAttribute('role')).toBe('separator');
             expect(divider.getAttribute('aria-orientation')).toBe('vertical');
-        }));
+        });
 
-        it('ENTER should activate a bare item', fakeAsync(() => {
+        it('ENTER should activate a bare item', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const itemEl = fixture.nativeElement.querySelector('kbq-navbar-item') as HTMLElement;
@@ -2060,13 +2387,13 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.clicks).toBe(1);
-        }));
+        });
 
-        it('SPACE should activate a bare item', fakeAsync(() => {
+        it('SPACE should activate a bare item', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const itemEl = fixture.nativeElement.querySelector('kbq-navbar-item') as HTMLElement;
@@ -2075,9 +2402,12 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.clicks).toBe(1);
-        }));
+        });
 
+        // The axe checks run on real timers: axe-core schedules its work on them.
         it('has no axe violations for a horizontal navbar', async () => {
+            vi.useRealTimers();
+
             const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
@@ -2089,6 +2419,8 @@ describe('KbqNavbar', () => {
         });
 
         it('has no axe violations for a titled and an icon-only item', async () => {
+            vi.useRealTimers();
+
             const fixture = TestBed.createComponent(TestItemApp);
 
             fixture.detectChanges();
@@ -2100,6 +2432,8 @@ describe('KbqNavbar', () => {
         });
 
         it('has no axe violations for a collapsed vertical navbar', async () => {
+            vi.useRealTimers();
+
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
@@ -2111,6 +2445,8 @@ describe('KbqNavbar', () => {
         });
 
         it('has no axe violations for an expanded vertical navbar', async () => {
+            vi.useRealTimers();
+
             const fixture = TestBed.createComponent(TestVerticalApp);
 
             fixture.detectChanges();
@@ -2140,7 +2476,7 @@ describe('overlay layer', () => {
     };
 
     beforeEach(() => {
-        TestBed.configureTestingModule({ imports: [NoopAnimationsModule, TestInOverlayLayerApp] });
+        TestBed.configureTestingModule({ imports: [TestInOverlayLayerApp] });
         fixture = TestBed.createComponent(TestInOverlayLayerApp);
         fixture.detectChanges();
     });
@@ -2231,6 +2567,48 @@ class TestItemApp {
     collapsable: boolean = true;
     tooltipDisabled: boolean | undefined = undefined;
     clicks = 0;
+}
+
+@Component({
+    selector: 'test-nested-button-app',
+    imports: [KbqNavbarModule, KbqButtonModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item>
+                    <kbq-navbar-title>First</kbq-navbar-title>
+                </kbq-navbar-item>
+                <kbq-navbar-item>
+                    <button kbq-button>Action</button>
+                </kbq-navbar-item>
+                <kbq-navbar-item>
+                    <kbq-navbar-title>Last</kbq-navbar-title>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestNestedButtonApp {}
+
+@Component({
+    selector: 'test-bound-tab-index-app',
+    imports: [KbqNavbarModule],
+    template: `
+        <kbq-navbar [(tabIndex)]="tabIndex" (tabIndexChange)="tabIndexChanges.push($event)">
+            <kbq-navbar-container>
+                @if (showItem) {
+                    <kbq-navbar-item>
+                        <kbq-navbar-title>Item</kbq-navbar-title>
+                    </kbq-navbar-item>
+                }
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestBoundTabIndexApp {
+    tabIndex = 0;
+    showItem = true;
+    readonly tabIndexChanges: number[] = [];
 }
 
 @Component({
@@ -2392,7 +2770,7 @@ class TestDisabledBrandApp {
     template: `
         <kbq-vertical-navbar [expanded]="expanded">
             <kbq-navbar-container>
-                <a href="#" kbq-navbar-brand [longTitle]="longTitle">
+                <a href="#" kbq-navbar-brand>
                     <div kbq-navbar-title>{{ titleText }}</div>
                 </a>
             </kbq-navbar-container>
@@ -2401,7 +2779,6 @@ class TestDisabledBrandApp {
 })
 class TestBrandLongTitleApp {
     titleText: string = 'App Name';
-    longTitle: boolean | undefined = undefined;
     expanded: boolean = true;
 }
 
@@ -2464,6 +2841,23 @@ class TestVerticalItemTitleApp {
     titleText = 'User Management and Access Control';
     expanded = false;
 }
+
+@Component({
+    selector: 'test-vertical-bento-app',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <kbq-vertical-navbar [expanded]="true">
+            <kbq-navbar-container>
+                <kbq-navbar-item bento>
+                    <i kbq-icon="kbq-bento-menu_16"></i>
+                    <kbq-navbar-title>Services</kbq-navbar-title>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+            <button kbq-navbar-toggle></button>
+        </kbq-vertical-navbar>
+    `
+})
+class TestVerticalBentoApp {}
 
 @Component({
     selector: 'test-two-vertical-navbars-app',
@@ -2605,4 +2999,45 @@ class TestTooltipSelectorApp {}
 class TestInOverlayLayerApp {
     readonly horizontalTrigger = viewChild.required('horizontalTrigger', { read: KbqDropdownTrigger });
     readonly verticalTrigger = viewChild.required('verticalTrigger', { read: KbqDropdownTrigger });
+}
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    selector: 'test-vertical-driven-by-effect-app',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <kbq-vertical-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item>
+                    <i kbq-icon="kbq-circle-info_16"></i>
+                    <kbq-navbar-title>First item</kbq-navbar-title>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+            <button kbq-navbar-toggle></button>
+        </kbq-vertical-navbar>
+    `
+})
+class TestVerticalDrivenByEffectApp {
+    readonly navbar = viewChild.required(KbqVerticalNavbar);
+    readonly toggle = viewChild.required(KbqNavbarToggle);
+    readonly action = signal<'navbar' | 'toggle' | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const action = this.action();
+
+            if (!action || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+
+            if (action === 'navbar') {
+                this.navbar().toggle();
+            } else {
+                this.toggle().toggle();
+            }
+        });
+    }
 }

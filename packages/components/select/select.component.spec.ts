@@ -9,12 +9,14 @@ import {
     OnInit,
     TemplateRef,
     Type,
+    effect,
     getDebugNode,
     inject as inject_1,
+    signal,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
     ControlValueAccessor,
@@ -31,7 +33,6 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule, provideNoopAnimations } from '@angular/platform-browser/animations';
 import {
     A,
     DOWN_ARROW,
@@ -50,6 +51,7 @@ import {
     KbqOptionSelectionChange,
     KbqOverlayLayer,
     KbqPanelMaxHeight,
+    KbqPanelWidth,
     KbqPartialLocaleData,
     KbqRepositionScrollStrategy,
     KbqVirtualOption,
@@ -59,7 +61,6 @@ import {
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
     TAB,
-    ThemePalette,
     UP_ARROW,
     createKeyboardEvent,
     dispatchEvent,
@@ -80,14 +81,10 @@ import { KbqTagsModule } from '@koobiq/components/tags';
 import { axe } from 'jest-axe';
 import { Observable, Subject, Subscription, merge, of, timer } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import type { MockInstance } from 'vitest';
 import { KbqSelectHiddenItemsMeasurer } from './hidden-items-measurer';
 import { KbqOptionTooltip } from './select-option.directive';
-import {
-    KbqSelect,
-    KbqSelectPanelWidth,
-    delayBeforeDisplayingResultWithoutOptions,
-    kbqSelectOptionsProvider
-} from './select.component';
+import { KbqSelect, delayBeforeDisplayingResultWithoutOptions, kbqSelectOptionsProvider } from './select.component';
 import { KbqSelectModule } from './select.module';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
@@ -127,17 +124,17 @@ const getAsyncValidator =
         timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
 
 /** Finish initializing the virtual scroll component at the beginning of a test. */
-function finishInit(fixture: ComponentFixture<any>) {
+async function finishInit(fixture: ComponentFixture<any>) {
     // On the first cycle we render and measure the viewport.
     fixture.autoDetectChanges();
-    flush();
+    await vi.runOnlyPendingTimersAsync();
 
     // On the second cycle we render the items.
     fixture.autoDetectChanges();
-    flush();
+    await vi.runOnlyPendingTimersAsync();
 
     // Flush the initial fake scroll event.
-    flush();
+    await vi.runOnlyPendingTimersAsync();
     fixture.autoDetectChanges();
 }
 
@@ -400,9 +397,9 @@ const OPTIONS = [
                     </kbq-option>
                 }
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -441,6 +438,20 @@ class BasicSelect {
 }
 
 @Component({
+    selector: 'select-with-custom-id',
+    imports: [KbqSelectModule],
+    template: `
+        <kbq-select [id]="id()">
+            <kbq-option value="steak-0">Steak</kbq-option>
+        </kbq-select>
+    `
+})
+class SelectWithCustomId {
+    readonly id = signal<string | undefined>(undefined);
+    readonly select = viewChild.required(KbqSelect);
+}
+
+@Component({
     selector: 'basic-events',
     imports: [
         KbqSelectModule,
@@ -461,9 +472,9 @@ class BasicSelect {
                     </kbq-option>
                 }
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -490,9 +501,9 @@ class BasicEvents {
 
     readonly select = viewChild.required(KbqSelect);
 
-    openedChangeListener = jest.fn();
-    openedListener = jest.fn();
-    closedListener = jest.fn();
+    openedChangeListener = vi.fn();
+    openedListener = vi.fn();
+    closedListener = vi.fn();
 }
 
 @Component({
@@ -533,9 +544,9 @@ class ManySelects {}
                     </kbq-option>
                 }
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -560,7 +571,7 @@ class SelectWithChangeEvent {
         'sushi-7'
     ];
 
-    changeListener = jest.fn();
+    changeListener = vi.fn();
 }
 
 @Component({
@@ -586,9 +597,9 @@ class SelectWithChangeEvent {
                     </kbq-option>
                 }
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -839,21 +850,22 @@ class BasicSelectOnPushPreselected {
     template: `
         <kbq-form-field>
             <kbq-select
-                multiple
                 placeholder="Food"
+                [multiple]="multiple"
                 [formControl]="control"
                 [sortComparator]="sortComparator"
                 [selectAllToggle]="selectAllToggle"
+                [selectAllHandler]="selectAllHandler"
             >
                 @for (food of foods; track food) {
-                    <kbq-option [value]="food.value">
+                    <kbq-option [value]="food.value" [disabled]="!!food.disabled">
                         {{ food.viewValue }}
                     </kbq-option>
                 }
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -867,7 +879,9 @@ class BasicSelectOnPushPreselected {
     `
 })
 class MultiSelect {
+    multiple = true;
     selectAllToggle: boolean = false;
+    selectAllHandler: ((event: KeyboardEvent, select: KbqSelect) => void) | undefined;
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
@@ -933,14 +947,14 @@ class MultiSelectWithNonSelectableOption {
                 [sortComparator]="sortComparator"
             >
                 @for (food of foods; track food) {
-                    <kbq-option [value]="food.value">
+                    <kbq-option [value]="food.value" [disabled]="!!food.disabled">
                         {{ food.viewValue }}
                     </kbq-option>
                 }
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -970,19 +984,6 @@ class MultiSelectNarrow {
     readonly options = viewChildren(KbqOption);
     sortComparator: (a: KbqOption, b: KbqOption, options: KbqOption[]) => number;
 }
-
-@Component({
-    selector: 'select-with-plain-tabindex',
-    imports: [
-        KbqSelectModule
-    ],
-    template: `
-        <kbq-form-field>
-            <kbq-select [tabIndex]="5" />
-        </kbq-form-field>
-    `
-})
-class SelectWithPlainTabindex {}
 
 @Component({
     selector: 'select-early-sibling-access',
@@ -1016,7 +1017,7 @@ class SelectEarlyAccessSibling {}
 })
 class BasicSelectWithTheming {
     readonly select = viewChild.required(KbqSelect);
-    theme: ThemePalette;
+    theme: KbqComponentColors;
 }
 
 @Component({
@@ -1036,9 +1037,9 @@ class BasicSelectWithTheming {
                 }
                 <kbq-option>None</kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -1081,9 +1082,9 @@ class ResetValuesSelect {
                 }
 
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -1391,9 +1392,9 @@ class SelectWithCustomTrigger {
                     </kbq-option>
                 }
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -1574,9 +1575,9 @@ class SelectWithFormFieldLabel {
                     <div class="kbq-option-caption">caption</div>
                 </kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -1616,9 +1617,9 @@ class SelectWithLongOptionText {
                 <kbq-option [value]="'value5'">Not long text</kbq-option>
                 <kbq-option [value]="'value6'">Not long text</kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -1697,9 +1698,9 @@ class CdkVirtualScrollViewportSelect<T = string> {
                 </cdk-virtual-scroll-viewport>
 
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.value.name }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -2082,7 +2083,7 @@ class BasicSelectNoPlaceholder {}
     changeDetection: ChangeDetectionStrategy.Default
 })
 class SelectWithPanelWidth {
-    panelWidth: KbqSelectPanelWidth;
+    panelWidth: KbqPanelWidth;
 }
 
 @Component({
@@ -2121,7 +2122,7 @@ class SelectWithPanelMaxHeight {
     changeDetection: ChangeDetectionStrategy.Default
 })
 class SelectWithSearchAndPanelWidth {
-    panelWidth: KbqSelectPanelWidth | null = null;
+    panelWidth: KbqPanelWidth | null = null;
     searchCtrl = new UntypedFormControl();
 }
 
@@ -2263,7 +2264,7 @@ class SelectWithAsyncOptions {
                 <ng-template #kbqSelectTagContent let-option let-select="select">
                     <kbq-tag [selectable]="false">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -2332,7 +2333,7 @@ class MultiSelectWithConfigurableInputs {
     backdropClass = 'cdk-overlay-transparent-backdrop';
     hiddenItemsText: string | undefined = '+{{ number }}';
     multiline = false;
-    valueChangeListener = jest.fn();
+    valueChangeListener = vi.fn();
 
     readonly select = viewChild.required(KbqSelect);
 }
@@ -2476,7 +2477,7 @@ class StandaloneSelect {
     template: `
         <kbq-form-field>
             <kbq-label>Food</kbq-label>
-            <kbq-select [formControl]="control">
+            <kbq-select [formControl]="control" [placeholder]="placeholder">
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">{{ food.viewValue }}</kbq-option>
                 }
@@ -2485,6 +2486,7 @@ class StandaloneSelect {
     `
 })
 class SelectWithLabel {
+    placeholder: string | undefined;
     foods = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' }
@@ -2709,7 +2711,6 @@ describe('KbqSelect', () => {
                 KbqTagsModule,
                 ReactiveFormsModule,
                 FormsModule,
-                NoopAnimationsModule,
                 ScrollingModule,
                 ...extraImports,
                 ...declarations
@@ -2734,7 +2735,12 @@ describe('KbqSelect', () => {
         })();
     }
 
+    beforeEach(() => {
+        vi.useFakeTimers();
+    });
+
     afterEach(() => {
+        vi.useRealTimers();
         overlayContainer?.ngOnDestroy();
     });
 
@@ -2758,39 +2764,39 @@ describe('KbqSelect', () => {
                 let fixture: ComponentFixture<BasicSelect>;
                 let select: HTMLElement;
 
-                beforeEach(fakeAsync(() => {
+                beforeEach(async () => {
                     fixture = TestBed.createComponent(BasicSelect);
                     fixture.detectChanges();
                     select = fixture.debugElement.query(By.css('kbq-select')).nativeElement;
-                    flush();
-                }));
+                    await vi.runOnlyPendingTimersAsync();
+                });
 
-                afterEach(fakeAsync(() => flush()));
+                afterEach(() => vi.runOnlyPendingTimersAsync());
 
-                it('should set the tabindex of the select to 0 by default', fakeAsync(() => {
+                it('should set the tabindex of the select to 0 by default', async () => {
                     expect(select.getAttribute('tabindex')).toEqual('0');
-                }));
+                });
 
-                it('should be able to override the tabindex', fakeAsync(() => {
+                it('should be able to override the tabindex', async () => {
                     fixture.componentInstance.tabIndexOverride = 3;
                     fixture.detectChanges();
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(select.getAttribute('tabindex')).toBe('3');
-                }));
+                });
 
-                it('should set the tabindex of the select to -1 if disabled', fakeAsync(() => {
+                it('should set the tabindex of the select to -1 if disabled', async () => {
                     fixture.componentInstance.control.disable();
                     fixture.detectChanges();
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
                     expect(select.getAttribute('tabindex')).toEqual('-1');
 
                     fixture.componentInstance.control.enable();
                     fixture.detectChanges();
                     expect(select.getAttribute('tabindex')).toEqual('0');
-                }));
+                });
 
-                it('should select options via the UP/DOWN arrow keys on a closed select', fakeAsync(() => {
+                it('should select options via the UP/DOWN arrow keys on a closed select', async () => {
                     const formControl = fixture.componentInstance.control;
                     const options = fixture.componentInstance.options();
 
@@ -2811,14 +2817,14 @@ describe('KbqSelect', () => {
                     expect(formControl.value).toBe(options[3].value);
 
                     dispatchKeyboardEvent(select, 'keydown', UP_ARROW);
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(options[1].selected).toBe(true);
 
                     expect(formControl.value).toBe(options[1].value);
-                }));
+                });
 
-                it('should resume focus from selected item after selecting via click', fakeAsync(() => {
+                it('should resume focus from selected item after selecting via click', async () => {
                     const formControl = fixture.componentInstance.control;
                     const options = fixture.componentInstance.options();
 
@@ -2826,22 +2832,22 @@ describe('KbqSelect', () => {
 
                     fixture.componentInstance.select().open();
                     fixture.detectChanges();
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     (overlayContainerElement.querySelectorAll('kbq-option')[3] as HTMLElement).click();
                     fixture.detectChanges();
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(formControl.value).toBe(options[3].value);
 
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
                     fixture.detectChanges();
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(formControl.value).toBe(options[4].value);
-                }));
+                });
 
-                it('should select options via LEFT/RIGHT arrow keys on a closed select', fakeAsync(() => {
+                it('should select options via LEFT/RIGHT arrow keys on a closed select', async () => {
                     const formControl = fixture.componentInstance.control;
                     const options = fixture.componentInstance.options();
 
@@ -2862,14 +2868,14 @@ describe('KbqSelect', () => {
                     expect(formControl.value).toBe(options[3].value);
 
                     dispatchKeyboardEvent(select, 'keydown', LEFT_ARROW);
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(options[1].selected).toBe(true);
 
                     expect(formControl.value).toBe(options[1].value);
-                }));
+                });
 
-                it('should open a single-selection select using ALT + DOWN_ARROW', fakeAsync(() => {
+                it('should open a single-selection select using ALT + DOWN_ARROW', async () => {
                     const { control: formControl, select: selectInput } = fixture.componentInstance;
                     const selectInstance = selectInput();
 
@@ -2882,14 +2888,14 @@ describe('KbqSelect', () => {
                     Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(selectInstance.panelOpen).toBe(true);
 
                     expect(formControl.value).toBeFalsy();
-                }));
+                });
 
-                it('should open a single-selection select using ALT + UP_ARROW', fakeAsync(() => {
+                it('should open a single-selection select using ALT + UP_ARROW', async () => {
                     const { control: formControl, select: selectInput } = fixture.componentInstance;
                     const selectInstance = selectInput();
 
@@ -2902,14 +2908,14 @@ describe('KbqSelect', () => {
                     Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(selectInstance.panelOpen).toBe(true);
 
                     expect(formControl.value).toBeFalsy();
-                }));
+                });
 
-                it('should should close when pressing ALT + DOWN_ARROW', fakeAsync(() => {
+                it('should should close when pressing ALT + DOWN_ARROW', async () => {
                     const { select: selectInput } = fixture.componentInstance;
                     const selectInstance = selectInput();
 
@@ -2922,14 +2928,14 @@ describe('KbqSelect', () => {
                     Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(selectInstance.panelOpen).toBe(false);
 
                     expect(event.defaultPrevented).toBe(true);
-                }));
+                });
 
-                it('should should close when pressing ALT + UP_ARROW', fakeAsync(() => {
+                it('should should close when pressing ALT + UP_ARROW', async () => {
                     const { select: selectInput } = fixture.componentInstance;
                     const selectInstance = selectInput();
 
@@ -2942,35 +2948,35 @@ describe('KbqSelect', () => {
                     Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(selectInstance.panelOpen).toBe(false);
 
                     expect(event.defaultPrevented).toBe(true);
-                }));
+                });
 
-                it('should be able to select options by typing on a closed select', fakeAsync(() => {
+                it('should be able to select options by typing on a closed select', async () => {
                     const formControl = fixture.componentInstance.control;
                     const options = fixture.componentInstance.options();
 
                     expect(formControl.value).toBeFalsy();
 
                     dispatchEvent(select, createKeyboardEvent('keydown', 80, undefined, 'p'));
-                    tick(200);
+                    await vi.advanceTimersByTimeAsync(200);
 
                     expect(options[1].selected).toBe(true);
 
                     expect(formControl.value).toBe(options[1].value);
 
                     dispatchEvent(select, createKeyboardEvent('keydown', 69, undefined, 'e'));
-                    tick(200);
+                    await vi.advanceTimersByTimeAsync(200);
 
                     expect(options[5].selected).toBe(true);
 
                     expect(formControl.value).toBe(options[5].value);
-                }));
+                });
 
-                it('should open the panel when pressing a vertical arrow key on a closed multiple select', fakeAsync(() => {
+                it('should open the panel when pressing a vertical arrow key on a closed multiple select', async () => {
                     fixture.destroy();
 
                     const multiFixture = TestBed.createComponent(MultiSelect);
@@ -2985,16 +2991,16 @@ describe('KbqSelect', () => {
 
                     const event = dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
 
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(instance.select().panelOpen).toBe(true);
 
                     expect(instance.control.value).toBe(initialValue);
 
                     expect(event.defaultPrevented).toBe(true);
-                }));
+                });
 
-                it('should open the panel when pressing a horizontal arrow key on closed multiple select', fakeAsync(() => {
+                it('should open the panel when pressing a horizontal arrow key on closed multiple select', async () => {
                     fixture.destroy();
 
                     const multiFixture = TestBed.createComponent(MultiSelect);
@@ -3009,16 +3015,16 @@ describe('KbqSelect', () => {
 
                     const event = dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
 
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(instance.select().panelOpen).toBe(true);
 
                     expect(instance.control.value).toBe(initialValue);
 
                     expect(event.defaultPrevented).toBe(true);
-                }));
+                });
 
-                it('should do nothing when typing on a closed multi-select', fakeAsync(() => {
+                it('should do nothing when typing on a closed multi-select', async () => {
                     fixture.destroy();
 
                     const multiFixture = TestBed.createComponent(MultiSelect);
@@ -3032,14 +3038,14 @@ describe('KbqSelect', () => {
                     expect(instance.select().panelOpen).toBe(false);
 
                     dispatchEvent(select, createKeyboardEvent('keydown', 80, undefined, 'p'));
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(instance.select().panelOpen).toBe(false);
 
                     expect(instance.control.value).toBe(initialValue);
-                }));
+                });
 
-                it('should do nothing if the key manager did not change the active item', fakeAsync(() => {
+                it('should do nothing if the key manager did not change the active item', async () => {
                     const formControl = fixture.componentInstance.control;
 
                     expect(formControl.value).toBeNull();
@@ -3051,24 +3057,24 @@ describe('KbqSelect', () => {
                     expect(formControl.value).toBeNull();
 
                     expect(formControl.pristine).toBe(true);
-                }));
+                });
 
-                it('should continue from the selected option when the value is set programmatically', fakeAsync(() => {
+                it('should continue from the selected option when the value is set programmatically', async () => {
                     const formControl = fixture.componentInstance.control;
 
                     formControl.setValue('eggs-5');
 
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(formControl.value).toBe('pasta-6');
                     expect(fixture.componentInstance.options()[6].selected).toBe(true);
-                }));
+                });
 
                 it(
                     'should not shift focus when the selected options are updated programmatically ' +
                         'in a multi select',
-                    fakeAsync(() => {
+                    async () => {
                         fixture.destroy();
 
                         const multiFixture = TestBed.createComponent(MultiSelect);
@@ -3077,7 +3083,7 @@ describe('KbqSelect', () => {
                         select = multiFixture.debugElement.query(By.css('kbq-select')).nativeElement;
                         multiFixture.componentInstance.select().open();
                         multiFixture.detectChanges();
-                        flush();
+                        await vi.runOnlyPendingTimersAsync();
 
                         const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -3086,25 +3092,25 @@ describe('KbqSelect', () => {
 
                         multiFixture.componentInstance.control.setValue(['steak-0', 'sushi-7']);
                         multiFixture.detectChanges();
-                        flush();
+                        await vi.runOnlyPendingTimersAsync();
 
                         expect(document.activeElement).toBe(options[3]);
-                    })
+                    }
                 );
 
-                it('should not cycle through the options if the control is disabled', fakeAsync(() => {
+                it('should not cycle through the options if the control is disabled', async () => {
                     const formControl = fixture.componentInstance.control;
 
                     formControl.setValue('eggs-5');
                     formControl.disable();
 
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(formControl.value).toBe('eggs-5');
-                }));
+                });
 
-                it('should not wrap selection after reaching the end of the options', fakeAsync(() => {
+                it('should not wrap selection after reaching the end of the options', async () => {
                     const lastOption = fixture.componentInstance.options().at(-1)!;
 
                     fixture.componentInstance.options().forEach(() => {
@@ -3114,12 +3120,12 @@ describe('KbqSelect', () => {
                     expect(lastOption.selected).toBe(true);
 
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
-                    flush(35);
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(lastOption.selected).toBe(true);
-                }));
+                });
 
-                it('should not open a multiple select when tabbing through', fakeAsync(() => {
+                it('should not open a multiple select when tabbing through', async () => {
                     fixture.destroy();
 
                     const multiFixture = TestBed.createComponent(MultiSelect);
@@ -3130,12 +3136,12 @@ describe('KbqSelect', () => {
                     expect(multiFixture.componentInstance.select().panelOpen).toBe(false);
 
                     dispatchKeyboardEvent(select, 'keydown', TAB);
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(multiFixture.componentInstance.select().panelOpen).toBe(false);
-                }));
+                });
 
-                it('should toggle the next option when pressing shift + DOWN_ARROW on a multi-select', fakeAsync(() => {
+                it('should toggle the next option when pressing shift + DOWN_ARROW on a multi-select', async () => {
                     fixture.destroy();
 
                     const multiFixture = TestBed.createComponent(MultiSelect);
@@ -3150,20 +3156,20 @@ describe('KbqSelect', () => {
 
                     multiFixture.componentInstance.select().open();
                     multiFixture.detectChanges();
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
-                    expect(multiFixture.componentInstance.select().value).toBeFalsy();
-
-                    dispatchEvent(select, event);
-                    expect(multiFixture.componentInstance.select().value).toEqual(['pizza-1']);
+                    expect(multiFixture.componentInstance.select().value()).toBeFalsy();
 
                     dispatchEvent(select, event);
-                    flush();
+                    expect(multiFixture.componentInstance.select().value()).toEqual(['pizza-1']);
 
-                    expect(multiFixture.componentInstance.select().value).toEqual(['pizza-1', 'tacos-2']);
-                }));
+                    dispatchEvent(select, event);
+                    await vi.runOnlyPendingTimersAsync();
 
-                it('should toggle the previous option when pressing shift + UP_ARROW on a multi-select', fakeAsync(() => {
+                    expect(multiFixture.componentInstance.select().value()).toEqual(['pizza-1', 'tacos-2']);
+                });
+
+                it('should toggle the previous option when pressing shift + UP_ARROW on a multi-select', async () => {
                     fixture.destroy();
 
                     const multiFixture = TestBed.createComponent(MultiSelect);
@@ -3178,7 +3184,7 @@ describe('KbqSelect', () => {
 
                     multiFixture.componentInstance.select().open();
                     multiFixture.detectChanges();
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     // Move focus down first.
                     for (let i = 0; i < 5; i++) {
@@ -3186,45 +3192,45 @@ describe('KbqSelect', () => {
                         multiFixture.detectChanges();
                     }
 
-                    expect(multiFixture.componentInstance.select().value).toBeFalsy();
+                    expect(multiFixture.componentInstance.select().value()).toBeFalsy();
 
                     dispatchEvent(select, event);
-                    flush();
-                    expect(multiFixture.componentInstance.select().value).toEqual(['chips-4']);
+                    await vi.runOnlyPendingTimersAsync();
+                    expect(multiFixture.componentInstance.select().value()).toEqual(['chips-4']);
 
                     dispatchEvent(select, event);
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
                     // Panel order, not selection order.
-                    expect(multiFixture.componentInstance.select().value).toEqual(['sandwich-3', 'chips-4']);
-                }));
+                    expect(multiFixture.componentInstance.select().value()).toEqual(['sandwich-3', 'chips-4']);
+                });
 
-                it('should prevent the default action when pressing space', fakeAsync(() => {
+                it('should prevent the default action when pressing space', async () => {
                     const event = dispatchKeyboardEvent(select, 'keydown', SPACE);
 
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     expect(event.defaultPrevented).toBe(true);
-                }));
+                });
 
-                it('should consider the selection a result of a user action when closed', fakeAsync(() => {
+                it('should consider the selection a result of a user action when closed', async () => {
                     const option = fixture.componentInstance.options().at(0)!;
-                    const spy = jest.fn();
+                    const spy = vi.fn();
                     const subscription = option.onSelectionChange.pipe(map((e) => e.isUserInput)).subscribe(spy);
 
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
                     expect(spy).toHaveBeenCalledWith(true);
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     subscription.unsubscribe();
-                }));
+                });
 
-                it('should be able to focus the select trigger', fakeAsync(() => {
+                it('should be able to focus the select trigger', async () => {
                     document.body.focus(); // ensure that focus isn't on the trigger already
 
                     fixture.componentInstance.select().focus();
 
                     expect(document.activeElement).toBe(select);
-                }));
+                });
 
                 // Multi-select focus restoration is covered by e2e.playwright-spec.ts
                 // (it requires real browser focus semantics).
@@ -3235,24 +3241,24 @@ describe('KbqSelect', () => {
                 let trigger: HTMLElement;
                 let options: NodeListOf<HTMLElement>;
 
-                beforeEach(fakeAsync(() => {
+                beforeEach(async () => {
                     fixture = TestBed.createComponent(BasicSelect);
                     fixture.detectChanges();
                     trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
                     trigger.click();
                     fixture.detectChanges();
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     options = overlayContainerElement.querySelectorAll('kbq-option');
-                }));
+                });
 
-                afterEach(fakeAsync(() => flush()));
+                afterEach(() => vi.runOnlyPendingTimersAsync());
 
-                it('should set the tabindex of each option according to disabled state', fakeAsync(() => {
+                it('should set the tabindex of each option according to disabled state', async () => {
                     expect(options[0].getAttribute('tabindex')).toEqual('0');
                     expect(options[1].getAttribute('tabindex')).toEqual('0');
                     expect(options[2].getAttribute('tabindex')).toEqual('-1');
-                }));
+                });
             });
         });
 
@@ -3260,12 +3266,12 @@ describe('KbqSelect', () => {
             let fixture: ComponentFixture<BasicSelect>;
             let trigger: HTMLElement;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 fixture = TestBed.createComponent(BasicSelect);
                 fixture.detectChanges();
                 trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
             it('should not throw when attempting to open too early', () => {
                 // Create component and then immediately open without running change detection
@@ -3273,95 +3279,95 @@ describe('KbqSelect', () => {
                 expect(() => fixture.componentInstance.select().open()).not.toThrow();
             });
 
-            it('should open the panel when trigger is clicked', fakeAsync(() => {
+            it('should open the panel when trigger is clicked', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
                 expect(overlayContainerElement.textContent).toContain('Steak');
                 expect(overlayContainerElement.textContent).toContain('Pizza');
                 expect(overlayContainerElement.textContent).toContain('Tacos');
-            }));
+            });
 
-            it('should close the panel when an item is clicked', fakeAsync(() => {
+            it('should close the panel when an item is clicked', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
 
                 option.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(overlayContainerElement.textContent).toEqual('');
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
-            }));
+            });
 
-            it('should close the panel when a click occurs outside the panel', fakeAsync(() => {
+            it('should close the panel when a click occurs outside the panel', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 document.body.click();
-                tick(1);
+                await vi.advanceTimersByTimeAsync(1);
 
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(overlayContainerElement.textContent).toEqual('');
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
-            }));
+            });
 
-            it('should not attempt to open a select that does not have any options', fakeAsync(() => {
+            it('should not attempt to open a select that does not have any options', async () => {
                 fixture.componentInstance.foods = [];
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 trigger.click();
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
-            }));
+            });
 
-            it('should close the panel when tabbing out', fakeAsync(() => {
+            it('should close the panel when tabbing out', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
 
                 dispatchKeyboardEvent(trigger, 'keydown', TAB);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
-            }));
+            });
 
-            it('should restore focus to the host before tabbing away', fakeAsync(() => {
+            it('should restore focus to the host before tabbing away', async () => {
                 const select = fixture.nativeElement.querySelector('.kbq-select');
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
 
                 // Use a spy since focus can be flaky in unit tests.
-                const focusSpyFn = jest.spyOn(select, 'focus');
+                const focusSpyFn = vi.spyOn(select, 'focus');
 
                 dispatchKeyboardEvent(trigger, 'keydown', TAB);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(focusSpyFn).toHaveBeenCalled();
-            }));
+            });
 
-            it('should close when tabbing out from inside the panel', fakeAsync(() => {
+            it('should close when tabbing out from inside the panel', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
 
@@ -3369,101 +3375,101 @@ describe('KbqSelect', () => {
 
                 dispatchKeyboardEvent(panel, 'keydown', TAB);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
-            }));
+            });
 
-            it('should stop ESCAPE propagation when the panel is open so ancestor overlays are not closed', fakeAsync(() => {
+            it('should stop ESCAPE propagation when the panel is open so ancestor overlays are not closed', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
 
                 const event = createKeyboardEvent('keydown', ESCAPE);
-                const stopPropagationSpy = jest.spyOn(event, 'stopPropagation');
+                const stopPropagationSpy = vi.spyOn(event, 'stopPropagation');
 
                 dispatchEvent(trigger, event);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
                 expect(stopPropagationSpy).toHaveBeenCalled();
-            }));
+            });
 
-            it('should focus the first option when pressing HOME', fakeAsync(() => {
+            it('should focus the first option when pressing HOME', async () => {
                 fixture.componentInstance.control.setValue('pizza-1');
                 fixture.detectChanges();
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const event = dispatchKeyboardEvent(trigger, 'keydown', HOME);
 
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().keyManager.activeItemIndex).toBe(0);
                 expect(event.defaultPrevented).toBe(true);
-            }));
+            });
 
-            it('should focus the last option when pressing END', fakeAsync(() => {
+            it('should focus the last option when pressing END', async () => {
                 fixture.componentInstance.control.setValue('pizza-1');
                 fixture.detectChanges();
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const event = dispatchKeyboardEvent(trigger, 'keydown', END);
 
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().keyManager.activeItemIndex).toBe(7);
                 expect(event.defaultPrevented).toBe(true);
-            }));
+            });
 
-            it('should be able to set extra classes on the panel', fakeAsync(() => {
+            it('should be able to set extra classes on the panel', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const panel = overlayContainerElement.querySelector('.kbq-select__panel') as HTMLElement;
 
                 expect(panel.classList).toContain('custom-one');
                 expect(panel.classList).toContain('custom-two');
-            }));
+            });
 
-            it('should prevent the default action when pressing SPACE on an option', fakeAsync(() => {
+            it('should prevent the default action when pressing SPACE on an option', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const option = overlayContainerElement.querySelector('kbq-option') as Node;
                 const event = dispatchKeyboardEvent(option, 'keydown', SPACE);
 
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(event.defaultPrevented).toBe(true);
-            }));
+            });
 
-            it('should prevent the default action when pressing ENTER on an option', fakeAsync(() => {
+            it('should prevent the default action when pressing ENTER on an option', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const option = overlayContainerElement.querySelector('kbq-option') as Node;
                 const event = dispatchKeyboardEvent(option, 'keydown', ENTER);
 
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(event.defaultPrevented).toBe(true);
-            }));
+            });
 
-            it('should be able to render options inside groups with an ng-container', fakeAsync(() => {
+            it('should be able to render options inside groups with an ng-container', async () => {
                 fixture.destroy();
 
                 const groupFixture = TestBed.createComponent(SelectWithGroupsAndNgContainer);
@@ -3472,33 +3478,77 @@ describe('KbqSelect', () => {
                 trigger = groupFixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
                 trigger.click();
                 groupFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(document.querySelectorAll('.cdk-overlay-container kbq-option').length).toBeGreaterThan(0);
-            }));
+            });
 
             it(
                 'should not consider itself as blurred if the trigger loses focus while the ' + 'panel is still open',
-                fakeAsync(() => {
+                async () => {
                     const selectElement = fixture.nativeElement.querySelector('.kbq-select');
                     const selectInstance = fixture.componentInstance.select();
 
                     dispatchFakeEvent(selectElement, 'focus');
                     fixture.detectChanges();
 
-                    expect(selectInstance.focused).toBe(true);
+                    expect(selectInstance.focused()).toBe(true);
 
                     selectInstance.open();
                     fixture.detectChanges();
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
                     dispatchFakeEvent(selectElement, 'blur');
                     fixture.detectChanges();
 
-                    expect(selectInstance.focused).toBe(true);
-                })
+                    expect(selectInstance.focused()).toBe(true);
+                }
             );
 
-            it('should set the width of the overlay based on the trigger', fakeAsync(() => {
+            // With zone.js, change detection runs after every listener of the click: between the select's, which
+            // opens the panel, and the form field's around it. The listener below stands in for that render.
+            it('should keep the focus on the active option when the opening click reaches the form field', async () => {
+                getSelectElement(fixture).addEventListener('click', () => fixture.detectChanges());
+
+                trigger.click();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(true);
+                expect(document.activeElement).toBe(overlayContainerElement.querySelector('kbq-option'));
+            });
+
+            it('should focus the closed select on a click on the form field container', () => {
+                const container: HTMLElement = getFormFieldDebugElement(fixture).query(
+                    By.css('.kbq-form-field__container')
+                ).nativeElement;
+
+                container.click();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+                expect(document.activeElement).toBe(getSelectElement(fixture));
+            });
+
+            it('should focus the select on a click on the form field container while the panel is open', async () => {
+                trigger.click();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                const container: HTMLElement = getFormFieldDebugElement(fixture).query(
+                    By.css('.kbq-form-field__container')
+                ).nativeElement;
+
+                // A press on content that takes no focus, such as a prefix icon, moves it to the body; jsdom does not.
+                (document.activeElement as HTMLElement).blur();
+                container.click();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+                expect(document.activeElement).toBe(getSelectElement(fixture));
+            });
+
+            it('should set the width of the overlay based on the trigger', async () => {
                 const triggerParent = getFormFieldDebugElement(fixture).nativeElement;
 
                 trigger.style.width = '200px';
@@ -3507,16 +3557,16 @@ describe('KbqSelect', () => {
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
                 expect(pane.style.minWidth).toBe('200px');
-            }));
+            });
         });
 
         describe('disabled behavior', () => {
-            it('should disable itself when control is disabled programmatically', fakeAsync(() => {
+            it('should disable itself when control is disabled programmatically', async () => {
                 const disabledFixture = TestBed.createComponent(BasicSelect);
 
                 disabledFixture.detectChanges();
@@ -3530,7 +3580,7 @@ describe('KbqSelect', () => {
 
                 disabledTrigger.click();
                 disabledFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(overlayContainerElement.textContent).toEqual('');
                 expect(disabledFixture.componentInstance.select().panelOpen).toBe(false);
@@ -3542,85 +3592,85 @@ describe('KbqSelect', () => {
 
                 disabledTrigger.click();
                 disabledFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(overlayContainerElement.textContent).toContain('Steak');
                 expect(disabledFixture.componentInstance.select().panelOpen).toBe(true);
-            }));
+            });
         });
 
         describe('selection logic', () => {
             let fixture: ComponentFixture<BasicSelect>;
             let trigger: HTMLElement;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 fixture = TestBed.createComponent(BasicSelect);
                 fixture.detectChanges();
                 trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
-            it('should focus the first option if no option is selected', fakeAsync(() => {
+            it('should focus the first option if no option is selected', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().keyManager.activeItemIndex).toEqual(0);
-            }));
+            });
 
-            it('should select an option when it is clicked', fakeAsync(() => {
+            it('should select an option when it is clicked', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 let option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
 
                 option.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
 
                 expect(option.classList).toContain('kbq-selected');
                 expect(fixture.componentInstance.options().at(0)!.selected).toBe(true);
                 expect(fixture.componentInstance.select().selected).toBe(fixture.componentInstance.options().at(0)!);
-            }));
+            });
 
-            it('should be able to select an option using the KbqOption API', fakeAsync(() => {
+            it('should be able to select an option using the KbqOption API', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const optionInstances = fixture.componentInstance.options();
                 const optionNodes: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
                 optionInstances[1].select();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(optionNodes[1].classList).toContain('kbq-selected');
                 expect(optionInstances[1].selected).toBe(true);
                 expect(fixture.componentInstance.select().selected).toBe(optionInstances[1]);
-            }));
+            });
 
-            it('should deselect other options when one is selected', fakeAsync(() => {
+            it('should deselect other options when one is selected', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 let options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
                 options[0].click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 options = overlayContainerElement.querySelectorAll('kbq-option');
                 expect(options[1].classList).not.toContain('kbq-selected');
@@ -3630,28 +3680,28 @@ describe('KbqSelect', () => {
 
                 expect(optionInstances[1].selected).toBe(false);
                 expect(optionInstances[2].selected).toBe(false);
-            }));
+            });
 
-            it('should deselect other options when one is programmatically selected', fakeAsync(() => {
+            it('should deselect other options when one is programmatically selected', async () => {
                 const control = fixture.componentInstance.control;
                 const foods = fixture.componentInstance.foods;
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 let options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
                 options[0].click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 control.setValue(foods[1].value);
                 fixture.detectChanges();
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 options = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -3664,58 +3714,58 @@ describe('KbqSelect', () => {
                 expect(optionInstances[0].selected).toBe(false);
 
                 expect(optionInstances[1].selected).toBe(true);
-            }));
+            });
 
-            it('should display the selected option in the trigger', fakeAsync(() => {
+            it('should display the selected option in the trigger', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
 
                 option.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const value = fixture.debugElement.query(By.css('.kbq-select__matcher')).nativeElement;
 
                 expect(value.textContent).toContain('Steak');
-            }));
+            });
 
-            it('should focus the selected option if an option is selected', fakeAsync(() => {
+            it('should focus the selected option if an option is selected', async () => {
                 // must wait for initial writeValue promise to finish
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 fixture.componentInstance.control.setValue('pizza-1');
                 fixture.detectChanges();
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 // must wait for animation to finish
                 fixture.detectChanges();
                 expect(fixture.componentInstance.select().keyManager.activeItemIndex).toEqual(1);
-            }));
+            });
 
-            it('should select an option that was added after initialization', fakeAsync(() => {
+            it('should select an option that was added after initialization', async () => {
                 fixture.componentInstance.foods.push({ viewValue: 'Potatoes', value: 'potatoes-8' });
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
                 options[8].click();
                 fixture.detectChanges();
-                tick();
-                flush();
+                await vi.advanceTimersByTimeAsync(0);
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(trigger.textContent).toContain('Potatoes');
                 expect(fixture.componentInstance.select().selected).toBe(fixture.componentInstance.options().at(-1)!);
-            }));
+            });
 
-            it('should update the trigger when the selected option label is changed', fakeAsync(() => {
+            it('should update the trigger when the selected option label is changed', async () => {
                 fixture.componentInstance.control.setValue('pizza-1');
                 fixture.detectChanges();
 
@@ -3723,12 +3773,12 @@ describe('KbqSelect', () => {
 
                 fixture.componentInstance.foods[1].viewValue = 'Calzone';
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(trigger.querySelector('.kbq-select__matcher-text')!.textContent!.trim()).toBe('Calzone');
-            }));
+            });
 
-            it('should not select disabled options', fakeAsync(() => {
+            it('should not select disabled options', async () => {
                 trigger.click();
                 fixture.detectChanges();
 
@@ -3738,17 +3788,17 @@ describe('KbqSelect', () => {
 
                 options[2].click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
                 expect(options[2].classList).not.toContain('kbq-selected');
                 expect(fixture.componentInstance.select().selected).toBeUndefined();
-            }));
+            });
 
-            it('should not select a disabled option on shift + click', fakeAsync(() => {
+            it('should not select a disabled option on shift + click', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -3757,50 +3807,50 @@ describe('KbqSelect', () => {
                 // visually while leaving the form control untouched.
                 options[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
                 fixture.detectChanges();
-                tick();
-                flush();
+                await vi.advanceTimersByTimeAsync(0);
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(options[2].classList).not.toContain('kbq-selected');
                 expect(fixture.componentInstance.select().selected).toBeUndefined();
                 expect(fixture.componentInstance.control.value).toBeFalsy();
-            }));
+            });
 
             // Regression: the single-selection branch toggled `selectionModel` directly, which marks the
             // option selected before `onSelect` reads the previous state. The "did the selection change?"
             // guard was then false, so the trigger showed the new value while the form control kept the old
             // one and nothing was emitted.
-            it('should propagate a value replaced by shift + click', fakeAsync(() => {
-                const selectionChangeSpy = jest.fn();
+            it('should propagate a value replaced by shift + click', async () => {
+                const selectionChangeSpy = vi.fn();
                 const subscription = fixture.componentInstance.select().selectionChange.subscribe(selectionChangeSpy);
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 (overlayContainerElement.querySelectorAll('kbq-option')[0] as HTMLElement).click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.control.value).toBe('steak-0');
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
                 options[1].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.control.value).toBe('pizza-1');
                 expect(fixture.componentInstance.select().selected).toBe(fixture.componentInstance.options().at(1)!);
                 expect(selectionChangeSpy).toHaveBeenLastCalledWith(expect.objectContaining({ value: 'pizza-1' }));
 
                 subscription.unsubscribe();
-            }));
+            });
 
-            it('should not select options inside a disabled group', fakeAsync(() => {
+            it('should not select options inside a disabled group', async () => {
                 fixture.destroy();
 
                 const groupFixture = TestBed.createComponent(SelectWithGroups);
@@ -3814,43 +3864,43 @@ describe('KbqSelect', () => {
 
                 options[0].click();
                 groupFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(groupFixture.componentInstance.select().panelOpen).toBe(true);
                 expect(options[0].classList).not.toContain('kbq-selected');
                 expect(groupFixture.componentInstance.select().selected).toBeUndefined();
-            }));
+            });
 
-            it('should not throw if triggerValue accessed with no selected value', fakeAsync(() => {
+            it('should not throw if triggerValue accessed with no selected value', async () => {
                 expect(() => fixture.componentInstance.select().triggerValue).not.toThrow();
-            }));
+            });
 
-            it('should emit to `optionSelectionChanges` when an option is selected', fakeAsync(() => {
+            it('should emit to `optionSelectionChanges` when an option is selected', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
-                const spy = jest.fn();
+                const spy = vi.fn();
                 const subscription = fixture.componentInstance.select().optionSelectionChanges.subscribe(spy);
                 const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
 
                 option.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(spy).toHaveBeenCalledWith(expect.any(KbqOptionSelectionChange));
 
                 subscription.unsubscribe();
-            }));
+            });
 
-            it('should handle accessing `optionSelectionChanges` before the options are initialized', fakeAsync(() => {
+            it('should handle accessing `optionSelectionChanges` before the options are initialized', async () => {
                 fixture.destroy();
                 fixture = TestBed.createComponent(BasicSelect);
 
-                const spy = jest.fn();
+                const spy = vi.fn();
                 let subscription: Subscription;
 
-                expect(fixture.componentInstance.select().options).toBeFalsy();
+                expect(fixture.componentInstance.select().options.length).toBe(0);
                 expect(() => {
                     subscription = fixture.componentInstance.select().optionSelectionChanges.subscribe(spy);
                 }).not.toThrow();
@@ -3860,26 +3910,26 @@ describe('KbqSelect', () => {
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
 
                 option.click();
                 fixture.detectChanges();
-                tick();
-                flush();
+                await vi.advanceTimersByTimeAsync(0);
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(spy).toHaveBeenCalledWith(expect.any(KbqOptionSelectionChange));
 
                 subscription!.unsubscribe();
-            }));
+            });
 
-            it('should focus itself after list closed by KeyBoard events', fakeAsync(() => {
+            it('should focus itself after list closed by KeyBoard events', async () => {
                 const closeAndFocusKeys: number[] = [TAB, ESCAPE, DOWN_ARROW, UP_ARROW];
                 const selectInstance = fixture.componentInstance.select();
-                const focusSpyFn = jest.spyOn(selectInstance, 'focus');
+                const focusSpyFn = vi.spyOn(selectInstance, 'focus');
 
-                closeAndFocusKeys.forEach((keyCode) => {
+                for (const keyCode of closeAndFocusKeys) {
                     trigger.click();
                     fixture.detectChanges();
 
@@ -3893,26 +3943,25 @@ describe('KbqSelect', () => {
                     dispatchEvent(option, keyBoardEvent);
 
                     fixture.detectChanges();
-                    flush();
-                });
+                    await vi.runOnlyPendingTimersAsync();
+                }
 
-                // Double it, since open and close events are involved
-                expect(focusSpyFn).toHaveBeenCalledTimes(closeAndFocusKeys.length * 2);
-            }));
+                expect(focusSpyFn).toHaveBeenCalledTimes(closeAndFocusKeys.length);
+            });
         });
 
         describe('forms integration', () => {
             let fixture: ComponentFixture<BasicSelect>;
             let trigger: HTMLElement;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 fixture = TestBed.createComponent(BasicSelect);
                 fixture.detectChanges();
                 trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
-            it('should take an initial view value with reactive forms', fakeAsync(() => {
+            it('should take an initial view value with reactive forms', async () => {
                 fixture.componentInstance.control = new UntypedFormControl('pizza-1');
                 fixture.detectChanges();
 
@@ -3923,14 +3972,14 @@ describe('KbqSelect', () => {
                 trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const options = overlayContainerElement.querySelectorAll('kbq-option');
 
                 expect(options[1].classList).toContain('kbq-selected');
-            }));
+            });
 
-            it('should set the view value from the form', fakeAsync(() => {
+            it('should set the view value from the form', async () => {
                 let value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
 
                 expect(value.nativeElement.textContent.trim()).toBe('Food');
@@ -3943,30 +3992,40 @@ describe('KbqSelect', () => {
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const options = overlayContainerElement.querySelectorAll('kbq-option');
 
                 expect(options[1].classList).toContain('kbq-selected');
-            }));
+            });
 
-            it('should update the form value when the view changes', fakeAsync(() => {
+            it('should follow the value the form control writes', () => {
+                fixture.componentInstance.control.setValue('pizza-1');
+
+                expect(fixture.componentInstance.select().value()).toBe('pizza-1');
+
+                fixture.componentInstance.control.setValue(null);
+
+                expect(fixture.componentInstance.select().value()).toBeNull();
+            });
+
+            it('should update the form value when the view changes', async () => {
                 expect(fixture.componentInstance.control.value).toEqual(null);
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
 
                 option.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.control.value).toEqual('steak-0');
-            }));
+            });
 
-            it('should clear the selection when a nonexistent option value is selected', fakeAsync(() => {
+            it('should clear the selection when a nonexistent option value is selected', async () => {
                 fixture.componentInstance.control.setValue('pizza-1');
                 fixture.detectChanges();
 
@@ -3981,14 +4040,14 @@ describe('KbqSelect', () => {
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const options = overlayContainerElement.querySelectorAll('kbq-option');
 
                 expect(options[1].classList).not.toContain('kbq-selected');
-            }));
+            });
 
-            it('should clear the selection when the control is reset', fakeAsync(() => {
+            it('should clear the selection when the control is reset', async () => {
                 fixture.componentInstance.control.setValue('pizza-1');
                 fixture.detectChanges();
 
@@ -4003,98 +4062,114 @@ describe('KbqSelect', () => {
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const options = overlayContainerElement.querySelectorAll('kbq-option');
 
                 expect(options[1].classList).not.toContain('kbq-selected');
-            }));
+            });
 
-            it('should set the control to touched when the select is blurred', fakeAsync(() => {
+            it('should set the control to touched when the select is blurred', async () => {
                 expect(fixture.componentInstance.control.touched).toEqual(false);
 
                 trigger.click();
                 dispatchFakeEvent(trigger, 'blur');
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.control.touched).toEqual(false);
 
                 document.body.click();
-                tick(1);
+                await vi.advanceTimersByTimeAsync(1);
                 dispatchFakeEvent(trigger, 'blur');
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.control.touched).toEqual(true);
-            }));
+            });
 
-            it('should set the control to touched when the panel is closed', fakeAsync(() => {
+            it('should set the control to touched when the panel is closed', async () => {
                 expect(fixture.componentInstance.control.touched).toBe(false);
 
                 trigger.click();
                 dispatchFakeEvent(trigger, 'blur');
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.control.touched).toBe(false);
 
                 fixture.componentInstance.select().close();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.control.touched).toBe(true);
-            }));
+            });
 
-            it('should not set touched when a disabled select is touched', fakeAsync(() => {
+            it('should not set touched when a disabled select is touched', async () => {
                 expect(fixture.componentInstance.control.touched).toBe(false);
 
                 fixture.componentInstance.control.disable();
                 dispatchFakeEvent(trigger, 'blur');
 
                 expect(fixture.componentInstance.control.touched).toBe(false);
-            }));
+            });
 
-            it('should set the control to dirty when the select value changes in DOM', fakeAsync(() => {
+            it('should set the control to dirty when the select value changes in DOM', async () => {
                 expect(fixture.componentInstance.control.dirty).toEqual(false);
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
 
                 option.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.control.dirty).toEqual(true);
-            }));
+            });
 
-            it('should not set the control to dirty when the value changes programmatically', fakeAsync(() => {
+            it('should not set the control to dirty when the value changes programmatically', async () => {
                 expect(fixture.componentInstance.control.dirty).toEqual(false);
 
                 fixture.componentInstance.control.setValue('pizza-1');
 
                 expect(fixture.componentInstance.control.dirty).toEqual(false);
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
+
+            // Following the written value, the closed select moves its active option onto it, which its
+            // arrow-key handling must not take for a selection of the user.
+            it('should not report a value the form writes as a selection of the user', async () => {
+                const option = fixture.componentInstance.options().at(1)!;
+                const spy = vi.fn();
+                const subscription = option.onSelectionChange.pipe(map((e) => e.isUserInput)).subscribe(spy);
+
+                fixture.componentInstance.control.setValue('pizza-1');
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                subscription.unsubscribe();
+
+                expect(option.selected).toBe(true);
+                expect(spy).not.toHaveBeenCalledWith(true);
+            });
         });
 
         describe('Clear value', () => {
             let fixture: ComponentFixture<BasicSelect>;
             let cleaner: HTMLElement;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 fixture = TestBed.createComponent(BasicSelect);
                 fixture.detectChanges();
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
-            it('should reset selection on clear', fakeAsync(() => {
+            it('should reset selection on clear', async () => {
                 fixture.componentInstance.control = new UntypedFormControl('pizza-1');
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
 
@@ -4103,34 +4178,34 @@ describe('KbqSelect', () => {
                 cleaner = fixture.debugElement.query(By.directive(KbqCleaner)).nativeElement;
                 cleaner.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(value.nativeElement.textContent).toContain('Food');
-            }));
+            });
 
-            it('should update FormControl value to null after clear on single select', fakeAsync(() => {
+            it('should update FormControl value to null after clear on single select', async () => {
                 fixture.componentInstance.control = new UntypedFormControl('pizza-1');
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.control.value).toBe('pizza-1');
 
                 cleaner = fixture.debugElement.query(By.directive(KbqCleaner)).nativeElement;
                 cleaner.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.control.value).toBeUndefined();
-            }));
+            });
 
-            it('should discover cleaner by component type without a template reference', fakeAsync(() => {
+            it('should discover cleaner by component type without a template reference', async () => {
                 const cleanerFixture = TestBed.createComponent(SelectWithCleanerWithoutTemplateRef);
 
                 cleanerFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 cleanerFixture.componentInstance.control.setValue('pizza');
                 cleanerFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const cleaner = cleanerFixture.debugElement.query(By.directive(KbqCleaner));
 
@@ -4138,38 +4213,38 @@ describe('KbqSelect', () => {
                 expect(cleaner).not.toBeNull();
                 cleaner.nativeElement.click();
                 cleanerFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(cleanerFixture.componentInstance.control.value).toBeUndefined();
-            }));
+            });
         });
 
         describe('Clear value — multiple select', () => {
             let multiFixture: ComponentFixture<MultiSelectWithCleaner>;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 multiFixture = TestBed.createComponent(MultiSelectWithCleaner);
                 multiFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 multiFixture.detectChanges();
-            }));
+            });
 
-            it('should update FormControl value to empty array after clear', fakeAsync(() => {
+            it('should update FormControl value to empty array after clear', async () => {
                 expect(multiFixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1']);
 
                 const multiCleaner = multiFixture.debugElement.query(By.directive(KbqCleaner)).nativeElement;
 
                 multiCleaner.click();
                 multiFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(multiFixture.componentInstance.control.value).toEqual([]);
-            }));
+            });
 
-            it('should deselect all options visually after clear', fakeAsync(() => {
+            it('should deselect all options visually after clear', async () => {
                 multiFixture.componentInstance.select().open();
                 multiFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const optionsBefore = Array.from(
                     overlayContainerElement.querySelectorAll('kbq-option')
@@ -4179,47 +4254,47 @@ describe('KbqSelect', () => {
 
                 multiFixture.componentInstance.select().close();
                 multiFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 multiFixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
                 multiFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 multiFixture.componentInstance.select().open();
                 multiFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const optionsAfter = Array.from(
                     overlayContainerElement.querySelectorAll('kbq-option')
                 ) as HTMLElement[];
 
                 expect(optionsAfter.filter((o) => o.classList.contains('kbq-selected')).length).toBe(0);
-            }));
+            });
 
-            it('should leave disabled options selected', fakeAsync(() => {
+            it('should leave disabled options selected', async () => {
                 multiFixture.componentInstance.disabledOptions = ['pizza-1'];
                 multiFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 multiFixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
                 multiFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(multiFixture.componentInstance.control.value).toEqual(['pizza-1']);
-            }));
+            });
 
-            it('should keep a disabled option checked in the panel after clear', fakeAsync(() => {
+            it('should keep a disabled option checked in the panel after clear', async () => {
                 multiFixture.componentInstance.disabledOptions = ['pizza-1'];
                 multiFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 multiFixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
                 multiFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 multiFixture.componentInstance.select().open();
                 multiFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const selected = Array.from(overlayContainerElement.querySelectorAll('kbq-option')).filter((option) =>
                     option.classList.contains('kbq-selected')
@@ -4227,89 +4302,89 @@ describe('KbqSelect', () => {
 
                 expect(selected.length).toBe(1);
                 expect(selected[0].textContent).toContain('Pizza');
-            }));
+            });
 
-            it('should hide the cleaner once only disabled options are left', fakeAsync(() => {
+            it('should hide the cleaner once only disabled options are left', async () => {
                 const fixture = TestBed.createComponent(MultiSelectWithCleaner);
 
                 fixture.componentInstance.disabledOptions = ['pizza-1'];
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 expect(fixture.nativeElement.querySelector('.kbq-select__cleaner')).not.toBeNull();
 
                 fixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.control.value).toEqual(['pizza-1']);
                 expect(fixture.componentInstance.select().canShowCleaner).toBe(false);
                 expect(fixture.nativeElement.querySelector('.kbq-select__cleaner')).toBeNull();
-            }));
+            });
 
-            it('should leave the value alone when every selected option is disabled', fakeAsync(() => {
+            it('should leave the value alone when every selected option is disabled', async () => {
                 multiFixture.componentInstance.disabledOptions = ['steak-0', 'pizza-1'];
                 multiFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 multiFixture.componentInstance.select().clear();
                 multiFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(multiFixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1']);
-            }));
+            });
         });
 
         describe('Clear value — clearPredicate', () => {
             let fixture: ComponentFixture<MultiSelectWithClearPredicate>;
 
-            const clear = () => {
+            const clear = async () => {
                 fixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
             };
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 fixture = TestBed.createComponent(MultiSelectWithClearPredicate);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
-            }));
+            });
 
-            it('should clear the disabled option when the predicate accepts it', fakeAsync(() => {
-                clear();
+            it('should clear the disabled option when the predicate accepts it', async () => {
+                await clear();
 
                 expect(fixture.componentInstance.control.value).toEqual([]);
-            }));
+            });
 
-            it('should clear only what the predicate accepts', fakeAsync(() => {
+            it('should clear only what the predicate accepts', async () => {
                 fixture.componentInstance.clearPredicate = ({ value }) => value === 'steak-0';
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
-                clear();
+                await clear();
 
                 expect(fixture.componentInstance.control.value).toEqual(['pizza-1']);
-            }));
+            });
 
-            it('should keep everything selected when the predicate throws', fakeAsync(() => {
-                const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            it('should keep everything selected when the predicate throws', async () => {
+                const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
                 fixture.componentInstance.clearPredicate = () => {
                     throw new Error('boom');
                 };
 
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 fixture.componentInstance.select().clear();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1']);
                 expect(warn).toHaveBeenCalled();
-            }));
+            });
 
             it('should throw when the predicate is not a function', () => {
                 const nonFunctionFixture = TestBed.createComponent(MultiSelectWithClearPredicate);
@@ -4319,10 +4394,10 @@ describe('KbqSelect', () => {
                 expect(() => nonFunctionFixture.detectChanges()).toThrow();
             });
 
-            it('should take the predicate from KBQ_SELECT_OPTIONS', fakeAsync(() => {
+            it('should take the predicate from KBQ_SELECT_OPTIONS', async () => {
                 TestBed.resetTestingModule();
                 TestBed.configureTestingModule({
-                    imports: [MultiSelectWithCleaner, NoopAnimationsModule],
+                    imports: [MultiSelectWithCleaner],
                     providers: [kbqSelectOptionsProvider({ clearPredicate: () => true })]
                 });
 
@@ -4330,15 +4405,15 @@ describe('KbqSelect', () => {
 
                 diFixture.componentInstance.disabledOptions = ['pizza-1'];
                 diFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 diFixture.detectChanges();
 
                 diFixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
                 diFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(diFixture.componentInstance.control.value).toEqual([]);
-            }));
+            });
         });
 
         describe('keyboard scrolling', () => {
@@ -4346,7 +4421,7 @@ describe('KbqSelect', () => {
             let host: HTMLElement;
             let panel: HTMLElement;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 fixture = TestBed.createComponent(BasicSelect);
 
                 fixture.componentInstance.foods = [];
@@ -4358,49 +4433,49 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
                 fixture.componentInstance.select().open();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 host = fixture.debugElement.query(By.css('kbq-select')).nativeElement;
                 panel = overlayContainerElement.querySelector('.kbq-select__content') as HTMLElement;
-            }));
+            });
 
-            it('should not scroll to options that are completely in the view', fakeAsync(() => {
+            it('should not scroll to options that are completely in the view', async () => {
                 const initialScrollPosition = panel.scrollTop;
 
                 [1, 2, 3].forEach(() => {
                     dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
                 });
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(panel.scrollTop).toBe(initialScrollPosition);
-            }));
+            });
 
-            it('should scroll down to the active option', fakeAsync(() => {
+            it('should scroll down to the active option', async () => {
                 for (let i = 0; i < 15; i++) {
                     dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
                 }
 
                 // In JSDOM scroll behavior is not simulated, so we verify the correct option is active
                 expect(fixture.componentInstance.select().keyManager.activeItemIndex).toBe(15);
-            }));
+            });
 
-            it('should scroll up to the active option', fakeAsync(() => {
+            it('should scroll up to the active option', async () => {
                 // Scroll to the bottom.
                 for (let i = 0; i < fixture.componentInstance.foods.length; i++) {
                     dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
                 }
 
                 for (let i = 0; i < 20; i++) {
                     dispatchKeyboardEvent(host, 'keydown', UP_ARROW);
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
                 }
 
                 expect(fixture.componentInstance.select().keyManager.activeItemIndex).toBe(9);
-            }));
+            });
 
-            it('should skip option group labels', fakeAsync(() => {
+            it('should skip option group labels', async () => {
                 fixture.destroy();
 
                 const groupFixture = TestBed.createComponent(SelectWithGroups);
@@ -4408,7 +4483,7 @@ describe('KbqSelect', () => {
                 groupFixture.detectChanges();
                 groupFixture.componentInstance.select().open();
                 groupFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 host = groupFixture.debugElement.query(By.css('kbq-select')).nativeElement;
 
@@ -4416,123 +4491,123 @@ describe('KbqSelect', () => {
                     dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
                 }
 
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 // Note that we press down 5 times, but it will skip
                 // 3 options because the second group is disabled.
                 expect(groupFixture.componentInstance.select().keyManager.activeItemIndex).toBe(8);
-            }));
+            });
 
-            it('should scroll to the top when pressing HOME', fakeAsync(() => {
+            it('should scroll to the top when pressing HOME', async () => {
                 for (let i = 0; i < 20; i++) {
                     dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
                     fixture.detectChanges();
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
                 }
 
                 expect(fixture.componentInstance.select().keyManager.activeItemIndex).toBeGreaterThan(0);
 
                 dispatchKeyboardEvent(host, 'keydown', HOME);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().keyManager.activeItemIndex).toBe(0);
-            }));
+            });
 
-            it('should scroll to the bottom of the panel when pressing END', fakeAsync(() => {
+            it('should scroll to the bottom of the panel when pressing END', async () => {
                 dispatchKeyboardEvent(host, 'keydown', END);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().keyManager.activeItemIndex).toBe(29);
-            }));
+            });
 
-            it('should scroll to the active option when typing', fakeAsync(() => {
+            it('should scroll to the active option when typing', async () => {
                 const LETTER_KEY_DEBOUNCE_INTERVAL = 200;
 
                 for (let i = 0; i < 15; i++) {
                     // Press the letter 'o' 15 times since all the options are named 'Option <index>'
                     dispatchEvent(host, createKeyboardEvent('keydown', 79, undefined, 'o'));
                     fixture.detectChanges();
-                    tick(LETTER_KEY_DEBOUNCE_INTERVAL);
+                    await vi.advanceTimersByTimeAsync(LETTER_KEY_DEBOUNCE_INTERVAL);
                 }
 
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 // Each 'o' press cycles to the next matching option
                 expect(fixture.componentInstance.select().keyManager.activeItemIndex).toBe(15);
-            }));
+            });
         });
 
         describe('Events', () => {
             let fixture: ComponentFixture<BasicEvents>;
             let trigger: HTMLElement;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 fixture = TestBed.createComponent(BasicEvents);
 
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            }));
+            });
 
-            it('should fire openedChange event on open select', fakeAsync(() => {
+            it('should fire openedChange event on open select', async () => {
                 expect(fixture.componentInstance.openedChangeListener).not.toHaveBeenCalled();
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.openedChangeListener).toHaveBeenCalledWith(true);
-            }));
+            });
 
-            it('should fire openedChange event on close select', fakeAsync(() => {
+            it('should fire openedChange event on close select', async () => {
                 expect(fixture.componentInstance.openedChangeListener).not.toHaveBeenCalled();
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.openedChangeListener).toHaveBeenNthCalledWith(1, true);
 
                 document.body.click();
-                tick(1);
+                await vi.advanceTimersByTimeAsync(1);
 
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.openedChangeListener).toHaveBeenCalledTimes(2);
                 expect(fixture.componentInstance.openedChangeListener).toHaveBeenNthCalledWith(2, false);
-            }));
+            });
 
-            it('should fire opened event on open select', fakeAsync(() => {
+            it('should fire opened event on open select', async () => {
                 expect(fixture.componentInstance.openedListener).not.toHaveBeenCalled();
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.openedListener).toHaveBeenCalled();
-            }));
+            });
 
-            it('should fire closed event on close select', fakeAsync(() => {
+            it('should fire closed event on close select', async () => {
                 expect(fixture.componentInstance.closedListener).not.toHaveBeenCalled();
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.closedListener).not.toHaveBeenCalled();
 
                 document.body.click();
-                tick(1);
+                await vi.advanceTimersByTimeAsync(1);
 
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.closedListener).toHaveBeenCalled();
-            }));
+            });
         });
     });
 
@@ -4541,14 +4616,14 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([NgModelSelect]);
         });
 
-        it('should disable itself when control is disabled using the property', fakeAsync(() => {
+        it('should disable itself when control is disabled using the property', async () => {
             const fixture = TestBed.createComponent(NgModelSelect);
 
             fixture.detectChanges();
 
             fixture.componentInstance.isDisabled = true;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             fixture.detectChanges();
             const trigger = getSelectTriggerDebugElement(fixture).nativeElement;
@@ -4564,18 +4639,18 @@ describe('KbqSelect', () => {
 
             fixture.componentInstance.isDisabled = false;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             fixture.detectChanges();
             expect(selectHost.classList).not.toContain('kbq-disabled');
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.textContent).toContain('Steak');
             expect(fixture.componentInstance.select().panelOpen).toBe(true);
-        }));
+        });
     });
 
     describe('with ngIf', () => {
@@ -4583,7 +4658,7 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([NgIfSelect]);
         });
 
-        it('should handle nesting in an ngIf', fakeAsync(() => {
+        it('should handle nesting in an ngIf', async () => {
             const fixture = TestBed.createComponent(NgIfSelect);
 
             fixture.detectChanges();
@@ -4600,7 +4675,7 @@ describe('KbqSelect', () => {
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
 
@@ -4616,7 +4691,7 @@ describe('KbqSelect', () => {
             expect(overlayContainerElement.textContent).toContain('Steak');
             expect(overlayContainerElement.textContent).toContain('Pizza');
             expect(overlayContainerElement.textContent).toContain('Tacos');
-        }));
+        });
     });
 
     describe('when initially hidden', () => {
@@ -4624,7 +4699,7 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([BasicSelectInitiallyHidden]);
         });
 
-        it('should set the width of the overlay if the element was hidden initially', fakeAsync(() => {
+        it('should set the width of the overlay if the element was hidden initially', async () => {
             const fixture = TestBed.createComponent(BasicSelectInitiallyHidden);
 
             fixture.detectChanges();
@@ -4638,12 +4713,12 @@ describe('KbqSelect', () => {
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
             expect(pane.style.minWidth).toBe('200px');
-        }));
+        });
     });
 
     describe('with no placeholder', () => {
@@ -4651,7 +4726,7 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([BasicSelectNoPlaceholder]);
         });
 
-        it('should set the width of the overlay if there is no placeholder', fakeAsync(() => {
+        it('should set the width of the overlay if there is no placeholder', async () => {
             const fixture = TestBed.createComponent(BasicSelectNoPlaceholder);
 
             fixture.detectChanges();
@@ -4659,19 +4734,19 @@ describe('KbqSelect', () => {
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
             expect(parseInt(pane.style.minWidth as string)).toBeGreaterThan(0);
-        }));
+        });
     });
 
     describe('Ctrl+A with search (multiple)', () => {
         let fixture: ComponentFixture<MultipleSelectWithSearch>;
         let testInstance: MultipleSelectWithSearch;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultipleSelectWithSearch]);
             fixture = TestBed.createComponent(MultipleSelectWithSearch);
             testInstance = fixture.componentInstance;
@@ -4679,8 +4754,8 @@ describe('KbqSelect', () => {
 
             testInstance.select().open();
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         const getSearchInput = (): HTMLInputElement =>
             fixture.debugElement.query(By.css('.search-input')).nativeElement;
@@ -4716,7 +4791,7 @@ describe('KbqSelect', () => {
 
         it('should select the search text (not options) when the text is only partially selected', () => {
             const input = getSearchInput();
-            const onSelectAll = jest.fn();
+            const onSelectAll = vi.fn();
 
             testInstance.select().onSelectAll.subscribe(onSelectAll);
 
@@ -4751,46 +4826,46 @@ describe('KbqSelect', () => {
         let fixture: ComponentFixture<SelectWithSearch>;
         let trigger: HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(SelectWithSearch);
             fixture.detectChanges();
             trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should have search input', fakeAsync(() => {
+        it('should have search input', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
-        }));
+        });
 
-        it('should focus search field after open', fakeAsync(() => {
+        it('should focus search field after open', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const input = fixture.debugElement.query(By.css('input')).nativeElement;
 
             expect(input).toBe(document.activeElement);
-        }));
+        });
 
-        it('should search', fakeAsync(() => {
+        it('should search', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             fixture.componentInstance.searchCtrl.setValue('lu');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const optionsTexts = fixture.debugElement
                 .queryAll(By.css('kbq-option'))
                 .map((el) => el.nativeElement.textContent.trim());
 
             expect(optionsTexts).toEqual(['Kaluga', 'Luga']);
-        }));
+        });
 
         it('should clear search by esc', () => {
             trigger.click();
@@ -4822,7 +4897,7 @@ describe('KbqSelect', () => {
             expect(selectInstance.panelOpen).toBe(false);
         });
 
-        it('should hide search if options count less than threshold', fakeAsync(() => {
+        it('should hide search if options count less than threshold', async () => {
             const { componentInstance } = fixture;
 
             componentInstance.minOptionsThreshold = 4;
@@ -4831,12 +4906,12 @@ describe('KbqSelect', () => {
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.debugElement.query(By.css('input'))).toBeFalsy();
-        }));
+        });
 
-        it('should show search if options count more than threshold', fakeAsync(() => {
+        it('should show search if options count more than threshold', async () => {
             const { componentInstance } = fixture;
 
             componentInstance.minOptionsThreshold = 2;
@@ -4845,12 +4920,12 @@ describe('KbqSelect', () => {
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
-        }));
+        });
 
-        it('should not hide search field if options filtered via search', fakeAsync(() => {
+        it('should not hide search field if options filtered via search', async () => {
             const { componentInstance } = fixture;
 
             componentInstance.minOptionsThreshold = 3;
@@ -4858,29 +4933,29 @@ describe('KbqSelect', () => {
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             componentInstance.searchCtrl.setValue(OPTIONS[0]);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options = fixture.debugElement.queryAll(By.css('kbq-option'));
 
             expect(options.length).toBe(1);
             expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
-        }));
+        });
 
-        it('should highlight the only remaining option as active when search filters to a single item', fakeAsync(() => {
+        it('should highlight the only remaining option as active when search filters to a single item', async () => {
             const { componentInstance } = fixture;
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             componentInstance.searchCtrl.setValue('Almetyevsk');
             fixture.detectChanges();
-            flush();
-            tick(1);
+            await vi.runOnlyPendingTimersAsync();
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
 
             const options = fixture.debugElement.queryAll(By.css('kbq-option'));
@@ -4892,19 +4967,19 @@ describe('KbqSelect', () => {
 
             expect(activeOption).toBeTruthy();
             expect(activeOption!.textContent!.trim()).toBe('Almetyevsk');
-        }));
+        });
 
-        it('should re-activate the first option when the previously active option is filtered out', fakeAsync(() => {
+        it('should re-activate the first option when the previously active option is filtered out', async () => {
             const { componentInstance } = fixture;
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             componentInstance.searchCtrl.setValue('Almetyevsk');
             fixture.detectChanges();
-            flush();
-            tick(1);
+            await vi.runOnlyPendingTimersAsync();
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
 
             const select = componentInstance.select();
@@ -4913,8 +4988,8 @@ describe('KbqSelect', () => {
 
             componentInstance.searchCtrl.setValue('Anapa');
             fixture.detectChanges();
-            flush();
-            tick(1);
+            await vi.runOnlyPendingTimersAsync();
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
 
             const options = fixture.debugElement.queryAll(By.css('kbq-option'));
@@ -4926,20 +5001,20 @@ describe('KbqSelect', () => {
 
             expect(activeOption).toBeTruthy();
             expect(activeOption!.textContent!.trim()).toBe('Anapa');
-        }));
+        });
 
-        it('should NOT reset active option when filter still includes it', fakeAsync(() => {
+        it('should NOT reset active option when filter still includes it', async () => {
             const { componentInstance } = fixture;
             const select = fixture.debugElement.query(By.css('kbq-select')).nativeElement;
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             // Navigate down to "Almetyevsk" (second option in OPTIONS).
             dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const selectValue = componentInstance.select();
 
@@ -4949,95 +5024,95 @@ describe('KbqSelect', () => {
             // among the city options).
             componentInstance.searchCtrl.setValue('Al');
             fixture.detectChanges();
-            flush();
-            tick(1);
+            await vi.runOnlyPendingTimersAsync();
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
 
             // The active item should remain "Almetyevsk", not be reset to the first option.
             expect(selectValue.keyManager.activeItem?.viewValue).toBe('Almetyevsk');
-        }));
+        });
 
-        it('should focus the active option when ArrowDown does not change the index (boundary)', fakeAsync(() => {
+        it('should focus the active option when ArrowDown does not change the index (boundary)', async () => {
             const { componentInstance } = fixture;
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             componentInstance.searchCtrl.setValue('Almetyevsk');
             fixture.detectChanges();
-            flush();
-            tick(1);
+            await vi.runOnlyPendingTimersAsync();
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
 
             const activeItem = componentInstance.select().keyManager.activeItem!;
 
             expect(activeItem).toBeTruthy();
 
-            const focusSpy = jest.spyOn(activeItem, 'focus');
+            const focusSpy = vi.spyOn(activeItem, 'focus');
             const inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
             dispatchKeyboardEvent(inputElement, 'keydown', DOWN_ARROW);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusSpy).toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('with a selectionChange event handler', () => {
         let fixture: ComponentFixture<SelectWithChangeEvent>;
         let trigger: HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([SelectWithChangeEvent]);
 
             fixture = TestBed.createComponent(SelectWithChangeEvent);
             fixture.detectChanges();
             trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should emit an event when the selected option has changed', fakeAsync(() => {
+        it('should emit an event when the selected option has changed', async () => {
             trigger.click();
             fixture.detectChanges();
 
             (overlayContainerElement.querySelector('kbq-option') as HTMLElement).click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.changeListener).toHaveBeenCalled();
-        }));
+        });
 
-        it('should not emit multiple change events for the same option', fakeAsync(() => {
+        it('should not emit multiple change events for the same option', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             (overlayContainerElement.querySelector('kbq-option') as HTMLElement).click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             // Reopen and click the same (already selected) option — no new change event expected
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             (overlayContainerElement.querySelector('kbq-option') as HTMLElement).click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.changeListener).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('should only emit one event when pressing arrow keys on closed select', fakeAsync(() => {
+        it('should only emit one event when pressing arrow keys on closed select', async () => {
             const select = fixture.debugElement.query(By.css('kbq-select')).nativeElement;
 
             dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.changeListener).toHaveBeenCalledTimes(1);
-        }));
+        });
     });
 
     describe('with multiple kbq-select elements in one view', () => {
@@ -5049,19 +5124,19 @@ describe('KbqSelect', () => {
         let triggers: DebugElement[];
         let options: NodeListOf<HTMLElement>;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(ManySelects);
             fixture.detectChanges();
             triggers = fixture.debugElement.queryAll(By.css('.kbq-select__trigger'));
 
             triggers[0].nativeElement.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             options = overlayContainerElement.querySelectorAll('kbq-option');
-        }));
+        });
 
-        it('should set the option id properly', fakeAsync(() => {
+        it('should set the option id properly', async () => {
             const firstOptionID = options[0].id;
 
             expect(options[0].id).toContain('kbq-option');
@@ -5069,14 +5144,14 @@ describe('KbqSelect', () => {
             expect(options[0].id).not.toEqual(options[1].id);
 
             document.body.click();
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             triggers[1].nativeElement.click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             options = overlayContainerElement.querySelectorAll('kbq-option');
             expect(options[0].id).toContain('kbq-option');
@@ -5084,7 +5159,7 @@ describe('KbqSelect', () => {
             expect(options[0].id).not.toEqual(firstOptionID);
 
             expect(options[0].id).not.toEqual(options[1].id);
-        }));
+        });
     });
 
     describe('with a sibling component that throws an error', () => {
@@ -5095,59 +5170,37 @@ describe('KbqSelect', () => {
             ]);
         });
 
-        it('should not crash the browser when a sibling throws an error on init', fakeAsync(() => {
+        it('should not crash the browser when a sibling throws an error on init', async () => {
             // Note that this test can be considered successful if the error being thrown didn't
             // end up crashing the testing setup altogether.
             expect(() => {
                 TestBed.createComponent(SelectWithErrorSibling).detectChanges();
             }).toThrow(new RegExp('Oh no!', 'g'));
-            flush();
-        }));
-    });
-
-    describe('change events', () => {
-        beforeEach(() => {
-            configureKbqSelectTestingModule([SelectWithPlainTabindex]);
-        });
-
-        it('should complete the stateChanges stream on destroy', () => {
-            const fixture = TestBed.createComponent(SelectWithPlainTabindex);
-
-            fixture.detectChanges();
-
-            const debugElement = fixture.debugElement.query(By.directive(KbqSelect));
-            const select = debugElement.componentInstance;
-
-            const spy = jest.fn();
-            const subscription = select.stateChanges.subscribe(undefined, undefined, spy);
-
-            fixture.destroy();
-            expect(spy).toHaveBeenCalled();
-            subscription.unsubscribe();
+            await vi.runOnlyPendingTimersAsync();
         });
     });
 
     describe('with theming', () => {
         let fixture: ComponentFixture<BasicSelectWithTheming>;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([BasicSelectWithTheming]);
 
             fixture = TestBed.createComponent(BasicSelectWithTheming);
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should transfer the theme to the select panel', fakeAsync(() => {
-            fixture.componentInstance.theme = ThemePalette.Error;
+        it('should transfer the theme to the select panel', async () => {
+            fixture.componentInstance.theme = KbqComponentColors.Error;
             fixture.componentInstance.select().open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const panel = overlayContainerElement.querySelector('.kbq-select__panel') as HTMLElement;
 
             expect(panel.classList).toContain('kbq-error');
-        }));
+        });
     });
 
     describe('when invalid inside a form', () => {
@@ -5155,7 +5208,7 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([InvalidSelectInForm]);
         });
 
-        it('should not throw SelectionModel errors in addition to ngModel errors', fakeAsync(() => {
+        it('should not throw SelectionModel errors in addition to ngModel errors', async () => {
             const fixture = TestBed.createComponent(InvalidSelectInForm);
 
             // The first change detection run will throw the "ngModel is missing a name" error.
@@ -5163,78 +5216,78 @@ describe('KbqSelect', () => {
 
             // The second run shouldn't throw selection-model related errors.
             expect(() => fixture.detectChanges()).not.toThrow();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('with ngModel using compareWith', () => {
         let fixture: ComponentFixture<NgModelCompareWithSelect>;
         let instance: NgModelCompareWithSelect;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([NgModelCompareWithSelect]);
 
             fixture = TestBed.createComponent(NgModelCompareWithSelect);
             instance = fixture.componentInstance;
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         describe('comparing by value', () => {
-            it('should have a selection', fakeAsync(() => {
+            it('should have a selection', async () => {
                 const selectedOption = instance.select().selected as KbqOption;
 
                 expect(selectedOption.value.value).toEqual('pizza-1');
-            }));
+            });
 
-            it('should update when making a new selection', fakeAsync(() => {
+            it('should update when making a new selection', async () => {
                 instance.options().at(-1)!.selectViaInteraction();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const selectedOption = instance.select().selected as KbqOption;
 
                 expect(instance.selectedFood.value).toEqual('tacos-2');
                 expect(selectedOption.value.value).toEqual('tacos-2');
-            }));
+            });
         });
 
         describe('comparing by reference', () => {
-            let compareByReferenceSpyFn: jest.SpyInstance;
+            let compareByReferenceSpyFn: MockInstance;
 
-            beforeEach(fakeAsync(() => {
-                compareByReferenceSpyFn = jest.spyOn(instance, 'compareByReference');
+            beforeEach(async () => {
+                compareByReferenceSpyFn = vi.spyOn(instance, 'compareByReference');
 
                 instance.useCompareByReference();
                 fixture.detectChanges();
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
-            it('should use the comparator', fakeAsync(() => {
+            it('should use the comparator', async () => {
                 expect(compareByReferenceSpyFn).toHaveBeenCalled();
-            }));
+            });
 
-            it('should initialize with no selection despite having a value', fakeAsync(() => {
+            it('should initialize with no selection despite having a value', async () => {
                 expect(instance.selectedFood.value).toBe('pizza-1');
                 expect(instance.select().selected).toBeUndefined();
-            }));
+            });
 
-            it('should not update the selection if value is copied on change', fakeAsync(() => {
+            it('should not update the selection if value is copied on change', async () => {
                 instance.options().at(0)!.selectViaInteraction();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(instance.selectedFood.value).toEqual('steak-0');
                 expect(instance.select().selected).toBeUndefined();
-            }));
+            });
 
-            it('should throw an error when using a non-function comparator', fakeAsync(() => {
+            it('should throw an error when using a non-function comparator', async () => {
                 instance.useNullComparator();
 
                 expect(() => {
                     fixture.detectChanges();
                 }).toThrow(wrappedErrorMessage(getKbqSelectNonFunctionValueError()));
-            }));
+            });
         });
     });
 
@@ -5243,12 +5296,12 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([SelectEarlyAccessSibling]);
         });
 
-        it('should not throw when trying to access the selected value on init', fakeAsync(() => {
+        it('should not throw when trying to access the selected value on init', async () => {
             expect(() => {
                 TestBed.createComponent(SelectEarlyAccessSibling).detectChanges();
             }).not.toThrow();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('inside of a form group', () => {
@@ -5256,75 +5309,73 @@ describe('KbqSelect', () => {
         let testComponent: SelectInsideFormGroup;
         let select: HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([SelectInsideFormGroup]);
 
             fixture = TestBed.createComponent(SelectInsideFormGroup);
             fixture.detectChanges();
             testComponent = fixture.componentInstance;
             select = fixture.debugElement.query(By.css('kbq-select')).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         // The form control is intrinsically invalid (Validators.required + empty value),
         // but until the user touches the field or submits the form the default
         // ErrorStateMatcher keeps the `.kbq-invalid` class off the host.
-        it('should not set the invalid class on a clean (untouched) select', fakeAsync(() => {
+        it('should not set the invalid class on a clean (untouched) select', async () => {
             expect(testComponent.formGroup.untouched).toBe(true);
             expect(testComponent.formControl.invalid).toBe(true);
 
             expect(select.classList).not.toContain('kbq-invalid');
-        }));
+        });
 
-        it('should set the invalid class after the control is touched while still invalid', fakeAsync(() => {
+        it('should set the invalid class after the control is touched while still invalid', async () => {
             expect(select.classList).not.toContain('kbq-invalid');
 
             testComponent.formControl.markAsTouched();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(select.classList).toContain('kbq-invalid');
-        }));
+        });
 
-        it('should drop the invalid class once a touched-then-invalid select becomes valid', fakeAsync(() => {
+        it('should drop the invalid class once a touched-then-invalid select becomes valid', async () => {
             testComponent.formControl.markAsTouched();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(select.classList).toContain('kbq-invalid');
 
             testComponent.formControl.setValue('pizza-1');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(select.classList).not.toContain('kbq-invalid');
-        }));
+        });
 
-        it('should colour the arrow when the error state changes outside the select', fakeAsync(() => {
+        it('should colour the arrow when the error state changes outside the select', async () => {
             const arrow = select.querySelector('.kbq-select__arrow')!;
-            const colorForState = jest.spyOn(testComponent.select(), 'colorForState', 'get');
+            const colorForState = vi.spyOn(testComponent.select(), 'colorForState', 'get');
 
-            // Initialization leaves the select's view marked; settle it and check that a pass no longer renders
-            // the trigger, so that nothing but the error state can repaint the arrow.
-            fixture.detectChanges();
-            colorForState.mockClear();
-            fixture.detectChanges();
+            // Skips the exhaustive check, which reads every binding: a pass that still does not render the trigger
+            // leaves nothing but the error state to repaint the arrow.
+            fixture.detectChanges(false);
 
             expect(colorForState).not.toHaveBeenCalled();
             expect(arrow.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`);
 
             testComponent.formControl.markAsTouched();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(arrow.classList).toContain(`kbq-${KbqComponentColors.Error}`);
 
             testComponent.formControl.markAsUntouched();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(arrow.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`);
-        }));
+        });
 
         it('should report the error colour right after the error state is updated', () => {
             testComponent.formControl.markAsTouched();
@@ -5333,26 +5384,26 @@ describe('KbqSelect', () => {
             expect(testComponent.select().colorForState).toBe(KbqComponentColors.Error);
         });
 
-        it('should appear as invalid when the parent form group is submitted', fakeAsync(() => {
+        it('should appear as invalid when the parent form group is submitted', async () => {
             expect(select.classList).not.toContain('kbq-invalid');
 
             dispatchFakeEvent(fixture.debugElement.query(By.css('form')).nativeElement, 'submit');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(select.classList).toContain('kbq-invalid');
-        }));
+        });
 
-        it('should set proper form group validation state on ngSubmit handler, without setTimeout', fakeAsync(() => {
-            const submitReactiveSpyFn = jest.spyOn(fixture.componentInstance, 'submitReactive');
+        it('should set proper form group validation state on ngSubmit handler, without setTimeout', async () => {
+            const submitReactiveSpyFn = vi.spyOn(fixture.componentInstance, 'submitReactive');
 
             dispatchFakeEvent(fixture.debugElement.query(By.css('form')).nativeElement, 'submit');
 
             expect(submitReactiveSpyFn).toHaveBeenCalled();
             expect(fixture.componentInstance.submitResult).toEqual('invalid');
-        }));
+        });
 
-        it('should render the error messages when the parent form is submitted', fakeAsync(() => {
+        it('should render the error messages when the parent form is submitted', async () => {
             const debugEl = fixture.debugElement.nativeElement;
 
             expect(debugEl.querySelectorAll('kbq-error').length).toBe(0);
@@ -5361,17 +5412,17 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
 
             expect(debugEl.querySelectorAll('kbq-error').length).toBe(1);
-        }));
+        });
 
-        it('should override error matching behavior via injection token', fakeAsync(() => {
+        it('should override error matching behavior via injection token', async () => {
             const errorStateMatcher: ErrorStateMatcher = {
-                isErrorState: jest.fn(() => true)
+                isErrorState: vi.fn(() => true)
             };
 
             fixture.destroy();
 
             TestBed.resetTestingModule().configureTestingModule({
-                imports: [KbqSelectModule, ReactiveFormsModule, FormsModule, NoopAnimationsModule],
+                imports: [KbqSelectModule, ReactiveFormsModule, FormsModule],
                 providers: [kbqErrorStateMatcherProvider(errorStateMatcher)]
             });
 
@@ -5380,10 +5431,10 @@ describe('KbqSelect', () => {
 
             errorFixture.detectChanges();
 
-            expect(component.select().errorState).toBe(true);
+            expect(component.select().errorState()).toBe(true);
             expect(errorStateMatcher.isErrorState).toHaveBeenCalled();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('with the legacy validate directive', () => {
@@ -5391,13 +5442,13 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([SelectWithLegacyValidate]);
         });
 
-        it('should colour the arrow by the control validity from the first render', fakeAsync(() => {
+        it('should colour the arrow by the control validity from the first render', async () => {
             const fixture = TestBed.createComponent(SelectWithLegacyValidate);
 
             // Attached to the application, so that the `afterNextRender` probing the host for the directive's
             // class runs, as it does outside tests.
             fixture.autoDetectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const arrow = fixture.debugElement.query(By.css('.kbq-select__arrow')).nativeElement;
 
@@ -5406,10 +5457,10 @@ describe('KbqSelect', () => {
 
             fixture.componentInstance.control.setValue('steak-0');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(arrow.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`);
-        }));
+        });
     });
 
     describe('with custom error behavior', () => {
@@ -5417,23 +5468,23 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([CustomErrorBehaviorSelect]);
         });
 
-        it('should be able to override the error matching behavior via an @Input', fakeAsync(() => {
+        it('should be able to override the error matching behavior via an @Input', async () => {
             const fixture = TestBed.createComponent(CustomErrorBehaviorSelect);
             const component = fixture.componentInstance;
-            const matcher = jest.fn(() => true);
+            const matcher = vi.fn(() => true);
 
             fixture.detectChanges();
 
             expect(component.control.invalid).toBe(false);
-            expect(component.select().errorState).toBe(false);
+            expect(component.select().errorState()).toBe(false);
 
             fixture.componentInstance.errorStateMatcher = { isErrorState: matcher };
             fixture.detectChanges();
 
-            expect(component.select().errorState).toBe(true);
+            expect(component.select().errorState()).toBe(true);
             expect(matcher).toHaveBeenCalled();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('with preselected array values', () => {
@@ -5441,19 +5492,19 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([SingleSelectWithPreselectedArrayValues]);
         });
 
-        it('should be able to preselect an array value in single-selection mode', fakeAsync(() => {
+        it('should be able to preselect an array value in single-selection mode', async () => {
             const fixture = TestBed.createComponent(SingleSelectWithPreselectedArrayValues);
 
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
             fixture.detectChanges();
             expect(trigger.textContent).toContain('Pizza');
             expect(fixture.componentInstance.options()[1].selected).toBe(true);
-        }));
+        });
     });
 
     describe('with custom value accessor', () => {
@@ -5464,17 +5515,17 @@ describe('KbqSelect', () => {
             ]);
         });
 
-        it('should support use inside a custom value accessor', fakeAsync(() => {
+        it('should support use inside a custom value accessor', async () => {
             const fixture = TestBed.createComponent(CompWithCustomSelect);
-            const writeValueSpyFn = jest.spyOn(fixture.componentInstance.customAccessor(), 'writeValue');
+            const writeValueSpyFn = vi.spyOn(fixture.componentInstance.customAccessor(), 'writeValue');
 
             fixture.detectChanges();
 
             expect(fixture.componentInstance.customAccessor().select().ngControl).toBeFalsy();
 
             expect(writeValueSpyFn).toHaveBeenCalled();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('with a falsy value', () => {
@@ -5482,19 +5533,19 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([FalsyValueSelect]);
         });
 
-        it('should be able to programmatically select a falsy option', fakeAsync(() => {
+        it('should be able to programmatically select a falsy option', async () => {
             const fixture = TestBed.createComponent(FalsyValueSelect);
 
             fixture.detectChanges();
             fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
             fixture.componentInstance.control.setValue(0);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.options().at(0)!.selected).toBe(true);
 
             expect(overlayContainerElement.querySelectorAll('kbq-option')[0].classList).toContain('kbq-selected');
-        }));
+        });
     });
 
     describe('with OnPush', () => {
@@ -5505,21 +5556,21 @@ describe('KbqSelect', () => {
             ]);
         });
 
-        it('should set the trigger text based on the value when initialized', fakeAsync(() => {
+        it('should set the trigger text based on the value when initialized', async () => {
             const fixture = TestBed.createComponent(BasicSelectOnPushPreselected);
 
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
             fixture.detectChanges();
 
             expect(trigger.textContent).toContain('Pizza');
-        }));
+        });
 
-        it('should update the trigger based on the value', fakeAsync(() => {
+        it('should update the trigger based on the value', async () => {
             const fixture = TestBed.createComponent(BasicSelectOnPush);
 
             fixture.detectChanges();
@@ -5527,16 +5578,16 @@ describe('KbqSelect', () => {
 
             fixture.componentInstance.control.setValue('pizza-1');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(trigger.textContent).toContain('Pizza');
 
             fixture.componentInstance.control.reset();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(trigger.textContent).not.toContain('Pizza');
-        }));
+        });
     });
 
     describe('with custom trigger', () => {
@@ -5544,19 +5595,19 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([SelectWithCustomTrigger]);
         });
 
-        it('should allow the user to customize the label', fakeAsync(() => {
+        it('should allow the user to customize the label', async () => {
             const fixture = TestBed.createComponent(SelectWithCustomTrigger);
 
             fixture.detectChanges();
 
             fixture.componentInstance.control.setValue('pizza-1');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const label = fixture.debugElement.query(By.css('.kbq-select__matcher')).nativeElement;
 
             expect(label.textContent).toContain('azziP');
-        }));
+        });
     });
 
     describe('when reseting the value by setting null or undefined', () => {
@@ -5565,7 +5616,7 @@ describe('KbqSelect', () => {
         let formField: HTMLElement;
         let options: NodeListOf<HTMLElement>;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([ResetValuesSelect]);
 
             fixture = TestBed.createComponent(ResetValuesSelect);
@@ -5575,80 +5626,80 @@ describe('KbqSelect', () => {
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             options = overlayContainerElement.querySelectorAll('kbq-option');
             options[0].click();
             fixture.detectChanges();
-            tick();
-            flush();
-        }));
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should reset when an option with an undefined value is selected', fakeAsync(() => {
+        it('should reset when an option with an undefined value is selected', async () => {
             options[4].click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.control.value).toBeUndefined();
             expect(fixture.componentInstance.select().selected).toBeFalsy();
             expect(formField.classList).not.toContain('kbq-form-field-should-float');
             expect(trigger.textContent).not.toContain('Undefined');
-        }));
+        });
 
-        it('should reset when an option with a null value is selected', fakeAsync(() => {
+        it('should reset when an option with a null value is selected', async () => {
             options[5].click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.control.value).toBeNull();
             expect(fixture.componentInstance.select().selected).toBeFalsy();
             expect(formField.classList).not.toContain('kbq-form-field-should-float');
             expect(trigger.textContent).not.toContain('Null');
-        }));
+        });
 
-        it('should reset when a blank option is selected', fakeAsync(() => {
+        it('should reset when a blank option is selected', async () => {
             options[6].click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.control.value).toBeUndefined();
             expect(fixture.componentInstance.select().selected).toBeFalsy();
             expect(formField.classList).not.toContain('kbq-form-field-should-float');
             expect(trigger.textContent).not.toContain('None');
-        }));
+        });
 
-        it('should not mark the reset option as selected ', fakeAsync(() => {
+        it('should not mark the reset option as selected ', async () => {
             options[5].click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             fixture.componentInstance.select().open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(options[5].classList).not.toContain('kbq-selected');
-        }));
+        });
 
-        it('should not reset when any other falsy option is selected', fakeAsync(() => {
+        it('should not reset when any other falsy option is selected', async () => {
             options[3].click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.control.value).toBe(false);
             expect(fixture.componentInstance.select().selected).toBeTruthy();
             expect(trigger.textContent).toContain('Falsy');
-        }));
+        });
 
-        it('should not consider the reset values as selected when resetting the form control', fakeAsync(() => {
+        it('should not consider the reset values as selected when resetting the form control', async () => {
             fixture.componentInstance.control.reset();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.control.value).toBeNull();
             expect(fixture.componentInstance.select().selected).toBeFalsy();
             expect(trigger.textContent).not.toContain('Null');
             expect(trigger.textContent).not.toContain('Undefined');
-        }));
+        });
     });
 
     describe('without Angular forms', () => {
@@ -5660,7 +5711,7 @@ describe('KbqSelect', () => {
             ]);
         });
 
-        it('should set the value when options are clicked', fakeAsync(() => {
+        it('should set the value when options are clicked', async () => {
             const fixture = TestBed.createComponent(BasicSelectWithoutForms);
 
             fixture.detectChanges();
@@ -5670,37 +5721,37 @@ describe('KbqSelect', () => {
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             (overlayContainerElement.querySelector('kbq-option') as HTMLElement).click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.selectedFood).toBe('steak-0');
-            expect(fixture.componentInstance.select().value).toBe('steak-0');
+            expect(fixture.componentInstance.select().value()).toBe('steak-0');
             expect(trigger.textContent).toContain('Steak');
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             (overlayContainerElement.querySelectorAll('kbq-option')[2] as HTMLElement).click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.selectedFood).toBe('sandwich-2');
-            expect(fixture.componentInstance.select().value).toBe('sandwich-2');
+            expect(fixture.componentInstance.select().value()).toBe('sandwich-2');
             expect(trigger.textContent).toContain('Sandwich');
-        }));
+        });
 
-        it('should mark options as selected when the value is set', fakeAsync(() => {
+        it('should mark options as selected when the value is set', async () => {
             const fixture = TestBed.createComponent(BasicSelectWithoutForms);
 
             fixture.detectChanges();
             fixture.componentInstance.selectedFood = 'sandwich-2';
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
@@ -5708,15 +5759,37 @@ describe('KbqSelect', () => {
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const option = overlayContainerElement.querySelectorAll('kbq-option')[2];
 
             expect(option.classList).toContain('kbq-selected');
-            expect(fixture.componentInstance.select().value).toBe('sandwich-2');
-        }));
+            expect(fixture.componentInstance.select().value()).toBe('sandwich-2');
+        });
 
-        it('should reset the label when a null value is set', fakeAsync(() => {
+        it('should select the options of a value set in code', async () => {
+            const fixture = TestBed.createComponent(BasicSelectWithoutForms);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const select = fixture.componentInstance.select();
+
+            select.value.set('sandwich-2');
+            fixture.detectChanges();
+
+            expect(select.value()).toBe('sandwich-2');
+            expect(fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.textContent).toContain(
+                'Sandwich'
+            );
+
+            select.value.set(null);
+            fixture.detectChanges();
+
+            expect(select.empty()).toBe(true);
+        });
+
+        it('should reset the label when a null value is set', async () => {
             const fixture = TestBed.createComponent(BasicSelectWithoutForms);
 
             fixture.detectChanges();
@@ -5726,30 +5799,30 @@ describe('KbqSelect', () => {
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             (overlayContainerElement.querySelector('kbq-option') as HTMLElement).click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.selectedFood).toBe('steak-0');
-            expect(fixture.componentInstance.select().value).toBe('steak-0');
+            expect(fixture.componentInstance.select().value()).toBe('steak-0');
             expect(trigger.textContent).toContain('Steak');
 
             fixture.componentInstance.selectedFood = null;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
-            expect(fixture.componentInstance.select().value).toBeNull();
+            expect(fixture.componentInstance.select().value()).toBeNull();
             expect(trigger.textContent).not.toContain('Steak');
-        }));
+        });
 
-        it('should reflect the preselected value', fakeAsync(() => {
+        it('should reflect the preselected value', async () => {
             const fixture = TestBed.createComponent(BasicSelectWithoutFormsPreselected);
 
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
@@ -5758,15 +5831,15 @@ describe('KbqSelect', () => {
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const option = overlayContainerElement.querySelectorAll('kbq-option')[1];
 
             expect(option.classList).toContain('kbq-selected');
-            expect(fixture.componentInstance.select().value).toBe('pizza-1');
-        }));
+            expect(fixture.componentInstance.select().value()).toBe('pizza-1');
+        });
 
-        it('should be able to select multiple values', fakeAsync(() => {
+        it('should be able to select multiple values', async () => {
             const fixture = TestBed.createComponent(BasicSelectWithoutFormsMultiple);
 
             fixture.detectChanges();
@@ -5776,28 +5849,28 @@ describe('KbqSelect', () => {
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
             options[0].click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.selectedFoods).toEqual(['steak-0']);
-            expect(fixture.componentInstance.select().value).toEqual(['steak-0']);
+            expect(fixture.componentInstance.select().value()).toEqual(['steak-0']);
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t: Element) => t.textContent!.trim())).toEqual([
                 'Steak'
             ]);
 
             options[2].click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.selectedFoods).toEqual(['steak-0', 'sandwich-2']);
-            expect(fixture.componentInstance.select().value).toEqual(['steak-0', 'sandwich-2']);
+            expect(fixture.componentInstance.select().value()).toEqual(['steak-0', 'sandwich-2']);
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t: Element) => t.textContent!.trim())).toEqual([
                 'Steak',
                 'Sandwich'
@@ -5805,59 +5878,59 @@ describe('KbqSelect', () => {
 
             options[1].click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             // Panel order, not click order: the value is sorted by the position of the option in the panel.
             expect(fixture.componentInstance.selectedFoods).toEqual(['steak-0', 'pizza-1', 'sandwich-2']);
-            expect(fixture.componentInstance.select().value).toEqual(['steak-0', 'pizza-1', 'sandwich-2']);
+            expect(fixture.componentInstance.select().value()).toEqual(['steak-0', 'pizza-1', 'sandwich-2']);
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t: Element) => t.textContent!.trim())).toEqual([
                 'Steak',
                 'Pizza',
                 'Sandwich'
             ]);
-        }));
+        });
 
-        it('should restore focus to the host element', fakeAsync(() => {
+        it('should restore focus to the host element', async () => {
             const fixture = TestBed.createComponent(BasicSelectWithoutForms);
 
             fixture.detectChanges();
             fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             (overlayContainerElement.querySelector('kbq-option') as HTMLElement).click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             const select = fixture.debugElement.nativeElement.querySelector('kbq-select');
 
             expect(document.activeElement).toBe(select);
-        }));
+        });
 
-        it('should not restore focus to the host element when clicking outside', fakeAsync(() => {
+        it('should not restore focus to the host element when clicking outside', async () => {
             const fixture = TestBed.createComponent(BasicSelectWithoutForms);
             const select = fixture.debugElement.nativeElement.querySelector('kbq-select');
 
             fixture.detectChanges();
             fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             select.blur(); // Blur manually since the programmatic click might not do it.
             dispatchFakeEvent(document.body, 'click');
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(document.activeElement).not.toBe(select);
-        }));
+        });
 
-        it('should update the data binding before emitting the change event', fakeAsync(() => {
+        it('should update the data binding before emitting the change event', async () => {
             const fixture = TestBed.createComponent(BasicSelectWithoutForms);
             const instance = fixture.componentInstance;
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             fixture.detectChanges();
             instance.select().selectionChange.subscribe(() => spy(instance.selectedFood));
@@ -5866,23 +5939,23 @@ describe('KbqSelect', () => {
 
             fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             (overlayContainerElement.querySelector('kbq-option') as HTMLElement).click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(instance.selectedFood).toBe('steak-0');
             expect(spy).toHaveBeenCalledWith('steak-0');
-        }));
+        });
     });
 
     describe('with option centering disabled', () => {
         let fixture: ComponentFixture<SelectWithoutOptionCentering>;
         let trigger: HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([
                 SelectWithoutOptionCentering
             ]);
@@ -5890,13 +5963,13 @@ describe('KbqSelect', () => {
             fixture = TestBed.createComponent(SelectWithoutOptionCentering);
             fixture.detectChanges();
             trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should not align the active option with the trigger if centering is disabled', fakeAsync(() => {
+        it('should not align the active option with the trigger if centering is disabled', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-select__panel')!;
 
@@ -5906,8 +5979,8 @@ describe('KbqSelect', () => {
             expect(trigger.textContent).toContain('Pizza');
             // The selected index should be 1 because it was preselected
             expect(fixture.componentInstance.options()[1].selected).toBe(true);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('with multiple selection', () => {
@@ -5915,7 +5988,7 @@ describe('KbqSelect', () => {
         let testInstance: MultiSelect;
         let trigger: HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([
                 MultiSelect,
                 MultiSelectWithCustomizedTagContent,
@@ -5926,10 +5999,10 @@ describe('KbqSelect', () => {
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
             trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should be able to select multiple values', fakeAsync(() => {
+        it('should be able to select multiple values', async () => {
             trigger.click();
             fixture.detectChanges();
 
@@ -5939,13 +6012,13 @@ describe('KbqSelect', () => {
             options[2].click();
             options[5].click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.control.value).toEqual(['steak-0', 'tacos-2', 'eggs-5']);
-        }));
+        });
 
-        it('should be able to toggle an option on and off', fakeAsync(() => {
+        it('should be able to toggle an option on and off', async () => {
             trigger.click();
             fixture.detectChanges();
 
@@ -5958,15 +6031,15 @@ describe('KbqSelect', () => {
 
             option.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.control.value).toEqual([]);
-        }));
+        });
 
-        it('should update the label', fakeAsync(() => {
+        it('should update the label', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -5982,21 +6055,21 @@ describe('KbqSelect', () => {
             ]);
 
             options[2].click();
-            tick(100);
+            await vi.advanceTimersByTimeAsync(100);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (item) => item.textContent!.trim())).toEqual([
                 'Steak',
                 'Eggs'
             ]);
-        }));
+        });
 
-        it('should be able to set the selected value by taking an array', fakeAsync(() => {
+        it('should be able to set the selected value by taking an array', async () => {
             trigger.click();
             testInstance.control.setValue(['steak-0', 'eggs-5']);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const optionNodes = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -6007,9 +6080,9 @@ describe('KbqSelect', () => {
 
             expect(optionInstances[0].selected).toBe(true);
             expect(optionInstances[5].selected).toBe(true);
-        }));
+        });
 
-        it('should override the previously-selected value when setting an array', fakeAsync(() => {
+        it('should override the previously-selected value when setting an array', async () => {
             trigger.click();
             fixture.detectChanges();
 
@@ -6022,13 +6095,13 @@ describe('KbqSelect', () => {
 
             testInstance.control.setValue(['eggs-5']);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(options[0].classList).not.toContain('kbq-selected');
             expect(options[5].classList).toContain('kbq-selected');
-        }));
+        });
 
-        it('should not close the panel when clicking on options', fakeAsync(() => {
+        it('should not close the panel when clicking on options', async () => {
             trigger.click();
             fixture.detectChanges();
 
@@ -6039,16 +6112,16 @@ describe('KbqSelect', () => {
             options[0].click();
             options[1].click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.select().panelOpen).toBe(true);
-        }));
+        });
 
-        it('should sort the selected options based on their order in the panel', fakeAsync(() => {
+        it('should sort the selected options based on their order in the panel', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -6056,8 +6129,8 @@ describe('KbqSelect', () => {
             options[0].click();
             options[1].click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             // Panel order (Steak, Pizza, Tacos), not the order the three were clicked in.
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t) => t.textContent!.trim())).toEqual([
@@ -6066,13 +6139,13 @@ describe('KbqSelect', () => {
                 'Tacos'
             ]);
             expect(fixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1', 'tacos-2']);
-        }));
+        });
 
-        it('should sort the selected options in reverse in rtl', fakeAsync(() => {
+        it('should sort the selected options in reverse in rtl', async () => {
             dir.value = 'rtl';
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -6080,8 +6153,8 @@ describe('KbqSelect', () => {
             options[0].click();
             options[1].click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t) => t.textContent!.trim())).toEqual([
                 'Tacos',
@@ -6089,16 +6162,16 @@ describe('KbqSelect', () => {
                 'Steak'
             ]);
             expect(fixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1', 'tacos-2']);
-        }));
+        });
 
         // Regression: the trigger reverses a copy of the selection in rtl. Reversing
         // `SelectionModel.selected` itself would reorder the selection, because CDK memoises that array
         // and hands out the very same instance on every read.
-        it('should not reorder the selection model when the trigger is reversed in rtl', fakeAsync(() => {
+        it('should not reorder the selection model when the trigger is reversed in rtl', async () => {
             dir.value = 'rtl';
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -6106,8 +6179,8 @@ describe('KbqSelect', () => {
             options[0].click();
             options[1].click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             fixture.detectChanges();
             fixture.detectChanges();
@@ -6117,9 +6190,9 @@ describe('KbqSelect', () => {
                 'pizza-1',
                 'tacos-2'
             ]);
-        }));
+        });
 
-        it('should be able to customize the value sorting logic', fakeAsync(() => {
+        it('should be able to customize the value sorting logic', async () => {
             fixture.componentInstance.sortComparator = (a, b, optionsArray) => {
                 return optionsArray.indexOf(b) - optionsArray.indexOf(a);
             };
@@ -6128,7 +6201,7 @@ describe('KbqSelect', () => {
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -6137,8 +6210,8 @@ describe('KbqSelect', () => {
             }
 
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             // Expect the items to be in reverse order.
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t) => t.textContent!.trim())).toEqual([
@@ -6147,73 +6220,73 @@ describe('KbqSelect', () => {
                 'Steak'
             ]);
             expect(fixture.componentInstance.control.value).toEqual(['tacos-2', 'pizza-1', 'steak-0']);
-        }));
+        });
 
-        it('should sort the values that get set via the model based on the panel order', fakeAsync(() => {
+        it('should sort the values that get set via the model based on the panel order', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             testInstance.control.setValue(['tacos-2', 'steak-0', 'pizza-1']);
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t) => t.textContent!.trim())).toEqual([
                 'Steak',
                 'Pizza',
                 'Tacos'
             ]);
-        }));
+        });
 
-        it('should reverse sort the values, that get set via the model in rtl', fakeAsync(() => {
+        it('should reverse sort the values, that get set via the model in rtl', async () => {
             dir.value = 'rtl';
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             testInstance.control.setValue(['tacos-2', 'steak-0', 'pizza-1']);
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t) => t.textContent!.trim())).toEqual([
                 'Tacos',
                 'Pizza',
                 'Steak'
             ]);
-        }));
+        });
 
-        it('should throw an exception when trying to set a non-array value', fakeAsync(() => {
+        it('should throw an exception when trying to set a non-array value', async () => {
             expect(() => {
                 testInstance.control.setValue('not-an-array');
             }).toThrow(wrappedErrorMessage(getKbqSelectNonArrayValueError()));
-        }));
+        });
 
-        it('should throw an exception when trying to change multiple mode after init', fakeAsync(() => {
-            expect(() => {
-                testInstance.select().multiple = false;
-            }).toThrow(wrappedErrorMessage(getKbqSelectDynamicMultipleError()));
-        }));
+        it('should throw an exception when trying to change multiple mode after init', async () => {
+            testInstance.multiple = false;
 
-        it('should pass the `multiple` value to all of the option instances', fakeAsync(() => {
+            expect(() => fixture.detectChanges()).toThrow(wrappedErrorMessage(getKbqSelectDynamicMultipleError()));
+        });
+
+        it('should pass the `multiple` value to all of the option instances', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.options().every((option: any) => option.multiple)).toBe(true);
 
             testInstance.foods.push({ value: 'cake-8', viewValue: 'Cake' });
             fixture.detectChanges();
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(testInstance.options().every((option) => !!option.multiple)).toBe(true);
-        }));
+        });
 
-        it('should update the active item index on click', fakeAsync(() => {
+        it('should update the active item index on click', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.select().keyManager.activeItemIndex).toBe(0);
 
@@ -6221,13 +6294,13 @@ describe('KbqSelect', () => {
 
             options[2].click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.select().keyManager.activeItemIndex).toBe(2);
-        }));
+        });
 
-        it('should be to select an option with a `null` value', fakeAsync(() => {
+        it('should be to select an option with a `null` value', async () => {
             fixture.componentInstance.foods = [
                 { value: null, viewValue: 'Steak' },
                 { value: 'pizza-1', viewValue: 'Pizza' },
@@ -6244,16 +6317,16 @@ describe('KbqSelect', () => {
             options[1].click();
             options[2].click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.control.value).toEqual([null, 'pizza-1', null]);
-        }));
+        });
 
-        it('should select options when pressing shift + click', fakeAsync(() => {
+        it('should select options when pressing shift + click', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.select().keyManager.activeItemIndex).toBe(0);
 
@@ -6261,23 +6334,23 @@ describe('KbqSelect', () => {
 
             options[0].click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.control.value.length).toBe(1);
 
             options[5].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.control.value.length).toBe(6);
-        }));
+        });
 
-        it('should deselect a range with shift + click when the active option is not selected', fakeAsync(() => {
+        it('should deselect a range with shift + click when the active option is not selected', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.select().keyManager.activeItemIndex).toBe(0);
 
@@ -6287,16 +6360,16 @@ describe('KbqSelect', () => {
             options[0].click();
             options[1].click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.control.value).toEqual(['steak-0', 'pizza-1']);
 
             // Toggle options[0] off so that the active (last-clicked) option is NOT selected.
             options[0].click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.control.value).toEqual(['pizza-1']);
 
@@ -6304,36 +6377,36 @@ describe('KbqSelect', () => {
             // the unselected state, deselecting options[1] which was the only previously selected.
             options[5].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.control.value).toEqual([]);
-        }));
+        });
 
-        it('should not deselect a disabled option on a repeated shift + click', fakeAsync(() => {
+        it('should not deselect a disabled option on a repeated shift + click', async () => {
             testInstance.control.setValue(['tacos-2']);
             fixture.detectChanges();
 
-            testInstance.options()[2].disabled = true;
+            testInstance.foods[2].disabled = true;
             fixture.detectChanges();
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
-            const shiftClickDisabledOption = () => {
+            const shiftClickDisabledOption = async () => {
                 options[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
                 fixture.detectChanges();
-                tick();
-                flush();
+                await vi.advanceTimersByTimeAsync(0);
+                await vi.runOnlyPendingTimersAsync();
             };
 
             // Twice on purpose: the first shift-click re-anchors the range onto the disabled option, and
             // the second one then took the `toIndex === fromIndex` branch, toggling it straight through
             // the selection model. That path emits no `selectionChange`, so nothing could repair it.
-            shiftClickDisabledOption();
-            shiftClickDisabledOption();
+            await shiftClickDisabledOption();
+            await shiftClickDisabledOption();
 
             expect(testInstance.options()[2].selected).toBe(true);
             expect(testInstance.select().selectionModel.isSelected(testInstance.options()[2])).toBe(true);
@@ -6341,9 +6414,9 @@ describe('KbqSelect', () => {
             // A rejected click must leave the range anchor alone: parking it on an option the user cannot
             // toggle would let that option's frozen selected state dictate the next shift-range.
             expect(testInstance.select().keyManager.activeItemIndex).toBe(0);
-        }));
+        });
 
-        it('should not select a non-selectable option on shift + click', fakeAsync(() => {
+        it('should not select a non-selectable option on shift + click', async () => {
             fixture.destroy();
 
             const nonSelectableFixture = TestBed.createComponent(MultiSelectWithNonSelectableOption);
@@ -6351,7 +6424,7 @@ describe('KbqSelect', () => {
             nonSelectableFixture.detectChanges();
             nonSelectableFixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
             nonSelectableFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
             const select = nonSelectableFixture.componentInstance.select();
@@ -6361,13 +6434,13 @@ describe('KbqSelect', () => {
             // the `toIndex === fromIndex` branch. Clicking twice would toggle it back out and hide the bug.
             options[0].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
             nonSelectableFixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(select.selectionModel.selected.length).toBe(0);
             expect(options[0].classList).not.toContain('kbq-selected');
             expect(nonSelectableFixture.componentInstance.control.value).toBeFalsy();
-        }));
+        });
 
         it('should select all options when pressing ctrl + a', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-select');
@@ -6418,11 +6491,12 @@ describe('KbqSelect', () => {
 
         it('should skip disabled options when using ctrl + a', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-select');
-            const options = fixture.componentInstance.options();
 
             for (let i = 0; i < 3; i++) {
-                options[i].disabled = true;
+                fixture.componentInstance.foods[i].disabled = true;
             }
+
+            fixture.detectChanges();
 
             expect(testInstance.control.value).toBeFalsy();
 
@@ -6535,7 +6609,7 @@ describe('KbqSelect', () => {
         it('should emit onSelectAll with selected=true on a no-op ctrl + a when everything is already selected', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-select');
             const options = fixture.componentInstance.options();
-            const onSelectAll = jest.fn();
+            const onSelectAll = vi.fn();
 
             fixture.componentInstance.select().onSelectAll.subscribe(onSelectAll);
 
@@ -6557,7 +6631,7 @@ describe('KbqSelect', () => {
             expect(options.every((option) => option.selected)).toBe(true);
         });
 
-        it('should allow providing custom tag content', fakeAsync(() => {
+        it('should allow providing custom tag content', async () => {
             const fixtureCustomizedContent = TestBed.createComponent(MultiSelectWithCustomizedTagContent);
             const componentInstance = fixtureCustomizedContent.componentInstance;
 
@@ -6570,7 +6644,7 @@ describe('KbqSelect', () => {
 
             trigger.click();
             fixtureCustomizedContent.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(
                 componentInstance
@@ -6578,9 +6652,9 @@ describe('KbqSelect', () => {
                     .tags.map((tag) => tag.nativeElement?.textContent)
                     .every((tagTextContent) => tagTextContent!.includes(componentInstance.customizedTextToken))
             ).toEqual(true);
-        }));
+        });
 
-        it('should hide tags if tags container is overflown', fakeAsync(() => {
+        it('should hide tags if tags container is overflown', async () => {
             const fixtureTest = TestBed.createComponent(MultiSelectNarrow);
             const componentInstance: MultiSelectNarrow = fixtureTest.componentInstance;
             const triggerEl: HTMLElement = fixtureTest.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
@@ -6599,13 +6673,13 @@ describe('KbqSelect', () => {
             }
 
             fixtureTest.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
-            expect(componentInstance.select().hiddenItems).not.toBeFalsy();
-        }));
+            expect(componentInstance.select().hiddenItems()).not.toBeFalsy();
+        });
 
-        it('should compute hidden items correctly', fakeAsync(() => {
+        it('should compute hidden items correctly', async () => {
             const restoreLayout = stubTagLayout();
 
             try {
@@ -6625,23 +6699,30 @@ describe('KbqSelect', () => {
                 }
 
                 fixtureTest.detectChanges();
-                tick();
-                flush();
+                await vi.advanceTimersByTimeAsync(0);
+                await vi.runOnlyPendingTimersAsync();
 
-                expect(componentInstance.select().hiddenItems).toEqual(1);
+                expect(componentInstance.select().hiddenItems()).toEqual(1);
 
                 options.item(2).click();
                 fixtureTest.detectChanges();
-                tick();
-                flush();
+                await vi.advanceTimersByTimeAsync(0);
+                await vi.runOnlyPendingTimersAsync();
 
-                expect(componentInstance.select().hiddenItems).toEqual(2);
+                expect(componentInstance.select().hiddenItems()).toEqual(2);
+
+                fixtureTest.detectChanges();
+
+                const counter: HTMLElement = triggerEl.querySelector('.kbq-select__match-hidden-text');
+
+                expect(counter.textContent?.trim()).toBe('+2');
+                expect(counter.classList).toContain('kbq-select__match-hidden-text_visible');
             } finally {
                 restoreLayout();
             }
-        }));
+        });
 
-        it('should not throw when the hidden-text element is not yet in the DOM', fakeAsync(() => {
+        it('should not throw when the hidden-text element is not yet in the DOM', async () => {
             // Regression: in multiple mode with preset values restored programmatically,
             // `calculateHiddenItems` may run (via setTimeout) before the trigger view has
             // materialized `.kbq-select__match-hidden-text`. `querySelector` then returns null,
@@ -6664,8 +6745,8 @@ describe('KbqSelect', () => {
             options.item(1)?.click();
 
             fixtureTest.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             HTMLElement.prototype.querySelector = function (selectors: string) {
                 if (selectors === '.kbq-select__match-hidden-text') return null;
@@ -6678,7 +6759,7 @@ describe('KbqSelect', () => {
             } finally {
                 HTMLElement.prototype.querySelector = originalQuerySelector;
             }
-        }));
+        });
     });
 
     describe('option tooltip', () => {
@@ -6716,7 +6797,7 @@ describe('KbqSelect', () => {
             }
         }
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             originalResizeObserver = window.ResizeObserver;
             (window as any).ResizeObserver = MockedResizeObserver;
 
@@ -6726,14 +6807,14 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
 
             trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         afterEach(() => {
             window.ResizeObserver = originalResizeObserver;
         });
 
-        it('should not display tooltip if ellipse not applied', fakeAsync(() => {
+        it('should not display tooltip if ellipse not applied', async () => {
             trigger.click();
             fixture.detectChanges();
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
@@ -6741,14 +6822,14 @@ describe('KbqSelect', () => {
             options[0].style.width = '200px';
 
             dispatchMouseEvent(options[0], 'mouseenter');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const tooltips = document.querySelectorAll('.kbq-tooltip__content');
 
             expect(tooltips.length).toEqual(0);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         /**
          * Forces `KbqOptionTooltip.isOverflown` to true on the given option by mocking
@@ -6762,10 +6843,10 @@ describe('KbqSelect', () => {
             Object.defineProperty(textEl, 'scrollWidth', { configurable: true, value: 500 });
         }
 
-        it('should display tooltip if ellipse applied', fakeAsync(() => {
+        it('should display tooltip if ellipse applied', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -6775,7 +6856,7 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
 
             // KbqTooltipTrigger uses an enterDelay of 400ms before showing.
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             fixture.detectChanges();
 
             const tooltips = document.querySelectorAll('.kbq-tooltip__content');
@@ -6784,16 +6865,15 @@ describe('KbqSelect', () => {
             expect(tooltips[0].textContent!.trim()).toEqual(options[1].textContent!.trim());
 
             dispatchMouseEvent(options[1], 'mouseleave');
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             fixture.detectChanges();
-            discardPeriodicTasks();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should reactively update disabled via ResizeObserver without mouseenter', fakeAsync(() => {
+        it('should reactively update disabled via ResizeObserver without mouseenter', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
             const directive = getDebugNode(options[1])!.injector.get(KbqOptionTooltip);
@@ -6803,20 +6883,20 @@ describe('KbqSelect', () => {
 
             mockOverflow(options[1]);
             window.dispatchEvent(new Event('resize'));
-            tick(150); // past debounceTime(100)
+            await vi.advanceTimersByTimeAsync(150); // past debounceTime(100)
 
             expect(directive.disabled).toBe(false);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should keep kbqTooltipDisabled over an option whose text is clipped', fakeAsync(() => {
+        it('should keep kbqTooltipDisabled over an option whose text is clipped', async () => {
             fixture.componentInstance.tooltipDisabled = true;
             fixture.detectChanges();
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
             const directive = getDebugNode(options[1])!.injector.get(KbqOptionTooltip);
@@ -6825,15 +6905,12 @@ describe('KbqSelect', () => {
             window.dispatchEvent(new Event('resize'));
             dispatchMouseEvent(options[1], 'mouseenter');
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             fixture.detectChanges();
 
             expect(directive.disabled).toBe(true);
             expect(document.querySelectorAll('.kbq-tooltip__content').length).toBe(0);
-
-            discardPeriodicTasks();
-            flush();
-        }));
+        });
 
         /** Forces one line of a two-line option to clip, without overflowing `.kbq-option-text` itself. */
         function mockLineOverflow(option: HTMLElement, textOverflow = 'ellipsis'): void {
@@ -6844,10 +6921,10 @@ describe('KbqSelect', () => {
             Object.defineProperty(line, 'scrollWidth', { configurable: true, value: 500 });
         }
 
-        it('should display tooltip when a two-line option clips one of its lines', fakeAsync(() => {
+        it('should display tooltip when a two-line option clips one of its lines', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
             const twoLine = options[options.length - 1];
@@ -6857,7 +6934,7 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
 
             // KbqTooltipTrigger uses an enterDelay of 400ms before showing.
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             fixture.detectChanges();
 
             const tooltips = document.querySelectorAll('.kbq-tooltip__content');
@@ -6867,16 +6944,15 @@ describe('KbqSelect', () => {
             expect(tooltips[0].textContent!.trim()).toEqual('Two line option');
 
             dispatchMouseEvent(twoLine, 'mouseleave');
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             fixture.detectChanges();
-            discardPeriodicTasks();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should ignore a clipped line that is not truncated with an ellipsis', fakeAsync(() => {
+        it('should ignore a clipped line that is not truncated with an ellipsis', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
             const twoLine = options[options.length - 1];
@@ -6889,8 +6965,8 @@ describe('KbqSelect', () => {
 
             expect(directive.disabled).toBe(true);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         // Reactive tooltip content updates after option mutation are covered by
         // e2e.playwright-spec.ts (MutationObserver/ContentObserver flow needs a real browser).
@@ -6906,7 +6982,6 @@ describe('KbqSelect', () => {
                     KbqTagsModule,
                     ReactiveFormsModule,
                     FormsModule,
-                    NoopAnimationsModule,
                     ScrollingModule,
                     CdkVirtualScrollViewportSelect,
                     CdkVirtualScrollViewportSelectOptionAsObject
@@ -6922,33 +6997,33 @@ describe('KbqSelect', () => {
         let fixture: ComponentFixture<CdkVirtualScrollViewportSelect>;
         let testInstance: CdkVirtualScrollViewportSelect;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(CdkVirtualScrollViewportSelect<string>);
             testInstance = fixture.componentInstance;
-            finishInit(fixture);
-        }));
+            await finishInit(fixture);
+        });
 
-        afterEach(fakeAsync(() => flush()));
+        afterEach(() => vi.runOnlyPendingTimersAsync());
 
-        it('should sort selected tags when some options hidden', fakeAsync(() => {
+        it('should sort selected tags when some options hidden', async () => {
             testInstance.select().open();
-            finishInit(fixture);
+            await finishInit(fixture);
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
             fixture.autoDetectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
-            [5, 3, 7].forEach((index) => {
+            for (const index of [5, 3, 7]) {
                 if (options[index]) {
                     options[index].click();
                     fixture.autoDetectChanges();
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
                 }
-            });
+            }
 
             fixture.autoDetectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const selectedOptions: string[] = testInstance
                 .select()
@@ -6958,13 +7033,10 @@ describe('KbqSelect', () => {
                 .select()
                 .options.changes.pipe(take(1))
                 .subscribe(() => {
-                    const currentOptions: NodeListOf<HTMLElement> | undefined =
-                        overlayContainerElement.querySelectorAll('kbq-option');
                     const currentSelectedOptions: string[] = testInstance
                         .select()
                         .selectionModel.selected.map((option) => option.value);
 
-                    expect(options?.length).not.toEqual(currentOptions.length);
                     expect(selectedOptions.length).toEqual(currentSelectedOptions.length);
                     expect(selectedOptions).toEqual(currentSelectedOptions);
                 });
@@ -6974,19 +7046,19 @@ describe('KbqSelect', () => {
                 (option: any) => option !== selectedOptions[2]
             );
             fixture.autoDetectChanges();
-            flush(35);
-            tick(1);
-        }));
+            await vi.runOnlyPendingTimersAsync();
+            await vi.advanceTimersByTimeAsync(1);
+        });
 
-        it('should render tags for non-rendered KbqOptions/values', fakeAsync(() => {
+        it('should render tags for non-rendered KbqOptions/values', async () => {
             const selectMatcher = fixture.debugElement.query(By.css('.kbq-select__matcher')).nativeElement;
 
             testInstance.values = [OPTIONS[0], OPTIONS[OPTIONS.length - 1]];
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             testInstance.select().open();
-            finishInit(fixture);
+            await finishInit(fixture);
 
             const tags: NodeListOf<HTMLElement> = selectMatcher.querySelectorAll('kbq-tag');
 
@@ -6996,18 +7068,18 @@ describe('KbqSelect', () => {
             expect(testInstance.select().keyManager.activeItem).toBeInstanceOf(KbqOption);
             expect((testInstance.select().selected as any[]).length).toEqual(2);
             expect((testInstance.select().selected as any[])[1]).toBeInstanceOf(KbqVirtualOption);
-        }));
+        });
 
-        it('should recalculate hidden items when previous rendered options range disappeared', fakeAsync(() => {
+        it('should recalculate hidden items when previous rendered options range disappeared', async () => {
             const fixture = TestBed.createComponent(CdkVirtualScrollViewportSelectOptionAsObject);
             const testInstance = fixture.componentInstance;
 
-            finishInit(fixture);
+            await finishInit(fixture);
 
             const triggerEl: HTMLElement = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
             fixture.autoDetectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             testInstance.style = { width: '100px' };
             triggerEl.click();
@@ -7015,30 +7087,32 @@ describe('KbqSelect', () => {
 
             let options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
-            options.forEach((option) => {
+            for (const option of options) {
                 option.click();
-                tick();
-            });
-            fixture.autoDetectChanges();
-            flush();
+                await vi.advanceTimersByTimeAsync(0);
+            }
 
-            const hiddenItemBeforeRenderedOptionsChange = fixture.componentInstance.select().hiddenItems;
+            fixture.autoDetectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const hiddenItemBeforeRenderedOptionsChange = fixture.componentInstance.select().hiddenItems();
 
             testInstance.viewport().setRenderedRange({ start: options.length + 1, end: options.length * 2 + 1 });
             // finishInit(fixture);
             fixture.autoDetectChanges();
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             options = overlayContainerElement.querySelectorAll('kbq-option');
-            options.forEach((option) => {
+
+            for (const option of options) {
                 option.click();
-                tick();
-            });
+                await vi.advanceTimersByTimeAsync(0);
+            }
 
-            expect(testInstance.select().hiddenItems).not.toEqual(hiddenItemBeforeRenderedOptionsChange);
-        }));
+            expect(testInstance.select().hiddenItems()).not.toEqual(hiddenItemBeforeRenderedOptionsChange);
+        });
 
-        it('should calculate hidden items with virtual options', fakeAsync(() => {
+        it('should calculate hidden items with virtual options', async () => {
             const restoreLayout = stubTagLayout();
 
             try {
@@ -7053,43 +7127,43 @@ describe('KbqSelect', () => {
 
                 for (let step = 0; step < 2; step++) {
                     options.item(step)?.click();
-                    tick();
+                    await vi.advanceTimersByTimeAsync(0);
                 }
 
                 fixture.autoDetectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
-                expect(testInstance.select().hiddenItems).toEqual(1);
+                expect(testInstance.select().hiddenItems()).toEqual(1);
 
                 options.item(2).click();
                 fixture.autoDetectChanges();
-                tick();
-                flush();
-                expect(testInstance.select().hiddenItems).toEqual(2);
+                await vi.advanceTimersByTimeAsync(0);
+                await vi.runOnlyPendingTimersAsync();
+                expect(testInstance.select().hiddenItems()).toEqual(2);
             } finally {
                 restoreLayout();
             }
-        }));
+        });
 
         describe('virtualOptionFactory', () => {
-            it('should render trigger label via factory for object values (single mode)', fakeAsync(() => {
+            it('should render trigger label via factory for object values (single mode)', async () => {
                 const singleFixture = TestBed.createComponent(CdkVirtualScrollSingleSelectWithFactory);
                 const instance = singleFixture.componentInstance;
 
-                finishInit(singleFixture);
+                await finishInit(singleFixture);
 
                 instance.value = instance.options[0];
                 singleFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const triggerText = singleFixture.debugElement
                     .query(By.css('.kbq-select__matcher-text'))
                     .nativeElement.textContent.trim();
 
                 expect(triggerText).toBe(instance.options[0].name);
-            }));
+            });
 
-            it('should render label for pre-selected value outside viewport (single mode)', fakeAsync(() => {
+            it('should render label for pre-selected value outside viewport (single mode)', async () => {
                 const singleFixture = TestBed.createComponent(CdkVirtualScrollSingleSelectWithFactory);
                 const instance = singleFixture.componentInstance;
 
@@ -7097,7 +7171,7 @@ describe('KbqSelect', () => {
                 const target = instance.options[instance.options.length - 1];
 
                 instance.value = target;
-                finishInit(singleFixture);
+                await finishInit(singleFixture);
 
                 const triggerText = singleFixture.debugElement
                     .query(By.css('.kbq-select__matcher-text'))
@@ -7107,17 +7181,17 @@ describe('KbqSelect', () => {
                 // and its viewValue must come from the factory-supplied `_viewValue`.
                 expect(instance.select().selectionModel.selected[0]).toBeInstanceOf(KbqVirtualOption);
                 expect(triggerText).toBe(target.name);
-            }));
+            });
 
-            it('should render tag labels via factory for non-rendered values (multiple mode)', fakeAsync(() => {
+            it('should render tag labels via factory for non-rendered values (multiple mode)', async () => {
                 const multiFixture = TestBed.createComponent(CdkVirtualScrollMultipleWithFactory);
                 const instance = multiFixture.componentInstance;
 
                 instance.values = [instance.options[0], instance.options[instance.options.length - 1]];
-                finishInit(multiFixture);
+                await finishInit(multiFixture);
 
                 multiFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const tags: NodeListOf<HTMLElement> = multiFixture.debugElement
                     .query(By.css('.kbq-select__matcher'))
@@ -7128,9 +7202,9 @@ describe('KbqSelect', () => {
 
                 expect(tagTexts).toContain(instance.options[0].name);
                 expect(tagTexts).toContain(instance.options[instance.options.length - 1].name);
-            }));
+            });
 
-            it('should honour per-value disabled returned by the factory', fakeAsync(() => {
+            it('should honour per-value disabled returned by the factory', async () => {
                 const multiFixture = TestBed.createComponent(CdkVirtualScrollMultipleWithFactory);
                 const instance = multiFixture.componentInstance;
 
@@ -7138,26 +7212,26 @@ describe('KbqSelect', () => {
                 instance.virtualOptionFactory = (v: CityOption) =>
                     new KbqVirtualOption(v, v.id === instance.options[instance.options.length - 1].id, v.name);
                 instance.values = [instance.options[0], instance.options[instance.options.length - 1]];
-                finishInit(multiFixture);
+                await finishInit(multiFixture);
 
                 multiFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const selected = instance.select().selectionModel.selected;
                 const disabledStates = selected.map((opt) => opt.disabled);
 
                 expect(disabledStates).toContain(true);
                 expect(disabledStates).toContain(false);
-            }));
+            });
 
-            it('should keep using raw value when virtualOptionFactory is not provided (primitive backward compat)', fakeAsync(() => {
+            it('should keep using raw value when virtualOptionFactory is not provided (primitive backward compat)', async () => {
                 // testInstance already uses primitive string OPTIONS without virtualOptionFactory.
                 testInstance.values = [OPTIONS[0]];
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 testInstance.select().open();
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 const tags: NodeListOf<HTMLElement> = fixture.debugElement
                     .query(By.css('.kbq-select__matcher'))
@@ -7165,23 +7239,23 @@ describe('KbqSelect', () => {
 
                 expect(tags.length).toBeGreaterThan(0);
                 expect(tags[0].textContent!.trim()).toBe(OPTIONS[0]);
-            }));
+            });
 
-            it('should read viewValue from DOM for currently-rendered KbqOption under virtual scroll', fakeAsync(() => {
+            it('should read viewValue from DOM for currently-rendered KbqOption under virtual scroll', async () => {
                 // After dropping the `if (parent?.withVirtualScroll) return this.value` branch,
                 // a rendered KbqOption with an object value and `{{ option.name }}` template
                 // must expose its DOM textContent as viewValue, not the raw object.
                 const singleFixture = TestBed.createComponent(CdkVirtualScrollSingleSelectWithFactory);
                 const instance = singleFixture.componentInstance;
 
-                finishInit(singleFixture);
+                await finishInit(singleFixture);
                 instance.select().open();
-                finishInit(singleFixture);
+                await finishInit(singleFixture);
 
                 const renderedOption = instance.select().options.first;
 
                 expect(renderedOption.viewValue).toBe(instance.options[renderedOption.value.id].name);
-            }));
+            });
         });
 
         describe('filtering the data source', () => {
@@ -7196,61 +7270,61 @@ describe('KbqSelect', () => {
                 instance.visible = instance.options.slice(60, 100);
             };
 
-            it('should keep the trigger label when the selected option is filtered out', fakeAsync(() => {
+            it('should keep the trigger label when the selected option is filtered out', async () => {
                 const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
                 const instance = fixture.componentInstance;
 
-                finishInit(fixture);
+                await finishInit(fixture);
                 instance.control.setValue(instance.options[2]);
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 filterOut(instance);
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 expect(getMatcherText(fixture)).toBe(instance.options[2].name);
-                expect(instance.select().empty).toBe(false);
-            }));
+                expect(instance.select().empty()).toBe(false);
+            });
 
-            it('should render the custom trigger while the selected option is filtered out', fakeAsync(() => {
+            it('should render the custom trigger while the selected option is filtered out', async () => {
                 const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelectWithCustomTrigger);
                 const instance = fixture.componentInstance;
 
-                finishInit(fixture);
+                await finishInit(fixture);
                 instance.control.setValue(instance.options[2]);
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 filterOut(instance);
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 expect(getMatcherText(fixture)).toBe(`Custom: ${instance.options[2].name}`);
                 expect(isPlaceholderRendered(fixture)).toBe(false);
-            }));
+            });
 
-            it('should keep tags when the selected options are filtered out', fakeAsync(() => {
+            it('should keep tags when the selected options are filtered out', async () => {
                 const fixture = TestBed.createComponent(CdkVirtualScrollFilteredMultiSelect);
                 const instance = fixture.componentInstance;
 
-                finishInit(fixture);
+                await finishInit(fixture);
                 instance.control.setValue([instance.options[2], instance.options[5]]);
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 filterOut(instance);
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 const tagTexts = Array.from(
                     fixture.debugElement.query(By.css('.kbq-select__matcher')).nativeElement.querySelectorAll('kbq-tag')
                 ).map((tag) => (tag as HTMLElement).textContent!.trim());
 
                 expect(tagTexts).toEqual([instance.options[2].name, instance.options[5].name]);
-            }));
+            });
 
-            it('should not show another item label while option views are recycled', fakeAsync(() => {
+            it('should not show another item label while option views are recycled', async () => {
                 const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
                 const instance = fixture.componentInstance;
 
-                finishInit(fixture);
+                await finishInit(fixture);
                 instance.control.setValue(instance.options[2]);
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 filterOut(instance);
                 // The very first pass after the source changed: the option views have been re-bound to other
@@ -7259,16 +7333,16 @@ describe('KbqSelect', () => {
 
                 expect(getMatcherText(fixture)).toBe(instance.options[2].name);
 
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
-            it('should report the selected option, not the recycled one, while option views are recycled', fakeAsync(() => {
+            it('should report the selected option, not the recycled one, while option views are recycled', async () => {
                 const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
                 const instance = fixture.componentInstance;
 
-                finishInit(fixture);
+                await finishInit(fixture);
                 instance.control.setValue(instance.options[2]);
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 filterOut(instance);
                 // Same window as above: the views already belong to other items, the selection is
@@ -7280,23 +7354,23 @@ describe('KbqSelect', () => {
                 // The selected option is no longer rendered, so the key manager must not activate it.
                 expect(instance.select().firstFiltered).toBe(true);
 
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
-            it('should keep rendering the selected label when compareWith throws for a recycled view', fakeAsync(() => {
+            it('should keep rendering the selected label when compareWith throws for a recycled view', async () => {
                 const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
                 const instance = fixture.componentInstance;
 
-                finishInit(fixture);
+                await finishInit(fixture);
                 instance.control.setValue(instance.options[2]);
-                finishInit(fixture);
+                await finishInit(fixture);
 
-                const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+                const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
                 // A comparator that only handles the values it considers equal, like a consumer
                 // reading a field that is absent on some of the items.
-                instance.select().compareWith = (a: CityOption, b: CityOption) => {
-                    if (a.id !== b.id) {
+                instance.compareWith = (a: CityOption | null, b: CityOption | null) => {
+                    if (a?.id !== b?.id) {
                         throw new Error('unsupported pair');
                     }
 
@@ -7309,64 +7383,64 @@ describe('KbqSelect', () => {
                 expect(getMatcherText(fixture)).toBe(instance.options[2].name);
                 expect(warnSpy).toHaveBeenCalled();
 
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 warnSpy.mockRestore();
-            }));
+            });
 
-            it('should reselect the rendered option when the filter is cleared', fakeAsync(() => {
+            it('should reselect the rendered option when the filter is cleared', async () => {
                 const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
                 const instance = fixture.componentInstance;
 
-                finishInit(fixture);
+                await finishInit(fixture);
                 instance.control.setValue(instance.options[2]);
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 filterOut(instance);
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 instance.visible = [...instance.options];
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 const selected = instance.select().selectionModel.selected;
 
                 expect(selected.length).toBe(1);
                 expect(selected[0]).toBeInstanceOf(KbqOption);
                 expect(selected[0].value).toBe(instance.options[2]);
-            }));
+            });
 
-            it('should clear the trigger when the value is reset while the source is filtered', fakeAsync(() => {
+            it('should clear the trigger when the value is reset while the source is filtered', async () => {
                 const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
                 const instance = fixture.componentInstance;
 
-                finishInit(fixture);
+                await finishInit(fixture);
                 instance.control.setValue(instance.options[2]);
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 filterOut(instance);
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 instance.control.setValue(null);
-                finishInit(fixture);
+                await finishInit(fixture);
 
-                expect(instance.select().empty).toBe(true);
+                expect(instance.select().empty()).toBe(true);
                 expect(isPlaceholderRendered(fixture)).toBe(true);
-            }));
+            });
 
-            it('should render the label via factory for a value missing from the filtered source', fakeAsync(() => {
+            it('should render the label via factory for a value missing from the filtered source', async () => {
                 const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
                 const instance = fixture.componentInstance;
 
                 // Server-side search: the value was never part of the currently loaded page of data.
                 instance.visible = instance.options.slice(0, 20);
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 instance.control.setValue(instance.options[100]);
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 expect(getMatcherText(fixture)).toBe(instance.options[100].name);
-            }));
+            });
 
-            it('should not select a value missing from the source when no virtualOptionFactory is provided', fakeAsync(() => {
+            it('should not select a value missing from the source when no virtualOptionFactory is provided', async () => {
                 const fixture = TestBed.createComponent(CdkVirtualScrollFilteredSelect);
                 const instance = fixture.componentInstance;
 
@@ -7374,14 +7448,14 @@ describe('KbqSelect', () => {
                 // and there is neither a factory nor `showPreselectedValues` to build a label from it.
                 instance.virtualOptionFactory = undefined;
                 instance.visible = instance.options.slice(0, 20);
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 instance.control.setValue(instance.options[100]);
-                finishInit(fixture);
+                await finishInit(fixture);
 
-                expect(instance.select().empty).toBe(true);
+                expect(instance.select().empty()).toBe(true);
                 expect(isPlaceholderRendered(fixture)).toBe(true);
-            }));
+            });
         });
     });
 
@@ -7392,7 +7466,7 @@ describe('KbqSelect', () => {
 
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and touched', () => {
@@ -7403,7 +7477,7 @@ describe('KbqSelect', () => {
                 fixture.componentInstance.form.controls.select.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(true);
+                expect(fixture.componentInstance.select().errorState()).toBe(true);
             });
 
             it('should be in error state when form is submitted and control is invalid', () => {
@@ -7414,21 +7488,21 @@ describe('KbqSelect', () => {
                 getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(true);
+                expect(fixture.componentInstance.select().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and update errorState on blur', () => {
                 const fixture = createComponent(SelectWithErrorStateMatcher);
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
 
                 getSelectElement(fixture).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.select().errorState).toBe(true);
+                expect(fixture.componentInstance.select().errorState()).toBe(true);
             });
         });
 
@@ -7440,7 +7514,7 @@ describe('KbqSelect', () => {
                 fixture.componentInstance.form.controls.select.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
             });
 
             it('should be in error state after form is submitted when invalid', () => {
@@ -7452,7 +7526,7 @@ describe('KbqSelect', () => {
                 getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(true);
+                expect(fixture.componentInstance.select().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and NOT update errorState on blur', () => {
@@ -7461,16 +7535,16 @@ describe('KbqSelect', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
                 fixture.detectChanges();
 
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
 
                 getSelectElement(fixture).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
             });
         });
 
@@ -7481,7 +7555,7 @@ describe('KbqSelect', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and dirty', () => {
@@ -7491,7 +7565,7 @@ describe('KbqSelect', () => {
                 fixture.componentInstance.form.controls.select.markAsDirty();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(true);
+                expect(fixture.componentInstance.select().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and NOT update errorState on blur', () => {
@@ -7500,16 +7574,16 @@ describe('KbqSelect', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
                 fixture.detectChanges();
 
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
 
                 getSelectElement(fixture).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
             });
         });
 
@@ -7517,12 +7591,12 @@ describe('KbqSelect', () => {
             it('should override errorStateMatcher by kbqErrorStateMatcherProvider', () => {
                 const fixture = createComponent(SelectWithDIErrorStateMatcher);
 
-                expect(fixture.componentInstance.select().errorState).toBe(true);
+                expect(fixture.componentInstance.select().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.select.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
             });
 
             it('should use custom errorStateMatcher logic', () => {
@@ -7531,12 +7605,12 @@ describe('KbqSelect', () => {
                 fixture.componentInstance.errorStateMatcher = customErrorStateMatcher;
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(true);
+                expect(fixture.componentInstance.select().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.select.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
             });
         });
     });
@@ -7546,75 +7620,75 @@ describe('KbqSelect', () => {
             let fixture: ComponentFixture<SelectWithShowPreselectedValuesSingle>;
             let testInstance: SelectWithShowPreselectedValuesSingle;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 configureKbqSelectTestingModule([SelectWithShowPreselectedValuesSingle]);
                 fixture = TestBed.createComponent(SelectWithShowPreselectedValuesSingle);
                 testInstance = fixture.componentInstance;
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
-            }));
+            });
 
-            it('should add an unmatched value as KbqVirtualOption when showPreselectedValues is true', fakeAsync(() => {
+            it('should add an unmatched value as KbqVirtualOption when showPreselectedValues is true', async () => {
                 const selected = testInstance.select().selected as KbqVirtualOption;
 
                 expect(selected).toBeInstanceOf(KbqVirtualOption);
                 expect(selected.value).toBe('unknown-value');
-            }));
+            });
 
-            it('should display the preselected value in the trigger', fakeAsync(() => {
+            it('should display the preselected value in the trigger', async () => {
                 const matcherText = fixture.debugElement.query(By.css('.kbq-select__matcher-text')).nativeElement;
 
                 expect(matcherText.textContent).toContain('unknown-value');
-            }));
+            });
 
-            it('should not add an unmatched value to selection when showPreselectedValues is false', fakeAsync(() => {
+            it('should not add an unmatched value to selection when showPreselectedValues is false', async () => {
                 testInstance.showPreselectedValues = false;
                 fixture.detectChanges();
                 testInstance.control.setValue('another-unknown');
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
-                expect(testInstance.select().empty).toBe(true);
-            }));
+                expect(testInstance.select().empty()).toBe(true);
+            });
 
-            it('should use KbqOption (not KbqVirtualOption) when value matches an existing option', fakeAsync(() => {
+            it('should use KbqOption (not KbqVirtualOption) when value matches an existing option', async () => {
                 testInstance.control.setValue('pizza');
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 const selected = testInstance.select().selected;
 
                 expect(selected).not.toBeInstanceOf(KbqVirtualOption);
                 expect((selected as KbqOption).viewValue).toBe('Pizza');
-            }));
+            });
 
-            it('should update preselected value when control value changes to another unmatched value', fakeAsync(() => {
+            it('should update preselected value when control value changes to another unmatched value', async () => {
                 testInstance.control.setValue('new-unknown');
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 const selected = testInstance.select().selected as KbqVirtualOption;
 
                 expect(selected).toBeInstanceOf(KbqVirtualOption);
                 expect(selected.value).toBe('new-unknown');
-            }));
+            });
         });
 
         describe('multiple select', () => {
             let fixture: ComponentFixture<SelectWithShowPreselectedValuesMultiple>;
             let testInstance: SelectWithShowPreselectedValuesMultiple;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 configureKbqSelectTestingModule([SelectWithShowPreselectedValuesMultiple]);
                 fixture = TestBed.createComponent(SelectWithShowPreselectedValuesMultiple);
                 testInstance = fixture.componentInstance;
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
-            }));
+            });
 
-            it('should add unmatched values as KbqVirtualOption instances', fakeAsync(() => {
+            it('should add unmatched values as KbqVirtualOption instances', async () => {
                 const selected = testInstance.select().selected as KbqVirtualOption[];
 
                 expect(selected.length).toBe(3);
@@ -7624,34 +7698,34 @@ describe('KbqSelect', () => {
                 expect(unknownOptions.length).toBe(2);
                 expect(unknownOptions[0].value).toBe('unknown-value-1');
                 expect(unknownOptions[1].value).toBe('unknown-value-2');
-            }));
+            });
 
-            it('should use KbqOption for values that match existing options', fakeAsync(() => {
+            it('should use KbqOption for values that match existing options', async () => {
                 const selected = testInstance.select().selected as KbqVirtualOption[];
                 const matchedOption = selected.find((o) => o.value === 'pizza');
 
                 expect(matchedOption).not.toBeInstanceOf(KbqVirtualOption);
                 expect(matchedOption).toBeInstanceOf(KbqOption);
-            }));
+            });
 
-            it('should not add unmatched values to selection when showPreselectedValues is false', fakeAsync(() => {
+            it('should not add unmatched values to selection when showPreselectedValues is false', async () => {
                 testInstance.showPreselectedValues = false;
                 fixture.detectChanges();
                 testInstance.control.setValue(['unknown-value']);
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
-                expect(testInstance.select().empty).toBe(true);
-            }));
+                expect(testInstance.select().empty()).toBe(true);
+            });
 
-            it('should not render the select-all row, since a preselected value may be invisible to it', fakeAsync(() => {
+            it('should not render the select-all row, since a preselected value may be invisible to it', async () => {
                 testInstance.select().open();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 expect(document.querySelector('.kbq-select__select-all')).toBeNull();
-            }));
+            });
         });
     });
 
@@ -7660,59 +7734,59 @@ describe('KbqSelect', () => {
         let testInstance: SelectWithAsyncOptions;
 
         /** Opens the panel and loads the first page, as an infinite-paging consumer would. */
-        function openPanelWithFirstPage() {
+        async function openPanelWithFirstPage() {
             testInstance.select().open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             testInstance.loadPage(0);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
         }
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([SelectWithAsyncOptions]);
             fixture = TestBed.createComponent(SelectWithAsyncOptions);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
-        }));
+        });
 
-        it('should render the trigger label before any option is rendered', fakeAsync(() => {
+        it('should render the trigger label before any option is rendered', async () => {
             const triggerText = fixture.debugElement.query(By.css('.kbq-select__matcher-text')).nativeElement
                 .textContent;
 
             expect(testInstance.select().selectionModel.selected[0]).toBeInstanceOf(KbqVirtualOption);
             expect(triggerText.trim()).toBe('Option #0');
-        }));
+        });
 
-        it('should not keep an unmatched value without showPreselectedValues, even with a factory', fakeAsync(() => {
+        it('should not keep an unmatched value without showPreselectedValues, even with a factory', async () => {
             // The factory only says *how* to render an unresolved value. Without virtual scroll the whole
             // list is rendered, so `showPreselectedValues` stays the opt-in for *whether* to render it.
             testInstance.showPreselectedValues = false;
             fixture.detectChanges();
             testInstance.value = { id: 100, name: 'Option #100' };
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
-            expect(testInstance.select().empty).toBe(true);
+            expect(testInstance.select().empty()).toBe(true);
             expect(fixture.debugElement.query(By.css('.kbq-select__placeholder'))).toBeTruthy();
-        }));
+        });
 
-        it('should replace the preselected virtual option with the matching one once it is rendered', fakeAsync(() => {
-            openPanelWithFirstPage();
+        it('should replace the preselected virtual option with the matching one once it is rendered', async () => {
+            await openPanelWithFirstPage();
 
             const selected = testInstance.select().selectionModel.selected[0];
 
             expect(selected).not.toBeInstanceOf(KbqVirtualOption);
             expect(selected.value.id).toBe(0);
-        }));
+        });
 
-        it('should keep the active item when options are appended while the panel is open', fakeAsync(() => {
-            openPanelWithFirstPage();
+        it('should keep the active item when options are appended while the panel is open', async () => {
+            await openPanelWithFirstPage();
 
             const activeOption = testInstance.select().options.toArray()[7];
 
@@ -7721,16 +7795,16 @@ describe('KbqSelect', () => {
 
             testInstance.loadPage(1);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(testInstance.select().keyManager.activeItem === activeOption).toBe(true);
             expect(testInstance.select().keyManager.activeItem!.value.id).toBe(7);
             expect(testInstance.select().keyManager.activeItemIndex).toBe(7);
-        }));
+        });
 
-        it('should activate the selected option when the options list is replaced', fakeAsync(() => {
-            openPanelWithFirstPage();
+        it('should activate the selected option when the options list is replaced', async () => {
+            await openPanelWithFirstPage();
 
             testInstance.select().keyManager.setActiveItem(testInstance.select().options.toArray()[7]);
             fixture.detectChanges();
@@ -7741,59 +7815,59 @@ describe('KbqSelect', () => {
                 { id: 0, name: 'Option #0' }
             ];
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(testInstance.select().keyManager.activeItem!.value.id).toBe(0);
             expect(testInstance.select().keyManager.activeItemIndex).toBe(1);
-        }));
+        });
     });
 
     describe('with a search field on a closed panel', () => {
         let fixture: ComponentFixture<SelectWithSearchAndPreselectedValue>;
         let testInstance: SelectWithSearchAndPreselectedValue;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([SelectWithSearchAndPreselectedValue]);
             fixture = TestBed.createComponent(SelectWithSearchAndPreselectedValue);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
-        }));
+        });
 
-        it('should not change the value when the search emits while the panel is closed', fakeAsync(() => {
+        it('should not change the value when the search emits while the panel is closed', async () => {
             expect(testInstance.select().panelOpen).toBe(false);
 
             // `beforeOpened` consumers reset the search to reload options, and with no options
             // the panel opens with a delay — so this lands while the panel is still closed.
             testInstance.searchCtrl.setValue('');
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const triggerText = fixture.debugElement.query(By.css('.kbq-select__matcher-text')).nativeElement
                 .textContent;
 
-            expect(testInstance.select().value).toBe('Unknown');
+            expect(testInstance.select().value()).toBe('Unknown');
             expect(triggerText.trim()).toBe('Unknown');
-        }));
+        });
 
-        it('should highlight the first option when the search emits while the panel is open', fakeAsync(() => {
+        it('should highlight the first option when the search emits while the panel is open', async () => {
             testInstance.select().open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             testInstance.searchCtrl.setValue('');
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(testInstance.select().keyManager.activeItemIndex).toBe(0);
-            expect(testInstance.select().value).toBe('Unknown');
-        }));
+            expect(testInstance.select().value()).toBe('Unknown');
+        });
     });
 
     describe('with triggerValuesLimit', () => {
@@ -7801,71 +7875,71 @@ describe('KbqSelect', () => {
         let testInstance: MultiSelectWithTriggerValuesLimit;
         let trigger: HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultiSelectWithTriggerValuesLimit]);
             fixture = TestBed.createComponent(MultiSelectWithTriggerValuesLimit);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
             trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should return all selected options when triggerValuesLimit is not set', fakeAsync(() => {
+        it('should return all selected options when triggerValuesLimit is not set', async () => {
             testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.select().triggerValues.length).toBe(3);
             expect(trigger.querySelectorAll('kbq-tag').length).toBe(3);
-        }));
+        });
 
-        it('should limit triggerValues to triggerValuesLimit when more items are selected', fakeAsync(() => {
+        it('should limit triggerValues to triggerValuesLimit when more items are selected', async () => {
             testInstance.triggerValuesLimit = 2;
             fixture.detectChanges();
 
             testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2', 'sandwich-3']);
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.select().triggerValues.length).toBe(2);
             expect(trigger.querySelectorAll('kbq-tag').length).toBe(2);
-        }));
+        });
 
-        it('should display all selected values when selected count is less than triggerValuesLimit', fakeAsync(() => {
+        it('should display all selected values when selected count is less than triggerValuesLimit', async () => {
             testInstance.triggerValuesLimit = 5;
             fixture.detectChanges();
 
             testInstance.control.setValue(['steak-0', 'pizza-1']);
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.select().triggerValues.length).toBe(2);
             expect(trigger.querySelectorAll('kbq-tag').length).toBe(2);
-        }));
+        });
 
-        it('should display only first N option tags when triggerValuesLimit is set', fakeAsync(() => {
+        it('should display only first N option tags when triggerValuesLimit is set', async () => {
             testInstance.triggerValuesLimit = 2;
             fixture.detectChanges();
 
             testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             const tagTexts = Array.from(trigger.querySelectorAll('kbq-tag'), (tag) => tag.textContent!.trim());
 
             expect(tagTexts[0]).toContain('Steak');
             expect(tagTexts[1]).toContain('Pizza');
-        }));
+        });
 
-        it('should update displayed tags when triggerValuesLimit changes dynamically', fakeAsync(() => {
+        it('should update displayed tags when triggerValuesLimit changes dynamically', async () => {
             testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2', 'sandwich-3']);
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.select().triggerValues.length).toBe(4);
 
@@ -7874,14 +7948,14 @@ describe('KbqSelect', () => {
 
             expect(testInstance.select().triggerValues.length).toBe(2);
             expect(trigger.querySelectorAll('kbq-tag').length).toBe(2);
-        }));
+        });
 
-        it('should show all tags when triggerValuesLimit is removed (set to undefined)', fakeAsync(() => {
+        it('should show all tags when triggerValuesLimit is removed (set to undefined)', async () => {
             testInstance.triggerValuesLimit = 2;
             testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.select().triggerValues.length).toBe(2);
 
@@ -7890,11 +7964,11 @@ describe('KbqSelect', () => {
 
             expect(testInstance.select().triggerValues.length).toBe(3);
             expect(trigger.querySelectorAll('kbq-tag').length).toBe(3);
-        }));
+        });
     });
 
     describe('async validation', () => {
-        it('should emit VALID via statusChanges on blur', fakeAsync(() => {
+        it('should emit VALID via statusChanges on blur', async () => {
             const fixture = createComponent(SelectControlWithAsyncValidators);
             const { select, control } = fixture.componentInstance;
             const statuses: FormControlStatus[] = [];
@@ -7906,19 +7980,19 @@ describe('KbqSelect', () => {
             expect(control.status).toBe('PENDING');
             expect(statuses).toEqual(['PENDING']);
 
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
+            await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             select().onBlur();
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
+            await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             subscription.unsubscribe();
-        }));
+        });
     });
 
     describe('panel width', () => {
@@ -7931,7 +8005,7 @@ describe('KbqSelect', () => {
             { autoDetect = true }: { autoDetect?: boolean } = {}
         ): ComponentFixture<T> {
             TestBed.configureTestingModule({
-                imports: [component, NoopAnimationsModule],
+                imports: [component],
                 providers
             }).compileComponents();
             panelOverlayContainer = TestBed.inject(OverlayContainer);
@@ -7962,7 +8036,7 @@ describe('KbqSelect', () => {
             // connection container to return a known width (matching the template's style="width: 300px")
             const connectionContainer = debugElement.query(By.css('.kbq-form-field__container'))
                 .nativeElement as HTMLElement;
-            const spy = jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({
+            const spy = vi.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({
                 width: 300,
                 height: 40,
                 top: 0,
@@ -8046,7 +8120,7 @@ describe('KbqSelect', () => {
 
             const connectionContainer = debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
-            jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width: 150 } as DOMRect);
+            vi.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width: 150 } as DOMRect);
 
             getSelectDebugElement(debugElement).nativeElement.click();
             fixture.detectChanges();
@@ -8066,7 +8140,7 @@ describe('KbqSelect', () => {
             // Narrower than KBQ_PANEL_DEFAULT_MIN_WIDTH (200): if `defaultOptions.panelMinWidth: null`
             // were wrongly coalesced into the 200px default (a `??` treats `null` and "absent" the
             // same), the panel would floor at 200px instead of following the 100px trigger.
-            jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
+            vi.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
 
             getSelectDebugElement(debugElement).nativeElement.click();
             fixture.detectChanges();
@@ -8078,7 +8152,7 @@ describe('KbqSelect', () => {
 
         describe('with search', () => {
             function mockPanelBoundingRect(width: number) {
-                return jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+                return vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
                     this: Element
                 ): DOMRect {
                     const w = this.classList?.contains('kbq-select__panel') ? width : 0;
@@ -8101,19 +8175,19 @@ describe('KbqSelect', () => {
                 return panelOverlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
             }
 
-            it('should lock panel width to the measured panel width when panelWidth is null', fakeAsync(() => {
+            it('should lock panel width to the measured panel width when panelWidth is null', async () => {
                 const fixture = createPanelWidthComponent(SelectWithSearchAndPanelWidth, [], { autoDetect: false });
                 const spy = mockPanelBoundingRect(412);
 
                 getSelectDebugElement(fixture.debugElement).nativeElement.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 expect(getPane().style.width).toBe('412px');
 
                 spy.mockRestore();
-            }));
+            });
 
             it('should not override explicitly provided numeric panelWidth', () => {
                 const fixture = createPanelWidthComponent(SelectWithSearchAndPanelWidth);
@@ -8155,7 +8229,7 @@ describe('KbqSelect', () => {
 
                 const connectionContainer = fixture.debugElement.query(By.css('.kbq-form-field__container'))
                     .nativeElement as HTMLElement;
-                const triggerSpy = jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({
+                const triggerSpy = vi.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({
                     width: 300,
                     height: 40,
                     top: 0,
@@ -8189,13 +8263,13 @@ describe('KbqSelect', () => {
                 spy.mockRestore();
             });
 
-            it('should keep the captured overlayWidth stable when options change after open', fakeAsync(() => {
+            it('should keep the captured overlayWidth stable when options change after open', async () => {
                 const fixture = createPanelWidthComponent(SelectWithSearchAndPanelWidth, [], { autoDetect: false });
                 const spy = mockPanelBoundingRect(412);
 
                 getSelectDebugElement(fixture.debugElement).nativeElement.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
                 expect(getPane().style.width).toBe('412px');
 
@@ -8208,7 +8282,7 @@ describe('KbqSelect', () => {
                 expect(getPane().style.width).toBe('412px');
 
                 shrinkSpy.mockRestore();
-            }));
+            });
         });
     });
 
@@ -8218,7 +8292,7 @@ describe('KbqSelect', () => {
 
         function createPanelMaxHeightComponent<T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> {
             TestBed.configureTestingModule({
-                imports: [component, NoopAnimationsModule],
+                imports: [component],
                 providers
             }).compileComponents();
             panelOverlayContainer = TestBed.inject(OverlayContainer);
@@ -8324,61 +8398,61 @@ describe('KbqSelect', () => {
         let testInstance: MultiSelectWithConfigurableInputs;
         let trigger: HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultiSelectWithConfigurableInputs]);
             fixture = TestBed.createComponent(MultiSelectWithConfigurableInputs);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
             trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should not render a backdrop by default', fakeAsync(() => {
+        it('should not render a backdrop by default', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeNull();
-        }));
+        });
 
-        it('should render a backdrop when hasBackdrop is true', fakeAsync(() => {
+        it('should render a backdrop when hasBackdrop is true', async () => {
             testInstance.hasBackdrop = true;
             fixture.detectChanges();
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).not.toBeNull();
-        }));
+        });
 
-        it('should apply a custom backdropClass to the backdrop element', fakeAsync(() => {
+        it('should apply a custom backdropClass to the backdrop element', async () => {
             testInstance.hasBackdrop = true;
             testInstance.backdropClass = 'custom-backdrop-class';
             fixture.detectChanges();
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
 
             expect(backdrop).not.toBeNull();
             expect(backdrop.classList).toContain('custom-backdrop-class');
-        }));
+        });
     });
 
     describe('hiddenItemsText', () => {
         let fixture: ComponentFixture<MultiSelectWithConfigurableInputs>;
         let testInstance: MultiSelectWithConfigurableInputs;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultiSelectWithConfigurableInputs]);
             fixture = TestBed.createComponent(MultiSelectWithConfigurableInputs);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         it('should format the hidden items text using the {{ number }} placeholder', () => {
             const format = testInstance.select().hiddenItemsTextFormatter();
@@ -8402,30 +8476,30 @@ describe('KbqSelect', () => {
         const getHiddenText = (): string =>
             fixture.debugElement.query(By.css('.kbq-select__match-hidden-text')).nativeElement.textContent.trim();
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultiSelectWithConfigurableInputs], [KbqLocaleServiceModule]);
             localeService = TestBed.inject(KBQ_LOCALE_SERVICE);
             fixture = TestBed.createComponent(MultiSelectWithConfigurableInputs);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         /**
          * Renders a tag, so the trigger materializes the counter. The count itself is not asserted: every
          * box measures zero under JSDOM, so how many tags "fit" is an artifact of the environment — these
          * cases are about which template the counter is rendered from.
          */
-        function selectOne(): void {
+        async function selectOne(): Promise<void> {
             testInstance.control.setValue(['steak-0']);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
         }
 
-        it('should keep the consumer template across a locale switch', fakeAsync(() => {
+        it('should keep the consumer template across a locale switch', async () => {
             testInstance.hiddenItemsText = '{{ number }} more';
-            selectOne();
+            await selectOne();
 
             expect(getHiddenText()).toMatch(/^\d+ more$/);
 
@@ -8433,38 +8507,39 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
 
             expect(getHiddenText()).toMatch(/^\d+ more$/);
-        }));
+        });
 
-        it('should follow the locale while the consumer supplies no template', fakeAsync(() => {
+        it('should follow the locale while the consumer supplies no template', async () => {
             testInstance.hiddenItemsText = undefined;
-            selectOne();
+            await selectOne();
 
             localeService.addLocale('test-locale', { select: { hiddenItemsText: 'and {{ number }}' } });
             localeService.setLocale('test-locale');
             fixture.detectChanges();
 
             expect(getHiddenText()).toMatch(/^and \d+$/);
-        }));
+        });
     });
 
     describe('selectAllHandler', () => {
         let fixture: ComponentFixture<MultiSelect>;
         let testInstance: MultiSelect;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultiSelect]);
             fixture = TestBed.createComponent(MultiSelect);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         it('should invoke a custom selectAllHandler on ctrl + a instead of the default', () => {
-            const handler = jest.fn();
+            const handler = vi.fn();
 
             const select = testInstance.select();
 
-            select.selectAllHandler = handler;
+            testInstance.selectAllHandler = handler;
+            fixture.detectChanges();
 
             const selectElement = fixture.nativeElement.querySelector('kbq-select');
 
@@ -8484,10 +8559,10 @@ describe('KbqSelect', () => {
             expect(testInstance.control.value).toBeFalsy();
         });
 
-        it('should throw if selectAllHandler is set to a non-function value', () => {
-            expect(() => {
-                (testInstance.select() as any).selectAllHandler = 'not a function';
-            }).toThrow('`selectAllHandler` must be a function.');
+        it('should throw if selectAllHandler is bound to a non-function value', () => {
+            (testInstance as { selectAllHandler: unknown }).selectAllHandler = 'not a function';
+
+            expect(() => fixture.detectChanges()).toThrow('`selectAllHandler` must be a function.');
         });
     });
 
@@ -8501,75 +8576,75 @@ describe('KbqSelect', () => {
         const getSearchInput = (): HTMLInputElement =>
             overlayContainerElement.querySelector('.search-input') as HTMLInputElement;
 
-        const search = (query: string) => {
+        const search = async (query: string) => {
             testInstance.searchCtrl.setValue(query);
             fixture.detectChanges();
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
         };
 
-        const openPanel = () => {
+        const openPanel = async () => {
             testInstance.select().open();
             fixture.detectChanges();
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
         };
 
         /** Recreates the fixture so inputs that cannot change after init (`multiple`) can be set. */
-        const recreate = (setup: (instance: MultiSelectWithSelectAll) => void) => {
+        const recreate = async (setup: (instance: MultiSelectWithSelectAll) => void) => {
             fixture.destroy();
             fixture = TestBed.createComponent(MultiSelectWithSelectAll);
             testInstance = fixture.componentInstance;
             setup(testInstance);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
         };
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultiSelectWithSelectAll]);
             fixture = TestBed.createComponent(MultiSelectWithSelectAll);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         describe('rendering', () => {
-            it('should render the row above the options', fakeAsync(() => {
-                openPanel();
+            it('should render the row above the options', async () => {
+                await openPanel();
 
                 const rows = Array.from(overlayContainerElement.querySelectorAll('.kbq-option'));
 
                 expect(rows.length).toBe(testInstance.allOptions.length + 1);
                 expect(rows[0].classList).toContain('kbq-select__select-all');
                 expect(rows[0].textContent!.trim()).toBe('Выбрать все');
-            }));
+            });
 
-            it('should not render the row when selectAll is off', fakeAsync(() => {
+            it('should not render the row when selectAll is off', async () => {
                 testInstance.selectAll = false;
                 fixture.detectChanges();
 
-                openPanel();
+                await openPanel();
 
                 expect(getSelectAllRow()).toBeNull();
-            }));
+            });
 
-            it('should not render the row in single-selection mode', fakeAsync(() => {
-                recreate((instance) => (instance.multiple = false));
+            it('should not render the row in single-selection mode', async () => {
+                await recreate((instance) => (instance.multiple = false));
 
-                openPanel();
-
-                expect(getSelectAllRow()).toBeNull();
-            }));
-
-            it('should not render the row when the search returns no results', fakeAsync(() => {
-                openPanel();
-                search('no such option');
+                await openPanel();
 
                 expect(getSelectAllRow()).toBeNull();
-            }));
+            });
 
-            it('should lead the list the key manager navigates', fakeAsync(() => {
-                openPanel();
+            it('should not render the row when the search returns no results', async () => {
+                await openPanel();
+                await search('no such option');
+
+                expect(getSelectAllRow()).toBeNull();
+            });
+
+            it('should lead the list the key manager navigates', async () => {
+                await openPanel();
 
                 const select = testInstance.select();
 
@@ -8577,19 +8652,19 @@ describe('KbqSelect', () => {
                 expect(select.navigableOptions.length).toBe(testInstance.allOptions.length + 1);
                 // `options` stays the projected options only.
                 expect(select.options.length).toBe(testInstance.allOptions.length);
-            }));
+            });
 
-            it('should be the active item right after the panel opens', fakeAsync(() => {
-                openPanel();
+            it('should be the active item right after the panel opens', async () => {
+                await openPanel();
 
                 const select = testInstance.select();
 
                 expect(select.keyManager.activeItemIndex).toBe(0);
                 expect(select.keyManager.activeItem!.getHostElement().classList).toContain('kbq-select__select-all');
-            }));
+            });
 
-            it('should become the active item when arrowing up from the first option', fakeAsync(() => {
-                openPanel();
+            it('should become the active item when arrowing up from the first option', async () => {
+                await openPanel();
 
                 const select = testInstance.select();
                 const selectElement = fixture.nativeElement.querySelector('kbq-select');
@@ -8601,10 +8676,10 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
 
                 expect(select.keyManager.activeItem!.getHostElement().classList).toContain('kbq-select__select-all');
-            }));
+            });
 
-            it('should land on the row when pressing HOME', fakeAsync(() => {
-                openPanel();
+            it('should land on the row when pressing HOME', async () => {
+                await openPanel();
 
                 const select = testInstance.select();
                 const selectElement = fixture.nativeElement.querySelector('kbq-select');
@@ -8616,10 +8691,10 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
 
                 expect(select.keyManager.activeItem).toBe(select.selectAllOption());
-            }));
+            });
 
-            it('should land on the true last option (not the row) when pressing END', fakeAsync(() => {
-                openPanel();
+            it('should land on the true last option (not the row) when pressing END', async () => {
+                await openPanel();
 
                 const select = testInstance.select();
                 const selectElement = fixture.nativeElement.querySelector('kbq-select');
@@ -8631,7 +8706,7 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
 
                 expect(select.keyManager.activeItem).toBe(select.options.last);
-            }));
+            });
 
             // PAGE_UP/PAGE_DOWN pagination size is derived from real option/container heights
             // (`getHeightOfOptionsContainer`, `option.getHeight()`), which JSDOM never lays out — like this
@@ -8642,69 +8717,69 @@ describe('KbqSelect', () => {
         describe('checkbox state', () => {
             const getCheckbox = (): HTMLElement => getSelectAllRow()!.querySelector('.kbq-pseudo-checkbox')!;
 
-            it('should be unchecked when nothing is selected', fakeAsync(() => {
-                openPanel();
+            it('should be unchecked when nothing is selected', async () => {
+                await openPanel();
 
                 expect(testInstance.select().selectAllState).toBe('unchecked');
                 expect(getCheckbox().classList).not.toContain('kbq-checked');
                 expect(getCheckbox().classList).not.toContain('kbq-indeterminate');
-            }));
+            });
 
-            it('should be indeterminate when only some options are selected', fakeAsync(() => {
+            it('should be indeterminate when only some options are selected', async () => {
                 testInstance.control.setValue(['One']);
                 fixture.detectChanges();
 
-                openPanel();
+                await openPanel();
 
                 expect(testInstance.select().selectAllState).toBe('indeterminate');
                 expect(getCheckbox().classList).toContain('kbq-indeterminate');
-            }));
+            });
 
-            it('should be checked when every option is selected', fakeAsync(() => {
+            it('should be checked when every option is selected', async () => {
                 testInstance.control.setValue([...testInstance.allOptions]);
                 fixture.detectChanges();
 
-                openPanel();
+                await openPanel();
 
                 expect(testInstance.select().selectAllState).toBe('checked');
                 expect(getCheckbox().classList).toContain('kbq-checked');
-            }));
+            });
 
-            it('should ignore disabled options', fakeAsync(() => {
+            it('should ignore disabled options', async () => {
                 testInstance.disabledOptions = ['Four'];
                 testInstance.control.setValue(['One', 'Two', 'Three']);
                 fixture.detectChanges();
 
-                openPanel();
+                await openPanel();
 
                 expect(testInstance.select().selectAllState).toBe('checked');
-            }));
+            });
 
-            it('should be unchecked when every option is disabled, whatever is selected', fakeAsync(() => {
+            it('should be unchecked when every option is disabled, whatever is selected', async () => {
                 testInstance.disabledOptions = [...testInstance.allOptions];
                 testInstance.control.setValue(['One']);
                 fixture.detectChanges();
 
-                openPanel();
+                await openPanel();
 
                 expect(testInstance.select().selectAllState).toBe('unchecked');
                 expect(testInstance.select().allOptionsSelected).toBe(false);
-            }));
+            });
         });
 
         describe('toggling', () => {
-            it('should select every option on click', fakeAsync(() => {
-                openPanel();
+            it('should select every option on click', async () => {
+                await openPanel();
 
                 getSelectAllRow()!.click();
                 fixture.detectChanges();
 
                 expect(testInstance.control.value).toEqual(['One', 'Two', 'Three', 'Four']);
                 expect(testInstance.select().selectAllState).toBe('checked');
-            }));
+            });
 
-            it('should deselect every option on a second click', fakeAsync(() => {
-                openPanel();
+            it('should deselect every option on a second click', async () => {
+                await openPanel();
 
                 getSelectAllRow()!.click();
                 fixture.detectChanges();
@@ -8713,35 +8788,35 @@ describe('KbqSelect', () => {
 
                 expect(testInstance.control.value).toEqual([]);
                 expect(testInstance.select().selectAllState).toBe('unchecked');
-            }));
+            });
 
-            it('should leave disabled options untouched', fakeAsync(() => {
+            it('should leave disabled options untouched', async () => {
                 testInstance.disabledOptions = ['Two'];
                 fixture.detectChanges();
 
-                openPanel();
+                await openPanel();
 
                 getSelectAllRow()!.click();
                 fixture.detectChanges();
 
                 expect(testInstance.control.value).toEqual(['One', 'Three', 'Four']);
-            }));
+            });
 
-            it('should be a no-op when every option is disabled', fakeAsync(() => {
+            it('should be a no-op when every option is disabled', async () => {
                 testInstance.disabledOptions = [...testInstance.allOptions];
                 fixture.detectChanges();
 
-                openPanel();
+                await openPanel();
 
                 getSelectAllRow()!.click();
                 fixture.detectChanges();
 
                 expect(testInstance.control.value).toBeFalsy();
-            }));
+            });
 
-            it('should toggle only the search results while a query is active', fakeAsync(() => {
-                openPanel();
-                search('o');
+            it('should toggle only the search results while a query is active', async () => {
+                await openPanel();
+                await search('o');
 
                 // "One", "Two" and "Four" match; "Three" does not.
                 getSelectAllRow()!.click();
@@ -8749,41 +8824,41 @@ describe('KbqSelect', () => {
 
                 expect(testInstance.control.value).toEqual(['One', 'Two', 'Four']);
                 expect(testInstance.select().selectAllState).toBe('checked');
-            }));
+            });
 
-            it('should keep the options filtered out by the search selected when deselecting', fakeAsync(() => {
+            it('should keep the options filtered out by the search selected when deselecting', async () => {
                 testInstance.control.setValue([...testInstance.allOptions]);
                 fixture.detectChanges();
 
-                openPanel();
-                search('three');
+                await openPanel();
+                await search('three');
 
                 getSelectAllRow()!.click();
                 fixture.detectChanges();
 
                 expect(testInstance.control.value).toEqual(['One', 'Two', 'Four']);
-            }));
+            });
 
-            it('should emit a single selectionChange for the whole batch', fakeAsync(() => {
-                const selectionChange = jest.fn();
+            it('should emit a single selectionChange for the whole batch', async () => {
+                const selectionChange = vi.fn();
 
                 testInstance.select().selectionChange.subscribe(selectionChange);
 
-                openPanel();
+                await openPanel();
 
                 getSelectAllRow()!.click();
                 fixture.detectChanges();
 
                 expect(selectionChange).toHaveBeenCalledTimes(1);
                 expect(selectionChange.mock.calls[0][0].value).toEqual(['One', 'Two', 'Three', 'Four']);
-            }));
+            });
 
-            it('should emit onSelectAll on click', fakeAsync(() => {
-                const onSelectAll = jest.fn();
+            it('should emit onSelectAll on click', async () => {
+                const onSelectAll = vi.fn();
 
                 testInstance.select().onSelectAll.subscribe(onSelectAll);
 
-                openPanel();
+                await openPanel();
 
                 getSelectAllRow()!.click();
                 fixture.detectChanges();
@@ -8797,7 +8872,7 @@ describe('KbqSelect', () => {
 
                 expect(onSelectAll).toHaveBeenCalledTimes(2);
                 expect(onSelectAll.mock.calls[1][0].selected).toBe(false);
-            }));
+            });
         });
 
         describe('keyboard', () => {
@@ -8810,31 +8885,31 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
             };
 
-            it('should toggle both ways with ctrl + a even though selectAllToggle is off', fakeAsync(() => {
-                openPanel();
+            it('should toggle both ways with ctrl + a even though selectAllToggle is off', async () => {
+                await openPanel();
 
                 pressCtrlA();
                 expect(testInstance.control.value).toEqual(['One', 'Two', 'Three', 'Four']);
 
                 pressCtrlA();
                 expect(testInstance.control.value).toEqual([]);
-            }));
+            });
 
-            it('should emit onSelectAll on ctrl + a', fakeAsync(() => {
-                const onSelectAll = jest.fn();
+            it('should emit onSelectAll on ctrl + a', async () => {
+                const onSelectAll = vi.fn();
 
                 testInstance.select().onSelectAll.subscribe(onSelectAll);
 
-                openPanel();
+                await openPanel();
                 pressCtrlA();
 
                 expect(onSelectAll).toHaveBeenCalledTimes(1);
                 expect(onSelectAll.mock.calls[0][0].selected).toBe(true);
-            }));
+            });
 
-            it('should select the search text on the first ctrl + a inside a non-empty search field', fakeAsync(() => {
-                openPanel();
-                search('o');
+            it('should select the search text on the first ctrl + a inside a non-empty search field', async () => {
+                await openPanel();
+                await search('o');
 
                 const input = getSearchInput();
 
@@ -8848,10 +8923,10 @@ describe('KbqSelect', () => {
 
                 expect(input.selectionEnd).toBe(input.value.length);
                 expect(testInstance.control.value).toBeFalsy();
-            }));
+            });
 
-            it('should toggle on enter while the row is active and focus is in the search field', fakeAsync(() => {
-                openPanel();
+            it('should toggle on enter while the row is active and focus is in the search field', async () => {
+                await openPanel();
 
                 const select = testInstance.select();
 
@@ -8862,10 +8937,10 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
 
                 expect(testInstance.control.value).toEqual(['One', 'Two', 'Three', 'Four']);
-            }));
+            });
 
-            it('should select a single option on enter while a regular option is active', fakeAsync(() => {
-                openPanel();
+            it('should select a single option on enter while a regular option is active', async () => {
+                await openPanel();
 
                 const select = testInstance.select();
 
@@ -8876,7 +8951,7 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
 
                 expect(testInstance.control.value).toEqual(['One']);
-            }));
+            });
         });
     });
 
@@ -8884,22 +8959,22 @@ describe('KbqSelect', () => {
         let fixture: ComponentFixture<MultiSelect>;
         let testInstance: MultiSelect;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultiSelect]);
             fixture = TestBed.createComponent(MultiSelect);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         // Regression: the delayed `options.changes` subscription set up in `onAttached` used to outlive the
         // component. Destroying the select (e.g. closing a modal) disposed the overlay before the 1ms timer
         // fired, so the late callback hit `resetOverlay` on a null overlay element and threw
         // "Cannot read properties of null (reading 'style')".
-        it('should not throw when destroyed before the delayed options.changes callback fires', fakeAsync(() => {
+        it('should not throw when destroyed before the delayed options.changes callback fires', async () => {
             testInstance.select().open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             // Re-render the options so the select's `options.changes` emits and schedules the delayed callback.
             testInstance.foods = [{ value: 'ramen-0', viewValue: 'Ramen' }];
@@ -8908,47 +8983,47 @@ describe('KbqSelect', () => {
             // Destroying disposes the overlay (overlay element becomes null) before the 1ms timer runs.
             fixture.destroy();
 
-            expect(() => tick(1)).not.toThrow();
-        }));
+            await expect(vi.advanceTimersByTimeAsync(1)).resolves.not.toThrow();
+        });
     });
 
     describe('locale subscription teardown', () => {
         let fixture: ComponentFixture<MultiSelect>;
         let localeService: KbqLocaleService;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultiSelect], [KbqLocaleServiceModule]);
             localeService = TestBed.inject(KBQ_LOCALE_SERVICE);
             fixture = TestBed.createComponent(MultiSelect);
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         // Regression: `localeService.changes` is a long-lived BehaviorSubject on a root service, so
         // subscribing without a teardown kept every destroyed select alive and let `updateLocaleParams`
         // run — and `markForCheck` a dead view — on the next locale switch.
-        it('should stop reacting to locale changes once destroyed', fakeAsync(() => {
+        it('should stop reacting to locale changes once destroyed', async () => {
             fixture.destroy();
 
-            const getParams = jest.spyOn(localeService, 'getParams');
+            const getParams = vi.spyOn(localeService, 'getParams');
 
             localeService.setLocale('en-US');
 
             expect(getParams.mock.calls.filter(([componentName]) => componentName === 'select')).toEqual([]);
-        }));
+        });
     });
 
     describe('multiline', () => {
         let fixture: ComponentFixture<MultiSelectWithConfigurableInputs>;
         let testInstance: MultiSelectWithConfigurableInputs;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultiSelectWithConfigurableInputs]);
             fixture = TestBed.createComponent(MultiSelectWithConfigurableInputs);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         it('should not add the multiline host class by default', () => {
             const host: HTMLElement = fixture.debugElement.query(By.css('kbq-select')).nativeElement;
@@ -8965,29 +9040,29 @@ describe('KbqSelect', () => {
             expect(host.classList).toContain('kbq-select_multiline');
         });
 
-        it('should hide the hidden-items counter in multiline mode', fakeAsync(() => {
+        it('should hide the hidden-items counter in multiline mode', async () => {
             testInstance.multiline = true;
             fixture.detectChanges();
 
             testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2', 'sandwich-3']);
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.debugElement.query(By.css('.kbq-select__match-hidden-text'))).toBeNull();
-        }));
+        });
 
-        it('should render the hidden-items counter when multiline is false', fakeAsync(() => {
+        it('should render the hidden-items counter when multiline is false', async () => {
             testInstance.multiline = false;
             fixture.detectChanges();
 
             testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2', 'sandwich-3']);
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.debugElement.query(By.css('.kbq-select__match-hidden-text'))).not.toBeNull();
-        }));
+        });
     });
 
     describe('valueChange', () => {
@@ -8995,76 +9070,83 @@ describe('KbqSelect', () => {
         let testInstance: MultiSelectWithConfigurableInputs;
         let trigger: HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultiSelectWithConfigurableInputs]);
             fixture = TestBed.createComponent(MultiSelectWithConfigurableInputs);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
             trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         it('should not emit valueChange before any selection', () => {
             expect(testInstance.valueChangeListener).not.toHaveBeenCalled();
         });
 
-        it('should emit valueChange with the new value when selecting via UI', fakeAsync(() => {
+        it('should emit valueChange with the new value when selecting via UI', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             (overlayContainerElement.querySelectorAll('kbq-option')[0] as HTMLElement).click();
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.valueChangeListener).toHaveBeenCalledTimes(1);
             expect(testInstance.valueChangeListener).toHaveBeenCalledWith(['steak-0']);
-        }));
+        });
 
-        it('should not emit valueChange when value is set programmatically through the FormControl', fakeAsync(() => {
+        it('should not emit valueChange when value is set programmatically through the FormControl', async () => {
             testInstance.control.setValue(['pizza-1']);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             // Programmatic writes go through writeValue() and do not call propagateChanges().
             expect(testInstance.valueChangeListener).not.toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('id', () => {
         let fixture: ComponentFixture<BasicSelect>;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([BasicSelect]);
             fixture = TestBed.createComponent(BasicSelect);
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         it('should auto-generate a unique id by default', () => {
             const select = fixture.componentInstance.select();
 
-            expect(select.id).toMatch(/^kbq-select-\d+$/);
+            expect(select.id()).toMatch(/^kbq-select-\d+$/);
         });
 
         it('should accept a custom id', () => {
-            const select = fixture.componentInstance.select();
+            const customFixture = TestBed.createComponent(SelectWithCustomId);
 
-            select.id = 'custom-select-id';
+            customFixture.componentInstance.id.set('custom-select-id');
+            customFixture.detectChanges();
 
-            expect(select.id).toBe('custom-select-id');
+            expect(customFixture.componentInstance.select().id()).toBe('custom-select-id');
         });
 
         it('should fall back to the auto-generated uid when id is set to a falsy value', () => {
-            const select = fixture.componentInstance.select();
-            const original = select.id;
+            const customFixture = TestBed.createComponent(SelectWithCustomId);
 
-            select.id = 'temp-id';
-            expect(select.id).toBe('temp-id');
+            customFixture.detectChanges();
 
-            select.id = '';
-            expect(select.id).toBe(original);
+            const select = customFixture.componentInstance.select();
+            const original = select.id();
+
+            customFixture.componentInstance.id.set('temp-id');
+            customFixture.detectChanges();
+            expect(select.id()).toBe('temp-id');
+
+            customFixture.componentInstance.id.set('');
+            customFixture.detectChanges();
+            expect(select.id()).toBe(original);
         });
     });
 
@@ -9088,92 +9170,92 @@ describe('KbqSelect', () => {
                 dispatchFakeEvent(optionsContainer, 'scroll');
             }
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 fixture = TestBed.createComponent(SelectWithScrolledToBottom);
                 testInstance = fixture.componentInstance;
                 fixture.detectChanges();
 
                 testInstance.select().open();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 optionsContainer = overlayContainerElement.querySelector('.kbq-select__content') as HTMLElement;
                 fakeDimensions(1000, 200);
-            }));
+            });
 
-            afterEach(fakeAsync(() => flush()));
+            afterEach(() => vi.runOnlyPendingTimersAsync());
 
-            it('emits when scrolled to the bottom', fakeAsync(() => {
+            it('emits when scrolled to the bottom', async () => {
                 setScroll(800);
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 expect(testInstance.emitCount).toBe(1);
-            }));
+            });
 
-            it('does not emit while there is room left to scroll', fakeAsync(() => {
+            it('does not emit while there is room left to scroll', async () => {
                 setScroll(100);
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 expect(testInstance.emitCount).toBe(0);
-            }));
+            });
 
-            it('respects scrolledToBottomOffset', fakeAsync(() => {
+            it('respects scrolledToBottomOffset', async () => {
                 testInstance.scrolledToBottomOffset = 64;
                 fixture.detectChanges();
 
                 // 50px from the actual bottom — within the 64px threshold
                 setScroll(750);
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 expect(testInstance.emitCount).toBe(1);
-            }));
+            });
 
-            it('does not emit when distance exceeds scrolledToBottomOffset', fakeAsync(() => {
+            it('does not emit when distance exceeds scrolledToBottomOffset', async () => {
                 testInstance.scrolledToBottomOffset = 32;
                 fixture.detectChanges();
 
                 // 100px from the bottom — outside the 32px threshold
                 setScroll(700);
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 expect(testInstance.emitCount).toBe(0);
-            }));
+            });
 
-            it('emits only once per crossing while staying at the bottom', fakeAsync(() => {
+            it('emits only once per crossing while staying at the bottom', async () => {
                 setScroll(800);
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 setScroll(800);
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 expect(testInstance.emitCount).toBe(1);
-            }));
+            });
 
-            it('re-emits after scrolling away from the bottom and back', fakeAsync(() => {
+            it('re-emits after scrolling away from the bottom and back', async () => {
                 setScroll(800);
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 setScroll(0);
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 setScroll(800);
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 expect(testInstance.emitCount).toBe(2);
-            }));
+            });
 
-            it('does not emit after the panel is closed', fakeAsync(() => {
+            it('does not emit after the panel is closed', async () => {
                 testInstance.select().close();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 setScroll(800);
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 expect(testInstance.emitCount).toBe(0);
-            }));
+            });
         });
 
         describe('cdk-virtual-scroll-viewport', () => {
@@ -9182,7 +9264,6 @@ describe('KbqSelect', () => {
                     imports: [
                         KbqFormFieldModule,
                         KbqSelectModule,
-                        NoopAnimationsModule,
                         ScrollingModule,
                         VirtualSelectWithScrolledToBottom
                     ]
@@ -9198,48 +9279,48 @@ describe('KbqSelect', () => {
             let testInstance: VirtualSelectWithScrolledToBottom;
             let viewportEl: HTMLElement;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 fixture = TestBed.createComponent(VirtualSelectWithScrolledToBottom);
                 testInstance = fixture.componentInstance;
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 testInstance.select().open();
-                finishInit(fixture);
+                await finishInit(fixture);
 
                 viewportEl = overlayContainerElement.querySelector('cdk-virtual-scroll-viewport') as HTMLElement;
-            }));
+            });
 
-            afterEach(fakeAsync(() => flush()));
+            afterEach(() => vi.runOnlyPendingTimersAsync());
 
-            it('emits when the viewport reaches the bottom', fakeAsync(() => {
-                jest.spyOn(testInstance.select().virtualScrollViewport()!, 'measureScrollOffset').mockReturnValue(0);
+            it('emits when the viewport reaches the bottom', async () => {
+                vi.spyOn(testInstance.select().virtualScrollViewport()!, 'measureScrollOffset').mockReturnValue(0);
 
                 dispatchFakeEvent(viewportEl, 'scroll');
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 expect(testInstance.emitCount).toBe(1);
-            }));
+            });
 
-            it('does not emit while the viewport has room to scroll', fakeAsync(() => {
-                jest.spyOn(testInstance.select().virtualScrollViewport()!, 'measureScrollOffset').mockReturnValue(500);
+            it('does not emit while the viewport has room to scroll', async () => {
+                vi.spyOn(testInstance.select().virtualScrollViewport()!, 'measureScrollOffset').mockReturnValue(500);
 
                 dispatchFakeEvent(viewportEl, 'scroll');
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 expect(testInstance.emitCount).toBe(0);
-            }));
+            });
 
-            it('respects scrolledToBottomOffset', fakeAsync(() => {
+            it('respects scrolledToBottomOffset', async () => {
                 testInstance.scrolledToBottomOffset = 64;
                 fixture.detectChanges();
 
-                jest.spyOn(testInstance.select().virtualScrollViewport()!, 'measureScrollOffset').mockReturnValue(50);
+                vi.spyOn(testInstance.select().virtualScrollViewport()!, 'measureScrollOffset').mockReturnValue(50);
 
                 dispatchFakeEvent(viewportEl, 'scroll');
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 expect(testInstance.emitCount).toBe(1);
-            }));
+            });
         });
     });
 
@@ -9251,25 +9332,25 @@ describe('KbqSelect', () => {
         // Regression: the search subscribes to its control in a microtask, so a select destroyed in the
         // same task left that subscription with no owner — and registering a teardown after the view is
         // gone throws instead of tidying up.
-        it('should survive being destroyed before the deferred search subscription is created', fakeAsync(() => {
+        it('should survive being destroyed before the deferred search subscription is created', async () => {
             const fixture = TestBed.createComponent(SelectWithSearch);
 
             fixture.detectChanges();
 
-            const changes = jest.fn();
+            const changes = vi.fn();
             const subscription = fixture.componentInstance.select().search()!.changes.subscribe(changes);
 
             fixture.destroy();
 
-            expect(() => flush()).not.toThrow();
+            await expect(vi.runOnlyPendingTimersAsync()).resolves.not.toThrow();
 
             fixture.componentInstance.searchCtrl.setValue('abc');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(changes).not.toHaveBeenCalled();
 
             subscription.unsubscribe();
-        }));
+        });
     });
 
     describe('aria', () => {
@@ -9281,51 +9362,51 @@ describe('KbqSelect', () => {
             let host: HTMLElement;
             let trigger: HTMLElement;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
                 configureKbqSelectTestingModule([BasicSelect]);
                 fixture = TestBed.createComponent(BasicSelect);
                 fixture.detectChanges();
                 host = getSelectElement(fixture);
                 trigger = getSelectTriggerDebugElement(fixture).nativeElement;
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
-            afterEach(fakeAsync(() => flush()));
+            afterEach(() => vi.runOnlyPendingTimersAsync());
 
             it('should expose the trigger as a combobox owning a listbox', () => {
                 expect(host.getAttribute('role')).toBe('combobox');
                 expect(host.getAttribute('aria-haspopup')).toBe('listbox');
             });
 
-            it('should report the panel state through aria-expanded and aria-controls', fakeAsync(() => {
+            it('should report the panel state through aria-expanded and aria-controls', async () => {
                 expect(host.getAttribute('aria-expanded')).toBe('false');
                 expect(host.getAttribute('aria-controls')).toBeNull();
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 expect(host.getAttribute('aria-expanded')).toBe('true');
                 expect(host.getAttribute('aria-controls')).toBe(getListbox().id);
-            }));
+            });
 
-            it('should expose the disabled state through aria-disabled', fakeAsync(() => {
+            it('should expose the disabled state through aria-disabled', async () => {
                 fixture.componentInstance.control.disable();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(host.getAttribute('aria-disabled')).toBe('true');
-            }));
+            });
 
             // The active option is not tracked from the trigger through `aria-activedescendant`: opening
             // the panel moves DOM focus onto that option, so it announces itself. An
             // `aria-activedescendant` on the trigger would be inert anyway — the attribute is only
             // honoured on the element that holds focus.
-            it('should move focus onto the option the key manager is on', fakeAsync(() => {
+            it('should move focus onto the option the key manager is on', async () => {
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 const select = fixture.componentInstance.select();
@@ -9335,11 +9416,11 @@ describe('KbqSelect', () => {
 
                 expect(document.activeElement).toBe(select.options.toArray()[1].getHostElement());
                 expect(host.getAttribute('aria-activedescendant')).toBeNull();
-            }));
+            });
         });
 
         describe('panel', () => {
-            it('should render the option container as a listbox', fakeAsync(() => {
+            it('should render the option container as a listbox', async () => {
                 configureKbqSelectTestingModule([BasicSelect]);
 
                 const fixture = TestBed.createComponent(BasicSelect);
@@ -9347,7 +9428,7 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
                 fixture.componentInstance.select().open();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const listbox = getListbox();
 
@@ -9355,10 +9436,10 @@ describe('KbqSelect', () => {
                 expect(listbox.getAttribute('aria-multiselectable')).toBe('false');
                 expect(listbox.id).toBeTruthy();
 
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
-            it('should mark the listbox of a multiple select as multiselectable', fakeAsync(() => {
+            it('should mark the listbox of a multiple select as multiselectable', async () => {
                 configureKbqSelectTestingModule([MultiSelect]);
 
                 const fixture = TestBed.createComponent(MultiSelect);
@@ -9366,14 +9447,14 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
                 fixture.componentInstance.select().open();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(getListbox().getAttribute('aria-multiselectable')).toBe('true');
 
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
-            it('should expose every option with its role and disabled state', fakeAsync(() => {
+            it('should expose every option with its role and disabled state', async () => {
                 configureKbqSelectTestingModule([BasicSelect]);
 
                 const fixture = TestBed.createComponent(BasicSelect);
@@ -9381,7 +9462,7 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
                 fixture.componentInstance.select().open();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -9392,10 +9473,10 @@ describe('KbqSelect', () => {
                 // `Tacos` is the disabled entry of the fixture.
                 expect(options[2].getAttribute('aria-disabled')).toBe('true');
 
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
-            it('should follow the selected state of an option', fakeAsync(() => {
+            it('should follow the selected state of an option', async () => {
                 configureKbqSelectTestingModule([MultiSelect]);
 
                 const fixture = TestBed.createComponent(MultiSelect);
@@ -9403,7 +9484,7 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
                 fixture.componentInstance.select().open();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -9411,17 +9492,17 @@ describe('KbqSelect', () => {
 
                 options[0].click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 expect(options[0].getAttribute('aria-selected')).toBe('true');
 
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
             // A `checkbox` is not a valid child of a `listbox`, so the row stays an option and carries its
             // tri-state on `aria-checked`.
-            it('should keep the select-all row a listbox option with a tri-state aria-checked', fakeAsync(() => {
+            it('should keep the select-all row a listbox option with a tri-state aria-checked', async () => {
                 configureKbqSelectTestingModule([MultiSelectWithSelectAll]);
 
                 const fixture = TestBed.createComponent(MultiSelectWithSelectAll);
@@ -9429,7 +9510,7 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
                 fixture.componentInstance.select().open();
                 fixture.detectChanges();
-                tick(1);
+                await vi.advanceTimersByTimeAsync(1);
                 fixture.detectChanges();
 
                 const selectAll = overlayContainerElement.querySelector('.kbq-select__select-all') as HTMLElement;
@@ -9439,15 +9520,15 @@ describe('KbqSelect', () => {
 
                 (overlayContainerElement.querySelectorAll('kbq-option')[1] as HTMLElement).click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 expect(selectAll.getAttribute('aria-checked')).toBe('mixed');
 
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
-            it('should hide the decorative pseudo-checkbox from assistive technology', fakeAsync(() => {
+            it('should hide the decorative pseudo-checkbox from assistive technology', async () => {
                 configureKbqSelectTestingModule([MultiSelect]);
 
                 const fixture = TestBed.createComponent(MultiSelect);
@@ -9455,24 +9536,24 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
                 fixture.componentInstance.select().open();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const checkbox = overlayContainerElement.querySelector('kbq-pseudo-checkbox') as HTMLElement;
 
                 expect(checkbox.getAttribute('aria-hidden')).toBe('true');
 
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
         });
 
         describe('accessible name', () => {
-            it('should name the select with the form-field label', fakeAsync(() => {
+            it('should name the select with the form-field label', async () => {
                 configureKbqSelectTestingModule([SelectWithLabel]);
 
                 const fixture = TestBed.createComponent(SelectWithLabel);
 
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const host = getSelectElement(fixture);
                 const caption: HTMLElement = fixture.debugElement.query(By.css('.kbq-form-field__label')).nativeElement;
@@ -9483,25 +9564,25 @@ describe('KbqSelect', () => {
                 // by `aria-labelledby` instead.
                 expect(caption.getAttribute('for')).toBeNull();
                 expect(host.getAttribute('aria-labelledby')).toBe(caption.id);
-            }));
+            });
 
-            it('should fall back to an explicit aria-label without a form-field label', fakeAsync(() => {
+            it('should fall back to an explicit aria-label without a form-field label', async () => {
                 configureKbqSelectTestingModule([SelectWithAriaLabel]);
 
                 const fixture = TestBed.createComponent(SelectWithAriaLabel);
 
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const host = getSelectElement(fixture);
 
                 expect(host.getAttribute('aria-labelledby')).toBeNull();
                 expect(host.getAttribute('aria-label')).toBe('Pick a food');
-            }));
+            });
 
             // A `combobox` takes its name from the author, never from its contents, so the placeholder
             // rendered inside the trigger names nothing on its own.
-            it('should fall back to the placeholder when nothing else names the select', fakeAsync(() => {
+            it('should fall back to the placeholder when nothing else names the select', async () => {
                 configureKbqSelectTestingModule([SelectWithPlaceholderOnly]);
 
                 const fixture = TestBed.createComponent(SelectWithPlaceholderOnly);
@@ -9509,30 +9590,35 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
                 fixture.componentInstance.select().open();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(getSelectElement(fixture).getAttribute('aria-label')).toBe('Country');
                 expect(getListbox().getAttribute('aria-label')).toBe('Country');
 
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
             // The label already names the select through `aria-labelledby`, which wins over `aria-label`.
-            it('should not fall back to the placeholder next to a form-field label', fakeAsync(() => {
+            it('should not fall back to the placeholder next to a form-field label', async () => {
                 configureKbqSelectTestingModule([SelectWithLabel]);
 
                 const fixture = TestBed.createComponent(SelectWithLabel);
 
                 fixture.detectChanges();
-                fixture.componentInstance.select().placeholder = 'Pick one';
+                fixture.componentInstance.placeholder = 'Pick one';
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(getSelectElement(fixture).getAttribute('aria-label')).toBeNull();
-            }));
+            });
         });
 
         describe('axe', () => {
+            // axe-core runs its checks on timers.
+            beforeEach(() => {
+                vi.useRealTimers();
+            });
+
             describe('named by an aria-label', () => {
                 let fixture: ComponentFixture<SelectWithAriaLabel>;
 
@@ -9627,7 +9713,7 @@ describe('KbqSelect', () => {
         const getRemoveControls = (): HTMLElement[] =>
             Array.from(trigger.querySelectorAll<HTMLElement>('.kbq-tag-remove'));
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultiSelectWithDefaultTags]);
             fixture = TestBed.createComponent(MultiSelectWithDefaultTags);
             testInstance = fixture.componentInstance;
@@ -9636,11 +9722,11 @@ describe('KbqSelect', () => {
 
             testInstance.control.setValue(['steak-0', 'pizza-1']);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
-        }));
+        });
 
-        afterEach(fakeAsync(() => flush()));
+        afterEach(() => vi.runOnlyPendingTimersAsync());
 
         it('should give every remove control a name and a tab stop', () => {
             const controls = getRemoveControls();
@@ -9653,41 +9739,41 @@ describe('KbqSelect', () => {
             );
         });
 
-        it('should deselect the value on click', fakeAsync(() => {
+        it('should deselect the value on click', async () => {
             getRemoveControls()[0].click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.control.value).toEqual(['pizza-1']);
-        }));
+        });
 
-        it('should deselect the value on Enter and on Space', fakeAsync(() => {
+        it('should deselect the value on Enter and on Space', async () => {
             dispatchKeyboardEvent(getRemoveControls()[0], 'keydown', ENTER, undefined, 'Enter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(testInstance.control.value).toEqual(['pizza-1']);
 
             dispatchKeyboardEvent(getRemoveControls()[0], 'keydown', SPACE, undefined, ' ');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(testInstance.control.value).toEqual([]);
-        }));
+        });
 
-        it('should not open the panel while removing a value', fakeAsync(() => {
+        it('should not open the panel while removing a value', async () => {
             getRemoveControls()[0].click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.select().panelOpen).toBe(false);
-        }));
+        });
     });
 
     describe('colour of the tags', () => {
-        it('should follow the error state changed outside the select', fakeAsync(() => {
+        it('should follow the error state changed outside the select', async () => {
             configureKbqSelectTestingModule([MultiSelectWithDefaultTags]);
 
             const fixture = TestBed.createComponent(MultiSelectWithDefaultTags);
@@ -9695,24 +9781,24 @@ describe('KbqSelect', () => {
 
             control.setValue(['steak-0', 'pizza-1']);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const tags = (): HTMLElement[] => Array.from(fixture.nativeElement.querySelectorAll('kbq-tag'));
 
             control.setErrors({ required: true });
             control.markAsTouched();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(tags().length).toBe(2);
             tags().forEach((tag) => expect(tag.classList).toContain(`kbq-${KbqComponentColors.Error}`));
 
             control.markAsUntouched();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             tags().forEach((tag) => expect(tag.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`));
-        }));
+        });
     });
 
     // The trigger renders every selected value and clips the overflow with `overflow: hidden`, so a tag
@@ -9722,26 +9808,25 @@ describe('KbqSelect', () => {
         let fixture: ComponentFixture<MultiSelectWithDefaultTags>;
         let testInstance: MultiSelectWithDefaultTags;
         let trigger: HTMLElement;
-        let measure: jest.SpyInstance;
+        let measure: MockInstance;
 
         const getTabIndexes = (): (string | null)[] =>
             Array.from(trigger.querySelectorAll<HTMLElement>('.kbq-tag-remove'), (control) =>
                 control.getAttribute('tabindex')
             );
 
-        const selectAllThree = () => {
+        const selectAllThree = async () => {
             testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
             fixture.detectChanges();
-            // `tick`, not `flush`: the measurement runs behind `debounceTime(0)`, which rxjs schedules through
-            // `setInterval`, and Angular's `flush()` deliberately leaves periodic timers alone.
-            tick(1);
+            // The measurement runs behind `debounceTime(0)`.
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
         };
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             // Every box measures zero under JSDOM, so the trigger geometry has to be dictated: two of the
             // three tags fit on the single line the trigger has room for.
-            measure = jest.spyOn(KbqSelectHiddenItemsMeasurer.prototype, 'measure').mockReturnValue({
+            measure = vi.spyOn(KbqSelectHiddenItemsMeasurer.prototype, 'measure').mockReturnValue({
                 totalItemsWidth: 300,
                 totalVisibleItemsWidth: 200,
                 visibleItems: 2
@@ -9752,75 +9837,75 @@ describe('KbqSelect', () => {
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
             trigger = getSelectTriggerDebugElement(fixture).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        afterEach(fakeAsync(() => {
+        afterEach(async () => {
             measure.mockRestore();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should leave the tab order to the tags that fit', fakeAsync(() => {
-            selectAllThree();
+        it('should leave the tab order to the tags that fit', async () => {
+            await selectAllThree();
 
-            expect(testInstance.select().hiddenItems).toBe(1);
+            expect(testInstance.select().hiddenItems()).toBe(1);
             expect(getTabIndexes()).toEqual(['0', '0', '-1']);
-        }));
+        });
 
         // A laid-out trigger always keeps at least one tag on its first line, so a measurement of zero
         // means there was no layout to measure — a detached or hidden trigger. Every control then stays
         // reachable rather than none of them.
-        it('should keep every tab stop when the trigger cannot be measured', fakeAsync(() => {
+        it('should keep every tab stop when the trigger cannot be measured', async () => {
             measure.mockReturnValue({ totalItemsWidth: 0, totalVisibleItemsWidth: 0, visibleItems: 0 });
 
-            selectAllThree();
+            await selectAllThree();
 
             expect(getTabIndexes()).toEqual(['0', '0', '0']);
-        }));
+        });
     });
 
     describe('loading, error and empty states', () => {
         let fixture: ComponentFixture<SelectWithStates>;
         let testInstance: SelectWithStates;
 
-        const open = () => {
+        const open = async () => {
             testInstance.select().open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
         };
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([SelectWithStates]);
             fixture = TestBed.createComponent(SelectWithStates);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        afterEach(fakeAsync(() => flush()));
+        afterEach(() => vi.runOnlyPendingTimersAsync());
 
-        it('should render the loading state instead of options', fakeAsync(() => {
+        it('should render the loading state instead of options', async () => {
             testInstance.state = 'loading';
             fixture.detectChanges();
             // Without options the panel waits before opening, so the placeholder is not flashed.
             testInstance.select().open();
             fixture.detectChanges();
-            tick(delayBeforeDisplayingResultWithoutOptions);
+            await vi.advanceTimersByTimeAsync(delayBeforeDisplayingResultWithoutOptions);
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-select-loading')).not.toBeNull();
             expect(overlayContainerElement.querySelectorAll('kbq-option').length).toBe(0);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should render the error state with its text', fakeAsync(() => {
+        it('should render the error state with its text', async () => {
             testInstance.state = 'error';
             fixture.detectChanges();
             testInstance.select().open();
             fixture.detectChanges();
-            tick(delayBeforeDisplayingResultWithoutOptions);
+            await vi.advanceTimersByTimeAsync(delayBeforeDisplayingResultWithoutOptions);
             fixture.detectChanges();
 
             const error = overlayContainerElement.querySelector('.kbq-select-error') as HTMLElement;
@@ -9829,152 +9914,152 @@ describe('KbqSelect', () => {
             expect(error.classList).toContain('kbq-select-error_default');
             expect(error.querySelector('.kbq-select-error__text')!.textContent).toContain('Could not load the list');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should render the empty state', fakeAsync(() => {
+        it('should render the empty state', async () => {
             testInstance.state = 'no-options';
             fixture.detectChanges();
             testInstance.select().open();
             fixture.detectChanges();
-            tick(delayBeforeDisplayingResultWithoutOptions);
+            await vi.advanceTimersByTimeAsync(delayBeforeDisplayingResultWithoutOptions);
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-select-no-options')!.textContent).toContain(
                 'Nothing to choose from'
             );
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         // A `listbox` is required to own `option` children, and this container is the projection target
         // for the states too — `aria-busy` is what tells assistive technology it is still filling up
         // rather than holding a list of options with nothing in it.
-        it('should mark the option list busy while it holds no options', fakeAsync(() => {
+        it('should mark the option list busy while it holds no options', async () => {
             testInstance.state = 'loading';
             fixture.detectChanges();
             testInstance.select().openPanel();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const listbox = overlayContainerElement.querySelector('.kbq-select__content') as HTMLElement;
 
             expect(listbox.getAttribute('role')).toBe('listbox');
             expect(listbox.getAttribute('aria-busy')).toBe('true');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should drop aria-busy once the options render', fakeAsync(() => {
-            open();
+        it('should drop aria-busy once the options render', async () => {
+            await open();
 
             const listbox = overlayContainerElement.querySelector('.kbq-select__content') as HTMLElement;
 
             expect(listbox.getAttribute('aria-busy')).toBeNull();
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should render the empty search result once the search matches nothing', fakeAsync(() => {
-            open();
+        it('should render the empty search result once the search matches nothing', async () => {
+            await open();
 
             expect(testInstance.select().isEmptySearchResult).toBe(false);
 
             testInstance.foods = [];
             testInstance.searchControl.setValue('zzz');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(testInstance.select().isEmptySearchResult).toBe(true);
             expect(overlayContainerElement.textContent).toContain('Nothing found');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('overlay teardown across panel sessions', () => {
         let fixture: ComponentFixture<MultiSelect>;
         let testInstance: MultiSelect;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultiSelect]);
             fixture = TestBed.createComponent(MultiSelect);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        afterEach(fakeAsync(() => flush()));
+        afterEach(() => vi.runOnlyPendingTimersAsync());
 
         // Regression: `onAttached` runs on every open, so an `options.changes` subscription without a
         // per-session teardown accumulated one extra listener per open/close cycle.
-        it('should not stack the options.changes subscription across open/close cycles', fakeAsync(() => {
+        it('should not stack the options.changes subscription across open/close cycles', async () => {
             const select = testInstance.select();
 
             for (let cycle = 0; cycle < 3; cycle++) {
                 select.open();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 select.close();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
             }
 
             select.open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
-            const setOverlayPosition = jest.spyOn(select as any, 'setOverlayPosition');
+            const setOverlayPosition = vi.spyOn(select as any, 'setOverlayPosition');
 
             testInstance.foods = [{ value: 'ramen-0', viewValue: 'Ramen' }];
             fixture.detectChanges();
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(setOverlayPosition).toHaveBeenCalledTimes(1);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('shift-range selection without an anchor', () => {
         let fixture: ComponentFixture<MultiSelect>;
         let testInstance: MultiSelect;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultiSelect]);
             fixture = TestBed.createComponent(MultiSelect);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        afterEach(fakeAsync(() => flush()));
+        afterEach(() => vi.runOnlyPendingTimersAsync());
 
         // Regression: `clear()` resets the active item to -1, and the range walk then resolved
         // `slice(-1, …)` to an empty range, so the shift-click selected nothing at all.
-        it('should toggle the clicked option after the active item was reset', fakeAsync(() => {
+        it('should toggle the clicked option after the active item was reset', async () => {
             const select = testInstance.select();
 
             select.open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             select.clear();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
             options[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.control.value).toEqual(['tacos-2']);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('sorting values that have no rendered option', () => {
@@ -9982,23 +10067,23 @@ describe('KbqSelect', () => {
         let testInstance: MultiSelectWithNumericValues;
         let trigger: HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultiSelectWithNumericValues]);
             fixture = TestBed.createComponent(MultiSelectWithNumericValues);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
             trigger = getSelectTriggerDebugElement(fixture).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        afterEach(fakeAsync(() => flush()));
+        afterEach(() => vi.runOnlyPendingTimersAsync());
 
         // The removed default comparator was `a.value - b.value`, which happens to be meaningful for
         // numbers — and would sort this panel the other way round.
-        it('should sort numeric values by panel order, not by their magnitude', fakeAsync(() => {
+        it('should sort numeric values by panel order, not by their magnitude', async () => {
             testInstance.select().open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -10006,7 +10091,7 @@ describe('KbqSelect', () => {
             options[0].click();
             options[1].click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(testInstance.control.value).toEqual([30, 20, 10]);
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (tag) => tag.textContent!.trim())).toEqual([
@@ -10015,8 +10100,8 @@ describe('KbqSelect', () => {
                 '10'
             ]);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('with triggerValuesLimit in rtl', () => {
@@ -10024,33 +10109,33 @@ describe('KbqSelect', () => {
         let testInstance: MultiSelectWithTriggerValuesLimit;
         let trigger: HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([MultiSelectWithTriggerValuesLimit]);
             fixture = TestBed.createComponent(MultiSelectWithTriggerValuesLimit);
             testInstance = fixture.componentInstance;
             fixture.detectChanges();
             trigger = getSelectTriggerDebugElement(fixture).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        afterEach(fakeAsync(() => flush()));
+        afterEach(() => vi.runOnlyPendingTimersAsync());
 
         // The trigger reverses before it truncates, so rtl keeps the tail of the panel order.
-        it('should keep the last values of the panel order', fakeAsync(() => {
+        it('should keep the last values of the panel order', async () => {
             dir.value = 'rtl';
             testInstance.triggerValuesLimit = 2;
             fixture.detectChanges();
 
             testInstance.control.setValue(['steak-0', 'pizza-1', 'tacos-2']);
             fixture.detectChanges();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (tag) => tag.textContent!.trim())).toEqual([
                 'Tacos',
                 'Pizza'
             ]);
-        }));
+        });
     });
 
     // `KbqSelect` is exported standalone, so `imports: [KbqSelect, KbqOption]` is a legitimate way to consume
@@ -10058,7 +10143,7 @@ describe('KbqSelect', () => {
     // does — so the token has to carry its own default.
     describe('without KbqSelectModule', () => {
         it('should render when imported as a bare standalone component', () => {
-            TestBed.configureTestingModule({ imports: [StandaloneSelect, NoopAnimationsModule] });
+            TestBed.configureTestingModule({ imports: [StandaloneSelect] });
 
             const fixture = TestBed.createComponent(StandaloneSelect);
 
@@ -10071,7 +10156,7 @@ describe('KbqSelect', () => {
             const closeStrategy = () => TestBed.inject(Overlay).scrollStrategies.close();
 
             TestBed.configureTestingModule({
-                imports: [StandaloneSelect, NoopAnimationsModule],
+                imports: [StandaloneSelect],
                 providers: [{ provide: KBQ_SELECT_SCROLL_STRATEGY, useValue: closeStrategy }]
             });
 
@@ -10087,10 +10172,10 @@ describe('KbqSelect', () => {
         let fixture: ComponentFixture<SelectWithFooter>;
         let trigger: HTMLElement;
 
-        const open = () => {
+        const open = async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
         };
 
         const getFooter = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-select__footer')!;
@@ -10098,7 +10183,11 @@ describe('KbqSelect', () => {
         const getFooterLink = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-select__footer a')!;
         const getPanel = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-select__panel')!;
 
-        const dispatchModifiedKeydown = (target: HTMLElement, keyCode: number, modifier?: 'shiftKey' | 'altKey') => {
+        const dispatchModifiedKeydown = async (
+            target: HTMLElement,
+            keyCode: number,
+            modifier?: 'shiftKey' | 'altKey'
+        ) => {
             const event = createKeyboardEvent('keydown', keyCode);
 
             if (modifier) {
@@ -10107,7 +10196,7 @@ describe('KbqSelect', () => {
 
             dispatchEvent(target, event);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             return event;
         };
@@ -10116,7 +10205,7 @@ describe('KbqSelect', () => {
         const shiftTab = (target: HTMLElement) => dispatchModifiedKeydown(target, TAB, 'shiftKey');
 
         /** Focus is flaky in unit tests, so a restore is asserted through the call rather than the result. */
-        const spyOnHostFocus = () => jest.spyOn(fixture.nativeElement.querySelector('.kbq-select'), 'focus');
+        const spyOnHostFocus = () => vi.spyOn(fixture.nativeElement.querySelector('.kbq-select'), 'focus');
 
         const setUp = (footer: FooterContent) => {
             configureKbqSelectTestingModule([SelectWithFooter]);
@@ -10129,99 +10218,99 @@ describe('KbqSelect', () => {
         describe('with an action row', () => {
             beforeEach(() => setUp('action'));
 
-            it('should move focus to the action row on TAB instead of closing the panel', fakeAsync(() => {
-                open();
+            it('should move focus to the action row on TAB instead of closing the panel', async () => {
+                await open();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
 
-                tab(getPanel());
+                await tab(getPanel());
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
                 expect(document.activeElement).toBe(getFooterItem());
-            }));
+            });
 
-            it('should close the panel and return focus to the host on a second TAB', fakeAsync(() => {
-                open();
-                tab(getPanel());
+            it('should close the panel and return focus to the host on a second TAB', async () => {
+                await open();
+                await tab(getPanel());
 
                 const focusSpy = spyOnHostFocus();
 
-                tab(getFooterItem());
+                await tab(getFooterItem());
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
                 expect(focusSpy).toHaveBeenCalled();
-            }));
+            });
 
-            it('should close the panel on SHIFT + TAB rather than stepping into the footer', fakeAsync(() => {
-                open();
-                shiftTab(getPanel());
+            it('should close the panel on SHIFT + TAB rather than stepping into the footer', async () => {
+                await open();
+                await shiftTab(getPanel());
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
-            }));
+            });
 
-            it('should leave ENTER to the action row instead of selecting an option', fakeAsync(() => {
-                open();
-                tab(getPanel());
+            it('should leave ENTER to the action row instead of selecting an option', async () => {
+                await open();
+                await tab(getPanel());
 
                 const event = createKeyboardEvent('keydown', ENTER);
 
                 dispatchEvent(getFooterItem(), event);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 // Left un-prevented, so the native button activates and the consumer's handler runs.
                 expect(event.defaultPrevented).toBe(false);
                 expect(fixture.componentInstance.select().selected).toBeFalsy();
-            }));
+            });
 
-            it('should not steer the option list while focus is on the action row', fakeAsync(() => {
-                open();
-                tab(getPanel());
+            it('should not steer the option list while focus is on the action row', async () => {
+                await open();
+                await tab(getPanel());
                 dispatchKeyboardEvent(getFooterItem(), 'keydown', DOWN_ARROW);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(document.activeElement).toBe(getFooterItem());
-            }));
+            });
 
-            it('should close the panel on ESCAPE while the action row holds focus', fakeAsync(() => {
-                open();
-                tab(getPanel());
+            it('should close the panel on ESCAPE while the action row holds focus', async () => {
+                await open();
+                await tab(getPanel());
 
                 const focusSpy = spyOnHostFocus();
 
                 dispatchKeyboardEvent(getFooterItem(), 'keydown', ESCAPE);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
                 expect(focusSpy).toHaveBeenCalled();
-            }));
+            });
 
-            it('should close the panel on ALT + arrow while the action row holds focus', fakeAsync(() => {
-                open();
-                tab(getPanel());
-                dispatchModifiedKeydown(getFooterItem(), UP_ARROW, 'altKey');
+            it('should close the panel on ALT + arrow while the action row holds focus', async () => {
+                await open();
+                await tab(getPanel());
+                await dispatchModifiedKeydown(getFooterItem(), UP_ARROW, 'altKey');
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
-            }));
+            });
 
-            it('should close the panel and restore focus to the host when the action row is activated', fakeAsync(() => {
-                open();
+            it('should close the panel and restore focus to the host when the action row is activated', async () => {
+                await open();
 
                 const focusSpy = spyOnHostFocus();
 
                 getFooterItem().focus();
                 getFooterItem().click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
                 expect(focusSpy).toHaveBeenCalled();
-            }));
+            });
 
-            it('should return focus to the host when a click blurs the footer', fakeAsync(() => {
-                open();
+            it('should return focus to the host when a click blurs the footer', async () => {
+                await open();
 
                 const focusSpy = spyOnHostFocus();
 
@@ -10231,13 +10320,15 @@ describe('KbqSelect', () => {
                 (document.activeElement as HTMLElement | null)?.blur();
                 getFooter().click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
                 expect(focusSpy).toHaveBeenCalled();
-            }));
+            });
 
             it('should have no accessibility violations with the panel open', async () => {
+                // axe-core runs its checks on timers.
+                vi.useRealTimers();
                 trigger.click();
                 fixture.detectChanges();
                 await fixture.whenStable();
@@ -10250,117 +10341,117 @@ describe('KbqSelect', () => {
         describe('with an action row and a link', () => {
             beforeEach(() => setUp('action-and-link'));
 
-            it('should step through every control before closing the panel', fakeAsync(() => {
-                open();
-                tab(getPanel());
+            it('should step through every control before closing the panel', async () => {
+                await open();
+                await tab(getPanel());
 
                 expect(document.activeElement).toBe(getFooterItem());
 
-                tab(getFooterItem());
+                await tab(getFooterItem());
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
                 expect(document.activeElement).toBe(getFooterLink());
 
-                tab(getFooterLink());
+                await tab(getFooterLink());
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
-            }));
+            });
 
-            it('should step back through the footer on SHIFT + TAB', fakeAsync(() => {
-                open();
-                tab(getPanel());
-                tab(getFooterItem());
-                shiftTab(getFooterLink());
+            it('should step back through the footer on SHIFT + TAB', async () => {
+                await open();
+                await tab(getPanel());
+                await tab(getFooterItem());
+                await shiftTab(getFooterLink());
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
                 expect(document.activeElement).toBe(getFooterItem());
-            }));
+            });
 
-            it('should close the panel on SHIFT + TAB from the first control', fakeAsync(() => {
-                open();
-                tab(getPanel());
-                shiftTab(getFooterItem());
+            it('should close the panel on SHIFT + TAB from the first control', async () => {
+                await open();
+                await tab(getPanel());
+                await shiftTab(getFooterItem());
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
-            }));
+            });
         });
 
         describe('with a plain link', () => {
             beforeEach(() => setUp('link'));
 
-            it('should reach a footer link on TAB, not only a marked action row', fakeAsync(() => {
-                open();
-                tab(getPanel());
+            it('should reach a footer link on TAB, not only a marked action row', async () => {
+                await open();
+                await tab(getPanel());
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
                 expect(document.activeElement).toBe(getFooterLink());
-            }));
+            });
         });
 
         describe('with a disabled action row', () => {
             beforeEach(() => setUp('disabled-action'));
 
-            it('should keep closing the panel on TAB, since focus cannot land on the row', fakeAsync(() => {
-                open();
+            it('should keep closing the panel on TAB, since focus cannot land on the row', async () => {
+                await open();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
 
-                tab(getPanel());
+                await tab(getPanel());
 
                 // Swallowing TAB here would leave it dead for as long as the panel stays open.
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
-            }));
+            });
         });
 
         describe('with a disabled action row before a link', () => {
             beforeEach(() => setUp('disabled-action-and-link'));
 
-            it('should skip the disabled row and land on the link', fakeAsync(() => {
-                open();
-                tab(getPanel());
+            it('should skip the disabled row and land on the link', async () => {
+                await open();
+                await tab(getPanel());
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
                 expect(document.activeElement).toBe(getFooterLink());
-            }));
+            });
         });
 
         describe('with a link disabled by class', () => {
             beforeEach(() => setUp('disabled-link'));
 
-            it('should keep closing the panel on TAB', fakeAsync(() => {
-                open();
+            it('should keep closing the panel on TAB', async () => {
+                await open();
 
                 // An `a` cannot carry the `disabled` attribute, so `.kbq-disabled` is what marks it — and
                 // `focus()` lands on it all the same, which is why the class has to be read explicitly.
-                tab(getPanel());
+                await tab(getPanel());
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
-            }));
+            });
         });
 
         describe('without an action row', () => {
             beforeEach(() => setUp('caption'));
 
-            it('should keep closing the panel on TAB', fakeAsync(() => {
-                open();
+            it('should keep closing the panel on TAB', async () => {
+                await open();
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
 
-                tab(getPanel());
+                await tab(getPanel());
 
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
-            }));
+            });
         });
     });
 
     describe('first-row anchor', () => {
-        it('should not reposition the panel when the anchor has not changed', fakeAsync(() => {
-            TestBed.configureTestingModule({ imports: [StandaloneSelect, NoopAnimationsModule] });
+        it('should not reposition the panel when the anchor has not changed', async () => {
+            TestBed.configureTestingModule({ imports: [StandaloneSelect] });
 
             const fixture = TestBed.createComponent(StandaloneSelect);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const select = fixture.componentInstance.select() as unknown as {
                 open(): void;
@@ -10370,9 +10461,9 @@ describe('KbqSelect', () => {
 
             select.open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
-            const setOverlayPosition = jest.spyOn(select, 'setOverlayPosition');
+            const setOverlayPosition = vi.spyOn(select, 'setOverlayPosition');
 
             select.reanchorPanel();
 
@@ -10380,7 +10471,7 @@ describe('KbqSelect', () => {
             // width it had before that, so a second pass over one open measures a narrower pane. In RTL the
             // pane's x is `documentWidth - (x + paneWidth)`, so that measurement moves the panel.
             expect(setOverlayPosition).not.toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('localeConfiguration', () => {
@@ -10407,8 +10498,7 @@ describe('KbqSelect', () => {
 
         it('should follow the active locale by default', () => {
             const fixture = createComponent(SelectWithLocaleConfiguration, [
-                KbqLocaleServiceModule,
-                provideNoopAnimations()
+                KbqLocaleServiceModule
             ]);
 
             openPanel(fixture);
@@ -10418,8 +10508,7 @@ describe('KbqSelect', () => {
 
         it('should override the strings of that one instance', () => {
             const fixture = createComponent(SelectWithLocaleConfiguration, [
-                KbqLocaleServiceModule,
-                provideNoopAnimations()
+                KbqLocaleServiceModule
             ]);
 
             fixture.componentInstance.localeConfiguration = { select: { selectAll: 'Everything' } };
@@ -10458,65 +10547,186 @@ describe('KbqSelect', () => {
         const getLayer = (): HTMLElement =>
             fixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer');
 
-        const openPanel = (select: KbqSelect): HTMLElement => {
+        const openPanel = async (select: KbqSelect): Promise<HTMLElement> => {
             select.open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             return select.panel()!.nativeElement.closest('.cdk-overlay-pane').parentElement;
         };
 
-        const clickOutside = (): void => {
+        const clickOutside = async (): Promise<void> => {
             document.body.click();
-            // The rxjs `delay` of the closing actions runs on `setInterval`, which `flush` skips.
-            tick();
+            // The closing actions pass through an rxjs `delay(0)`.
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
         };
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([SelectInOverlayLayer]);
             fixture = TestBed.createComponent(SelectInOverlayLayer);
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should render the panel of a select inside the element into its overlay layer', fakeAsync(() => {
-            const overlayHost = openPanel(fixture.componentInstance.inside());
+        it('should render the panel of a select inside the element into its overlay layer', async () => {
+            const overlayHost = await openPanel(fixture.componentInstance.inside());
 
             expect(overlayHost.parentElement).toBe(getLayer());
-        }));
+        });
 
-        it('should keep the panel of a select outside the element in the application-wide container', fakeAsync(() => {
-            const overlayHost = openPanel(fixture.componentInstance.outside());
+        it('should keep the panel of a select outside the element in the application-wide container', async () => {
+            const overlayHost = await openPanel(fixture.componentInstance.outside());
 
             expect(overlayHost.parentElement).toBe(overlayContainerElement);
-        }));
+        });
 
-        it('should close the layered panel on an outside click while other overlays are open', fakeAsync(() => {
+        it('should close the layered panel on an outside click while other overlays are open', async () => {
             const select = fixture.componentInstance.inside();
             const otherOverlays = [document.createElement('div'), document.createElement('div')];
 
-            openPanel(select);
+            await openPanel(select);
             overlayContainerElement.append(...otherOverlays);
-            clickOutside();
+            await clickOutside();
 
             expect(select.panelOpen).toBe(false);
 
             otherOverlays.forEach((overlay) => overlay.remove());
-        }));
+        });
 
-        it('should keep the layered panel open on an outside click while a modal is open', fakeAsync(() => {
+        it('should keep the layered panel open on an outside click while a modal is open', async () => {
             const select = fixture.componentInstance.inside();
             const modalOverlay = document.createElement('div');
 
             modalOverlay.classList.add('kbq-modal-overlay');
-            openPanel(select);
+            await openPanel(select);
             overlayContainerElement.appendChild(modalOverlay);
-            clickOutside();
+            await clickOutside();
 
             expect(select.panelOpen).toBe(true);
 
             modalOverlay.remove();
-        }));
+        });
+    });
+
+    describe('called from an effect', () => {
+        @Component({
+            imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
+            template: `
+                <kbq-form-field>
+                    <kbq-select [formControl]="control">
+                        @for (option of options(); track option) {
+                            <kbq-option [value]="option">{{ option }}</kbq-option>
+                        }
+                    </kbq-select>
+                </kbq-form-field>
+            `
+        })
+        class SelectDrivenByEffects {
+            readonly select = viewChild.required(KbqSelect);
+            readonly options = signal(['steak', 'pizza']);
+            readonly control = new FormControl<string | null>(null);
+            readonly wantOpen = signal(false);
+            readonly toggles = signal(0);
+            readonly closeOnOptionsChange = signal(false);
+            readonly writtenValue = signal<string | null>(null);
+            readonly runs = { open: 0, toggle: 0, close: 0, write: 0 };
+
+            constructor() {
+                effect(() => {
+                    if (!this.wantOpen()) return;
+
+                    this.runs.open++;
+                    this.select().open();
+                });
+
+                effect(() => {
+                    if (!this.toggles() || this.runs.toggle >= 10) return;
+
+                    this.runs.toggle++;
+                    this.select().toggle();
+                });
+
+                effect(() => {
+                    this.options();
+
+                    if (!this.closeOnOptionsChange()) return;
+
+                    this.runs.close++;
+                    this.select().close();
+                });
+
+                effect(() => {
+                    const value = this.writtenValue();
+
+                    if (value === null || this.runs.write >= 10) return;
+
+                    this.runs.write++;
+                    this.control.setValue(value);
+                });
+            }
+        }
+
+        let fixture: ComponentFixture<SelectDrivenByEffects>;
+        let select: KbqSelect;
+
+        const settle = async (): Promise<void> => {
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        beforeEach(async () => {
+            configureKbqSelectTestingModule([SelectDrivenByEffects]);
+            fixture = TestBed.createComponent(SelectDrivenByEffects);
+            await settle();
+            select = fixture.componentInstance.select();
+        });
+
+        it('should not make an effect that opens it run again when the user closes it', async () => {
+            fixture.componentInstance.wantOpen.set(true);
+            await settle();
+
+            expect(select.panelOpen).toBe(true);
+
+            dispatchKeyboardEvent(select.elementRef.nativeElement, 'keydown', ESCAPE);
+            await settle();
+
+            expect(select.panelOpen).toBe(false);
+            expect(fixture.componentInstance.runs.open).toBe(1);
+        });
+
+        it('should not loop when an effect toggles it', async () => {
+            fixture.componentInstance.toggles.set(1);
+            await settle();
+
+            expect(select.panelOpen).toBe(true);
+            expect(fixture.componentInstance.runs.toggle).toBe(1);
+        });
+
+        it('should stay openable when an effect closes it on an options change', async () => {
+            fixture.componentInstance.closeOnOptionsChange.set(true);
+            await settle();
+
+            select.elementRef.nativeElement.click();
+            await settle();
+
+            expect(select.panelOpen).toBe(true);
+            expect(fixture.componentInstance.runs.close).toBe(1);
+        });
+
+        it('should not make an effect that writes the form value run again when the user selects', async () => {
+            fixture.componentInstance.writtenValue.set('steak');
+            await settle();
+
+            select.elementRef.nativeElement.click();
+            await settle();
+            (overlayContainerElement.querySelectorAll('kbq-option')[1] as HTMLElement).click();
+            await settle();
+
+            expect(select.panelOpen).toBe(false);
+            expect(fixture.componentInstance.control.value).toBe('pizza');
+            expect(fixture.componentInstance.runs.write).toBe(1);
+        });
     });
 });

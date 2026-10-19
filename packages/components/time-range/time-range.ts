@@ -14,6 +14,7 @@ import {
     Signal,
     signal,
     TemplateRef,
+    untracked,
     ViewEncapsulation,
     WritableSignal
 } from '@angular/core';
@@ -219,6 +220,14 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
 
     /** Implemented as part of ControlValueAccessor */
     writeValue(value: KbqTimeRangeRange | null): void {
+        // Untracked, as `setDisabledState()`: a form control set from a consumer's `effect()` writes here on the
+        // spot, and the inputs read on the way — and the editor's bounds, through its validators — would make the
+        // effect run again.
+        untracked(() => this.applyValue(value));
+    }
+
+    /** Body of `writeValue()`. */
+    private applyValue(value: KbqTimeRangeRange | null): void {
         const nonNullable = this.nonNullable();
 
         const availableTimeRangeTypes = this.availableTimeRangeTypes();
@@ -331,11 +340,13 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     setDisabledState(isDisabled: boolean): void {
         this.disabledState.set(isDisabled);
 
-        if (isDisabled) {
-            this.rangeEditorControl.disable({ emitEvent: false });
-        } else {
-            this.rangeEditorControl.enable({ emitEvent: false });
-        }
+        untracked(() => {
+            if (isDisabled) {
+                this.rangeEditorControl.disable({ emitEvent: false });
+            } else {
+                this.rangeEditorControl.enable({ emitEvent: false });
+            }
+        });
     }
 
     private handleAvailableTypesChange = (types: KbqTimeRangeType[]): void => {

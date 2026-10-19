@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqComponentColors, ThemePalette } from '@koobiq/components/core';
+import { KBQ_ANIMATIONS_CONFIG, KbqComponentColors } from '@koobiq/components/core';
 import { KbqProgressSpinner, KbqProgressSpinnerModule, ProgressSpinnerMode, ProgressSpinnerSize } from './index';
 
 /** `MAX_DASH_ARRAY - percentage * MAX_DASH_ARRAY`, with `MAX_DASH_ARRAY = 295`. */
@@ -35,13 +35,11 @@ describe('KbqProgressSpinner', () => {
     });
 
     it('should apply class based on color attribute', () => {
-        Object.keys(ThemePalette).forEach((key) => {
-            if (!ThemePalette[key]) return;
-
-            testComponent.color.set(ThemePalette[key]);
+        Object.values(KbqComponentColors).forEach((color) => {
+            testComponent.color.set(color);
             fixture.detectChanges();
 
-            expect(host.classList.contains(`kbq-${ThemePalette[key]}`)).toBe(true);
+            expect(host.classList.contains(`kbq-${color}`)).toBe(true);
         });
     });
 
@@ -145,6 +143,34 @@ describe('KbqProgressSpinner', () => {
 
         expect(staticCircle.style.strokeDashoffset).toBe('177%');
     });
+
+    describe('motion', () => {
+        // The box the indeterminate spinner rotates and the circle that follows a new value.
+        const getAnimated = (spinner: HTMLElement): Element[] => [
+            spinner.querySelector('.kbq-progress-spinner__inner')!,
+            spinner.querySelector('.kbq-progress-spinner__circle')!
+        ];
+
+        it('should move by default', () => {
+            getAnimated(host).forEach((element) => expect(element.classList).not.toContain('kbq-animations-disabled'));
+        });
+
+        it('should stand still when animations are disabled', () => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [KbqProgressSpinnerModule, TestApp],
+                providers: [{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }]
+            });
+
+            const stillFixture = TestBed.createComponent(TestApp);
+
+            stillFixture.detectChanges();
+
+            getAnimated(stillFixture.nativeElement.querySelector('.first')).forEach((element) =>
+                expect(element.classList).toContain('kbq-animations-disabled')
+            );
+        });
+    });
 });
 
 @Component({
@@ -164,7 +190,7 @@ describe('KbqProgressSpinner', () => {
     `
 })
 class TestApp {
-    readonly color = signal<ThemePalette>(ThemePalette.Primary);
+    readonly color = signal<KbqComponentColors>(KbqComponentColors.Theme);
     readonly value = signal(0);
     readonly mode = signal<ProgressSpinnerMode>('determinate');
     readonly size = signal<ProgressSpinnerSize>('compact');

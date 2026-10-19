@@ -35,58 +35,5 @@
             [(ngModel)]="ngModelValue"
             (ngModelChange)="onTimepickerChange()"
         />
-        <!--        <kbq-hint class="kbq-text-normal" *ngIf="reactiveFormControlValue.errors?.kbqTimepickerParse">Только цифры</kbq-hint>-->
     </kbq-form-field>
-
-    <!--    <br><br><br>-->
-
-    <!--    <kbq-form-field-->
-    <!--        [kbqWarningTooltip]="'Только цифры'"-->
-    <!--        #tooltip="kbqWarningTooltip">-->
-    <!--        <i kbqPrefix kbq-icon="kbq-clock_16"></i>-->
-    <!--        <input-->
-    <!--            kbqTimepicker-->
-    <!--            [formControl]="reactiveFormControlValue"-->
-    <!--            (ngModelChange)="ngModelChange($event)"-->
-    <!--            [kbqValidationTooltip]="tooltip"-->
-    <!--            [max]="maxDate"-->
-    <!--            [format]="timeFormats.HHmmss">-->
-    <!--    </kbq-form-field>-->
-
-    <!--    <br><br><br>-->
-
-    <!--    <kbq-form-field>-->
-    <!--        <input-->
-    <!--            kbqTimepicker-->
-    <!--            placeholder="чч:мм"-->
-    <!--            [formControl]="reactiveFormControlValue"-->
-    <!--            [max]="maxDate"-->
-    <!--            [format]="timeFormats.HHmm"-->
-    <!--            size="3">-->
-    <!--    </kbq-form-field>-->
-
-    <!--    <kbq-form-field>-->
-    <!--        <input-->
-    <!--            kbqTimepicker-->
-    <!--            placeholder="чч:мм"-->
-    <!--            [formControl]="reactiveFormControlValue"-->
-    <!--            [max]="maxDate"-->
-    <!--            [format]="timeFormats.HHmmss"-->
-    <!--            size="6">-->
-    <!--    </kbq-form-field>-->
-
-    <!--    <br><br><br>-->
-
-    <!--    <div>Validation state: {{ formControlValue.errors | json }}</div>-->
-    <!--    <kbq-form-field>-->
-    <!--        <i kbqPrefix kbq-icon="kbq-clock_16"></i>-->
-    <!--        <input kbqTimepicker [formControl]="formControlValue" [max]="maxDate" [min]="minDate">-->
-    <!--    </kbq-form-field>-->
-
-    <!--    <br><br><br>-->
-
-    <!--    <kbq-form-field>-->
-    <!--        <i kbqPrefix kbq-icon="kbq-clock_16"></i>-->
-    <!--        <input kbqTimepicker [(ngModel)]="ngModelValue" [format]="timeFormats.HHmmss" [max]="maxDate" [min]="minDate">-->
-    <!--    </kbq-form-field>-->
 </div>

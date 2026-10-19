@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
@@ -18,5 +18,5 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 })
 export class ToggleErrorExample {
     protected readonly value = signal(false);
-    protected readonly color = ThemePalette.Error;
+    protected readonly color = KbqComponentColors.Error;
 }

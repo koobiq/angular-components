@@ -1,48 +1,126 @@
-import { Component, signal } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { ChangeDetectionStrategy, Component, Signal, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By, DomSanitizer } from '@angular/platform-browser';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { axe } from 'jest-axe';
-import { Subject } from 'rxjs';
 import { KbqIconButton } from './icon-button.component';
-import { KBQ_ICON_ERROR_STATE_CONTEXT, KbqIconErrorStateContext } from './icon-error-state-context';
+import { KBQ_ICON_ERROR_STATE_CONTEXT } from './icon-error-state-context';
 import { KbqIconRegistry } from './icon-registry';
 import { kbqIconsResolverProvider } from './icon-registry-providers';
 import { KbqIcon } from './icon.component';
 
-const ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M0 0h16v16H0z"/></svg>';
+const svgOf = (path: string) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="${path}"/></svg>`;
+
+const ICON_SVG = svgOf('M0 0h16v16H0z');
 
 @Component({
-    selector: 'icon-test-app',
     imports: [KbqIcon],
     template: `
         <i [kbq-icon]="name()" [iconSize]="iconSize()"></i>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-class IconTestApp {
+class TestApp {
     readonly name = signal<string | undefined>('kbq-plus_16');
     readonly iconSize = signal<number | undefined>(undefined);
 }
 
 @Component({
-    selector: 'auto-color-test-app',
     imports: [KbqIcon],
     template: `
         <i kbq-icon="kbq-plus_16" [autoColor]="autoColor()"></i>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-class AutoColorTestApp {
-    readonly autoColor = signal(false);
+class AutoColorIcon {
+    readonly autoColor = signal<boolean | undefined>(false);
 }
 
+@Component({
+    imports: [KbqIcon],
+    template: `
+        <i kbq-icon="kbq-plus_16" [color]="color()"></i>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ColoredIcon {
+    readonly color = signal<string | undefined>(KbqComponentColors.Error);
+}
+
+@Component({
+    selector: '[name-in-constructor-icon]',
+    template: '<ng-content />',
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class NameInConstructorIcon extends KbqIcon {
+    constructor() {
+        super();
+
+        this.iconName = 'kbq-plus_16';
+    }
+}
+
+@Component({
+    imports: [NameInConstructorIcon],
+    template: `
+        <i name-in-constructor-icon></i>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class NameInConstructorHost {}
+
+@Component({
+    imports: [KbqIcon],
+    template: `
+        <i kbq-icon="kbq-plus_16" role="img" aria-hidden="false" aria-label="Add"></i>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class MeaningfulIcon {}
+
+@Component({
+    imports: [KbqIcon],
+    template: `
+        <i kbq-icon="kbq-plus_16" [aria-hidden]="ariaHidden()"></i>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class BoundAriaHiddenIcon {
+    readonly ariaHidden = signal<boolean | null>(null);
+}
+
+@Component({
+    imports: [KbqIcon],
+    template: `
+        <i [kbq-icon]="name()">
+            <svg class="projected" viewBox="0 0 16 16"><path d="M0 0h16v16H0z" /></svg>
+        </i>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ProjectedSvgIcon {
+    readonly name = signal('');
+}
+
+@Component({
+    imports: [KbqIconButton],
+    template: `
+        <i aria-hidden="true" kbq-icon-button="kbq-chevron-up-s_16" [tabindex]="-1"></i>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class DecorativeIconButton {}
+
 describe('KbqIcon', () => {
-    const hostOf = (fixture: ComponentFixture<unknown>): HTMLElement =>
-        fixture.nativeElement.querySelector('i') as HTMLElement;
+    const hostOf = (fixture: ComponentFixture<unknown>): HTMLElement => fixture.nativeElement.querySelector('i');
 
     describe('font icon class', () => {
-        let fixture: ComponentFixture<IconTestApp>;
+        let fixture: ComponentFixture<TestApp>;
 
         beforeEach(() => {
-            fixture = TestBed.createComponent(IconTestApp);
+            fixture = TestBed.createComponent(TestApp);
             fixture.detectChanges();
         });
 
@@ -64,17 +142,24 @@ describe('KbqIcon', () => {
             expect(hostOf(fixture).classList).not.toContain('kbq-plus_16');
             expect(hostOf(fixture).classList).toContain('kbq-play_64');
         });
+
+        it('should drop the font class once the bound name turns undefined', () => {
+            fixture.componentInstance.name.set(undefined);
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).classList).not.toContain('kbq-plus_16');
+        });
     });
 
     describe('max-height', () => {
-        let fixture: ComponentFixture<IconTestApp>;
+        let fixture: ComponentFixture<TestApp>;
 
         beforeEach(() => {
-            fixture = TestBed.createComponent(IconTestApp);
+            fixture = TestBed.createComponent(TestApp);
         });
 
         // The size is inferred from the `_<px>` suffix of the name, so the table doubles as the
-        // specification of `parseIconSize`.
+        // specification of the name parsing.
         it.each([
             ['kbq-plus_16', '16px'],
             ['ns:plus_24', '24px'],
@@ -128,7 +213,7 @@ describe('KbqIcon', () => {
 
     describe('aria', () => {
         it('should hide a bare icon from assistive technology', () => {
-            const fixture = TestBed.createComponent(IconTestApp);
+            const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
 
@@ -136,16 +221,7 @@ describe('KbqIcon', () => {
         });
 
         it('should let a meaningful icon opt out', () => {
-            @Component({
-                selector: 'meaningful-icon-app',
-                imports: [KbqIcon],
-                template: `
-                    <i kbq-icon="kbq-plus_16" role="img" aria-hidden="false" aria-label="Add"></i>
-                `
-            })
-            class MeaningfulIconApp {}
-
-            const fixture = TestBed.createComponent(MeaningfulIconApp);
+            const fixture = TestBed.createComponent(MeaningfulIcon);
 
             fixture.detectChanges();
 
@@ -153,70 +229,93 @@ describe('KbqIcon', () => {
         });
 
         it('should keep an icon button hidden when the caller asked for it', () => {
-            @Component({
-                selector: 'decorative-icon-button-app',
-                imports: [KbqIconButton],
-                template: `
-                    <i aria-hidden="true" kbq-icon-button="kbq-chevron-up-s_16" [tabindex]="-1"></i>
-                `
-            })
-            class DecorativeIconButtonApp {}
-
-            const fixture = TestBed.createComponent(DecorativeIconButtonApp);
+            const fixture = TestBed.createComponent(DecorativeIconButton);
 
             fixture.detectChanges();
 
             expect(hostOf(fixture).getAttribute('aria-hidden')).toBe('true');
         });
 
-        // `cond ? true : null` is how a template leaves an attribute unset. `booleanAttribute(null)` is
-        // `false`, which would have turned "say nothing" into an explicit opt-out of the default.
+        // `cond ? true : null` is how a template leaves a value unset. `booleanAttribute(null)` is `false`,
+        // which would have turned "say nothing" into an explicit opt-out of the default.
         it('should treat a null binding as no answer at all', () => {
-            @Component({
-                selector: 'null-aria-hidden-app',
-                imports: [KbqIcon],
-                template: `
-                    <i kbq-icon="kbq-plus_16" [attr.aria-hidden]="null"></i>
-                `
-            })
-            class NullAriaHiddenApp {}
-
-            const fixture = TestBed.createComponent(NullAriaHiddenApp);
+            const fixture = TestBed.createComponent(BoundAriaHiddenIcon);
 
             fixture.detectChanges();
 
             expect(hostOf(fixture).getAttribute('aria-hidden')).toBe('true');
+
+            fixture.componentInstance.ariaHidden.set(false);
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).getAttribute('aria-hidden')).toBe('false');
+        });
+
+        it('should have no violations', async () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
         });
     });
 
     describe('svg resolution', () => {
         let registry: KbqIconRegistry;
+        let sanitizer: DomSanitizer;
 
-        const register = (name: string) => {
-            registry.addSvgIconLiteral(name, TestBed.inject(DomSanitizer).bypassSecurityTrustHtml(ICON_SVG));
-        };
+        const register = (name: string, svg = ICON_SVG) =>
+            registry.addSvgIconLiteral(name, sanitizer.bypassSecurityTrustHtml(svg));
 
         beforeEach(() => {
+            TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
+
             registry = TestBed.inject(KbqIconRegistry);
+            sanitizer = TestBed.inject(DomSanitizer);
         });
 
-        it('should inject the resolved svg and drop the font class', () => {
+        afterEach(() => TestBed.inject(HttpTestingController).verify());
+
+        it('should render a registered icon as inline SVG instead of the font class', () => {
             register('kbq-plus_16');
 
-            const fixture = TestBed.createComponent(IconTestApp);
+            const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
 
-            const host = hostOf(fixture);
+            expect(hostOf(fixture).querySelector('svg')).not.toBeNull();
+            expect(hostOf(fixture).classList).not.toContain('kbq-plus_16');
+        });
 
-            expect(host.querySelector('svg')).not.toBeNull();
-            expect(host.classList).not.toContain('kbq-plus_16');
+        it('should keep the font class for a name the registry does not know', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).querySelector('svg')).toBeNull();
+            expect(hostOf(fixture).classList).toContain('kbq-plus_16');
+        });
+
+        it('should render an SVG that arrives after the first render', async () => {
+            registry.addSvgIcon('kbq-plus_16', sanitizer.bypassSecurityTrustResourceUrl('/icons/plus.svg'));
+
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).classList).toContain('kbq-plus_16');
+
+            TestBed.inject(HttpTestingController).expectOne('/icons/plus.svg').flush(ICON_SVG);
+            await fixture.whenStable();
+
+            expect(hostOf(fixture).querySelector('svg')).not.toBeNull();
+            expect(hostOf(fixture).classList).not.toContain('kbq-plus_16');
         });
 
         it('should size the injected svg from the name', () => {
             register('kbq-plus_16');
 
-            const fixture = TestBed.createComponent(IconTestApp);
+            const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
 
@@ -226,25 +325,40 @@ describe('KbqIcon', () => {
             expect(svg.getAttribute('height')).toBe('16');
         });
 
-        it('should replace the injected svg on a name change instead of stacking', () => {
+        it('should size the injected svg from iconSize', () => {
             register('kbq-plus_16');
-            register('kbq-play_64');
 
-            const fixture = TestBed.createComponent(IconTestApp);
+            const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
-            fixture.componentInstance.name.set('kbq-play_64');
+            fixture.componentInstance.iconSize.set(24);
             fixture.detectChanges();
 
-            expect(hostOf(fixture).querySelectorAll('svg')).toHaveLength(1);
+            expect(hostOf(fixture).querySelector('svg')!.getAttribute('width')).toBe('24');
         });
 
-        // ICN-BUG-01: the stream used to terminate on the first unresolved name, which the default
-        // font-icon configuration guarantees, leaving the element unable to render anything later.
+        it('should replace the injected svg on a name change instead of stacking', () => {
+            register('kbq-plus_16');
+            register('kbq-check_16', svgOf('M1 8l4 4 8-8'));
+
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+            fixture.componentInstance.name.set('kbq-check_16');
+            fixture.detectChanges();
+
+            const svgs = hostOf(fixture).querySelectorAll('svg');
+
+            expect(svgs).toHaveLength(1);
+            expect(svgs[0].querySelector('path')?.getAttribute('d')).toBe('M1 8l4 4 8-8');
+        });
+
+        // The default font-icon configuration resolves no name at all, so an unresolved name must not keep a later
+        // one from resolving.
         it('should still resolve a registered name after an unregistered one', () => {
             register('kbq-play_64');
 
-            const fixture = TestBed.createComponent(IconTestApp);
+            const fixture = TestBed.createComponent(TestApp);
 
             fixture.componentInstance.name.set('kbq-missing_16');
             fixture.detectChanges();
@@ -260,7 +374,7 @@ describe('KbqIcon', () => {
         it('should remove the stale svg and restore the font class for an unregistered name', () => {
             register('kbq-plus_16');
 
-            const fixture = TestBed.createComponent(IconTestApp);
+            const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
             expect(hostOf(fixture).querySelector('svg')).not.toBeNull();
@@ -272,121 +386,52 @@ describe('KbqIcon', () => {
             expect(hostOf(fixture).classList).toContain('kbq-missing_16');
         });
 
-        it('should keep updating max-height once the stream has seen a failure', () => {
-            const fixture = TestBed.createComponent(IconTestApp);
+        // The docs site projects the GitHub logo into an `<i kbq-icon="">` this way.
+        it('should keep an svg projected into the host', () => {
+            register('kbq-plus_16');
+
+            const fixture = TestBed.createComponent(ProjectedSvgIcon);
+            const projected = () => hostOf(fixture).querySelector('svg.projected');
 
             fixture.detectChanges();
-            expect(hostOf(fixture).style.maxHeight).toBe('16px');
+            expect(projected()).not.toBeNull();
 
-            fixture.componentInstance.name.set('kbq-play_64');
+            fixture.componentInstance.name.set('kbq-plus_16');
+            fixture.detectChanges();
+            fixture.componentInstance.name.set('kbq-missing_16');
             fixture.detectChanges();
 
-            expect(hostOf(fixture).style.maxHeight).toBe('64px');
+            expect(projected()).not.toBeNull();
+            expect(hostOf(fixture).querySelectorAll('svg')).toHaveLength(1);
+        });
+
+        it('should resolve a name a subclass assigns in its constructor', () => {
+            register('kbq-plus_16');
+
+            const fixture = TestBed.createComponent(NameInConstructorHost);
+
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).querySelector('svg')).not.toBeNull();
+            expect(hostOf(fixture).classList).not.toContain('kbq-plus_16');
+        });
+
+        it('should remove the stale svg once the bound name turns undefined', () => {
+            register('kbq-plus_16');
+
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+            fixture.componentInstance.name.set(undefined);
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).querySelector('svg')).toBeNull();
         });
     });
 
-    describe('autoColor', () => {
-        let stateChanges: Subject<void>;
-        let context: KbqIconErrorStateContext;
-        let errorState: boolean;
-
-        beforeEach(() => {
-            stateChanges = new Subject<void>();
-            errorState = false;
-            context = {
-                get errorState() {
-                    return errorState;
-                },
-                get stateChanges() {
-                    return stateChanges;
-                }
-            };
-
-            TestBed.configureTestingModule({
-                providers: [{ provide: KBQ_ICON_ERROR_STATE_CONTEXT, useValue: context }]
-            });
-        });
-
-        const errorClassOf = (fixture: ComponentFixture<AutoColorTestApp>) =>
-            hostOf(fixture).classList.contains('kbq-error');
-
-        it('should not follow the error state while off', () => {
-            const fixture = TestBed.createComponent(AutoColorTestApp);
-
-            fixture.detectChanges();
-
-            errorState = true;
-            stateChanges.next();
-            fixture.detectChanges();
-
-            expect(errorClassOf(fixture)).toBe(false);
-        });
-
-        it('should pick up the error state when turned on after init', () => {
-            const fixture = TestBed.createComponent(AutoColorTestApp);
-
-            fixture.detectChanges();
-
-            errorState = true;
-            fixture.componentInstance.autoColor.set(true);
-            fixture.detectChanges();
-
-            expect(errorClassOf(fixture)).toBe(true);
-        });
-
-        it('should reset and stop following when turned back off', () => {
-            const fixture = TestBed.createComponent(AutoColorTestApp);
-
-            fixture.componentInstance.autoColor.set(true);
-            errorState = true;
-            fixture.detectChanges();
-            expect(errorClassOf(fixture)).toBe(true);
-
-            fixture.componentInstance.autoColor.set(false);
-            fixture.detectChanges();
-
-            expect(errorClassOf(fixture)).toBe(false);
-        });
-
-        it('should re-read the error state off the context on every change', () => {
-            const fixture = TestBed.createComponent(AutoColorTestApp);
-
-            fixture.componentInstance.autoColor.set(true);
-            fixture.detectChanges();
-            expect(errorClassOf(fixture)).toBe(false);
-
-            errorState = true;
-            stateChanges.next();
-            fixture.detectChanges();
-
-            expect(errorClassOf(fixture)).toBe(true);
-        });
-    });
-
-    describe('accessibility', () => {
-        it('should have no violations', async () => {
-            const fixture = TestBed.createComponent(IconTestApp);
-
-            fixture.detectChanges();
-
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
-        });
-    });
-
-    it('should expose the host element', () => {
-        const fixture = TestBed.createComponent(IconTestApp);
-
-        fixture.detectChanges();
-
-        const icon = fixture.debugElement.query(By.directive(KbqIcon)).componentInstance as KbqIcon;
-
-        expect(icon.getHostElement()).toBe(hostOf(fixture));
-    });
-
-    // A resolver is consumer code. One that throws used to escape the `switchMap` project function,
-    // reach the outer subscription and end it — the same defect as ICN-BUG-01, by another route.
+    // A resolver is consumer code. One that throws must fall back to the font class and leave the next
+    // name to be resolved again.
     it('should survive a resolver that throws', () => {
-        TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             providers: [
                 kbqIconsResolverProvider((name) => {
@@ -402,16 +447,173 @@ describe('KbqIcon', () => {
             TestBed.inject(DomSanitizer).bypassSecurityTrustHtml(ICON_SVG)
         );
 
-        const fixture = TestBed.createComponent(IconTestApp);
+        const fixture = TestBed.createComponent(TestApp);
 
         fixture.componentInstance.name.set('kbq-boom_16');
         fixture.detectChanges();
 
         expect(hostOf(fixture).querySelector('svg')).toBeNull();
+        expect(hostOf(fixture).classList).toContain('kbq-boom_16');
 
         fixture.componentInstance.name.set('kbq-play_64');
         fixture.detectChanges();
 
         expect(hostOf(fixture).querySelector('svg')).not.toBeNull();
+    });
+
+    // The color class of an error icon is `kbq-error` too; the `kbq-error` class binding must not take it away.
+    describe('error color', () => {
+        const iconOf = (fixture: ComponentFixture<ColoredIcon>): KbqIcon =>
+            fixture.debugElement.query(By.directive(KbqIcon)).componentInstance;
+
+        it('should keep the error class of a bound error color', () => {
+            const fixture = TestBed.createComponent(ColoredIcon);
+
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).classList).toContain('kbq-error');
+
+            fixture.componentInstance.color.set(KbqComponentColors.Theme);
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).classList).not.toContain('kbq-error');
+            expect(hostOf(fixture).classList).toContain('kbq-theme');
+        });
+
+        it('should keep the error class of an error color set in code', () => {
+            const fixture = TestBed.createComponent(ColoredIcon);
+
+            fixture.componentInstance.color.set(undefined);
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).classList).not.toContain('kbq-error');
+
+            iconOf(fixture).color.set(KbqComponentColors.Error);
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).classList).toContain('kbq-error');
+        });
+
+        it('should take the error class from hasError whatever the color', () => {
+            const fixture = TestBed.createComponent(ColoredIcon);
+
+            fixture.componentInstance.color.set(KbqComponentColors.Theme);
+            iconOf(fixture).hasError = true;
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).classList).toContain('kbq-error');
+            expect(hostOf(fixture).classList).toContain('kbq-theme');
+        });
+    });
+
+    describe('autoColor', () => {
+        const errorState = signal(false);
+
+        const hasErrorClass = (fixture: ComponentFixture<AutoColorIcon>) =>
+            hostOf(fixture).classList.contains('kbq-error');
+
+        beforeEach(() => {
+            errorState.set(false);
+
+            TestBed.configureTestingModule({
+                providers: [{ provide: KBQ_ICON_ERROR_STATE_CONTEXT, useValue: { errorState } }]
+            });
+        });
+
+        it('should not follow the error state while off', () => {
+            const fixture = TestBed.createComponent(AutoColorIcon);
+
+            fixture.detectChanges();
+            errorState.set(true);
+            fixture.detectChanges();
+
+            expect(hasErrorClass(fixture)).toBe(false);
+        });
+
+        it('should pick up the error state when turned on after init', () => {
+            const fixture = TestBed.createComponent(AutoColorIcon);
+
+            fixture.detectChanges();
+            errorState.set(true);
+            fixture.componentInstance.autoColor.set(true);
+            fixture.detectChanges();
+
+            expect(hasErrorClass(fixture)).toBe(true);
+        });
+
+        it('should follow every change of the error state', () => {
+            const fixture = TestBed.createComponent(AutoColorIcon);
+
+            fixture.componentInstance.autoColor.set(true);
+            fixture.detectChanges();
+            expect(hasErrorClass(fixture)).toBe(false);
+
+            errorState.set(true);
+            fixture.detectChanges();
+
+            expect(hasErrorClass(fixture)).toBe(true);
+        });
+
+        it('should stop taking the error color when turned back off', () => {
+            const fixture = TestBed.createComponent(AutoColorIcon);
+
+            errorState.set(true);
+            fixture.componentInstance.autoColor.set(true);
+            fixture.detectChanges();
+            expect(hasErrorClass(fixture)).toBe(true);
+
+            fixture.componentInstance.autoColor.set(false);
+            fixture.detectChanges();
+
+            expect(hasErrorClass(fixture)).toBe(false);
+        });
+
+        it('should follow the error state of a control the host replaces', () => {
+            const current = signal<Signal<boolean>>(errorState);
+
+            // The form field resolves the error state through its current control.
+            TestBed.overrideProvider(KBQ_ICON_ERROR_STATE_CONTEXT, {
+                useValue: {
+                    get errorState() {
+                        return current();
+                    }
+                }
+            });
+
+            const fixture = TestBed.createComponent(AutoColorIcon);
+
+            fixture.componentInstance.autoColor.set(true);
+            fixture.detectChanges();
+            expect(hasErrorClass(fixture)).toBe(false);
+
+            current.set(signal(true));
+            fixture.detectChanges();
+
+            expect(hasErrorClass(fixture)).toBe(true);
+        });
+
+        it('should stop taking the error color once the bound autoColor turns undefined', () => {
+            const fixture = TestBed.createComponent(AutoColorIcon);
+
+            errorState.set(true);
+            fixture.componentInstance.autoColor.set(true);
+            fixture.detectChanges();
+            expect(hasErrorClass(fixture)).toBe(true);
+
+            fixture.componentInstance.autoColor.set(undefined);
+            fixture.detectChanges();
+
+            expect(hasErrorClass(fixture)).toBe(false);
+        });
+    });
+
+    it('should expose the host element', () => {
+        const fixture = TestBed.createComponent(TestApp);
+
+        fixture.detectChanges();
+
+        const icon: KbqIcon = fixture.debugElement.query(By.directive(KbqIcon)).componentInstance;
+
+        expect(icon.getHostElement()).toBe(hostOf(fixture));
     });
 });

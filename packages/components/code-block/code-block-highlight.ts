@@ -1,4 +1,3 @@
-import { isPlatformServer } from '@angular/common';
 import {
     booleanAttribute,
     Directive,
@@ -9,7 +8,6 @@ import {
     isDevMode,
     numberAttribute,
     PendingTasks,
-    PLATFORM_ID,
     Provider,
     Renderer2,
     SecurityContext,
@@ -97,7 +95,6 @@ export class KbqCodeBlockHighlight {
     private readonly renderer = inject(Renderer2);
     private readonly domSanitizer = inject(DomSanitizer);
     private readonly pendingTasks = inject(PendingTasks);
-    private readonly isServer = isPlatformServer(inject(PLATFORM_ID));
     private readonly loader = inject(KbqCodeBlockHighlightJsLoader);
     private readonly fallbackFileLanguage = inject(KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE);
     // Read here and handed to the loader: a component or a route may provide a configuration of its own.
@@ -131,7 +128,9 @@ export class KbqCodeBlockHighlight {
 
             // The template leaves `<code>` empty, so that hydration does not look for a text node the highlighted
             // markup has replaced. The plain content stands in until highlighting lands, and for good if it fails.
-            if (this.nativeElement.hasAttribute(HIGHLIGHTED_ATTRIBUTE)) {
+            const keepsServerMarkup = this.nativeElement.hasAttribute(HIGHLIGHTED_ATTRIBUTE);
+
+            if (keepsServerMarkup) {
                 // Markup from the server stays instead, rather than flash plain text over code that arrived
                 // highlighted. Once: the file of a later run is not the one it was rendered for.
                 this.renderer.removeAttribute(this.nativeElement, HIGHLIGHTED_ATTRIBUTE);
@@ -146,11 +145,12 @@ export class KbqCodeBlockHighlight {
 
             onCleanup(() => (cancelled = true));
 
-            // `pending` holds the code block, the pending task holds server rendering: both last until the load
-            // settles, failed or not. The task is the server's only: in the browser it would keep the application
-            // unstable, and Angular replays what a reader did before hydration only once it is stable.
+            // `pending` holds the code block until the load settles, failed or not. A block with nothing highlighted to
+            // show holds the application as well, so that server rendering and tests wait for the highlighted markup.
+            // Markup kept from the server needs no task: it would keep a hydrated page unstable, and Angular replays
+            // what a reader did before hydration only once the page is stable.
             this._pending.set(true);
-            const removeTask = this.isServer ? this.pendingTasks.add() : null;
+            const removeTask = keepsServerMarkup ? null : this.pendingTasks.add();
 
             this.loader
                 .load(this.config)

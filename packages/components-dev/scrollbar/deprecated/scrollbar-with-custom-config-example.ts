@@ -3,7 +3,7 @@ import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarModule, KbqScrollbarOptions } from '@
 
 /**
  * @title Scrollbar with custom KBQ_SCROLLBAR_CONFIG
- * @deprecated Should be removed in a future major version.
+ * @deprecated Will be removed in 22.0.0.
  */
 @Component({
     selector: 'dev-scrollbar-with-custom-config-example',

@@ -14,6 +14,7 @@ export const KBQ_SKELETON_PRESETS_CONFIGURATION: InjectionToken<KbqSkeletonPrese
 // @public
 export class KbqSkeleton {
     constructor();
+    protected readonly animationsDisabled: boolean;
     readonly enabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqSkeleton, "kbq-skeleton, [kbqSkeleton]", ["kbqSkeleton"], { "enabled": { "alias": "kbqSkeleton"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;

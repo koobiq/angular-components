@@ -391,13 +391,23 @@ describe(SCHEMATIC_NAME, () => {
         );
     });
 
-    it('drops an import line entirely when the removed symbol was the only specifier', async () => {
+    it('keeps the layout of a multi-line import clause it removes a stale symbol from', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
 
         appTree.overwrite(
             ts,
-            "import { KbqValidationOptions } from '@koobiq/components/core';\nconst x: KbqValidationOptions | null = null;\n"
+            [
+                "import { booleanAttribute } from '@angular/core';",
+                'import {',
+                '    KbqColorDirective,',
+                '    toBoolean,',
+                '    kbqErrorStateMatcherProvider',
+                "} from '@koobiq/components/core';",
+                '',
+                "export const v = [toBoolean('x'), booleanAttribute, KbqColorDirective, kbqErrorStateMatcherProvider];",
+                ''
+            ].join('\n')
         );
 
         const result = await runner.runSchematic(
@@ -406,11 +416,112 @@ describe(SCHEMATIC_NAME, () => {
             appTree
         );
 
-        const updated = result.readText(ts);
+        expect(result.readText(ts)).toBe(
+            [
+                "import { booleanAttribute } from '@angular/core';",
+                'import {',
+                '    KbqColorDirective,',
+                '    kbqErrorStateMatcherProvider',
+                "} from '@koobiq/components/core';",
+                '',
+                "export const v = [booleanAttribute('x'), booleanAttribute, KbqColorDirective, kbqErrorStateMatcherProvider];",
+                ''
+            ].join('\n')
+        );
+    });
 
-        // Neither the symbol nor its (now-empty) import line should remain.
-        expect(updated).not.toMatch(/\bKbqValidationOptions\b/);
-        expect(updated).not.toMatch(/import\s*\{[^}]*\}\s*from\s*['"]@koobiq\/components\/core['"]/);
+    it('drops an import line entirely when the removed symbol was the only specifier', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            "import { KbqCommonModule } from '@koobiq/components/core';\nexport const imports = [KbqCommonModule];\n"
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe('export const imports = [];\n');
+    });
+
+    it('leaves a removed symbol used outside a list untouched and reports it', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages: string[] = [];
+        const legacy = [
+            "import { Inject, NgModule, Optional } from '@angular/core';",
+            "import { KBQ_VALIDATION, KbqValidationOptions } from '@koobiq/components/core';",
+            'export class Legacy {',
+            '    constructor(@Optional() @Inject(KBQ_VALIDATION) private validation: KbqValidationOptions) {}',
+            '}',
+            ''
+        ].join('\n');
+
+        appTree.overwrite(
+            ts,
+            legacy.replace('import { KBQ_VALIDATION, ', 'import { KbqCommonModule, KBQ_VALIDATION, ') +
+                '@NgModule({ imports: [KbqCommonModule] })\nexport class LegacyModule {}\n'
+        );
+        runner.logger.subscribe((entry) => messages.push(entry.message));
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+        const log = messages.join('\n');
+
+        expect(result.readText(ts)).toBe(`${legacy}@NgModule({ imports: [] })\nexport class LegacyModule {}\n`);
+        expect(log).toContain('`KBQ_VALIDATION` was removed in 20.0.0');
+        expect(log).toContain('`KbqValidationOptions` was removed in 20.0.0');
+        expect(log).not.toContain('`KbqCommonModule` was removed in 20.0.0');
+    });
+
+    it('keeps one import specifier when a rename gives two the same name', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            [
+                "import { KbqDatepickerToggle, KbqDatepickerToggleIconComponent } from '@koobiq/components/datepicker';",
+                'import {',
+                '    KbqFormField,',
+                '    KbqFormFieldRef,',
+                '    KbqFormFieldModule',
+                "} from '@koobiq/components/form-field';",
+                "import { type KbqWarningTooltipTrigger, KbqTooltipTrigger } from '@koobiq/components/tooltip';",
+                'export const toggles = [KbqDatepickerToggle, KbqDatepickerToggleIconComponent];',
+                'export const fields = [KbqFormField, KbqFormFieldRef, KbqFormFieldModule];',
+                'export const tooltip: KbqWarningTooltipTrigger = new KbqTooltipTrigger();',
+                ''
+            ].join('\n')
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            [
+                "import { KbqDatepickerToggleIconComponent } from '@koobiq/components/datepicker';",
+                'import {',
+                '    KbqFormField,',
+                '    KbqFormFieldModule',
+                "} from '@koobiq/components/form-field';",
+                "import { KbqTooltipTrigger } from '@koobiq/components/tooltip';",
+                'export const toggles = [KbqDatepickerToggleIconComponent, KbqDatepickerToggleIconComponent];',
+                'export const fields = [KbqFormField, KbqFormField, KbqFormFieldModule];',
+                'export const tooltip: KbqTooltipTrigger = new KbqTooltipTrigger();',
+                ''
+            ].join('\n')
+        );
     });
 
     it('rewrites the static-attribute form kbqWarningTooltip="text" to kbqTooltipModifier + kbqTooltip', async () => {
@@ -455,6 +566,40 @@ describe(SCHEMATIC_NAME, () => {
         expect(angularCoreImports.length).toBe(1);
         expect(updated).toMatch(
             /import\s*\{[^}]*\bComponent\b[^}]*\bbooleanAttribute\b[^}]*\}\s*from\s*['"]@angular\/core['"]/
+        );
+    });
+
+    it('extends an import clause that ends in a comma without doubling it', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            [
+                'import {',
+                '    Component,',
+                '    Input,',
+                "} from '@angular/core';",
+                "import { toBoolean } from '@koobiq/components/core';",
+                "const v = toBoolean('x');",
+                ''
+            ].join('\n')
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            [
+                'import {',
+                '    Component,',
+                "    Input, booleanAttribute } from '@angular/core';",
+                "const v = booleanAttribute('x');",
+                ''
+            ].join('\n')
         );
     });
 
@@ -607,6 +752,80 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).not.toContain('codeFiles=');
     });
 
+    it('rewrites canLoad/codeFiles only on <kbq-code-block>, past a > inside a quoted value', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+        const template = [
+            '<kbq-code-block *ngIf="a > b" [canLoad]="x" codeFiles="a.ts"></kbq-code-block>',
+            '<kbq-code-block canLoad [codeFiles]="files"></kbq-code-block>',
+            '<my-loader [canLoad]="x" canLoad="true" [codeFiles]="files" codeFiles="a.ts"></my-loader>',
+            ''
+        ].join('\n');
+
+        appTree.overwrite(html, template);
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(html)).toBe(
+            [
+                '<kbq-code-block *ngIf="a > b" [canDownload]="x" files="a.ts"></kbq-code-block>',
+                '<kbq-code-block canDownload [files]="files"></kbq-code-block>',
+                '<my-loader [canLoad]="x" canLoad="true" [codeFiles]="files" codeFiles="a.ts"></my-loader>',
+                ''
+            ].join('\n')
+        );
+    });
+
+    it('keeps and reports an alias on a <kbq-code-block> that binds its replacement too', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+        const template = [
+            '<kbq-code-block [canLoad]="x" *ngIf="a > b" [canDownload]="y" [codeFiles]="f"></kbq-code-block>',
+            '<kbq-code-block codeFiles="a.ts" [title]="n > 0 ? \'a\' : \'b\'" [files]="files"></kbq-code-block>',
+            ''
+        ].join('\n');
+        const messages: string[] = [];
+
+        appTree.overwrite(html, template);
+        runner.logger.subscribe((entry) => messages.push(entry.message));
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(html)).toBe(template.replace('[codeFiles]="f"', '[files]="f"'));
+        expect(messages.some((m) => m.includes('binds `canLoad` next to `canDownload`'))).toBe(true);
+    });
+
+    it('does not report a <kbq-code-block> that binds each input once', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+        const messages: string[] = [];
+
+        appTree.overwrite(
+            html,
+            '<kbq-code-block [canLoad]="allowed && canDownload" [codeFiles]="all ? files : []">canDownload files</kbq-code-block>\n'
+        );
+        runner.logger.subscribe((entry) => messages.push(entry.message));
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(html)).toBe(
+            '<kbq-code-block [canDownload]="allowed && canDownload" [files]="all ? files : []">canDownload files</kbq-code-block>\n'
+        );
+        expect(messages.some((m) => m.includes('binds `canLoad` next to `canDownload`'))).toBe(false);
+    });
+
     it('warns about KbqCodeBlock.scrollableCodeContent (use scrollTo())', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
@@ -697,20 +916,25 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.some((m) => m.includes('(onSaveAsNew)'))).toBe(true);
     });
 
-    it('does nothing when fix=false', async () => {
+    it('reports instead of writing with fix: false', async () => {
         const [first] = projects.keys();
         const { html } = paths(projects.get(first)!);
         const original = '<kbq-filter-search></kbq-filter-search>\n';
+        const messages: string[] = [];
 
         appTree.overwrite(html, original);
+        runner.logger.subscribe((entry) => messages.push(entry.message));
 
         const result = await runner.runSchematic(
             SCHEMATIC_NAME,
             { project: first, fix: false } satisfies Schema,
             appTree
         );
+        const log = messages.join('\n');
 
         expect(result.readText(html)).toBe(original);
+        expect(log).toContain(`[v20-upgrade] would update ${html} (run with --fix to apply)`);
+        expect(log).toMatch(/\[v20-upgrade\] processed tree under "[^"]+", would update 1 file\(s\)\./);
     });
 
     it('strips kbqDisableLegacyValidationDirectiveProvider call sites and the stale import', async () => {
@@ -719,7 +943,7 @@ describe(SCHEMATIC_NAME, () => {
 
         // Three call-site positions in a single array (first, middle, last) plus a
         // sole-occupant case, all paired with an import that contains the symbol
-        // alongside others — the cleanup must leave the array, the sibling
+        // alongside others — the removal must leave the array, the sibling
         // providers, and the import clause healthy.
         appTree.overwrite(
             ts,
@@ -751,6 +975,306 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toMatch(/providers:\s*\[\s*\]/);
         // Sibling imports kept; symbol gone.
         expect(updated).toMatch(/import\s*\{[^}]*\bkbqErrorStateMatcherProvider\b[^}]*\bKbqColorDirective\b[^}]*\}/);
+    });
+
+    it('removes a symbol with one of its commas from any place in a list', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            [
+                'import {',
+                '    KbqCommonModule,',
+                '    KbqColorDirective,',
+                '    type KbqValidationOptions,',
+                '    kbqErrorStateMatcherProvider,',
+                "} from '@koobiq/components/core';",
+                "import type { KbqFileUploadModule, KbqInputFile } from '@koobiq/components/file-upload';",
+                "import { KBQ_SIDEPANEL_WITH_SHADOW } from '@koobiq/components/sidepanel';",
+                'export const first = [KbqCommonModule, KbqColorDirective];',
+                'export const middle = [KbqColorDirective, KbqCommonModule, kbqErrorStateMatcherProvider];',
+                'export const last = [KbqColorDirective, KbqCommonModule];',
+                'export const only = [KbqCommonModule];',
+                'export const lines = [',
+                '    KbqColorDirective,',
+                '    KbqCommonModule,',
+                '];',
+                'export type Upload = KbqFileUploadModule;',
+                ''
+            ].join('\n')
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            [
+                'import {',
+                '    KbqColorDirective,',
+                '    kbqErrorStateMatcherProvider,',
+                "} from '@koobiq/components/core';",
+                "import type { KbqFileUploadModule } from '@koobiq/components/file-upload';",
+                'export const first = [KbqColorDirective];',
+                'export const middle = [KbqColorDirective, kbqErrorStateMatcherProvider];',
+                'export const last = [KbqColorDirective];',
+                'export const only = [];',
+                'export const lines = [',
+                '    KbqColorDirective,',
+                '];',
+                'export type Upload = KbqFileUploadModule;',
+                ''
+            ].join('\n')
+        );
+    });
+
+    it('leaves the commas of the rest of a file alone when it removes a symbol', async () => {
+        const [first] = projects.keys();
+        const { ts, html } = paths(projects.get(first)!);
+        const rest = [
+            'const pair = [1, 2];',
+            'export const [, second] = pair;',
+            'export const values = (m: Record<string, number>) => Object.entries(m).map(([, v]) => v);',
+            'export const words = (s: string) => s.split(/[\\s,]+/);',
+            'export const separator = /[,;]/;',
+            "export const doubled = 'a,,b';",
+            'export const options = {',
+            '    a: 1,',
+            '};',
+            'export const list = [',
+            '    1,',
+            '];',
+            ''
+        ].join('\n');
+        const markup = '<input pattern="[,;]+" />\n<p>a,,b</p>\n';
+
+        appTree.overwrite(
+            ts,
+            "import { KbqColorDirective, KbqCommonModule } from '@koobiq/components/core';\n" +
+                'export const imports = [KbqCommonModule, KbqColorDirective];\n' +
+                rest
+        );
+        appTree.overwrite(html, `<kbq-divider [inset]="true"></kbq-divider>\n${markup}`);
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            "import { KbqColorDirective } from '@koobiq/components/core';\n" +
+                'export const imports = [KbqColorDirective];\n' +
+                rest
+        );
+        expect(result.readText(html)).toBe(`<kbq-divider></kbq-divider>\n${markup}`);
+    });
+
+    it('imports a symbol it writes as a value past a type-only import or an alias of it', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const typeClause = ts.replace(/[^/]+$/, 'type-clause.ts');
+
+        appTree.overwrite(
+            ts,
+            [
+                "import { booleanAttribute as toBool } from '@angular/core';",
+                "import { toBoolean } from '@koobiq/components/core';",
+                'export const flags = (value: unknown) => [toBool(value), toBoolean(value)];',
+                ''
+            ].join('\n')
+        );
+        appTree.create(
+            typeClause,
+            [
+                "import type { Signal } from '@angular/core';",
+                "import { toBoolean } from '@koobiq/components/core';",
+                'export const flag = (value: Signal<unknown>) => toBoolean(value());',
+                ''
+            ].join('\n')
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            [
+                "import { booleanAttribute as toBool, booleanAttribute } from '@angular/core';",
+                'export const flags = (value: unknown) => [toBool(value), booleanAttribute(value)];',
+                ''
+            ].join('\n')
+        );
+        expect(result.readText(typeClause)).toBe(
+            [
+                "import { booleanAttribute } from '@angular/core';",
+                "import type { Signal } from '@angular/core';",
+                'export const flag = (value: Signal<unknown>) => booleanAttribute(value());',
+                ''
+            ].join('\n')
+        );
+    });
+
+    it('drops inset only on a <kbq-divider>', async () => {
+        const [first] = projects.keys();
+        const { ts, html } = paths(projects.get(first)!);
+        const code = [
+            "import { Component } from '@angular/core';",
+            '',
+            '@Component({',
+            '    template: \'<kbq-divider inset /><mat-divider [inset]="true" />{{ inset ? 8 : 0 }}\'',
+            '})',
+            'export class Dividers {',
+            '    readonly inset = 8;',
+            '}',
+            ''
+        ].join('\n');
+        const markup = '<mat-divider [inset]="true"></mat-divider>\n<p class="inset">{{ inset }}</p>\n';
+
+        appTree.overwrite(ts, code);
+        appTree.overwrite(html, `<kbq-divider class="list" inset="true"></kbq-divider>\n${markup}`);
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(code.replace('<kbq-divider inset />', '<kbq-divider />'));
+        expect(result.readText(html)).toBe(`<kbq-divider class="list"></kbq-divider>\n${markup}`);
+    });
+
+    it('renames AnimationCurves and openPanel() of Koobiq only, not of Angular Material', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const material = ts.replace(/[^/]+$/, 'material.ts');
+        const materialCode = [
+            "import { AnimationCurves } from '@angular/material/core';",
+            "import { MatAutocompleteTrigger } from '@angular/material/autocomplete';",
+            'export const curve = AnimationCurves.STANDARD_CURVE;',
+            'export const open = (trigger: MatAutocompleteTrigger) => trigger.openPanel();',
+            ''
+        ].join('\n');
+
+        appTree.overwrite(
+            ts,
+            [
+                "import { AnimationCurves } from '@koobiq/components/core';",
+                "import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';",
+                'export const curve = AnimationCurves.StandardCurve;',
+                'export const open = (trigger: KbqAutocompleteTrigger) => trigger.openPanel();',
+                ''
+            ].join('\n')
+        );
+        appTree.create(material, materialCode);
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            [
+                "import { KbqAnimationCurves } from '@koobiq/components/core';",
+                "import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';",
+                'export const curve = KbqAnimationCurves.StandardCurve;',
+                'export const open = (trigger: KbqAutocompleteTrigger) => trigger.open();',
+                ''
+            ].join('\n')
+        );
+        expect(result.readText(material)).toBe(materialCode);
+    });
+
+    it('drops a re-export it empties', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            [
+                "export { KbqCommonModule } from '@koobiq/components/core';",
+                "export type { KbqValidationOptions } from '@koobiq/components/core';",
+                "export { KbqColorDirective, KBQ_VALIDATION } from '@koobiq/components/core';",
+                'export class App {}',
+                ''
+            ].join('\n')
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            ["export { KbqColorDirective } from '@koobiq/components/core';", 'export class App {}', ''].join('\n')
+        );
+    });
+
+    it('adds a symbol past a line comment that ends an import clause', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const source = (input: string) => [
+                'import {',
+                '    Component,',
+                `    ${input} // the input`,
+                "} from '@angular/core';",
+                "import { toBoolean } from '@koobiq/components/core';",
+                "export const v = toBoolean('x');",
+                ''
+            ].join('\n');
+        const comma = ts.replace(/[^/]+$/, 'comma.ts');
+
+        appTree.overwrite(ts, source('Input'));
+        appTree.create(comma, source('Input,'));
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+        const expected = [
+            'import {',
+            '    Component,',
+            '    Input, // the input',
+            '    booleanAttribute',
+            "} from '@angular/core';",
+            "export const v = booleanAttribute('x');",
+            ''
+        ].join('\n');
+
+        expect(result.readText(ts)).toBe(expected);
+        expect(result.readText(comma)).toBe(expected);
+    });
+
+    it('keeps the line endings of a CRLF file when it adds an import', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            ["import { toBoolean } from '@koobiq/components/core';", "export const v = toBoolean('x');", ''].join(
+                '\r\n'
+            )
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            ["import { booleanAttribute } from '@angular/core';", "export const v = booleanAttribute('x');", ''].join(
+                '\r\n'
+            )
+        );
     });
 
     it('applies the migration when `fix` is absent, as it is under `ng update`', async () => {

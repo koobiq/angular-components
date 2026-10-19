@@ -1,18 +1,18 @@
-import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import { SUMMARY, TABS_PACKAGE, TABS_TYPE, warnPatterns } from './data';
 import { Schema } from './schema';
 
 const LABEL = '[tabs-signals-and-aria]';
 const EXTENSIONS = ['.ts', '.html'];
 
-// Compiled once: every pattern here is a module-level constant, and the tree walk below would
-// otherwise recompile each of them for every file in the project.
+// Compiled once rather than for every file of the project. None carries the `g` flag, so a shared instance holds no
+// `lastIndex`.
 const TABS_TYPE_REGEX = new RegExp(TABS_TYPE);
 const COMPILED_WARN_PATTERNS = warnPatterns.map(({ anchor, pattern, message }) => ({
-    anchor: new RegExp(anchor),
+    anchor: anchor ? new RegExp(anchor) : null,
     pattern: new RegExp(pattern),
     message
 }));
@@ -23,36 +23,32 @@ function referencesTabs(content: string): boolean {
 }
 
 /**
- * Reports the tabs members that were removed or became signal-backed in the review, plus the ARIA and
- * theming changes that have no call site to point at. Never writes: a read of a signal member becomes
- * a call, a removed member has no replacement expression, and an attribute selector has to be
- * rewritten by hand.
+ * Reports the subclasses of the tabs classes and the direct calls of their `ngOnChanges`, the members the review
+ * removed or changed, and the ARIA and theming changes that have no call site to point at. Never writes.
  *
- * `.html` is visited as well as `.ts`, because the removed `disabled` input and the removed
- * `[attr.disabled]` on a label are both template-side.
+ * `.html` is visited as well as `.ts`, because the removed `disabled` input of the group and the removed
+ * `[attr.disabled]` of a label are both template-side.
  */
 export default function tabsSignalsAndAria(options: Schema): Rule {
     return async (tree: Tree, context: SchematicContext) => {
-        const { project } = options;
-        const projectDefinition = await setupOptions(project, tree);
+        const projectDefinition = await setupOptions(options.project, tree);
         const root = projectDefinition?.root ?? '';
-        const rootDir = root ? tree.getDir(root as Path) : tree.root;
 
         let consumers = 0;
         let reported = 0;
 
-        rootDir.visit((filePath: Path, entry) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
+        visitProjectFiles(root ? tree.getDir(root) : tree.root, (filePath, entry) => {
             if (!EXTENSIONS.some((extension) => filePath.endsWith(extension))) return;
 
-            const content = entry?.content.toString();
+            const content = entry.content.toString();
 
             if (!content || !referencesTabs(content)) return;
 
             consumers++;
 
             for (const { anchor, pattern, message } of COMPILED_WARN_PATTERNS) {
-                if (!anchor.test(content) || !pattern.test(content)) continue;
+                if (anchor && !anchor.test(content)) continue;
+                if (!pattern.test(content)) continue;
 
                 reported++;
 

@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqDefaultSizes, ThemePalette } from '@koobiq/components/core';
+import { KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import {
     KbqLoaderOverlay,
@@ -353,6 +353,14 @@ describe('KbqLoaderOverlay', () => {
         expect(classes).toEqual(expect.objectContaining({ 'kbq-loader-overlay_surface_bg-tertiary': true }));
         expect(classes).not.toHaveProperty('kbq-loader-overlay_card');
     });
+
+    it('should not throw when destroyed before ngOnInit runs', () => {
+        const fixture = TestBed.createComponent(OverlayNoParams);
+        const overlay = fixture.debugElement.query(By.directive(KbqLoaderOverlay))
+            .componentInstance as KbqLoaderOverlay;
+
+        expect(() => overlay.ngOnDestroy()).not.toThrow();
+    });
 });
 
 @Component({
@@ -426,11 +434,7 @@ class OverlayNoParams {}
             text text text text text text text text text text text text text text text text text text text text
 
             <kbq-loader-overlay>
-                <kbq-progress-spinner
-                    kbq-loader-overlay-indicator
-                    [mode]="'indeterminate'"
-                    [color]="themePalette.Error"
-                />
+                <kbq-progress-spinner kbq-loader-overlay-indicator [mode]="'indeterminate'" [color]="colors.Error" />
 
                 <div kbq-loader-overlay-text>Создание отчета</div>
                 <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>
@@ -439,7 +443,7 @@ class OverlayNoParams {}
     `
 })
 class OverlayWithExternalParams {
-    themePalette = ThemePalette;
+    colors = KbqComponentColors;
 }
 
 @Component({

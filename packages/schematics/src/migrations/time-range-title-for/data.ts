@@ -14,8 +14,8 @@
  *   instead of a set of declarations nothing ever assigned.
  *
  * Only the `for` removal has a mechanical translation. Everything else is reported: what replaces a
- * write to a member that became a getter is a binding on the host, or nothing at all, and neither can
- * be derived from the assignment.
+ * write to a member that became a read-only signal is a binding on the host, or nothing at all, and
+ * neither can be derived from the assignment.
  */
 
 export interface WarnPattern {
@@ -47,7 +47,7 @@ export const TIME_RANGE_PACKAGE = '@koobiq/components/time-range';
 /** Identifier and element shapes that mark a consumer without an import. */
 export const TIME_RANGE_TYPE = '\\bKbqTimeRange\\w*\\b|\\bkbq-time-range\\b';
 
-/** The form-field adapter, whose members stopped being plain fields. */
+/** The form-field adapter, whose members became read-only signals. */
 export const TITLE_AS_CONTROL_TYPE = '\\bKbqTimeRangeTitleAsControl\\b|\\bkbq-time-range-title-as-control\\b';
 
 /**
@@ -91,16 +91,19 @@ export const warnPatterns: WarnPattern[] = [
     },
     {
         anchor: TITLE_AS_CONTROL_TYPE,
+        // `control().stateChanges` read off a form field is reported by `form-field-signals`.
         pattern:
-            '\\.\\s*(?:errorState|empty|required|disabled|id|placeholder|value|controlType|stateChanges)\\s*=(?!=)',
+            '\\.\\s*(?:errorState|empty|required|disabled|focused|id|placeholder|value|controlType)\\s*=(?!=)|' +
+            '(?<!control\\(\\)\\??)\\.\\s*stateChanges\\b',
         message:
-            'A write to a member of a KbqTimeRangeTitleAsControl - ignore this if the receiver is another ' +
-            'object, the anchor is the file, not the assignment: value, empty, required, disabled, ' +
-            'errorState, id, placeholder, controlType and stateChanges are no longer assignable. They were ' +
-            'declared and never written, so a form field around the control rendered once against undefined ' +
-            'state; they are derived from the host and the bound NgControl now, and the control emits ' +
-            'stateChanges when any of them moves. Drive them through the form control instead: a write to ' +
-            'value, empty, required, disabled or errorState throws, and the other four are a compile error.'
+            'A write to a member of a KbqTimeRangeTitleAsControl, or a read of its stateChanges - ignore this ' +
+            'if the receiver is another object, the anchor is the file, not the expression: value, id, ' +
+            'placeholder, focused, empty, required, disabled and errorState are no longer assignable, and ' +
+            'stateChanges was removed. They were declared and never written, so a form field around the ' +
+            'control rendered once against undefined state; they are read-only signals derived from the host ' +
+            'and the bound NgControl now, and controlType is readonly. Drive them through the form control ' +
+            'instead of assigning them, read them with a call - errorState() - and read the signals in a ' +
+            'computed() or an effect() where you subscribed to stateChanges.'
     },
     {
         anchor: TIME_RANGE_TYPE,

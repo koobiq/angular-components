@@ -1,7 +1,9 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { firstValueFrom } from 'rxjs';
+import type { MockInstance } from 'vitest';
 import { KbqIconRegistry } from './icon-registry';
 
 const ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M0 0h16v16H0z"/></svg>';
@@ -29,74 +31,56 @@ describe('KbqIconRegistry', () => {
     afterEach(() => http.verify());
 
     describe('addSvgIconLiteral', () => {
-        it('returns cloned SVGElement', (done) => {
+        it('returns cloned SVGElement', async () => {
             registry.addSvgIconLiteral('check', sanitizer.bypassSecurityTrustHtml(ICON_SVG));
 
-            registry.getNamedSvgIcon('check').subscribe((svg) => {
-                expect(svg).toBeInstanceOf(SVGElement);
-                expect(svg.tagName.toLowerCase()).toBe('svg');
-                done();
-            });
+            const svg = await firstValueFrom(registry.getNamedSvgIcon('check'));
+
+            expect(svg).toBeInstanceOf(SVGElement);
+            expect(svg.tagName.toLowerCase()).toBe('svg');
         });
 
-        it('returns distinct clones per call', (done) => {
+        it('returns distinct clones per call', async () => {
             registry.addSvgIconLiteral('check', sanitizer.bypassSecurityTrustHtml(ICON_SVG));
 
-            const results: SVGElement[] = [];
+            const first = await firstValueFrom(registry.getNamedSvgIcon('check'));
+            const second = await firstValueFrom(registry.getNamedSvgIcon('check'));
 
-            registry.getNamedSvgIcon('check').subscribe((svg) => results.push(svg));
-            registry.getNamedSvgIcon('check').subscribe((svg) => {
-                results.push(svg);
-                expect(results[0]).not.toBe(results[1]);
-                done();
-            });
+            expect(first).not.toBe(second);
         });
     });
 
     describe('addSvgIconLiteralInNamespace', () => {
-        it('resolves by explicit namespace arg', (done) => {
+        it('resolves by explicit namespace arg', async () => {
             registry.addSvgIconLiteralInNamespace('brand', 'logo', sanitizer.bypassSecurityTrustHtml(ICON_SVG));
 
-            registry.getNamedSvgIcon('logo', 'brand').subscribe((svg) => {
-                expect(svg).toBeInstanceOf(SVGElement);
-                done();
-            });
+            expect(await firstValueFrom(registry.getNamedSvgIcon('logo', 'brand'))).toBeInstanceOf(SVGElement);
         });
 
-        it('resolves by "ns:name" syntax', (done) => {
+        it('resolves by "ns:name" syntax', async () => {
             registry.addSvgIconLiteralInNamespace('brand', 'logo', sanitizer.bypassSecurityTrustHtml(ICON_SVG));
 
-            registry.getNamedSvgIcon('brand:logo').subscribe((svg) => {
-                expect(svg).toBeInstanceOf(SVGElement);
-                done();
-            });
+            expect(await firstValueFrom(registry.getNamedSvgIcon('brand:logo'))).toBeInstanceOf(SVGElement);
         });
 
-        it('does not resolve in wrong namespace', (done) => {
+        it('does not resolve in wrong namespace', async () => {
             registry.addSvgIconLiteralInNamespace('brand', 'logo', sanitizer.bypassSecurityTrustHtml(ICON_SVG));
 
-            registry.getNamedSvgIcon('logo', 'other').subscribe({
-                next: (svg) => done(new Error(`expected no emission, got ${svg.nodeName}`)),
-                error: (error) => {
-                    expect(error).toBeInstanceOf(Error);
-                    done();
-                }
-            });
+            await expect(firstValueFrom(registry.getNamedSvgIcon('logo', 'other'))).rejects.toBeInstanceOf(Error);
         });
     });
 
     describe('addSvgIcon (URL)', () => {
-        it('fetches and returns SVGElement', (done) => {
+        it('fetches and returns SVGElement', async () => {
             const url = sanitizer.bypassSecurityTrustResourceUrl('/icons/check.svg');
 
             registry.addSvgIcon('check', url);
 
-            registry.getNamedSvgIcon('check').subscribe((svg) => {
-                expect(svg).toBeInstanceOf(SVGElement);
-                done();
-            });
+            const svg = firstValueFrom(registry.getNamedSvgIcon('check'));
 
             http.expectOne('/icons/check.svg').flush(ICON_SVG);
+
+            expect(await svg).toBeInstanceOf(SVGElement);
         });
 
         it('dedupes concurrent requests for same URL', () => {
@@ -115,34 +99,31 @@ describe('KbqIconRegistry', () => {
     });
 
     describe('addSvgIconSet', () => {
-        it('extracts named symbol from sprite', (done) => {
+        it('extracts named symbol from sprite', async () => {
             const url = sanitizer.bypassSecurityTrustResourceUrl('/sprite.svg');
 
             registry.addSvgIconSet(url);
 
-            registry.getNamedSvgIcon('check_16').subscribe((svg) => {
-                expect(svg).toBeInstanceOf(SVGElement);
-                expect(svg.getAttribute('viewBox')).toBe('0 0 16 16');
-                done();
-            });
+            const icon = firstValueFrom(registry.getNamedSvgIcon('check_16'));
 
             http.expectOne('/sprite.svg').flush(SPRITE_SVG);
+
+            const svg = await icon;
+
+            expect(svg).toBeInstanceOf(SVGElement);
+            expect(svg.getAttribute('viewBox')).toBe('0 0 16 16');
         });
 
-        it('errors for unknown name in set', (done) => {
+        it('errors for unknown name in set', async () => {
             const url = sanitizer.bypassSecurityTrustResourceUrl('/sprite.svg');
 
             registry.addSvgIconSet(url);
 
-            registry.getNamedSvgIcon('nonexistent_16').subscribe({
-                next: (svg) => done(new Error(`expected no emission, got ${svg.nodeName}`)),
-                error: (error) => {
-                    expect(error).toBeInstanceOf(Error);
-                    done();
-                }
-            });
+            const icon = firstValueFrom(registry.getNamedSvgIcon('nonexistent_16'));
 
             http.expectOne('/sprite.svg').flush(SPRITE_SVG);
+
+            await expect(icon).rejects.toBeInstanceOf(Error);
         });
 
         it('does not register same URL twice', () => {
@@ -161,47 +142,36 @@ describe('KbqIconRegistry', () => {
         });
 
         // Symbol ids come from the consumer's sprite, so they are not guaranteed to be valid CSS
-        // identifiers. Looking one up as `#${name}` made a leading digit a selector syntax error, and
-        // the icon never resolved.
-        it('extracts a symbol whose id is not a valid CSS identifier', (done) => {
+        // identifiers. Looked up as `#${name}`, a leading digit would be a selector syntax error, and
+        // the icon would never resolve.
+        it('extracts a symbol whose id is not a valid CSS identifier', async () => {
             registry.addSvgIconSet(sanitizer.bypassSecurityTrustResourceUrl('/sprite.svg'));
 
-            registry.getNamedSvgIcon('3d-view_16').subscribe({
-                next: (svg) => {
-                    expect(svg).toBeInstanceOf(SVGElement);
-                    done();
-                },
-                error: (error: Error) => done.fail(error.message)
-            });
+            const icon = firstValueFrom(registry.getNamedSvgIcon('3d-view_16'));
 
             http.expectOne('/sprite.svg').flush(SPRITE_SVG);
+
+            expect(await icon).toBeInstanceOf(SVGElement);
         });
     });
 
     describe('addSvgIconSetInNamespace', () => {
-        it('resolves symbol from namespaced set', (done) => {
+        it('resolves symbol from namespaced set', async () => {
             const url = sanitizer.bypassSecurityTrustResourceUrl('/sprite.svg');
 
             registry.addSvgIconSetInNamespace('kbq', url);
 
-            registry.getNamedSvgIcon('check_16', 'kbq').subscribe((svg) => {
-                expect(svg).toBeInstanceOf(SVGElement);
-                done();
-            });
+            const icon = firstValueFrom(registry.getNamedSvgIcon('check_16', 'kbq'));
 
             http.expectOne('/sprite.svg').flush(SPRITE_SVG);
+
+            expect(await icon).toBeInstanceOf(SVGElement);
         });
     });
 
     describe('getNamedSvgIcon errors', () => {
-        it('errors when no icon registered', (done) => {
-            registry.getNamedSvgIcon('missing').subscribe({
-                next: (svg) => done(new Error(`expected no emission, got ${svg.nodeName}`)),
-                error: (err: Error) => {
-                    expect(err.message).toContain('missing');
-                    done();
-                }
-            });
+        it('errors when no icon registered', async () => {
+            await expect(firstValueFrom(registry.getNamedSvgIcon('missing'))).rejects.toThrow('missing');
         });
     });
 
@@ -215,10 +185,10 @@ describe('KbqIconRegistry', () => {
         const unsafe = (html: string) => html as unknown as SafeHtml;
 
         // Angular's sanitizer reports in dev mode whenever it strips content, which is what these tests provoke.
-        let warn: jest.SpyInstance;
+        let warn: MockInstance;
 
         beforeEach(() => {
-            warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
         });
 
         afterEach(() => {
@@ -274,24 +244,21 @@ describe('KbqIconRegistry', () => {
 
     // A synchronous throw escapes `getNamedSvgIcon` at the call site, where no `catchError` can reach it
     // and a subscriber's `error` callback never runs. Every failure of this class is an error
-    // notification instead, which is what lets `KbqIcon` fall back to the font class.
+    // notification instead, which is what lets `KbqIcon` fall back to the font class. `HttpClient` is
+    // provided in root, so only an explicit `null` takes it away.
     describe('without an HttpClient', () => {
-        it('reports a URL-backed icon through an error notification', (done) => {
+        it('reports a URL-backed icon through an error notification', async () => {
             TestBed.resetTestingModule();
+            TestBed.configureTestingModule({ providers: [{ provide: HttpClient, useValue: null }] });
 
             const bare = TestBed.inject(KbqIconRegistry);
 
             bare.addSvgIcon('remote_16', TestBed.inject(DomSanitizer).bypassSecurityTrustResourceUrl('/remote.svg'));
 
-            expect(() => {
-                bare.getNamedSvgIcon('remote_16').subscribe({
-                    next: () => done.fail('should not emit'),
-                    error: (error: Error) => {
-                        expect(error.message).toContain('HttpClient is required');
-                        done();
-                    }
-                });
-            }).not.toThrow();
+            let icon: Promise<SVGElement> | undefined;
+
+            expect(() => (icon = firstValueFrom(bare.getNamedSvgIcon('remote_16')))).not.toThrow();
+            await expect(icon).rejects.toThrow('HttpClient is required');
         });
     });
 });

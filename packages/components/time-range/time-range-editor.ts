@@ -8,6 +8,7 @@ import {
     input,
     OnInit,
     TemplateRef,
+    untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -263,6 +264,13 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
 
     /** Implemented as part of ControlValueAccessor */
     writeValue(value?: KbqTimeRangeRange): void {
+        // Untracked, as `setDisabledState()`: a form control set from a consumer's `effect()` writes here on the
+        // spot, and the inputs and bounds read on the way, by the validators too, would make the effect run again.
+        untracked(() => this.applyValue(value));
+    }
+
+    /** Body of `writeValue()`. */
+    private applyValue(value?: KbqTimeRangeRange): void {
         if (!value) return;
 
         const corrected = this.timeRangeService.checkAndCorrectTimeRangeValue(
@@ -537,13 +545,15 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
 
     /** Implemented as part of ControlValueAccessor */
     setDisabledState(isDisabled: boolean): void {
-        if (isDisabled) {
-            this.form.disable({ emitEvent: false });
-        } else {
-            this.form.enable({ emitEvent: false });
-            // `enable()` reaches every control, including the from/to pair a preset type keeps disabled.
-            this.syncRangeControlsDisabledState(this.form.controls.type.value);
-        }
+        untracked(() => {
+            if (isDisabled) {
+                this.form.disable({ emitEvent: false });
+            } else {
+                this.form.enable({ emitEvent: false });
+                // `enable()` reaches every control, including the from/to pair a preset type keeps disabled.
+                this.syncRangeControlsDisabledState(this.form.controls.type.value);
+            }
+        });
     }
 
     /** The from/to pair is only editable while the `range` type is selected. */

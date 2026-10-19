@@ -210,6 +210,38 @@ describe(SCHEMATIC_NAME, () => {
             expect(messages.join('\n')).toContain('are no longer assignable');
         });
 
+        it('reports a subscription to the removed stateChanges of the form-field adapter', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(
+                ts,
+                "import { KbqTimeRangeTitleAsControl } from '@koobiq/components/time-range';\n" +
+                    'export class App { watch(c: KbqTimeRangeTitleAsControl) { c.stateChanges.subscribe(); } }\n'
+            );
+
+            await run(first);
+
+            expect(messages.join('\n')).toContain('stateChanges was removed');
+        });
+
+        it('leaves a stateChanges read off a form field to form-field-signals', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(
+                ts,
+                "import { KbqTimeRangeTitleAsControl } from '@koobiq/components/time-range';\n" +
+                    'export class App { watch(f: KbqFormField) { f.control().stateChanges.subscribe(); } }\n'
+            );
+
+            await run(first);
+
+            expect(messages.join('\n')).not.toContain('stateChanges was removed');
+        });
+
         it('reports a valueCorrected handler, whose emissions changed', async () => {
             const [first] = projects.keys();
             const { ts } = paths(projects.get(first)!);

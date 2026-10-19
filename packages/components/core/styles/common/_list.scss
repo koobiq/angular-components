@@ -1,4 +1,3 @@
-@use '../tokens';
 @use './tokens' as *;
 @use './vendor-prefixes';
 
@@ -83,26 +82,6 @@
     padding-left: kbq-difference-series-css-variables([size-m, size-3xs]);
     padding-right: kbq-difference-series-css-variables([size-m, size-3xs]);
     padding-bottom: var(--kbq-size-3xs);
-
-    .kbq-list-text {
-        @include kbq-list-text();
-    }
-}
-
-@mixin kbq-list-subheading-base() {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    box-sizing: border-box;
-    min-height: 32px;
-
-    border-left: var(--kbq-size-3xs) solid transparent;
-    border-right: var(--kbq-size-3xs) solid transparent;
-
-    padding-top: var(--kbq-size-m);
-    padding-left: kbq-difference-series-css-variables([size-m, size-3xs]);
-    padding-right: kbq-difference-series-css-variables([size-m, size-3xs]);
-    padding-bottom: var(--kbq-size-xxs);
 
     .kbq-list-text {
         @include kbq-list-text();

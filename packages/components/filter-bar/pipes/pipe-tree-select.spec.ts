@@ -1,8 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     kbqBuildTree,
     KbqFilter,
@@ -113,7 +112,7 @@ describe('KbqPipeTreeSelectComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent]
+            imports: [KbqFilterBarModule, TestComponent]
         })
             .overrideComponent(KbqPipeTreeSelectComponent, {
                 set: {
@@ -122,6 +121,8 @@ describe('KbqPipeTreeSelectComponent', () => {
             })
             .compileComponents();
     });
+
+    afterEach(() => vi.useRealTimers());
 
     const getPipeComponent = (index: number = 0): KbqPipeTreeSelectComponent => {
         const pipes = fixture.debugElement.queryAll(By.css('kbq-pipe-tree-select'));
@@ -225,7 +226,9 @@ describe('KbqPipeTreeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should emit onChangePipe event on selection', fakeAsync(() => {
+        it('should emit onChangePipe event on selection', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null })
             ]);
@@ -233,17 +236,19 @@ describe('KbqPipeTreeSelectComponent', () => {
 
             const filterBar = getFilterBar();
             const component = getPipeComponent();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onChangePipe.subscribe(spy);
 
             component.onSelect({ value: SINGLE_VALUE } as KbqTreeOption);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(spy).toHaveBeenCalled();
-        }));
+        });
 
-        it('should set data.value to selected item value', fakeAsync(() => {
+        it('should set data.value to selected item value', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null })
             ]);
@@ -253,40 +258,44 @@ describe('KbqPipeTreeSelectComponent', () => {
             const mockItem = { value: SINGLE_VALUE } as KbqTreeOption;
 
             component.onSelect(mockItem);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(component.data.value).toEqual(SINGLE_VALUE);
-        }));
+        });
 
-        it('should close select after selection', fakeAsync(() => {
+        it('should close select after selection', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null })
             ]);
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const closeSpy = jest.spyOn(component.select(), 'close');
+            const closeSpy = vi.spyOn(component.select(), 'close');
             const mockItem = { value: SINGLE_VALUE } as KbqTreeOption;
 
             component.onSelect(mockItem);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(closeSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('should restore focus to the trigger button after selection', fakeAsync(() => {
+        it('should restore focus to the trigger button after selection', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null })
             ]);
             fixture.detectChanges();
 
-            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+            const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             getPipeComponent().onSelect({ value: SINGLE_VALUE } as KbqTreeOption);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
-        }));
+        });
     });
 
     describe('updateTemplates', () => {
@@ -328,7 +337,9 @@ describe('KbqPipeTreeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should forward panelMaxHeight from the pipe template to the panel', fakeAsync(() => {
+        it('should forward panelMaxHeight from the pipe template to the panel', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.pipeTemplates = [
                 {
                     name: 'TreeSelect',
@@ -345,23 +356,25 @@ describe('KbqPipeTreeSelectComponent', () => {
             fixture.detectChanges();
 
             openPanel();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(readPanelMaxHeightToken()).toBe('300px');
-        }));
+        });
 
-        it('should leave the token unset when the template omits panelMaxHeight', fakeAsync(() => {
+        it('should leave the token unset when the template omits panelMaxHeight', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
             openPanel();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // No inline custom property at all, so the select-family default of 256px applies.
             expect(readPanelMaxHeightToken()).toBe('');
-        }));
+        });
     });
 
     describe('onClear', () => {
@@ -390,7 +403,7 @@ describe('KbqPipeTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onClearPipe.subscribe(spy);
 
@@ -406,7 +419,7 @@ describe('KbqPipeTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onChangePipe.subscribe(spy);
 
@@ -429,7 +442,7 @@ describe('KbqPipeTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const expandAllSpy = jest.spyOn(component.treeControl, 'expandAll');
+            const expandAllSpy = vi.spyOn(component.treeControl, 'expandAll');
 
             component.onOpen();
 
@@ -466,19 +479,21 @@ describe('KbqPipeTreeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should filter tree nodes when search value changes', fakeAsync(() => {
+        it('should filter tree nodes when search value changes', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null, search: true })
             ]);
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const filterNodesSpy = jest.spyOn(component.treeControl, 'filterNodes');
+            const filterNodesSpy = vi.spyOn(component.treeControl, 'filterNodes');
 
             component.searchControl.setValue('Admin');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(filterNodesSpy).toHaveBeenCalledWith('Admin');
-        }));
+        });
     });
 });

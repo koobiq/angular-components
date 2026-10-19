@@ -74,7 +74,7 @@ describe(SCHEMATIC_NAME, () => {
     });
 
     it('should throw message if replaced attr value is not static', async () => {
-        const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
         const [firstProjectKey] = projects.keys();
         const { templatePath } = getProjectContentPaths(projects.get(firstProjectKey)!, appTree);
 

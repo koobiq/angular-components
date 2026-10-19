@@ -1,6 +1,6 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
-import { Platform } from '@angular/cdk/platform';
+import { _getFocusedElementPierceShadowDom, Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     afterNextRender,
@@ -18,12 +18,12 @@ import {
     ElementRef,
     inject,
     Injector,
-    Input,
     input,
-    NgZone,
+    OnChanges,
     OnDestroy,
     Signal,
     signal,
+    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -33,6 +33,7 @@ import {
     ENTER,
     IFocusableOption,
     KBQ_WINDOW,
+    kbqAnimationsDisabled,
     kbqInjectNativeElement,
     PopUpPlacements,
     PopUpTriggers,
@@ -44,7 +45,6 @@ import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { getOuterWidth } from './outer-width';
 
 /** Orientation of the navbar an element belongs to. */
@@ -95,15 +95,12 @@ export class KbqNavbarItemSuffix {}
         class: 'kbq-navbar-title'
     }
 })
-export class KbqNavbarTitle implements AfterViewInit {
+export class KbqNavbarTitle {
     /** @docs-private */
     protected readonly isBrowser = inject(Platform).isBrowser;
     /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
     private readonly window = inject(KBQ_WINDOW);
-
-    /** @docs-private */
-    outerElementWidth: number;
 
     /** Text content of the title element. */
     get text(): string {
@@ -134,11 +131,6 @@ export class KbqNavbarTitle implements AfterViewInit {
     /** Outer width of the title: its border box plus horizontal margins. */
     getOuterElementWidth(): number {
         return this.isBrowser ? getOuterWidth(this.nativeElement, this.window) : 0;
-    }
-
-    /** @docs-private */
-    ngAfterViewInit(): void {
-        this.outerElementWidth = this.getOuterElementWidth();
     }
 }
 
@@ -180,11 +172,11 @@ export class KbqNavbarDivider {
         '(blur)': 'blur()'
     }
 })
-export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
+export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetector = inject(ChangeDetectorRef);
     private focusMonitor = inject(FocusMonitor);
-    private ngZone = inject(NgZone);
+    private readonly injector = inject(Injector);
     private readonly destroyRef = inject(DestroyRef);
 
     /** @docs-private */
@@ -216,36 +208,27 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
 
     /** @docs-private */
     get hasFocus(): boolean {
-        return !!this.nestedElement?.hasFocus || this._hasFocus;
+        return !!this.nestedElement?.hasFocus || this.hasFocusState();
     }
 
     set hasFocus(value: boolean) {
-        this._hasFocus = value;
+        this.hasFocusState.set(value);
     }
 
-    private _hasFocus: boolean = false;
+    private readonly hasFocusState = signal(false);
 
-    /**
-     * Whether the item is disabled.
-     *
-     * Deliberately kept a plain accessor input rather than a signal: `FocusKeyManager` reads it as a boolean
-     * through its default skip predicate, and a signal would always read truthy there — the manager would then
-     * skip every item and arrow navigation would stop working entirely. It also reads `true` for a decorative
-     * element, which the key manager has to skip just the same.
-     */
-    @Input({ transform: booleanAttribute })
+    /** Whether the item is disabled. Also `true` for a decorative element, which the key manager skips as well. */
+    // An accessor, not a signal: `FocusKeyManager` reads it as a boolean through its default skip predicate, where a
+    // signal would always read truthy — the manager would skip every item and arrow navigation would stop working.
     get disabled(): boolean {
-        return this._disabled || this.decorative;
+        return this.disabledState() || this.decorative();
     }
 
     set disabled(value: boolean) {
-        if (value !== this._disabled) {
-            this._disabled = value;
-            this.changeDetector.markForCheck();
-        }
+        this.disabledState.set(value);
     }
 
-    private _disabled = false;
+    private readonly disabledState = signal(false);
 
     /**
      * Keeps an element with nothing to interact with out of the roving focus order, without announcing or
@@ -253,7 +236,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
      *
      * @internal
      */
-    decorative = false;
+    readonly decorative = signal(false);
 
     /**
      * Whether the item was disabled through `disabled`, as opposed to being decorative.
@@ -261,7 +244,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
      * @internal
      */
     get explicitlyDisabled(): boolean {
-        return this._disabled;
+        return this.disabledState();
     }
 
     /**
@@ -270,6 +253,21 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
      */
     get tabIndex(): number {
         return -1;
+    }
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
     }
 
     constructor() {
@@ -313,8 +311,6 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
 
         this.hasFocus = true;
 
-        this.changeDetector.markForCheck();
-
         this.elementRef.nativeElement.focus();
     }
 
@@ -324,18 +320,20 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
             return;
         }
 
-        if (origin === 'keyboard') {
-            this.focusMonitor.focusVia(this.elementRef, origin);
+        // A pointer focuses what it lands on by itself; moving the focus for it would surface a focus ring and a
+        // tooltip. Focus set by code still has to reach the item, or the host keeps it while this item is active.
+        const movesFocus = origin !== 'mouse' && origin !== 'touch';
+
+        if (movesFocus) {
+            this.focusMonitor.focusVia(this.elementRef, origin ?? 'program');
         }
 
         if (this.nestedElement) {
-            if (origin === 'keyboard') {
-                // KbqButton tracks focus via FocusMonitor; KbqFormField just delegates to control.focus.
-                if ('focusViaKeyboard' in this.nestedElement) {
-                    this.nestedElement.focusViaKeyboard();
-                } else {
-                    this.nestedElement.focus();
-                }
+            // KbqButton tracks focus via FocusMonitor; KbqFormField just delegates to control.focus.
+            if (origin === 'keyboard' && 'focusViaKeyboard' in this.nestedElement) {
+                this.nestedElement.focusViaKeyboard();
+            } else if (movesFocus) {
+                this.nestedElement.focus();
             }
 
             this.changeDetector.markForCheck();
@@ -343,34 +341,38 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
             return;
         }
 
-        if (origin === 'keyboard') {
-            this.tooltip?.show();
+        if (movesFocus) {
+            if (origin === 'keyboard') this.tooltip?.show();
+
             this.onFocusHandler();
         }
     }
 
     /** @docs-private */
     blur(): void {
-        // When animations are enabled, Angular may end up removing the option from the DOM a little
-        // earlier than usual, causing it to be blurred and throwing off the logic in the list
-        // that moves focus not the next item. To work around the issue, we defer marking the option
-        // as not focused until the next time the zone stabilizes.
-        this.ngZone.onStable
-            .asObservable()
-            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.ngZone.run(() => {
-                    this._hasFocus = false;
+        // Deferred until the focus has settled: an item hands its focus to its nested button or form field, which
+        // registers its focus only after this blur, and the item gets no focus event of its own afterwards. A blur
+        // reported before that would read as no item being focused and clear the navbar's active item. An item
+        // blurred by its own destruction has nothing to update.
+        if (this.destroyRef.destroyed) return;
 
-                    this.tooltip?.hide();
+        afterNextRender(
+            () => {
+                // Focus can be back by the time this runs (a blur and a focus in the same task): then nothing was lost.
+                if (_getFocusedElementPierceShadowDom() === this.elementRef.nativeElement) return;
 
-                    if (this.button()?.hasFocus) {
-                        return;
-                    }
+                this.hasFocusState.set(false);
 
-                    this.onBlur.next({ item: this });
-                });
-            });
+                this.tooltip?.hide();
+
+                if (this.button()?.hasFocus) {
+                    return;
+                }
+
+                this.onBlur.next({ item: this });
+            },
+            { injector: this.injector }
+        );
     }
 
     /** @docs-private */
@@ -591,6 +593,12 @@ export class KbqNavbarItem implements AfterContentInit {
         () => this.hasDropDownTrigger && this.rectangleElement.isHorizontal() && !this.isCollapsed()
     );
 
+    /**
+     * Whether the title of a vertical bento item slides in without motion.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
     /** @docs-private */
     get hasCroppedText(): boolean {
         return !!this.title()?.isOverflown;
@@ -640,8 +648,6 @@ export class KbqNavbarItem implements AfterContentInit {
             this.updateDropdown();
 
             this.updateTooltip();
-
-            this.changeDetectorRef.markForCheck();
         });
 
         this.navbarFocusableItem.setTooltip(this.tooltip);
@@ -750,17 +756,6 @@ export class KbqNavbarItem implements AfterContentInit {
      */
     getCollapsibleWidth(): number {
         return Math.max(this.expandedWidth - this.collapsedWidth, 0);
-    }
-
-    /**
-     * Outer width of the projected title, measured once when it initialized.
-     *
-     * @deprecated Unused by the navbar, which collapses items by `getCollapsibleWidth()`: the title alone leaves out
-     * a suffix, the dropdown chevron and the padding an item gives up. Will be removed in the next major release.
-     * @docs-private
-     */
-    getTitleWidth(): number {
-        return this.title()?.outerElementWidth ?? 0;
     }
 
     /** @docs-private */

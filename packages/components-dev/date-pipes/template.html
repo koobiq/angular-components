@@ -4,7 +4,7 @@
     <br />
     <header class="kbq-display-compact">pipe's</header>
     <div class="dev-container">
-        <button (click)="toggleLocale()">Toggle locale (current: {{ localeService.id }})</button>
+        <button (click)="toggleLocale()">Toggle locale (current: {{ localeService.localeId() }})</button>
         <button (click)="toggleTimezone()">Toggle time zone (current: {{ timezoneService.timezone() }})</button>
         <p>
             Only the

@@ -44,7 +44,7 @@ export const MODAL_ANIMATE_DURATION = 300;
  */
 export interface KbqModal {
     /** Whether the dialog renders a close button in its header. */
-    readonly kbqClosable: boolean;
+    readonly kbqClosable: Signal<boolean>;
     /** Palette the composed header binds the close-icon color from. */
     readonly componentColors: typeof KbqComponentColors;
     /** Id the dialog element points `aria-labelledby` at. Belongs on the rendered title element. */

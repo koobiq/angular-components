@@ -1,33 +1,71 @@
 /**
- * Replacement data for the v20.0.0 deprecated API removal migration.
- *
- * Each entry uses a RegExp source string in `from` and a literal `to`. The
- * RegExp is compiled with the `g` flag inside the migration driver.
+ * Replacement data for the v20.0.0 deprecated API removal migration, applied by `replacementMigrationRule`.
  *
  * Three buckets are emitted so the schematic can apply each to the right
  * file kind (.ts, .html / inline-template strings, .scss).
  */
 
-export interface Replacement {
-    from: string;
-    to: string;
-    /** Optional human-readable note shown in dry-run / warn mode. */
-    note?: string;
-    /**
-     * When this replacement matches in a .ts file, ensure the listed import
-     * specifier is present. Used for rewrites that introduce a symbol the
-     * user did not previously import (e.g. `toBoolean(` → `booleanAttribute(`
-     * requires `import { booleanAttribute } from '@angular/core'`).
-     */
-    ensureImport?: { symbol: string; from: string };
-    /**
-     * When this replacement matches in a .ts file, strip `symbol` from any
-     * existing `import { … } from 'from'` named-import clause. Used for
-     * rewrites whose source symbol no longer exists in v20.0.0 — leaving the
-     * stale import would otherwise break compilation of the migrated file.
-     */
-    removeImport?: { symbol: string; from: string };
+import { listItemPattern } from '../../utils/list-item-pattern';
+import type { Replacement, WarnPattern } from '../../utils/replacement-driver';
+import { codeBlockTagWith, codeBlockTagWithout, TAG_BODY } from '../../utils/tag-patterns';
+
+const CORE = '@koobiq/components/core';
+const FILE_UPLOAD = '@koobiq/components/file-upload';
+
+/** A named import of `symbol` from `module`. */
+const namedImport = (symbol: string, module: string): string =>
+    `\\bimport\\s*(?:type\\s*)?\\{[^}]*\\b${symbol}\\b[^}]*\\}\\s*from\\s*['"]${module}['"]`;
+
+/** A mention of the Koobiq autocomplete: one of its symbols, its entry point, its `exportAs` or its input. */
+const KBQ_AUTOCOMPLETE = '(?:\\bKbqAutocomplete|@koobiq/components/autocomplete\\b|\\bkbqAutocomplete)';
+
+/** An opening `<kbq-divider>` tag up to one of its attributes, captured as `$1`. */
+const DIVIDER_TAG = `(<kbq-divider(?![\\w-])${TAG_BODY}*?)`;
+
+/** The `="…"` of an attribute. */
+const ATTRIBUTE_VALUE = `(?:\\s*=\\s*(?:"[^"]*"|'[^']*'))`;
+
+/** A symbol removed in 20.0.0 with nothing in its place. */
+interface RemovedSymbol {
+    name: string;
+    /** The module it was imported from. */
+    module: string;
+    /** Whether a list holds it called with no arguments, as a provider function. */
+    call?: boolean;
 }
+
+const REMOVED_SYMBOLS: RemovedSymbol[] = [
+    { name: 'KbqInputFileLabel', module: FILE_UPLOAD },
+    { name: 'KbqInputFile', module: FILE_UPLOAD },
+    { name: 'KbqFileValidatorFn', module: FILE_UPLOAD },
+    { name: 'KbqValidationOptions', module: CORE },
+    { name: 'KBQ_VALIDATION', module: CORE },
+    { name: 'KBQ_SANITY_CHECKS', module: CORE },
+    { name: 'KBQ_SIDEPANEL_WITH_SHADOW', module: '@koobiq/components/sidepanel' },
+    { name: 'mcSanityChecksFactory', module: CORE },
+    { name: 'KbqCommonModule', module: CORE },
+    // A no-op shim kept after the KbqValidateDirective removal. Its calls go, which can leave an empty
+    // `providers: []` behind.
+    { name: 'kbqDisableLegacyValidationDirectiveProvider', module: CORE, call: true }
+];
+
+/**
+ * A mention of the symbol outside the elements of `[…]` and `{…}` lists: a type annotation, an `@Inject()` token, a
+ * `provide:`, an aliased import. Deleting it there would leave the code broken.
+ */
+const outsideLists = ({ name, call }: RemovedSymbol): string =>
+    `(?<![\\[{,]\\s*(?:\\btype\\s+)?)\\b${name}\\b|\\b${name}\\b(?!${call ? '(?:\\s*\\(\\s*\\))?' : ''}\\s*[,\\]}])`;
+
+/**
+ * Removes the symbol with one of its commas from the named imports and exports and the arrays of a file that names
+ * it nowhere else. A file that also uses it elsewhere is left untouched and reported.
+ */
+const removeFromLists = (symbol: RemovedSymbol): Replacement => ({
+    from: listItemPattern(symbol.call ? `\\b${symbol.name}\\(\\s*\\)` : `\\b${symbol.name}\\b`),
+    to: '',
+    unless: outsideLists(symbol),
+    removeImport: { symbol: symbol.name, from: symbol.module }
+});
 
 /** TypeScript-source replacements (imports + identifiers + method renames). */
 export const tsReplacements: Replacement[] = [
@@ -68,7 +106,13 @@ export const tsReplacements: Replacement[] = [
     // ─── Identifier renames (TypeScript imports / type references) ────────
     { from: '\\bRdxAccordionItemState\\b', to: 'KbqAccordionItemState' },
     { from: '\\bKbqCodeFile\\b', to: 'KbqCodeBlockFile' },
-    { from: '\\bAnimationCurves\\b', to: 'KbqAnimationCurves' },
+    // The import specifier and the uses of the core one only: Angular Material exports an `AnimationCurves` too.
+    {
+        from:
+            `\\bAnimationCurves\\b(?:(?=[^{}]*\\}\\s*from\\s*['"]${CORE}['"])|` +
+            `(?<=${namedImport('AnimationCurves', CORE)}[\\s\\S]*))`,
+        to: 'KbqAnimationCurves'
+    },
     { from: '\\bMeasurementSystem\\b', to: 'KbqMeasurementSystem' },
     { from: '\\bSizeUnitsConfig\\b', to: 'KbqSizeUnitsLocaleConfiguration' },
     { from: '\\bKbqNavbarIcModule\\b', to: 'KbqNavbarModule' },
@@ -81,26 +125,6 @@ export const tsReplacements: Replacement[] = [
     { from: '\\bKbqExtendedTooltipTrigger\\b', to: 'KbqTooltipTrigger' },
     { from: '\\bKbqDatepickerToggle\\b(?!Icon)', to: 'KbqDatepickerToggleIconComponent' },
     { from: '\\bKbqFilterBarSearch\\b', to: 'KbqSearchExpandable' },
-    {
-        from: '\\bKbqInputFileLabel\\b',
-        to: '',
-        removeImport: { symbol: 'KbqInputFileLabel', from: '@koobiq/components/file-upload' }
-    },
-    {
-        from: '\\bKbqInputFile\\b',
-        to: '',
-        removeImport: { symbol: 'KbqInputFile', from: '@koobiq/components/file-upload' }
-    },
-    {
-        from: '\\bKbqFileValidatorFn\\b',
-        to: '',
-        removeImport: { symbol: 'KbqFileValidatorFn', from: '@koobiq/components/file-upload' }
-    },
-    {
-        from: '\\bKbqValidationOptions\\b',
-        to: '',
-        removeImport: { symbol: 'KbqValidationOptions', from: '@koobiq/components/core' }
-    },
     { from: '\\bKbqFormFieldRef\\b', to: 'KbqFormField' },
 
     // Deprecated dropdown position type aliases → Kbq-prefixed names. The
@@ -109,48 +133,8 @@ export const tsReplacements: Replacement[] = [
     { from: '\\bDropdownPositionX\\b', to: 'KbqDropdownPositionX' },
     { from: '\\bDropdownPositionY\\b', to: 'KbqDropdownPositionY' },
 
-    // ─── Tokens / function renames ────────────────────────────────────────
-    {
-        from: '\\bKBQ_VALIDATION\\b',
-        to: '',
-        removeImport: { symbol: 'KBQ_VALIDATION', from: '@koobiq/components/core' }
-    },
-    {
-        from: '\\bKBQ_SANITY_CHECKS\\b',
-        to: '',
-        removeImport: { symbol: 'KBQ_SANITY_CHECKS', from: '@koobiq/components/core' }
-    },
-    {
-        from: '\\bKBQ_SIDEPANEL_WITH_SHADOW\\b',
-        to: '',
-        removeImport: { symbol: 'KBQ_SIDEPANEL_WITH_SHADOW', from: '@koobiq/components/sidepanel' }
-    },
-    {
-        from: '\\bmcSanityChecksFactory\\b',
-        to: '',
-        removeImport: { symbol: 'mcSanityChecksFactory', from: '@koobiq/components/core' }
-    },
-    {
-        from: '\\bKbqCommonModule\\b',
-        to: '',
-        removeImport: { symbol: 'KbqCommonModule', from: '@koobiq/components/core' }
-    },
-    {
-        // No-op shim kept after the KbqValidateDirective removal in v20.0.0 is
-        // gone in this release. Strip the call, its trailing comma, and the
-        // import; the array/empty-providers cleanup happens via the extended
-        // `[ , … ]` / `[ … , ]` normalize pass in the driver.
-        from: '\\bkbqDisableLegacyValidationDirectiveProvider\\(\\s*\\),?\\s*',
-        to: '',
-        note:
-            'kbqDisableLegacyValidationDirectiveProvider was a no-op shim kept after the ' +
-            'KbqValidateDirective removal in v20.0.0; it is removed in this release. ' +
-            'You may also need to remove the (now-empty) `providers: []` key from the affected decorator.',
-        removeImport: {
-            symbol: 'kbqDisableLegacyValidationDirectiveProvider',
-            from: '@koobiq/components/core'
-        }
-    },
+    // ─── Removed symbols / function renames ───────────────────────────────
+    ...REMOVED_SYMBOLS.map(removeFromLists),
     {
         from: '\\btoBoolean\\(',
         to: 'booleanAttribute(',
@@ -170,7 +154,12 @@ export const tsReplacements: Replacement[] = [
     },
 
     // ─── Method renames on instances ──────────────────────────────────────
-    { from: '\\.openPanel\\(', to: '.open(' },
+    // `KbqAutocompleteTrigger.openPanel()`, in a file that uses the Koobiq autocomplete: the autocomplete trigger of
+    // Angular Material keeps its `openPanel()`.
+    {
+        from: `\\.openPanel\\((?:(?<=${KBQ_AUTOCOMPLETE}[\\s\\S]*)|(?=[\\s\\S]*${KBQ_AUTOCOMPLETE}))`,
+        to: '.open('
+    },
     { from: '\\.toggleIsCollapsed\\(', to: '.toggle(' },
     { from: '\\.focusViaKeyboard\\(', to: '.focus(' },
 
@@ -242,12 +231,10 @@ export const templateReplacements: Replacement[] = [
     { from: '(<kbq-search-expandable\\b[^>]*?\\s)tooltip="', to: '$1tooltipText="' },
 
     // ─── KbqCodeBlock deprecated input renames ────────────────────────────
-    // Scoped strictly to the attribute form (`[x]` binding or `x="…"` static)
-    // so the common words `canDownload` / `files` elsewhere are never touched.
-    { from: '\\[canLoad\\]', to: '[canDownload]' },
-    { from: '\\bcanLoad="', to: 'canDownload="' },
-    { from: '\\[codeFiles\\]', to: '[files]' },
-    { from: '\\bcodeFiles="', to: 'files="' },
+    // `[x]="…"`, `x="…"` and a valueless `x`, only on a `<kbq-code-block>` that does not bind the replacement
+    // as well: the two bindings would end up under one name. Such a tag is reported below.
+    { from: String.raw`${codeBlockTagWithout('canDownload')}canLoad(?=\]?[\s=/>])`, to: '$1canDownload' },
+    { from: String.raw`${codeBlockTagWithout('files')}codeFiles(?=\]?[\s=/>])`, to: '$1files' },
 
     // ─── Tooltip warning trigger → kbqTooltip + modifier ───────────────────
     // Two-step: first add modifier attribute, then rename binding key.
@@ -265,8 +252,9 @@ export const templateReplacements: Replacement[] = [
     },
 
     // ─── Divider deprecated inset attribute ───────────────────────────────
-    { from: '\\s\\[inset\\]="[^"]*"', to: '' },
-    { from: '\\sinset(\\s|>|/)', to: '$1' }
+    // Only on a `<kbq-divider>`: in code `inset` is any identifier, and other dividers have an input of that name.
+    { from: `${DIVIDER_TAG}\\s\\[inset\\]${ATTRIBUTE_VALUE}`, to: '$1' },
+    { from: `${DIVIDER_TAG}\\sinset${ATTRIBUTE_VALUE}?(?=[\\s/>])`, to: '$1' }
 ];
 
 /** SCSS replacements (CSS class selectors that were renamed at the runtime level). */
@@ -280,13 +268,8 @@ export const scssReplacements: Replacement[] = [
 
 /**
  * Patterns that we can't safely auto-fix — surface them to the user with file
- * locations so they can migrate manually. Used in `warn` mode only.
+ * locations so they can migrate manually, whether or not the fix is applied.
  */
-export interface WarnPattern {
-    pattern: string;
-    message: string;
-}
-
 export const warnPatterns: WarnPattern[] = [
     {
         pattern: '\\(onSaveAsNew\\)',
@@ -331,6 +314,12 @@ export const warnPatterns: WarnPattern[] = [
             'update any programmatic (TypeScript) access manually.'
     },
     {
+        pattern: `${codeBlockTagWith('canLoad', 'canDownload')}|${codeBlockTagWith('codeFiles', 'files')}`,
+        message:
+            'A <kbq-code-block> that binds `canLoad` next to `canDownload`, or `codeFiles` next to `files`, was ' +
+            'left untouched: merge each pair into one `canDownload` / `files` binding. Manual migration required.'
+    },
+    {
         pattern: '\\[initialValue\\]|\\binitialValue="',
         message:
             'KbqFilterBarSearch.initialValue has no counterpart in kbq-search-expandable: the component ' +
@@ -365,5 +354,13 @@ export const warnPatterns: WarnPattern[] = [
         message:
             'KbqFilter.required is deprecated — use cleanable = false and removable = false instead. ' +
             'NOTE: this warning is best-effort and may match unrelated `required:` keys; verify it is a KbqFilter config.'
-    }
+    },
+    ...REMOVED_SYMBOLS.map((symbol): WarnPattern => ({
+        anchor: `\\b(?:import|export)\\s*(?:type\\s*)?\\{[^}]*\\b${symbol.name}\\b[^}]*\\}\\s*from\\s*['"]${symbol.module}['"]`,
+        pattern: outsideLists(symbol),
+        message:
+            `\`${symbol.name}\` was removed in 20.0.0 with nothing in its place. This file uses it outside an ` +
+            'import or a list, e.g. as a type, an `@Inject()` token or a `provide:`, so it was left untouched: ' +
+            'remove those uses, and the code that depends on them, by hand. Manual migration required.'
+    }))
 ];

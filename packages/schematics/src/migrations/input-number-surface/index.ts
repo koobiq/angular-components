@@ -3,6 +3,7 @@ import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import {
     FORM_FIELD_CONTROL_MEMBER_PATTERN,
     INPUT_PACKAGE,
@@ -302,8 +303,7 @@ export default function inputNumberSurface(options: Schema): Rule {
 
         const pending: Array<{ filePath: Path; content: string }> = [];
 
-        rootDir.visit((filePath: Path, entry) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
+        visitProjectFiles(rootDir, (filePath: Path, entry) => {
             if (!EXTENSIONS.some((extension) => filePath.endsWith(extension))) return;
 
             const content = entry?.content.toString();

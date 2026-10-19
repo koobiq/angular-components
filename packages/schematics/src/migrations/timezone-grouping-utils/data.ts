@@ -88,7 +88,8 @@ export const warnPatterns: WarnPattern[] = [
         message:
             'kbq-timezone-select rejects multiple selection with an error instead of accepting it and ' +
             'rendering a trigger that shows one of the selected values — through multiple and through ' +
-            'multiline alike, since multiline turns on multiple selection as well. Use kbq-select for ' +
+            'multiline alike, since multiline turns on multiple selection as well. An assignment to multiple ' +
+            'no longer compiles: it is a signal input now, set through the template. Use kbq-select for ' +
             'multiple selection.'
     }
 ];

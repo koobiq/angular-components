@@ -1,4 +1,3 @@
-import { AnimationEvent } from '@angular/animations';
 import {
     CdkTrapFocus,
     ConfigurableFocusTrapFactory,
@@ -27,27 +26,25 @@ import {
     ElementRef,
     EventEmitter,
     InjectionToken,
-    Input,
+    InputSignal,
+    OnChanges,
     OnInit,
-    Output,
     Provider,
+    SimpleChanges,
     TemplateRef,
     Type,
-    ViewChild,
     ViewEncapsulation,
     booleanAttribute,
-    computed,
     inject,
     input,
-    numberAttribute,
+    untracked,
     viewChild
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     EmptyFocusTrapStrategy,
     KBQ_OVERLAY_LAYERS,
-    KBQ_WINDOW,
     KbqComponentColors,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
@@ -59,23 +56,26 @@ import {
     KbqPopUpTrigger,
     KbqStickToWindowPlacementValues,
     POSITION_TO_CSS_MAP,
+    PopUpPlacements,
     PopUpSizes,
     PopUpTriggers,
-    PopUpVisibility,
     applyPopupMargins,
     kbqInjectA11yLocaleConfiguration,
+    kbqOptionalNumberAttribute,
     kbqRepositionScrollStrategyFactory,
     kbqSiblingPopupProvider
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { NEVER, merge } from 'rxjs';
-import { kbqPopoverAnimations } from './popover-animations';
 
 export const defaultOffsetYWithArrow = 8;
 
 /** Leave delay applied to a hover-triggered popover when `kbqLeaveDelay` is not bound. */
 export const defaultHoverLeaveDelay = 500;
+
+/** Default `kbqPopoverBackdropClass`. */
+const defaultBackdropClass = 'cdk-overlay-transparent-backdrop';
 
 /** Debounce of the content-mutation observer that drives the scroll shadows, in milliseconds. */
 const contentObserverDebounce = 15;
@@ -117,19 +117,13 @@ export const KBQ_POPOVER_FOCUS_TRAP_PROVIDERS: Provider[] = [
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        '(keydown.esc)': 'onEscape()',
-        '[@.disabled]': 'reducedMotion'
+        '(keydown.esc)': 'onEscape($event)'
     },
-    animations: [kbqPopoverAnimations.popoverState],
     preserveWhitespaces: false
 })
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     /** Accessible name for the icon-only close button. */
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
-
-    /** Whether the opening/closing animation must be skipped because the user asked for reduced motion. */
-    protected readonly reducedMotion: boolean =
-        inject(KBQ_WINDOW).matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 
     /** Debounce shared by the mutation observer and the scroll-shadow container (both expose `debounce`). */
     protected readonly contentObserverDebounce = contentObserverDebounce;
@@ -150,6 +144,8 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     /** Accessible name of the panel, used when there is no header to label it. Written by the trigger. */
     ariaLabel: string | undefined;
 
+    private readonly popoverElement = viewChild<ElementRef<HTMLElement>>('popover');
+
     /**
      * Panel element (`.kbq-popover`), not the component host.
      *
@@ -157,7 +153,9 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
      * panel, so both `applyPopupMargins` here and `setStickPosition`/`addEventListenerForHide` in the base
      * must resolve to the same element. The confirm template carries the matching `#popover` reference.
      */
-    @ViewChild('popover') elementRef: ElementRef;
+    override get elementRef(): ElementRef<HTMLElement> {
+        return this.popoverElement()!;
+    }
     readonly cdkTrapFocus = viewChild.required(CdkTrapFocus);
     /** @docs-private */
     readonly overflowContainer = viewChild(KbqOverflowShadowContainer);
@@ -212,7 +210,12 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
         this.isTrapFocus = isTrapFocus;
     }
 
-    onEscape() {
+    /** Closes the panel on `Escape` inside it, unless a control there spent the key closing a popup of its own. */
+    onEscape(event?: Event) {
+        if (event?.defaultPrevented || this.trigger?.preventClose) return;
+
+        // Spent, so that a container closing on Escape, such as a modal around an overlay layer, stays open.
+        event?.preventDefault();
         this.requestClose();
     }
 
@@ -247,12 +250,8 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
         return top || bottom;
     }
 
-    override animationDone(event: AnimationEvent): void {
-        super.animationDone(event);
-
-        if (event.toState === PopUpVisibility.Visible) {
-            this.scrollbarViewport()?.flashScrollIndicators();
-        }
+    protected override afterShowAnimation(): void {
+        this.scrollbarViewport()?.flashScrollIndicators();
     }
 
     protected readonly componentColors = KbqComponentColors;
@@ -275,16 +274,6 @@ export const KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     useFactory: kbqPopoverScrollStrategyFactory
 };
 
-/**
- * Creates an error to be thrown if the user supplied an invalid popover position.
- *
- * @deprecated An invalid placement is not fatal: it is reported with a warning and falls back to `top`.
- * Will be removed in the next major release.
- */
-export function getKbqPopoverInvalidPositionError(position: string) {
-    return Error(`KbqPopover position "${position}" is invalid.`);
-}
-
 @Directive({
     selector: '[kbqPopover]',
     providers: [kbqSiblingPopupProvider(KbqPopoverTrigger)],
@@ -299,7 +288,10 @@ export function getKbqPopoverInvalidPositionError(position: string) {
     },
     exportAs: 'kbqPopover'
 })
-export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit, OnInit {
+export class KbqPopoverTrigger
+    extends KbqPopUpTrigger<KbqPopoverComponent>
+    implements OnChanges, AfterContentInit, OnInit
+{
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_POPOVER_SCROLL_STRATEGY);
 
     private readonly focusMonitor = inject(FocusMonitor);
@@ -310,47 +302,26 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     readonly panelId: string = `kbq-popover-${nextUniqueId++}`;
 
     /**
-     * Controls whether the component should be hidden when it is not visible in the viewport.
-     *
-     * @deprecated Use `kbqPopoverHideIfNotInViewPort`. The unprefixed alias will be removed in the next
-     * major release.
+     * Input (`kbqPopoverHideIfNotInViewPort`) — whether the popover closes once its trigger scrolls out of the
+     * nearest scrollable ancestor. A bound `null` or `undefined` restores the default, `true`.
      */
-    readonly hideIfNotInViewPort = input(true, { transform: booleanAttribute });
-
-    /**
-     * Input (`kbqPopoverHideIfNotInViewPort`) — prefixed alias of {@link hideIfNotInViewPort}. Left
-     * `undefined` when it is not bound, so the deprecated alias keeps winning until it is removed.
-     */
-    readonly popoverHideIfNotInViewPort = input<boolean | undefined, unknown>(undefined, {
+    readonly popoverHideIfNotInViewPort = input<boolean, unknown>(true, {
         alias: 'kbqPopoverHideIfNotInViewPort',
-        transform: (value: unknown) => (value == null ? undefined : booleanAttribute(value))
+        transform: (value) => (value == null ? true : booleanAttribute(value))
     });
 
     /** prevents closure by any event */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ alias: 'kbqPopoverPreventClose', transform: booleanAttribute }) override preventClose: boolean = false;
+    override preventClose: boolean = false;
 
-    /**
-     * disables default padding for all popover elements (header, content and footer)
-     *
-     * @deprecated Use `kbqPopoverDefaultPaddings`. The unprefixed alias will be removed in the next major
-     * release.
-     */
-    // TODO: Skipped for migration because:
-    //  Class of this input is referenced in the signature of another class.
-    @Input({ transform: booleanAttribute }) defaultPaddings = true;
+    /** Whether the header, content and footer keep their default paddings. Bound with `kbqPopoverDefaultPaddings`. */
+    defaultPaddings = true;
 
-    /** Input (`kbqPopoverDefaultPaddings`) — prefixed alias of {@link defaultPaddings}. */
-    @Input({ alias: 'kbqPopoverDefaultPaddings', transform: booleanAttribute })
+    /** Input (`kbqPopoverDefaultPaddings`) — sets {@link defaultPaddings}. */
     set popoverDefaultPaddings(value: boolean) {
         this.defaultPaddings = value;
     }
 
     /** Input (`kbqPopoverVisible`) — opens the popover when set to `true` and closes it when set to `false`. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPopoverVisible')
     get popoverVisible(): boolean {
         return this.visible;
     }
@@ -360,9 +331,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     }
 
     /** Input (`kbqPopoverPlacement`) — preferred placement of the panel relative to the trigger. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPopoverPlacement')
     get popoverPlacement(): KbqPopUpPlacementValues {
         return this.placement;
     }
@@ -372,9 +340,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     }
 
     /** Input (`kbqPopoverPlacementPriority`) — ordered placements tried before the default strategy. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPopoverPlacementPriority')
     get popoverPlacementPriority() {
         return this.placementPriority;
     }
@@ -387,36 +352,20 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
      * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
      * If container is specified, the positioning will be relative to it.
      * */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input('kbqPopoverStickToWindow') stickToWindow: KbqStickToWindowPlacementValues;
+    stickToWindow: KbqStickToWindowPlacementValues | undefined;
 
-    /**
-     * Container for additional positioning, used with kbqPopoverStickToWindow
-     *
-     * @deprecated Use `kbqPopoverContainer`. The unprefixed alias will be removed in the next major release.
-     */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input() container: HTMLElement;
+    /** Container for additional positioning, used with `kbqPopoverStickToWindow`. Bound with `kbqPopoverContainer`. */
+    container: HTMLElement | undefined;
 
-    /** Input (`kbqPopoverContainer`) — prefixed alias of {@link container}. */
-    @Input('kbqPopoverContainer')
-    set popoverContainer(value: HTMLElement) {
+    /** Input (`kbqPopoverContainer`) — sets {@link container}. */
+    set popoverContainer(value: HTMLElement | undefined) {
         this.container = value;
     }
 
     /**
-     * Input (`hasBackdrop`) — whether a backdrop is rendered behind the panel. With a backdrop the popover
-     * closes on a backdrop click instead of on any outside pointer event.
-     *
-     * @deprecated Use `kbqPopoverHasBackdrop`. The unprefixed alias will be removed in the next major release.
+     * Whether a backdrop is rendered behind the panel. With a backdrop the popover closes on a backdrop click
+     * instead of on any outside pointer event. Bound with `kbqPopoverHasBackdrop`.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get hasBackdrop(): boolean {
         return this._hasBackdrop;
     }
@@ -429,16 +378,12 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     private _hasBackdrop: boolean = false;
 
-    /** Input (`kbqPopoverHasBackdrop`) — prefixed alias of {@link hasBackdrop}. */
-    @Input('kbqPopoverHasBackdrop')
+    /** Input (`kbqPopoverHasBackdrop`) — sets {@link hasBackdrop}. */
     set popoverHasBackdrop(value: boolean) {
         this.hasBackdrop = value;
     }
 
     /** Input (`kbqPopoverHeader`) — header of the panel, as a string or a template. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPopoverHeader')
     get header(): string | TemplateRef<any> {
         return this._header;
     }
@@ -452,9 +397,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     private _header: string | TemplateRef<any>;
 
     /** Input (`kbqPopoverContent`) — content of the panel, as a string or a template. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPopoverContent')
     get content(): string | TemplateRef<any> {
         return this._content;
     }
@@ -466,9 +408,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     }
 
     /** Input (`kbqPopoverFooter`) — footer of the panel, as a string or a template. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPopoverFooter')
     get footer(): string | TemplateRef<any> {
         return this._footer;
     }
@@ -482,9 +421,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     private _footer: string | TemplateRef<any>;
 
     /** Input (`kbqPopoverDisabled`) — disables the trigger and closes an open popover. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPopoverDisabled')
     get disabled(): boolean {
         return this._disabled;
     }
@@ -502,9 +438,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
      * and rebinds listeners. The alias is shared with `kbqTooltip`, so binding it on an element that carries
      * both reconfigures both.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqTrigger')
     get trigger(): string {
         return this._trigger;
     }
@@ -524,7 +457,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         // switched to `hover` later closes on the 0 it was born with otherwise, leaving no time to cross the
         // gap between the trigger and the panel.
         if (!this.leaveDelayBound) {
-            this.leaveDelay = this._trigger.includes(PopUpTriggers.Hover) ? defaultHoverLeaveDelay : 0;
+            this.leaveDelay = this.defaultLeaveDelay;
         }
 
         this.initListeners();
@@ -532,10 +465,12 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     private _trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
 
+    /** Leave delay while `kbqLeaveDelay` is not bound. */
+    private get defaultLeaveDelay(): number {
+        return this._trigger.includes(PopUpTriggers.Hover) ? defaultHoverLeaveDelay : 0;
+    }
+
     /** Input (`kbqPopoverSize`) — preset width of the panel. An unknown value falls back to `medium`. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPopoverSize')
     get size(): KbqPopUpSizeValues {
         return this._size;
     }
@@ -556,9 +491,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     private _size: KbqPopUpSizeValues = PopUpSizes.Medium;
 
     /** Input (`kbqPopoverClass`) with extra CSS classes applied to the panel. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPopoverClass')
     get customClass() {
         return this._customClass;
     }
@@ -570,9 +502,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     }
 
     /** Context for popover templates (kbqPopoverHeader, kbqPopoverContent and kbqPopoverFooter). */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPopoverContext')
     get context() {
         return this._context;
     }
@@ -588,9 +517,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
      * Accessible name of the panel. Ignored while a string `kbqPopoverHeader` is set — the header labels the
      * dialog then — and recommended for every header-less popover.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPopoverAriaLabel')
     get ariaLabel(): string | undefined {
         return this._ariaLabel;
     }
@@ -603,15 +529,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     private _ariaLabel: string | undefined;
 
-    /**
-     * Input (`hasCloseButton`) — renders the icon-only close button in the top corner of the panel.
-     *
-     * @deprecated Use `kbqPopoverHasCloseButton`. The unprefixed alias will be removed in the next major
-     * release.
-     */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
+    /** Renders the icon-only close button in the top corner of the panel. Bound with `kbqPopoverHasCloseButton`. */
     get hasCloseButton(): boolean {
         return this._hasCloseButton;
     }
@@ -623,27 +541,21 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     private _hasCloseButton = false;
 
-    /** Input (`kbqPopoverHasCloseButton`) — prefixed alias of {@link hasCloseButton}. */
-    @Input({ alias: 'kbqPopoverHasCloseButton', transform: booleanAttribute })
+    /** Input (`kbqPopoverHasCloseButton`) — sets {@link hasCloseButton}. */
     set popoverHasCloseButton(value: boolean) {
         this.hasCloseButton = value;
     }
 
     /**
-     * Controls the behavior of closing the component on scroll. Three states:
+     * Controls the behavior of closing the component on scroll. Bound with `kbqPopoverCloseOnScroll`. Three
+     * states:
      * - `null` (default) — the popover survives a scroll, except when it scrolls out of a
      *   `.kbq-hide-nested-popup` container, which closes it;
      * - `true` — any scroll closes the popover;
      * - `false` — no scroll closes the popover, not even a `.kbq-hide-nested-popup` one.
      *
      * Use CloseScrollStrategy as alternative
-     *
-     * @deprecated Use `kbqPopoverCloseOnScroll`. The unprefixed alias will be removed in the next major
-     * release.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get closeOnScroll(): boolean | null {
         return this._closeOnScroll;
     }
@@ -654,8 +566,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     private _closeOnScroll: boolean | null = null;
 
-    /** Input (`kbqPopoverCloseOnScroll`) — prefixed alias of {@link closeOnScroll}. */
-    @Input('kbqPopoverCloseOnScroll')
+    /** Input (`kbqPopoverCloseOnScroll`) — sets {@link closeOnScroll}. */
     set popoverCloseOnScroll(value: boolean) {
         this.closeOnScroll = value;
     }
@@ -678,15 +589,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         return this.instance.destroyRef;
     }
 
-    /**
-     * Input (`backdropClass`) — CSS class applied to the backdrop, when there is one.
-     *
-     * @deprecated Use `kbqPopoverBackdropClass`. The unprefixed alias will be removed in the next major
-     * release.
-     */
-    // TODO: Skipped for migration because:
-    //  Class of this input is referenced in the signature of another class.
-    @Input()
+    /** CSS class applied to the backdrop, when there is one. Bound with `kbqPopoverBackdropClass`. */
     get backdropClass(): string {
         return this._backdropClass;
     }
@@ -697,31 +600,25 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         this.invalidateOverlay();
     }
 
-    private _backdropClass: string = 'cdk-overlay-transparent-backdrop';
+    private _backdropClass: string = defaultBackdropClass;
 
-    /** Input (`kbqPopoverBackdropClass`) — prefixed alias of {@link backdropClass}. */
-    @Input('kbqPopoverBackdropClass')
+    /** Input (`kbqPopoverBackdropClass`) — sets {@link backdropClass}. */
     set popoverBackdropClass(value: string) {
         this.backdropClass = value;
     }
 
     /** Input (`kbqPopoverArrow`) — renders the arrow pointing at the trigger. */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input({ alias: 'kbqPopoverArrow', transform: booleanAttribute }) arrow: boolean = true;
+    arrow: boolean = true;
 
     /** Input (`kbqPopoverOffset`) — distance between the trigger and the panel, in pixels. */
-    // TODO: Skipped for migration because:
-    //  Class of this input is referenced in the signature of another class.
-    @Input({ alias: 'kbqPopoverOffset', transform: numberAttribute }) offset: number | null = defaultOffsetYWithArrow;
+    offset: number | null = defaultOffsetYWithArrow;
 
     /**
      * Input (`kbqPopoverAutoFocus`) — whether opening the popover moves the keyboard focus into the panel. Turn it
      * off for a panel that must not disturb what the reader is doing: taking focus away from a text selection
      * collapses it. Focus then never enters the panel, so its content has to be reachable some other way.
      */
-    @Input({ alias: 'kbqPopoverAutoFocus', transform: booleanAttribute }) autoFocus: boolean = true;
+    autoFocus: boolean = true;
 
     /**
      * Input (`kbqPopoverOrigin`) — what the panel is positioned against: an element, or a rectangle in viewport
@@ -729,7 +626,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
      *
      * Bind it before `kbqPopoverVisible`, which opens the panel as it is written.
      */
-    @Input('kbqPopoverOrigin')
     get popoverOrigin(): KbqOverlayOrigin | null {
         return this.origin;
     }
@@ -739,10 +635,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     }
 
     /** Input (`kbqEnterDelay`) — delay before opening, in milliseconds. Defaults to `0`. */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input({ alias: 'kbqEnterDelay', transform: numberAttribute }) enterDelay: number = 0;
+    enterDelay: number = 0;
 
     /**
      * Input (`kbqLeaveDelay`) — delay before closing, in milliseconds. Defaults to `0`, and to
@@ -750,7 +643,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
      */
     // A write-only input rather than an accessor over `leaveDelay`: the base declares that member as a
     // plain field, and TypeScript refuses to override a property with an accessor (TS2611).
-    @Input({ transform: numberAttribute })
     set kbqLeaveDelay(value: number) {
         this.leaveDelay = value;
         // Tracked instead of comparing the delay against a sentinel: an explicit `kbqLeaveDelay="0"` and an
@@ -767,17 +659,18 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
      * so a narrower emitter cannot override a wider one. Narrowing both is a change to the shared pop-up
      * base and belongs to the branch that owns it.
      */
-    @Output('kbqPopoverPlacementChange') readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
+    readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
+
+    /** @docs-private */
+    readonly placementChangeOutput = outputFromObservable(this.placementChange, { alias: 'kbqPopoverPlacementChange' });
 
     /** Emits `true` when the panel opens and `false` when it closes. */
-    @Output('kbqPopoverVisibleChange') readonly visibleChange = new EventEmitter<boolean>();
+    readonly visibleChange = new EventEmitter<boolean>();
+
+    /** @docs-private */
+    readonly visibleChangeOutput = outputFromObservable(this.visibleChange, { alias: 'kbqPopoverVisibleChange' });
 
     protected originSelector = '.kbq-popover';
-
-    /** Resolved value of the two `hideIfNotInViewPort` aliases. */
-    private readonly shouldHideIfNotInViewPort = computed(
-        () => this.popoverHideIfNotInViewPort() ?? this.hideIfNotInViewPort()
-    );
 
     /** Whether a position re-apply is already queued for this turn. */
     private repositionScheduled = false;
@@ -803,6 +696,268 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
             hasBackdrop: this.hasBackdrop,
             backdropClass: this.backdropClass
         };
+    }
+
+    /** @docs-private */
+    readonly triggerInput = input<string | undefined>(undefined, { alias: 'kbqTrigger' });
+
+    /** @docs-private */
+    readonly kbqLeaveDelayInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'kbqLeaveDelay',
+        transform: kbqOptionalNumberAttribute
+    });
+
+    /** @docs-private */
+    readonly enterDelayInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'kbqEnterDelay',
+        transform: kbqOptionalNumberAttribute
+    });
+
+    /** @docs-private */
+    readonly preventCloseInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqPopoverPreventClose',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly stickToWindowInput = input<KbqStickToWindowPlacementValues | undefined>(undefined, {
+        alias: 'kbqPopoverStickToWindow'
+    });
+
+    /** @docs-private */
+    readonly popoverContainerInput = input<HTMLElement | undefined>(undefined, { alias: 'kbqPopoverContainer' });
+
+    /** @docs-private */
+    readonly popoverHasBackdropInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqPopoverHasBackdrop',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly popoverBackdropClassInput = input<string | undefined>(undefined, { alias: 'kbqPopoverBackdropClass' });
+
+    /** @docs-private */
+    readonly popoverDefaultPaddingsInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqPopoverDefaultPaddings',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly sizeInput = input<KbqPopUpSizeValues | undefined>(undefined, { alias: 'kbqPopoverSize' });
+
+    /** @docs-private */
+    readonly customClassInput = input<string | undefined>(undefined, { alias: 'kbqPopoverClass' });
+
+    /** @docs-private */
+    readonly headerInput: InputSignal<KbqPopoverTrigger['header'] | undefined> = input<
+        KbqPopoverTrigger['header'] | undefined
+    >(undefined, {
+        alias: 'kbqPopoverHeader'
+    });
+
+    /** @docs-private */
+    readonly contentInput: InputSignal<KbqPopoverTrigger['content'] | undefined> = input<
+        KbqPopoverTrigger['content'] | undefined
+    >(undefined, {
+        alias: 'kbqPopoverContent'
+    });
+
+    /** @docs-private */
+    readonly footerInput: InputSignal<KbqPopoverTrigger['footer'] | undefined> = input<
+        KbqPopoverTrigger['footer'] | undefined
+    >(undefined, {
+        alias: 'kbqPopoverFooter'
+    });
+
+    /** @docs-private */
+    readonly contextInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'kbqPopoverContext' });
+
+    /** @docs-private */
+    readonly ariaLabelInput = input<string | undefined>(undefined, { alias: 'kbqPopoverAriaLabel' });
+
+    /** @docs-private */
+    readonly popoverHasCloseButtonInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqPopoverHasCloseButton',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly popoverCloseOnScrollInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqPopoverCloseOnScroll',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly arrowInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqPopoverArrow',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly offsetInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'kbqPopoverOffset',
+        transform: kbqOptionalNumberAttribute
+    });
+
+    /** @docs-private */
+    readonly autoFocusInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqPopoverAutoFocus',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly popoverOriginInput = input<KbqOverlayOrigin | null | undefined>(undefined, { alias: 'kbqPopoverOrigin' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqPopoverDisabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly popoverPlacementPriorityInput = input<string | string[] | null | undefined>(undefined, {
+        alias: 'kbqPopoverPlacementPriority'
+    });
+
+    /** @docs-private */
+    readonly popoverPlacementInput = input<KbqPopUpPlacementValues | undefined>(undefined, {
+        alias: 'kbqPopoverPlacement'
+    });
+
+    /** @docs-private */
+    readonly popoverVisibleInput = input<boolean | undefined>(undefined, { alias: 'kbqPopoverVisible' });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member, a bound `undefined` restoring the
+        // member's default; unbound, it leaves what code wrote. The `booleanAttribute` inputs are the exception:
+        // the transform reads a bound `undefined` as `false`.
+        if (changes['triggerInput']) {
+            this.trigger = this.triggerInput() ?? '';
+        }
+
+        if (changes['kbqLeaveDelayInput']) {
+            const kbqLeaveDelay = this.kbqLeaveDelayInput();
+
+            if (kbqLeaveDelay === undefined) {
+                // Counts as unbound, so that a hover popover gets its default delay back.
+                this.leaveDelayBound = false;
+                this.leaveDelay = this.defaultLeaveDelay;
+            } else {
+                this.kbqLeaveDelay = kbqLeaveDelay;
+            }
+        }
+
+        if (changes['enterDelayInput']) {
+            this.enterDelay = this.enterDelayInput() ?? 0;
+        }
+
+        if (changes['preventCloseInput']) {
+            const preventClose = this.preventCloseInput();
+
+            if (preventClose !== undefined) this.preventClose = preventClose;
+        }
+
+        if (changes['stickToWindowInput']) {
+            this.stickToWindow = this.stickToWindowInput();
+        }
+
+        if (changes['popoverContainerInput']) {
+            this.popoverContainer = this.popoverContainerInput();
+        }
+
+        if (changes['popoverHasBackdropInput']) {
+            const popoverHasBackdrop = this.popoverHasBackdropInput();
+
+            if (popoverHasBackdrop !== undefined) this.popoverHasBackdrop = popoverHasBackdrop;
+        }
+
+        if (changes['popoverBackdropClassInput']) {
+            this.popoverBackdropClass = this.popoverBackdropClassInput() ?? defaultBackdropClass;
+        }
+
+        if (changes['popoverDefaultPaddingsInput']) {
+            const popoverDefaultPaddings = this.popoverDefaultPaddingsInput();
+
+            if (popoverDefaultPaddings !== undefined) this.popoverDefaultPaddings = popoverDefaultPaddings;
+        }
+
+        if (changes['sizeInput']) {
+            this.size = this.sizeInput() ?? PopUpSizes.Medium;
+        }
+
+        if (changes['customClassInput']) {
+            this.customClass = this.customClassInput() ?? '';
+        }
+
+        if (changes['headerInput']) {
+            this.header = this.headerInput() ?? '';
+        }
+
+        if (changes['contentInput']) {
+            this.content = this.contentInput() ?? '';
+        }
+
+        if (changes['footerInput']) {
+            this.footer = this.footerInput() ?? '';
+        }
+
+        if (changes['contextInput']) {
+            this.context = this.contextInput();
+        }
+
+        if (changes['ariaLabelInput']) {
+            this.ariaLabel = this.ariaLabelInput();
+        }
+
+        if (changes['popoverHasCloseButtonInput']) {
+            const popoverHasCloseButton = this.popoverHasCloseButtonInput();
+
+            if (popoverHasCloseButton !== undefined) this.popoverHasCloseButton = popoverHasCloseButton;
+        }
+
+        if (changes['popoverCloseOnScrollInput']) {
+            const popoverCloseOnScroll = this.popoverCloseOnScrollInput();
+
+            if (popoverCloseOnScroll !== undefined) this.popoverCloseOnScroll = popoverCloseOnScroll;
+        }
+
+        if (changes['arrowInput']) {
+            const arrow = this.arrowInput();
+
+            if (arrow !== undefined) this.arrow = arrow;
+        }
+
+        if (changes['offsetInput']) {
+            this.offset = this.offsetInput() ?? defaultOffsetYWithArrow;
+        }
+
+        if (changes['autoFocusInput']) {
+            const autoFocus = this.autoFocusInput();
+
+            if (autoFocus !== undefined) this.autoFocus = autoFocus;
+        }
+
+        if (changes['popoverOriginInput']) {
+            this.popoverOrigin = this.popoverOriginInput() ?? null;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['popoverPlacementPriorityInput']) {
+            this.popoverPlacementPriority = this.popoverPlacementPriorityInput() ?? null;
+        }
+
+        if (changes['popoverPlacementInput']) {
+            this.popoverPlacement = this.popoverPlacementInput() ?? PopUpPlacements.Top;
+        }
+
+        if (changes['popoverVisibleInput']) {
+            this.popoverVisible = this.popoverVisibleInput() ?? false;
+        }
     }
 
     ngOnInit(): void {
@@ -832,6 +987,13 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     /** @docs-private */
     updateData() {
+        // Untracked: an input written from a consumer's `effect()` lands here, and `isOpen` read on the way would make
+        // the effect run again on every open and close.
+        untracked(() => this.pushData());
+    }
+
+    /** Body of `updateData()`. */
+    private pushData(): void {
         if (!this.instance) return;
 
         this.instance.header = this.header;
@@ -850,6 +1012,9 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         this.instance.ariaLabel = this.ariaLabel;
 
         this.instance.updateTrapFocus(this.trigger !== PopUpTriggers.Focus);
+        // As the tooltip does: this mostly runs from an input setter, while the trigger's view is being checked,
+        // and the panel renders in an overlay of its own that nothing else would check.
+        this.instance.detectChanges();
 
         if (this.isOpen) {
             this.scheduleReposition();
@@ -898,7 +1063,6 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         }
 
         this.instance.updateClassMap(POSITION_TO_CSS_MAP[newPlacement], this.customClass, this.size);
-        this.instance.markForCheck();
     }
 
     /** @docs-private */
@@ -983,7 +1147,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     /** Closes the popover once it has scrolled out of its nearest scrollable ancestor. */
     private hideIfScrolledOutOfView = () => {
-        if (!this.instance || !this.scrollable || !this.shouldHideIfNotInViewPort()) return;
+        if (!this.instance || !this.scrollable || !this.popoverHideIfNotInViewPort()) return;
 
         const rect = this.elementRef.nativeElement.getBoundingClientRect();
         const containerRect = this.scrollable.getElementRef().nativeElement.getBoundingClientRect();

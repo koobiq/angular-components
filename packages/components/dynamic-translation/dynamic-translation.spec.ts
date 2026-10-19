@@ -1,14 +1,13 @@
 import { ChangeDetectionStrategy, Component, DebugElement, model, Provider, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLinkModule } from '../link';
 import { KbqDynamicTranslation } from './dynamic-translation';
 import { KbqDynamicTranslationModule } from './module';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
-        imports: [component, NoopAnimationsModule],
+        imports: [component],
         providers
     });
     const fixture = TestBed.createComponent<T>(component);

@@ -12,29 +12,23 @@ import { KbqCodeBlockFile } from './types';
 
 const buildMockCore = (): HLJSApi =>
     ({
-        getLanguage: jest.fn().mockReturnValue({}),
-        highlight: jest.fn().mockImplementation((content: string, { language }: { language: string }) => ({
+        getLanguage: vi.fn().mockReturnValue({}),
+        highlight: vi.fn().mockImplementation((content: string, { language }: { language: string }) => ({
             // Empty for empty content, as highlight.js has it.
             value: content && `<span class="hljs-keyword">${content}</span>`,
             language,
             illegal: false,
             relevance: 10
         })),
-        registerLanguage: jest.fn()
+        registerLanguage: vi.fn()
     }) as unknown as HLJSApi;
 
-const coreLoader = (core: HLJSApi) => jest.fn(() => Promise.resolve({ default: core }));
-
-// An async function rather than `mockRejectedValue`: zone.js takes a rejected promise of its own that is awaited
-// natively, as it is here, for an uncaught one.
-const failedCoreLoad = async (): Promise<{ default: HLJSApi }> => {
-    throw new Error('offline');
-};
+const coreLoader = (core: HLJSApi) => vi.fn(() => Promise.resolve({ default: core }));
 
 // A core load that settles only when the test says so.
 const deferredCoreLoader = (core: HLJSApi) => {
     let settle!: () => void;
-    const load = jest.fn(
+    const load = vi.fn(
         () => new Promise<{ default: HLJSApi }>((resolve) => (settle = () => resolve({ default: core })))
     );
 
@@ -52,8 +46,8 @@ const createComponent = <T>(component: Type<T>, providers: Provider[] = []): Com
     return fixture;
 };
 
-// The browser holds no pending task for the load of highlight.js, so `whenStable()` does not wait for it: a macrotask
-// starts once every promise of the load has settled.
+// A block that keeps the markup rendered on the server holds no pending task, so `whenStable()` alone does not wait for
+// its load: a macrotask starts once every promise of the load has settled.
 const settle = async (fixture: ComponentFixture<unknown>): Promise<void> => {
     await new Promise((resolve) => setTimeout(resolve));
     await fixture.whenStable();
@@ -167,7 +161,7 @@ describe(KbqCodeBlockHighlight.name, () => {
     });
 
     it('should load highlight.js and install the line numbers plugin once for every block on the page', async () => {
-        const addEventListener = jest.spyOn(document, 'addEventListener');
+        const addEventListener = vi.spyOn(document, 'addEventListener');
         const stylesBefore = countPluginStyles();
 
         try {
@@ -209,11 +203,11 @@ describe(KbqCodeBlockHighlight.name, () => {
     });
 
     it('should keep the plain content, clear pending and try again on the next file after a failed load', async () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         try {
             const core = buildMockCore();
-            const load = jest.fn().mockImplementationOnce(failedCoreLoad).mockResolvedValue({ default: core });
+            const load = vi.fn().mockRejectedValueOnce(new Error('offline')).mockResolvedValue({ default: core });
             const fixture = createComponent(SingleBlock, [kbqCodeBlockHighlightJsConfigProvider({ core: load })]);
             const [code] = getCodeElements(fixture);
 
@@ -316,9 +310,9 @@ describe(KbqCodeBlockHighlight.name, () => {
     });
 
     // Angular replays what a reader did before hydration only once the application is stable.
-    it('should leave the application stable in the browser while highlight.js loads', async () => {
+    it('should leave the application stable while a block keeps the markup rendered on the server', async () => {
         const { load } = deferredCoreLoader(buildMockCore());
-        const fixture = createComponent(SingleBlock, [kbqCodeBlockHighlightJsConfigProvider({ core: load })]);
+        const fixture = createComponent(ServerRenderedBlock, [kbqCodeBlockHighlightJsConfigProvider({ core: load })]);
 
         await fixture.whenStable();
 
@@ -327,10 +321,10 @@ describe(KbqCodeBlockHighlight.name, () => {
     });
 
     it('should keep the markup rendered on the server when highlight.js fails to load', async () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         try {
-            const load = jest.fn(failedCoreLoad);
+            const load = vi.fn().mockRejectedValue(new Error('offline'));
             const fixture = createComponent(ServerRenderedBlock, [
                 kbqCodeBlockHighlightJsConfigProvider({ core: load })
             ]);

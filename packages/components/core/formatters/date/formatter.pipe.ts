@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, effect, inject, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, inject, Pipe, PipeTransform } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DurationUnit } from '@koobiq/date-adapter';
 import { DateTimeOptions } from '@koobiq/date-formatter';
@@ -78,6 +78,7 @@ const toDurationRange = <D>(adapter: DateAdapter<D>, value: D[] | string[] | nul
     return range && adapter.compareDateTime(range[0], range[1]) <= 0 ? range : null;
 };
 
+/** @deprecated The base of the deprecated unprefixed date pipes. Will be removed in 22.0.0. */
 export class BaseFormatterPipe<D> {
     protected readonly adapter: DateAdapter<D> = inject(DateAdapter<D>);
     protected readonly formatter: DateFormatter<D> = inject(DateFormatter<D>);
@@ -88,8 +89,10 @@ export class BaseFormatterPipe<D> {
  * changes via `KbqLocaleService`, or the active time zone via `KbqDateTimezoneService`.
  *
  * The base class owns:
- * - a subscription to `KbqLocaleService.changes` and an `effect` on the active time zone, each of which
- *   invalidates the cache and marks the host for check (the same approach the built-in `AsyncPipe` uses);
+ * - a subscription to `KbqLocaleService.changes`, which invalidates the cache and marks the host for check
+ *   (the same approach the built-in `AsyncPipe` uses);
+ * - a read of the active time zone signal in `transform()`, which registers it on the rendering view, so a
+ *   time zone change refreshes that view — OnPush included — without a call of its own;
  * - caching by `(value, args, localeId, timezone)`, so the impure `transform()` only does
  *   real work when an input, the active locale or the active time zone actually changed — see
  *   `shallowEqual` for how the comparison works and its limits.
@@ -105,7 +108,9 @@ export abstract class BaseLocaleAwareFormatterPipe<
     D,
     Value = D | string | null | undefined,
     Args extends unknown[] = unknown[]
-> extends BaseFormatterPipe<D> {
+> {
+    protected readonly adapter: DateAdapter<D> = inject(DateAdapter<D>);
+    protected readonly formatter: DateFormatter<D> = inject(DateFormatter<D>);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly timezoneService = inject(KbqDateTimezoneService);
@@ -118,24 +123,15 @@ export abstract class BaseLocaleAwareFormatterPipe<
     private hasCache = false;
 
     constructor() {
-        super();
-
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(() => {
+        this.localeService?.changes.pipe(takeUntilDestroyed(inject(DestroyRef))).subscribe(() => {
             this.hasCache = false;
-            this.changeDetectorRef.markForCheck();
-        });
-
-        // Only wakes an OnPush host up; the cache is invalidated by comparing the zone in `transform()`,
-        // so the run this effect makes on creation costs nothing.
-        effect(() => {
-            this.timezoneService.timezone();
-
             this.changeDetectorRef.markForCheck();
         });
     }
 
     transform(value: Value, ...args: Args): string {
-        const currentLocaleId = this.localeService?.id ?? null;
+        const currentLocaleId = this.localeService?.localeId() ?? null;
+        // Read ahead of the cache check on every call: the read is what refreshes the view on a zone change.
         const currentTimezone = this.timezoneService.timezone();
 
         if (
@@ -171,6 +167,10 @@ export abstract class BaseLocaleAwareFormatterPipe<
     }
 }
 
+/**
+ * @deprecated Use the `kbqAbsoluteLongDate` pipe (`KbqAbsoluteLongDatePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'absoluteLongDate'
 })
@@ -182,6 +182,10 @@ export class AbsoluteDateFormatterPipe<D> extends BaseFormatterPipe<D> implement
     }
 }
 
+/**
+ * @deprecated Use the `kbqAbsoluteLongDate` pipe (`KbqAbsoluteLongDatePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'absoluteLongDateImpurePipe',
     pure: false
@@ -193,6 +197,10 @@ export class AbsoluteDateFormatterImpurePipe<D> extends AbsoluteDateFormatterPip
     }
 }
 
+/**
+ * @deprecated Use the `kbqAbsoluteLongDateTime` pipe (`KbqAbsoluteLongDateTimePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'absoluteLongDateTime'
 })
@@ -204,6 +212,10 @@ export class AbsoluteDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imple
     }
 }
 
+/**
+ * @deprecated Use the `kbqAbsoluteLongDateTime` pipe (`KbqAbsoluteLongDateTimePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'absoluteLongDateTimeImpurePipe',
     pure: false
@@ -215,6 +227,10 @@ export class AbsoluteDateTimeFormatterImpurePipe<D> extends AbsoluteDateTimeForm
     }
 }
 
+/**
+ * @deprecated Use the `kbqAbsoluteShortDate` pipe (`KbqAbsoluteShortDatePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'absoluteShortDate'
 })
@@ -226,6 +242,10 @@ export class AbsoluteDateShortFormatterPipe<D> extends BaseFormatterPipe<D> impl
     }
 }
 
+/**
+ * @deprecated Use the `kbqAbsoluteShortDate` pipe (`KbqAbsoluteShortDatePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'absoluteShortDateImpurePipe',
     pure: false
@@ -237,6 +257,10 @@ export class AbsoluteDateShortFormatterImpurePipe<D> extends AbsoluteDateShortFo
     }
 }
 
+/**
+ * @deprecated Use the `kbqAbsoluteShortDateTime` pipe (`KbqAbsoluteShortDateTimePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'absoluteShortDateTime'
 })
@@ -248,6 +272,10 @@ export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
     }
 }
 
+/**
+ * @deprecated Use the `kbqAbsoluteShortDateTime` pipe (`KbqAbsoluteShortDateTimePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'absoluteShortDateTimeImpurePipe',
     pure: false
@@ -259,6 +287,10 @@ export class AbsoluteShortDateTimeFormatterImpurePipe<D> extends AbsoluteShortDa
     }
 }
 
+/**
+ * @deprecated Use the `kbqRelativeLongDate` pipe (`KbqRelativeLongDatePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'relativeLongDate'
 })
@@ -270,6 +302,10 @@ export class RelativeDateFormatterPipe<D> extends BaseFormatterPipe<D> implement
     }
 }
 
+/**
+ * @deprecated Use the `kbqRelativeLongDate` pipe (`KbqRelativeLongDatePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'relativeLongDateImpurePipe',
     pure: false
@@ -281,6 +317,10 @@ export class RelativeDateFormatterImpurePipe<D> extends RelativeDateFormatterPip
     }
 }
 
+/**
+ * @deprecated Use the `kbqRelativeLongDateTime` pipe (`KbqRelativeLongDateTimePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'relativeLongDateTime'
 })
@@ -292,6 +332,10 @@ export class RelativeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imple
     }
 }
 
+/**
+ * @deprecated Use the `kbqRelativeLongDateTime` pipe (`KbqRelativeLongDateTimePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'relativeLongDateTimeImpurePipe',
     pure: false
@@ -303,6 +347,10 @@ export class RelativeDateTimeFormatterImpurePipe<D> extends RelativeDateTimeForm
     }
 }
 
+/**
+ * @deprecated Use the `kbqRelativeShortDate` pipe (`KbqRelativeShortDatePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'relativeShortDate'
 })
@@ -314,6 +362,10 @@ export class RelativeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> impl
     }
 }
 
+/**
+ * @deprecated Use the `kbqRelativeShortDate` pipe (`KbqRelativeShortDatePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'relativeShortDateImpurePipe',
     pure: false
@@ -325,6 +377,10 @@ export class RelativeShortDateFormatterImpurePipe<D> extends RelativeShortDateFo
     }
 }
 
+/**
+ * @deprecated Use the `kbqRelativeShortDateTime` pipe (`KbqRelativeShortDateTimePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'relativeShortDateTime'
 })
@@ -336,6 +392,10 @@ export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
     }
 }
 
+/**
+ * @deprecated Use the `kbqRelativeShortDateTime` pipe (`KbqRelativeShortDateTimePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'relativeShortDateTimeImpurePipe',
     pure: false
@@ -347,6 +407,10 @@ export class RelativeShortDateTimeFormatterImpurePipe<D> extends RelativeShortDa
     }
 }
 
+/**
+ * @deprecated Use the `kbqRangeLongDate` pipe (`KbqRangeLongDatePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'rangeLongDate'
 })
@@ -360,6 +424,10 @@ export class RangeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements P
     }
 }
 
+/**
+ * @deprecated Use the `kbqRangeLongDate` pipe (`KbqRangeLongDatePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'rangeLongDateImpurePipe',
     pure: false
@@ -371,6 +439,10 @@ export class RangeDateFormatterImpurePipe<D> extends RangeDateFormatterPipe<D> {
     }
 }
 
+/**
+ * @deprecated Use the `kbqRangeShortDate` pipe (`KbqRangeShortDatePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'rangeShortDate'
 })
@@ -384,6 +456,10 @@ export class RangeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> impleme
     }
 }
 
+/**
+ * @deprecated Use the `kbqRangeShortDate` pipe (`KbqRangeShortDatePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'rangeShortDateImpurePipe',
     pure: false
@@ -395,6 +471,10 @@ export class RangeShortDateFormatterImpurePipe<D> extends RangeShortDateFormatte
     }
 }
 
+/**
+ * @deprecated Use the `kbqRangeLongDateTime` pipe (`KbqRangeLongDateTimePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'rangeLongDateTime'
 })
@@ -408,6 +488,10 @@ export class RangeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implemen
     }
 }
 
+/**
+ * @deprecated Use the `kbqRangeLongDateTime` pipe (`KbqRangeLongDateTimePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'rangeLongDateTimeImpurePipe',
     pure: false
@@ -419,6 +503,10 @@ export class RangeDateTimeFormatterImpurePipe<D> extends RangeDateTimeFormatterP
     }
 }
 
+/**
+ * @deprecated Use the `kbqRangeMiddleDateTime` pipe (`KbqRangeMiddleDateTimePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'rangeMiddleDateTime'
 })
@@ -433,6 +521,10 @@ export class RangeMiddleDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> im
     }
 }
 
+/**
+ * @deprecated Use the `kbqRangeMiddleDateTime` pipe (`KbqRangeMiddleDateTimePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'rangeMiddleDateTimeImpurePipe',
     pure: false
@@ -444,6 +536,10 @@ export class RangeMiddleDateTimeFormatterImpurePipe<D> extends RangeMiddleDateTi
     }
 }
 
+/**
+ * @deprecated Use the `kbqRangeShortDateTime` pipe (`KbqRangeShortDateTimePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'rangeShortDateTime'
 })
@@ -457,6 +553,10 @@ export class RangeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imp
     }
 }
 
+/**
+ * @deprecated Use the `kbqRangeShortDateTime` pipe (`KbqRangeShortDateTimePipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'rangeShortDateTimeImpurePipe',
     pure: false
@@ -468,6 +568,10 @@ export class RangeShortDateTimeFormatterImpurePipe<D> extends RangeShortDateTime
     }
 }
 
+/**
+ * @deprecated Use the `kbqDurationShortest` pipe (`KbqDurationShortestPipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'durationShortest'
 })
@@ -481,6 +585,10 @@ export class DurationShortestFormatterPipe<D> extends BaseFormatterPipe<D> imple
     }
 }
 
+/**
+ * @deprecated Use the `kbqDurationShortest` pipe (`KbqDurationShortestPipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'durationShortestImpurePipe',
     pure: false
@@ -492,6 +600,10 @@ export class DurationShortestFormatterImpurePipe<D> extends DurationShortestForm
     }
 }
 
+/**
+ * @deprecated Use the `kbqDurationLong` pipe (`KbqDurationLongPipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'durationLong'
 })
@@ -505,6 +617,10 @@ export class DurationLongFormatterPipe<D> extends BaseFormatterPipe<D> implement
     }
 }
 
+/**
+ * @deprecated Use the `kbqDurationLong` pipe (`KbqDurationLongPipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'durationLongImpurePipe',
     pure: false
@@ -516,6 +632,10 @@ export class DurationLongFormatterImpurePipe<D> extends DurationLongFormatterPip
     }
 }
 
+/**
+ * @deprecated Use the `kbqDurationShort` pipe (`KbqDurationShortPipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'durationShort'
 })
@@ -529,6 +649,10 @@ export class DurationShortFormatterPipe<D> extends BaseFormatterPipe<D> implemen
     }
 }
 
+/**
+ * @deprecated Use the `kbqDurationShort` pipe (`KbqDurationShortPipe`), which follows a locale change.
+ * Will be removed in 22.0.0.
+ */
 @Pipe({
     name: 'durationShortImpurePipe',
     pure: false

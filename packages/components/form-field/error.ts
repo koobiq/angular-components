@@ -26,6 +26,6 @@ export class KbqError extends KbqHint {
     constructor() {
         super();
 
-        this.color = KbqComponentColors.Error;
+        this.setDefaultColor(KbqComponentColors.Error);
     }
 }
