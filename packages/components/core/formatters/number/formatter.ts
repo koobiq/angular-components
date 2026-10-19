@@ -249,7 +249,9 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
                 decimalFor(this.formatters(), this.localeService, this.id, currentLocale)
             );
         } catch (error: any) {
-            throw Error(`InvalidPipeArgument: KbqDecimalPipe for pipe '${JSON.stringify(error.message)}'`);
+            throw Error(`InvalidPipeArgument: KbqDecimalPipe for pipe '${JSON.stringify(error.message)}'`, {
+                cause: error
+            });
         }
     }
 
@@ -319,7 +321,9 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
                 decimalFor(this.formatters(), this.localeService, this.id, currentLocale)
             );
         } catch (error: any) {
-            throw Error(`InvalidPipeArgument: KbqTableNumberPipe for pipe '${JSON.stringify(error.message)}'`);
+            throw Error(`InvalidPipeArgument: KbqTableNumberPipe for pipe '${JSON.stringify(error.message)}'`, {
+                cause: error
+            });
         }
     }
 }
@@ -407,7 +411,9 @@ export class KbqRoundDecimalPipe implements PipeTransform {
 
             return `${calculatedValue}${this.roundingOptions.separator}${this.roundingOptions[unit]}`;
         } catch (error: any) {
-            throw Error(`InvalidPipeArgument: KbqRoundDecimalPipe for pipe '${JSON.stringify(error.message)}'`);
+            throw Error(`InvalidPipeArgument: KbqRoundDecimalPipe for pipe '${JSON.stringify(error.message)}'`, {
+                cause: error
+            });
         }
     }
 
