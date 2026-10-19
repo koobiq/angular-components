@@ -442,9 +442,8 @@ describe('KbqIcon', () => {
             sanitizer = TestBed.inject(DomSanitizer);
         });
 
-        // ICN-BUG-02: a second resolution for an already-rendered name (e.g. a transfer-state read
-        // landing after hydration already claimed the host) replaced the svg instead of leaving it,
-        // which duplicated it when the removal raced the replacement.
+        // ICN-BUG-02: a repeat resolution for an already-rendered name replaced the svg instead of
+        // adopting it, duplicating it if the replacement raced the DOM it was reusing (e.g. SSR's).
         it('should adopt an already-rendered svg instead of duplicating it on a repeat resolution', () => {
             register('kbq-plus_16');
 
@@ -467,16 +466,10 @@ describe('KbqIcon', () => {
             expect(host.classList).not.toContain('kbq-plus_16');
         });
 
-        // ICN-BUG-04: `svgIcon` defaulted to `false` until the async resolution pipeline confirmed an
-        // svg, so the font-icon class host binding applied for every frame before that — rendering the
-        // font glyph on top of an svg a hydrated host already has, visible whenever resolution is slow.
-        //
-        // Not covered here: TestBed has no way to construct a component against DOM that already has
-        // content, which is what real hydration reuses (`createComponent`'s `hostElement` option looked
-        // promising, but it clears the host's children before constructing the component, the opposite
-        // of what SSR hands the client). Verified manually instead, against a real hydrated SSR build:
-        // `svgIcon` reads `true` through Angular DevTools immediately post-hydration, before the
-        // resolution pipeline has had a chance to run, and the font class never appears in `className`.
+        // ICN-BUG-04: `svgIcon` defaulted to `false` until resolution confirmed an svg, briefly showing
+        // the font class over an svg a hydrated host already has. Not covered here: TestBed can't
+        // construct a component against pre-populated DOM (`createComponent`'s `hostElement` clears the
+        // host first). Verified manually against a hydrated SSR build instead.
     });
 
     // A resolver is consumer code. One that throws must fall back to the font class and leave the next

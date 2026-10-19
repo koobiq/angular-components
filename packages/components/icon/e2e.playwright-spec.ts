@@ -41,14 +41,11 @@ test.describe('KbqIconModule', () => {
     });
 
     test.describe('E2eIconUnresolvedName', () => {
-        // ICN-BUG-03: the font-icon fallback path removed whatever `<svg>` it found in the host when
-        // the name didn't resolve, including one that arrived as projected content rather than one the
-        // component injected itself — emptying an icon like the docs navbar's GitHub link.
+        // ICN-BUG-03: an unresolved name removed whatever svg the host held, projected content included.
         test('keeps projected svg content when the name does not resolve', async ({ page }) => {
             await page.goto('/E2eIconUnresolvedName');
 
-            // `toBeAttached`, not `toBeVisible`: the bug removed the node from the DOM outright, which
-            // is what's under test here — the literal svg has no explicit size of its own to assert on.
+            // Not `toBeVisible`: the literal svg has no size of its own, so presence is what matters.
             await expect(page.getByTestId('e2eIconProjectedSvg')).toBeAttached();
             await expect(page.getByTestId('e2eIconUnresolvedName').locator('svg')).toHaveCount(1);
         });
