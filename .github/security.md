@@ -43,6 +43,12 @@ give us a chance to release a fix before disclosing the issue publicly.
 Advisories against dependencies are tracked by Dependabot and by the `Audit` and
 `Audit report` workflows in this repository.
 
+A dependency version is installed only once it has been on the npm registry for a day
+(`npmMinimalAgeGate` in [`.yarnrc.yml`](../.yarnrc.yml)), and Dependabot proposes version
+updates only for releases at least a week old (`cooldown` in
+[`dependabot.yml`](./dependabot.yml)), so a compromised release is usually unpublished before
+it reaches the lockfile. Security updates from Dependabot are not delayed.
+
 The published packages (`@koobiq/components`, `@koobiq/components-experimental`, the date
 adapters) depend only on `tslib` at runtime; everything else is a peer dependency or build
 tooling that is not shipped to consumers. Advisories that cannot be fixed by an upgrade are

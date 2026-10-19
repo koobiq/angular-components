@@ -4,6 +4,10 @@ updates:
     directory: '/'
     schedule:
       interval: 'monthly'
+    # A release is proposed only once it is a week old, so a compromised version is caught
+    # before it reaches a pull request.
+    cooldown:
+      default-days: 7
     groups:
       github-actions:
         patterns:
@@ -16,6 +20,14 @@ updates:
       interval: 'cron'
       cronjob: '0 9 1,15 * *'
       timezone: 'Europe/Moscow'
+    # Has to stay at least as long as npmMinimalAgeGate in .yarnrc.yml: Dependabot does not read
+    # the gate when it picks a version, and yarn refuses to install a younger one. The same window
+    # also holds back the transitive dependencies Dependabot resolves into the lockfile. Security
+    # updates are not delayed. Our own packages are taken as soon as they are published.
+    cooldown:
+      default-days: 7
+      exclude:
+        - '@koobiq/*'
     ignore:
       # Majors are ignored only where the version is coupled to the Angular release train
       # and has to be upgraded deliberately, together with the framework. Everything else
@@ -176,6 +188,12 @@ updates:
       interval: 'cron'
       cronjob: '0 9 1,15 * *'
       timezone: 'Europe/Moscow'
+    # The same cooldown as the root entry, so these ranges move in step with the root
+    # devDependencies that mirror them.
+    cooldown:
+      default-days: 7
+      exclude:
+        - '@koobiq/*'
     open-pull-requests-limit: 5
     commit-message:
       prefix: 'chore(cli)'
