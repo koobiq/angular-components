@@ -179,9 +179,7 @@ test.describe('KbqSplitter', () => {
 
         test('should wait at the minimum and flip sides at the midpoint', async ({ page }) => {
             const panel = getPanel(page, 'First');
-            const box = await getSeparator(page).boundingBox();
-
-            if (!box) throw new Error('bounding box is null');
+            const box = (await getSeparator(page).boundingBox())!;
 
             const x = box.x + box.width / 2;
             const y = box.y + box.height / 2;
@@ -210,9 +208,7 @@ test.describe('KbqSplitter', () => {
             await page.goto('/E2eSplitterCollapsibleLive');
 
             const state = page.getByTestId('e2eSplitterCollapsedState');
-            const box = await getSeparator(page).boundingBox();
-
-            if (!box) throw new Error('bounding box is null');
+            const box = (await getSeparator(page).boundingBox())!;
 
             const x = box.x + box.width / 2;
             const y = box.y + box.height / 2;
@@ -537,6 +533,7 @@ test.describe('KbqSplitter', () => {
             const separator = getSeparator(page);
             const resting = await lineColor(page);
 
+            // eslint-disable-next-line playwright/no-force-option -- the hover over a disabled separator is the point; actionability checks would refuse it
             await separator.hover({ force: true });
 
             expect(await lineColor(page)).toBe(resting);

@@ -4,7 +4,6 @@ import { By } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon, KbqIconButtonSize, KbqIconModule } from '@koobiq/components/icon';
-import { axe } from 'jest-axe';
 
 describe('KbqIconButton', () => {
     beforeEach(() => {
@@ -204,7 +203,7 @@ describe('KbqIconButton', () => {
 
             named.detectChanges();
 
-            expect(await axe(named.nativeElement)).toHaveNoViolations();
+            await expect(named.nativeElement).toHaveNoViolations();
         });
     });
 

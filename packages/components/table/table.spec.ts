@@ -2,7 +2,6 @@ import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Component, Injectable, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { axe } from 'jest-axe';
 import { Observable, Subject } from 'rxjs';
 import { KbqTableModule } from './table.module';
 
@@ -209,7 +208,7 @@ describe('KbqTable', () => {
         document.body.appendChild(fixture.nativeElement);
 
         try {
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         } finally {
             document.body.removeChild(fixture.nativeElement);
         }

@@ -4,7 +4,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 import { KBQ_SCROLLBAR_OPTIONS, KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { axe } from 'jest-axe';
 import { Subject } from 'rxjs';
 import { KbqTabLink, KbqTabNavBar } from './tab-nav-bar';
 import { KbqTabsModule } from './tabs.module';
@@ -243,7 +242,7 @@ describe(KbqTabNavBar.name, () => {
         });
 
         it('should have no axe violations', async () => {
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 

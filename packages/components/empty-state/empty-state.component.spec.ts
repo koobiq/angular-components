@@ -5,7 +5,6 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqIconItem, KbqIconModule } from '@koobiq/components/icon';
 import { readFileSync } from 'fs';
-import { axe } from 'jest-axe';
 import { join } from 'path';
 import {
     KbqEmptyState,
@@ -260,7 +259,7 @@ describe('KbqEmptyState', () => {
 
             container.appendChild(fixture.nativeElement);
 
-            expect(await axe(container)).toHaveNoViolations();
+            await expect(container).toHaveNoViolations();
         });
     });
 

@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KbqStateSavingService } from '@koobiq/components/core';
 import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
-import { axe } from 'jest-axe';
 import { BehaviorSubject, map } from 'rxjs';
 import type { Mock } from 'vitest';
 import { DocsLocale } from '../../constants/locale';
@@ -117,7 +116,7 @@ describe(DocsLiveExampleViewerComponent.name, () => {
     });
 
     it('has no axe violations', async () => {
-        expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        await expect(fixture.nativeElement).toHaveNoViolations();
     });
 
     // The toggle used to be announced as a link with no state and no Space activation (A11Y-02).

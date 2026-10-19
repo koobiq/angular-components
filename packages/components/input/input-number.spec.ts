@@ -30,7 +30,6 @@ import {
     ruRUFormattersData
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
-import { axe } from 'jest-axe';
 import { BIG_STEP, KbqInput, KbqInputModule, KbqNumberInput, SMALL_STEP, add, getPrecision } from './index';
 
 import type { Mock } from 'vitest';
@@ -2368,7 +2367,7 @@ describe('KbqNumberInput', () => {
             await fixture.whenStable();
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 

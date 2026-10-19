@@ -78,7 +78,6 @@ import { KbqCleaner, KbqFormField, KbqFormFieldModule } from '@koobiq/components
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { axe } from 'jest-axe';
 import { Observable, Subject, Subscription, merge, of, timer } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import type { MockInstance } from 'vitest';
@@ -5668,7 +5667,7 @@ describe('KbqSelect', () => {
             expect(trigger.textContent).not.toContain('None');
         });
 
-        it('should not mark the reset option as selected ', async () => {
+        it('should not mark the reset option as selected', async () => {
             options[5].click();
             fixture.detectChanges();
             await vi.runOnlyPendingTimersAsync();
@@ -9629,7 +9628,7 @@ describe('KbqSelect', () => {
                 });
 
                 it('should have no violations while closed', async () => {
-                    expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                    await expect(fixture.nativeElement).toHaveNoViolations();
                 });
 
                 it('should have no violations while the panel is open', async () => {
@@ -9638,7 +9637,7 @@ describe('KbqSelect', () => {
                     await fixture.whenStable();
                     fixture.detectChanges();
 
-                    expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                    await expect(overlayContainerElement).toHaveNoViolations();
                 });
             });
 
@@ -9654,7 +9653,7 @@ describe('KbqSelect', () => {
                 });
 
                 it('should have no violations while closed', async () => {
-                    expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                    await expect(fixture.nativeElement).toHaveNoViolations();
                 });
 
                 it('should have no violations while the panel is open', async () => {
@@ -9663,7 +9662,7 @@ describe('KbqSelect', () => {
                     await fixture.whenStable();
                     fixture.detectChanges();
 
-                    expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                    await expect(overlayContainerElement).toHaveNoViolations();
                 });
             });
 
@@ -9682,8 +9681,6 @@ describe('KbqSelect', () => {
                     fixture.detectChanges();
                     await fixture.whenStable();
                     fixture.detectChanges();
-
-                    return axe(overlayContainerElement);
                 };
 
                 beforeEach(() => {
@@ -9691,15 +9688,21 @@ describe('KbqSelect', () => {
                 });
 
                 it('should have no violations while loading', async () => {
-                    expect(await openWith('loading')).toHaveNoViolations();
+                    await openWith('loading');
+
+                    await expect(overlayContainerElement).toHaveNoViolations();
                 });
 
                 it('should have no violations while showing an error', async () => {
-                    expect(await openWith('error')).toHaveNoViolations();
+                    await openWith('error');
+
+                    await expect(overlayContainerElement).toHaveNoViolations();
                 });
 
                 it('should have no violations while showing the empty state', async () => {
-                    expect(await openWith('no-options')).toHaveNoViolations();
+                    await openWith('no-options');
+
+                    await expect(overlayContainerElement).toHaveNoViolations();
                 });
             });
         });
@@ -10334,7 +10337,7 @@ describe('KbqSelect', () => {
                 await fixture.whenStable();
                 fixture.detectChanges();
 
-                expect(await axe(getPanel())).toHaveNoViolations();
+                await expect(getPanel()).toHaveNoViolations();
             });
         });
 

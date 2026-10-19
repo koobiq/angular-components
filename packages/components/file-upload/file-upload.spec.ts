@@ -41,7 +41,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';
-import { axe } from 'jest-axe';
 import { BehaviorSubject, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqDropzoneData, KbqFileUploadEmptyState, KbqFullScreenDropzoneService, KbqLocalDropzone } from './dropzone';
@@ -466,7 +465,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
         });
 
         it('should have no violations while empty', async () => {
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations with files in the list', async () => {
@@ -476,7 +475,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations while invalid', async () => {
@@ -486,7 +485,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             hintFixture.componentInstance.control.markAsTouched();
             hintFixture.detectChanges();
 
-            expect(await axe(hintFixture.nativeElement)).toHaveNoViolations();
+            await expect(hintFixture.nativeElement).toHaveNoViolations();
         });
     });
 
@@ -1432,7 +1431,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
         });
 
         it('should have no violations while empty', async () => {
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations with a file selected', async () => {
@@ -1442,7 +1441,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations while invalid', async () => {
@@ -1452,7 +1451,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             hintFixture.componentInstance.control.markAsTouched();
             hintFixture.detectChanges();
 
-            expect(await axe(hintFixture.nativeElement)).toHaveNoViolations();
+            await expect(hintFixture.nativeElement).toHaveNoViolations();
         });
     });
 

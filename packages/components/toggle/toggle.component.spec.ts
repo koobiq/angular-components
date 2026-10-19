@@ -260,7 +260,7 @@ describe('KbqToggle', () => {
         });
     });
 
-    describe('aria-label ', () => {
+    describe('aria-label', () => {
         let toggleDebugElement: DebugElement;
         let toggleNativeElement: HTMLElement;
         let inputElement: HTMLInputElement;
@@ -284,7 +284,7 @@ describe('KbqToggle', () => {
         });
     });
 
-    describe('with provided aria-labelledby ', () => {
+    describe('with provided aria-labelledby', () => {
         let toggleDebugElement: DebugElement;
         let toggleNativeElement: HTMLElement;
         let inputElement: HTMLInputElement;

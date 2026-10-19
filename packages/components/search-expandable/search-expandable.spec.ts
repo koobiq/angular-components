@@ -16,7 +16,6 @@ import {
     KbqSearchExpandableModule
 } from '@koobiq/components/search-expandable';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { axe } from 'jest-axe';
 
 // The modal's own animation timeout, which is internal to its entry point.
 const MODAL_ANIMATE_DURATION = 300;
@@ -976,14 +975,14 @@ describe('KbqSearchExpandable', () => {
         });
 
         it('should have no axe violations when collapsed', async () => {
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no axe violations when expanded', async () => {
             fixture.componentInstance.openedState = true;
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no axe violations when two instances are expanded on the same page', async () => {
@@ -991,7 +990,7 @@ describe('KbqSearchExpandable', () => {
 
             local.detectChanges();
 
-            expect(await axe(local.nativeElement)).toHaveNoViolations();
+            await expect(local.nativeElement).toHaveNoViolations();
         });
     });
 

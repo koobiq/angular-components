@@ -14,7 +14,6 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { axe } from 'jest-axe';
 import { KbqRadioButton, KbqRadioGroup, KbqRadioModule } from './index';
 
 describe('KbqRadio', () => {
@@ -544,7 +543,7 @@ describe('KbqRadio', () => {
 
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations for a group whose options carry hints', async () => {
@@ -552,7 +551,7 @@ describe('KbqRadio', () => {
 
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 

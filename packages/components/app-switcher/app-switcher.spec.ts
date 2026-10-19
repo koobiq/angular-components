@@ -24,7 +24,6 @@ import {
 import { NESTED_HOVER_SWITCH_DELAY } from '@koobiq/components/dropdown';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { axe } from 'jest-axe';
 import { of } from 'rxjs';
 import {
     KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING,
@@ -2081,7 +2080,7 @@ describe('KbqAppSwitcher', () => {
             async () => {
                 await openAsync(AppSwitcherSingleSite);
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             },
             AXE_TIMEOUT
         );
@@ -2091,7 +2090,7 @@ describe('KbqAppSwitcher', () => {
             async () => {
                 await openAsync(AppSwitcherMultiSite);
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             },
             AXE_TIMEOUT
         );
@@ -2105,7 +2104,7 @@ describe('KbqAppSwitcher', () => {
                 await fixture.whenStable();
                 fixture.detectChanges();
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             },
             AXE_TIMEOUT
         );

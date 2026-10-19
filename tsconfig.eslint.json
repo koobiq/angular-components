@@ -6,6 +6,8 @@
     },
     "include": [
         "**/*.ts",
+        "**/*.cts",
+        "**/*.mts",
         "**/*.html"
     ],
     "exclude": [

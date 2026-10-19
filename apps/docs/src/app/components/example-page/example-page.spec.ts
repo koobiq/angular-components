@@ -6,7 +6,6 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
 import * as docsExamplesLoader from '@koobiq/docs-examples/loader';
-import { axe } from 'jest-axe';
 import type { MockInstance } from 'vitest';
 import { DocsExamplePage } from './example-page';
 import { DOCS_EXAMPLE_PAGE_ROUTES } from './example-page.routes';
@@ -143,6 +142,6 @@ describe(DocsExamplePage.name, () => {
     it('has no axe violations', async () => {
         const harness = await open(`/examples/${EXAMPLE_ID}`);
 
-        expect(await axe(harness.routeNativeElement!)).toHaveNoViolations();
+        await expect(harness.routeNativeElement!).toHaveNoViolations();
     });
 });

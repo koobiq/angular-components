@@ -3,7 +3,6 @@ import { Component, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KBQ_ANIMATIONS_CONFIG, KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { axe } from 'jest-axe';
 import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
 
 const createFixture = <T>(component: Type<T>): ComponentFixture<T> => {
@@ -116,7 +115,7 @@ describe(KbqTopBar.name, () => {
 
         document.body.appendChild(fixture.nativeElement);
 
-        expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        await expect(fixture.nativeElement).toHaveNoViolations();
 
         fixture.nativeElement.remove();
     });

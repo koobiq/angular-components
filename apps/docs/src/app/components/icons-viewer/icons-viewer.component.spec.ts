@@ -3,7 +3,6 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideLocationMocks } from '@angular/common/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
-import { axe } from 'jest-axe';
 import { BehaviorSubject, map, of } from 'rxjs';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
@@ -80,7 +79,7 @@ describe(DocsIconsViewerComponent.name, () => {
         // axe-core schedules its checks on timers.
         vi.useRealTimers();
 
-        expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        await expect(fixture.nativeElement).toHaveNoViolations();
     });
 
     // The cells used to be bare <div>s with a click handler: no button semantics, no Space (A11Y-02).

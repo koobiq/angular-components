@@ -59,7 +59,6 @@ import {
     KbqToolTipModule,
     KbqTooltipTrigger
 } from '@koobiq/components/tooltip';
-import { axe } from 'jest-axe';
 import { Subject } from 'rxjs';
 import type { MockInstance } from 'vitest';
 import {
@@ -4082,7 +4081,7 @@ describe('KbqDropdown', () => {
 
                 fixture.detectChanges();
 
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
             },
             axeTimeout
         );
@@ -4096,7 +4095,7 @@ describe('KbqDropdown', () => {
                 fixture.componentInstance.trigger().open();
                 fixture.detectChanges();
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             },
             axeTimeout
         );
@@ -4112,7 +4111,7 @@ describe('KbqDropdown', () => {
                 fixture.componentInstance.levelOneTrigger().open();
                 fixture.detectChanges();
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             },
             axeTimeout
         );
@@ -4126,7 +4125,7 @@ describe('KbqDropdown', () => {
                 fixture.componentInstance.triggerEl().nativeElement.click();
                 fixture.detectChanges();
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             },
             axeTimeout
         );
@@ -4142,7 +4141,7 @@ describe('KbqDropdown', () => {
                 await fixture.whenStable();
                 fixture.detectChanges();
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             },
             axeTimeout
         );

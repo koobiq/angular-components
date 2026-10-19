@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By, DomSanitizer } from '@angular/platform-browser';
-import { axe } from 'jest-axe';
 import { KbqFlag } from './flag';
 
 /** An axe audit runs on real timers and needs more than the repo-wide 2s default. */
@@ -334,7 +333,7 @@ describe(KbqFlag.name, () => {
 
                 document.body.appendChild(fixture.nativeElement);
 
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
 
                 fixture.nativeElement.remove();
             },

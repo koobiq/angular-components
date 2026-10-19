@@ -40,7 +40,6 @@ import {
 } from '@koobiq/components/notification-center';
 import { KbqToastService } from '@koobiq/components/toast';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { axe } from 'jest-axe';
 import type { MockInstance } from 'vitest';
 
 /** Mirrors the panel's own rate-limit window for the scroll-to-bottom check. */
@@ -638,7 +637,7 @@ describe('KbqNotificationCenter', () => {
             await fixture.whenStable();
             fixture.detectChanges();
 
-            expect(await axe(overlayContainer.getContainerElement())).toHaveNoViolations();
+            await expect(overlayContainer.getContainerElement()).toHaveNoViolations();
         });
 
         it('has no axe violations in the empty state', async () => {
@@ -646,7 +645,7 @@ describe('KbqNotificationCenter', () => {
             await fixture.whenStable();
             fixture.detectChanges();
 
-            expect(await axe(overlayContainer.getContainerElement())).toHaveNoViolations();
+            await expect(overlayContainer.getContainerElement()).toHaveNoViolations();
         });
 
         describe('status icon', () => {

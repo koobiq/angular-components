@@ -98,6 +98,7 @@ test.describe('KbqListModule', () => {
             await expect(row).toHaveAttribute('aria-checked', 'false');
             await expect(selected).toHaveCount(1);
 
+            // eslint-disable-next-line playwright/no-force-option -- the click on a disabled control is the point; actionability checks would refuse it
             await row.click({ force: true });
 
             await expect(row).toHaveAttribute('aria-checked', 'false');
@@ -604,6 +605,7 @@ test.describe('KbqListModule', () => {
                 .toEqual(['row-1', 'row-2', 'row-3', 'row-4', 'row-5', 'row-6', 'row-7']);
         });
     });
+
     test.describe('E2eListDragPreview', () => {
         /** Picks an option up and holds it, without dropping — the preview only exists mid-drag. */
         const pickUp = async (page: Page, testId: string) => {

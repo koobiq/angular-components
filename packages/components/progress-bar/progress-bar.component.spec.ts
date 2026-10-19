@@ -9,7 +9,6 @@ import {
     KbqLocaleServiceModule,
     ruRULocaleData
 } from '@koobiq/components/core';
-import { axe } from 'jest-axe';
 import { KbqProgressBarModule, ProgressBarMode } from './index';
 
 const DEFAULT_ARIA_LABEL = ruRULocaleData.a11y.progressBar;
@@ -330,7 +329,7 @@ describe('KbqProgressBar', () => {
         });
 
         it('should have no axe violations', async () => {
-            expect(await axe(projected.nativeElement)).toHaveNoViolations();
+            await expect(projected.nativeElement).toHaveNoViolations();
         });
 
         // The range is absent in this mode, which is the only axis the indeterminate `progressbar` has
@@ -340,7 +339,7 @@ describe('KbqProgressBar', () => {
 
             indeterminate.detectChanges();
 
-            expect(await axe(indeterminate.nativeElement)).toHaveNoViolations();
+            await expect(indeterminate.nativeElement).toHaveNoViolations();
         });
     });
 

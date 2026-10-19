@@ -187,18 +187,17 @@ describe('KbqIconRegistry', () => {
         // Angular's sanitizer reports in dev mode whenever it strips content, which is what these tests provoke.
         let warn: MockInstance;
 
+        const SANITIZER_WARNING = expect.stringContaining('sanitizing HTML stripped some content');
+
         beforeEach(() => {
             warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-        });
-
-        afterEach(() => {
-            expect(warn).toHaveBeenCalledWith(expect.stringContaining('sanitizing HTML stripped some content'));
         });
 
         it('throws when input sanitizes to empty (script-only literal)', () => {
             expect(() => registry.addSvgIconLiteral('evil', unsafe('<script>alert(1)</script>'))).toThrow(
                 /sanitized to empty string/
             );
+            expect(warn).toHaveBeenCalledWith(SANITIZER_WARNING);
         });
 
         it('strips <script> elements embedded in the SVG', () => {
@@ -213,6 +212,7 @@ describe('KbqIconRegistry', () => {
                     )
                 );
             }).toThrow();
+            expect(warn).toHaveBeenCalledWith(SANITIZER_WARNING);
         });
 
         it('strips inline event-handler attributes from the SVG root', () => {
@@ -226,6 +226,7 @@ describe('KbqIconRegistry', () => {
                     )
                 );
             }).toThrow();
+            expect(warn).toHaveBeenCalledWith(SANITIZER_WARNING);
         });
 
         it('strips event-handler attributes from nested SVG children', () => {
@@ -239,6 +240,7 @@ describe('KbqIconRegistry', () => {
                     )
                 );
             }).toThrow();
+            expect(warn).toHaveBeenCalledWith(SANITIZER_WARNING);
         });
     });
 

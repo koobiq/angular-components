@@ -16,7 +16,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
-import { axe } from 'jest-axe';
 import { EMPTY } from 'rxjs';
 import { KbqButtonToggle, KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from './index';
 
@@ -1242,7 +1241,7 @@ describe('KbqButtonToggle accessibility', () => {
 
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations in a multiple-selection group', async () => {
@@ -1250,7 +1249,7 @@ describe('KbqButtonToggle accessibility', () => {
 
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations for a named icon-only toggle', async () => {
@@ -1258,7 +1257,7 @@ describe('KbqButtonToggle accessibility', () => {
 
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 

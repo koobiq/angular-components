@@ -28,7 +28,6 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverComponent } from '@koobiq/components/popover';
 import { KbqRadioButton } from '@koobiq/components/radio';
-import { axe } from 'jest-axe';
 import { KBQ_CUSTOM_TIME_RANGE_TYPES, KBQ_DEFAULT_TIME_RANGE_TYPES } from './constants';
 import {
     KBQ_TIME_RANGE_LOCALE_CONFIGURATION,
@@ -1384,7 +1383,7 @@ describe('KbqTimeRange', () => {
 
                 const editor = debugElement.query(By.directive(KbqTimeRangeEditor)).nativeElement;
 
-                expect(await axe(editor)).toHaveNoViolations();
+                await expect(editor).toHaveNoViolations();
             },
             axeTimeout
         );

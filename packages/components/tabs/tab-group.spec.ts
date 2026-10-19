@@ -25,7 +25,6 @@ import {
     dispatchMouseEvent
 } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { axe } from 'jest-axe';
 import { Observable, Subject } from 'rxjs';
 import { KBQ_TABS_CONFIG, KbqTabGroup, KbqTabHeaderPosition, KbqTabSelectBy } from './tab-group.component';
 import { KbqTabHeader } from './tab-header.component';
@@ -843,13 +842,13 @@ describe('KbqTabGroup ARIA', () => {
     });
 
     it('should have no axe violations in either orientation', async () => {
-        expect(await axe(createFixture().nativeElement)).toHaveNoViolations();
+        await expect(createFixture().nativeElement).toHaveNoViolations();
 
         const vertical = TestBed.createComponent(VerticalTabsTestApp);
 
         vertical.detectChanges();
 
-        expect(await axe(vertical.nativeElement)).toHaveNoViolations();
+        await expect(vertical.nativeElement).toHaveNoViolations();
     });
 });
 

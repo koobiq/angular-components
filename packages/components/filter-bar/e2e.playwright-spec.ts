@@ -417,6 +417,7 @@ test.describe('KbqFilterBarModule', () => {
             await expect(trigger).toHaveClass(/kbq-button_outline/);
             await expect(clear).toHaveClass(/kbq-button_outline/);
         });
+
         test('states', async ({ page }) => {
             await page.goto('/E2eFilterBarPipeFill');
 

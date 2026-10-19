@@ -400,6 +400,7 @@ describe('KbqDatepicker', () => {
             });
 
             // The calendar handles no keys: the input's keydown is the only listener, and it ignores ENTER.
+            // eslint-disable-next-line vitest/no-disabled-tests -- documents the defect described above until it is fixed
             it.skip('pressing enter on the currently selected date should close the calendar without firing selectedChanged', async () => {
                 const nextSpyFn = vi.spyOn(testComponent.datepicker().selectedChanged, 'next');
 
@@ -1950,6 +1951,7 @@ describe('KbqDatepicker', () => {
 
             // writeValue deserializes the ISO string, but setControl's valueChanges subscription then stores the
             // raw control value in the input, so its value stays a string.
+            // eslint-disable-next-line vitest/no-disabled-tests -- documents the defect described above until it is fixed
             it.skip('should coerce an ISO string bound through ngModel', async () => {
                 vi.useFakeTimers();
 
@@ -2305,6 +2307,7 @@ describe('KbqDatepicker', () => {
     // @koobiq/luxon-date-adapter carries locale data for a fixed set of locales, and its base constructor
     // calls setLocale before the subclass field that would widen it exists. KBQ_DATE_LOCALE: 'de-DE' therefore
     // throws inside the adapter constructor, before any assertion here runs.
+    // eslint-disable-next-line vitest/no-disabled-tests -- documents the defect described above until it is fixed
     describe.skip('internationalization', () => {
         let fixture: ComponentFixture<DatepickerWithi18n>;
         let testComponent: DatepickerWithi18n;

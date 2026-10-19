@@ -11,7 +11,6 @@ import {
     KbqStateSavingService,
     KbqStateStore
 } from '@koobiq/components/core';
-import { axe } from 'jest-axe';
 import { EMPTY } from 'rxjs';
 import {
     KbqAccordion,
@@ -2227,7 +2226,7 @@ describe('KbqAccordion', () => {
             fixture.detectChanges();
             document.body.appendChild(fixture.nativeElement);
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('has no axe violations when an item is expanded', async () => {
@@ -2238,7 +2237,7 @@ describe('KbqAccordion', () => {
             fixture.debugElement.query(By.directive(KbqAccordionTrigger)).nativeElement.click();
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         // Pins the `nested-interactive` fix: actions must be siblings of the trigger, never inside
@@ -2249,7 +2248,7 @@ describe('KbqAccordion', () => {
             fixture.detectChanges();
             document.body.appendChild(fixture.nativeElement);
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('has no axe violations with header actions and expanded content controls', async () => {
@@ -2260,7 +2259,7 @@ describe('KbqAccordion', () => {
             fixture.debugElement.query(By.directive(KbqAccordionTrigger)).nativeElement.click();
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('has no axe violations with header actions in RTL', async () => {
@@ -2279,7 +2278,7 @@ describe('KbqAccordion', () => {
             fixture.debugElement.query(By.directive(KbqAccordionTrigger)).nativeElement.click();
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('has no axe violations for a nested accordion', async () => {
@@ -2290,7 +2289,7 @@ describe('KbqAccordion', () => {
             fixture.debugElement.query(By.directive(KbqAccordionTrigger)).nativeElement.click();
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 });

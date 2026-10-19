@@ -13,7 +13,9 @@ const jsdoc = require('eslint-plugin-jsdoc');
 // eslint-plugin-file-progress ships as ESM since v2 (the plugin object lives under `.default`)
 const progress = require('eslint-plugin-file-progress').default;
 const prettierRecommended = require('eslint-plugin-prettier/recommended');
-const playwright = require('eslint-plugin-playwright');
+// eslint-plugin-playwright types its CommonJS entry as `export default`, while `require` returns the plugin itself
+/** @type {typeof import('eslint-plugin-playwright').default} */
+const playwright = /** @type {any} */ (require('eslint-plugin-playwright'));
 const vitest = require('@vitest/eslint-plugin');
 
 const isCI = !!process.env.CI;
@@ -189,9 +191,10 @@ module.exports = tseslint.config(
         }
     },
 
-    // Rules for JavaScript and TypeScript files
+    // Rules for JavaScript and TypeScript files, `.cjs`/`.cts` and `.mjs`/`.mts` among them: a pattern this config
+    // does not list leaves the file either unlinted or with the few rules that apply to every file
     {
-        files: ['**/*.js', '**/*.ts'],
+        files: ['**/*.{js,cjs,mjs}', '**/*.{ts,cts,mts}'],
         extends: [
             eslint.configs.recommended,
             promise.configs['flat/recommended']
@@ -241,12 +244,15 @@ module.exports = tseslint.config(
         }
     },
 
-    // JavaScript files in this repo are CommonJS (require/module.exports)
+    // JavaScript files in this repo are CommonJS (require/module.exports), unless `.mjs` makes one an ES module
     {
         files: ['**/*.js'],
         languageOptions: {
             sourceType: 'commonjs'
-        },
+        }
+    },
+    {
+        files: ['**/*.{js,cjs,mjs}'],
         rules: {
             // ESLint 9 changed the `no-unused-vars` `caughtErrors` default from 'none' to 'all'.
             // Restore the previous behavior so unused `catch` bindings are not newly reported.
@@ -256,7 +262,7 @@ module.exports = tseslint.config(
 
     // Rules for TypeScript files
     {
-        files: ['**/*.ts'],
+        files: ['**/*.{ts,cts,mts}'],
         extends: [
             /** @see https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/src/configs/recommended.ts */
             tseslint.configs.recommended,
@@ -566,14 +572,12 @@ module.exports = tseslint.config(
     // Override rules for specs
     {
         files: ['**/*.spec.ts', '**/*.spec-helper.ts'],
-        plugins: { vitest },
+        extends: [vitest.configs.recommended],
         rules: {
-            // plugin:vitest — the classes of defect this suite has actually shipped: a test with no
-            // assertion at all, an assertion reachable only through a branch that may not be taken,
-            // an assertion outside the test that is supposed to own it, and a focused test.
+            // plugin:vitest — on top of the recommended set, the helpers that hold a test's assertions and an
+            // async assertion that has to be awaited.
             // A helper that holds a test's assertions is listed by its exact name: a wildcard also matches
-            // any call on a variable named the same way, such as `checkbox.click()`. A premise guard in a
-            // hook is deliberate here, so no-standalone-expect stays off.
+            // any call on a variable named the same way, such as `checkbox.click()`.
             'vitest/expect-expect': [
                 2,
                 {
@@ -593,11 +597,10 @@ module.exports = tseslint.config(
                     ]
                 }
             ],
-            'vitest/no-conditional-expect': 2,
-            'vitest/no-focused-tests': 2,
-            'vitest/no-identical-title': 2,
-            'vitest/valid-expect': [2, { alwaysAwait: true }],
-            'vitest/no-commented-out-tests': 2,
+            // `toHaveNoViolations` runs axe-core, so it is an async assertion too
+            'vitest/valid-expect': [2, { alwaysAwait: true, asyncMatchers: ['toHaveNoViolations'] }],
+            // `describe(KbqButton.name)` and `describe(SCHEMATIC_NAME)` follow a rename on their own
+            'vitest/valid-title': [2, { ignoreTypeOfDescribeName: true }],
 
             // plugin:eslint
             // ignore `noRestrictedGlobalsOptionsForSSR` in specs, because they are not executed in SSR context
@@ -638,16 +641,14 @@ module.exports = tseslint.config(
         }
     },
 
-    // Override rules for e2e
+    // Playwright code: the e2e specs and the helpers they share
     {
-        files: ['**/*.playwright-spec.ts', '**/e2e.ts', 'packages/e2e/**/*.ts'],
-        plugins: { playwright },
+        files: ['**/*.playwright-spec.ts', 'packages/e2e/utils/**/*.ts'],
+        extends: [playwright.configs['flat/recommended']],
         rules: {
-            // plugin:playwright — a hardcoded wait is the flake this suite keeps rediscovering, and
-            // a focused test is already rejected by the container at runtime; catching it at lint
-            // time costs nothing.
+            // plugin:playwright — on top of the recommended set, errors for a hardcoded wait, the flake this
+            // suite keeps rediscovering, and for a `page.pause()` left over from debugging.
             'playwright/no-wait-for-timeout': 2,
-            'playwright/no-focused-test': 2,
             'playwright/no-page-pause': 2,
             'playwright/expect-expect': [
                 2,
@@ -664,8 +665,15 @@ module.exports = tseslint.config(
                 }
             ],
             'playwright/no-conditional-expect': 2,
-            'playwright/valid-expect': 2,
+            // A skip on what the browser supports reports the test as not run, where an early return would pass it
+            'playwright/no-skipped-test': [1, { allowConditional: true }]
+        }
+    },
 
+    // Override rules for e2e
+    {
+        files: ['**/*.playwright-spec.ts', '**/e2e.ts', 'packages/e2e/**/*.ts'],
+        rules: {
             // plugin:eslint
             // ignore `noRestrictedGlobalsOptionsForSSR` in e2e tests, because they are not executed in SSR context
             'no-restricted-globals': 0,
@@ -700,7 +708,7 @@ module.exports = tseslint.config(
 
     // Override rules for /tools
     {
-        files: ['tools/**/*.ts', 'tools/**/*.js'],
+        files: ['tools/**/*.{js,cjs,mjs,ts,cts,mts}'],
         rules: {
             // plugin:eslint
             'no-console': 0,
@@ -713,7 +721,7 @@ module.exports = tseslint.config(
 
     // Override rules for /packages/schematics/
     {
-        files: ['packages/schematics/**/*.ts', 'packages/schematics/**/*.js'],
+        files: ['packages/schematics/**/*.{js,cjs,mjs,ts,cts,mts}'],
         rules: {
             // plugin:eslint
             'no-console': 0
@@ -722,7 +730,7 @@ module.exports = tseslint.config(
 
     // Override rules for /packages/cli/
     {
-        files: ['packages/cli/**/*.ts', 'packages/cli/**/*.js'],
+        files: ['packages/cli/**/*.{js,cjs,mjs,ts,cts,mts}'],
         rules: {
             // plugin:eslint
             'no-console': 0,
@@ -735,7 +743,7 @@ module.exports = tseslint.config(
 
     // plugin:prettier — must be last so it can turn off conflicting formatting rules
     {
-        files: ['**/*.js', '**/*.ts', '**/*.html'],
+        files: ['**/*.{js,cjs,mjs}', '**/*.{ts,cts,mts}', '**/*.html'],
         extends: [prettierRecommended]
     }
 );

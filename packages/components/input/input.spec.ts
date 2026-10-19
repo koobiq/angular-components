@@ -23,7 +23,6 @@ import {
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KBQ_INPUT_VALUE_ACCESSOR, KbqInput, KbqInputModule } from '@koobiq/components/input';
-import { axe } from 'jest-axe';
 import { map, Observable, timer } from 'rxjs';
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
@@ -856,7 +855,7 @@ describe('KbqInput', () => {
             await fixture.whenStable();
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 });

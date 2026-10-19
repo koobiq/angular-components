@@ -32,7 +32,6 @@ import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTimepicker, KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { axe } from 'jest-axe';
 import { DateTime } from 'luxon';
 import { defer, Observable, Subject } from 'rxjs';
 import {
@@ -44,7 +43,7 @@ import {
 } from './inline-edit';
 import { KbqInlineEditModule } from './module';
 
-/** `axe()` walks the whole subtree, which takes far longer than the 2s default of the suite. */
+/** `toHaveNoViolations()` walks the whole subtree, which takes far longer than the 2s default of the suite. */
 const AXE_TIMEOUT = 15000;
 
 // The modal's own animation timeout, which is internal to its entry point.
@@ -1235,7 +1234,7 @@ describe('KbqInlineEdit', () => {
                 fixture.detectChanges();
                 await fixture.whenStable();
 
-                expect(await axe(getOverlayContainerElement())).toHaveNoViolations();
+                await expect(getOverlayContainerElement()).toHaveNoViolations();
             },
             AXE_TIMEOUT
         );
@@ -1247,7 +1246,7 @@ describe('KbqInlineEdit', () => {
 
                 await fixture.whenStable();
 
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
             },
             AXE_TIMEOUT
         );
