@@ -2,6 +2,7 @@
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
 import {
+    afterNextRender,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -16,7 +17,7 @@ import {
     ElementRef,
     forwardRef,
     inject,
-    Input,
+    Injector,
     input,
     numberAttribute,
     OnChanges,
@@ -24,7 +25,8 @@ import {
     output,
     signal,
     SimpleChanges,
-    ViewChild,
+    untracked,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -33,6 +35,7 @@ import {
     IFocusableOption,
     isNull,
     KBQ_TITLE_TEXT_REF,
+    kbqAnimationsDisabled,
     KbqColorDirective,
     KbqComponentColors,
     KbqFieldSizingContent,
@@ -225,8 +228,11 @@ export class KbqTagEditInput {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tag',
+        // No signal is read by two of these bindings, and none of the tag list's: the host bindings of every tag in a
+        // view run in that view's reactive consumer, where a signal read again after others costs a scan of all it has
+        // read so far, O(N²) per check across N tags. Each value that folds in `disabled` has a signal of its own.
         '[attr.tabindex]': 'tabindex',
-        '[attr.disabled]': 'disabled || null',
+        '[attr.disabled]': 'disabledAttribute()',
         '[class.kbq-selected]': 'selected()',
         '[class.kbq-tag-with-avatar]': 'avatar()',
         '[class.kbq-tag-with-icon]': 'contentChildren()',
@@ -237,6 +243,7 @@ export class KbqTagEditInput {
         '[class.kbq-tag_removable]': 'removable()',
         '[class.kbq-tag_selectable]': 'selectable()',
         '[class.kbq-tag_draggable]': 'draggable',
+        '[class.kbq-animations-disabled]': 'animationsDisabled',
         '(dblclick)': 'handleDblClick($event)',
         '(click)': 'handleClick($event)',
         '(keydown)': 'handleKeydown($event)'
@@ -257,6 +264,7 @@ export class KbqTag
     private readonly tagList = inject(KbqTagList, { optional: true });
     private readonly drag: CdkDrag<KbqTagDragData> = inject(CdkDrag, { host: true });
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
 
     /** @docs-private */
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -283,7 +291,16 @@ export class KbqTag
      *
      * @docs-private
      */
-    hasFocus: boolean = false;
+    get hasFocus(): boolean {
+        return this._hasFocus();
+    }
+
+    /** @docs-private */
+    set hasFocus(value: boolean) {
+        this._hasFocus.set(value);
+    }
+
+    private readonly _hasFocus = signal(false);
 
     /**
      * Backing input of `editable`. Bind through the `editable` attribute; read `editable`, which falls
@@ -314,10 +331,14 @@ export class KbqTag
      */
     protected readonly editing = signal(false);
 
+    private readonly textElementQuery = viewChild<ElementRef<HTMLSpanElement>>('kbqTitleText');
+
     /**
      * @docs-private
      */
-    @ViewChild('kbqTitleText') readonly textElement: ElementRef<HTMLSpanElement>;
+    get textElement(): ElementRef<HTMLSpanElement> {
+        return this.textElementQuery()!;
+    }
 
     readonly contentChildren = contentChildren_1(KbqIcon);
 
@@ -360,7 +381,6 @@ export class KbqTag
 
     /** The value of the tag. Defaults to the content inside `<kbq-tag>` tags. */
     // Stays an accessor: it falls back to the projected text content, which is DOM state.
-    @Input()
     get value(): any {
         return this._value ?? this.elementRef.nativeElement.textContent?.trim();
     }
@@ -398,20 +418,13 @@ export class KbqTag
      * This is the affordance, not the channel: `remove()` stays open so the list can still clear a
      * disabled tag when `clearPredicate` asks for it.
      */
-    // Stays an accessor for the same reason `disabled` is one: it folds in the tag list's form control.
     get canRemove(): boolean {
         return this.removable() && !this.disabled;
     }
 
     /** Tab order of the tag. */
-    // Stays an accessor: it folds in `disabled`, which reads the tag list's form control - a plain property
-    // a `computed` would not see change.
-    @Input()
     get tabindex() {
-        if (this.disabled) return null;
-        if (this._tabindex() === -1 && this.selectable() && !this.tagList) return 0;
-
-        return this._tabindex();
+        return this.tabindexState();
     }
 
     set tabindex(value: any) {
@@ -420,21 +433,33 @@ export class KbqTag
 
     private readonly _tabindex = signal<any>(-1);
 
+    private readonly tabindexState = computed(() => {
+        if (this.disabled) return null;
+        if (this._tabindex() === -1 && this.selectable() && !this.tagList) return 0;
+
+        return this._tabindex();
+    });
+
     /** Whether the tag is disabled. */
     // Stays a plain boolean: the focus key manager skips items by reading `item.disabled` as a value, so a
     // signal - a function, always truthy - would skip every tag. It also folds in the tag list's form control.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this._disabled() || (this.tagList?.disabled ?? false);
+        return this.disabledState();
     }
 
     set disabled(value: boolean) {
         this._disabled.set(value);
-        // The cleaner's visibility is decided by the list, whose view this write does not touch.
-        this.tagList?.markForCheck();
     }
 
     private readonly _disabled = signal(false);
+
+    private readonly disabledState = computed(() => this._disabled() || (this.tagList?.disabled() ?? false));
+
+    /**
+     * Value of the `disabled` attribute.
+     * @internal
+     */
+    protected readonly disabledAttribute = computed(() => this.disabled || null);
 
     /**
      * Whether the tag is draggable.
@@ -442,13 +467,32 @@ export class KbqTag
      * @docs-private
      */
     protected get draggable(): boolean {
-        return (this.tagList?.draggable ?? false) && !this.disabled;
+        return this.draggableState();
     }
+
+    private readonly draggableState = computed(() => (this.tagList?.draggable ?? false) && !this.disabled);
+
+    /**
+     * Whether the tag moves into place without motion while the list is reordered.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
+    /** @docs-private */
+    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
+
+    /** @docs-private */
+    readonly tabindexInput = input<number | null | undefined>(undefined, { alias: 'tabindex' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
 
     constructor() {
         super();
 
-        this.color = KbqComponentColors.ContrastFade;
         this.setDefaultColor(KbqComponentColors.ContrastFade);
 
         this.addHostClassName();
@@ -456,6 +500,25 @@ export class KbqTag
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        if (changes['valueInput']) {
+            const value = this.valueInput();
+
+            if (value !== undefined) this.value = value;
+        }
+
+        if (changes['tabindexInput']) {
+            const tabindex = this.tabindexInput();
+
+            if (tabindex !== undefined) this.tabindex = tabindex;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
         // Only a change of this binding: `ngOnChanges` also fires for every other input, and re-applying the
         // bound value then would undo a selection the user made by clicking.
         if (changes['selectedInput']) {
@@ -477,6 +540,7 @@ export class KbqTag
      * Adds the legacy positional classes inferred from projected icons.
      *
      * @deprecated Use `KbqTagPrefix` and `KbqTagSuffix` to declare the position explicitly.
+     * Will be removed in 22.0.0.
      * @docs-private
      */
     addClassModificatorForIcons(): void {
@@ -522,18 +586,24 @@ export class KbqTag
      * Selects the tag.
      */
     select(): void {
-        if (this.disabled || !this.selectable()) return;
+        // Untracked, like the other imperative methods: called from a consumer's `effect()`, the state read on the
+        // way — `selected`, `disabled`, focus, the inputs — would make the effect run again whenever it changes.
+        untracked(() => {
+            if (this.disabled || !this.selectable()) return;
 
-        this.setSelectedState(true, { emitEvent: true });
+            this.setSelectedState(true, { emitEvent: true });
+        });
     }
 
     /**
      * Deselects the tag.
      */
     deselect(): void {
-        if (this.disabled || !this.selectable()) return;
+        untracked(() => {
+            if (this.disabled || !this.selectable()) return;
 
-        this.setSelectedState(false, { emitEvent: true });
+            this.setSelectedState(false, { emitEvent: true });
+        });
     }
 
     /**
@@ -542,27 +612,34 @@ export class KbqTag
      * @docs-private
      */
     selectViaInteraction(): void {
-        if (this.disabled || !this.selectable()) return;
+        untracked(() => {
+            if (this.disabled || !this.selectable()) return;
 
-        this.setSelectedState(true, { isUserInput: true, emitEvent: true });
+            this.setSelectedState(true, { isUserInput: true, emitEvent: true });
+        });
     }
 
     /**
      * Toggles the current selected state of the tag.
      */
     toggleSelected(isUserInput: boolean = false): boolean {
-        if (this.disabled || !this.selectable()) return this.selected();
+        return untracked(() => {
+            if (this.disabled || !this.selectable()) return this.selected();
 
-        this.setSelectedState(!this.selected(), { isUserInput, emitEvent: true });
+            this.setSelectedState(!this.selected(), { isUserInput, emitEvent: true });
 
-        return this.selected();
+            return this.selected();
+        });
     }
 
     /** Focuses the tag. */
     focus(): void {
-        if (this.disabled) return;
+        // The focus monitor reports the focus synchronously, and its handler reads the focus state.
+        untracked(() => {
+            if (this.disabled) return;
 
-        this.elementRef.nativeElement.focus();
+            this.elementRef.nativeElement.focus();
+        });
     }
 
     /**
@@ -572,7 +649,7 @@ export class KbqTag
      * Informs any listeners of the removal request. Does not remove the tag from the DOM.
      */
     remove(): void {
-        if (this.removable()) {
+        if (untracked(this.removable)) {
             this.removed.emit({ tag: this });
         }
     }
@@ -653,7 +730,7 @@ export class KbqTag
 
     /** @docs-private */
     blur(): void {
-        this.elementRef.nativeElement.blur();
+        untracked(() => this.elementRef.nativeElement.blur());
     }
 
     /** @docs-private */
@@ -670,34 +747,42 @@ export class KbqTag
         this.editing.set(true);
         this.editChange.emit({ tag: this, type: 'start', reason });
 
-        setTimeout(() => {
-            const input = this.editInputElementRef()?.nativeElement;
+        // The edit input exists once the editing state is rendered.
+        afterNextRender(
+            () => {
+                const input = this.editInputElementRef()?.nativeElement;
 
-            if (!input) throw getTagEditInputMissingError();
+                if (!input) throw getTagEditInputMissingError();
 
-            this.focusMonitor.focusVia(this.elementRef.nativeElement, 'keyboard');
-            input.select();
-        });
+                this.focusMonitor.focusVia(this.elementRef.nativeElement, 'keyboard');
+                input.select();
+            },
+            { injector: this.injector }
+        );
     }
 
     /** @docs-private */
     cancelEditing(reason: string): void {
-        if (!this.editing()) return;
+        untracked(() => {
+            if (!this.editing()) return;
 
-        this.editing.set(false);
-        this.editChange.emit({ tag: this, type: 'cancel', reason });
+            this.editing.set(false);
+            this.editChange.emit({ tag: this, type: 'cancel', reason });
 
-        this.textElement.nativeElement.scrollTo?.({ left: 0, behavior: 'instant' });
+            this.textElement.nativeElement.scrollTo?.({ left: 0, behavior: 'instant' });
+        });
     }
 
     /** @docs-private */
     submitEditing(reason: string): void {
-        if (!this.editing() || this.preventEditSubmit()) return;
+        untracked(() => {
+            if (!this.editing() || this.preventEditSubmit()) return;
 
-        this.editing.set(false);
-        this.editChange.emit({ tag: this, type: 'submit', reason });
+            this.editing.set(false);
+            this.editChange.emit({ tag: this, type: 'submit', reason });
 
-        this.textElement.nativeElement.scrollTo?.({ left: 0, behavior: 'instant' });
+            this.textElement.nativeElement.scrollTo?.({ left: 0, behavior: 'instant' });
+        });
     }
 
     /**
@@ -708,19 +793,19 @@ export class KbqTag
     setSelectedState(selected: boolean, options: Partial<{ isUserInput: boolean; emitEvent: boolean }> = {}): void {
         const { isUserInput = false, emitEvent = false } = options;
 
-        if (selected !== this.selected()) {
-            this._selected.set(selected);
+        untracked(() => {
+            if (selected !== this.selected()) {
+                this._selected.set(selected);
 
-            if (emitEvent) {
-                this.selectionChange.emit({
-                    source: this,
-                    isUserInput,
-                    selected: this.selected()
-                });
+                if (emitEvent) {
+                    this.selectionChange.emit({
+                        source: this,
+                        isUserInput,
+                        selected: this.selected()
+                    });
+                }
             }
-
-            this.changeDetectorRef.markForCheck();
-        }
+        });
     }
 
     private setupDragInitialProperties(): void {
@@ -753,8 +838,6 @@ export class KbqTag
                     this.cancelEditing('blur');
                     if (!this.tagList) this.deselect();
                 }
-
-                this.changeDetectorRef.markForCheck();
             }
         });
     }
@@ -782,8 +865,8 @@ export class KbqTag
         '[attr.tabindex]': 'tabIndex()',
         '(click)': 'handleClick($event)',
         '(focus)': 'focus($event)',
-        '(keydown.enter)': 'handleKeydown($event)',
-        '(keydown.space)': 'handleKeydown($event)'
+        '(keydown.enter)': 'handleKeydown($any($event))',
+        '(keydown.space)': 'handleKeydown($any($event))'
     },
     hostDirectives: [KbqTagSuffix]
 })

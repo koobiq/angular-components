@@ -12,6 +12,7 @@ import { KbqDefaultSizes } from '@koobiq/components/core';
 // @public
 export class KbqProgressSpinner extends KbqColorDirective {
     constructor();
+    protected readonly animationsDisabled: boolean;
     protected readonly dashOffsetPercent: i0.Signal<string>;
     readonly id: i0.InputSignal<string>;
     readonly mode: i0.InputSignal<ProgressSpinnerMode>;

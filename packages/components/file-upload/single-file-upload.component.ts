@@ -1,6 +1,7 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { AsyncPipe, isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
+import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
+    afterNextRender,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -11,10 +12,13 @@ import {
     effect,
     ElementRef,
     inject,
+    Injector,
     input,
-    Input,
+    OnChanges,
     output,
     PLATFORM_ID,
+    SimpleChanges,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -53,7 +57,6 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
 @Component({
     selector: 'kbq-single-file-upload,kbq-file-upload:not([multiple])',
     imports: [
-        AsyncPipe,
         KbqFileDropDirective,
         KbqLink,
         KbqIcon,
@@ -88,7 +91,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
 })
 export class KbqSingleFileUploadComponent
     extends KbqFileUploadBase
-    implements AfterViewInit, ControlValueAccessor, DoCheck
+    implements OnChanges, AfterViewInit, ControlValueAccessor, DoCheck
 {
     /**
      * A value responsible for progress spinner type.
@@ -99,22 +102,18 @@ export class KbqSingleFileUploadComponent
     readonly inputId = input<string>(`kbq-single-file-upload-${nextSingleFileUploadUniqueId++}`);
 
     /** An object used to control the error state of the component. */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input() errorStateMatcher: ErrorStateMatcher;
+    errorStateMatcher: ErrorStateMatcher;
 
     /**
-     * The selected file, or `null`. Stays an accessor input rather than becoming a `model()`: the
-     * store is `KbqFileList.list`, a model on the host directive that the template reads and that
-     * `remove()`, `removeAt()` and `replace()` mutate. A `model()` here would be a second store to
-     * keep in sync with that one, not a replacement for it.
+     * The selected file, or `null`.
      *
      * Writing it is the model→view direction, same as `writeValue()`: it fills the list and tells
      * nobody. `cvaOnChange` and `(fileChange)` belong to the paths a user drives — see `addFile()`
      * and `deleteItem()` — so a `[file]` binding cannot make the form look edited.
      */
-    @Input()
+    // An accessor, not a `model()`: the store is `KbqFileList.list`, a model on the host directive that the template
+    // reads and that `remove()`, `removeAt()` and `replace()` mutate. A `model()` here would be a second store to keep
+    // in sync with that one.
     get file(): KbqFileItem | null {
         const files = this.fileList.list();
 
@@ -230,7 +229,24 @@ export class KbqSingleFileUploadComponent
     });
 
     private readonly focusMonitor = inject(FocusMonitor);
+    private readonly injector = inject(Injector);
     private readonly platformId = inject(PLATFORM_ID);
+
+    /** @docs-private */
+    readonly errorStateMatcherInput = input<ErrorStateMatcher | undefined>(undefined, { alias: 'errorStateMatcher' });
+
+    /** @docs-private */
+    readonly fileInput = input<KbqFileItem | null | undefined>(undefined, { alias: 'file' });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        // A bound `undefined` falls back to the default matcher and clears the file.
+        if (changes['errorStateMatcherInput']) {
+            this.errorStateMatcher = this.errorStateMatcherInput() ?? this.defaultErrorStateMatcher;
+        }
+
+        if (changes['fileInput']) this.file = this.fileInput() ?? null;
+    }
 
     constructor() {
         super();
@@ -355,6 +371,13 @@ export class KbqSingleFileUploadComponent
 
     /** @docs-private */
     deleteItem(event?: Event, origin?: FocusOrigin): void {
+        // Untracked: called from a consumer's `effect()`, the state read on the way — the file, `disabled` — would make
+        // the effect run again whenever a file is added, and remove it.
+        untracked(() => this.removeFile(event, origin));
+    }
+
+    /** Body of `deleteItem()`. */
+    private removeFile(event?: Event, origin?: FocusOrigin): void {
         if (this.disabled) return;
 
         event?.stopPropagation();
@@ -371,13 +394,17 @@ export class KbqSingleFileUploadComponent
             this.announce(this.withFileName(this.localeConfiguration().a11y.fileRemoved, removed.file.name));
         }
 
-        setTimeout(() => {
-            const input = this.input?.nativeElement;
+        // The input to focus is rendered in place of the file.
+        afterNextRender(
+            () => {
+                const input = this.input?.nativeElement;
 
-            if (input) {
-                this.focusMonitor.focusVia(input, origin ?? 'keyboard');
-            }
-        });
+                if (input) {
+                    this.focusMonitor.focusVia(input, origin ?? 'keyboard');
+                }
+            },
+            { injector: this.injector }
+        );
     }
 
     /**

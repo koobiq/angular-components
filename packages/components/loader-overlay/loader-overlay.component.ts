@@ -96,14 +96,15 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     /**
      * Controls the legacy overlay opacity when `surface` is not set and `card` is disabled.
      *
-     * @deprecated Use `surface="bg"` for a transparent overlay or `surface="solid"` for an opaque overlay.
+     * @deprecated Use `surface="bg"` for a transparent overlay or `surface="solid"` for an opaque overlay. Will
+     * be removed in 22.0.0.
      */
     readonly transparent = input(true, { transform: booleanAttribute });
 
     /**
      * Uses a semi-transparent card background and overrides `transparent` when `surface` is not set.
      *
-     * @deprecated Use `surface="card"` instead.
+     * @deprecated Use `surface="card"` instead. Will be removed in 22.0.0.
      */
     readonly card = input(false, { transform: booleanAttribute });
 

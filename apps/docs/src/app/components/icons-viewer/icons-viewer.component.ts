@@ -13,7 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqHighlightModule, ThemePalette } from '@koobiq/components/core';
+import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -67,8 +67,6 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly destroyRef = inject(DestroyRef);
-
-    readonly themePalette = ThemePalette;
 
     searchControl = new FormControl<string>('');
     accentColorFilterControl = new FormControl<boolean>(false, { nonNullable: true });

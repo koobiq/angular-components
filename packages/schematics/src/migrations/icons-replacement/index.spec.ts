@@ -3,6 +3,7 @@ import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
+import { firstValueFrom } from 'rxjs';
 import { createTestApp } from '../../utils/testing';
 import { iconReplacementData } from './data';
 import { Schema } from './schema';
@@ -72,7 +73,7 @@ describe(SCHEMATIC_NAME, () => {
         expect(updatedTree.read(templatePath)?.toString()).toMatchSnapshot(`project ${firstProjectKey}: after changes`);
     });
 
-    it('should inform about deprecated icons for fix = false (default, without params)', (done) => {
+    it('should inform about deprecated icons for fix = false (default, without params)', async () => {
         const [firstProjectKey] = projects.keys();
         const iconsDataSlice = iconReplacementData.slice(0, 10);
         const iconsToBeReplaced = iconsDataSlice.map(({ from }) => `<i kbq-icon="kbq-${from}"></i>`);
@@ -87,12 +88,10 @@ describe(SCHEMATIC_NAME, () => {
         });
 
         // simply check for messages to be sent
-        runner.logger.subscribe((logEntry) => {
-            expect(logEntry?.message).toBeTruthy();
-            runner.logger.complete();
-            done();
-        });
+        const firstLogEntry = firstValueFrom(runner.logger);
 
-        runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey }, appTree);
+        await runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey }, appTree);
+
+        expect((await firstLogEntry).message).toBeTruthy();
     });
 });

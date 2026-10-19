@@ -1,4 +1,3 @@
-import { AnimationEvent } from '@angular/animations';
 import { coerceCssPixelValue } from '@angular/cdk/coercion';
 import {
     ChangeDetectorRef,
@@ -7,43 +6,80 @@ import {
     ElementRef,
     EventEmitter,
     inject,
+    Injector,
     OnDestroy,
     Renderer2,
+    Signal,
+    signal,
     TemplateRef
 } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { kbqAfterAnimations, kbqAnimationsDisabled } from '../animation/animations-state';
 import { PopUpPlacements, PopUpVisibility } from './constants';
 import { KbqPopUpTrigger } from './pop-up-trigger';
 
 @Directive({
     host: {
-        '(mouseenter)': 'hovered.next(true)',
-        '(mouseleave)': 'hovered.next(false)'
+        '(mouseenter)': 'setHovered(true)',
+        '(mouseleave)': 'setHovered(false)'
     }
 })
 export abstract class KbqPopUp implements OnDestroy {
     protected readonly renderer: Renderer2 = inject(Renderer2);
-    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly hostElementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    /** The element the pop-up measures and decorates: its host, unless a subclass renders a panel of its own. */
+    protected get elementRef(): ElementRef<HTMLElement> {
+        return this.hostElementRef;
+    }
     protected readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
     readonly destroyRef = inject(DestroyRef);
 
-    /** Stream that emits when the popup item is hovered. */
-    readonly hovered = new BehaviorSubject<boolean>(false);
+    /**
+     * Whether the pop-up appears without motion.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
+    private readonly hostInjector = inject(Injector);
+
+    private readonly hoveredState = signal(false);
+
+    /** Whether the pointer is over the pop-up. */
+    readonly hovered: Signal<boolean> = this.hoveredState.asReadonly();
 
     trigger: KbqPopUpTrigger<unknown>;
     header: string | TemplateRef<unknown>;
     content: string | TemplateRef<unknown>;
     context: { $implicit: unknown } | null;
 
-    classMap = {};
+    private readonly classMapState = signal({});
 
-    warning: boolean;
+    /** CSS classes of the pop-up element: the placement, the custom class and the modifiers of the subclass. */
+    get classMap() {
+        return this.classMapState();
+    }
+
+    set classMap(value) {
+        this.classMapState.set(value);
+    }
+
     arrow: boolean;
     defaultPaddings: boolean;
 
     offset: number | null;
 
-    visibility = PopUpVisibility.Initial;
+    private readonly visibilityState = signal(PopUpVisibility.Initial);
+
+    /** Stage of the pop-up's life: not shown yet, visible, or hidden. */
+    get visibility(): PopUpVisibility {
+        return this.visibilityState();
+    }
+
+    set visibility(value: PopUpVisibility) {
+        this.visibilityState.set(value);
+    }
+
     visibleChange = new EventEmitter<boolean>();
 
     protected prefix: string;
@@ -51,13 +87,13 @@ export abstract class KbqPopUp implements OnDestroy {
     /** Subject for notifying that the tooltip has been hidden from the view */
     protected readonly onHideSubject = new Subject<void>();
 
-    protected closeOnInteraction: boolean = false;
-
     private showTimeoutId: any;
     private hideTimeoutId: any;
 
     /** Handler bound on the pop-up element to hide it on `mouseleave`, or `null` while none is bound. */
     private hideOnMouseLeave: (() => void) | null = null;
+
+    private showAnimation?: { destroy(): void };
 
     ngOnDestroy() {
         clearTimeout(this.showTimeoutId);
@@ -66,7 +102,6 @@ export abstract class KbqPopUp implements OnDestroy {
         this.removeEventListenerForHide();
 
         this.onHideSubject.complete();
-        this.hovered.complete();
         // Completed here rather than left dangling: the trigger subscribes to it once per show and keeps that
         // subscription for its own lifetime, so a trigger that outlives many pop-ups would otherwise accumulate
         // one live subscriber per show.
@@ -91,16 +126,18 @@ export abstract class KbqPopUp implements OnDestroy {
             clearTimeout(this.hideTimeoutId);
         }
 
-        this.closeOnInteraction = true;
-
         this.showTimeoutId = setTimeout(() => {
             this.showTimeoutId = undefined;
 
+            // A re-hover re-enters `show()` on a pop-up already on screen, which has no entrance to wait for.
+            const appearing = !this.isVisible();
+
             this.visibility = PopUpVisibility.Visible;
             this.visibleChange.emit(true);
-            // Mark for check so if any parent component has set the
-            // ChangeDetectionStrategy to OnPush it will be checked anyways
-            this.markForCheck();
+
+            if (appearing) {
+                this.waitForShowAnimation();
+            }
 
             if (this.trigger.triggerName === 'mouseenter') {
                 this.addEventListenerForHide();
@@ -112,7 +149,6 @@ export abstract class KbqPopUp implements OnDestroy {
      * Hides the popup after a specified delay.
      *
      * The hide timeout triggers the hiding of the popup by updating visibility and emitting relevant events.
-     * Also, it marks for check to ensure proper change detection, especially for parent components with OnPush strategy.
      * @param delay - The delay in milliseconds before hiding the popup.
      */
     hide(delay: number): void {
@@ -132,10 +168,6 @@ export abstract class KbqPopUp implements OnDestroy {
 
             this.visibleChange.emit(false);
             this.onHideSubject.next();
-
-            // Mark for check so if any parent component has set the
-            // ChangeDetectionStrategy to OnPush it will be checked anyways
-            this.markForCheck();
         }, delay);
     }
 
@@ -165,34 +197,32 @@ export abstract class KbqPopUp implements OnDestroy {
         return this.onHideSubject.asObservable();
     }
 
-    markForCheck(): void {
-        this.changeDetectorRef.markForCheck();
+    /** Records whether the pointer is over the pop-up, and lets the trigger re-evaluate its delayed hide. */
+    protected setHovered(value: boolean): void {
+        this.hoveredState.set(value);
+        // Optional: a panel rendered on its own, without a trigger, is hoverable too.
+        this.trigger?.handleHoverChange();
     }
 
     detectChanges(): void {
         this.changeDetectorRef.detectChanges();
     }
 
-    animationStart() {
-        this.closeOnInteraction = false;
-    }
-
     /**
-     * Only the transition into `visible` is observable here: `hide()` emits `onHideSubject` synchronously and
-     * `KbqPopUpTrigger` detaches the overlay in the same call stack, so the view is destroyed before the
-     * `* => hidden` transition can start. Making the fade-out actually play belongs to the migration off the
-     * deprecated `@angular/animations` API, together with the `prefers-reduced-motion` gate.
+     * Called once the pop-up has animated in. Only the entrance animates: `hide()` emits `onHideSubject`
+     * synchronously and `KbqPopUpTrigger` detaches the overlay in the same call stack.
      */
-    animationDone({ toState }: AnimationEvent): void {
-        if (toState === PopUpVisibility.Visible) {
-            this.closeOnInteraction = true;
-        }
-    }
+    protected afterShowAnimation(): void {}
 
-    handleBodyInteraction(): void {
-        if (this.closeOnInteraction) {
-            this.hide(0);
-        }
+    /** Calls `afterShowAnimation()` once the pop-up has animated in. */
+    private waitForShowAnimation(): void {
+        this.showAnimation?.destroy();
+        this.showAnimation = kbqAfterAnimations(
+            // Read once rendered: a subclass queries the animated element from its view.
+            () => this.elementRef?.nativeElement,
+            () => this.afterShowAnimation(),
+            this.hostInjector
+        );
     }
 
     /** Binds the `mouseleave` hide listener on the pop-up element, at most once per instance. */
@@ -214,6 +244,8 @@ export abstract class KbqPopUp implements OnDestroy {
     }
 
     protected setStickPosition() {
+        if (!this.trigger.stickToWindow) return;
+
         const oppositeSide = {
             [PopUpPlacements.Top]: PopUpPlacements.Bottom,
             [PopUpPlacements.Bottom]: PopUpPlacements.Top,
@@ -221,7 +253,7 @@ export abstract class KbqPopUp implements OnDestroy {
             [PopUpPlacements.Left]: PopUpPlacements.Right
         }[this.trigger.stickToWindow];
 
-        if (!this.trigger.stickToWindow || !oppositeSide) return;
+        if (!oppositeSide) return;
 
         this.arrow = false;
 

@@ -2,7 +2,7 @@ import { DOCS_SEO_DESCRIPTIONS } from '../../apps/docs/src/app/seo-descriptions'
 import { collectSeoDescriptions, DocsSeoDescriptions } from './generate-seo-descriptions';
 import { DOCS_PAGE_OVERVIEW_SOURCES } from './sources';
 
-jest.setTimeout(10_000);
+vi.setConfig({ testTimeout: 10_000 });
 
 const locales = ['en', 'ru'] as const;
 

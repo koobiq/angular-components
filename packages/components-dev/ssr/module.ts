@@ -44,7 +44,7 @@ import { devSsrExampleIds } from './routes';
 
                 @for (option of filteredOptions(); track option) {
                     <kbq-option [value]="option">
-                        <span [innerHTML]="option | mcHighlight: searchQuery()"></span>
+                        <span [innerHTML]="option | kbqHighlightBold: searchQuery()"></span>
                     </kbq-option>
                 }
             </kbq-select>

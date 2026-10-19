@@ -1,3 +1,9 @@
 ### Форма смены пароля
 
 <Example id="validation-cross-field-password" />
+
+### Подсказки к паролю в шаблонной форме
+
+`PasswordValidators` — это функции, поэтому шаблонная форма (template-driven) подключает их к `ngModel` через директиву-валидатор. Подсказки берут ошибки из ссылки на `ngModel`.
+
+<Example id="input-password-template-driven" />

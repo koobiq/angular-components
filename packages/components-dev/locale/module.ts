@@ -6,8 +6,7 @@ import {
     KbqLocaleOverridesDirective,
     KbqLocaleService,
     KbqLocaleServiceModule,
-    KbqOptionModule,
-    ThemePalette
+    KbqOptionModule
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -37,7 +36,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
 export class DevApp {
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
 
-    themePalette = ThemePalette;
     selectedLanguage;
     languages;
 

@@ -56,7 +56,7 @@ describe('FileDropDirective', () => {
         expect(dndZone.classList.contains('kbq-file-drop_dragover')).toBeFalsy();
     });
 
-    it('FileDropDirective: drop with files', (done) => {
+    it('FileDropDirective: drop with files', async () => {
         const event = new CustomEvent('CustomEvent');
 
         event.initCustomEvent('drop');
@@ -72,11 +72,9 @@ describe('FileDropDirective', () => {
         dispatchEvent(dndZone, event);
         fixture.detectChanges();
 
-        setTimeout(() => {
-            expect(component.onDrop).toHaveBeenCalledWith([{ fullPath: 'test.file', name: 'test.file', type: '' }]);
-            expect(dndZone.classList.contains('kbq-file-drop_dragover')).toBeFalsy();
-            done();
-        });
+        await new Promise<void>((resolve) => setTimeout(resolve));
+        expect(component.onDrop).toHaveBeenCalledWith([{ fullPath: 'test.file', name: 'test.file', type: '' }]);
+        expect(dndZone.classList.contains('kbq-file-drop_dragover')).toBeFalsy();
     });
 
     it('FileDropDirective: drop without files', () => {
@@ -88,7 +86,7 @@ describe('FileDropDirective', () => {
         expect(component.onDrop).not.toHaveBeenCalled();
     });
 
-    it('FileDropDirective: drop folder', (done) => {
+    it('FileDropDirective: drop folder', async () => {
         const event = new CustomEvent('CustomEvent');
 
         event.initCustomEvent('drop');
@@ -116,14 +114,12 @@ describe('FileDropDirective', () => {
         dispatchEvent(dndZone, event);
         fixture.detectChanges();
 
-        setTimeout(() => {
-            expect(component.onDrop).toHaveBeenCalledWith([
-                { fullPath: 'test2', name: 'test2', type: '' },
-                { fullPath: 'test1', name: 'test1', type: '' }
-            ]);
-            expect(component.files.length).toEqual(fakeFiles.length);
-            done();
-        });
+        await new Promise<void>((resolve) => setTimeout(resolve));
+        expect(component.onDrop).toHaveBeenCalledWith([
+            { fullPath: 'test2', name: 'test2', type: '' },
+            { fullPath: 'test1', name: 'test1', type: '' }
+        ]);
+        expect(component.files.length).toEqual(fakeFiles.length);
     });
 });
 
@@ -136,7 +132,7 @@ describe('FileDropDirective', () => {
 class SimpleDNDComponent {
     files: FileList | KbqFile[];
 
-    onDrop = jest.fn().mockImplementation((event: FileList | KbqFile[]) => {
+    onDrop = vi.fn().mockImplementation((event: FileList | KbqFile[]) => {
         this.files = event;
     });
 }

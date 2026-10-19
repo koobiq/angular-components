@@ -6,14 +6,5 @@
         // "type": "module", and Node loads those packages through require(esm).
         "module": "nodenext",
         "moduleResolution": "nodenext"
-    },
-    // The root config forces module to CommonJS for ts-node, which conflicts with NodeNext
-    // resolution (TS5110). Repeat the block here with a matching module setting.
-    "ts-node": {
-        "transpileOnly": true,
-        "compilerOptions": {
-            "types": ["node"],
-            "module": "nodenext"
-        }
     }
 }

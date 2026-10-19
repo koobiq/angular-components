@@ -196,7 +196,7 @@ export class TreeSelectCustomMatcherWithInputExample {
     handleKeydown(event, treeSelect: KbqTreeSelect) {
         console.log('handleKeydown: ', event);
 
-        if (!treeSelect.disabled) {
+        if (!treeSelect.disabled()) {
             if (treeSelect.panelOpen) {
                 treeSelect.panelKeydownHandler(event);
             } else {

@@ -30,7 +30,7 @@ The same format is available in three flavours:
 | No prefix                | `absoluteLongDate`           | A pure pipe. Recomputes only when the input value changes — **the string goes stale on a locale change** |
 | `ImpurePipe` suffix      | `absoluteLongDateImpurePipe` | An impure pipe with no cache: reformats on every change detection cycle                                  |
 
-The unprefixed and `ImpurePipe` flavours are kept for backward compatibility. Use `kbq*` in new code.
+The unprefixed and `ImpurePipe` flavours are deprecated and will be removed in 22.0.0: each one maps to the `kbq*` pipe of the same format, with the same arguments.
 
 #### The pipes
 

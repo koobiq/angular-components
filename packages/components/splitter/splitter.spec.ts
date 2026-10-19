@@ -381,12 +381,13 @@ describe(KbqSplitter.name, () => {
         ]);
         measure(fixture);
         pressKey(getSeparators(fixture)[0], 'Enter');
+        fixture.detectChanges();
 
         expect(getSizes(fixture)).toEqual([60, 540]);
     });
 
     it('should warn once in dev mode about a size in a unit it does not support, and ignore that size', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
         const fixture = createComponent(TestSplitter);
 
         fixture.componentInstance.panels.set([{ id: 'first', minSize: '10rem' }, { id: 'second' }]);

@@ -1,12 +1,21 @@
-import { Component, DebugElement, model, Provider, signal, Type, viewChild } from '@angular/core';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { Component, DebugElement, effect, model, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
+import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
+import {
+    dispatchFakeEvent,
+    dispatchKeyboardEvent,
+    ESCAPE,
+    KBQ_STATE_STORE,
+    KbqStateSavingService,
+    KbqStateStore
+} from '@koobiq/components/core';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqContentPanelContainer } from './content-panel';
 import { KbqContentPanelModule } from './module';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
-    TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
+    TestBed.configureTestingModule({ imports: [component], providers });
     const fixture = TestBed.createComponent<T>(component);
 
     fixture.autoDetectChanges();
@@ -74,6 +83,29 @@ export class TestContentPanel {
     readonly disableCloseByEscape = signal(false);
 
     readonly paragraphs = Array.from({ length: 100 });
+}
+
+@Component({
+    selector: 'test-content-panel-with-autocomplete',
+    imports: [KbqContentPanelModule, KbqInputModule, KbqAutocompleteModule],
+    template: `
+        <kbq-content-panel-container [(opened)]="opened">
+            <kbq-form-field>
+                <input kbqInput placeholder="State" [kbqAutocomplete]="auto" />
+            </kbq-form-field>
+
+            <kbq-autocomplete #auto="kbqAutocomplete">
+                <kbq-option value="Alabama">Alabama</kbq-option>
+            </kbq-autocomplete>
+
+            <kbq-content-panel>
+                <kbq-content-panel-body>body</kbq-content-panel-body>
+            </kbq-content-panel>
+        </kbq-content-panel-container>
+    `
+})
+class ContentPanelWithAutocomplete {
+    readonly opened = model(true);
 }
 
 describe(KbqContentPanelModule.name, () => {
@@ -186,6 +218,32 @@ describe(KbqContentPanelModule.name, () => {
         expect(componentInstance.opened()).toBe(true);
     });
 
+    it('should close an autocomplete panel in the content on ESCAPE, and the panel once it is closed', async () => {
+        const fixture = createComponent(ContentPanelWithAutocomplete);
+        const { componentInstance, debugElement } = fixture;
+        const overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+        const input: HTMLInputElement = debugElement.nativeElement.querySelector('input');
+        const pressEscape = async () => {
+            dispatchKeyboardEvent(input, 'keydown', ESCAPE, undefined, 'Escape');
+            await fixture.whenStable();
+        };
+
+        await fixture.whenStable();
+        dispatchFakeEvent(input, 'focusin');
+        await fixture.whenStable();
+
+        expect(overlayContainerElement.querySelector('.kbq-autocomplete-panel')).not.toBeNull();
+
+        await pressEscape();
+
+        expect(overlayContainerElement.querySelector('.kbq-autocomplete-panel')).toBeNull();
+        expect(componentInstance.opened()).toBe(true);
+
+        await pressEscape();
+
+        expect(componentInstance.opened()).toBe(false);
+    });
+
     it('should setup width/minWidth/maxWidth', async () => {
         const fixture = createComponent(TestContentPanel);
         const { componentInstance, debugElement } = fixture;
@@ -202,7 +260,79 @@ describe(KbqContentPanelModule.name, () => {
         expect(style.width).toBe('333px');
         expect(style.maxWidth).toBe('444px');
     });
+
+    describe('called from an effect', () => {
+        it('should not make an effect that opens it re-run when it closes', async () => {
+            const fixture = createComponent(ContentPanelDrivenByEffect);
+            const host = fixture.componentInstance;
+
+            host.action.set('open');
+            await fixture.whenStable();
+
+            expect(host.container().isOpened()).toBe(true);
+
+            host.container().close();
+            await fixture.whenStable();
+
+            expect(host.container().isOpened()).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+
+        it('should not make an effect that toggles it re-run when it closes', async () => {
+            const fixture = createComponent(ContentPanelDrivenByEffect);
+            const host = fixture.componentInstance;
+
+            host.action.set('toggle');
+            await fixture.whenStable();
+
+            expect(host.container().isOpened()).toBe(true);
+
+            host.container().close();
+            await fixture.whenStable();
+
+            expect(host.container().isOpened()).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+    });
 });
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    selector: 'content-panel-driven-by-effect',
+    imports: [KbqContentPanelModule],
+    template: `
+        <kbq-content-panel-container [useStateSaving]="false">
+            <div>test</div>
+
+            <kbq-content-panel>
+                <kbq-content-panel-body>body</kbq-content-panel-body>
+            </kbq-content-panel>
+        </kbq-content-panel-container>
+    `
+})
+class ContentPanelDrivenByEffect {
+    readonly container = viewChild.required(KbqContentPanelContainer);
+    readonly action = signal<'open' | 'toggle' | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const action = this.action();
+
+            if (!action || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+
+            if (action === 'open') {
+                this.container().open();
+            } else {
+                this.container().toggle();
+            }
+        });
+    }
+}
 
 /** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
 class InMemoryStateStore implements KbqStateStore {
@@ -382,7 +512,7 @@ describe('KbqContentPanelContainer state saving', () => {
         const fixture = create(UncontrolledContentPanel);
         const service = TestBed.inject(KbqStateSavingService);
 
-        // Mapped to plain data on purpose: deep-comparing a live directive makes jest serialize it,
+        // Mapped to plain data on purpose: deep-comparing a live directive makes the runner serialize it,
         // which throws while building the diff and hides the real failure.
         expect(service.components().map(({ name, key, enabled }) => ({ name, key, enabled }))).toEqual([
             { name: 'kbq-content-panel-container', key: 'content-panel-key', enabled: true }

@@ -1,4 +1,11 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
+import {
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    input,
+    ViewEncapsulation
+} from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 import { KbqFlagShadow, KbqFlagShape } from './flag.types';
 
@@ -31,9 +38,12 @@ import { KbqFlagShadow, KbqFlagShape } from './flag.types';
         '[class.kbq-flag_shadow-inset]': "shadow() === 'inset'",
         '[class.kbq-flag_empty]': 'empty()',
         '[style.--kbq-flag-aspect-ratio]': 'aspectRatio()',
-        '[attr.role]': "decorative() ? null : (label() ? 'img' : null)",
-        '[attr.aria-label]': 'decorative() ? null : (label() || null)',
-        '[attr.aria-hidden]': "decorative() || !label() ? 'true' : null"
+        // A signal per attribute: the three read `decorative` and `label` in turn, and the host bindings of every
+        // flag in a view run in that view's reactive consumer, where a signal read again after others costs a scan of
+        // all it has read so far.
+        '[attr.role]': 'resolvedRole()',
+        '[attr.aria-label]': 'resolvedAriaLabel()',
+        '[attr.aria-hidden]': 'resolvedAriaHidden()'
     },
     exportAs: 'kbqFlag'
 })
@@ -74,4 +84,22 @@ export class KbqFlag {
      * projected image (`alt`, `<title>`) has to repeat it here.
      */
     readonly label = input<string>();
+
+    /**
+     * Value of `role`.
+     * @internal
+     */
+    protected readonly resolvedRole = computed(() => (this.decorative() ? null : this.label() ? 'img' : null));
+
+    /**
+     * Value of `aria-label`.
+     * @internal
+     */
+    protected readonly resolvedAriaLabel = computed(() => (this.decorative() ? null : this.label() || null));
+
+    /**
+     * Value of `aria-hidden`.
+     * @internal
+     */
+    protected readonly resolvedAriaHidden = computed(() => (this.decorative() || !this.label() ? 'true' : null));
 }

@@ -25,12 +25,15 @@ import {
     forwardRef,
     inject,
     InjectionToken,
+    Injector,
     input,
+    isWritableSignal,
     NgZone,
     OnDestroy,
     output,
     Provider,
     Renderer2,
+    signal,
     untracked,
     ViewContainerRef
 } from '@angular/core';
@@ -69,20 +72,11 @@ import {
     TAB,
     UP_ARROW
 } from '@koobiq/components/core';
-import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
-import { defer, fromEvent, merge, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
-import { delay, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';
+import { EMPTY, fromEvent, merge, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
+import { delay, filter, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
 import { KbqAutocomplete } from './autocomplete.component';
-
-/**
- * The total height of the autocomplete panel.
- *
- * @deprecated Unused — the panel is capped by `--kbq-autocomplete-size-panel-max-height` and reveals its
- * active option through `KbqOption.focus`, so nothing computes a scroll offset from this. Will be removed
- * in the next major release.
- */
-export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
 
 /**
  * Injection token that determines the scroll handling while the autocomplete panel is open. The root default
@@ -158,7 +152,7 @@ export function getKbqAutocompleteMissingPanelError(): Error {
         '(focusin)': 'handleFocus()',
         '(blur)': 'onTouched()',
         '(input)': 'handleInput($event)',
-        '(keydown)': 'handleKeydown($event)',
+        '(keydown)': 'handleKeydown($any($event))',
         '(click)': 'handleClick($event)'
     },
     exportAs: 'kbqAutocompleteTrigger'
@@ -172,26 +166,12 @@ export class KbqAutocompleteTrigger
     private overlay = inject(Overlay);
     private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
     private zone = inject(NgZone);
+    private readonly injector = inject(Injector);
     private dir = inject(Directionality, { optional: true })!;
     private readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
     private viewportRuler = inject(ViewportRuler);
 
     protected readonly document = inject<Document>(DOCUMENT);
-
-    readonly optionSelections: Observable<KbqOptionSelectionChange> = defer(() => {
-        const autocomplete = this.autocomplete();
-
-        if (autocomplete && autocomplete.options) {
-            return merge(...autocomplete.options.map((option) => option.onSelectionChange));
-        }
-
-        // If there are any subscribers before `ngAfterViewInit`, the `autocomplete` will be undefined.
-        // Return a stream that we'll replace with the real one once everything is in place.
-        return this.zone.onStable.asObservable().pipe(
-            take(1),
-            switchMap(() => this.optionSelections)
-        );
-    });
 
     /** The currently active option, coerced to MatOption type. */
     get activeOption(): KbqOption | null {
@@ -199,7 +179,7 @@ export class KbqAutocompleteTrigger
     }
 
     get panelOpen(): boolean {
-        return this.overlayAttached && this.autocomplete().showPanel();
+        return this.overlayAttached() && this.autocomplete().showPanel();
     }
 
     /** The autocomplete panel to be attached to this trigger. */
@@ -207,8 +187,11 @@ export class KbqAutocompleteTrigger
 
     /** Whether the autocomplete panel is currently on screen. Part of the `KbqSiblingPopup` contract. */
     get isAttached(): boolean {
-        return this.overlayAttached;
+        return this.overlayAttached();
     }
+
+    /** The bound panel, replayed to every subscriber: it may be bound, or rendered, after they subscribe. */
+    private readonly autocompleteChanges = toObservable(this.autocomplete);
 
     /**
      * Emits `true` when the panel opens and `false` when it closes. Part of the `KbqSiblingPopup`
@@ -217,7 +200,7 @@ export class KbqAutocompleteTrigger
      * Built on top of the `autocomplete` signal rather than read once: the panel is bound after the consumers
      * of this stream are created (a tooltip on the same element subscribes in its constructor).
      */
-    readonly openedChange: Observable<boolean> = toObservable(this.autocomplete).pipe(
+    readonly openedChange: Observable<boolean> = this.autocompleteChanges.pipe(
         filter(Boolean),
         switchMap((autocomplete) =>
             merge(
@@ -225,6 +208,20 @@ export class KbqAutocompleteTrigger
                 outputToObservable(autocomplete.closed).pipe(map(() => false))
             )
         )
+    );
+
+    // Follows the bound panel and its options rather than reading them once: either may arrive after a subscriber.
+    readonly optionSelections: Observable<KbqOptionSelectionChange> = this.autocompleteChanges.pipe(
+        switchMap((autocomplete) => {
+            if (!autocomplete) return EMPTY;
+
+            const { options } = autocomplete;
+
+            return options.changes.pipe(
+                startWith(options),
+                switchMap(() => merge(...options.map((option) => option.onSelectionChange)))
+            );
+        })
     );
 
     /**
@@ -340,13 +337,12 @@ export class KbqAutocompleteTrigger
     /** Inline hint drawn after the caret, or `''` while there is none. */
     private inlineHintText = '';
 
-    private overlayAttached: boolean = false;
+    /** Whether the overlay is attached. A signal: host bindings read it, and it changes outside any listener. */
+    private readonly overlayAttached = signal(false);
 
     private overlayRef: OverlayRef | null;
 
     private portal: TemplatePortal;
-
-    private componentDestroyed = false;
 
     private scrollStrategy: () => ScrollStrategy;
 
@@ -418,7 +414,6 @@ export class KbqAutocompleteTrigger
         this.window.removeEventListener('blur', this.windowBlurHandler);
 
         this.viewportSubscription.unsubscribe();
-        this.componentDestroyed = true;
         this.destroyPanel();
         this.textMirror?.destroy();
         this.closeKeyEventStream.complete();
@@ -438,40 +433,34 @@ export class KbqAutocompleteTrigger
 
     /** Opens the autocomplete suggestion panel. */
     open(): void {
-        this.attachOverlay();
+        // Untracked, like `closePanel()` and `updatePosition()`: called from a consumer's `effect()`, the state read
+        // on the way — whether the overlay is attached, the panel's options, the inputs — would make the effect run
+        // again on every open and close.
+        untracked(() => this.attachOverlay());
     }
 
     closePanel(): void {
-        if (!this.overlayAttached) {
-            return;
-        }
+        untracked(() => {
+            if (!this.overlayAttached()) {
+                return;
+            }
 
-        if (this.panelOpen) {
-            // TODO: The 'emit' function requires a mandatory void argument
-            this.autocomplete().closed.emit();
-        }
+            if (this.panelOpen) {
+                this.autocomplete().closed.emit();
+            }
 
-        this.stopFollowingCaret();
-        this.inlineHintText = '';
-        this.textMirror?.hide();
+            this.stopFollowingCaret();
+            this.inlineHintText = '';
+            this.textMirror?.hide();
 
-        this.overlayAttached = false;
-        this.autocomplete().attached.set(false);
+            this.overlayAttached.set(false);
+            this.autocomplete().attached.set(false);
 
-        if (this.overlayRef && this.overlayRef.hasAttached()) {
-            this.overlayRef.detach();
-            this.closingActionsSubscription.unsubscribe();
-        }
-
-        // Note that in some cases this can end up being called after the component is destroyed.
-        // Add a check to ensure that we don't try to run change detection on a destroyed view.
-        if (!this.componentDestroyed) {
-            // We need to trigger change detection manually, because
-            // `fromEvent` doesn't seem to do it at the proper time.
-            // This ensures that the label is reset when the
-            // user clicks outside.
-            this.changeDetectorRef.detectChanges();
-        }
+            if (this.overlayRef && this.overlayRef.hasAttached()) {
+                this.overlayRef.detach();
+                this.closingActionsSubscription.unsubscribe();
+            }
+        });
     }
 
     /**
@@ -479,9 +468,11 @@ export class KbqAutocompleteTrigger
      * within the viewport.
      */
     updatePosition(): void {
-        if (this.overlayAttached) {
-            this.overlayRef!.updatePosition();
-        }
+        untracked(() => {
+            if (this.overlayAttached()) {
+                this.overlayRef!.updatePosition();
+            }
+        });
     }
 
     /**
@@ -491,10 +482,10 @@ export class KbqAutocompleteTrigger
     get panelClosingActions(): Observable<KbqOptionSelectionChange | null> {
         return merge(
             this.optionSelections,
-            this.autocomplete().keyManager.tabOut.pipe(filter(() => this.overlayAttached)),
+            this.autocomplete().keyManager.tabOut.pipe(filter(() => this.overlayAttached())),
             this.closeKeyEventStream,
             this.getOutsideClickStream(),
-            this.overlayRef ? this.overlayRef.detachments().pipe(filter(() => this.overlayAttached)) : observableOf()
+            this.overlayRef ? this.overlayRef.detachments().pipe(filter(() => this.overlayAttached())) : observableOf()
         ).pipe(
             // Normalize the output so we return a consistent type.
             map((event) => (event instanceof KbqOptionSelectionChange ? event : null))
@@ -534,11 +525,9 @@ export class KbqAutocompleteTrigger
     handleKeydown(event: KeyboardEvent): void {
         const keyCode = event.keyCode;
 
-        // Prevent the default action on all escape key presses. This is here primarily to bring IE
-        // in line with other browsers. By default, pressing escape on IE will cause it to revert
-        // the input value to the one that it had on focus, however it won't dispatch any events
-        // which means that the model value will be out of sync with the view.
-        if (keyCode === ESCAPE) {
+        // The overlay closes the panel once the key reaches `body`. Consumed only when there is a panel
+        // to close, so a dialog around the input still takes the key.
+        if (keyCode === ESCAPE && this.panelOpen) {
             event.preventDefault();
         }
 
@@ -552,6 +541,17 @@ export class KbqAutocompleteTrigger
             this.activeOption!.selectViaInteraction();
 
             return;
+        }
+
+        // The active option is re-resolved a task after the options change, so an Enter right after a keystroke can
+        // find it pointing at an option the new query filtered out: resolve it now rather than pick a stale one.
+        if (
+            keyCode === ENTER &&
+            this.panelOpen &&
+            this.activeOption &&
+            !autocomplete.options.toArray().includes(this.activeOption)
+        ) {
+            this.resetActiveItem();
         }
 
         if (this.activeOption && keyCode === ENTER && this.panelOpen) {
@@ -576,7 +576,7 @@ export class KbqAutocompleteTrigger
         }
     }
 
-    handleInput(event: KeyboardEvent): void {
+    handleInput(event: Event): void {
         const target = event.target as HTMLInputElement;
         let value: number | string | null = target.value;
 
@@ -626,7 +626,7 @@ export class KbqAutocompleteTrigger
         }
     }
 
-    handleClick($event: MouseEvent) {
+    handleClick($event: Event) {
         if (_getFocusedElementPierceShadowDom() !== $event.target) return;
 
         if (this.textMode()) {
@@ -654,7 +654,7 @@ export class KbqAutocompleteTrigger
                 const customOrigin = connectedTo ? connectedTo.elementRef.nativeElement : null;
 
                 return (
-                    this.overlayAttached &&
+                    this.overlayAttached() &&
                     clickTarget !== this.elementRef.nativeElement &&
                     (!formField || !formField.contains(clickTarget)) &&
                     (!customOrigin || !customOrigin.contains(clickTarget)) &&
@@ -681,7 +681,11 @@ export class KbqAutocompleteTrigger
      * stream every time the option list changes.
      */
     private subscribeToClosingActions(): Subscription {
-        const firstStable = this.zone.onStable.asObservable().pipe(take(1));
+        const firstRender = new Observable<void>((subscriber) => {
+            const ref = afterNextRender(() => subscriber.next(), { injector: this.injector });
+
+            return () => ref.destroy();
+        });
         const optionChanges = this.autocomplete().options.changes.pipe(
             tap(() => this.positionStrategy.reapplyLastPosition()),
             // Defer emitting to the stream until the next tick, because changing
@@ -689,9 +693,9 @@ export class KbqAutocompleteTrigger
             delay(0)
         );
 
-        // When the zone is stable initially, and when the option list changes...
+        // When the options are initially rendered, and when the option list changes...
         return (
-            merge(firstStable, optionChanges)
+            merge(firstRender, optionChanges)
                 .pipe(
                     // create a new stream of panelClosingActions, replacing any previous streams
                     // that were created, and flatten it so our stream only emits closing events...
@@ -716,7 +720,6 @@ export class KbqAutocompleteTrigger
                             // can happen if the users opens the panel and there are no options, but the
                             // options come in slightly later or as a result of the value changing.
                             if (wasOpen !== this.panelOpen) {
-                                // TODO: The 'emit' function requires a mandatory void argument
                                 this.autocomplete().opened.emit();
                             }
                         }
@@ -751,12 +754,16 @@ export class KbqAutocompleteTrigger
 
         const inputValue = toDisplay != null ? toDisplay : '';
 
-        // If it's used within a `MatFormField`, we should set it through the property so it can go
-        // through change detection.
-        if (this.formField) {
-            this.formField.control().value = inputValue;
-        } else {
-            this.elementRef.nativeElement.value = inputValue;
+        // Written at once, because the text is read back from the element right after. The control on the element is
+        // told as well: it would otherwise pick the change up only at its next check. Not the control of the form
+        // field, which is the tag list when the input adds tags. Looked up here: `KbqInput` injects the `NgControl`
+        // that injects this directive.
+        this.elementRef.nativeElement.value = inputValue;
+
+        const controlValue = this.injector.get(KbqFormFieldControl, null, { self: true })?.value;
+
+        if (isWritableSignal(controlValue)) {
+            controlValue.set(inputValue);
         }
 
         this.previousValue = inputValue;
@@ -845,27 +852,29 @@ export class KbqAutocompleteTrigger
 
         autocomplete.listboxName.set(this.getListboxName());
         autocomplete.setVisibility();
-        this.overlayAttached = true;
+        this.overlayAttached.set(true);
         autocomplete.attached.set(true);
 
         // We need to do an extra `panelOpen` check in here, because the
         // autocomplete won't be shown if there are no options.
         if (this.panelOpen && wasOpen !== this.panelOpen) {
-            // TODO: The 'emit' function requires a mandatory void argument
             autocomplete.opened.emit();
         }
 
-        this.zone.onStable
-            .asObservable()
-            .pipe(take(1))
-            .subscribe(() => {
+        afterNextRender(
+            () => {
+                // Closed before the render: the key manager selects an option made active on a closed panel.
+                if (!this.overlayAttached()) return;
+
                 this.resetActiveItem();
 
-                // Overlay width may not be final on first open, so re-measure when the layout is stable.
+                // Overlay width may not be final on first open, so re-measure once the panel is rendered.
                 if (this.panelOpen && this.overlayRef) {
                     this.overlayRef.updateSize(this.getOverlaySize());
                 }
-            });
+            },
+            { injector: this.injector }
+        );
     }
 
     private getOverlayConfig(): OverlayConfig {
@@ -1020,7 +1029,7 @@ export class KbqAutocompleteTrigger
 
         if (
             open &&
-            !this.overlayAttached &&
+            !this.overlayAttached() &&
             this.canOpen() &&
             _getFocusedElementPierceShadowDom() === this.elementRef.nativeElement
         ) {
@@ -1070,7 +1079,7 @@ export class KbqAutocompleteTrigger
                     this.zone.run(() => this.refreshQuery(false));
                 }
 
-                if (this.relativeToCaret() && this.overlayAttached) {
+                if (this.relativeToCaret() && this.overlayAttached()) {
                     this.overlayRef?.updatePosition();
                 }
             });

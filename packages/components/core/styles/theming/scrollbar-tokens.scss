@@ -1,4 +1,5 @@
-// @deprecated The `--kbq-scrollbar-*` tokens are deprecated. Will be removed in the next major version.
+// @deprecated The tokens of the `.kbq-scrollbar` class are deprecated, not the `--kbq-scrollbar-*` tokens of
+// `@koobiq/components/scrollbar`, which share the prefix. Will be removed in 22.0.0.
 
 :where(.kbq-scrollbar) {
     --kbq-scrollbar-size-track-dimension: var(--kbq-size-l);

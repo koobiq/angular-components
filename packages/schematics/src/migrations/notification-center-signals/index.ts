@@ -2,6 +2,7 @@ import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import { NOTIFICATION_CENTER_REFERENCE, warnPatterns } from './data';
 import { Schema } from './schema';
 
@@ -45,8 +46,7 @@ export default function notificationCenterSignals(options: Schema): Rule {
         const rootDir = root ? tree.getDir(root as Path) : tree.root;
         let reported = 0;
 
-        rootDir.visit((filePath: Path, entry) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
+        visitProjectFiles(rootDir, (filePath: Path, entry) => {
             // A declaration file re-states the API this reports on, so scanning one turns the report
             // into noise about the consumer's own typings rather than their call sites.
             if (!isMigratableTs(filePath)) return;

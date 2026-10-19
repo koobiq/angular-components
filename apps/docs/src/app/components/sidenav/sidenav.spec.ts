@@ -30,7 +30,7 @@ describe(DocsSidenav.name, () => {
         TestBed.configureTestingModule({
             providers: [
                 provideDocsLocale(DocsLocale.En),
-                { provide: Router, useValue: { events: routerEvents.asObservable(), navigate: jest.fn() } },
+                { provide: Router, useValue: { events: routerEvents.asObservable(), navigate: vi.fn() } },
                 { provide: Location, useValue: { path: () => currentPath.value } }
             ]
         });
@@ -51,12 +51,12 @@ describe(DocsSidenav.name, () => {
     // page on screen for as long as it takes to fetch the next one.
     describe('prefetching the page of an item', () => {
         const setup = () => {
-            const load = jest.fn(() => Promise.resolve({ default: class {} }));
+            const load = vi.fn(() => Promise.resolve({ default: class {} }));
 
             TestBed.configureTestingModule({
                 providers: [
                     provideDocsLocale(DocsLocale.En),
-                    { provide: Router, useValue: { events: new Subject(), navigate: jest.fn() } },
+                    { provide: Router, useValue: { events: new Subject(), navigate: vi.fn() } },
                     { provide: Location, useValue: { path: () => '/en/components/button/overview' } },
                     { provide: DOCS_PAGES, useValue: { alert: { overview: { en: load } } } }
                 ]
@@ -94,7 +94,7 @@ describe(DocsSidenav.name, () => {
             TestBed.configureTestingModule({
                 providers: [
                     provideDocsLocale(DocsLocale.Ru),
-                    { provide: Router, useValue: { events: routerEvents.asObservable(), navigate: jest.fn() } },
+                    { provide: Router, useValue: { events: routerEvents.asObservable(), navigate: vi.fn() } },
                     { provide: Location, useValue: { path: () => currentPath.value } }
                 ]
             });
@@ -106,7 +106,7 @@ describe(DocsSidenav.name, () => {
                 // Only the call is under test. Left calling through, the real body schedules
                 // `this.tree()` via `afterNextRender`, and that required `viewChild` throws NG0951
                 // as soon as anything makes the after-render hooks run without a fixture.
-                highlight: jest.spyOn(sidenav as any, 'highlightSelectedOption').mockImplementation(),
+                highlight: vi.spyOn(sidenav as any, 'highlightSelectedOption').mockImplementation(() => {}),
                 navigateTo: (next: string) => {
                     currentPath.value = next;
                     routerEvents.next(new NavigationEnd(1, next, next));

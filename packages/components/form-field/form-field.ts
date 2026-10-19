@@ -23,6 +23,7 @@ import {
     OnDestroy,
     Provider,
     Signal,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -30,14 +31,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { KBQ_CONNECTED_OVERLAY_ORIGIN, KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
 import { kbqIconErrorStateContextFactoryProvider } from '@koobiq/components/icon';
-import { EMPTY, merge } from 'rxjs';
-import { delay, startWith } from 'rxjs/operators';
 import { KbqCleaner, kbqCleanerFactoryProvider } from './cleaner';
 import { KbqError } from './error';
 import { KbqFormFieldControl, kbqSetDescribedByIds } from './form-field-control';
 import { KbqHint } from './hint';
 import { KbqLabel } from './label';
-import { hasPasswordStrengthError, KbqPasswordHint } from './password-hint';
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
 import { KbqReactivePasswordHint } from './reactive-password-hint';
@@ -54,9 +52,6 @@ export function getKbqFormFieldMissingControlError(): Error {
  * @docs-private
  */
 export const KBQ_FORM_FIELD = new InjectionToken<KbqFormField>('KbqFormField');
-
-/** Error key set on the control by the legacy `KbqPasswordHint` when the password is not strong enough. */
-const PASSWORD_STRENGTH_ERROR = 'passwordStrength';
 
 /**
  * Default options for the kbq-form-field that can be configured using the `KBQ_FORM_FIELD_DEFAULT_OPTIONS`
@@ -135,9 +130,6 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
             return {
                 get errorState() {
                     return formField.control().errorState;
-                },
-                get stateChanges() {
-                    return formField.control().stateChanges;
                 }
             };
         })
@@ -163,11 +155,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         '[class.ng-dirty]': 'shouldForward("dirty")',
         '[class.ng-valid]': 'shouldForward("valid")',
         '[class.ng-invalid]': 'shouldForward("invalid")',
-        '[class.ng-pending]': 'shouldForward("pending")',
-
-        '(keydown)': 'onKeyDown($event)',
-        '(mouseenter)': 'onHoverChanged(true)',
-        '(mouseleave)': 'onHoverChanged(false)'
+        '[class.ng-pending]': 'shouldForward("pending")'
     },
     exportAs: 'kbqFormField'
 })
@@ -225,10 +213,6 @@ export class KbqFormField
     /**
      * @docs-private
      */
-    readonly passwordHints = contentChildren(KbqPasswordHint);
-    /**
-     * @docs-private
-     */
     readonly suffix = contentChildren(KbqSuffix);
     /**
      * @docs-private
@@ -248,20 +232,15 @@ export class KbqFormField
     private readonly error = contentChildren(KbqError);
     private readonly label = contentChild(KbqLabel);
 
-    /**
-     * @docs-private
-     */
-    hovered: boolean = false;
-
-    /**
-     * @docs-private
-     * @deprecated Unused. This property is no longer used by the form field and will be removed in a future version.
-     */
-    canCleanerClearByEsc: boolean = true;
+    // One signal per host value. The host bindings of every form field in a view run in that view's reactive
+    // consumer, where a signal read again by another binding costs a scan of everything the view has read.
+    private readonly invalidState = computed(() => !!this.control()?.errorState());
+    private readonly disabledState = computed(() => !!this.control()?.disabled());
+    private readonly autofilledState = computed(() => !!this.control()?.autofilled?.());
 
     /** Whether the form field is invalid. */
     get invalid(): boolean {
-        return !!this.control()?.errorState;
+        return this.invalidState();
     }
 
     /**
@@ -291,7 +270,7 @@ export class KbqFormField
      * `for` only associates a label with a native form control, so a control that is a custom element
      * (`kbq-select`, for one) has to point back at the label through `aria-labelledby` instead.
      */
-    readonly labelId = computed(() => (this.hasLabel() ? `${this.control().id}-label` : null));
+    readonly labelId = computed(() => (this.hasLabel() ? `${this.control().id()}-label` : null));
 
     /**
      * Whether the control is a native labelable element, so that a `<label>` can associate with it.
@@ -301,13 +280,6 @@ export class KbqFormField
      * element nor wraps one is invalid, and the control is named through `aria-labelledby` instead.
      */
     readonly isNativeLabelSupported = computed(() => this.control().isNativeLabelSupported !== false);
-
-    /**
-     * Whether the form-field contains kbq-password-hint.
-     *
-     * @docs-private
-     */
-    readonly hasPasswordHint = computed(() => this.passwordHints().length > 0);
 
     /**
      * Whether the form-field contains kbq-hint.
@@ -366,7 +338,7 @@ export class KbqFormField
      * @docs-private
      */
     get hasFocus(): boolean {
-        return !!this.control()?.focused;
+        return !!this.control()?.focused();
     }
 
     /**
@@ -381,7 +353,7 @@ export class KbqFormField
 
     /** Whether the form field is disabled. */
     get disabled(): boolean {
-        return !!this.control()?.disabled;
+        return this.disabledState();
     }
 
     /**
@@ -395,7 +367,7 @@ export class KbqFormField
      * longer considers autofilled.
      */
     get autofilled(): boolean {
-        return !!this.control()?.autofilled?.();
+        return this.autofilledState();
     }
 
     /** Ids last written to the control's `aria-describedby`, to skip redundant DOM writes. */
@@ -403,17 +375,6 @@ export class KbqFormField
 
     ngAfterContentInit(): void {
         this.validateControlChild();
-
-        // Subscribe to changes in the child control state in order to update the form field UI.
-        this.control()
-            .stateChanges.pipe(startWith(), delay(0), takeUntilDestroyed(this.destroyRef))
-            .subscribe((state) => {
-                const focused = (state as { focused?: boolean } | undefined)?.focused;
-
-                if (this.passwordHints().length && !focused && hasPasswordStrengthError(this.passwordHints())) {
-                    this.setPasswordStrengthError();
-                }
-            });
 
         this.initializeControl();
     }
@@ -425,8 +386,6 @@ export class KbqFormField
 
     ngAfterViewInit(): void {
         this.runFocusMonitor();
-
-        this.changeDetectorRef.markForCheck();
     }
 
     ngOnDestroy(): void {
@@ -459,23 +418,6 @@ export class KbqFormField
     }
 
     /**
-     * Handles keydown events.
-     * @deprecated Unused. This method is no longer called by the form field and will be removed in a future version.
-     * @docs-private
-     */
-    onKeyDown(_event: KeyboardEvent): void {}
-
-    /**
-     * @docs-private
-     */
-    onHoverChanged(isHovered: boolean): void {
-        if (isHovered !== this.hovered) {
-            this.hovered = isHovered;
-            this.changeDetectorRef.markForCheck();
-        }
-    }
-
-    /**
      * Gets an ElementRef for the element that a overlay attached to the form-field should be positioned relative to.
      */
     getConnectedOverlayOrigin(): ElementRef {
@@ -490,7 +432,9 @@ export class KbqFormField
      * @docs-private
      */
     shouldForward(prop: keyof NgControl): boolean {
-        return !!this.control()?.ngControl?.[prop];
+        // Untracked: the `ng-*` state is no signal, and the computeds above already refresh the host bindings when
+        // the control is replaced.
+        return !!untracked(this.control)?.ngControl?.[prop];
     }
 
     /**
@@ -543,7 +487,6 @@ export class KbqFormField
             // reference elements that are not in the DOM.
             ...(this.invalid ? this.error() : []),
             ...this.hint(),
-            ...this.passwordHints(),
             ...this.reactivePasswordHint()
         ].map((hint) => hint.id());
         const joinedIds = ids.join(' ');
@@ -563,16 +506,6 @@ export class KbqFormField
         }
     }
 
-    /**
-     * Adds the password strength error to the control, keeping the errors set by the other validators:
-     * `setErrors` replaces the whole errors object.
-     */
-    private setPasswordStrengthError(): void {
-        const control = this.control().ngControl?.control;
-
-        control?.setErrors({ ...control.errors, [PASSWORD_STRENGTH_ERROR]: true });
-    }
-
     /** Initializes the form field control. */
     private initializeControl(): void {
         const control = this.control();
@@ -581,8 +514,9 @@ export class KbqFormField
             this.elementRef.nativeElement.classList.add(`kbq-form-field-type-${control.controlType}`);
         }
 
-        merge(control.stateChanges, control.ngControl?.valueChanges || EMPTY)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+        // The `ng-*` classes forwarded from the form control are not signals.
+        control.ngControl?.valueChanges
+            ?.pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.changeDetectorRef.markForCheck());
     }
 }

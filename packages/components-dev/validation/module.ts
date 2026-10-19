@@ -13,7 +13,7 @@ import {
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { COMMA, ENTER, ThemePalette } from '@koobiq/components/core';
+import { COMMA, ENTER } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -88,8 +88,6 @@ export class DevDocsExamples {}
 export class DevApp {
     private formBuilder = inject(UntypedFormBuilder);
     changeDetectorRef = inject(ChangeDetectorRef);
-
-    themePalette = ThemePalette;
 
     reactiveTypeaheadItems: string[] = [];
     reactiveFormControlTypeaheadItems: string[] = [];

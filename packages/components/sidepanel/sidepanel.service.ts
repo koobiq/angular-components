@@ -8,7 +8,8 @@ import {
     OnDestroy,
     TemplateRef,
     inject,
-    isDevMode
+    isDevMode,
+    untracked
 } from '@angular/core';
 import { KBQ_STATE_STORE, KbqStateSavingRef, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
 import { KbqSidepanelAnimationState } from './sidepanel-animations';
@@ -151,6 +152,17 @@ export class KbqSidepanelService implements OnDestroy {
     open<T, D = any>(
         componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
         config?: KbqSidepanelConfig<D>
+    ): KbqSidepanelRef<T> {
+        // Untracked, as `KbqSidepanelRef.close()`: called from a consumer's `effect()`, the state of the sidepanels
+        // already open, read and written on the way, would make the effect run again — and open another sidepanel —
+        // as soon as it changes.
+        return untracked(() => this.openSidepanel(componentOrTemplateRef, config));
+    }
+
+    /** Body of `open()`. */
+    private openSidepanel<T, D>(
+        componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
+        config: KbqSidepanelConfig<D> | undefined
     ): KbqSidepanelRef<T> {
         const fullConfig = new KbqSidepanelConfig<D>();
 
@@ -452,7 +464,7 @@ export class KbqSidepanelService implements OnDestroy {
     private setAnimationState(sidepanelRef: KbqSidepanelRef | undefined, state: KbqSidepanelAnimationState): void {
         const containerInstance = sidepanelRef?.containerInstance;
 
-        if (!containerInstance || containerInstance.animationState === KbqSidepanelAnimationState.Hidden) return;
+        if (!containerInstance || containerInstance.animationState() === KbqSidepanelAnimationState.Hidden) return;
 
         containerInstance.setAnimationState(state);
     }

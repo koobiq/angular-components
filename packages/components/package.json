@@ -21,7 +21,6 @@
     },
     "homepage": "https://github.com/koobiq/angular-components#readme",
     "peerDependencies": {
-        "@angular/animations": "{{NG_VERSION}}",
         "@angular/cdk": "{{NG_VERSION}}",
         "@angular/common": "{{NG_VERSION}}",
         "@angular/core": "{{NG_VERSION}}",
@@ -68,12 +67,6 @@
     "exports": {
         ".": {
             "sass": "./_index.scss"
-        },
-        "./prebuilt-themes/light-theme.css": {
-            "style": "./prebuilt-themes/light-theme.css"
-        },
-        "./prebuilt-themes/dark-theme.css": {
-            "style": "./prebuilt-themes/dark-theme.css"
         },
         "./prebuilt-themes/theme.css": {
             "style": "./prebuilt-themes/theme.css"

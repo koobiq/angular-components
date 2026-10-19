@@ -2,15 +2,24 @@ import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import { SUMMARY, TIMEZONE_PACKAGE, TIMEZONE_TYPE, warnPatterns } from './data';
 import { Schema } from './schema';
 
 const LABEL = '[timezone-grouping-utils]';
 const EXTENSIONS = ['.ts', '.html'];
 
+// Compiled once rather than per file. None carries the `g` flag, so a shared instance holds no `lastIndex`.
+const TIMEZONE_TYPE_REGEX = new RegExp(TIMEZONE_TYPE);
+const COMPILED_WARN_PATTERNS = warnPatterns.map(({ anchor, pattern, message }) => ({
+    anchor: new RegExp(anchor),
+    pattern: new RegExp(pattern),
+    message
+}));
+
 /** A file is a timezone consumer if it imports the package, names a member, or renders one of its elements. */
 function referencesTimezone(content: string): boolean {
-    return content.includes(TIMEZONE_PACKAGE) || new RegExp(TIMEZONE_TYPE).test(content);
+    return content.includes(TIMEZONE_PACKAGE) || TIMEZONE_TYPE_REGEX.test(content);
 }
 
 /**
@@ -30,18 +39,17 @@ export default function timezoneGroupingUtils(options: Schema): Rule {
         let consumers = 0;
         let reported = 0;
 
-        rootDir.visit((filePath: Path, entry) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
+        visitProjectFiles(rootDir, (filePath, entry) => {
             if (!EXTENSIONS.some((extension) => filePath.endsWith(extension))) return;
 
-            const content = entry?.content.toString();
+            const content = entry.content.toString();
 
             if (!content || !referencesTimezone(content)) return;
 
             consumers++;
 
-            for (const { anchor, pattern, message } of warnPatterns) {
-                if (!new RegExp(anchor).test(content) || !new RegExp(pattern).test(content)) continue;
+            for (const { anchor, pattern, message } of COMPILED_WARN_PATTERNS) {
+                if (!anchor.test(content) || !pattern.test(content)) continue;
 
                 reported++;
 

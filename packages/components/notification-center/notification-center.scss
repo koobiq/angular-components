@@ -130,8 +130,12 @@
     // Smoothly reveal the just-appended "load more" spinner / error row. The row is scrolled into
     // view via KbqScrollbarViewport.scrollTo(), which calls a behavior-less scroll on this element
     // (it's the scroll container itself now that KbqScrollbarViewport is applied to it directly).
-    // Disabled for users who prefer reduced motion.
+    // `kbq-animations-off()` does not cover scrolling, so both of its switches are repeated here.
     scroll-behavior: smooth;
+
+    &.kbq-animations-disabled {
+        scroll-behavior: auto;
+    }
 
     @media (prefers-reduced-motion: reduce) {
         scroll-behavior: auto;

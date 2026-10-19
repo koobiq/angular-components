@@ -59,6 +59,65 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('KbqTreeNodeToggle.disabled is a read-only getter');
     });
 
+    it('reports writes to the tree selection and option inputs', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';\n" +
+                'export class App { set(tree: KbqTreeSelection, option: KbqTreeOption) { tree.dataSource = null; tree.tabIndex = 0; option.showCheckbox = true; } }\n'
+        );
+
+        await run(first);
+
+        const log = messages.join('\n');
+
+        expect(log).toContain('treeControl and dataSource of KbqTreeBase');
+        expect(log).toContain('disabled, tabIndex and selectAllHandler of KbqTreeSelection');
+        expect(log).toContain('KbqTreeOption.disabled and .showCheckbox are signal inputs');
+    });
+
+    it('leaves a write to the selection multiple alone, since it never had a setter', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqTreeSelection } from '@koobiq/components/tree';\n" +
+                'export class App { set(tree: KbqTreeSelection) { tree.multiple = true; } }\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).not.toContain(`[tree-signals] ${ts}`);
+    });
+
+    it('reports a write to the data source of a kbq-tree', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqTree } from '@koobiq/components/tree';\n" +
+                'export class App {\n' +
+                '    @ViewChild(KbqTree) tree: KbqTree;\n' +
+                '    load(data: unknown[], button: HTMLButtonElement) { this.tree.dataSource = data; button.disabled = true; }\n' +
+                '}\n'
+        );
+
+        await run(first);
+
+        const log = messages.join('\n');
+
+        expect(log).toContain(`[tree-signals] ${ts}`);
+        expect(log).toContain('treeControl and dataSource of KbqTreeBase');
+        expect(log).not.toContain('disabled, tabIndex and selectAllHandler of KbqTreeSelection');
+    });
+
     it('reports the QueryList API lost by nodeDefs', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);

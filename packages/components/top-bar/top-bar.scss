@@ -1,3 +1,4 @@
+@use '../core/styles/common/animation';
 @use '../core/styles/common/tokens';
 @use '../core/styles/common/squircle' as *;
 
@@ -38,6 +39,8 @@
     &.kbq-top-bar_with-shadow {
         box-shadow: var(--kbq-top-bar-shadow-bottom);
         transition: box-shadow var(--kbq-top-bar-shadow-transition);
+
+        @include animation.kbq-animations-off();
     }
 
     .kbq-top-bar-spacer {

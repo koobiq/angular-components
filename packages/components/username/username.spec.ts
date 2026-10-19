@@ -170,7 +170,7 @@ describe(KbqUsernameCustomPipe.name, () => {
     });
 
     it('should warn once about a format key with no mapped field', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         const mappingWithoutLastName = { ...mockMapping, [KbqUsernameFormatKey.LastNameFull]: undefined };
 
         expect(pipe.transform(mockProfile, 'L f.', mappingWithoutLastName)).toBe('L A.');

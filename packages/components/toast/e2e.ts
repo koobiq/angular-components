@@ -1,4 +1,15 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    inject,
+    TemplateRef,
+    viewChild,
+    ViewContainerRef
+} from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -159,6 +170,14 @@ export class E2eToastStates implements AfterViewInit {
     template: `
         <button kbq-button data-testid="e2eShowToast" (click)="show(2000)">Show</button>
         <button kbq-button data-testid="e2eShowStickyToast" (click)="show(0)">Show sticky</button>
+        <button kbq-button data-testid="e2eOpenOverlay" (click)="openOverlay()">Open overlay</button>
+
+        <ng-template #overlayContent>
+            <div
+                data-testid="e2eOverlay"
+                style="width: 50vw; height: 100vh; background: var(--kbq-background-bg-secondary)"
+            ></div>
+        </ng-template>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -167,6 +186,26 @@ export class E2eToastStates implements AfterViewInit {
 })
 export class E2eToastInteraction {
     private readonly toastService = inject(KbqToastService);
+    private readonly overlay = inject(Overlay);
+    private readonly viewContainerRef = inject(ViewContainerRef);
+    private readonly overlayContent = viewChild.required<TemplateRef<unknown>>('overlayContent');
+    private overlayRef: OverlayRef | null = null;
+
+    constructor() {
+        inject(DestroyRef).onDestroy(() => this.overlayRef?.dispose());
+    }
+
+    /** Covers the corner of the stack with an overlay opened after the stack's own. */
+    protected openOverlay(): void {
+        if (this.overlayRef) {
+            return;
+        }
+
+        this.overlayRef = this.overlay.create({
+            positionStrategy: this.overlay.position().global().top('0').right('0')
+        });
+        this.overlayRef.attach(new TemplatePortal(this.overlayContent(), this.viewContainerRef));
+    }
 
     show(duration: number): void {
         this.toastService.show(

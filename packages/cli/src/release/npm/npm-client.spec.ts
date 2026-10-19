@@ -1,9 +1,10 @@
 import { spawnSync } from 'child_process';
+import type { MockedFunction } from 'vitest';
 import { NpmViewError, npmViewDistTag } from './npm-client';
 
-jest.mock('child_process');
+vi.mock('child_process');
 
-const spawnSyncMock = spawnSync as jest.MockedFunction<typeof spawnSync>;
+const spawnSyncMock = spawnSync as MockedFunction<typeof spawnSync>;
 
 const mockResult = (overrides: { status?: number | null; stdout?: string; stderr?: string; error?: Error }) =>
     ({
@@ -18,7 +19,7 @@ const mockResult = (overrides: { status?: number | null; stdout?: string; stderr
 
 describe(npmViewDistTag.name, () => {
     afterEach(() => {
-        jest.resetAllMocks();
+        vi.resetAllMocks();
     });
 
     it('returns the published version on success', () => {

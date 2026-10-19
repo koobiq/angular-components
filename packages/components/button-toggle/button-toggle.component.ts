@@ -16,14 +16,15 @@ import {
     ElementRef,
     forwardRef,
     inject,
-    Input,
     input,
     isDevMode,
+    OnChanges,
     OnDestroy,
     OnInit,
     output,
     Provider,
     signal,
+    SimpleChanges,
     untracked,
     viewChild,
     ViewEncapsulation
@@ -98,9 +99,7 @@ export class KbqButtonToggleChange {
     },
     exportAs: 'kbqButtonToggleGroup'
 })
-export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDestroy {
-    private _changeDetector = inject(ChangeDetectorRef);
-
+export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, OnInit, OnDestroy {
     /** Whether the toggle group is vertical. */
     readonly vertical = input(false, { transform: booleanAttribute });
 
@@ -120,12 +119,19 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDes
      * to a toggle rendered later — the same contract as `KbqRadioGroup`. It follows that `value` can
      * name a toggle `selected` does not hold: `selected` only ever reports toggles that exist.
      */
-    @Input()
     get value(): any {
         return this.currentValue();
     }
 
     set value(newValue: any) {
+        // Untracked, as `emitChangeEvent()`, `syncButtonToggle()` and the toggles' `checked` setter and
+        // `onToggleClick()`: called from a consumer's `effect()`, the selection read on the way would make the effect
+        // run again whenever the user picks another toggle.
+        untracked(() => this.assignValue(newValue));
+    }
+
+    /** Body of the `value` setter. */
+    private assignValue(newValue: any): void {
         this.setSelectionByValue(newValue);
 
         // A write the group answers with the value it was given has nothing to announce: the binding
@@ -152,7 +158,6 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDes
     readonly buttonToggles = contentChildren<KbqButtonToggle>(forwardRef(() => KbqButtonToggle));
 
     /** Whether the whole button toggle group is disabled. */
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled();
     }
@@ -265,6 +270,29 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDes
      */
     onTouched: () => void = () => {};
 
+    /** @docs-private */
+    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member, a bound `undefined` included;
+        // unbound, it leaves what code wrote.
+        if (changes['valueInput']) {
+            this.value = this.valueInput();
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
+
     ngOnInit() {
         this.selectionModel = new SelectionModel<KbqButtonToggle>(this.multiple(), undefined, false);
     }
@@ -279,7 +307,6 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDes
      */
     writeValue(value: any) {
         this.value = value;
-        this._changeDetector.markForCheck();
     }
 
     /**
@@ -314,10 +341,12 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDes
      * unchecked — there is no "last selected" toggle left to report then.
      */
     emitChangeEvent(source: KbqButtonToggle): void {
-        const event = new KbqButtonToggleChange(source, this.value);
+        untracked(() => {
+            const event = new KbqButtonToggleChange(source, this.value);
 
-        this.controlValueAccessorChangeFn(event.value);
-        this.change.emit(event);
+            this.controlValueAccessorChangeFn(event.value);
+            this.change.emit(event);
+        });
     }
 
     /**
@@ -327,6 +356,11 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDes
      * @param isUserInput Whether the change was a result of a user interaction.
      */
     syncButtonToggle(toggle: KbqButtonToggle, select: boolean, isUserInput = false) {
+        untracked(() => this.applyToggleSelection(toggle, select, isUserInput));
+    }
+
+    /** Body of `syncButtonToggle()`. */
+    private applyToggleSelection(toggle: KbqButtonToggle, select: boolean, isUserInput: boolean): void {
         // A destroyed toggle drops itself from the selection on a microtask, which still runs when
         // the whole group is torn down: there is nothing left to sync and nobody left to notify.
         if (this.destroyed) {
@@ -360,6 +394,27 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDes
         // Note: this one is not limited to user interactions, because it is what Angular syncs the
         // two-way data binding up with — an interaction is only one of the things that move a value.
         this.emitValueChange();
+    }
+
+    /**
+     * Reports the new value of a selected toggle, which changes the value of the group, as an interaction would.
+     * @internal
+     */
+    followToggleValue(toggle: KbqButtonToggle, previous: unknown): void {
+        if (this.destroyed || !this.selectionModel?.isSelected(toggle)) return;
+
+        this.renamePendingValue(previous, toggle.value);
+
+        // On a microtask, as the removal of a destroyed toggle: a `[value]` binding changes during change detection,
+        // which has already checked the binding `[(value)]` writes the report to.
+        Promise.resolve().then(() => {
+            const value = this.value;
+
+            if (this.destroyed || sameValue(this.reportedValue, value)) return;
+
+            // Not to the form: the user picked nothing, and a report would mark the control dirty.
+            this.emitValueChange();
+        });
     }
 
     /** Checks whether a button toggle is selected. */
@@ -397,6 +452,19 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDes
             }
         } else if (Array.isArray(assigned) && assigned.includes(value)) {
             this.rawValue.set(assigned.filter((item) => item !== value));
+        }
+    }
+
+    /** Follows a selected toggle whose value changed in the assignment, which would hold the old value otherwise. */
+    private renamePendingValue(previous: unknown, value: unknown): void {
+        const assigned = this.rawValue();
+
+        if (!this.multiple()) {
+            if (assigned === previous) {
+                this.rawValue.set(value);
+            }
+        } else if (Array.isArray(assigned) && assigned.includes(previous)) {
+            this.rawValue.set(assigned.map((item) => (item === previous ? value : item)));
         }
     }
 
@@ -491,7 +559,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDes
     },
     exportAs: 'kbqButtonToggle'
 })
-export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
+export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, AfterViewInit, OnDestroy {
     /** Group the toggle belongs to, or `null` for a standalone toggle. */
     protected readonly buttonToggleGroup = inject(KbqButtonToggleGroup, { optional: true });
 
@@ -505,23 +573,24 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     private readonly button = viewChild.required(KbqButton);
 
     /** Whether the button is checked. */
-    @Input({ transform: booleanAttribute })
     get checked(): boolean {
         return this.checkedState();
     }
 
     set checked(value: boolean) {
-        // Against the effective state rather than `_checked`, which a grouped toggle does not own:
-        // its group selects it directly, so the two drift apart the moment a value is assigned.
-        if (value === this.checked) {
-            return;
-        }
+        untracked(() => {
+            // Against the effective state rather than `_checked`, which a grouped toggle does not own:
+            // its group selects it directly, so the two drift apart the moment a value is assigned.
+            if (value === this.checked) {
+                return;
+            }
 
-        this._checked.set(value);
+            this._checked.set(value);
 
-        if (this.buttonToggleGroup) {
-            this.buttonToggleGroup.syncButtonToggle(this, value);
-        }
+            if (this.buttonToggleGroup) {
+                this.buttonToggleGroup.syncButtonToggle(this, value);
+            }
+        });
     }
 
     /**
@@ -542,8 +611,21 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
         return this._iconType();
     }
 
-    /** KbqButtonToggleGroup reads this to assign its own value. */
-    @Input() value: any;
+    /** Value of the toggle. The value of a selected toggle is the value of its group. */
+    get value(): any {
+        return this._value();
+    }
+
+    set value(value: any) {
+        untracked(() => {
+            const previous = this._value();
+
+            if (value === previous) return;
+
+            this._value.set(value);
+            this.buttonToggleGroup?.followToggleValue(this, previous);
+        });
+    }
 
     /** Tabindex for the toggle. `null` leaves the toggle at its default position in the tab order. */
     readonly tabIndex = input<number | null>(null);
@@ -555,7 +637,6 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
 
     /** Whether the toggle is disabled. A toggle inside a disabled group is disabled as well. */
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this.disabledState();
     }
@@ -567,6 +648,7 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     /** Event emitted when the group value changes. */
     readonly change = output<KbqButtonToggleChange>();
 
+    private readonly _value = signal<any>(undefined);
     private readonly _checked = signal(false);
     private readonly _disabled = signal(false);
     private readonly _iconType = signal('');
@@ -612,6 +694,41 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
 
     /** Pressed state of a toggle button; `null` in a single-selection group, where `aria-checked` says it. */
     protected readonly ariaPressed = computed(() => (this.isSingleSelector() ? null : this.checkedState()));
+
+    /** @docs-private */
+    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
+
+    /** @docs-private */
+    readonly checkedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'checked',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member, a bound `undefined` included;
+        // unbound, it leaves what code wrote.
+        if (changes['valueInput']) {
+            this.value = this.valueInput();
+        }
+
+        if (changes['checkedInput']) {
+            const checked = this.checkedInput();
+
+            if (checked !== undefined) this.checked = checked;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
 
     constructor() {
         // The content query only tracks KbqIcon instances, while `iconType` also depends on the text
@@ -690,6 +807,11 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
 
     /** Checks the button toggle due to an interaction with the underlying native button. */
     onToggleClick() {
+        untracked(() => this.toggleByUser());
+    }
+
+    /** Body of `onToggleClick()`. */
+    private toggleByUser(): void {
         if (this.disabled) {
             return;
         }

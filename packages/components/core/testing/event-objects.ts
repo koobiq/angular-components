@@ -1,5 +1,14 @@
 /* eslint-disable no-restricted-globals -- testing utilities legitimately use raw `document`/`window` */
 
+/**
+ * The view an event is initialized with. Vitest's jsdom environment, which `ng test` runs, points `window` at
+ * Node's global object, and jsdom rejects anything but its own Window as a view: the event gets none there.
+ */
+function eventView(): Window {
+    // `null` is a valid view, which TypeScript's DOM types leave out.
+    return (typeof Window !== 'undefined' && window instanceof Window ? window : null) as Window;
+}
+
 /** Creates a browser MouseEvent with the specified options. */
 export function createMouseEvent(type: string, x = 0, y = 0, button = 0) {
     const event = document.createEvent('MouseEvent');
@@ -8,7 +17,7 @@ export function createMouseEvent(type: string, x = 0, y = 0, button = 0) {
         type,
         false,
         false,
-        window /* view */,
+        eventView(),
         0,
         x /* screenX */,
         y /* screenY */,
@@ -32,7 +41,7 @@ export function createTouchEvent(type: string, pageX = 0, pageY = 0) {
     const event = document.createEvent('UIEvent');
     const touchDetails = { pageX, pageY };
 
-    (event as any).initUIEvent(type, true, true, window, 0);
+    (event as any).initUIEvent(type, true, true, eventView(), 0);
 
     // Most of the browsers don't have a "initTouchEvent" method that can be used to define
     // the touch details.
@@ -49,9 +58,9 @@ export function createKeyboardEvent(type: string, keyCode: number, target?: Elem
 
     // Firefox does not support `initKeyboardEvent`, but supports `initKeyEvent`.
     if (event.initKeyEvent) {
-        event.initKeyEvent(type, true, true, window, 0, 0, 0, 0, 0, keyCode);
+        event.initKeyEvent(type, true, true, eventView(), 0, 0, 0, 0, 0, keyCode);
     } else {
-        event.initKeyboardEvent(type, true, true, window, 0, key, 0, '', false);
+        event.initKeyboardEvent(type, true, true, eventView(), 0, key, 0, '', false);
     }
 
     // Webkit Browsers don't set the keyCode when calling the init function.

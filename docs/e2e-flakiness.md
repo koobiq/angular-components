@@ -356,6 +356,59 @@ change.
 **Verified:** at threshold 0, in Docker at 6 workers — the whole `form-field` spec ×3 (156/156) and
 the two autofill shots ×25 (50/50).
 
+## Follow-up, 2026-10-08
+
+### `actions-panel › items overflow and dropdown`
+
+1 occurrence in a full local Docker run, 23709 px (ratio 0.05) on `2-light.png`: the first item of the
+overflow dropdown, `Action 5`, rendered in its hover/focus state, where the baseline has no item
+highlighted. It did not come back in about 80 further runs of the test, among them the whole suite ×3
+and the spec ×60 alone and ×15 at 64 workers.
+
+The test set the container to 650 px and clicked the overflow button straight away. The overflow follows
+the width through a `ResizeObserver`, and at the fixture's 400 px four actions are hidden rather than
+two, so a slow recalculation lets the dropdown open while it still lists `Action 3` to `Action 6` and
+lose two items while open. That race is the only asynchronous step between the runs. The highlight
+itself is not explained: a probe that opened the panel before the recalculation left no item focused,
+and the pointer, resting on the button, stays below the panel in both states, so it is not a hover.
+
+**Fix:** the test waits until exactly the two actions that no longer fit are hidden before it opens
+the dropdown, then asserts the two items and that none of them is focused before the screenshot, so a
+recurrence fails on a named state instead of a pixel count. **Verified:** the spec ×30 in Docker
+(240/240).
+
+**Recurred in CI on 2026-10-11**, same 23709 px, after both assertions had passed. The trace has the item
+`cdk-focused cdk-mouse-focused` only in the snapshot of `toHaveScreenshot`, so a `mouseenter` reached it
+during the capture. The page is 234 px tall in a 200 px viewport, and the target, 202 px with its
+border, does not fit either: Chromium captures it by growing the viewport, the page stops being scrolled
+and moves down under the pointer resting on the overflow button. A probe that grew the viewport to
+240 px focused `Action 6`, to 260 px `Action 5`, and to 300 px flipped the dropdown below the trigger;
+whether and how far the capture grows it is what varied between runs.
+
+**Fix:** the viewport is 240 px tall, so the page fits, nothing scrolls and the capture moves nothing.
+The dropdown, no longer offset by the scroll, lands on another fraction of a pixel, so `2-light.png` was
+re-recorded in Docker (58 px of corner anti-aliasing). **Verified:** the spec ×30 in Docker (240/240).
+
+## Follow-up, 2026-10-19
+
+### `docs app › renders the examples that cannot render on the server once the page is hydrated`
+
+1 occurrence in CI (`e2e:docs`, 4 workers): `ag-grid-angular` not found within the default 5 s. The trace
+has the examples chunk loaded 0.5 s after the network went idle, then no request for 2.3 s while the main thread
+evaluated it and rendered the grids; the first grid initialized 3 s into the wait and the assertion still
+ran out. The test took 5.0 to 10.3 s across recent CI runs, main included (6.7, 6.9, 7.6, 8.5 s), against
+2.4 s locally, so the wait was always close to the limit rather than broken by a change.
+
+**Fix:** both waits for the client-only examples take 15 s, within the 30 s test timeout of the docs
+config. **Verified:** the test ×12 at 6 workers locally.
+
+### `migration guide filter › hides the steps outside the picked range`
+
+1 occurrence in CI, on the next run: every step still shown. The test counted the visible steps once,
+right after `waitForHydration`, which waits for the network to go idle; the guide applies the range of the
+URL after that, so a single count could see the prerendered page with every step. **Fix:** both bounds are
+polled. **Verified:** the filter tests ×8 at 6 workers locally (48/48).
+
 ## Not fixed
 
 - **`tabs › E2eTabsStates › states`** — 1 occurrence, 18769 px by Playwright's count, 27480 raw. The
@@ -369,8 +422,12 @@ the two autofill shots ×25 (50/50).
   neither the paginator width (40 px) nor any other constant in that file. No mechanism established,
   and it did not reproduce in 20 local repeats at 8 workers or 5 at 16. Nothing was changed.
 - **`datepicker › scrolls back to the part the caret returns to`** — 1 occurrence in 99 CI runs, and it
-  did not reproduce in 200 local repeats under 16 workers. No mechanism established, so nothing was
-  changed. Left for the next occurrence, which will now be visible rather than absorbed.
+  did not reproduce in 200 local repeats under 16 workers. The second occurrence (2026-10-08, the
+  selection stuck on the month, `3,5` instead of `0,2`) gave the mechanism: an arrow key reads the
+  input's `selectionStart` and sets the new selection on a timer, so a second key that arrives before
+  that timer runs moves on from the old selection and lands on the same part again. Fixed in the
+  input: a key moves on from the part the previous one is about to select. A unit spec presses both
+  keys in one task.
 - **`notification-center › states`** — 1 occurrence, 3831 px. Initially attributed to the scrollbar
   reveal and gated accordingly; that was wrong. A `MutationObserver` running from first paint records
   no reveal on this route at all, and `scrollToBottom()` is reachable only from a `loadingMore`

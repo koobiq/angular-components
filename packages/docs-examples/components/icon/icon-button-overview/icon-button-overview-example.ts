@@ -25,6 +25,6 @@ import { KbqIconButton } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconButtonOverviewExample {
-    disabled = model(false);
+    readonly disabled = model(false);
     colors = KbqComponentColors;
 }

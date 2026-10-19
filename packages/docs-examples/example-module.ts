@@ -3420,6 +3420,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "input-password-overview-example.ts",
     "importPath": "components/input"
   },
+  "input-password-template-driven": {
+    "packagePath": "components/input/input-password-template-driven",
+    "title": "Input password with template-driven forms",
+    "componentName": "InputPasswordTemplateDrivenExample",
+    "files": [
+      "input-password-template-driven-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "input-password-template-driven-example",
+    "primaryFile": "input-password-template-driven-example.ts",
+    "importPath": "components/input"
+  },
   "input-with-mask": {
     "packagePath": "components/input/input-with-mask",
     "title": "Input with mask",
@@ -3820,6 +3832,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "loader-overlay-default-example",
     "primaryFile": "loader-overlay-default-example.ts",
+    "importPath": "components/loader-overlay"
+  },
+  "loader-overlay-delay": {
+    "packagePath": "components/loader-overlay/loader-overlay-delay",
+    "title": "Loader-overlay delay",
+    "componentName": "LoaderOverlayDelayExample",
+    "files": [
+      "loader-overlay-delay-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "loader-overlay-delay-example",
+    "primaryFile": "loader-overlay-delay-example.ts",
     "importPath": "components/loader-overlay"
   },
   "loader-overlay-fixed-top": {
@@ -8153,6 +8177,7 @@ export type LiveExampleId =
   | 'input-number-overview'
   | 'input-overview'
   | 'input-password-overview'
+  | 'input-password-template-driven'
   | 'input-with-mask'
   | 'layout-flex-alignment'
   | 'layout-flex-behaviour-modifiers'
@@ -8186,6 +8211,7 @@ export type LiveExampleId =
   | 'list-virtual-scroll'
   | 'loader-overlay-background'
   | 'loader-overlay-default'
+  | 'loader-overlay-delay'
   | 'loader-overlay-fixed-top'
   | 'loader-overlay-large'
   | 'loader-overlay-overview'

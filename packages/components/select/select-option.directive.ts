@@ -40,7 +40,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     protected override readonly derivedDisabledWins = true;
 
     get textElement(): HTMLElement {
-        return this.option.textElement.nativeElement;
+        return this.option.textElement!.nativeElement;
     }
 
     get isOverflown(): boolean {

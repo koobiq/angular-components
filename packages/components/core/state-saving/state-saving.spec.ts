@@ -1,5 +1,14 @@
 import { Platform } from '@angular/cdk/platform';
-import { ChangeDetectionStrategy, Component, inject, Type, viewChild, viewChildren } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    effect,
+    inject,
+    signal,
+    Type,
+    viewChild,
+    viewChildren
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KBQ_WINDOW } from '../tokens';
 import { KBQ_STATE_SAVING_ENABLED, KbqStateSaving } from './state-saving';
@@ -300,7 +309,7 @@ describe('KbqWebStorageStateStore', () => {
     // same snapshot twice. `setItem` is synchronous, so the repeat is worth skipping.
     it('skips the write when the payload is unchanged', () => {
         const store = TestBed.inject(KbqLocalStorageStateStore);
-        const setItem = jest.spyOn(Storage.prototype, 'setItem');
+        const setItem = vi.spyOn(Storage.prototype, 'setItem');
 
         store.setState(key, ['a']);
         store.setState(key, ['a']);
@@ -405,6 +414,34 @@ describe('KbqStateSaving', () => {
         expect(store.getState('resolved-key')).toEqual(['a']);
     });
 
+    it('does not make an effect that writes or clears run again when useStateSaving changes', () => {
+        const stateSaving = initialized();
+        const value = signal(['a']);
+        let writes = 0;
+        let clears = 0;
+
+        TestBed.runInInjectionContext(() => {
+            effect(() => {
+                writes++;
+                stateSaving.write(value());
+            });
+            effect(() => {
+                value();
+                clears++;
+                stateSaving.clear();
+            });
+        });
+        TestBed.tick();
+
+        setEnabled(false);
+        TestBed.tick();
+        setEnabled(true);
+        TestBed.tick();
+
+        expect(writes).toBe(1);
+        expect(clears).toBe(1);
+    });
+
     // `write()` asks for the key on every change, and resolving walks the document. A host that moved
     // would also resolve a different key and trip the key-change guard, silently ending persistence.
     it('resolves the key once', () => {
@@ -424,7 +461,7 @@ describe('KbqStateSaving', () => {
     });
 
     it('persists nothing when no key can be resolved for the host', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         resolvedKey = '';
 
@@ -460,7 +497,7 @@ describe('KbqStateSaving', () => {
     // Persistence is on by default, so a component nobody configured is the ordinary case — warning about a
     // missing `stateSavingKey` would fire in every application, on every instance.
     it('does not warn when no key is provided', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         setup({ key: '' }).read(normalizeStringArray);
 
@@ -563,7 +600,7 @@ describe('KbqStateSaving', () => {
         store.setState('example-key', ['a']);
         store.setState('other-key', ['b']);
 
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
         const stateSaving = initialized();
 
         setKey('other-key');
@@ -700,7 +737,7 @@ describe('KbqStateSaving dev-mode warnings', () => {
     });
 
     it('warns when a second component claims a key that is already taken', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         TestBed.configureTestingModule({ providers: [{ provide: KBQ_STATE_STORE, useValue: store }] });
 
@@ -720,7 +757,7 @@ describe('KbqStateSaving dev-mode warnings', () => {
     });
 
     it('stays quiet while the two keys differ', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         TestBed.configureTestingModule({ providers: [{ provide: KBQ_STATE_STORE, useValue: store }] });
 
@@ -733,7 +770,7 @@ describe('KbqStateSaving dev-mode warnings', () => {
     });
 
     it('warns when the store hands back a promise, and restores nothing', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
         const asyncStore: KbqStateStore = {
             getState: () => Promise.resolve(['a']),
             setState: () => {},
@@ -778,7 +815,7 @@ describe('KbqStateSaving key changes', () => {
 
     it('asks the owner to restore once the key changes', () => {
         const { stateSaving, setKey } = setup();
-        const restore = jest.fn();
+        const restore = vi.fn();
 
         stateSaving.read(normalizeStringArray);
         stateSaving.keyChanges.subscribe(restore);
@@ -790,7 +827,7 @@ describe('KbqStateSaving key changes', () => {
 
     it('stays quiet while the state has not been read yet', () => {
         const { stateSaving, setKey } = setup();
-        const restore = jest.fn();
+        const restore = vi.fn();
 
         stateSaving.keyChanges.subscribe(restore);
 

@@ -1,130 +1,4 @@
-@use 'sass:map';
-@use 'typography-utils' as *;
 @use '../common/tokens' as *;
-
-// TODO: REMOVE
-@function kbq-typography-config($tokens) {
-    $font-family: map.get($tokens, font-family-base);
-    $typography: map.get(map.get($tokens, koobiq), typography);
-
-    $config: (
-        headline: map.get($typography, headline),
-        subheading: map.get($typography, subheading),
-        title: map.get($typography, title),
-        display-big: map.get($typography, display-big),
-        display-normal: map.get($typography, display-normal),
-        display-compact: map.get($typography, display-compact),
-        display-big-strong: map.get($typography, display-big-strong),
-        display-normal-strong: map.get($typography, display-normal-strong),
-        display-compact-strong: map.get($typography, display-compact-strong),
-        text-big: map.get($typography, text-big),
-        text-big-strong: map.get($typography, text-big-strong),
-        text-big-medium: map.get($typography, text-big-medium),
-        text-normal: map.get($typography, text-normal),
-        text-normal-strong: map.get($typography, text-normal-strong),
-        text-normal-medium: map.get($typography, text-normal-medium),
-        text-compact: map.get($typography, text-compact),
-        text-compact-strong: map.get($typography, text-compact-strong),
-        text-compact-medium: map.get($typography, text-compact-medium),
-        caps-big: map.get($typography, caps-big),
-        caps-big-strong: map.get($typography, caps-big-strong),
-        caps-normal: map.get($typography, caps-normal),
-        caps-normal-strong: map.get($typography, caps-normal-strong),
-        caps-compact: map.get($typography, caps-compact),
-        caps-compact-strong: map.get($typography, caps-compact-strong),
-        mono-big: map.get($typography, mono-big),
-        mono-big-strong: map.get($typography, mono-big-strong),
-        mono-normal: map.get($typography, mono-normal),
-        mono-normal-strong: map.get($typography, mono-normal-strong),
-        mono-compact: map.get($typography, mono-compact),
-        mono-compact-strong: map.get($typography, mono-compact-strong),
-        tabular-big: map.get($typography, tabular-big),
-        tabular-big-strong: map.get($typography, tabular-big-strong),
-        tabular-normal: map.get($typography, tabular-normal),
-        tabular-normal-strong: map.get($typography, tabular-normal-strong),
-        tabular-compact: map.get($typography, tabular-compact),
-        tabular-compact-strong: map.get($typography, tabular-compact-strong),
-        italic-big: map.get($typography, italic-big),
-        italic-big-strong: map.get($typography, italic-big-strong),
-        italic-normal: map.get($typography, italic-normal),
-        italic-normal-strong: map.get($typography, italic-normal-strong),
-        italic-compact: map.get($typography, italic-compact),
-        italic-compact-strong: map.get($typography, italic-compact-strong),
-        mono-codeblock: map.get($typography, mono-codeblock),
-        navbar-title: map.get($typography, navbar-title)
-    );
-
-    @each $key, $level in $config {
-        @if not map.get($level, font-family) {
-            $new-level: map.merge(
-                $level,
-                (
-                    font-family: $font-family
-                )
-            );
-            $config: map.merge(
-                $config,
-                (
-                    $key: $new-level
-                )
-            );
-        }
-    }
-
-    // Add the base font family to the config.
-    @return map.merge(
-        $config,
-        (
-            font-family: $font-family,
-            tokens: $tokens
-        )
-    );
-}
-
-@function kbq-markdown-typography-config($tokens) {
-    $font-family: map.get($tokens, font-family-base);
-    $md-typography: map.get(map.get($tokens, md-typography), md-typography);
-
-    $config: (
-        md-h1: map.get($md-typography, md-h1),
-        md-h2: map.get($md-typography, md-h2),
-        md-h3: map.get($md-typography, md-h3),
-        md-h4: map.get($md-typography, md-h4),
-        md-h5: map.get($md-typography, md-h5),
-        md-h6: map.get($md-typography, md-h6),
-        md-body: map.get($md-typography, md-body),
-        md-body-mono: map.get($md-typography, md-body-mono),
-        md-caption: map.get($md-typography, md-caption),
-        md-table-cell: map.get($md-typography, md-table-cell),
-        md-table-header: map.get($md-typography, md-table-header)
-    );
-
-    @each $key, $level in $config {
-        @if not map.get($level, font-family) {
-            $new-level: map.merge(
-                $level,
-                (
-                    font-family: $font-family
-                )
-            );
-            $config: map.merge(
-                $config,
-                (
-                    $key: $new-level
-                )
-            );
-        }
-    }
-
-    // Add the base font family to the config.
-    @return map.merge(
-        $config,
-        (
-            font-family: $font-family,
-            tokens: $tokens
-        )
-    );
-}
 
 @mixin kbq-base-typography() {
     .kbq-headline {
@@ -307,44 +181,27 @@
 @mixin kbq-markdown-base-typography() {
     // h1, h2, h3, h4, h5, h6
     @for $i from 1 through 6 {
-        // DEPRECATED: .md-h# class is deprecated, use .kbq-md-h# instead
-        .md-h#{$i},
         .kbq-md-h#{$i} {
             @include kbq-typography-level-to-styles-css-variables(md-typography, md-h#{$i});
         }
     }
 
-    // DEPRECATED: .md-body class is deprecated, use .kbq-md-body instead
-    /* stylelint-disable-next-line selector-class-pattern */
-    .md-body,
     .kbq-md-body {
         @include kbq-typography-level-to-styles-css-variables(md-typography, md-body);
     }
 
-    // DEPRECATED: .md-body-mono class is deprecated, use .kbq-md-body-mono instead
-    /* stylelint-disable-next-line selector-class-pattern */
-    .md-body-mono,
     .kbq-md-body-mono {
         @include kbq-typography-level-to-styles-css-variables(md-typography, md-body-mono);
     }
 
-    // DEPRECATED: .md-caption class is deprecated, use .kbq-md-caption instead
-    /* stylelint-disable-next-line selector-class-pattern */
-    .md-caption,
     .kbq-md-caption {
         @include kbq-typography-level-to-styles-css-variables(md-typography, md-caption);
     }
 
-    // DEPRECATED: .md-table-cell class is deprecated, use .kbq-md-table-cell instead
-    /* stylelint-disable-next-line selector-class-pattern */
-    .md-table-cell,
     .kbq-md-table-cell {
         @include kbq-typography-level-to-styles-css-variables(md-typography, md-table-cell);
     }
 
-    // DEPRECATED: .md-table-header class is deprecated, use .kbq-md-table-header instead
-    /* stylelint-disable-next-line selector-class-pattern */
-    .md-table-header,
     .kbq-md-table-header {
         @include kbq-typography-level-to-styles-css-variables(md-typography, md-table-header);
     }

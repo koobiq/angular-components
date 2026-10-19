@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 
 /**
@@ -21,6 +20,4 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoaderOverlayOverviewExample {
-    themePalette = ThemePalette;
-}
+export class LoaderOverlayOverviewExample {}

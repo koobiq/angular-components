@@ -3,12 +3,13 @@
 **Note: Releasing should only be done by the maintainers.**
 
 The current major is released from `main`. Older supported lines are released from their own branches
-— `19.x` and `18.x` — see [security.md](../../.github/security.md) for which lines are still supported.
+— `20.4.x` for 20, `19.x` and `18.x` — see [security.md](../../.github/security.md) for which lines
+are still supported.
 
 ## Releasing
 
-1. Check out the branch you are releasing from: `main` for the current major, `19.x` or `18.x` for a
-   patch to an older line.
+1. Check out the branch you are releasing from: `main` for the current major, `20.4.x`, `19.x` or `18.x`
+   for a patch to an older line.
 
 2. Run:
 

@@ -1,4 +1,4 @@
-import { fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import {
     KBQ_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
@@ -32,21 +32,19 @@ describe('KbqRoundDecimalPipe', () => {
         expect(pipe.transform(tenThousand)).toBe('10 К');
     });
 
-    it('should switch rounding options with localization change', fakeAsync(() => {
+    it('should switch rounding options with localization change', () => {
         const tenThousand = 10000;
 
         const roundedWithDefaultLocale = pipe.transform(tenThousand);
 
         localeService.setLocale('en-US');
-        flush();
 
         expect(pipe.transform(tenThousand)).not.toEqual(roundedWithDefaultLocale);
         expect(pipe.transform(tenThousand)).toBe('10K');
-    }));
+    });
 
-    it('should handle intervals in latin numbers', fakeAsync(() => {
+    it('should handle intervals in latin numbers', () => {
         localeService.setLocale('en-US');
-        flush();
 
         const betweenOneAndThousand = 152;
         const betweenThousandAndTenThousand = 1515;
@@ -63,7 +61,6 @@ describe('KbqRoundDecimalPipe', () => {
 
         ['ru-RU', 'en-US', 'es-LA', 'pt-BR'].forEach((locale) => {
             localeService.setLocale(locale);
-            flush();
 
             const units = [
                 localeService.current.formatters.number.rounding.separator,
@@ -87,15 +84,14 @@ describe('KbqRoundDecimalPipe', () => {
 
             expect(units.includes(pipe.transform(betweenTenMillionsAndBillion)[2])).toBeTruthy();
         });
-    }));
+    });
 
     /*
      * 2 * 10^3 - number in the interval of [1500...2500)
      * 2,0 * 10^3 - number in the interval of [1950...2050)
      */
-    it('should handle 2k and 2,0k case', fakeAsync(() => {
+    it('should handle 2k and 2,0k case', () => {
         localeService.setLocale('en-US');
-        flush();
 
         expect(pipe.transform(1051)).toBe('1K');
         expect(pipe.transform(1499)).toBe('1K');
@@ -104,7 +100,7 @@ describe('KbqRoundDecimalPipe', () => {
 
         expect(pipe.transform(2800)).toBe('3K');
         expect(pipe.transform(1750)).toBe('2K');
-    }));
+    });
 });
 
 // `digitsInfo` is a small language parsed with a regular expression, and the pipe is public API that

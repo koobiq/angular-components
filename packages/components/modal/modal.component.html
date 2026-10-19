@@ -143,11 +143,11 @@
                         @if (getButtonCallableProp(button, 'show')) {
                             <button
                                 kbq-button
-                                [attr.autofocus]="button.autoFocus"
-                                [attr.kbq-modal-main-action]="button.kbqModalMainAction"
+                                [attr.autofocus]="button.autoFocus ? '' : null"
+                                [attr.kbq-modal-main-action]="button.kbqModalMainAction ? '' : null"
                                 [class.kbq-progress]="getButtonCallableProp(button, 'loading')"
                                 [color]="button.type"
-                                [disabled]="getButtonCallableProp(button, 'disabled')"
+                                [disabled]="!!getButtonCallableProp(button, 'disabled')"
                                 (click)="onButtonClick(button)"
                             >
                                 {{ button.label }}

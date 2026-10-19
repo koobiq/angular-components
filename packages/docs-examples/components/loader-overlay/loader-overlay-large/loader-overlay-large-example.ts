@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 
@@ -24,6 +23,4 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoaderOverlayLargeExample {
-    themePalette = ThemePalette;
-}
+export class LoaderOverlayLargeExample {}

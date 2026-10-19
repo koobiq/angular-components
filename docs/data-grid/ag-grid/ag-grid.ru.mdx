@@ -119,7 +119,7 @@ providers: [kbqAgGridRowDetailLabelsProvider(KBQ_AG_GRID_ROW_DETAIL_LABELS_EN)];
 
 ### Экспорт
 
-Для экспорта отображаемых данных (с учётом активных фильтров, сортировки и форматирования) можно использовать собственный API таблицы. Метод `api.exportDataAsCsv()` позволяет скачать CSV-файл без дополнительных зависимостей. Другие форматы можно получить на основе значений ячеек таблицы с помощью сторонних библиотек — например, XLSX с помощью [`xlsx`](https://www.npmjs.com/package/xlsx), а PDF — с помощью [`jspdf`](https://www.npmjs.com/package/jspdf) и [`jspdf-autotable`](https://www.npmjs.com/package/jspdf-autotable).
+Для экспорта отображаемых данных (с учётом активных фильтров, сортировки и форматирования) можно использовать собственный API таблицы. Метод `api.exportDataAsCsv()` позволяет скачать CSV-файл без дополнительных зависимостей. Другие форматы можно получить на основе значений ячеек таблицы с помощью сторонних библиотек — например, XLSX с помощью [`write-excel-file`](https://www.npmjs.com/package/write-excel-file), а PDF — с помощью [`jspdf`](https://www.npmjs.com/package/jspdf) и [`jspdf-autotable`](https://www.npmjs.com/package/jspdf-autotable).
 
 <Example id="ag-grid-export" />
 
