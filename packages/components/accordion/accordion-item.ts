@@ -8,10 +8,13 @@ import {
     forwardRef,
     inject,
     input,
-    Input,
+    linkedSignal,
+    OnChanges,
     OnDestroy,
     OnInit,
-    output
+    output,
+    SimpleChanges,
+    untracked
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { KbqAccordion, KbqAccordionOrientation } from './accordion';
@@ -32,7 +35,7 @@ export type KbqAccordionItemState = 'open' | 'closed';
         '[attr.data-orientation]': 'orientation'
     }
 })
-export class KbqAccordionItem implements OnInit, OnDestroy {
+export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
     /**
      * The accordion this item belongs to — always the nearest one, because it is injected.
      * The accordion reads it back to tell its own items apart from a nested accordion's.
@@ -72,26 +75,41 @@ export class KbqAccordionItem implements OnInit, OnDestroy {
      * Whether the AccordionItem is expanded. When the accordion initializes, its controlled `value`, the saved
      * state and `defaultValue` take precedence over it.
      */
-    // Kept as an `@Input` accessor (not `model()`): the setter runs a synchronous side-effect
-    // cascade (emits opened/closed/expandedChange, notifies the selection dispatcher, toggles the
-    // content and persists state) that sibling items rely on within the same change-detection tick.
-    @Input({ transform: booleanAttribute })
+    // An accessor over the bound state rather than a `model()`: the setter runs a synchronous side-effect
+    // cascade (emits opened/closed/expandedChange, notifies the selection dispatcher, toggles the content and
+    // persists state) that sibling items rely on within the same change-detection tick.
     get expanded(): boolean {
-        return this._expanded;
+        return this.expandedState();
     }
 
     set expanded(expanded: boolean) {
+        // Untracked, as `toggle()`, `open()` and `close()`: called from a consumer's `effect()`, the state read on the
+        // way — `expanded`, `disabled`, the siblings and the accordion it reports to — would make the effect run again
+        // on every expand and collapse.
+        untracked(() => this.setExpanded(expanded));
+    }
+
+    /** Body of the `expanded` setter. */
+    private setExpanded(expanded: boolean): void {
         // Only emit events and update the internal value if the value changes.
-        if (this._expanded !== expanded) {
-            this._expanded = expanded;
+        if (this.expandedState() !== expanded) {
+            this.expandedState.set(expanded);
 
             // Before `ngOnInit` the accordion's inputs may still be unbound, this item may not be in its `items()`
-            // and nothing listens to the outputs yet — the static attribute is applied while the view is created.
+            // and nothing listens to the outputs yet.
             if (this.initialized) this.reportExpanded();
         }
     }
 
-    private _expanded = false;
+    /**
+     * Follows the binding at once, a static `expanded` included, while the view is created: every item of a
+     * single-mode accordion holds its bound state before the first of them reports in `ngOnInit` and collapses
+     * the others.
+     */
+    private readonly expandedState = linkedSignal(() => !!this.expandedInput());
+
+    /** The state the item last reported, so a binding change that the state already follows is reported once. */
+    private reportedExpanded = false;
 
     private initialized = false;
 
@@ -123,11 +141,10 @@ export class KbqAccordionItem implements OnInit, OnDestroy {
     });
 
     /** Whether the AccordionItem is disabled. */
-    // Kept as an `@Input` accessor (not a signal): `KbqAccordionItem` is a `FocusKeyManager` option,
-    // and `ListKeyManagerOption.disabled` (core/a11y/key-manager) is read as a plain `boolean` — a
-    // signal function is always truthy, which makes the key manager treat every item as disabled.
-    // The getter also merges the item's own state with the parent accordion's (an effective value).
-    @Input({ transform: booleanAttribute })
+    // An accessor, not a signal: `KbqAccordionItem` is a `FocusKeyManager` option, and
+    // `ListKeyManagerOption.disabled` (core/a11y/key-manager) is read as a plain `boolean` — a signal
+    // function is always truthy, which makes the key manager treat every item as disabled. The getter
+    // also merges the item's own state with the parent accordion's.
     get disabled(): boolean {
         return this.accordion.disabled() || this._disabled;
     }
@@ -155,6 +172,32 @@ export class KbqAccordionItem implements OnInit, OnDestroy {
 
     /** Subscription to openAll/closeAll events. */
     private openCloseAllSubscription = Subscription.EMPTY;
+
+    /** @docs-private */
+    readonly expandedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'expanded',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        // The state already follows the binding; a later change still has to be reported, once.
+        if (changes['expandedInput'] && this.initialized && this.expanded !== this.reportedExpanded) {
+            this.reportExpanded();
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
 
     constructor() {
         this.removeUniqueSelectionListener = this.expansionDispatcher.listen((id: string, accordionId: string) => {
@@ -188,7 +231,7 @@ export class KbqAccordionItem implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.initialized = true;
 
-        if (this._expanded) this.reportExpanded();
+        if (this.expanded) this.reportExpanded();
     }
 
     ngOnDestroy() {
@@ -203,23 +246,29 @@ export class KbqAccordionItem implements OnInit, OnDestroy {
 
     /** Toggles the expanded state of the accordion item. */
     toggle(): void {
-        if (!this.disabled) {
-            this.expanded = !this.expanded;
-        }
+        untracked(() => {
+            if (!this.disabled) {
+                this.expanded = !this.expanded;
+            }
+        });
     }
 
     /** Sets the expanded state of the accordion item to false. */
     close(): void {
-        if (!this.disabled) {
-            this.expanded = false;
-        }
+        untracked(() => {
+            if (!this.disabled) {
+                this.expanded = false;
+            }
+        });
     }
 
     /** Sets the expanded state of the accordion item to true. */
     open(): void {
-        if (!this.disabled) {
-            this.expanded = true;
-        }
+        untracked(() => {
+            if (!this.disabled) {
+                this.expanded = true;
+            }
+        });
     }
 
     /** Disables the open/close animation of the item's content and chevron. @docs-private */
@@ -236,13 +285,14 @@ export class KbqAccordionItem implements OnInit, OnDestroy {
 
     /** Emits the expanded state and propagates it to the siblings, the content and the saved state. */
     private reportExpanded(): void {
+        this.reportedExpanded = this.expanded;
+
         // First: a handler below may run change detection, and the content pins its height before `data-state` flips.
         this.content()?.toggle();
 
-        this.expandedChange.emit(this._expanded);
+        this.expandedChange.emit(this.expanded);
 
-        if (this._expanded) {
-            // TODO: The 'emit' function requires a mandatory void argument
+        if (this.expanded) {
             this.opened.emit();
             /**
              * In the unique selection dispatcher, the id parameter is the id of the KbqAccordionItem,
@@ -250,15 +300,10 @@ export class KbqAccordionItem implements OnInit, OnDestroy {
              */
             this.expansionDispatcher.notify(this.value(), this.accordion.id);
         } else {
-            // TODO: The 'emit' function requires a mandatory void argument
             this.closed.emit();
         }
 
         this.accordion.saveState();
-
-        // Ensures that the animation will run when the value is set outside of an `@Input`.
-        // This includes cases like the open, close and toggle methods.
-        this.changeDetectorRef.markForCheck();
     }
 
     private subscribeToOpenCloseAllActions(): Subscription {

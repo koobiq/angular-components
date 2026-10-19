@@ -9,6 +9,7 @@ import * as i1 from '@koobiq/components/core';
 
 // @public
 export class KbqTopBar {
+    protected readonly animationsDisabled: boolean;
     readonly ariaLabel: i0.InputSignal<string | null>;
     readonly withShadow: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)

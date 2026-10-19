@@ -43,7 +43,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-component-viewer',
-        '[attr.data-docsearch-category]': 'structureItem.id'
+        '[attr.data-docsearch-category]': 'structureItem?.id'
     }
 })
 export class DocsDesignTokensViewer extends DocsComponentViewerComponent {

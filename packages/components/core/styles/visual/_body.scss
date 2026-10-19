@@ -8,13 +8,8 @@
     }
 
     html {
-        // Prevent adjustments of font size after orientation changes in IE on Windows Phone and in iOS.
+        // Prevent adjustments of font size after orientation changes in iOS.
         -webkit-text-size-adjust: 100%;
-        -ms-text-size-adjust: 100%;
-
-        // Setting @viewport causes scrollbars to overlap content in Edge, so
-        // we force a non-overlapping, non-auto-hiding scrollbar to counteract.
-        -ms-overflow-style: scrollbar;
 
         -moz-osx-font-smoothing: grayscale;
 

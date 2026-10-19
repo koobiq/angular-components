@@ -6,13 +6,15 @@ import {
     computed,
     contentChild,
     contentChildren,
+    DestroyRef,
     Directive,
     inject,
     input,
     numberAttribute,
     output,
     Renderer2,
-    signal
+    signal,
+    untracked
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import {
@@ -22,7 +24,7 @@ import {
     kbqInjectNativeElement,
     KbqOrientation
 } from '@koobiq/components/core';
-import { debounceTime, merge, skip, switchMap } from 'rxjs';
+import { debounce, merge, skip, switchMap, timer } from 'rxjs';
 
 /**
  * Manages the visibility of the element.
@@ -115,7 +117,8 @@ export class KbqOverflowItem extends ElementVisibilityManager {
      * @docs-private
      */
     override hide(): void {
-        if (this.alwaysVisible()) return;
+        // Untracked: called from a consumer's `effect()`, `alwaysVisible` would make the effect run again when it changes.
+        if (untracked(this.alwaysVisible)) return;
 
         super.hide();
     }
@@ -131,6 +134,7 @@ export class KbqOverflowItem extends ElementVisibilityManager {
 })
 export class KbqOverflowItems {
     private readonly element = kbqInjectNativeElement();
+    private readonly destroyRef = inject(DestroyRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly renderer = inject(Renderer2);
     private readonly document = inject(DOCUMENT);
@@ -269,7 +273,11 @@ export class KbqOverflowItems {
             toObservable(this.orientation).pipe(skip(1)),
             resizeObservers
         )
-            .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed())
+            .pipe(
+                // Read per emission: the constructor that builds this runs before the input is set.
+                debounce(() => timer(this.debounceTime())),
+                takeUntilDestroyed(this.destroyRef)
+            )
             .subscribe(() => {
                 const hiddenItems = this.getHiddenItems(
                     this.sortItemsByOrder(this.items()),
@@ -311,7 +319,7 @@ export class KbqOverflowItems {
         while (this.hasOverflown(container, items, result, orientation)) {
             const itemToHide = reverseOverflowOrder
                 ? items.find(({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible())
-                : this.findLast(items, ({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible());
+                : items.findLast(({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible());
 
             if (!itemToHide) break;
 
@@ -332,7 +340,7 @@ export class KbqOverflowItems {
         this.renderer.setStyle(this.element, 'flex-grow', '1');
 
         toObservable(this.orientation)
-            .pipe(takeUntilDestroyed())
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((orientation) => {
                 const { flexDirection } = this.orientationConfig[orientation];
 
@@ -340,7 +348,7 @@ export class KbqOverflowItems {
             });
 
         toObservable(this.wrap)
-            .pipe(takeUntilDestroyed())
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((wrap) => this.renderer.setStyle(this.element, 'flex-wrap', wrap));
     }
 
@@ -360,16 +368,5 @@ export class KbqOverflowItems {
         const resultSize = !result || result.hidden() ? 0 : itemSize(result.element);
 
         return itemsSize + resultSize > containerSizeWithoutPaddings;
-    }
-
-    // TODO: Should be removed when `Array.prototype.findLast` is supported.
-    private findLast<T>(array: ReadonlyArray<T>, predicate: (item: T) => boolean): T | undefined {
-        for (let i = array.length - 1; i >= 0; i--) {
-            if (predicate(array[i])) {
-                return array[i];
-            }
-        }
-
-        return undefined;
     }
 }

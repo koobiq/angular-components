@@ -84,6 +84,7 @@ in the clause it lived in.
 | `KBQ_FILE_UPLOAD_CONFIGURATION`                                | The token was removed. Register the labels with `kbqFileUploadLocaleConfigurationProvider({ single: …, multiple: … })`                                            |
 | `.externalConfig`                                              | The member was removed from `KbqDataSizePipe`. Overrides go through `kbqSizeUnitsLocaleConfigurationProvider()`                                                   |
 | `.localeConfig` / `.resolvedLocaleConfig` (read)               | Both were removed from the file upload components. Bind `[localeOverrides]` keyed by section and read `localeConfiguration().single` / `.multiple`                |
+| `KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION`                       | Deprecated, removed in 22.0.0. Not renamed: it is the `number` slice, so read `KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION.number` — the same object                   |
 
 A provider reported by one of the two specific messages is not reported again by
 the generic leftover-token one. The `.configuration = …` pattern is common enough

@@ -9,7 +9,7 @@ import {
     numberAttribute,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqColorDirective, KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
+import { kbqAnimationsDisabled, KbqColorDirective, KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
 
 /** Whether the spinner reports a known progress value or spins indefinitely. */
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
@@ -91,10 +91,15 @@ export class KbqProgressSpinner extends KbqColorDirective {
     /** @docs-private */
     protected readonly dashOffsetPercent = computed(() => `${MAX_DASH_ARRAY - this.percentage() * MAX_DASH_ARRAY}%`);
 
+    /**
+     * Whether the indeterminate spinner stands still and the determinate one follows a new value at once.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
     constructor() {
         super();
 
-        this.color = KbqComponentColors.Theme;
         this.setDefaultColor(KbqComponentColors.Theme);
     }
 }

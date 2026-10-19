@@ -59,7 +59,7 @@ import { KbqAppSwitcherIconSanitizer } from './app-switcher-icon-sanitizer';
         class: 'kbq-app-switcher-list-item',
         role: 'menuitem',
         '[class.kbq-dropdown-item]': 'false',
-        '[attr.tabindex]': 'getTabIndex()',
+        // `tabindex` comes from `KbqDropdownItem`: a second binding here would read its signal again after the others.
         '[attr.aria-expanded]': 'toggle() ? !collapsed() : null',
         '(click)': 'clickHandler($event)'
     },

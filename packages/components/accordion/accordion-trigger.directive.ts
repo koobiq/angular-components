@@ -1,4 +1,4 @@
-import { Directive, inject } from '@angular/core';
+import { computed, Directive, inject } from '@angular/core';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqAccordion } from './accordion';
 import { KbqAccordionItem } from './accordion-item';
@@ -8,10 +8,13 @@ import { KbqAccordionItem } from './accordion-item';
     host: {
         '[attr.id]': 'triggerId',
         '[attr.role]': '"button"',
-        '[attr.aria-expanded]': 'item.expanded',
+        // Signals of this directive's own: the item and its other parts read the same state, and the host bindings of
+        // every item in a view run in that view's reactive consumer, where a signal read again after others costs a
+        // scan of all it has read so far.
+        '[attr.aria-expanded]': 'expanded()',
         '[attr.aria-controls]': 'contentId',
         '[attr.aria-disabled]': 'item.disabled',
-        '[attr.data-state]': 'item.dataState',
+        '[attr.data-state]': 'dataState()',
         '[attr.data-disabled]': 'item.disabled',
         '[attr.data-orientation]': 'item.orientation',
         '(click)': 'onClick()',
@@ -26,6 +29,18 @@ export class KbqAccordionTriggerDirective {
     protected readonly accordion = inject(KbqAccordion);
     /** @docs-private */
     protected readonly item = inject(KbqAccordionItem);
+
+    /**
+     * Value of `aria-expanded`.
+     * @internal
+     */
+    protected readonly expanded = computed(() => this.item.expanded);
+
+    /**
+     * Value of `data-state`.
+     * @internal
+     */
+    protected readonly dataState = computed(() => this.item.dataState);
 
     /** @docs-private */
     get triggerId(): string {

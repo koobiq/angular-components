@@ -52,7 +52,9 @@ export class KbqModalControlService {
     private rootRegisteredMetaMap: Map<KbqModalRef, IRegisteredMeta> = this.parentService ? null : new Map();
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    private rootVisibleModals: WritableSignal<KbqModalRef[]> = this.parentService ? null : signal<KbqModalRef[]>([]);
+    private readonly rootVisibleModals: WritableSignal<KbqModalRef[]> = this.parentService
+        ? null
+        : signal<KbqModalRef[]>([]);
 
     // Lazy, so the copy a child-level service never reads costs nothing.
     private readonly rootTopVisibleModal: Signal<KbqModalRef | null> = computed(() => {
@@ -193,37 +195,37 @@ export class KbqModalControlService {
 
             // Trigger leave animation on other masks, then disable them after animation completes
             visibleModalsWithMask.forEach((modal) => {
-                setTimeout(() => {
+                modal.getInstance().animateMaskTo('leave');
+                modal.markForCheck();
+
+                this.afterMaskAnimation(modal, () => {
                     modal.getInstance().animateMaskTo(null);
                     modal.getInstance().setMaskEnabled(false);
                     modal.markForCheck();
-                }, MODAL_ANIMATE_DURATION);
-
-                modal.getInstance().animateMaskTo('leave');
-                modal.markForCheck();
+                });
             });
 
             // On close, restore other masks with enter animation, then reset animation state after it completes
             const beforeCloseSubscription = modalRef.beforeClose.subscribe(() => {
                 // Invariant with respect to the loop below — the dialog being closed is the same
                 // one every time round.
-                setTimeout(() => {
-                    modalRef.getInstance().animateMaskTo(null);
-                    modalRef.getInstance().setMaskEnabled(false);
-                }, MODAL_ANIMATE_DURATION);
-
                 modalRef.getInstance().animateMaskTo('leave');
 
-                visibleModalsWithMask.forEach((modal) => {
-                    setTimeout(() => {
-                        modal.getInstance().animateMaskTo(null);
-                        modal.markForCheck();
-                    }, MODAL_ANIMATE_DURATION);
+                this.afterMaskAnimation(modalRef, () => {
+                    modalRef.getInstance().animateMaskTo(null);
+                    modalRef.getInstance().setMaskEnabled(false);
+                });
 
+                visibleModalsWithMask.forEach((modal) => {
                     modal.getInstance().setMaskEnabled(true);
                     modal.getInstance().animateMaskTo('enter');
 
                     modal.markForCheck();
+
+                    this.afterMaskAnimation(modal, () => {
+                        modal.getInstance().animateMaskTo(null);
+                        modal.markForCheck();
+                    });
                 });
             });
 
@@ -232,5 +234,20 @@ export class KbqModalControlService {
             // The closure captures a set of sibling dialogs, so it has to die with the registration.
             if (meta) meta.beforeCloseSubscription = beforeCloseSubscription;
         }
+    }
+
+    /**
+     * Runs `fn` once the mask animation of `modal` started just now is over, at once when that dialog has
+     * animations disabled: the covered layer would otherwise stay painted under the new one for the whole
+     * duration. Read per dialog, whose injector can be below the one of this service.
+     */
+    private afterMaskAnimation(modal: KbqModalRef, fn: () => void): void {
+        if (modal.getInstance().animationsDisabled) {
+            fn();
+
+            return;
+        }
+
+        setTimeout(fn, MODAL_ANIMATE_DURATION);
     }
 }

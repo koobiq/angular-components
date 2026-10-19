@@ -1,5 +1,5 @@
-export function wrappedErrorMessage(e: Error) {
-    const escapedMessage = e.message.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
+import { escapeRegExp } from '../highlight/highlight-base';
 
-    return new RegExp(escapedMessage);
+export function wrappedErrorMessage(e: Error) {
+    return new RegExp(escapeRegExp(e.message));
 }

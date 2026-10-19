@@ -1,4 +1,3 @@
-import { AnimationEvent } from '@angular/animations';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { InjectionToken, Provider, TemplateRef } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -55,9 +54,6 @@ export type KbqToastTemplateContext = {
 export interface KbqToastStack {
     /** Emits the data of a toast once the user has read it. */
     readonly read: Subject<KbqToastData | null>;
-    /** Emits the animation events of every toast in the stack. */
-    readonly animation: Subject<AnimationEvent>;
-
     /** Removes the toast with the given id from the stack. */
     hide(id: number): void;
 

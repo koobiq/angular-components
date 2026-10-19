@@ -22,11 +22,12 @@
 export const SELECT_PACKAGE = '@koobiq/components/select';
 
 /**
- * Identifier and attribute shapes that mark a consumer without an import. `selectEvents` is in the
- * list because it was exported from `@koobiq/components/core`, so a file importing it need not name
- * the select at all — and that file is exactly the one whose import no longer resolves.
+ * Identifier and attribute shapes that mark a consumer without an import: the select and the timezone select,
+ * which extends it and inherits every member reported here. `selectEvents` is in the list because it was exported
+ * from `@koobiq/components/core`, so a file importing it need not name the select at all — and that file is
+ * exactly the one whose import no longer resolves.
  */
-export const SELECT_TYPE = '\\bKbqSelect\\w*\\b|\\bkbq-select\\b|\\bselectEvents\\b';
+export const SELECT_TYPE = '\\bKbq(?:Timezone)?Select\\w*\\b|\\bkbq-(?:timezone-)?select\\b|\\bselectEvents\\b';
 
 export interface WarnPattern {
     /** Owner of the member. The pattern is only evaluated for files that also name it. */
@@ -73,6 +74,23 @@ export const warnPatterns: WarnPattern[] = [
         message:
             'selectEvents and the core/select/events module were removed. The module exported one constant ' +
             "whose value equalled its own name ('selectEvents') and nothing read it — delete the import."
+    },
+    {
+        anchor: SELECT_TYPE,
+        pattern: '\\.\\s*(?:hasBackdrop|compareWith|searchMinOptionsThreshold)\\b(?!\\s*[=(])',
+        message:
+            'KbqSelect.hasBackdrop, .compareWith and .searchMinOptionsThreshold are signals now: read them as ' +
+            'calls, e.g. `compareWith()(a, b)`. searchMinOptionsThreshold() still reports the resolved number.'
+    },
+    {
+        anchor: SELECT_TYPE,
+        pattern:
+            '\\.\\s*(?:hasBackdrop|compareWith|searchMinOptionsThreshold|multiple|tabIndex|selectAllHandler)\\s*=(?!=)',
+        message:
+            'hasBackdrop, compareWith, searchMinOptionsThreshold, multiple, tabIndex and selectAllHandler of ' +
+            'KbqSelect are signal inputs, so an assignment no longer compiles. Bind them in the template; ' +
+            'multiple, tabIndex and selectAllHandler are still read as properties. This pattern also matches a ' +
+            'write to an unrelated object in the same file — check before changing it.'
     }
 ];
 

@@ -9,6 +9,8 @@
 
 $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
 
+$state-transition: 300ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+
 @mixin _sidepanel-container($selected-side) {
     $sides: top, right, bottom, left;
     $opposite-sides: (
@@ -37,6 +39,14 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
     flex: 1;
     position: fixed;
     min-height: 0;
+
+    // The state of the container sets its `transform` and `opacity`, see `KbqSidepanelContainerComponent`.
+    transition:
+        transform $state-transition,
+        opacity $state-transition;
+    animation: kbq-sidepanel-enter $state-transition;
+
+    @include common.kbq-animations-off();
 
     /* stylelint-disable-next-line selector-class-pattern */
     .flex {
@@ -85,8 +95,10 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
 }
 
 .kbq-sidepanel-container_right {
+    --kbq-sidepanel-transform-in: translateX(100%);
+
     right: 0;
-    transform: translateX(100%);
+    transform: var(--kbq-sidepanel-transform-in);
 
     .kbq-sidepanel-wrapper {
         flex-direction: row;
@@ -96,8 +108,10 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
 }
 
 .kbq-sidepanel-container_left {
+    --kbq-sidepanel-transform-in: translateX(-100%);
+
     left: 0;
-    transform: translateX(-100%);
+    transform: var(--kbq-sidepanel-transform-in);
 
     .kbq-sidepanel-wrapper {
         flex-direction: row-reverse;
@@ -107,8 +121,10 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
 }
 
 .kbq-sidepanel-container_top {
+    --kbq-sidepanel-transform-in: translateY(-100%);
+
     top: 0;
-    transform: translateY(-100%);
+    transform: var(--kbq-sidepanel-transform-in);
 
     .kbq-sidepanel-wrapper {
         flex-direction: column-reverse;
@@ -118,8 +134,10 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
 }
 
 .kbq-sidepanel-container_bottom {
+    --kbq-sidepanel-transform-in: translateY(100%);
+
     bottom: 0;
-    transform: translateY(100%);
+    transform: var(--kbq-sidepanel-transform-in);
 
     .kbq-sidepanel-wrapper {
         flex-direction: column;
@@ -247,6 +265,13 @@ $indent-offset: calc(-1 * var(--kbq-sidepanel-size-panel-lower-offset));
         }
 
         gap: var(--kbq-sidepanel-size-footer-content-gap-horizontal);
+    }
+}
+
+@keyframes kbq-sidepanel-enter {
+    from {
+        opacity: 0;
+        transform: var(--kbq-sidepanel-transform-in);
     }
 }
 

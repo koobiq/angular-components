@@ -5,7 +5,7 @@ import {
     inject,
     linkedSignal,
     TemplateRef,
-    ViewChild
+    viewChild
 } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateFormatter } from '@koobiq/components/core';
@@ -87,9 +87,8 @@ const createSearchPipe = (name: string): KbqPipe => ({
 export class FilterBarSavedFiltersExample {
     readonly toastService = inject(KbqToastService);
 
-    @ViewChild(KbqFilterBar) filterBar: KbqFilterBar;
-    @ViewChild('errorToastActions') errorToastActionsTemplate: TemplateRef<any>;
-    @ViewChild('toastErrorTitleTemplate') toastErrorTitleTemplate: TemplateRef<any>;
+    readonly errorToastActionsTemplate = viewChild.required<TemplateRef<any>>('errorToastActions');
+    readonly toastErrorTitleTemplate = viewChild.required<TemplateRef<any>>('toastErrorTitleTemplate');
 
     /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
     protected readonly periods = injectLocalizedPeriods();
@@ -214,9 +213,9 @@ export class FilterBarSavedFiltersExample {
         if (filter.id === 3) {
             this.toastService.show({
                 style: KbqToastStyle.Error,
-                title: this.toastErrorTitleTemplate,
+                title: this.toastErrorTitleTemplate(),
                 closeButton: true,
-                actions: this.errorToastActionsTemplate,
+                actions: this.errorToastActionsTemplate(),
                 text: this.text().deleteError,
                 filter
             } as KbqToastData);

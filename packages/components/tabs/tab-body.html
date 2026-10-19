@@ -2,12 +2,9 @@
     #content
     kbqScrollbarViewport
     class="kbq-tab-body__content kbq-hide-nested-popup"
-    [@translateTab]="{
-        value: bodyPosition,
-        params: { animationDuration: animationDuration() }
-    }"
-    (@translateTab.done)="onTranslateTabComplete($event)"
-    (@translateTab.start)="onTranslateTabStarted($event)"
+    [class]="`kbq-tab-body__content_${bodyPosition}`"
+    [class.kbq-animations-disabled]="animationsDisabled"
+    [style.--kbq-tab-body-animation-duration]="cssAnimationDuration()"
 >
     <ng-template kbqTabBodyHost />
 </div>

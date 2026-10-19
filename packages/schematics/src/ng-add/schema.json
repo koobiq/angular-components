@@ -25,12 +25,6 @@
                     { "value": "dark", "label": "Dark" }
                 ]
             }
-        },
-        "animations": {
-            "type": "boolean",
-            "default": true,
-            "description": "Adds provideAnimations(), required by components that animate (dropdown, select, tooltip, toast, datepicker).",
-            "x-prompt": "Set up Angular animations automatically (adds `provideAnimations()`)?"
         }
     }
 }

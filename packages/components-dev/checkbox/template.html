@@ -49,19 +49,17 @@
             </td>
         </tr>
         <tr>
-            <td><kbq-checkbox [color]="themePalette.Error">error</kbq-checkbox></td>
-            <td><kbq-checkbox [big]="true" [color]="themePalette.Error">error</kbq-checkbox></td>
+            <td><kbq-checkbox [color]="colors.Error">error</kbq-checkbox></td>
+            <td><kbq-checkbox [big]="true" [color]="colors.Error">error</kbq-checkbox></td>
         </tr>
         <tr>
             <td>
-                <kbq-checkbox [color]="themePalette.Error" [indeterminate]="true" [(ngModel)]="checked[2]">
+                <kbq-checkbox [color]="colors.Error" [indeterminate]="true" [(ngModel)]="checked[2]">
                     error indeterminate
                 </kbq-checkbox>
             </td>
             <td>
-                <kbq-checkbox [big]="true" [color]="themePalette.Error" [(ngModel)]="checked[1]">
-                    error checked
-                </kbq-checkbox>
+                <kbq-checkbox [big]="true" [color]="colors.Error" [(ngModel)]="checked[1]">error checked</kbq-checkbox>
             </td>
         </tr>
         <tr>
@@ -104,18 +102,18 @@
         </tr>
         <tr>
             <td>
-                <kbq-pseudo-checkbox [color]="themePalette.Error" />
+                <kbq-pseudo-checkbox [color]="colors.Error" />
                 &nbsp;
-                <kbq-pseudo-checkbox [color]="themePalette.Error" [state]="'checked'" />
+                <kbq-pseudo-checkbox [color]="colors.Error" [state]="'checked'" />
                 &nbsp;
-                <kbq-pseudo-checkbox [color]="themePalette.Error" [state]="'indeterminate'" />
+                <kbq-pseudo-checkbox [color]="colors.Error" [state]="'indeterminate'" />
             </td>
             <td>
-                <kbq-pseudo-checkbox [big]="true" [color]="themePalette.Error" />
+                <kbq-pseudo-checkbox [big]="true" [color]="colors.Error" />
                 &nbsp;
-                <kbq-pseudo-checkbox [big]="true" [color]="themePalette.Error" [state]="'checked'" />
+                <kbq-pseudo-checkbox [big]="true" [color]="colors.Error" [state]="'checked'" />
                 &nbsp;
-                <kbq-pseudo-checkbox [big]="true" [color]="themePalette.Error" [state]="'indeterminate'" />
+                <kbq-pseudo-checkbox [big]="true" [color]="colors.Error" [state]="'indeterminate'" />
             </td>
         </tr>
         <tr>

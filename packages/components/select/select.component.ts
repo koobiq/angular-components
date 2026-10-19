@@ -1,6 +1,5 @@
 import { CdkMonitorFocus, InteractivityChecker } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
     CdkConnectedOverlay,
@@ -9,30 +8,28 @@ import {
     OverlayContainer,
     ScrollStrategy
 } from '@angular/cdk/overlay';
-import { Platform, _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
+import { Platform, _getEventTarget, _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
 import {
+    AfterContentChecked,
     AfterContentInit,
+    AfterViewChecked,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChildren,
     DestroyRef,
     DoCheck,
     ElementRef,
     EventEmitter,
     InjectionToken,
-    Input,
+    Injector,
     NgZone,
     OnDestroy,
     OnInit,
-    Output,
     Provider,
     QueryList,
     TemplateRef,
-    ViewChild,
-    ViewChildren,
     ViewEncapsulation,
     afterNextRender,
     booleanAttribute,
@@ -42,13 +39,17 @@ import {
     effect,
     inject,
     input,
+    linkedSignal,
     numberAttribute,
     output,
     signal,
-    viewChild
+    untracked,
+    viewChild,
+    viewChildren,
+    type AfterRenderRef
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
+import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
     ActiveDescendantKeyManager,
     BACKSPACE,
@@ -71,10 +72,12 @@ import {
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqAbstractSelect,
     KbqComponentColors,
+    KbqErrorStateTracker,
     KbqLocaleOverridesDirective,
     KbqOptgroup,
     KbqOption,
     KbqOptionBase,
+    KbqOptionParentComponent,
     KbqOptionSelectionChange,
     KbqPanelMaxHeight,
     KbqPanelMaxWidth,
@@ -107,8 +110,9 @@ import {
     isSelectAll,
     isUndefined,
     kbqGetElementHeight,
+    kbqQueryListFrom,
     kbqResolvePanelMaxHeightToken,
-    kbqSelectAnimations,
+    kbqSelectAllHandlerTransform,
     kbqSiblingPopupProvider,
     runClearPredicate,
     runCompareWith,
@@ -153,12 +157,6 @@ export class KbqSelectChange {
         public value: any
     ) {}
 }
-
-/**
- * Select panel width type.
- * @deprecated Use `KbqPanelWidth` from `@koobiq/components/core` instead.
- */
-export type KbqSelectPanelWidth = KbqPanelWidth;
 
 /** Options for the `kbq-select` that can be configured using the `KBQ_SELECT_OPTIONS` injection token. */
 export type KbqSelectOptions = Partial<{
@@ -251,7 +249,7 @@ export const minimumTimeToDisplayLoading = 300;
     encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.tabindex]': 'tabIndex',
-        '[attr.disabled]': 'disabled || null',
+        '[attr.disabled]': 'disabledAttribute()',
         // The select is not a native control, so its role, states and the relationship with the panel it
         // owns have to be exposed explicitly.
         role: 'combobox',
@@ -260,14 +258,14 @@ export const minimumTimeToDisplayLoading = 300;
         '[attr.aria-controls]': 'panelOpen ? panelId : null',
         '[attr.aria-labelledby]': 'ariaLabelledby',
         '[attr.aria-label]': 'resolvedAriaLabel',
-        '[attr.aria-invalid]': 'errorState',
-        '[attr.aria-required]': 'required',
-        '[attr.aria-disabled]': 'disabled',
+        '[attr.aria-invalid]': 'errorState()',
+        '[attr.aria-required]': 'required()',
+        '[attr.aria-disabled]': 'disabled()',
         class: 'kbq-select',
         '[class.kbq-select_multiple]': 'multiple',
         '[class.kbq-select_multiline]': 'multiline()',
-        '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-invalid]': 'errorState',
+        '[class.kbq-disabled]': 'disabledClass()',
+        '[class.kbq-invalid]': 'invalidClass()',
         '(click)': 'toggle()',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()',
@@ -276,14 +274,13 @@ export const minimumTimeToDisplayLoading = 300;
     hostDirectives: [
         { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
-    animations: [
-        kbqSelectAnimations.fadeInContent
-    ],
     exportAs: 'kbqSelect'
 })
 export class KbqSelect
     extends KbqAbstractSelect
     implements
+        AfterViewChecked,
+        AfterContentChecked,
         AfterContentInit,
         OnDestroy,
         OnInit,
@@ -291,10 +288,12 @@ export class KbqSelect
         ControlValueAccessor,
         KbqFormFieldControl<any>,
         CanUpdateErrorState,
-        KbqSiblingPopup
+        KbqSiblingPopup,
+        KbqOptionParentComponent
 {
     private readonly _changeDetectorRef = inject(ChangeDetectorRef);
     private readonly _ngZone = inject(NgZone);
+    private readonly injector = inject(Injector);
     private readonly hiddenItemsMeasurer = inject(KbqSelectHiddenItemsMeasurer);
     private readonly interactivityChecker = inject(InteractivityChecker);
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
@@ -321,14 +320,15 @@ export class KbqSelect
     protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
     private readonly scrollbarOptions = inject(KBQ_SCROLLBAR_OPTIONS);
 
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        this.defaultErrorStateMatcher,
+        this.ngControl,
+        this.parentFormGroup,
+        this.parentForm
+    );
+
     /** Whether the component is in an error state. */
-    errorState: boolean = false;
-    /**
-     * Emits whenever the component state changes and should cause the parent
-     * form-field to update. Implemented as part of `KbqFormFieldControl`.
-     * @docs-private
-     */
-    readonly stateChanges = new Subject<void>();
+    readonly errorState = this.errorStateTracker.errorState;
 
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
@@ -339,7 +339,10 @@ export class KbqSelect
      */
     readonly isNativeLabelSupported = false;
 
-    hiddenItems: number = 0;
+    private readonly hiddenItemsCount = signal(0);
+
+    /** Number of the selected items that do not fit into the trigger. */
+    readonly hiddenItems = this.hiddenItemsCount.asReadonly();
 
     /**
      * How many of the rendered tags stay on the trigger's single line.
@@ -348,7 +351,7 @@ export class KbqSelect
      * no tag on the first line at all, which a laid-out trigger never does and so means there was no layout
      * to measure. Both cases leave every tag treated as visible.
      */
-    private visibleTriggerItems: number | null = null;
+    private readonly visibleTriggerItems = signal<number | null>(null);
 
     /** The last measured value for the trigger's client bounding rect. */
     protected triggerRect: DOMRect;
@@ -362,6 +365,9 @@ export class KbqSelect
     /** Previously selected options before the current selection was made. */
     previousSelectionModelSelected: KbqOptionBase[] = [];
 
+    /** Whether the selection is being set to a written value, which is no selection of the user. */
+    private writingValue = false;
+
     /**
      * Detached copies of the selected options, captured while the option was still rendered.
      * `cdk-virtual-scroll` recycles option views, so a `KbqOption` kept in `selectionModel` can
@@ -372,23 +378,16 @@ export class KbqSelect
     /** Manages keyboard events for options in the panel. */
     keyManager: ActiveDescendantKeyManager<KbqOption>;
 
-    /** The value of the select panel's transform-origin property for animations. */
+    /** The value of the select panel's transform-origin property. */
     transformOrigin: string = 'top';
 
-    /** Emits when the panel element is finished transforming in. */
+    /** Emits once the panel has rendered (`'showing'`) or has been removed (`'void'`). */
     panelDoneAnimatingStream = new Subject<string>();
+
+    private panelRender?: AfterRenderRef;
 
     /** Strategy that will be used to handle scrolling while the select panel is open. */
     scrollStrategy: ScrollStrategy = this.scrollStrategyFactory();
-
-    /**
-     * The y-offset of the overlay panel in relation to the trigger.
-     *
-     * @deprecated noop. The trigger↔panel gap is now controlled by the `--kbq-connected-overlay-gap` CSS
-     * variable (transparent padding inside the pane via the `kbq-connected-overlay_below/_above` panel
-     * classes), not by a physical overlay offset — so setting this has no effect. Will be removed in 21.0.0.
-     */
-    offsetY = 0;
 
     /**
      * Minimum space to keep between the overlay and the viewport edge.
@@ -440,8 +439,12 @@ export class KbqSelect
     /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
     readonly selectAllOption = viewChild(KbqOption);
 
+    private readonly overlayDirQuery = viewChild(CdkConnectedOverlay);
+
     /** Reference to the CDK connected overlay directive. */
-    @ViewChild(CdkConnectedOverlay, { static: false }) protected overlayDir: CdkConnectedOverlay;
+    protected get overlayDir(): CdkConnectedOverlay {
+        return this.overlayDirQuery()!;
+    }
 
     /** Reference to the optional footer element in the panel. */
     readonly footer = contentChild(KbqSelectFooter, { read: ElementRef });
@@ -452,8 +455,13 @@ export class KbqSelect
     /** Reference to the CDK virtual scroll viewport for tracking scroll position in virtual mode. */
     readonly virtualScrollViewport = contentChild(CdkVirtualScrollViewport);
 
+    private readonly tagsQuery = viewChildren(KbqTag);
+    private readonly tagsList = kbqQueryListFrom(this.tagsQuery);
+
     /** Query list of tags displayed in multiple selection mode. */
-    @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
+    get tags(): QueryList<KbqTag> {
+        return this.tagsList();
+    }
 
     /** User-supplied override of the trigger element for custom rendering. */
     readonly customTrigger = contentChild(KbqSelectTrigger);
@@ -470,8 +478,16 @@ export class KbqSelect
      */
     readonly cleaner = contentChild(KbqCleaner, { descendants: false });
 
+    private readonly optionsQuery = contentChildren(KbqOption, { descendants: true });
+    private readonly optionsList = kbqQueryListFrom(this.optionsQuery);
+
     /** All of the defined select options. */
-    @ContentChildren(KbqOption, { descendants: true }) options: QueryList<KbqOption>;
+    get options(): QueryList<KbqOption> {
+        return this.optionsList();
+    }
+
+    /** Whether `ngAfterContentInit` has run. The options are not settled before that, so nothing reads them. */
+    private contentReady = false;
 
     /**
      * Everything the key manager navigates: the built-in "select all" row first, then `options`.
@@ -514,7 +530,7 @@ export class KbqSelect
     protected get hiddenItemsLabel(): string {
         const template = this.hiddenItemsText() ?? this.localeConfiguration().hiddenItemsText;
 
-        return this.hiddenItemsTextFormatter()(template, this.hiddenItems);
+        return this.hiddenItemsTextFormatter()(template, this.hiddenItems());
     }
 
     /** Label of the "select all" row. Follows the active locale. */
@@ -547,7 +563,7 @@ export class KbqSelect
     readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
 
     /** Object used to control when error messages are shown. */
-    @Input() errorStateMatcher: ErrorStateMatcher;
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
 
     /**
      * Function used to sort the values in a select in multiple mode.
@@ -576,26 +592,20 @@ export class KbqSelect
      * reports the resolved number, never `'auto'`.
      * @default undefined
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    set searchMinOptionsThreshold(value: 'auto' | number | undefined) {
-        this._searchMinOptionsThreshold =
-            this.resolveSearchMinOptionsThreshold(value) ??
-            this.resolveSearchMinOptionsThreshold(this.defaultOptions?.searchMinOptionsThreshold);
-    }
-
-    get searchMinOptionsThreshold(): number | undefined {
-        return this._searchMinOptionsThreshold;
-    }
-
-    private _searchMinOptionsThreshold = this.resolveSearchMinOptionsThreshold(
-        this.defaultOptions?.searchMinOptionsThreshold
+    readonly searchMinOptionsThreshold = computed<number | undefined>(
+        () =>
+            this.resolveSearchMinOptionsThreshold(this.searchMinOptionsThresholdInput()) ??
+            this.resolveSearchMinOptionsThreshold(this.defaultOptions?.searchMinOptionsThreshold)
     );
+
+    /** @docs-private */
+    readonly searchMinOptionsThresholdInput = input<'auto' | number | undefined>(undefined, {
+        alias: 'searchMinOptionsThreshold'
+    });
 
     /** Combined stream of all of the child options' change events. */
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange> = defer(() => {
-        if (this.options) {
+        if (this.contentReady) {
             return merge(
                 ...this.options.map((option) => option.onSelectionChange),
                 this.options.changes.pipe(
@@ -619,11 +629,11 @@ export class KbqSelect
             );
         }
 
-        return this._ngZone.onStable.asObservable().pipe(
-            take(1),
-            switchMap(() => this.optionSelectionChanges)
-        );
+        return this.contentInitialized.pipe(switchMap(() => this.optionSelectionChanges));
     }) as Observable<KbqOptionSelectionChange>;
+
+    /** Emits once the content queries are resolved, for subscribers that arrive before `options` exist. */
+    private readonly contentInitialized = new Subject<void>();
 
     /**
      * Event emitted when the select panel has been toggled. Emits true when opened, false when closed.
@@ -631,22 +641,31 @@ export class KbqSelect
      * this element's host reacts to it, so its emission timing (gated on `panelDoneAnimatingStream`, see
      * `ngOnInit`) matters beyond this output's original consumers.
      */
-    @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+    readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    /** @docs-private */
+    readonly openedChangeOutput = outputFromObservable(this.openedChange, { alias: 'openedChange' });
 
     /** Event emitted before the select panel starts opening. */
     readonly beforeOpened = output<void>();
 
     /** Event emitted when the select has been opened. */
-    @Output('opened') readonly openedStream: Observable<void> = this.openedChange.pipe(
+    readonly openedStream: Observable<void> = this.openedChange.pipe(
         filter((o) => o),
         map(() => {})
     );
 
+    /** @docs-private */
+    readonly openedOutput = outputFromObservable(this.openedStream, { alias: 'opened' });
+
     /** Event emitted when the select has been closed. */
-    @Output('closed') readonly closedStream: Observable<void> = this.openedChange.pipe(
+    readonly closedStream: Observable<void> = this.openedChange.pipe(
         filter((o) => !o),
         map(() => {})
     );
+
+    /** @docs-private */
+    readonly closedOutput = outputFromObservable(this.closedStream, { alias: 'closed' });
 
     /** Event emitted when the selected value has been changed by the user. */
     readonly selectionChange = output<KbqSelectChange>();
@@ -677,76 +696,35 @@ export class KbqSelect
      * Whether the overlay should have a backdrop.
      * When true, clicking the backdrop will close the select.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get hasBackdrop(): boolean {
-        return this._hasBackdrop;
-    }
-
-    set hasBackdrop(value: boolean) {
-        this._hasBackdrop = coerceBooleanProperty(value);
-    }
-
-    private _hasBackdrop: boolean = false;
+    readonly hasBackdrop = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
     /**
      * Placeholder text to be shown when no value is selected.
      * Displayed in the trigger when the select is closed and no value is selected.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get placeholder(): string {
-        return this._placeholder;
-    }
-
-    set placeholder(value: string) {
-        this._placeholder = value;
-
-        this.stateChanges.next();
-    }
-
-    private _placeholder: string;
+    readonly placeholder = input<string>();
 
     /**
      * Whether the select is required. Affects validation and display of placeholder.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get required(): boolean {
-        return this._required;
-    }
+    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
-    set required(value: boolean) {
-        this._required = coerceBooleanProperty(value);
-
-        this.stateChanges.next();
-    }
-
-    private _required: boolean = false;
+    /** @docs-private */
+    readonly multipleInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'multiple',
+        transform: booleanAttribute
+    });
 
     /**
      * Whether multiple options can be selected.
      * Note: This cannot be changed dynamically after initialization.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get multiple(): boolean {
-        return this._multiple;
+        return this.multipleValue ?? this.multipleInput();
     }
 
-    set multiple(value: boolean) {
-        if (this.selectionModel) {
-            throw getKbqSelectDynamicMultipleError();
-        }
-
-        this._multiple = value;
-    }
-
-    private _multiple: boolean = false;
+    /** The multiplicity the selection model was created with; a later binding change is refused. */
+    private multipleValue: boolean | undefined;
 
     /**
      * Function to compare the option values with the selected values.
@@ -755,25 +733,15 @@ export class KbqSelect
      * Should return true if the values match.
      * Defaults to strict equality comparison.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get compareWith() {
-        return this._compareWith;
-    }
+    readonly compareWith = input<(o1: any, o2: any) => boolean, (o1: any, o2: any) => boolean>((o1, o2) => o1 === o2, {
+        transform: (fn) => {
+            if (typeof fn !== 'function') {
+                throw getKbqSelectNonFunctionValueError();
+            }
 
-    set compareWith(fn: (o1: any, o2: any) => boolean) {
-        if (typeof fn !== 'function') {
-            throw getKbqSelectNonFunctionValueError();
+            return fn;
         }
-
-        this._compareWith = fn;
-
-        if (this.selectionModel) {
-            // A different comparator means the selection could change.
-            this.initializeSelection();
-        }
-    }
+    });
 
     /**
      * Factory used to construct a `KbqVirtualOption` for selected values whose
@@ -785,7 +753,7 @@ export class KbqSelect
      * customise per-value `disabled` state or any future `KbqVirtualOption`
      * fields without adding new `@Input`s.
      *
-     * Defaults to `new KbqVirtualOption(value, this.disabled)`, which is correct
+     * Defaults to `new KbqVirtualOption(value, this.disabled())`, which is correct
      * for primitive values where `value` itself is the display label.
      */
     readonly virtualOptionFactory = input<(value: any) => KbqVirtualOption>();
@@ -823,24 +791,22 @@ export class KbqSelect
      */
     readonly selectAll = input(false, { transform: booleanAttribute });
 
+    /** @docs-private */
+    readonly selectAllHandlerInput = input<
+        ((event: KeyboardEvent, select: KbqSelect) => void) | undefined,
+        ((event: KeyboardEvent, select: KbqSelect) => void) | undefined
+    >(undefined, {
+        alias: 'selectAllHandler',
+        transform: kbqSelectAllHandlerTransform
+    });
+
     /**
      * Function for handling the Ctrl + A (select all) keyboard combination.
      * By default, the internal handler selects all options.
      * It is called with the keyboard event that triggered it and a reference to this select component.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get selectAllHandler() {
-        return this._selectAllHandler;
-    }
-
-    set selectAllHandler(fn: (event: KeyboardEvent, select: KbqSelect) => void) {
-        if (typeof fn !== 'function') {
-            throw Error('`selectAllHandler` must be a function.');
-        }
-
-        this._selectAllHandler = fn;
+    get selectAllHandler(): (event: KeyboardEvent, select: KbqSelect) => void {
+        return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
     }
 
     /**
@@ -891,101 +857,82 @@ export class KbqSelect
      */
     protected readonly panelMaxHeightToken = computed(() => kbqResolvePanelMaxHeightToken(this.panelMaxHeight()));
 
-    /** Value of the select control. Can be a single value or array of values for multiple selection. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get value(): any {
-        return this._value;
-    }
+    /** @docs-private */
+    readonly valueInput = input<any>(undefined, { alias: 'value' });
 
-    set value(newValue: any) {
-        if (newValue !== this._value) {
-            this.writeValue(newValue);
-            this._value = newValue;
-        }
-    }
+    /**
+     * Value of the select control. Can be a single value or array of values for multiple selection. Follows
+     * `[value]`, the form control and the user's selection. A value set in code selects its options on the next
+     * change detection, without emitting `valueChange`.
+     */
+    readonly value = linkedSignal(() => this.valueInput());
 
-    private _value: any;
+    /** The value the selection was last made from or reported as. */
+    private selectionValue: any;
+
+    /** @docs-private */
+    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
 
     /**
      * Unique identifier for the select component.
      * Auto-generates an ID if not provided.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get id(): string {
-        return this._id;
-    }
-
-    set id(value: string) {
-        this._id = value || this.uid;
-        this.stateChanges.next();
-    }
-
-    private _id: string;
+    readonly id = computed(() => this.idInput() || this.uid);
 
     /**
      * Sets the tabIndex of the select element.
      * Automatically set to -1 when disabled.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: numberAttribute })
+    /** @docs-private */
+    readonly tabIndexInput = input<number, number | string | null | undefined>(0, {
+        alias: 'tabIndex',
+        transform: numberAttribute
+    });
+
     get tabIndex(): number {
-        return this.disabled ? -1 : this._tabIndex;
+        return this.resolvedTabIndex();
     }
 
-    set tabIndex(value: number) {
-        this._tabIndex = value;
-    }
-
-    private _tabIndex = 0;
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
 
     /**
      * Whether the select is disabled.
-     * When disabled, the select cannot be opened and its value cannot be changed.
+     * When disabled, the select cannot be opened and its value cannot be changed. Also set by the bound form
+     * control.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
-        return this._disabled;
-    }
+    readonly disabled = linkedSignal(() => this.disabledInput());
 
-    set disabled(value: boolean) {
-        if (value !== this.disabled) {
-            this._disabled = value;
+    // One signal per host value. The host bindings of every select in a view run in that view's reactive consumer,
+    // where a signal read again by another binding costs a scan of everything the view has read.
+    private readonly resolvedTabIndex = computed(() => (this.disabled() ? -1 : this.tabIndexInput()));
+    private readonly resolvedAriaLabelValue = computed(
+        () => this.ariaLabel() ?? (this.ariaLabelledby ? null : this.placeholder() || null)
+    );
+    /** @internal */
+    protected readonly disabledAttribute = computed(() => this.disabled() || null);
+    /** @internal */
+    protected readonly disabledClass = computed(() => this.disabled());
+    /** @internal */
+    protected readonly invalidClass = computed(() => this.errorState());
 
-            if (this.parentFormField) {
-                Promise.resolve().then(() => {
-                    if (this._disabled) {
-                        this.parentFormField.stopFocusMonitor();
-                    } else {
-                        this.parentFormField.runFocusMonitor();
-                    }
-                });
-            }
-
-            // Let the parent form field know to run change detection when the disabled state changes.
-            this.stateChanges.next();
-        }
-    }
-
-    private _disabled: boolean = false;
+    private readonly focusedValue = signal(false);
+    private readonly panelOpenValue = signal(false);
 
     /** Whether the select is focused. */
-    get focused(): boolean {
-        return this._focused || this.panelOpen;
-    }
-
-    set focused(value: boolean) {
-        this._focused = value;
-    }
+    readonly focused = computed(() => this.focusedValue() || this.panelOpenValue());
 
     /** Whether the select panel is currently open. */
-    panelOpen = false;
+    get panelOpen(): boolean {
+        return this.panelOpenValue();
+    }
+
+    set panelOpen(value: boolean) {
+        this.panelOpenValue.set(value);
+    }
 
     /** Whether the overlay panel is currently on screen. Part of the `KbqSiblingPopup` contract. */
     get isAttached(): boolean {
@@ -998,8 +945,6 @@ export class KbqSelect
     protected get scrollbarMode(): KbqScrollbarMode {
         return this.withVirtualScroll ? 'native' : this.scrollbarOptions.mode;
     }
-
-    private _focused = false;
 
     /** Whether the search returned no results. */
     get isEmptySearchResult(): boolean {
@@ -1101,14 +1046,14 @@ export class KbqSelect
 
     /** Returns the display value for the trigger element. */
     get triggerValue(): string {
-        if (this.empty) return '';
+        if (this.empty()) return '';
 
         return this.resolveSelectedOption(this.selectionModel.selected[0]).viewValue;
     }
 
     /** Returns all selected options in display order. */
     get triggerValues(): KbqOptionBase[] {
-        if (this.empty) {
+        if (this.empty()) {
             return [];
         }
 
@@ -1133,13 +1078,15 @@ export class KbqSelect
      * @docs-private
      */
     protected isTriggerValueVisible(index: number): boolean {
-        return this.visibleTriggerItems === null || index < this.visibleTriggerItems;
+        const visibleTriggerItems = this.visibleTriggerItems();
+
+        return visibleTriggerItems === null || index < visibleTriggerItems;
     }
 
+    private readonly emptyValue = signal(false);
+
     /** Whether no option is currently selected. */
-    get empty(): boolean {
-        return !!this.selectionModel?.isEmpty();
-    }
+    readonly empty = this.emptyValue.asReadonly();
 
     /** Whether there are no options available. */
     get noOptions(): boolean {
@@ -1166,15 +1113,15 @@ export class KbqSelect
      */
     private hasLegacyValidateDirective = false;
 
-    // Mirror of the state the error colour is derived from. That state changes in `ngDoCheck`, while the
-    // parent is checked, and nothing marks this OnPush view for it — the signal is what repaints the trigger.
-    private readonly invalidState = signal(false);
+    // Mirror of `NgControl.invalid` for the legacy directive. The validity changes outside this OnPush view and
+    // is no signal, so nothing else would repaint the trigger when it flips.
+    private readonly legacyInvalid = signal(false);
 
     /** @docs-private */
     get colorForState(): KbqComponentColors {
-        if (this.disabled) return KbqComponentColors.Empty;
+        if (this.disabled()) return KbqComponentColors.Empty;
 
-        return this.invalidState() ? KbqComponentColors.Error : KbqComponentColors.ContrastFade;
+        return this.legacyInvalid() || this.errorState() ? KbqComponentColors.Error : KbqComponentColors.ContrastFade;
     }
 
     /** Whether multiple choice is enabled. True if multiple or multiline mode is active. */
@@ -1239,7 +1186,7 @@ export class KbqSelect
      * @docs-private
      */
     protected get resolvedAriaLabel(): string | null {
-        return this.ariaLabel() ?? (this.ariaLabelledby ? null : this.placeholder || null);
+        return this.resolvedAriaLabelValue();
     }
 
     /**
@@ -1269,16 +1216,60 @@ export class KbqSelect
     /** Accessible names of the controls the select renders itself. */
     private readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
 
-    /**
-     * Whether the panel opens without motion because the user asked for reduced motion.
-     * @docs-private
-     */
-    protected readonly animationsDisabled = signal(false);
-
     constructor() {
         super();
 
-        this.watchReducedMotion();
+        // A different comparator means a different set of options can match the value.
+        let comparatorBound = false;
+
+        effect(() => {
+            this.compareWith();
+
+            untracked(() => {
+                if (comparatorBound && this.selectionModel) this.initializeSelection();
+
+                comparatorBound = true;
+            });
+        });
+
+        // The selection model is created with the multiplicity of the first binding and cannot follow a change.
+        effect(() => {
+            const multiple = this.multipleInput();
+
+            if (this.multipleValue !== undefined && multiple !== this.multipleValue) {
+                throw getKbqSelectDynamicMultipleError();
+            }
+        });
+
+        // A value bound or set in code selects its options, as long as it differs from the one the selection holds.
+        effect(() => {
+            const value = this.value();
+
+            untracked(() => {
+                if (value !== this.selectionValue) {
+                    this.applyValue(value);
+                }
+            });
+        });
+
+        // A disabled select reports no focus to its form field.
+        let wasDisabled = false;
+
+        effect(() => {
+            const disabled = this.disabled();
+
+            if (disabled === wasDisabled) return;
+
+            wasDisabled = disabled;
+
+            const formField = this.parentFormField;
+
+            if (formField) {
+                Promise.resolve().then(() =>
+                    this.disabled() ? formField.stopFocusMonitor() : formField.runFocusMonitor()
+                );
+            }
+        });
 
         // The "select all" row only exists while the panel is attached, so the key manager's list has to
         // be rebuilt whenever the view query resolves or drops it — `options.changes` alone never fires
@@ -1286,7 +1277,8 @@ export class KbqSelect
         effect(() => {
             this.selectAllOption();
 
-            this.syncNavigableOptions();
+            // Untracked: the options are read here too, and their changes are handled by `options.changes`.
+            untracked(() => this.syncNavigableOptions());
         });
 
         if (this.ngControl) {
@@ -1295,14 +1287,11 @@ export class KbqSelect
             this.ngControl.valueAccessor = this;
         }
 
-        // Force setter to be called in case id was not specified.
-        this.id = this.id;
-
         afterNextRender(() => {
             this.hasLegacyValidateDirective = this.elementRef.nativeElement.classList.contains(
                 'kbq-control_has-validate-directive'
             );
-            this.syncInvalidState();
+            this.syncLegacyInvalid();
 
             this.observeVisibility();
 
@@ -1316,12 +1305,15 @@ export class KbqSelect
 
     /** Lifecycle hook called after component initialization. Initializes selection model and subscriptions. */
     ngOnInit() {
+        this.multipleValue = this.multipleInput();
         this.selectionModel = new SelectionModel(this.multiSelection);
-        this.stateChanges.next();
+        this.emptyValue.set(this.selectionModel.isEmpty());
+        this.selectionModel.changed
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.emptyValue.set(this.selectionModel.isEmpty()));
 
-        // We need `distinctUntilChanged` here, because some browsers will
-        // fire the animation end event twice for the same animation. See:
-        // https://github.com/angular/angular/issues/24084
+        // Only the latest report of a frame is delivered, so a close and a reopen within one frame repeat the
+        // state delivered before; `distinctUntilChanged` keeps `openedChange` from emitting it twice.
         this.panelDoneAnimatingStream
             .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
@@ -1340,7 +1332,6 @@ export class KbqSelect
                     this.openedChange.emit(true);
                 } else {
                     this.openedChange.emit(false);
-                    this._changeDetectorRef.markForCheck();
                 }
             });
 
@@ -1369,13 +1360,12 @@ export class KbqSelect
     ngDoCheck() {
         if (this.ngControl) {
             this.updateErrorState();
-        } else {
-            this.syncInvalidState();
         }
     }
 
     /** Lifecycle hook after content initialization. Sets up key manager and option subscriptions. */
     ngAfterContentInit() {
+        this.contentReady = true;
         this.withVirtualScroll = !!this.cdkVirtualForOf();
         this.initKeyManager();
 
@@ -1401,13 +1391,25 @@ export class KbqSelect
                 filter(() => this.panelOpen && this.isActiveItemStale())
             )
             .subscribe(() => this.keyManager.setFirstItemActive());
+
+        this.contentInitialized.next();
+        this.contentInitialized.complete();
+    }
+
+    ngAfterContentChecked(): void {
+        // Syncs the list here so `changes` emits after the projected items are bound and before the host bindings.
+        this.optionsList();
+    }
+
+    ngAfterViewChecked(): void {
+        // Syncs the list here so `changes` emits once this view is checked.
+        this.tagsList();
     }
 
     /** Lifecycle hook when component is destroyed. Cleans up subscriptions. */
     ngOnDestroy() {
-        this.stateChanges.complete();
         this.visibleChanges.complete();
-        // Before `openedChange`: the panel animation stream is what emits into it.
+        // Before `openedChange`: the panel stream is what emits into it.
         this.panelDoneAnimatingStream.complete();
         this.openedChange.complete();
 
@@ -1420,22 +1422,13 @@ export class KbqSelect
 
     /** Updates the error state based on the error state matcher. */
     updateErrorState() {
-        const oldState = this.errorState;
-        const parent = this.parentFormGroup || this.parentForm;
-        const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
-        const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
-        const newState = matcher.isErrorState(control, parent);
-
-        if (newState !== oldState) {
-            this.errorState = newState;
-            this.stateChanges.next();
-        }
-
-        this.syncInvalidState();
+        this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
+        this.errorStateTracker.updateErrorState();
+        this.syncLegacyInvalid();
     }
 
-    private syncInvalidState(): void {
-        this.invalidState.set((this.hasLegacyValidateDirective && !!this.ngControl?.invalid) || this.errorState);
+    private syncLegacyInvalid(): void {
+        this.legacyInvalid.set(this.hasLegacyValidateDirective && !!this.ngControl?.invalid);
     }
 
     /**
@@ -1461,7 +1454,6 @@ export class KbqSelect
         }
 
         this.propagateChanges();
-        this.stateChanges.next();
 
         this.onSelectAll.emit(new KbqSelectAllEvent(this, targets, this.allOptionsSelected));
     }
@@ -1471,28 +1463,12 @@ export class KbqSelect
      * @docs-private
      */
     clear(): void {
-        this.selectionModel.deselect(...this.clearTargets);
-        this.keyManager.setActiveItem(-1);
+        untracked(() => {
+            this.selectionModel.deselect(...this.clearTargets);
+            this.keyManager.setActiveItem(-1);
 
-        this.propagateChanges();
-    }
-
-    /**
-     * Clears the current selection.
-     * @deprecated Activate the projected `KbqCleaner` instead.
-     * @docs-private
-     */
-    clearValue(event: Event): void {
-        const cleaner = this.cleaner();
-
-        if (cleaner) {
-            cleaner.clear(event);
-        } else {
-            event.stopPropagation();
-            event.preventDefault();
-            this.clear();
-            this.focus();
-        }
+            this.propagateChanges();
+        });
     }
 
     /**
@@ -1509,28 +1485,35 @@ export class KbqSelect
 
     /** Resets the search component if present. */
     resetSearch(): void {
-        const search = this.search();
+        untracked(() => {
+            const search = this.search();
 
-        if (!search) {
-            return;
-        }
+            if (!search) {
+                return;
+            }
 
-        search.reset();
-        /*
-        todo the incorrect behaviour of keyManager is possible here
-        to avoid first item selection (to provide correct options flipping on closed select)
-        we should process options update like it is the first options appearance
-        */
-        search.isSearchChanged = false;
+            search.reset();
+            /*
+            todo the incorrect behaviour of keyManager is possible here
+            to avoid first item selection (to provide correct options flipping on closed select)
+            we should process options update like it is the first options appearance
+            */
+            search.isSearchChanged = false;
+        });
     }
 
     /** Toggles the overlay panel open or closed. */
     toggle(): void {
-        if (this.panelOpen) {
-            this.close();
-        } else {
-            this.open();
-        }
+        // Untracked, like the other imperative methods: called from a consumer's `effect()`, the state read on the
+        // way — `panelOpen`, `disabled`, the options, the inputs — would make the effect run again on every open
+        // and close.
+        untracked(() => {
+            if (this.panelOpen) {
+                this.close();
+            } else {
+                this.open();
+            }
+        });
     }
 
     /**
@@ -1541,24 +1524,30 @@ export class KbqSelect
      * if options exist, it opens immediately.
      */
     open(): void {
-        if (this.disabled || this.panelOpen) return;
+        untracked(() => {
+            if (this.disabled() || this.panelOpen) return;
 
-        this.beforeOpened.emit();
+            this.beforeOpened.emit();
 
-        if (this.noOptions) {
-            clearTimeout(this.openPanelTimeout);
+            if (this.noOptions) {
+                clearTimeout(this.openPanelTimeout);
 
-            this.openPanelTimeout = setTimeout(() => this.openPanel(), delayBeforeDisplayingResultWithoutOptions);
-        } else {
-            this.openPanel();
-        }
+                this.openPanelTimeout = setTimeout(() => this.openPanel(), delayBeforeDisplayingResultWithoutOptions);
+            } else {
+                this.openPanel();
+            }
+        });
     }
 
     /**
      * Internal method to open the panel. Handles overlay positioning and sizing.
      * Sets up the overlay dimensions based on trigger size and configured options.
      */
-    openPanel() {
+    openPanel(): void {
+        untracked(() => this.attachPanel());
+    }
+
+    private attachPanel(): void {
         const trigger = this.trigger();
 
         if (!trigger || !this.keyManager) return;
@@ -1588,10 +1577,8 @@ export class KbqSelect
         this._changeDetectorRef.markForCheck();
 
         // Set the font size on the panel element once it exists.
-        this._ngZone.onStable
-            .asObservable()
-            .pipe(take(1))
-            .subscribe(() => {
+        afterNextRender(
+            () => {
                 this.scrollActiveOptionIntoView();
 
                 if (this.triggerFontSize && this.overlayDir.overlayRef && this.overlayDir.overlayRef.overlayElement) {
@@ -1601,24 +1588,46 @@ export class KbqSelect
                 if (this.search()) {
                     this.lockOverlayWidthForSearch(this.panel());
                 }
-            });
+            },
+            { injector: this.injector }
+        );
+
+        this.reportPanelRendered('showing');
     }
 
     /** Closes the overlay panel. */
     close(): void {
-        if (!this.panelOpen) return;
+        untracked(() => {
+            if (!this.panelOpen) return;
 
-        // the order of calls is important
-        this.resetSearch();
-        this.panelOpen = false;
-        this.unsubscribeFromPanelResize();
-        // Back to the two default sides, so the next open is not resolved against a first row that has since
-        // changed height.
-        this.positions = this.withOverlapPosition(this.positions, null) ?? this.positions;
-        this.keyManager.withHorizontalOrientation(this.isRtl() ? 'rtl' : 'ltr');
+            // the order of calls is important
+            this.resetSearch();
+            this.panelOpen = false;
+            this.unsubscribeFromPanelResize();
+            // Back to the two default sides, so the next open is not resolved against a first row that has since
+            // changed height.
+            this.positions = this.withOverlapPosition(this.positions, null) ?? this.positions;
+            this.keyManager.withHorizontalOrientation(this.isRtl() ? 'rtl' : 'ltr');
 
-        this._changeDetectorRef.markForCheck();
-        this.onTouched();
+            this._changeDetectorRef.markForCheck();
+            this.onTouched();
+            this.reportPanelRendered('void');
+        });
+    }
+
+    /**
+     * Reports the panel rendered or removed once the next render has applied `panelOpen`; only the latest
+     * report of a frame is delivered.
+     */
+    private reportPanelRendered(state: 'showing' | 'void'): void {
+        this.panelRender?.destroy();
+
+        // The overlay detaching while the select is destroyed closes it too.
+        if (this.destroyRef.destroyed) return;
+
+        this.panelRender = afterNextRender(() => this.panelDoneAnimatingStream.next(state), {
+            injector: this.injector
+        });
     }
 
     /**
@@ -1628,9 +1637,9 @@ export class KbqSelect
      * @param value New value to be written to the model.
      */
     writeValue(value: any): void {
-        if (this.options) {
-            this.setSelectionByValue(value);
-        }
+        // Untracked: a form control set from an `effect()` writes here synchronously.
+        untracked(() => this.applyValue(value));
+        this.value.set(value);
     }
 
     /**
@@ -1663,9 +1672,7 @@ export class KbqSelect
      * @param isDisabled Sets whether the component is disabled.
      */
     setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
-        this._changeDetectorRef.markForCheck();
-        this.stateChanges.next();
+        this.disabled.set(isDisabled);
     }
 
     /**
@@ -1682,7 +1689,7 @@ export class KbqSelect
      * @param event The keyboard event to handle.
      */
     handleKeydown(event: KeyboardEvent): void {
-        if (this.disabled) return;
+        if (this.disabled()) return;
 
         if (this.panelOpen) {
             this.handleOpenKeydown(event);
@@ -1693,10 +1700,8 @@ export class KbqSelect
 
     /** Handles focus event on the select element. */
     onFocus() {
-        if (!this.disabled) {
-            this._focused = true;
-
-            this.stateChanges.next();
+        if (!this.disabled()) {
+            this.focusedValue.set(true);
         }
     }
 
@@ -1705,12 +1710,10 @@ export class KbqSelect
      * "blur" to the panel when it opens, causing a false positive.
      */
     onBlur() {
-        this._focused = false;
+        this.focusedValue.set(false);
 
-        if (!this.disabled && !this.panelOpen) {
+        if (!this.disabled() && !this.panelOpen) {
             this.onTouched();
-            this._changeDetectorRef.markForCheck();
-            this.stateChanges.next();
         }
     }
 
@@ -1772,7 +1775,7 @@ export class KbqSelect
 
     /** Returns the theme to be used on the panel based on parent form field color. */
     getPanelTheme(): string {
-        return this.parentFormField ? `kbq-${this.parentFormField.color}` : '';
+        return this.parentFormField ? `kbq-${this.parentFormField.color()}` : '';
     }
 
     /**
@@ -1794,7 +1797,14 @@ export class KbqSelect
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    onContainerClick() {
+    onContainerClick(event?: MouseEvent) {
+        // The click that opened the panel reaches the form field after the select. In an application with zone.js
+        // the panel has rendered and focused its active option by then, so the focus is left to the panel. Any
+        // other click on the field, such as one on a prefix that blurred the panel to the body, brings the focus back.
+        const target = event && _getEventTarget(event);
+
+        if (this.panelOpen && target instanceof Node && this.elementRef.nativeElement.contains(target)) return;
+
         this.focus();
     }
 
@@ -1816,64 +1826,46 @@ export class KbqSelect
         return `${this.a11yLocaleConfiguration().remove} ${option.viewValue}`.trim();
     }
 
-    /**
-     * Calculates the number of hidden items in multiple selection mode.
-     * Updates the hiddenItems property and triggers change detection.
-     */
-    calculateHiddenItems = () => {
+    /** Calculates the number of hidden items in multiple selection mode and updates `hiddenItems`. */
+    calculateHiddenItems = (): void => untracked(() => this.measureHiddenItems());
+
+    private measureHiddenItems(): void {
         if (
             !this.isBrowser ||
             this.customTrigger() ||
             this.customMatcher() ||
-            this.empty ||
+            this.empty() ||
             !this.multiple ||
             this.multiline()
         )
             return;
 
-        const { totalItemsWidth, totalVisibleItemsWidth, visibleItems } = this.hiddenItemsMeasurer.measure(
-            this.trigger()!.nativeElement
-        );
+        const { totalItemsWidth, visibleItems } = this.hiddenItemsMeasurer.measure(this.trigger()!.nativeElement);
 
-        this.hiddenItems = (this.selected as ArrayLike<KbqOptionBase>).length - visibleItems;
-        this.visibleTriggerItems = visibleItems || null;
+        this.hiddenItemsCount.set((this.selected as ArrayLike<KbqOptionBase>).length - visibleItems);
+        this.visibleTriggerItems.set(visibleItems || null);
+
+        if (!this.hiddenItems()) return;
+
+        // The counter is measured below, so it has to be rendered with the new count first.
         this._changeDetectorRef.detectChanges();
 
-        if (this.hiddenItems) {
-            const itemsCounter = this.trigger()!.nativeElement.querySelector('.kbq-select__match-hidden-text');
-            const matcherList = this.trigger()!.nativeElement.querySelector('.kbq-select__match-list');
+        const itemsCounter = this.trigger()!.nativeElement.querySelector('.kbq-select__match-hidden-text');
+        const matcherList = this.trigger()!.nativeElement.querySelector('.kbq-select__match-list');
 
-            if (!itemsCounter || !matcherList) {
-                this._changeDetectorRef.markForCheck();
+        if (!itemsCounter || !matcherList) return;
 
-                return;
-            }
+        const itemsCounterShowed = itemsCounter.offsetTop < itemsCounter.offsetHeight;
+        const itemsCounterWidth: number = Math.floor(itemsCounter.getBoundingClientRect().width);
+        const matcherListWidth: number = Math.floor(matcherList.getBoundingClientRect().width);
+        const matcherWidth: number = matcherListWidth + (itemsCounterShowed ? itemsCounterWidth : 0);
 
-            const itemsCounterShowed = itemsCounter.offsetTop < itemsCounter.offsetHeight;
-            const itemsCounterWidth: number = Math.floor(itemsCounter.getBoundingClientRect().width);
-
-            const matcherListWidth: number = Math.floor(matcherList.getBoundingClientRect().width);
-            const matcherWidth: number = matcherListWidth + (itemsCounterShowed ? itemsCounterWidth : 0);
-
-            if (itemsCounterShowed && totalItemsWidth < matcherWidth) {
-                // Everything fits once the counter goes away, so nothing is clipped after all.
-                this.hiddenItems = 0;
-                this.visibleTriggerItems = null;
-                this._changeDetectorRef.detectChanges();
-            }
-
-            if (
-                totalVisibleItemsWidth === matcherListWidth ||
-                totalVisibleItemsWidth + itemsCounterWidth < matcherListWidth
-            ) {
-                this._changeDetectorRef.markForCheck();
-
-                return;
-            }
+        if (itemsCounterShowed && totalItemsWidth < matcherWidth) {
+            // Everything fits once the counter goes away, so nothing is clipped after all.
+            this.hiddenItemsCount.set(0);
+            this.visibleTriggerItems.set(null);
         }
-
-        this._changeDetectorRef.markForCheck();
-    };
+    }
 
     /**
      * Gets the height of a single option item.
@@ -2032,9 +2024,9 @@ export class KbqSelect
     /** @docs-private */
     protected shouldShowSearch(): boolean {
         return (
-            isUndefined(this.searchMinOptionsThreshold) ||
+            isUndefined(this.searchMinOptionsThreshold()) ||
             !!this.search()?.value() ||
-            this.options.length >= this.searchMinOptionsThreshold
+            this.options.length >= this.searchMinOptionsThreshold()!
         );
     }
 
@@ -2055,19 +2047,6 @@ export class KbqSelect
 
         observer.observe(this.elementRef.nativeElement);
         this.destroyRef.onDestroy(() => observer.disconnect());
-    }
-
-    /** Keeps the panel's animation in step with the user's motion preference. */
-    private watchReducedMotion(): void {
-        if (!this.isBrowser || typeof this.window.matchMedia !== 'function') return;
-
-        const query = this.window.matchMedia('(prefers-reduced-motion: reduce)');
-        const onChange = (event: MediaQueryListEvent) => this.animationsDisabled.set(event.matches);
-
-        this.animationsDisabled.set(query.matches);
-
-        query.addEventListener('change', onChange);
-        this.destroyRef.onDestroy(() => query.removeEventListener('change', onChange));
     }
 
     /** Whether a modal paints over the panel, so that clicks inside the modal leave the panel open. */
@@ -2292,7 +2271,7 @@ export class KbqSelect
         // Defer setting the value in order to avoid the "Expression
         // has changed after it was checked" errors from Angular.
         Promise.resolve().then(() => {
-            this.setSelectionByValue(this.ngControl ? this.ngControl.value : this._value);
+            this.setSelectionByValue(this.ngControl ? this.ngControl.value : this.value());
         });
     }
 
@@ -2327,35 +2306,53 @@ export class KbqSelect
         }
     }
 
+    /** Selects the options of `value` once the options are settled; until then `initializeSelection` does. */
+    private applyValue(value: any): void {
+        this.selectionValue = value;
+
+        if (this.contentReady) {
+            this.setSelectionByValue(value);
+        }
+    }
+
     /**
      * Sets the selected option based on a value.
      * If no option can be found with the designated value, the select trigger is cleared.
      * @param value The value to select. Can be a single value or array for multiple selection.
      */
     private setSelectionByValue(value: any | any[]): void {
-        this.previousSelectionModelSelected = this.selectionModel.selected;
+        // Restored rather than cleared: a value written while this one is applied must not end the outer write.
+        const wasWritingValue = this.writingValue;
 
-        if (this.multiSelection && value) {
-            if (!Array.isArray(value)) {
-                throw getKbqSelectNonArrayValueError();
+        this.writingValue = true;
+
+        try {
+            this.previousSelectionModelSelected = this.selectionModel.selected;
+
+            if (this.multiSelection && value) {
+                if (!Array.isArray(value)) {
+                    throw getKbqSelectNonArrayValueError();
+                }
+
+                this.selectionModel.clear();
+                value.forEach((currentValue: any) => this.selectValue(currentValue));
+                this.sortValues();
+            } else {
+                this.selectionModel.clear();
+                const correspondingOption = this.selectValue(value);
+
+                // Shift focus to the active item. Note that we shouldn't do this in multiple
+                // mode, because we don't know what option the user interacted with last.
+                // While the panel is open and the user is already navigating a still-present
+                // active item, keep it as is: `options.changes` re-runs this method on every
+                // appended chunk (e.g. paging), and re-activating the selected option would
+                // focus it and scroll the list back to it.
+                if (correspondingOption && !this.withVirtualScroll && (!this.panelOpen || this.isActiveItemStale())) {
+                    this.keyManager.setActiveItem(correspondingOption);
+                }
             }
-
-            this.selectionModel.clear();
-            value.forEach((currentValue: any) => this.selectValue(currentValue));
-            this.sortValues();
-        } else {
-            this.selectionModel.clear();
-            const correspondingOption = this.selectValue(value);
-
-            // Shift focus to the active item. Note that we shouldn't do this in multiple
-            // mode, because we don't know what option the user interacted with last.
-            // While the panel is open and the user is already navigating a still-present
-            // active item, keep it as is: `options.changes` re-runs this method on every
-            // appended chunk (e.g. paging), and re-activating the selected option would
-            // focus it and scroll the list back to it.
-            if (correspondingOption && !this.withVirtualScroll && (!this.panelOpen || this.isActiveItemStale())) {
-                this.keyManager.setActiveItem(correspondingOption);
-            }
+        } finally {
+            this.writingValue = wasWritingValue;
         }
 
         this._changeDetectorRef.markForCheck();
@@ -2372,7 +2369,7 @@ export class KbqSelect
             ...this.previousSelectionModelSelected.map((option) => this.resolveSelectedOption(option))
             // Treat null as a special reset value.
         ].find(
-            (option: KbqOptionBase) => option.value != null && runCompareWith(this.compareWith, option.value, value)
+            (option: KbqOptionBase) => option.value != null && runCompareWith(this.compareWith(), option.value, value)
         );
     }
 
@@ -2411,7 +2408,7 @@ export class KbqSelect
         if (this.withVirtualScroll) {
             const source = this.cdkVirtualForOf()?.cdkVirtualForOf;
             const correspondingOptionVirtual =
-                source instanceof Array ? source.find((item) => this.compareWith(item, value)) : undefined;
+                source instanceof Array ? source.find((item) => this.compareWith()(item, value)) : undefined;
 
             if (correspondingOptionVirtual) {
                 return this.createVirtualOption(correspondingOptionVirtual);
@@ -2435,7 +2432,7 @@ export class KbqSelect
     private createVirtualOption(value: any): KbqVirtualOption {
         const virtualOptionFactory = this.virtualOptionFactory();
 
-        return virtualOptionFactory ? virtualOptionFactory(value) : new KbqVirtualOption(value, this.disabled);
+        return virtualOptionFactory ? virtualOptionFactory(value) : new KbqVirtualOption(value, this.disabled());
     }
 
     /**
@@ -2456,7 +2453,7 @@ export class KbqSelect
 
         // A value that no longer matches the copy means the view was recycled for another item. A
         // comparator that throws reads as "no match" here too, falling back to the value actually selected.
-        return runCompareWith(this.compareWith, option.value, copy.value) ? option : copy;
+        return runCompareWith(this.compareWith(), option.value, copy.value) ? option : copy;
     }
 
     /** Sets up a key manager to listen to keyboard events on the overlay panel. */
@@ -2473,7 +2470,13 @@ export class KbqSelect
                 this.scrollActiveOptionIntoView();
 
                 this.search()?.focus();
-            } else if (!this.panelOpen && !this.multiSelection && this.keyManager.activeItem) {
+            } else if (
+                !this.panelOpen &&
+                !this.multiSelection &&
+                this.keyManager.activeItem &&
+                // The active option follows a written value; selecting it again would report it as the user's.
+                !this.writingValue
+            ) {
                 this.keyManager.activeItem.selectViaInteraction();
             }
         });
@@ -2496,10 +2499,7 @@ export class KbqSelect
         // Handles cases like the labels of the selected options changing.
         (this.options.length ? merge(...this.options.map((option) => option.stateChanges)) : EMPTY)
             .pipe(takeUntilDestroyed(this.destroyRef), takeUntil(this.options.changes))
-            .subscribe(() => {
-                this._changeDetectorRef.markForCheck();
-                this.stateChanges.next();
-            });
+            .subscribe(() => this._changeDetectorRef.markForCheck());
     }
 
     /** Invoked when an option is clicked. */
@@ -2532,7 +2532,7 @@ export class KbqSelect
             this.propagateChanges();
         }
 
-        this.stateChanges.next();
+        this._changeDetectorRef.markForCheck();
     }
 
     /** Sorts the selected values based on their order in the panel. */
@@ -2562,8 +2562,6 @@ export class KbqSelect
                     return indexA - indexB;
                 });
             }
-
-            this.stateChanges.next();
         }
     }
 
@@ -2577,7 +2575,8 @@ export class KbqSelect
             valueToEmit = this.selected ? (this.selected as KbqOption).value : fallbackValue;
         }
 
-        this._value = valueToEmit;
+        this.selectionValue = valueToEmit;
+        this.value.set(valueToEmit);
         this.valueChange.emit(valueToEmit);
         this.onChange(valueToEmit);
         this.selectionChange.emit(new KbqSelectChange(this, valueToEmit));
@@ -2590,7 +2589,7 @@ export class KbqSelect
      */
     private highlightCorrectOption(): void {
         if (this.keyManager) {
-            if (this.empty || !this.firstSelected || this.firstFiltered) {
+            if (this.empty() || !this.firstSelected || this.firstFiltered) {
                 this.keyManager.setFirstItemActive();
             } else {
                 this.keyManager.setActiveItem(this.firstSelected as KbqOption);
@@ -2602,11 +2601,8 @@ export class KbqSelect
         this.keyManager.activeItem?.focus();
     }
 
-    /** Comparison function to specify which option is displayed. Defaults to object equality. */
-    private _compareWith = (o1: any, o2: any) => o1 === o2;
-
     /** Function for handling the combination Ctrl + A (select all). By default, the internal handler is used. */
-    private _selectAllHandler(event: KeyboardEvent, select: KbqSelect): void {
+    private defaultSelectAllHandler(event: KeyboardEvent, select: KbqSelect): void {
         const searchInput = isInput(event) ? (event.target as HTMLInputElement) : null;
 
         if (shouldSelectSearchText(searchInput)) {

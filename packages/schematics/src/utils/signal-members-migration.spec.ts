@@ -22,6 +22,7 @@ const config: SignalMembersConfig = {
     },
     exportAsToType: { widget: 'Widget', widgetTrigger: 'WidgetTrigger' },
     elementToType: { 'acme-widget': 'Widget' },
+    attributeToType: { 'acme-widget-button': 'Widget' },
     writableMembers: new Set(['label']),
     protectedMembers: ['internals'],
     warnPatterns: [
@@ -276,6 +277,25 @@ describe('signalMembersRule', () => {
             expect(updated).toContain('widget.size++;');
             expect(updated).toContain('({ size: widget.size } = { size: 3 });');
         });
+
+        it('rewrites a read under a prefix operator that does not write, and leaves ++ / -- alone', async () => {
+            appTree.overwrite(
+                tsPath(),
+                "import { Widget } from '@acme/widgets';\n" +
+                    'class Demo {\n' +
+                    '    read(widget: Widget) {\n' +
+                    '        ++widget.size;\n' +
+                    '        --widget.size;\n' +
+                    '        return [!widget.size, -widget.size, +widget.label, ~widget.size];\n' +
+                    '    }\n' +
+                    '}\n'
+            );
+
+            const updated = (await run()).readText(tsPath());
+
+            expect(updated).toContain('        ++widget.size;\n        --widget.size;\n');
+            expect(updated).toContain('return [!widget.size(), -widget.size(), +widget.label(), ~widget.size()];');
+        });
     });
 
     describe('idempotence', () => {
@@ -322,6 +342,24 @@ describe('signalMembersRule', () => {
             expect((await run()).readText(htmlPath())).toContain('{{ t.armed() }}');
         });
 
+        it('rewrites reads through a bare reference on an element the component claims by attribute', async () => {
+            appTree.overwrite(htmlPath(), '<button acme-widget-button #w></button>{{ w.size }}');
+
+            expect((await run()).readText(htmlPath())).toContain('{{ w.size() }}');
+        });
+
+        it('resolves the attribute when it is bound', async () => {
+            appTree.overwrite(htmlPath(), '<button [acme-widget-button]="x" #w></button>{{ w.size }}');
+
+            expect((await run()).readText(htmlPath())).toContain('{{ w.size() }}');
+        });
+
+        it('leaves a bare reference on an element no component claims alone', async () => {
+            appTree.overwrite(htmlPath(), '<acme-widget /><button #b></button>{{ b.size }}');
+
+            expect((await run()).readText(htmlPath())).toContain('{{ b.size }}');
+        });
+
         it('ignores a reference that names a foreign directive', async () => {
             appTree.overwrite(htmlPath(), '<acme-widget #w="cdkOverlayOrigin" />{{ w.size }}');
 
@@ -341,6 +379,23 @@ describe('signalMembersRule', () => {
             appTree.overwrite(htmlPath(), '<acme-widget #w />@for (w of rows; track w) {{{ w.size }}}');
 
             expect((await run()).readText(htmlPath())).toContain('{{ w.size }}');
+        });
+
+        it('does not rewrite a reference shadowed by a *ngFor variable', async () => {
+            appTree.overwrite(htmlPath(), '<acme-widget #w /><i *ngFor="let w of rows">{{ w.size }}</i>');
+
+            expect((await run()).readText(htmlPath())).toContain('{{ w.size }}');
+        });
+
+        it('does not rewrite a reference on an element with a structural directive from outside it', async () => {
+            appTree.overwrite(
+                htmlPath(),
+                '<acme-widget *ngIf="on" #w />{{ w.size }}<i *ngIf="on"><acme-widget #v />{{ v.size }}</i>'
+            );
+
+            expect((await run()).readText(htmlPath())).toBe(
+                '<acme-widget *ngIf="on" #w />{{ w.size }}<i *ngIf="on"><acme-widget #v />{{ v.size() }}</i>'
+            );
         });
 
         it('does not rewrite a reference declared in an ng-template from outside it', async () => {

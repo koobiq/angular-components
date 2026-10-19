@@ -26,8 +26,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadSingleWithSignalExample {
-    file = signal<KbqFileItem | null>(null);
-    files = signal<KbqFileItem[]>([]);
+    readonly file = signal<KbqFileItem | null>(null);
+    readonly files = signal<KbqFileItem[]>([]);
 
     onSingleChange($event: KbqFileItem | null) {
         if ($event) {

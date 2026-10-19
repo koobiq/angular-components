@@ -30,7 +30,9 @@ const boundingBoxAtRest = async (locator: Locator) => {
 
 test.describe('KbqActionsPanel', () => {
     test.describe('E2eActionsPanelWithOverlayContainer', () => {
-        test.use({ viewport: { width: 650, height: 200 } });
+        // Tall enough for the whole page: a target taller than the viewport is captured by growing the viewport,
+        // which moves the page down under the resting pointer and hovers a dropdown item.
+        test.use({ viewport: { width: 650, height: 240 } });
 
         const getComponent = (page: Page) => page.getByTestId('e2eActionsPanelWithOverlayContainer');
         const getOpenButton = (locator: Locator) => locator.getByTestId('e2eActionsPanelOpenButton');
@@ -54,7 +56,13 @@ test.describe('KbqActionsPanel', () => {
 
             await getOpenButton(locator).click();
             await getOverlayContainer(locator).evaluate(({ style }) => (style.width = '650px'));
+            // The overflow follows the width through a ResizeObserver: open the dropdown once only the two actions
+            // that no longer fit are hidden, rather than while it still lists the ones the wider panel shows again.
+            await expect(getOverlayContainer(locator).locator('.kbq-overflow-item-hidden')).toHaveCount(2);
             await getOverflowItemsResultButton(page).click();
+            // Opened by mouse, the panel takes the focus and no item is highlighted.
+            await expect(page.locator('.kbq-dropdown-item')).toHaveText(['Action 5', 'Action 6']);
+            await expect(page.locator('.kbq-dropdown-item.cdk-focused')).toHaveCount(0);
             await expect(screenshotTarget).toHaveScreenshot('2-light.png');
             await e2eEnableDarkTheme(page);
             await expect(screenshotTarget).toHaveScreenshot('2-dark.png');

@@ -39,9 +39,9 @@ export const kbqFilterBarLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqFilterBarLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('filterBar', configuration);
 
-/** @deprecated Use {@link KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION}. */
+/** @deprecated Use {@link KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
 export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION = KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION;
-/** @deprecated Use {@link KBQ_FILTER_BAR_LOCALE_CONFIGURATION}. */
+/** @deprecated Use {@link KBQ_FILTER_BAR_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
 export const KBQ_FILTER_BAR_CONFIGURATION = KBQ_FILTER_BAR_LOCALE_CONFIGURATION;
 
 /**
@@ -190,8 +190,6 @@ export interface KbqPipe {
      * */
     selectedAllEqualsSelectedNothing?: boolean;
 
-    /** @deprecated use cleanable = false and removable = false instead */
-    required?: boolean;
     cleanable: boolean;
     removable: boolean;
     disabled: boolean;

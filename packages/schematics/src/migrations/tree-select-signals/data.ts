@@ -10,6 +10,7 @@
  *   a `value` input that does not exist, and nothing ever emitted it.
  * - `hiddenItemsText`, `hiddenItemsTextFormatter` — accessor pair / method → signal inputs.
  * - `hiddenItems` → `WritableSignal<number>`, `colorForState` → `Signal<KbqComponentColors>`.
+ * - `hasBackdrop` — accessor pair → signal input.
  * - `options`, `tags`, `overlayDir`, `triggerRect`, `panelDoneAnimatingStream`, `changeDetectorRef` —
  *   public → `protected`.
  * - `KbqTreeSelectChange` is generic and its `value` is no longer `any`.
@@ -73,6 +74,33 @@ export const warnPatterns: WarnPattern[] = [
             'KbqTreeSelect.options / tags / overlayDir / triggerRect / panelDoneAnimatingStream / ' +
             'changeDetectorRef are protected. They were the panel and trigger plumbing; the supported ' +
             'surface is the open/close API, the inputs and (selectionChange).'
+    },
+    {
+        anchor: TREE_SELECT_TYPE,
+        pattern: '\\.\\s*(?:hasBackdrop|searchMinOptionsThreshold)\\b(?!\\s*[=(])',
+        message:
+            'KbqTreeSelect.hasBackdrop and .searchMinOptionsThreshold are signals now: read them as calls, ' +
+            '`hasBackdrop()` and `searchMinOptionsThreshold()`. searchMinOptionsThreshold() still reports the ' +
+            'resolved number.'
+    },
+    {
+        anchor: TREE_SELECT_TYPE,
+        pattern:
+            '\\.\\s*(?:multiple|autoSelect|tabIndex|selectAllHandler|hasBackdrop|searchMinOptionsThreshold)\\s*=(?!=)',
+        message:
+            'multiple, autoSelect, tabIndex, selectAllHandler, hasBackdrop and searchMinOptionsThreshold of ' +
+            'KbqTreeSelect are signal inputs, so an assignment no longer compiles. Bind them in the template. This ' +
+            'pattern also matches a write to an unrelated object in the same file — check before changing it.'
+    },
+    {
+        anchor: TREE_SELECT_TYPE,
+        pattern: '\\bsortComparator\\b',
+        message:
+            'The sortComparator of KbqTreeSelect gets the selected data nodes, as it always did, and its third ' +
+            'argument is every data node of the tree in panel order (treeControl.dataNodes) instead of the ' +
+            'rendered KbqTreeOption[]. A comparator that looks its arguments up among the options, or types ' +
+            'them as KbqTreeOption, has to take your node type. Without a comparator a multiple value is ' +
+            'ordered by the panel now; `() => 0` keeps the order the values were written in.'
     }
 ];
 

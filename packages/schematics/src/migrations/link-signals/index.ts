@@ -3,6 +3,7 @@ import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import {
     DISABLED_CAVEAT,
     HIDDEN_MEMBERS,
@@ -527,9 +528,7 @@ export default function linkSignals(options: Schema): Rule {
 
         const tsPaths: string[] = [];
 
-        rootDir.visit((filePath) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
-
+        visitProjectFiles(rootDir, (filePath) => {
             if (filePath.endsWith(TS_EXT)) tsPaths.push(filePath);
         });
 

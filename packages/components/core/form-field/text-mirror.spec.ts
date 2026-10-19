@@ -24,7 +24,7 @@ describe('kbqCreateTextMirror', () => {
     afterEach(() => {
         mirror?.destroy();
         container.remove();
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
 
     describe('textarea', () => {
@@ -85,7 +85,7 @@ describe('kbqCreateTextMirror', () => {
         describe('hint placement', () => {
             /** jsdom lays nothing out; the rectangles below stand for a layout the browser would produce. */
             const layOut = (hintTop: number, hintLeft = 50) => {
-                jest.spyOn(Element.prototype, 'getClientRects').mockImplementation(function (this: Element) {
+                vi.spyOn(Element.prototype, 'getClientRects').mockImplementation(function (this: Element) {
                     if (!this.parentElement?.classList.contains(CLASS_NAME)) return [] as unknown as DOMRectList;
 
                     const top = this.classList.contains(`${CLASS_NAME}__hint`) ? hintTop : 20;
@@ -93,7 +93,7 @@ describe('kbqCreateTextMirror', () => {
 
                     return [{ top, left, width: 10, height: 20 }] as unknown as DOMRectList;
                 });
-                jest.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue({
+                vi.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue({
                     top: 0,
                     left: 0,
                     width: 302,
@@ -136,8 +136,8 @@ describe('kbqCreateTextMirror', () => {
         });
 
         it('should follow the scroll offsets of the field', () => {
-            const scrollTop = jest.spyOn(Element.prototype, 'scrollTop', 'set');
-            const scrollLeft = jest.spyOn(Element.prototype, 'scrollLeft', 'set');
+            const scrollTop = vi.spyOn(Element.prototype, 'scrollTop', 'set');
+            const scrollLeft = vi.spyOn(Element.prototype, 'scrollLeft', 'set');
 
             setMetrics(textarea, { scrollTop: 40, scrollLeft: 0 });
             mirror.update('a', 'b', '');

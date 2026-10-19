@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqPseudoCheckboxModule, ThemePalette } from '@koobiq/components/core';
+import { KbqComponentColors, KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTableModule } from '@koobiq/components/table';
 import { CheckboxExamplesModule } from 'packages/docs-examples/components/checkbox';
@@ -42,6 +42,6 @@ export class DevDocsExamples {}
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
-    readonly themePalette = ThemePalette;
+    readonly colors = KbqComponentColors;
     readonly checked: boolean[] = [true, true, false];
 }

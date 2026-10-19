@@ -15,7 +15,7 @@
                     class="dev-all-nav__link"
                     routerLinkActive="dev-all-nav__link_active"
                     [routerLink]="['/', name]"
-                    [innerHTML]="name | mcHighlight: searchQuery()"
+                    [innerHTML]="name | kbqHighlightBold: searchQuery()"
                 ></a>
             } @empty {
                 <div class="dev-all-nav__empty">Nothing found</div>

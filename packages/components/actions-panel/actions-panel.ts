@@ -1,5 +1,5 @@
 import { Dialog } from '@angular/cdk/dialog';
-import { ComponentType, Overlay, OverlayContainer } from '@angular/cdk/overlay';
+import { ComponentType, Overlay, OVERLAY_DEFAULT_CONFIG, OverlayContainer } from '@angular/cdk/overlay';
 import {
     createEnvironmentInjector,
     ElementRef,
@@ -243,7 +243,10 @@ export class KbqActionsPanel implements OnDestroy {
                 // shares its registry of open dialogs, so `closeAll()` and `afterAllClosed` keep seeing this panel.
                 { provide: Dialog, useClass: KbqActionsPanelScopedDialog },
                 { provide: KBQ_ACTIONS_PANEL_SCOPED_OVERLAY_HOST, useValue: host },
-                { provide: OverlayContainer, useClass: KbqActionsPanelScopedOverlayContainer }
+                { provide: OverlayContainer, useClass: KbqActionsPanelScopedOverlayContainer },
+                // A popover is shown in the top layer and laid out against the viewport, wherever its host sits in
+                // the DOM: the panel would leave `host` and pin itself to the bottom of the page.
+                { provide: OVERLAY_DEFAULT_CONFIG, useValue: { usePopover: false } }
             ],
             this.environmentInjector,
             KbqActionsPanel.name

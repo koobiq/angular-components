@@ -4,17 +4,6 @@
     #{$font-property}: var(--kbq-#{$component}-#{$font}#{$component-property}-#{$font-property});
 }
 
-@mixin kbq-typography-css-variables($component, $property) {
-    @include kbq-css-font-variable($component, $property, font-size, font-);
-    @include kbq-css-font-variable($component, $property, font-style, font-);
-    @include kbq-css-font-variable($component, $property, font-weight, font-);
-    @include kbq-css-font-variable($component, $property, line-height, font-);
-    @include kbq-css-font-variable($component, $property, font-family, font-);
-    @include kbq-css-font-variable($component, $property, text-transform, font-);
-    @include kbq-css-font-variable($component, $property, font-feature-settings, font-);
-    @include kbq-css-font-variable($component, $property, letter-spacing, font-);
-}
-
 @mixin kbq-typography-level-to-styles-css-variables($component, $property) {
     @include kbq-css-font-variable($component, $property, font-size, '');
     @include kbq-css-font-variable($component, $property, font-style, '');

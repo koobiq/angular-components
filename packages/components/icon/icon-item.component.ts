@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, input } from '@angular/core';
 import { KbqIcon } from './icon.component';
 
 /**
@@ -27,10 +27,8 @@ export class KbqIconItem extends KbqIcon {
     /** The item sizes itself through its own padding, so it never gets the bare icon's `max-height`. */
     protected override readonly appliesMaxHeight: boolean = false;
 
-    /** Name of an icon within a `@koobiq/icons`. */
-    // Kept as @Input() to stay compatible with KbqIcon.iconName (also @Input()).
-    // Migrate together with the rest of the KbqIcon hierarchy in a follow-up.
-    @Input({ alias: 'kbq-icon-item' }) override iconName: string | undefined;
+    /** @docs-private */
+    override readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon-item' });
 
     /** Whether the background is the translucent "fade" variant of the color rather than the solid one. */
     readonly fade = input<boolean>(false);

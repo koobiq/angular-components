@@ -1,23 +1,27 @@
-import { AnimationEvent } from '@angular/animations';
 import { CdkTrapFocus, ConfigurableFocusTrapFactory, FocusTrapFactory } from '@angular/cdk/a11y';
 import { BasePortalOutlet, CdkPortalOutlet, ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import {
+    afterNextRender,
+    AfterRenderRef,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ComponentRef,
+    computed,
     ElementRef,
     EmbeddedViewRef,
-    EventEmitter,
     inject,
     InjectionToken,
+    Injector,
     OnDestroy,
+    signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { kbqAfterAnimations, kbqAnimationsDisabled } from '@koobiq/components/core';
 import { Observable, Subject } from 'rxjs';
 import {
-    kbqSidepanelAnimations,
+    KbqSidepanelAnimationEvent,
     KbqSidepanelAnimationState,
     kbqSidepanelTransformAnimation
 } from './sidepanel-animations';
@@ -49,22 +53,30 @@ export const KBQ_SIDEPANEL_WITH_INDENT = new InjectionToken<boolean>('kbq-sidepa
         '[attr.aria-modal]': 'trapFocus ? "true" : null',
         '[attr.aria-label]': 'sidepanelConfig.ariaLabel ?? null',
         '[attr.aria-labelledby]': 'ariaLabelledBy',
-        '[@state]': `{
-            value: animationState,
-            params: animationTransform
-        }`,
-        '(@state.start)': 'onAnimation($event)',
-        '(@state.done)': 'onAnimation($event)'
-    },
-    animations: [kbqSidepanelAnimations.sidepanelState]
+        '[class.kbq-animations-disabled]': 'animationsDisabled',
+        '[style.transform]': 'stateTransform()',
+        '[style.opacity]': 'stateOpacity()'
+    }
 })
 export class KbqSidepanelContainerComponent extends BasePortalOutlet implements OnDestroy {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly injector = inject(Injector);
     sidepanelConfig = inject(KbqSidepanelConfig);
 
+    /** Whether the sidepanel moves without motion. */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
     /** Whether the panel exposes the clickable indent strip of the sidepanel stacked underneath it. */
-    withIndent = inject(KBQ_SIDEPANEL_WITH_INDENT);
+    get withIndent(): boolean {
+        return this._withIndent();
+    }
+
+    set withIndent(value: boolean) {
+        this._withIndent.set(value);
+    }
+
+    private readonly _withIndent = signal(inject(KBQ_SIDEPANEL_WITH_INDENT));
 
     /** ID for the container DOM element. */
     id: string;
@@ -74,25 +86,41 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
      *
      * @docs-private
      */
-    ariaLabelledBy: string | null = this.sidepanelConfig.ariaLabelledBy ?? null;
+    get ariaLabelledBy(): string | null {
+        return this._ariaLabelledBy();
+    }
+
+    /** @docs-private */
+    set ariaLabelledBy(value: string | null) {
+        this._ariaLabelledBy.set(value);
+    }
+
+    // A signal: the header reports its title while this view is being checked, which a `markForCheck` would miss.
+    private readonly _ariaLabelledBy = signal(this.sidepanelConfig.ariaLabelledBy ?? null);
 
     /** The portal outlet inside of this container into which the content will be loaded. */
     readonly portalOutlet = viewChild.required(CdkPortalOutlet);
 
-    /** The state of the sidepanel animations. */
-    animationState: KbqSidepanelAnimationState = KbqSidepanelAnimationState.Void;
+    /**
+     * The state of the sidepanel: on screen, closing, or stacked under another one.
+     * @internal
+     */
+    readonly animationState = signal<KbqSidepanelAnimationState>(KbqSidepanelAnimationState.Void);
 
-    /** @docs-private */
-    animationTransform: {
-        transformIn: string;
-        transformOut: string;
-        lower: string;
-        bottomPanel: string;
-        becomingNormal: string;
-    };
+    /**
+     * Reports each state transition starting and ending.
+     * @internal
+     */
+    readonly animationStateChanged = new Subject<KbqSidepanelAnimationEvent>();
 
-    /** Emits whenever the state of the animation changes. */
-    animationStateChanged = new EventEmitter<AnimationEvent>();
+    /** The transition in progress, ended early by the next one. */
+    private pendingTransition?: { state: KbqSidepanelAnimationState; wait: { destroy(): void } };
+
+    /** Transition events held until the render that applies the state, in the order they happened. */
+    private readonly unreportedEvents: KbqSidepanelAnimationEvent[] = [];
+
+    /** Reports the held events once the next render is over. */
+    private reportAfterRender?: AfterRenderRef;
 
     /** @docs-private */
     get size(): string {
@@ -136,7 +164,6 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     /** Attach a component portal as content to this sidepanel container. */
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
         this.validatePortalAttached();
-        this.setAnimation();
         this.setPanelClass();
 
         const componentRef = this.portalOutlet().attachComponentPortal(portal);
@@ -152,7 +179,6 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     /** Attach a template portal as content to this sidepanel container. */
     attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C> {
         this.validatePortalAttached();
-        this.setAnimation();
         this.setPanelClass();
 
         return this.portalOutlet().attachTemplatePortal(portal);
@@ -162,8 +188,9 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     enter(): void {
         if (this.destroyed) return;
 
-        this.animationState = KbqSidepanelAnimationState.Visible;
+        this.animationState.set(KbqSidepanelAnimationState.Visible);
         this.changeDetectorRef.detectChanges();
+        this.startTransition(KbqSidepanelAnimationState.Visible);
     }
 
     /** Begin animation of the sidepanel exiting from view. */
@@ -173,16 +200,52 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         this.setAnimationState(KbqSidepanelAnimationState.Hidden);
     }
 
-    /** @docs-private */
-    onAnimation(event: AnimationEvent) {
-        this.animationStateChanged.emit(event);
+    /** @internal */
+    setAnimationState(state: KbqSidepanelAnimationState): void {
+        if (this.destroyed) return;
+
+        this.animationState.set(state);
+        this.startTransition(state);
     }
 
-    /** @docs-private */
-    setAnimationState(state: KbqSidepanelAnimationState): void {
-        this.animationState = state;
-        this.changeDetectorRef.markForCheck();
-    }
+    /**
+     * Transform of the panel in its current state.
+     * @internal
+     */
+    protected readonly stateTransform = computed((): string | null => {
+        const transforms = kbqSidepanelTransformAnimation[this.position];
+
+        switch (this.animationState()) {
+            case KbqSidepanelAnimationState.Hidden:
+                return transforms.in;
+            case KbqSidepanelAnimationState.Visible:
+                return transforms.out;
+            case KbqSidepanelAnimationState.Lower:
+                return transforms.lower;
+            case KbqSidepanelAnimationState.BottomPanel:
+                return transforms.bottomPanel;
+            case KbqSidepanelAnimationState.BecomingNormal:
+                return transforms.becomingNormal;
+            default:
+                return null;
+        }
+    });
+
+    /**
+     * Opacity of the panel in its current state.
+     * @internal
+     */
+    protected readonly stateOpacity = computed((): number | null => {
+        switch (this.animationState()) {
+            case KbqSidepanelAnimationState.Void:
+            case KbqSidepanelAnimationState.BottomPanel:
+                return 0;
+            case KbqSidepanelAnimationState.Hidden:
+                return null;
+            default:
+                return 1;
+        }
+    });
 
     /**
      * Recomputes whether this panel exposes an indent strip, after the stack it belongs to changed.
@@ -190,10 +253,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
      * @docs-private
      */
     setWithIndent(withIndent: boolean): void {
-        if (this.withIndent === withIndent) return;
-
         this.withIndent = withIndent;
-        this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -205,19 +265,52 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         if (this.ariaLabelledBy !== null) return;
 
         this.ariaLabelledBy = id;
-        this.changeDetectorRef.markForCheck();
     }
 
-    private setAnimation() {
-        const position = this.position;
+    /**
+     * Reports the transition to `state` starting, and ending once its CSS transition has.
+     *
+     * Both are reported after the render that applies the state, as the animation engine did, and never inside
+     * `open()` or `close()`: a subscriber that opens another sidepanel would otherwise do so before the stack the
+     * call is changing is complete, and one that subscribes right after the call would miss the start.
+     */
+    private startTransition(state: KbqSidepanelAnimationState): void {
+        const pending = this.pendingTransition;
 
-        this.animationTransform = {
-            transformIn: kbqSidepanelTransformAnimation[position].in,
-            transformOut: kbqSidepanelTransformAnimation[position].out,
-            lower: kbqSidepanelTransformAnimation[position].lower,
-            bottomPanel: kbqSidepanelTransformAnimation[position].bottomPanel,
-            becomingNormal: kbqSidepanelTransformAnimation[position].becomingNormal
-        };
+        if (pending) {
+            pending.wait.destroy();
+            this.holdEvent({ phaseName: 'done', toState: pending.state });
+        }
+
+        this.holdEvent({ phaseName: 'start', toState: state });
+
+        const wait = kbqAfterAnimations(
+            () => this.elementRef.nativeElement,
+            () => {
+                this.pendingTransition = undefined;
+                this.unreportedEvents.push({ phaseName: 'done', toState: state });
+                this.reportEvents();
+            },
+            this.injector
+        );
+
+        this.pendingTransition = { state, wait };
+    }
+
+    private holdEvent(event: KbqSidepanelAnimationEvent): void {
+        this.unreportedEvents.push(event);
+        this.reportAfterRender ??= afterNextRender(() => this.reportEvents(), { injector: this.injector });
+    }
+
+    private reportEvents(): void {
+        this.reportAfterRender?.destroy();
+
+        // One at a time: a subscriber that moves the panel again holds more events, which follow in order.
+        for (let event = this.unreportedEvents.shift(); event; event = this.unreportedEvents.shift()) {
+            this.animationStateChanged.next(event);
+        }
+
+        this.reportAfterRender = undefined;
     }
 
     private setPanelClass() {

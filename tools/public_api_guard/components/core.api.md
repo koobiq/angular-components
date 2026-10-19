@@ -9,8 +9,6 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_forms from '@angular/forms';
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
@@ -39,6 +37,7 @@ import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { InjectOptions } from '@angular/core';
+import { Injector } from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { ModelSignal } from '@angular/core';
 import { MonoTypeOperatorFunction } from 'rxjs';
@@ -73,7 +72,7 @@ import { WritableSignal } from '@angular/core';
 // @public (undocumented)
 export const A = 65;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class AbsoluteDateFormatterImpurePipe<D> extends AbsoluteDateFormatterPipe<D> {
     // (undocumented)
     transform(value: D | string | null | undefined, currYear?: boolean): string;
@@ -83,7 +82,7 @@ export class AbsoluteDateFormatterImpurePipe<D> extends AbsoluteDateFormatterPip
     static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteDateFormatterImpurePipe<any>, "absoluteLongDateImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class AbsoluteDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string | null | undefined, currYear?: boolean): string;
@@ -93,7 +92,7 @@ export class AbsoluteDateFormatterPipe<D> extends BaseFormatterPipe<D> implement
     static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteDateFormatterPipe<any>, "absoluteLongDate", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class AbsoluteDateShortFormatterImpurePipe<D> extends AbsoluteDateShortFormatterPipe<D> {
     // (undocumented)
     transform(value: D | string | null | undefined, currYear?: boolean): string;
@@ -103,7 +102,7 @@ export class AbsoluteDateShortFormatterImpurePipe<D> extends AbsoluteDateShortFo
     static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteDateShortFormatterImpurePipe<any>, "absoluteShortDateImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class AbsoluteDateShortFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string | null | undefined, currYear?: boolean): string;
@@ -113,7 +112,7 @@ export class AbsoluteDateShortFormatterPipe<D> extends BaseFormatterPipe<D> impl
     static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteDateShortFormatterPipe<any>, "absoluteShortDate", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class AbsoluteDateTimeFormatterImpurePipe<D> extends AbsoluteDateTimeFormatterPipe<D> {
     // (undocumented)
     transform(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -123,7 +122,7 @@ export class AbsoluteDateTimeFormatterImpurePipe<D> extends AbsoluteDateTimeForm
     static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteDateTimeFormatterImpurePipe<any>, "absoluteLongDateTimeImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class AbsoluteDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -133,7 +132,7 @@ export class AbsoluteDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imple
     static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteDateTimeFormatterPipe<any>, "absoluteLongDateTime", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class AbsoluteShortDateTimeFormatterImpurePipe<D> extends AbsoluteShortDateTimeFormatterPipe<D> {
     // (undocumented)
     transform(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -143,7 +142,7 @@ export class AbsoluteShortDateTimeFormatterImpurePipe<D> extends AbsoluteShortDa
     static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteShortDateTimeFormatterImpurePipe<any>, "absoluteShortDateTimeImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -168,9 +167,6 @@ export const APOSTROPHE = 192;
 // @public (undocumented)
 export const applyPopupMargins: (renderer: Renderer2, element: HTMLElement, name: string, value: string) => void;
 
-// @public
-export const ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT: number;
-
 // @public (undocumented)
 export const AT_SIGN = 64;
 
@@ -183,7 +179,7 @@ export const BACKSLASH = 220;
 // @public (undocumented)
 export const BACKSPACE = 8;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class BaseFormatterPipe<D> {
     // (undocumented)
     protected readonly adapter: DateAdapter<D>;
@@ -192,53 +188,26 @@ export class BaseFormatterPipe<D> {
 }
 
 // @public
-export abstract class BaseLocaleAwareFormatterPipe<D, Value = D | string | null | undefined, Args extends unknown[] = unknown[]> extends BaseFormatterPipe<D> {
+export abstract class BaseLocaleAwareFormatterPipe<D, Value = D | string | null | undefined, Args extends unknown[] = unknown[]> {
     constructor();
     // (undocumented)
+    protected readonly adapter: DateAdapter<D>;
+    // (undocumented)
     protected abstract format(value: Value, ...args: Args): string;
+    // (undocumented)
+    protected readonly formatter: DateFormatter<D>;
     // (undocumented)
     transform(value: Value, ...args: Args): string;
 }
 
 // @public (undocumented)
-export const BOTTOM_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const BOTTOM_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const BOTTOM_RIGHT_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
 export const C = 67;
-
-// @public (undocumented)
-export interface CanColor {
-    // (undocumented)
-    color: KbqComponentColors | ThemePalette | string;
-}
-
-// @public (undocumented)
-export interface CanDisable {
-    // (undocumented)
-    disabled: boolean;
-}
-
-// Warning: (ae-forgotten-export) The symbol "Constructor" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "AbstractConstructor" needs to be exported by the entry point index.d.ts
-//
-// @public
-export type CanDisableCtor = Constructor<CanDisable> & AbstractConstructor<CanDisable>;
 
 // @public
 export interface CanUpdateErrorState {
-    errorState: boolean;
-    errorStateMatcher: ErrorStateMatcher;
+    readonly errorState: Signal<boolean>;
     updateErrorState(): void;
 }
-
-// @public
-export type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState>;
 
 // @public (undocumented)
 export const CAPS_LOCK = 20;
@@ -257,9 +226,6 @@ export const CONTEXT_MENU = 93;
 
 // @public (undocumented)
 export const CONTROL = 17;
-
-// @public
-export function countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<KbqOption>, optionGroups: QueryList<KbqOptgroup>): number;
 
 // @public
 export function createFakeEvent(type: string, canBubble?: boolean, cancelable?: boolean): Event;
@@ -288,8 +254,6 @@ export const DASH = 189;
 // @public (undocumented)
 export abstract class DateAdapter<D> extends DateAdapter_2<D> {
     abstract get localeChanges(): Observable<any>;
-    // (undocumented)
-    protected abstract _localeChanges: BehaviorSubject<string>;
 }
 
 // @public (undocumented)
@@ -330,7 +294,7 @@ export function dispatchTouchEvent(node: Node, type: string, x?: number, y?: num
 // @public (undocumented)
 export const DOWN_ARROW = 40;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class DurationLongFormatterImpurePipe<D> extends DurationLongFormatterPipe<D> {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string;
@@ -340,7 +304,7 @@ export class DurationLongFormatterImpurePipe<D> extends DurationLongFormatterPip
     static ɵpipe: i0.ɵɵPipeDeclaration<DurationLongFormatterImpurePipe<any>, "durationLongImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class DurationLongFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string;
@@ -350,7 +314,7 @@ export class DurationLongFormatterPipe<D> extends BaseFormatterPipe<D> implement
     static ɵpipe: i0.ɵɵPipeDeclaration<DurationLongFormatterPipe<any>, "durationLong", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class DurationShortestFormatterImpurePipe<D> extends DurationShortestFormatterPipe<D> {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string;
@@ -360,7 +324,7 @@ export class DurationShortestFormatterImpurePipe<D> extends DurationShortestForm
     static ɵpipe: i0.ɵɵPipeDeclaration<DurationShortestFormatterImpurePipe<any>, "durationShortestImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class DurationShortestFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string;
@@ -370,7 +334,7 @@ export class DurationShortestFormatterPipe<D> extends BaseFormatterPipe<D> imple
     static ɵpipe: i0.ɵɵPipeDeclaration<DurationShortestFormatterPipe<any>, "durationShortest", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class DurationShortFormatterImpurePipe<D> extends DurationShortFormatterPipe<D> {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string;
@@ -380,7 +344,7 @@ export class DurationShortFormatterImpurePipe<D> extends DurationShortFormatterP
     static ɵpipe: i0.ɵɵPipeDeclaration<DurationShortFormatterImpurePipe<any>, "durationShortImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class DurationShortFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string;
@@ -957,9 +921,6 @@ export const esLALocaleData: {
 };
 
 // @public (undocumented)
-export const EXTENDED_OVERLAY_POSITIONS: ConnectionPositionPair[];
-
-// @public (undocumented)
 export const F = 70;
 
 // @public (undocumented)
@@ -999,9 +960,6 @@ export const F8 = 119;
 export const F9 = 120;
 
 // @public (undocumented)
-export const fadeAnimation: AnimationTriggerMetadata;
-
-// @public (undocumented)
 export const FF_EQUALS = 61;
 
 // @public (undocumented)
@@ -1036,7 +994,7 @@ export const FIVE = 53;
 
 // @public (undocumented)
 export class FocusKeyManager<T> extends ListKeyManager<IFocusableOption & T> {
-    // (undocumented)
+    // @deprecated (undocumented)
     getFocusOrigin(): FocusOrigin;
     setActiveItem(item: number | T): void;
     setFocusOrigin(origin: FocusOrigin): this;
@@ -1078,9 +1036,6 @@ export function getKbqSelectNonFunctionValueError(): Error;
 // @public (undocumented)
 export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 
-// @public @deprecated
-export function getOptionScrollPosition(optionIndex: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
-
 // @public
 export function getSafeTriangleVertices(origin: KbqPoint, targetRect: DOMRect): KbqTriangle;
 
@@ -1090,19 +1045,10 @@ export function getSelectAllState<T>(adapter: KbqSelectAllAdapter<T>): KbqPseudo
 // @public (undocumented)
 export const H = 72;
 
-// Warning: (ae-forgotten-export) The symbol "ModifierKey" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ModifierKey" needs to be exported by the entry point koobiq-components-core.d.ts
 //
 // @public (undocumented)
 export function hasModifierKey(event: KeyboardEvent | MouseEvent, ...modifiers: ModifierKey[]): boolean;
-
-// @public (undocumented)
-export interface HasTabIndex {
-    // (undocumented)
-    tabIndex: number;
-}
-
-// @public (undocumented)
-export type HasTabIndexCtor = Constructor<HasTabIndex> & AbstractConstructor<HasTabIndex>;
 
 // @public
 export interface Highlightable extends ListKeyManagerOption {
@@ -1127,7 +1073,7 @@ export interface IFocusableOption extends ListKeyManagerOption {
 // @public (undocumented)
 export const INSERT = 45;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export function isBoolean(value: unknown): value is boolean;
 
 // @public (undocumented)
@@ -1136,7 +1082,7 @@ export function isControl(event: KeyboardEvent): boolean;
 // @public (undocumented)
 export function isCopy(event: KeyboardEvent): boolean;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export function isDigit(input: KeyboardEvent): boolean;
 
 // @public
@@ -1197,9 +1143,6 @@ export const isUndefined: (value: unknown) => value is undefined;
 export function isVerticalMovement(input: KeyboardEvent): boolean;
 
 // @public (undocumented)
-export function isWithin(startRange: number, endRange: number, valueToCheck: number): boolean;
-
-// @public (undocumented)
 export const J = 74;
 
 // @public (undocumented)
@@ -1209,10 +1152,10 @@ export const K = 75;
 export const KBQ_A11Y_LOCALE_CONFIGURATION: InjectionToken<KbqA11yLocaleConfiguration>;
 
 // @public
-export const KBQ_CHECKABLE_CLICK_ACTION: InjectionToken<KbqCheckableClickAction>;
+export const KBQ_ANIMATIONS_CONFIG: InjectionToken<KbqAnimationsConfig>;
 
 // @public
-export const KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR: Provider;
+export const KBQ_CHECKABLE_CLICK_ACTION: InjectionToken<KbqCheckableClickAction>;
 
 // @public
 export const KBQ_CONNECTED_OVERLAY_ABOVE_CLASS = "kbq-connected-overlay_above";
@@ -2550,7 +2493,7 @@ export const KBQ_DEFAULT_PRECISION_SEPARATOR = ".";
 // @public
 export const KBQ_DEFAULT_THEMES: KbqThemeConfig[];
 
-// @public @deprecated
+// @public
 export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 
 // @public
@@ -2577,7 +2520,7 @@ export const KBQ_LOCALE_SERVICE: InjectionToken<KbqLocaleService>;
 // @public
 export const KBQ_LOCALE_SERVICE_LANG_ATTR_NAME: InjectionToken<string>;
 
-// Warning: (ae-forgotten-export) The symbol "ParsedDigitsInfo" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ParsedDigitsInfo" needs to be exported by the entry point koobiq-components-core.d.ts
 //
 // @public (undocumented)
 export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo;
@@ -2600,8 +2543,10 @@ export const KBQ_OVERLAY_LAYERS: InjectionToken<KbqOverlayLayers>;
 // @public
 export const KBQ_PANEL_DEFAULT_MIN_WIDTH = 200;
 
-// @public (undocumented)
-export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
+// @public
+export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<{
+    readonly animationDone: OutputRef<void>;
+}>;
 
 // @public
 export const KBQ_PARENT_POPUP: InjectionToken<KbqParentPopup>;
@@ -2617,13 +2562,6 @@ export const KBQ_SELECT_LOCALE_CONFIGURATION: InjectionToken<KbqSelectLocaleConf
 
 // @public
 export const KBQ_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
-
-// @public
-export const KBQ_SELECT_SCROLL_STRATEGY_PROVIDER: {
-    provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof ScrollDispatcher)[];
-    useFactory: typeof kbqSelectScrollStrategyProviderFactory;
-};
 
 // @public
 export const KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD = 10;
@@ -2802,36 +2740,20 @@ export type KbqActionsPanelLocaleConfiguration = {
 };
 
 // @public
-export enum KbqAnimationCurves {
-    // (undocumented)
-    AccelerationCurve = "cubic-bezier(0.4,0.0,1,1)",
-    // (undocumented)
-    DecelerationCurve = "cubic-bezier(0.0,0.0,0.2,1)",
-    // (undocumented)
-    EaseInOut = "ease-in-out",
-    // (undocumented)
-    EaseInOutQuad = "cubic-bezier(0.455,0.03,0.515,0.955)",
-    // (undocumented)
-    SharpCurve = "cubic-bezier(0.4,0.0,0.6,1)",
-    // (undocumented)
-    StandardCurve = "cubic-bezier(0.4,0.0,0.2,1)"
+export function kbqAfterAnimations(element: () => Element | null | undefined, callback: () => void, injector: Injector): {
+    destroy(): void;
+};
+
+// @public
+export interface KbqAnimationsConfig {
+    animationsDisabled?: boolean;
 }
 
 // @public
-export enum KbqAnimationDurations {
-    // (undocumented)
-    Complex = "250ms",
-    // (undocumented)
-    Entering = "150ms",
-    // (undocumented)
-    Exiting = "125ms",
-    // (undocumented)
-    Instant = "50ms",
-    // (undocumented)
-    Long = "300ms",
-    // (undocumented)
-    Rapid = "100ms"
-}
+export function kbqAnimationsDisabled(): boolean;
+
+// @public
+export function kbqAnimationsSettled(element: Element | null | undefined, timeout?: number): Promise<void> | null;
 
 // @public
 export type KbqAppSwitcherLocaleConfiguration = {
@@ -2952,22 +2874,18 @@ export type KbqCodeBlockLocaleConfiguration = {
     openExternalSystemTooltip: string;
 };
 
-// @public (undocumented)
-export class KbqColorDirective {
-    constructor();
-    // (undocumented)
-    get color(): KbqComponentColors | ThemePalette | string;
-    set color(value: KbqComponentColors | ThemePalette | string);
-    // (undocumented)
-    protected _color: KbqComponentColors | ThemePalette | string;
-    get colorClassName(): KbqComponentColors | ThemePalette | string;
-    protected defaultColor: KbqComponentColors | ThemePalette | string;
+// @public
+export class KbqColorDirective<T extends string = KbqComponentColors | string> {
+    readonly color: WritableSignal<T>;
+    get colorClassName(): string;
+    readonly colorInput: i0.InputSignal<T | null | undefined>;
+    protected readonly defaultColor: Signal<T>;
     readonly elementRef: ElementRef<HTMLElement>;
-    setDefaultColor(color: KbqComponentColors | ThemePalette | string): void;
+    setDefaultColor(color: T): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqColorDirective, never, never, { "color": { "alias": "color"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqColorDirective<any>, never, never, { "colorInput": { "alias": "color"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqColorDirective, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqColorDirective<any>, never>;
 }
 
 // @public (undocumented)
@@ -3041,8 +2959,6 @@ export class KbqDateTimezoneService {
 export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     constructor();
     // (undocumented)
-    isSpecialFormatForRULocale(locale: string, value: number, grouping?: boolean): boolean;
-    // (undocumented)
     transform(value: any, digitsInfo?: string, locale?: string): string | null;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDecimalPipe, never>;
@@ -3062,9 +2978,6 @@ export type KbqDeepPartial<T> = T extends (...args: never[]) => unknown ? T : T 
 
 // @public
 export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
-
-// @public @deprecated (undocumented)
-export const KbqDefaultThemes: KbqThemeConfig[];
 
 // @public
 export function kbqDelayLoadingIndicator(options?: KbqDelayLoadingIndicatorOptions): MonoTypeOperatorFunction<boolean>;
@@ -3125,9 +3038,9 @@ export const kbqErrorStateMatcherProvider: (errorStateMatcher: Type<ErrorStateMa
 
 // @public
 export class KbqErrorStateTracker implements CanUpdateErrorState {
-    constructor(defaultMatcher: ErrorStateMatcher | null, ngControl: NgControl | null, parentFormGroup: FormGroupDirective | null, parentForm: NgForm | null, stateChanges: Subject<void>);
-    errorState: boolean;
-    errorStateMatcher: ErrorStateMatcher;
+    constructor(defaultMatcher: ErrorStateMatcher | null, ngControl: NgControl | null, parentFormGroup: FormGroupDirective | null, parentForm: NgForm | null);
+    readonly errorState: Signal<boolean>;
+    errorStateMatcher: ErrorStateMatcher | null | undefined;
     // (undocumented)
     ngControl: NgControl | null;
     updateErrorState(): void;
@@ -3274,8 +3187,6 @@ export class KbqFormElement implements AfterContentInit {
     // (undocumented)
     isHorizontal: boolean;
     // (undocumented)
-    isRow: boolean;
-    // (undocumented)
     margin: boolean;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -3288,22 +3199,19 @@ export class KbqFormElement implements AfterContentInit {
 // @public
 export interface KbqFormFieldControlRef<T = unknown> {
     readonly controlType?: string;
-    readonly disabled: boolean;
-    readonly empty: boolean;
-    readonly errorState: boolean;
-    readonly focused: boolean;
-    readonly id: string;
+    readonly disabled: Signal<boolean>;
+    readonly empty: Signal<boolean>;
+    readonly errorState: Signal<boolean>;
+    readonly focused: Signal<boolean>;
+    readonly id: Signal<string>;
     readonly ngControl: NgControl | null;
-    placeholder: string;
-    readonly required: boolean;
-    readonly stateChanges: Observable<void>;
-    value: T | null;
+    readonly placeholder: Signal<string | null | undefined>;
+    readonly required: Signal<boolean>;
+    readonly value: Signal<T | null>;
 }
 
-// @public @deprecated
+// @public
 export interface KbqFormFieldRef {
-    // (undocumented)
-    canCleanerClearByEsc: boolean;
     // (undocumented)
     readonly control: Signal<KbqFormFieldControlRef>;
     // (undocumented)
@@ -3355,6 +3263,15 @@ export class KbqHighlightBackgroundPipe implements PipeTransform {
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqHighlightBackgroundPipe, "kbqHighlightBackground", true>;
 }
 
+// @public
+export class KbqHighlightBoldPipe implements PipeTransform {
+    transform(value: string | null | undefined, keyword: string | readonly string[] | null | undefined, foldDiacritics?: boolean): string;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqHighlightBoldPipe, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<KbqHighlightBoldPipe, "kbqHighlightBold", true>;
+}
+
 // @public (undocumented)
 export class KbqHighlightModule {
     // (undocumented)
@@ -3362,10 +3279,10 @@ export class KbqHighlightModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqHighlightModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqHighlightModule, never, [typeof KbqHighlightPipe, typeof KbqHighlightBackgroundPipe], [typeof KbqHighlightPipe, typeof KbqHighlightBackgroundPipe]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqHighlightModule, never, [typeof KbqHighlightPipe, typeof KbqHighlightBoldPipe, typeof KbqHighlightBackgroundPipe], [typeof KbqHighlightPipe, typeof KbqHighlightBoldPipe, typeof KbqHighlightBackgroundPipe]>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqHighlightPipe implements PipeTransform {
     // (undocumented)
     transform(value: unknown, keyword: unknown, foldDiacritics?: boolean): string;
@@ -3373,15 +3290,6 @@ export class KbqHighlightPipe implements PipeTransform {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHighlightPipe, never>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqHighlightPipe, "mcHighlight", true>;
-}
-
-// @public
-export class KbqHover {
-    readonly hovered: i0.Signal<boolean>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqHover, "[kbqHover]", ["kbqHover"], {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqHover, never>;
 }
 
 // @public
@@ -3426,16 +3334,14 @@ export const kbqIsElementOrigin: (origin: KbqOverlayOrigin) => boolean;
 export const kbqIsTextLaidOutFromStart: (computedStyle: CSSStyleDeclaration) => boolean;
 
 // @public
-export class KbqLine {
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLine, "[kbq-line], [mcLine]", never, {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLine, never>;
-}
+export function kbqLeaveTabOrderOnTabOut(tabOut: Observable<void>, host: HTMLElement, renderedTabIndex: () => number | null, destroyRef: DestroyRef): void;
 
 // @public
-export class KbqLineSetter {
-    constructor(_lines: QueryList<KbqLine>, _element: ElementRef);
+export class KbqLine {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLine, "[kbq-line]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLine, never>;
 }
 
 // @public
@@ -3606,7 +3512,7 @@ export enum KbqMeasurementSystem {
 // @public
 export type KbqMeasurementSystemType = keyof typeof KbqMeasurementSystem;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqMeasureScrollbarService {
     constructor();
     // (undocumented)
@@ -3689,16 +3595,12 @@ export interface KbqNumericPipe {
 
 // @public
 export class KbqOptgroup {
-    // (undocumented)
-    get disabled(): boolean;
-    set disabled(value: boolean);
+    readonly disabled: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     readonly label: i0.InputSignal<string>;
     labelId: string;
     // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptgroup, "kbq-optgroup", ["kbqOptgroup"], { "label": { "alias": "label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["kbq-option, kbq-list-option, kbq-timezone-option, ng-container"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptgroup, "kbq-optgroup", ["kbqOptgroup"], { "label": { "alias": "label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, ["kbq-option, kbq-list-option, kbq-timezone-option, ng-container"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptgroup, never>;
 }
@@ -3708,9 +3610,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     get active(): boolean;
     // (undocumented)
     deselect(emitEvent?: boolean): void;
-    // (undocumented)
-    get disabled(): any;
-    set disabled(value: any);
+    get disabled(): boolean;
+    readonly disabledInput: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     focus(): void;
     protected getAriaSelected(): boolean | null;
     getHeight(): number;
@@ -3734,29 +3635,29 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     protected onMouseleave(): void;
     readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<KbqOption>>;
     // (undocumented)
-    protected readonly parent: KbqOptionParentComponent;
+    protected readonly parent: KbqOptionParentComponent | null;
     // (undocumented)
     select(emitEvent?: boolean): void;
     // (undocumented)
     readonly selectable: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     get selected(): boolean;
+    readonly selectionChangeOutput: i0.OutputRef<KbqOptionSelectionChange<KbqOption>>;
     selectViaInteraction(): void;
     setActiveStyles(): void;
     setInactiveStyles(): void;
-    // (undocumented)
     get showCheckbox(): boolean;
-    set showCheckbox(value: boolean);
+    readonly showCheckboxInput: i0.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     readonly stateChanges: Subject<void>;
-    // (undocumented)
-    textElement: ElementRef;
+    get textElement(): ElementRef<HTMLElement> | undefined;
     // (undocumented)
     readonly userSelect: i0.InputSignalWithTransform<boolean, unknown>;
-    value: any;
+    get value(): any;
+    readonly valueInput: i0.InputSignal<any>;
     get viewValue(): string;
-    set viewValue(value: string);
+    readonly viewValueInput: i0.InputSignal<string | undefined>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOption, "kbq-option", ["kbqOption"], { "value": { "alias": "value"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "userSelect": { "alias": "userSelect"; "required": false; "isSignal": true; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "viewValue": { "alias": "viewValue"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["kbq-pseudo-checkbox", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOption, "kbq-option", ["kbqOption"], { "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "userSelect": { "alias": "userSelect"; "required": false; "isSignal": true; }; "showCheckboxInput": { "alias": "showCheckbox"; "required": false; "isSignal": true; }; "viewValueInput": { "alias": "viewValue"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "selectionChangeOutput": "onSelectionChange"; }, never, ["kbq-pseudo-checkbox", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOption, never>;
 }
@@ -3766,15 +3667,11 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     get active(): boolean;
     readonly ariaLabel: i0.InputSignal<string>;
-    // (undocumented)
-    get disabled(): boolean;
-    set disabled(value: boolean);
+    readonly disabled: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     // (undocumented)
     hasFocus: boolean;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -3785,7 +3682,7 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     onKeyDown($event: any): void;
     protected get resolvedAriaLabel(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["[kbq-icon]"], true, [{ directive: typeof KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, ["[kbq-icon]"], true, [{ directive: typeof KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionActionComponent, never>;
 }
@@ -3814,14 +3711,13 @@ export abstract class KbqOptionBase {
     abstract deselect(): void;
     // (undocumented)
     abstract get disabled(): boolean;
-    abstract set disabled(value: any);
     protected emitSelectionChangeEvent(isUserInput?: boolean): void;
     // (undocumented)
     abstract readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<any>>;
     // (undocumented)
     abstract select(): void;
     // (undocumented)
-    value: any;
+    abstract get value(): any;
     // (undocumented)
     abstract get viewValue(): string;
 }
@@ -3844,8 +3740,7 @@ export interface KbqOptionParentComponent {
     multiple?: boolean;
     // (undocumented)
     multiSelection?: boolean;
-    // (undocumented)
-    setSelectedOptionsByClick: (option: KbqOption) => void;
+    setSelectedOptionsByClick?(option: KbqOption): void;
     // (undocumented)
     withVirtualScroll?: boolean;
 }
@@ -3978,17 +3873,14 @@ export const kbqPopoverConfirmLocaleConfigurationProvider: (configuration: KbqDe
 export abstract class KbqPopUp implements OnDestroy {
     protected addEventListenerForHide(): void;
     afterHidden(): Observable<void>;
-    animationDone(input: AnimationEvent_2): void;
-    // (undocumented)
-    animationStart(): void;
+    protected afterShowAnimation(): void;
+    protected readonly animationsDisabled: boolean;
     // (undocumented)
     arrow: boolean;
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    // (undocumented)
-    classMap: {};
-    // (undocumented)
-    protected closeOnInteraction: boolean;
+    get classMap(): {};
+    set classMap(value: {});
     // (undocumented)
     content: string | TemplateRef<unknown>;
     // (undocumented)
@@ -4001,20 +3893,15 @@ export abstract class KbqPopUp implements OnDestroy {
     readonly destroyRef: DestroyRef;
     // (undocumented)
     detectChanges(): void;
-    // (undocumented)
-    protected readonly elementRef: ElementRef<HTMLElement>;
-    // (undocumented)
-    handleBodyInteraction(): void;
+    protected get elementRef(): ElementRef<HTMLElement>;
     // (undocumented)
     header: string | TemplateRef<unknown>;
     hide(delay: number): void;
-    readonly hovered: BehaviorSubject<boolean>;
+    readonly hovered: Signal<boolean>;
     // (undocumented)
     isTemplateRef(value: any): boolean;
     // (undocumented)
     isVisible(): boolean;
-    // (undocumented)
-    markForCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -4024,6 +3911,7 @@ export abstract class KbqPopUp implements OnDestroy {
     protected prefix: string;
     // (undocumented)
     protected readonly renderer: Renderer2;
+    protected setHovered(value: boolean): void;
     // (undocumented)
     protected setStickPosition(): void;
     // (undocumented)
@@ -4032,12 +3920,10 @@ export abstract class KbqPopUp implements OnDestroy {
     trigger: KbqPopUpTrigger<unknown>;
     // (undocumented)
     updateClassMap(placement: string, customClass: string, classMap?: any): void;
-    // (undocumented)
-    visibility: PopUpVisibility;
+    get visibility(): PopUpVisibility;
+    set visibility(value: PopUpVisibility);
     // (undocumented)
     visibleChange: EventEmitter<boolean>;
-    // (undocumented)
-    warning: boolean;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopUp, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -4059,7 +3945,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected clearListeners(): void;
     abstract closingActions(): Observable<any>;
     protected closingActionsSubscription: Subscription;
-    container: HTMLElement;
+    container: HTMLElement | undefined;
     abstract content: string | TemplateRef<unknown>;
     protected _content: string | TemplateRef<unknown>;
     createOverlay(): OverlayRef;
@@ -4088,7 +3974,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     hide(delay?: number): void;
     protected hideWithTimeout: boolean;
     protected readonly hostView: ViewContainerRef;
-    readonly hovered: BehaviorSubject<boolean>;
+    readonly hovered: Signal<boolean>;
     initListeners(): void;
     protected instance: any | null;
     get isAttached(): boolean;
@@ -4118,8 +4004,9 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected readonly scrollDispatcher: ScrollDispatcher;
     protected abstract scrollStrategy: () => ScrollStrategy;
     setExternalNativeElement(value: HTMLElement): void;
+    protected setHovered(value: boolean): void;
     show(delay?: number): void;
-    stickToWindow: KbqStickToWindowPlacementValues;
+    stickToWindow: KbqStickToWindowPlacementValues | undefined;
     protected strategy: FlexibleConnectedPositionStrategy;
     touchendHandler(): void;
     abstract trigger: string;
@@ -4166,6 +4053,9 @@ export class KbqPseudoCheckboxModule {
 
 // @public (undocumented)
 export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' | boolean;
+
+// @public
+export function kbqQueryListFrom<T>(query: Signal<readonly T[]>): () => QueryList<T>;
 
 // @public (undocumented)
 export class KbqRangeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, []> implements PipeTransform {
@@ -4239,24 +4129,6 @@ export class KbqReadStateDirective {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqReadStateDirective, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqReadStateDirective, never>;
-}
-
-// @public (undocumented)
-export class KbqRectangleItem {
-    // (undocumented)
-    get collapsed(): boolean;
-    set collapsed(value: boolean);
-    getOuterElementWidth(): number;
-    // (undocumented)
-    protected readonly isBrowser: boolean;
-    // (undocumented)
-    protected readonly nativeElement: HTMLElement;
-    // (undocumented)
-    readonly state: Subject<void>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqRectangleItem, never, never, {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRectangleItem, never>;
 }
 
 // @public (undocumented)
@@ -4356,10 +4228,6 @@ export const kbqRevealSelection: (element: HTMLInputElement) => void;
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
     constructor();
-    // Warning: (ae-forgotten-export) The symbol "RoundDecimalOptions" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    roundingOptions: RoundDecimalOptions;
     // (undocumented)
     transform(value: any, locale?: string): any;
     // (undocumented)
@@ -4399,10 +4267,7 @@ export class KbqSelectAllEvent<T, S = unknown> {
 }
 
 // @public
-export const kbqSelectAnimations: {
-    readonly transformPanel: AnimationTriggerMetadata;
-    readonly fadeInContent: AnimationTriggerMetadata;
-};
+export function kbqSelectAllHandlerTransform<S>(handler: ((event: KeyboardEvent, source: S) => void) | undefined): ((event: KeyboardEvent, source: S) => void) | undefined;
 
 // @public (undocumented)
 export class KbqSelectFooter {
@@ -4650,17 +4515,6 @@ export interface KbqTextQueryOptions {
     triggers?: readonly string[];
 }
 
-// @public @deprecated (undocumented)
-export interface KbqTheme {
-    className: string;
-    // (undocumented)
-    colorScheme?: KbqThemeColorScheme;
-    // (undocumented)
-    name: string;
-    // @deprecated (undocumented)
-    selected?: boolean;
-}
-
 // @public
 export type KbqThemeColorScheme = 'light' | 'dark';
 
@@ -4712,8 +4566,6 @@ export type KbqThemeMode = 'auto' | KbqThemeColorScheme;
 // @public
 export enum KbqThemeNames {
     Dark = "dark",
-    // @deprecated (undocumented)
-    Default = "light",
     Light = "light"
 }
 
@@ -4723,8 +4575,6 @@ export const kbqThemeProvider: <T extends KbqThemeConfig = KbqThemeConfig>(confi
 // @public
 export enum KbqThemeSelector {
     Dark = "kbq-dark",
-    // @deprecated (undocumented)
-    Default = "kbq-light",
     Light = "kbq-light"
 }
 
@@ -4897,15 +4747,6 @@ export const LAST_MEDIA = 183;
 export const LEFT_ARROW = 37;
 
 // @public (undocumented)
-export const LEFT_BOTTOM_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const LEFT_TOP_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
 export const leftIconClassName = "kbq-icon_left";
 
 // @public
@@ -4975,34 +4816,6 @@ export const MAC_WK_CMD_RIGHT = 93;
 // @public (undocumented)
 export const META = 91;
 
-// @public
-export function mixinDisabled<T extends AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
-
-// Warning: (ae-forgotten-export) The symbol "HasErrorState" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function mixinErrorState<T extends AbstractConstructor<HasErrorState>>(base: T): CanUpdateErrorStateCtor & T;
-
-// @public
-export function mixinTabIndex<T extends AbstractConstructor<CanDisable>>(base: T, defaultTabIndex?: number): HasTabIndexCtor & T;
-
-// @public
-export class MockNgZone extends NgZone {
-    constructor();
-    // (undocumented)
-    onStable: EventEmitter<any>;
-    // (undocumented)
-    run(fn: () => void): any;
-    // (undocumented)
-    runOutsideAngular(fn: () => void): any;
-    // (undocumented)
-    simulateZoneExit(): void;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MockNgZone, never>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MockNgZone>;
-}
-
 // @public (undocumented)
 export enum MultipleMode {
     // (undocumented)
@@ -5031,9 +4844,6 @@ export const NUM_CENTER = 12;
 
 // @public (undocumented)
 export const NUM_LOCK = 144;
-
-// @public (undocumented)
-export const NUMBER_FORMAT_REGEXP: RegExp;
 
 // @public (undocumented)
 export const NUMPAD_DIVIDE = 111;
@@ -5183,27 +4993,6 @@ export enum PopUpVisibility {
     // (undocumented)
     Visible = "visible"
 }
-
-// @public (undocumented)
-export const POSITION_MAP: {
-    [key: string]: ConnectionPositionPair;
-};
-
-// @public (undocumented)
-export const POSITION_PRIORITY_STRATEGY: {
-    top: ConnectionPositionPair[];
-    topLeft: ConnectionPositionPair[];
-    topRight: ConnectionPositionPair[];
-    bottom: ConnectionPositionPair[];
-    bottomLeft: ConnectionPositionPair[];
-    bottomRight: ConnectionPositionPair[];
-    left: ConnectionPositionPair[];
-    leftTop: ConnectionPositionPair[];
-    leftBottom: ConnectionPositionPair[];
-    right: ConnectionPositionPair[];
-    rightTop: ConnectionPositionPair[];
-    rightBottom: ConnectionPositionPair[];
-};
 
 // @public (undocumented)
 export const POSITION_TO_CSS_MAP: {
@@ -5483,7 +5272,7 @@ export const QUESTION_MARK = 63;
 // @public (undocumented)
 export const R = 82;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RangeDateFormatterImpurePipe<D> extends RangeDateFormatterPipe<D> {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined): string;
@@ -5493,7 +5282,7 @@ export class RangeDateFormatterImpurePipe<D> extends RangeDateFormatterPipe<D> {
     static ɵpipe: i0.ɵɵPipeDeclaration<RangeDateFormatterImpurePipe<any>, "rangeLongDateImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RangeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined): string;
@@ -5503,7 +5292,7 @@ export class RangeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements P
     static ɵpipe: i0.ɵɵPipeDeclaration<RangeDateFormatterPipe<any>, "rangeLongDate", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RangeDateTimeFormatterImpurePipe<D> extends RangeDateTimeFormatterPipe<D> {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string;
@@ -5513,7 +5302,7 @@ export class RangeDateTimeFormatterImpurePipe<D> extends RangeDateTimeFormatterP
     static ɵpipe: i0.ɵɵPipeDeclaration<RangeDateTimeFormatterImpurePipe<any>, "rangeLongDateTimeImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RangeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string;
@@ -5523,7 +5312,7 @@ export class RangeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implemen
     static ɵpipe: i0.ɵɵPipeDeclaration<RangeDateTimeFormatterPipe<any>, "rangeLongDateTime", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RangeMiddleDateTimeFormatterImpurePipe<D> extends RangeMiddleDateTimeFormatterPipe<D> {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string;
@@ -5533,7 +5322,7 @@ export class RangeMiddleDateTimeFormatterImpurePipe<D> extends RangeMiddleDateTi
     static ɵpipe: i0.ɵɵPipeDeclaration<RangeMiddleDateTimeFormatterImpurePipe<any>, "rangeMiddleDateTimeImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RangeMiddleDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string;
@@ -5543,7 +5332,7 @@ export class RangeMiddleDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> im
     static ɵpipe: i0.ɵɵPipeDeclaration<RangeMiddleDateTimeFormatterPipe<any>, "rangeMiddleDateTime", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RangeShortDateFormatterImpurePipe<D> extends RangeShortDateFormatterPipe<D> {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined): string;
@@ -5553,7 +5342,7 @@ export class RangeShortDateFormatterImpurePipe<D> extends RangeShortDateFormatte
     static ɵpipe: i0.ɵɵPipeDeclaration<RangeShortDateFormatterImpurePipe<any>, "rangeShortDateImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RangeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined): string;
@@ -5563,7 +5352,7 @@ export class RangeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> impleme
     static ɵpipe: i0.ɵɵPipeDeclaration<RangeShortDateFormatterPipe<any>, "rangeShortDate", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RangeShortDateTimeFormatterImpurePipe<D> extends RangeShortDateTimeFormatterPipe<D> {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string;
@@ -5573,7 +5362,7 @@ export class RangeShortDateTimeFormatterImpurePipe<D> extends RangeShortDateTime
     static ɵpipe: i0.ɵɵPipeDeclaration<RangeShortDateTimeFormatterImpurePipe<any>, "rangeShortDateTimeImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RangeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string;
@@ -5583,7 +5372,7 @@ export class RangeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imp
     static ɵpipe: i0.ɵɵPipeDeclaration<RangeShortDateTimeFormatterPipe<any>, "rangeShortDateTime", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RelativeDateFormatterImpurePipe<D> extends RelativeDateFormatterPipe<D> {
     // (undocumented)
     transform(value: D | string | null | undefined): string;
@@ -5593,7 +5382,7 @@ export class RelativeDateFormatterImpurePipe<D> extends RelativeDateFormatterPip
     static ɵpipe: i0.ɵɵPipeDeclaration<RelativeDateFormatterImpurePipe<any>, "relativeLongDateImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RelativeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string | null | undefined): string;
@@ -5603,7 +5392,7 @@ export class RelativeDateFormatterPipe<D> extends BaseFormatterPipe<D> implement
     static ɵpipe: i0.ɵɵPipeDeclaration<RelativeDateFormatterPipe<any>, "relativeLongDate", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RelativeDateTimeFormatterImpurePipe<D> extends RelativeDateTimeFormatterPipe<D> {
     // (undocumented)
     transform(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -5613,7 +5402,7 @@ export class RelativeDateTimeFormatterImpurePipe<D> extends RelativeDateTimeForm
     static ɵpipe: i0.ɵɵPipeDeclaration<RelativeDateTimeFormatterImpurePipe<any>, "relativeLongDateTimeImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RelativeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -5623,7 +5412,7 @@ export class RelativeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imple
     static ɵpipe: i0.ɵɵPipeDeclaration<RelativeDateTimeFormatterPipe<any>, "relativeLongDateTime", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RelativeShortDateFormatterImpurePipe<D> extends RelativeShortDateFormatterPipe<D> {
     // (undocumented)
     transform(value: D | string | null | undefined): string;
@@ -5633,7 +5422,7 @@ export class RelativeShortDateFormatterImpurePipe<D> extends RelativeShortDateFo
     static ɵpipe: i0.ɵɵPipeDeclaration<RelativeShortDateFormatterImpurePipe<any>, "relativeShortDateImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RelativeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string | null | undefined): string;
@@ -5643,7 +5432,7 @@ export class RelativeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> impl
     static ɵpipe: i0.ɵɵPipeDeclaration<RelativeShortDateFormatterPipe<any>, "relativeShortDate", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RelativeShortDateTimeFormatterImpurePipe<D> extends RelativeShortDateTimeFormatterPipe<D> {
     // (undocumented)
     transform(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -5653,7 +5442,7 @@ export class RelativeShortDateTimeFormatterImpurePipe<D> extends RelativeShortDa
     static ɵpipe: i0.ɵɵPipeDeclaration<RelativeShortDateTimeFormatterImpurePipe<any>, "relativeShortDateTimeImpurePipe", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -5668,15 +5457,6 @@ export function resolveMultipleMode(value: KbqMultipleInput): MultipleMode | nul
 
 // @public (undocumented)
 export const RIGHT_ARROW = 39;
-
-// @public (undocumented)
-export const RIGHT_BOTTOM_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const RIGHT_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const RIGHT_TOP_POSITION_PRIORITY: ConnectionPositionPair[];
 
 // @public (undocumented)
 export const rightIconClassName = "kbq-icon_right";
@@ -5960,9 +5740,6 @@ export const S = 83;
 // @public (undocumented)
 export const SCROLL_LOCK = 145;
 
-// @public
-export const SELECT_PANEL_VIEWPORT_PADDING = 8;
-
 // @public (undocumented)
 export const SEMICOLON = 186;
 
@@ -6033,46 +5810,6 @@ export const T = 84;
 
 // @public (undocumented)
 export const TAB = 9;
-
-// @public (undocumented)
-export enum ThemePalette {
-    // (undocumented)
-    Default = "secondary",
-    // (undocumented)
-    Empty = "",
-    // (undocumented)
-    Error = "error",
-    // (undocumented)
-    Info = "info",
-    // (undocumented)
-    Primary = "primary",
-    // (undocumented)
-    Secondary = "secondary",
-    // (undocumented)
-    Success = "success",
-    // (undocumented)
-    Warning = "warning"
-}
-
-// @public @deprecated (undocumented)
-export class ThemeService<T extends KbqTheme = KbqTheme> implements OnDestroy {
-    constructor();
-    // @deprecated (undocumented)
-    readonly current: BehaviorSubject<T | null>;
-    // @deprecated (undocumented)
-    getTheme(): T | null;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // @deprecated (undocumented)
-    setTheme(value: T | number): void;
-    // @deprecated (undocumented)
-    get themes(): T[];
-    set themes(items: T[]);
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<ThemeService<any>, never>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ThemeService<any>>;
-}
 
 // @public (undocumented)
 export const THREE = 51;
@@ -6348,15 +6085,6 @@ export function toggleSelectAll<T>(adapter: KbqSelectAllAdapter<T>, options?: Kb
 
 // @public
 export function tokenizeSearchQuery(query: string): string[];
-
-// @public (undocumented)
-export const TOP_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const TOP_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const TOP_RIGHT_POSITION_PRIORITY: ConnectionPositionPair[];
 
 // @public
 export enum TransitionCheckState {

@@ -29,7 +29,7 @@ export class KbqGutterDirective implements OnInit {
     set direction(direction: Direction);
     // (undocumented)
     dragged: boolean;
-    // Warning: (ae-forgotten-export) The symbol "IPoint" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "IPoint" needs to be exported by the entry point koobiq-components-splitter-deprecated.d.ts
     //
     // (undocumented)
     getPosition(): IPoint;
@@ -74,7 +74,7 @@ export class KbqGutterGhostDirective {
 }
 
 // @public @deprecated (undocumented)
-export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
+export class KbqSplitterAreaDirective implements OnInit, AfterViewInit, OnDestroy {
     // (undocumented)
     disableFlex(): void;
     // (undocumented)
@@ -89,6 +89,8 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
     // (undocumented)
     setOrder(order: number): void;
     // (undocumented)
@@ -107,7 +109,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     addArea(area: KbqSplitterAreaDirective): void;
     // (undocumented)
     areaRefs: QueryList<KbqSplitterAreaDirective>;
-    // Warning: (ae-forgotten-export) The symbol "IArea" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "IArea" needs to be exported by the entry point koobiq-components-splitter-deprecated.d.ts
     //
     // (undocumented)
     areas: IArea[];

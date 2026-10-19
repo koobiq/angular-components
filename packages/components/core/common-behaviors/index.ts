@@ -1,17 +1,20 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken, OutputRef } from '@angular/core';
 
 export * from './autofill';
 export * from './checkable';
 export * from './checkbox';
 export * from './clipboard';
-export { CanColor, KbqColorDirective, KbqComponentColors, ThemePalette } from './color';
-export { CanDisable, CanDisableCtor, mixinDisabled } from './disabled';
-export { CanUpdateErrorState, CanUpdateErrorStateCtor, KbqErrorStateTracker, mixinErrorState } from './error-state';
+export { KbqColorDirective, KbqComponentColors } from './color';
+export { CanUpdateErrorState, KbqErrorStateTracker } from './error-state';
 export * from './flex';
-export * from './hover';
 export * from './orientation';
 export * from './read-state';
 export { KbqDefaultSizes } from './size';
-export { HasTabIndex, HasTabIndexCtor, mixinTabIndex } from './tabindex';
 
-export const KBQ_PARENT_ANIMATION_COMPONENT = new InjectionToken<any>('kbq-parent-animation-component');
+/**
+ * A parent whose content changes size once its animation ends, such as a tab group.
+ * @docs-private
+ */
+export const KBQ_PARENT_ANIMATION_COMPONENT = new InjectionToken<{ readonly animationDone: OutputRef<void> }>(
+    'kbq-parent-animation-component'
+);

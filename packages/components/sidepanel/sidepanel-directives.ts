@@ -1,6 +1,7 @@
 import {
     afterNextRender,
     booleanAttribute,
+    ChangeDetectionStrategy,
     Component,
     Directive,
     effect,
@@ -87,6 +88,7 @@ export class KbqSidepanelClose {
             </button>
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-sidepanel-header',
         '[class.kbq-sidepanel-header_truncate-text]': 'truncateText()',

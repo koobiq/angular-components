@@ -3,13 +3,14 @@ import {
     afterNextRender,
     AfterRenderRef,
     AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
     inject,
     OnDestroy,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { kbqInjectNativeElement } from '@koobiq/components/core';
+import { kbqAnimationsDisabled, kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqAccordion } from './accordion';
 import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
@@ -21,11 +22,13 @@ import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
         <i
             kbq-icon="{{ isHugSpaceBetween ? 'kbq-chevron-down-s_16' : 'kbq-chevron-right-s_16' }}"
             class="kbq-accordion-trigger__icon"
+            [class.kbq-animations-disabled]="animationsDisabled"
         ></i>
 
         <ng-content />
     `,
     styleUrls: ['accordion-trigger.scss', 'accordion-tokens.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-accordion-trigger',
@@ -45,6 +48,12 @@ export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {
 
     /** @docs-private */
     readonly icon = viewChild.required(KbqIcon);
+
+    /**
+     * Whether the icon turns without motion.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     private savedTransition: string;
     private readonly afterRenderRef?: AfterRenderRef;

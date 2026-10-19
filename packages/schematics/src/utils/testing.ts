@@ -1,3 +1,5 @@
+import { Path, virtualFs } from '@angular-devkit/core';
+import { HostTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 
 function createWorkspace(runner: SchematicTestRunner): Promise<UnitTestTree> {
@@ -53,4 +55,22 @@ async function branchOf(runner: SchematicTestRunner, appOptions: object, second:
     cache.set(key, cache.get(key) ?? generate(runner, appOptions, second));
 
     return new UnitTestTree((await cache.get(key)!).branch());
+}
+
+/**
+ * An empty tree over an in-memory host, and every directory the host has been asked to list: a walk that skips a
+ * directory never lists it, while one that filters its paths afterwards does.
+ */
+export function listingTree(): { tree: HostTree; listed: string[] } {
+    const host = new virtualFs.SimpleMemoryHost();
+    const listed: string[] = [];
+    const list = host.list.bind(host);
+
+    host.list = (path: Path) => {
+        listed.push(path);
+
+        return list(path);
+    };
+
+    return { tree: new HostTree(host), listed };
 }

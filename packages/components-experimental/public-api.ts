@@ -1,4 +1,4 @@
-// This package has no public exports in v20.0.0. The only previously-shipped
+// This package has no public exports since 20.0.0. The only previously-shipped
 // sub-package — `@koobiq/components-experimental/form-field` — graduated to the
 // stable `@koobiq/components/form-field` and was removed.
 //

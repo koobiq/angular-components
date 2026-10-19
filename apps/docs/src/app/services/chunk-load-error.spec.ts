@@ -1,18 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 import { NavigationError, provideRouter, Router } from '@angular/router';
 import { KBQ_WINDOW } from '@koobiq/components/core';
+import type { Mock } from 'vitest';
 import { docsReloadOnChunkLoadError } from './chunk-load-error';
 
 const TARGET_URL = '/en/components/button/overview';
 
 describe('docsReloadOnChunkLoadError', () => {
-    let assign: jest.Mock;
+    let assign: Mock;
 
     const handle = (error: unknown): void =>
         TestBed.runInInjectionContext(() => docsReloadOnChunkLoadError(new NavigationError(1, TARGET_URL, error)));
 
     beforeEach(() => {
-        assign = jest.fn();
+        assign = vi.fn();
         TestBed.configureTestingModule({
             providers: [provideRouter([]), { provide: KBQ_WINDOW, useValue: { location: { assign } } }]
         });

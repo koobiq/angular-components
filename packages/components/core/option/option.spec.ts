@@ -1,7 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, effect, signal, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqOptgroup, KbqOption, KbqOptionModule } from './index';
+import {
+    KBQ_OPTION_ACTION_PARENT,
+    KBQ_OPTION_PARENT_COMPONENT,
+    KbqOptgroup,
+    KbqOption,
+    KbqOptionActionComponent,
+    KbqOptionModule
+} from './index';
 
 @Component({
     imports: [KbqOptionModule],
@@ -41,11 +48,120 @@ class OptionWithOwnRole {}
 })
 class OptgroupWithLabel {}
 
+@Component({
+    imports: [KbqOptionModule],
+    template: `
+        <kbq-optgroup [label]="'Meat'" [disabled]="groupDisabled()">
+            <kbq-option [value]="'steak'">Steak</kbq-option>
+        </kbq-optgroup>
+    `
+})
+class OptionInGroup {
+    readonly groupDisabled = signal(true);
+}
+
+@Component({
+    imports: [KbqOptionModule],
+    template: `
+        <kbq-option-action [disabled]="disabled()" />
+    `,
+    providers: [{ provide: KBQ_OPTION_ACTION_PARENT, useValue: { focus: () => {} } }]
+})
+class ActionWithDisable {
+    readonly disabled = signal(true);
+}
+
+@Component({
+    imports: [KbqOptionModule],
+    template: `
+        <kbq-option [value]="'steak'">Steak</kbq-option>
+    `,
+    providers: [{ provide: KBQ_OPTION_PARENT_COMPONENT, useValue: { multiSelection: true } }]
+})
+class OptionDrivenByEffects {
+    readonly option = viewChild.required(KbqOption);
+    readonly wantSelected = signal(false);
+    readonly toggles = signal(0);
+    readonly runs = { select: 0, toggle: 0 };
+
+    constructor() {
+        effect(() => {
+            if (!this.wantSelected()) return;
+
+            this.runs.select++;
+            this.option().select();
+        });
+
+        effect(() => {
+            if (!this.toggles() || this.runs.toggle >= 10) return;
+
+            this.runs.toggle++;
+            this.option().selectViaInteraction();
+        });
+    }
+}
+
 describe('KbqOption component', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqOptionModule, OptionWithDisable, OptionWithCheckbox, OptionWithOwnRole, OptgroupWithLabel]
+            imports: [
+                KbqOptionModule,
+                OptionWithDisable,
+                OptionWithCheckbox,
+                OptionWithOwnRole,
+                OptgroupWithLabel,
+                OptionInGroup,
+                OptionDrivenByEffects
+            ]
         }).compileComponents();
+    });
+
+    describe('host state', () => {
+        it('should reflect the selected, active and disabled state', () => {
+            const fixture = TestBed.createComponent(OptionWithDisable);
+
+            fixture.detectChanges();
+
+            const debugElement = fixture.debugElement.query(By.directive(KbqOption));
+            const option: HTMLElement = debugElement.nativeElement;
+
+            expect(option.getAttribute('tabindex')).toBe('0');
+            expect(option.classList).not.toContain('kbq-selected');
+            expect(option.classList).not.toContain('kbq-active');
+            expect(option.classList).not.toContain('kbq-disabled');
+
+            (debugElement.componentInstance as KbqOption).select();
+            (debugElement.componentInstance as KbqOption).setActiveStyles();
+            fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+
+            expect(option.getAttribute('tabindex')).toBe('-1');
+            expect(option.classList).toContain('kbq-selected');
+            expect(option.classList).toContain('kbq-active');
+            expect(option.classList).toContain('kbq-disabled');
+        });
+
+        it('should follow the disabled state of its group', () => {
+            const fixture = TestBed.createComponent(OptionInGroup);
+
+            fixture.detectChanges();
+
+            const debugElement = fixture.debugElement.query(By.directive(KbqOption));
+            const option: HTMLElement = debugElement.nativeElement;
+
+            expect((debugElement.componentInstance as KbqOption).disabled).toBe(true);
+            expect(option.getAttribute('tabindex')).toBe('-1');
+            expect(option.getAttribute('aria-disabled')).toBe('true');
+            expect(option.classList).toContain('kbq-disabled');
+
+            fixture.componentInstance.groupDisabled.set(false);
+            fixture.detectChanges();
+
+            expect((debugElement.componentInstance as KbqOption).disabled).toBe(false);
+            expect(option.getAttribute('tabindex')).toBe('0');
+            expect(option.getAttribute('aria-disabled')).toBe('false');
+            expect(option.classList).not.toContain('kbq-disabled');
+        });
     });
 
     describe('aria', () => {
@@ -125,7 +241,7 @@ describe('KbqOption component', () => {
         fixture.detectChanges();
 
         const optionInstance: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
-        const completeSpy = jest.fn();
+        const completeSpy = vi.fn();
         const subscription = optionInstance.stateChanges.subscribe({ complete: completeSpy });
 
         fixture.destroy();
@@ -140,8 +256,8 @@ describe('KbqOption component', () => {
 
         const option: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
         const host = option.getHostElement();
-        const focusSpy = jest.spyOn(host, 'focus');
-        const scrollSpy = jest.spyOn(host, 'scrollIntoView');
+        const focusSpy = vi.spyOn(host, 'focus');
+        const scrollSpy = vi.spyOn(host, 'scrollIntoView');
 
         option.focus();
 
@@ -156,8 +272,8 @@ describe('KbqOption component', () => {
 
         const option: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
         const host = option.getHostElement();
-        const focusSpy = jest.spyOn(host, 'focus');
-        const scrollSpy = jest.spyOn(host, 'scrollIntoView');
+        const focusSpy = vi.spyOn(host, 'focus');
+        const scrollSpy = vi.spyOn(host, 'scrollIntoView');
 
         host.dispatchEvent(new MouseEvent('mouseenter'));
         option.focus();
@@ -175,7 +291,7 @@ describe('KbqOption component', () => {
 
         const option: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
         const host = option.getHostElement();
-        const scrollSpy = jest.spyOn(host, 'scrollIntoView');
+        const scrollSpy = vi.spyOn(host, 'scrollIntoView');
 
         // Hovering the option that is already active never reaches focus(), so a flag cleared only
         // there would stay armed and silently swallow every later reveal.
@@ -184,6 +300,19 @@ describe('KbqOption component', () => {
         option.focus();
 
         expect(scrollSpy).toHaveBeenCalledWith({ block: 'nearest', inline: 'nearest' });
+    });
+
+    it('should select an option without a parent on shift + click', () => {
+        const fixture = TestBed.createComponent(OptionWithDisable);
+
+        fixture.detectChanges();
+
+        const option = fixture.debugElement.query(By.directive(KbqOption));
+
+        option.nativeElement.dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+        fixture.detectChanges();
+
+        expect((option.componentInstance as KbqOption).selected).toBe(true);
     });
 
     it('should not emit to `onSelectionChange` if selecting an already-selected option', () => {
@@ -196,7 +325,7 @@ describe('KbqOption component', () => {
         optionInstance.select();
         expect(optionInstance.selected).toBe(true);
 
-        const spy = jest.fn();
+        const spy = vi.fn();
         const subscription = optionInstance.onSelectionChange.subscribe(spy);
 
         optionInstance.select();
@@ -218,7 +347,7 @@ describe('KbqOption component', () => {
         optionInstance.deselect();
         expect(optionInstance.selected).toBe(false);
 
-        const spy = jest.fn();
+        const spy = vi.fn();
         const subscription = optionInstance.onSelectionChange.subscribe(spy);
 
         optionInstance.deselect();
@@ -228,6 +357,56 @@ describe('KbqOption component', () => {
         expect(spy).not.toHaveBeenCalled();
 
         subscription.unsubscribe();
+    });
+
+    describe('called from an effect', () => {
+        it('should not make an effect that selects it run again when it is deselected', () => {
+            const fixture = TestBed.createComponent(OptionDrivenByEffects);
+            const { componentInstance } = fixture;
+
+            fixture.detectChanges();
+            componentInstance.wantSelected.set(true);
+            fixture.detectChanges();
+
+            componentInstance.option().deselect();
+            fixture.detectChanges();
+
+            expect(componentInstance.option().selected).toBe(false);
+            expect(componentInstance.runs.select).toBe(1);
+        });
+
+        it('should not loop when an effect toggles it through `selectViaInteraction`', () => {
+            const fixture = TestBed.createComponent(OptionDrivenByEffects);
+            const { componentInstance } = fixture;
+
+            fixture.detectChanges();
+            componentInstance.toggles.set(1);
+            fixture.detectChanges();
+
+            expect(componentInstance.option().selected).toBe(true);
+            expect(componentInstance.runs.toggle).toBe(1);
+        });
+    });
+});
+
+describe('KbqOptionActionComponent', () => {
+    it('should reflect the disabled state on the host', () => {
+        const fixture = TestBed.createComponent(ActionWithDisable);
+
+        fixture.detectChanges();
+
+        const action: HTMLElement = fixture.debugElement.query(By.directive(KbqOptionActionComponent)).nativeElement;
+
+        expect(action.getAttribute('disabled')).toBe('true');
+        expect(action.getAttribute('aria-disabled')).toBe('true');
+        expect(action.classList).toContain('kbq-disabled');
+
+        fixture.componentInstance.disabled.set(false);
+        fixture.detectChanges();
+
+        expect(action.hasAttribute('disabled')).toBe(false);
+        expect(action.hasAttribute('aria-disabled')).toBe(false);
+        expect(action.classList).not.toContain('kbq-disabled');
     });
 });
 

@@ -110,3 +110,18 @@ export function shouldSelectSearchText(input: HTMLInputElement | null | undefine
 
     return !(input.selectionStart === 0 && input.selectionEnd === length);
 }
+
+/**
+ * Transform of a `selectAllHandler` input: takes a function or `undefined`, which leaves the component its own handler,
+ * and throws on anything else, so that a wrong binding fails where it is made rather than on the first Ctrl/Cmd + A.
+ * @docs-private
+ */
+export function kbqSelectAllHandlerTransform<S>(
+    handler: ((event: KeyboardEvent, source: S) => void) | undefined
+): ((event: KeyboardEvent, source: S) => void) | undefined {
+    if (handler !== undefined && typeof handler !== 'function') {
+        throw Error('`selectAllHandler` must be a function.');
+    }
+
+    return handler;
+}

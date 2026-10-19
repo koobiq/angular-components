@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, TemplateRef, ViewEncapsulation, inject, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -90,8 +89,6 @@ export class DevDocsExamples {}
 export class DevSidepanelComponent {
     data = inject(KBQ_SIDEPANEL_DATA);
 
-    themePalette = ThemePalette;
-
     openComponentSidepanel: () => void;
 
     array = new Array(60);
@@ -123,7 +120,6 @@ export class DevSidepanelComponent {
 export class DevApp {
     private sidepanelService = inject(KbqSidepanelService);
 
-    themePalette = ThemePalette;
     position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
     size: KbqSidepanelSize = KbqSidepanelSize.Medium;
 

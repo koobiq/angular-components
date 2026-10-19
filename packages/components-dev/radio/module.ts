@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ThemePalette } from '@koobiq/components/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
 import { RadioExamplesModule } from 'packages/docs-examples/components/radio';
@@ -39,7 +39,7 @@ export class DevDocsExamples {}
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
-    readonly themePalette = ThemePalette;
+    readonly colors = KbqComponentColors;
 
     favoriteFruit: string;
 

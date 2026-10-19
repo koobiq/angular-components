@@ -1,0 +1,39 @@
+{
+    "name": "kbq-check-angular",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "ng": "ng",
+        "install:library": "node scripts/install-library.mjs",
+        "build": "ng build zoneless && ng build zone && ng build zone-animations",
+        "check:bundles": "node scripts/check-bundles.mjs",
+        "test": "ng test zoneless --watch=false && ng test zone --watch=false && ng test zone-animations --watch=false",
+        "check": "npm run build && npm run check:bundles && npm test"
+    },
+    "dependencies": {
+        "@angular/animations": "^21.2.0",
+        "@angular/cdk": "^21.2.0",
+        "@angular/common": "^21.2.0",
+        "@angular/compiler": "^21.2.0",
+        "@angular/core": "^21.2.0",
+        "@angular/forms": "^21.2.0",
+        "@angular/platform-browser": "^21.2.0",
+        "@koobiq/date-adapter": "^3.5.1",
+        "@koobiq/date-formatter": "^3.5.1",
+        "@koobiq/design-tokens": "^3.20.0",
+        "@koobiq/icons": "^12.2.1",
+        "luxon": "^3.7.2",
+        "overlayscrollbars": "2.7.3",
+        "rxjs": "~7.8.2",
+        "tslib": "^2.8.1",
+        "zone.js": "~0.16.0"
+    },
+    "devDependencies": {
+        "@angular/build": "^21.2.0",
+        "@angular/cli": "^21.2.0",
+        "@angular/compiler-cli": "^21.2.0",
+        "jsdom": "^26.1.0",
+        "typescript": "~5.9.3",
+        "vitest": "^4.0.8"
+    }
+}
