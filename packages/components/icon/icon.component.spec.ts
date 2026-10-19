@@ -429,6 +429,56 @@ describe('KbqIcon', () => {
         });
     });
 
+    describe('hydration', () => {
+        let registry: KbqIconRegistry;
+        let sanitizer: DomSanitizer;
+
+        const register = (name: string) => {
+            registry.addSvgIconLiteral(name, sanitizer.bypassSecurityTrustHtml(ICON_SVG));
+        };
+
+        beforeEach(() => {
+            registry = TestBed.inject(KbqIconRegistry);
+            sanitizer = TestBed.inject(DomSanitizer);
+        });
+
+        // ICN-BUG-02: a second resolution for an already-rendered name (e.g. a transfer-state read
+        // landing after hydration already claimed the host) replaced the svg instead of leaving it,
+        // which duplicated it when the removal raced the replacement.
+        it('should adopt an already-rendered svg instead of duplicating it on a repeat resolution', () => {
+            register('kbq-plus_16');
+
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            const host = hostOf(fixture);
+            const svg = host.querySelector('svg');
+
+            expect(svg).not.toBeNull();
+
+            const icon = fixture.debugElement.query(By.directive(KbqIcon)).injector.get(KbqIcon);
+
+            (icon as unknown as { resolveSvgIcon(): void }).resolveSvgIcon();
+            fixture.detectChanges();
+
+            expect(host.querySelectorAll('svg')).toHaveLength(1);
+            expect(host.querySelector('svg')).toBe(svg);
+            expect(host.classList).not.toContain('kbq-plus_16');
+        });
+
+        // ICN-BUG-04: `svgIcon` defaulted to `false` until the async resolution pipeline confirmed an
+        // svg, so the font-icon class host binding applied for every frame before that — rendering the
+        // font glyph on top of an svg a hydrated host already has, visible whenever resolution is slow.
+        //
+        // Not covered here: TestBed has no way to construct a component against DOM that already has
+        // content, which is what real hydration reuses (`createComponent`'s `hostElement` option looked
+        // promising, but it clears the host's children before constructing the component, the opposite
+        // of what SSR hands the client). Verified manually instead, against a real hydrated SSR build:
+        // `svgIcon` reads `true` through Angular DevTools immediately post-hydration, before the
+        // resolution pipeline has had a chance to run, and the font class never appears in `className`.
+    });
+
     // A resolver is consumer code. One that throws must fall back to the font class and leave the next
     // name to be resolved again.
     it('should survive a resolver that throws', () => {
