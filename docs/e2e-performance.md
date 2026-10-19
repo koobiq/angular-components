@@ -50,8 +50,8 @@ from `ng build` output instead.
 
 ## What changed
 
-- `packages/e2e/routes.ts` keys the fixtures by class name instead of reading `component.name`,
-  which minification mangles.
+- `packages/e2e/routes.ts` keys the scenarios by export name, the keys of a namespace import of
+  `packages/e2e/scenarios.ts`, instead of reading `component.name`, which minification mangles.
 - `angular.json`: the `production` configuration of `dev-e2e` sets `sourceMap: false` and
   `optimization: { scripts: true, styles: false, fonts: false }`. Styles stay byte-identical — no
   minification, no `inlineCritical` — so no baseline moves. `yarn run dev:e2e` still uses the

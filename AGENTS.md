@@ -65,7 +65,7 @@ packages/components/<component-name>/
 
 Cross-entry-point imports go through the `@koobiq/components/<name>` alias mapped in the root `tsconfig.json`, never through relative paths into another component's directory. A nested entry point such as `scrollbar/deprecated` carries its own `ng-package.json` and alias.
 
-A new component touches more than its directory: the alias in `tsconfig.json`, the API guard list in `tools/api-extractor/config.json`, a `dev-<name>` project in `angular.json` plus a `dev:<name>` script in `package.json`, the route list in `packages/e2e/routes.ts`, the docs navigation in `apps/docs/src/app/structure.ts`, and an examples folder under `packages/docs-examples/components/<name>/`. The commit scope needs nothing: the enum is built from the directory names.
+A new component touches more than its directory: the alias in `tsconfig.json`, the API guard list in `tools/api-extractor/config.json`, a `dev-<name>` project in `angular.json` plus a `dev:<name>` script in `package.json`, an `export *` of its `e2e.ts` in `packages/e2e/scenarios.ts`, the docs navigation in `apps/docs/src/app/structure.ts`, and an examples folder under `packages/docs-examples/components/<name>/`. The commit scope needs nothing: the enum is built from the directory names.
 
 ## Common Commands
 
@@ -234,9 +234,9 @@ A docs preview is deployed to Firebase for pull requests opened from this reposi
 
 ### E2E wiring
 
-- `packages/components/<name>/e2e.ts` exports standalone `E2e<Name><Scenario>` components with a `data-testid` host attribute and an inner `data-testid="e2eScreenshotTarget"` for screenshots. Each class is added to the `components` map in `packages/e2e/routes.ts` under its own name, and that key becomes the route path (the production build mangles class names, so the path cannot come from `component.name`); a spec navigates with `page.goto('/E2eButtonStateAndStyle')`.
+- `packages/components/<name>/e2e.ts` exports standalone `E2e<Name><Scenario>` components with a `data-testid` host attribute and an inner `data-testid="e2eScreenshotTarget"` for screenshots. `packages/e2e/scenarios.ts` re-exports every `e2e.ts`, and `packages/e2e/routes.ts` turns each exported component with the `E2e` prefix into a route whose path is the export name (the production build mangles class names, so the path cannot come from `component.name`); a spec navigates with `page.goto('/E2eButtonStateAndStyle')`. A new scenario needs no registration. Lint requires the `E2e` prefix of every exported class, so keep helper components local; a helper Angular forces to export (NG3004 when another template binds its inputs or outputs, fixed in Angular 22.2.3) drops the prefix under an `eslint-disable` comment, like `TopBarActionsRow` in `top-bar/e2e.ts`.
 - Specs locate everything by test id, take the light screenshot, call `e2eEnableDarkTheme(page)` and take the dark one; baselines are named `NN-light.png` / `NN-dark.png` (and `NN-rtl.png` where relevant).
-- Selectors, class names and exported symbols in e2e code use the `e2e` prefix (lint-enforced); dev apps use `dev`, the docs app `docs`.
+- Selectors, CSS classes and exported symbols in e2e code use the `e2e` prefix (lint checks selectors and exports); dev apps use `dev`, the docs app `docs`. Local classes and types go without a prefix, and markup copied from a docs example drops its `example` prefixes and suffixes.
 
 ### Documentation pipeline
 

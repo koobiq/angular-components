@@ -370,10 +370,10 @@ export class E2eSplitterCollapsibleLive {
 })
 export class E2eSplitterPaddedPanels {}
 
-type E2eSplitterSeparatorState = 'default' | 'hover' | 'focus' | 'active';
+type SplitterSeparatorState = 'default' | 'hover' | 'focus' | 'active';
 
 /** Classes that put a separator into each state without a pointer or a keyboard behind it. */
-const e2eSplitterSeparatorStateClasses: Record<E2eSplitterSeparatorState, string[]> = {
+const e2eSplitterSeparatorStateClasses: Record<SplitterSeparatorState, string[]> = {
     default: [],
     hover: ['kbq-hover'],
     focus: ['cdk-keyboard-focused'],
@@ -447,7 +447,7 @@ const e2eSplitterSeparatorStateClasses: Record<E2eSplitterSeparatorState, string
 export class E2eSplitterStates {
     protected readonly orientations: KbqSplitterOrientation[] = ['horizontal', 'vertical'];
     protected readonly appearances: KbqSplitterAppearance[] = ['divider', 'transparent', 'handle'];
-    protected readonly states = Object.keys(e2eSplitterSeparatorStateClasses) as E2eSplitterSeparatorState[];
+    protected readonly states = Object.keys(e2eSplitterSeparatorStateClasses) as SplitterSeparatorState[];
 
     private readonly nativeElement = kbqInjectNativeElement();
 
@@ -457,7 +457,7 @@ export class E2eSplitterStates {
                 const separator = splitter.querySelector(
                     ':scope > .kbq-splitter-panel > .kbq-splitter-panel__separator'
                 );
-                const state = splitter.dataset.e2eSeparatorState as E2eSplitterSeparatorState;
+                const state = splitter.dataset.e2eSeparatorState as SplitterSeparatorState;
 
                 // Throws rather than dropping the state quietly, which would rewrite the baseline without it.
                 if (!separator) throw new Error(`[e2eSplitterStates] no separator to put into the ${state} state`);

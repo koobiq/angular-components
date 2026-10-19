@@ -86,13 +86,17 @@ export class E2eLoaderOverlayStates {}
     imports: [KbqLoaderOverlayModule],
     template: `
         @for (surface of surfaces; track surface.value) {
-            <div class="example__item {{ surface.surfaceClass }}">
-                <div class="example__content">
-                    <p class="example__paragraph kbq-text-normal">{{ content }}</p>
-                    <p class="example__paragraph example__paragraph_fade kbq-text-normal">{{ contentFade }}</p>
+            <div class="e2e-loader-overlay-background__item {{ surface.surfaceClass }}">
+                <div class="e2e-loader-overlay-background__content">
+                    <p class="e2e-loader-overlay-background__paragraph kbq-text-normal">{{ content }}</p>
+                    <p
+                        class="e2e-loader-overlay-background__paragraph e2e-loader-overlay-background__paragraph_fade kbq-text-normal"
+                    >
+                        {{ contentFade }}
+                    </p>
                 </div>
                 <kbq-loader-overlay
-                    class="example__overlay"
+                    class="e2e-loader-overlay-background__overlay"
                     size="compact"
                     [text]="surface.value"
                     [surface]="surface.value"
@@ -106,27 +110,27 @@ export class E2eLoaderOverlayStates {}
             grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 20px;
 
-            --example-padding: var(--kbq-size-l);
-            --example-overlay-transition-duration: 200ms;
-            --example-overlay-transition-easing: cubic-bezier(0.23, 1, 0.32, 1);
+            --e2e-padding: var(--kbq-size-l);
+            --e2e-overlay-transition-duration: 200ms;
+            --e2e-overlay-transition-easing: cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .example__item {
-            --example-overlay-size-reduction: 0px;
-            --example-overlay-inset-y: 0px;
-            --example-overlay-inset-x: 0px;
+        .e2e-loader-overlay-background__item {
+            --e2e-overlay-size-reduction: 0px;
+            --e2e-overlay-inset-y: 0px;
+            --e2e-overlay-inset-x: 0px;
 
             display: flex;
             flex-direction: column;
             min-width: 0;
             aspect-ratio: 16 / 9;
             box-sizing: border-box;
-            padding: var(--example-padding) var(--example-padding) 0;
+            padding: var(--e2e-padding) var(--e2e-padding) 0;
             border-radius: var(--kbq-size-m);
             grid-column: span 2;
         }
 
-        .example__item:nth-child(5) {
+        .e2e-loader-overlay-background__item:nth-child(5) {
             grid-column: 2 / span 2;
         }
 
@@ -135,68 +139,68 @@ export class E2eLoaderOverlayStates {}
                 grid-template-columns: 1fr;
             }
 
-            .example__item,
-            .example__item:nth-child(5) {
+            .e2e-loader-overlay-background__item,
+            .e2e-loader-overlay-background__item:nth-child(5) {
                 grid-column: auto;
             }
         }
 
-        .example__overlay {
-            inset: var(--example-overlay-inset-y) auto auto var(--example-overlay-inset-x);
-            width: calc(100% - var(--example-overlay-size-reduction));
-            height: calc(100% - var(--example-overlay-size-reduction));
+        .e2e-loader-overlay-background__overlay {
+            inset: var(--e2e-overlay-inset-y) auto auto var(--e2e-overlay-inset-x);
+            width: calc(100% - var(--e2e-overlay-size-reduction));
+            height: calc(100% - var(--e2e-overlay-size-reduction));
             box-sizing: border-box;
             transition:
-                top var(--example-overlay-transition-duration) var(--example-overlay-transition-easing),
-                left var(--example-overlay-transition-duration) var(--example-overlay-transition-easing),
-                width var(--example-overlay-transition-duration) var(--example-overlay-transition-easing),
-                height var(--example-overlay-transition-duration) var(--example-overlay-transition-easing);
+                top var(--e2e-overlay-transition-duration) var(--e2e-overlay-transition-easing),
+                left var(--e2e-overlay-transition-duration) var(--e2e-overlay-transition-easing),
+                width var(--e2e-overlay-transition-duration) var(--e2e-overlay-transition-easing),
+                height var(--e2e-overlay-transition-duration) var(--e2e-overlay-transition-easing);
         }
 
         @media (hover: hover) and (pointer: fine) {
-            .example__item:hover {
-                --example-overlay-size-reduction: var(--example-padding);
-                --example-overlay-inset-y: calc(var(--example-padding) * -1);
-                --example-overlay-inset-x: calc(var(--example-padding) * 2);
+            .e2e-loader-overlay-background__item:hover {
+                --e2e-overlay-size-reduction: var(--e2e-padding);
+                --e2e-overlay-inset-y: calc(var(--e2e-padding) * -1);
+                --e2e-overlay-inset-x: calc(var(--e2e-padding) * 2);
             }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .example__overlay {
+            .e2e-loader-overlay-background__overlay {
                 transition: none;
             }
         }
 
-        .example__content {
+        .e2e-loader-overlay-background__content {
             flex: 1;
             overflow: hidden;
         }
 
-        .example__paragraph {
+        .e2e-loader-overlay-background__paragraph {
             margin: 0;
         }
 
-        .example__paragraph + .example__paragraph {
+        .e2e-loader-overlay-background__paragraph + .e2e-loader-overlay-background__paragraph {
             margin-top: 4px;
         }
 
-        .example__paragraph_fade {
+        .e2e-loader-overlay-background__paragraph_fade {
             color: var(--kbq-foreground-contrast-secondary);
         }
 
-        .example__item_bg {
+        .e2e-loader-overlay-background__item_bg {
             background: var(--kbq-background-bg);
         }
 
-        .example__item_bg-secondary {
+        .e2e-loader-overlay-background__item_bg-secondary {
             background: var(--kbq-background-bg-secondary);
         }
 
-        .example__item_bg-tertiary {
+        .e2e-loader-overlay-background__item_bg-tertiary {
             background: var(--kbq-background-bg-tertiary);
         }
 
-        .example__item_card {
+        .e2e-loader-overlay-background__item_card {
             background: var(--kbq-background-card);
         }
     `,
@@ -214,11 +218,11 @@ export class E2eLoaderOverlayBackground {
         value: KbqLoaderOverlaySurface;
         surfaceClass: string;
     }> = [
-        { value: 'bg', surfaceClass: 'example__item_bg' },
-        { value: 'bg-secondary', surfaceClass: 'example__item_bg-secondary' },
-        { value: 'bg-tertiary', surfaceClass: 'example__item_bg-tertiary' },
-        { value: 'card', surfaceClass: 'example__item_card' },
-        { value: 'solid', surfaceClass: 'example__item_bg' }
+        { value: 'bg', surfaceClass: 'e2e-loader-overlay-background__item_bg' },
+        { value: 'bg-secondary', surfaceClass: 'e2e-loader-overlay-background__item_bg-secondary' },
+        { value: 'bg-tertiary', surfaceClass: 'e2e-loader-overlay-background__item_bg-tertiary' },
+        { value: 'card', surfaceClass: 'e2e-loader-overlay-background__item_card' },
+        { value: 'solid', surfaceClass: 'e2e-loader-overlay-background__item_bg' }
     ];
 }
 

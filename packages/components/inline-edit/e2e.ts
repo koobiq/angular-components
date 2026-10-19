@@ -35,7 +35,7 @@ import { KbqInlineEditModule } from './module';
             data-testid="e2eInlineEditList"
         >
             <kbq-inline-edit>
-                <div class="example-inline-text" kbqInlineEditViewMode>
+                <div class="e2e-inline-edit-text" kbqInlineEditViewMode>
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: { value: '' } }" />
                 </div>
                 <kbq-form-field kbqInlineEditEditMode>
@@ -44,7 +44,7 @@ import { KbqInlineEditModule } from './module';
             </kbq-inline-edit>
 
             <kbq-inline-edit>
-                <div class="example-inline-text" kbqInlineEditViewMode>
+                <div class="e2e-inline-edit-text" kbqInlineEditViewMode>
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: { value: 'value' } }" />
                 </div>
                 <kbq-form-field kbqInlineEditEditMode>
@@ -55,7 +55,7 @@ import { KbqInlineEditModule } from './module';
             <kbq-inline-edit>
                 <kbq-label>Label</kbq-label>
 
-                <div class="example-inline-text" kbqInlineEditViewMode>
+                <div class="e2e-inline-edit-text" kbqInlineEditViewMode>
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: { value: 'value' } }" />
                 </div>
                 <kbq-form-field kbqInlineEditEditMode>
@@ -64,7 +64,7 @@ import { KbqInlineEditModule } from './module';
             </kbq-inline-edit>
 
             <kbq-inline-edit showActions>
-                <div class="example-inline-text" kbqInlineEditViewMode>
+                <div class="e2e-inline-edit-text" kbqInlineEditViewMode>
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: { value: 'value' } }" />
                 </div>
                 <kbq-form-field kbqInlineEditEditMode>
@@ -207,7 +207,7 @@ export class E2eInlineEditTruncation {}
                     [kbqDropdownTriggerFor]="dropdown"
                     [color]="'contrast-fade'"
                 ></i>
-                <div class="example-inline-text" kbqInlineEditViewMode>value</div>
+                <div class="e2e-inline-edit-text" kbqInlineEditViewMode>value</div>
                 <kbq-form-field kbqInlineEditEditMode>
                     <input kbqInput [value]="'value'" />
                 </kbq-form-field>
