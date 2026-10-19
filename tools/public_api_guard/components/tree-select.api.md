@@ -102,7 +102,7 @@ export class KbqTreeSelect<T = any> extends KbqAbstractSelect implements AfterVi
     readonly empty: _angular_core.Signal<boolean>;
     readonly errorState: _angular_core.Signal<boolean>;
     readonly errorStateMatcher: InputSignal<ErrorStateMatcher | undefined>;
-    protected get firstSelected(): T;
+    protected get firstSelected(): T | undefined;
     // (undocumented)
     focus(): void;
     readonly focused: _angular_core.Signal<boolean>;
@@ -198,7 +198,7 @@ export class KbqTreeSelect<T = any> extends KbqAbstractSelect implements AfterVi
     readonly selectAllHandlerInput: _angular_core.InputSignalWithTransform<((event: KeyboardEvent, select: KbqTreeSelect<T>) => void) | undefined, ((event: KeyboardEvent, select: KbqTreeSelect<T>) => void) | undefined>;
     readonly selectAllToggle: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    get selected(): any;
+    get selected(): T | T[];
     // (undocumented)
     get selectedValues(): any;
     readonly selectionChange: _angular_core.OutputEmitterRef<KbqTreeSelectChange<any>>;

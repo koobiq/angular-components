@@ -2927,6 +2927,8 @@ class MyToast extends KbqToastComponent {
 
 `[dataSource]`, привязанный обратно к `undefined`, очищает дерево так же, как `null`; пока источник не задан, `dataSource` возвращает `null`, а не `undefined`.
 
+`KbqTreeSelection`, `KbqTreeOption` и `KbqTreeSelect` принимают тип узла данных `T`, по умолчанию `any`. `selectionModel` — это `SelectionModel<T>` вместо модели над интерфейсом, который не экспортировался и не описывал хранимые в ней узлы, а `KbqTreeOption.data` — это узел, а не тип опции, которым он был объявлен. Шаблон выводит `T` дерева из `[treeControl]`, `[dataSource]`, `[trackBy]` и `[selectAllHandler]`, поэтому со `strictTemplates` дерево, привязки которого называют разные типы узлов, больше не компилируется: задайте им один тип. Запрос указывает тип явно: `viewChild.required<KbqTreeSelection<Node>>(KbqTreeSelection)`.
+
 Сообщает `tree-signals`. Проект, который вообще отрисовывает дерево, получает ещё и сводку по всем шести членам: пять из них видны только там, где в них пишут, а потребитель, который просто читает один из них, получает значение с изменившимся типом и вообще никакой диагностики.
 
 #### Tree select

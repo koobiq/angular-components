@@ -318,7 +318,8 @@ export class KbqTreeSelect<T = any>
     /**
      * Deals with the selection logic. The projected `kbq-tree-selection` shares the same instance.
      *
-     * `T` is the type of the data nodes. A query names it: `viewChild.required<KbqTreeSelect<Node>>(KbqTreeSelect)`.
+     * `T` is the type of the data nodes, the same as the projected tree's. A template infers it from `[clearPredicate]`
+     * alone, apart from the tree; a query names it: `viewChild.required<KbqTreeSelect<Node>>(KbqTreeSelect)`.
      */
     selectionModel: SelectionModel<T>;
 
@@ -523,7 +524,8 @@ export class KbqTreeSelect<T = any>
      * option. Disabled nodes are kept by default. Bind a stable reference — a new function on every
      * change detection re-runs the predicate over the whole selection.
      *
-     * Not consulted by `writeValue` / `reset()`, which always clear everything.
+     * Not consulted by `writeValue` / `reset()`, which always clear everything. The parameter type becomes the select's
+     * `T` in a template: type it with the tree's node, not with an option.
      */
     readonly clearPredicate = input<(node: T) => boolean, (node: T) => boolean>(
         this.defaultOptions?.clearPredicate ?? ((node) => !this.isNodeDisabled(node)),
@@ -1403,7 +1405,7 @@ export class KbqTreeSelect<T = any>
         this.disabled.set(isDisabled);
     }
 
-    get selected(): any {
+    get selected(): T | T[] {
         return this.multiSelection ? this.selectionModel?.selected : this.selectionModel?.selected[0];
     }
 
@@ -1418,7 +1420,8 @@ export class KbqTreeSelect<T = any>
             return '';
         }
 
-        return this.tree()!.treeControl.getViewValue(this.selected);
+        // Shown in single selection, where `selected` is the node.
+        return this.tree()!.treeControl.getViewValue(this.selected as T);
     }
 
     private readonly emptyValue = signal(true);
@@ -1427,7 +1430,7 @@ export class KbqTreeSelect<T = any>
     readonly empty = this.emptyValue.asReadonly();
 
     /** First selected node that is not disabled — the one the panel highlights when it opens. */
-    protected get firstSelected() {
+    protected get firstSelected(): T | undefined {
         return this.selectionModel.selected.filter((node) => !this.tree()!.treeControl.isDisabled(node))[0];
     }
 
@@ -1530,9 +1533,13 @@ export class KbqTreeSelect<T = any>
             .filter(({ disabled }) => !disabled)
             .findIndex(({ value }) => value === selectedOption.value);
 
-        this.selectionModel.deselect(
-            this.selected.find((value) => this.tree()!.treeControl.getValue(value) === selectedOption.value)
+        const removed = this.selectionModel.selected.find(
+            (node) => this.tree()!.treeControl.getValue(node) === selectedOption.value
         );
+
+        if (removed !== undefined) {
+            this.selectionModel.deselect(removed);
+        }
 
         this.selectionChange.emit(
             new KbqTreeSelectChange(

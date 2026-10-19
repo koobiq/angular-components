@@ -2,7 +2,7 @@
 
 Migration schematic invoked automatically by `ng update @koobiq/components@21`
 (registered for `21.0.0-0`). Reports the public members of `@koobiq/components/tree` that
-became read-only when the tree moved to signals. It never writes to the tree.
+became read-only when the tree moved to signals, and the node type the tree takes. It never writes to the tree.
 
 ## Background
 
@@ -37,6 +37,15 @@ Two of them are silent rather than loud:
 - `KbqTreeNodeToggle` kept `disabled` as the input alias (the input is declared as `disabledInput`),
   so every template binding keeps working. Only imperative writes break, and the class itself
   performed one before the review: the filter state is now OR-ed in by the computed instead.
+
+## Node type
+
+`KbqTreeSelection`, `KbqTreeOption` and `KbqTreeSelect` take the type of the data node, `T`, `any` by
+default, and `selectionModel` is `SelectionModel<T>`. A template infers `T` of `kbq-tree-selection` from
+`[treeControl]`, `[dataSource]`, `[trackBy]` and `[selectAllHandler]`, so with `strictTemplates`
+bindings that name different node types no longer compile. Only the compiler sees such a mismatch, so
+the summary names it rather than a pattern: give the bindings the same node type. A query names it as
+`viewChild.required<KbqTreeSelection<Node>>(KbqTreeSelection)`.
 
 ## What it does
 

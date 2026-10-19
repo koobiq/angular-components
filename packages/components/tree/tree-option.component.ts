@@ -76,8 +76,9 @@ export interface KbqTreeOptionParent<T = any> {
 }
 
 /** Injection token used to provide the parent component to options. */
-export const KBQ_TREE_OPTION_PARENT_COMPONENT: InjectionToken<KbqTreeOptionParent> =
-    new InjectionToken<KbqTreeOptionParent>('KBQ_TREE_OPTION_PARENT_COMPONENT');
+export const KBQ_TREE_OPTION_PARENT_COMPONENT: InjectionToken<KbqTreeOptionParent> = new InjectionToken(
+    'KBQ_TREE_OPTION_PARENT_COMPONENT'
+);
 
 /** Represents a change event for a tree option. */
 export class KbqTreeOptionChange {

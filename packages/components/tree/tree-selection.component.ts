@@ -87,9 +87,9 @@ export const KBQ_SELECTION_TREE_VALUE_ACCESSOR: Provider = {
 /** How long the key manager collects keystrokes before matching them against the option labels. */
 const typeAheadDebounce = 200;
 
-export class KbqTreeSelectAllEvent<T> {
+export class KbqTreeSelectAllEvent<T, N = any> {
     constructor(
-        public source: KbqTreeSelection,
+        public source: KbqTreeSelection<N>,
         public options: T[]
     ) {}
 }
@@ -102,24 +102,24 @@ export class KbqTreeSelectAllEvent<T> {
  * @param option - instance of KbqTreeOption
  * @param event - original keyboard event (optional) that triggered the copy
  */
-export class KbqTreeCopyEvent<T> {
+export class KbqTreeCopyEvent<T, N = any> {
     constructor(
-        public source: KbqTreeSelection,
+        public source: KbqTreeSelection<N>,
         public option: T,
         public event?: KeyboardEvent
     ) {}
 }
 
-export class KbqTreeNavigationChange<T> {
+export class KbqTreeNavigationChange<T, N = any> {
     constructor(
-        public source: KbqTreeSelection,
+        public source: KbqTreeSelection<N>,
         public option: T
     ) {}
 }
 
-export class KbqTreeSelectionChange<T> {
+export class KbqTreeSelectionChange<T, N = any> {
     constructor(
-        public source: KbqTreeSelection,
+        public source: KbqTreeSelection<N>,
         public option: T,
         public options?: T[]
     ) {}
@@ -274,21 +274,21 @@ export class KbqTreeSelection<T = any>
         return this.unorderedOptionsList();
     }
 
-    readonly navigationChange = output<KbqTreeNavigationChange<KbqTreeOption<T>>>();
+    readonly navigationChange = output<KbqTreeNavigationChange<KbqTreeOption<T>, T>>();
 
     /**
      * Emits when the selection changes. A stream rather than an `output()`: `KbqTreeSelect` pipes it with rxjs.
      */
-    readonly selectionChange = new EventEmitter<KbqTreeSelectionChange<KbqTreeOption<T>>>();
+    readonly selectionChange = new EventEmitter<KbqTreeSelectionChange<KbqTreeOption<T>, T>>();
 
     /** @docs-private */
     readonly selectionChangeOutput = outputFromObservable(this.selectionChange, { alias: 'selectionChange' });
 
     /** Emits after "select all" ran, with the options it could act on. */
-    readonly selectAllChange = output<KbqTreeSelectAllEvent<KbqTreeOption<T>>>();
+    readonly selectAllChange = output<KbqTreeSelectAllEvent<KbqTreeOption<T>, T>>();
 
     /** @deprecated Use `selectAllChange` instead. Will be removed in 22.0.0. */
-    readonly onSelectAll = output<KbqTreeSelectAllEvent<KbqTreeOption<T>>>({ alias: 'onSelectAll' });
+    readonly onSelectAll = output<KbqTreeSelectAllEvent<KbqTreeOption<T>, T>>({ alias: 'onSelectAll' });
 
     /**
      * Emits when the active option is copied with Ctrl/Cmd + C. Subscribing replaces the built-in
@@ -296,13 +296,13 @@ export class KbqTreeSelection<T = any>
      * `observed`, which `OutputEmitterRef` does not have. A template listener subscribes to it through
      * the output below.
      */
-    readonly copyChange = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption<T>>>();
+    readonly copyChange = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption<T>, T>>();
 
     /** @docs-private */
     readonly copyChangeOutput = outputFromObservable(this.copyChange, { alias: 'copyChange' });
 
     /** @deprecated Use `copyChange` instead. Will be removed in 22.0.0. */
-    readonly onCopy = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption<T>>>();
+    readonly onCopy = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption<T>, T>>();
 
     /** @docs-private */
     readonly onCopyOutput = outputFromObservable(this.onCopy, { alias: 'onCopy' });

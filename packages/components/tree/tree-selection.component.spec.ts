@@ -1,12 +1,13 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { SelectionModel } from '@angular/cdk/collections';
+import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import {
     Component,
     DebugElement,
     Directive,
     DoCheck,
     effect,
+    EventEmitter,
     InputSignal,
     signal,
     Type,
@@ -46,7 +47,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqTitleDirective, KbqTitleModule } from '@koobiq/components/title';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
@@ -4631,8 +4632,9 @@ describe('KbqTreeSelection inputs', () => {
         expect(fixture.componentInstance.tree().treeControl).toBe(fixture.componentInstance.treeControl);
     });
 
-    // The types are checked by `check-spec-types`: a query that names the data node gets the model and the options
-    // typed by it, one that does not keeps `any`. What the model holds is the node, not the option.
+    // The types are checked by `check-spec-types`. A template infers `T` from the inputs, so they carry it; a query that
+    // names the data node gets the model, the options and the event source typed by it, one that does not keeps `any`.
+    // What the model holds is the node itself, not the option.
     it('should hold the data nodes in a selection model typed by them', async () => {
         const fixture = TestBed.createComponent(TreeMultipleWithDisabledNodes);
         const { tree, treeControl } = fixture.componentInstance;
@@ -4642,10 +4644,23 @@ describe('KbqTreeSelection inputs', () => {
 
         tree().unorderedOptions.first.selectViaInteraction();
 
+        expectTypeOf<KbqTreeSelection<FileFlatNode>['treeControlInput']>().toEqualTypeOf<
+            InputSignal<FlatTreeControl<FileFlatNode>>
+        >();
+        expectTypeOf<KbqTreeSelection<FileFlatNode>['dataSourceInput']>().toEqualTypeOf<
+            InputSignal<DataSource<FileFlatNode> | Observable<FileFlatNode[]> | FileFlatNode[] | null | undefined>
+        >();
         expectTypeOf<KbqTreeSelection['selectionModel']>().toEqualTypeOf<SelectionModel<any>>();
         expectTypeOf(tree().selectionModel).toEqualTypeOf<SelectionModel<FileFlatNode>>();
         expectTypeOf(tree().unorderedOptions.first.data).toEqualTypeOf<FileFlatNode>();
-        expect(tree().selectionModel.selected).toEqual([treeControl.dataNodes[0]]);
+        expectTypeOf(tree().selectionChange).toEqualTypeOf<
+            EventEmitter<KbqTreeSelectionChange<KbqTreeOption<FileFlatNode>, FileFlatNode>>
+        >();
+        expectTypeOf<KbqTreeSelectionChange<KbqTreeOption<FileFlatNode>, FileFlatNode>['source']>().toEqualTypeOf<
+            KbqTreeSelection<FileFlatNode>
+        >();
+        expect(tree().selectionModel.selected).toHaveLength(1);
+        expect(tree().selectionModel.selected[0]).toBe(treeControl.dataNodes[0]);
     });
 });
 

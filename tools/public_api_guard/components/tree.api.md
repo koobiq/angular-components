@@ -207,14 +207,14 @@ export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>> implement
 }
 
 // @public
-export class KbqTreeCopyEvent<T> {
-    constructor(source: KbqTreeSelection, option: T, event?: KeyboardEvent | undefined);
+export class KbqTreeCopyEvent<T, N = any> {
+    constructor(source: KbqTreeSelection<N>, option: T, event?: KeyboardEvent | undefined);
     // (undocumented)
     event?: KeyboardEvent | undefined;
     // (undocumented)
     option: T;
     // (undocumented)
-    source: KbqTreeSelection;
+    source: KbqTreeSelection<N>;
 }
 
 // @public
@@ -267,12 +267,12 @@ export class KbqTreeModule {
 }
 
 // @public (undocumented)
-export class KbqTreeNavigationChange<T> {
-    constructor(source: KbqTreeSelection, option: T);
+export class KbqTreeNavigationChange<T, N = any> {
+    constructor(source: KbqTreeSelection<N>, option: T);
     // (undocumented)
     option: T;
     // (undocumented)
-    source: KbqTreeSelection;
+    source: KbqTreeSelection<N>;
 }
 
 // @public
@@ -553,12 +553,12 @@ export interface KbqTreeOptionParent<T = any> {
 }
 
 // @public (undocumented)
-export class KbqTreeSelectAllEvent<T> {
-    constructor(source: KbqTreeSelection, options: T[]);
+export class KbqTreeSelectAllEvent<T, N = any> {
+    constructor(source: KbqTreeSelection<N>, options: T[]);
     // (undocumented)
     options: T[];
     // (undocumented)
-    source: KbqTreeSelection;
+    source: KbqTreeSelection<N>;
 }
 
 // @public (undocumented)
@@ -577,8 +577,8 @@ export class KbqTreeSelection<T = any> extends KbqTreeBase<T, FlatTreeControl<T>
     blur(): void;
     // (undocumented)
     copyActiveOption(event: KeyboardEvent): void;
-    readonly copyChange: EventEmitter<KbqTreeCopyEvent<KbqTreeOption<T>>>;
-    readonly copyChangeOutput: _angular_core.OutputRef<KbqTreeCopyEvent<KbqTreeOption<T>>>;
+    readonly copyChange: EventEmitter<KbqTreeCopyEvent<KbqTreeOption<T>, T>>;
+    readonly copyChangeOutput: _angular_core.OutputRef<KbqTreeCopyEvent<KbqTreeOption<T>, T>>;
     get disabled(): boolean;
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     protected emitChangeEvent(option: KbqTreeOption<T>): void;
@@ -602,7 +602,7 @@ export class KbqTreeSelection<T = any> extends KbqTreeBase<T, FlatTreeControl<T>
     get multipleMode(): MultipleMode | null;
     set multipleMode(value: MultipleMode | null);
     // (undocumented)
-    readonly navigationChange: _angular_core.OutputEmitterRef<KbqTreeNavigationChange<KbqTreeOption<T>>>;
+    readonly navigationChange: _angular_core.OutputEmitterRef<KbqTreeNavigationChange<KbqTreeOption<T>, T>>;
     // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
@@ -617,11 +617,11 @@ export class KbqTreeSelection<T = any> extends KbqTreeBase<T, FlatTreeControl<T>
     readonly noUnselectLastInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     onChange: (value: any) => void;
     // @deprecated (undocumented)
-    readonly onCopy: EventEmitter<KbqTreeCopyEvent<KbqTreeOption<T>>>;
-    readonly onCopyOutput: _angular_core.OutputRef<KbqTreeCopyEvent<KbqTreeOption<T>>>;
+    readonly onCopy: EventEmitter<KbqTreeCopyEvent<KbqTreeOption<T>, T>>;
+    readonly onCopyOutput: _angular_core.OutputRef<KbqTreeCopyEvent<KbqTreeOption<T>, T>>;
     onKeyDown(event: KeyboardEvent): void;
     // @deprecated (undocumented)
-    readonly onSelectAll: _angular_core.OutputEmitterRef<KbqTreeSelectAllEvent<KbqTreeOption<T>>>;
+    readonly onSelectAll: _angular_core.OutputEmitterRef<KbqTreeSelectAllEvent<KbqTreeOption<T>, T>>;
     onTouched: () => void;
     // (undocumented)
     get optionBlurChanges(): Observable<KbqTreeOptionEvent>;
@@ -644,7 +644,7 @@ export class KbqTreeSelection<T = any> extends KbqTreeBase<T, FlatTreeControl<T>
     protected selectActiveOptions(): void;
     get selectAll(): boolean;
     set selectAll(value: boolean);
-    readonly selectAllChange: _angular_core.OutputEmitterRef<KbqTreeSelectAllEvent<KbqTreeOption<T>>>;
+    readonly selectAllChange: _angular_core.OutputEmitterRef<KbqTreeSelectAllEvent<KbqTreeOption<T>, T>>;
     get selectAllHandler(): (event: KeyboardEvent, tree: KbqTreeSelection<T>) => void;
     readonly selectAllHandlerInput: _angular_core.InputSignalWithTransform<((event: KeyboardEvent, tree: KbqTreeSelection<T>) => void) | undefined, ((event: KeyboardEvent, tree: KbqTreeSelection<T>) => void) | undefined>;
     readonly selectAllInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
@@ -654,8 +654,8 @@ export class KbqTreeSelection<T = any> extends KbqTreeBase<T, FlatTreeControl<T>
     get selectAllState(): KbqPseudoCheckboxState;
     protected get selectAllText(): string;
     readonly selectAllToggle: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    readonly selectionChange: EventEmitter<KbqTreeSelectionChange<KbqTreeOption<T>>>;
-    readonly selectionChangeOutput: _angular_core.OutputRef<KbqTreeSelectionChange<KbqTreeOption<T>>>;
+    readonly selectionChange: EventEmitter<KbqTreeSelectionChange<KbqTreeOption<T>, T>>;
+    readonly selectionChangeOutput: _angular_core.OutputRef<KbqTreeSelectionChange<KbqTreeOption<T>, T>>;
     selectionModel: SelectionModel<T>;
     setDisabledState(isDisabled: boolean): void;
     protected setFocusedOption(option: KbqTreeOption<T>): void;
@@ -689,14 +689,14 @@ export class KbqTreeSelection<T = any> extends KbqTreeBase<T, FlatTreeControl<T>
 }
 
 // @public (undocumented)
-export class KbqTreeSelectionChange<T> {
-    constructor(source: KbqTreeSelection, option: T, options?: T[] | undefined);
+export class KbqTreeSelectionChange<T, N = any> {
+    constructor(source: KbqTreeSelection<N>, option: T, options?: T[] | undefined);
     // (undocumented)
     option: T;
     // (undocumented)
     options?: T[] | undefined;
     // (undocumented)
-    source: KbqTreeSelection;
+    source: KbqTreeSelection<N>;
 }
 
 // @public

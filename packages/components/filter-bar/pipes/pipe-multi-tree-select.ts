@@ -75,7 +75,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     }
 
     get numberOfSelectedLeaves(): number {
-        return this.select().selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length;
+        return this.select().selectionModel.selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length;
     }
 
     /** true if all options selected */
