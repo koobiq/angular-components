@@ -117,7 +117,7 @@
         "glob": "^13.0.6",
         "globals": "^16.0.0",
         "husky": "^9.1.7",
-        "inquirer": "^14.2.2",
+        "inquirer": "^14.2.3",
         "jest-axe": "^11.0.0",
         "jsdom": "^26.1.0",
         "license-checker": "^25.0.1",
