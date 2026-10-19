@@ -128,8 +128,8 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     }
 
     /**
-     * Whether the pipe template provides no values to choose from. Only consumed by the select-family pipe
-     * components, which then show `noOptionsMessage` instead of the list.
+     * Whether the pipe template provides no values to choose from. The select-family pipe components then
+     * show `noOptionsMessage` instead of the list; the date pipes open straight on the custom period.
      */
     protected get noOptions(): boolean {
         return !this.values?.length;

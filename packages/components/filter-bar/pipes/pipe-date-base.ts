@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, inject, signal, untracked, viewChild } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, inject, signal, untracked, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
@@ -78,7 +78,10 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     // in deferred callbacks that may fire after the popover has already closed.
     readonly listSelection = viewChild('listSelection', { read: KbqListSelection });
     /** @docs-private */
-    readonly returnButton = viewChild.required('returnButton', { read: KbqButton });
+    // Optional: rendered only when the pipe template provides presets to go back to.
+    readonly returnButton = viewChild('returnButton', { read: KbqButton });
+
+    private readonly startInput = viewChild('startInput', { read: ElementRef });
 
     /** Resolves the `minDateTime` / `maxDateTime` bounds from the pipe template matching this pipe. */
     private updateDateBounds = (templates: KbqPipeTemplate[] | null) => {
@@ -331,9 +334,12 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
             .visibleChange.pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((visible) => {
                 if (visible) {
-                    // Move keyboard focus onto the period list so Enter selects a preset
-                    // instead of the focus trap landing on the "custom period" row.
-                    if (this.isListMode()) {
+                    if (this.noOptions) {
+                        // The "custom period" row would be the only one: skip the list.
+                        this.showPeriod();
+                    } else if (this.isListMode()) {
+                        // Move keyboard focus onto the period list so Enter selects a preset
+                        // instead of the focus trap landing on the "custom period" row.
                         setTimeout(() => this.listSelection()?.focus());
                     }
                 } else {
@@ -391,12 +397,17 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
             if (this.destroyed) return;
 
             this.popover().updatePosition(true);
-            // The period list this view replaces is being torn down, so focus has to move or it lands on
-            // <body>. Focus via FocusMonitor with the user's *current* input modality — not
+            // Focus has to move into the period view: the list it replaces is being torn down (focus would
+            // land on <body>), and without a list there is no back button, so the start input takes it and
+            // opens its calendar. Focus via FocusMonitor with the user's *current* input modality — not
             // `KbqButton.focusViaKeyboard()`, which hardcodes `'keyboard'` and paints the ring even for a
             // mouse click on the "custom period" row. This also leaves FocusMonitor's last focus origin
             // truthful, so the native focus `showList()` performs on the way back inherits the right origin.
-            this.focusMonitor.focusVia(this.returnButton().elementRef, this.currentFocusOrigin);
+            const target = this.returnButton()?.elementRef ?? this.startInput();
+
+            if (target) {
+                this.focusMonitor.focusVia(target, this.currentFocusOrigin);
+            }
         });
     }
 

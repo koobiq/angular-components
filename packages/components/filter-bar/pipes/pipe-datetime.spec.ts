@@ -680,7 +680,67 @@ describe('KbqPipeDatetimeComponent', () => {
             component.popover().visibleChange.emit(true);
             await vi.runOnlyPendingTimersAsync();
 
+            expect(asInternal(component).isListMode()).toBe(true);
             expect(focus).toHaveBeenCalled();
+        });
+    });
+
+    describe('without values', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+        });
+
+        const openPopover = async () => {
+            getPipeComponent().open();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+        };
+
+        it('should open straight on the custom period, without the list and the back button', async () => {
+            vi.useFakeTimers();
+
+            const component = getPipeComponent();
+            const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
+
+            await openPopover();
+
+            expect(asInternal(component).isListMode()).toBe(false);
+            expect(overlayContainer.querySelector('.kbq-date-period')).not.toBeNull();
+            expect(overlayContainer.querySelector('kbq-list-option')).toBeNull();
+            expect(overlayContainer.querySelector('.kbq-date-period__header')).toBeNull();
+        });
+
+        it('should focus the start date input with the current modality, which opens its calendar', async () => {
+            vi.useFakeTimers();
+
+            const component = getPipeComponent();
+            const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
+            const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+
+            setInputModality('mouse');
+
+            await openPopover();
+
+            const startInput = overlayContainer.querySelector('.kbq-date-period__date input[formcontrolname="start"]');
+
+            expect(focusViaSpy).toHaveBeenCalledWith(expect.objectContaining({ nativeElement: startInput }), 'mouse');
+            expect(document.activeElement).toBe(startInput);
+            expect(asInternal(component).showStartCalendar()).toBe(true);
         });
     });
 

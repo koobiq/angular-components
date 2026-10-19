@@ -490,7 +490,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     open(): void;
     protected readonly placements: typeof PopUpPlacements;
     readonly popover: _angular_core.Signal<KbqPopoverTrigger>;
-    readonly returnButton: _angular_core.Signal<KbqButton>;
+    readonly returnButton: _angular_core.Signal<KbqButton | undefined>;
     protected readonly showEndCalendar: _angular_core.WritableSignal<boolean>;
     // (undocumented)
     showList(): void;
