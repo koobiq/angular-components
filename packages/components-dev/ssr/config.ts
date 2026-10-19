@@ -4,6 +4,7 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideRouter } from '@angular/router';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqFormattersModule, kbqLocaleServiceProvider } from '@koobiq/components/core';
+import { kbqIconsResolverProvider } from '@koobiq/components/icon';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { devSsrRoutes } from './routes';
 import { devTimezoneBrowserProviders } from './timezone';
@@ -11,6 +12,7 @@ import { devTimezoneBrowserProviders } from './timezone';
 export default {
     providers: [
         kbqLocaleServiceProvider(),
+        kbqIconsResolverProvider((name) => `/assets/SVGIcons/${name.replace(/^kbq-/, '')}.svg`),
         devTimezoneBrowserProviders(),
         provideRouter(devSsrRoutes),
         provideHttpClient(withFetch()),
