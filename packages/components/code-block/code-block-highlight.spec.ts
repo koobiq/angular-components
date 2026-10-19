@@ -14,7 +14,8 @@ const buildMockCore = (): HLJSApi =>
     ({
         getLanguage: jest.fn().mockReturnValue({}),
         highlight: jest.fn().mockImplementation((content: string, { language }: { language: string }) => ({
-            value: `<span class="hljs-keyword">${content}</span>`,
+            // Empty for empty content, as highlight.js has it.
+            value: content && `<span class="hljs-keyword">${content}</span>`,
             language,
             illegal: false,
             relevance: 10
@@ -230,6 +231,20 @@ describe(KbqCodeBlockHighlight.name, () => {
         } finally {
             warn.mockRestore();
         }
+    });
+
+    it('should highlight an empty file', async () => {
+        const fixture = createComponent(SingleBlock, [
+            kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(buildMockCore()) })
+        ]);
+        const [code] = getCodeElements(fixture);
+
+        fixture.componentInstance.file.set({ content: '', language: 'typescript' });
+        await settle(fixture);
+
+        expect(code.textContent).toBe('');
+        expect(code.getAttribute('data-language')).toBe('typescript');
+        expect(getHighlight(fixture).pending()).toBe(false);
     });
 
     it('should keep the markup rendered on the server until highlight.js has loaded, then render it again', async () => {

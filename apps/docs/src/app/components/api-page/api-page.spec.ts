@@ -119,8 +119,8 @@ describe(DocsApiPage.name, () => {
         createFixture(entryPoint, selectedMember).nativeElement;
 
     // The code blocks are `@defer` blocks: they render once their dependencies have loaded.
-    const renderCodeBlocks = async (): Promise<HTMLElement> => {
-        const fixture = createFixture();
+    const renderCodeBlocks = async (entryPoint = ENTRY_POINT): Promise<HTMLElement> => {
+        const fixture = createFixture(entryPoint);
 
         await fixture.whenStable();
         fixture.detectChanges();
@@ -166,8 +166,10 @@ describe(DocsApiPage.name, () => {
         expect(page.querySelector('.docs-api__entry-name')?.tagName).toBe('H3');
     });
 
-    it('leaves the import out for an entry point without a module', () => {
-        expect(render({ ...ENTRY_POINT, primaryExport: undefined }).querySelector('.docs-api__import')).toBeNull();
+    it('leaves the import out for an entry point without a module', async () => {
+        const page = await renderCodeBlocks({ ...ENTRY_POINT, primaryExport: undefined });
+
+        expect(page.querySelector('.docs-api__import')).toBeNull();
     });
 
     it('renders the HTML of a text as it is, and its code in a code block', async () => {
@@ -394,6 +396,6 @@ describe(DocsApiPage.name, () => {
     });
 
     it('has no axe violations', async () => {
-        expect(await axe(render())).toHaveNoViolations();
+        expect(await axe(await renderCodeBlocks())).toHaveNoViolations();
     });
 });

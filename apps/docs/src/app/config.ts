@@ -44,7 +44,7 @@ export const appConfig: ApplicationConfig = {
         { provide: DOCS_API_PAGES, useValue: DOCS_COMPILED_API_PAGES },
         provideHttpClient(withFetch()),
         // Lets static parts of a page, such as the code blocks of an API tab, stay as the server rendered them until
-        // they are interacted with. It replays events as well, as `withEventReplay()` did.
+        // they are interacted with. Replays events as well.
         provideClientHydration(withIncrementalHydration()),
         provideAnimations(),
         // Keeps overlays (select panels, modals, sidepanels, toasts — everything routed through

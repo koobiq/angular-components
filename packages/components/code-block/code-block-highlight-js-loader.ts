@@ -79,7 +79,8 @@ export class KbqCodeBlockHighlightJsLoader {
 
     /** Wraps highlighted markup in the line numbers table. */
     addLineNumbers(html: string, options: KbqCodeBlockLineNumbersOptions): string {
-        return this.lineNumbersPlugin().lineNumbersValue(html, options);
+        // The plugin cannot take empty markup: it reads the last of no lines.
+        return html ? this.lineNumbersPlugin().lineNumbersValue(html, options) : html;
     }
 
     private async importInstance({ core, languages }: KbqCodeBlockHighlightJsConfig): Promise<HLJSApi> {

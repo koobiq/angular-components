@@ -402,6 +402,9 @@ test.describe('docs app', () => {
 
         await page.goto('/en/components/select/api');
         await waitForHydration(page);
+        // A block that rendered on its own after hydration would request highlight.js once the browser is idle:
+        // leave it a second past that before asserting that nothing came.
+        await page.evaluate(() => new Promise((resolve) => requestIdleCallback(() => setTimeout(resolve, 1000))));
 
         expect(await highlightJsChunks()).toBe(0);
 
@@ -413,6 +416,23 @@ test.describe('docs app', () => {
         await expect.poll(highlightJsChunks).toBeGreaterThan(0);
         expect(errors).toEqual([]);
     });
+
+    // An API tab reached in the app reuses the page of the previous one, and a block that is still dehydrated follows
+    // neither its bindings nor the view around it.
+    for (const [entryPoint, imports] of [
+        ['tooltip', ["from '@koobiq/components/tooltip'"]],
+        ['core', []]
+    ] as const) {
+        test(`shows the import of the ${entryPoint} API tab reached by a link on another one`, async ({ page }) => {
+            await page.goto('/en/components/select/api');
+            await waitForHydration(page);
+
+            await page.locator(`docs-api-page a[href^="/en/components/${entryPoint}/api"]`).first().click();
+            await expect(page).toHaveURL(new RegExp(`/en/components/${entryPoint}/api`));
+
+            await expect(page.locator('.docs-api__import')).toHaveText(imports.map((text) => new RegExp(text)));
+        });
+    }
 
     test('scrolls to the member a link points at and highlights it', async ({ page }) => {
         await page.goto('/en/components/select/api?member=KbqSelect-panelClass');
@@ -436,7 +456,7 @@ test.describe('docs app', () => {
         await waitForHydration(page);
 
         // AG Grid arrives in a chunk of its own once the page is hydrated, and on CI it renders close to the end of
-        // the default 5 seconds of an assertion: the whole test takes 7-8 seconds on main.
+        // the default 5 seconds of an assertion.
         await expect(page.locator('docs-live-example-viewer ag-grid-angular').first()).toBeVisible({ timeout: 15000 });
         await expect(page.locator('docs-live-example-viewer kbq-skeleton')).toHaveCount(0);
         expect(errors).toEqual([]);
