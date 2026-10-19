@@ -402,6 +402,13 @@ ran out. The test took 5.0 to 10.3 s across recent CI runs, main included (6.7, 
 **Fix:** both waits for the client-only examples take 15 s, within the 30 s test timeout of the docs
 config. **Verified:** the test ×12 at 6 workers locally.
 
+### `migration guide filter › hides the steps outside the picked range`
+
+1 occurrence in CI, on the next run: every step still shown. The test counted the visible steps once,
+right after `waitForHydration`, which waits for the network to go idle; the guide applies the range of the
+URL after that, so a single count could see the prerendered page with every step. **Fix:** both bounds are
+polled. **Verified:** the filter tests ×8 at 6 workers locally (48/48).
+
 ## Not fixed
 
 - **`tabs › E2eTabsStates › states`** — 1 occurrence, 18769 px by Playwright's count, 27480 raw. The

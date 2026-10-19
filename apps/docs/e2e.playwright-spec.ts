@@ -494,10 +494,11 @@ test.describe('migration guide filter', () => {
         await page.goto(MIGRATION_URL + '?from=20.0.0&to=20.2.0');
         await waitForHydration(page);
 
-        const shown = await visibleSteps(page).count();
+        const total = await page.locator('.docs-migration-step').count();
 
-        expect(shown).toBeGreaterThan(0);
-        expect(shown).toBeLessThan(await page.locator('.docs-migration-step').count());
+        // Polled: the filter applies the range after the network goes idle, so a single count can still see every step.
+        await expect.poll(() => visibleSteps(page).count()).toBeLessThan(total);
+        await expect.poll(() => visibleSteps(page).count()).toBeGreaterThan(0);
     });
 
     test('narrows the component review to the picked components', async ({ page }) => {
