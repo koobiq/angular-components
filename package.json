@@ -121,7 +121,7 @@
         "jest-axe": "^11.0.0",
         "jsdom": "^26.1.0",
         "license-checker": "^25.0.1",
-        "lint-staged": "^15.5.2",
+        "lint-staged": "^17.6.0",
         "luxon": "^3.7.2",
         "mdast-util-mdx-jsx": "^3.2.0",
         "mdast-util-to-string": "^4.0.0",
