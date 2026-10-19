@@ -1,4 +1,5 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
+import { SelectionModel } from '@angular/cdk/collections';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher, ViewportRuler } from '@angular/cdk/scrolling';
 import {
@@ -1784,7 +1785,7 @@ class ChildSelection {
 
     control = new UntypedFormControl(['Downloads', 'rootNode_1']);
 
-    readonly select = viewChild.required(KbqTreeSelect);
+    readonly select = viewChild.required<KbqTreeSelect<FileFlatNode>>(KbqTreeSelect);
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -1816,7 +1817,7 @@ class ChildSelection {
 
     pseudoCheckboxState(option: KbqTreeOption): KbqPseudoCheckboxState {
         if (option.isExpandable) {
-            const node: FileFlatNode = option.data as unknown as FileFlatNode;
+            const node: FileFlatNode = option.data;
 
             if (this.descendantsAllSelected(node)) {
                 return 'checked';
@@ -5877,6 +5878,19 @@ describe('KbqTreeSelect', () => {
             }
 
             expect(fixture.componentInstance.control.value).toContain('Applications');
+        });
+
+        // The types are checked by `check-spec-types`: a query that names the data node gets the model typed by it,
+        // the tree's included, one that does not keeps `any`.
+        it('should share a selection model typed by the data node with the tree', () => {
+            const select = fixture.componentInstance.select();
+            const tree = select.tree()!;
+
+            expectTypeOf<KbqTreeSelect['selectionModel']>().toEqualTypeOf<SelectionModel<any>>();
+            expectTypeOf(select.selectionModel).toEqualTypeOf<SelectionModel<FileFlatNode>>();
+            expectTypeOf(tree.selectionModel).toEqualTypeOf<SelectionModel<FileFlatNode>>();
+            expect(tree.selectionModel).toBe(select.selectionModel);
+            expect(select.selectionModel.selected.map(({ name }) => name).sort()).toEqual(['Downloads', 'rootNode_1']);
         });
     });
 

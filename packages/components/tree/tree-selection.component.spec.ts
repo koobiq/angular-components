@@ -2217,15 +2217,8 @@ describe('KbqTreeSelection', () => {
             let fixture: ComponentFixture<TreeMultipleWithDisabledNodes>;
             let component: TreeMultipleWithDisabledNodes;
 
-            // The model is declared over `SelectionModelOption`, but what it actually holds is whatever the
-            // consumer's tree control produced — here a `FileFlatNode`. The cast documents that gap rather
-            // than pretending the declared shape is what comes back out.
             const selectedValues = () =>
-                component
-                    .tree()
-                    .selectionModel.selected.map((node) =>
-                        component.treeControl.getValue(node as unknown as FileFlatNode)
-                    );
+                component.tree().selectionModel.selected.map((node) => component.treeControl.getValue(node));
 
             const pressKey = async (keyCode: number, modifier?: 'ctrlKey' | 'shiftKey') => {
                 const event = createKeyboardEvent('keydown', keyCode);
@@ -2845,7 +2838,7 @@ describe('KbqTreeSelection', () => {
                 await vi.runOnlyPendingTimersAsync();
 
                 expect(tree().getSelectedValues()).toBe(0);
-                expect((tree().selectionModel.selected[0] as unknown as FileFlatNode).name).toBe('rootNode_1');
+                expect(tree().selectionModel.selected[0].name).toBe('rootNode_1');
             });
         });
 
@@ -3585,7 +3578,7 @@ class KbqTreeAppMultipleCheckbox extends TreeParams {
 class TreeSelectionWithFormControl extends TreeParams {
     readonly control = new FormControl<string | null>(null);
     readonly onSelectionChange = vi.fn();
-    readonly tree = viewChild.required(KbqTreeSelection);
+    readonly tree = viewChild.required<KbqTreeSelection<FileFlatNode>>(KbqTreeSelection);
 }
 
 @Component({
@@ -3806,7 +3799,7 @@ class TreeWithTrackBy {
 })
 class TreeMultipleWithDisabledNodes extends TreeParams {
     disabledNodes: string[] = [];
-    readonly tree = viewChild.required(KbqTreeSelection);
+    readonly tree = viewChild.required<KbqTreeSelection<FileFlatNode>>(KbqTreeSelection);
 }
 
 @Component({
@@ -4636,6 +4629,23 @@ describe('KbqTreeSelection inputs', () => {
         expectTypeOf<KbqTreeSelection['treeControlInput']>().toEqualTypeOf<InputSignal<FlatTreeControl<any>>>();
         expectTypeOf<KbqTree['treeControlInput']>().toEqualTypeOf<InputSignal<TreeControl<any>>>();
         expect(fixture.componentInstance.tree().treeControl).toBe(fixture.componentInstance.treeControl);
+    });
+
+    // The types are checked by `check-spec-types`: a query that names the data node gets the model and the options
+    // typed by it, one that does not keeps `any`. What the model holds is the node, not the option.
+    it('should hold the data nodes in a selection model typed by them', async () => {
+        const fixture = TestBed.createComponent(TreeMultipleWithDisabledNodes);
+        const { tree, treeControl } = fixture.componentInstance;
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        tree().unorderedOptions.first.selectViaInteraction();
+
+        expectTypeOf<KbqTreeSelection['selectionModel']>().toEqualTypeOf<SelectionModel<any>>();
+        expectTypeOf(tree().selectionModel).toEqualTypeOf<SelectionModel<FileFlatNode>>();
+        expectTypeOf(tree().unorderedOptions.first.data).toEqualTypeOf<FileFlatNode>();
+        expect(tree().selectionModel.selected).toEqual([treeControl.dataNodes[0]]);
     });
 });
 
