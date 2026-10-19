@@ -7,25 +7,18 @@ $animation-duration-base: 0.3s;
     animation-fill-mode: both;
 }
 
-@mixin _motion-common-leave($duration: $animation-duration-base) {
-    animation-duration: $duration;
-    animation-fill-mode: both;
-}
-
 @mixin _make-motion($className, $keyframeName, $duration: $animation-duration-base) {
-    .#{$className}-enter,
-    .#{$className}-appear {
+    .#{$className}-enter {
         @include _motion-common($duration);
         animation-play-state: paused;
     }
 
     .#{$className}-leave {
-        @include _motion-common-leave($duration);
+        @include _motion-common($duration);
         animation-play-state: paused;
     }
 
-    .#{$className}-enter.#{$className}-enter-active,
-    .#{$className}-appear.#{$className}-appear-active {
+    .#{$className}-enter.#{$className}-enter-active {
         animation-name: #{$keyframeName}In;
         animation-play-state: running;
     }
@@ -40,8 +33,7 @@ $animation-duration-base: 0.3s;
 @mixin zoom-motion($className, $keyframeName, $duration: $animation-duration-base) {
     @include _make-motion($className, $keyframeName, $duration);
 
-    .#{$className}-enter,
-    .#{$className}-appear {
+    .#{$className}-enter {
         transform: translate(0, -25%);
         animation-timing-function: $ease-out-circ;
     }
@@ -55,8 +47,7 @@ $animation-duration-base: 0.3s;
 @mixin fade-motion($className, $keyframeName) {
     @include _make-motion($className, $keyframeName);
 
-    .#{$className}-enter,
-    .#{$className}-appear {
+    .#{$className}-enter {
         opacity: 0;
         animation-timing-function: ease-out;
     }
@@ -116,7 +107,6 @@ $animation-duration-base: 0.3s;
 @mixin reduced-motion($className) {
     @media (prefers-reduced-motion: reduce) {
         .#{$className}-enter,
-        .#{$className}-appear,
         .#{$className}-leave {
             animation: none;
             opacity: 1;

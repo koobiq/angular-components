@@ -80,6 +80,7 @@ export class FilterByValues<T> implements FlatTreeControlFilter<T> {
         this.values = values;
     };
 
+    // TODO: nothing in the library uses it; kept as public API at the DS-2196 review. Document or deprecate it.
     getValues(): string[] {
         return this.values;
     }

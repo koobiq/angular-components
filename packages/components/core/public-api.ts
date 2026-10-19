@@ -8,7 +8,6 @@ export * from './formatters/index';
 export * from './forms/index';
 export * from './highlight/index';
 export * from './keycodes/index';
-export * from './line/line';
 export * from './locales/index';
 export * from './option/index';
 export * from './overflow-shadow/index';

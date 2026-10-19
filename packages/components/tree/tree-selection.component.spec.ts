@@ -84,6 +84,20 @@ describe('KbqTreeSelection', () => {
         }).compileComponents();
     }
 
+    describe('node template context', () => {
+        it('should hand each node its index, as the CDK tree does', () => {
+            configureKbqTreeTestingModule();
+
+            const fixture = TestBed.createComponent(TreeWithNodeIndexApp);
+
+            fixture.detectChanges();
+
+            const indexes = getNodes(fixture.nativeElement).map((node) => node.getAttribute('data-index'));
+
+            expect(indexes).toEqual(['0', '1', '2', '3', '4']);
+        });
+    });
+
     describe('flat tree', () => {
         describe('should initialize', () => {
             let fixture: ComponentFixture<SimpleKbqTreeApp>;
@@ -3433,6 +3447,18 @@ class TreeAppWithTitle extends TreeParams {}
     `
 })
 class TreeAppWithTitleText extends TreeParams {}
+
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node; let i = index" [attr.data-index]="i">
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeWithNodeIndexApp extends TreeParams {}
 
 @Component({
     imports: [KbqTreeModule, FormsModule],

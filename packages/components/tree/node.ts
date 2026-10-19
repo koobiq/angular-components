@@ -11,6 +11,7 @@ export class KbqTreeNodeOutletContext<T> {
     /** Index location of the node. */
     index?: number;
 
+    // TODO: never filled, as in the CDK context; fill it or deprecate it (#DS-2196).
     /** Length of the number of total dataNodes. */
     count?: number;
 

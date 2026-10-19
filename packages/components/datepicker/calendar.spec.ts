@@ -5,7 +5,6 @@ import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, ENTER, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 import { KbqCalendar } from './calendar.component';
-import { KbqDatepickerIntl } from './datepicker-intl';
 import { KbqDatepickerModule } from './datepicker-module';
 
 describe('KbqCalendar', () => {
@@ -14,7 +13,6 @@ describe('KbqCalendar', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
-                KbqDatepickerIntl,
                 { provide: DateAdapter, useClass: LuxonDateAdapter },
                 { provide: LOCALE_ID, useValue: 'ru-RU' }
             ]

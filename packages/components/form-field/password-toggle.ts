@@ -4,7 +4,6 @@ import { F8 } from '@angular/cdk/keycodes';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
     inject,
@@ -101,7 +100,6 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     protected readonly nativeElement = kbqInjectNativeElement();
     protected readonly focusMonitor = inject(FocusMonitor);
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'a11y',

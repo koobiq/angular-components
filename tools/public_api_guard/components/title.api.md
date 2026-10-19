@@ -13,14 +13,11 @@ import { TemplateRef } from '@angular/core';
 // @public
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit {
     constructor();
-    protected get child(): HTMLElement | undefined;
     protected readonly derivedDisabledWins = true;
     protected handleElementEnter(): void;
     protected hideTooltip(): void;
     readonly ignoreTooltipPointerEvents: i0.InputSignal<boolean>;
-    protected get isHorizontalOverflown(): boolean;
     get isOverflown(): boolean;
-    protected get isVerticalOverflown(): boolean;
     ngAfterViewInit(): void;
     protected get parent(): HTMLElement;
     readonly titleContent: i0.InputSignal<string | TemplateRef<unknown>>;

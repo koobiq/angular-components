@@ -93,7 +93,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    onPanelReached(): Observable<void>;
     onSwitchTarget(): Observable<KbqDropdownItem>;
     readonly overlapTriggerX: _angular_core.ModelSignal<boolean>;
     readonly overlapTriggerY: _angular_core.ModelSignal<boolean>;

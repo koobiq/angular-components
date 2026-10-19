@@ -18,6 +18,7 @@ import { styles } from './data/styles';
 import { tags } from './data/tags';
 import { toast } from './data/toast';
 import { tree } from './data/tree';
+import { unusedApi } from './data/unused-api';
 
 export type { Replacement };
 
@@ -44,7 +45,8 @@ const AREAS: AreaData[] = [
     styles,
     tags,
     toast,
-    tree
+    tree,
+    unusedApi
 ];
 
 /** TypeScript-source replacements (imports, identifiers, member accesses). */

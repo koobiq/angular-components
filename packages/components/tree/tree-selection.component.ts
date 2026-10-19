@@ -1162,11 +1162,6 @@ export class KbqTreeSelection<T = any>
     }
 
     /** @docs-private */
-    protected setFocusedOption(option: KbqTreeOption<T>): void {
-        this.keyManager.setActiveItem(option);
-    }
-
-    /** @docs-private */
     protected toggleFocusedOption(): void {
         const focusedOption = this.keyManager.activeItem;
 
@@ -1450,11 +1445,6 @@ export class KbqTreeSelection<T = any>
         const selectedValues = this.selectionModel.selected.map((selected) => this.treeControl.getValue(selected));
 
         return this.multiple ? selectedValues : selectedValues[0];
-    }
-
-    /** @docs-private */
-    protected getItemHeight(): number {
-        return this.renderedOptions.first ? this.renderedOptions.first.getHeight() : 0;
     }
 
     setStateChildren(option: KbqTreeOption<T>, state: boolean) {

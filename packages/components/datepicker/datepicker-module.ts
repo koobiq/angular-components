@@ -11,7 +11,6 @@ import { KbqCalendarBody } from './calendar-body.component';
 import { KbqCalendarHeader } from './calendar-header.component';
 import { KbqCalendar } from './calendar.component';
 import { KbqDatepickerInput } from './datepicker-input.directive';
-import { KbqDatepickerIntl } from './datepicker-intl';
 import { KbqDatepickerToggleIcon, KbqDatepickerToggleIconComponent } from './datepicker-toggle.component';
 import { KbqDatepicker, KbqDatepickerContent } from './datepicker.component';
 import { KbqMonthView } from './month-view.component';
@@ -35,7 +34,6 @@ import { KbqMonthView } from './month-view.component';
         KbqMonthView,
         KbqCalendarHeader
     ],
-    providers: [KbqDatepickerIntl],
     exports: [
         KbqCalendar,
         KbqCalendarBody,

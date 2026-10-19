@@ -996,7 +996,7 @@ describe('KbqButtonToggle label', () => {
             // Measuring the label against the whole button would leave a band as wide as an icon plus
             // its gap where the label is already clipped but the tooltip stays silent. Measured
             // against itself, the comparison is exactly `clientWidth < scrollWidth`.
-            expect(title['child']).toBe(label);
+            expect(title['childElements']).toEqual([label]);
             expect(title['parent']).toBe(label);
         });
 

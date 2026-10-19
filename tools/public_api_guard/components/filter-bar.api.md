@@ -333,7 +333,6 @@ export class KbqFilters implements OnInit {
     get showFilterSavingError(): boolean;
     set showFilterSavingError(value: boolean);
     stopEventPropagation(event: Event): void;
-    protected readonly styles: typeof KbqButtonStyles;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilters, "kbq-filters", ["kbqFilters"], { "filters": { "alias": "filters"; "required": true; "isSignal": true; }; }, { "onSelectFilter": "onSelectFilter"; "onSave": "onSave"; "onChangeFilter": "onChangeFilter"; "onRemoveFilter": "onRemoveFilter"; "onResetFilterChanges": "onResetFilterChanges"; }, never, ["*"], true, never>;
     // (undocumented)

@@ -1,5 +1,4 @@
 @use './tokens' as *;
-@use './vendor-prefixes';
 
 // This mixin will ensure that lines that overflow the container will hide the overflow and
 // truncate neatly with an ellipsis.
@@ -90,8 +89,4 @@
 
 .kbq-truncate-line {
     @include kbq-truncate-line();
-}
-
-.kbq-no-select {
-    @include vendor-prefixes.user-select(none);
 }

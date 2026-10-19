@@ -56,8 +56,10 @@ Reports:
 - the undocumented exports nothing in the library used, imported from `@koobiq/components/core`: the pop-up
   position lists, `ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT`, `SELECT_PANEL_VIEWPORT_PADDING`, `NUMBER_FORMAT_REGEXP`,
   `isWithin`, `KBQ_SELECT_SCROLL_STRATEGY_PROVIDER`, `KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR`, `KbqHover`, `CanColor`,
-  `KbqAnimationCurves`, `KbqAnimationDurations`, `KbqRectangleItem`, `countGroupLabelsBeforeOption` and `KbqLineSetter`, each with
-  what to do instead;
+  `KbqAnimationCurves`, `KbqAnimationDurations`, `KbqRectangleItem`, `countGroupLabelsBeforeOption`, `KbqLineSetter` and
+  `KbqLine`, each with what to do instead;
+- `.lines` in a file that names `KbqListItem` or uses `kbq-list-item`, and `.hasPlaceholder()` in one that names
+  `KbqSelectSearch`: both were removed, query the `kbq-line` elements and read the placeholder yourself;
 - a call of `.handleBodyInteraction()`, and a read of `.isSpecialFormatForRULocale()` or `.roundingOptions`,
   private members of the number pipes now;
 - in a subclass of a pop-up or of its trigger, `markForCheck()`, `warning` or `closeOnInteraction` on `this`,
@@ -239,6 +241,21 @@ their replacements: `(onSelectAll)` → `(selectAllChange)` and `(onCopy)` → `
 The `isUserInput` of `KbqOptionSelectionChange` and `KbqTreeSelectChange` stays and is not reported, nor are the
 `onSelectAll` and `onCopy` of `kbq-list-selection` and the `onSelectAll` of `kbq-tree-select`, which are not
 deprecated.
+
+**Unused component API** — rewrites nothing; reports what was removed without a deprecation because nothing in the
+library used it:
+
+- imported from their entry point: `normalizeSplitter`, `isInt` and `isDigit` of the input,
+  `KbqTimeRangeTranslateTypeMap` of the time range, `KbqTabBodyOriginState` and `KbqDatepickerIntl`;
+- in a file that names the component: `KbqDropdown.onPanelReached()`, `tagSelectionChanges` and `shouldLabelFloat`
+  of `KbqTagList`, and `KbqTreeNodeOutlet.changeDetectorRef`;
+- in a subclass, through `this` or `super`: the protected `changeDetectorRef` of the accordion, accordion item,
+  password toggle, icons and expandable search, `KbqAccordionTrigger.nativeElement`,
+  `KbqNotificationCenterComponent.dateAdapter`, `KbqFilters.styles`, `setFocusedOption()` and `getItemHeight()` of
+  `KbqTreeSelection`, and
+  `isHorizontalOverflown`, `isVerticalOverflown` and `child` of `KbqTitleDirective`;
+- the `kbq-control_has-validate-directive`, `kbq-form-field_has-validate-directive` and `kbq-no-select` classes in
+  templates, styles and code: nothing sets them.
 
 ## Running it manually
 

@@ -14,6 +14,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **21.0.0**: removal of the APIs deprecated before 21.0.0.
 - **21.0.0**: removal of `ThemePalette`.
 - **21.0.0**: removal of the core API nothing in the library used, and deprecation of its legacy API.
+- **21.0.0**: removal of the component API and styles nothing in the library used.
 - **21.0.0**: the actions panel overlay container.
 - **21.0.0**: legacy splitter deprecation.
 - **21.0.0**: removal of the overlay demotion mechanism.
@@ -468,7 +469,7 @@ ng g @koobiq/components:tabs-signals-and-aria --project "<your project>"
 
 #### Query lists
 
-The `options` of `KbqSelect`, `KbqAutocomplete` and `KbqListSelection`, the `tags` of `KbqSelect` and `KbqTagList`, `KbqListItem.lines`, `KbqRadioGroup.radios`, `KbqTreeSelection.unorderedOptions`, the `focusableItems` of `KbqNavbar` and `KbqVerticalNavbar`, and the `textElement` of `KbqTag` and `KbqDropdownItem` are getters over signal queries. They keep their types — a `QueryList` whose `changes` emit as before, or an `ElementRef` — so reading them works as before. Before the content is initialized a `QueryList` is empty rather than `undefined`.
+The `options` of `KbqSelect`, `KbqAutocomplete` and `KbqListSelection`, the `tags` of `KbqSelect` and `KbqTagList`, `KbqRadioGroup.radios`, `KbqTreeSelection.unorderedOptions`, the `focusableItems` of `KbqNavbar` and `KbqVerticalNavbar`, and the `textElement` of `KbqTag` and `KbqDropdownItem` are getters over signal queries. They keep their types — a `QueryList` whose `changes` emit as before, or an `ElementRef` — so reading them works as before. Before the content is initialized a `QueryList` is empty rather than `undefined`.
 
 - **A subclass** that redeclared one of them, with a query decorator or as a field, removes the redeclaration or overrides the getter.
 - **A write** to one of them no longer compiles: render the items in the template.
@@ -746,7 +747,9 @@ With `--fix false` it only reports what it would change.
 | `KbqPopUp.warning`, `.handleBodyInteraction()`, the protected `closeOnInteraction`                                 | no replacement: `warning` did nothing, nothing called `handleBodyInteraction()`, and `closeOnInteraction` only gated it                                                                                | reported  |
 | `KbqDecimalPipe.isSpecialFormatForRULocale()`, `KbqRoundDecimalPipe.roundingOptions`                               | private now: the pipe arguments and the formatters locale configuration                                                                                                                                | reported  |
 | `KbqFormElement.isRow`                                                                                             | the `kbq-form__row` class of the element                                                                                                                                                               | reported  |
-| `KbqLineSetter` and the `kbq-2-line`, `kbq-3-line`, `kbq-multi-line` classes of a list item                        | nothing: no style read them; `KbqListItem.lines` counts the lines                                                                                                                                      | reported  |
+| `KbqLineSetter` and the `kbq-2-line`, `kbq-3-line`, `kbq-multi-line` classes of a list item                        | nothing: no style read them                                                                                                                                                                            | reported  |
+| `KbqLine`, `KbqListItem.lines`                                                                                     | nothing: only `lines` read `KbqLine`, and nothing counted the lines; the `kbq-line` attribute still places an element in the text of a list item                                                       | reported  |
+| `KbqSelectSearch.hasPlaceholder()`                                                                                 | the placeholder of the search input                                                                                                                                                                    | reported  |
 | the `mcListIcon` attribute of a list item                                                                          | `kbq-list-icon`                                                                                                                                                                                        | rewritten |
 | the `mcLine` attribute                                                                                             | `kbq-line`                                                                                                                                                                                             | rewritten |
 
@@ -771,6 +774,26 @@ The documented core API that has a replacement is deprecated instead; `v21-upgra
 | `KbqMeasureScrollbarService`                                                                                     | `element.offsetWidth - element.clientWidth` of the element that scrolls                                                   |
 | `FocusKeyManager.getFocusOrigin()`                                                                               | the origin passed to `setFocusOrigin()`                                                                                   |
 | `dateInput` of the datepicker locale configuration                                                               | `KBQ_DATE_FORMATS`: nothing reads `dateInput`                                                                             |
+
+### Unused component API removal (21.0.0)
+
+The component entry points drop the exports, members and styles that nothing in the library used. They were never deprecated: most are leftovers of removed features or implementation details that leaked into the public API. `v21-upgrade` reports each use.
+
+| Removed                                                                     | Use instead                                                                                            |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `normalizeSplitter()`, `isInt()`, `isDigit()` of `@koobiq/components/input` | `value.replace(/,/g, '.')`, `/^-?\d+$/.test(value)`; `isFloat()` stays                                 |
+| `KbqTimeRangeTranslateTypeMap`                                              | `Record<KbqTimeRangeType, KbqTimeRangeTranslationType>`                                                |
+| `KbqTabBodyOriginState`                                                     | `'left' \| 'right'`                                                                                    |
+| `KbqDatepickerIntl`                                                         | nothing: no view rendered its labels; the texts come from `kbqDatepickerLocaleConfigurationProvider()` |
+| `KbqDropdown.onPanelReached()`                                              | nothing: nothing subscribed to it                                                                      |
+| the protected `KbqTreeSelection.getItemHeight()`                            | `options.first?.getHeight() ?? 0`                                                                      |
+| the protected `KbqTreeSelection.setFocusedOption()`                         | `this.keyManager.setActiveItem(option)`                                                                |
+| `KbqTagList.tagSelectionChanges`, `.shouldLabelFloat`                       | the `selectionChange` output of each tag; `!empty() \|\| focused()`                                    |
+| `KbqTreeNodeOutlet.changeDetectorRef`                                       | `ChangeDetectorRef`, injected where you need it                                                        |
+
+A subclass loses the protected members nothing read: `changeDetectorRef` of `KbqAccordion`, `KbqAccordionItem`, `KbqPasswordToggle`, `KbqIcon` and `KbqSearchExpandable`, `KbqAccordionTrigger.nativeElement`, `KbqNotificationCenterComponent.dateAdapter`, `KbqFilters.styles`, and `isHorizontalOverflown`, `isVerticalOverflown` and `child` of `KbqTitleDirective`. Inject what the subclass needs itself; `isOverflown` of the title covers both directions.
+
+The styles lose the rules for classes nothing sets: `kbq-control_has-validate-directive` and `kbq-form-field_has-validate-directive`, left from the `KbqValidateDirective` removed in 20.0.0 (the form field, select and tree select show an error through their `ErrorStateMatcher`), and the `kbq-no-select` utility class: set `user-select: none` in your own styles.
 
 ### Actions panel overlay container (21.0.0)
 

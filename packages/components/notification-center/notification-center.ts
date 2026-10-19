@@ -40,7 +40,6 @@ import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-int
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
-    DateAdapter,
     EmptyFocusTrapStrategy,
     KBQ_A11Y_LOCALE_CONFIGURATION,
     KbqLocaleOverridesDirective,
@@ -168,8 +167,6 @@ export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): ()
     preserveWhitespaces: false
 })
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit, KbqNotificationCenterPanel {
-    /** @docs-private */
-    protected readonly dateAdapter = inject(DateAdapter);
     /** @docs-private */
     protected readonly service = inject(KbqNotificationCenterService);
 

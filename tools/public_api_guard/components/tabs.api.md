@@ -215,9 +215,6 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
 }
 
 // @public
-export type KbqTabBodyOriginState = 'left' | 'right';
-
-// @public
 export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
     ngOnDestroy(): void;
     ngOnInit(): void;

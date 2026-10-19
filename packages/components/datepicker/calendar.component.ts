@@ -16,7 +16,6 @@ import { Subject, Subscription } from 'rxjs';
 import { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { KbqCalendarHeader } from './calendar-header.component';
 import { injectRequiredDateAdapter } from './datepicker-errors';
-import { KbqDatepickerIntl } from './datepicker-intl';
 import { KbqMonthView } from './month-view.component';
 
 /**
@@ -156,15 +155,8 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     /** The input element this datepicker is associated with. */
     datepickerInput;
 
-    private readonly intlChanges: Subscription;
-
     /** Subscription to value changes in the associated input element. */
     private inputSubscription = Subscription.EMPTY;
-
-    constructor() {
-        // No view of the calendar renders the labels of the intl.
-        this.intlChanges = inject(KbqDatepickerIntl).changes.subscribe(() => this.stateChanges.next());
-    }
 
     ngOnChanges(changes: SimpleChanges) {
         // A bound input is handed to its member; unbound, it leaves what code wrote. A
@@ -199,7 +191,6 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     }
 
     ngOnDestroy() {
-        this.intlChanges.unsubscribe();
         this.inputSubscription.unsubscribe();
         this.stateChanges.complete();
     }

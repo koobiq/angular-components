@@ -2,7 +2,6 @@ export * from './calendar-body.component';
 export * from './calendar-header.component';
 export * from './calendar.component';
 export * from './datepicker-input.directive';
-export * from './datepicker-intl';
 export * from './datepicker-module';
 export * from './datepicker-toggle.component';
 export * from './datepicker.component';

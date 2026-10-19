@@ -43,14 +43,6 @@ import { startWith } from 'rxjs/operators';
 export type KbqTabBodyPositionState = 'left' | 'center' | 'right' | 'left-origin-center' | 'right-origin-center';
 
 /**
- * The origin state is an internally used state that is set on a new tab body indicating if it
- * began to the left or right of the prior selected index. For example, if the selected index was
- * set to 1, and a new tab is created and selected at index 2, then the tab body would have an
- * origin of right because its index was greater than the prior selected index.
- */
-export type KbqTabBodyOriginState = 'left' | 'right';
-
-/**
  * Wrapper for the contents of a tab.
  * @docs-private
  */

@@ -7,7 +7,6 @@
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { DestroyRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
@@ -40,8 +39,6 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     autoColor: boolean;
     protected get autoColorError(): boolean;
     readonly autoColorInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
-    // (undocumented)
-    protected readonly changeDetectorRef: ChangeDetectorRef;
     protected readonly defaultAriaHidden: boolean;
     // (undocumented)
     protected readonly destroyRef: DestroyRef;

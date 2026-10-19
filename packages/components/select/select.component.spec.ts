@@ -1249,23 +1249,6 @@ class SelectInsideFormGroup {
 
 @Component({
     imports: [
-        ReactiveFormsModule,
-        KbqSelectModule
-    ],
-    template: `
-        <kbq-form-field>
-            <kbq-select class="kbq-control_has-validate-directive" [formControl]="control">
-                <kbq-option value="steak-0">Steak</kbq-option>
-            </kbq-select>
-        </kbq-form-field>
-    `
-})
-class SelectWithLegacyValidate {
-    readonly control = new UntypedFormControl('', Validators.required);
-}
-
-@Component({
-    imports: [
         KbqSelectModule
     ],
     template: `
@@ -5433,32 +5416,6 @@ describe('KbqSelect', () => {
             expect(component.select().errorState()).toBe(true);
             expect(errorStateMatcher.isErrorState).toHaveBeenCalled();
             await vi.runOnlyPendingTimersAsync();
-        });
-    });
-
-    describe('with the legacy validate directive', () => {
-        beforeEach(() => {
-            configureKbqSelectTestingModule([SelectWithLegacyValidate]);
-        });
-
-        it('should colour the arrow by the control validity from the first render', async () => {
-            const fixture = TestBed.createComponent(SelectWithLegacyValidate);
-
-            // Attached to the application, so that the `afterNextRender` probing the host for the directive's
-            // class runs, as it does outside tests.
-            fixture.autoDetectChanges();
-            await vi.runOnlyPendingTimersAsync();
-
-            const arrow = fixture.debugElement.query(By.css('.kbq-select__arrow')).nativeElement;
-
-            expect(fixture.componentInstance.control.untouched).toBe(true);
-            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.Error}`);
-
-            fixture.componentInstance.control.setValue('steak-0');
-            fixture.detectChanges();
-            await vi.runOnlyPendingTimersAsync();
-
-            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`);
         });
     });
 

@@ -1,7 +1,6 @@
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 import {
     booleanAttribute,
-    ChangeDetectorRef,
     computed,
     contentChild,
     Directive,
@@ -41,8 +40,6 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
      * The accordion reads it back to tell its own items apart from a nested accordion's.
      */
     readonly accordion = inject(KbqAccordion);
-    /** @docs-private */
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
     protected readonly expansionDispatcher = inject(UniqueSelectionDispatcher);
 

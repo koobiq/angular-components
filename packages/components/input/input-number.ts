@@ -117,27 +117,9 @@ const numberAttribute =
     (value: NumberInput): number =>
         coerceNumberProperty(value, fallback);
 
-/**
- * Rewrites every `,` as the canonical `.` decimal point.
- * @docs-private
- */
-export function normalizeSplitter(value: string): string {
-    return value ? value.replace(/,/g, KBQ_DEFAULT_PRECISION_SEPARATOR) : value;
-}
-
 /** @docs-private */
 export function isFloat(value: string): boolean {
     return /^-?\d+\.\d+$/.test(value);
-}
-
-/** @docs-private */
-export function isInt(value: string): boolean {
-    return /^-?\d+$/.test(value);
-}
-
-/** @docs-private */
-export function isDigit(value: string): boolean {
-    return isFloat(value) || isInt(value);
 }
 
 /**

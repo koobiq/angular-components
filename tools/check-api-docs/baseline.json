@@ -11,7 +11,7 @@
     "components-checkbox": 2,
     "components-code-block": 2,
     "components-content-panel": 10,
-    "components-core": 656,
+    "components-core": 655,
     "components-datepicker": 49,
     "components-dl": 3,
     "components-dropdown": 11,
@@ -22,7 +22,7 @@
     "components-icon": 9,
     "components-inline-edit": 4,
     "components-input": 38,
-    "components-list": 47,
+    "components-list": 46,
     "components-modal": 55,
     "components-navbar": 17,
     "components-notification-center": 3,
@@ -45,7 +45,7 @@
     "components-toast": 50,
     "components-toggle": 17,
     "components-tooltip": 22,
-    "components-tree": 158,
+    "components-tree": 157,
     "components-tree-select": 28,
     "components-username": 1
 }
