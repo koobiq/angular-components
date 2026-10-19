@@ -389,6 +389,19 @@ whether and how far the capture grows it is what varied between runs.
 The dropdown, no longer offset by the scroll, lands on another fraction of a pixel, so `2-light.png` was
 re-recorded in Docker (58 px of corner anti-aliasing). **Verified:** the spec ×30 in Docker (240/240).
 
+## Follow-up, 2026-10-19
+
+### `docs app › renders the examples that cannot render on the server once the page is hydrated`
+
+1 occurrence in CI (`e2e:docs`, 4 workers): `ag-grid-angular` not found within the default 5 s. The trace
+has the examples chunk loaded 0.5 s after the network went idle, then no request for 2.3 s while the main thread
+evaluated it and rendered the grids; the first grid initialized 3 s into the wait and the assertion still
+ran out. The test took 5.0 to 10.3 s across recent CI runs, main included (6.7, 6.9, 7.6, 8.5 s), against
+2.4 s locally, so the wait was always close to the limit rather than broken by a change.
+
+**Fix:** both waits for the client-only examples take 15 s, within the 30 s test timeout of the docs
+config. **Verified:** the test ×12 at 6 workers locally.
+
 ## Not fixed
 
 - **`tabs › E2eTabsStates › states`** — 1 occurrence, 18769 px by Playwright's count, 27480 raw. The

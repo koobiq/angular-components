@@ -403,8 +403,12 @@ test.describe('docs app', () => {
         await page.goto('/en/components/ag-grid/overview');
         await waitForHydration(page);
 
-        await expect(page.locator('docs-live-example-viewer ag-grid-angular').first()).toBeVisible();
-        await expect(page.locator('docs-live-example-viewer kbq-skeleton')).toHaveCount(0);
+        // The examples load only after hydration, and AG Grid renders them on the main thread: on a busy runner
+        // that alone has taken more than the default expect timeout.
+        const examplesTimeout = { timeout: 15_000 };
+
+        await expect(page.locator('docs-live-example-viewer ag-grid-angular').first()).toBeVisible(examplesTimeout);
+        await expect(page.locator('docs-live-example-viewer kbq-skeleton')).toHaveCount(0, examplesTimeout);
         expect(errors).toEqual([]);
     });
 
