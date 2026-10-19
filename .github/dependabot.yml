@@ -32,7 +32,7 @@ updates:
       # Installed through a yarn `patch:` that ports angular/angular-cli@6d9b360e5, without which `ng build`
       # never exits. The patch is cut for one version, so @angular/build is bumped by hand together with the
       # rest of @angular/* and the patch moved to the new version (see AGENTS.md). Remove this entry with the
-      # patch once the release line ships the fix: 21.2.26 does not.
+      # patch once the release line ships the fix: 21.2.27 does not, 22.1.0 does.
       - dependency-name: '@angular/build'
       # `@angular/build` 21 declares `vitest ^4` as its peer.
       - dependency-name: 'vitest'
