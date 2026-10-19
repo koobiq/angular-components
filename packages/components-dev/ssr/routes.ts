@@ -5,7 +5,6 @@ import {
     EXAMPLE_IDS_WITHOUT_SERVER_RENDERING,
     EXAMPLE_IMPORT_PATHS_WITHOUT_SERVER_RENDERING
 } from '../../docs-examples/server-rendering';
-import { DevPasswordToggleHydration } from './components/password-toggle';
 
 // TODO: Removing an entry here is not proof that the example survives SSR: `ssr:build` only prerenders,
 // while a hydration mismatch is thrown by the browser, after its parser has restructured the server
@@ -74,6 +73,4 @@ const fallbackRoutes: Routes = devSsrExampleIds.length
       ]
     : [];
 
-const manualTestRoutes: Routes = [{ path: 'password-toggle-hydration', component: DevPasswordToggleHydration }];
-
-export const devSsrRoutes: Routes = [...exampleRoutes, ...manualTestRoutes, ...fallbackRoutes];
+export const devSsrRoutes: Routes = [...exampleRoutes, ...fallbackRoutes];
