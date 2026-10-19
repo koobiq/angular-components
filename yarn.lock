@@ -9880,9 +9880,9 @@ __metadata:
   linkType: hard
 
 "http-cache-semantics@npm:^4.1.1":
-  version: 4.1.1
-  resolution: "http-cache-semantics@npm:4.1.1"
-  checksum: 10c0/ce1319b8a382eb3cbb4a37c19f6bfe14e5bb5be3d09079e885e8c513ab2d3cd9214902f8a31c9dc4e37022633ceabfc2d697405deeaf1b8f3552bb4ed996fdfc
+  version: 4.3.0
+  resolution: "http-cache-semantics@npm:4.3.0"
+  checksum: 10c0/b9668e271b4a99cba067bfa6f286b12eff1408a24e090ca16f0f5fa826ac07f67b4b8c7aa6e7458596d890683f3c172f647a00ca516a8f0158c80d7e4ebe0316
   languageName: node
   linkType: hard
 
@@ -13161,7 +13161,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"piscina@npm:5.3.2":
+"piscina@npm:5.3.2, piscina@npm:^5.0.0":
   version: 5.3.2
   resolution: "piscina@npm:5.3.2"
   dependencies:
@@ -13170,18 +13170,6 @@ __metadata:
     "@napi-rs/nice":
       optional: true
   checksum: 10c0/b739158a6b1a6a7a5f30bceb1aa3782cbc85b7195511fd7a808cf18e8a7c162caae82f5045ccdcbb3fd4c60e1f58b72dbb21946aa97f62ae3166bb012cae08f4
-  languageName: node
-  linkType: hard
-
-"piscina@npm:^5.0.0":
-  version: 5.2.0
-  resolution: "piscina@npm:5.2.0"
-  dependencies:
-    "@napi-rs/nice": "npm:^1.0.4"
-  dependenciesMeta:
-    "@napi-rs/nice":
-      optional: true
-  checksum: 10c0/61f4377dc7aeff2b3f71c2c03861fad97786b6fdad8a320e6281dd77bcadd4f2c8260a6274184d1c74ea30fddc293f30b10978f371b45a367b03145de3c84d1e
   languageName: node
   linkType: hard
 
@@ -13392,12 +13380,12 @@ __metadata:
   linkType: hard
 
 "proxy-addr@npm:^2.0.7":
-  version: 2.0.7
-  resolution: "proxy-addr@npm:2.0.7"
+  version: 2.0.8
+  resolution: "proxy-addr@npm:2.0.8"
   dependencies:
     forwarded: "npm:0.2.0"
     ipaddr.js: "npm:1.9.1"
-  checksum: 10c0/c3eed999781a35f7fd935f398b6d8920b6fb00bbc14287bc6de78128ccc1a02c89b95b56742bf7cf0362cc333c61d138532049c7dedc7a328ef13343eff81210
+  checksum: 10c0/58398f36e5b1f72b1011ca21844c0c41a9a3b6f2f0d101bcdb19abb3f3dd9626b27a96e53da777ded901eb67faed0304a4bc1d435b235e436f66f8e5e1fe1f5e
   languageName: node
   linkType: hard
 
@@ -14481,9 +14469,9 @@ __metadata:
   linkType: hard
 
 "source-map-js@npm:>=0.6.2 <2.0.0, source-map-js@npm:^1.2.1":
-  version: 1.2.1
-  resolution: "source-map-js@npm:1.2.1"
-  checksum: 10c0/7bda1fc4c197e3c6ff17de1b8b2c20e60af81b63a52cb32ec5a5d67a20a7d42651e2cb34ebe93833c5a2a084377e17455854fee3e21e7925c64a51b6a52b0faf
+  version: 1.2.2
+  resolution: "source-map-js@npm:1.2.2"
+  checksum: 10c0/d5d6dec62266834f83dd4f8a2606a196fb1a006ca5d53b0ef80ee513b7eba2f4e2ae241f4bc129ae7e9b80dea24f6e3d92b446b7e6e96be7653cab8888168a94
   languageName: node
   linkType: hard
 
