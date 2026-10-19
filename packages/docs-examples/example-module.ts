@@ -3822,6 +3822,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "loader-overlay-default-example.ts",
     "importPath": "components/loader-overlay"
   },
+  "loader-overlay-delay": {
+    "packagePath": "components/loader-overlay/loader-overlay-delay",
+    "title": "Loader-overlay delay",
+    "componentName": "LoaderOverlayDelayExample",
+    "files": [
+      "loader-overlay-delay-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "loader-overlay-delay-example",
+    "primaryFile": "loader-overlay-delay-example.ts",
+    "importPath": "components/loader-overlay"
+  },
   "loader-overlay-fixed-top": {
     "packagePath": "components/loader-overlay/loader-overlay-fixed-top",
     "title": "Loader-overlay fixed-top",
@@ -8186,6 +8198,7 @@ export type LiveExampleId =
   | 'list-virtual-scroll'
   | 'loader-overlay-background'
   | 'loader-overlay-default'
+  | 'loader-overlay-delay'
   | 'loader-overlay-fixed-top'
   | 'loader-overlay-large'
   | 'loader-overlay-overview'

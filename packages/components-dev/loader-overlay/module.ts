@@ -10,6 +10,8 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     imports: [LoaderOverlayExamplesModule],
     template: `
+        <loader-overlay-delay-example />
+        <hr />
         <loader-overlay-overview-example />
         <hr />
         <loader-overlay-fixed-top-example />

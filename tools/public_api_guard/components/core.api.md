@@ -41,6 +41,7 @@ import { InjectionToken } from '@angular/core';
 import { InjectOptions } from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { ModelSignal } from '@angular/core';
+import { MonoTypeOperatorFunction } from 'rxjs';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
@@ -3064,6 +3065,15 @@ export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
 
 // @public @deprecated (undocumented)
 export const KbqDefaultThemes: KbqThemeConfig[];
+
+// @public
+export function kbqDelayLoadingIndicator(options?: KbqDelayLoadingIndicatorOptions): MonoTypeOperatorFunction<boolean>;
+
+// @public
+export type KbqDelayLoadingIndicatorOptions = {
+    delay?: number;
+    minDuration?: number;
+};
 
 // @public
 export class KbqDurationLongPipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, [
