@@ -364,7 +364,9 @@ export class KbqCodeBlock implements AfterViewInit {
      * has a scroll, and the calculated maximum height is not set.
      */
     private get canCodeContentBeFocused(): boolean {
-        if (!this.platform.isBrowser) return false;
+        // The server cannot measure the content, so it leaves it focusable: a block that stays dehydrated, as one
+        // under a `@defer` hydrate trigger does, would otherwise keep an overflow that no keyboard can scroll.
+        if (!this.platform.isBrowser) return true;
 
         const element = this.scrollbarViewport().getNativeElement();
 

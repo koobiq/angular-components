@@ -617,6 +617,20 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
     });
 
+    it('should leave the code content focusable when rendered on the server', () => {
+        const { nativeElement } = createComponent(BaseCodeBlock, [
+            { provide: Platform, useValue: { isBrowser: false } satisfies Partial<Platform> }
+        ]);
+
+        expect(nativeElement.querySelector('.kbq-code-block__main').tabIndex).toBe(0);
+    });
+
+    it('should not let the code content be focused in the browser when nothing overflows', () => {
+        const { nativeElement } = createComponent(BaseCodeBlock);
+
+        expect(nativeElement.querySelector('.kbq-code-block__main').tabIndex).toBe(-1);
+    });
+
     it('should show actionbar when tabs are visible', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;

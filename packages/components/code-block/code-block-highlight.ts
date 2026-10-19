@@ -74,9 +74,10 @@ export const kbqCodeBlockFallbackFileLanguageProvider = (language: string): Prov
 
 /**
  * Marks the markup the directive has highlighted. Found while highlight.js has yet to load, it can only have come
- * from the server: once the browser has highlighted a file, highlight.js stays loaded.
+ * from the server: once the browser has highlighted a file, highlight.js stays loaded. Not `data-highlighted`, which
+ * highlight.js sets on the elements it highlights itself.
  */
-const HIGHLIGHTED_ATTRIBUTE = 'data-highlighted';
+const HIGHLIGHTED_MARKUP_ATTRIBUTE = 'data-highlighted-markup';
 
 /**
  * Directive which applies syntax highlighting to the code block content.
@@ -128,12 +129,12 @@ export class KbqCodeBlockHighlight {
 
             // The template leaves `<code>` empty, so that hydration does not look for a text node the highlighted
             // markup has replaced. The plain content stands in until highlighting lands, and for good if it fails.
-            const keepsServerMarkup = this.nativeElement.hasAttribute(HIGHLIGHTED_ATTRIBUTE);
+            const keepsServerMarkup = this.nativeElement.hasAttribute(HIGHLIGHTED_MARKUP_ATTRIBUTE);
 
             if (keepsServerMarkup) {
                 // Markup from the server stays instead, rather than flash plain text over code that arrived
                 // highlighted. Once: the file of a later run is not the one it was rendered for.
-                this.renderer.removeAttribute(this.nativeElement, HIGHLIGHTED_ATTRIBUTE);
+                this.renderer.removeAttribute(this.nativeElement, HIGHLIGHTED_MARKUP_ATTRIBUTE);
             } else {
                 this.renderer.setProperty(this.nativeElement, 'textContent', file.content);
                 this.renderer.removeAttribute(this.nativeElement, 'data-language');
@@ -211,7 +212,7 @@ export class KbqCodeBlockHighlight {
 
         this.renderer.setAttribute(this.nativeElement, 'data-language', highlightedLanguage!);
         this.renderer.setProperty(this.nativeElement, 'innerHTML', highlightedHTMLWithLineNumbers);
-        this.renderer.setAttribute(this.nativeElement, HIGHLIGHTED_ATTRIBUTE, '');
+        this.renderer.setAttribute(this.nativeElement, HIGHLIGHTED_MARKUP_ATTRIBUTE, '');
 
         this._pending.set(false);
     }

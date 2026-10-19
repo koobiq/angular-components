@@ -124,7 +124,7 @@ class RootAndScopedBlocks {
 @Component({
     imports: [KbqCodeBlockHighlight],
     template: `
-        <code kbqCodeBlockHighlight data-highlighted data-language="typescript" [file]="file()">
+        <code kbqCodeBlockHighlight data-highlighted-markup data-language="typescript" [file]="file()">
             <span class="server-markup">one</span>
         </code>
     `,
@@ -156,7 +156,7 @@ describe(KbqCodeBlockHighlight.name, () => {
 
         expect(code.textContent).toBe('one');
         expect(code.children.length).toBe(0);
-        expect(code.hasAttribute('data-highlighted')).toBe(false);
+        expect(code.hasAttribute('data-highlighted-markup')).toBe(false);
         expect(getHighlight(fixture).pending()).toBe(true);
     });
 
@@ -251,7 +251,7 @@ describe(KbqCodeBlockHighlight.name, () => {
         expect(code.querySelector('.server-markup')).toBeInstanceOf(HTMLSpanElement);
         expect(code.getAttribute('data-language')).toBe('typescript');
         // Taken once: a file that arrives before highlight.js is not the one the markup was rendered for.
-        expect(code.hasAttribute('data-highlighted')).toBe(false);
+        expect(code.hasAttribute('data-highlighted-markup')).toBe(false);
         expect(getHighlight(fixture).pending()).toBe(true);
 
         resolve();
@@ -260,7 +260,7 @@ describe(KbqCodeBlockHighlight.name, () => {
         expect(core.highlight).toHaveBeenCalledWith('one', { language: 'typescript' });
         expect(code.querySelector('.server-markup')).toBeNull();
         expect(code.querySelector('.hljs-keyword')?.textContent).toBe('one');
-        expect(code.hasAttribute('data-highlighted')).toBe(true);
+        expect(code.hasAttribute('data-highlighted-markup')).toBe(true);
         expect(getHighlight(fixture).pending()).toBe(false);
     });
 
