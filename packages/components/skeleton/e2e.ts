@@ -314,19 +314,19 @@ export class E2eSkeletonPresets {
     protected readonly rows = [1, 2, 3];
 }
 
-type E2eSkeletonTreeNode = {
+type SkeletonTreeNode = {
     name: string;
-    children?: E2eSkeletonTreeNode[];
+    children?: SkeletonTreeNode[];
 };
 
-type E2eSkeletonTreeFlatNode = {
+type SkeletonTreeFlatNode = {
     name: string;
     level: number;
     expandable: boolean;
 };
 
 // Every visible node has children, so each one has a toggle, as in the preset; the second one is expanded.
-const E2E_SKELETON_TREE: E2eSkeletonTreeNode[] = [1, 2, 3].map((node) => ({
+const E2E_SKELETON_TREE: SkeletonTreeNode[] = [1, 2, 3].map((node) => ({
     name: `Node ${node}`,
     children: [1, 2, 3].map((child) => ({
         name: `Node ${node}.${child}`,
@@ -426,7 +426,7 @@ const E2E_SKELETON_TREE: E2eSkeletonTreeNode[] = [1, 2, 3].map((node) => ({
 })
 export class E2eSkeletonComponentPresets {
     protected readonly rows = [1, 2, 3];
-    protected readonly treeControl = new FlatTreeControl<E2eSkeletonTreeFlatNode>(
+    protected readonly treeControl = new FlatTreeControl<SkeletonTreeFlatNode>(
         (node) => node.level,
         (node) => node.expandable,
         (node) => node.name,
@@ -434,7 +434,7 @@ export class E2eSkeletonComponentPresets {
     );
     protected readonly dataSource = new KbqTreeFlatDataSource(
         this.treeControl,
-        new KbqTreeFlattener<E2eSkeletonTreeNode, E2eSkeletonTreeFlatNode>(
+        new KbqTreeFlattener<SkeletonTreeNode, SkeletonTreeFlatNode>(
             (node, level) => ({ name: node.name, level, expandable: !!node.children }),
             (node) => node.level,
             (node) => node.expandable,

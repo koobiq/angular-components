@@ -4,13 +4,7 @@
 
     <hr />
 
-    <div class="e2e-nav">
-        @for (link of links; track link.path) {
-            <a kbq-link compact noUnderline [routerLink]="link.path">
-                {{ link.path }}
-            </a>
-        }
-    </div>
+    <e2e-scenario-select />
 
     <hr />
 }
