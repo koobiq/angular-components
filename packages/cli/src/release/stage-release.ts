@@ -127,8 +127,7 @@ export class StageReleaseTask extends BaseReleaseTask {
             process.exit(0);
         }
 
-        this.git.stageAllChanges();
-        this.git.createNewCommit(`chore: bump version to ${newVersionName} w/ changelog`);
+        this.commitReleaseChanges(newVersionName);
 
         console.info();
         console.info(green(`  ✓   Created the staging commit for: "${newVersionName}".`));
