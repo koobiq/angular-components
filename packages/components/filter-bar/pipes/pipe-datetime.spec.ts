@@ -5,7 +5,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, DateFormatter } from '@koobiq/components/core';
+import { DateAdapter, DateFormatter, dispatchKeyboardEvent, TAB } from '@koobiq/components/core';
 import {
     KbqFilter,
     KbqFilterBar,
@@ -612,6 +612,41 @@ describe('KbqPipeDatetimeComponent', () => {
 
             expect(internal.showStartCalendar()).toBe(false);
             expect(internal.showEndCalendar()).toBe(false);
+        });
+
+        // The browser moves focus right after keydown, so a calendar still displayed then takes the focus and
+        // hides with it inside. jsdom moves no focus, hence no `fixture.detectChanges()` after the keydown.
+        it('should hide the calendar of a date input within the Tab keydown', async () => {
+            vi.useFakeTimers();
+
+            const component = getPipeComponent();
+            const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
+
+            component.open();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            asInternal(component).returnButton = stubReturnButton();
+            component.showPeriod();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const [startInput, endInput] = Array.from(
+                overlayContainer.querySelectorAll<HTMLInputElement>('input.kbq-datepicker')
+            );
+            const [start, end] = Array.from(overlayContainer.querySelectorAll('kbq-calendar'));
+
+            component.onFocusStartInput();
+            fixture.detectChanges();
+            dispatchKeyboardEvent(startInput, 'keydown', TAB, undefined, 'Tab');
+
+            expect(start.classList).toContain('kbq-calendar_hidden');
+
+            component.onFocusEndInput();
+            fixture.detectChanges();
+            dispatchKeyboardEvent(endInput, 'keydown', TAB, undefined, 'Tab');
+
+            expect(end.classList).toContain('kbq-calendar_hidden');
         });
     });
 

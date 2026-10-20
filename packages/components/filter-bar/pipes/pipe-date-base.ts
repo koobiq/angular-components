@@ -1,4 +1,13 @@
-import { AfterViewInit, Directive, ElementRef, inject, signal, untracked, viewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    ApplicationRef,
+    Directive,
+    ElementRef,
+    inject,
+    signal,
+    untracked,
+    viewChild
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
@@ -20,6 +29,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     // matching the behaviour the `date`/`datetime` pipes had before this base class was extracted.
     protected readonly adapter: DateAdapter<any> = inject(DateAdapter);
     protected readonly formatter: DateFormatter<any> = inject(DateFormatter);
+    private readonly appRef = inject(ApplicationRef);
 
     /** @docs-private */
     protected readonly placements = PopUpPlacements;
@@ -446,6 +456,17 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     hideCalendars() {
         this.showStartCalendar.set(false);
         this.showEndCalendar.set(false);
+    }
+
+    /**
+     * Hides the calendars before the browser moves focus on Tab.
+     * @docs-private
+     */
+    onDateInputTab(): void {
+        this.hideCalendars();
+        // Change detection runs after the event, but the browser moves focus right after keydown: render now, or
+        // Tab lands on the still displayed calendar, which then hides with the focus inside it.
+        this.appRef.tick();
     }
 
     /**

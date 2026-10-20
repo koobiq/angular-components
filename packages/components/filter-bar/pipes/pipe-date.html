@@ -82,7 +82,7 @@
                         [min]="min"
                         [max]="startMax"
                         (focusin)="onFocusStartInput()"
-                        (keydown.tab)="hideCalendars()"
+                        (keydown.tab)="onDateInputTab()"
                     />
                     <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
                 </kbq-form-field>
@@ -104,7 +104,7 @@
                         [min]="min"
                         [max]="max"
                         (focusin)="onFocusEndInput()"
-                        (keydown.tab)="hideCalendars()"
+                        (keydown.tab)="onDateInputTab()"
                     />
                     <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
                 </kbq-form-field>

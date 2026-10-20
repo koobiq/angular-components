@@ -476,6 +476,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     ngAfterViewInit(): void;
     // (undocumented)
     onApplyPeriod(): void;
+    onDateInputTab(): void;
     // (undocumented)
     onFocusEndInput(): void;
     // (undocumented)
