@@ -11,6 +11,8 @@ const FILTERED_OPTIONS = '`filteredOptions` of `KbqFilters`, `KbqPipeSelectCompo
 const FILTERED_OPTIONS_ASYNC = '`filteredOptions` of the filter bar is a signal';
 const PIPE_SELECT_INIT = '`KbqPipeSelectComponent` no longer implements `ngOnInit`';
 const DATE_PIPE_FLAGS = '`isListMode`, `showStartCalendar` and `showEndCalendar` of the date pipes are signals';
+const DATE_PIPE_RETURN_BUTTON = '`returnButton` of the date pipes may be `undefined`';
+const DATE_PIPE_TAB = 'Bind `(keydown.tab)` and `(keydown.shift.tab)` of the date inputs';
 const SELECT_HIDDEN_ITEMS = 'If this reads `KbqSelect.hiddenItems`';
 const SELECT_HIDDEN_ITEMS_TEMPLATE = 'If this reads `hiddenItems` of a `kbq-select`';
 const SEARCH_VALUE = 'If this uses `KbqSearchExpandable.value`';
@@ -188,6 +190,54 @@ describe('v21-upgrade: state as signals', () => {
         });
 
         expect(run.log).not.toContain(DATE_PIPE_FLAGS);
+    });
+
+    it('reports a date pipe subclass dereferencing the back button and a template hiding the calendars on Tab', async () => {
+        const run = await runV21Upgrade({
+            'pipe.ts': [
+                "import { KbqPipeDateComponent } from '@koobiq/components/filter-bar';",
+                '',
+                'export class AppPipeDate extends KbqPipeDateComponent {',
+                '    focusBack(): void {',
+                '        this.returnButton().focus();',
+                '    }',
+                '}',
+                ''
+            ].join('\n'),
+            'pipe.html': [
+                '<div class="kbq-date-period">',
+                '    <input formControlName="start" (keydown.tab)="hideCalendars()" />',
+                '</div>',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.log).toContain(DATE_PIPE_RETURN_BUTTON);
+        expect(run.log).toContain(DATE_PIPE_TAB);
+    });
+
+    it('does not report the back button read with optional chaining or a template bound to onDateInputTab', async () => {
+        const run = await runV21Upgrade({
+            'pipe.ts': [
+                "import { KbqPipeDateComponent } from '@koobiq/components/filter-bar';",
+                '',
+                'export class AppPipeDate extends KbqPipeDateComponent {',
+                '    focusBack(): void {',
+                '        this.returnButton()?.focus();',
+                '    }',
+                '}',
+                ''
+            ].join('\n'),
+            'pipe.html': [
+                '<div class="kbq-date-period">',
+                '    <input formControlName="start" (keydown.tab)="onDateInputTab()" />',
+                '</div>',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.log).not.toContain(DATE_PIPE_RETURN_BUTTON);
+        expect(run.log).not.toContain(DATE_PIPE_TAB);
     });
 
     it('reports hiddenItems of the select read as a field, in code and in a template', async () => {
