@@ -29,7 +29,9 @@ Do not use single-word "Loading" text with an enlarged spinner.
 
 #### Focus and keyboard navigation
 
-The system prevents focusing on form elements covered by the overlay.
+The system prevents focusing on form elements covered by the overlay. The content behind the overlay cannot be selected or clicked either, and screen readers do not read it, nor the text of the overlay itself. So announce the loading separately, for example with `LiveAnnouncer` from `@angular/cdk/a11y`.
+
+Once the overlay is hidden, focus returns to the element that had it before the overlay appeared, unless the user has moved it to another element. To move focus to another element behind the overlay after loading, do it once the overlay is hidden, for example in `afterNextRender`.
 
 #### Display delay
 

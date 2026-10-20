@@ -1,10 +1,12 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import {
+    afterNextRender,
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
     inject,
+    Injector,
     OnDestroy,
     signal,
     viewChild,
@@ -141,8 +143,10 @@ export class ValidationMessageGlobalExample implements AfterViewInit, OnDestroy 
     });
 
     protected readonly focusMonitor = inject(FocusMonitor);
+    private readonly injector = inject(Injector);
     protected submitOrigin: FocusOrigin | null = null;
     private readonly formFieldList = viewChildren(KbqFormField);
+    private submitTimeout: ReturnType<typeof setTimeout> | undefined;
 
     ngAfterViewInit() {
         const alert = this.alertContainer();
@@ -153,6 +157,8 @@ export class ValidationMessageGlobalExample implements AfterViewInit, OnDestroy 
     }
 
     ngOnDestroy(): void {
+        clearTimeout(this.submitTimeout);
+
         const alert = this.alertContainer();
 
         if (alert) {
@@ -170,16 +176,22 @@ export class ValidationMessageGlobalExample implements AfterViewInit, OnDestroy 
 
         this.inProgress.set(true);
 
-        setTimeout(() => {
+        this.submitTimeout = setTimeout(() => {
             this.inProgress.set(false);
             this.showServerErrors.set(true);
 
-            const alert = this.alertContainer();
+            // The alert stays inert until the loader overlay is removed from the DOM.
+            afterNextRender(
+                () => {
+                    const alert = this.alertContainer();
 
-            if (alert) {
-                this.focusMonitor.focusVia(alert.nativeElement, this.submitOrigin);
-                this.submitOrigin = null;
-            }
+                    if (alert) {
+                        this.focusMonitor.focusVia(alert.nativeElement, this.submitOrigin);
+                        this.submitOrigin = null;
+                    }
+                },
+                { injector: this.injector }
+            );
         }, 2000);
     }
 

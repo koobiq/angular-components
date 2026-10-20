@@ -1,10 +1,14 @@
+import { FocusMonitor, FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { DOCUMENT } from '@angular/common';
 import {
+    afterNextRender,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     computed,
     contentChild,
     Directive,
+    EnvironmentInjector,
     inject,
     input,
     OnDestroy,
@@ -70,12 +74,19 @@ export class KbqLoaderOverlayCaption {}
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly renderer = inject(Renderer2);
+    private readonly document = inject(DOCUMENT);
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly inputModalityDetector = inject(InputModalityDetector);
+    private readonly environmentInjector = inject(EnvironmentInjector);
 
     private readonly externalIndicator = contentChild(KbqLoaderOverlayIndicator);
     private readonly externalText = contentChild(KbqLoaderOverlayText);
     private readonly externalCaption = contentChild(KbqLoaderOverlayCaption);
 
     private parent: HTMLElement | null = null;
+    private parentWasInert = false;
+    private previouslyFocused: HTMLElement | null = null;
+    private previousFocusOrigin: FocusOrigin = null;
 
     /** Text shown under the indicator. Ignored when a `[kbq-loader-overlay-text]` is projected. */
     readonly text = input<string>();
@@ -149,13 +160,62 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
         this.parent = this.nativeElement.parentElement;
 
         if (this.parent) {
+            // Covering the parent only blocks the pointer: `inert` also takes the content behind the overlay out of
+            // the tab order, text selection and the accessibility tree. The overlay itself is inert too, which is
+            // harmless because it has nothing to interact with.
+            // An `inert` that comes with the class was set by an overlay (on the server, before hydration, or by
+            // another overlay in this parent), so only one without it is the consumer's to keep.
+            this.parentWasInert =
+                this.parent.hasAttribute('inert') && !this.parent.classList.contains(kbqLoaderOverlayParent);
+            this.saveFocus(this.parent);
             this.renderer.addClass(this.parent, kbqLoaderOverlayParent);
+            this.renderer.setAttribute(this.parent, 'inert', '');
         }
     }
 
     ngOnDestroy(): void {
         if (this.parent) {
             this.renderer.removeClass(this.parent, kbqLoaderOverlayParent);
+
+            if (!this.parentWasInert) {
+                this.renderer.removeAttribute(this.parent, 'inert');
+            }
+
+            this.restoreFocus();
         }
+    }
+
+    // Remembers the element `inert` is about to take the focus from.
+    private saveFocus(parent: HTMLElement): void {
+        const focused = this.document.activeElement as HTMLElement | null;
+
+        if (focused && parent.contains(focused)) {
+            this.previouslyFocused = focused;
+            // Read now: by the time the overlay goes away, the modality is long gone from the focus origin.
+            this.previousFocusOrigin = this.inputModalityDetector.mostRecentModality;
+        }
+    }
+
+    // Hands the focus back to the element the overlay took it from, unless the user has moved it since.
+    private restoreFocus(): void {
+        const element = this.previouslyFocused;
+
+        // The environment injector is already destroyed when the overlay goes away with the whole application.
+        if (!element || this.environmentInjector.destroyed) return;
+
+        // After the render, not now: the element can still be disabled by a binding that is updated later in the
+        // same pass. The environment injector, not the overlay's, because the overlay's view is already destroyed.
+        afterNextRender(
+            () => {
+                const focused = this.document.activeElement;
+
+                if (!element.isConnected || (focused && focused !== this.document.body)) return;
+
+                // `focusVia` keeps the focus ring of a keyboard user, which a native `focus()` would drop. No scroll:
+                // the user may have scrolled away while waiting.
+                this.focusMonitor.focusVia(element, this.previousFocusOrigin ?? 'program', { preventScroll: true });
+            },
+            { injector: this.environmentInjector }
+        );
     }
 }
