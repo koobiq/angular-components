@@ -37,3 +37,7 @@ apps/docs/src/app/seo-descriptions.ts
 /tools/check-angular/dist
 /tools/check-angular/.angular
 /tools/check-angular/.tarballs
+
+# copies of the repository made by Claude Code; git hides them through .git/info/exclude,
+# which prettier does not read
+/.claude/worktrees

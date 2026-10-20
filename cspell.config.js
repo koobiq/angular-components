@@ -10,7 +10,10 @@ const config = {
         '**/dist/**',
         '**/node_modules/**',
         '**/CHANGELOG.md',
-        '**/public_api_guard/**'
+        '**/public_api_guard/**',
+        // copies of the repository made by Claude Code; git hides them through .git/info/exclude,
+        // which useGitignore does not read
+        '.claude/worktrees/**'
     ],
     import: [
         'tools/cspell-locales/en.json',
