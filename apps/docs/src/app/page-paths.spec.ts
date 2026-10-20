@@ -11,7 +11,7 @@ describe(docsGetPagePaths.name, () => {
         expect(paths).toContain('/ru/components/alert/overview');
         expect(paths).toContain('/en/components/alert/api');
         expect(paths).toContain('/ru/components/select/examples');
-        expect(paths).toContain('/en/icons');
+        expect(paths).toContain('/en/main/icons');
         expect(paths.filter((path) => path.startsWith('/examples/'))).toEqual([]);
         expect(pages).toContainEqual({ path: '/', indexable: false });
         expect(pages).toContainEqual({ path: '/404', indexable: false });

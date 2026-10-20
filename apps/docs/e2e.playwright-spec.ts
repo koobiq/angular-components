@@ -466,7 +466,7 @@ test.describe('docs app', () => {
     });
 
     test('renders the icons page as an operable grid', async ({ page }) => {
-        await page.goto('/en/icons');
+        await page.goto('/en/main/icons');
         await waitForHydration(page);
 
         const cell = page.locator('.docs-icons-viewer__table-cell').first();

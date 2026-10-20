@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { DocsLocale } from '../constants/locale';
 import { DOCS_SEO_DESCRIPTIONS } from '../seo-descriptions';
+import { DOCS_TRANSLATIONS } from './i18n';
 import { docsResolveSeo, DocsSeoService } from './seo';
 
 describe(docsResolveSeo.name, () => {
@@ -49,6 +50,17 @@ describe(docsResolveSeo.name, () => {
 
         expect(seo.title).toBe('Дизайн-токены — Инженерная палитра · Koobiq');
         expect(seo.markdownUrl).toBe('/ru/main/design-tokens.md');
+    });
+
+    it('describes the icons page without Markdown of its own', () => {
+        const seo = docsResolveSeo('/en/main/icons?s=arrow', DocsLocale.En);
+
+        expect(seo.title).toBe('Icons · Koobiq');
+        expect(seo.description).toBe(DOCS_TRANSLATIONS.seoIconsDescription.en);
+        expect(seo.canonicalUrl).toBe('https://koobiq.io/en/main/icons');
+        expect(seo.markdownUrl).toBeNull();
+        expect(seo.image.url).toBe('https://koobiq.io/assets/images/welcome/icons-light.png');
+        expect(seo.noIndex).toBe(false);
     });
 
     it('uses a localized Markdown summary added before the examples', () => {
