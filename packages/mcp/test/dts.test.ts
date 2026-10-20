@@ -130,6 +130,17 @@ test('inputs inherited from a base directive are kept, and labelled with where t
     assert.ok(sample.input.type, `${sample.symbol}.${sample.input.alias} resolved without a type`);
 });
 
+test('a type argument given to a generic base class replaces its parameter in an inherited member', () => {
+    // `KbqButton extends KbqColorDirective<KbqButtonColor>` — `color` is declared on
+    // `KbqColorDirective<T>` as `InputSignal<T | null | undefined>`. Reading the base's own
+    // signature without substituting `T` reports every color input in the library as
+    // `T | null | undefined`, true of no component and useless to all of them.
+    const button = api?.read('button')?.find((symbol) => symbol.name === 'KbqButton');
+    const color = button?.inputs.find((input) => input.alias === 'color');
+
+    assert.equal(color?.type, 'KbqButtonColor | null | undefined');
+});
+
 test('inputs exposed by a host directive are kept, with the type they accept', () => {
     const viaHost = allInputs().filter((entry) => entry.input.viaHostDirective);
 

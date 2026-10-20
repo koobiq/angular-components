@@ -63,6 +63,10 @@ export type DtsSymbol = {
     kind: DtsSymbolKind;
     /** Base class name, unresolved. Inputs are inherited through it. */
     base: string | null;
+    /** This class's own generic parameter names, e.g. `['T']` for `KbqColorDirective<T extends string>`. */
+    typeParams: string[];
+    /** Concrete arguments given to `base` at the `extends` site, e.g. `['KbqButtonColor']`. */
+    baseTypeArgs: string[];
     selector?: string;
     exportAs: string[];
     inputs: DtsInput[];
@@ -85,7 +89,7 @@ export type DtsFile = {
 };
 
 const CLASS =
-    /^(?:export\s+)?declare\s+(?:abstract\s+)?class\s+([A-Za-z_$][\w$]*)(?:<[^>]*>)?(?:\s+extends\s+([A-Za-z_$][\w$]*))?/;
+    /^(?:export\s+)?declare\s+(?:abstract\s+)?class\s+([A-Za-z_$][\w$]*)(?:<([^>]*)>)?(?:\s+extends\s+([A-Za-z_$][\w$]*)(?:<([^>]*)>)?)?/;
 const INTERFACE = /^(?:export\s+)?declare\s+interface\s+([A-Za-z_$][\w$]*)/;
 const ENUM = /^(?:export\s+)?declare\s+(?:const\s+)?enum\s+([A-Za-z_$][\w$]*)/;
 const CONST = /^(?:export\s+)?declare\s+(?:const|let|var)\s+([A-Za-z_$][\w$]*)/;
@@ -225,16 +229,32 @@ const classifyMember = (name: string, modifiers: string[], rest: string): DtsMem
     };
 };
 
-const emptySymbol = (name: string, kind: DtsSymbolKind, base: string | null = null): DtsSymbol => ({
+const emptySymbol = (
+    name: string,
+    kind: DtsSymbolKind,
+    base: string | null = null,
+    typeParams: string[] = [],
+    baseTypeArgs: string[] = []
+): DtsSymbol => ({
     name,
     kind,
     base,
+    typeParams,
+    baseTypeArgs,
     exportAs: [],
     inputs: [],
     outputs: [],
     hostDirectives: [],
     members: []
 });
+
+/** `T, U extends Foo = Bar` → `['T', 'U']` — the names a type argument list substitutes for. */
+const typeParamNames = (raw: string | undefined): string[] =>
+    raw
+        ? splitTopLevel(raw)
+              .map((param) => /^([A-Za-z_$][\w$]*)/.exec(param)?.[1])
+              .filter((name): name is string => Boolean(name))
+        : [];
 
 export const parseDts = (source: string): DtsFile => {
     const lines = source.replace(/\r\n/g, '\n').split('\n');
@@ -289,7 +309,13 @@ export const parseDts = (source: string): DtsFile => {
             const klass = CLASS.exec(trimmed);
 
             if (klass) {
-                current = emptySymbol(klass[1]!, 'class', klass[2] ?? null);
+                current = emptySymbol(
+                    klass[1]!,
+                    'class',
+                    klass[3] ?? null,
+                    typeParamNames(klass[2]),
+                    splitTopLevel(klass[4] ?? '')
+                );
                 depth = (trimmed.match(/\{/g)?.length ?? 0) - (trimmed.match(/\}/g)?.length ?? 0);
 
                 if (depth <= 0) {

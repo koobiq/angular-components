@@ -62,6 +62,56 @@ const bindableType = (signature: string | undefined): string | undefined => {
     return property ? property[1]!.trim() : undefined;
 };
 
+/** Replaces `name` with `value` wherever it appears in `text` as a whole word, not part of another. */
+const substituteWord = (text: string, name: string, value: string): string =>
+    text.replace(new RegExp(`\\b${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g'), value);
+
+/**
+ * A base class's generic parameter, substituted with the concrete type its subclass gave it.
+ *
+ * `class KbqButton extends KbqColorDirective<KbqButtonColor>` means every member `KbqButton`
+ * inherits through that step has its `T` read as `KbqButtonColor` — without this, `color` reports
+ * the unresolved parameter itself, `T | null | undefined`, the same for every component that uses
+ * `KbqColorDirective`.
+ */
+const applySubstitution = (text: string, subst: ReadonlyMap<string, string>): string =>
+    [...subst].reduce((result, [name, value]) => substituteWord(result, name, value), text);
+
+/**
+ * The substitution the step from `symbolAt` into `base` introduces, composed with whatever
+ * `symbolAt` itself was substituted with — so a parameter a subclass passes through unchanged, as
+ * `class Foo<T> extends KbqColorDirective<T>` would, still resolves to the concrete type at the
+ * root rather than stopping at the next name.
+ */
+const baseSubstitution = (
+    baseTypeParams: readonly string[],
+    baseTypeArgs: readonly string[],
+    current: ReadonlyMap<string, string>
+): Map<string, string> => {
+    const next = new Map<string, string>();
+
+    baseTypeParams.forEach((name, index) => {
+        const arg = baseTypeArgs[index];
+
+        if (arg) next.set(name, current.size > 0 ? applySubstitution(arg, current) : arg);
+    });
+
+    return next;
+};
+
+/** The type a member resolves to once its signature has `subst` applied. */
+const typeOf = (
+    member: { signature: string; accepts?: string } | undefined,
+    subst: ReadonlyMap<string, string>
+): string | undefined => {
+    if (!member) return undefined;
+    if (subst.size === 0) return member.accepts ?? bindableType(member.signature);
+
+    return member.accepts
+        ? applySubstitution(member.accepts, subst)
+        : bindableType(applySubstitution(member.signature, subst));
+};
+
 export type ResolvedOutput = DtsOutput & { from?: string; viaHostDirective?: string; type?: string };
 
 export type ResolvedSymbol = Omit<DtsSymbol, 'inputs' | 'outputs'> & {
@@ -282,7 +332,12 @@ export const readComponentsApi = (pkg: PackageRef | undefined): ComponentsApi | 
      * on itself but on `KbqColorDirective` in `core`; reading only its own declaration left every
      * input it exposes through that chain with no type.
      */
-    const declaredChain = (name: string, origin: string, depth = 0): { inputs: DtsInput[]; members: DtsMember[] } => {
+    const declaredChain = (
+        name: string,
+        origin: string,
+        depth = 0,
+        subst: ReadonlyMap<string, string> = new Map()
+    ): { inputs: DtsInput[]; members: DtsMember[] } => {
         const empty = { inputs: [], members: [] };
 
         if (depth > 8) return empty;
@@ -292,20 +347,27 @@ export const readComponentsApi = (pkg: PackageRef | undefined): ComponentsApi | 
         if (!located) return empty;
 
         const { symbol, entryPoint } = located;
+        const members =
+            subst.size === 0
+                ? symbol.members
+                : symbol.members.map((member) => ({
+                      ...member,
+                      signature: applySubstitution(member.signature, subst),
+                      ...(member.accepts ? { accepts: applySubstitution(member.accepts, subst) } : {})
+                  }));
 
-        if (!symbol.base) return { inputs: symbol.inputs, members: symbol.members };
+        if (!symbol.base) return { inputs: symbol.inputs, members };
 
-        const base = declaredChain(symbol.base, entryPoint, depth + 1);
+        const baseSymbol = locate(symbol.base, entryPoint)?.symbol;
+        const nextSubst = baseSymbol ? baseSubstitution(baseSymbol.typeParams, symbol.baseTypeArgs, subst) : subst;
+        const base = declaredChain(symbol.base, entryPoint, depth + 1, nextSubst);
 
         return {
             inputs: [
                 ...symbol.inputs,
                 ...base.inputs.filter((input) => !symbol.inputs.some((it) => it.alias === input.alias))
             ],
-            members: [
-                ...symbol.members,
-                ...base.members.filter((member) => !symbol.members.some((it) => it.name === member.name))
-            ]
+            members: [...members, ...base.members.filter((member) => !members.some((it) => it.name === member.name))]
         };
     };
 
@@ -321,7 +383,12 @@ export const readComponentsApi = (pkg: PackageRef | undefined): ComponentsApi | 
         const taken = new Set<string>();
         const takenOutputs = new Set<string>();
 
-        const add = (symbolAt: DtsSymbol, origin: string, depth: number): void => {
+        const add = (
+            symbolAt: DtsSymbol,
+            origin: string,
+            depth: number,
+            subst: ReadonlyMap<string, string> = new Map()
+        ): void => {
             if (depth > 8) return;
 
             for (const input of symbolAt.inputs) {
@@ -330,7 +397,7 @@ export const readComponentsApi = (pkg: PackageRef | undefined): ComponentsApi | 
                 taken.add(input.alias);
 
                 const member = symbolAt.members.find((entry) => entry.name === input.name);
-                const type = member?.accepts ?? bindableType(member?.signature);
+                const type = typeOf(member, subst);
 
                 inputs.push({ ...input, ...(type ? { type } : {}), ...(depth === 0 ? {} : { from: origin }) });
             }
@@ -340,7 +407,10 @@ export const readComponentsApi = (pkg: PackageRef | undefined): ComponentsApi | 
 
                 takenOutputs.add(output.alias);
 
-                const type = bindableType(symbolAt.members.find((member) => member.name === output.name)?.signature);
+                const signature = symbolAt.members.find((member) => member.name === output.name)?.signature;
+                const type = bindableType(
+                    signature && subst.size > 0 ? applySubstitution(signature, subst) : signature
+                );
 
                 outputs.push({ ...output, ...(type ? { type } : {}), ...(depth === 0 ? {} : { from: origin }) });
             }
@@ -394,7 +464,14 @@ export const readComponentsApi = (pkg: PackageRef | undefined): ComponentsApi | 
 
             const base = locate(symbolAt.base, origin);
 
-            if (base) add(base.symbol, base.entryPoint, depth + 1);
+            if (base) {
+                add(
+                    base.symbol,
+                    base.entryPoint,
+                    depth + 1,
+                    baseSubstitution(base.symbol.typeParams, symbolAt.baseTypeArgs, subst)
+                );
+            }
         };
 
         add(symbol, entryPoint, 0);
