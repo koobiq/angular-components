@@ -1,6 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, Signal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Signal, signal, SimpleChange } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By, DomSanitizer } from '@angular/platform-browser';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -442,8 +442,6 @@ describe('KbqIcon', () => {
             sanitizer = TestBed.inject(DomSanitizer);
         });
 
-        // ICN-BUG-02: a repeat resolution for an already-rendered name replaced the svg instead of
-        // adopting it, duplicating it if the replacement raced the DOM it was reusing (e.g. SSR's).
         it('should adopt an already-rendered svg instead of duplicating it on a repeat resolution', () => {
             register('kbq-plus_16');
 
@@ -458,18 +456,16 @@ describe('KbqIcon', () => {
 
             const icon = fixture.debugElement.query(By.directive(KbqIcon)).injector.get(KbqIcon);
 
-            (icon as unknown as { resolveSvgIcon(): void }).resolveSvgIcon();
+            // Angular never re-fires `ngOnChanges` for an unchanged value, so a repeat resolution of the
+            // same name can only be driven through the lifecycle hook directly, with a synthetic
+            // "unchanged" `SimpleChange` standing in for hydration resolving a name SSR already rendered.
+            icon.ngOnChanges({ iconNameInput: new SimpleChange('kbq-plus_16', 'kbq-plus_16', false) });
             fixture.detectChanges();
 
             expect(host.querySelectorAll('svg')).toHaveLength(1);
             expect(host.querySelector('svg')).toBe(svg);
             expect(host.classList).not.toContain('kbq-plus_16');
         });
-
-        // ICN-BUG-04: `svgIcon` defaulted to `false` until resolution confirmed an svg, briefly showing
-        // the font class over an svg a hydrated host already has. Not covered here: TestBed can't
-        // construct a component against pre-populated DOM (`createComponent`'s `hostElement` clears the
-        // host first). Verified manually against a hydrated SSR build instead.
     });
 
     // A resolver is consumer code. One that throws must fall back to the font class and leave the next
