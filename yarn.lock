@@ -7359,13 +7359,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "chalk@npm:6.0.0"
-  checksum: 10c0/47fd9028aa66fa532295525fe3ac5aec5e467e0d86847d4b5f6e01f9c9bb70b6fd1edca79cddc78a0f31a357baa65cc752d30c6557d025904207d113c82d8962
-  languageName: node
-  linkType: hard
-
 "chalk@npm:^6.0.1":
   version: 6.0.1
   resolution: "chalk@npm:6.0.1"
@@ -10613,7 +10606,7 @@ __metadata:
     ag-grid-community: "npm:^34.3.1"
     angular-eslint: "npm:^21.4.0"
     autoprefixer: "npm:^10.6.0"
-    chalk: "npm:^6.0.0"
+    chalk: "npm:^6.0.1"
     commander: "npm:^15.0.0"
     conventional-changelog: "npm:^8.1.3"
     conventional-changelog-angular: "npm:^9.4.0"
