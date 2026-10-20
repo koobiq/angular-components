@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { axe } from 'jest-axe';
 import { BehaviorSubject, map } from 'rxjs';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
@@ -68,6 +67,6 @@ describe(DocsNavbarComponent.name, () => {
     });
 
     it('has no axe violations', async () => {
-        expect(await axe(render(DocsLocale.En).nativeElement)).toHaveNoViolations();
+        await expect(render(DocsLocale.En).nativeElement).toHaveNoViolations();
     });
 });

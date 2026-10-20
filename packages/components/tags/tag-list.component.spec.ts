@@ -48,7 +48,6 @@ import {
     typeInElement
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
-import { axe } from 'jest-axe';
 import { map, Observable, Subject, timer } from 'rxjs';
 import {
     ErrorStateMatcher,
@@ -833,14 +832,6 @@ describe(KbqTagList.name, () => {
                 });
             });
         });
-
-        // jsdom performs no layout, so getBoundingClientRect reports 0 for every box. Row height is
-        // covered by the screenshot baselines.
-        it.skip('height should be 32px', () => {
-            const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
-
-            expect(formFieldElement.getBoundingClientRect().height).toBe(32);
-        });
     });
 
     describe('accessible name', () => {
@@ -861,7 +852,7 @@ describe(KbqTagList.name, () => {
             fixture = createComponent(TagListWithFormFieldLabel);
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 
@@ -878,6 +869,7 @@ describe(KbqTagList.name, () => {
 
             // KbqTagList.writeValue only stores the value, and the control value is derived from the rendered
             // tags, so neither direction of this binding is implemented.
+            // eslint-disable-next-line vitest/no-disabled-tests -- documents the defect described above until it is fixed
             it.skip('should set the view value from the form', () => {
                 const tagList = fixture.componentInstance.tagList();
                 const array = fixture.componentInstance.tags();
@@ -892,6 +884,7 @@ describe(KbqTagList.name, () => {
 
             // KbqTagList.writeValue only stores the value, and the control value is derived from the rendered
             // tags, so neither direction of this binding is implemented.
+            // eslint-disable-next-line vitest/no-disabled-tests -- documents the defect described above until it is fixed
             it.skip('should update the form value when the view changes', () => {
                 expect(fixture.componentInstance.control.value).toEqual(null);
 
@@ -943,6 +936,7 @@ describe(KbqTagList.name, () => {
 
             // KbqTagList.writeValue only stores the value, and the control value is derived from the rendered
             // tags, so neither direction of this binding is implemented.
+            // eslint-disable-next-line vitest/no-disabled-tests -- documents the defect described above until it is fixed
             it.skip("should set the control to dirty when the tag list's value changes in the DOM", () => {
                 expect(fixture.componentInstance.control.dirty).toEqual(false);
 
@@ -1185,6 +1179,7 @@ describe(KbqTagList.name, () => {
     // Dead twice over: the fixture's only kbq-error is commented out below, and KbqTagList renders neither
     // aria-invalid nor aria-describedby — unlike input, select, textarea and tree-select, it has no role to
     // carry them either. Reviving this needs the a11y wiring first.
+    // eslint-disable-next-line vitest/no-disabled-tests -- documents the defect described above until it is fixed
     describe.skip('error messages', () => {
         let errorTestComponent: TagListWithFormErrorMessages;
         let containerEl: HTMLElement;

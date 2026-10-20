@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { By, provideClientHydration, withIncrementalHydration } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { axe } from 'jest-axe';
 import { BehaviorSubject, map } from 'rxjs';
 import type { Mock } from 'vitest';
 import { DOCS_API_MEMBER_PARAM } from '../../constants/api-page';
@@ -397,6 +396,6 @@ describe(DocsApiPage.name, () => {
     });
 
     it('has no axe violations', async () => {
-        expect(await axe(await renderCodeBlocks())).toHaveNoViolations();
+        await expect(await renderCodeBlocks()).toHaveNoViolations();
     });
 });

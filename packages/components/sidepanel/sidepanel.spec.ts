@@ -23,7 +23,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { axe } from 'jest-axe';
 import {
     KBQ_SIDEPANEL_DATA,
     KbqSidepanelConfig,
@@ -732,7 +731,7 @@ describe('KbqSidepanelService', () => {
                 rootComponentFixture.detectChanges();
                 await rootComponentFixture.whenStable();
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             },
             axeTimeout
         );

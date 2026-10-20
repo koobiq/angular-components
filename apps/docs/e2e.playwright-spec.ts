@@ -14,6 +14,7 @@ import { DOCS_SEO_DESCRIPTIONS } from './src/app/seo-descriptions';
 /** Waits for hydration to replace the prerendered markup with the live app. */
 const waitForHydration = async (page: Page): Promise<void> => {
     await expect(page.locator('docs-app')).toBeVisible();
+    // eslint-disable-next-line playwright/no-networkidle -- hydration announces nothing of its own; the beforeEach below keeps the network to the build's host, so idle does arrive
     await page.waitForLoadState('networkidle');
 };
 

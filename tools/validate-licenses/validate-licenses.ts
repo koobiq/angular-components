@@ -32,8 +32,9 @@ const licensesWhitelist: License[] = [
     'Python-2.0',
 
     // File-level (weak) copyleft: obligations stay within the MPL-licensed files themselves and
-    // do not extend to the larger work. Reaches the tree only through `axe-core`, a transitive
-    // devDependency of `jest-axe`, so it is never bundled into the published packages.
+    // do not extend to the larger work. Reaches the tree through `axe-core`, which the specs check
+    // accessibility with, and `lightningcss`, which Vite builds on: devDependencies both, so it is
+    // never bundled into the published packages.
     'MPL-2.0',
 
     // Have a full copyright grant. Validated by opensource team.

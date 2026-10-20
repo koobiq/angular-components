@@ -46,7 +46,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqTitleDirective, KbqTitleModule } from '@koobiq/components/title';
-import { axe } from 'jest-axe';
 import { BehaviorSubject, of } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
@@ -178,6 +177,7 @@ describe('KbqTreeSelection', () => {
             // provokes reaches the option through FocusMonitor after the handler has returned, so the guard
             // is already down. Deferring the clear by a microtask is not enough — the fix belongs in the
             // blur()/focus() coordination of KbqTreeOption. The clipboard write itself works.
+            // eslint-disable-next-line vitest/no-disabled-tests -- documents the defect described above until it is fixed
             it.skip('should not blur on focused option when copying', async () => {
                 vi.useFakeTimers();
 
@@ -3100,7 +3100,7 @@ describe('KbqTreeSelection', () => {
             it('has no violations with every branch collapsed', async () => {
                 attach(KbqTreeAppDeepData);
 
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
             });
 
             it('has no violations with an expanded branch', async () => {
@@ -3109,13 +3109,13 @@ describe('KbqTreeSelection', () => {
                 fixture.componentInstance.treeControl.expandAll();
                 fixture.detectChanges();
 
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
             });
 
             it('has no violations with tri-state checkboxes', async () => {
                 attach(TreeWithThirdStateCheckbox);
 
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
             });
 
             it('has no violations with the select-all row', async () => {
@@ -3125,13 +3125,13 @@ describe('KbqTreeSelection', () => {
                 document.body.appendChild(fixture.nativeElement);
 
                 expect(fixture.nativeElement.querySelector('.kbq-tree-option_select-all')).not.toBeNull();
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
             });
 
             it('has no violations with an action button', async () => {
                 attach(TreeWithActionButtonApp);
 
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
             });
         });
     });

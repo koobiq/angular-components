@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, Provider, signal, Type } from '@ang
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqTitleDirective } from '@koobiq/components/title';
-import { axe } from 'jest-axe';
 import {
     KBQ_PROFILE_MAPPING,
     KBQ_USERNAME_DEFAULT_LOCALE_CONFIGURATION,
@@ -367,7 +366,7 @@ describe(KbqUsername.name, () => {
             async () => {
                 const fixture = createComponent(TestComponent);
 
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
             },
             AXE_TIMEOUT
         );

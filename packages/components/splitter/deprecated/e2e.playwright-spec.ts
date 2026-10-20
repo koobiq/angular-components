@@ -39,10 +39,8 @@ test.describe('KbqSplitter (deprecated)', () => {
             const areaFirst = getAreaByText(block, 'first');
             const areaSecond = getAreaByText(block, 'second');
 
-            const firstStart = await areaFirst.boundingBox();
-            const secondStart = await areaSecond.boundingBox();
-
-            if (!firstStart || !secondStart) throw new Error('bounding box is null');
+            const firstStart = (await areaFirst.boundingBox())!;
+            const secondStart = (await areaSecond.boundingBox())!;
 
             // Drag left so areaA shrinks and areaB grows; areaB has no min-width hit at this offset.
             const dragOffset = -30;
@@ -52,19 +50,15 @@ test.describe('KbqSplitter (deprecated)', () => {
 
             await cursor.down();
             // hover() left the cursor at gutter centre; offset relative to that.
-            const gutterBox = await gutter.boundingBox();
-
-            if (!gutterBox) throw new Error('bounding box is null');
+            const gutterBox = (await gutter.boundingBox())!;
             const startX = gutterBox.x + gutterBox.width / 2;
             const startY = gutterBox.y + gutterBox.height / 2;
 
             await cursor.move(startX + dragOffset, startY, { steps: 5 });
             await cursor.up();
 
-            const firstEnd = await areaFirst.boundingBox();
-            const secondEnd = await areaSecond.boundingBox();
-
-            if (!firstEnd || !secondEnd) throw new Error('bounding box is null');
+            const firstEnd = (await areaFirst.boundingBox())!;
+            const secondEnd = (await areaSecond.boundingBox())!;
 
             expect(firstEnd.width).toBeCloseTo(firstStart.width + dragOffset, 0);
             expect(secondEnd.width).toBeCloseTo(secondStart.width - dragOffset, 0);

@@ -80,7 +80,6 @@ import {
     defaultCompareValues,
     defaultCompareViewValues
 } from '@koobiq/components/tree';
-import { axe } from 'jest-axe';
 import { BehaviorSubject, Observable, Subject, map, of, timer } from 'rxjs';
 import { KbqTreeSelect, KbqTreeSelectChange, kbqTreeSelectOptionsProvider } from './tree-select.component';
 import { KbqTreeSelectModule } from './tree-select.module';
@@ -2393,7 +2392,7 @@ describe('KbqTreeSelect', () => {
                     document.body.appendChild(fixture.nativeElement);
 
                     try {
-                        expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                        await expect(fixture.nativeElement).toHaveNoViolations();
                     } finally {
                         document.body.removeChild(fixture.nativeElement);
                     }
@@ -4608,6 +4607,7 @@ describe('KbqTreeSelect', () => {
 
     // Skipped: `KbqTreeSelect` has no reset-on-null behaviour (`KbqSelect.onSelect` has). These passed only while the
     // trigger was not re-rendered after a selection, so it kept showing nothing whatever was selected.
+    // eslint-disable-next-line vitest/no-disabled-tests -- documents the defect described above until it is fixed
     describe.skip('when resetting the value by setting null or undefined', () => {
         beforeEach(() => {
             configureKbqTreeSelectTestingModule([ResetValuesSelect]);
@@ -4642,7 +4642,7 @@ describe('KbqTreeSelect', () => {
             expect(trigger.textContent).not.toContain('Null-option');
         });
 
-        it('should not mark the reset option as selected ', async () => {
+        it('should not mark the reset option as selected', async () => {
             options[4].click();
 
             fixture.componentInstance.select().open();
@@ -7089,6 +7089,6 @@ describe('KbqTreeSelect without options', () => {
         await fixture.whenStable();
 
         expect(overlayContainerElement.querySelector('.kbq-select-no-options')).not.toBeNull();
-        expect(await axe(overlayContainerElement)).toHaveNoViolations();
+        await expect(overlayContainerElement).toHaveNoViolations();
     });
 });

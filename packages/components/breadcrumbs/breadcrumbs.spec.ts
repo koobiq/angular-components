@@ -11,7 +11,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqOverflowItem, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
-import { axe } from 'jest-axe';
 import {
     KbqBreadcrumbButton,
     KbqBreadcrumbItem,
@@ -205,7 +204,7 @@ describe(KbqBreadcrumbs.name, () => {
 
                 await fixture.whenStable();
 
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
             },
             AXE_TIMEOUT
         );
@@ -217,7 +216,7 @@ describe(KbqBreadcrumbs.name, () => {
 
                 await fixture.whenStable();
 
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
             },
             AXE_TIMEOUT
         );

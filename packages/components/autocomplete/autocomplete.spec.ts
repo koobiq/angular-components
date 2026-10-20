@@ -48,7 +48,6 @@ import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field'
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { axe } from 'jest-axe';
 import { EMPTY, Observable, Subject, Subscription } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
 import type { Mock } from 'vitest';
@@ -2587,21 +2586,21 @@ describe('KbqAutocomplete', () => {
             });
 
             it('should have no axe violations while the panel is closed', async () => {
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
             });
 
             it('should have no axe violations while the panel is open with an active option', async () => {
                 openWithActiveOption(fixture);
 
                 expect(input.hasAttribute('aria-activedescendant')).toBe(true);
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
             });
 
             it('should have no axe violations in the open panel', async () => {
                 openWithActiveOption(fixture);
 
                 expect(overlayContainerElement.querySelector('[role="listbox"]')).not.toBeNull();
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             });
         });
 
@@ -2633,7 +2632,7 @@ describe('KbqAutocomplete', () => {
                 openWithActiveOption(fixture);
 
                 expect(textarea.hasAttribute('aria-activedescendant')).toBe(true);
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
             });
         });
 
@@ -2731,7 +2730,7 @@ describe('KbqAutocomplete', () => {
 
                 openListbox();
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             });
         });
 
@@ -2773,7 +2772,7 @@ describe('KbqAutocomplete', () => {
 
                 openListbox();
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             });
         });
     });
@@ -3349,7 +3348,7 @@ describe('KbqAutocomplete', () => {
             it('should have no accessibility violations', async () => {
                 typeAt('тек');
 
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
             });
         });
     });

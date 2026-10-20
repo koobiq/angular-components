@@ -60,12 +60,12 @@ export default defineConfig({
                 test: {
                     ...shared,
                     name: 'angular',
-                    // A VM context per spec file, so the global object is jsdom's `window` as it was under Jest. In
+                    // A VM context per spec file, so the global object is jsdom's `window`. In
                     // child processes rather than the `vmThreads` the Angular plugin defaults to: one process
                     // holding every worker starves under load and times tests out.
                     pool: 'vmForks',
                     environment: 'jsdom',
-                    // Jest's default document URL, which the snapshots of resolved links carry.
+                    // The document URL the snapshots of resolved links carry.
                     environmentOptions: { jsdom: { url: 'http://localhost/' } },
                     include: [
                         'packages/components/**/*.spec.ts',
@@ -73,8 +73,10 @@ export default defineConfig({
                         'packages/angular-luxon-adapter/**/*.spec.ts',
                         'packages/angular-moment-adapter/**/*.spec.ts',
                         'apps/docs/**/*.spec.ts',
-                        // Proves the console hook of this project's setup, as the node project does for its own.
-                        'tools/vitest/fail-on-console.spec.ts'
+                        // Prove the console hook and the axe-core matcher of this project's setup, as the node project
+                        // does for its own console hook.
+                        'tools/vitest/fail-on-console.spec.ts',
+                        'tools/vitest/to-have-no-violations.spec.ts'
                     ],
                     setupFiles: ['tools/vitest/setup-angular.ts']
                 }
@@ -90,8 +92,13 @@ export default defineConfig({
                         'packages/cli/**/*.spec.ts',
                         'tools/**/*.spec.ts'
                     ],
-                    // A separate npm project with its own Angular and its own runner.
-                    exclude: ['**/node_modules/**', 'tools/check-angular/**'],
+                    exclude: [
+                        '**/node_modules/**',
+                        // A separate npm project with its own Angular and its own runner.
+                        'tools/check-angular/**',
+                        // Needs the document and the matcher of the angular project's setup.
+                        'tools/vitest/to-have-no-violations.spec.ts'
+                    ],
                     setupFiles: ['tools/vitest/setup-node.ts']
                 }
             }

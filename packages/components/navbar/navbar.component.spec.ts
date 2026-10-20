@@ -25,7 +25,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { axe } from 'jest-axe';
 import { Observable, Subject } from 'rxjs';
 import { KbqIconModule } from './../icon/icon.module';
 import {
@@ -2413,7 +2412,7 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
             document.body.appendChild(fixture.nativeElement);
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
 
             fixture.nativeElement.remove();
         });
@@ -2426,7 +2425,7 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
             document.body.appendChild(fixture.nativeElement);
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
 
             fixture.nativeElement.remove();
         });
@@ -2439,7 +2438,7 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
             document.body.appendChild(fixture.nativeElement);
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
 
             fixture.nativeElement.remove();
         });
@@ -2458,7 +2457,7 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
             document.body.appendChild(fixture.nativeElement);
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
 
             fixture.nativeElement.remove();
         });

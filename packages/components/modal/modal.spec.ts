@@ -33,7 +33,6 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
-import { axe } from 'jest-axe';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
 import { KbqModalComponent } from './modal.component';
@@ -359,7 +358,7 @@ describe('KbqModal', () => {
             expect(modalRef.getElement().querySelectorAll('[disabled]').length).toBe(1);
         });
 
-        it('should called function on hotkey ctrl+enter. kbqFooter is array ', async () => {
+        it('should called function on hotkey ctrl+enter. kbqFooter is array', async () => {
             const spyOk = vi.fn();
             const modalRef = modalService.create({
                 kbqContent: TestModalContentComponent,
@@ -473,7 +472,7 @@ describe('KbqModal', () => {
             expect(modalRef.getInstance().kbqVisible()).toBe(false);
         });
 
-        it('should called function on hotkey ctrl+enter. modal type is confirm ', () => {
+        it('should called function on hotkey ctrl+enter. modal type is confirm', () => {
             const spyOk = vi.fn();
             const modalRef = modalService.success({
                 kbqContent: 'Сохранить сделанные изменения?',
@@ -1012,27 +1011,27 @@ describe('KbqModal', () => {
                 kbqCancelText: 'Cancel'
             });
 
-            expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            await expect(overlayContainerElement).toHaveNoViolations();
         });
 
         it('should have no violations for an untitled dialog named by kbqAriaLabel', async () => {
             render({ kbqContent: 'text', kbqAriaLabel: 'Simple dialog' });
 
-            expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            await expect(overlayContainerElement).toHaveNoViolations();
         });
 
         it('should have no violations for a confirm dialog', async () => {
             modalService.confirm({ kbqContent: 'Sure?', kbqAriaLabel: 'Confirm', kbqOkText: 'Ok' });
             fixture.detectChanges();
 
-            expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            await expect(overlayContainerElement).toHaveNoViolations();
         });
 
         it('should have no violations for a custom dialog', async () => {
             modalService.open({ kbqComponent: TestModalContentComponent, kbqAriaLabel: 'Custom' });
             fixture.detectChanges();
 
-            expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            await expect(overlayContainerElement).toHaveNoViolations();
         });
     });
 

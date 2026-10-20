@@ -51,7 +51,6 @@ import {
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { axe } from 'jest-axe';
 import type { MockInstance } from 'vitest';
 import {
     KbqListCopyEvent,
@@ -2031,7 +2030,7 @@ describe('KbqListSelection accessibility', () => {
 
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations for a multiple-selection list', async () => {
@@ -2039,7 +2038,7 @@ describe('KbqListSelection accessibility', () => {
 
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations for a grouped list', async () => {
@@ -2047,7 +2046,7 @@ describe('KbqListSelection accessibility', () => {
 
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations for a disabled list', async () => {
@@ -2055,7 +2054,7 @@ describe('KbqListSelection accessibility', () => {
 
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 });
@@ -2521,7 +2520,7 @@ describe('KbqListSelection drag and drop', () => {
             fixtureElement = fixture.nativeElement;
             document.body.appendChild(fixture.nativeElement);
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('has no axe violations once the list is split by a group and a divider', async () => {
@@ -2532,7 +2531,7 @@ describe('KbqListSelection drag and drop', () => {
             fixtureElement = fixture.nativeElement;
             document.body.appendChild(fixture.nativeElement);
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 
@@ -4613,7 +4612,7 @@ describe('KbqListSelection select all row', () => {
             getOptions(fixture)[0].setSelected(true);
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 });

@@ -3,7 +3,6 @@ import { Component, DebugElement, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchKeyboardEvent } from '@koobiq/components/core';
-import { axe } from 'jest-axe';
 import { KbqClampedList, KbqClampedListTrigger } from './clamped-list';
 
 const AXE_TIMEOUT = 15000;
@@ -175,12 +174,12 @@ describe('KbqClampedList', () => {
         it(
             'should have no axe violations in both states',
             async () => {
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
 
                 getTrigger(debugElement).nativeElement.click();
                 fixture.detectChanges();
 
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
             },
             AXE_TIMEOUT
         );

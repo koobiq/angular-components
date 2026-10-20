@@ -14,7 +14,6 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButton, KbqSplitButtonModule } from '@koobiq/components/split-button';
-import { axe } from 'jest-axe';
 
 describe('KbqSplitButton', () => {
     const getButtons = (fixture: ComponentFixture<unknown>): KbqButton[] =>
@@ -553,7 +552,7 @@ describe('KbqSplitButton', () => {
 
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations when a nested button is disabled', async () => {
@@ -561,7 +560,7 @@ describe('KbqSplitButton', () => {
 
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 });

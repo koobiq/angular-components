@@ -42,7 +42,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { axe } from 'jest-axe';
 import { Subject, filter } from 'rxjs';
 import type { Mock } from 'vitest';
 import {
@@ -598,7 +597,7 @@ describe('KbqPopover', () => {
                 await fixture.whenStable();
                 fixture.detectChanges();
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             },
             axeTimeout
         );
@@ -1090,7 +1089,7 @@ describe('KbqPopover', () => {
                 await a11yFixture.whenStable();
                 a11yFixture.detectChanges();
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             },
             axeTimeout
         );
@@ -1111,7 +1110,7 @@ describe('KbqPopover', () => {
                 // Nothing can name the panel, so it must not claim to be a dialog: `aria-dialog-name` fails
                 // an unnamed one, and a screen reader announces it as "dialog" and nothing more.
                 expect(overlayContainerElement.querySelector('.kbq-popover')!.getAttribute('role')).toBeNull();
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             },
             axeTimeout
         );

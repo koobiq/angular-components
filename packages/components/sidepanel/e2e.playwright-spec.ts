@@ -176,7 +176,7 @@ test.describe('KbqSidepanel', () => {
             await expect(track).toBeAttached();
             await expect(track).toHaveCSS('opacity', '0');
 
-            // WebKit can report the continuously repainted track as unstable.
+            // eslint-disable-next-line playwright/no-force-option -- WebKit can report the continuously repainted track as unstable
             await getBody(page).hover({ force: true });
             await expect(track).toHaveCSS('opacity', '1');
         });
@@ -184,6 +184,7 @@ test.describe('KbqSidepanel', () => {
         test('renders the custom scrollbar', async ({ page }) => {
             const track = getTrack(page);
 
+            // eslint-disable-next-line playwright/no-force-option -- WebKit can report the continuously repainted track as unstable
             await getBody(page).hover({ force: true });
             await expect(track).toHaveCSS('opacity', '1');
             await expect(getBody(page)).toHaveScreenshot('05-light.png');

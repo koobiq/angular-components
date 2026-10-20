@@ -379,18 +379,22 @@ describe('Key managers', () => {
                 // modified arrow still moves the active item. Enabling these four needs every caller
                 // of onKeydown to opt back in with withAllowedModifierKeys, or shift-range selection
                 // in list, tree and select stops working.
+                // eslint-disable-next-line vitest/no-disabled-tests -- documents the defect described above until it is fixed
                 it.skip('should not do anything for arrow keys if the alt key is held down', () => {
                     runModifierKeyTest('altKey');
                 });
 
+                // eslint-disable-next-line vitest/no-disabled-tests -- documents the defect described above until it is fixed
                 it.skip('should not do anything for arrow keys if the control key is held down', () => {
                     runModifierKeyTest('ctrlKey');
                 });
 
+                // eslint-disable-next-line vitest/no-disabled-tests -- documents the defect described above until it is fixed
                 it.skip('should not do anything for arrow keys if the meta key is held down', () => {
                     runModifierKeyTest('metaKey');
                 });
 
+                // eslint-disable-next-line vitest/no-disabled-tests -- documents the defect described above until it is fixed
                 it.skip('should not do anything for arrow keys if the shift key is held down', () => {
                     runModifierKeyTest('shiftKey');
                 });

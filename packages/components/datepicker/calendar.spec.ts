@@ -97,7 +97,6 @@ describe('KbqCalendar', () => {
 
                 beforeEach(() => {
                     calendarBodyEl = calendarElement.querySelector('.kbq-calendar__content') as HTMLElement;
-                    expect(calendarBodyEl).not.toBeNull();
 
                     dispatchFakeEvent(calendarBodyEl, 'focus');
                     fixture.detectChanges();
@@ -314,7 +313,6 @@ describe('KbqCalendar', () => {
 
             beforeEach(() => {
                 tableBodyEl = calendarElement.querySelector('.kbq-calendar__body') as HTMLElement;
-                expect(tableBodyEl).not.toBeNull();
 
                 dispatchFakeEvent(tableBodyEl, 'focus');
                 fixture.detectChanges();

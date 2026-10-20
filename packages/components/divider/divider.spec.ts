@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { axe } from 'jest-axe';
 import { KbqDivider } from './divider.component';
 import { KbqDividerModule } from './divider.module';
 
@@ -132,19 +131,19 @@ describe('KbqDivider', () => {
 
     describe('axe', () => {
         it('should have no violations for a horizontal separator', async () => {
-            expect(await axe(createFixture(DefaultDivider).nativeElement)).toHaveNoViolations();
+            await expect(createFixture(DefaultDivider).nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations for a vertical separator', async () => {
-            expect(await axe(createFixture(VerticalDivider).nativeElement)).toHaveNoViolations();
+            await expect(createFixture(VerticalDivider).nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations for a decorative divider', async () => {
-            expect(await axe(createFixture(DecorativeDivider).nativeElement)).toHaveNoViolations();
+            await expect(createFixture(DecorativeDivider).nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations for a divider the caller hid', async () => {
-            expect(await axe(createFixture(HiddenDivider).nativeElement)).toHaveNoViolations();
+            await expect(createFixture(HiddenDivider).nativeElement).toHaveNoViolations();
         });
     });
 });

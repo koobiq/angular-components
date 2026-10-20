@@ -21,7 +21,6 @@ import {
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
-import { axe } from 'jest-axe';
 import { Subject } from 'rxjs';
 import type { Mock } from 'vitest';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqTooltipRegistry } from './tooltip-registry';
@@ -1032,8 +1031,8 @@ describe('KbqTooltip', () => {
             await new Promise((resolve) => setTimeout(resolve));
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
-            expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
+            await expect(overlayContainerElement).toHaveNoViolations();
         });
     });
 

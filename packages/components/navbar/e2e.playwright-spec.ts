@@ -391,7 +391,7 @@ test.describe('KbqNavbarModule', () => {
         test('clicking a disabled brand should not follow its link', async ({ page }) => {
             await page.goto('/E2eNavbarDisabledBrand');
 
-            // `force`: Playwright waits for a link with `aria-disabled` to become enabled.
+            // eslint-disable-next-line playwright/no-force-option -- Playwright waits for a link with `aria-disabled` to become enabled
             await getBrand(page, 'horizontal', 'disabled-link-brand').click({ force: true });
 
             await expect(page).not.toHaveURL(/#disabled-link-brand$/);

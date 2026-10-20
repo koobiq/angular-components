@@ -3,7 +3,6 @@ import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { ChangeDetectionStrategy, Component, effect, Injectable, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { dispatchKeyboardEvent } from '@koobiq/components/core';
-import { axe } from 'jest-axe';
 import { Observable, Subject } from 'rxjs';
 import { KbqClampedText } from './clamped-text';
 
@@ -283,12 +282,12 @@ describe('KbqClampedText', () => {
                 async () => {
                     const fixture = await createMeasuredComponent(ClampedTextTest);
 
-                    expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                    await expect(fixture.nativeElement).toHaveNoViolations();
 
                     requireToggle(fixture).click();
                     await fixture.whenStable();
 
-                    expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                    await expect(fixture.nativeElement).toHaveNoViolations();
                 },
                 AXE_TIMEOUT
             );

@@ -4,9 +4,9 @@ import '@angular/compiler';
 import { setupTestBed } from '@analogjs/vitest-angular/setup-testbed';
 import { DebugNode, provideCheckNoChangesConfig } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
-import { toHaveNoViolations } from 'jest-axe';
 import { expect, SnapshotSerializer, vi } from 'vitest';
 import './fail-on-console';
+import { toHaveNoViolations } from './to-have-no-violations';
 
 // Zoneless, the default of `setupTestBed`, as the library runs.
 setupTestBed({
@@ -27,18 +27,17 @@ ComponentFixture.prototype.detectChanges = function (this: ComponentFixture<unkn
 
 // jsdom reports its own errors — an API it does not implement, a resource it could not load, a stylesheet it could
 // not parse — through its virtual console, which Vitest leaves writing to the worker's console instead of this
-// context's. Forwarded, they reach the console gate, as they did under Jest.
+// context's. Forwarded, they reach the console gate like any other error.
 (
     globalThis as typeof globalThis & {
         _virtualConsole?: { on(event: 'jsdomError', listener: (error: Error) => void): void };
     }
 )._virtualConsole?.on('jsdomError', (error) => console.error(error));
 
-// jest-axe has no runtime dependency on Jest: `axe()` wraps axe-core and the matcher only formats.
-expect.extend(toHaveNoViolations);
+expect.extend({ toHaveNoViolations });
 
-// Prints a `DebugElement` as the plain object it is, as Jest did: the fixture serializer of
-// `@analogjs/vitest-angular` claims anything with a `componentInstance` and fails on it.
+// Prints a `DebugElement` as the plain object it is: the fixture serializer of `@analogjs/vitest-angular` claims
+// anything with a `componentInstance` and fails on it.
 expect.addSnapshotSerializer({
     test: (value) => value instanceof DebugNode,
     serialize: (value, config, indentation, depth, refs, printer) =>

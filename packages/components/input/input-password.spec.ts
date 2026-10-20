@@ -6,7 +6,6 @@ import { By } from '@angular/platform-browser';
 import { dispatchFakeEvent, PasswordValidators } from '@koobiq/components/core';
 import { KbqFormFieldModule, KbqPasswordToggle, KbqReactivePasswordHint } from '@koobiq/components/form-field';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { axe } from 'jest-axe';
 import { KBQ_INPUT_VALUE_ACCESSOR, KbqInputModule, KbqInputPassword } from './index';
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
@@ -366,7 +365,7 @@ describe('KbqPasswordInput', () => {
             await fixture.whenStable();
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 });

@@ -66,6 +66,7 @@ test.describe('KbqTimeRangeModule', () => {
             await expect(disabledTrigger).toHaveCount(1);
             await expect(disabledTrigger.locator('a')).toHaveAttribute('tabindex', '-1');
 
+            // eslint-disable-next-line playwright/no-force-option -- the click on a disabled control is the point; actionability checks would refuse it
             await disabledTrigger.click({ force: true });
 
             await expect(getPopover(page)).toHaveCount(0);

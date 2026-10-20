@@ -52,7 +52,7 @@ test.describe('KbqBreadcrumbs overflow', () => {
 
         await breadcrumbsHost.evaluate(({ style }) => (style.width = '1000px'));
 
-        await expect(dropdownPanel()).not.toBeVisible();
+        await expect(dropdownPanel()).toBeHidden();
     });
 });
 

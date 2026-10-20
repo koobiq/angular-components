@@ -17,7 +17,6 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { dispatchKeyboardEvent, dispatchMouseEvent, kbqShadowDomOverlayProvider } from '@koobiq/components/core';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { axe } from 'jest-axe';
 import { Subject, Subscription } from 'rxjs';
 import type { Mock, MockInstance } from 'vitest';
 import { KbqToastContainerComponent } from './toast-container.component';
@@ -1084,7 +1083,7 @@ describe('KbqToastService', () => {
         it('has no axe violations', async () => {
             showRendered(createToastData({ caption: 'Caption' }));
 
-            expect(await axe(overlayContainerElement)).toHaveNoViolations();
+            await expect(overlayContainerElement).toHaveNoViolations();
         });
     });
 });

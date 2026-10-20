@@ -1,6 +1,5 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { axe } from 'jest-axe';
 import { BehaviorSubject, map } from 'rxjs';
 import type { Mock } from 'vitest';
 import { DocsLocale } from '../../constants/locale';
@@ -42,7 +41,7 @@ describe(DocsCopyButtonComponent.name, () => {
     });
 
     it('has no axe violations', async () => {
-        expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+        await expect(fixture.nativeElement).toHaveNoViolations();
     });
 
     // The action used to sit on a non-focusable decorative <i>, making copying mouse-only (A11Y-01).

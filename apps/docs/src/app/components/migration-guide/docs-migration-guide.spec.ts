@@ -4,7 +4,6 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router, provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { KbqStateSavingService } from '@koobiq/components/core';
-import { axe } from 'jest-axe';
 import { BehaviorSubject, map } from 'rxjs';
 import { DocsLocale } from '../../constants/locale';
 import { DOCS_TRANSLATIONS } from '../../services/i18n';
@@ -399,7 +398,7 @@ describe(DocsMigrationGuide.name, () => {
             'ng update @angular/core@19 @angular/cli@19 @angular/cdk@19 @koobiq/cdk@19 @koobiq/components@19'
         );
         expect(host().querySelector('.docs-migration-guide__commands kbq-alert')).toBeTruthy();
-        expect(await axe(host())).toHaveNoViolations();
+        await expect(host()).toHaveNoViolations();
 
         await pick({ from: '20.2.0', to: '21.0.0' });
 
@@ -583,6 +582,6 @@ describe(DocsMigrationGuide.name, () => {
     it('should have no accessibility violations', async () => {
         await render();
 
-        expect(await axe(host())).toHaveNoViolations();
+        await expect(host()).toHaveNoViolations();
     });
 });

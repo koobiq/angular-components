@@ -4,7 +4,6 @@ import { ChangeDetectionStrategy, Component, Signal, signal } from '@angular/cor
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By, DomSanitizer } from '@angular/platform-browser';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { axe } from 'jest-axe';
 import { KbqIconButton } from './icon-button.component';
 import { KBQ_ICON_ERROR_STATE_CONTEXT } from './icon-error-state-context';
 import { KbqIconRegistry } from './icon-registry';
@@ -256,7 +255,7 @@ describe('KbqIcon', () => {
 
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 
