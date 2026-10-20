@@ -344,6 +344,28 @@ test.describe('docs app', () => {
         await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
     });
 
+    test('opens the same page in the version picked in the footer', async ({ page }) => {
+        const pageUrl = 'https://koobiq.io/en/components/select/api';
+
+        // The committed version list makes 20 the latest version, which koobiq.io serves.
+        await page.route('https://koobiq.io/sitemap.xml', (route) =>
+            route.fulfill({
+                contentType: 'application/xml',
+                headers: { 'Access-Control-Allow-Origin': '*' },
+                body: `<urlset><url><loc>${pageUrl}</loc></url></urlset>`
+            })
+        );
+        await page.route(pageUrl, (route) => route.fulfill({ contentType: 'text/html', body: '<!doctype html>' }));
+
+        await page.goto('/en/components/select/api');
+        await waitForHydration(page);
+
+        await page.locator('docs-sidenav .docs-footer__control').last().click();
+        await dropdownItem(page, '20').click();
+
+        await expect(page).toHaveURL(pageUrl);
+    });
+
     for (const [name, url] of [
         ['an unknown component id', '/en/components/definitely-not-a-component/overview'],
         ['an unknown example id', '/examples/definitely-not-an-example'],

@@ -2,7 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { afterNextRender, ChangeDetectorRef, DestroyRef, Directive, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_WINDOW } from '@koobiq/components/core';
-import { catchError, of } from 'rxjs';
+import { catchError, map, of, timeout } from 'rxjs';
+import { docsGetVersionPageUrl, docsParseSitemapPaths } from './version-url';
+
+/** How long a click on a version waits for its sitemap before it opens the home page of that version. */
+const SITEMAP_TIMEOUT = 3000;
 
 type DocsVersion = {
     version: string;
@@ -63,10 +67,22 @@ export class DocsVersionPickerDirective {
             });
     }
 
-    goToVersion(version: DocsVersion) {
-        if (!version.url.startsWith(this.window.location.href)) {
-            this.window.location.assign(version.url);
-        }
+    /** Opens the page the reader is on in the given version, or the closest page that version has. */
+    goToVersion(version: DocsVersion): void {
+        if (version.selected) return;
+
+        this.httpClient
+            .get(new URL('/sitemap.xml', version.url).href, { responseType: 'text' })
+            .pipe(
+                timeout(SITEMAP_TIMEOUT),
+                map(docsParseSitemapPaths),
+                // A version deployed before its sitemap was shared with other origins cannot be checked: its home page.
+                catchError(() => of(null)),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe((pagePaths) =>
+                this.window.location.assign(docsGetVersionPageUrl(this.window.location, version.url, pagePaths))
+            );
     }
 
     private setSelectedVersion(): void {
