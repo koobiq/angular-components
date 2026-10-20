@@ -126,19 +126,33 @@ const describeLive = (
         return from === undefined || !folded.has(from);
     };
 
+    // What an input or output line already said, by every name it answers to — so a member sharing
+    // that name further down is not printed a second time. `KbqSelect.multiple` is both the alias of
+    // the signal input `multipleInput` and the name of a plain public getter kept for the
+    // boolean-only reading of it; the input line already named it.
+    const printed = new Set<string>();
+
     for (const input of symbol.inputs) {
         if ((!only(input.alias) && !only(input.name)) || !whole(input)) continue;
+
+        printed.add(input.alias).add(input.name);
 
         const flags = [input.required ? 'required' : null, input.isSignal ? 'signal' : null].filter(Boolean).join(', ');
 
         lines.push(
             `  [input]  ${input.alias}: ${input.type ?? 'unknown'}${flags ? `  (${flags})` : ''}${origin(input)}` +
-                (input.name !== input.alias ? `  — property ${input.name}` : '')
+                // Worth a line when the property is a genuinely different word — `connectedTo` bound
+                // as `kbqAutocompleteConnectedTo` — not when it is the alias itself plus the `Input`
+                // suffix every signal input's backing field carries. `multipleInput` for `multiple`
+                // says nothing the alias has not already said, once for the eye and once for a grep.
+                (input.name !== input.alias && !input.name.startsWith(input.alias) ? `  — property ${input.name}` : '')
         );
     }
 
     for (const output of symbol.outputs) {
         if ((!only(output.alias) && !only(output.name)) || !whole(output)) continue;
+
+        printed.add(output.alias).add(output.name);
 
         lines.push(`  [output] ${output.alias}: ${output.type ?? 'unknown'}${origin(output)}`);
     }
@@ -165,11 +179,20 @@ const describeLive = (
             only(member.name)
     );
 
-    if (include.has('methods')) for (const member of methods) lines.push(`  [method] ${member.signature}`);
+    // A member matching a name the caller asked for is shown even without `include`, the same
+    // principle as the inherited-origin fold above: naming it is the ask. Without `include`,
+    // "asked for" stops at public, undocumented-as-internal members — `internals` is still what
+    // reaches compiler plumbing and private state by name.
+    const namedRequest = Boolean(members?.length);
 
-    if (include.has('internals')) {
+    if (include.has('methods') || namedRequest) {
+        for (const member of methods) if (!printed.has(member.name)) lines.push(`  [method] ${member.signature}`);
+    }
+
+    if (include.has('internals') || namedRequest) {
         for (const member of symbol.members) {
-            if (methods.includes(member) || !only(member.name)) continue;
+            if (methods.includes(member) || !only(member.name) || printed.has(member.name)) continue;
+            if (!include.has('internals') && (member.internal || member.visibility !== 'public')) continue;
 
             lines.push(`  [${member.lifecycle ? 'lifecycle' : member.kind}] ${member.signature}`);
         }
@@ -182,7 +205,9 @@ const describeLive = (
     if (lines.length === 0) return [head];
 
     const hidden =
-        methods.length > 0 && !include.has('methods') ? `  (+${methods.length} methods — include: ["methods"])` : '';
+        methods.length > 0 && !include.has('methods') && !namedRequest
+            ? `  (+${methods.length} methods — include: ["methods"])`
+            : '';
 
     return [head + hidden, ...lines];
 };
