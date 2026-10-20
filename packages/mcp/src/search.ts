@@ -1,4 +1,5 @@
 import type { Catalog } from './catalog.js';
+import { expand } from './glossary.js';
 import { FLOOR, normalize, score, terms } from './matching.js';
 
 /**
@@ -31,6 +32,20 @@ const KIND_WEIGHT: Record<HitKind, number> = {
     token: 1,
     example: 0.95
 };
+
+/**
+ * A term that names a component outright — directly, or through its Russian synonym in the
+ * glossary — must outrank a guide mentioning it in passing. The migration guide has a heading for
+ * every component it touches, so "вкладки" or "дерево с чекбоксами" also lands on a breaking-change
+ * heading; naming the thing is a stronger signal than a guide section merely containing its name.
+ *
+ * Deliberately exact rather than fuzzy: a substring or stem match (`scroll` against `scrollbar`) is
+ * a guess, same as anywhere else in this module, and does not earn the override.
+ */
+const IDENTITY_BOOST = 2.5;
+
+const identifiesComponent = (query: string[], componentId: string): boolean =>
+    query.some((term) => expand(term).includes(componentId));
 
 export type SearchOptions = {
     kinds?: HitKind[];
@@ -69,7 +84,10 @@ export const search = (catalog: Catalog, query: string, options: SearchOptions =
         // Answer in the language that was asked in, when there is a choice.
         const summary = (cyrillic ? (component.summaryRu ?? component.summary) : component.summary) ?? null;
 
-        push('entry-point', score(query_, normalize(component.id), keywords), {
+        const componentId = normalize(component.id);
+        const boost = identifiesComponent(query_, componentId) ? IDENTITY_BOOST : 1;
+
+        push('entry-point', score(query_, componentId, keywords) * boost, {
             ref: component.id,
             label: component.importPath ?? `${component.id} (docs group)`,
             detail: summary ?? `${component.symbols.length} symbols, ${component.examples.length} examples`
