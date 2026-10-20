@@ -73,6 +73,61 @@ export type ComponentsApi = {
 
 const ENTRY_PREFIX = '@koobiq/components/';
 
+/** The `types` of an `exports` entry, through whatever conditions it is nested under. */
+const typesOf = (value: unknown): string | null => {
+    if (typeof value === 'string') return value.endsWith('.d.ts') ? value : null;
+    if (!value || typeof value !== 'object') return null;
+
+    const { types } = value as { types?: unknown };
+
+    if (typeof types === 'string') return types.endsWith('.d.ts') ? types : null;
+
+    for (const nested of Object.values(value)) {
+        const found = typesOf(nested);
+
+        if (found) return found;
+    }
+
+    return null;
+};
+
+/**
+ * The `exports` map of the installed package: entry point id → the file its typings are in.
+ *
+ * Read in preference to the directory layout because 21.x publishes one flat file per entry point
+ * under `types/` and addresses it from here, leaving the entry point directories with nothing but
+ * stylesheets in them. Keys that carry no typings — `./package.json`, the prebuilt themes — are
+ * skipped, so what is left is exactly the entry points the package publishes, nested ones included
+ * and under the path they are imported by.
+ */
+const typingsFromExports = (root: string): Map<string, string> | null => {
+    const manifest = join(root, 'package.json');
+
+    if (!existsSync(manifest)) return null;
+
+    let map: unknown;
+
+    try {
+        ({ exports: map } = JSON.parse(readFileSync(manifest, 'utf-8')) as { exports?: unknown });
+    } catch {
+        return null;
+    }
+
+    if (!map || typeof map !== 'object') return null;
+
+    const found = new Map<string, string>();
+
+    for (const [key, value] of Object.entries(map as Record<string, unknown>)) {
+        if (!key.startsWith('.')) continue;
+
+        const types = typesOf(value);
+
+        if (types) found.set(key === '.' ? '' : key.replace(/^\.\//, ''), join(root, types));
+    }
+
+    return found.size > 0 ? found : null;
+};
+
 /**
  * Entry point directories, discovered rather than listed: the set changes every few releases.
  *
@@ -81,23 +136,44 @@ const ENTRY_PREFIX = '@koobiq/components/';
  * publishes 66, and the two it misses are the ones a project that has not migrated off the
  * deprecated scrollbar still imports.
  */
-const listEntryPoints = (root: string): string[] => {
-    const found: string[] = [];
+const typingsFromDirectories = (root: string): Map<string, string> => {
+    const found = new Map<string, string>();
+
+    // The root barrel first: a directory holding no typings of its own is not this package, and
+    // walking it would read every directory of whatever was handed over instead.
+    if (!existsSync(join(root, 'index.d.ts'))) return found;
+
+    found.set('', join(root, 'index.d.ts'));
+
+    const take = (id: string, path: string) => {
+        if (existsSync(path)) found.set(id, path);
+    };
 
     for (const entry of readdirSync(root, { withFileTypes: true })) {
         if (!entry.isDirectory()) continue;
 
-        if (existsSync(join(root, entry.name, 'index.d.ts'))) found.push(entry.name);
+        take(entry.name, join(root, entry.name, 'index.d.ts'));
 
         for (const nested of readdirSync(join(root, entry.name), { withFileTypes: true })) {
-            if (nested.isDirectory() && existsSync(join(root, entry.name, nested.name, 'index.d.ts'))) {
-                found.push(`${entry.name}/${nested.name}`);
+            if (nested.isDirectory()) {
+                take(`${entry.name}/${nested.name}`, join(root, entry.name, nested.name, 'index.d.ts'));
             }
         }
     }
 
-    return found.sort();
+    return found;
 };
+
+/**
+ * Entry point id → the file its typings are published in, `''` being the root barrel.
+ *
+ * The packaging has moved twice: 19.x and 20.x publish a directory per entry point with an
+ * `index.d.ts` in it, 21.x publishes `types/koobiq-components-<id>.d.ts` and addresses it through
+ * `exports`. Both are installed by someone, so the map is read first and the scan answers for the
+ * releases that have none.
+ */
+export const listEntryPointTypings = (root: string): Map<string, string> =>
+    typingsFromExports(root) ?? typingsFromDirectories(root);
 
 /**
  * Reads an entry point, following the barrel if there is one.
@@ -106,10 +182,8 @@ const listEntryPoints = (root: string): string[] => {
  * file. Following relative re-exports collapses the difference here instead of spreading a version
  * check through everything downstream.
  */
-const readEntryFile = (root: string, entryPoint: string): DtsFile | null => {
-    const indexPath = join(root, entryPoint, 'index.d.ts');
-
-    if (!existsSync(indexPath)) return null;
+const readEntryFile = (indexPath: string | undefined): DtsFile | null => {
+    if (!indexPath || !existsSync(indexPath)) return null;
 
     const merged = parseDts(readFileSync(indexPath, 'utf-8'));
     const seen = new Set<string>();
@@ -139,18 +213,24 @@ const readEntryFile = (root: string, entryPoint: string): DtsFile | null => {
 };
 
 export const readComponentsApi = (pkg: PackageRef | undefined): ComponentsApi | null => {
-    if (!pkg || !existsSync(join(pkg.root, 'index.d.ts'))) return null;
+    if (!pkg || !existsSync(join(pkg.root, 'package.json'))) return null;
+
+    const typings = listEntryPointTypings(pkg.root);
+
+    // No root barrel means no typings were found at all: a source checkout, or a directory handed
+    // over through the override that is not this package.
+    if (!typings.has('')) return null;
 
     const files = new Map<string, DtsFile | null>();
     const resolved = new Map<string, ResolvedSymbol[]>();
 
     const file = (entryPoint: string): DtsFile | null => {
-        if (!files.has(entryPoint)) files.set(entryPoint, readEntryFile(pkg.root, entryPoint));
+        if (!files.has(entryPoint)) files.set(entryPoint, readEntryFile(typings.get(entryPoint)));
 
         return files.get(entryPoint) ?? null;
     };
 
-    const entryPoints = listEntryPoints(pkg.root);
+    const entryPoints = [...typings.keys()].filter(Boolean).sort();
 
     /** Finds a class by name in `entryPoint`, then wherever that entry point imported it from. */
     const locate = (name: string, entryPoint: string): { symbol: DtsSymbol; entryPoint: string } | null => {

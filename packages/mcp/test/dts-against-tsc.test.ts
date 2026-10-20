@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import ts from 'typescript';
 import { parseDts } from '../src/dts/parse-dts.ts';
+import { listEntryPointTypings } from '../src/sources/components.ts';
 import { resolveProject } from '../src/sources/project.ts';
 import { CONSUMER } from './project.ts';
 
@@ -102,11 +102,9 @@ const files = ((): { id: string; source: string }[] => {
 
     if (!pkg) return [];
 
-    return readdirSync(pkg.root, { withFileTypes: true })
-        .filter((entry) => entry.isDirectory())
-        .map((entry) => ({ id: entry.name, path: join(pkg.root, entry.name, 'index.d.ts') }))
-        .filter((entry) => existsSync(entry.path))
-        .map((entry) => ({ id: entry.id, source: readFileSync(entry.path, 'utf-8') }))
+    return [...listEntryPointTypings(pkg.root)]
+        .filter(([id, path]) => id && existsSync(path))
+        .map(([id, path]) => ({ id, source: readFileSync(path, 'utf-8') }))
         .sort((a, b) => a.id.localeCompare(b.id));
 })();
 

@@ -1,6 +1,7 @@
 import { existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { listEntryPointTypings } from '../src/sources/components.ts';
 
 /**
  * The two projects every test reads from.
@@ -10,8 +11,8 @@ import { fileURLToPath } from 'node:url';
  * `CONSUMER` is a project with `@koobiq/components` installed, which is what the live API reader
  * needs. Inside the monorepo there is no such project — the library is the source here, not a
  * dependency — so the tests point at the repository's own `dist/components`. That build has the
- * published layout, entry point directories with an `index.d.ts` apiece, and it is the artefact
- * that gets published, so testing against it tests the thing consumers actually install.
+ * published layout, the typings of each entry point addressed from `exports`, and it is the
+ * artefact that gets published, so testing against it tests the thing consumers actually install.
  *
  * Set `KOOBIQ_TEST_CONSUMER` to use a real installed project instead.
  */
@@ -35,7 +36,7 @@ if (!process.env.KOOBIQ_TEST_CONSUMER && !process.env.KOOBIQ_COMPONENTS_ROOT && 
 
 /** True when the library has not been built, so the API tests have nothing to read. */
 export const componentsAvailable = (): boolean =>
-    Boolean(process.env.KOOBIQ_TEST_CONSUMER) || existsSync(join(BUILT, 'index.d.ts'));
+    Boolean(process.env.KOOBIQ_TEST_CONSUMER) || listEntryPointTypings(BUILT).has('');
 
 export const SKIP_WITHOUT_BUILD = componentsAvailable()
     ? undefined

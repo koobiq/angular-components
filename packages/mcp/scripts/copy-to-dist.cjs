@@ -14,6 +14,7 @@ mkdirSync(resolve(out, 'dist'), { recursive: true });
 const version = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8')).version;
 
 const manifest = JSON.parse(readFileSync(resolve(pkg, 'package.json'), 'utf8'));
+
 manifest.version = version;
 writeFileSync(resolve(out, 'package.json'), JSON.stringify(manifest, null, 4) + '\n');
 
@@ -25,4 +26,5 @@ cpSync(resolve(pkg, 'dist'), resolve(out, 'dist'), { recursive: true });
 cpSync(resolve(pkg, 'data'), resolve(out, 'data'), { recursive: true });
 
 const server = resolve(out, 'dist', 'server.js');
+
 writeFileSync(server, readFileSync(server, 'utf8').replaceAll('{{VERSION}}', version));

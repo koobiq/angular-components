@@ -40,6 +40,7 @@ const PUBLIC_GUIDES = [
     'schematics',
     'search-smart',
     'angular-20-breaking-changes',
+    'angular-21-breaking-changes',
     // Prose counterpart to `data/history.json`: 30 sections, each tagged with the release it
     // applies to. The diff says a member changed; this says what to write instead.
     'migration',
