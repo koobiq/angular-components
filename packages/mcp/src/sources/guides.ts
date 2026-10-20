@@ -88,12 +88,20 @@ const matches = (heading: string, query: string): boolean => {
     return lowered === wanted || lowered.includes(wanted);
 };
 
+/** A query long enough that matching it against prose, not just a heading, means something. */
+const MIN_BODY_QUERY_LENGTH = 4;
+
 /**
- * Every section whose address satisfies the query, exact heading matches in preference to partial.
+ * Every section whose address satisfies the query, exact heading matches in preference to partial,
+ * and a body match only once neither kind of heading match exists at all.
  *
- * The query may be a path: `5. Filter-bar upgrade (20.2.0) > Running the migration`. The segments
- * before the last have to appear in the ancestor chain, in order but not necessarily adjacently,
- * so a reader does not have to know the depth of the heading they are quoting.
+ * The body tier exists because a heading is a label, not an index: "theming setup" is called
+ * `Setup`, but what a reader actually asks for — "the prebuilt theme", "css-tokens" — is prose
+ * inside it. Heading-only addressing answered that with "no section", the same dead end `llms.txt`
+ * was pulled in to fix. The query may also be a path: `5. Filter-bar upgrade (20.2.0) > Running the
+ * migration`. The segments before the last have to appear in the ancestor chain, in order but not
+ * necessarily adjacently, so a reader does not have to know the depth of the heading they are
+ * quoting.
  */
 const locate = (guide: Guide, query: string): number[] => {
     const segments = query
@@ -105,9 +113,15 @@ const locate = (guide: Guide, query: string): number[] => {
     const above = segments.slice(0, -1);
     const exact: number[] = [];
     const partial: number[] = [];
+    const body: number[] = [];
+    const wanted = target.toLowerCase();
+    const bySecond = wanted.length >= MIN_BODY_QUERY_LENGTH;
 
     guide.sections.forEach((section, index) => {
-        if (!matches(section.heading, target)) return;
+        const onHeading = matches(section.heading, target);
+        const onBody = !onHeading && bySecond && section.body.toLowerCase().includes(wanted);
+
+        if (!onHeading && !onBody) return;
 
         const chain = ancestorsOf(guide, index);
         let cursor = 0;
@@ -120,10 +134,14 @@ const locate = (guide: Guide, query: string): number[] => {
             cursor = at + 1;
         }
 
-        (section.heading.toLowerCase() === target.toLowerCase() ? exact : partial).push(index);
+        if (!onHeading) body.push(index);
+        else (section.heading.toLowerCase() === wanted ? exact : partial).push(index);
     });
 
-    return exact.length > 0 ? exact : partial;
+    if (exact.length > 0) return exact;
+    if (partial.length > 0) return partial;
+
+    return body;
 };
 
 /**

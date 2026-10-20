@@ -116,7 +116,10 @@ const register = (server: McpServer, catalog: Catalog): void => {
                 "Koobiq guides: installation, theming, localization, validation patterns, schematics, smart search, and the version-by-version migration guide. Served at the version this project resolved, not the newest. Call with no arguments to list guides, with `id` to list a guide's sections, with `id` and `section` to read one.",
             inputSchema: {
                 id: z.string().optional().describe('Guide id, e.g. "theming", "validation", "migration"'),
-                section: z.string().optional().describe('Section heading, exact or partial'),
+                section: z
+                    .string()
+                    .optional()
+                    .describe('Section heading, exact or partial; falls back to a keyword from its text'),
                 lang: z.enum(['en', 'ru']).optional().describe('Preferred language, default en')
             }
         },
