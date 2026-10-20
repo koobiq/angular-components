@@ -4,6 +4,10 @@ updates:
     directory: '/'
     schedule:
       interval: 'monthly'
+    # A release is proposed only once it is a week old, so a compromised version is caught
+    # before it reaches a pull request.
+    cooldown:
+      default-days: 7
     groups:
       github-actions:
         patterns:
@@ -16,6 +20,14 @@ updates:
       interval: 'cron'
       cronjob: '0 9 1,15 * *'
       timezone: 'Europe/Moscow'
+    # Has to stay at least as long as npmMinimalAgeGate in .yarnrc.yml: Dependabot does not read
+    # the gate when it picks a version, and yarn refuses to install a younger one. The same window
+    # also holds back the transitive dependencies Dependabot resolves into the lockfile. Security
+    # updates are not delayed. Our own packages are taken as soon as they are published.
+    cooldown:
+      default-days: 7
+      exclude:
+        - '@koobiq/*'
     ignore:
       # Majors are ignored only where the version is coupled to the Angular release train
       # and has to be upgraded deliberately, together with the framework. Everything else
@@ -23,36 +35,29 @@ updates:
       # accumulate advisories whose only fix lives in a newer major.
       - dependency-name: '@angular/*'
         update-types: ['version-update:semver-major']
-      - dependency-name: '@angular-builders/*'
-        update-types: ['version-update:semver-major']
       - dependency-name: '@angular-devkit/*'
         update-types: ['version-update:semver-major']
       - dependency-name: '@schematics/angular'
         update-types: ['version-update:semver-major']
       - dependency-name: 'angular-eslint'
         update-types: ['version-update:semver-major']
-      # ESLint is coupled to angular-eslint, and therefore to Angular: the template parser of
-      # angular-eslint 20.x builds a ScopeManager without a global scope, which makes ESLint 10
-      # crash on every template. ESLint 10 support lands in angular-eslint 21.4, which requires
-      # Angular 21 — so the major has to wait for the framework upgrade.
-      - dependency-name: 'eslint'
+      # Installed through a yarn `patch:` that ports angular/angular-cli@6d9b360e5, without which `ng build`
+      # never exits. The patch is cut for one version, so @angular/build is bumped by hand together with the
+      # rest of @angular/* and the patch moved to the new version (see AGENTS.md). Remove this entry with the
+      # patch once the release line ships the fix: 21.2.27 does not, 22.1.0 does.
+      - dependency-name: '@angular/build'
+      # `@angular/build` 21 declares `vitest ^4` as its peer.
+      - dependency-name: 'vitest'
         update-types: ['version-update:semver-major']
-      # Released in lockstep with eslint and consumed as `eslint.configs.recommended`, so it cannot
-      # cross a major on its own — see the `eslint` entry above.
-      - dependency-name: '@eslint/js'
-        update-types: ['version-update:semver-major']
-      # Requires ESLint 10 since v4 — see the `eslint` entry above.
-      - dependency-name: 'eslint-plugin-file-progress'
-        update-types: ['version-update:semver-major']
-      - dependency-name: 'jest-preset-angular'
+      # vitest depends on `vite ^6 || ^7 || ^8`: a root vite beyond that range gives vitest a nested vite of
+      # its own while @analogjs/vite-plugin-angular resolves the root one.
+      - dependency-name: 'vite'
         update-types: ['version-update:semver-major']
       - dependency-name: 'ng-packagr'
         update-types: ['version-update:semver-major']
       - dependency-name: 'rxjs'
         update-types: ['version-update:semver-major']
       - dependency-name: 'typescript'
-        update-types: ['version-update:semver-major']
-      - dependency-name: 'zone.js'
         update-types: ['version-update:semver-major']
       # AG Grid packages must stay on the same major and be upgraded together deliberately.
       - dependency-name: 'ag-grid-*'
@@ -67,6 +72,10 @@ updates:
       # semantic version number
       - dependency-name: '@angular-devkit/architect-cli'
         update-types: ['version-update:semver-major', 'version-update:semver-minor']
+      # Majors can carry breaking token renames/removals that need a manual review, so only
+      # minor and patch updates are automated.
+      - dependency-name: '@koobiq/design-tokens'
+        update-types: ['version-update:semver-major']
     groups:
       # Security fixes arrive as a single pull request rather than one per advisory.
       security:
@@ -102,8 +111,6 @@ updates:
         patterns:
           - '@angular/*'
           - 'rxjs'
-          - 'zone.js'
-          - '@angular-builders/*'
           - '@angular-devkit/*'
           - '@schematics/angular'
           - 'ng-packagr'
@@ -126,11 +133,14 @@ updates:
         patterns:
           - 'conventional-changelog*'
           - '@conventional-changelog/*'
-      jest:
+      vitest:
         patterns:
-          - 'jest*'
-          - '@types/jest'
-          - 'ts-jest'
+          - 'vitest'
+          - '@vitest/*'
+          - '@analogjs/*'
+          - 'vite'
+          - 'jsdom'
+          - '@types/jsdom'
       # The MDX compiler of the documentation pages (tools/docs-pages). The remark plugins and the
       # mdast utilities are released together and share the `mdast` types, so a version that lands
       # alone leaves the compiler with two incompatible node models.
@@ -182,6 +192,12 @@ updates:
       interval: 'cron'
       cronjob: '0 9 1,15 * *'
       timezone: 'Europe/Moscow'
+    # The same cooldown as the root entry, so these ranges move in step with the root
+    # devDependencies that mirror them.
+    cooldown:
+      default-days: 7
+      exclude:
+        - '@koobiq/*'
     open-pull-requests-limit: 5
     commit-message:
       prefix: 'chore(cli)'

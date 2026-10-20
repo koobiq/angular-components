@@ -231,7 +231,7 @@ test.describe('KbqTreeSelectModule', () => {
     /*  Behaviour-only tests ported from tree-select.component.karma-spec.ts  */
     /*  and from xit blocks in tree-select.component.spec.ts. They rely on    */
     /*  real layout (bounding boxes, computed styles, CDK overlay flexible-   */
-    /*  position math) and so cannot run under Jest/JSDOM.                    */
+    /*  position math) and so cannot run under jsdom.                         */
     /* ---------------------------------------------------------------------- */
 
     test.describe('overlay panel', () => {
@@ -282,6 +282,7 @@ test.describe('KbqTreeSelectModule', () => {
 
             await expect(trigger).toHaveCSS('cursor', 'default');
 
+            // eslint-disable-next-line playwright/no-force-option -- the click on a disabled control is the point; actionability checks would refuse it
             await trigger.click({ force: true });
             await expect(panel).toHaveCount(0);
 
@@ -301,6 +302,7 @@ test.describe('KbqTreeSelectModule', () => {
 
             await expect(trigger).toHaveCSS('cursor', 'default');
 
+            // eslint-disable-next-line playwright/no-force-option -- the click on a disabled control is the point; actionability checks would refuse it
             await trigger.click({ force: true });
             await expect(panel).toHaveCount(0);
 
@@ -427,7 +429,7 @@ test.describe('KbqTreeSelectModule', () => {
     });
 
     /* ---------------------------------------------------------------------- */
-    /*  Behaviour-only tests replacing previously-xit'd jest tests in         */
+    /*  Behaviour-only tests replacing previously skipped unit tests in       */
     /*  tree-select.component.spec.ts. They cover existing tree-select        */
     /*  behaviour exercised in a real browser. Tests that depended on stale   */
     /*  data references (pizza-1, chips-4, etc. from the select fixture) or  */
@@ -683,9 +685,7 @@ test.describe('KbqTreeSelectModule', () => {
             await openWithPreselect(page, 'preselectApplications');
 
             const overlay = await box(page.locator('.cdk-overlay-pane'));
-            const viewport = page.viewportSize();
-
-            if (!viewport) throw new Error('No viewport');
+            const viewport = page.viewportSize()!;
 
             expect(overlay.x).toBeGreaterThanOrEqual(0);
             expect(overlay.y).toBeGreaterThanOrEqual(0);
@@ -717,9 +717,7 @@ test.describe('KbqTreeSelectModule', () => {
             await page.locator('.kbq-tree-select__panel').waitFor();
 
             const overlay = await box(page.locator('.cdk-overlay-pane'));
-            const viewport = page.viewportSize();
-
-            if (!viewport) throw new Error('No viewport');
+            const viewport = page.viewportSize()!;
 
             expect(overlay.y + overlay.height).toBeLessThanOrEqual(viewport.height);
         });

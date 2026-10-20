@@ -390,12 +390,13 @@ test.describe('KbqFormFieldModule', () => {
                 });
             }
 
-            for (const [theme, scheme, uaColor] of [
-                ['light', 'light', 'rgb(0, 0, 0)'],
-                ['dark', 'dark', 'rgb(255, 255, 255)']
+            // The page starts light, so only the dark run has a theme to switch on.
+            for (const [theme, scheme, uaColor, switchTheme] of [
+                ['light', 'light', 'rgb(0, 0, 0)', async () => {}],
+                ['dark', 'dark', 'rgb(255, 255, 255)', e2eEnableDarkTheme]
             ] as const) {
                 test(`tells the browser the palette is ${theme}`, async ({ page }) => {
-                    if (theme === 'dark') await e2eEnableDarkTheme(page);
+                    await switchTheme(page);
 
                     const { control } = await autofill(page, 'state_default');
 

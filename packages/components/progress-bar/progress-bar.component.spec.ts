@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
+    KBQ_ANIMATIONS_CONFIG,
     KBQ_LOCALE_SERVICE,
     KbqComponentColors,
     KbqLocaleService,
     KbqLocaleServiceModule,
     ruRULocaleData
 } from '@koobiq/components/core';
-import { axe } from 'jest-axe';
 import { KbqProgressBarModule, ProgressBarMode } from './index';
 
 const DEFAULT_ARIA_LABEL = ruRULocaleData.a11y.progressBar;
@@ -212,6 +212,36 @@ describe('KbqProgressBar', () => {
         });
     });
 
+    describe('motion', () => {
+        it('should animate a new value by default', () => {
+            fixture = TestBed.createComponent(TestApp);
+            detect();
+
+            expect(lineOf(first()).classList).not.toContain('kbq-animations-disabled');
+        });
+
+        it('should follow a new value without a transition when animations are disabled', () => {
+            TestBed.overrideProvider(KBQ_ANIMATIONS_CONFIG, { useValue: { animationsDisabled: true } });
+            fixture = TestBed.createComponent(TestApp);
+            detect();
+
+            expect(lineOf(first()).classList).toContain('kbq-animations-disabled');
+        });
+
+        it('should pulse the indeterminate fill in place when animations are disabled', () => {
+            TestBed.overrideProvider(KBQ_ANIMATIONS_CONFIG, { useValue: { animationsDisabled: true } });
+
+            const indeterminate = TestBed.createComponent(IndeterminateApp);
+
+            indeterminate.detectChanges();
+
+            const line = indeterminate.nativeElement.querySelector('.kbq-progress-bar__line');
+
+            expect(line.classList).toContain('kbq-progress-bar__line_indeterminate');
+            expect(line.classList).toContain('kbq-animations-disabled');
+        });
+    });
+
     describe('projected content', () => {
         let projected: ComponentFixture<ProjectedApp>;
 
@@ -299,7 +329,7 @@ describe('KbqProgressBar', () => {
         });
 
         it('should have no axe violations', async () => {
-            expect(await axe(projected.nativeElement)).toHaveNoViolations();
+            await expect(projected.nativeElement).toHaveNoViolations();
         });
 
         // The range is absent in this mode, which is the only axis the indeterminate `progressbar` has
@@ -309,7 +339,7 @@ describe('KbqProgressBar', () => {
 
             indeterminate.detectChanges();
 
-            expect(await axe(indeterminate.nativeElement)).toHaveNoViolations();
+            await expect(indeterminate.nativeElement).toHaveNoViolations();
         });
     });
 

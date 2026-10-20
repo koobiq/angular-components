@@ -47,8 +47,8 @@ as `<kbq-code-block softWrap>` working.
 Narrowing `number | undefined` back to `number` is a decision — `?? 0`, a non-null assertion, or
 handling the unset state — and turning a `file` write into a `[file]` binding is a template edit. A
 compound assignment (`||=`, `+=`) or an increment would need the receiver spelled twice, so it is
-reported rather than rewritten, and the backing inputs — `softWrapInput` and friends — plus the
-deprecated `canLoad` and `codeFiles` aliases cannot be written at all any more.
+reported rather than rewritten, and the backing inputs — `softWrapInput` and friends — cannot be
+written at all any more. The removed `canLoad` and `codeFiles` aliases are migrated by `v21-upgrade`.
 
 | Pattern                                  | Manual migration                                                    |
 | ---------------------------------------- | ------------------------------------------------------------------- |

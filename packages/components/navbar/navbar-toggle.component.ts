@@ -3,13 +3,13 @@ import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     effect,
     inject,
     Injectable,
     NgZone,
     OnDestroy,
+    untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -124,7 +124,6 @@ export class KbqNavbarToggleRegistry implements OnDestroy {
 })
 export class KbqNavbarToggle implements OnDestroy {
     private readonly nativeElement = kbqInjectNativeElement();
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly registry = inject(KbqNavbarToggleRegistry);
     private readonly isBrowser = inject(Platform).isBrowser;
 
@@ -169,10 +168,12 @@ export class KbqNavbarToggle implements OnDestroy {
 
     /** toggles the state of the navbar */
     toggle() {
-        this.navbar.toggle();
-        this.tooltip.hide();
-
-        this.changeDetectorRef.markForCheck();
+        // Untracked: called from a consumer's `effect()`, the state read on the way — `expanded`, the tooltip's — would
+        // make the effect run again on every expand and collapse.
+        untracked(() => {
+            this.navbar.toggle();
+            this.tooltip.hide();
+        });
     }
 
     /** @docs-private */

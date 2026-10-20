@@ -1,8 +1,9 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { axe } from 'jest-axe';
+import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
+import { KBQ_SCROLLBAR_OPTIONS, KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { Subject } from 'rxjs';
 import { KbqTabLink, KbqTabNavBar } from './tab-nav-bar';
 import { KbqTabsModule } from './tabs.module';
@@ -18,7 +19,14 @@ describe(KbqTabNavBar.name, () => {
     beforeEach(() => {
         dirChange = new Subject();
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule, SimpleTabNavBarTestApp, TabLinkWithTabIndexBinding, TabNavBarWithPanel],
+            imports: [
+                KbqTabsModule,
+                SimpleTabNavBarTestApp,
+                TabLinkWithTabIndexBinding,
+                TabLinkWithIdBinding,
+                TabNavBarWithPanel,
+                TabNavBarWithDisablePagination
+            ],
             providers: [
                 {
                     provide: Directionality,
@@ -115,6 +123,43 @@ describe(KbqTabNavBar.name, () => {
         expect(tabLink.tabIndex).toBe(3);
     });
 
+    it.each([undefined, null])('should restore the default tabIndex once the binding changes to %s', (value) => {
+        const fixture = TestBed.createComponent(TabLinkWithTabIndexBinding);
+        const component = fixture.componentInstance;
+
+        component.tabIndex = 3;
+        fixture.detectChanges();
+
+        component.tabIndex = value;
+        fixture.detectChanges();
+
+        const tabLink: HTMLElement = fixture.debugElement.query(By.directive(KbqTabLink)).nativeElement;
+
+        expect(tabLink.getAttribute('tabindex')).toBe('0');
+    });
+
+    it('should fall back to the generated id when the bound id turns undefined', () => {
+        const fixture = TestBed.createComponent(TabLinkWithIdBinding);
+        const component = fixture.componentInstance;
+
+        fixture.detectChanges();
+
+        const tabLink: HTMLElement = fixture.debugElement.query(By.directive(KbqTabLink)).nativeElement;
+        const generatedId = tabLink.id;
+
+        expect(generatedId).toMatch(/^kbq-tab-link-\d+$/);
+
+        component.id = 'custom-link';
+        fixture.detectChanges();
+
+        expect(tabLink.id).toBe('custom-link');
+
+        component.id = undefined;
+        fixture.detectChanges();
+
+        expect(tabLink.id).toBe(generatedId);
+    });
+
     describe('with [tabNavPanel]', () => {
         let fixture: ComponentFixture<TabNavBarWithPanel>;
 
@@ -197,12 +242,14 @@ describe(KbqTabNavBar.name, () => {
         });
 
         it('should have no axe violations', async () => {
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 
     describe('without [tabNavPanel]', () => {
         let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
+
+        const links = (): HTMLElement[] => Array.from(fixture.nativeElement.querySelectorAll('a'));
 
         beforeEach(() => {
             fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
@@ -211,30 +258,42 @@ describe(KbqTabNavBar.name, () => {
 
         it('should stay a plain navigation with no tab semantics', () => {
             const navBar: HTMLElement = fixture.nativeElement.querySelector('nav');
-            const links: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('a'));
 
             expect(navBar.hasAttribute('role')).toBe(false);
             expect(navBar.hasAttribute('aria-orientation')).toBe(false);
-            expect(links.every((link) => !link.hasAttribute('role'))).toBe(true);
-            expect(links.every((link) => !link.hasAttribute('aria-selected'))).toBe(true);
+            expect(links().every((link) => !link.hasAttribute('role'))).toBe(true);
+            expect(links().every((link) => !link.hasAttribute('aria-selected'))).toBe(true);
         });
 
         it('should mark a disabled link with aria-disabled and no disabled attribute', () => {
             fixture.componentInstance.disabled = true;
             fixture.detectChanges();
 
-            const links: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('a'));
-
-            // `disabled` is not a valid attribute on an anchor, and no assistive technology reads it
-            // there — the same defect the review already fixed on the tab labels.
-            expect(links.some((link) => link.hasAttribute('disabled'))).toBe(false);
-            expect(links.every((link) => link.getAttribute('aria-disabled') === 'true')).toBe(true);
+            expect(links().some((link) => link.hasAttribute('disabled'))).toBe(false);
+            expect(links().every((link) => link.getAttribute('aria-disabled') === 'true')).toBe(true);
         });
 
         it('should mark the active link with aria-current instead', () => {
-            const links: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('a'));
+            expect(links().map((link) => link.getAttribute('aria-current'))).toEqual(['page', null, null]);
+        });
+    });
 
-            expect(links.map((link) => link.getAttribute('aria-current'))).toEqual(['page', null, null]);
+    describe('vertical', () => {
+        const scrollbarMode = (fixture: ComponentFixture<unknown>) =>
+            fixture.debugElement.query(By.directive(KbqScrollbarViewport)).injector.get(KbqScrollbarViewport).mode();
+
+        it('should give the strip of a nav bar created vertical the configured scrollbar, and drop it with vertical', () => {
+            const fixture = TestBed.createComponent(TabNavBarWithPanel);
+
+            fixture.componentInstance.vertical = true;
+            fixture.detectChanges();
+
+            expect(scrollbarMode(fixture)).toBe(TestBed.inject(KBQ_SCROLLBAR_OPTIONS).mode);
+
+            fixture.componentInstance.vertical = false;
+            fixture.detectChanges();
+
+            expect(scrollbarMode(fixture)).toBe('hidden');
         });
     });
 
@@ -245,11 +304,9 @@ describe(KbqTabNavBar.name, () => {
             fixture.detectChanges();
 
             const navBar = fixture.debugElement.query(By.directive(KbqTabNavBar)).componentInstance as KbqTabNavBar;
-            const updatePagination = jest.spyOn(navBar, 'updatePagination');
+            const updatePagination = vi.spyOn(navBar, 'updatePagination');
 
-            // Neither the orientation nor the link count changes here, so a dirty flag hung off
-            // `vertical` alone never fires — even though `disablePagination` feeds the same derived
-            // value and leaves the paginator arrows stale.
+            // Neither the orientation nor the link count changes here.
             fixture.componentInstance.disablePagination = true;
             fixture.detectChanges();
 
@@ -272,9 +329,8 @@ describe(KbqTabNavBar.name, () => {
             fixture.componentInstance.tabs = [0, 1];
             fixture.detectChanges();
 
-            // `updateActiveLink()` runs on the same `items.changes` tick and writes `selectedIndex`,
-            // which also moves `keyManager.activeItemIndex`. Restoration has to remember where focus
-            // actually was rather than reading that field back, or it lands on the active link.
+            // `updateActiveLink()` runs on the same `items.changes` tick and moves the key manager to the
+            // active link, so restoration has to remember where focus actually was.
             expect(document.activeElement).toBe(links()[1]);
         });
     });
@@ -300,7 +356,13 @@ describe(KbqTabNavBar.name, () => {
             fixture.detectChanges();
         });
 
-        it('should dim the previous/next arrows at each scroll bound without removing them', fakeAsync(() => {
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('should dim the previous/next arrows at each scroll bound without removing them', async () => {
+            vi.useFakeTimers();
+
             const before = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_before');
             const after = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_after');
 
@@ -313,12 +375,37 @@ describe(KbqTabNavBar.name, () => {
 
             // `KbqTabNavBar` is OnPush — arrow state from a native scroll event is only reflected
             // once the audited change-detection tick fires.
-            tick(SCROLL_CD_THROTTLE);
+            await vi.advanceTimersByTimeAsync(SCROLL_CD_THROTTLE);
             fixture.detectChanges();
 
             expect(before.classList.contains('kbq-disabled')).toBe(false);
             expect(after.classList.contains('kbq-disabled')).toBe(true);
-        }));
+        });
+    });
+
+    describe('underline motion', () => {
+        const underlineOf = (fixture: ComponentFixture<SimpleTabNavBarTestApp>): HTMLElement =>
+            fixture.nativeElement.querySelector('.kbq-tab-list__active-tab-underline');
+
+        it('should move the underline with motion by default', () => {
+            const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+
+            fixture.detectChanges();
+
+            expect(underlineOf(fixture).classList).not.toContain('kbq-animations-disabled');
+        });
+
+        it('should move the underline without motion when animations are disabled', () => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }]
+            });
+
+            const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+
+            fixture.detectChanges();
+
+            expect(underlineOf(fixture).classList).toContain('kbq-animations-disabled');
+        });
     });
 
     describe('activeTabOffset', () => {
@@ -329,6 +416,20 @@ describe(KbqTabNavBar.name, () => {
             fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
             fixture.detectChanges();
             navBar = fixture.debugElement.query(By.directive(KbqTabNavBar)).componentInstance;
+        });
+
+        it('should move the underline to an index assigned in code', async () => {
+            const underline: HTMLElement = fixture.nativeElement.querySelector('.kbq-tab-list__active-tab-underline');
+
+            Object.defineProperty(navBar.items.get(1)!.elementRef.nativeElement, 'offsetLeft', {
+                configurable: true,
+                value: 100
+            });
+
+            navBar.selectedIndex = 1;
+            await fixture.whenStable();
+
+            expect(underline.style.left).toBe('112px');
         });
 
         describe('activeTabOffsetWidth', () => {
@@ -409,14 +510,26 @@ class SimpleTabNavBarTestApp {
     `
 })
 class TabLinkWithTabIndexBinding {
-    tabIndex = 0;
+    tabIndex: number | null | undefined = 0;
+}
+
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <nav kbqTabNavBar>
+            <a kbqTabLink [id]="id">Id Link</a>
+        </nav>
+    `
+})
+class TabLinkWithIdBinding {
+    id: string | undefined;
 }
 
 @Component({
     imports: [KbqTabsModule],
     template: `
         <nav kbqTabNavBar [disablePagination]="disablePagination">
-            <a kbqTabLink [active]="$first">One</a>
+            <a kbqTabLink [active]="true">One</a>
             <a kbqTabLink>Two</a>
         </nav>
     `

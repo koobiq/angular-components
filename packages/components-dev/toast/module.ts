@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, TemplateRef, ViewEncapsulation, inject, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
@@ -110,8 +109,6 @@ export class DevApp {
     private newToastService = inject<KbqToastService<DevToastComponent>>(KbqToastService);
     private modalService = inject(KbqModalService);
     private sidepanelService = inject(KbqSidepanelService);
-
-    themePalette = ThemePalette;
 
     position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
 

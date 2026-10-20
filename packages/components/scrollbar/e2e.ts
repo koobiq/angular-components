@@ -293,7 +293,7 @@ const E2E_TALL_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/
     template: '<ng-content />',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-class E2eScrollbarInlineHost {}
+class ScrollbarInlineHost {}
 
 const E2E_LONG_TEXT =
     'Content that arrives after the viewport was measured has to be noticed without anyone touching the ' +
@@ -301,7 +301,7 @@ const E2E_LONG_TEXT =
 
 @Component({
     selector: 'e2e-scrollbar-content-changes',
-    imports: [KbqScrollbar, KbqScrollbarViewport, NgTemplateOutlet, E2eScrollbarInlineHost],
+    imports: [KbqScrollbar, KbqScrollbarViewport, NgTemplateOutlet, ScrollbarInlineHost],
     template: `
         <div class="e2e-controls">
             <button type="button" data-testid="e2eScrollbarContentChangesAdd" (click)="addItems()">Add</button>

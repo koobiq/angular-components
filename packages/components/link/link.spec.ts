@@ -5,7 +5,6 @@ import { By } from '@angular/platform-browser';
 import { provideRouter, RouterLink } from '@angular/router';
 import { dispatchKeyboardEvent, ENTER, KbqDefaultSizes, SPACE } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { axe } from 'jest-axe';
 import { KbqLink, kbqLinkOptionsProvider, KbqLinkPrefix, KbqLinkSuffix, KbqLinkUnderline } from './index';
 
 const getLink = (fixture: ComponentFixture<unknown>): HTMLElement => fixture.nativeElement.querySelector('[kbqLink]');
@@ -569,19 +568,19 @@ describe(KbqLink.name, () => {
         it('should have no violations on a link with icons', async () => {
             const fixture = createLink(IconsLink);
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations on an external link', async () => {
             const fixture = createLink(ExternalLink);
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations on a pseudo link', async () => {
             const fixture = createLink(PseudoLink);
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 });

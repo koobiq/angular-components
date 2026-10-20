@@ -2,13 +2,14 @@ import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import { SUMMARY, TABLE_PACKAGE, TABLE_TYPE, warnPatterns } from './data';
 import { Schema } from './schema';
 
 const LABEL = '[table-cell-content]';
 const EXTENSIONS = ['.ts', '.html', '.scss', '.css'];
 
-// Compiled once rather than per visited file: `rootDir.visit` below can run over every file in the
+// Compiled once rather than per visited file: the walk below can run over every file in the
 // project, and these patterns never change between files.
 const TABLE_TYPE_PATTERN = new RegExp(TABLE_TYPE);
 const compiledWarnPatterns = warnPatterns.map(({ anchor, pattern, message }) => ({
@@ -40,8 +41,7 @@ export default function tableCellContent(options: Schema): Rule {
         let consumers = 0;
         let reported = 0;
 
-        rootDir.visit((filePath: Path, entry) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
+        visitProjectFiles(rootDir, (filePath: Path, entry) => {
             if (!EXTENSIONS.some((extension) => filePath.endsWith(extension))) return;
 
             const content = entry?.content.toString();

@@ -1,10 +1,21 @@
 import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
-import { forEachClass, parseTemplate } from '../../utils/typescript';
+import { visitProjectFiles } from '../../utils/project-files';
+import {
+    Binding,
+    classifyAccess,
+    collectAllReceivers,
+    collectBindings,
+    isPlainAssignment,
+    isWriteTarget,
+    Receiver,
+    resolveReceiver
+} from '../../utils/signal-members-migration';
+import { RefAccessPolicy, rewriteRefAccesses } from '../../utils/template-ref-access';
+import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
     FILTER_BAR_ELEMENT,
     FILTER_BAR_HOST_TYPE,
@@ -26,16 +37,18 @@ interface Edit {
     text: string;
 }
 
-/** A receiver whose static type is a filter bar, valid within `[start, end]` of the source. */
-interface Receiver {
-    /** Source text of the receiver expression, e.g. `filterBar` or `this.filterBar`. */
-    text: string;
-    start: number;
-    end: number;
+/** The filter-bar receivers of a file, and the bindings that decide which of them an access reaches. */
+interface FileReceivers {
+    receivers: Receiver[];
+    bindings: Binding[];
 }
 
-function escapeRegExp(value: string): string {
-    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** Members written in code, which the rewrite leaves as they are. */
+interface Writes {
+    /** Read-only members, written in any form. */
+    readOnlyWrites: Set<string>;
+    /** `filter` written by a compound assignment, an increment, `delete` or destructuring. */
+    compoundWrites: Set<string>;
 }
 
 /** Applies text-span edits to `content`, right-to-left, so earlier edits don't shift later offsets. */
@@ -50,127 +63,43 @@ function applyEdits(content: string, edits: Edit[]): string {
     return result;
 }
 
-const isFunctionLike = (node: ts.Node): boolean =>
-    ts.isFunctionDeclaration(node) ||
-    ts.isMethodDeclaration(node) ||
-    ts.isConstructorDeclaration(node) ||
-    ts.isArrowFunction(node) ||
-    ts.isFunctionExpression(node) ||
-    ts.isGetAccessorDeclaration(node) ||
-    ts.isSetAccessorDeclaration(node);
-
-/** Walks up from `node` to the nearest ancestor matching `predicate`. */
-function findAncestor(node: ts.Node, predicate: (node: ts.Node) => boolean): ts.Node | undefined {
-    let current = node.parent;
-
-    while (current) {
-        if (predicate(current)) return current;
-        current = current.parent;
-    }
-
-    return undefined;
+/** The `KbqFilterBar` / `KbqFilterBarHost` receivers of a file, typed by annotation or `inject()`. */
+function collectFileReceivers(sourceFile: ts.SourceFile): FileReceivers {
+    return {
+        receivers: collectAllReceivers(sourceFile, [FILTER_BAR_TYPE, FILTER_BAR_HOST_TYPE]),
+        bindings: collectBindings(sourceFile)
+    };
 }
-
-/** Whether a type annotation refers to the filter bar (`KbqFilterBar` / `KbqFilterBarHost`). */
-function isFilterBarType(type: ts.TypeNode | undefined): boolean {
-    return (
-        !!type &&
-        ts.isTypeReferenceNode(type) &&
-        ts.isIdentifier(type.typeName) &&
-        (type.typeName.text === FILTER_BAR_TYPE || type.typeName.text === FILTER_BAR_HOST_TYPE)
-    );
-}
-
-const FIELD_MODIFIERS = new Set<ts.SyntaxKind>([
-    ts.SyntaxKind.PrivateKeyword,
-    ts.SyntaxKind.PublicKeyword,
-    ts.SyntaxKind.ProtectedKeyword,
-    ts.SyntaxKind.ReadonlyKeyword
-]);
 
 /**
- * Collects the receivers whose static type is a filter bar, by explicit annotation only (no cross-package
- * type resolution): method/function params, class fields (incl. `@ViewChild(KbqFilterBar) x: KbqFilterBar`
- * and constructor parameter-properties) and typed locals.
+ * Whether `node` accesses a signal member on a filter-bar receiver. The shared engine resolves the receiver at
+ * this exact position, so a nested declaration that shadows its name or a `function` that rebinds `this` is
+ * not followed. A signal query holds the instance behind a call of its own, which this pass does not reach.
  */
-function collectReceivers(sourceFile: ts.SourceFile): Receiver[] {
-    const receivers: Receiver[] = [];
-    const add = (text: string, scope: ts.Node) =>
-        receivers.push({ text, start: scope.getStart(sourceFile), end: scope.getEnd() });
-
-    const visit = (node: ts.Node): void => {
-        if (ts.isParameter(node) && ts.isIdentifier(node.name) && isFilterBarType(node.type)) {
-            add(node.name.text, findAncestor(node, isFunctionLike) ?? sourceFile);
-
-            // A constructor parameter-property is also a class field, reachable as `this.<name>`.
-            if (node.modifiers?.some((modifier) => FIELD_MODIFIERS.has(modifier.kind))) {
-                const owner = findAncestor(node, ts.isClassDeclaration);
-
-                if (owner) add(`this.${node.name.text}`, owner);
-            }
-        } else if (ts.isPropertyDeclaration(node) && ts.isIdentifier(node.name) && isFilterBarType(node.type)) {
-            const owner = findAncestor(node, ts.isClassDeclaration);
-
-            if (owner) add(`this.${node.name.text}`, owner);
-        } else if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && isFilterBarType(node.type)) {
-            add(node.name.text, findAncestor(node, isFunctionLike) ?? sourceFile);
-        }
-
-        node.forEachChild(visit);
-    };
-
-    visit(sourceFile);
-
-    return receivers;
-}
-
-/** Classifies a matched property access and appends the resulting edit(s). */
-function classifyAccess(node: ts.PropertyAccessExpression, sourceFile: ts.SourceFile, edits: Edit[]): void {
-    const parent = node.parent;
-
-    // Already migrated: `x.filter()` (call) or `x.filter.set(...)` — leave alone (idempotent).
-    if (ts.isCallExpression(parent) && parent.expression === node) return;
-    if (ts.isPropertyAccessExpression(parent) && parent.expression === node && parent.name.text === 'set') return;
-
-    // Write target: `x.filter = RHS` → `x.filter.set(RHS)` (writable members only).
+function isSignalMemberAccess(
+    node: ts.Node,
+    sourceFile: ts.SourceFile,
+    scope: FileReceivers
+): node is ts.PropertyAccessExpression {
     if (
-        ts.isBinaryExpression(parent) &&
-        parent.left === node &&
-        parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
+        !ts.isPropertyAccessExpression(node) ||
+        !ts.isIdentifier(node.name) ||
+        !SIGNAL_MEMBERS.includes(node.name.text)
     ) {
-        if (WRITABLE_MEMBERS.has(node.name.text)) {
-            const rhs = parent.right;
-
-            // Replace ` = ` with `.set(` and close after the right-hand side; keeping the RHS span intact
-            // lets any nested read edits inside it still apply.
-            edits.push({ start: node.getEnd(), end: rhs.getStart(sourceFile), text: '.set(' });
-            edits.push({ start: rhs.getEnd(), end: rhs.getEnd(), text: ')' });
-        }
-
-        return;
+        return false;
     }
 
-    // Read (incl. optional chain `x?.filter`): append `()`.
-    edits.push({ start: node.getEnd(), end: node.getEnd(), text: '()' });
+    const receiver = resolveReceiver(node.expression, node, sourceFile, scope.receivers, scope.bindings);
+
+    return !!receiver && !receiver.signalQuery;
 }
 
 /** Collects edits for every read/write of a signal member on a known filter-bar receiver. */
-function collectAccessEdits(sourceFile: ts.SourceFile, receivers: Receiver[]): Edit[] {
+function collectAccessEdits(sourceFile: ts.SourceFile, scope: FileReceivers): Edit[] {
     const edits: Edit[] = [];
 
     const visit = (node: ts.Node): void => {
-        if (
-            ts.isPropertyAccessExpression(node) &&
-            ts.isIdentifier(node.name) &&
-            SIGNAL_MEMBERS.includes(node.name.text)
-        ) {
-            const receiverText = node.expression.getText(sourceFile);
-            const start = node.getStart(sourceFile);
-            const end = node.getEnd();
-            const inScope = receivers.some((r) => r.text === receiverText && start >= r.start && end <= r.end);
-
-            if (inScope) classifyAccess(node, sourceFile, edits);
-        }
+        if (isSignalMemberAccess(node, sourceFile, scope)) classifyAccess(node, sourceFile, WRITABLE_MEMBERS, edits);
 
         node.forEachChild(visit);
     };
@@ -180,143 +109,96 @@ function collectAccessEdits(sourceFile: ts.SourceFile, receivers: Receiver[]): E
     return edits;
 }
 
+/** Signal members written on a filter-bar receiver in a form the rewrite leaves for the consumer. */
+function collectWrites(sourceFile: ts.SourceFile, scope: FileReceivers): Writes {
+    const writes: Writes = { readOnlyWrites: new Set<string>(), compoundWrites: new Set<string>() };
+
+    const visit = (node: ts.Node): void => {
+        if (isSignalMemberAccess(node, sourceFile, scope) && isWriteTarget(node)) {
+            const name = node.name.text;
+
+            if (!WRITABLE_MEMBERS.has(name)) writes.readOnlyWrites.add(name);
+            else if (!isPlainAssignment(node)) writes.compoundWrites.add(name);
+        }
+
+        node.forEachChild(visit);
+    };
+
+    visit(sourceFile);
+
+    return writes;
+}
+
 /** Pass A — rewrite programmatic reads/writes of filter-bar signal members in TypeScript code. */
 function migrateTsExpressions(content: string, fileName: string): string {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-    const receivers = collectReceivers(sourceFile);
+    const scope = collectFileReceivers(sourceFile);
 
-    if (receivers.length === 0) return content;
+    if (scope.receivers.length === 0) return content;
 
-    const edits = collectAccessEdits(sourceFile, receivers);
+    const edits = collectAccessEdits(sourceFile, scope);
 
     return edits.length > 0 ? applyEdits(content, edits) : content;
 }
 
-/** Collects template reference variable names bound to a `<kbq-filter-bar>` element. */
-class FilterBarRefCollector implements Visitor {
-    readonly refs = new Set<string>();
-
-    visitElement(element: any): void {
-        if (element.name === FILTER_BAR_ELEMENT) {
-            for (const attr of element.attrs ?? []) {
-                if (typeof attr.name !== 'string') continue;
-
-                if (attr.name.startsWith('#')) this.refs.add(attr.name.slice(1));
-                else if (attr.name.startsWith('ref-')) this.refs.add(attr.name.slice(4));
-            }
-        }
-
-        this.visitChildren(element);
-    }
-
-    visitBlock(block: any): void {
-        this.visitChildren(block);
-    }
-
-    private visitChildren(node: any): void {
-        for (const child of node.children ?? []) {
-            child.visit(this);
-        }
-    }
-
-    visitAttribute(): void {}
-    visitText(): void {}
-    visitComment(): void {}
-    visitExpansion(): void {}
-    visitExpansionCase(): void {}
-    visitBlockParameter(): void {}
-    visitLetDeclaration(): void {}
+/** Merges the writes in `from` into `into`. */
+function mergeWrites(into: Writes, from: Writes): void {
+    from.readOnlyWrites.forEach((member) => into.readOnlyWrites.add(member));
+    from.compoundWrites.forEach((member) => into.compoundWrites.add(member));
 }
 
-/** Rewrites `ref.member` reads to `ref.member()` for the given refs, scoped to those exact identifiers. */
-function rewriteRefReads(template: string, refs: string[]): { content: string; changed: boolean } {
-    const members = SIGNAL_MEMBERS.join('|');
-    let content = template;
-    let changed = false;
+/** What a reference variable on `<kbq-filter-bar>` reaches. */
+const REF_POLICY: RefAccessPolicy = { members: SIGNAL_MEMBERS, writable: WRITABLE_MEMBERS };
 
-    for (const ref of refs) {
-        // `\bref\.(member)\b(?!\s*\()` — skip anything already invoked, so the rewrite is idempotent.
-        const pattern = new RegExp(`\\b(${escapeRegExp(ref)})\\.(${members})\\b(?!\\s*\\()`, 'g');
-        const next = content.replace(pattern, '$1.$2()');
-
-        if (next !== content) {
-            content = next;
-            changed = true;
-        }
-    }
-
-    return { content, changed };
+/** The writes made through a reference variable are the ones a template leaves as they are. */
+interface TemplateResult extends Writes {
+    content: string;
+    changed: boolean;
 }
 
-/** Pass B (core) — parse a template, discover filter-bar refs, rewrite their signal reads. */
-async function migrateTemplate(template: string): Promise<{ content: string; changed: boolean }> {
-    if (!template.includes(FILTER_BAR_ELEMENT)) return { content: template, changed: false };
+/** Pass B (core) — parse a template, discover filter-bar refs, rewrite their signal reads and `filter` writes. */
+async function migrateTemplate(template: string): Promise<TemplateResult> {
+    const untouched = {
+        content: template,
+        changed: false,
+        readOnlyWrites: new Set<string>(),
+        compoundWrites: new Set<string>()
+    };
+
+    if (!template.includes(FILTER_BAR_ELEMENT)) return untouched;
 
     const parsed = await parseTemplate(template);
 
-    if (!parsed.tree) return { content: template, changed: false };
+    if (!parsed.tree) return untouched;
 
-    const collector = new FilterBarRefCollector();
+    const { rootNodes } = parsed.tree as { rootNodes: unknown[] };
+    // `KbqFilterBar` has no `exportAs`, so only a bare `#ref` is the filter bar; `#ref="ngModel"` names another
+    // directive.
+    const { content, readOnlyWrites, compoundWrites } = rewriteRefAccesses(template, rootNodes, (element, value) =>
+        element.name === FILTER_BAR_ELEMENT && !value ? REF_POLICY : undefined
+    );
 
-    visitAll(collector, (parsed.tree as { rootNodes: unknown[] }).rootNodes);
-
-    if (collector.refs.size === 0) return { content: template, changed: false };
-
-    return rewriteRefReads(template, [...collector.refs]);
-}
-
-/** Interior `[start, end]` ranges of inline `@Component({ template: '…' })` string literals. */
-function collectInlineTemplateRanges(sourceFile: ts.SourceFile): Array<{ start: number; end: number }> {
-    const ranges: Array<{ start: number; end: number }> = [];
-
-    forEachClass(sourceFile, (node) => {
-        const decorator = ts
-            .getDecorators(node)
-            ?.find(
-                (dec) =>
-                    ts.isCallExpression(dec.expression) &&
-                    ts.isIdentifier(dec.expression.expression) &&
-                    dec.expression.expression.text === 'Component'
-            );
-
-        if (!decorator || !ts.isCallExpression(decorator.expression)) return;
-
-        const [arg] = decorator.expression.arguments;
-
-        if (!arg || !ts.isObjectLiteralExpression(arg)) return;
-
-        for (const prop of arg.properties) {
-            if (
-                ts.isPropertyAssignment(prop) &&
-                (ts.isIdentifier(prop.name) || ts.isStringLiteralLike(prop.name)) &&
-                prop.name.text === 'template' &&
-                ts.isStringLiteralLike(prop.initializer) &&
-                prop.initializer.text
-            ) {
-                // +1 / -1 to exclude the opening/closing quote characters.
-                ranges.push({ start: prop.initializer.getStart(sourceFile) + 1, end: prop.initializer.getEnd() - 1 });
-            }
-        }
-    });
-
-    return ranges;
+    return { content, changed: content !== template, readOnlyWrites, compoundWrites };
 }
 
 /** Pass B (inline) — rewrite filter-bar ref reads inside inline component templates. */
-async function migrateInlineTemplates(content: string, fileName: string): Promise<string> {
+async function migrateInlineTemplates(content: string, fileName: string): Promise<Writes & { content: string }> {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
     const ranges = collectInlineTemplateRanges(sourceFile).sort((a, b) => b.start - a.start);
+    const writes: Writes = { readOnlyWrites: new Set<string>(), compoundWrites: new Set<string>() };
     let result = content;
 
     for (const { start, end } of ranges) {
-        const { content: rewritten, changed } = await migrateTemplate(result.slice(start, end));
+        const outcome = await migrateTemplate(result.slice(start, end));
 
-        if (changed) {
-            result = result.slice(0, start) + rewritten + result.slice(end);
+        mergeWrites(writes, outcome);
+
+        if (outcome.changed) {
+            result = result.slice(0, start) + outcome.content + result.slice(end);
         }
     }
 
-    return result;
+    return { content: result, ...writes };
 }
 
 /** Pass C — safe identifier renames. */
@@ -338,6 +220,29 @@ function logWarnings(context: SchematicContext, filePath: string, content: strin
     }
 }
 
+/** Reports writes to signal members that are read-only now, made in code or through a template reference. */
+function warnReadOnlyWrites(context: SchematicContext, filePath: string, members: Set<string>): void {
+    if (members.size === 0) return;
+
+    logMessage(context.logger, [
+        `[filter-bar-signals] ${filePath}`,
+        `  \`${[...members].join('`, `')}\` can no longer be assigned: they are read-only signals now. Bind`,
+        `  \`[pipeTemplates]\` in the template instead; the \`is*\` state follows \`filter\`.`
+    ]);
+}
+
+/** Reports writes to `filter` that have no `.set()` form, made in code or through a template reference. */
+function warnCompoundWrites(context: SchematicContext, filePath: string, members: Set<string>): void {
+    if (members.size === 0) return;
+
+    logMessage(context.logger, [
+        `[filter-bar-signals] ${filePath}`,
+        `  \`${[...members].join('`, `')}\` is a writable signal now, but only a plain \`=\` is rewritten to`,
+        `  \`.set()\`: a compound assignment, an increment, \`delete\` or a destructuring target was left as it`,
+        `  is. Write it with \`.set()\` or \`.update()\`.`
+    ]);
+}
+
 /** A `.ts` file is a filter-bar consumer if it names the type or imports the package. */
 function referencesFilterBar(content: string): boolean {
     return /\bKbqFilterBar\b/.test(content) || content.includes('@koobiq/components/filter-bar');
@@ -356,9 +261,7 @@ export default function filterBarSignals(options: Schema): Rule {
         const tsPaths: string[] = [];
         const htmlPaths: string[] = [];
 
-        rootDir.visit((filePath) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
-
+        visitProjectFiles(rootDir, (filePath) => {
             if (filePath.endsWith(TS_EXT)) tsPaths.push(filePath);
             else if (filePath.endsWith(HTML_EXT)) htmlPaths.push(filePath);
         });
@@ -384,12 +287,14 @@ export default function filterBarSignals(options: Schema): Rule {
 
             logWarnings(context, filePath, original);
 
-            let content = migrateTsExpressions(original, filePath);
+            const sourceFile = ts.createSourceFile(filePath, original, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+            const writes = collectWrites(sourceFile, collectFileReceivers(sourceFile));
+            const inline = await migrateInlineTemplates(migrateTsExpressions(original, filePath), filePath);
 
-            content = await migrateInlineTemplates(content, filePath);
-            content = applyRenames(content);
-
-            commit(filePath, original, content);
+            mergeWrites(writes, inline);
+            warnReadOnlyWrites(context, filePath, writes.readOnlyWrites);
+            warnCompoundWrites(context, filePath, writes.compoundWrites);
+            commit(filePath, original, applyRenames(inline.content));
         }
 
         for (const filePath of htmlPaths) {
@@ -397,7 +302,10 @@ export default function filterBarSignals(options: Schema): Rule {
 
             if (!original) continue;
 
-            const { content, changed } = await migrateTemplate(original);
+            const { content, changed, readOnlyWrites, compoundWrites } = await migrateTemplate(original);
+
+            warnReadOnlyWrites(context, filePath, readOnlyWrites);
+            warnCompoundWrites(context, filePath, compoundWrites);
 
             if (changed) commit(filePath, original, content);
         }

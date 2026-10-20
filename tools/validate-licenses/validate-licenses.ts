@@ -32,14 +32,19 @@ const licensesWhitelist: License[] = [
     'Python-2.0',
 
     // File-level (weak) copyleft: obligations stay within the MPL-licensed files themselves and
-    // do not extend to the larger work. Reaches the tree only through `axe-core`, a transitive
-    // devDependency of `jest-axe`, so it is never bundled into the published packages.
+    // do not extend to the larger work. Reaches the tree through `axe-core`, which the specs check
+    // accessibility with, and `lightningcss`, which Vite builds on: devDependencies both, so it is
+    // never bundled into the published packages.
     'MPL-2.0',
 
     // Have a full copyright grant. Validated by opensource team.
     'Unlicense',
     '0BSD',
     'CC0-1.0',
+
+    // Unconditional grant with no obligations. Reaches the tree only through `@cspell/dict-django`,
+    // a data-only dictionary of `cspell` (a devDependency), so it is never bundled into the published packages.
+    'WTFPL',
 
     // https://openfontlicense.org/documents/OFL.md
     'OFL-1.1'
@@ -66,7 +71,7 @@ const ignoredPackages: PackageID[] = [
     // CC BY-SA 4.0, declared as a non-SPDX string, so the expression cannot be parsed.
     // Data-only dictionary pulled in by `cspell`, a devDependency, so it is never bundled into the published packages.
     // https://github.com/streetsidesoftware/cspell-dicts/blob/main/dictionaries/en-common-misspellings/LICENSE
-    '@cspell/dict-en-common-misspellings@2.2.2'
+    '@cspell/dict-en-common-misspellings@2.2.5'
 ];
 
 // Normalizes the license string to a standard SPDX identifier, handling possible asterisks from guessed licenses.

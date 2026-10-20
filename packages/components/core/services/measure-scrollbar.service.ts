@@ -2,6 +2,10 @@ import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
 
+/**
+ * @deprecated Nothing in the library uses it. Measure the scrollbar of the element that scrolls instead:
+ * `element.offsetWidth - element.clientWidth`. Will be removed in 22.0.0.
+ */
 @Injectable({ providedIn: 'root' })
 export class KbqMeasureScrollbarService {
     protected readonly document = inject<Document>(DOCUMENT);

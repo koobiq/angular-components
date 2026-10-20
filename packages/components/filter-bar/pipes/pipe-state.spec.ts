@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     KbqFilterBarModule,
     KbqPipe,
@@ -91,7 +90,7 @@ describe('KbqPipeState', () => {
     beforeEach(() => {
         // The pipe components alias themselves to `KbqBasePipe` with `useExisting: this`, which does not
         // resolve here. Every `[kbqPipeState]` injects that alias, so the specs restore it.
-        TestBed.configureTestingModule({ imports: [NoopAnimationsModule, KbqFilterBarModule, TestApp] })
+        TestBed.configureTestingModule({ imports: [KbqFilterBarModule, TestApp] })
             .overrideComponent(KbqPipeSelectComponent, {
                 set: { providers: [{ provide: KbqBasePipe, useExisting: KbqPipeSelectComponent }] }
             })
@@ -145,17 +144,21 @@ describe('KbqPipeState', () => {
         });
     };
 
-    it('should fill both halves once an empty cleanable pipe receives a value', fakeAsync(() => {
+    afterEach(() => vi.useRealTimers());
+
+    it('should fill both halves once an empty cleanable pipe receives a value', async () => {
+        vi.useFakeTimers();
+
         render([selectPipe({ value: null, cleanable: true })]);
 
         expectPipeStyle('outline', halvesOf(), 1);
 
         selectPipeComponent().onSelect(SELECT_VALUES[0]);
-        flush();
+        await vi.runOnlyPendingTimersAsync();
         fixture.detectChanges();
 
         expectPipeStyle('filled', halvesOf(), 2);
-    }));
+    });
 
     it('should outline both halves once a pipe is cleared by its own clear button', () => {
         // Cleanable AND removable: the clear button routes to `onClear()` because the pipe is cleanable

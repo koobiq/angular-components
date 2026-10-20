@@ -4,9 +4,9 @@ Thanks for helping keep Koobiq and its users safe.
 
 ## Supported versions
 
-Security fixes are made on `main`, which is the current release line (`20.x`). Older release
-branches (`19.x`, `18.x`) receive backports where the fix applies cleanly and the line is
-still in use.
+Security fixes are made on `main`, which is the current release line (`21.x`). Older release
+branches (`20.4.x` for 20, `19.x`, `18.x`) receive backports where the fix applies cleanly and
+the line is still in use.
 
 Note that `@koobiq/components` and the adapter packages declare their Angular dependencies
 as peer dependencies. Vulnerabilities in Angular itself should be reported to the
@@ -42,6 +42,12 @@ give us a chance to release a fix before disclosing the issue publicly.
 
 Advisories against dependencies are tracked by Dependabot and by the `Audit` and
 `Audit report` workflows in this repository.
+
+A dependency version is installed only once it has been on the npm registry for a day
+(`npmMinimalAgeGate` in [`.yarnrc.yml`](../.yarnrc.yml)), and Dependabot proposes version
+updates only for releases at least a week old (`cooldown` in
+[`dependabot.yml`](./dependabot.yml)), so a compromised release is usually unpublished before
+it reaches the lockfile. Security updates from Dependabot are not delayed.
 
 The published packages (`@koobiq/components`, `@koobiq/components-experimental`, the date
 adapters) depend only on `tslib` at runtime; everything else is a peer dependency or build

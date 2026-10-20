@@ -4,7 +4,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFileUploadModule } from '@koobiq/components/file-upload';
-import { KbqFormFieldModule, PasswordRules } from '@koobiq/components/form-field';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import {
     KbqIcon,
     KbqIconButton,
@@ -337,9 +337,7 @@ export class E2eIconStateAndStyle {
 
                         <kbq-password-toggle />
 
-                        <kbq-password-hint [min]="8" [max]="15" [rule]="passwordRules.Length">
-                            8 - 15 symbols
-                        </kbq-password-hint>
+                        <kbq-reactive-password-hint>8 - 15 symbols</kbq-reactive-password-hint>
 
                         <kbq-reactive-password-hint [hasError]="true">Min length</kbq-reactive-password-hint>
                     </kbq-form-field>
@@ -396,8 +394,7 @@ export class E2eIconStateAndStyle {
     }
 })
 export class E2eIconSvg {
-    inputMonoValue = signal('P@a$$w0rd');
-    protected readonly passwordRules = PasswordRules;
+    readonly inputMonoValue = signal('P@a$$w0rd');
 
     readonly tabs = [
         { tabId: 'files', icon: 'kbq-folder-open_16' },
@@ -445,3 +442,20 @@ export class E2eIconSvg {
     }
 })
 export class E2eIconSvgDropdown {}
+
+/** An unregistered icon name next to a literal projected `<svg>` — the docs navbar's GitHub-link pattern. */
+@Component({
+    selector: 'e2e-icon-unresolved-name',
+    imports: [KbqIcon],
+    template: `
+        <i kbq-icon="kbq-unregistered-name_16" data-testid="e2eIconUnresolvedName">
+            <svg data-testid="e2eIconProjectedSvg" viewBox="0 0 16 16"><path d="M0 0h16v16H0z" /></svg>
+        </i>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-top-l layout-margin-bottom-l',
+        'data-testid': 'e2eIconUnresolvedNameHost'
+    }
+})
+export class E2eIconUnresolvedName {}

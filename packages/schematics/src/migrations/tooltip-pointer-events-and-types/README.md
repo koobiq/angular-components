@@ -2,7 +2,8 @@
 
 Migration schematic invoked automatically by `ng update @koobiq/components@21`
 (registered for `21.0.0-0`). Reports the one tooltip change that reaches consumers with no code to
-point at, plus the narrowed types that surface as compile errors. It never writes to the tree.
+point at, plus the narrowed types that surface as compile errors and the deprecated open-time tokens.
+It never writes to the tree.
 
 ## Background
 
@@ -27,13 +28,14 @@ Nothing is rewritten. The markup whose behaviour changed is the markup that says
 input, and there is no way to tell from a template whether a given tooltip floats over a click
 target.
 
-| Pattern                                           | Manual migration                                                               |
-| ------------------------------------------------- | ------------------------------------------------------------------------------ |
-| `kbqTooltip` with no `ignoreTooltipPointerEvents` | Add `[ignoreTooltipPointerEvents]="true"` where a pane overlays a click target |
-| `.scheduler`                                      | Removed; schedule on a scheduler you own                                       |
-| `getMouseLeaveListener(delay)`                    | Drop the argument — the listener reads the trigger's own `leaveDelay`          |
-| `placementChange`                                 | Handler takes `KbqPopUpPlacementValues`, not `string`                          |
-| `.content` / `.header` / `.context` / `.modifier` | `unknown` and the real enum replaced `any`; a value read out needs a cast      |
+| Pattern                                                    | Manual migration                                                                                                 |
+| ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `kbqTooltip` with no `ignoreTooltipPointerEvents`          | Add `[ignoreTooltipPointerEvents]="true"` where a pane overlays a click target                                   |
+| `.scheduler`                                               | Removed; schedule on a scheduler you own                                                                         |
+| `getMouseLeaveListener(delay)`                             | Drop the argument — the listener reads the trigger's own `leaveDelay`                                            |
+| `placementChange`                                          | Handler takes `KbqPopUpPlacementValues`, not `string`                                                            |
+| `.content` / `.header` / `.context` / `.modifier`          | `unknown` and the real enum replaced `any`; a value read out needs a cast                                        |
+| `KBQ_TOOLTIP_OPEN_TIME` / `KBQ_TOOLTIP_OPEN_TIME_PROVIDER` | Deprecated no-ops, removed in 22.0.0: use `KBQ_TOOLTIP_INSTANT_SHOW_WINDOW` and `KbqTooltipDelayTracker.reset()` |
 
 ## Notes with no call site to point at
 

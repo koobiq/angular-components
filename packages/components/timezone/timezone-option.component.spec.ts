@@ -43,6 +43,8 @@ describe('KbqTimezoneOption', () => {
         fixture.detectChanges();
     });
 
+    afterEach(() => vi.useRealTimers());
+
     it('should compute viewValue from offset, city, and cities', () => {
         expect(getOption().viewValue).toBe('UTC+03:00 city3, city1, city2');
     });
@@ -56,7 +58,8 @@ describe('KbqTimezoneOption', () => {
     });
 
     it('should derive the offset from the IANA id when the zone carries none', () => {
-        jest.useFakeTimers().setSystemTime(Date.UTC(2026, 6, 15));
+        vi.useFakeTimers({ toFake: ['Date'] });
+        vi.setSystemTime(Date.UTC(2026, 6, 15));
 
         fixture.componentInstance.zone.set({
             id: 'Europe/Berlin',
@@ -68,8 +71,6 @@ describe('KbqTimezoneOption', () => {
         fixture.detectChanges();
 
         expect(getText('.kbq-timezone-option__offset-wrapper')).toBe('UTC+02:00');
-
-        jest.useRealTimers();
     });
 
     it('should resolve KBQ_TITLE_TEXT_REF to the option itself', () => {
@@ -79,7 +80,7 @@ describe('KbqTimezoneOption', () => {
     });
 
     it('should point the inherited textElement at the city label', () => {
-        expect(getOption().textElement.nativeElement).toBe(
+        expect(getOption().textElement?.nativeElement).toBe(
             fixture.debugElement.query(By.css('.kbq-timezone-option__city')).nativeElement
         );
     });
@@ -121,7 +122,7 @@ describe('KbqTimezoneOption', () => {
 
         it('should not re-assign its state when the measured line count is unchanged', () => {
             const tooltip = getTooltip();
-            const assign = jest.fn();
+            const assign = vi.fn();
             // jsdom reports no client rects, so the measurement always says "fits, no tooltip needed".
             let disabled = true;
 

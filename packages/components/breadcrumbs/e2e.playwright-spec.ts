@@ -52,7 +52,7 @@ test.describe('KbqBreadcrumbs overflow', () => {
 
         await breadcrumbsHost.evaluate(({ style }) => (style.width = '1000px'));
 
-        await expect(dropdownPanel()).not.toBeVisible();
+        await expect(dropdownPanel()).toBeHidden();
     });
 });
 
@@ -83,6 +83,25 @@ test.describe('KbqBreadcrumbsModule', () => {
 
             await expect(screenshotTarget).toHaveScreenshot('02-light.png');
         });
+    });
+});
+
+test.describe('KbqBreadcrumbs keyboard', () => {
+    // jsdom performs no sequential focus navigation, so only a real browser shows where Shift+Tab lands.
+    test('should leave the trail on Shift+Tab from an item', async ({ page }) => {
+        await page.goto('/E2eBreadcrumbsInForm');
+
+        const trail = page.getByTestId('e2eBreadcrumbsForm').locator('.kbq-breadcrumbs');
+        const isFocusInTrail = () => trail.evaluate((element) => element.contains(document.activeElement));
+
+        await page.getByTestId('e2eFirstField').focus();
+        await page.keyboard.press('Shift+Tab');
+
+        await expect(trail.locator('.kbq-breadcrumb-item').first()).toBeFocused();
+
+        await page.keyboard.press('Shift+Tab');
+
+        await expect.poll(isFocusInTrail).toBe(false);
     });
 });
 

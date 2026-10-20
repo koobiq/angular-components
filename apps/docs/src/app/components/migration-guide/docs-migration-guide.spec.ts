@@ -1,11 +1,9 @@
 import { provideLocationMocks } from '@angular/common/testing';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ActivatedRouteSnapshot, Router, provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { KbqStateSavingService } from '@koobiq/components/core';
-import { axe } from 'jest-axe';
 import { BehaviorSubject, map } from 'rxjs';
 import { DocsLocale } from '../../constants/locale';
 import { DOCS_TRANSLATIONS } from '../../services/i18n';
@@ -166,7 +164,6 @@ describe(DocsMigrationGuide.name, () => {
                     { path: 'elsewhere', children: [] }
                 ]),
                 provideLocationMocks(),
-                provideNoopAnimations(),
                 provideDocsLocale()
             ]
         });
@@ -401,7 +398,7 @@ describe(DocsMigrationGuide.name, () => {
             'ng update @angular/core@19 @angular/cli@19 @angular/cdk@19 @koobiq/cdk@19 @koobiq/components@19'
         );
         expect(host().querySelector('.docs-migration-guide__commands kbq-alert')).toBeTruthy();
-        expect(await axe(host())).toHaveNoViolations();
+        await expect(host()).toHaveNoViolations();
 
         await pick({ from: '20.2.0', to: '21.0.0' });
 
@@ -508,7 +505,7 @@ describe(DocsMigrationGuide.name, () => {
     // The page has no anchors, which is what jumps to a linked heading on every other page.
     it('should scroll to the step a link points at once the guide has rendered', async () => {
         // jsdom lays nothing out and has no `scrollIntoView` to spy on.
-        const scrollIntoView = jest.fn();
+        const scrollIntoView = vi.fn();
 
         Element.prototype.scrollIntoView = scrollIntoView;
 
@@ -585,6 +582,6 @@ describe(DocsMigrationGuide.name, () => {
     it('should have no accessibility violations', async () => {
         await render();
 
-        expect(await axe(host())).toHaveNoViolations();
+        await expect(host()).toHaveNoViolations();
     });
 });

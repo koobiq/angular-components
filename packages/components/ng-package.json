@@ -5,11 +5,7 @@
         {
             "input": "",
             "glob": "**/*.scss",
-            "ignore": [
-                "**/dark-theme.scss",
-                "**/light-theme.scss",
-                "**/theme.scss"
-            ],
+            "ignore": ["**/theme.scss"],
             "output": ""
         },
         {

@@ -1,3 +1,4 @@
+@use '../core/styles/common/animation';
 @use '../core/styles/common/squircle' as *;
 
 .kbq-dropzone-overlay {
@@ -14,9 +15,7 @@
 
     // The overlay covers the whole viewport, so the fade is the largest animated surface the library
     // produces — the one a reduced-motion preference is most about.
-    @media (prefers-reduced-motion: reduce) {
-        transition: none;
-    }
+    @include animation.kbq-animations-off();
 
     &.kbq-dropzone-overlay__attached {
         opacity: 1;

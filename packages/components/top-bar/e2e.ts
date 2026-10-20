@@ -17,14 +17,14 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
 
 /** An overflowing action rendered as a button. Annotated so the values keep the button's types. */
-type E2eTopBarAction = {
+type TopBarAction = {
     id: string;
     color: KbqButtonColor;
     style: KbqButtonStyleInput;
     text: string;
 };
 
-const ACTIONS: E2eTopBarAction[] = [
+const ACTIONS: TopBarAction[] = [
     { id: '1', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent, text: 'List' },
     { id: '2', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent, text: 'Filter' },
     { id: '3', color: KbqComponentColors.Contrast, style: '', text: 'Create dashboard' }
@@ -102,7 +102,11 @@ const ACTIONS: E2eTopBarAction[] = [
         style: 'display: contents'
     }
 })
-export class E2eTopBarActionsRow {
+// Exported only for NG3004: Angular type-checks the bindings of `E2eTopBarStates` in a separate file that has to
+// import this class. Without the `E2e` prefix it does not become a route. Unexport it on Angular 22.2.3+, which
+// inlines that code instead (angular/angular#71291).
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export class TopBarActionsRow {
     readonly withShadow = input(false);
     readonly width = input<number | undefined>(undefined);
 
@@ -114,7 +118,7 @@ export class E2eTopBarActionsRow {
 @Component({
     selector: 'e2e-top-bar-states',
     imports: [
-        E2eTopBarActionsRow,
+        TopBarActionsRow,
         KbqTopBarContainer,
         KbqTopBar,
         KbqTopBarSpacer,
@@ -145,10 +149,10 @@ export class E2eTopBarActionsRow {
 
         <div style="width: 550px">
             <e2e-top-bar-actions-row>
-                <div class="kbq-title kbq-truncate-line example-kbq-top-bar__title">
+                <div class="kbq-title kbq-truncate-line e2e-top-bar-states__title">
                     <span class="kbq-truncate-line layout-margin-right-xs">Dashboards</span>
 
-                    <span class="example-kbq-top-bar__counter">{{ 13294 | kbqNumber: '' : 'en-US' }}</span>
+                    <span class="e2e-top-bar-states__counter">{{ 13294 | kbqNumber: '' : 'en-US' }}</span>
                 </div>
             </e2e-top-bar-actions-row>
         </div>

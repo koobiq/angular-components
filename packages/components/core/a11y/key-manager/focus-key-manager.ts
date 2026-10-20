@@ -38,6 +38,7 @@ export class FocusKeyManager<T> extends ListKeyManager<IFocusableOption & T> {
         return this;
     }
 
+    /** @deprecated Keep the origin you pass to `setFocusOrigin()`. Will be removed in 22.0.0. */
     getFocusOrigin(): FocusOrigin {
         return this.origin;
     }

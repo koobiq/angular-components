@@ -88,7 +88,7 @@ export const parsePage = (source: string, path: string): Root => {
     } catch (error) {
         // MDX reports a syntax error as a VFileMessage, which knows the position but not the file.
         if (error instanceof Error && 'reason' in error && 'line' in error && 'column' in error) {
-            throw new Error(`${path}:${error.line ?? 0}:${error.column ?? 0}: ${error.reason}`);
+            throw new Error(`${path}:${error.line ?? 0}:${error.column ?? 0}: ${error.reason}`, { cause: error });
         }
 
         throw error;

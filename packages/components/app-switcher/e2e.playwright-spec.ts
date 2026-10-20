@@ -73,12 +73,12 @@ test.describe('KbqAppSwitcherModule', () => {
             await openStates(page);
 
             await page.keyboard.press('ArrowDown');
-            const afterDown = await focusedItem(page).textContent();
+            const afterDown = (await focusedItem(page).textContent())!;
 
             await page.keyboard.press('ArrowDown');
             await page.keyboard.press('ArrowUp');
 
-            expect(await focusedItem(page).textContent()).toBe(afterDown);
+            await expect(focusedItem(page)).toHaveText(afterDown);
         });
 
         test('the keyboard-focused item looks like hover with no ring', async ({ page }) => {
@@ -103,14 +103,14 @@ test.describe('KbqAppSwitcherModule', () => {
             await openStates(page);
 
             await page.keyboard.press('End');
-            const lastText = await listItem(page).last().textContent();
+            const lastText = (await listItem(page).last().textContent())!;
 
-            expect(await focusedItem(page).textContent()).toBe(lastText);
+            await expect(focusedItem(page)).toHaveText(lastText);
 
             await page.keyboard.press('Home');
-            const firstText = await listItem(page).first().textContent();
+            const firstText = (await listItem(page).first().textContent())!;
 
-            expect(await focusedItem(page).textContent()).toBe(firstText);
+            await expect(focusedItem(page)).toHaveText(firstText);
         });
 
         test('Escape closes the switcher', async ({ page }) => {

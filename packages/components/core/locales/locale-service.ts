@@ -141,7 +141,7 @@ export class KbqLocaleService {
 
     private readonly document = inject(DOCUMENT);
 
-    /** @deprecated Use the {@link localeId} signal. */
+    /** @deprecated Use the {@link localeId} signal. Will be removed in 22.0.0. */
     get id(): string {
         return this._localeId();
     }
@@ -150,7 +150,7 @@ export class KbqLocaleService {
         this._localeId.set(value);
     }
 
-    /** @deprecated Use the {@link data} signal. */
+    /** @deprecated Use the {@link data} signal. Will be removed in 22.0.0. */
     get current(): KbqLocaleData {
         return this._data();
     }

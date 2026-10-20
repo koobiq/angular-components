@@ -1,8 +1,7 @@
-import { ChangeDetectorRef, Component, computed, DebugElement, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, DebugElement, effect, inject, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     KBQ_LOCALE_SERVICE,
     KBQ_STATE_STORE,
@@ -83,6 +82,22 @@ class TestComponent {
     ];
 }
 
+/** Calls `command` from an effect of its own view, at most ten times. */
+@Component({ template: '' })
+class EffectHost {
+    command: () => void = () => {};
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            if (this.runs >= 10) return;
+
+            this.runs++;
+            this.command();
+        });
+    }
+}
+
 describe('KbqFilterBar', () => {
     let fixture: ComponentFixture<TestComponent>;
     let filterBarDebugElement: DebugElement;
@@ -99,7 +114,7 @@ describe('KbqFilterBar', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent]
+            imports: [KbqFilterBarModule, TestComponent]
         }).compileComponents();
     });
 
@@ -171,7 +186,7 @@ describe('KbqFilterBar', () => {
 
         it('should emit filterChange via internalFilterChanges subscription', () => {
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.filter.subscribe(spy);
             spy.mockClear();
@@ -193,7 +208,7 @@ describe('KbqFilterBar', () => {
 
         it('should emit internalTemplatesChanges when pipeTemplates are set', () => {
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.internalTemplatesChanges.subscribe(spy);
             spy.mockClear();
@@ -349,7 +364,7 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter.set(createFilter([pipe]));
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onRemovePipe.subscribe(spy);
             spy.mockClear();
@@ -365,7 +380,7 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter.set(createFilter([pipe]));
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onRemovePipe.subscribe(spy);
             spy.mockClear();
@@ -397,7 +412,7 @@ describe('KbqFilterBar', () => {
             // Saved, unmodified filter: a stale first emission (changed=false) would be observable here.
             filterBar.filter.set(createFilter([pipe], { saved: true, changed: false }));
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.filter.subscribe(spy);
             spy.mockClear();
@@ -501,6 +516,68 @@ describe('KbqFilterBar', () => {
         });
     });
 
+    describe('called from an effect', () => {
+        // Renders no pipes, which need the providers of a full application.
+        @Component({
+            imports: [KbqFilterBarModule],
+            template: '<kbq-filter-bar />'
+        })
+        class BareFilterBar {
+            readonly filterBar = viewChild.required(KbqFilterBar);
+        }
+
+        let filterBar: KbqFilterBar;
+
+        let effectHost: ComponentFixture<EffectHost>;
+
+        const callFromEffect = (command: () => void): void => {
+            effectHost = TestBed.createComponent(EffectHost);
+            effectHost.componentInstance.command = command;
+            effectHost.detectChanges();
+        };
+
+        beforeEach(() => {
+            const bareFixture = TestBed.createComponent(BareFilterBar);
+
+            bareFixture.detectChanges();
+            filterBar = bareFixture.componentInstance.filterBar();
+        });
+
+        it('should not make an effect that removes a pipe run again when the filter changes', () => {
+            const pipe = createPipe({ name: 'removable' });
+
+            filterBar.filter.set(createFilter([pipe]));
+
+            callFromEffect(() => filterBar.removePipe(pipe));
+            filterBar.filter.set(createFilter([pipe]));
+            effectHost.detectChanges();
+
+            expect(filterBar.filter()!.pipes).toEqual([pipe]);
+            expect(effectHost.componentInstance.runs).toBe(1);
+        });
+
+        it('should not make an effect that saves the state run again when the filter changes', () => {
+            filterBar.filter.set(createFilter([], { name: 'original' }));
+            callFromEffect(() => filterBar.saveFilterState());
+            filterBar.filter.set(createFilter([], { name: 'changed' }));
+            effectHost.detectChanges();
+            filterBar.restoreFilterState();
+
+            expect(filterBar.filter()!.name).toBe('original');
+            expect(effectHost.componentInstance.runs).toBe(1);
+        });
+
+        it('should not make an effect that resets the changed state run again when the filter changes', () => {
+            filterBar.filter.set(createFilter([], { changed: true }));
+            callFromEffect(() => filterBar.resetFilterChangedState());
+            filterBar.filter.set(createFilter([], { changed: true }));
+            effectHost.detectChanges();
+
+            expect(filterBar.isChanged()).toBe(true);
+            expect(effectHost.componentInstance.runs).toBe(1);
+        });
+    });
+
     describe('constructor subscriptions', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);
@@ -534,7 +611,7 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter.set(createFilter([]));
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.filter.subscribe(spy);
             spy.mockClear();
@@ -579,7 +656,7 @@ describe('KbqFilterBar', () => {
             // Render <kbq-filter-bar> WITHOUT binding the input, so this exercises the declared `input(true)`
             // default rather than a round-tripped binding.
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponentDefaultSelectAll]
+                imports: [KbqFilterBarModule, TestComponentDefaultSelectAll]
             });
 
             const defaultFixture = TestBed.createComponent(TestComponentDefaultSelectAll);
@@ -613,7 +690,6 @@ describe('KbqFilterBar', () => {
         it('should project <kbq-search-expandable> into the kbq-filter-bar__right slot', () => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     KbqFilterBarModule,
                     KbqSearchExpandableModule,
                     ReactiveFormsModule,
@@ -678,7 +754,7 @@ describe('KbqFilterBar', () => {
             const localeService = new MockLocaleService();
 
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent],
+                imports: [KbqFilterBarModule, TestComponent],
                 providers: [{ provide: KBQ_LOCALE_SERVICE, useValue: localeService }]
             });
 
@@ -702,7 +778,7 @@ describe('KbqFilterBar', () => {
             const localeService = new MockLocaleService();
 
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent],
+                imports: [KbqFilterBarModule, TestComponent],
                 providers: [
                     { provide: KBQ_LOCALE_SERVICE, useValue: localeService },
                     kbqFilterBarLocaleConfigurationProvider({ filters: { defaultName: 'External name' } })
@@ -729,7 +805,7 @@ describe('KbqFilterBar', () => {
 
         it('should take the strings from KBQ_FILTER_BAR_LOCALE_CONFIGURATION when no locale service is provided', () => {
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent],
+                imports: [KbqFilterBarModule, TestComponent],
                 providers: [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: externalConfiguration }]
             });
 
@@ -747,7 +823,7 @@ describe('KbqFilterBar', () => {
             const localeService = new MockLocaleService();
 
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent],
+                imports: [KbqFilterBarModule, TestComponent],
                 providers: [{ provide: KBQ_LOCALE_SERVICE, useValue: localeService }]
             });
 
@@ -884,7 +960,7 @@ describe(`${KbqFilterBarModule.name} state saving`, () => {
         store = new InMemoryStateStore();
 
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFilterBarModule, StateSavingFilterBar, FilterBarWithoutFilterList]
+            imports: [KbqFilterBarModule, StateSavingFilterBar, FilterBarWithoutFilterList]
         }).compileComponents();
     });
 

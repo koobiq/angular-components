@@ -1,5 +1,5 @@
 ﻿import { Component, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchMouseEvent } from '@koobiq/components/core';
 import {
@@ -89,9 +89,9 @@ class KbqSplitterDirection {
     `
 })
 class KbqSplitterEvents {
-    gutterPositionChange = jest.fn();
-    areaASizeChange = jest.fn().mockImplementation((size: number) => size);
-    areaBSizeChange = jest.fn().mockImplementation((size: number) => size);
+    gutterPositionChange = vi.fn();
+    areaASizeChange = vi.fn().mockImplementation((size: number) => size);
+    areaBSizeChange = vi.fn().mockImplementation((size: number) => size);
     readonly areaA = viewChild.required('areaA', { read: KbqSplitterAreaDirective });
     readonly areaB = viewChild.required('areaB', { read: KbqSplitterAreaDirective });
 }
@@ -135,7 +135,49 @@ class DynamicData {
     readonly areaB = viewChild.required('areaB', { read: KbqSplitterAreaDirective });
 }
 
+/** Binds the sizes of its own host, as a sidebar does. */
+@Component({
+    selector: 'sized-area',
+    template: '',
+    host: {
+        '[style.width]': 'width',
+        '[style.max-width]': 'maxWidth'
+    }
+})
+class SizedArea {
+    readonly width = '170px';
+    readonly maxWidth = '50%';
+}
+
+@Component({
+    imports: [KbqSplitterModule, SizedArea],
+    template: `
+        <kbq-splitter>
+            <sized-area kbq-splitter-area />
+            <div kbq-splitter-area style="width: 300px; max-width: 50%">second</div>
+        </kbq-splitter>
+    `
+})
+class SplitterWithSizedArea {}
+
 describe('KbqSplitter', () => {
+    describe('area sizes', () => {
+        it('should keep the sizes a component binds to the host of an area, and drop those of the markup', () => {
+            const fixture = createTestComponent(SplitterWithSizedArea);
+
+            fixture.detectChanges();
+
+            const [sized, plain]: HTMLElement[] = fixture.debugElement
+                .queryAll(By.directive(KbqSplitterAreaDirective))
+                .map(({ nativeElement }) => nativeElement);
+
+            expect(sized.style.width).toBe('170px');
+            expect(sized.style.maxWidth).toBe('50%');
+            expect(plain.style.width).toBe('');
+            expect(plain.style.maxWidth).toBe('');
+        });
+    });
+
     describe('direction', () => {
         it('should default to horizontal direction', () => {
             const fixture = createTestComponent(KbqSplitterDefaultDirection);
@@ -173,12 +215,12 @@ describe('KbqSplitter', () => {
     });
 
     describe('events', () => {
-        it('should emit events after releasing gutter', fakeAsync(() => {
+        it('should emit events after releasing gutter', async () => {
             const fixture = createTestComponent(KbqSplitterEvents);
 
             fixture.detectChanges();
 
-            tick();
+            await fixture.whenStable();
 
             const gutters = fixture.debugElement.queryAll(By.directive(KbqGutterDirective));
 
@@ -196,28 +238,28 @@ describe('KbqSplitter', () => {
             expect(fixture.componentInstance.areaBSizeChange).toHaveBeenCalledWith(
                 fixture.componentInstance.areaB().getSize()
             );
-        }));
+        });
     });
 
     describe('ghost', () => {
-        it('should create ghost gutter', fakeAsync(() => {
+        it('should create ghost gutter', async () => {
             const fixture = createTestComponent(KbqSplitterGhost);
 
             fixture.detectChanges();
 
-            tick();
+            await fixture.whenStable();
 
             const ghostGutters = fixture.debugElement.queryAll(By.directive(KbqGutterGhostDirective));
 
             expect(ghostGutters.length).toBe(1);
-        }));
+        });
 
-        it('should toggle ghost visibility class on mousedown / mouseup', fakeAsync(() => {
+        it('should toggle ghost visibility class on mousedown / mouseup', async () => {
             const fixture = createTestComponent(KbqSplitterGhost);
 
             fixture.detectChanges();
 
-            tick();
+            await fixture.whenStable();
 
             const gutter = fixture.debugElement.query(By.directive(KbqGutterDirective));
             const ghost = fixture.debugElement.query(By.directive(KbqGutterGhostDirective));
@@ -235,14 +277,14 @@ describe('KbqSplitter', () => {
             fixture.detectChanges();
 
             expect(ghost.nativeElement.classList.contains('kbq-gutter-ghost_visible')).toBe(false);
-        }));
+        });
 
-        it('should not resize areas while ghost is being dragged', fakeAsync(() => {
+        it('should not resize areas while ghost is being dragged', async () => {
             const fixture = createTestComponent(KbqSplitterGhost);
 
             fixture.detectChanges();
 
-            tick();
+            await fixture.whenStable();
 
             const areaAInitialSize = fixture.componentInstance.areaA().getSize();
             const areaBInitialSize = fixture.componentInstance.areaB().getSize();
@@ -260,32 +302,32 @@ describe('KbqSplitter', () => {
 
             expect(fixture.componentInstance.areaA().getSize()).toBe(areaAInitialSize);
             expect(fixture.componentInstance.areaB().getSize()).toBe(areaBInitialSize);
-        }));
+        });
     });
 
     describe('dynamic data', () => {
-        it('should re-order remaining areas when an area is removed', fakeAsync(() => {
-            const update = () => {
+        it('should re-order remaining areas when an area is removed', async () => {
+            const update = async () => {
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
             };
 
             const fixture = createTestComponent(DynamicData);
             const componentInstance = fixture.componentInstance;
 
-            update();
+            await update();
 
             expect(componentInstance.areaA()).toBeTruthy();
             expect(+(componentInstance.areaA() as any).elementRef.nativeElement.style.order).toBe(0);
             const areaBInitialOrder = +(componentInstance.areaB() as any).elementRef.nativeElement.style.order;
 
             componentInstance.isFirstRendered = false;
-            update();
+            await update();
 
             expect(componentInstance.areaA()).toBeFalsy();
             expect(+(componentInstance.areaB() as any).elementRef.nativeElement.style.order).not.toEqual(
                 areaBInitialOrder
             );
-        }));
+        });
     });
 });

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { KbqComponentColors } from '@koobiq/components/core';
+import { KBQ_ANIMATIONS_CONFIG, KbqComponentColors } from '@koobiq/components/core';
 import { ProgressBarMode } from './progress-bar.component';
 import { KbqProgressBarModule } from './progress-bar.module';
 
@@ -45,6 +45,9 @@ type ProgressBarState = {
             </table>
         </div>
     `,
+    // The e2e app turns the motion of the components off; this fixture is about the motion, which follows
+    // the reduced motion a spec emulates.
+    providers: [{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: false } }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eProgressBarStateAndStyle'

@@ -6,6 +6,13 @@
     },
     "include": [
         "**/*.ts",
+        "**/*.cts",
+        "**/*.mts",
         "**/*.html"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/dist",
+        "tools/check-angular"
     ]
 }

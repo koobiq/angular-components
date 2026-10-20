@@ -17,6 +17,7 @@ import {
     numberAttribute,
     signal,
     Signal,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -163,14 +164,18 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     toggle(event: Event): void {
         event.stopPropagation();
 
-        this.isCollapsed.update((state) => !(state ?? true));
+        // Untracked: called from a consumer's `effect()`, the collapsed state read here would make the effect toggle
+        // again on every change it makes.
+        untracked(() => {
+            this.isCollapsed.update((state) => !(state ?? true));
 
-        if (this.scrollOnCollapse() && this.collapsedState()) {
-            afterNextRender(
-                () => this.elementRef.nativeElement.scrollIntoView({ block: 'nearest', inline: 'nearest' }),
-                { injector: this.injector }
-            );
-        }
+            if (this.scrollOnCollapse() && this.collapsedState()) {
+                afterNextRender(
+                    () => this.elementRef.nativeElement.scrollIntoView({ block: 'nearest', inline: 'nearest' }),
+                    { injector: this.injector }
+                );
+            }
+        });
     }
 
     private updateToggleVisibilityState(): void {

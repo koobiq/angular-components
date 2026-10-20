@@ -13,8 +13,10 @@ const jsdoc = require('eslint-plugin-jsdoc');
 // eslint-plugin-file-progress ships as ESM since v2 (the plugin object lives under `.default`)
 const progress = require('eslint-plugin-file-progress').default;
 const prettierRecommended = require('eslint-plugin-prettier/recommended');
-const jest = require('eslint-plugin-jest');
-const playwright = require('eslint-plugin-playwright');
+// eslint-plugin-playwright types its CommonJS entry as `export default`, while `require` returns the plugin itself
+/** @type {typeof import('eslint-plugin-playwright').default} */
+const playwright = /** @type {any} */ (require('eslint-plugin-playwright'));
+const vitest = require('@vitest/eslint-plugin');
 
 const isCI = !!process.env.CI;
 
@@ -68,6 +70,24 @@ const makeNamingConventionOptions = (prefix) => {
         { selector: 'classProperty', format: ['camelCase', 'UPPER_CASE'], leadingUnderscore: 'allow' }
     ];
 };
+
+/**
+ * `@angular/animations` is deprecated: the components animate with CSS, waited for with `kbqAfterAnimations`, and
+ * templates with `animate.enter`/`animate.leave`.
+ *
+ * @see https://eslint.org/docs/latest/rules/no-restricted-imports
+ */
+const noAngularAnimationsImports = [
+    {
+        group: [
+            '@angular/animations',
+            '@angular/animations/*',
+            '@angular/platform-browser/animations',
+            '@angular/platform-browser/animations/*'
+        ],
+        message: 'Animate with CSS and `animate.enter`/`animate.leave`: @angular/animations is deprecated.'
+    }
+];
 
 /**
  * @see https://eslint.org/docs/latest/rules/no-restricted-globals
@@ -141,6 +161,8 @@ module.exports = tseslint.config(
             // files there belong to no tsconfig project, so the type-aware rules fail on them
             '.ai',
             '.claude',
+            // a separate npm project with its own Angular and its own runner, see its README
+            'tools/check-angular',
             // ignore build tokens
             'apps/docs/src/styles/koobiq/default-theme/',
             // ignore index.html
@@ -169,9 +191,10 @@ module.exports = tseslint.config(
         }
     },
 
-    // Rules for JavaScript and TypeScript files
+    // Rules for JavaScript and TypeScript files, `.cjs`/`.cts` and `.mjs`/`.mts` among them: a pattern this config
+    // does not list leaves the file either unlinted or with the few rules that apply to every file
     {
-        files: ['**/*.js', '**/*.ts'],
+        files: ['**/*.{js,cjs,mjs}', '**/*.{ts,cts,mts}'],
         extends: [
             eslint.configs.recommended,
             promise.configs['flat/recommended']
@@ -221,12 +244,15 @@ module.exports = tseslint.config(
         }
     },
 
-    // JavaScript files in this repo are CommonJS (require/module.exports)
+    // JavaScript files in this repo are CommonJS (require/module.exports), unless `.mjs` makes one an ES module
     {
         files: ['**/*.js'],
         languageOptions: {
             sourceType: 'commonjs'
-        },
+        }
+    },
+    {
+        files: ['**/*.{js,cjs,mjs}'],
         rules: {
             // ESLint 9 changed the `no-unused-vars` `caughtErrors` default from 'none' to 'all'.
             // Restore the previous behavior so unused `catch` bindings are not newly reported.
@@ -236,7 +262,7 @@ module.exports = tseslint.config(
 
     // Rules for TypeScript files
     {
-        files: ['**/*.ts'],
+        files: ['**/*.{ts,cts,mts}'],
         extends: [
             /** @see https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/src/configs/recommended.ts */
             tseslint.configs.recommended,
@@ -253,6 +279,8 @@ module.exports = tseslint.config(
             }
         },
         rules: {
+            'no-restricted-imports': [2, { patterns: noAngularAnimationsImports }],
+
             // plugin:@typescript-eslint
             '@typescript-eslint/no-explicit-any': 0,
             '@typescript-eslint/no-var-requires': 0,
@@ -289,6 +317,7 @@ module.exports = tseslint.config(
 
             '@angular-eslint/prefer-signals': 0,
             '@angular-eslint/prefer-output-emitter-ref': 0,
+            '@angular-eslint/prefer-signal-model': 0,
             '@angular-eslint/prefer-inject': 0,
 
             // plugin:rxjs-x
@@ -331,6 +360,7 @@ module.exports = tseslint.config(
             '@angular-eslint/template/no-any': 0,
             '@angular-eslint/template/prefer-static-string-properties': 0,
             '@angular-eslint/template/cyclomatic-complexity': 0,
+            '@angular-eslint/template/no-non-null-assertion': 0,
             // Allow combining a static `class`/`style` attribute with its `[class]`/`[style]` binding.
             // Angular merges them via styling precedence, so this is a valid pattern (e.g. after the
             // NgClass -> [class] migration). Genuine duplicates (two static `class`, two `[class]`) are
@@ -459,7 +489,52 @@ module.exports = tseslint.config(
             'no-restricted-globals': [
                 1,
                 ...noRestrictedGlobalsOptionsForSSR
+            ],
+            // Components render without zone.js, where these events never fire.
+            'no-restricted-syntax': [
+                1,
+                {
+                    selector: 'MemberExpression[property.name=/^(onStable|onUnstable|onMicrotaskEmpty)$/]',
+                    message:
+                        'NgZone never emits this without zone.js: run the work in afterNextRender, or notify change ' +
+                        'detection with a signal or markForCheck().'
+                }
             ]
+        }
+    },
+
+    // Angular code is signal-based: no decorator inputs, outputs or queries, readonly signal fields, and inject()
+    // rather than constructor injection — in the library and its specs and e2e fixtures as in the examples, the dev
+    // apps, the docs app and the e2e app. The deprecated sub-entry points stay as they are until their removal in
+    // 22.0.0.
+    {
+        files: [
+            'packages/components/**/*.ts',
+            'packages/docs-examples/**/*.ts',
+            'packages/components-dev/**/*.ts',
+            'packages/e2e/**/*.ts',
+            'apps/docs/**/*.ts'
+        ],
+        ignores: ['**/*.playwright-spec.ts', 'packages/components/**/deprecated/**'],
+        rules: {
+            '@angular-eslint/prefer-signals': 2,
+            '@angular-eslint/prefer-output-emitter-ref': 2,
+            '@angular-eslint/prefer-inject': 2
+        }
+    },
+
+    // No component of packages/components runs on the default change detection.
+    {
+        files: ['packages/components/**/*.ts'],
+        ignores: [
+            '**/*.spec.ts',
+            '**/*.spec-helper.ts',
+            '**/*.playwright-spec.ts',
+            '**/e2e.ts',
+            'packages/components/**/deprecated/**'
+        ],
+        rules: {
+            '@angular-eslint/prefer-on-push-component-change-detection': 2
         }
     },
 
@@ -497,15 +572,13 @@ module.exports = tseslint.config(
     // Override rules for specs
     {
         files: ['**/*.spec.ts', '**/*.spec-helper.ts'],
-        plugins: { jest },
+        extends: [vitest.configs.recommended],
         rules: {
-            // plugin:jest — the classes of defect this suite has actually shipped: a test with no
-            // assertion at all, an assertion reachable only through a branch that may not be taken,
-            // an assertion outside the test that is supposed to own it, and a focused test.
+            // plugin:vitest — on top of the recommended set, the helpers that hold a test's assertions and an
+            // async assertion that has to be awaited.
             // A helper that holds a test's assertions is listed by its exact name: a wildcard also matches
-            // any call on a variable named the same way, such as `checkbox.click()`. A premise guard in a
-            // hook is deliberate here, so no-standalone-expect stays off.
-            'jest/expect-expect': [
+            // any call on a variable named the same way, such as `checkbox.click()`.
+            'vitest/expect-expect': [
                 2,
                 {
                     assertFunctionNames: [
@@ -515,6 +588,7 @@ module.exports = tseslint.config(
                         'checkSelectedIndex',
                         'expectCustomScrollbars',
                         'expectFlatTreeToMatch',
+                        'expectObservable',
                         'expectPipeStyle',
                         'runModifierKeyTest',
                         'shouldFocusReturnButtonWith',
@@ -523,11 +597,10 @@ module.exports = tseslint.config(
                     ]
                 }
             ],
-            'jest/no-conditional-expect': 2,
-            'jest/no-focused-tests': 2,
-            'jest/no-identical-title': 2,
-            'jest/valid-expect': [2, { alwaysAwait: true }],
-            'jest/no-commented-out-tests': 2,
+            // `toHaveNoViolations` runs axe-core, so it is an async assertion too
+            'vitest/valid-expect': [2, { alwaysAwait: true, asyncMatchers: ['toHaveNoViolations'] }],
+            // `describe(KbqButton.name)` and `describe(SCHEMATIC_NAME)` follow a rename on their own
+            'vitest/valid-title': [2, { ignoreTypeOfDescribeName: true }],
 
             // plugin:eslint
             // ignore `noRestrictedGlobalsOptionsForSSR` in specs, because they are not executed in SSR context
@@ -539,16 +612,43 @@ module.exports = tseslint.config(
         }
     },
 
-    // Override rules for e2e
+    // The tests run without zone.js, as the library does: a spec awaits `fixture.whenStable()` and drives time with
+    // Vitest's fake timers.
     {
-        files: ['**/*.playwright-spec.ts', '**/e2e.ts', 'packages/e2e/**/*.ts'],
-        plugins: { playwright },
+        files: ['**/*.spec.ts', '**/*.spec-helper.ts'],
         rules: {
-            // plugin:playwright — a hardcoded wait is the flake this suite keeps rediscovering, and
-            // a focused test is already rejected by the container at runtime; catching it at lint
-            // time costs nothing.
+            'no-restricted-imports': [
+                2,
+                {
+                    patterns: noAngularAnimationsImports,
+                    paths: [
+                        {
+                            name: '@angular/core/testing',
+                            importNames: [
+                                'fakeAsync',
+                                'tick',
+                                'flush',
+                                'flushMicrotasks',
+                                'discardPeriodicTasks',
+                                'waitForAsync'
+                            ],
+                            message:
+                                'The tests run without zone.js: await fixture.whenStable() and use vi.useFakeTimers() instead.'
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+
+    // Playwright code: the e2e specs and the helpers they share
+    {
+        files: ['**/*.playwright-spec.ts', 'packages/e2e/utils/**/*.ts'],
+        extends: [playwright.configs['flat/recommended']],
+        rules: {
+            // plugin:playwright — on top of the recommended set, errors for a hardcoded wait, the flake this
+            // suite keeps rediscovering, and for a `page.pause()` left over from debugging.
             'playwright/no-wait-for-timeout': 2,
-            'playwright/no-focused-test': 2,
             'playwright/no-page-pause': 2,
             'playwright/expect-expect': [
                 2,
@@ -565,8 +665,15 @@ module.exports = tseslint.config(
                 }
             ],
             'playwright/no-conditional-expect': 2,
-            'playwright/valid-expect': 2,
+            // A skip on what the browser supports reports the test as not run, where an early return would pass it
+            'playwright/no-skipped-test': [1, { allowConditional: true }]
+        }
+    },
 
+    // Override rules for e2e
+    {
+        files: ['**/*.playwright-spec.ts', '**/e2e.ts', 'packages/e2e/**/*.ts'],
+        rules: {
             // plugin:eslint
             // ignore `noRestrictedGlobalsOptionsForSSR` in e2e tests, because they are not executed in SSR context
             'no-restricted-globals': 0,
@@ -601,7 +708,7 @@ module.exports = tseslint.config(
 
     // Override rules for /tools
     {
-        files: ['tools/**/*.ts', 'tools/**/*.js'],
+        files: ['tools/**/*.{js,cjs,mjs,ts,cts,mts}'],
         rules: {
             // plugin:eslint
             'no-console': 0,
@@ -614,7 +721,7 @@ module.exports = tseslint.config(
 
     // Override rules for /packages/schematics/
     {
-        files: ['packages/schematics/**/*.ts', 'packages/schematics/**/*.js'],
+        files: ['packages/schematics/**/*.{js,cjs,mjs,ts,cts,mts}'],
         rules: {
             // plugin:eslint
             'no-console': 0
@@ -623,7 +730,7 @@ module.exports = tseslint.config(
 
     // Override rules for /packages/cli/
     {
-        files: ['packages/cli/**/*.ts', 'packages/cli/**/*.js'],
+        files: ['packages/cli/**/*.{js,cjs,mjs,ts,cts,mts}'],
         rules: {
             // plugin:eslint
             'no-console': 0,
@@ -636,7 +743,7 @@ module.exports = tseslint.config(
 
     // plugin:prettier — must be last so it can turn off conflicting formatting rules
     {
-        files: ['**/*.js', '**/*.ts', '**/*.html'],
+        files: ['**/*.{js,cjs,mjs}', '**/*.{ts,cts,mts}', '**/*.html'],
         extends: [prettierRecommended]
     }
 );

@@ -2,21 +2,21 @@ import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { _CdkPrivateStyleLoader } from '@angular/cdk/private';
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     Directive,
     inject,
-    Input,
     input,
     NgModule,
     numberAttribute,
     OnDestroy,
     OnInit,
+    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 /**
@@ -26,6 +26,7 @@ import { debounceTime } from 'rxjs/operators';
     selector: 'ellipsis-center-style-loader',
     template: '',
     styleUrl: 'ellipsis-center.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 class EllipsisCenterStyleLoader {}
@@ -60,9 +61,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     /** The two spans this directive renders have no styles of their own until this is loaded. */
     private readonly styleLoader = inject(_CdkPrivateStyleLoader);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input() set kbqEllipsisCenter(value: string) {
+    set kbqEllipsisCenter(value: string) {
         this._kbqEllipsisCenter = value;
         this.refresh();
         // check the view to properly calculate text-start and text-end on text initialized
@@ -105,13 +104,6 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
      */
     readonly debounceInterval = input<number, unknown>(50, { transform: numberAttribute });
 
-    /**
-     * @deprecated No longer read. Resizes now come from the shared `ResizeObserver`, which also catches the
-     * container-only ones a `window:resize` listener cannot see; the host listener that used to feed this
-     * subject is gone, and nothing subscribes to it. Kept as a no-op and removed in the next major version.
-     * @docs-private */
-    readonly resizeStream = new Subject<Event>();
-
     private _kbqEllipsisCenter: string;
 
     // Host width the last completed `refresh()` measured, so a resize that leaves it untouched (the host is
@@ -119,6 +111,17 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     private lastMeasuredWidth: number | undefined;
 
     private refreshTimeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    /** @docs-private */
+    readonly kbqEllipsisCenterInput = input<string | undefined>(undefined, { alias: 'kbqEllipsisCenter' });
+
+    override ngOnChanges(changes: SimpleChanges): void {
+        super.ngOnChanges(changes);
+
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        // A bound `undefined` clears the text.
+        if (changes['kbqEllipsisCenterInput']) this.kbqEllipsisCenter = this.kbqEllipsisCenterInput() ?? '';
+    }
 
     constructor() {
         super();
@@ -227,7 +230,6 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
             dataTextEnd.innerText = end;
 
             this.setDerivedDisabled(!truncated);
-            this.cdr.markForCheck();
         });
 
         this.renderer.appendChild(this.elementRef.nativeElement, dataTextStart);

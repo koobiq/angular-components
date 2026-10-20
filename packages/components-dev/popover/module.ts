@@ -9,8 +9,7 @@ import {
     KbqPopUpSizeValues,
     KbqStickToWindowPlacementValues,
     PopUpPlacements,
-    PopUpSizes,
-    ThemePalette
+    PopUpSizes
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -77,7 +76,6 @@ export class DevDocsExamples {}
 export class DevApp {
     readonly popovers = viewChildren(KbqPopoverTrigger);
 
-    themePalette = ThemePalette;
     popUpPlacements = PopUpPlacements;
 
     popoverActiveStage: number;

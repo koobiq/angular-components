@@ -2,7 +2,6 @@ import { A11yModule, FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
@@ -11,7 +10,7 @@ import {
     ChangeDetectorRef,
     Component,
     computed,
-    ContentChild,
+    contentChild,
     DestroyRef,
     Directive,
     effect,
@@ -126,9 +125,6 @@ export class KbqCodeBlockTabLinkContent {}
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-code-block',
-        // highlight.js rewrites the <code> subtree on the client (and builds a <table> for line numbers),
-        // which never matches the server-rendered DOM — skip hydration for this component to avoid NG0500.
-        ngSkipHydration: 'true',
         '[class.kbq-code-block_filled]': 'filled()',
         '[class.kbq-code-block_outline]': '!filled()',
         '[class.kbq-code-block_hide-line-numbers]': '!lineNumbers()',
@@ -146,14 +142,6 @@ export class KbqCodeBlockTabLinkContent {}
 export class KbqCodeBlock implements AfterViewInit {
     private readonly copyButtonTooltip = viewChild<KbqTooltipTrigger>('copyButtonTooltip');
     private readonly defaultOptions = inject(KBQ_CODE_BLOCK_DEFAULT_OPTIONS, { optional: true });
-    /**
-     * Reference to the scrollable code content.
-     *
-     * @deprecated Use `scrollTo` method instead, will be removed from public API (mark as private) in the next major release.
-     *
-     * @docs-private
-     */
-    readonly scrollableCodeContent = viewChild.required(CdkScrollable);
 
     /** @docs-private */
     private readonly highlight = viewChild(KbqCodeBlockHighlight);
@@ -171,8 +159,10 @@ export class KbqCodeBlock implements AfterViewInit {
     protected readonly contentExceedsMaxHeight = signal(false);
 
     /** @docs-private */
-    @ContentChild(KbqCodeBlockTabLinkContent, { read: TemplateRef })
-    protected readonly tabLinkTemplate: TemplateRef<KbqTabLinkTemplateContext>;
+    protected readonly tabLinkTemplate = contentChild<
+        KbqCodeBlockTabLinkContent,
+        TemplateRef<KbqTabLinkTemplateContext>
+    >(KbqCodeBlockTabLinkContent, { read: TemplateRef });
 
     /** Whether to display line numbers. */
     readonly lineNumbers = input(false, { transform: booleanAttribute });
@@ -237,25 +227,14 @@ export class KbqCodeBlock implements AfterViewInit {
     });
 
     /**
-     * Backing input of the deprecated `canLoad` attribute.
-     *
-     * @deprecated Will be removed in next major release, use `canDownload` instead.
-     * @docs-private
-     */
-    readonly canLoadInput = input(false, { alias: 'canLoad', transform: booleanAttribute });
-
-    /**
      * Backing input of `canDownload`.
      *
      * @docs-private
      */
     readonly canDownloadInput = input(false, { alias: 'canDownload', transform: booleanAttribute });
 
-    /**
-     * Added download code button. Either attribute turns it on: `canLoad` used to write into
-     * `canDownload`, and which of the two won depended on the order they sat in the template.
-     */
-    readonly canDownload = linkedSignal(() => this.canDownloadInput() || this.canLoadInput());
+    /** Added download code button. */
+    readonly canDownload = linkedSignal(() => this.canDownloadInput());
 
     /** Added copy code button. */
     readonly canCopy = input<boolean, unknown>(true, { transform: booleanAttribute });
@@ -266,30 +245,15 @@ export class KbqCodeBlock implements AfterViewInit {
     });
 
     /**
-     * Backing input of the deprecated `codeFiles` attribute.
-     *
-     * @deprecated Will be removed in next major release, use `files` instead.
-     * @docs-private
-     */
-    readonly codeFilesInput = input<KbqCodeBlockFile[]>([], { alias: 'codeFiles' });
-
-    /**
      * Backing input of `files`.
      *
      * @docs-private
      */
     readonly filesInput = input<KbqCodeBlockFile[]>([], { alias: 'files' });
 
-    // TODO: mark as `required` once `codeFiles` is removed.
-    /**
-     * Files to display. `codeFiles` fills in while `files` is empty: the deprecated attribute used to
-     * write into the same field, and which of the two won depended on the order in the template.
-     */
-    readonly files = linkedSignal(() => {
-        const files = this.filesInput();
-
-        return files.length > 0 ? files : this.codeFilesInput();
-    });
+    // TODO: mark as `required`.
+    /** Files to display. */
+    readonly files = linkedSignal(() => this.filesInput());
 
     /**
      * Backing input of `activeFileIndex`. `numberAttribute` yields NaN for anything not cleanly numeric,
@@ -400,7 +364,9 @@ export class KbqCodeBlock implements AfterViewInit {
      * has a scroll, and the calculated maximum height is not set.
      */
     private get canCodeContentBeFocused(): boolean {
-        if (!this.platform.isBrowser) return false;
+        // The server cannot measure the content, so it leaves it focusable: a block that stays dehydrated, as one
+        // under a `@defer` hydrate trigger does, would otherwise keep an overflow that no keyboard can scroll.
+        if (!this.platform.isBrowser) return true;
 
         const element = this.scrollbarViewport().getNativeElement();
 
@@ -533,6 +499,10 @@ export class KbqCodeBlock implements AfterViewInit {
                 this.actionbarHovered.set(false);
 
                 if (!hideTabs || alwaysShowActionbar || this.platform.IOS || this.platform.ANDROID) return;
+
+                // A block that comes to life under the pointer, as one hydrated on hover does, gets no `mouseenter`
+                // until the pointer has left it.
+                this.actionbarHovered.set(this.platform.isBrowser && this.elementRef.nativeElement.matches(':hover'));
 
                 const subscription = merge(
                     fromEvent<MouseEvent>(this.elementRef.nativeElement, 'mouseenter').pipe(map(() => true)),

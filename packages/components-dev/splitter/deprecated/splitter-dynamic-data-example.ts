@@ -4,7 +4,7 @@ import { KbqSplitterModule } from '@koobiq/components/splitter/deprecated';
 
 /**
  * @title Splitter dynamic data
- * @deprecated Should be removed in a future major version.
+ * @deprecated Will be removed in 22.0.0.
  */
 @Component({
     selector: 'dev-deprecated-splitter-dynamic-data-example',

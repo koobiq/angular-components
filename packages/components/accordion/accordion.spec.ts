@@ -1,11 +1,16 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { DOWN_ARROW, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB, UP_ARROW } from '@angular/cdk/keycodes';
-import { Component, DebugElement } from '@angular/core';
+import { Component, DebugElement, effect, signal, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchKeyboardEvent, KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
-import { axe } from 'jest-axe';
+import {
+    dispatchKeyboardEvent,
+    KBQ_ANIMATIONS_CONFIG,
+    KBQ_STATE_STORE,
+    KbqStateSavingService,
+    KbqStateStore
+} from '@koobiq/components/core';
 import { EMPTY } from 'rxjs';
 import {
     KbqAccordion,
@@ -74,7 +79,8 @@ describe('KbqAccordion', () => {
                 AccordionInteractiveContent,
                 AccordionNestedInTrigger,
                 AccordionNested,
-                AccordionContentInChild
+                AccordionContentInChild,
+                AccordionDrivenByEffect
             ]
         }).compileComponents();
     });
@@ -115,15 +121,31 @@ describe('KbqAccordion', () => {
 
             expect(accordionTriggerDebugElement.nativeElement.classList).toContain('kbq-accordion-trigger_hug');
 
-            component.selectedVariant = 'fill';
+            component.selectedVariant.set('fill');
             fixture.detectChanges();
             expect(accordionTriggerDebugElement.nativeElement.classList).toContain('kbq-accordion-trigger_fill');
 
-            component.selectedVariant = 'hugSpaceBetween';
+            component.selectedVariant.set('hugSpaceBetween');
             fixture.detectChanges();
             expect(accordionTriggerDebugElement.nativeElement.classList).toContain(
                 'kbq-accordion-trigger_hug-space-between'
             );
+        });
+
+        it('should point the trigger chevron down only in the hugSpaceBetween variant', async () => {
+            const variantsFixture = TestBed.createComponent(AccordionVariants);
+            const iconClasses = () =>
+                variantsFixture.nativeElement.querySelector('.kbq-accordion-trigger__icon').classList;
+
+            await variantsFixture.whenStable();
+
+            expect(iconClasses()).toContain('kbq-chevron-right-s_16');
+
+            variantsFixture.componentInstance.selectedVariant.set('hugSpaceBetween');
+            await variantsFixture.whenStable();
+
+            expect(iconClasses()).toContain('kbq-chevron-down-s_16');
+            expect(iconClasses()).not.toContain('kbq-chevron-right-s_16');
         });
 
         describe('defaultValue', () => {
@@ -457,8 +479,8 @@ describe('KbqAccordion', () => {
             const item = fixture.debugElement.query(By.directive(KbqAccordionItem)).injector.get(KbqAccordionItem);
             const trigger = fixture.debugElement.query(By.directive(KbqAccordionTrigger));
 
-            const openedSpy = jest.fn();
-            const expandedChangeSpy = jest.fn();
+            const openedSpy = vi.fn();
+            const expandedChangeSpy = vi.fn();
 
             item.opened.subscribe(openedSpy);
             item.expandedChange.subscribe(expandedChangeSpy);
@@ -477,8 +499,8 @@ describe('KbqAccordion', () => {
             const item = fixture.debugElement.query(By.directive(KbqAccordionItem)).injector.get(KbqAccordionItem);
             const trigger = fixture.debugElement.query(By.directive(KbqAccordionTrigger));
 
-            const closedSpy = jest.fn();
-            const expandedChangeSpy = jest.fn();
+            const closedSpy = vi.fn();
+            const expandedChangeSpy = vi.fn();
 
             item.closed.subscribe(closedSpy);
             item.expandedChange.subscribe(expandedChangeSpy);
@@ -500,7 +522,7 @@ describe('KbqAccordion', () => {
             const item = fixture.debugElement.query(By.directive(KbqAccordionItem)).injector.get(KbqAccordionItem);
             const trigger = fixture.debugElement.query(By.directive(KbqAccordionTrigger));
 
-            const valueChangeSpy = jest.fn();
+            const valueChangeSpy = vi.fn();
 
             accordion.valueChange.subscribe(valueChangeSpy);
 
@@ -846,7 +868,7 @@ describe('KbqAccordion', () => {
 
         it('header actions should be reachable and stay interactive on a disabled item', () => {
             const { items, disabledItemAction } = createInteractiveFixture();
-            const clicked = jest.fn();
+            const clicked = vi.fn();
 
             expect(items[2].nativeElement.getAttribute('data-disabled')).toBe('true');
 
@@ -1024,6 +1046,23 @@ describe('KbqAccordion', () => {
 
             expect(accordionTriggerDebugElement.nativeElement.getAttribute('data-state')).toBe('open');
             expect(accordionItemDebugElement.nativeElement.getAttribute('data-state')).toBe('open');
+        });
+
+        it('data-state on header and content should match item state', () => {
+            fixture = TestBed.createComponent(TestApp);
+            fixture.detectChanges();
+
+            const header: HTMLElement = fixture.debugElement.query(By.directive(KbqAccordionHeader)).nativeElement;
+            const content: HTMLElement = fixture.debugElement.query(By.directive(KbqAccordionContent)).nativeElement;
+
+            expect(header.getAttribute('data-state')).toBe('closed');
+            expect(content.getAttribute('data-state')).toBe('closed');
+
+            fixture.debugElement.query(By.directive(KbqAccordionTrigger)).nativeElement.click();
+            fixture.detectChanges();
+
+            expect(header.getAttribute('data-state')).toBe('open');
+            expect(content.getAttribute('data-state')).toBe('open');
         });
 
         it('should set aria-disabled on trigger when item is disabled', () => {
@@ -1415,6 +1454,27 @@ describe('KbqAccordion', () => {
 
             item.enableAnimation();
             expect(content.style.transition).toBe('height 300ms ease-out');
+        });
+
+        // The content and the trigger icon.
+        const getAnimated = (): HTMLElement[] => {
+            fixture = TestBed.createComponent(TestApp);
+            fixture.detectChanges();
+
+            return [
+                fixture.debugElement.query(By.directive(KbqAccordionContent)).nativeElement,
+                fixture.nativeElement.querySelector('.kbq-accordion-trigger__icon')
+            ];
+        };
+
+        it('should expand and collapse with motion by default', () => {
+            getAnimated().forEach((element) => expect(element.classList).not.toContain('kbq-animations-disabled'));
+        });
+
+        it('should expand and collapse without motion when animations are disabled', () => {
+            TestBed.overrideProvider(KBQ_ANIMATIONS_CONFIG, { useValue: { animationsDisabled: true } });
+
+            getAnimated().forEach((element) => expect(element.classList).toContain('kbq-animations-disabled'));
         });
     });
 
@@ -1945,7 +2005,7 @@ describe('KbqAccordion', () => {
 
             store.setState('accordion-key', ['item-1']);
 
-            const setState = jest.spyOn(store, 'setState');
+            const setState = vi.spyOn(store, 'setState');
 
             createStateSaving(store);
 
@@ -2035,7 +2095,7 @@ describe('KbqAccordion', () => {
             const stateSavingFixture = createStateSaving(store);
             const service = TestBed.inject(KbqStateSavingService);
 
-            // Mapped to plain data on purpose: deep-comparing a live directive makes jest serialize it,
+            // Mapped to plain data on purpose: deep-comparing a live directive makes the runner serialize it,
             // which throws while building the diff and hides the real failure.
             expect(service.components().map(({ name, key, enabled }) => ({ name, key, enabled }))).toEqual([
                 { name: 'kbq-accordion', key: 'accordion-key', enabled: true }
@@ -2082,18 +2142,75 @@ describe('KbqAccordion', () => {
 
         it('stops focus monitoring and completes openCloseAllActions on destroy', () => {
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const stopMonitoringSpy = jest.spyOn(focusMonitor, 'stopMonitoring');
+            const stopMonitoringSpy = vi.spyOn(focusMonitor, 'stopMonitoring');
 
             fixture = TestBed.createComponent(AccordionType);
             fixture.detectChanges();
 
             const accordion = fixture.debugElement.query(By.directive(KbqAccordion)).componentInstance as KbqAccordion;
-            const completeSpy = jest.spyOn(accordion.openCloseAllActions, 'complete');
+            const completeSpy = vi.spyOn(accordion.openCloseAllActions, 'complete');
 
             fixture.destroy();
 
             expect(stopMonitoringSpy).toHaveBeenCalled();
             expect(completeSpy).toHaveBeenCalled();
+        });
+    });
+
+    describe('called from an effect', () => {
+        let effectFixture: ComponentFixture<AccordionDrivenByEffect>;
+        let host: AccordionDrivenByEffect;
+
+        const settle = async (): Promise<void> => {
+            effectFixture.detectChanges();
+            await effectFixture.whenStable();
+        };
+
+        beforeEach(async () => {
+            effectFixture = TestBed.createComponent(AccordionDrivenByEffect);
+            host = effectFixture.componentInstance;
+            await settle();
+        });
+
+        it('should not make an effect that opens an item re-run when it closes', async () => {
+            const [item] = host.items();
+
+            host.action.set('open');
+            await settle();
+
+            expect(item.expanded).toBe(true);
+
+            item.close();
+            await settle();
+
+            expect(item.expanded).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+
+        it('should not loop when an effect toggles an item', async () => {
+            host.action.set('toggle');
+            await settle();
+
+            expect(host.items()[0].expanded).toBe(true);
+            expect(host.runs).toBe(1);
+        });
+
+        it('should not make an effect that opens all items re-run when the accordion is re-enabled', async () => {
+            const [item] = host.items();
+
+            host.action.set('openAll');
+            await settle();
+
+            expect(item.expanded).toBe(true);
+
+            item.close();
+            host.disabled.set(true);
+            await settle();
+            host.disabled.set(false);
+            await settle();
+
+            expect(item.expanded).toBe(false);
+            expect(host.runs).toBe(1);
         });
     });
 
@@ -2109,7 +2226,7 @@ describe('KbqAccordion', () => {
             fixture.detectChanges();
             document.body.appendChild(fixture.nativeElement);
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('has no axe violations when an item is expanded', async () => {
@@ -2120,7 +2237,7 @@ describe('KbqAccordion', () => {
             fixture.debugElement.query(By.directive(KbqAccordionTrigger)).nativeElement.click();
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         // Pins the `nested-interactive` fix: actions must be siblings of the trigger, never inside
@@ -2131,7 +2248,7 @@ describe('KbqAccordion', () => {
             fixture.detectChanges();
             document.body.appendChild(fixture.nativeElement);
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('has no axe violations with header actions and expanded content controls', async () => {
@@ -2142,7 +2259,7 @@ describe('KbqAccordion', () => {
             fixture.debugElement.query(By.directive(KbqAccordionTrigger)).nativeElement.click();
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('has no axe violations with header actions in RTL', async () => {
@@ -2161,7 +2278,7 @@ describe('KbqAccordion', () => {
             fixture.debugElement.query(By.directive(KbqAccordionTrigger)).nativeElement.click();
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('has no axe violations for a nested accordion', async () => {
@@ -2172,7 +2289,7 @@ describe('KbqAccordion', () => {
             fixture.debugElement.query(By.directive(KbqAccordionTrigger)).nativeElement.click();
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 });
@@ -2197,7 +2314,7 @@ class TestApp {}
     selector: 'accordion-variant',
     imports: [KbqAccordionModule],
     template: `
-        <kbq-accordion [variant]="selectedVariant">
+        <kbq-accordion [variant]="selectedVariant()">
             <kbq-accordion-item>
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Is it accessible?</button>
@@ -2208,7 +2325,7 @@ class TestApp {}
     `
 })
 class AccordionVariants {
-    selectedVariant: KbqAccordionVariant = 'hug';
+    readonly selectedVariant = signal<KbqAccordionVariant>('hug');
 }
 
 @Component({
@@ -2804,3 +2921,49 @@ class SectionBody {}
     `
 })
 class AccordionContentInChild {}
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    selector: 'accordion-driven-by-effect',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion type="multiple" [disabled]="disabled()">
+            @for (value of values; track value) {
+                <kbq-accordion-item [value]="value">
+                    <kbq-accordion-header>
+                        <button kbq-accordion-trigger type="button">{{ value }}</button>
+                    </kbq-accordion-header>
+                    <kbq-accordion-content>{{ value }}</kbq-accordion-content>
+                </kbq-accordion-item>
+            }
+        </kbq-accordion>
+    `
+})
+class AccordionDrivenByEffect {
+    readonly accordion = viewChild.required(KbqAccordion);
+    readonly items = viewChildren(KbqAccordionItem);
+    readonly values = ['item-1', 'item-2'];
+    readonly disabled = signal(false);
+    readonly action = signal<'open' | 'toggle' | 'openAll' | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const action = this.action();
+
+            if (!action || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+
+            if (action === 'openAll') {
+                this.accordion().openAll();
+            } else if (action === 'open') {
+                this.items()[0].open();
+            } else {
+                this.items()[0].toggle();
+            }
+        });
+    }
+}

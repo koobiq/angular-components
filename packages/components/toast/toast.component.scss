@@ -1,3 +1,4 @@
+@use '../core/styles/common/animation';
 @use './toast-theme' as *;
 @use '../core/styles/common/squircle' as *;
 
@@ -13,6 +14,36 @@
 
     padding-left: var(--kbq-toast-size-container-padding-left);
     padding-right: var(--kbq-toast-size-container-padding-right);
+
+    animation: kbq-toast-enter 150ms ease-out;
+
+    &.kbq-toast_leaving {
+        pointer-events: none;
+        animation: kbq-toast-leave 300ms ease-in forwards;
+
+        @include animation.kbq-animations-off();
+    }
+
+    @include animation.kbq-animations-off();
+}
+
+@keyframes kbq-toast-enter {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes kbq-toast-leave {
+    from {
+        height: var(--kbq-toast-leaving-height);
+    }
+
+    to {
+        transform: translateX(50%);
+        opacity: 0;
+        height: 0;
+    }
 }
 
 .kbq-toast__icon-container {

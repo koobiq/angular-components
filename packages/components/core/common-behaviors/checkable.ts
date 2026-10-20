@@ -1,4 +1,4 @@
-import { computed, Directive, forwardRef, InjectionToken, model, Provider, signal } from '@angular/core';
+import { computed, Directive, forwardRef, InjectionToken, model, Provider, signal, untracked } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KbqCheckedState } from './checkbox';
 
@@ -7,7 +7,7 @@ import { KbqCheckedState } from './checkbox';
  * applying it via `hostDirectives` gets `[(ngModel)]`/`formControl` support without wiring up its own.
  * @docs-private
  */
-export const KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR: Provider = {
+const KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR: Provider = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqCheckable),
     multi: true
@@ -93,8 +93,12 @@ export class KbqCheckable implements ControlValueAccessor {
 
     /** Toggles the `checked` state and notifies the registered `ControlValueAccessor` change handler. */
     toggle(): void {
-        this.checked.update((value) => !value);
-        this.notifyFormValueChange(this.checked());
+        // Untracked, as `transitionCheckState()`: called from a consumer's `effect()`, `checked` read here would make
+        // the effect toggle again on every change it makes.
+        untracked(() => {
+            this.checked.update((value) => !value);
+            this.notifyFormValueChange(this.checked());
+        });
     }
 
     /**
@@ -121,7 +125,7 @@ export class KbqCheckable implements ControlValueAccessor {
 
     /** Transitions the animation state, ignoring no-op transitions. @docs-private */
     transitionCheckState(newState: TransitionCheckState): void {
-        if (this.currentCheckState() === newState) return;
+        if (untracked(this.currentCheckState) === newState) return;
 
         this.currentCheckState.set(newState);
     }

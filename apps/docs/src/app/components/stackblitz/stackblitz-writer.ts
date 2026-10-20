@@ -49,13 +49,8 @@ const OPTIONAL_PACKAGE_JSON_DEPENDENCIES = {
         'jspdf-autotable': '^5'
     },
     // Used by packages/docs-examples/components/ag-grid/ag-grid-export/ag-grid-export-example.ts
-    //
-    // Deliberately not the version this repository uses. SheetJS stopped publishing to npm
-    // after 0.18.5, so the repository installs 0.20.3 from the vendor CDN, which StackBlitz
-    // cannot resolve. 0.18 is the newest npm can serve. The example only calls `utils` and
-    // `writeFile`, whose API is unchanged between the two, so the sandbox still works.
-    xlsx: {
-        xlsx: '^0.18'
+    'write-excel-file': {
+        'write-excel-file': '^4'
     },
     '@koobiq/components/scrollbar/deprecated': {
         overlayscrollbars: '2.7.3'
@@ -234,7 +229,6 @@ export class DocsStackblitzWriter {
         const ngVersion = `^${VERSION.major}`;
         const koobiqVersion = `^${docsKoobiqVersion}`;
         const dependencies = {
-            '@angular/animations': ngVersion,
             '@angular/cdk': ngVersion,
             '@angular/common': ngVersion,
             '@angular/compiler': ngVersion,
@@ -252,16 +246,15 @@ export class DocsStackblitzWriter {
             '@messageformat/core': '^3.4.0',
             luxon: '^3.7.2',
             rxjs: '^7.8.2',
-            tslib: '^2.8.1',
-            'zone.js': '~0.15.0'
+            tslib: '^2.8.1'
         };
 
         const devDependencies = {
-            '@angular-devkit/build-angular': ngVersion,
+            '@angular/build': ngVersion,
             '@angular/cli': ngVersion,
             '@angular/compiler-cli': ngVersion,
             '@types/luxon': '^3.7.1',
-            typescript: '5.8.3'
+            typescript: '~5.9.2'
         };
 
         for (const pattern of patterns) {

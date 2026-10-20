@@ -1,3 +1,5 @@
+@use '../core/styles/common/animation';
+
 // The wave crosses the viewport, not the host: the host offset turns viewport coordinates into the host's own, so
 // every skeleton on the page shows the same band at the same moment. `mask-position` is animated directly and must
 // never be `!important`: either an animated custom property or an important base value makes the browser recompute
@@ -62,7 +64,5 @@
         animation: none;
     }
 
-    @media (prefers-reduced-motion: reduce) {
-        animation: none;
-    }
+    @include animation.kbq-animations-off();
 }

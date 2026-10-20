@@ -116,7 +116,7 @@ import { BehaviorSubject } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadPrimitiveExample {
-    list = viewChild.required(KbqFileList);
+    readonly list = viewChild.required(KbqFileList);
 
     onFileClicked({ target }: Event) {
         if (!(target instanceof HTMLInputElement)) return;

@@ -4,6 +4,7 @@ import ts from 'typescript';
 import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
     BOOLEAN_ATTRIBUTES,
@@ -161,8 +162,7 @@ export default function dlAttributeCoercion(options: Schema): Rule {
 
         const paths: string[] = [];
 
-        rootDir.visit((filePath: Path) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
+        visitProjectFiles(rootDir, (filePath: Path) => {
             if (filePath.endsWith(TS_EXT) || filePath.endsWith(HTML_EXT)) paths.push(filePath);
         });
 

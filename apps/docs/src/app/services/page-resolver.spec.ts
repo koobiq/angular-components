@@ -84,8 +84,8 @@ describe('docsApiPageResolver', () => {
 
 describe(DocsPagePrefetch.name, () => {
     const setup = () => {
-        const page = jest.fn(() => Promise.resolve({ default: DocsCompiledPage }));
-        const api = jest.fn(() => Promise.resolve({ default: ALERT_API }));
+        const page = vi.fn(() => Promise.resolve({ default: DocsCompiledPage }));
+        const api = vi.fn(() => Promise.resolve({ default: ALERT_API }));
 
         TestBed.configureTestingModule({
             providers: [

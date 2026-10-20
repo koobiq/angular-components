@@ -24,9 +24,9 @@ export const kbqNotificationCenterLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqNotificationCenterLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('notificationCenter', configuration);
 
-/** @deprecated Use {@link KBQ_NOTIFICATION_CENTER_DEFAULT_LOCALE_CONFIGURATION}. */
+/** @deprecated Use {@link KBQ_NOTIFICATION_CENTER_DEFAULT_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
 export const KBQ_NOTIFICATION_CENTER_DEFAULT_CONFIGURATION = KBQ_NOTIFICATION_CENTER_DEFAULT_LOCALE_CONFIGURATION;
-/** @deprecated Use {@link KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION}. */
+/** @deprecated Use {@link KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
 export const KBQ_NOTIFICATION_CENTER_CONFIGURATION = KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION;
 
 /** The panel members a rendered notification item depends on. */

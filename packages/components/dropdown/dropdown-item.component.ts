@@ -4,6 +4,7 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
     contentChild,
     effect,
     ElementRef,
@@ -11,13 +12,15 @@ import {
     input,
     OnDestroy,
     signal,
-    ViewChild,
+    untracked,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import {
     Highlightable,
     IFocusableOption,
     KBQ_TITLE_TEXT_REF,
+    kbqAnimationsDisabled,
     KbqComponentColors,
     KbqTitleTextRef
 } from '@koobiq/components/core';
@@ -57,15 +60,19 @@ const SELF_ACTIVATING_HOST_SELECTOR = 'button, a[href], [role="menuitem"]';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-dropdown-item',
+        // Only the class reads `disabled`, and the three attributes, which run back to back before every class
+        // binding, read `disabledAttribute`: the host bindings of every item in a view run in that view's reactive
+        // consumer, where a signal read again after others costs a scan of all it has read so far. A signal read twice
+        // in a row costs none.
         '[class.kbq-dropdown-item_highlighted]': 'highlighted',
         '[class.kbq-dropdown-item_active]': 'active()',
         '[class.kbq-disabled]': 'disabled()',
         '[class.kbq-progress]': 'progress()',
         '[class.kbq-dropdown-item_has-action]': '!!itemAction()',
 
-        '[attr.disabled]': 'disabled() || null',
+        '[attr.disabled]': 'disabledAttribute()',
         // `disabled` is inert on `<div>`/`<a>` hosts.
-        '[attr.aria-disabled]': 'disabled() || null',
+        '[attr.aria-disabled]': 'disabledAttribute()',
         '[attr.tabindex]': 'getTabIndex()',
 
         '(click)': 'checkDisabled($event)',
@@ -80,8 +87,12 @@ export class KbqDropdownItem
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private focusMonitor = inject(FocusMonitor);
     parentDropdownPanel? = inject<KbqDropdownPanel>(KBQ_DROPDOWN_PANEL, { optional: true });
-    // Stays a decorator query: `KbqTitle` reads `KbqTitleTextRef.textElement` as a plain property.
-    @ViewChild('kbqTitleText') textElement: ElementRef;
+    private readonly textElementQuery = viewChild<ElementRef>('kbqTitleText');
+
+    /** Element holding the text of the item, measured by `kbq-title`. */
+    get textElement(): ElementRef {
+        return this.textElementQuery()!;
+    }
 
     readonly icon = contentChild(KbqIcon);
 
@@ -94,6 +105,12 @@ export class KbqDropdownItem
     /** Whether the dropdown item is in a loading state. */
     readonly progress = input(false, { transform: booleanAttribute });
 
+    /**
+     * Value of the `disabled` and `aria-disabled` attributes.
+     * @internal
+     */
+    protected readonly disabledAttribute = computed(() => this.disabled() || null);
+
     /** Stream that emits when the dropdown item is hovered. */
     readonly hovered = new Subject<KbqDropdownItem>();
 
@@ -101,7 +118,15 @@ export class KbqDropdownItem
     readonly focused = new Subject<KbqDropdownItem>();
 
     /** Whether the dropdown item is highlighted. */
-    highlighted: boolean = false;
+    get highlighted(): boolean {
+        return this.highlightedState();
+    }
+
+    set highlighted(value: boolean) {
+        this.highlightedState.set(value);
+    }
+
+    private readonly highlightedState = signal(false);
 
     /** Whether the item is the panel's active item while DOM focus is held elsewhere. */
     protected readonly active = signal(false);
@@ -111,6 +136,12 @@ export class KbqDropdownItem
 
     /** @docs-private */
     protected readonly componentColors = KbqComponentColors;
+
+    /**
+     * Whether the progress shimmer stands still.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     /** Memoised `getLabel()` result, keyed on the raw text it was derived from. */
     private cachedLabel?: { text: string; label: string };
@@ -159,6 +190,13 @@ export class KbqDropdownItem
      * the meantime. `preventScroll` is therefore always forced on, overriding `options`.
      */
     focus(origin?: FocusOrigin, options?: FocusOptions): void {
+        // Untracked: called from a consumer's `effect()`, `disabled` and what the focus listeners read on the way would
+        // make the effect run again whenever they change.
+        untracked(() => this.focusItem(origin, options));
+    }
+
+    /** Body of `focus()`. */
+    private focusItem(origin: FocusOrigin | undefined, options: FocusOptions | undefined): void {
         if (this.disabled()) return;
 
         const element = this.getHostElement();
@@ -185,7 +223,8 @@ export class KbqDropdownItem
 
     /** Used to set the `tabindex`. */
     getTabIndex(): string {
-        return this.disabled() ? '-1' : '0';
+        // The attributes' signal rather than `disabled`: the binding runs right after theirs.
+        return this.disabledAttribute() ? '-1' : '0';
     }
 
     /** Prevents the default element actions if it is disabled. Bound via `host` metadata. */

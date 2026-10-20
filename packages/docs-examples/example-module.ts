@@ -3420,6 +3420,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "input-password-overview-example.ts",
     "importPath": "components/input"
   },
+  "input-password-template-driven": {
+    "packagePath": "components/input/input-password-template-driven",
+    "title": "Input password with template-driven forms",
+    "componentName": "InputPasswordTemplateDrivenExample",
+    "files": [
+      "input-password-template-driven-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "input-password-template-driven-example",
+    "primaryFile": "input-password-template-driven-example.ts",
+    "importPath": "components/input"
+  },
   "input-with-mask": {
     "packagePath": "components/input/input-with-mask",
     "title": "Input with mask",
@@ -3820,6 +3832,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "loader-overlay-default-example",
     "primaryFile": "loader-overlay-default-example.ts",
+    "importPath": "components/loader-overlay"
+  },
+  "loader-overlay-delay": {
+    "packagePath": "components/loader-overlay/loader-overlay-delay",
+    "title": "Loader-overlay delay",
+    "componentName": "LoaderOverlayDelayExample",
+    "files": [
+      "loader-overlay-delay-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "loader-overlay-delay-example",
+    "primaryFile": "loader-overlay-delay-example.ts",
     "importPath": "components/loader-overlay"
   },
   "loader-overlay-fixed-top": {
@@ -5466,6 +5490,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "skeleton-accordion-example.ts",
     "importPath": "components/skeleton"
   },
+  "skeleton-basic": {
+    "packagePath": "components/skeleton/skeleton-basic",
+    "title": "Skeleton basic block",
+    "componentName": "SkeletonBasicExample",
+    "files": [
+      "skeleton-basic-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-basic-example",
+    "primaryFile": "skeleton-basic-example.ts",
+    "importPath": "components/skeleton"
+  },
   "skeleton-checkable": {
     "packagePath": "components/skeleton/skeleton-checkable",
     "title": "Skeleton checkable preset",
@@ -5488,6 +5524,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "skeleton-code-block-example",
     "primaryFile": "skeleton-code-block-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-directive": {
+    "packagePath": "components/skeleton/skeleton-directive",
+    "title": "Skeleton directive",
+    "componentName": "SkeletonDirectiveExample",
+    "files": [
+      "skeleton-directive-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-directive-example",
+    "primaryFile": "skeleton-directive-example.ts",
     "importPath": "components/skeleton"
   },
   "skeleton-dl": {
@@ -5560,30 +5608,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "skeleton-in-sidepanel-example",
     "primaryFile": "skeleton-in-sidepanel-example.ts",
-    "importPath": "components/skeleton"
-  },
-  "skeleton-overview": {
-    "packagePath": "components/skeleton/skeleton-overview",
-    "title": "Skeleton overview",
-    "componentName": "SkeletonOverviewExample",
-    "files": [
-      "skeleton-overview-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "skeleton-overview-example",
-    "primaryFile": "skeleton-overview-example.ts",
-    "importPath": "components/skeleton"
-  },
-  "skeleton-table": {
-    "packagePath": "components/skeleton/skeleton-table",
-    "title": "Skeleton table preset",
-    "componentName": "SkeletonTableExample",
-    "files": [
-      "skeleton-table-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "skeleton-table-example",
-    "primaryFile": "skeleton-table-example.ts",
     "importPath": "components/skeleton"
   },
   "skeleton-tabs": {
@@ -8153,6 +8177,7 @@ export type LiveExampleId =
   | 'input-number-overview'
   | 'input-overview'
   | 'input-password-overview'
+  | 'input-password-template-driven'
   | 'input-with-mask'
   | 'layout-flex-alignment'
   | 'layout-flex-behaviour-modifiers'
@@ -8186,6 +8211,7 @@ export type LiveExampleId =
   | 'list-virtual-scroll'
   | 'loader-overlay-background'
   | 'loader-overlay-default'
+  | 'loader-overlay-delay'
   | 'loader-overlay-fixed-top'
   | 'loader-overlay-large'
   | 'loader-overlay-overview'
@@ -8317,16 +8343,16 @@ export type LiveExampleId =
   | 'sidepanel-with-custom-injector'
   | 'sidepanel-with-dynamic-config-update'
   | 'skeleton-accordion'
+  | 'skeleton-basic'
   | 'skeleton-checkable'
   | 'skeleton-code-block'
+  | 'skeleton-directive'
   | 'skeleton-dl'
   | 'skeleton-elements'
   | 'skeleton-form-field'
   | 'skeleton-grid'
   | 'skeleton-group'
   | 'skeleton-in-sidepanel'
-  | 'skeleton-overview'
-  | 'skeleton-table'
   | 'skeleton-tabs'
   | 'skeleton-tree'
   | 'skeleton-typography'

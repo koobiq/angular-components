@@ -11,8 +11,7 @@
 @use '../forms/forms-theme' as *;
 @use '../highlight/highlight-theme' as *;
 
-// @TODO: Argument is unused. will be removed in next major release
-@mixin koobiq-theme($theme: null) {
+@mixin koobiq-theme() {
     @include kbq-core-theme();
 
     @include kbq-forms-theme();
@@ -21,14 +20,13 @@
     // The deprecated link directive has no stylesheet of its own
     @include link-theme.kbq-link-theme();
     @include kbq-markdown-theme();
-    // @deprecated Will be removed in next major release.
+    // @deprecated Will be removed in 22.0.0, with `scrollbar/deprecated`.
     @include kbq-scrollbar-theme();
     @include kbq-tabs-theme();
     @include kbq-tag-theme();
 }
 
-// @TODO: Argument is unused. will be removed in next major release
-@mixin koobiq-typography($tokens: null, $config: null, $md-config: null) {
+@mixin koobiq-typography() {
     @include kbq-base-typography();
     @include kbq-markdown-base-typography();
     @include kbq-markdown-typography();

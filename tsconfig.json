@@ -5,11 +5,8 @@
         "rootDir": ".",
         "module": "ES2022",
         "target": "ES2022",
-        "lib": [
-            "ES2022",
-            "DOM"
-        ],
-        "moduleResolution": "Node",
+        "lib": ["ES2023", "DOM", "DOM.Iterable", "DOM.AsyncIterable"],
+        "moduleResolution": "bundler",
         "declaration": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
@@ -111,7 +108,8 @@
         "transpileOnly": true,
         "compilerOptions": {
             "types": ["node"],
-            "module": "CommonJS"
+            "module": "nodenext",
+            "moduleResolution": "nodenext"
         }
     },
     "angularCompilerOptions": {

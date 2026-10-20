@@ -3,7 +3,7 @@
     "compilerOptions": {
         // Needed for Moment.js since it doesn't have a default export.
         "allowSyntheticDefaultImports": true,
-        "types": ["node", "jest"],
+        "types": ["node", "vitest/globals"],
         "paths": {
             "@koobiq/components/*": ["./dist/components/*"]
         }

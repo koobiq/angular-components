@@ -1,3 +1,5 @@
+@use '../core/styles/common/animation';
+
 :host {
     position: sticky;
     z-index: var(--kbq-scrollbar-track-z-index, 1000);
@@ -30,6 +32,8 @@
 .kbq-scrollbar-track__bar_enter,
 .kbq-scrollbar-track__bar_leave {
     animation: kbq-scrollbar-fade var(--kbq-scrollbar-transition-duration) ease-in-out;
+
+    @include animation.kbq-animations-off();
 }
 
 .kbq-scrollbar-track__bar_leave {
@@ -67,6 +71,8 @@
     cursor: default;
     user-select: none;
     pointer-events: auto;
+
+    @include animation.kbq-animations-off();
 }
 
 .kbq-scrollbar-track__thumb:hover {

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`KbqLoaderOverlay should assign default css classes including size-related css-class 1`] = `
+exports[`KbqLoaderOverlay > should assign default css classes including size-related css-class 1`] = `
 {
   "kbq-loader-overlay": true,
   "kbq-loader-overlay_big": true,

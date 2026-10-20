@@ -304,7 +304,7 @@ test.describe('KbqScrollbar', () => {
             await setMode(page, 'hover');
             const track = getTrack(page);
 
-            // The horizontal thumb overlaps the fixture's focus target.
+            // eslint-disable-next-line playwright/no-force-option -- the horizontal thumb overlaps the fixture's focus target
             await page.getByTestId('e2eScrollbarModeFocusable').click({ force: true });
             await page.mouse.move(0, 0);
 

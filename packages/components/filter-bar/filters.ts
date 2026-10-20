@@ -1,9 +1,8 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
+    computed,
     DestroyRef,
     ElementRef,
     forwardRef,
@@ -11,10 +10,12 @@ import {
     input,
     OnInit,
     output,
+    Signal,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqFormsModule, PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
@@ -25,8 +26,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { merge, Observable, of } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilterBarButton } from './filter-bar-button';
 import {
@@ -49,7 +49,6 @@ import { KbqFilterSavePopover } from './filter-save-popover';
         KbqTitleModule,
         KbqInputModule,
         KbqFilterBarButton,
-        AsyncPipe,
         KbqTooltipTrigger,
         KbqPopoverModule,
         FormsModule,
@@ -82,9 +81,6 @@ export class KbqFilters implements OnInit {
     protected readonly filterBar = inject(KbqFilterBar);
 
     /** @docs-private */
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
-
-    /** @docs-private */
     protected readonly mainButton = viewChild.required<KbqButton>('mainButton');
     /** @docs-private */
     protected readonly saveNewFilterButton = viewChild.required<KbqButton>('saveNewFilterButton');
@@ -105,8 +101,13 @@ export class KbqFilters implements OnInit {
 
     /** control for search filter */
     readonly searchControl = new FormControl<string | null>(null);
-    /** filtered by search filters */
-    filteredOptions: Observable<KbqFilter[]>;
+
+    private readonly searchQuery = toSignal(this.searchControl.valueChanges, {
+        initialValue: this.searchControl.value
+    });
+
+    /** Saved filters whose name matches the search query. */
+    readonly filteredOptions: Signal<KbqFilter[]> = computed(() => this.getFilteredOptions(this.searchQuery()));
 
     /** @docs-private */
     protected readonly popoverSize = PopUpSizes.Medium;
@@ -164,11 +165,6 @@ export class KbqFilters implements OnInit {
     private focusedElementBeforeOpen: KbqButton | null;
 
     ngOnInit(): void {
-        this.filteredOptions = merge(
-            of(this.filters()),
-            this.searchControl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
-        );
-
         this.focusMonitor
             .monitor(this.elementRef, true)
             .pipe(
@@ -195,7 +191,9 @@ export class KbqFilters implements OnInit {
     }
 
     saveChanges() {
-        const current = this.filterBar.filter();
+        // Untracked, as in the other imperative methods: called from a consumer's `effect()`, the filter read
+        // here would make the effect run again on every change the user makes to it.
+        const current = untracked(this.filterBar.filter);
 
         if (!current) return;
 
@@ -213,16 +211,18 @@ export class KbqFilters implements OnInit {
     }
 
     restoreFocus() {
-        // The popover can be opened from the dropdown item or programmatically, paths that never
-        // capture a trigger via `saveFocusedElement`. Fall back to the main button so focus returns
-        // to the filters control instead of being dropped on `<body>` (WCAG 2.4.3).
-        const target = this.focusedElementBeforeOpen ?? this.mainButton();
+        untracked(() => {
+            // The popover can be opened from the dropdown item or programmatically, paths that never
+            // capture a trigger via `saveFocusedElement`. Fall back to the main button so focus returns
+            // to the filters control instead of being dropped on `<body>` (WCAG 2.4.3).
+            const target = this.focusedElementBeforeOpen ?? this.mainButton();
 
-        if (target && !target.disabled) {
-            this.focusMonitor.focusVia(target.elementRef, this.focusOrigin);
-        }
+            if (target && !target.disabled) {
+                this.focusMonitor.focusVia(target.elementRef, this.focusOrigin);
+            }
 
-        this.focusedElementBeforeOpen = null;
+            this.focusedElementBeforeOpen = null;
+        });
     }
 
     /** @docs-private */
@@ -233,8 +233,6 @@ export class KbqFilters implements OnInit {
     /** Restore focus when the save popover reports it closed. @docs-private */
     onSavePopoverClosed(restoreFocus: boolean) {
         if (restoreFocus) this.restoreFocus();
-
-        this.changeDetectorRef.markForCheck();
     }
 
     /** @docs-private */
@@ -258,13 +256,15 @@ export class KbqFilters implements OnInit {
     }
 
     resetFilterChanges() {
-        this.filterBar.resetFilterChangedState();
+        untracked(() => {
+            this.filterBar.resetFilterChangedState();
 
-        this.onResetFilterChanges.emit(this.filter!);
+            this.onResetFilterChanges.emit(this.filter!);
+        });
     }
 
     removeFilter() {
-        this.onRemoveFilter.emit(this.filter!);
+        this.onRemoveFilter.emit(untracked(() => this.filter!));
 
         setTimeout(() => this.focusMonitor.focusVia(this.mainButton().elementRef, this.focusOrigin), 0);
     }
@@ -272,11 +272,9 @@ export class KbqFilters implements OnInit {
     /** Hide the popup and restore focus.
      * Use this method in the onSave or onChangeFilter events after the data has been successfully saved. */
     filterSavedSuccessfully() {
-        this.savePopover().savedSuccessfully();
+        untracked(() => this.savePopover().savedSuccessfully());
 
         setTimeout(() => this.restoreFocus(), 0);
-
-        this.changeDetectorRef.markForCheck();
     }
 
     /** Shows an error. Use this method in the onSave or onChangeFilter events if saving data failed. */
@@ -284,11 +282,11 @@ export class KbqFilters implements OnInit {
         // Re-enable the name control FIRST: `enable()` re-runs the control's validators and would wipe a
         // custom `filterNameAlreadyExist` error set beforehand, so apply the error AFTER re-enabling —
         // otherwise the name field is never marked invalid.
-        this.savePopover().savedUnsuccessfully();
+        untracked(() => {
+            this.savePopover().savedUnsuccessfully();
 
-        this.showError(error);
-
-        this.changeDetectorRef.markForCheck();
+            this.showError(error);
+        });
     }
 
     // Delegating facade to the extracted `KbqFilterSavePopover`: the save-popover state, templates and

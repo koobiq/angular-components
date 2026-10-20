@@ -559,6 +559,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/input').then((m) => m.InputOverviewExample);
         case 'input-password-overview':
             return import('@koobiq/docs-examples/components/input').then((m) => m.InputPasswordOverviewExample);
+        case 'input-password-template-driven':
+            return import('@koobiq/docs-examples/components/input').then((m) => m.InputPasswordTemplateDrivenExample);
         case 'input-with-mask':
             return import('@koobiq/docs-examples/components/input').then((m) => m.InputWithMaskExample);
         case 'layout-flex-alignment':
@@ -625,6 +627,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayBackgroundExample);
         case 'loader-overlay-default':
             return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayDefaultExample);
+        case 'loader-overlay-delay':
+            return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayDelayExample);
         case 'loader-overlay-fixed-top':
             return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayFixedTopExample);
         case 'loader-overlay-large':
@@ -887,10 +891,14 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/sidepanel').then((m) => m.SidepanelWithDynamicConfigUpdateExample);
         case 'skeleton-accordion':
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonAccordionExample);
+        case 'skeleton-basic':
+            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonBasicExample);
         case 'skeleton-checkable':
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonCheckableExample);
         case 'skeleton-code-block':
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonCodeBlockExample);
+        case 'skeleton-directive':
+            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonDirectiveExample);
         case 'skeleton-dl':
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonDlExample);
         case 'skeleton-elements':
@@ -903,10 +911,6 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonGroupExample);
         case 'skeleton-in-sidepanel':
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonInSidepanelExample);
-        case 'skeleton-overview':
-            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonOverviewExample);
-        case 'skeleton-table':
-            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonTableExample);
         case 'skeleton-tabs':
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonTabsExample);
         case 'skeleton-tree':

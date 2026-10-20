@@ -1,14 +1,15 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Platform } from '@angular/cdk/platform';
 import {
+    AfterContentChecked,
     AfterContentInit,
     afterNextRender,
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     contentChildren,
-    ContentChildren,
     DestroyRef,
     Directive,
     effect,
@@ -20,6 +21,7 @@ import {
     NgZone,
     OnDestroy,
     QueryList,
+    untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -28,7 +30,9 @@ import {
     isHorizontalMovement,
     isVerticalMovement,
     KBQ_WINDOW,
+    kbqLeaveTabOrderOnTabOut,
     KbqOverlayLayerExclude,
+    kbqQueryListFrom,
     LEFT_ARROW,
     RIGHT_ARROW,
     TAB
@@ -44,7 +48,7 @@ import {
 import { getOuterWidth } from './outer-width';
 
 @Directive()
-export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, OnDestroy {
+export class KbqFocusableComponent implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
@@ -54,18 +58,34 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
 
+    private readonly focusableItemsQuery = contentChildren<KbqNavbarFocusableItem>(
+        forwardRef(() => KbqNavbarFocusableItem),
+        { descendants: true }
+    );
+    private readonly focusableItemsList = kbqQueryListFrom(this.focusableItemsQuery);
+
     /** @docs-private */
-    @ContentChildren(forwardRef(() => KbqNavbarFocusableItem), { descendants: true })
-    focusableItems: QueryList<KbqNavbarFocusableItem>;
+    get focusableItems(): QueryList<KbqNavbarFocusableItem> {
+        return this.focusableItemsList();
+    }
 
     /** @docs-private */
     keyManager: FocusKeyManager<KbqNavbarFocusableItem>;
 
     /**
      * Tab index of the navbar host. The navbar owns the single tab stop of the whole widget and moves focus
-     * between its items with the arrow keys.
+     * between its items with the arrow keys. A navbar without a focusable item stays out of the tab order.
      */
     readonly tabIndex = model<number>(0);
+
+    /**
+     * Tab index the host renders: {@link tabIndex}, or `-1` while there is no item to hand the focus to. Derived
+     * rather than written to the model, which a consumer may bind.
+     * @docs-private
+     */
+    protected readonly renderedTabIndex = computed(() =>
+        this.focusableItemsQuery().length === 0 ? -1 : this.tabIndex()
+    );
 
     /**
      * Accessible name of the navigation landmark. Set it whenever a page renders more than one navbar, so
@@ -92,32 +112,27 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
     ngAfterContentInit(): void {
         this.keyManager = new FocusKeyManager<KbqNavbarFocusableItem>(this.focusableItems).withTypeAhead();
 
-        this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.tabIndex.set(-1);
+        kbqLeaveTabOrderOnTabOut(
+            this.keyManager.tabOut,
+            this.elementRef.nativeElement,
+            () => this.renderedTabIndex(),
+            this.destroyRef
+        );
 
-            // Restored on a macrotask so the browser has moved focus out of the navbar first. Bound to the
-            // component's lifetime: without it the callback can run against a destroyed view.
-            const timeoutId = setTimeout(() => {
-                this.tabIndex.set(0);
-                this.changeDetectorRef.markForCheck();
-            });
+        this.focusableItems.changes
+            .pipe(startWith(null), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.resetOptions());
+    }
 
-            this.destroyRef.onDestroy(() => clearTimeout(timeoutId));
-        });
-
-        this.focusableItems.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.resetOptions();
-
-            // Check to see if we need to update our tab index
-            this.updateTabIndex();
-        });
+    /** @docs-private */
+    ngAfterContentChecked(): void {
+        // Syncs the list here so `changes` emits after the projected items are bound and before the host bindings.
+        this.focusableItemsList();
     }
 
     /**
      * Monitored with `checkChildren`, because the navbar is one composite widget: the host owns the tab stop
      * but hands focus straight to an item, and without it that hand-off reads as the navbar being blurred.
-     * The origin would reset to `null` on the very first item, leaving every later arrow key with no keyboard
-     * origin to pass on — the key manager would move its active item while nothing moved in the DOM.
      * @docs-private
      */
     ngAfterViewInit(): void {
@@ -203,10 +218,6 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
         this.optionBlurSubscription = this.optionBlurChanges.subscribe(() => this.blur());
     }
 
-    private updateTabIndex(): void {
-        this.tabIndex.set(this.focusableItems.length === 0 ? -1 : 0);
-    }
-
     private isValidIndex(index: number): boolean {
         return index >= 0 && index < this.focusableItems.length;
     }
@@ -242,7 +253,7 @@ export class KbqNavbarContainer {}
         class: 'kbq-navbar',
         role: 'navigation',
         '[attr.aria-label]': 'ariaLabel()',
-        '[attr.tabindex]': 'tabIndex()',
+        '[attr.tabindex]': 'renderedTabIndex()',
         '(focus)': 'focus()',
         '(blur)': 'blur()',
         '(keydown)': 'onKeyDown($event)'
@@ -340,6 +351,13 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
      * `KbqNavbarItem.measureWidths()`.
      * @docs-private */
     updateExpandedStateForItems = () => {
+        // Untracked: called from a consumer's `effect()`, the items and their collapsed state read here would make the
+        // effect run again on every collapse it makes.
+        untracked(() => this.fitItems());
+    };
+
+    /** Body of `updateExpandedStateForItems()`. */
+    private fitItems(): void {
         const availableWidth = this.width;
 
         // A navbar that is not rendered, e.g. hidden in an inactive tab, has nothing to measure yet.
@@ -357,11 +375,14 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         } else {
             this.expandItems(items, collapseDelta);
         }
-    };
+    }
 
     /** @docs-private */
     protected onKeyDown(event: KeyboardEvent) {
         const keyCode = event.keyCode;
+
+        // The origin of the last focus event may be a click, and an item takes no DOM focus for a pointer origin.
+        this.keyManager.setFocusOrigin('keyboard');
 
         if (!this.eventFromInput(event) && (isVerticalMovement(event) || isHorizontalMovement(event))) {
             event.preventDefault();

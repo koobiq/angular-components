@@ -107,7 +107,7 @@ function strToNumber(value: unknown): number {
     return coerced;
 }
 
-export const NUMBER_FORMAT_REGEXP = /^(\d+)?\.((\d+)(-(\d+))?(-(true|false))?)?$/;
+const NUMBER_FORMAT_REGEXP = /^(\d+)?\.((\d+)(-(\d+))?(-(true|false))?)?$/;
 
 const minIntGroupPosition = 1;
 const minFractionGroupPosition = 3;
@@ -119,7 +119,6 @@ type RoundDecimalOptions = KbqNumberRoundingLocaleConfiguration & {
     tenThousand?: string;
     /** Label for the one-hundred-millions unit. */
     oneHundredMillions?: string;
-    rtl?: boolean;
 };
 
 const ROUNDING_UNITS = {
@@ -250,11 +249,13 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
                 decimalFor(this.formatters(), this.localeService, this.id, currentLocale)
             );
         } catch (error: any) {
-            throw Error(`InvalidPipeArgument: KbqDecimalPipe for pipe '${JSON.stringify(error.message)}'`);
+            throw Error(`InvalidPipeArgument: KbqDecimalPipe for pipe '${JSON.stringify(error.message)}'`, {
+                cause: error
+            });
         }
     }
 
-    isSpecialFormatForRULocale(locale: string, value: number, grouping?: boolean): boolean {
+    private isSpecialFormatForRULocale(locale: string, value: number, grouping?: boolean): boolean {
         return (
             ['ru', 'ru-RU'].includes(locale) &&
             grouping === undefined &&
@@ -320,12 +321,14 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
                 decimalFor(this.formatters(), this.localeService, this.id, currentLocale)
             );
         } catch (error: any) {
-            throw Error(`InvalidPipeArgument: KbqTableNumberPipe for pipe '${JSON.stringify(error.message)}'`);
+            throw Error(`InvalidPipeArgument: KbqTableNumberPipe for pipe '${JSON.stringify(error.message)}'`, {
+                cause: error
+            });
         }
     }
 }
 
-export function isWithin(startRange: number, endRange: number, valueToCheck: number): boolean {
+function isWithin(startRange: number, endRange: number, valueToCheck: number): boolean {
     return startRange <= valueToCheck && valueToCheck < endRange;
 }
 
@@ -337,7 +340,7 @@ export function isWithin(startRange: number, endRange: number, valueToCheck: num
 export class KbqRoundDecimalPipe implements PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true });
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
-    roundingOptions: RoundDecimalOptions;
+    private roundingOptions: RoundDecimalOptions;
     private readonly formatters = kbqInjectLocaleConfiguration('formatters', KBQ_FORMATTERS_LOCALE_CONFIGURATION);
 
     constructor() {
@@ -408,7 +411,9 @@ export class KbqRoundDecimalPipe implements PipeTransform {
 
             return `${calculatedValue}${this.roundingOptions.separator}${this.roundingOptions[unit]}`;
         } catch (error: any) {
-            throw Error(`InvalidPipeArgument: KbqRoundDecimalPipe for pipe '${JSON.stringify(error.message)}'`);
+            throw Error(`InvalidPipeArgument: KbqRoundDecimalPipe for pipe '${JSON.stringify(error.message)}'`, {
+                cause: error
+            });
         }
     }
 

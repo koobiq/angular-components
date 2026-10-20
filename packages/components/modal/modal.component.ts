@@ -24,23 +24,24 @@ import {
     OnChanges,
     OnDestroy,
     OnInit,
-    Output,
     Renderer2,
     signal,
     SimpleChanges,
     TemplateRef,
     Type,
+    untracked,
     viewChild,
     viewChildren,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
+import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonColor, KbqButtonModule } from '@koobiq/components/button';
 import {
     ENTER,
     ESCAPE,
     KBQ_A11Y_LOCALE_CONFIGURATION,
-    KBQ_WINDOW,
+    kbqAnimationsDisabled,
     KbqComponentColors,
     KbqLocaleOverridesDirective,
     KbqOverflowShadowBottom,
@@ -60,6 +61,7 @@ import {
     IModalButtonOptions,
     KBQ_MODAL,
     KBQ_MODAL_OPTIONS,
+    KbqModal,
     KbqModalAutoFocus,
     MODAL_ANIMATE_DURATION,
     ModalOptions,
@@ -120,7 +122,7 @@ let uniqueIdCounter = 0;
 // input here, so the two no longer match structurally and the dialog cannot declare it.
 export class KbqModalComponent<T = any, R = any>
     extends KbqModalRef<T, R>
-    implements OnInit, OnChanges, AfterViewInit, OnDestroy
+    implements KbqModal, OnInit, OnChanges, AfterViewInit, OnDestroy
 {
     private overlay = inject(Overlay);
     private renderer = inject(Renderer2);
@@ -132,7 +134,13 @@ export class KbqModalComponent<T = any, R = any>
     private focusMonitor = inject(FocusMonitor);
     private readonly inputModalityDetector = inject(InputModalityDetector);
     private readonly injector = inject(Injector);
-    private readonly window = inject(KBQ_WINDOW);
+
+    /**
+     * Whether the dialog and its dim layer move without motion. Read from the dialog's own injector, under
+     * `options.injector` when the service opened it.
+     * @internal
+     */
+    readonly animationsDisabled = kbqAnimationsDisabled();
 
     /** Accessible name for the icon-only close button. */
     protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
@@ -210,22 +218,22 @@ export class KbqModalComponent<T = any, R = any>
     /** Inline styles for the body element. */
     readonly kbqBodyStyle = input<object | undefined>(this.options?.kbqBodyStyle);
 
-    // TODO These three are the one part of the component still on decorators, and `output()` is not
-    // a drop-in: they also back the public `afterOpen`/`beforeClose`/`afterClose` observables, and
-    // `OutputEmitterRef` has no `asObservable()`. Converting them silently breaks
-    // `modalRef.afterClose` on the service path — `ModalBuilderForService` subscribes first to
-    // dispose the overlay, so by the time the later listener runs the component is destroyed and
-    // `outputToObservable` has already completed the stream, dropping the value. It also emits onto
-    // a destroyed `OutputRef` (NG0953) when the opener dies mid-animation. Converting them means
-    // first moving the source of truth to a `Subject` the dialog owns and completes, with the output
-    // as its template-facing mirror, and taking the overlay teardown off this emitter — the shape
-    // `sidepanel` and `actions-panel` already use.
+    // The emitters stay the source of truth: they back the public `afterOpen`/`beforeClose`/`afterClose`
+    // observables and the subscriptions of `ModalBuilderForService`, which `OutputEmitterRef` cannot. The
+    // outputs below mirror them for template bindings; `outputFromObservable` subscribes once per listener,
+    // so `observed` still tells a bound output.
     // Trigger when modal open(visible) after animations
-    @Output() readonly kbqAfterOpen = new EventEmitter<void>();
+    readonly kbqAfterOpen = new EventEmitter<void>();
+    /** @docs-private */
+    readonly kbqAfterOpenOutput = outputFromObservable(this.kbqAfterOpen, { alias: 'kbqAfterOpen' });
     // Trigger when modal leave-animation over
-    @Output() readonly kbqAfterClose = new EventEmitter<R | undefined>();
+    readonly kbqAfterClose = new EventEmitter<R | undefined>();
+    /** @docs-private */
+    readonly kbqAfterCloseOutput = outputFromObservable(this.kbqAfterClose, { alias: 'kbqAfterClose' });
     /** Emitted before the modal begins its closing animation. */
-    @Output() readonly kbqBeforeClose = new EventEmitter<R | undefined>();
+    readonly kbqBeforeClose = new EventEmitter<R | undefined>();
+    /** @docs-private */
+    readonly kbqBeforeCloseOutput = outputFromObservable(this.kbqBeforeClose, { alias: 'kbqBeforeClose' });
 
     // --- Predefined OK & Cancel buttons
     /** Caption of the predefined OK button. The button is not rendered without it. */
@@ -253,7 +261,9 @@ export class KbqModalComponent<T = any, R = any>
      * Emits when the predefined OK button is activated. A notification, not a decision — the dialog
      * closes either way. Bind `[kbqOkClick]` instead to decide whether it closes.
      */
-    @Output() readonly kbqOnOk = new EventEmitter<T>();
+    readonly kbqOnOk = new EventEmitter<T>();
+    /** @docs-private */
+    readonly kbqOnOkOutput = outputFromObservable(this.kbqOnOk, { alias: 'kbqOnOk' });
 
     /** Caption of the predefined Cancel button. The button is not rendered without it. */
     readonly kbqCancelText = input<string | undefined>(this.options?.kbqCancelText);
@@ -273,7 +283,9 @@ export class KbqModalComponent<T = any, R = any>
      * Emits when the dialog is cancelled, by any of the controls `kbqCancelClick` covers. A
      * notification, not a decision. Bind `[kbqCancelClick]` instead to decide whether it closes.
      */
-    @Output() readonly kbqOnCancel = new EventEmitter<T>();
+    readonly kbqOnCancel = new EventEmitter<T>();
+    /** @docs-private */
+    readonly kbqOnCancelOutput = outputFromObservable(this.kbqOnCancel, { alias: 'kbqOnCancel' });
 
     readonly modalContainer = viewChild.required<ElementRef>('modalContainer');
     readonly bodyContainer = viewChild.required('bodyContainer', { read: ViewContainerRef });
@@ -538,7 +550,10 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     open() {
-        this.changeVisibleFromInside(true);
+        // Untracked, as `close()`, `triggerOk()` and `triggerCancel()`: called from a consumer's `effect()`, the state
+        // read and written on the way — `kbqVisible`, the dialogs shown, the inputs — would make the effect run again on
+        // every open and close, and an effect that creates a dialog would create another one at once.
+        untracked(() => this.changeVisibleFromInside(true));
     }
 
     /**
@@ -547,7 +562,7 @@ export class KbqModalComponent<T = any, R = any>
      * Closing an already closed dialog is a no-op: `afterClose` emits once per actual transition.
      */
     close(result?: R) {
-        this.changeVisibleFromInside(false, result);
+        untracked(() => this.changeVisibleFromInside(false, result));
     }
 
     // Destroy equals Close
@@ -560,11 +575,11 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     triggerOk() {
-        this.onClickOkCancel('ok');
+        untracked(() => this.onClickOkCancel('ok'));
     }
 
     triggerCancel() {
-        this.onClickOkCancel('cancel');
+        untracked(() => this.onClickOkCancel('cancel'));
     }
 
     getInstance(): KbqModalComponent {
@@ -609,7 +624,8 @@ export class KbqModalComponent<T = any, R = any>
      * @docs-private
      */
     animateMaskTo(state: AnimationState): void {
-        this.maskPhase.set(state);
+        // The phase classes are the layer's whole motion, so leaving them off is what disables it.
+        this.maskPhase.set(this.animationsDisabled ? null : state);
     }
 
     /**
@@ -657,6 +673,9 @@ export class KbqModalComponent<T = any, R = any>
     /** @docs-private */
     protected onKeyDown(event: KeyboardEvent): void {
         if (event.keyCode === ESCAPE) {
+            // A control inside the dialog consumed the key to close a popup of its own, such as a calendar.
+            if (event.defaultPrevented) return;
+
             // One implementation for both entry paths: the event only reaches the host from inside
             // the dialog, so it cannot be the keystroke that opened it. Escape is the Cancel
             // button, veto included.
@@ -937,13 +956,13 @@ export class KbqModalComponent<T = any, R = any>
 
     /**
      * Runs the enter/leave animation and settles when it is really over: on `animationend`, as soon
-     * as the dialog is rendered when the user asked for reduced motion, and on a timer when neither
-     * arrives.
+     * as the dialog is rendered when animations are disabled (`kbqAnimationsDisabled`), and on a
+     * timer when neither arrives.
      */
     private animateTo(isVisible: boolean): Promise<any> {
         this.changeAnimationState(isVisible ? 'enter' : 'leave');
 
-        if (this.prefersReducedMotion()) {
+        if (this.animationsDisabled) {
             this.changeAnimationState(null);
 
             // There is no animation to wait for, but `open()` still runs before the first change
@@ -988,13 +1007,6 @@ export class KbqModalComponent<T = any, R = any>
 
             timer = setTimeout(finish, MODAL_ANIMATE_DURATION);
         });
-    }
-
-    private prefersReducedMotion(): boolean {
-        return (
-            typeof this.window.matchMedia === 'function' &&
-            this.window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        );
     }
 
     private formatModalButtons(buttons: IModalButtonOptions<T>[]): IModalButtonOptions<T>[] {

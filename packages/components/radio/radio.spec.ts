@@ -1,11 +1,19 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ApplicationRef, ChangeDetectionStrategy, Component, DebugElement } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import {
+    ApplicationRef,
+    ChangeDetectionStrategy,
+    Component,
+    DebugElement,
+    effect,
+    signal,
+    viewChild,
+    viewChildren
+} from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { ThemePalette } from '@koobiq/components/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { axe } from 'jest-axe';
 import { KbqRadioButton, KbqRadioGroup, KbqRadioModule } from './index';
 
 describe('KbqRadio', () => {
@@ -188,7 +196,7 @@ describe('KbqRadio', () => {
         it('should emit a change event from radio buttons', () => {
             expect(radioInstances[0].checked).toBe(false);
 
-            const spies = radioInstances.map(() => jest.fn());
+            const spies = radioInstances.map(() => vi.fn());
 
             spies.forEach((spy, index) => radioInstances[index].change.subscribe(spy));
 
@@ -209,7 +217,7 @@ describe('KbqRadio', () => {
         it(`should not emit a change event from the radio group when change group value programmatically`, () => {
             expect(groupInstance.value).toBeFalsy();
 
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             groupInstance.change.subscribe(changeSpy);
 
@@ -255,7 +263,7 @@ describe('KbqRadio', () => {
         });
 
         it(`should update the group's selected radio to null when unchecking that radio programmatically`, () => {
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             groupInstance.change.subscribe(changeSpy);
             radioInstances[0].checked = true;
@@ -276,7 +284,7 @@ describe('KbqRadio', () => {
         });
 
         it('should not fire a change event from the group when a radio checked state changes', () => {
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             groupInstance.change.subscribe(changeSpy);
             radioInstances[0].checked = true;
@@ -296,7 +304,7 @@ describe('KbqRadio', () => {
         });
 
         it(`should update checked status if changed value to radio group's value`, () => {
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             groupInstance.change.subscribe(changeSpy);
             groupInstance.value = 'apple';
@@ -482,11 +490,28 @@ describe('KbqRadio', () => {
 
             expect(group.getAttribute('aria-invalid')).toBeNull();
 
-            fixture.componentInstance.groupColor = ThemePalette.Error;
+            fixture.componentInstance.groupColor = KbqComponentColors.Error;
             fixture.detectChanges();
 
             expect(group.getAttribute('aria-invalid')).toBe('true');
             expect(group.classList).toContain('kbq-error');
+        });
+
+        it('should give the buttons the big size of the group', () => {
+            const fixture = TestBed.createComponent(RadiosInsideRadioGroup);
+
+            fixture.detectChanges();
+
+            const buttons: HTMLElement[] = fixture.debugElement
+                .queryAll(By.directive(KbqRadioButton))
+                .map(({ nativeElement }) => nativeElement);
+
+            expect(buttons.some((button) => button.classList.contains('kbq-radio-button_big'))).toBe(false);
+
+            fixture.componentInstance.isGroupBig = true;
+            fixture.detectChanges();
+
+            expect(buttons.every((button) => button.classList.contains('kbq-radio-button_big'))).toBe(true);
         });
 
         it('should name a radio button by its option text alone and describe it with the hint', () => {
@@ -518,7 +543,7 @@ describe('KbqRadio', () => {
 
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
 
         it('should have no violations for a group whose options carry hints', async () => {
@@ -526,11 +551,13 @@ describe('KbqRadio', () => {
 
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 
     describe('focus', () => {
+        afterEach(() => vi.useRealTimers());
+
         it('should leave a keyboard focus origin on the host, which is what paints the ring', () => {
             const fixture = TestBed.createComponent(RadiosInsideRadioGroup);
 
@@ -592,7 +619,8 @@ describe('KbqRadio', () => {
             expect(hosts[1].nativeElement.classList).toContain('cdk-keyboard-focused');
         });
 
-        it('should mark the group as touched when focus leaves a radio button', fakeAsync(() => {
+        it('should mark the group as touched when focus leaves a radio button', async () => {
+            vi.useFakeTimers();
             const fixture = TestBed.createComponent(RadioGroupWithFormControl);
 
             fixture.detectChanges();
@@ -601,16 +629,16 @@ describe('KbqRadio', () => {
 
             TestBed.inject(FocusMonitor).focusVia(input, 'keyboard');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.control.touched).toBe(false);
 
             input.blur();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.control.touched).toBe(true);
-        }));
+        });
     });
 
     /**
@@ -651,14 +679,105 @@ describe('KbqRadio', () => {
         });
     });
 
+    describe('binding changed to undefined', () => {
+        let fixture: ComponentFixture<RadioUndefinedBindings>;
+        let host: RadioUndefinedBindings;
+        let group: KbqRadioGroup;
+        let radios: KbqRadioButton[];
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(RadioUndefinedBindings);
+            fixture.detectChanges();
+
+            host = fixture.componentInstance;
+            group = fixture.debugElement.query(By.directive(KbqRadioGroup)).injector.get(KbqRadioGroup);
+            radios = fixture.debugElement
+                .queryAll(By.directive(KbqRadioButton))
+                .map((debugElement) => debugElement.componentInstance);
+        });
+
+        it('should clear the selection once the group value binding changes to undefined', () => {
+            host.groupValue = 'fire';
+            fixture.detectChanges();
+
+            expect(radios[0].checked).toBe(true);
+
+            host.groupValue = undefined;
+            fixture.detectChanges();
+
+            expect(radios[0].checked).toBe(false);
+            expect(group.value).toBeUndefined();
+        });
+
+        it('should clear the selection once the group selected binding changes to undefined', () => {
+            host.selected = radios[1];
+            fixture.detectChanges();
+
+            expect(group.selected).toBe(radios[1]);
+            expect(radios[1].checked).toBe(true);
+
+            host.selected = undefined;
+            fixture.detectChanges();
+
+            expect(group.selected).toBeNull();
+            expect(radios[1].checked).toBe(false);
+        });
+
+        it('should apply a button value binding that changes to undefined', () => {
+            expect(radios[1].value).toBe('water');
+
+            host.secondValue = undefined;
+            fixture.detectChanges();
+
+            expect(radios[1].value).toBeUndefined();
+        });
+
+        it('should fall back to the group label position once the button binding changes to undefined', () => {
+            host.labelPosition = 'before';
+            fixture.detectChanges();
+
+            expect(radios[0].labelPosition).toBe('before');
+
+            host.labelPosition = undefined;
+            fixture.detectChanges();
+
+            expect(radios[0].labelPosition).toBe('after');
+        });
+
+        it('should fall back to the group name once the button name binding changes to undefined', () => {
+            host.name = 'custom';
+            fixture.detectChanges();
+
+            expect(radios[0].name).toBe('custom');
+
+            host.name = undefined;
+            fixture.detectChanges();
+
+            expect(radios[0].name).toBe(group.name());
+        });
+
+        it.each([undefined, null])('should restore the default tabIndex once the binding changes to %s', (value) => {
+            host.tabIndex = 3;
+            fixture.detectChanges();
+
+            expect(radios[0].tabIndex).toBe(3);
+
+            host.tabIndex = value;
+            fixture.detectChanges();
+
+            expect(radios[0].tabIndex).toBe(0);
+            expect(fixture.nativeElement.querySelector('input').getAttribute('tabindex')).toBe('0');
+        });
+    });
+
     describe('ControlValueAccessor', () => {
-        it('should check the radio matching the ngModel value', fakeAsync(() => {
+        it('should check the radio matching the ngModel value', async () => {
             const fixture = TestBed.createComponent(RadioGroupWithNgModel);
 
             fixture.componentInstance.model = 'water';
             fixture.detectChanges();
             // NgModel writes the initial value through a microtask.
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             const radios = fixture.debugElement
@@ -666,7 +785,7 @@ describe('KbqRadio', () => {
                 .map((debugEl) => debugEl.componentInstance as KbqRadioButton);
 
             expect(radios.map((radio) => radio.checked)).toEqual([false, true, false]);
-        }));
+        });
 
         it('should write the clicked value back into the ngModel', () => {
             const fixture = TestBed.createComponent(RadioGroupWithNgModel);
@@ -719,12 +838,93 @@ describe('KbqRadio', () => {
             expect(inputs.every((input) => (input.nativeElement as HTMLInputElement).disabled)).toBe(true);
         });
     });
+
+    describe('called from an effect', () => {
+        let fixture: ComponentFixture<RadioGroupDrivenByEffect>;
+        let host: RadioGroupDrivenByEffect;
+
+        const settle = async (): Promise<void> => {
+            fixture.detectChanges();
+            await fixture.whenStable();
+        };
+
+        const pickWater = async (): Promise<void> => {
+            fixture.debugElement.queryAll(By.css('label'))[1].nativeElement.click();
+            await settle();
+        };
+
+        beforeEach(async () => {
+            fixture = TestBed.createComponent(RadioGroupDrivenByEffect);
+            host = fixture.componentInstance;
+            await settle();
+        });
+
+        it('should not make an effect that sets the group value re-run when another radio is picked', async () => {
+            host.action.set('value');
+            await settle();
+
+            expect(host.group().value).toBe('fire');
+
+            await pickWater();
+
+            expect(host.group().value).toBe('water');
+            expect(host.runs).toBe(1);
+        });
+
+        it('should not make an effect that checks a radio re-run when another radio is picked', async () => {
+            host.action.set('checked');
+            await settle();
+
+            expect(host.radios()[0].checked).toBe(true);
+
+            await pickWater();
+
+            expect(host.radios()[0].checked).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+    });
 });
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    imports: [KbqRadioModule],
+    template: `
+        <kbq-radio-group aria-label="Pokemon">
+            <kbq-radio-button [value]="'fire'">Charmander</kbq-radio-button>
+            <kbq-radio-button [value]="'water'">Squirtle</kbq-radio-button>
+        </kbq-radio-group>
+    `
+})
+class RadioGroupDrivenByEffect {
+    readonly group = viewChild.required(KbqRadioGroup);
+    readonly radios = viewChildren(KbqRadioButton);
+    readonly action = signal<'value' | 'checked' | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const action = this.action();
+
+            if (!action || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+
+            if (action === 'value') {
+                this.group().value = 'fire';
+            } else {
+                this.radios()[0].checked = true;
+            }
+        });
+    }
+}
 
 @Component({
     imports: [KbqRadioModule, FormsModule, ReactiveFormsModule],
     template: `
         <kbq-radio-group
+            [big]="isGroupBig"
             [color]="groupColor"
             [disabled]="isGroupDisabled"
             [labelPosition]="labelPos"
@@ -741,14 +941,35 @@ describe('KbqRadio', () => {
     `
 })
 class RadiosInsideRadioGroup {
+    isGroupBig: boolean = false;
     labelPos: 'before' | 'after' = 'after';
     isFirstDisabled: boolean = false;
     isGroupDisabled: unknown = false;
     isGroupRequired: boolean = false;
     groupName: string = 'test-name';
     groupValue: string | null = null;
-    groupColor: ThemePalette = ThemePalette.Empty;
-    color: ThemePalette;
+    groupColor: string = '';
+    color: KbqComponentColors;
+}
+
+@Component({
+    imports: [KbqRadioModule],
+    template: `
+        <kbq-radio-group [value]="groupValue" [selected]="selected">
+            <kbq-radio-button [value]="'fire'" [labelPosition]="labelPosition" [name]="name" [tabIndex]="tabIndex">
+                Charmander
+            </kbq-radio-button>
+            <kbq-radio-button [value]="secondValue">Squirtle</kbq-radio-button>
+        </kbq-radio-group>
+    `
+})
+class RadioUndefinedBindings {
+    groupValue: string | undefined;
+    selected: KbqRadioButton | undefined;
+    labelPosition: 'before' | 'after' | undefined;
+    name: string | undefined;
+    tabIndex: number | null | undefined;
+    secondValue: string | undefined = 'water';
 }
 
 @Component({

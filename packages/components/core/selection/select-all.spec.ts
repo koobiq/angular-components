@@ -1,4 +1,10 @@
-import { getSelectAllState, KbqSelectAllAdapter, shouldSelectSearchText, toggleSelectAll } from './select-all';
+import {
+    getSelectAllState,
+    KbqSelectAllAdapter,
+    kbqSelectAllHandlerTransform,
+    shouldSelectSearchText,
+    toggleSelectAll
+} from './select-all';
 
 interface TestItem {
     disabled: boolean;
@@ -190,5 +196,20 @@ describe('shouldSelectSearchText', () => {
 
     it('should return false when the whole value is already selected', () => {
         expect(shouldSelectSearchText(createInput('text', 0, 4))).toBe(false);
+    });
+});
+
+describe('kbqSelectAllHandlerTransform', () => {
+    it('should pass a function and undefined through', () => {
+        const handler = (_event: KeyboardEvent, _source: object) => {};
+
+        expect(kbqSelectAllHandlerTransform(handler)).toBe(handler);
+        expect(kbqSelectAllHandlerTransform(undefined)).toBeUndefined();
+    });
+
+    it.each([null, 'not a function', {}])('should throw on %s', (value) => {
+        expect(() => kbqSelectAllHandlerTransform(value as unknown as undefined)).toThrow(
+            '`selectAllHandler` must be a function.'
+        );
     });
 });

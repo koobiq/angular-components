@@ -100,10 +100,11 @@ test.describe('KbqNotificationCenterModule', () => {
 
             await expect(triggerButton(page)).toHaveAttribute('aria-expanded', 'true');
 
-            const panelId = await panel(page).getAttribute('id');
+            await expect(panel(page)).toHaveAttribute('id', /\S/);
 
-            expect(panelId).toBeTruthy();
-            await expect(triggerButton(page)).toHaveAttribute('aria-controls', panelId!);
+            const panelId = (await panel(page).getAttribute('id'))!;
+
+            await expect(triggerButton(page)).toHaveAttribute('aria-controls', panelId);
         });
 
         test('the panel is a dialog named by its heading', async ({ page }) => {
@@ -111,9 +112,10 @@ test.describe('KbqNotificationCenterModule', () => {
 
             await expect(panel(page)).toHaveAttribute('role', 'dialog');
 
+            await expect(panel(page)).toHaveAttribute('aria-labelledby', /\S/);
+
             const labelledBy = await panel(page).getAttribute('aria-labelledby');
 
-            expect(labelledBy).toBeTruthy();
             await expect(page.locator(`#${labelledBy}`)).toHaveClass(/kbq-notification-center-title__text/);
             await expect(page.locator(`#${labelledBy}`)).not.toBeEmpty();
         });
@@ -136,20 +138,16 @@ test.describe('KbqNotificationCenterModule', () => {
             await open(page);
 
             // The buttons used to be `display: none` until hovered, which kept them out of the tab order
-            // entirely - walk the tab order from the initially focused control until one of them lands.
-            let reached = false;
+            // entirely - walk the tab order from the initially focused control and expect one of them on it.
+            const tabOrder: (string | null | undefined)[] = [];
 
-            for (let index = 0; index < 10 && !reached; index++) {
+            for (let index = 0; index < 10; index++) {
                 await page.keyboard.press('Tab');
 
-                reached = await page.evaluate(
-                    () =>
-                        document.activeElement?.getAttribute('data-testid') ===
-                        'kbq-notification-center-remove-group-button'
-                );
+                tabOrder.push(await page.evaluate(() => document.activeElement?.getAttribute('data-testid')));
             }
 
-            expect(reached).toBe(true);
+            expect(tabOrder).toContain('kbq-notification-center-remove-group-button');
         });
 
         test('focus stays inside the open panel', async ({ page }) => {

@@ -1,10 +1,9 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectorRef, Component, DebugElement, inject, LOCALE_ID } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter } from '@koobiq/components/core';
 import {
@@ -93,9 +92,11 @@ describe('KbqPipeDatetimeComponent', () => {
         window.structuredClone = originalStructuredClone;
     });
 
+    afterEach(() => vi.useRealTimers());
+
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFilterBarModule, KbqLuxonDateModule, TestComponent],
+            imports: [KbqFilterBarModule, KbqLuxonDateModule, TestComponent],
             providers: [
                 { provide: LOCALE_ID, useValue: 'ru-RU' },
                 DateFormatter
@@ -176,7 +177,7 @@ describe('KbqPipeDatetimeComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const spy = jest
+            const spy = vi
                 .spyOn(asInternal(component).formatter, 'rangeShortDateTime')
                 .mockReturnValue('formatted datetime range');
 
@@ -286,46 +287,48 @@ describe('KbqPipeDatetimeComponent', () => {
             setupSinglePipe({ value: PRESET_VALUES[0] });
         });
 
-        it('should switch to custom period mode and initialize form', fakeAsync(() => {
+        it('should switch to custom period mode and initialize form', async () => {
+            vi.useFakeTimers();
+
             const component = getPipeComponent();
             const internal = asInternal(component);
-            const updatePosition = jest.fn();
+            const updatePosition = vi.fn();
 
             internal.popover = () => ({ updatePosition });
             internal.returnButton = stubReturnButton();
-            internal.showStartCalendar = true;
-            internal.showEndCalendar = true;
+            internal.showStartCalendar.set(true);
+            internal.showEndCalendar.set(true);
 
             component.showPeriod();
 
-            expect(internal.isListMode).toBe(false);
-            expect(internal.showStartCalendar).toBe(false);
-            expect(internal.showEndCalendar).toBe(false);
+            expect(internal.isListMode()).toBe(false);
+            expect(internal.showStartCalendar()).toBe(false);
+            expect(internal.showEndCalendar()).toBe(false);
             expect(internal.formGroup).toBeDefined();
             expect(internal.formGroup.controls.start.value.equals(component.defaultStart)).toBe(true);
             expect(internal.formGroup.controls.end.value.equals(component.defaultEnd)).toBe(true);
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(updatePosition).toHaveBeenCalledWith(true);
-        }));
+        });
 
         /**
          * The "back" button must always receive focus (the period list it replaces is destroyed), but with
          * the origin the user actually interacted with — the ring is painted off `.cdk-keyboard-focused`.
          */
-        const shouldFocusReturnButtonWith = (modality: 'mouse' | 'keyboard') => {
+        const shouldFocusReturnButtonWith = async (modality: 'mouse' | 'keyboard') => {
             const component = getPipeComponent();
             const internal = asInternal(component);
-            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+            const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
-            internal.popover = () => ({ updatePosition: jest.fn() });
+            internal.popover = () => ({ updatePosition: vi.fn() });
             internal.returnButton = stubReturnButton();
 
             setInputModality(modality);
 
             component.showPeriod();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusViaSpy).toHaveBeenCalledWith(
                 expect.objectContaining({ nativeElement: expect.any(HTMLButtonElement) }),
@@ -333,13 +336,17 @@ describe('KbqPipeDatetimeComponent', () => {
             );
         };
 
-        it('should focus the "back" button with the keyboard origin when opened from the keyboard', fakeAsync(() => {
-            shouldFocusReturnButtonWith('keyboard');
-        }));
+        it('should focus the "back" button with the keyboard origin when opened from the keyboard', async () => {
+            vi.useFakeTimers();
 
-        it('should focus the "back" button with the mouse origin when opened with the mouse', fakeAsync(() => {
-            shouldFocusReturnButtonWith('mouse');
-        }));
+            await shouldFocusReturnButtonWith('keyboard');
+        });
+
+        it('should focus the "back" button with the mouse origin when opened with the mouse', async () => {
+            vi.useFakeTimers();
+
+            await shouldFocusReturnButtonWith('mouse');
+        });
     });
 
     describe('showList', () => {
@@ -347,25 +354,27 @@ describe('KbqPipeDatetimeComponent', () => {
             setupSinglePipe({ value: PRESET_VALUES[0] });
         });
 
-        it('should switch back to preset list', fakeAsync(() => {
+        it('should switch back to preset list', async () => {
+            vi.useFakeTimers();
+
             const component = getPipeComponent();
             const internal = asInternal(component);
-            const updatePosition = jest.fn();
-            const focus = jest.fn();
+            const updatePosition = vi.fn();
+            const focus = vi.fn();
 
             internal.popover = () => ({ updatePosition });
             internal.listSelection = () => ({ focus });
-            internal.isListMode = false;
+            internal.isListMode.set(false);
 
             component.showList();
 
-            expect(internal.isListMode).toBe(true);
+            expect(internal.isListMode()).toBe(true);
             expect(updatePosition).toHaveBeenCalledWith(true);
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focus).toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('open', () => {
@@ -375,7 +384,7 @@ describe('KbqPipeDatetimeComponent', () => {
 
         it('should call popover.show()', () => {
             const component = getPipeComponent();
-            const show = jest.fn();
+            const show = vi.fn();
 
             asInternal(component).popover = () => ({ show });
             component.open();
@@ -389,12 +398,14 @@ describe('KbqPipeDatetimeComponent', () => {
             setupSinglePipe({ value: null });
         });
 
-        it('should set data.value, emit onChangePipe, hide popover and restore focus', fakeAsync(() => {
+        it('should set data.value, emit onChangePipe, hide popover and restore focus', async () => {
+            vi.useFakeTimers();
+
             const component = getPipeComponent();
             const filterBar = getFilterBar();
-            const spy = jest.fn();
-            const hide = jest.fn();
-            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+            const spy = vi.fn();
+            const hide = vi.fn();
+            const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             asInternal(component).popover = () => ({ hide });
             filterBar.onChangePipe.subscribe(spy);
@@ -405,10 +416,10 @@ describe('KbqPipeDatetimeComponent', () => {
             expect(spy).toHaveBeenCalledWith(component.data);
             expect(hide).toHaveBeenCalled();
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
-        }));
+        });
     });
 
     describe('onApplyPeriod', () => {
@@ -416,13 +427,15 @@ describe('KbqPipeDatetimeComponent', () => {
             setupSinglePipe({ value: null });
         });
 
-        it('should save custom period as ISO strings, emit onChangePipe and restore focus', fakeAsync(() => {
+        it('should save custom period as ISO strings, emit onChangePipe and restore focus', async () => {
+            vi.useFakeTimers();
+
             const component = getPipeComponent();
             const internal = asInternal(component);
             const filterBar = getFilterBar();
-            const spy = jest.fn();
-            const hide = jest.fn();
-            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+            const spy = vi.fn();
+            const hide = vi.fn();
+            const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
             const start = adapter.today().minus({ days: 5 }).set({ hour: 8, minute: 30, second: 0, millisecond: 0 });
             const end = adapter.today().set({ hour: 17, minute: 5, second: 0, millisecond: 0 });
 
@@ -442,10 +455,10 @@ describe('KbqPipeDatetimeComponent', () => {
             expect(spy).toHaveBeenCalledWith(component.data);
             expect(hide).toHaveBeenCalled();
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
-        }));
+        });
     });
 
     describe('disabled', () => {
@@ -580,25 +593,25 @@ describe('KbqPipeDatetimeComponent', () => {
         it('should toggle calendars on focus and hide both on request', () => {
             const component = getPipeComponent();
             const internal = asInternal(component);
-            const updatePosition = jest.fn();
+            const updatePosition = vi.fn();
 
             internal.popover = () => ({ updatePosition });
 
             component.onFocusStartInput();
 
-            expect(internal.showStartCalendar).toBe(true);
-            expect(internal.showEndCalendar).toBe(false);
+            expect(internal.showStartCalendar()).toBe(true);
+            expect(internal.showEndCalendar()).toBe(false);
             expect(updatePosition).toHaveBeenCalledWith(true);
 
             component.onFocusEndInput();
 
-            expect(internal.showStartCalendar).toBe(false);
-            expect(internal.showEndCalendar).toBe(true);
+            expect(internal.showStartCalendar()).toBe(false);
+            expect(internal.showEndCalendar()).toBe(true);
 
             component.hideCalendars();
 
-            expect(internal.showStartCalendar).toBe(false);
-            expect(internal.showEndCalendar).toBe(false);
+            expect(internal.showStartCalendar()).toBe(false);
+            expect(internal.showEndCalendar()).toBe(false);
         });
     });
 
@@ -609,8 +622,8 @@ describe('KbqPipeDatetimeComponent', () => {
 
         it('should apply period on Ctrl+Enter and prevent default', () => {
             const component = getPipeComponent();
-            const applySpy = jest.spyOn(component, 'onApplyPeriod').mockImplementation();
-            const event = { ctrlKey: true, metaKey: false, keyCode: 13, preventDefault: jest.fn() } as any;
+            const applySpy = vi.spyOn(component, 'onApplyPeriod').mockImplementation(() => {});
+            const event = { ctrlKey: true, metaKey: false, keyCode: 13, preventDefault: vi.fn() } as any;
 
             component.onKeydown(event);
 
@@ -620,8 +633,8 @@ describe('KbqPipeDatetimeComponent', () => {
 
         it('should apply period on Meta+Enter and prevent default', () => {
             const component = getPipeComponent();
-            const applySpy = jest.spyOn(component, 'onApplyPeriod').mockImplementation();
-            const event = { ctrlKey: false, metaKey: true, keyCode: 13, preventDefault: jest.fn() } as any;
+            const applySpy = vi.spyOn(component, 'onApplyPeriod').mockImplementation(() => {});
+            const event = { ctrlKey: false, metaKey: true, keyCode: 13, preventDefault: vi.fn() } as any;
 
             component.onKeydown(event);
 
@@ -631,7 +644,7 @@ describe('KbqPipeDatetimeComponent', () => {
 
         it('should prevent default on Enter without modifiers', () => {
             const component = getPipeComponent();
-            const event = { ctrlKey: false, metaKey: false, keyCode: 13, preventDefault: jest.fn() } as any;
+            const event = { ctrlKey: false, metaKey: false, keyCode: 13, preventDefault: vi.fn() } as any;
 
             component.onKeydown(event);
 
@@ -647,7 +660,7 @@ describe('KbqPipeDatetimeComponent', () => {
         it('should emit onClosePipe when popover closes', () => {
             const component = getPipeComponent();
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onClosePipe.subscribe(spy);
             component.popover().visibleChange.emit(false);
@@ -655,18 +668,20 @@ describe('KbqPipeDatetimeComponent', () => {
             expect(spy).toHaveBeenCalledWith(component.data);
         });
 
-        it('should focus the period list when the popover opens so Enter can pick a preset', fakeAsync(() => {
-            const component = getPipeComponent();
-            const focus = jest.fn();
+        it('should focus the period list when the popover opens so Enter can pick a preset', async () => {
+            vi.useFakeTimers();
 
-            asInternal(component).isListMode = true;
+            const component = getPipeComponent();
+            const focus = vi.fn();
+
+            asInternal(component).isListMode.set(true);
             asInternal(component).listSelection = () => ({ focus });
 
             component.popover().visibleChange.emit(true);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focus).toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('onClear', () => {
@@ -685,8 +700,8 @@ describe('KbqPipeDatetimeComponent', () => {
         it('should emit onClearPipe and onChangePipe', () => {
             const component = getPipeComponent();
             const filterBar = getFilterBar();
-            const clearSpy = jest.fn();
-            const changeSpy = jest.fn();
+            const clearSpy = vi.fn();
+            const changeSpy = vi.fn();
 
             filterBar.onClearPipe.subscribe(clearSpy);
             filterBar.onChangePipe.subscribe(changeSpy);
@@ -703,13 +718,15 @@ describe('KbqPipeDatetimeComponent', () => {
             setupSinglePipe({ value: null });
         });
 
-        it('should render chevron icon inside list text, not in leading icon slot', fakeAsync(() => {
+        it('should render chevron icon inside list text, not in leading icon slot', async () => {
+            vi.useFakeTimers();
+
             const component = getPipeComponent();
             const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
 
             component.open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const customPeriodOption = overlayContainer.querySelector('kbq-list-option')!;
@@ -717,7 +734,7 @@ describe('KbqPipeDatetimeComponent', () => {
             const icon = customPeriodOption.querySelector('i[kbq-icon]');
 
             expect(listText?.contains(icon)).toBe(true);
-        }));
+        });
     });
 
     describe('min / max bounds', () => {
@@ -1031,7 +1048,7 @@ describe('KbqPipeDatetimeComponent', () => {
 
         it('should interpolate the locale-formatted minInterval into the hint, passing the matching units', () => {
             const component = setupWithInterval({ minInterval: { hours: 2 } });
-            const spy = jest.spyOn(asInternal(component).formatter, 'durationLong').mockReturnValue('SENTINEL');
+            const spy = vi.spyOn(asInternal(component).formatter, 'durationLong').mockReturnValue('SENTINEL');
 
             const hint = component.minIntervalErrorHint;
 
@@ -1042,7 +1059,7 @@ describe('KbqPipeDatetimeComponent', () => {
 
         it('should interpolate the locale-formatted maxInterval into the hint, passing the matching units', () => {
             const component = setupWithInterval({ maxInterval: { days: 7 } });
-            const spy = jest.spyOn(asInternal(component).formatter, 'durationLong').mockReturnValue('SENTINEL');
+            const spy = vi.spyOn(asInternal(component).formatter, 'durationLong').mockReturnValue('SENTINEL');
 
             const hint = component.maxIntervalErrorHint;
 
@@ -1053,7 +1070,7 @@ describe('KbqPipeDatetimeComponent', () => {
 
         it('should pass the "months" unit for a { months: N } interval, as used by the docs example', () => {
             const component = setupWithInterval({ maxInterval: { months: 3 } });
-            const spy = jest.spyOn(asInternal(component).formatter, 'durationLong').mockReturnValue('SENTINEL');
+            const spy = vi.spyOn(asInternal(component).formatter, 'durationLong').mockReturnValue('SENTINEL');
 
             void component.maxIntervalErrorHint;
 
@@ -1062,7 +1079,7 @@ describe('KbqPipeDatetimeComponent', () => {
 
         it('should pass the "weeks" unit for a { weeks: N } interval', () => {
             const component = setupWithInterval({ minInterval: { weeks: 2 } });
-            const spy = jest.spyOn(asInternal(component).formatter, 'durationLong').mockReturnValue('SENTINEL');
+            const spy = vi.spyOn(asInternal(component).formatter, 'durationLong').mockReturnValue('SENTINEL');
 
             void component.minIntervalErrorHint;
 
@@ -1071,7 +1088,7 @@ describe('KbqPipeDatetimeComponent', () => {
 
         it('should pass all matching units for a multi-unit interval', () => {
             const component = setupWithInterval({ minInterval: { days: 1, hours: 12 } });
-            const spy = jest.spyOn(asInternal(component).formatter, 'durationLong').mockReturnValue('SENTINEL');
+            const spy = vi.spyOn(asInternal(component).formatter, 'durationLong').mockReturnValue('SENTINEL');
 
             void component.minIntervalErrorHint;
 
@@ -1080,7 +1097,9 @@ describe('KbqPipeDatetimeComponent', () => {
     });
 
     describe('interval hint rendering', () => {
-        it('should render the interpolated minInterval hint text in the popover', fakeAsync(() => {
+        it('should render the interpolated minInterval hint text in the popover', async () => {
+            vi.useFakeTimers();
+
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
             fixture.componentInstance.pipeTemplates = [
@@ -1103,7 +1122,7 @@ describe('KbqPipeDatetimeComponent', () => {
 
             component.open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const internal = asInternal(component);
@@ -1114,7 +1133,7 @@ describe('KbqPipeDatetimeComponent', () => {
 
             component.showPeriod();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const start = adapter.today().set({ hour: 9, minute: 0, second: 0, millisecond: 0 });
 
@@ -1125,6 +1144,6 @@ describe('KbqPipeDatetimeComponent', () => {
             const hint = overlayContainer.querySelector('.kbq-date-period__hint');
 
             expect(hint?.textContent?.trim()).toBe(component.minIntervalErrorHint);
-        }));
+        });
     });
 });

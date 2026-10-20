@@ -1,7 +1,6 @@
-import { Component, inject, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By, DomSanitizer } from '@angular/platform-browser';
-import { axe } from 'jest-axe';
 import { KbqFlag } from './flag';
 
 /** An axe audit runs on real timers and needs more than the repo-wide 2s default. */
@@ -286,6 +285,36 @@ describe(KbqFlag.name, () => {
             expect(flag.hasAttribute('aria-label')).toBe(false);
         });
 
+        it('should follow a change of the label and of decorative', () => {
+            @Component({
+                imports: [KbqFlag],
+                template: `
+                    <kbq-flag [decorative]="decorative()" [label]="label()" />
+                `,
+                changeDetection: ChangeDetectionStrategy.OnPush
+            })
+            class TestComponent {
+                readonly decorative = signal(false);
+                readonly label = signal<string | undefined>(undefined);
+            }
+
+            const fixture = createComponent(TestComponent);
+            const flag = getFlag(fixture);
+            const attributes = () => ['role', 'aria-label', 'aria-hidden'].map((name) => flag.getAttribute(name));
+
+            expect(attributes()).toEqual([null, null, 'true']);
+
+            fixture.componentInstance.label.set('Germany');
+            fixture.detectChanges();
+
+            expect(attributes()).toEqual(['img', 'Germany', null]);
+
+            fixture.componentInstance.decorative.set(true);
+            fixture.detectChanges();
+
+            expect(attributes()).toEqual([null, null, 'true']);
+        });
+
         it(
             'should pass axe in each of the three documented shapes',
             async () => {
@@ -304,7 +333,7 @@ describe(KbqFlag.name, () => {
 
                 document.body.appendChild(fixture.nativeElement);
 
-                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+                await expect(fixture.nativeElement).toHaveNoViolations();
 
                 fixture.nativeElement.remove();
             },

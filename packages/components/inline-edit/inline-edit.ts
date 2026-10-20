@@ -1,4 +1,3 @@
-import { animate, style, transition, trigger } from '@angular/animations';
 import { CdkMonitorFocus, CdkTrapFocus, FocusMonitor, FocusOrigin, InteractivityChecker } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { ContentObserver } from '@angular/cdk/observers';
@@ -19,18 +18,21 @@ import {
     forwardRef,
     inject,
     InjectionToken,
+    Injector,
     input,
+    isWritableSignal,
     model,
     NgZone,
     numberAttribute,
     output,
+    PendingTasks,
     signal,
     TemplateRef,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { AbstractControl, NgControl } from '@angular/forms';
+import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     isElement,
@@ -38,8 +40,7 @@ import {
     KBQ_CONNECTED_OVERLAY_ORIGIN,
     KBQ_OVERLAY_LAYERS,
     KBQ_WINDOW,
-    KbqAnimationCurves,
-    KbqAnimationDurations,
+    kbqAnimationsDisabled,
     KbqComponentColors,
     KbqConnectedOverlayOriginProvider,
     KbqLocaleOverridesDirective,
@@ -53,16 +54,6 @@ import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { concat, debounceTime, merge, Observable, of, startWith, timer } from 'rxjs';
 import { catchError, concatMap, defaultIfEmpty, ignoreElements, map, take, takeUntil, takeWhile } from 'rxjs/operators';
-
-const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
-    transition(':enter', [
-        style({ transform: 'translateY(100%)', opacity: 0 }),
-        animate(
-            `${KbqAnimationDurations.Instant} ${KbqAnimationCurves.DecelerationCurve}`,
-            style({ transform: 'translateY(0%)', opacity: 1 })
-        )
-    ])
-]);
 
 const baseClass = 'kbq-inline-edit';
 
@@ -87,6 +78,9 @@ export const kbqInlineEditSaveProgressMinimumDuration = 300;
  * instead of driving it through the DOM with a fabricated `KeyboardEvent`.
  */
 const inlineEditRegistry = new WeakMap<HTMLElement, KbqInlineEdit>();
+
+const isValueAccessor = (control: object): control is ControlValueAccessor =>
+    typeof (control as Partial<ControlValueAccessor>).writeValue === 'function';
 
 export type KbqInlineEditMode = 'view' | 'edit';
 
@@ -198,7 +192,6 @@ export class KbqInlineEditMenu {
         CdkMonitorFocus,
         { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
-    animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION],
     exportAs: 'kbqInlineEdit'
 })
 export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInlineEditSaveRecovery {
@@ -215,8 +208,10 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     private readonly resizeObserver = inject(SharedResizeObserver);
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly ngZone = inject(NgZone);
+    private readonly pendingTasks = inject(PendingTasks);
     private readonly scrollDispatcher = inject(ScrollDispatcher);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
     private readonly contentObserver = inject(ContentObserver);
     private readonly interactivityChecker = inject(InteractivityChecker);
     private readonly focusMonitor = inject(FocusMonitor);
@@ -416,6 +411,9 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     protected readonly placements = PopUpPlacements;
 
     /** @docs-private */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
+    /** @docs-private */
     protected readonly colors = KbqComponentColors;
 
     private initialValue: unknown;
@@ -476,9 +474,13 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
     /** Manually switch mode. Does nothing while a `saveHandler` request is in flight. */
     toggleMode(): void {
-        if (this.isSaving()) return;
+        // Untracked, as `commit()`, `retrySave()` and `rollback()`: called from a consumer's `effect()`, the state read
+        // on the way — the mode, the save status, the inputs — would make the effect run again whenever it changes.
+        untracked(() => {
+            if (this.isSaving()) return;
 
-        this.mode.update((currentMode) => (currentMode === 'edit' ? 'view' : 'edit'));
+            this.mode.update((currentMode) => (currentMode === 'edit' ? 'view' : 'edit'));
+        });
     }
 
     /**
@@ -493,29 +495,33 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
     /** Saves the current value, running the same validation as a normal save. */
     commit(): void {
-        this.save();
+        untracked(() => this.save());
     }
 
     /** Repeats the request for a value the server rejected. Does nothing unless the last save failed. */
     retrySave(): void {
-        const saveHandler = this.saveHandler();
+        untracked(() => {
+            const saveHandler = this.saveHandler();
 
-        if (this.saveStatus() !== 'error' || !saveHandler) return;
+            if (this.saveStatus() !== 'error' || !saveHandler) return;
 
-        this.startSave(saveHandler());
+            this.startSave(saveHandler());
+        });
     }
 
     /** Discards the value the server rejected, restoring the last saved one and closing the editor. */
     rollback(): void {
-        if (this.saveStatus() !== 'error') return;
+        untracked(() => {
+            if (this.saveStatus() !== 'error') return;
 
-        this.setValue(this.lastSavedValue);
-        this.initialValue = this.lastSavedValue;
-        this.saveStatusSource.set('idle');
+            this.setValue(this.lastSavedValue);
+            this.initialValue = this.lastSavedValue;
+            this.saveStatusSource.set('idle');
 
-        if (this.isEditMode()) {
-            this.toggleMode();
-        }
+            if (this.isEditMode()) {
+                this.toggleMode();
+            }
+        });
     }
 
     /** @docs-private */
@@ -539,28 +545,37 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
         this.setOverlayWidth();
 
+        // Hides the validation tooltip once the controls accept their values. Ended with the session by hand: an
+        // effect otherwise lives as long as its injector, and the tooltip only as long as the panel.
+        const validationTooltipWatcher = effect(
+            () => {
+                this.formFieldRefList().forEach((ref) => {
+                    ref.control().errorState();
+                    ref.control().value();
+                });
+
+                untracked(() => {
+                    const tooltipTrigger = this.tooltipTrigger();
+
+                    if (tooltipTrigger.isOpen && !this.isInvalid()) {
+                        tooltipTrigger.hide();
+                    }
+                });
+            },
+            { injector: this.injector }
+        );
+
         this.overlayDir()!
             .overlayRef.detachments()
             .pipe(take(1))
-            .subscribe(() => this.validationTooltipScrollHandle?.cancel());
-
-        const formFieldRefList = this.formFieldRefList();
-
-        merge(...formFieldRefList.map((ref) => ref.control().stateChanges))
-            .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
             .subscribe(() => {
-                if (!this.isInvalid()) {
-                    const tooltipTrigger = this.tooltipTrigger();
-
-                    if (tooltipTrigger?.isOpen) {
-                        tooltipTrigger.hide();
-                    }
-                }
+                validationTooltipWatcher.destroy();
+                this.validationTooltipScrollHandle?.cancel();
             });
 
         this.watchTabOutsideThePanel();
 
-        setTimeout(() => {
+        this.defer(() => {
             // Captured before the form-field checks below: an editor built on `setValueHandler` alone has no
             // `KbqFormField`, and `cancel()` and `rollback()` still have to restore something other than undefined.
             this.initialValue = this.getValue();
@@ -582,7 +597,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
             if (this.initialValue) input?.select();
 
             this.openPanel(formFieldRef);
-        }, 0);
+        });
     }
 
     /** @docs-private */
@@ -827,18 +842,28 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     }
 
     /** @docs-private */
+    protected onPanelEscape(event: Event): void {
+        // Also bound on the panel: the overlay dispatches its keys from `<body>`, after a container around an
+        // overlay layer, such as a modal, has handled them. A key spent in the panel cancels nothing more.
+        if (event.defaultPrevented) return;
+
+        event.preventDefault();
+        this.cancel();
+    }
+
+    /** @docs-private */
     protected onOverlayKeydown(event: KeyboardEvent): void {
         const canSaveOnEnter = this.canSaveOnEnter();
 
         switch (event.key) {
             case 'Escape': {
-                this.cancel();
+                this.onPanelEscape(event);
                 break;
             }
             case 'Enter': {
                 if (canSaveOnEnter(event)) {
                     event.preventDefault();
-                    setTimeout(() => this.save(event));
+                    this.defer(() => this.save(event));
                 }
 
                 break;
@@ -902,7 +927,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
             // Deferred by one task: the select also uses Tab to walk its own footer, and stays open when
             // it does. That is its business, and only the next task can tell the two apart.
-            setTimeout(() => {
+            this.defer(() => {
                 if (select.panelOpen || !this.isEditMode()) return;
 
                 this.ngZone.run(() => this.saveAndFocusAdjacentTabStop(event, backwards));
@@ -988,10 +1013,26 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
         this.editModeOrigin = null;
 
-        setTimeout(() => {
+        this.defer(() => {
             if (!this.elementRef.nativeElement.isConnected) return;
 
             this.focusViewTabStop(origin ?? 'program');
+        });
+    }
+
+    /**
+     * Runs `fn` in the next task, unless the inline edit is gone by then, and keeps the application unstable until
+     * then: without zone.js nothing else would make `whenStable` wait for a timer.
+     */
+    private defer(fn: () => void): void {
+        const removeTask = this.pendingTasks.add();
+
+        setTimeout(() => {
+            try {
+                if (!this.destroyRef.destroyed) fn();
+            } finally {
+                removeTask();
+            }
         });
     }
 
@@ -1046,7 +1087,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         this.editModeOrigin = null;
 
         // Deferred until view mode is rendered: until then the field's own tab stop — the fallback — is missing.
-        setTimeout(() => {
+        this.defer(() => {
             if (!this.elementRef.nativeElement.isConnected) return;
 
             const target = this.focusAdjacentTabStop(backwards);
@@ -1103,7 +1144,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
         if (!formFieldRefList.length) return false;
 
-        return formFieldRefList.some((ref) => ref.control().ngControl?.control?.invalid ?? ref.invalid);
+        return formFieldRefList.some((ref) => this.getFormControl(ref)?.invalid ?? ref.invalid);
     }
 
     private getValue() {
@@ -1115,7 +1156,11 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
         if (!formFieldRefList.length) return;
 
-        return this.formFieldRefList().map((ref) => this.coerceControl(ref)?.value);
+        return this.formFieldRefList().map((ref) => {
+            const control = this.coerceControl(ref);
+
+            return control instanceof AbstractControl ? control.value : control.value();
+        });
     }
 
     private setValue<T>(value: T): void {
@@ -1134,24 +1179,29 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         value.forEach((controlValue, index) => {
             const control = this.coerceControl(formFieldRefList[index]);
 
-            if (!control) return;
-
             if (control instanceof AbstractControl) {
                 control.setValue(controlValue);
-            } else {
-                control.value = controlValue;
+            } else if (isWritableSignal(control.value)) {
+                // A control without a form control can still hold a value code writes, as `kbqInput` does.
+                control.value.set(controlValue);
+            } else if (isValueAccessor(control)) {
+                // One holding its value read-only, as the pickers and the tree select do, takes it as from a form.
+                control.writeValue(controlValue);
             }
         });
     }
 
     private coerceControl(formFieldRef: KbqFormField) {
-        const control = formFieldRef.control();
+        return this.getFormControl(formFieldRef) ?? formFieldRef.control();
+    }
 
-        if (control.ngControl instanceof NgControl) {
-            return control.ngControl.control;
-        }
+    private getFormControl(formFieldRef: KbqFormField): AbstractControl | null {
+        const { ngControl } = formFieldRef.control();
 
-        return control;
+        // The pickers hand over the form control itself: they are value accessors, which cannot inject `NgControl`.
+        if (ngControl instanceof AbstractControl) return ngControl;
+
+        return ngControl instanceof NgControl ? ngControl.control : null;
     }
 
     private setOverlayWidth(): void {
@@ -1194,6 +1244,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     }
 
     private markAllAsTouched(): void {
-        this.formFieldRefList().forEach((formField) => formField.control().ngControl?.control?.markAsTouched());
+        this.formFieldRefList().forEach((formField) => this.getFormControl(formField)?.markAsTouched());
     }
 }

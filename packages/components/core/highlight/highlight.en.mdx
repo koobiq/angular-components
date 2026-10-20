@@ -1,6 +1,6 @@
 Highlighting matches helps users quickly understand why a result is relevant and speeds up navigation through lists. Depending on the context, one of two styles is used.
 
-Koobiq provides two pipes for highlighting text matches — `kbqHighlightBackground` and `mcHighlight`. Both take a string and a search argument, wrapping the found matches in a `<mark>` tag — `kbq-highlight-background` for the background-color style and `kbq-highlight` for the bold style.
+Koobiq provides two pipes for highlighting text matches — `kbqHighlightBackground` and `kbqHighlightBold`. Both take a string and a search argument, wrapping the found matches in a `<mark>` tag — `kbq-highlight-background` for the background-color style and `kbq-highlight` for the bold style.
 
 #### Background color
 
@@ -25,5 +25,7 @@ Matches in a table:
 This style is unobtrusive and ideal for quickly scanning familiar data: the user immediately sees that the searched word is in the row but is not distracted from the main choice.
 
 ```html
-<span [innerHTML]="item | mcHighlight: searchQuery"></span>
+<span [innerHTML]="item | kbqHighlightBold: searchQuery"></span>
 ```
+
+The pipe used to be called `mcHighlight`: that name is deprecated and will be removed in 22.0.0.

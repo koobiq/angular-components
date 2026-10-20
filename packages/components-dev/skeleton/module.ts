@@ -1,30 +1,32 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
     SkeletonAccordionExample,
+    SkeletonBasicExample,
     SkeletonCheckableExample,
     SkeletonCodeBlockExample,
+    SkeletonDirectiveExample,
     SkeletonDlExample,
     SkeletonElementsExample,
     SkeletonFormFieldExample,
     SkeletonGridExample,
     SkeletonGroupExample,
     SkeletonInSidepanelExample,
-    SkeletonOverviewExample,
-    SkeletonTableExample,
     SkeletonTabsExample,
     SkeletonTreeExample,
     SkeletonTypographyExample
 } from 'packages/docs-examples/components/skeleton';
 import { DevThemeToggle } from '../theme-toggle';
+import { DevSkeletonTableExample } from './examples/skeleton-table-example';
 
 @Component({
     selector: 'dev-examples',
     imports: [
-        SkeletonOverviewExample,
+        SkeletonBasicExample,
+        SkeletonDirectiveExample,
         SkeletonElementsExample,
         SkeletonTypographyExample,
         SkeletonDlExample,
-        SkeletonTableExample,
+        DevSkeletonTableExample,
         SkeletonGridExample,
         SkeletonGroupExample,
         SkeletonFormFieldExample,
@@ -36,7 +38,10 @@ import { DevThemeToggle } from '../theme-toggle';
         SkeletonInSidepanelExample
     ],
     template: `
-        <skeleton-overview-example />
+        <skeleton-basic-example />
+        <hr />
+
+        <skeleton-directive-example />
         <hr />
 
         <skeleton-elements-example />
@@ -48,7 +53,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <skeleton-dl-example />
         <hr />
 
-        <skeleton-table-example />
+        <dev-skeleton-table-example />
         <hr />
 
         <skeleton-grid-example />
@@ -76,7 +81,6 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
 
         <skeleton-in-sidepanel-example />
-        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

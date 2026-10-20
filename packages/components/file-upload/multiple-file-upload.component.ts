@@ -1,5 +1,5 @@
 import { CdkMonitorFocus, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { AsyncPipe, isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
+import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -12,10 +12,12 @@ import {
     ElementRef,
     inject,
     input,
-    Input,
+    OnChanges,
     output,
     PLATFORM_ID,
+    SimpleChanges,
     TemplateRef,
+    untracked,
     viewChild,
     viewChildren,
     ViewEncapsulation
@@ -58,7 +60,6 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
 @Component({
     selector: 'kbq-multiple-file-upload,kbq-file-upload[multiple]',
     imports: [
-        AsyncPipe,
         CdkMonitorFocus,
         NgTemplateOutlet,
         KbqFileDropDirective,
@@ -93,7 +94,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
 })
 export class KbqMultipleFileUploadComponent
     extends KbqFileUploadBase
-    implements AfterViewInit, ControlValueAccessor, DoCheck
+    implements OnChanges, AfterViewInit, ControlValueAccessor, DoCheck
 {
     /**
      * A value responsible for progress spinner type.
@@ -108,26 +109,22 @@ export class KbqMultipleFileUploadComponent
     readonly inputId = input<string>(`kbq-multiple-file-upload-${nextMultipleFileUploadUniqueId++}`);
 
     /** An object used to control the error state of the component. */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input() errorStateMatcher: ErrorStateMatcher;
+    errorStateMatcher: ErrorStateMatcher;
 
     /**
-     * The selected files. Stays an accessor input rather than becoming a `model()`: the store is
-     * `KbqFileList.list`, a model on the host directive that the template iterates and that
-     * `addArray()`, `replace()` and `removeAt()` mutate. A `model()` here would be a second store to
-     * keep in sync with that one, not a replacement for it.
+     * The selected files.
      *
      * Writing it is the model→view direction, same as `writeValue()`: it fills the list and tells
      * nobody. `cvaOnChange` and `(filesChange)` belong to the paths a user drives — see
      * `onFileAdded()` and `deleteFile()` — so a `[files]` binding cannot make the form look edited.
      */
+    // An accessor, not a `model()`: the store is `KbqFileList.list`, a model on the host directive that the template
+    // iterates and that `addArray()`, `replace()` and `removeAt()` mutate. A `model()` here would be a second store to
+    // keep in sync with that one.
     get files(): KbqFileItem[] {
         return this.fileList.list();
     }
 
-    @Input()
     set files(currentFileList: KbqFileItem[]) {
         this.setFileList(currentFileList);
     }
@@ -272,6 +269,22 @@ export class KbqMultipleFileUploadComponent
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly platformId = inject(PLATFORM_ID);
 
+    /** @docs-private */
+    readonly errorStateMatcherInput = input<ErrorStateMatcher | undefined>(undefined, { alias: 'errorStateMatcher' });
+
+    /** @docs-private */
+    readonly filesInput = input<KbqFileItem[] | undefined>(undefined, { alias: 'files' });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        // A bound `undefined` falls back to the default matcher and clears the files.
+        if (changes['errorStateMatcherInput']) {
+            this.errorStateMatcher = this.errorStateMatcherInput() ?? this.defaultErrorStateMatcher;
+        }
+
+        if (changes['filesInput']) this.files = this.filesInput() ?? [];
+    }
+
     constructor() {
         super();
 
@@ -399,6 +412,13 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     deleteFile(index: number, event?: Event, origin?: FocusOrigin): void {
+        // Untracked: called from a consumer's `effect()`, the state read on the way — the list, `disabled` — would make
+        // the effect run again on every change it makes, and remove the next file.
+        untracked(() => this.removeFile(index, event, origin));
+    }
+
+    /** Body of `deleteFile()`. */
+    private removeFile(index: number, event?: Event, origin?: FocusOrigin): void {
         if (this.disabled) return;
 
         event?.stopPropagation();

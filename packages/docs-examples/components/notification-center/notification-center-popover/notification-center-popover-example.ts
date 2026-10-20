@@ -1,4 +1,3 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, inject, TemplateRef, viewChild } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
@@ -19,7 +18,6 @@ import { createNotifications, injectExampleText } from '../localized-data';
         KbqBadgeModule,
         KbqIconModule,
         KbqNavbarModule,
-        AsyncPipe,
         KbqLink,
         LuxonDateModule,
         KbqFormattersModule

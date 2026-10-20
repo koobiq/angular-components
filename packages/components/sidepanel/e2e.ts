@@ -131,7 +131,7 @@ export class E2eSidepanelStateAndStyle implements OnDestroy {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class E2eSidepanelComponentPortalContent {
+class SidepanelComponentPortalContent {
     protected readonly items = Array.from({ length: 50 }, (_, i) => `Item #${i}`);
 }
 
@@ -155,7 +155,7 @@ export class E2eSidepanelComponentPortal implements OnDestroy {
     private readonly sidepanelService = inject(KbqSidepanelService);
 
     protected open(): void {
-        this.sidepanelService.open(E2eSidepanelComponentPortalContent, { size: KbqSidepanelSize.Medium });
+        this.sidepanelService.open(SidepanelComponentPortalContent, { size: KbqSidepanelSize.Medium });
     }
 
     ngOnDestroy(): void {

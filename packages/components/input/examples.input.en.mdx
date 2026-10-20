@@ -1,3 +1,9 @@
 ### Password change form
 
 <Example id="validation-cross-field-password" />
+
+### Password hints in a template-driven form
+
+`PasswordValidators` are functions, so a template-driven form attaches them to `ngModel` through a validator directive. The hints read the errors from the `ngModel` reference.
+
+<Example id="input-password-template-driven" />

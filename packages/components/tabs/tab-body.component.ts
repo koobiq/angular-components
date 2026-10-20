@@ -1,35 +1,40 @@
-import { AnimationEvent } from '@angular/animations';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { CdkPortalOutlet, TemplatePortal } from '@angular/cdk/portal';
 import {
+    afterNextRender,
+    AfterRenderRef,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
-    Input,
-    OnDestroy,
-    OnInit,
-    Output,
-    ViewEncapsulation,
     forwardRef,
     inject,
+    Injector,
     input,
+    MAX_ANIMATION_TIMEOUT,
+    OnChanges,
+    OnDestroy,
+    OnInit,
     output,
-    viewChild
+    SimpleChanges,
+    viewChild,
+    ViewEncapsulation
 } from '@angular/core';
+import { outputFromObservable } from '@angular/core/rxjs-interop';
+import { kbqAnimationsDisabled, kbqAnimationsSettled } from '@koobiq/components/core';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
-import { kbqTabsAnimations } from './tabs-animations';
 
 /**
- * These position states are used internally as animation states for the tab body. Setting the
+ * These position states are used internally as the translation states of the tab body. Setting the
  * position state to left, right, or center will transition the tab body from its current
  * position to its respective state. If there is not current position (void, in the case of a new
- * tab body), then there will be no transition animation to its state.
+ * tab body), then there will be no transition to its state.
  *
  * In the case of a new tab body that should immediately be centered with an animating transition,
  * then left-origin-center or right-origin-center can be used, which will use left or right as its
@@ -58,38 +63,46 @@ export type KbqTabBodyOriginState = 'left' | 'right';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tab-body'
-    },
-    animations: [kbqTabsAnimations.translateTab]
+    }
 })
-export class KbqTabBody implements OnInit, OnDestroy {
+export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly dir = inject(Directionality, { optional: true });
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
+
+    /** Whether the tab body translates without motion. */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
+    /** @docs-private */
+    readonly positionInput = input<number | undefined>(undefined, { alias: 'position' });
+
+    /** @docs-private */
+    readonly originInput = input<number | undefined>(undefined, { alias: 'origin' });
+
     /** The shifted index position of the tab body, where zero represents the active center tab. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     set position(position: number) {
         this.positionIndex = position;
         this.computePositionAnimationState();
     }
 
-    /** Tab body position state. Used by the animation trigger for the current state. */
+    /** Tab body position state, rendered as a modifier class of the content. */
     bodyPosition: KbqTabBodyPositionState;
 
     /** Event emitted when the tab begins to animate towards the center as the active tab. */
     readonly onCentering = output<number>();
 
     /** Event emitted before the centering of the tab begins. */
-    @Output() readonly beforeCentering: EventEmitter<boolean> = new EventEmitter<boolean>();
+    readonly beforeCentering: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    /**
-     * Event emitted once the tab has finished animating away from the center.
-     *
-     * Carries no payload: it is only ever emitted with none, so the `boolean` it used to advertise was
-     * always `undefined` at runtime.
-     */
-    @Output() readonly afterLeavingCenter: EventEmitter<void> = new EventEmitter<void>();
+    /** @docs-private */
+    readonly beforeCenteringOutput = outputFromObservable(this.beforeCentering, { alias: 'beforeCentering' });
+
+    /** Event emitted once the tab has finished moving away from the center. Carries no payload. */
+    readonly afterLeavingCenter: EventEmitter<void> = new EventEmitter<void>();
+
+    /** @docs-private */
+    readonly afterLeavingCenterOutput = outputFromObservable(this.afterLeavingCenter, { alias: 'afterLeavingCenter' });
 
     /** Event emitted when the tab completes its animation towards the center. */
     readonly onCentered = output<void>();
@@ -101,20 +114,33 @@ export class KbqTabBody implements OnInit, OnDestroy {
     readonly content = input<TemplatePortal>(undefined!);
 
     /** Position that will be used when the tab is immediately becoming visible after creation. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() origin: number;
+    origin: number;
 
-    // Note that the default value will always be overwritten by `KbqTabBody`, but we need one
-    // anyway to prevent the animations module from throwing an error if the body is used on its own.
     /** Duration for the tab's animation. */
     readonly animationDuration = input<string>('0ms');
+
+    /** The duration as CSS time: a bare number, which CSS rejects, is taken as milliseconds. */
+    protected readonly cssAnimationDuration = computed(() => {
+        const duration = this.animationDuration();
+
+        return /^\d+$/.test(duration) ? `${duration}ms` : duration;
+    });
 
     /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
     private positionIndex: number;
 
     /** Subscription to the directionality change observable. */
     private readonly dirChangeSubscription = Subscription.EMPTY;
+
+    private readonly contentElement = viewChild.required('content', { read: ElementRef });
+
+    /** The position the last translation went to, see `translateOnRender`. */
+    private renderedPosition?: KbqTabBodyPositionState;
+
+    /** The position the body is created at, see `translateOnRender`. */
+    private initialPosition?: KbqTabBodyPositionState;
+
+    private translationRender?: AfterRenderRef;
 
     constructor() {
         const changeDetectorRef = inject(ChangeDetectorRef);
@@ -127,6 +153,21 @@ export class KbqTabBody implements OnInit, OnDestroy {
         }
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        if (changes['positionInput']) {
+            const position = this.positionInput();
+
+            if (position !== undefined) this.position = position;
+        }
+
+        if (changes['originInput']) {
+            const origin = this.originInput();
+
+            if (origin !== undefined) this.origin = origin;
+        }
+    }
+
     /**
      * After initialized, check if the content is centered and has an origin. If so, set the
      * special position states that transition the tab from the left or right before centering.
@@ -135,37 +176,14 @@ export class KbqTabBody implements OnInit, OnDestroy {
         if (this.bodyPosition === 'center' && this.origin != null) {
             this.bodyPosition = this.computePositionFromOrigin();
         }
+
+        this.initialPosition = this.bodyPosition;
+
+        this.translateOnRender();
     }
 
     ngOnDestroy() {
         this.dirChangeSubscription.unsubscribe();
-    }
-
-    onTranslateTabStarted(e: AnimationEvent): void {
-        // Both animation callbacks still fire when the body is destroyed mid-animation.
-        if (this.destroyRef.destroyed) return;
-
-        const isCentering = this.isCenterPosition(e.toState);
-
-        this.beforeCentering.emit(isCentering);
-
-        if (isCentering) {
-            this.onCentering.emit(this.elementRef.nativeElement.clientHeight);
-        }
-    }
-
-    onTranslateTabComplete(e: AnimationEvent): void {
-        if (this.destroyRef.destroyed) return;
-
-        // If the transition to the center is complete, emit an event.
-        if (this.isCenterPosition(e.toState) && this.isCenterPosition(this.bodyPosition)) {
-            // TODO: The 'emit' function requires a mandatory void argument
-            this.onCentered.emit();
-        }
-
-        if (this.isCenterPosition(e.fromState) && !this.isCenterPosition(this.bodyPosition)) {
-            this.afterLeavingCenter.emit();
-        }
     }
 
     /** The text direction of the containing app. */
@@ -178,7 +196,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
         return position === 'center' || position === 'left-origin-center' || position === 'right-origin-center';
     }
 
-    /** Computes the position state that will be used for the tab-body animation trigger. */
+    /** Computes the position state that the tab body translates to. */
     private computePositionAnimationState(dir: Direction = this.getLayoutDirection()) {
         if (this.positionIndex < 0) {
             this.bodyPosition = dir === 'ltr' ? 'left' : 'right';
@@ -186,6 +204,66 @@ export class KbqTabBody implements OnInit, OnDestroy {
             this.bodyPosition = dir === 'ltr' ? 'right' : 'left';
         } else {
             this.bodyPosition = 'center';
+        }
+
+        this.translateOnRender();
+    }
+
+    /**
+     * Starts the translation to the current position once it has rendered, and ends it once its transition
+     * has: the content is attached as the body starts centering and detached once it has left the center.
+     * Positions set within one frame translate once, from the last rendered one. The first frame starts from the
+     * position the body was created at when it has moved on from it: the content of a body created centered is
+     * attached at once, rendered or not.
+     */
+    private translateOnRender(): void {
+        if (this.translationRender) return;
+
+        this.translationRender = afterNextRender(
+            () => {
+                this.translationRender = undefined;
+
+                const to = this.bodyPosition;
+                const from = this.renderedPosition ?? (to === this.initialPosition ? undefined : this.initialPosition);
+
+                if (from === to) return;
+
+                this.renderedPosition = to;
+                this.translationStarted(to);
+
+                const settled = kbqAnimationsSettled(
+                    this.contentElement().nativeElement,
+                    this.injector.get(MAX_ANIMATION_TIMEOUT)
+                );
+
+                if (!settled) return this.translationDone(from, to);
+
+                settled.then(() => {
+                    if (!this.destroyRef.destroyed) this.translationDone(from, to);
+                });
+            },
+            { injector: this.injector }
+        );
+    }
+
+    private translationStarted(to: KbqTabBodyPositionState): void {
+        const isCentering = this.isCenterPosition(to);
+
+        this.beforeCentering.emit(isCentering);
+
+        if (isCentering) {
+            this.onCentering.emit(this.elementRef.nativeElement.clientHeight);
+        }
+    }
+
+    private translationDone(from: KbqTabBodyPositionState | undefined, to: KbqTabBodyPositionState): void {
+        // A later translation may have started since, so the current position has the last word.
+        if (this.isCenterPosition(to) && this.isCenterPosition(this.bodyPosition)) {
+            this.onCentered.emit();
+        }
+
+        if (from !== undefined && this.isCenterPosition(from) && !this.isCenterPosition(this.bodyPosition)) {
+            this.afterLeavingCenter.emit();
         }
     }
 

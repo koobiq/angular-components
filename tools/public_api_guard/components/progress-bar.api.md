@@ -10,6 +10,7 @@ import { KbqColorDirective } from '@koobiq/components/core';
 // @public
 export class KbqProgressBar extends KbqColorDirective {
     constructor();
+    protected readonly animationsDisabled: boolean;
     readonly ariaLabel: _angular_core.InputSignal<string | null>;
     // (undocumented)
     protected readonly caption: _angular_core.Signal<KbqProgressBarCaption | undefined>;

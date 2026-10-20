@@ -1,16 +1,15 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, DebugElement, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import { Component, DebugElement, effect, signal, Type, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KBQ_CHECKBOX_CLICK_ACTION } from '@koobiq/components/checkbox';
-import { KBQ_CHECKABLE_CLICK_ACTION, KbqCheckedState } from '@koobiq/components/core';
+import { KBQ_ANIMATIONS_CONFIG, KBQ_CHECKABLE_CLICK_ACTION, KbqCheckedState } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqToggleComponent, KbqToggleModule } from './index';
+import { KbqToggleClickAction, KbqToggleComponent, KbqToggleModule } from './index';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
-    TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers }).compileComponents();
+    TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
     const fixture = TestBed.createComponent<T>(component);
 
     fixture.autoDetectChanges();
@@ -107,7 +106,7 @@ describe('KbqToggle', () => {
             testComponent.isDisabled = true;
             fixture.detectChanges();
 
-            const onToggleChangeSpyFn = jest.spyOn(testComponent, 'onToggleChange');
+            const onToggleChangeSpyFn = vi.spyOn(testComponent, 'onToggleChange');
 
             // A real browser never dispatches a click on a disabled control, so it has to be dispatched
             // manually to reach the handler that must decline it.
@@ -130,6 +129,14 @@ describe('KbqToggle', () => {
             expect(toggleInstance.inputId).toMatch(/kbq-toggle-\d+-input/);
             expect(inputElement.id).toBe(toggleInstance.inputId);
             expect(toggleNativeElement.id).toBe(toggleInstance.inputId.replace(/-input$/, ''));
+        });
+
+        it('should fall back to the generated id when the bound id turns undefined', () => {
+            testComponent.toggleId = undefined;
+            fixture.detectChanges();
+
+            expect(toggleNativeElement.id).toMatch(/^kbq-toggle-\d+$/);
+            expect(inputElement.id).toBe(`${toggleNativeElement.id}-input`);
         });
 
         it('should add a css class when big is set', () => {
@@ -167,7 +174,7 @@ describe('KbqToggle', () => {
         });
 
         it('should not trigger the click event multiple times', () => {
-            const onToggleClickSpyFn = jest.spyOn(testComponent, 'onToggleClick');
+            const onToggleClickSpyFn = vi.spyOn(testComponent, 'onToggleClick');
 
             expect(inputElement.checked).toBe(false);
 
@@ -180,8 +187,8 @@ describe('KbqToggle', () => {
             expect(testComponent.parentElementClickCount).toBe(1);
         });
 
-        it('should trigger a change event when the native input does', fakeAsync(() => {
-            const onToggleChangeSpyFn = jest.spyOn(testComponent, 'onToggleChange');
+        it('should trigger a change event when the native input does', async () => {
+            const onToggleChangeSpyFn = vi.spyOn(testComponent, 'onToggleChange');
 
             expect(inputElement.checked).toBe(false);
 
@@ -191,13 +198,13 @@ describe('KbqToggle', () => {
             expect(inputElement.checked).toBe(true);
 
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             expect(onToggleChangeSpyFn).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('should not trigger the change event by changing the native value', fakeAsync(() => {
-            const onToggleChangeSpyFn = jest.spyOn(testComponent, 'onToggleChange');
+        it('should not trigger the change event by changing the native value', async () => {
+            const onToggleChangeSpyFn = vi.spyOn(testComponent, 'onToggleChange');
 
             expect(inputElement.checked).toBe(false);
 
@@ -207,12 +214,12 @@ describe('KbqToggle', () => {
             expect(inputElement.checked).toBe(true);
 
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             // The change event shouldn't fire, because the value change was not caused
             // by any interaction.
             expect(onToggleChangeSpyFn).not.toHaveBeenCalled();
-        }));
+        });
 
         it('should focus on underlying input element when focus() is called', () => {
             expect(document.activeElement).not.toBe(inputElement);
@@ -253,7 +260,7 @@ describe('KbqToggle', () => {
         });
     });
 
-    describe('aria-label ', () => {
+    describe('aria-label', () => {
         let toggleDebugElement: DebugElement;
         let toggleNativeElement: HTMLElement;
         let inputElement: HTMLInputElement;
@@ -277,7 +284,7 @@ describe('KbqToggle', () => {
         });
     });
 
-    describe('with provided aria-labelledby ', () => {
+    describe('with provided aria-labelledby', () => {
         let toggleDebugElement: DebugElement;
         let toggleNativeElement: HTMLElement;
         let inputElement: HTMLInputElement;
@@ -336,6 +343,14 @@ describe('KbqToggle', () => {
             fixture.detectChanges();
 
             expect(inputElement.tabIndex).toBe(13);
+        });
+
+        it.each([undefined, null])('should restore the default tabIndex for a bound %s', (value) => {
+            testComponent.customTabIndex = value;
+            fixture.detectChanges();
+
+            expect(toggleDebugElement.componentInstance.tabIndex).toBe(0);
+            expect(inputElement.getAttribute('tabindex')).toBe('0');
         });
     });
 
@@ -416,8 +431,8 @@ describe('KbqToggle', () => {
             inputElement = <HTMLInputElement>toggleNativeElement.querySelector('input');
         });
 
-        it('should be in pristine, untouched, and valid states initially', fakeAsync(() => {
-            flush();
+        it('should be in pristine, untouched, and valid states initially', async () => {
+            await fixture.whenStable();
 
             const toggleElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
             const ngModel = toggleElement.injector.get<NgModel>(NgModel);
@@ -425,7 +440,7 @@ describe('KbqToggle', () => {
             expect(ngModel.valid).toBe(true);
             expect(ngModel.pristine).toBe(true);
             expect(ngModel.touched).toBe(false);
-        }));
+        });
 
         it('should toggle checked state on click', () => {
             expect(toggleInstance.checked).toBe(false);
@@ -618,7 +633,7 @@ describe('KbqToggle', () => {
     });
 
     describe('with click action tokens', () => {
-        const clickLabel = (fixture: ComponentFixture<SingleToggle>): void => {
+        const clickLabel = (fixture: ComponentFixture<unknown>): void => {
             fixture.nativeElement.querySelector('label').click();
             fixture.detectChanges();
         };
@@ -680,6 +695,35 @@ describe('KbqToggle', () => {
             expect(toggleInstance.checked).toBe(false);
             expect(toggleInstance.indeterminate).toBe(false);
         });
+
+        it('should fall back to the default action when the bound clickAction turns undefined', () => {
+            const fixture = createComponent(ToggleWithClickAction);
+
+            fixture.detectChanges();
+
+            fixture.componentInstance.clickAction = undefined;
+            fixture.detectChanges();
+
+            clickLabel(fixture);
+
+            expect(fixture.componentInstance.toggle().checked).toBe(true);
+        });
+
+        it('should not restore the token action when the bound clickAction turns undefined', () => {
+            const fixture = createComponent(ToggleWithClickAction, [
+                { provide: KBQ_CHECKABLE_CLICK_ACTION, useValue: 'noop' }
+            ]);
+
+            fixture.componentInstance.clickAction = 'check';
+            fixture.detectChanges();
+
+            fixture.componentInstance.clickAction = undefined;
+            fixture.detectChanges();
+
+            clickLabel(fixture);
+
+            expect(fixture.componentInstance.toggle().checked).toBe(true);
+        });
     });
 
     describe('with loading state', () => {
@@ -717,7 +761,7 @@ describe('KbqToggle', () => {
         });
 
         it('should ignore a click, keep the native input in sync and not bubble the click twice', () => {
-            const onToggleClickSpyFn = jest.spyOn(fixture.componentInstance, 'onToggleClick');
+            const onToggleClickSpyFn = vi.spyOn(fixture.componentInstance, 'onToggleClick');
 
             fixture.nativeElement.querySelector('label').click();
             fixture.detectChanges();
@@ -758,11 +802,11 @@ describe('KbqToggle', () => {
     });
 
     describe('with touched state', () => {
-        it('should mark the control as touched on focus without changing its value', fakeAsync(() => {
+        it('should mark the control as touched once focus leaves it, without changing its value', async () => {
             const fixture = createComponent(ToggleWithFormDirectives);
 
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             const toggleElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
             const ngModel = toggleElement.injector.get<NgModel>(NgModel);
@@ -771,16 +815,108 @@ describe('KbqToggle', () => {
             expect(ngModel.touched).toBe(false);
 
             TestBed.inject(FocusMonitor).focusVia(inputElement, 'keyboard');
-            tick();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            // A `required` error must not show while the control is only focused.
+            expect(ngModel.touched).toBe(false);
+
             inputElement.blur();
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             expect(ngModel.touched).toBe(true);
             expect(fixture.componentInstance.isGood).toBe(false);
-        }));
+        });
+    });
+
+    describe('with animations disabled', () => {
+        it('should take the motion off the switch', () => {
+            const fixture = createComponent(SingleToggle, [
+                { provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }
+            ]);
+
+            fixture.detectChanges();
+
+            const animated: HTMLElement[] = Array.from(
+                fixture.nativeElement.querySelectorAll('.kbq-toggle-bar, .kbq-toggle__circle, .kbq-toggle__thumb')
+            );
+
+            expect(animated.length).toBe(3);
+            animated.forEach((element) => expect(element.classList).toContain('kbq-animations-disabled'));
+        });
+    });
+
+    describe('called from an effect', () => {
+        let fixture: ComponentFixture<ToggleDrivenByEffect>;
+        let host: ToggleDrivenByEffect;
+        let input: HTMLInputElement;
+
+        beforeEach(async () => {
+            fixture = createComponent(ToggleDrivenByEffect);
+            host = fixture.componentInstance;
+            await fixture.whenStable();
+            input = fixture.nativeElement.querySelector('input');
+        });
+
+        it('should not make an effect that checks it re-run when it is clicked', async () => {
+            host.action.set('checked');
+            await fixture.whenStable();
+
+            expect(host.toggle().checked).toBe(true);
+
+            input.click();
+            await fixture.whenStable();
+
+            expect(host.toggle().checked).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+
+        it('should not make an effect that sets indeterminate re-run when it is clicked', async () => {
+            host.action.set('indeterminate');
+            await fixture.whenStable();
+
+            expect(host.toggle().indeterminate).toBe(true);
+
+            input.click();
+            await fixture.whenStable();
+
+            expect(host.toggle().indeterminate).toBe(false);
+            expect(host.runs).toBe(1);
+        });
     });
 });
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    imports: [KbqToggleModule],
+    template: `
+        <kbq-toggle>Driven by an effect</kbq-toggle>
+    `
+})
+class ToggleDrivenByEffect {
+    readonly toggle = viewChild.required(KbqToggleComponent);
+    readonly action = signal<'checked' | 'indeterminate' | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const action = this.action();
+
+            if (!action || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+
+            if (action === 'checked') {
+                this.toggle().checked = true;
+            } else {
+                this.toggle().indeterminate = true;
+            }
+        });
+    }
+}
 
 @Component({
     imports: [
@@ -835,7 +971,7 @@ class SingleToggle {
     isDisabled: boolean = false;
     big: boolean = false;
     parentElementClickCount: number = 0;
-    toggleId: string = 'simple-check';
+    toggleId: string | undefined = 'simple-check';
     toggleColor: string = 'primary';
     indeterminate = false;
 
@@ -843,6 +979,20 @@ class SingleToggle {
 
     onToggleClick: (event?: Event) => void = () => {};
     onToggleChange: (event?: any) => void = () => {};
+}
+
+@Component({
+    imports: [
+        KbqToggleModule
+    ],
+    template: `
+        <kbq-toggle [clickAction]="clickAction">Toggle</kbq-toggle>
+    `
+})
+class ToggleWithClickAction {
+    clickAction: KbqToggleClickAction = 'noop';
+
+    readonly toggle = viewChild.required(KbqToggleComponent);
 }
 
 @Component({
@@ -876,7 +1026,7 @@ class MultipleToggles {}
     `
 })
 class ToggleWithTabIndex {
-    customTabIndex: number = 7;
+    customTabIndex: number | null | undefined = 7;
     isDisabled: boolean = false;
 }
 

@@ -1,3 +1,4 @@
+@use '../core/styles/common/animation';
 @use '../core/styles/common/squircle' as *;
 @use '../core/styles/common/tokens';
 @use '../core/styles/common/vendor-prefixes';
@@ -304,5 +305,7 @@
         &.kbq-disabled {
             background: var(--kbq-states-icon-disabled);
         }
+
+        @include animation.kbq-animations-off();
     }
 }

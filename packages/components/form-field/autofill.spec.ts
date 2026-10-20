@@ -1,4 +1,4 @@
-import { Component, DebugElement, Type, ViewChild } from '@angular/core';
+import { Component, DebugElement, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -52,7 +52,7 @@ const getFormFieldElement = (debugElement: DebugElement): HTMLElement =>
     `
 })
 class InputFormField {
-    @ViewChild(KbqInput, { static: true }) input: KbqInput;
+    readonly input = viewChild.required(KbqInput);
 
     disabled = false;
 }
@@ -69,7 +69,7 @@ class InputFormField {
     `
 })
 class PasswordFormField {
-    @ViewChild(KbqInputPassword, { static: true }) input: KbqInputPassword;
+    readonly input = viewChild.required(KbqInputPassword);
 }
 
 @Component({
@@ -82,7 +82,7 @@ class PasswordFormField {
     `
 })
 class TextareaFormField {
-    @ViewChild(KbqTextarea, { static: true }) textarea: KbqTextarea;
+    readonly textarea = viewChild.required(KbqTextarea);
 
     value = '';
 }
@@ -99,7 +99,7 @@ class TextareaFormField {
     `
 })
 class TagListFormField {
-    @ViewChild(KbqTagList, { static: true }) tagList: KbqTagList;
+    readonly tagList = viewChild.required(KbqTagList);
 }
 
 describe('autofill', () => {
@@ -109,13 +109,13 @@ describe('autofill', () => {
             const { debugElement, componentInstance } = fixture;
             const input = debugElement.query(By.css('input')).nativeElement;
 
-            expect(componentInstance.input.autofilled()).toBe(false);
+            expect(componentInstance.input().autofilled()).toBe(false);
             expect(getFormFieldElement(debugElement).classList).not.toContain('kbq-form-field_autofilled');
 
             dispatchAutofill(input, true);
             fixture.detectChanges();
 
-            expect(componentInstance.input.autofilled()).toBe(true);
+            expect(componentInstance.input().autofilled()).toBe(true);
             expect(getFormFieldElement(debugElement).classList).toContain('kbq-form-field_autofilled');
         });
 
@@ -129,7 +129,7 @@ describe('autofill', () => {
             dispatchAutofill(input, false);
             fixture.detectChanges();
 
-            expect(componentInstance.input.autofilled()).toBe(false);
+            expect(componentInstance.input().autofilled()).toBe(false);
             expect(getFormFieldElement(debugElement).classList).not.toContain('kbq-form-field_autofilled');
         });
 
@@ -176,7 +176,7 @@ describe('autofill', () => {
             dispatchAutofill(input, true);
             fixture.detectChanges();
 
-            expect(componentInstance.input.autofilled()).toBe(true);
+            expect(componentInstance.input().autofilled()).toBe(true);
             expect(getFormFieldElement(debugElement).classList).toContain('kbq-form-field_autofilled');
         });
     });
@@ -190,7 +190,7 @@ describe('autofill', () => {
             dispatchAutofill(textarea, true);
             fixture.detectChanges();
 
-            expect(componentInstance.textarea.autofilled()).toBe(true);
+            expect(componentInstance.textarea().autofilled()).toBe(true);
             expect(getFormFieldElement(debugElement).classList).toContain('kbq-form-field_autofilled');
         });
     });
@@ -201,13 +201,13 @@ describe('autofill', () => {
             const { debugElement, componentInstance } = fixture;
             const input = debugElement.query(By.css('input')).nativeElement;
 
-            expect(componentInstance.tagList.autofilled()).toBe(false);
+            expect(componentInstance.tagList().autofilled()).toBe(false);
 
             dispatchAutofill(input, true);
             fixture.detectChanges();
 
             // The tag list is the `KbqFormFieldControl`, but the browser autofills the inner input.
-            expect(componentInstance.tagList.autofilled()).toBe(true);
+            expect(componentInstance.tagList().autofilled()).toBe(true);
             expect(getFormFieldElement(debugElement).classList).toContain('kbq-form-field_autofilled');
         });
     });

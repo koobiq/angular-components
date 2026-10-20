@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`KbqDynamicTranslationModule should change text dynamically 1`] = `
+exports[`KbqDynamicTranslationModule > should change text dynamically 1`] = `
 <kbq-dynamic-translation>
   
   NEW text before slot 
@@ -34,7 +34,7 @@ exports[`KbqDynamicTranslationModule should change text dynamically 1`] = `
 </kbq-dynamic-translation>
 `;
 
-exports[`KbqDynamicTranslationModule should handle list-like slot context (parentheses) 1`] = `
+exports[`KbqDynamicTranslationModule > should handle list-like slot context (parentheses) 1`] = `
 <kbq-dynamic-translation>
   
   with list 
@@ -59,7 +59,7 @@ exports[`KbqDynamicTranslationModule should handle list-like slot context (paren
 </kbq-dynamic-translation>
 `;
 
-exports[`KbqDynamicTranslationModule should handle malformed slot syntax 1`] = `
+exports[`KbqDynamicTranslationModule > should handle malformed slot syntax 1`] = `
 <kbq-dynamic-translation>
   
   with [[incomplete and [invalid] and 
@@ -79,7 +79,7 @@ exports[`KbqDynamicTranslationModule should handle malformed slot syntax 1`] = `
 </kbq-dynamic-translation>
 `;
 
-exports[`KbqDynamicTranslationModule should handle multiple same slots 1`] = `
+exports[`KbqDynamicTranslationModule > should handle multiple same slots 1`] = `
 <kbq-dynamic-translation>
   
   first slot 
@@ -105,7 +105,7 @@ exports[`KbqDynamicTranslationModule should handle multiple same slots 1`] = `
 </kbq-dynamic-translation>
 `;
 
-exports[`KbqDynamicTranslationModule should handle slots without context 1`] = `
+exports[`KbqDynamicTranslationModule > should handle slots without context 1`] = `
 <kbq-dynamic-translation>
   
   with empty slots 
@@ -135,7 +135,7 @@ exports[`KbqDynamicTranslationModule should handle slots without context 1`] = `
 </kbq-dynamic-translation>
 `;
 
-exports[`KbqDynamicTranslationModule should handle special characters 1`] = `
+exports[`KbqDynamicTranslationModule > should handle special characters 1`] = `
 <kbq-dynamic-translation>
   
   with special chars 
@@ -155,7 +155,7 @@ exports[`KbqDynamicTranslationModule should handle special characters 1`] = `
 </kbq-dynamic-translation>
 `;
 
-exports[`KbqDynamicTranslationModule should handle undefined slot 1`] = `
+exports[`KbqDynamicTranslationModule > should handle undefined slot 1`] = `
 <kbq-dynamic-translation>
   
   with undefined slot [[undefinedSlot:undefined slot context]]
@@ -165,7 +165,7 @@ exports[`KbqDynamicTranslationModule should handle undefined slot 1`] = `
 </kbq-dynamic-translation>
 `;
 
-exports[`KbqDynamicTranslationModule should handle unicode characters 1`] = `
+exports[`KbqDynamicTranslationModule > should handle unicode characters 1`] = `
 <kbq-dynamic-translation>
   
   with unicode 
@@ -181,7 +181,7 @@ exports[`KbqDynamicTranslationModule should handle unicode characters 1`] = `
 </kbq-dynamic-translation>
 `;
 
-exports[`KbqDynamicTranslationModule should render component with 2 slots 1`] = `
+exports[`KbqDynamicTranslationModule > should render component with 2 slots 1`] = `
 <kbq-dynamic-translation>
   
   text before slot1 

@@ -4,7 +4,7 @@ import {
     Component,
     computed,
     OnInit,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -56,7 +56,7 @@ import { injectLocalizedPeriods } from '../localized-data';
             [kbqPopoverContent]="content"
             [kbqPopoverOffset]="4"
             [kbqPopoverPlacement]="placements.BottomLeft"
-            [class]="{ 'kbq-active': popover?.isOpen }"
+            [class]="{ 'kbq-active': popover().isOpen }"
         >
             <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
             <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!data.value">
@@ -74,7 +74,7 @@ import { injectLocalizedPeriods } from '../localized-data';
                 type="color"
                 style="width:100%;"
                 [formControl]="control"
-                (keydown.enter)="popover.hide()"
+                (keydown.enter)="popover().hide()"
             />
         </ng-template>
 
@@ -96,14 +96,14 @@ import { injectLocalizedPeriods } from '../localized-data';
 export class ColorPipeComponent extends KbqBasePipe<string | null> implements AfterViewInit, OnInit {
     readonly placements = PopUpPlacements;
 
-    @ViewChild(KbqPopoverTrigger) popover: KbqPopoverTrigger;
+    readonly popover = viewChild.required(KbqPopoverTrigger);
 
     get isEmpty(): boolean {
         return this.data.value === null || this.data.value === undefined;
     }
 
     get showRemoveButton(): boolean {
-        return !!(!this.data.required && (this.data.removable || (this.data.cleanable && !this.isEmpty)));
+        return this.data.removable || (this.data.cleanable && !this.isEmpty);
     }
 
     get disabled(): boolean {
@@ -119,18 +119,20 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
     ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        this.popover.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((visible) => {
-            if (!visible) {
-                this.data.value = this.control.value;
-                this.filterBar?.onChangePipe.emit(this.data);
-            }
+        this.popover()
+            .visibleChange.pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((visible) => {
+                if (!visible) {
+                    this.data.value = this.control.value;
+                    this.filterBar?.onChangePipe.emit(this.data);
+                }
 
-            this.stateChanges.next();
-        });
+                this.stateChanges.next();
+            });
     }
 
     override open() {
-        this.popover?.show();
+        this.popover().show();
     }
 }
 

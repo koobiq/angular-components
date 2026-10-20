@@ -54,6 +54,44 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('valueChange was removed');
     });
 
+    it('reports writes to the new signal inputs and reads of searchMinOptionsThreshold', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqTreeSelect } from '@koobiq/components/tree-select';\n" +
+                'export class App { set(s: KbqTreeSelect) { s.autoSelect = false; return s.searchMinOptionsThreshold; } }\n'
+        );
+
+        await run(first);
+
+        const log = messages.join('\n');
+
+        expect(log).toContain('hasBackdrop and .searchMinOptionsThreshold are signals now');
+        expect(log).toContain('are signal inputs, so an assignment no longer compiles');
+    });
+
+    it('reports a read of and a write to hasBackdrop', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqTreeSelect } from '@koobiq/components/tree-select';\n" +
+                'export class App { toggle(s: KbqTreeSelect) { s.hasBackdrop = true; return s.hasBackdrop; } }\n'
+        );
+
+        await run(first);
+
+        const log = messages.join('\n');
+
+        expect(log).toContain('hasBackdrop and .searchMinOptionsThreshold are signals now');
+        expect(log).toContain('are signal inputs, so an assignment no longer compiles');
+    });
+
     it('reports a removed template helper', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
@@ -85,6 +123,18 @@ describe(SCHEMATIC_NAME, () => {
 
         expect(messages.join('\n')).toContain('none of them takes an assignment');
         expect(messages.join('\n')).not.toContain('read them as calls');
+    });
+
+    it('reports a sortComparator, whose third argument changed', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(ts, 'const template = `<kbq-tree-select [sortComparator]="byName" />`;\n');
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('third argument is every data node of the tree in panel order');
     });
 
     it('reports a member that became protected', async () => {

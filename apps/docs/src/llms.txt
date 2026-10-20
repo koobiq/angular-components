@@ -2,7 +2,7 @@
 
 > Koobiq is an open-source design system for designers and developers, focused on designing products related to **information security**.
 
-`@koobiq/components` 20.x for Angular 20. Every link below leads to one item of the documentation as Markdown, in English, in the order of its tabs: the overview with the full source of its examples, the API, the extra examples. Without `.md`, the address opens the page itself.
+`@koobiq/components` 21.x for Angular 21. Every link below leads to one item of the documentation as Markdown, in English, in the order of its tabs: the overview with the full source of its examples, the API, the extra examples. Without `.md`, the address opens the page itself.
 
 Rules for code that uses Koobiq:
 
@@ -79,7 +79,7 @@ Rules for code that uses Koobiq:
 - [Select](https://koobiq.io/en/components/select.md): Select - allows the user to select one or more values from a predefined list. Entry point: `@koobiq/components/select`.
 - [Sidebar](https://koobiq.io/en/components/sidebar.md): Component designed to add collapsible side content. Entry point: `@koobiq/components/sidebar`.
 - [Sidepanel](https://koobiq.io/en/components/sidepanel.md): A sidepanel is a window that slides in from the edge of the screen and appears on top of the main page content. Entry point: `@koobiq/components/sidepanel`.
-- [Skeleton](https://koobiq.io/en/components/skeleton.md): `KbqSkeleton` is a temporary placeholder that occupies the space of the loading element and displays its approximate layout while the actual content is still loading. Entry point: `@koobiq/components/skeleton`.
+- [Skeleton](https://koobiq.io/en/components/skeleton.md): A skeleton is a temporary placeholder that previews the approximate shape of content while it loads. Entry point: `@koobiq/components/skeleton`.
 - [Split button](https://koobiq.io/en/components/split-button.md): A split button combines several related actions into a single control. Entry point: `@koobiq/components/split-button`.
 - [Splitter](https://koobiq.io/en/components/splitter.md): Splitter resizes neighboring panels by dragging the separator. Entry point: `@koobiq/components/splitter`.
 - [Table](https://koobiq.io/en/components/table.md): A table is similar to a grid but simpler in structure. Entry point: `@koobiq/components/table`.
@@ -112,8 +112,8 @@ Rules for code that uses Koobiq:
 
 ## Icons
 
-- [Icons](https://raw.githubusercontent.com/koobiq/icons/12.2.1/llms.txt): the llms.txt of `@koobiq/icons` 12.2.1, with its packages, the naming of the icons and how to import them.
-- [Icon reference](https://raw.githubusercontent.com/koobiq/icons/12.2.1/llms-full.txt): every icon name with its sizes, tags and imports.
+- [Icons](https://raw.githubusercontent.com/koobiq/icons/12.3.0/llms.txt): the llms.txt of `@koobiq/icons` 12.3.0, with its packages, the naming of the icons and how to import them.
+- [Icon reference](https://raw.githubusercontent.com/koobiq/icons/12.3.0/llms-full.txt): every icon name with its sizes, tags and imports.
 
 ## Optional
 

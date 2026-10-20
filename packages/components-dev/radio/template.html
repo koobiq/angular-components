@@ -17,7 +17,7 @@
             }
         </kbq-radio-group>
 
-        <kbq-radio-group [color]="themePalette.Error" [(ngModel)]="favoriteFruit" (change)="onChange($event)">
+        <kbq-radio-group [color]="colors.Error" [(ngModel)]="favoriteFruit" (change)="onChange($event)">
             @for (season of fruits; track season) {
                 <kbq-radio-button [value]="season">
                     {{ season }}
@@ -59,12 +59,7 @@
             }
         </kbq-radio-group>
 
-        <kbq-radio-group
-            [big]="true"
-            [color]="themePalette.Error"
-            [(ngModel)]="favoriteFruit"
-            (change)="onChange($event)"
-        >
+        <kbq-radio-group [big]="true" [color]="colors.Error" [(ngModel)]="favoriteFruit" (change)="onChange($event)">
             @for (season of fruits; track season) {
                 <kbq-radio-button [value]="season">
                     {{ season }}

@@ -1,19 +1,18 @@
 ﻿import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import {
-    ApplicationRef,
     ChangeDetectionStrategy,
     Component,
     InjectionToken,
     Injector,
     NgModule,
     TemplateRef,
+    effect,
     inject as injectCore,
     signal,
     viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     ESCAPE,
@@ -23,7 +22,7 @@ import {
     dispatchKeyboardEvent
 } from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { axe } from 'jest-axe';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import {
     KBQ_SIDEPANEL_DATA,
     KbqSidepanelConfig,
@@ -37,6 +36,21 @@ import { KbqSidepanelAnimationState } from './sidepanel-animations';
 
 /** An axe audit walks the whole overlay and needs more than the repo-wide 2s default. */
 const axeTimeout = 15000;
+
+/**
+ * Gives `element` an animation that runs until the returned function ends it. jsdom has no Web Animations API,
+ * so without one every transition of the sidepanel ends right after the render it starts in.
+ */
+const holdAnimation = (element: Element): (() => void) => {
+    let finish!: () => void;
+    const finished = new Promise<void>((resolve) => (finish = resolve));
+
+    element.getAnimations = () => [
+        { finished, effect: { getComputedTiming: () => ({ endTime: 300 }) } } as unknown as Animation
+    ];
+
+    return finish;
+};
 
 describe('KbqSidepanelService', () => {
     let sidepanelService: KbqSidepanelService;
@@ -63,6 +77,7 @@ describe('KbqSidepanelService', () => {
 
     afterEach(() => {
         overlayContainer.ngOnDestroy();
+        vi.useRealTimers();
     });
 
     it('should open a sidepanel with a component', () => {
@@ -85,48 +100,59 @@ describe('KbqSidepanelService', () => {
         expect(templateRefFixture.componentInstance.sidepanelRef).toBe(sidepanelRef);
     });
 
-    it('should emit when sidepanel opening animation is complete', fakeAsync(() => {
+    it('should emit when sidepanel opening animation is complete', async () => {
+        vi.useFakeTimers();
+
         const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
-        const afterOpenedCallback = jest.fn();
+        const finishOpening = holdAnimation(overlayContainerElement.querySelector('kbq-sidepanel-container')!);
+        const afterOpenedCallback = vi.fn();
 
         sidepanelRef.afterOpened().subscribe(afterOpenedCallback);
 
         rootComponentFixture.detectChanges();
+        await vi.advanceTimersByTimeAsync(0);
 
         expect(afterOpenedCallback).not.toHaveBeenCalled();
 
-        flush();
+        finishOpening();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(afterOpenedCallback).toHaveBeenCalled();
-    }));
+    });
 
-    it('should close a sidepanel and return result', fakeAsync(() => {
+    it('should close a sidepanel and return result', async () => {
+        vi.useFakeTimers();
+
         const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
-        const afterCloseCallback = jest.fn();
+        const afterCloseCallback = vi.fn();
 
         sidepanelRef.afterClosed().subscribe(afterCloseCallback);
         sidepanelRef.close('Result');
 
         rootComponentFixture.detectChanges();
 
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(afterCloseCallback).toHaveBeenCalledWith('Result');
         expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
-    }));
+    });
 
-    it('should close a sidepanel via the escape key', fakeAsync(() => {
+    it('should close a sidepanel via the escape key', async () => {
+        vi.useFakeTimers();
+
         sidepanelService.open(SimpleSidepanelExample);
 
         dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
         rootComponentFixture.detectChanges();
 
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
-    }));
+    });
 
-    it('should close a sidepanel via the backdrop click', fakeAsync(() => {
+    it('should close a sidepanel via the backdrop click', async () => {
+        vi.useFakeTimers();
+
         sidepanelService.open(SimpleSidepanelExample);
 
         rootComponentFixture.detectChanges();
@@ -134,26 +160,30 @@ describe('KbqSidepanelService', () => {
         const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
 
         backdrop.click();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
-    }));
+    });
 
-    it('should change disableClose dynamically', fakeAsync(() => {
+    it('should change disableClose dynamically', async () => {
+        vi.useFakeTimers();
+
         const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
-        const closeSpy = jest.spyOn(sidepanelRef, 'close');
+        const closeSpy = vi.spyOn(sidepanelRef, 'close');
 
         sidepanelRef.config.disableClose = true;
 
         overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!.click();
         dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
 
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
 
         expect(closeSpy).toHaveBeenCalledTimes(0);
-    }));
+    });
 
-    it('should close all opened sidepanels', fakeAsync(() => {
+    it('should close all opened sidepanels', async () => {
+        vi.useFakeTimers();
+
         sidepanelService.open(SimpleSidepanelExample);
         sidepanelService.open(SimpleSidepanelExample);
         sidepanelService.open(SimpleSidepanelExample);
@@ -162,19 +192,19 @@ describe('KbqSidepanelService', () => {
 
         sidepanelService.closeAll();
         rootComponentFixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(overlayContainerElement.querySelectorAll('kbq-sidepanel-container').length).toBe(0);
-    }));
+    });
 
     it('should set the proper animation states', () => {
         const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
 
-        expect(sidepanelRef.containerInstance.animationState).toBe('visible');
+        expect(sidepanelRef.containerInstance.animationState()).toBe('visible');
 
         sidepanelRef.close();
 
-        expect(sidepanelRef.containerInstance.animationState).toBe('hidden');
+        expect(sidepanelRef.containerInstance.animationState()).toBe('hidden');
     });
 
     it('should assign a unique id to each sidepanel', () => {
@@ -222,27 +252,31 @@ describe('KbqSidepanelService', () => {
         expect(sidepanelRef.id).toBe('example');
     });
 
-    it('should be able to prevent closing via the escape key', fakeAsync(() => {
+    it('should be able to prevent closing via the escape key', async () => {
+        vi.useFakeTimers();
+
         sidepanelService.open(SimpleSidepanelExample, { disableClose: true });
 
         rootComponentFixture.detectChanges();
         dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
         rootComponentFixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).not.toBeNull();
-    }));
+    });
 
-    it('should be able to prevent closing via backdrop click', fakeAsync(() => {
+    it('should be able to prevent closing via backdrop click', async () => {
+        vi.useFakeTimers();
+
         sidepanelService.open(SimpleSidepanelExample, { disableClose: true });
 
         const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
 
         backdrop.click();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).not.toBeNull();
-    }));
+    });
 
     it('should have a backdrop by default', () => {
         sidepanelService.open(SimpleSidepanelExample);
@@ -256,14 +290,16 @@ describe('KbqSidepanelService', () => {
         expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeNull();
     });
 
-    it('should show only the topmost backdrop when multiple sidepanels are open', fakeAsync(() => {
-        const spy = jest.spyOn(sidepanelService, 'open');
+    it('should show only the topmost backdrop when multiple sidepanels are open', async () => {
+        vi.useFakeTimers();
+
+        const spy = vi.spyOn(sidepanelService, 'open');
 
         sidepanelService.open(SimpleSidepanelExample);
         sidepanelService.open(SimpleSidepanelExample);
         sidepanelService.open(SimpleSidepanelExample);
 
-        tick(1000);
+        await vi.advanceTimersByTimeAsync(1000);
 
         rootComponentFixture.detectChanges();
 
@@ -274,7 +310,7 @@ describe('KbqSidepanelService', () => {
         expect(Array.from(backdropElements).filter((element) => element.style.opacity === '0').length).toBe(
             backdropElements.length - 1
         );
-    }));
+    });
 
     it('should be able to set custom overlay class', () => {
         sidepanelService.open(SimpleSidepanelExample, { overlayPanelClass: 'custom-overlay' });
@@ -314,7 +350,9 @@ describe('KbqSidepanelService', () => {
         expect(containers[containers.length - 1].querySelector('.kbq-sidepanel-indent')).not.toBeNull();
     });
 
-    it('should close sidepanel on indent click', fakeAsync(() => {
+    it('should close sidepanel on indent click', async () => {
+        vi.useFakeTimers();
+
         sidepanelService.open(SimpleSidepanelExample);
 
         expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(0);
@@ -326,12 +364,14 @@ describe('KbqSidepanelService', () => {
         overlayContainerElement.querySelectorAll<HTMLDivElement>('.kbq-sidepanel-indent')[0]!.click();
 
         rootComponentFixture.detectChanges();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
 
         expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(0);
-    }));
+    });
 
-    it('should NOT close sidepanel on indent click', fakeAsync(() => {
+    it('should NOT close sidepanel on indent click', async () => {
+        vi.useFakeTimers();
+
         sidepanelService.open(SimpleSidepanelExample);
 
         expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(0);
@@ -343,10 +383,10 @@ describe('KbqSidepanelService', () => {
         overlayContainerElement.querySelectorAll<HTMLDivElement>('.kbq-sidepanel-indent')[0]!.click();
 
         rootComponentFixture.detectChanges();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
 
         expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(1);
-    }));
+    });
 
     it('should not add indent when open more than one sidepanel with different position', () => {
         sidepanelService.open(SimpleSidepanelExample);
@@ -375,62 +415,72 @@ describe('KbqSidepanelService', () => {
         expect(sidepanelRef.instance).toBeTruthy();
     });
 
-    it('should not trigger form submission when close button is clicked inside a form', fakeAsync(() => {
+    it('should not trigger form submission when close button is clicked inside a form', async () => {
+        vi.useFakeTimers();
+
         const sidepanelRef = sidepanelService.open(SidepanelWithFormComponent);
-        const submitSpy = jest.spyOn(sidepanelRef.instance, 'onSubmit');
+        const submitSpy = vi.spyOn(sidepanelRef.instance, 'onSubmit');
 
         rootComponentFixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         const closeButton = overlayContainerElement.querySelector<HTMLButtonElement>('button[kbq-sidepanel-close]')!;
 
         closeButton.click();
         rootComponentFixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(submitSpy).not.toHaveBeenCalled();
-    }));
+    });
 
     describe('close result', () => {
-        const closeWith = (buttonId: string) => {
+        const closeWith = async (buttonId: string) => {
             const sidepanelRef = sidepanelService.open(SidepanelWithCloseResults);
-            const result = jest.fn();
+            const result = vi.fn();
 
             sidepanelRef.afterClosed().subscribe(result);
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             overlayContainerElement.querySelector<HTMLButtonElement>(`#${buttonId}`)!.click();
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             return result;
         };
 
-        it('should hand the value bound to kbq-sidepanel-close to close()', fakeAsync(() => {
-            expect(closeWith('hyphenated')).toHaveBeenCalledWith('hyphenated');
-        }));
+        it('should hand the value bound to kbq-sidepanel-close to close()', async () => {
+            vi.useFakeTimers();
 
-        it('should hand the value bound to kbqSidepanelClose to close()', fakeAsync(() => {
-            expect(closeWith('camel')).toHaveBeenCalledWith('camel-case');
-        }));
+            expect(await closeWith('hyphenated')).toHaveBeenCalledWith('hyphenated');
+        });
 
-        it('should prefer the camel-case spelling when a template binds both', fakeAsync(() => {
-            expect(closeWith('both')).toHaveBeenCalledWith('winner');
-        }));
+        it('should hand the value bound to kbqSidepanelClose to close()', async () => {
+            vi.useFakeTimers();
+
+            expect(await closeWith('camel')).toHaveBeenCalledWith('camel-case');
+        });
+
+        it('should prefer the camel-case spelling when a template binds both', async () => {
+            vi.useFakeTimers();
+
+            expect(await closeWith('both')).toHaveBeenCalledWith('winner');
+        });
     });
 
-    it('renders the custom scrollbar on the body', fakeAsync(() => {
+    it('renders the custom scrollbar on the body', async () => {
+        vi.useFakeTimers();
+
         sidepanelService.open(SidepanelWithFormComponent);
 
         rootComponentFixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         const body = overlayContainerElement.querySelector('.kbq-sidepanel-body')!;
 
         expect(body.classList).toContain('kbq-scrollbar-viewport');
         expect(body.classList).toContain('kbq-scrollbar-viewport_native-scrollbar-hidden');
-    }));
+    });
 
     describe('focus', () => {
         const nativeGetClientRects = Element.prototype.getClientRects;
@@ -452,16 +502,18 @@ describe('KbqSidepanelService', () => {
             Element.prototype.getClientRects = nativeGetClientRects;
         });
 
-        it('should set focus inside the sidepanel when opened by dropdown', fakeAsync(() => {
+        it('should set focus inside the sidepanel when opened by dropdown', async () => {
+            vi.useFakeTimers();
+
             const fixtureComponent = TestBed.createComponent(SidepanelFromDropdownComponent);
             const buttonElement = fixtureComponent.debugElement.nativeElement.querySelector('button');
 
             fixtureComponent.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             fixtureComponent.componentInstance.trigger().open();
             fixtureComponent.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const dropdownItems = fixtureComponent.debugElement
                 .queryAll(By.directive(KbqDropdownItem))
@@ -469,7 +521,7 @@ describe('KbqSidepanelService', () => {
 
             dropdownItems[0].click();
             fixtureComponent.detectChanges();
-            tick(1000);
+            await vi.advanceTimersByTimeAsync(1000);
 
             const content = overlayContainerElement.querySelector('.kbq-sidepanel-content')!;
 
@@ -477,55 +529,63 @@ describe('KbqSidepanelService', () => {
             expect(document.activeElement).not.toBe(buttonElement);
             expect(document.activeElement).not.toBe(dropdownItems[0]);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should move focus to the element marked cdkFocusInitial', fakeAsync(() => {
+        it('should move focus to the element marked cdkFocusInitial', async () => {
+            vi.useFakeTimers();
+
             sidepanelService.open(SidepanelWithFocusInitial);
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(document.activeElement).toBe(overlayContainerElement.querySelector('[cdkFocusInitial]'));
-        }));
+        });
 
-        it('should return focus to the trigger when the sidepanel closes', fakeAsync(() => {
+        it('should return focus to the trigger when the sidepanel closes', async () => {
+            vi.useFakeTimers();
+
             const sidepanelRef = sidepanelService.open(SidepanelWithFocusInitial);
 
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(document.activeElement).not.toBe(trigger);
 
             sidepanelRef.close();
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(document.activeElement).toBe(trigger);
-        }));
+        });
 
-        it('should return focus to the trigger of a non-modal sidepanel too', fakeAsync(() => {
+        it('should return focus to the trigger of a non-modal sidepanel too', async () => {
+            vi.useFakeTimers();
+
             const sidepanelRef = sidepanelService.open(SidepanelWithFocusInitial, { hasBackdrop: false });
 
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(document.activeElement).not.toBe(trigger);
 
             sidepanelRef.close();
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(document.activeElement).toBe(trigger);
-        }));
+        });
 
-        it('should leave focus on the trigger with trapFocusAutoCapture disabled', fakeAsync(() => {
+        it('should leave focus on the trigger with trapFocusAutoCapture disabled', async () => {
+            vi.useFakeTimers();
+
             sidepanelService.open(SidepanelWithFocusInitial, { trapFocusAutoCapture: false });
 
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(document.activeElement).toBe(trigger);
-        }));
+        });
     });
 
     describe('accessibility', () => {
@@ -534,10 +594,12 @@ describe('KbqSidepanelService', () => {
                 (element) => element !== overlayContainerElement && element.nodeName !== 'STYLE'
             );
 
-        it('should expose the container as a dialog named by the header', fakeAsync(() => {
+        it('should expose the container as a dialog named by the header', async () => {
+            vi.useFakeTimers();
+
             sidepanelService.open(ComponentForSidepanel);
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const container = overlayContainerElement.querySelector('kbq-sidepanel-container')!;
 
@@ -548,45 +610,53 @@ describe('KbqSidepanelService', () => {
 
             expect(labelledBy).toBeTruthy();
             expect(document.getElementById(labelledBy)!.textContent).toContain('Sidepanel Component Content');
-        }));
+        });
 
-        it('should not claim modality for a non-modal sidepanel', fakeAsync(() => {
+        it('should not claim modality for a non-modal sidepanel', async () => {
+            vi.useFakeTimers();
+
             sidepanelService.open(ComponentForSidepanel, { hasBackdrop: false });
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const container = overlayContainerElement.querySelector('kbq-sidepanel-container')!;
 
             expect(container.getAttribute('role')).toBe('dialog');
             expect(container.hasAttribute('aria-modal')).toBe(false);
-        }));
+        });
 
-        it('should name the sidepanel from the config when nothing else does', fakeAsync(() => {
+        it('should name the sidepanel from the config when nothing else does', async () => {
+            vi.useFakeTimers();
+
             sidepanelService.open(SimpleSidepanelExample, { ariaLabel: 'Details' });
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const container = overlayContainerElement.querySelector('kbq-sidepanel-container')!;
 
             expect(container.getAttribute('aria-label')).toBe('Details');
             expect(container.hasAttribute('aria-labelledby')).toBe(false);
-        }));
+        });
 
-        it('should prefer an explicit ariaLabelledBy over the header title', fakeAsync(() => {
+        it('should prefer an explicit ariaLabelledBy over the header title', async () => {
+            vi.useFakeTimers();
+
             sidepanelService.open(ComponentForSidepanel, { ariaLabelledBy: 'outer-heading' });
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(
                 overlayContainerElement.querySelector('kbq-sidepanel-container')!.getAttribute('aria-labelledby')
             ).toBe('outer-heading');
-        }));
+        });
 
-        it('should name the sidepanel from a header rendered after it opened', fakeAsync(() => {
+        it('should name the sidepanel from a header rendered after it opened', async () => {
+            vi.useFakeTimers();
+
             const sidepanelRef = sidepanelService.open(SidepanelWithLateHeader);
 
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const container = overlayContainerElement.querySelector('kbq-sidepanel-container')!;
 
@@ -594,48 +664,49 @@ describe('KbqSidepanelService', () => {
 
             sidepanelRef.instance.showHeader.set(true);
             rootComponentFixture.detectChanges();
-            flush();
-
-            // The container's host bindings run before its content, so the header that appeared in the pass
-            // above is named in the next one. The overlay host view hangs off the application, not off the
-            // fixture, so that pass is an application tick.
-            TestBed.inject(ApplicationRef).tick();
+            await vi.runOnlyPendingTimersAsync();
 
             const labelledBy = container.getAttribute('aria-labelledby')!;
 
             expect(labelledBy).toBeTruthy();
             expect(document.getElementById(labelledBy)!.textContent).toContain('Late title');
-        }));
+        });
 
-        it('should hide the rest of the page from assistive technology while a modal sidepanel is open', fakeAsync(() => {
+        it('should hide the rest of the page from assistive technology while a modal sidepanel is open', async () => {
+            vi.useFakeTimers();
+
             expect(pageElements().length).toBeGreaterThan(0);
 
             const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
 
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(pageElements().every((element) => element.getAttribute('aria-hidden') === 'true')).toBe(true);
 
             sidepanelRef.close();
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(pageElements().some((element) => element.hasAttribute('aria-hidden'))).toBe(false);
-        }));
+        });
 
-        it('should keep the page reachable while only non-modal sidepanels are open', fakeAsync(() => {
+        it('should keep the page reachable while only non-modal sidepanels are open', async () => {
+            vi.useFakeTimers();
+
             sidepanelService.open(SimpleSidepanelExample, { hasBackdrop: false });
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(pageElements().some((element) => element.hasAttribute('aria-hidden'))).toBe(false);
-        }));
+        });
 
-        it('should keep the page hidden when a component-level service is destroyed', fakeAsync(() => {
+        it('should keep the page hidden when a component-level service is destroyed', async () => {
+            vi.useFakeTimers();
+
             sidepanelService.open(SimpleSidepanelExample);
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const hidden = pageElements();
 
@@ -648,10 +719,10 @@ describe('KbqSidepanelService', () => {
             componentWithOwnService.detectChanges();
             componentWithOwnService.destroy();
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(hidden.every((element) => element.getAttribute('aria-hidden') === 'true')).toBe(true);
-        }));
+        });
 
         it(
             'should have no axe violations while open',
@@ -660,7 +731,7 @@ describe('KbqSidepanelService', () => {
                 rootComponentFixture.detectChanges();
                 await rootComponentFixture.whenStable();
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             },
             axeTimeout
         );
@@ -716,7 +787,9 @@ describe('KbqSidepanelService', () => {
             expect(isBlocked()).toBe(false);
         });
 
-        it('should keep the page blocked while a sidepanel above the closed one stays open', fakeAsync(() => {
+        it('should keep the page blocked while a sidepanel above the closed one stays open', async () => {
+            vi.useFakeTimers();
+
             const lower = sidepanelService.open(SimpleSidepanelExample);
 
             sidepanelService.open(SimpleSidepanelExample);
@@ -725,14 +798,16 @@ describe('KbqSidepanelService', () => {
 
             lower.close();
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(isBlocked()).toBe(true);
-        }));
+        });
     });
 
     describe('stacking', () => {
-        it('should not reverse the live stack when closing all sidepanels', fakeAsync(() => {
+        it('should not reverse the live stack when closing all sidepanels', async () => {
+            vi.useFakeTimers();
+
             const first = sidepanelService.open(SimpleSidepanelExample);
             const second = sidepanelService.open(SimpleSidepanelExample);
 
@@ -741,18 +816,20 @@ describe('KbqSidepanelService', () => {
             expect(sidepanelService.openedSidepanels).toEqual([first, second]);
 
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(sidepanelService.openedSidepanels.length).toBe(0);
-        }));
+        });
 
-        it('should not animate a closing sidepanel back into view when closing all sidepanels', fakeAsync(() => {
+        it('should not animate a closing sidepanel back into view when closing all sidepanels', async () => {
+            vi.useFakeTimers();
+
             const refs = [1, 2, 3].map(() => sidepanelService.open(SimpleSidepanelExample));
-            const spies = refs.map((ref) => jest.spyOn(ref.containerInstance, 'setAnimationState'));
+            const spies = refs.map((ref) => vi.spyOn(ref.containerInstance, 'setAnimationState'));
 
             sidepanelService.closeAll();
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             // Nothing may follow `hidden`: the exit animation is what disposes the overlay, so a panel
             // put back on screen mid-close never goes away.
@@ -763,46 +840,77 @@ describe('KbqSidepanelService', () => {
                 expect(hiddenAt).toBeGreaterThan(-1);
                 expect(states.slice(hiddenAt + 1)).toEqual([]);
             });
-        }));
+        });
 
-        it('should drop the indent of the panel above when the one underneath closes', fakeAsync(() => {
+        it('should drop the indent of the panel above when the one underneath closes', async () => {
+            vi.useFakeTimers();
+
             const lower = sidepanelService.open(SimpleSidepanelExample);
 
             sidepanelService.open(SimpleSidepanelExample);
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(1);
 
             lower.close();
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(0);
-        }));
+        });
 
-        it('should close the sidepanels opened by a component-level service when it is destroyed', fakeAsync(() => {
+        it('should close the sidepanels opened by a component-level service when it is destroyed', async () => {
+            vi.useFakeTimers();
+
             const fixtureComponent = TestBed.createComponent(SidepanelFromDropdownComponent);
 
             fixtureComponent.detectChanges();
             fixtureComponent.componentInstance.showSidepanel();
             fixtureComponent.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).not.toBeNull();
 
             fixtureComponent.destroy();
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
-        }));
+        });
+
+        it('should put a sidepanel opened from afterOpened of a lower one on top of the stack', async () => {
+            vi.useFakeTimers();
+
+            const bottom = sidepanelService.open(SimpleSidepanelExample, { hasBackdrop: false, id: 'bottom' });
+
+            bottom
+                .afterOpened()
+                .subscribe(() => sidepanelService.open(SimpleSidepanelExample, { hasBackdrop: false, id: 'top' }));
+            // Cuts the entrance of the first one short, which reports it as opened.
+            sidepanelService.open(SimpleSidepanelExample, { hasBackdrop: false, id: 'middle' });
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(
+                sidepanelService.openedSidepanels.map(({ id, containerInstance }) => [
+                    id,
+                    containerInstance.animationState()
+                ])
+            ).toEqual([
+                ['bottom', KbqSidepanelAnimationState.BottomPanel],
+                ['middle', KbqSidepanelAnimationState.Lower],
+                ['top', KbqSidepanelAnimationState.Visible]
+            ]);
+        });
     });
 
     describe('closing', () => {
-        it('should deliver the result of the first close call', fakeAsync(() => {
+        it('should deliver the result of the first close call', async () => {
+            vi.useFakeTimers();
+
             const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
-            const afterCloseCallback = jest.fn();
+            const afterCloseCallback = vi.fn();
 
             sidepanelRef.afterClosed().subscribe(afterCloseCallback);
 
@@ -810,48 +918,121 @@ describe('KbqSidepanelService', () => {
             sidepanelRef.close('B');
 
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(afterCloseCallback).toHaveBeenCalledTimes(1);
             expect(afterCloseCallback).toHaveBeenCalledWith('A');
-        }));
+        });
 
-        it('should prevent the default action of the escape key it consumes', fakeAsync(() => {
+        it('should notify a beforeClosed subscriber that subscribed right after close()', async () => {
+            vi.useFakeTimers();
+
+            const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
+            const beforeClosed = vi.fn();
+
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            sidepanelRef.close();
+            sidepanelRef.beforeClosed().subscribe(beforeClosed);
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(beforeClosed).toHaveBeenCalledTimes(1);
+        });
+
+        it('should prevent the default action of the escape key it consumes', async () => {
+            vi.useFakeTimers();
+
             sidepanelService.open(SimpleSidepanelExample);
 
             const event = dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
 
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(event.defaultPrevented).toBe(true);
-        }));
+        });
 
-        it('should leave the escape key alone when closing is disabled', fakeAsync(() => {
+        it('should leave the escape key alone when closing is disabled', async () => {
+            vi.useFakeTimers();
+
             sidepanelService.open(SimpleSidepanelExample, { disableClose: true });
 
             const event = dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
 
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(event.defaultPrevented).toBe(false);
-        }));
+        });
 
-        it('should close the sidepanel underneath when a same-position stack is clicked through', fakeAsync(() => {
+        it('should stay open on an escape key already spent by a control inside it', async () => {
+            vi.useFakeTimers();
+
+            const sidepanelRef = sidepanelService.open(SidepanelWithTooltip);
+
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const control = overlayContainerElement.querySelector<HTMLElement>('#with-tooltip')!;
+
+            control.addEventListener('keydown', (event) => event.preventDefault());
+            dispatchKeyboardEvent(control, 'keydown', ESCAPE);
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(sidepanelRef.containerInstance.animationState()).toBe(KbqSidepanelAnimationState.Visible);
+        });
+
+        it('should close only the tooltip open inside it on the first escape key, and itself on the next', async () => {
+            vi.useFakeTimers();
+
+            const sidepanelRef = sidepanelService.open(SidepanelWithTooltip);
+
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const tooltip = sidepanelRef.instance.tooltip();
+
+            tooltip.show(0);
+            await vi.runOnlyPendingTimersAsync();
+            rootComponentFixture.detectChanges();
+
+            expect(tooltip.isOpen).toBe(true);
+
+            dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(tooltip.isOpen).toBe(false);
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).not.toBeNull();
+
+            dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
+        });
+
+        it('should close the sidepanel underneath when a same-position stack is clicked through', async () => {
+            vi.useFakeTimers();
+
             sidepanelService.open(SimpleSidepanelExample, { hasBackdrop: false });
             sidepanelService.open(SimpleSidepanelExample, { hasBackdrop: false });
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             overlayContainerElement.querySelector<HTMLElement>('.kbq-sidepanel-container_right')!.click();
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.querySelectorAll('kbq-sidepanel-container').length).toBe(1);
-        }));
+        });
 
-        it('should not close a sidepanel when another one at a different position is clicked', fakeAsync(() => {
+        it('should not close a sidepanel when another one at a different position is clicked', async () => {
+            vi.useFakeTimers();
+
             sidepanelService.open(SimpleSidepanelExample, {
                 position: KbqSidepanelPosition.Right,
                 hasBackdrop: false
@@ -861,29 +1042,44 @@ describe('KbqSidepanelService', () => {
                 hasBackdrop: false
             });
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             overlayContainerElement.querySelector<HTMLElement>('.kbq-sidepanel-container_right')!.click();
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.querySelectorAll('kbq-sidepanel-container').length).toBe(2);
-        }));
+        });
 
-        it('should close a template sidepanel from its close button', fakeAsync(() => {
+        it('should close a template sidepanel from its close button', async () => {
+            vi.useFakeTimers();
+
             const templateRefFixture = TestBed.createComponent(ComponentWithCloseButtonTemplate);
 
             templateRefFixture.detectChanges();
             sidepanelService.open(templateRefFixture.componentInstance.templateRef());
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             overlayContainerElement.querySelector<HTMLButtonElement>('button[kbq-sidepanel-close]')!.click();
             rootComponentFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
-        }));
+        });
+
+        it('should render the header close button once the header becomes closeable', async () => {
+            const sidepanelRef = sidepanelService.open(SidepanelWithToggleableHeader);
+            const closeButton = () =>
+                overlayContainerElement.querySelector('kbq-sidepanel-header button[kbq-sidepanel-close]');
+
+            await rootComponentFixture.whenStable();
+            expect(closeButton()).toBeNull();
+
+            sidepanelRef.instance.closeable.set(true);
+            await rootComponentFixture.whenStable();
+            expect(closeButton()).not.toBeNull();
+        });
     });
 
     describe('config defaults', () => {
@@ -905,6 +1101,44 @@ describe('KbqSidepanelService', () => {
             expect(
                 overlayContainerElement.querySelector('.kbq-sidepanel-content > .kbq-sidepanel-content-host')
             ).not.toBeNull();
+        });
+    });
+
+    describe('called from an effect', () => {
+        let fixture: ComponentFixture<SidepanelDrivenByEffects>;
+
+        const settle = async () => {
+            fixture.detectChanges();
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            rootComponentFixture.detectChanges();
+        };
+
+        beforeEach(() => {
+            vi.useFakeTimers();
+            fixture = TestBed.createComponent(SidepanelDrivenByEffects);
+        });
+
+        it('should not make an effect that opens a sidepanel over another one open more of them', async () => {
+            sidepanelService.open(SimpleSidepanelExample);
+            fixture.componentInstance.wantOpen.set(true);
+            await settle();
+
+            expect(fixture.componentInstance.runs.open).toBe(1);
+            expect(sidepanelService.openedSidepanels.length).toBe(2);
+        });
+
+        it('should not make an effect that closes a sidepanel run again as the one underneath moves', async () => {
+            sidepanelService.open(SimpleSidepanelExample);
+            const upper = sidepanelService.open(SimpleSidepanelExample);
+
+            await settle();
+            fixture.componentInstance.toClose.set(upper);
+            await settle();
+            await settle();
+
+            expect(sidepanelService.openedSidepanels.length).toBe(1);
+            expect(fixture.componentInstance.runs.close).toBe(1);
         });
     });
 });
@@ -957,15 +1191,16 @@ describe('KbqSidepanelService state saving', () => {
 
     afterEach(() => {
         overlayContainer.ngOnDestroy();
+        vi.useRealTimers();
     });
 
     /** Opens a sidepanel and closes it the way a user does — through the ref rather than in a group. */
-    const openAndClose = (config?: KbqSidepanelConfig) => {
+    const openAndClose = async (config?: KbqSidepanelConfig) => {
         const ref = sidepanelService.open(SimpleSidepanelExample, config);
 
         fixture.detectChanges();
         ref.close();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
     };
 
     it('records the sidepanel as open', () => {
@@ -974,37 +1209,45 @@ describe('KbqSidepanelService state saving', () => {
         expect(store.getState(key)).toEqual({ opened: true });
     });
 
-    it('records the sidepanel as closed once it is closed on its own', fakeAsync(() => {
-        openAndClose({ stateSavingKey: key });
+    it('records the sidepanel as closed once it is closed on its own', async () => {
+        vi.useFakeTimers();
+
+        await openAndClose({ stateSavingKey: key });
 
         expect(store.getState(key)).toEqual({ opened: false });
-    }));
+    });
 
-    it('keeps the flag when the sidepanels are closed as a group', fakeAsync(() => {
+    it('keeps the flag when the sidepanels are closed as a group', async () => {
+        vi.useFakeTimers();
+
         sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });
 
         fixture.detectChanges();
         sidepanelService.closeAll();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(store.getState(key)).toEqual({ opened: true });
-    }));
+    });
 
-    it('keeps the flag when the service is destroyed', fakeAsync(() => {
+    it('keeps the flag when the service is destroyed', async () => {
+        vi.useFakeTimers();
+
         sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });
 
         fixture.detectChanges();
         sidepanelService.ngOnDestroy();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(store.getState(key)).toEqual({ opened: true });
-    }));
+    });
 
-    it('persists nothing without a state saving key', fakeAsync(() => {
-        openAndClose();
+    it('persists nothing without a state saving key', async () => {
+        vi.useFakeTimers();
+
+        await openAndClose();
 
         expect(store.keys()).toEqual([]);
-    }));
+    });
 
     it('reports what is stored', () => {
         store.setState(key, { opened: true });
@@ -1041,7 +1284,9 @@ describe('KbqSidepanelService state saving', () => {
         expect(sidepanelService.wasOpen(key)).toBe(false);
     });
 
-    it('clears the persisted state on request and keeps persisting afterwards', fakeAsync(() => {
+    it('clears the persisted state on request and keeps persisting afterwards', async () => {
+        vi.useFakeTimers();
+
         const ref = sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });
 
         fixture.detectChanges();
@@ -1050,10 +1295,10 @@ describe('KbqSidepanelService state saving', () => {
         expect(store.getState(key)).toBeNull();
 
         ref.close();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(store.getState(key)).toEqual({ opened: false });
-    }));
+    });
 
     it('claims the key it writes, so it is not reported as orphaned', () => {
         sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });
@@ -1080,7 +1325,7 @@ describe('KbqSidepanelService state saving', () => {
     });
 
     it('warns when two open sidepanels share a key', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });
         sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });
@@ -1116,6 +1361,16 @@ class ComponentForSidepanel {}
 class SidepanelTrigger {}
 
 @Component({
+    imports: [KbqButtonModule, KbqToolTipModule],
+    template: `
+        <button id="with-tooltip" kbq-button kbqTooltip="Hint" type="button">With a tooltip</button>
+    `
+})
+class SidepanelWithTooltip {
+    readonly tooltip = viewChild.required(KbqTooltipTrigger);
+}
+
+@Component({
     imports: [KbqSidepanelModule, KbqButtonModule],
     template: `
         <kbq-sidepanel-body>
@@ -1137,6 +1392,18 @@ class SidepanelWithFocusInitial {}
 })
 class SidepanelWithLateHeader {
     readonly showHeader = signal(false);
+}
+
+@Component({
+    imports: [KbqSidepanelModule],
+    template: `
+        <kbq-sidepanel-header [closeable]="closeable()">Title</kbq-sidepanel-header>
+        <kbq-sidepanel-body>Body</kbq-sidepanel-body>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SidepanelWithToggleableHeader {
+    readonly closeable = signal(false);
 }
 
 @Component({
@@ -1257,6 +1524,36 @@ class ComponentWithTemplateForSidepanel {
 })
 class RootComponent {}
 
+@Component({
+    selector: 'sidepanel-driven-by-effects',
+    template: ''
+})
+class SidepanelDrivenByEffects {
+    readonly wantOpen = signal(false);
+    readonly toClose = signal<KbqSidepanelRef | null>(null);
+    readonly runs = { open: 0, close: 0 };
+
+    private readonly sidepanelService = injectCore(KbqSidepanelService);
+
+    constructor() {
+        effect(() => {
+            if (!this.wantOpen() || this.runs.open >= 5) return;
+
+            this.runs.open++;
+            this.sidepanelService.open(SimpleSidepanelExample);
+        });
+
+        effect(() => {
+            const sidepanelRef = this.toClose();
+
+            if (!sidepanelRef) return;
+
+            this.runs.close++;
+            sidepanelRef.close();
+        });
+    }
+}
+
 // Create a real (non-test) NgModule as a workaround for
 // https://github.com/angular/angular/issues/10760
 const TEST_COMPONENTS = [
@@ -1266,17 +1563,19 @@ const TEST_COMPONENTS = [
     SidepanelWithFocusInitial,
     SidepanelWithCloseResults,
     SidepanelWithLateHeader,
+    SidepanelWithToggleableHeader,
+    SidepanelWithTooltip,
     SidepanelTrigger,
     ComponentWithTemplateForSidepanel,
     ComponentWithCloseButtonTemplate,
     RootComponent,
-    SidepanelFromDropdownComponent
+    SidepanelFromDropdownComponent,
+    SidepanelDrivenByEffects
 ];
 
 @NgModule({
     imports: [
         KbqSidepanelModule,
-        NoopAnimationsModule,
         KbqDropdownModule,
         KbqButtonModule,
         ...TEST_COMPONENTS

@@ -72,17 +72,10 @@
     // the item's own border uncovered. Flush the shimmer to the item's outer edge instead.
     inset: calc(-1 * var(--kbq-size-3xs));
 
-    @media (prefers-reduced-motion: reduce) {
-        animation: none;
-    }
+    @include animation.kbq-animations-off();
 }
 
 .kbq-dropdown__group-header {
     @include vendor-prefixes.user-select(none);
     @include list.kbq-list-header-base();
-
-    // @deprecated, use <kbq-optgroup label="Label" /> instead. Will be removed in the next major release
-    &.kbq-dropdown__group-header_small {
-        @include list.kbq-list-subheading-base();
-    }
 }

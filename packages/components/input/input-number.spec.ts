@@ -1,5 +1,5 @@
 ﻿import { Component, DebugElement, Provider, Type, inject, viewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import {
     AbstractControl,
     FormGroupDirective,
@@ -29,17 +29,15 @@ import {
     dispatchKeyboardEvent,
     ruRUFormattersData
 } from '@koobiq/components/core';
-import {
-    KBQ_STEPPER_INITIAL_TIMEOUT,
-    KBQ_STEPPER_INTERVAL_DELAY,
-    KbqFormField,
-    KbqFormFieldModule,
-    getKbqFormFieldYouCanNotUseCleanerInNumberInputError
-} from '@koobiq/components/form-field';
-import { axe } from 'jest-axe';
+import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { BIG_STEP, KbqInput, KbqInputModule, KbqNumberInput, SMALL_STEP, add, getPrecision } from './index';
 
+import type { Mock } from 'vitest';
 const defaultLocaleGroupSep = ruRUFormattersData.input.number.viewGroupSeparator;
+
+// The stepper's long-press timings, which are internal to the form-field entry point.
+const KBQ_STEPPER_INITIAL_TIMEOUT = 300;
+const KBQ_STEPPER_INTERVAL_DELAY = 75;
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
     TestBed.resetTestingModule();
@@ -60,7 +58,13 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         ]
     }).compileComponents();
 
-    return TestBed.createComponent<T>(component);
+    const fixture = TestBed.createComponent<T>(component);
+
+    // Without zone.js, auto-detection renders on the next scheduled tick rather than inside `createComponent`.
+
+    fixture.detectChanges();
+
+    return fixture;
 }
 
 @Component({
@@ -79,8 +83,8 @@ class NumberInputTestComponent {
     value: number | null = null;
     disabled = false;
 
-    stepUp = jest.fn().mockImplementation(() => true);
-    stepDown = jest.fn().mockImplementation(() => false);
+    stepUp = vi.fn().mockImplementation(() => true);
+    stepDown = vi.fn().mockImplementation(() => false);
 }
 
 @Component({
@@ -101,8 +105,8 @@ class TestNumberInputConditional {
     isVisible = true;
     value: number | null = null;
 
-    stepUp = jest.fn().mockImplementation(() => true);
-    stepDown = jest.fn().mockImplementation(() => false);
+    stepUp = vi.fn().mockImplementation(() => true);
+    stepDown = vi.fn().mockImplementation(() => false);
 }
 
 @Component({
@@ -329,6 +333,29 @@ class NumberInputWithNativeNumberType {
 @Component({
     imports: [
         KbqInputModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <input kbqNumberInput type="number" [formControl]="formControl" />
+    `
+})
+class NumberInputWithNativeNumberTypeAndFormControl {
+    readonly formControl = new UntypedFormControl(12345.5);
+}
+
+@Component({
+    imports: [KbqInputModule],
+    template: `
+        <input kbqNumberInput [value]="$any(value)" />
+    `
+})
+class NumberInputWithBoundValue {
+    value: number | undefined = 12345.5;
+}
+
+@Component({
+    imports: [
+        KbqInputModule,
         FormsModule
     ],
     template: `
@@ -380,11 +407,17 @@ class NumberInputDestroyedWhileTyping {
 }
 
 describe('KbqNumberInput', () => {
-    it('should use input-number control type', fakeAsync(() => {
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it('should use input-number control type', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(NumberInputTestComponent);
 
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         const inputElement = fixture.debugElement.query(By.directive(KbqInput));
         const input = inputElement.injector.get(KbqInput);
@@ -394,13 +427,15 @@ describe('KbqNumberInput', () => {
         expect(input.controlType).toBe('input-number');
         expect(numberInput.controlType).toBe('input-number');
         expect(formField.classList).toContain('kbq-form-field-type-input-number');
-    }));
+    });
 
-    it('should have stepper on focus', fakeAsync(() => {
+    it('should have stepper on focus', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(NumberInputTestComponent);
 
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
         const inputElement = inputElementDebug.nativeElement;
@@ -413,27 +448,29 @@ describe('KbqNumberInput', () => {
 
         expect(stepper).not.toBeNull();
         expect(icons.length).toBe(2);
-    }));
+    });
 
-    it('should apply kbq-error class to stepper icons when control is invalid', fakeAsync(() => {
+    it('should apply kbq-error class to stepper icons when control is invalid', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(NumberInputWithErrorState);
 
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
         const icons = stepper.queryAll(By.css('.kbq-icon'));
 
         expect(icons.length).toBe(2);
         expect(icons.every((icon) => icon.nativeElement.classList.contains('kbq-error'))).toBe(true);
-    }));
+    });
 
     it('should throw error with cleaner', () => {
         // KbqCleaner.ngAfterContentInit() throws when it detects a number input.
         // Override ComponentFixtureAutoDetect so CD doesn't run inside
         // TestBed.createComponent — that way the throw originates from our explicit
         // fixture.detectChanges() call, where expect-to-throw can capture it.
-        jest.spyOn(console, 'error').mockImplementation(() => {});
+        vi.spyOn(console, 'error').mockImplementation(() => {});
 
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -450,27 +487,31 @@ describe('KbqNumberInput', () => {
 
         const fixture = TestBed.createComponent(NumberInputWithCleaner);
 
-        expect(() => fixture.detectChanges()).toThrow(getKbqFormFieldYouCanNotUseCleanerInNumberInputError());
+        expect(() => fixture.detectChanges()).toThrow(`You can't use kbq-cleaner with input that have type="number"`);
     });
 
-    it('should throw an exception with kbq-cleaner', fakeAsync(() => {
+    it('should throw an exception with kbq-cleaner', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(NumberInputTestComponent);
 
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         const stepper = fixture.debugElement.query(By.css('kbq-cleaner'));
 
         expect(stepper).toBeNull();
-    }));
+    });
 
-    it('should block steps when disabled', fakeAsync(() => {
+    it('should block steps when disabled', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(NumberInputTestComponent);
 
         fixture.componentInstance.disabled = true;
 
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         const initialValue = fixture.componentInstance.value;
 
@@ -486,13 +527,15 @@ describe('KbqNumberInput', () => {
         fixture.detectChanges();
 
         expect(fixture.componentInstance.value).toEqual(initialValue);
-    }));
+    });
 
-    it('should connect a stepper added after form-field initialization', fakeAsync(() => {
+    it('should connect a stepper added after form-field initialization', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(NumberInputWithDynamicStepper);
 
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
         fixture.componentInstance.showStepper = true;
         fixture.detectChanges();
 
@@ -501,22 +544,26 @@ describe('KbqNumberInput', () => {
 
         dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(fixture.componentInstance.value).toBe(11);
-    }));
+    });
 
     describe('with long press on stepper', () => {
         const initialValue = 0;
 
-        it('should not have timers assigned on init', fakeAsync(() => {
+        it('should not have timers assigned on init', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputTestComponent);
 
-            jest.spyOn(global, 'setTimeout');
+            const setTimeoutSpy = vi.spyOn(global, 'setTimeout');
+            // Change detection schedules itself with an undelayed timer; the long press waits for its own delay.
+            const longPressTimers = () => setTimeoutSpy.mock.calls.filter(([, delay]) => !!delay);
 
             fixture.detectChanges();
 
-            expect(global.setTimeout).not.toHaveBeenCalled();
+            expect(longPressTimers()).toHaveLength(0);
 
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const [iconUp] = stepper.queryAll(By.css('.kbq-icon'));
@@ -524,10 +571,12 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
             fixture.detectChanges();
 
-            expect(global.setTimeout).toHaveBeenCalledTimes(1);
-        }));
+            expect(longPressTimers()).toHaveLength(1);
+        });
 
-        it('should emit once before initial delay', fakeAsync(() => {
+        it('should emit once before initial delay', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputTestComponent);
 
             fixture.componentInstance.value = initialValue;
@@ -536,22 +585,24 @@ describe('KbqNumberInput', () => {
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
 
-            const testLongPressFor = (icon, emitter) => {
+            const testLongPressFor = async (icon, emitter) => {
                 dispatchFakeEvent(icon.nativeElement, 'mousedown');
 
                 fixture.detectChanges();
-                tick(KBQ_STEPPER_INITIAL_TIMEOUT - 1);
+                await vi.advanceTimersByTimeAsync(KBQ_STEPPER_INITIAL_TIMEOUT - 1);
 
                 expect(emitter).toHaveBeenCalledTimes(1);
 
                 dispatchFakeEvent(document, 'mouseup');
             };
 
-            testLongPressFor(iconUp, fixture.componentInstance.stepUp);
-            testLongPressFor(iconDown, fixture.componentInstance.stepDown);
-        }));
+            await testLongPressFor(iconUp, fixture.componentInstance.stepUp);
+            await testLongPressFor(iconDown, fixture.componentInstance.stepDown);
+        });
 
-        it('should emit after initial delay + interval', fakeAsync(() => {
+        it('should emit after initial delay + interval', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputTestComponent);
 
             fixture.componentInstance.value = initialValue;
@@ -560,25 +611,27 @@ describe('KbqNumberInput', () => {
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
 
-            const testLongPressFor = (icon, emitter) => {
+            const testLongPressFor = async (icon, emitter) => {
                 dispatchFakeEvent(icon.nativeElement, 'mousedown');
                 fixture.detectChanges();
-                tick(KBQ_STEPPER_INITIAL_TIMEOUT);
+                await vi.advanceTimersByTimeAsync(KBQ_STEPPER_INITIAL_TIMEOUT);
 
-                tick(KBQ_STEPPER_INTERVAL_DELAY);
+                await vi.advanceTimersByTimeAsync(KBQ_STEPPER_INTERVAL_DELAY);
                 expect(emitter).toHaveBeenCalledTimes(2);
 
-                tick(KBQ_STEPPER_INTERVAL_DELAY);
+                await vi.advanceTimersByTimeAsync(KBQ_STEPPER_INTERVAL_DELAY);
                 expect(emitter).toHaveBeenCalledTimes(3);
 
                 dispatchFakeEvent(document, 'mouseup');
             };
 
-            testLongPressFor(iconUp, fixture.componentInstance.stepUp);
-            testLongPressFor(iconDown, fixture.componentInstance.stepDown);
-        }));
+            await testLongPressFor(iconUp, fixture.componentInstance.stepUp);
+            await testLongPressFor(iconDown, fixture.componentInstance.stepDown);
+        });
 
-        it('should stop emitting on mouseUp', fakeAsync(() => {
+        it('should stop emitting on mouseUp', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputTestComponent);
 
             fixture.componentInstance.value = initialValue;
@@ -587,23 +640,25 @@ describe('KbqNumberInput', () => {
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
 
-            const testLongPressFor = (icon, emitter) => {
+            const testLongPressFor = async (icon, emitter) => {
                 dispatchFakeEvent(icon.nativeElement, 'mousedown');
                 fixture.detectChanges();
-                tick(KBQ_STEPPER_INITIAL_TIMEOUT);
+                await vi.advanceTimersByTimeAsync(KBQ_STEPPER_INITIAL_TIMEOUT);
 
                 dispatchFakeEvent(document, 'mouseup');
                 fixture.detectChanges();
-                tick(KBQ_STEPPER_INTERVAL_DELAY);
+                await vi.advanceTimersByTimeAsync(KBQ_STEPPER_INTERVAL_DELAY);
 
                 expect(emitter).toHaveBeenCalledTimes(1);
             };
 
-            testLongPressFor(iconUp, fixture.componentInstance.stepUp);
-            testLongPressFor(iconDown, fixture.componentInstance.stepDown);
-        }));
+            await testLongPressFor(iconUp, fixture.componentInstance.stepUp);
+            await testLongPressFor(iconDown, fixture.componentInstance.stepDown);
+        });
 
-        it('should stop emitting on component destroy', fakeAsync(() => {
+        it('should stop emitting on component destroy', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(TestNumberInputConditional);
             const { debugElement } = fixture;
 
@@ -611,39 +666,41 @@ describe('KbqNumberInput', () => {
 
             expect(debugElement.query(By.directive(KbqFormField)).nativeElement).toBeTruthy();
 
-            const testLongPressFor = (queryIconFn, emitter: jest.Mock<any, any, any>) => {
+            const testLongPressFor = async (queryIconFn, emitter: Mock) => {
                 const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
                 const icon = queryIconFn(stepper.queryAll(By.css('.kbq-icon')));
 
                 dispatchFakeEvent(icon.nativeElement, 'mousedown');
                 fixture.detectChanges();
-                tick(KBQ_STEPPER_INITIAL_TIMEOUT);
+                await vi.advanceTimersByTimeAsync(KBQ_STEPPER_INITIAL_TIMEOUT);
 
                 fixture.componentInstance.isVisible = false;
                 fixture.detectChanges();
                 // this call is skipped
-                tick(KBQ_STEPPER_INTERVAL_DELAY);
+                await vi.advanceTimersByTimeAsync(KBQ_STEPPER_INTERVAL_DELAY);
 
                 expect(debugElement.query(By.directive(KbqFormField))).toBeFalsy();
                 // only immediate call counts
                 expect(emitter).toHaveBeenCalledTimes(1);
             };
 
-            testLongPressFor((icons) => icons[0], fixture.componentInstance.stepUp);
+            await testLongPressFor((icons) => icons[0], fixture.componentInstance.stepUp);
             // return back visible state
             fixture.componentInstance.isVisible = true;
             fixture.detectChanges();
 
-            testLongPressFor((icons) => icons[1], fixture.componentInstance.stepDown);
-        }));
+            await testLongPressFor((icons) => icons[1], fixture.componentInstance.stepDown);
+        });
     });
 
     describe('formControl', () => {
-        it('should step up', fakeAsync(() => {
+        it('should step up', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputWithFormControl);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.formControl.value).toBe(10);
 
@@ -652,7 +709,7 @@ describe('KbqNumberInput', () => {
 
             dispatchFakeEvent(inputElement, 'focus');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const icons = stepper.queryAll(By.css('.kbq-icon'));
@@ -661,12 +718,14 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.formControl.value).toBe(11);
-        }));
+        });
 
-        it('should step down', fakeAsync(() => {
+        it('should step down', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputWithFormControl);
 
             fixture.detectChanges();
@@ -686,10 +745,10 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.formControl.value).toBe(9);
-        }));
+        });
 
         it('should mark as touched on blur', () => {
             const fixture = createComponent(NumberInputWithFormControl);
@@ -708,13 +767,15 @@ describe('KbqNumberInput', () => {
             expect(formFieldDebugElement.classes['ng-touched']).toBeTruthy();
         });
 
-        it('should block steps when disabled', fakeAsync(() => {
+        it('should block steps when disabled', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputWithFormControl);
 
             fixture.componentInstance.formControl.disable();
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const initialValue = fixture.componentInstance.formControl.value;
 
@@ -730,11 +791,13 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.formControl.value).toEqual(initialValue);
-        }));
+        });
     });
 
     describe('formControlName', () => {
-        it('should step up', fakeAsync(() => {
+        it('should step up', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputWithFormControlName);
 
             fixture.detectChanges();
@@ -754,12 +817,14 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.reactiveForm.value['reactiveInputValue']).toBe(11);
-        }));
+        });
 
-        it('should step down', fakeAsync(() => {
+        it('should step down', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputWithFormControlName);
 
             fixture.detectChanges();
@@ -779,18 +844,20 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.reactiveForm.value['reactiveInputValue']).toBe(9);
-        }));
+        });
 
-        it('should block steps when disabled', fakeAsync(() => {
+        it('should block steps when disabled', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputWithFormControlName);
 
             fixture.componentInstance.reactiveForm.disable();
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const initialValue = fixture.componentInstance.reactiveForm.value['reactiveInputValue'];
 
@@ -806,15 +873,17 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.reactiveForm.value['reactiveInputValue']).toEqual(initialValue);
-        }));
+        });
     });
 
     describe('empty value', () => {
-        it('should step up when no max', fakeAsync(() => {
+        it('should step up when no max', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputTestComponent);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
             const inputElement = inputElementDebug.nativeElement;
@@ -829,12 +898,14 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(1);
-        }));
+        });
 
-        it('should step down when no min', fakeAsync(() => {
+        it('should step down when no min', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputTestComponent);
 
             fixture.detectChanges();
@@ -852,12 +923,14 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(-1);
-        }));
+        });
 
-        it('should step up when max is set', fakeAsync(() => {
+        it('should step up when max is set', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
@@ -879,12 +952,14 @@ describe('KbqNumberInput', () => {
 
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(3.5);
-        }));
+        });
 
-        it('should step down when min is set', fakeAsync(() => {
+        it('should step down when min is set', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
@@ -907,12 +982,14 @@ describe('KbqNumberInput', () => {
 
             dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(3);
-        }));
+        });
 
-        it('should be able to set min', fakeAsync(() => {
+        it('should be able to set min', async () => {
+            vi.useFakeTimers();
+
             const min = 1;
 
             const fixture = createComponent(NumberInputMaxMinStepInput);
@@ -936,12 +1013,14 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(min);
-        }));
+        });
 
-        it('should be able to set max', fakeAsync(() => {
+        it('should be able to set max', async () => {
+            vi.useFakeTimers();
+
             const max = 3.5;
 
             const fixture = createComponent(NumberInputMaxMinStepInput);
@@ -949,7 +1028,7 @@ describe('KbqNumberInput', () => {
             fixture.componentInstance.max = max;
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
             const inputElement = inputElementDebug.nativeElement;
@@ -973,12 +1052,14 @@ describe('KbqNumberInput', () => {
 
             dispatchFakeEvent(stepUp.nativeElement, 'mousedown');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(max);
-        }));
+        });
 
-        it('should be able to set step', fakeAsync(() => {
+        it('should be able to set step', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStepInput);
 
             fixture.detectChanges();
@@ -1004,12 +1085,14 @@ describe('KbqNumberInput', () => {
 
             dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(3);
-        }));
+        });
 
-        it('should be able to set bigStep via the camelCase property binding', fakeAsync(() => {
+        it('should be able to set bigStep via the camelCase property binding', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStepInput);
 
             fixture.detectChanges();
@@ -1017,7 +1100,7 @@ describe('KbqNumberInput', () => {
             fixture.componentInstance.bigStep = 3;
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
             const inputElement = inputElementDebug.nativeElement;
@@ -1025,7 +1108,7 @@ describe('KbqNumberInput', () => {
             inputElement.value = 5;
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const event = createKeyboardEvent('keydown', UP_ARROW);
 
@@ -1033,20 +1116,22 @@ describe('KbqNumberInput', () => {
             dispatchEvent(inputElementDebug.nativeElement, event);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(8);
-        }));
+        });
 
-        it('should be able to set bigStep via the static attribute', fakeAsync(() => {
+        it('should be able to set bigStep via the static attribute', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             fixture.componentInstance.value = 5;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
 
@@ -1056,24 +1141,26 @@ describe('KbqNumberInput', () => {
             dispatchEvent(inputElementDebug.nativeElement, event);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             // The template's static `bigStep="2"` reaches `bigStep()` through the input's transform.
             // Stepping by the directive's own default (`BIG_STEP = 10`) instead would clamp the result
             // to `max="10"`, so 7 also proves the attribute, not the default, was used.
             expect(fixture.componentInstance.value).toBe(7);
-        }));
+        });
     });
 
     describe('signal inputs', () => {
         const numberInputOf = (fixture: ComponentFixture<unknown>): KbqNumberInput =>
             fixture.debugElement.query(By.directive(KbqNumberInput)).injector.get(KbqNumberInput);
 
-        it('should read the static attribute forms back as coerced numbers', fakeAsync(() => {
+        it('should read the static attribute forms back as coerced numbers', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const numberInput = numberInputOf(fixture);
 
@@ -1081,13 +1168,15 @@ describe('KbqNumberInput', () => {
             expect(numberInput.max()).toBe(10);
             expect(numberInput.step()).toBe(0.5);
             expect(numberInput.bigStep()).toBe(2);
-        }));
+        });
 
-        it('should fall back to the defaults when nothing is bound', fakeAsync(() => {
+        it('should fall back to the defaults when nothing is bound', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputConfigurable);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const numberInput = numberInputOf(fixture);
 
@@ -1095,27 +1184,31 @@ describe('KbqNumberInput', () => {
             expect(numberInput.max()).toBe(Infinity);
             expect(numberInput.step()).toBe(SMALL_STEP);
             expect(numberInput.bigStep()).toBe(BIG_STEP);
-        }));
+        });
 
-        it('should fall back to the defaults for a non-numeric bound value', fakeAsync(() => {
+        it('should fall back to the defaults for a non-numeric bound value', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStepInput);
 
             fixture.componentInstance.step = '5px' as unknown as number;
             fixture.componentInstance.bigStep = '5px' as unknown as number;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const numberInput = numberInputOf(fixture);
 
             expect(numberInput.step()).toBe(SMALL_STEP);
             expect(numberInput.bigStep()).toBe(BIG_STEP);
-        }));
+        });
 
-        it('should track a rebound value', fakeAsync(() => {
+        it('should track a rebound value', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStepInput);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const numberInput = numberInputOf(fixture);
 
@@ -1123,16 +1216,18 @@ describe('KbqNumberInput', () => {
 
             fixture.componentInstance.max = 40;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(numberInput.max()).toBe(40);
-        }));
+        });
 
-        it('should repaint aria-valuemax when the bound upper bound changes', fakeAsync(() => {
+        it('should repaint aria-valuemax when the bound upper bound changes', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStepInput);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
 
@@ -1140,18 +1235,20 @@ describe('KbqNumberInput', () => {
 
             fixture.componentInstance.max = 40;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.getAttribute('aria-valuemax')).toBe('40');
-        }));
+        });
     });
 
     describe('not empty value', () => {
-        it('should step up when no min', fakeAsync(() => {
+        it('should step up when no min', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputTestComponent);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
             const inputElement = inputElementDebug.nativeElement;
@@ -1161,7 +1258,7 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'focus');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const icons = stepper.queryAll(By.css('.kbq-icon'));
@@ -1170,12 +1267,14 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(2);
-        }));
+        });
 
-        it('should step down when no max', fakeAsync(() => {
+        it('should step down when no max', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputTestComponent);
 
             fixture.detectChanges();
@@ -1188,7 +1287,7 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'focus');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const icons = stepper.queryAll(By.css('.kbq-icon'));
@@ -1197,14 +1296,16 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(0);
-        }));
+        });
     });
 
     describe('keys', () => {
-        it('should step up on up arrow key', fakeAsync(() => {
+        it('should step up on up arrow key', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputTestComponent);
 
             fixture.detectChanges();
@@ -1215,17 +1316,19 @@ describe('KbqNumberInput', () => {
             inputElement.value = 1;
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             dispatchKeyboardEvent(inputElementDebug.nativeElement, 'keydown', UP_ARROW);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(2);
-        }));
+        });
 
-        it('should step down on down arrow key', fakeAsync(() => {
+        it('should step down on down arrow key', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputTestComponent);
 
             fixture.detectChanges();
@@ -1236,17 +1339,19 @@ describe('KbqNumberInput', () => {
             inputElement.value = 1;
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             dispatchKeyboardEvent(inputElementDebug.nativeElement, 'keydown', DOWN_ARROW);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(0);
-        }));
+        });
 
-        it('should step up with bug step on shift and up arrow key', fakeAsync(() => {
+        it('should step up with bug step on shift and up arrow key', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
@@ -1257,7 +1362,7 @@ describe('KbqNumberInput', () => {
             inputElement.value = 5;
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const event = createKeyboardEvent('keydown', UP_ARROW);
 
@@ -1265,12 +1370,14 @@ describe('KbqNumberInput', () => {
             dispatchEvent(inputElementDebug.nativeElement, event);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(7);
-        }));
+        });
 
-        it('should step down with bug step on shift and down arrow key', fakeAsync(() => {
+        it('should step down with bug step on shift and down arrow key', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
@@ -1281,7 +1388,7 @@ describe('KbqNumberInput', () => {
             inputElement.value = 6;
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const event = createKeyboardEvent('keydown', DOWN_ARROW);
 
@@ -1289,16 +1396,18 @@ describe('KbqNumberInput', () => {
             dispatchEvent(inputElementDebug.nativeElement, event);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(4);
-        }));
+        });
 
-        it('should ignore wrong chars', fakeAsync(() => {
+        it('should ignore wrong chars', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
             const inputElement = inputElementDebug.nativeElement;
@@ -1307,57 +1416,59 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'input');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(fixture.componentInstance.value).toBe(123);
 
             inputElement.value = 'blahblah';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(fixture.componentInstance.value).toBeNull();
 
             inputElement.value = '1.2';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(fixture.componentInstance.value).toBe(1.2);
 
             inputElement.value = '1..2';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(fixture.componentInstance.value).toBeNull();
 
             inputElement.value = '1..';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(fixture.componentInstance.value).toBeNull();
 
             inputElement.value = '--1';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(fixture.componentInstance.value).toBeNull();
 
             inputElement.value = '-1-';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(fixture.componentInstance.value).toBeNull();
 
             inputElement.value = '.';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(fixture.componentInstance.value).toBeNull();
-        }));
+        });
 
-        it('should allow entering minus', fakeAsync(() => {
+        it('should allow entering minus', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
             const inputElement = inputElementDebug.nativeElement;
@@ -1365,17 +1476,19 @@ describe('KbqNumberInput', () => {
             inputElement.value = '-';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(fixture.componentInstance.value).toBeNull();
-        }));
+        });
 
-        it('should allow enter fraction separator char after integer part', fakeAsync(() => {
+        it('should allow enter fraction separator char after integer part', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStep);
             const localeService = fixture.debugElement.injector.get(KbqLocaleService);
 
             localeService.setLocale('ru-RU');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const fractionSeparator = localeService.current.input.number.fractionSeparator;
 
@@ -1385,79 +1498,85 @@ describe('KbqNumberInput', () => {
             inputElement.value = '123';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             inputElement.value = `${inputElement.value}${fractionSeparator}`;
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toContain(localeService?.current.input.number.fractionSeparator);
-        }));
+        });
 
         describe('negative values', () => {
             let fixture: ComponentFixture<NumberInputMaxMinStepInput>;
             let inputElementDebug;
             let inputElement;
 
-            beforeEach(fakeAsync(() => {
+            beforeEach(async () => {
+                vi.useFakeTimers();
+
                 fixture = createComponent(NumberInputMaxMinStepInput);
                 inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
                 inputElement = inputElementDebug.nativeElement;
                 fixture.detectChanges();
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
-            it('should prevent negative value from being emitted if min >= 0', fakeAsync(() => {
+            it('should prevent negative value from being emitted if min >= 0', async () => {
                 fixture.componentInstance.min = 0;
                 const minuses = [NUMPAD_MINUS, DASH, FF_MINUS];
                 const mockEvent: any = { preventDefault: () => true };
-                const preventDefaultSpyFn = jest.spyOn(mockEvent, 'preventDefault');
+                const preventDefaultSpyFn = vi.spyOn(mockEvent, 'preventDefault');
 
                 fixture.detectChanges();
 
-                minuses.forEach((minus) => {
+                for (const minus of minuses) {
                     mockEvent.keyCode = minus;
                     inputElementDebug.triggerEventHandler('keydown', mockEvent);
                     fixture.detectChanges();
-                    flush();
-                });
+                    await vi.runOnlyPendingTimersAsync();
+                }
+
                 expect(preventDefaultSpyFn).toHaveBeenCalledTimes(minuses.length);
-            }));
+            });
 
             /* TODO: not the full coverage since input validity change can't be emitted */
-            it('should prevent negative value from being emitted for repeated minus', fakeAsync(() => {
+            it('should prevent negative value from being emitted for repeated minus', async () => {
                 fixture.componentInstance.min = -5;
                 const minuses = [NUMPAD_MINUS, DASH, FF_MINUS];
                 const mockEvent: any = { preventDefault: () => true };
-                const preventDefaultSpyFn = jest.spyOn(mockEvent, 'preventDefault');
+                const preventDefaultSpyFn = vi.spyOn(mockEvent, 'preventDefault');
 
                 fixture.detectChanges();
 
                 inputElement.value = '-1';
                 dispatchFakeEvent(inputElement, 'input');
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
-                minuses.forEach((minus) => {
+                for (const minus of minuses) {
                     mockEvent.keyCode = minus;
                     mockEvent.key = '-';
                     inputElementDebug.triggerEventHandler('keydown', mockEvent);
                     dispatchFakeEvent(inputElement, 'input');
                     fixture.detectChanges();
-                    flush();
-                });
+                    await vi.runOnlyPendingTimersAsync();
+                }
+
                 expect(preventDefaultSpyFn).toHaveBeenCalledTimes(minuses.length);
-            }));
+            });
         });
     });
 
     describe('truncate to bounds', () => {
-        it('should set max when value > max on step up', fakeAsync(() => {
+        it('should set max when value > max on step up', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
             const inputElement = inputElementDebug.nativeElement;
@@ -1467,7 +1586,7 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'focus');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const icons = stepper.queryAll(By.css('.kbq-icon'));
@@ -1476,16 +1595,18 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(10);
-        }));
+        });
 
-        it('should set min when value < min on step down', fakeAsync(() => {
+        it('should set min when value < min on step down', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputMaxMinStep);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
             const inputElement = inputElementDebug.nativeElement;
@@ -1495,7 +1616,7 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'focus');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const icons = stepper.queryAll(By.css('.kbq-icon'));
@@ -1504,10 +1625,10 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.value).toBe(3);
-        }));
+        });
     });
 
     describe('with masked thousand separators', () => {
@@ -1523,95 +1644,111 @@ describe('KbqNumberInput', () => {
             inputElement = inputElementDebug.nativeElement;
         });
 
-        it('should mask number satisfying rules', fakeAsync(() => {
+        it('should mask number satisfying rules', async () => {
+            vi.useFakeTimers();
+
             const { groupSeparator } = fixture.componentInstance.localeService.current.input.number;
 
             inputElement.value = '12345';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe(`12${defaultLocaleGroupSep}345`);
             expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
             expect(fixture.componentInstance.value).toBe(12345);
-        }));
+        });
 
-        it('ru-RU: should NOT mask number if number between [1000, 10000)', fakeAsync(() => {
+        it('ru-RU: should NOT mask number if number between [1000, 10000)', async () => {
+            vi.useFakeTimers();
+
             const { groupSeparator } = fixture.componentInstance.localeService.current.input.number;
 
             inputElement.value = '1145';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe('1145');
             groupSeparator.forEach((separator) => {
                 expect(inputElement.value).not.toContain(separator);
             });
             expect(fixture.componentInstance.value).toBe(1145);
-        }));
+        });
 
-        it('should mask number with model to view changes', fakeAsync(() => {
+        it('should mask number with model to view changes', async () => {
+            vi.useFakeTimers();
+
             const { groupSeparator } = fixture.componentInstance.localeService.current.input.number;
 
             fixture.componentInstance.value = 11145;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe(`11${defaultLocaleGroupSep}145`);
             expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
-        }));
+        });
 
-        it('should NOT mask fractional part of number', fakeAsync(() => {
+        it('should NOT mask fractional part of number', async () => {
+            vi.useFakeTimers();
+
             const { groupSeparator } = fixture.componentInstance.localeService.current.input.number;
 
             inputElement.value = '0,1234';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe('0,1234');
             groupSeparator.forEach((separator) => {
                 expect(inputElement.value).not.toContain(separator);
             });
             expect(fixture.componentInstance.value).toBe(0.1234);
-        }));
+        });
 
-        it('should add thousand separator for number more than thousand with fraction part', fakeAsync(() => {
+        it('should add thousand separator for number more than thousand with fraction part', async () => {
+            vi.useFakeTimers();
+
             const { groupSeparator } = fixture.componentInstance.localeService.current.input.number;
 
             inputElement.value = '10234,1234';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe(`10${defaultLocaleGroupSep}234,1234`);
             expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
             expect(fixture.componentInstance.value).toBe(10234.1234);
-        }));
+        });
 
-        it('should NOT mask number if less thousand', fakeAsync(() => {
+        it('should NOT mask number if less thousand', async () => {
+            vi.useFakeTimers();
+
             const { groupSeparator } = fixture.componentInstance.localeService.current.input.number;
 
             inputElement.value = '123';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe('123');
             groupSeparator.forEach((separator) => {
                 expect(inputElement.value).not.toContain(separator);
             });
             expect(fixture.componentInstance.value).toBe(123);
-        }));
+        });
 
-        it('should switch separators on language change', fakeAsync(() => {
+        it('should switch separators on language change', async () => {
+            vi.useFakeTimers();
+
             const { groupSeparator: previousGroupSep } = fixture.componentInstance.localeService.current.input.number;
 
             inputElement.value = '99999,999';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            // The reformat schedules the change detection that writes the model back; it has to land before the
+            // locale switches.
+            await vi.runAllTimersAsync();
 
             expect(inputElement.value).toBe(`99${defaultLocaleGroupSep}999,999`);
             expect(previousGroupSep.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
@@ -1620,7 +1757,7 @@ describe('KbqNumberInput', () => {
 
             fixture.componentInstance.localeService.setLocale('en-US');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe('99,999.999');
             previousGroupSep.forEach((separator) => {
@@ -1628,47 +1765,53 @@ describe('KbqNumberInput', () => {
             });
             expect(previousValue).toEqual(fixture.componentInstance.value);
             expect(fixture.componentInstance.value).toEqual(99999.999);
-        }));
+        });
 
-        it('should work with ngModel of type number', fakeAsync(() => {
+        it('should work with ngModel of type number', async () => {
+            vi.useFakeTimers();
+
             const { groupSeparator } = fixture.componentInstance.localeService.current.input.number;
 
             inputElement.value = '12345,12345';
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe(`12${defaultLocaleGroupSep}345,12345`);
             expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
             expect(fixture.componentInstance.value).toBe(12345.12345);
             expect(typeof fixture.componentInstance.value).toBe('number');
-        }));
+        });
 
-        it('should NOT allow duplicated fractional part sign', fakeAsync(() => {
+        it('should NOT allow duplicated fractional part sign', async () => {
+            vi.useFakeTimers();
+
             const mockEvent: any = { preventDefault: () => true, keyCode: COMMA, key: ',' };
-            const preventDefaultSpyFn = jest.spyOn(mockEvent, 'preventDefault');
+            const preventDefaultSpyFn = vi.spyOn(mockEvent, 'preventDefault');
             const previousValue = '0,12345';
 
             inputElement.value = previousValue;
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             inputElementDebug.triggerEventHandler('keydown', mockEvent);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(preventDefaultSpyFn).toHaveBeenCalled();
             expect(inputElement.value).toBe(previousValue);
-        }));
+        });
 
-        it('should mask on step up/down', fakeAsync(() => {
+        it('should mask on step up/down', async () => {
+            vi.useFakeTimers();
+
             const { groupSeparator } = fixture.componentInstance.localeService.current.input.number;
 
             fixture.componentInstance.max = 15000;
             fixture.componentInstance.value = 9999;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe('9999');
 
@@ -1678,25 +1821,29 @@ describe('KbqNumberInput', () => {
 
             dispatchFakeEvent(inputElement, 'focus');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconUp = icons[0];
 
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe(`10${defaultLocaleGroupSep}000`);
             expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
-        }));
+        });
 
-        it('should paste properly', fakeAsync(() => {
+        it('should paste properly', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.localeService.setLocale('ru-RU');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
-            const testOutput = [
+            const testOutput: string[] = [];
+
+            for (const value of [
                 '1',
                 '1.',
                 '1.2',
@@ -1706,7 +1853,7 @@ describe('KbqNumberInput', () => {
                 '2,2',
                 '2,2,',
                 '2,2,2'
-            ].map((value) => {
+            ]) {
                 inputElementDebug.triggerEventHandler('paste', {
                     preventDefault: () => null,
                     clipboardData: {
@@ -1716,18 +1863,20 @@ describe('KbqNumberInput', () => {
                 fixture.detectChanges();
                 fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
-                return `${value} -> ${inputElement.value}`;
-            });
+                testOutput.push(`${value} -> ${inputElement.value}`);
+            }
 
             expect(testOutput).toMatchSnapshot();
-        }));
+        });
 
-        it('should check and normalize localized number when pasted number in different locale', fakeAsync(() => {
+        it('should check and normalize localized number when pasted number in different locale', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.localeService.setLocale('ru-RU');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
@@ -1738,7 +1887,7 @@ describe('KbqNumberInput', () => {
 
             fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe(`1${defaultLocaleGroupSep}234${defaultLocaleGroupSep}567,89`);
 
@@ -1752,20 +1901,22 @@ describe('KbqNumberInput', () => {
 
             fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe(`10${defaultLocaleGroupSep}000,7`);
-        }));
+        });
 
-        it('nothing should happen when inserting a text value', fakeAsync(() => {
+        it('nothing should happen when inserting a text value', async () => {
+            vi.useFakeTimers();
+
             const mockEvent: any = { preventDefault: () => true };
-            const preventDefault = jest.spyOn(mockEvent, 'preventDefault');
+            const preventDefault = vi.spyOn(mockEvent, 'preventDefault');
 
             expect(inputElement.value).toBe('');
 
             fixture.componentInstance.localeService.setLocale('ru-RU');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault,
                 clipboardData: {
@@ -1776,7 +1927,7 @@ describe('KbqNumberInput', () => {
 
             fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(preventDefault).not.toHaveBeenCalled();
             expect(inputElement.value).toBe(`1${defaultLocaleGroupSep}234${defaultLocaleGroupSep}567,89`);
@@ -1788,23 +1939,25 @@ describe('KbqNumberInput', () => {
                 }
             });
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(preventDefault).toHaveBeenCalled();
             expect(inputElement.value).toBe(`1${defaultLocaleGroupSep}234${defaultLocaleGroupSep}567,89`);
-        }));
+        });
 
-        it('should paste negative value properly', fakeAsync(() => {
+        it('should paste negative value properly', async () => {
+            vi.useFakeTimers();
+
             const pasteValue = '-1234';
             const mockEvent: any = { preventDefault: () => true };
-            const preventDefault = jest.spyOn(mockEvent, 'preventDefault');
+            const preventDefault = vi.spyOn(mockEvent, 'preventDefault');
 
             expect(inputElement.value).toBe('');
 
             fixture.componentInstance.localeService.setLocale('ru-RU');
             fixture.componentInstance.withMask = false;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault,
                 clipboardData: {
@@ -1815,11 +1968,11 @@ describe('KbqNumberInput', () => {
 
             fixture.componentInstance.inputNumberDirective().onInput({ inputType: 'insertFromPaste' } as any);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(preventDefault).not.toHaveBeenCalled();
             expect(inputElement.value).toBe(pasteValue);
-        }));
+        });
     });
 
     describe('with [integer]="true"', () => {
@@ -1835,10 +1988,12 @@ describe('KbqNumberInput', () => {
             inputElement = inputElementDebug.nativeElement;
         });
 
-        it('should paste only integer part and normalize number in different locale', fakeAsync(() => {
+        it('should paste only integer part and normalize number in different locale', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.localeService.setLocale('ru-RU');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
                 clipboardData: {
@@ -1846,7 +2001,7 @@ describe('KbqNumberInput', () => {
                 }
             });
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe(`1${defaultLocaleGroupSep}234${defaultLocaleGroupSep}567`);
 
@@ -1857,18 +2012,20 @@ describe('KbqNumberInput', () => {
                 }
             });
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe(`10${defaultLocaleGroupSep}000`);
-        }));
+        });
     });
 
     describe('valueAsNumber', () => {
-        it('should leave the platform accessor of an unrelated input alone', fakeAsync(() => {
+        it('should leave the platform accessor of an unrelated input alone', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputNextToPlainInput);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const plainInput: HTMLInputElement = fixture.debugElement.query(
                 By.css('[data-testid="plain"]')
@@ -1876,24 +2033,28 @@ describe('KbqNumberInput', () => {
 
             expect(plainInput.value).toBe('12,5');
             expect(plainInput.valueAsNumber).toBeNaN();
-        }));
+        });
 
-        it('should read the normalized model value off the directive', fakeAsync(() => {
+        it('should read the normalized model value off the directive', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputWithMask);
 
             fixture.componentInstance.localeService.setLocale('ru-RU');
             fixture.componentInstance.value = 1234.5;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.inputNumberDirective().valueAsNumber).toBe(1234.5);
-        }));
+        });
 
-        it('should read the live view value, before the deferred reformat runs', fakeAsync(() => {
+        it('should read the live view value, before the deferred reformat runs', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputWithMask);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
             const inputElement: HTMLInputElement = inputElementDebug.nativeElement;
@@ -1901,22 +2062,24 @@ describe('KbqNumberInput', () => {
             inputElement.value = '42';
             dispatchFakeEvent(inputElement, 'input');
 
-            // No `flush()`/`tick()` yet: the reformat is still pending in its `setTimeout(0)`, and so is
+            // No timer has run yet: the reformat is still pending in its `setTimeout(0)`, and so is
             // the committed `value`/`valueChange`. A consumer reading `valueAsNumber` from its own
             // `(input)` handler must still see the keystroke immediately, same as `nativeElement.value`.
             expect(fixture.componentInstance.inputNumberDirective().valueAsNumber).toBe(42);
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.inputNumberDirective().valueAsNumber).toBe(42);
-        }));
+        });
 
-        it('should read an in-progress "-" as null rather than the last committed number', fakeAsync(() => {
+        it('should read an in-progress "-" as null rather than the last committed number', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputWithMask);
 
             fixture.componentInstance.value = 5;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
             const inputElement: HTMLInputElement = inputElementDebug.nativeElement;
@@ -1925,18 +2088,20 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'input');
 
             expect(fixture.componentInstance.inputNumberDirective().valueAsNumber).toBeNull();
-        }));
+        });
     });
 
     describe('with type="number"', () => {
-        it('should reset the native type to text and warn', fakeAsync(() => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+        it('should reset the native type to text and warn', async () => {
+            vi.useFakeTimers();
+
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
             try {
                 const fixture = createComponent(NumberInputWithNativeNumberType);
 
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
 
@@ -1945,28 +2110,83 @@ describe('KbqNumberInput', () => {
             } finally {
                 warn.mockRestore();
             }
-        }));
+        });
 
-        it('should keep a fractional value in the field after a step', fakeAsync(() => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+        it('should keep a fractional value in the field after a step', async () => {
+            vi.useFakeTimers();
+
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
             try {
                 const fixture = createComponent(NumberInputWithNativeNumberType);
 
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
 
                 dispatchKeyboardEvent(inputElement, 'keydown', UP_ARROW);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(inputElement.value).toBe('0,5');
             } finally {
                 warn.mockRestore();
             }
-        }));
+        });
+
+        it('should render the value a reactive form writes on creation', async () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+            try {
+                const fixture = createComponent(NumberInputWithNativeNumberTypeAndFormControl);
+
+                await fixture.whenStable();
+
+                const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                expect(inputElement.value).toBe(`12${defaultLocaleGroupSep}345,5`);
+            } finally {
+                warn.mockRestore();
+            }
+        });
+    });
+
+    describe('bound value', () => {
+        let fixture: ComponentFixture<NumberInputWithBoundValue>;
+        let inputElement: HTMLInputElement;
+        let numberInput: KbqNumberInput;
+
+        beforeEach(async () => {
+            fixture = createComponent(NumberInputWithBoundValue);
+            await fixture.whenStable();
+
+            const inputDebugElement = fixture.debugElement.query(By.directive(KbqNumberInput));
+
+            inputElement = inputDebugElement.nativeElement;
+            numberInput = inputDebugElement.injector.get(KbqNumberInput);
+        });
+
+        it('should render the bound number in the locale format', () => {
+            const input = fixture.debugElement.query(By.directive(KbqInput)).injector.get(KbqInput);
+
+            expect(inputElement.value).toBe(`12${defaultLocaleGroupSep}345,5`);
+            expect(input.value()).toBe(inputElement.value);
+        });
+
+        it('should clear the field when the bound value becomes undefined', async () => {
+            const valueChange = vi.fn();
+
+            numberInput.valueChange.subscribe(valueChange);
+
+            fixture.componentInstance.value = undefined;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(inputElement.value).toBe('');
+            expect(numberInput.value).toBeNull();
+            expect(valueChange).toHaveBeenCalledWith(null);
+        });
     });
 
     describe('decimal stepping', () => {
@@ -1985,25 +2205,27 @@ describe('KbqNumberInput', () => {
             expect(getPrecision(12)).toBe(1);
         });
 
-        it('should render the stepped value without drift', fakeAsync(() => {
+        it('should render the stepped value without drift', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputConfigurable);
 
             fixture.componentInstance.localeService.setLocale('ru-RU');
             fixture.componentInstance.step = 0.001;
             fixture.componentInstance.value = 1.005;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
 
             dispatchKeyboardEvent(inputElement, 'keydown', UP_ARROW);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             // The model alone would have missed this: `formatNumber` renders `toString()` digit for digit.
             expect(inputElement.value).toBe('1,006');
             expect(fixture.componentInstance.inputNumberDirective().value).toBe(1.006);
-        }));
+        });
     });
 
     describe('startFormattingFrom', () => {
@@ -2017,43 +2239,49 @@ describe('KbqNumberInput', () => {
             inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
         });
 
-        it('should group from the given power of ten, overriding the locale default', fakeAsync(() => {
+        it('should group from the given power of ten, overriding the locale default', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.startFormattingFrom = 3;
             fixture.componentInstance.value = 1234;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe(`1${defaultLocaleGroupSep}234`);
-        }));
+        });
 
-        it('should follow the locale default when not set', fakeAsync(() => {
+        it('should follow the locale default when not set', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.value = 1234;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe('1234');
-        }));
+        });
     });
 
     describe('es-LA', () => {
         // `es-LA` is not a real BCP-47 tag, so the directive hands `Intl` the default locale instead of
         // letting each engine's ICU data decide what `es-LA` means. This pins that workaround: without
         // it the separators come from whatever `Intl` resolves to, which varies by build.
-        it('should render exactly what the default locale renders', fakeAsync(() => {
-            const render = (locale: 'es-LA' | 'ru-RU') => {
+        it('should render exactly what the default locale renders', async () => {
+            vi.useFakeTimers();
+
+            const render = async (locale: 'es-LA' | 'ru-RU') => {
                 const fixture = createComponent(NumberInputConfigurable);
 
                 fixture.componentInstance.localeService.setLocale(locale);
                 fixture.componentInstance.value = 1234567.89;
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 return (fixture.debugElement.query(By.directive(KbqInput)).nativeElement as HTMLInputElement).value;
             };
 
-            expect(render('es-LA')).toBe(render('ru-RU'));
-        }));
+            expect(await render('es-LA')).toBe(await render('ru-RU'));
+        });
     });
 
     describe('accessibility', () => {
@@ -2067,61 +2295,71 @@ describe('KbqNumberInput', () => {
             inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
         });
 
-        it('should expose spinbutton semantics', fakeAsync(() => {
+        it('should expose spinbutton semantics', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.min = -10;
             fixture.componentInstance.max = 10;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.getAttribute('role')).toBe('spinbutton');
             expect(inputElement.getAttribute('aria-valuemin')).toBe('-10');
             expect(inputElement.getAttribute('aria-valuemax')).toBe('10');
-        }));
+        });
 
-        it('should omit aria-valuemin/aria-valuemax when unbounded', fakeAsync(() => {
+        it('should omit aria-valuemin/aria-valuemax when unbounded', async () => {
+            vi.useFakeTimers();
+
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.getAttribute('aria-valuemin')).toBeNull();
             expect(inputElement.getAttribute('aria-valuemax')).toBeNull();
-        }));
+        });
 
-        it('should track the value in aria-valuenow and the formatted string in aria-valuetext', fakeAsync(() => {
+        it('should track the value in aria-valuenow and the formatted string in aria-valuetext', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.value = 12345;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(inputElement.getAttribute('aria-valuenow')).toBe('12345');
             expect(inputElement.getAttribute('aria-valuetext')).toBe(`12${defaultLocaleGroupSep}345`);
-        }));
+        });
 
-        it('should update aria-valuenow after a step', fakeAsync(() => {
+        it('should update aria-valuenow after a step', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.value = 5;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             dispatchKeyboardEvent(inputElement, 'keydown', UP_ARROW);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(inputElement.getAttribute('aria-valuenow')).toBe('6');
-        }));
+        });
 
-        it('should flip inputmode with [integer]', fakeAsync(() => {
+        it('should flip inputmode with [integer]', async () => {
+            vi.useFakeTimers();
+
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.getAttribute('inputmode')).toBe('decimal');
 
             fixture.componentInstance.integer = true;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(inputElement.getAttribute('inputmode')).toBe('numeric');
-        }));
+        });
 
         it('should have no AXE violations', async () => {
             fixture.componentInstance.value = 12345;
@@ -2129,7 +2367,7 @@ describe('KbqNumberInput', () => {
             await fixture.whenStable();
             fixture.detectChanges();
 
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            await expect(fixture.nativeElement).toHaveNoViolations();
         });
     });
 
@@ -2147,61 +2385,69 @@ describe('KbqNumberInput', () => {
         });
 
         /** Types `digit` at the end of the field, the way a keystroke reaches `onInput`. */
-        const type = (nextViewValue: string) => {
+        const type = async (nextViewValue: string) => {
             inputElement.value = nextViewValue;
             inputElement.setSelectionRange(nextViewValue.length, nextViewValue.length);
             dispatchFakeEvent(inputElement, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
         };
 
-        it('should move the caret right when a group separator is inserted', fakeAsync(() => {
+        it('should move the caret right when a group separator is inserted', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.value = 1234;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe('1234');
 
-            type('12345');
+            await type('12345');
 
             expect(inputElement.value).toBe(`12${defaultLocaleGroupSep}345`);
             expect(inputElement.selectionStart).toBe(6);
-        }));
+        });
 
-        it('should move the caret left when a group separator is removed', fakeAsync(() => {
+        it('should move the caret left when a group separator is removed', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.value = 12345;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(inputElement.value).toBe(`12${defaultLocaleGroupSep}345`);
 
-            type(`12${defaultLocaleGroupSep}34`);
+            await type(`12${defaultLocaleGroupSep}34`);
 
             expect(inputElement.value).toBe('1234');
             expect(inputElement.selectionStart).toBe(4);
-        }));
+        });
 
-        it('should keep the caret where it is when no separator crosses it', fakeAsync(() => {
+        it('should keep the caret where it is when no separator crosses it', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.value = 12;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
-            type('123');
+            await type('123');
 
             expect(inputElement.value).toBe('123');
             expect(inputElement.selectionStart).toBe(3);
-        }));
+        });
     });
 
     describe('teardown', () => {
-        it('should not update the model from a keystroke pending at destroy time', fakeAsync(() => {
+        it('should not update the model from a keystroke pending at destroy time', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(NumberInputDestroyedWhileTyping);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
-            const onChange = jest.fn();
+            const onChange = vi.fn();
 
             fixture.componentInstance.formControl.valueChanges.subscribe(onChange);
 
@@ -2211,9 +2457,9 @@ describe('KbqNumberInput', () => {
             fixture.componentInstance.visible = false;
             fixture.detectChanges();
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(onChange).not.toHaveBeenCalled();
-        }));
+        });
     });
 });

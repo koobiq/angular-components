@@ -3,7 +3,7 @@ import { kbqMarkdownMarkedOptionsProvider } from './markdown.component';
 import { KbqMarkdownModule } from './markdown.module';
 
 @Component({
-    selector: 'e2e-markdown-line-break-with-markdown-text-input-example',
+    selector: 'e2e-markdown-line-break-with-markdown-text-input',
     imports: [KbqMarkdownModule],
     // prettier-ignore
     template: `
@@ -12,13 +12,13 @@ import { KbqMarkdownModule } from './markdown.module';
     providers: [kbqMarkdownMarkedOptionsProvider({ breaks: true })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class E2eMarkdownLineBreakWithMarkdownTextInputExample {}
+class MarkdownLineBreakWithMarkdownTextInput {}
 
 @Component({
     selector: 'e2e-markdown-states',
     imports: [
         KbqMarkdownModule,
-        E2eMarkdownLineBreakWithMarkdownTextInputExample
+        MarkdownLineBreakWithMarkdownTextInput
     ],
     templateUrl: './e2e.html',
     styles: `

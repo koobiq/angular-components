@@ -43,11 +43,14 @@ const opensElsewhere = ({ button, ctrlKey, metaKey, shiftKey, altKey }: MouseEve
     template: `
         @for (block of blocks(); track $index) {
             @if (block.type === 'code') {
-                <kbq-code-block
-                    class="docs-code-block"
-                    filled
-                    [files]="[{ content: block.code, language: block.language }]"
-                />
+                <!-- Static until hovered, like the other code blocks of the API tab. -->
+                @defer (on immediate; hydrate on hover) {
+                    <kbq-code-block
+                        class="docs-code-block"
+                        filled
+                        [files]="[{ content: block.code, language: block.language }]"
+                    />
+                }
             } @else {
                 <div [innerHTML]="block.html"></div>
             }

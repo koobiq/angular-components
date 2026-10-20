@@ -88,6 +88,7 @@ RUN set -eux; \
 
 COPY .yarnrc.yml package.json yarn.lock ./
 COPY .yarn/releases/ .yarn/releases/
+COPY .yarn/patches/ .yarn/patches/
 
 # The base image has Yarn 1 classic on PATH from its own `npm install -g yarn`. It cannot read a
 # Berry lockfile, and the container command (`yarn run e2e:components`) shells out to whatever `yarn`
@@ -108,9 +109,6 @@ RUN set -eux; \
 COPY tools/builders/ tools/builders/
 COPY tools/e2e/assert-browsers.js tools/e2e/
 
-# For whoever debugs a failure here: `xlsx` resolves to https://cdn.sheetjs.com/, not the npm
-# registry, so this layer needs that host reachable as well as the registry.
-#
 # The cache is cleaned in the same layer rather than a later one: node_modules is already
 # materialised by then (nodeLinker: node-modules), and Yarn's global cache is another 640 MB that
 # would otherwise be committed and then paid for again on every image export and pull.

@@ -2,17 +2,26 @@
 import { coerceElement } from '@angular/cdk/coercion';
 import {
     ConnectedOverlayPositionChange,
+    ConnectionPositionPair,
     FlexibleConnectedPositionStrategy,
     OverlayContainer,
     OverlayPositionBuilder
 } from '@angular/cdk/overlay';
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
-import { Component, DebugElement, ElementRef, Provider, TemplateRef, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
-    ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT,
+    Component,
+    DebugElement,
+    ElementRef,
+    Provider,
+    TemplateRef,
+    Type,
+    effect,
+    signal,
+    viewChild
+} from '@angular/core';
+import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import {
     ENTER,
     ESCAPE,
     KBQ_LOCALE_SERVICE,
@@ -21,7 +30,6 @@ import {
     KbqOverlayOrigin,
     KbqPopUpPlacementValues,
     KbqStickToWindowPlacementValues,
-    POSITION_MAP,
     POSITION_TO_CSS_MAP,
     SPACE,
     createKeyboardEvent,
@@ -32,24 +40,57 @@ import {
     enUSLocaleData,
     ruRULocaleData
 } from '@koobiq/components/core';
+import { KbqModalService } from '@koobiq/components/modal';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { axe } from 'jest-axe';
 import { Subject, filter } from 'rxjs';
-import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
-import { TestScheduler } from 'rxjs/testing';
-import { KBQ_POPOVER_CONFIRM_BUTTON_TEXT, KBQ_POPOVER_CONFIRM_TEXT } from './popover-confirm.component';
-import { KbqPopoverComponent, KbqPopoverTrigger, defaultHoverLeaveDelay } from './popover.component';
+import type { Mock } from 'vitest';
+import {
+    KBQ_POPOVER_CONFIRM_BUTTON_TEXT,
+    KBQ_POPOVER_CONFIRM_TEXT,
+    KbqPopoverConfirmTrigger
+} from './popover-confirm.component';
+import {
+    KbqPopoverComponent,
+    KbqPopoverTrigger,
+    defaultHoverLeaveDelay,
+    defaultOffsetYWithArrow
+} from './popover.component';
 import { KbqPopoverModule } from './popover.module';
 
 /** `KbqTooltipTrigger` default enter delay (400 ms) plus a buffer for the deferred show. */
 const tooltipEnterDelay = 410;
 
+// The modal's own animation timeout, which is internal to its entry point.
+const MODAL_ANIMATE_DURATION = 300;
+
 /** An axe audit walks the whole overlay and needs more than the repo-wide 2s default. */
 const axeTimeout = 15000;
 
-function openAndAssertPopover<T>(componentFixture: ComponentFixture<T>, triggerElement: ElementRef) {
+// Values internal to the core entry point: the 12px arrow times √2, rounded, and two of its position pairs.
+const ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT = 17;
+const RIGHT_TOP_POSITION: ConnectionPositionPair = {
+    originX: 'end',
+    originY: 'top',
+    overlayX: 'start',
+    overlayY: 'top'
+};
+const BOTTOM_POSITION: ConnectionPositionPair = {
+    originX: 'center',
+    originY: 'bottom',
+    overlayX: 'center',
+    overlayY: 'top'
+};
+
+/**
+ * Fires the timers that are due, and the zero-delay ones they schedule in turn — a closing action runs
+ * through `delay(0)` into the pop-up's own hide timeout. Vitest's fake clock puts a zero-delay timer
+ * scheduled from inside another timer 1 ms later, so the clock has to move for the chain to complete.
+ */
+const runDueTimers = (): Promise<unknown> => vi.advanceTimersByTimeAsync(1);
+
+async function openAndAssertPopover<T>(componentFixture: ComponentFixture<T>, triggerElement: ElementRef) {
     dispatchMouseEvent(coerceElement(triggerElement), 'click');
-    tick();
+    await runDueTimers();
     componentFixture.detectChanges();
 
     const popover = componentFixture.debugElement.query(By.css('.kbq-popover'));
@@ -66,20 +107,12 @@ describe('KbqPopover', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
 
+    afterEach(() => vi.useRealTimers());
+
     const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
         TestBed.configureTestingModule({
-            imports: [component, NoopAnimationsModule],
-            providers: [
-                // The shared pop-up base still polls with `interval(leaveDelay, scheduler)` while a
-                // hover-triggered pop-up is open, which spins the CPU when `leaveDelay` is 0. Substituting a
-                // scheduler that never runs keeps the suite off that path; the polling itself is replaced by
-                // an event-driven timer on the branch that owns `core/pop-up`, and this provider goes with it.
-                {
-                    provide: AsyncScheduler,
-                    useValue: new TestScheduler((actual, expected) => expect(expected).toEqual(actual))
-                },
-                ...providers
-            ]
+            imports: [component],
+            providers
         });
         const fixture = TestBed.createComponent<T>(component);
 
@@ -94,10 +127,10 @@ describe('KbqPopover', () => {
     };
 
     /** Settles the whole closing pipeline: the delayed closing action, the hide timeout and the detach. */
-    const settleClose = <T>(componentFixture: ComponentFixture<T>) => {
-        tick();
+    const settleClose = async <T>(componentFixture: ComponentFixture<T>) => {
+        await runDueTimers();
         componentFixture.detectChanges();
-        tick();
+        await runDueTimers();
         componentFixture.detectChanges();
     };
 
@@ -114,14 +147,16 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('kbqTrigger = hover', fakeAsync(() => {
+        it('kbqTrigger = hover', async () => {
+            vi.useFakeTimers();
+
             const expectedValue = '_TEST1';
             const triggerElement = componentInstance.test1().nativeElement;
 
             expect(overlayContainerElement.textContent).not.toEqual(expectedValue);
 
             dispatchMouseEvent(triggerElement, 'mouseenter');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toEqual(expectedValue);
 
@@ -136,50 +171,52 @@ describe('KbqPopover', () => {
 
             // Past both the pending hide and a full watchdog period: the pointer is on the panel, so neither
             // may close it.
-            tick(defaultHoverLeaveDelay * 2);
+            await vi.advanceTimersByTimeAsync(defaultHoverLeaveDelay * 2);
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toContain(expectedValue);
 
-            // Back onto the trigger and away again: the trigger's own `mouseleave` is what schedules the
-            // hide. Leaving straight from the panel is handled by the pop-up base's hover watchdog, which
-            // is polling-based here and stubbed out by the scheduler above — it becomes event-driven on the
-            // branch that owns `core/pop-up`, and this leg can move back to the panel then.
+            // Straight off the panel: the pop-up base hides it one leave delay later, then the panel's own
+            // zero-delay hide runs.
             dispatchMouseEvent(panel, 'mouseleave');
             fixture.detectChanges();
-            dispatchMouseEvent(triggerElement, 'mouseenter');
+            await vi.advanceTimersByTimeAsync(defaultHoverLeaveDelay - 1);
             fixture.detectChanges();
-            dispatchMouseEvent(triggerElement, 'mouseleave');
-            tick(defaultHoverLeaveDelay);
-            fixture.detectChanges();
-            tick(defaultHoverLeaveDelay);
+            expect(overlayContainerElement.textContent).toContain(expectedValue);
+
+            await vi.advanceTimersByTimeAsync(1);
+            await runDueTimers();
             fixture.detectChanges();
 
             expect(overlayContainerElement.textContent).not.toEqual(expectedValue);
             expect(triggerElement.classList).not.toContain('kbq-active');
-        }));
+        });
 
-        it('kbqTrigger = manual', fakeAsync(() => {
+        it('kbqTrigger = manual', async () => {
+            vi.useFakeTimers();
+
             const expectedValue = '_TEST2';
             const triggerElement = componentInstance.test2().nativeElement;
 
             expect(overlayContainerElement.textContent).not.toEqual(expectedValue);
 
             componentInstance.popoverVisibility = true;
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toEqual(expectedValue);
 
             componentInstance.popoverVisibility = false;
             fixture.detectChanges();
-            settleClose(fixture);
+            await settleClose(fixture);
 
             expect(overlayContainerElement.textContent).not.toEqual(expectedValue);
             // A manual trigger is not a dialog opener, so it must not advertise one.
             expect(triggerElement.getAttribute('aria-haspopup')).toBeNull();
             expect(triggerElement.getAttribute('aria-expanded')).toBeNull();
-        }));
+        });
 
-        it('kbqTrigger = focus', fakeAsync(() => {
+        it('kbqTrigger = focus', async () => {
+            vi.useFakeTimers();
+
             const featureKey = '_TEST3';
             const triggerElement = componentInstance.test3().nativeElement;
 
@@ -188,18 +225,20 @@ describe('KbqPopover', () => {
             expect(overlayContainerElement.textContent).toContain(featureKey);
 
             dispatchFakeEvent(triggerElement, 'blur');
-            settleClose(fixture);
+            await settleClose(fixture);
 
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
             expect(triggerElement.classList).not.toContain('kbq-active');
-        }));
+        });
 
-        it('Can set kbqPopoverHeader', fakeAsync(() => {
+        it('Can set kbqPopoverHeader', async () => {
+            vi.useFakeTimers();
+
             const expectedValue = '_TEST4';
             const triggerElement = componentInstance.test4().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'mouseenter');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             const header = debugElement.query(By.css('.kbq-popover__header'));
@@ -208,14 +247,16 @@ describe('KbqPopover', () => {
 
             // A hover popover keeps a watchdog interval running for as long as it is open.
             fixture.destroy();
-        }));
+        });
 
-        it('Can set kbqPopoverContent', fakeAsync(() => {
+        it('Can set kbqPopoverContent', async () => {
+            vi.useFakeTimers();
+
             const expectedValue = '_TEST5';
             const triggerElement = componentInstance.test5().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'mouseenter');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             const content = debugElement.query(By.css('.kbq-popover__content'));
@@ -223,27 +264,31 @@ describe('KbqPopover', () => {
             expect(content.nativeElement.textContent).toEqual(expectedValue);
 
             fixture.destroy();
-        }));
+        });
 
-        it('renders the custom scrollbar on the content', fakeAsync(() => {
+        it('renders the custom scrollbar on the content', async () => {
+            vi.useFakeTimers();
+
             const triggerElement = componentInstance.test5().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'mouseenter');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             const content = debugElement.query(By.css('.kbq-popover__content'));
 
             expect(content.nativeElement.classList).toContain('kbq-scrollbar-viewport');
             expect(content.nativeElement.classList).toContain('kbq-scrollbar-viewport_native-scrollbar-hidden');
-        }));
+        });
 
-        it('Can set kbqPopoverFooter', fakeAsync(() => {
+        it('Can set kbqPopoverFooter', async () => {
+            vi.useFakeTimers();
+
             const expectedValue = '_TEST6';
             const triggerElement = componentInstance.test6().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'mouseenter');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             const footer = debugElement.query(By.css('.kbq-popover__footer'));
@@ -251,28 +296,32 @@ describe('KbqPopover', () => {
             expect(footer.nativeElement.textContent).toEqual(expectedValue);
 
             fixture.destroy();
-        }));
+        });
 
-        it('Can set kbqPopoverClass', fakeAsync(() => {
+        it('Can set kbqPopoverClass', async () => {
+            vi.useFakeTimers();
+
             const expectedValue = '_TEST7';
             const triggerElement = componentInstance.test7().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'click');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             const popover = debugElement.query(By.css('.kbq-popover'));
 
             expect(popover.nativeElement.classList.contains(expectedValue)).toBeTruthy();
             expect(triggerElement.classList).toContain('kbq-active');
-        }));
+        });
 
-        it('should open popover with keyboard when kbqTrigger = default', fakeAsync(() => {
+        it('should open popover with keyboard when kbqTrigger = default', async () => {
+            vi.useFakeTimers();
+
             const triggerElement = componentInstance.test7().nativeElement;
 
-            [ENTER, SPACE].forEach((keyCode) => {
+            for (const keyCode of [ENTER, SPACE]) {
                 dispatchKeyboardEvent(triggerElement, 'keydown', keyCode);
-                tick();
+                await runDueTimers();
                 fixture.detectChanges();
 
                 let popover = debugElement.query(By.css('.kbq-popover'));
@@ -281,22 +330,24 @@ describe('KbqPopover', () => {
                 expect(triggerElement.classList).toContain('kbq-active');
 
                 dispatchKeyboardEvent(triggerElement, 'keydown', ESCAPE);
-                tick();
+                await runDueTimers();
                 fixture.detectChanges();
                 popover = debugElement.query(By.css('.kbq-popover'));
                 expect(popover).not.toBeTruthy();
                 expect(triggerElement.classList).not.toContain('kbq-active');
-            });
-        }));
+            }
+        });
 
-        it('should open popover with keyboard when kbqTrigger = default for elements other than button', fakeAsync(() => {
+        it('should open popover with keyboard when kbqTrigger = default for elements other than button', async () => {
+            vi.useFakeTimers();
+
             const triggerElement = componentInstance.test8().nativeElement;
 
             expect(triggerElement.tagName).not.toEqual('BUTTON');
 
-            [ENTER, SPACE].forEach((keyCode) => {
+            for (const keyCode of [ENTER, SPACE]) {
                 dispatchKeyboardEvent(triggerElement, 'keydown', keyCode);
-                tick();
+                await runDueTimers();
                 fixture.detectChanges();
 
                 let popover = debugElement.query(By.css('.kbq-popover'));
@@ -305,13 +356,13 @@ describe('KbqPopover', () => {
                 expect(triggerElement.classList).toContain('kbq-active');
 
                 dispatchKeyboardEvent(triggerElement, 'keydown', ESCAPE);
-                tick();
+                await runDueTimers();
                 fixture.detectChanges();
                 popover = debugElement.query(By.css('.kbq-popover'));
                 expect(popover).not.toBeTruthy();
                 expect(triggerElement.classList).not.toContain('kbq-active');
-            });
-        }));
+            }
+        });
     });
 
     describe('closeOnScroll', () => {
@@ -351,35 +402,39 @@ describe('KbqPopover', () => {
 
         afterEach(() => overlayContainer.ngOnDestroy());
 
-        const openPopover = () => {
+        const openPopover = async () => {
             trigger.show(0);
-            tick();
+            await runDueTimers();
             closeOnScrollFixture.detectChanges();
         };
 
-        it('subscribes to the ancestor-filtered stream: a scroll it excludes (the popover’s own content) does not close it', fakeAsync(() => {
-            openPopover();
+        it('subscribes to the ancestor-filtered stream: a scroll it excludes (the popover’s own content) does not close it', async () => {
+            vi.useFakeTimers();
+
+            await openPopover();
             const content = overlayContainerElement.querySelector('.kbq-popover__content')!;
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
 
             scrolled$.next(makeScrollable(content));
-            tick();
+            await runDueTimers();
             closeOnScrollFixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
-        }));
+        });
 
-        it('hides when the ancestor-filtered stream emits (an ancestor/page scroll)', fakeAsync(() => {
-            openPopover();
+        it('hides when the ancestor-filtered stream emits (an ancestor/page scroll)', async () => {
+            vi.useFakeTimers();
+
+            await openPopover();
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
 
             scrolled$.next(makeScrollable(document.body));
-            tick();
+            await runDueTimers();
             closeOnScrollFixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
-        }));
+        });
     });
 
     describe('Check popover confirm', () => {
@@ -387,7 +442,9 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('Default text comes from the active locale', fakeAsync(() => {
+        it('Default text comes from the active locale', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(PopoverConfirmTestComponent);
             const { componentInstance, debugElement } = fixture;
 
@@ -396,7 +453,7 @@ describe('KbqPopover', () => {
             const triggerElement = componentInstance.test8().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'click');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             const button = debugElement.query(By.css('.kbq-popover-confirm button'));
@@ -406,9 +463,11 @@ describe('KbqPopover', () => {
             const confirmText = debugElement.query(By.css('.kbq-popover-confirm .kbq-popover__content div'));
 
             expect(confirmText.nativeElement.textContent).toEqual(ruRULocaleData.popoverConfirm.confirmText);
-        }));
+        });
 
-        it('Default text follows a locale switch made while the panel is open', fakeAsync(() => {
+        it('Default text follows a locale switch made while the panel is open', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(PopoverConfirmTestComponent, [
                 { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
             ]);
@@ -422,7 +481,7 @@ describe('KbqPopover', () => {
                 debugElement.query(By.css('.kbq-popover-confirm .kbq-popover__content div')).nativeElement.textContent;
 
             dispatchMouseEvent(componentInstance.test8().nativeElement, 'click');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             expect(buttonText()).toEqual(ruRULocaleData.popoverConfirm.confirmButtonText);
@@ -431,14 +490,16 @@ describe('KbqPopover', () => {
             // Switched with the panel already on screen: `updateData` only runs on input writes, so nothing
             // but the trigger's locale effect can carry the new strings into the live panel.
             TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             expect(buttonText()).toEqual(enUSLocaleData.popoverConfirm.confirmButtonText);
             expect(confirmText()).toEqual(enUSLocaleData.popoverConfirm.confirmText);
-        }));
+        });
 
-        it('Can set confirm text through input', fakeAsync(() => {
+        it('Can set confirm text through input', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(PopoverConfirmTestComponent);
             const { componentInstance, debugElement } = fixture;
             const expectedValue = 'new confirm text';
@@ -448,15 +509,17 @@ describe('KbqPopover', () => {
             const triggerElement = componentInstance.test9().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'click');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             const confirmText = debugElement.query(By.css('.kbq-popover-confirm .kbq-popover__content div'));
 
             expect(confirmText.nativeElement.textContent).toEqual(expectedValue);
-        }));
+        });
 
-        it('Can set button text through input', fakeAsync(() => {
+        it('Can set button text through input', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(PopoverConfirmTestComponent);
             const { componentInstance, debugElement } = fixture;
             const expectedValue = 'new button text';
@@ -466,56 +529,62 @@ describe('KbqPopover', () => {
             const triggerElement = componentInstance.test10().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'click');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             const button = debugElement.query(By.css('.kbq-popover-confirm button'));
 
             expect(button.nativeElement.textContent.trim()).toEqual(expectedValue);
-        }));
+        });
 
-        it('Click emits confirm exactly once and closes the panel', fakeAsync(() => {
+        it('Click emits confirm exactly once and closes the panel', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(PopoverConfirmTestComponent);
             const { componentInstance, debugElement } = fixture;
-            const onConfirmSpyFn = jest.spyOn(componentInstance, 'onConfirm');
+            const onConfirmSpyFn = vi.spyOn(componentInstance, 'onConfirm');
 
             readOverlayContainer();
 
             dispatchMouseEvent(componentInstance.test11().nativeElement, 'click');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             // Every input write re-runs `updateData`; the confirm handler must survive that without stacking.
             componentInstance.confirmText = 'updated confirm text';
             fixture.detectChanges();
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             const confirmButton = debugElement.query(By.css('.kbq-popover-confirm button'));
 
             dispatchMouseEvent(confirmButton.nativeElement, 'click');
-            settleClose(fixture);
+            await settleClose(fixture);
 
             expect(onConfirmSpyFn).toHaveBeenCalledTimes(1);
             expect(overlayContainerElement.querySelector('.kbq-popover-confirm')).toBeFalsy();
-        }));
+        });
 
-        it('should not throw when a confirm popover is opened by hover', fakeAsync(() => {
+        it('should not throw when a confirm popover is opened by hover', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(PopoverConfirmTestComponent);
             const { componentInstance } = fixture;
 
             readOverlayContainer();
 
-            expect(() => {
-                dispatchMouseEvent(componentInstance.test13().nativeElement, 'mouseenter');
-                tick();
-                fixture.detectChanges();
-            }).not.toThrow();
+            await expect(
+                (async () => {
+                    dispatchMouseEvent(componentInstance.test13().nativeElement, 'mouseenter');
+                    await runDueTimers();
+                    fixture.detectChanges();
+                })()
+            ).resolves.not.toThrow();
 
             expect(overlayContainerElement.querySelector('.kbq-popover-confirm')).toBeTruthy();
 
             fixture.destroy();
-        }));
+        });
 
         it(
             'should have no axe violations while open',
@@ -528,7 +597,7 @@ describe('KbqPopover', () => {
                 await fixture.whenStable();
                 fixture.detectChanges();
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             },
             axeTimeout
         );
@@ -539,7 +608,9 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('Provided text is correct', fakeAsync(() => {
+        it('Provided text is correct', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(PopoverConfirmWithProvidersTestComponent);
             const { componentInstance, debugElement } = fixture;
 
@@ -548,7 +619,7 @@ describe('KbqPopover', () => {
             const triggerElement = componentInstance.test12().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'click');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             const button = debugElement.query(By.css('.kbq-popover-confirm button'));
@@ -558,7 +629,7 @@ describe('KbqPopover', () => {
             const confirmText = debugElement.query(By.css('.kbq-popover-confirm .kbq-popover__content div'));
 
             expect(confirmText.nativeElement.textContent).toEqual('provided confirm text');
-        }));
+        });
     });
 
     describe('Overlay offset', () => {
@@ -566,7 +637,9 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('should add offset for some positions if element is less than arrow margin', fakeAsync(() => {
+        it('should add offset for some positions if element is less than arrow margin', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(PopoverSimple);
             const { componentInstance } = fixture;
 
@@ -580,7 +653,7 @@ describe('KbqPopover', () => {
             });
             fixture.detectChanges();
 
-            openAndAssertPopover(fixture, componentInstance.triggerElementRef());
+            await openAndAssertPopover(fixture, componentInstance.triggerElementRef());
 
             const strategy: FlexibleConnectedPositionStrategy = componentInstance
                 .popoverTrigger()
@@ -588,9 +661,11 @@ describe('KbqPopover', () => {
                 .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
 
             expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeTruthy();
-        }));
+        });
 
-        it('should not add offset if element is large', fakeAsync(() => {
+        it('should not add offset if element is large', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(PopoverSimple);
             const { componentInstance } = fixture;
 
@@ -602,7 +677,7 @@ describe('KbqPopover', () => {
             });
             fixture.detectChanges();
 
-            openAndAssertPopover(fixture, componentInstance.triggerElementRef());
+            await openAndAssertPopover(fixture, componentInstance.triggerElementRef());
 
             const strategy: FlexibleConnectedPositionStrategy = componentInstance
                 .popoverTrigger()
@@ -610,7 +685,7 @@ describe('KbqPopover', () => {
                 .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
 
             expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeFalsy();
-        }));
+        });
     });
 
     describe('with TemplateRef', () => {
@@ -628,11 +703,13 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('context for template', fakeAsync(() => {
+        it('context for template', async () => {
+            vi.useFakeTimers();
+
             const triggerElement = templateInstance.trigger().nativeElement;
 
             dispatchMouseEvent(triggerElement, 'mouseenter');
-            tick();
+            await runDueTimers();
             templateFixture.detectChanges();
 
             const header = overlayContainerElement.querySelector('.kbq-popover__header')?.textContent;
@@ -644,14 +721,16 @@ describe('KbqPopover', () => {
             expect(footer).toEqual(templateInstance.context.footer);
 
             templateFixture.destroy();
-        }));
+        });
 
-        it('should pass a falsy context to the template', fakeAsync(() => {
+        it('should pass a falsy context to the template', async () => {
+            vi.useFakeTimers();
+
             templateInstance.context = 0 as never;
             templateFixture.detectChanges();
 
             dispatchMouseEvent(templateInstance.trigger().nativeElement, 'mouseenter');
-            tick();
+            await runDueTimers();
             templateFixture.detectChanges();
 
             const popover = templateFixture.debugElement.query(By.directive(KbqPopoverComponent))
@@ -660,7 +739,7 @@ describe('KbqPopover', () => {
             expect(popover.context).toEqual({ $implicit: 0 });
 
             templateFixture.destroy();
-        }));
+        });
     });
 
     describe('closing behavior', () => {
@@ -668,9 +747,9 @@ describe('KbqPopover', () => {
         let closingInstance: PopoverClosingBehavior;
         let trigger: HTMLElement;
 
-        const open = () => {
+        const open = async () => {
             dispatchMouseEvent(trigger, 'click');
-            tick();
+            await runDueTimers();
             closingFixture.detectChanges();
         };
 
@@ -688,25 +767,29 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('should emit kbqPopoverVisibleChange once per state change', fakeAsync(() => {
-            const spy = jest.spyOn(closingInstance, 'onVisibleChange');
+        it('should emit kbqPopoverVisibleChange once per state change', async () => {
+            vi.useFakeTimers();
+
+            const spy = vi.spyOn(closingInstance, 'onVisibleChange');
 
             for (let i = 0; i < 3; i++) {
-                open();
+                await open();
                 dispatchMouseEvent(document.body, 'click');
-                settleClose(closingFixture);
+                await settleClose(closingFixture);
             }
 
             expect(spy).toHaveBeenCalledTimes(6);
             expect(spy.mock.calls.map(([value]) => value)).toEqual([true, false, true, false, true, false]);
-        }));
+        });
 
-        it('should close on a backdrop click and use the configured backdrop class', fakeAsync(() => {
+        it('should close on a backdrop click and use the configured backdrop class', async () => {
+            vi.useFakeTimers();
+
             closingInstance.hasBackdrop = true;
             closingInstance.backdropClass = 'test-backdrop';
             closingFixture.detectChanges();
 
-            open();
+            await open();
 
             const backdrop = overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!;
 
@@ -714,95 +797,107 @@ describe('KbqPopover', () => {
             expect(backdrop.classList).toContain('test-backdrop');
 
             backdrop.click();
-            settleClose(closingFixture);
+            await settleClose(closingFixture);
 
             expect(isOpen()).toBeFalsy();
-        }));
+        });
 
-        it('should render a backdrop enabled after the first open', fakeAsync(() => {
-            open();
+        it('should render a backdrop enabled after the first open', async () => {
+            vi.useFakeTimers();
+
+            await open();
             dispatchMouseEvent(document.body, 'click');
-            settleClose(closingFixture);
+            await settleClose(closingFixture);
 
             closingInstance.hasBackdrop = true;
             closingFixture.detectChanges();
 
-            open();
+            await open();
 
             expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
-        }));
+        });
 
-        it('should keep the popover open while kbqPopoverPreventClose is set', fakeAsync(() => {
-            open();
+        it('should keep the popover open while kbqPopoverPreventClose is set', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             closingInstance.preventClose = true;
             closingFixture.detectChanges();
 
             dispatchMouseEvent(document.body, 'click');
-            settleClose(closingFixture);
+            await settleClose(closingFixture);
 
             expect(isOpen()).toBeTruthy();
 
             const panel = overlayContainerElement.querySelector('.kbq-popover')!;
 
             dispatchEvent(panel, createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape'));
-            settleClose(closingFixture);
+            await settleClose(closingFixture);
 
             expect(isOpen()).toBeTruthy();
 
             closingInstance.preventClose = false;
             closingFixture.detectChanges();
-        }));
+        });
 
-        it('should close when the trigger becomes disabled', fakeAsync(() => {
-            open();
+        it('should close when the trigger becomes disabled', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             closingInstance.disabled = true;
             closingFixture.detectChanges();
-            settleClose(closingFixture);
+            await settleClose(closingFixture);
 
             expect(isOpen()).toBeFalsy();
-        }));
+        });
 
-        it('should close on touchend', fakeAsync(() => {
-            open();
+        it('should close on touchend', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             dispatchFakeEvent(trigger, 'touchend');
-            settleClose(closingFixture);
+            await settleClose(closingFixture);
 
             expect(isOpen()).toBeFalsy();
-        }));
+        });
 
-        it('should close on scroll only when closeOnScroll is enabled', fakeAsync(() => {
+        it('should close on scroll only when closeOnScroll is enabled', async () => {
+            vi.useFakeTimers();
+
             closingInstance.closeOnScroll = false;
             closingFixture.detectChanges();
 
-            open();
+            await open();
             dispatchFakeEvent(document, 'scroll');
-            tick(20);
-            settleClose(closingFixture);
+            await vi.advanceTimersByTimeAsync(20);
+            await settleClose(closingFixture);
 
             expect(isOpen()).toBeTruthy();
 
             dispatchMouseEvent(document.body, 'click');
-            settleClose(closingFixture);
+            await settleClose(closingFixture);
 
             closingInstance.closeOnScroll = true;
             closingFixture.detectChanges();
 
-            open();
+            await open();
             dispatchFakeEvent(document, 'scroll');
-            tick(20);
-            settleClose(closingFixture);
+            await vi.advanceTimersByTimeAsync(20);
+            await settleClose(closingFixture);
 
             expect(isOpen()).toBeFalsy();
-        }));
+        });
 
-        it('should restore focus to the trigger when the close button is used', fakeAsync(() => {
+        it('should restore focus to the trigger when the close button is used', async () => {
+            vi.useFakeTimers();
+
             closingInstance.hasCloseButton = true;
             closingFixture.detectChanges();
 
-            open();
+            await open();
 
             const closeButton = overlayContainerElement.querySelector<HTMLElement>('.kbq-popover__close button')!;
 
@@ -813,34 +908,38 @@ describe('KbqPopover', () => {
             closeButton.focus();
 
             closeButton.click();
-            settleClose(closingFixture);
+            await settleClose(closingFixture);
 
             expect(isOpen()).toBeFalsy();
             expect(document.activeElement).toBe(trigger);
-        }));
+        });
 
-        it('should leave focus alone when it never entered the panel', fakeAsync(() => {
+        it('should leave focus alone when it never entered the panel', async () => {
+            vi.useFakeTimers();
+
             const outside = closingInstance.outside().nativeElement as HTMLElement;
 
-            open();
+            await open();
             outside.focus();
 
             dispatchMouseEvent(document.body, 'click');
-            settleClose(closingFixture);
+            await settleClose(closingFixture);
 
             expect(isOpen()).toBeFalsy();
             expect(document.activeElement).toBe(outside);
-        }));
+        });
 
-        it('should leave nothing in the overlay container when destroyed while open', fakeAsync(() => {
-            open();
+        it('should leave nothing in the overlay container when destroyed while open', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             expect(isOpen()).toBeTruthy();
 
             closingFixture.destroy();
 
             expect(overlayContainerElement.childNodes.length).toBe(0);
-        }));
+        });
     });
 
     describe('reposition while closing', () => {
@@ -848,13 +947,15 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('should still close on an outside click that repositions the panel', fakeAsync(() => {
+        it('should still close on an outside click that repositions the panel', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(PopoverRebuiltContext);
 
             readOverlayContainer();
 
             dispatchMouseEvent(fixture.componentInstance.trigger().nativeElement, 'click');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
@@ -867,10 +968,10 @@ describe('KbqPopover', () => {
             // and drop the close with it. The inherited `updatePosition` does exactly that.
             fixture.componentInstance.popoverTrigger().updatePosition(true);
 
-            settleClose(fixture);
+            await settleClose(fixture);
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
-        }));
+        });
     });
 
     describe('accessibility', () => {
@@ -878,9 +979,9 @@ describe('KbqPopover', () => {
         let a11yInstance: PopoverClosingBehavior;
         let trigger: HTMLElement;
 
-        const open = () => {
+        const open = async () => {
             dispatchMouseEvent(trigger, 'click');
-            tick();
+            await runDueTimers();
             a11yFixture.detectChanges();
         };
 
@@ -896,12 +997,14 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('should describe the trigger as a dialog opener', fakeAsync(() => {
+        it('should describe the trigger as a dialog opener', async () => {
+            vi.useFakeTimers();
+
             expect(trigger.getAttribute('aria-haspopup')).toEqual('dialog');
             expect(trigger.getAttribute('aria-expanded')).toEqual('false');
             expect(trigger.getAttribute('aria-controls')).toBeNull();
 
-            open();
+            await open();
 
             const panel = overlayContainerElement.querySelector('.kbq-popover')!;
 
@@ -910,14 +1013,16 @@ describe('KbqPopover', () => {
             expect(panel.id).toBeTruthy();
 
             dispatchMouseEvent(document.body, 'click');
-            settleClose(a11yFixture);
+            await settleClose(a11yFixture);
 
             expect(trigger.getAttribute('aria-expanded')).toEqual('false');
             expect(trigger.getAttribute('aria-controls')).toBeNull();
-        }));
+        });
 
-        it('should label the panel by its header', fakeAsync(() => {
-            open();
+        it('should label the panel by its header', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             const panel = overlayContainerElement.querySelector('.kbq-popover')!;
             const header = overlayContainerElement.querySelector('.kbq-popover__header-text')!;
@@ -925,38 +1030,44 @@ describe('KbqPopover', () => {
             expect(panel.getAttribute('role')).toEqual('dialog');
             expect(panel.getAttribute('aria-labelledby')).toEqual(header.id);
             expect(header.id).toBeTruthy();
-        }));
+        });
 
-        it('should label a header-less panel with kbqPopoverAriaLabel', fakeAsync(() => {
+        it('should label a header-less panel with kbqPopoverAriaLabel', async () => {
+            vi.useFakeTimers();
+
             a11yInstance.header = '';
             a11yInstance.ariaLabel = 'ARIA LABEL';
             a11yFixture.detectChanges();
 
-            open();
+            await open();
 
             const panel = overlayContainerElement.querySelector('.kbq-popover')!;
 
             expect(panel.getAttribute('aria-labelledby')).toBeNull();
             expect(panel.getAttribute('aria-label')).toEqual('ARIA LABEL');
-        }));
+        });
 
-        it('should fall back to kbqPopoverAriaLabel when the header is a template', fakeAsync(() => {
+        it('should fall back to kbqPopoverAriaLabel when the header is a template', async () => {
+            vi.useFakeTimers();
+
             // A template header renders arbitrary markup with no text node to point `aria-labelledby` at.
             a11yInstance.header = a11yInstance.templateHeader();
             a11yInstance.ariaLabel = 'ARIA LABEL';
             a11yFixture.detectChanges();
 
-            open();
+            await open();
 
             const panel = overlayContainerElement.querySelector('.kbq-popover')!;
 
             expect(panel.querySelector('.kbq-popover__header')!.textContent).toContain('TEMPLATE HEADER');
             expect(panel.getAttribute('aria-labelledby')).toBeNull();
             expect(panel.getAttribute('aria-label')).toEqual('ARIA LABEL');
-        }));
+        });
 
-        it('should arm the focus trap and claim focus for a click open', fakeAsync(() => {
-            open();
+        it('should arm the focus trap and claim focus for a click open', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             const panel = a11yFixture.debugElement.query(By.directive(KbqPopoverComponent))
                 .componentInstance as KbqPopoverComponent;
@@ -966,7 +1077,7 @@ describe('KbqPopover', () => {
             // element by geometry, which jsdom has none of; the decision to claim it is what popover owns,
             // and the landing is covered by the Playwright suite.
             expect(a11yInstance.popoverTrigger().capturesFocusOnOpen).toBe(true);
-        }));
+        });
 
         it(
             'should have no axe violations while open',
@@ -978,7 +1089,7 @@ describe('KbqPopover', () => {
                 await a11yFixture.whenStable();
                 a11yFixture.detectChanges();
 
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             },
             axeTimeout
         );
@@ -999,7 +1110,7 @@ describe('KbqPopover', () => {
                 // Nothing can name the panel, so it must not claim to be a dialog: `aria-dialog-name` fails
                 // an unnamed one, and a screen reader announces it as "dialog" and nothing more.
                 expect(overlayContainerElement.querySelector('.kbq-popover')!.getAttribute('role')).toBeNull();
-                expect(await axe(overlayContainerElement)).toHaveNoViolations();
+                await expect(overlayContainerElement).toHaveNoViolations();
             },
             axeTimeout
         );
@@ -1028,13 +1139,15 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('should not steal keyboard focus', fakeAsync(() => {
+        it('should not steal keyboard focus', async () => {
+            vi.useFakeTimers();
+
             const outside = hoverFixture.componentInstance.outside().nativeElement as HTMLElement;
 
             outside.focus();
 
             dispatchMouseEvent(hoverFixture.componentInstance.trigger().nativeElement, 'mouseenter');
-            tick();
+            await runDueTimers();
             hoverFixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
@@ -1042,38 +1155,42 @@ describe('KbqPopover', () => {
             expect(document.activeElement).toBe(outside);
 
             hoverFixture.destroy();
-        }));
+        });
 
-        it('should claim focus for a keyboard open that follows a hover', fakeAsync(() => {
+        it('should claim focus for a keyboard open that follows a hover', async () => {
+            vi.useFakeTimers();
+
             const trigger = hoverFixture.componentInstance.keyboard().nativeElement as HTMLElement;
 
             // One hover is enough to leave the last recorded trigger event at `mouseleave`, and the shared
             // base records nothing for its own keyboard opener.
             dispatchMouseEvent(trigger, 'mouseenter');
-            tick();
+            await runDueTimers();
             hoverFixture.detectChanges();
             dispatchMouseEvent(trigger, 'mouseleave');
-            tick(defaultHoverLeaveDelay);
-            tick(defaultHoverLeaveDelay);
+            await vi.advanceTimersByTimeAsync(defaultHoverLeaveDelay);
+            await vi.advanceTimersByTimeAsync(defaultHoverLeaveDelay);
             hoverFixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
 
             dispatchKeyboardEvent(trigger, 'keydown', ENTER);
-            tick();
+            await runDueTimers();
             hoverFixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
             expect(hoverFixture.componentInstance.keyboardTrigger().capturesFocusOnOpen).toBe(true);
 
             hoverFixture.destroy();
-        }));
+        });
 
-        it('should hold the panel open for the default leave delay', fakeAsync(() => {
+        it('should hold the panel open for the default leave delay', async () => {
+            vi.useFakeTimers();
+
             const trigger = hoverFixture.componentInstance.trigger().nativeElement as HTMLElement;
 
             dispatchMouseEvent(trigger, 'mouseenter');
-            tick();
+            await runDueTimers();
             hoverFixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
@@ -1081,39 +1198,43 @@ describe('KbqPopover', () => {
             // The pointer leaves the trigger without landing on the panel, so the delay is the only thing
             // keeping the popover on screen while the pointer travels towards it.
             dispatchMouseEvent(trigger, 'mouseleave');
-            tick(defaultHoverLeaveDelay - 1);
+            await vi.advanceTimersByTimeAsync(defaultHoverLeaveDelay - 1);
             hoverFixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
 
             // The scheduled hide hands the same delay on to the panel, so the second period is the panel's.
-            tick(1);
-            tick(defaultHoverLeaveDelay);
+            await vi.advanceTimersByTimeAsync(1);
+            await vi.advanceTimersByTimeAsync(defaultHoverLeaveDelay);
             hoverFixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
-        }));
+        });
 
-        it('should honour an explicit kbqLeaveDelay of zero', fakeAsync(() => {
+        it('should honour an explicit kbqLeaveDelay of zero', async () => {
+            vi.useFakeTimers();
+
             const trigger = hoverFixture.componentInstance.instantTrigger().nativeElement as HTMLElement;
 
             dispatchMouseEvent(trigger, 'mouseenter');
-            tick();
+            await runDueTimers();
             hoverFixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
 
             dispatchMouseEvent(trigger, 'mouseleave');
-            settleClose(hoverFixture);
+            await settleClose(hoverFixture);
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
-        }));
+        });
 
-        it('should close on the close button while the pointer rests on the panel', fakeAsync(() => {
+        it('should close on the close button while the pointer rests on the panel', async () => {
+            vi.useFakeTimers();
+
             const trigger = hoverFixture.componentInstance.closable().nativeElement as HTMLElement;
 
             dispatchMouseEvent(trigger, 'mouseenter');
-            tick();
+            await runDueTimers();
             hoverFixture.detectChanges();
 
             // Reaching the close button means the pointer has left the trigger and landed on the panel —
@@ -1122,19 +1243,21 @@ describe('KbqPopover', () => {
             movePointerOntoPanel(trigger);
 
             overlayContainerElement.querySelector<HTMLElement>('.kbq-popover__close button')!.click();
-            settleClose(hoverFixture);
+            await settleClose(hoverFixture);
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
 
             // Drain the hide the trigger's own `mouseleave` scheduled; it is a no-op now that the panel is gone.
-            tick(defaultHoverLeaveDelay);
-        }));
+            await vi.advanceTimersByTimeAsync(defaultHoverLeaveDelay);
+        });
 
-        it('should close on Escape while the pointer rests on the panel', fakeAsync(() => {
+        it('should close on Escape while the pointer rests on the panel', async () => {
+            vi.useFakeTimers();
+
             const trigger = hoverFixture.componentInstance.closable().nativeElement as HTMLElement;
 
             dispatchMouseEvent(trigger, 'mouseenter');
-            tick();
+            await runDueTimers();
             hoverFixture.detectChanges();
 
             movePointerOntoPanel(trigger);
@@ -1143,50 +1266,42 @@ describe('KbqPopover', () => {
                 overlayContainerElement.querySelector('.kbq-popover')!,
                 createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape')
             );
-            settleClose(hoverFixture);
+            await settleClose(hoverFixture);
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
 
-            tick(defaultHoverLeaveDelay);
-        }));
+            await vi.advanceTimersByTimeAsync(defaultHoverLeaveDelay);
+        });
     });
 
-    describe('input aliases', () => {
+    describe('boolean attribute inputs', () => {
         afterEach(() => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('should treat a bare hasCloseButton attribute as true', fakeAsync(() => {
-            const fixture = createComponent(PopoverInputAliases);
+        it('should treat kbqPopoverHasCloseButton="false" as false', async () => {
+            vi.useFakeTimers();
 
-            readOverlayContainer();
-
-            dispatchMouseEvent(fixture.componentInstance.bare().nativeElement, 'click');
-            tick();
-            fixture.detectChanges();
-
-            expect(overlayContainerElement.querySelector('.kbq-popover__close')).toBeTruthy();
-        }));
-
-        it('should treat hasCloseButton="false" as false', fakeAsync(() => {
-            const fixture = createComponent(PopoverInputAliases);
+            const fixture = createComponent(PopoverBooleanInputs);
 
             readOverlayContainer();
 
             dispatchMouseEvent(fixture.componentInstance.stringFalse().nativeElement, 'click');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-popover__close')).toBeFalsy();
-        }));
+        });
 
-        it('should accept the prefixed aliases of the legacy inputs', fakeAsync(() => {
-            const fixture = createComponent(PopoverInputAliases);
+        it('should apply the bare close button and backdrop attributes and the paddings binding', async () => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(PopoverBooleanInputs);
 
             readOverlayContainer();
 
             dispatchMouseEvent(fixture.componentInstance.prefixed().nativeElement, 'click');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-popover__close')).toBeTruthy();
@@ -1196,22 +1311,22 @@ describe('KbqPopover', () => {
                     .querySelector('.kbq-popover__content')!
                     .classList.contains('kbq-popover__content_default-paddings')
             ).toBeFalsy();
-        }));
+        });
     });
 
     describe('placement and positioning', () => {
         let placementFixture: ComponentFixture<PopoverPlacement>;
         let placementInstance: PopoverPlacement;
 
-        const open = () => {
+        const open = async () => {
             dispatchMouseEvent(placementInstance.trigger().nativeElement, 'click');
-            tick();
+            await runDueTimers();
             placementFixture.detectChanges();
         };
 
-        const close = () => {
+        const close = async () => {
             dispatchMouseEvent(document.body, 'click');
-            settleClose(placementFixture);
+            await settleClose(placementFixture);
         };
 
         const panel = () => overlayContainerElement.querySelector('.kbq-popover');
@@ -1233,7 +1348,9 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('should resolve every placement to its own panel class', fakeAsync(() => {
+        it('should resolve every placement to its own panel class', async () => {
+            vi.useFakeTimers();
+
             const placements = Object.entries(POSITION_TO_CSS_MAP) as [KbqPopUpPlacementValues, string][];
 
             expect(placements).toHaveLength(12);
@@ -1242,54 +1359,62 @@ describe('KbqPopover', () => {
                 placementInstance.placement = placement;
                 placementFixture.detectChanges();
 
-                open();
+                await open();
 
                 expect(panel()!.classList).toContain(`kbq-popover_placement-${cssName}`);
 
-                close();
+                await close();
             }
-        }));
+        });
 
-        it('should emit the placement resolved by the position strategy', fakeAsync(() => {
-            const spy = jest.spyOn(placementInstance, 'onPlacementChange');
+        it('should emit the placement resolved by the position strategy', async () => {
+            vi.useFakeTimers();
 
-            open();
+            const spy = vi.spyOn(placementInstance, 'onPlacementChange');
+
+            await open();
 
             // jsdom has no layout, so the strategy never flips on its own — feed it the connection pair the
             // browser would have resolved instead.
             placementInstance.popoverTrigger().onPositionChange({
-                connectionPair: POSITION_MAP.rightTop
+                connectionPair: RIGHT_TOP_POSITION
             } as ConnectedOverlayPositionChange);
             placementFixture.detectChanges();
 
             expect(spy).toHaveBeenCalledWith('rightTop');
             expect(panel()!.classList).toContain('kbq-popover_placement-right-top');
-        }));
+        });
 
-        it('should try only the prioritised placements', fakeAsync(() => {
+        it('should try only the prioritised placements', async () => {
+            vi.useFakeTimers();
+
             placementInstance.placementPriority = ['bottom', 'top'];
             placementFixture.detectChanges();
 
-            open();
+            await open();
 
             expect(positions()).toHaveLength(2);
-            expect(positions()[0]).toMatchObject(POSITION_MAP.bottom);
-        }));
+            expect(positions()[0]).toMatchObject(BOTTOM_POSITION);
+        });
 
-        it('should not offset the positions when the arrow is hidden', fakeAsync(() => {
+        it('should not offset the positions when the arrow is hidden', async () => {
+            vi.useFakeTimers();
+
             placementInstance.arrow = false;
             placementFixture.detectChanges();
 
-            open();
+            await open();
 
             expect(positions().some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeFalsy();
-        }));
+        });
 
-        it('should keep the arrow dropped while stuck to the window', fakeAsync(() => {
+        it('should keep the arrow dropped while stuck to the window', async () => {
+            vi.useFakeTimers();
+
             placementInstance.stickToWindow = 'right';
             placementFixture.detectChanges();
 
-            open();
+            await open();
 
             expect(panel()!.classList).toContain('kbq-popover_arrowless');
             expect(overlayContainerElement.querySelector('.kbq-popover__arrow')).toBeFalsy();
@@ -1298,11 +1423,11 @@ describe('KbqPopover', () => {
             // stick-driven decision and resurrect a rotated square detached from the trigger.
             placementInstance.content = 'UPDATED';
             placementFixture.detectChanges();
-            tick();
+            await runDueTimers();
             placementFixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-popover__arrow')).toBeFalsy();
-        }));
+        });
     });
 
     describe('placement and size fallbacks', () => {
@@ -1310,42 +1435,46 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('should warn and fall back to the top placement on an unknown value', fakeAsync(() => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+        it('should warn and fall back to the top placement on an unknown value', async () => {
+            vi.useFakeTimers();
+
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
             const fixture = createComponent(PopoverFallbacks);
 
             readOverlayContainer();
 
             dispatchMouseEvent(fixture.componentInstance.badPlacement().nativeElement, 'click');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             expect(warn).toHaveBeenCalled();
             expect(overlayContainerElement.querySelector('.kbq-popover_placement-top')).toBeTruthy();
-        }));
+        });
 
-        it('should warn and fall back to the medium size on an unknown value', fakeAsync(() => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+        it('should warn and fall back to the medium size on an unknown value', async () => {
+            vi.useFakeTimers();
+
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
             const fixture = createComponent(PopoverFallbacks);
 
             readOverlayContainer();
 
             dispatchMouseEvent(fixture.componentInstance.badSize().nativeElement, 'click');
-            tick();
+            await runDueTimers();
             fixture.detectChanges();
 
             expect(warn).toHaveBeenCalled();
             expect(overlayContainerElement.querySelector('.kbq-popover_medium')).toBeTruthy();
-        }));
+        });
     });
 
     describe('leaks', () => {
         it('should unsubscribe from the global scroll stream on destroy', () => {
-            TestBed.configureTestingModule({ imports: [PopoverSimple, NoopAnimationsModule] });
+            TestBed.configureTestingModule({ imports: [PopoverSimple] });
 
             const scrolled = new Subject<CdkScrollable | void>();
 
-            jest.spyOn(TestBed.inject(ScrollDispatcher), 'scrolled').mockReturnValue(scrolled);
+            vi.spyOn(TestBed.inject(ScrollDispatcher), 'scrolled').mockReturnValue(scrolled);
 
             const fixture = TestBed.createComponent(PopoverSimple);
 
@@ -1359,17 +1488,17 @@ describe('KbqPopover', () => {
         });
 
         it('should not measure anything on scroll while closed', () => {
-            TestBed.configureTestingModule({ imports: [PopoverSimple, NoopAnimationsModule] });
+            TestBed.configureTestingModule({ imports: [PopoverSimple] });
 
             const scrolled = new Subject<CdkScrollable | void>();
 
-            jest.spyOn(TestBed.inject(ScrollDispatcher), 'scrolled').mockReturnValue(scrolled);
+            vi.spyOn(TestBed.inject(ScrollDispatcher), 'scrolled').mockReturnValue(scrolled);
 
             const fixture = TestBed.createComponent(PopoverSimple);
 
             fixture.detectChanges();
 
-            const measure = jest.spyOn(Element.prototype, 'getBoundingClientRect');
+            const measure = vi.spyOn(Element.prototype, 'getBoundingClientRect');
             const container = document.createElement('div');
 
             // A plain document scroll (`scrolled.next()`) never reaches the layout reads at all — the handler
@@ -1385,22 +1514,98 @@ describe('KbqPopover', () => {
         });
     });
 
+    describe('shown from an effect', () => {
+        afterEach(() => {
+            overlayContainer.ngOnDestroy();
+        });
+
+        it('should not run the effect again when the popover opens and closes', async () => {
+            vi.useFakeTimers();
+
+            const effectFixture = createComponent(PopoverShownByEffect);
+            const popoverTrigger = effectFixture.componentInstance.popoverTrigger()!;
+
+            readOverlayContainer();
+            await runDueTimers();
+            effectFixture.detectChanges();
+
+            expect(popoverTrigger.isOpen).toBe(true);
+
+            popoverTrigger.hide(0);
+            await settleClose(effectFixture);
+
+            expect(popoverTrigger.isOpen).toBe(false);
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeNull();
+            expect(effectFixture.componentInstance.runs).toBe(1);
+        });
+
+        it('should not make an effect that sets the content run again when the popover closes', async () => {
+            vi.useFakeTimers();
+
+            const effectFixture = createComponent(PopoverContentFromEffect);
+            const { componentInstance } = effectFixture;
+            const popoverTrigger = componentInstance.popoverTrigger()!;
+
+            readOverlayContainer();
+            popoverTrigger.show(0);
+            await runDueTimers();
+            effectFixture.detectChanges();
+            componentInstance.content.set('Updated');
+            await runDueTimers();
+            effectFixture.detectChanges();
+
+            expect(popoverTrigger.isOpen).toBe(true);
+            expect(componentInstance.runs.popover).toBe(2);
+
+            popoverTrigger.hide(0);
+            await settleClose(effectFixture);
+
+            expect(popoverTrigger.isOpen).toBe(false);
+            expect(componentInstance.runs.popover).toBe(2);
+        });
+
+        it('should not make an effect that sets the content of a confirm run again when the locale changes', async () => {
+            vi.useFakeTimers();
+
+            const effectFixture = createComponent(PopoverContentFromEffect, [
+                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
+            ]);
+            const { componentInstance } = effectFixture;
+
+            readOverlayContainer();
+            componentInstance.confirmTrigger()!.show(0);
+            await runDueTimers();
+            effectFixture.detectChanges();
+            componentInstance.content.set('Updated');
+            await runDueTimers();
+            effectFixture.detectChanges();
+
+            expect(componentInstance.runs.confirm).toBe(2);
+
+            TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+            await runDueTimers();
+            effectFixture.detectChanges();
+
+            expect(componentInstance.runs.confirm).toBe(2);
+        });
+    });
+
     describe('with a tooltip on the same element', () => {
         let tooltipFixture: ComponentFixture<PopoverWithTooltip>;
         let trigger: HTMLElement;
 
         /** Opens the tooltip by hover and settles its 400 ms enter delay and the deferred reposition. */
-        const showTooltip = () => {
+        const showTooltip = async () => {
             dispatchMouseEvent(trigger, 'mouseenter');
             tooltipFixture.detectChanges();
-            tick(tooltipEnterDelay);
+            await vi.advanceTimersByTimeAsync(tooltipEnterDelay);
             tooltipFixture.detectChanges();
-            tick();
+            await runDueTimers();
             tooltipFixture.detectChanges();
         };
 
         /** Presses `Escape` inside the open panel, which is what makes the popover restore focus. */
-        const pressEscapeInPanel = () => {
+        const pressEscapeInPanel = async () => {
             const panel = overlayContainerElement.querySelector('.kbq-popover')!;
 
             // The CDK focus trap picks its first tabbable element by geometry, which jsdom never reports —
@@ -1408,9 +1613,9 @@ describe('KbqPopover', () => {
             panel.querySelector<HTMLElement>('button')?.focus();
 
             dispatchEvent(panel, createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape'));
-            tick();
+            await runDueTimers();
             tooltipFixture.detectChanges();
-            tick();
+            await runDueTimers();
             tooltipFixture.detectChanges();
         };
 
@@ -1425,42 +1630,48 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('should hide the tooltip when the popover opens', fakeAsync(() => {
-            showTooltip();
+        it('should hide the tooltip when the popover opens', async () => {
+            vi.useFakeTimers();
+
+            await showTooltip();
 
             expect(overlayContainerElement.textContent).toContain('TOOLTIP');
 
             dispatchMouseEvent(trigger, 'click');
-            tick();
+            await runDueTimers();
             tooltipFixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
             expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
-        }));
+        });
 
-        it('should not show the tooltip when the popover is closed with Escape', fakeAsync(() => {
-            showTooltip();
+        it('should not show the tooltip when the popover is closed with Escape', async () => {
+            vi.useFakeTimers();
+
+            await showTooltip();
 
             dispatchMouseEvent(trigger, 'click');
-            tick();
+            await runDueTimers();
             tooltipFixture.detectChanges();
 
-            pressEscapeInPanel();
+            await pressEscapeInPanel();
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
             expect(document.activeElement).toBe(trigger);
             expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
-        }));
+        });
 
-        it('should release the mute after the popover is closed by an outside click', fakeAsync(() => {
+        it('should release the mute after the popover is closed by an outside click', async () => {
+            vi.useFakeTimers();
+
             dispatchMouseEvent(trigger, 'click');
-            tick();
+            await runDueTimers();
             tooltipFixture.detectChanges();
 
             dispatchMouseEvent(document.body, 'click');
-            tick();
+            await runDueTimers();
             tooltipFixture.detectChanges();
-            tick();
+            await runDueTimers();
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeFalsy();
             expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
@@ -1468,29 +1679,31 @@ describe('KbqPopover', () => {
             // The mute must be released by this closing path too, not just by Escape (the other test above):
             // a genuine mouseleave + mouseenter after the outside click should show the tooltip again.
             dispatchMouseEvent(trigger, 'mouseleave');
-            tick();
+            await runDueTimers();
             tooltipFixture.detectChanges();
 
-            showTooltip();
+            await showTooltip();
 
             expect(overlayContainerElement.textContent).toContain('TOOLTIP');
-        }));
+        });
 
-        it('should show the tooltip again after the pointer leaves and returns to the trigger', fakeAsync(() => {
+        it('should show the tooltip again after the pointer leaves and returns to the trigger', async () => {
+            vi.useFakeTimers();
+
             dispatchMouseEvent(trigger, 'click');
-            tick();
+            await runDueTimers();
             tooltipFixture.detectChanges();
 
-            pressEscapeInPanel();
+            await pressEscapeInPanel();
 
             dispatchMouseEvent(trigger, 'mouseleave');
-            tick();
+            await runDueTimers();
             tooltipFixture.detectChanges();
 
-            showTooltip();
+            await showTooltip();
 
             expect(overlayContainerElement.textContent).toContain('TOOLTIP');
-        }));
+        });
     });
 
     describe('origin', () => {
@@ -1498,10 +1711,10 @@ describe('KbqPopover', () => {
         let originInstance: PopoverOrigin;
         let triggerElement: HTMLElement;
 
-        const openPopover = () => {
+        const openPopover = async () => {
             originInstance.visible = true;
             originFixture.detectChanges();
-            tick();
+            await runDueTimers();
             originFixture.detectChanges();
         };
 
@@ -1516,50 +1729,58 @@ describe('KbqPopover', () => {
             readOverlayContainer();
         });
 
-        it('should connect the panel to the origin it was opened with', fakeAsync(() => {
-            const flexibleConnectedTo = jest.spyOn(TestBed.inject(OverlayPositionBuilder), 'flexibleConnectedTo');
+        it('should connect the panel to the origin it was opened with', async () => {
+            vi.useFakeTimers();
+
+            const flexibleConnectedTo = vi.spyOn(TestBed.inject(OverlayPositionBuilder), 'flexibleConnectedTo');
 
             originInstance.origin = { x: 40, y: 80, width: 0, height: 16 };
             originFixture.detectChanges();
-            openPopover();
+            await openPopover();
 
             expect(flexibleConnectedTo).toHaveBeenCalledWith(originInstance.origin);
-        }));
+        });
 
-        it('should move an open panel to a new origin', fakeAsync(() => {
-            openPopover();
+        it('should move an open panel to a new origin', async () => {
+            vi.useFakeTimers();
 
-            const setOrigin = jest.spyOn(positionStrategy(), 'setOrigin');
-            const updatePosition = jest.spyOn(originInstance.popoverTrigger().overlayRef!, 'updatePosition');
+            await openPopover();
+
+            const setOrigin = vi.spyOn(positionStrategy(), 'setOrigin');
+            const updatePosition = vi.spyOn(originInstance.popoverTrigger().overlayRef!, 'updatePosition');
 
             originInstance.origin = { x: 40, y: 80, width: 0, height: 16 };
             originFixture.detectChanges();
 
             expect(setOrigin).toHaveBeenLastCalledWith(originInstance.origin);
             expect(updatePosition).toHaveBeenCalled();
-        }));
+        });
 
-        it('should anchor the panel back to the trigger when the origin is cleared', fakeAsync(() => {
+        it('should anchor the panel back to the trigger when the origin is cleared', async () => {
+            vi.useFakeTimers();
+
             originInstance.origin = { x: 40, y: 80, width: 0, height: 16 };
             originFixture.detectChanges();
-            openPopover();
+            await openPopover();
 
-            const setOrigin = jest.spyOn(positionStrategy(), 'setOrigin');
+            const setOrigin = vi.spyOn(positionStrategy(), 'setOrigin');
 
             originInstance.origin = null;
             originFixture.detectChanges();
 
             expect(setOrigin).toHaveBeenLastCalledWith(triggerElement);
-        }));
+        });
 
-        it('should carry an origin bound between two opens into the strategy', fakeAsync(() => {
-            openPopover();
+        it('should carry an origin bound between two opens into the strategy', async () => {
+            vi.useFakeTimers();
 
-            const setOrigin = jest.spyOn(positionStrategy(), 'setOrigin');
+            await openPopover();
+
+            const setOrigin = vi.spyOn(positionStrategy(), 'setOrigin');
 
             originInstance.visible = false;
             originFixture.detectChanges();
-            settleClose(originFixture);
+            await settleClose(originFixture);
 
             // The overlay and its strategy are created once and reused, so a closed pop-up has to take the
             // new origin too — nothing re-connects the strategy on the next open.
@@ -1567,42 +1788,48 @@ describe('KbqPopover', () => {
             originFixture.detectChanges();
 
             expect(setOrigin).toHaveBeenLastCalledWith(originInstance.origin);
-        }));
+        });
 
         // jsdom lays nothing out, so the focus trap finds nothing tabbable and `activeElement` never
         // moves either way; the call it makes is the only thing that separates the two modes here.
-        it('should move the focus into the panel by default', fakeAsync(() => {
-            const focusFirstTabbableElement = jest.spyOn(FocusTrap.prototype, 'focusFirstTabbableElement');
+        it('should move the focus into the panel by default', async () => {
+            vi.useFakeTimers();
 
-            openPopover();
+            const focusFirstTabbableElement = vi.spyOn(FocusTrap.prototype, 'focusFirstTabbableElement');
+
+            await openPopover();
 
             expect(focusFirstTabbableElement).toHaveBeenCalled();
-        }));
+        });
 
-        it('should leave the focus alone when autoFocus is off', fakeAsync(() => {
-            const focusFirstTabbableElement = jest.spyOn(FocusTrap.prototype, 'focusFirstTabbableElement');
+        it('should leave the focus alone when autoFocus is off', async () => {
+            vi.useFakeTimers();
+
+            const focusFirstTabbableElement = vi.spyOn(FocusTrap.prototype, 'focusFirstTabbableElement');
 
             originInstance.autoFocus = false;
             originFixture.detectChanges();
-            openPopover();
+            await openPopover();
 
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
             expect(focusFirstTabbableElement).not.toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('panel rendered without a trigger', () => {
         // `KbqPopoverComponent` is exported, so a consumer can render the panel on its own. The trigger is
         // what normally closes it, and reaching for one that was never assigned used to throw on the first
         // Escape.
-        it('should hide itself on escape rather than throw', fakeAsync(() => {
+        it('should hide itself on escape rather than throw', async () => {
+            vi.useFakeTimers();
+
             const panelFixture = createComponent(KbqPopoverComponent);
 
             expect(panelFixture.componentInstance.trigger).toBeUndefined();
             expect(() => panelFixture.componentInstance.onEscape()).not.toThrow();
 
-            tick();
-        }));
+            await runDueTimers();
+        });
     });
 
     describe('overlay layer', () => {
@@ -1613,6 +1840,7 @@ describe('KbqPopover', () => {
             layerFixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer');
 
         beforeEach(() => {
+            vi.useFakeTimers();
             layerFixture = createComponent(PopoverInOverlayLayer);
             layerInstance = layerFixture.componentInstance;
             readOverlayContainer();
@@ -1622,30 +1850,432 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('should render the panel of a trigger inside the element into its overlay layer', fakeAsync(() => {
-            openAndAssertPopover(layerFixture, layerInstance.popover());
+        it('should render the panel of a trigger inside the element into its overlay layer', async () => {
+            await openAndAssertPopover(layerFixture, layerInstance.popover());
 
             expect(layerInstance.popoverTrigger().overlayRef!.hostElement.parentElement).toBe(getLayer());
-        }));
+        });
 
-        it('should keep a panel stuck to a window edge in the application-wide container', fakeAsync(() => {
+        it('should keep a panel stuck to a window edge in the application-wide container', async () => {
             layerInstance.stickToWindow = 'top';
             layerFixture.detectChanges();
-            openAndAssertPopover(layerFixture, layerInstance.popover());
+            await openAndAssertPopover(layerFixture, layerInstance.popover());
 
             expect(layerInstance.popoverTrigger().overlayRef!.hostElement.parentElement).toBe(overlayContainerElement);
-        }));
+        });
 
-        it('should keep a tooltip inside the element in the application-wide container', fakeAsync(() => {
+        it('should keep a tooltip inside the element in the application-wide container', async () => {
             dispatchMouseEvent(layerInstance.tooltip().nativeElement, 'mouseenter');
             layerFixture.detectChanges();
-            tick(tooltipEnterDelay);
+            await vi.advanceTimersByTimeAsync(tooltipEnterDelay);
             layerFixture.detectChanges();
 
             expect(layerInstance.tooltipTrigger().overlayRef!.hostElement.parentElement).toBe(overlayContainerElement);
-        }));
+        });
+    });
+
+    describe('binding changed to undefined', () => {
+        let undefinedFixture: ComponentFixture<PopoverUndefinedInputs>;
+        let undefinedInstance: PopoverUndefinedInputs;
+
+        beforeEach(() => {
+            vi.useFakeTimers();
+
+            undefinedFixture = createComponent(PopoverUndefinedInputs);
+            undefinedInstance = undefinedFixture.componentInstance;
+
+            readOverlayContainer();
+        });
+
+        afterEach(() => overlayContainer.ngOnDestroy());
+
+        const element = document.createElement('div');
+        const cases: {
+            binding: string;
+            field: keyof PopoverUndefinedInputs;
+            value: unknown;
+            read: (trigger: KbqPopoverTrigger) => unknown;
+            reset: unknown;
+        }[] = [
+            {
+                binding: 'kbqTrigger',
+                field: 'triggers',
+                value: 'hover',
+                read: (t) => t.trigger,
+                reset: 'click, keydown'
+            },
+            {
+                binding: 'kbqPopoverStickToWindow',
+                field: 'stickToWindow',
+                value: 'right',
+                read: (t) => t.stickToWindow,
+                reset: undefined
+            },
+            {
+                binding: 'kbqPopoverContainer',
+                field: 'container',
+                value: element,
+                read: (t) => t.container,
+                reset: undefined
+            },
+            {
+                binding: 'kbqPopoverBackdropClass',
+                field: 'backdropClass',
+                value: 'custom-backdrop',
+                read: (t) => t.backdropClass,
+                reset: 'cdk-overlay-transparent-backdrop'
+            },
+            { binding: 'kbqPopoverSize', field: 'size', value: 'large', read: (t) => t.size, reset: 'medium' },
+            {
+                binding: 'kbqPopoverClass',
+                field: 'customClass',
+                value: 'custom',
+                read: (t) => t.customClass,
+                reset: ''
+            },
+            { binding: 'kbqPopoverContent', field: 'content', value: 'Content', read: (t) => t.content, reset: '' },
+            { binding: 'kbqPopoverFooter', field: 'footer', value: 'Footer', read: (t) => t.footer, reset: '' },
+            {
+                binding: 'kbqPopoverContext',
+                field: 'context',
+                value: { a: 1 },
+                read: (t) => t.context,
+                reset: undefined
+            },
+            { binding: 'kbqPopoverOrigin', field: 'origin', value: element, read: (t) => t.popoverOrigin, reset: null },
+            {
+                binding: 'kbqPopoverPlacementPriority',
+                field: 'placementPriority',
+                value: ['bottom'],
+                read: (t) => t.popoverPlacementPriority,
+                reset: null
+            },
+            {
+                binding: 'kbqPopoverPlacement',
+                field: 'placement',
+                value: 'right',
+                read: (t) => t.popoverPlacement,
+                reset: 'top'
+            },
+            {
+                binding: 'kbqPopoverHideIfNotInViewPort',
+                field: 'hideIfNotInViewPort',
+                value: false,
+                read: (t) => t.popoverHideIfNotInViewPort(),
+                reset: true
+            },
+            { binding: 'kbqEnterDelay', field: 'enterDelay', value: 100, read: (t) => t.enterDelay, reset: 0 },
+            { binding: 'kbqLeaveDelay', field: 'leaveDelay', value: 300, read: (t) => t.leaveDelay, reset: 0 },
+            {
+                binding: 'kbqPopoverOffset',
+                field: 'offset',
+                value: 20,
+                read: (t) => t.offset,
+                reset: defaultOffsetYWithArrow
+            }
+        ];
+
+        for (const { binding, field, value, read, reset } of cases) {
+            it(`should reset ${binding} to its default once the binding changes to undefined`, () => {
+                Object.assign(undefinedInstance, { [field]: value });
+                undefinedFixture.detectChanges();
+
+                expect(read(undefinedInstance.popoverTrigger())).toEqual(value);
+
+                Object.assign(undefinedInstance, { [field]: undefined });
+                undefinedFixture.detectChanges();
+
+                expect(read(undefinedInstance.popoverTrigger())).toEqual(reset);
+            });
+        }
+
+        it('should reset kbqPopoverHideIfNotInViewPort to its default once the binding changes to null', () => {
+            undefinedInstance.hideIfNotInViewPort = false;
+            undefinedFixture.detectChanges();
+            undefinedInstance.hideIfNotInViewPort = null;
+            undefinedFixture.detectChanges();
+
+            expect(undefinedInstance.popoverTrigger().popoverHideIfNotInViewPort()).toBe(true);
+        });
+
+        it('should restore the hover leave delay once kbqLeaveDelay changes to undefined', () => {
+            undefinedInstance.triggers = 'hover';
+            undefinedInstance.leaveDelay = 0;
+            undefinedFixture.detectChanges();
+            undefinedInstance.leaveDelay = undefined;
+            undefinedFixture.detectChanges();
+
+            expect(undefinedInstance.popoverTrigger().leaveDelay).toBe(defaultHoverLeaveDelay);
+        });
+
+        it('should reset kbqPopoverOffset to its default once the binding changes to null', () => {
+            undefinedInstance.offset = 20;
+            undefinedFixture.detectChanges();
+            undefinedInstance.offset = null;
+            undefinedFixture.detectChanges();
+
+            expect(undefinedInstance.popoverTrigger().offset).toBe(defaultOffsetYWithArrow);
+        });
+
+        it('should drop the header once its binding changes to undefined', async () => {
+            undefinedInstance.content = 'Content';
+            undefinedInstance.header = 'Header';
+            undefinedFixture.detectChanges();
+
+            await openAndAssertPopover(undefinedFixture, undefinedInstance.trigger());
+
+            expect(overlayContainerElement.querySelector('.kbq-popover__header')?.textContent).toContain('Header');
+
+            undefinedInstance.header = undefined;
+            undefinedFixture.detectChanges();
+            await runDueTimers();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover__header')).toBeNull();
+            expect(overlayContainerElement.querySelector('.kbq-popover')!.getAttribute('aria-labelledby')).toBeNull();
+        });
+
+        it('should drop the accessible name once kbqPopoverAriaLabel changes to undefined', async () => {
+            undefinedInstance.content = 'Content';
+            undefinedInstance.ariaLabel = 'Name';
+            undefinedFixture.detectChanges();
+
+            await openAndAssertPopover(undefinedFixture, undefinedInstance.trigger());
+
+            const panel = overlayContainerElement.querySelector('.kbq-popover')!;
+
+            expect(panel.getAttribute('aria-label')).toBe('Name');
+
+            undefinedInstance.ariaLabel = undefined;
+            undefinedFixture.detectChanges();
+            await runDueTimers();
+
+            expect(panel.getAttribute('aria-label')).toBeNull();
+        });
+
+        it('should close the popover once kbqPopoverVisible changes to undefined', async () => {
+            undefinedInstance.content = 'Content';
+            undefinedInstance.visible = true;
+            undefinedFixture.detectChanges();
+            await runDueTimers();
+            undefinedFixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
+
+            undefinedInstance.visible = undefined;
+            undefinedFixture.detectChanges();
+            await settleClose(undefinedFixture);
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeNull();
+        });
+    });
+
+    describe('confirm texts bound to undefined', () => {
+        afterEach(() => overlayContainer.ngOnDestroy());
+
+        it('should fall back to the locale texts once the bindings change to undefined', async () => {
+            vi.useFakeTimers();
+
+            const confirmFixture = createComponent(PopoverConfirmUndefinedTexts);
+            const confirmInstance = confirmFixture.componentInstance;
+
+            readOverlayContainer();
+
+            confirmInstance.confirmText = 'Custom question';
+            confirmInstance.confirmButtonText = 'Custom button';
+            confirmFixture.detectChanges();
+            confirmInstance.confirmText = undefined;
+            confirmInstance.confirmButtonText = undefined;
+            confirmFixture.detectChanges();
+
+            await openAndAssertPopover(confirmFixture, confirmInstance.trigger());
+
+            expect(overlayContainerElement.querySelector('.kbq-popover-confirm button')!.textContent!.trim()).toBe(
+                ruRULocaleData.popoverConfirm.confirmButtonText
+            );
+            expect(
+                overlayContainerElement.querySelector('.kbq-popover-confirm .kbq-popover__content div')!.textContent
+            ).toBe(ruRULocaleData.popoverConfirm.confirmText);
+        });
+    });
+
+    describe('kbqLeaveDelay', () => {
+        it('should coerce a static attribute to a number', () => {
+            const leaveDelayFixture = createComponent(PopoverStaticLeaveDelay);
+
+            expect(leaveDelayFixture.componentInstance.popoverTrigger().leaveDelay).toBe(0);
+        });
+    });
+
+    // The modal yields Escape only to a control that consumed it to close a popup of its own.
+    describe('inside a modal', () => {
+        let content: PopoverInModal;
+        let modalClosing: Mock;
+
+        const isOpen = () => !!overlayContainerElement.querySelector('.kbq-popover');
+
+        const pressEscape = async (element: Element) => {
+            dispatchKeyboardEvent(element, 'keydown', ESCAPE, undefined, 'Escape');
+            await vi.advanceTimersByTimeAsync(defaultHoverLeaveDelay);
+        };
+
+        const focusTrigger = async () => {
+            const trigger = content.focusTrigger().nativeElement;
+
+            trigger.focus();
+            dispatchFakeEvent(trigger, 'focus');
+            await runDueTimers();
+
+            return trigger;
+        };
+
+        beforeEach(async () => {
+            vi.useFakeTimers();
+            TestBed.configureTestingModule({ imports: [PopoverInModal] });
+
+            const modalRef = TestBed.inject(KbqModalService).open({ kbqComponent: PopoverInModal });
+
+            modalClosing = vi.fn();
+            modalRef.beforeClose.subscribe(modalClosing);
+            await vi.advanceTimersByTimeAsync(MODAL_ANIMATE_DURATION);
+            content = modalRef.getContentComponent();
+            readOverlayContainer();
+        });
+
+        afterEach(() => overlayContainer.ngOnDestroy());
+
+        it('should close a popover that keeps focus on its trigger, and the modal on the next Escape', async () => {
+            const trigger = await focusTrigger();
+
+            expect(isOpen()).toBe(true);
+
+            await pressEscape(trigger);
+
+            expect(isOpen()).toBe(false);
+            expect(modalClosing).not.toHaveBeenCalled();
+
+            await pressEscape(trigger);
+
+            expect(modalClosing).toHaveBeenCalledTimes(1);
+        });
+
+        it('should leave Escape to the modal while kbqPopoverPreventClose keeps the popover open', async () => {
+            content.preventClose.set(true);
+            await runDueTimers();
+
+            const trigger = await focusTrigger();
+
+            expect(isOpen()).toBe(true);
+
+            await pressEscape(trigger);
+
+            expect(modalClosing).toHaveBeenCalledTimes(1);
+        });
+
+        it('should close a panel in an overlay layer of the modal, and the modal on the next Escape', async () => {
+            const trigger = content.layerTrigger().nativeElement;
+
+            dispatchMouseEvent(trigger, 'click');
+            await runDueTimers();
+
+            await pressEscape(overlayContainerElement.querySelector('.kbq-popover')!);
+
+            expect(isOpen()).toBe(false);
+            expect(modalClosing).not.toHaveBeenCalled();
+
+            await pressEscape(trigger);
+
+            expect(modalClosing).toHaveBeenCalledTimes(1);
+        });
     });
 });
+
+@Component({
+    selector: 'popover-undefined-inputs',
+    imports: [KbqPopoverModule],
+    template: `
+        <button
+            #trigger
+            kbqPopover
+            [kbqTrigger]="triggers"
+            [kbqPopoverStickToWindow]="stickToWindow"
+            [kbqPopoverContainer]="container"
+            [kbqPopoverBackdropClass]="backdropClass"
+            [kbqPopoverSize]="size"
+            [kbqPopoverClass]="customClass"
+            [kbqPopoverHeader]="header"
+            [kbqPopoverContent]="content"
+            [kbqPopoverFooter]="footer"
+            [kbqPopoverContext]="context"
+            [kbqPopoverAriaLabel]="ariaLabel"
+            [kbqPopoverOrigin]="origin"
+            [kbqPopoverPlacementPriority]="placementPriority"
+            [kbqPopoverPlacement]="placement"
+            [kbqPopoverVisible]="visible"
+            [kbqPopoverHideIfNotInViewPort]="hideIfNotInViewPort"
+            [kbqEnterDelay]="enterDelay"
+            [kbqLeaveDelay]="leaveDelay"
+            [kbqPopoverOffset]="offset"
+        >
+            Trigger
+        </button>
+    `
+})
+class PopoverUndefinedInputs {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+
+    triggers: string | undefined;
+    stickToWindow: KbqStickToWindowPlacementValues | undefined;
+    container: HTMLElement | undefined;
+    backdropClass: string | undefined;
+    size: 'small' | 'medium' | 'large' | undefined;
+    customClass: string | undefined;
+    header: string | undefined;
+    content: string | undefined;
+    footer: string | undefined;
+    context: object | undefined;
+    ariaLabel: string | undefined;
+    origin: KbqOverlayOrigin | undefined;
+    placementPriority: KbqPopUpPlacementValues[] | undefined;
+    placement: KbqPopUpPlacementValues | undefined;
+    visible: boolean | undefined;
+    hideIfNotInViewPort: boolean | null | undefined;
+    enterDelay: number | undefined;
+    leaveDelay: number | undefined;
+    offset: number | null | undefined;
+}
+
+@Component({
+    selector: 'popover-confirm-undefined-texts',
+    imports: [KbqPopoverModule],
+    template: `
+        <button
+            #trigger
+            kbqPopoverConfirm
+            [kbqPopoverConfirmText]="confirmText"
+            [kbqPopoverConfirmButtonText]="confirmButtonText"
+        >
+            Delete
+        </button>
+    `
+})
+class PopoverConfirmUndefinedTexts {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+
+    confirmText: string | undefined;
+    confirmButtonText: string | undefined;
+}
+
+@Component({
+    selector: 'popover-static-leave-delay',
+    imports: [KbqPopoverModule],
+    template: `
+        <button kbqPopover kbqTrigger="hover" kbqLeaveDelay="0" kbqPopoverContent="Content">Trigger</button>
+    `
+})
+class PopoverStaticLeaveDelay {
+    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+}
 
 @Component({
     selector: 'popover-simple',
@@ -1660,10 +2290,74 @@ class PopoverSimple {
 }
 
 @Component({
+    selector: 'popover-shown-by-effect',
+    imports: [KbqPopoverModule],
+    template: `
+        <button kbqPopover kbqTrigger="manual" kbqPopoverContent="EFFECT">Trigger</button>
+    `
+})
+class PopoverShownByEffect {
+    readonly popoverTrigger = viewChild(KbqPopoverTrigger);
+
+    /** How many times the effect below opened the popover. */
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const trigger = this.popoverTrigger();
+
+            if (!trigger) return;
+
+            this.runs++;
+            trigger.show(0);
+        });
+    }
+}
+
+@Component({
+    selector: 'popover-content-from-effect',
+    imports: [KbqPopoverModule],
+    template: `
+        <button kbqPopover kbqTrigger="manual">Trigger</button>
+        <button kbqPopoverConfirm kbqTrigger="manual">Confirm</button>
+    `
+})
+class PopoverContentFromEffect {
+    readonly popoverTrigger = viewChild(KbqPopoverTrigger);
+    readonly confirmTrigger = viewChild(KbqPopoverConfirmTrigger);
+    readonly content = signal('Content');
+
+    /** How many times each effect below wrote the content. */
+    readonly runs = { popover: 0, confirm: 0 };
+
+    constructor() {
+        effect(() => {
+            const content = this.content();
+            const trigger = this.popoverTrigger();
+
+            if (!trigger) return;
+
+            this.runs.popover++;
+            trigger.content = content;
+        });
+
+        effect(() => {
+            const content = this.content();
+            const trigger = this.confirmTrigger();
+
+            if (!trigger) return;
+
+            this.runs.confirm++;
+            trigger.content = content;
+        });
+    }
+}
+
+@Component({
     selector: 'popover-close-on-scroll',
     imports: [KbqPopoverModule],
     template: `
-        <button kbqPopover [closeOnScroll]="true" [kbqTrigger]="'manual'" [kbqPopoverContent]="'CONTENT'">
+        <button kbqPopover [kbqPopoverCloseOnScroll]="true" [kbqTrigger]="'manual'" [kbqPopoverContent]="'CONTENT'">
             trigger
         </button>
     `
@@ -1878,11 +2572,10 @@ class PopoverRebuiltContext {
 }
 
 @Component({
-    selector: 'popover-input-aliases',
+    selector: 'popover-boolean-inputs',
     imports: [KbqPopoverModule],
     template: `
-        <button #bare kbqPopover hasCloseButton kbqPopoverContent="BARE" kbqPopoverHeader="HEADER">Bare</button>
-        <button #stringFalse kbqPopover hasCloseButton="false" kbqPopoverContent="FALSE">False</button>
+        <button #stringFalse kbqPopover kbqPopoverHasCloseButton="false" kbqPopoverContent="FALSE">False</button>
         <button
             #prefixed
             kbqPopover
@@ -1896,8 +2589,7 @@ class PopoverRebuiltContext {
         </button>
     `
 })
-class PopoverInputAliases {
-    readonly bare = viewChild.required<ElementRef>('bare');
+class PopoverBooleanInputs {
     readonly stringFalse = viewChild.required<ElementRef>('stringFalse');
     readonly prefixed = viewChild.required<ElementRef>('prefixed');
 }
@@ -1991,6 +2683,31 @@ class PopoverOrigin {
 
     readonly trigger = viewChild.required<ElementRef>('trigger');
     readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+}
+
+@Component({
+    selector: 'popover-in-modal',
+    imports: [KbqPopoverModule, KbqOverlayLayer],
+    template: `
+        <button
+            #focusTrigger
+            kbqPopover
+            kbqTrigger="focus"
+            [kbqPopoverContent]="'Focus'"
+            [kbqPopoverPreventClose]="preventClose()"
+        >
+            Focus
+        </button>
+        <div kbqOverlayLayer>
+            <button #layerTrigger kbqPopover [kbqPopoverContent]="'Layer'">Layer</button>
+        </div>
+    `
+})
+class PopoverInModal {
+    readonly preventClose = signal(false);
+
+    readonly focusTrigger = viewChild.required<ElementRef<HTMLElement>>('focusTrigger');
+    readonly layerTrigger = viewChild.required<ElementRef<HTMLElement>>('layerTrigger');
 }
 
 @Component({

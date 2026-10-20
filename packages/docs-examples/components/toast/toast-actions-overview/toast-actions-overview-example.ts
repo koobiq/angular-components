@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { outputToObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -21,7 +21,7 @@ import { take } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastActionsOverviewExample {
-    @ViewChild('dropdown') dropdown: KbqDropdown;
+    readonly dropdown = viewChild.required<KbqDropdown>('dropdown');
 
     readonly toastService = inject(KbqToastService);
 
@@ -43,7 +43,7 @@ export class ToastActionsOverviewExample {
             0
         );
 
-        outputToObservable(this.dropdown.closed)
+        outputToObservable(this.dropdown().closed)
             .pipe(take(1))
             .subscribe(() => ref.instance.close());
     }

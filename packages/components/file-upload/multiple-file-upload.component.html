@@ -36,22 +36,17 @@
                         >
                             <div class="kbq-file-upload__row" [class.kbq-error]="file.hasError">
                                 <div class="kbq-file-upload__file kbq-file-upload__grid-cell">
-                                    @if (
-                                        { loading: file.loading | async, progress: file.progress | async };
-                                        as asyncData
-                                    ) {
-                                        @if (!asyncData.loading) {
-                                            <ng-container
-                                                [ngTemplateOutlet]="$any(customFileIcon())"
-                                                [ngTemplateOutletContext]="{ $implicit: file }"
-                                            />
-                                        } @else {
-                                            <kbq-progress-spinner
-                                                class="kbq-file-upload-name-cell__icon"
-                                                [mode]="progressMode()"
-                                                [value]="asyncData.progress || 0"
-                                            />
-                                        }
+                                    @if (!isLoading(file)) {
+                                        <ng-container
+                                            [ngTemplateOutlet]="$any(customFileIcon())"
+                                            [ngTemplateOutletContext]="{ $implicit: file }"
+                                        />
+                                    } @else {
+                                        <kbq-progress-spinner
+                                            class="kbq-file-upload-name-cell__icon"
+                                            [mode]="progressMode()"
+                                            [value]="uploadProgress(file)"
+                                        />
                                     }
                                     <span
                                         class="kbq-file-item__text"

@@ -11,7 +11,7 @@ import {
     inject,
     input
 } from '@angular/core';
-import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
+import { KBQ_WINDOW, kbqAnimationsDisabled, kbqInjectNativeElement } from '@koobiq/components/core';
 
 const WAVE_ANIMATION_NAME = 'kbq-skeleton-wave';
 const OFFSCREEN_SELECTOR = 'kbq-skeleton_offscreen';
@@ -151,6 +151,7 @@ class SkeletonWave {
     host: {
         class: 'kbq-skeleton',
         '[class.kbq-skeleton_disabled]': '!enabled()',
+        '[class.kbq-animations-disabled]': 'animationsDisabled',
         '[attr.inert]': 'enabled() || null'
     },
     exportAs: 'kbqSkeleton'
@@ -162,6 +163,12 @@ export class KbqSkeleton {
 
     /** Whether the skeleton is enabled. */
     readonly enabled = input(true, { transform: booleanAttribute, alias: 'kbqSkeleton' });
+
+    /**
+     * Whether the fill stands still, without the wave.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     constructor() {
         this.styleLoader.load(SkeletonStyleLoader);

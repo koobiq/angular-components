@@ -10,7 +10,7 @@ const COMPONENTS = [
 
 /**
  * @deprecated Wraps `overlayscrollbars`. Superseded by the dependency-free
- * `@koobiq/components/scrollbar`. Will be removed in a future major version — an `ng update`
+ * `@koobiq/components/scrollbar`. Will be removed in 22.0.0 — an `ng update`
  * migration rewrites `@koobiq/components/scrollbar` imports of this module to
  * `@koobiq/components/scrollbar/deprecated` automatically.
  */

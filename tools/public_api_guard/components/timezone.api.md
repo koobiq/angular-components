@@ -77,17 +77,17 @@ export class KbqTimezoneOption extends KbqOption {
     // (undocumented)
     readonly highlightText: i0.InputSignal<string | readonly string[]>;
     protected get resolvedOffset(): string;
-    // (undocumented)
     get timezone(): KbqTimezoneZone;
-    set timezone(zone: KbqTimezoneZone);
+    readonly timezoneInput: i0.InputSignal<KbqTimezoneZone>;
     // (undocumented)
     readonly tooltipContent: i0.Signal<ElementRef<HTMLElement>>;
     // (undocumented)
     readonly tooltipContentWrapper: i0.Signal<ElementRef<HTMLElement>>;
     get tooltipViewValue(): string;
+    get value(): string;
     get viewValue(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneOption, "kbq-timezone-option", ["kbqTimezoneOption"], { "highlightText": { "alias": "highlightText"; "required": false; "isSignal": true; }; "foldDiacritics": { "alias": "foldDiacritics"; "required": false; "isSignal": true; }; "timezone": { "alias": "timezone"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneOption, "kbq-timezone-option", ["kbqTimezoneOption"], { "highlightText": { "alias": "highlightText"; "required": false; "isSignal": true; }; "foldDiacritics": { "alias": "foldDiacritics"; "required": false; "isSignal": true; }; "timezoneInput": { "alias": "timezone"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneOption, never>;
 }
@@ -122,12 +122,10 @@ export class KbqTimezoneSelect extends KbqSelect {
     constructor();
     // (undocumented)
     readonly customTrigger: i0.Signal<KbqTimezoneSelectTrigger | undefined>;
-    get multiple(): boolean;
-    set multiple(value: boolean);
     ngOnInit(): void;
     readonly timezoneLocaleConfiguration: i0.Signal<KbqTimezoneLocaleConfiguration>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger", "searchFormField"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneSelect, never>;
 }

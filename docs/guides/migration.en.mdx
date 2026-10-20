@@ -10,6 +10,10 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **20.0.0**: the move to Angular 20: removal of deprecated APIs and package renames.
 - **20.2.0**: the move of the filter-bar API to signals.
 - **20.2.0**: one shared mechanism for dropdown panel width.
+- **21.0.0**: the move to Angular 21: zoneless change detection, CSS animations instead of `@angular/animations`, and signal inputs, outputs and queries.
+- **21.0.0**: removal of the APIs deprecated before 21.0.0.
+- **21.0.0**: removal of `ThemePalette`.
+- **21.0.0**: removal of the core API nothing in the library used, and deprecation of its legacy API.
 - **21.0.0**: the actions panel overlay container.
 - **21.0.0**: legacy splitter deprecation.
 - **21.0.0**: removal of the overlay demotion mechanism.
@@ -146,7 +150,7 @@ ng g @koobiq/components:v20-upgrade --project "<your project>"
 
 **Instance methods:**
 
-- .openPanel() → .open(),
+- KbqAutocompleteTrigger.openPanel() → .open(),
 - .toggleIsCollapsed() → .toggle(),
 - .focusViaKeyboard() → .focus().
 
@@ -176,7 +180,7 @@ The schematic emits warnings for what cannot be rewritten safely:
 
 **Modals**: ModalOptions.kbqComponentParams → the data field + inject(KBQ_MODAL_DATA).
 
-**Code block**: the deprecated `canLoad` / `codeFiles` inputs are renamed to `canDownload` / `files`. Template bindings are migrated automatically; programmatic access (`.canLoad`, `.codeFiles`) must be updated by hand.
+**Code block**: the deprecated `canLoad` / `codeFiles` inputs are renamed to `canDownload` / `files`. Template bindings are migrated automatically, except on a `<kbq-code-block>` that binds the replacement too: it is reported, merge each pair into one binding. Programmatic access (`.canLoad`, `.codeFiles`) must be updated by hand.
 
 ### Filter-bar upgrade (20.2.0)
 
@@ -220,7 +224,7 @@ ng g @koobiq/components:filter-bar-signals --project "<your project>"
 
 **Renames:**
 
-- KbqFilterBarRefresher → KbqFilterRefresher (the old name is still re-exported as an alias, so it does not break the build)
+- KbqFilterBarRefresher → KbqFilterRefresher (the old name stayed an alias until 21.0.0)
 
 All replacements are idempotent — running the schematic twice does not double the call.
 
@@ -228,7 +232,7 @@ All replacements are idempotent — running the schematic twice does not double 
 
 The schematic emits warnings for what cannot be rewritten safely:
 
-**KbqFilterBar.changes**: deprecated and no longer emits → read `filterBar.filter()` inside an `effect(...)`, or listen to `(filterChange)`.
+**KbqFilterBar.changes**: deprecated, no longer emits, removed in 21.0.0 → read `filterBar.filter()` inside an `effect(...)`, or listen to `(filterChange)`.
 
 **KbqFilters.preparePopover()**: removed → `openSaveAsNewFilterPopover()` / `openChangeFilterNamePopover()`.
 
@@ -312,6 +316,463 @@ const w = this.select.panelWidth();
 
 **`kbq-dropdown`'s minimum width is now measured with `getBoundingClientRect()`** (the trigger's full border-box) instead of `getComputedStyle().width` minus its borders (the old, incorrectly-computed content-box). A trigger with padding or a border renders a wider panel than before by that amount; a trigger with neither is unaffected.
 
+### Upgrade to Angular 21
+
+{/* migration-step-version(21.0.0) */}
+
+In version 21.0.0 the library moves to Angular 21. Requirements: **Angular 21+**, **TypeScript 5.9** and **Node.js 20.19, 22.12 or 24+**. Update Angular first, then Koobiq:
+
+```bash
+ng update @angular/core@21 @angular/cli@21 @angular/cdk@21
+ng update @koobiq/components@21
+```
+
+#### Zoneless change detection
+
+Koobiq components no longer depend on zone.js: they render in an application bootstrapped with `provideZonelessChangeDetection()` and keep working with `provideZoneChangeDetection()`. What used to wait for `NgZone.onStable` now runs after the next render.
+
+- **`MockNgZone` is removed** from `@koobiq/components/core`. It fired `onStable` on demand, and nothing in the library listens to it any more: drop the `NgZone` override, and replace `simulateZoneExit()` with `fixture.detectChanges()` or `await fixture.whenStable()`.
+- **A spec without zone.js renders only when told to.** A check made right after an event needs `fixture.detectChanges()` or `await fixture.whenStable()` first, and `whenStable()` no longer waits for timers the component started.
+- **The actions panel container is `OnPush`**, like the sidepanel container. In an application with zone.js, a component opened in the panel that writes its fields from a timer or a subscription calls `markForCheck()` or keeps that state in a signal.
+
+`zoneless-change-detection` reports every use of `MockNgZone` and `simulateZoneExit()`:
+
+```bash
+ng g @koobiq/components:zoneless-change-detection --project "<your project>"
+```
+
+#### Animations without @angular/animations
+
+Koobiq components no longer use `@angular/animations`, which Angular deprecated: they animate with CSS and wait for the end of an animation themselves. `@angular/animations` is no longer a peer dependency, and the components no longer need `provideAnimations()`: remove it, and the package, unless the components of your application declare `animations: [...]` themselves.
+
+- **The motion is off under `prefers-reduced-motion: reduce`.** To turn it off in the whole application, for example in an end-to-end suite, provide `{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }` from `@koobiq/components/core`. `provideNoopAnimations()` still turns it off, but it belongs to the deprecated package.
+- **The exported triggers are removed**: `fadeAnimation` and `kbqSelectAnimations` from `core`, `kbqDropdownAnimations`, `fadeInItems` and `transformDropdown` from `dropdown`, `kbqTabsAnimations` from `tabs`, `kbqPopoverAnimations` from `popover`, `kbqDatepickerAnimations` from `datepicker`, `KbqNotificationCenterAnimations` from `notification-center` and `kbqAppSwitcherAnimations` from `app-switcher`. `KbqSidepanelAnimationState` is no longer exported from `sidepanel`, nor `MODAL_ANIMATE_DURATION` from `modal`: instead of a timer of that length, act on `afterOpen` / `afterClose` of the `KbqModalRef`.
+- **The members that carried an `AnimationEvent` are removed.** `KbqPopUp.animationStart()` and `animationDone()`: a subclass overrides the protected `afterShowAnimation()`, which runs once each time the pop-up appears, not again when the pointer returns to an open one. `KbqDropdown.animationDone`, `isAnimating`, `panelAnimationState`, `startAnimation()`, `resetAnimation()`, `onAnimationStart()` and `onAnimationDone()`: a custom trigger calls `setOpened()`. `KbqSidebar.animationState`, `onAnimationStart()` and `onAnimationDone()`: listen to `stateChanged`. `KbqTabBody.onTranslateTabStarted()` and `onTranslateTabComplete()`, `KbqToastService.animation`, `KbqToastComponent.animationState` and `onAnimation()`, the `animationStateChanged` of the sidepanel and actions panel containers, and `animationState`, `animationTransform` and `setAnimationState()` of the sidepanel container: follow a panel through its ref — `afterOpened()`, `beforeClosed()`, `afterClosed()`. The protected `KbqContentPanelContainer.contentAnimationState` fed the removed `@contentAnimation` trigger: a subclass reads `isOpened()`.
+- **The dropdown panel no longer fades out**: it is closed, and its lazy content detached, as soon as the trigger reports it.
+- **In a spec, what waited for an animation callback now waits for the next render**: `fixture.detectChanges()` or `await fixture.whenStable()`. jsdom has no Web Animations API, so nothing animates there.
+
+`angular-animations-removal` reports every use of the removed triggers and members:
+
+```bash
+ng g @koobiq/components:angular-animations-removal --project "<your project>"
+```
+
+#### Overlays in the top layer
+
+The CDK 21 opens overlays as popovers in the browser top layer, and the components keep that default: a panel is drawn above the whole page, whatever stacking context surrounds its trigger. The `z-index` of `.cdk-overlay-container` no longer orders panels against the application's own fixed and sticky elements, so an override of it has no effect. An application that relied on it opts out with `OVERLAY_DEFAULT_CONFIG` from `@angular/cdk/overlay`:
+
+```typescript
+import { OVERLAY_DEFAULT_CONFIG } from '@angular/cdk/overlay';
+
+bootstrapApplication(AppComponent, {
+    providers: [{ provide: OVERLAY_DEFAULT_CONFIG, useValue: { usePopover: false } }]
+});
+```
+
+#### Color as a signal
+
+`color` of `KbqColorDirective` is a writable signal, and so is the `color` of every component built on it: the buttons, checkbox, toggle, radio, icons, form field, hints, cleaner, progress bar and spinner, and tag. The `[color]` binding is unchanged.
+
+- **A read is a call, a write is `.set()`**: `icon.color()`, `button.color.set(KbqComponentColors.Theme)`. A color set in code holds until the `[color]` binding changes, as an assigned one did.
+- **An unset or falsy `[color]` renders the default color of the component**, `kbq-empty` where it has none, instead of no color class.
+- **A subclass can no longer override the `color` accessor.** Set its default with `setDefaultColor()` instead of assigning `color` in the constructor. `_color` is removed, `defaultColor` is a signal, and `KbqColorDirective` takes the type of its color as a parameter: `KbqColorDirective<KbqButtonColor>` for the buttons. `CanColor` is removed: type the member `Signal<KbqComponentColors | string>`, or use `KbqColorDirective`.
+
+`color-signals` rewrites the reads and writes, and reports subclasses:
+
+```bash
+ng g @koobiq/components:color-signals --project "<your project>"
+```
+
+#### Removed mixins
+
+`mixinDisabled` and `mixinTabIndex` are removed from `@koobiq/components/core` with `CanDisable`, `CanDisableCtor`, `HasTabIndex` and `HasTabIndexCtor`. They were deprecated and unused inside the library: declare `disabled` and `tabIndex` as inputs of the class instead. `core-mixins-removal` reports every use:
+
+```bash
+ng g @koobiq/components:core-mixins-removal --project "<your project>"
+```
+
+#### Options
+
+`KbqOption`, `KbqOptgroup`, the option action and `KbqTimezoneOption` keep their state in signal inputs. The state of an option is still read as a property — `event.option.value`, `select.selected.disabled`, `option.viewValue` in a `kbqSelectTagContent` template — so those reads are unchanged.
+
+- **Programmatic writes are gone**: `option.value`, `viewValue`, `disabled`, `showCheckbox` and `KbqTimezoneOption.timezone` are bound in the template.
+- **`KbqOptgroup.disabled` and `KbqOptionActionComponent.disabled` are signals**: `group.disabled()`.
+- **`KbqOption.stateChanges` no longer emits for `disabled`**, and `textElement` is typed `ElementRef | undefined`.
+
+`option-signals` rewrites the reads of the group and the action, and reports the writes:
+
+```bash
+ng g @koobiq/components:option-signals --project "<your project>"
+```
+
+#### Number input and input type
+
+`KbqNumberInput.value`, `KbqNumberInput.disabled` and `KbqInput.type` are signal inputs read through a getter: a read is unchanged, a programmatic write no longer compiles. Bind `[value]`, `[disabled]` and `[type]`, or write through the form control. `input-signals` reports every write:
+
+```bash
+ng g @koobiq/components:input-signals --project "<your project>"
+```
+
+#### List
+
+The inputs of `KbqListSelection` and `KbqListOption` are signal inputs read through a getter: a read is unchanged, a programmatic write no longer compiles. Bind them in the template, and disable the list through its form control. `KbqListOption.selected` and `KbqListSelection.multipleMode` stay writable. `list-signals` reports every write:
+
+```bash
+ng g @koobiq/components:list-signals --project "<your project>"
+```
+
+#### Checkbox, toggle, radio, button toggle, buttons, icons, search and pop-ups
+
+Their inputs are signal inputs named `<member>Input`, handed to the unchanged member from `ngOnChanges`: reading and writing `checkbox.checked`, `button.disabled`, `icon.iconName` or `tooltip.content` works as before. The same goes for the tooltip, popover, popover confirm, app switcher and notification center triggers, the password toggle and the ellipsis center, and for the tags, file uploads, accordion item, navbar item, notification item and sidebar. The exception is a member another migration moved to a signal, such as `color` (see Color as a signal) or the tag members and the form-field state of the tag list (see Tags).
+
+- **A subclass** that implements `ngOnChanges` calls `super.ngOnChanges(changes)`, and one that redeclared an `@Input()` overrides the `<member>Input` signal input instead, e.g. `iconNameInput`.
+- **A boolean input** accepts `boolean | string | null | undefined` in a template, rather than anything.
+- **`KbqPopUp.elementRef` is a protected getter.** A panel that renders an element of its own overrides it over a `viewChild()` instead of re-declaring the field with `@ViewChild`.
+
+`signal-inputs-subclasses` reports every subclass:
+
+```bash
+ng g @koobiq/components:signal-inputs-subclasses --project "<your project>"
+```
+
+#### Datepicker
+
+The inputs of `KbqDatepicker`, `KbqDatepickerInput`, `KbqDatepickerToggleIconComponent`, `KbqCalendar`, `KbqCalendarHeader` and `KbqMonthView` are signal inputs named `<member>Input`, handed to the unchanged member from `ngOnChanges`: reading and writing `datepicker.opened`, `datepicker.startAt`, `input.min` or `calendar.minDate` works as before. The exception is the form-field state of `KbqDatepickerInput`: `value`, `id`, `placeholder`, `focused`, `empty`, `required`, `disabled` and `errorState` are signals, migrated by `form-field-signals` (see Form field review (21.0.0)).
+
+- **A subclass** that implements `ngOnChanges` marks it `override` and calls `super.ngOnChanges(changes)`, and one that redeclared an `@Input()` overrides the `<member>Input` signal input instead, e.g. `minInput`.
+- **A `SimpleChanges` passed to `ngOnChanges` by hand** is keyed by the `<member>Input` names: `minDateInput`, not `minDate`.
+- **A boolean input** — `hasBackdrop`, `disabled` and `opened` — accepts `boolean | string | null | undefined` in a template.
+
+`datepicker-signals` reports every subclass and every direct call of `ngOnChanges`:
+
+```bash
+ng g @koobiq/components:datepicker-signals --project "<your project>"
+```
+
+**Without a locale service, the placeholder names the format the input takes.** It used to be the `ru-RU` one whatever locale the date adapter parsed in. It now follows the date adapter of the input — `KBQ_DATE_LOCALE`, Angular's `LOCALE_ID` unless provided, on a component too — so with the default `en-US` it reads `yyyy-mm-dd`; for a locale the library ships no strings for, or a format set through `KBQ_DATE_FORMATS`, it is the format itself, such as `yyyy/mm/dd`. To keep the former one, bind `[placeholder]` or pass it to `kbqDatepickerLocaleConfigurationProvider()`. With a locale service nothing changes.
+
+#### Tabs
+
+The inputs of `KbqTabGroup`, `KbqTab`, `KbqTabNavBar`, `KbqTabLink` and of the header, labels and bodies inside the tab group are signal inputs named `<member>Input`, handed to the unchanged member from `ngOnChanges`: reading and writing `tabGroup.selectedIndex`, `tabGroup.headerPosition`, `tab.disabled` or `tabLink.active` works as before. Their queries are signal queries behind getters: `KbqTabGroup.tabs` and `KbqTabNavBar.items` are still `QueryList`s whose `changes` emit as before.
+
+- **A subclass** that implements `ngOnChanges` marks it `override` and calls `super.ngOnChanges(changes)`, and one that redeclared an `@Input()` overrides the `<member>Input` signal input instead, e.g. `headerPositionInput`. A query it redeclared with `@ContentChildren` or `@ViewChild` — `tabs`, `items`, `templateLabel` — is overridden as a getter.
+- **A `SimpleChanges` passed to `ngOnChanges` by hand** is keyed by the `<member>Input` names: `disabledInput`, not `disabled`.
+- **A boolean input** — `disabled`, `active`, `vertical`, `disablePagination` — accepts `boolean | string | null | undefined` in a template.
+- **A bound `undefined`** resets the member to its default rather than leaving it as it was: `headerPosition` becomes `'above'`, `animationDuration` the duration of `KBQ_TABS_CONFIG`, `tooltipTitle` `''` and a boolean input `false`, `selectedIndex` selects the first enabled tab, and a `KbqTabLink` gets `tabIndex` `0` and its generated `id`.
+- **`KbqTab.templateLabel` follows the `kbqTabLabel` in the content of the tab**: once that is removed, the tab shows its text label rather than the removed template.
+
+`tabs-signals-and-aria` reports every subclass and every direct call of `ngOnChanges`:
+
+```bash
+ng g @koobiq/components:tabs-signals-and-aria --project "<your project>"
+```
+
+#### Query lists
+
+The `options` of `KbqSelect`, `KbqAutocomplete` and `KbqListSelection`, the `tags` of `KbqSelect` and `KbqTagList`, `KbqListItem.lines`, `KbqRadioGroup.radios`, `KbqTreeSelection.unorderedOptions`, the `focusableItems` of `KbqNavbar` and `KbqVerticalNavbar`, and the `textElement` of `KbqTag` and `KbqDropdownItem` are getters over signal queries. They keep their types — a `QueryList` whose `changes` emit as before, or an `ElementRef` — so reading them works as before. Before the content is initialized a `QueryList` is empty rather than `undefined`.
+
+- **A subclass** that redeclared one of them, with a query decorator or as a field, removes the redeclaration or overrides the getter.
+- **A write** to one of them no longer compiles: render the items in the template.
+- **`KbqCodeBlock.tabLinkTemplate`**, which is protected, is a signal: a subclass reads `this.tabLinkTemplate()`.
+
+`query-list-signals` reports every redeclaration and write:
+
+```bash
+ng g @koobiq/components:query-list-signals --project "<your project>"
+```
+
+#### State as signals
+
+The state that components and services expose for reading is a signal, where it used to be a `BehaviorSubject`, an `Observable` or a plain field. The streams that report events stay observables.
+
+| Member                                                                                                                    | Was                                   | Now                                                |
+| ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- | -------------------------------------------------- |
+| `silentMode`, `loadingMode`, `errorMode`, `loadingMore`, `loadMoreErrorMode`, `hasMore` of `KbqNotificationCenterService` | `BehaviorSubject<boolean>`            | `Signal<boolean>`, written by the `set…()` methods |
+| `unreadItemsCounter` of `KbqNotificationCenterService` and `KbqNotificationCenterTrigger`                                 | `Observable<string>`                  | `Signal<string>`                                   |
+| `KbqNotificationCenterService.groupedItems`                                                                               | `Observable<KbqNotificationsGroup[]>` | `Signal<KbqNotificationsGroup[]>`                  |
+| `hovered`, `focused` of `KbqToastService` and `KbqToastComponent`                                                         | `BehaviorSubject<boolean>`            | `Signal<boolean>`                                  |
+| `filteredOptions` of `KbqFilters`, `KbqPipeSelectComponent` and `KbqPipeMultiSelectComponent`                             | `Observable`                          | a read-only `Signal`                               |
+| `KbqSelect.hiddenItems`                                                                                                   | `number`                              | `Signal<number>`, as in `KbqTreeSelect`            |
+| `KbqSearchExpandable.value`                                                                                               | `BehaviorSubject<string>`             | `WritableSignal<string>`                           |
+| `hovered` of `KbqPopUp` and `KbqPopUpTrigger`: tooltips, popovers, the notification center and the app switcher           | `BehaviorSubject<boolean>`            | `Signal<boolean>`                                  |
+
+- **Read** them with a call — `service.silentMode()`, `trigger.unreadItemsCounter()` — instead of `.value`, `.getValue()` or `| async`. Where a stream is still needed, wrap the signal in `toObservable()` from `@angular/core/rxjs-interop`.
+- **Write** the notification center flags with their `set…()` methods and the search value with `value.set()`; the other signals are read-only.
+- **`KbqNotificationCenterService.changes`** no longer emits on subscription: a handler that relied on that runs once on its own before subscribing.
+- **`KbqFilters.filteredOptions`** now follows a change of the `filters` input too.
+- **A pop-up trigger no longer marks its host view for check** when it opens or closes: an OnPush view that renders a field of its own, written from a `visibleChange` subscription made in code, calls `markForCheck()` itself or keeps the field in a signal. An output bound in the template needs nothing.
+- **A getter backed by a signal is a tracked read.** `isOpen` of the pop-up triggers, `opened` of `KbqDropdownTrigger`, `KbqDatepicker` and `KbqSidebar`, `panelOpen` of `KbqSelect`, `KbqTreeSelect` and `KbqAutocompleteTrigger`, `expanded` of `KbqAccordionItem`, `isOpened` of `KbqSearchExpandable`, `selected` of the options, `selectedIndex` of `KbqTabGroup` and `isActive` of `KbqTab` keep their type, but reading one inside an `effect()` or a `computed()` makes it follow that state: an effect that opens or closes a component depending on one reads it with `untracked()`. The commands of the components — `open()`, `close()`, `toggle()`, `select()`, `writeValue()` and the like — read nothing an effect calling them would follow.
+- **A number input bound to `undefined` or `null`** falls back to its default instead of becoming `NaN`: `tabIndex` of `kbq-checkbox`, `kbq-toggle`, `kbq-radio-button`, `kbq-search-expandable` and `kbqTabLink` reads `0` (a tab link no longer renders `tabindex="NaN"`), `selectedIndex` of `kbq-tab-group` selects the first enabled tab, `offset` of `kbqAppSwitcher` takes the default offset, and `tabIndex` of `kbq-list-selection` and `kbq-tree-selection` gives back the default tab stop (`0`, or `-1` without options). A value that is not a finite number counts the same.
+- **Tabbing out of a list, tag list or tree leaves `tabIndex` alone.** `kbq-list-selection`, `kbq-tag-list` and `kbq-tree-selection` take themselves out of the tab order in the DOM only, so `tabIndex` reads the same value while the focus leaves, and then put back the tab stop they render. A tag list with a tag input renders no `tabindex` again instead of keeping `-1`, and a tree keeps a bound `[tabIndex]` when its rendered nodes change.
+- **A subclass** of `KbqToastComponent`, `KbqPopUp` or `KbqPopUpTrigger` sets its hover state with the protected `setHovered()`; one of `KbqPipeSelectComponent` drops its `super.ngOnInit()` call, and one of `KbqDatepickerToggleIconComponent` its `super.ngAfterContentInit()` and `super.ngOnDestroy()` calls, since the classes no longer implement them. The protected `isListMode`, `showStartCalendar` and `showEndCalendar` of the date pipes are signals.
+- **`KbqFileItem`** keeps its `loading` and `progress` subjects, which the application updates.
+
+`v21-upgrade` reports these reads, writes and `super` calls:
+
+```bash
+ng g @koobiq/components:v21-upgrade --project "<your project>"
+```
+
+### Deprecated API removal (21.0.0)
+
+The APIs deprecated in 20.x are removed in 21.0.0, those whose note promised removal in the next major release and those deprecated without a date alike. A renamed member or alias is rewritten by `v21-upgrade`; for the rest it reports the file and the replacement to use.
+
+#### Accordion
+
+| Removed                                   | Use instead                                                                             | Migration |
+| ----------------------------------------- | --------------------------------------------------------------------------------------- | --------- |
+| the `kbq-accordion-trigger__action` class | a `kbq-accordion-header__actions` element next to the trigger in `kbq-accordion-header` | reported  |
+
+An action inside the trigger is a focusable element inside a `role="button"`, so the actions move out of the trigger: see [Interactive elements](/en/components/accordion/overview#interactive-elements). `v21-upgrade` reports the class in templates, style sheets and code.
+
+#### Code block and icon button
+
+| Removed                                         | Use instead                       | Migration |
+| ----------------------------------------------- | --------------------------------- | --------- |
+| `canLoad` on `<kbq-code-block>`                 | `canDownload`                     | rewritten |
+| `codeFiles` on `<kbq-code-block>`               | `files`                           | rewritten |
+| `KbqCodeBlock.canLoadInput` / `.codeFilesInput` | `canDownload()` / `files()`       | reported  |
+| `KbqCodeBlock.scrollableCodeContent`            | `scrollTo(options)`               | reported  |
+| `small` on an icon button                       | `size="compact"`                  | rewritten |
+| the `kbq-icon-button_small` class               | `kbq-icon-button_compact`         | rewritten |
+| `KbqIconButton.small`                           | `size` (`'compact'` / `'normal'`) | reported  |
+
+The aliases no longer fill in for their replacements: a `<kbq-code-block>` that binds both `canLoad` and `canDownload`, or both `codeFiles` and `files`, is reported and has to merge each pair into one binding. So is one that binds `canDownload` or `files` twice, which is what the 20.0.0 migration made of such a pair: only the last binding takes effect. A bound `[small]="expr"` becomes `[size]="(expr) ? 'compact' : 'normal'"`. A valueless `small` never took effect, because the input had no boolean transform; it is reported, as is a static `small` with any other value than `"true"`, which made the button compact.
+
+#### Core
+
+| Removed                                | Use instead                                                                | Migration           |
+| -------------------------------------- | -------------------------------------------------------------------------- | ------------------- |
+| `KbqThemeSelector.Default`             | `KbqThemeSelector.Light`                                                   | rewritten           |
+| `KbqThemeNames.Default`                | `KbqThemeNames.Light`                                                      | rewritten           |
+| `KbqDefaultThemes`                     | `KBQ_DEFAULT_THEMES`                                                       | rewritten           |
+| `KbqTheme`                             | `KbqThemeConfig`: `colorScheme` is required, `selected` is gone            | rewritten, reported |
+| `ThemeService`                         | `KbqThemeService`                                                          | reported            |
+| `ThemeService.current` / `.getTheme()` | `currentTheme()`, a signal                                                 | reported            |
+| `ThemeService.themes`                  | `themes()` / `setThemes()`                                                 | reported            |
+| `ThemeService.setTheme(theme)`         | `setMode(theme.colorScheme)`, or `selectTheme(theme.name)` to pin a theme  | reported            |
+| `getOptionScrollPosition()`            | `KbqOption.focus()` or `kbqFocusAndReveal(element)`: both scroll into view | reported            |
+
+`v21-upgrade` reports `ThemeService` and `getOptionScrollPosition` where they are imported from `@koobiq/components/core`, and every file that names `KbqTheme`. Give each custom theme its `colorScheme` and compare a theme with `currentTheme()` instead of reading `selected`. Unlike `ThemeService`, `KbqThemeService` applies a theme as soon as it is injected and starts in `'auto'` mode: an app that called `setTheme()` at startup to force a theme sets `kbqThemeProvider({ mode: 'light' })` instead. The rest of the service is described in the theme service review below.
+
+#### Dropdown and select
+
+| Removed                                                             | Use instead                                                                               | Migration |
+| ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | --------- |
+| `KbqDropdown.triggerWidth`, `KbqDropdownPanel.triggerWidth`         | `KbqDropdownTrigger.widthOrigin`, to match the panel to an element other than the trigger | reported  |
+| `offsetY` of `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect`      | the `--kbq-connected-overlay-gap` CSS variable, set on `:root` or on the overlay pane     | reported  |
+| `AUTOCOMPLETE_PANEL_HEIGHT`                                         | a constant of your own: the panel is capped by `--kbq-autocomplete-size-panel-max-height` | reported  |
+| `DropdownPositionX` / `DropdownPositionY`                           | `KbqDropdownPositionX` / `KbqDropdownPositionY`                                           | rewritten |
+| `KbqSelectPanelWidth`, `KbqTreeSelectPanelWidth`                    | `KbqPanelWidth` from `@koobiq/components/core`                                            | rewritten |
+| `clearValue()` of `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect` | a projected `<kbq-cleaner />`; from code, reset the bound form control                    | reported  |
+| the `kbq-dropdown__group-header_small` class                        | `<kbq-optgroup label="…" />`, `KbqOptgroup` from `@koobiq/components/core`                | reported  |
+
+None of the removed members was an input, so no template binds them, and of `triggerWidth`, `offsetY` and `AUTOCOMPLETE_PANEL_HEIGHT` only `offsetY` of `kbq-timezone-select` still had an effect: it moved the panel. `v21-upgrade` reports `.triggerWidth` in a file that uses the dropdown, `triggerWidth` in a `KbqDropdownPanel` implementation, `.offsetY` in a file that uses one of the selects and an `offsetY` field of their subclass; the `offsetY` input of `KbqDropdownTrigger` stays. It renames the position types in a file that names `@koobiq/components/dropdown` and moves the panel width types to the core import; the position types elsewhere, an aliased import and a re-export are reported. `.clearValue` is reported in a file that uses one of the selects, except on `this` and on a form field, whose `clearValue()` stays; like the cleaner, it spared the options `clearPredicate` keeps, while a reset control loses them all. `<kbq-optgroup>` renders the subheading of the removed modifier inside a dropdown; `kbq-dropdown__group-header` itself stays.
+
+#### Filter bar
+
+| Removed                               | Use instead                                                                                            | Migration                    |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------ | ---------------------------- |
+| `KbqFilterBarRefresher`               | `KbqFilterRefresher`                                                                                   | rewritten                    |
+| `KbqFilterBar.changes`                | `filter()` read in an `effect()`, or the `(filterChange)` output: `changes` never emitted              | reported                     |
+| `KbqPipeMinWidth` (`kbqPipeMinWidth`) | nothing: a pipe lays its name and value out as shrinkable grid tracks, which keeps a short part intact | removed; other uses reported |
+| `KbqPipe.required`                    | `cleanable: false` and `removable: false`: the filter bar never read `required`                        | reported                     |
+
+`v21-upgrade` reports `.changes` in a file that names `KbqFilterBar`. It removes `KbqPipeMinWidth` from the `@koobiq/components/filter-bar` import and from `imports` arrays and the `kbqPipeMinWidth` attribute from templates, and reports any other reference to the directive. It reports a read of `data.required` in a custom pipe, and a `required` key only in an object literal that also has `cleanable`, `removable` or `type: KbqPipeTypes.…`: the `required` of a form config or a validator in the same file is left alone.
+
+#### Form field
+
+| Removed                                                        | Use instead                                                                         | Migration |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------- | --------- |
+| `KbqPasswordHint` (`<kbq-password-hint>`)                      | `KbqReactivePasswordHint` (`<kbq-reactive-password-hint [hasError]="…">`)           | reported  |
+| `PasswordRules`                                                | `PasswordValidators` from `@koobiq/components/core`, or a `ValidatorFn` of your own | reported  |
+| `regExpPasswordValidator`                                      | `Validators.pattern` or a `ValidatorFn` of your own                                 | reported  |
+| `hasPasswordStrengthError()`                                   | the errors of the form control                                                      | reported  |
+| the `passwordStrength` error the form field set on the control | the errors of the password validators                                               | reported  |
+| `KbqFormField.passwordHints` / `.hasPasswordHint`              | `viewChildren(KbqReactivePasswordHint)`                                             | reported  |
+| `KbqInputPassword.checkRules()` / `.checkRule`                 | `control.updateValueAndValidity()` after changing the validators                    | reported  |
+| `KbqFormField.canCleanerClearByEsc`                            | nothing: it was unused                                                              | reported  |
+| `KbqFormField.onKeyDown()`                                     | nothing: it was a no-op                                                             | reported  |
+| `KbqStepper.connectTo()`                                       | nothing: the stepper finds the number input of its form field by itself             | reported  |
+
+`KbqReactivePasswordHint` shows the state it is given: put each rule on the form control as a validator and bind `[hasError]` to its error, for example `control.hasError('minLength')`. It has no counterpart of `[rule]`, `[min]`, `[max]`, `[regex]`, `[checkRule]` or `[viewFormField]`, so place it inside the `kbq-form-field`, which links it to the control through `aria-describedby`. `v21-upgrade` reports the first four where they are imported from `@koobiq/components/form-field`, `<kbq-password-hint>` and its classes in templates and style sheets, a check of the `passwordStrength` error, `.passwordHints`, `.hasPasswordHint` and `.onKeyDown()` on a form field, every `canCleanerClearByEsc`, `checkRules()` in a file that uses `KbqInputPassword`, and `connectTo()` in a file that uses `KbqStepper`.
+
+#### Checkbox and toggle
+
+`KbqCheckbox` and `KbqToggleComponent` no longer implement `ControlValueAccessor`. The `KbqCheckable` host directive has been the value accessor of both, so forms never called their own members; `[(ngModel)]` and `[formControl]` work as before.
+
+| Removed                                                   | Use instead                                   | Migration |
+| --------------------------------------------------------- | --------------------------------------------- | --------- |
+| `KbqCheckbox` / `KbqToggleComponent.writeValue()`         | `checked = !!value`                           | reported  |
+| `.setDisabledState()` of both                             | `disabled = isDisabled`                       | reported  |
+| `.registerOnChange()` of both                             | the `(change)` output                         | reported  |
+| `.registerOnTouched()` of both                            | the `touched` state of the bound form control | reported  |
+| `KbqCheckbox.onTouched`                                   | nothing: it was never called                  | reported  |
+| `KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR`                     | nothing: `KbqCheckable` registers itself      | reported  |
+| `TransitionCheckState` from `@koobiq/components/checkbox` | the same enum from `@koobiq/components/core`  | rewritten |
+
+`v21-upgrade` reports these uses in a file that names either class or its tag, except calls on `this`. A call that has to stay can go to the host directive: `viewChild(KbqCheckbox, { read: KbqCheckable })`, with `KbqCheckable` from `@koobiq/components/core`. It moves `TransitionCheckState` from the checkbox import into the core one, and reports it imported under an alias, re-exported or read through a namespace import of the checkbox.
+
+`KbqToggleComponent.onLabelTextChange()` does nothing now and is deprecated for removal in 22.0.0: delete the call. `v21-upgrade` reports it.
+
+The protected `KbqToggleComponent.currentCheckState` is a `Signal<TransitionCheckState>` shared with the host `KbqCheckable`: a subclass reads it as `currentCheckState()` and changes it through the `checked` and `indeterminate` setters. `v21-upgrade` reports a read without the call in a subclass.
+
+#### Navbar, ellipsis center and description list
+
+| Removed                                   | Use instead                                                                                                     | Migration         |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ----------------- |
+| `longTitle` on `kbq-navbar-brand`         | nothing: the brand switches to the two-line title when the title does not fit on one line                       | removed, reported |
+| `KbqNavbarBrand.longTitle` in code        | nothing                                                                                                         | reported          |
+| `KbqNavbarItem.getTitleWidth()`           | `getOuterElementWidth()` of the item's `KbqNavbarTitle`; the navbar itself collapses by `getCollapsibleWidth()` | reported          |
+| `KbqNavbarTitle.outerElementWidth`        | `getOuterElementWidth()`                                                                                        | reported          |
+| `KbqEllipsisCenterDirective.resizeStream` | nothing: the shared `ResizeObserver` re-measures the host                                                       | reported          |
+| `minWidth` on `<kbq-dl>`                  | `verticalBreakpoint`                                                                                            | rewritten         |
+| `KbqDlComponent.minWidth` in code         | `verticalBreakpoint()`                                                                                          | reported          |
+
+`[longTitle]="true"` forced the compact title on a name that fits and `false` kept the default one for a name that does not; neither has a replacement. `outerElementWidth` held the width measured once on init and only fed `getTitleWidth()`. `minWidth` took precedence over `verticalBreakpoint`, so a `<kbq-dl>` that sets both keeps its `minWidth` and is reported: move the value into `verticalBreakpoint`. A `[minWidth]` that resolved to `null` or `undefined` left the decision to `verticalBreakpoint`, while `[verticalBreakpoint]` given such a value never switches to the vertical layout, so bind a number. `v21-upgrade` reports each renamed `minWidth` whose value is not a number literal.
+
+#### Popover trigger
+
+The trigger inputs without the `kbqPopover` prefix are removed from `KbqPopoverTrigger` and `KbqPopoverConfirmTrigger`. The members they set — `defaultPaddings`, `container`, `hasBackdrop`, `hasCloseButton`, `closeOnScroll` and `backdropClass` — stay public, so code that reads or writes them keeps compiling.
+
+| Removed                                          | Use instead                                                 | Migration |
+| ------------------------------------------------ | ----------------------------------------------------------- | --------- |
+| the `hideIfNotInViewPort` input                  | `kbqPopoverHideIfNotInViewPort`                             | rewritten |
+| the `defaultPaddings` input                      | `kbqPopoverDefaultPaddings`                                 | rewritten |
+| the `container` input                            | `kbqPopoverContainer`                                       | rewritten |
+| the `hasBackdrop` input                          | `kbqPopoverHasBackdrop`                                     | rewritten |
+| the `hasCloseButton` input                       | `kbqPopoverHasCloseButton`                                  | rewritten |
+| the `closeOnScroll` input                        | `kbqPopoverCloseOnScroll`                                   | rewritten |
+| the `backdropClass` input                        | `kbqPopoverBackdropClass`                                   | rewritten |
+| `KbqPopoverTrigger.hideIfNotInViewPort` (signal) | `popoverHideIfNotInViewPort()`                              | reported  |
+| `getKbqPopoverInvalidPositionError()`            | nothing: an invalid placement warns and falls back to `top` | reported  |
+
+`v21-upgrade` rewrites bindings, static and valueless attributes only on an element that carries `kbqPopover` or `kbqPopoverConfirm`: other components, such as the dropdown and the select, have inputs of the same names. It reports a `hostDirectives` entry of `KbqPopoverTrigger` that exposes a removed input; expose the prefixed one instead, for example `'kbqPopoverHasBackdrop: hasBackdrop'`.
+
+#### Styles and theming
+
+| Removed                                                                                                     | Use instead                                                                                                  | Migration                          |
+| ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
+| the arguments of `koobiq-theme()`, `koobiq-typography()` and `kbq-core-theme()`                             | nothing: they were ignored                                                                                   | removed; with nested `()` reported |
+| `kbq-contrast()`, `kbq-palette()`, `kbq-color()`                                                            | the CSS variables of the theme, for example `var(--kbq-foreground-contrast)`                                 | reported                           |
+| `kbq-typography-config()`                                                                                   | the `--kbq-typography-*` CSS variables                                                                       | reported                           |
+| `@koobiq/components/core/styles/tokens`                                                                     | the modules it forwarded: `@koobiq/design-tokens/web/variables`, `palette`, `typography` and `md-typography` | reported                           |
+| `prebuilt-themes/light-theme.css`, `prebuilt-themes/dark-theme.css`                                         | `prebuilt-themes/theme.css`                                                                                  | rewritten                          |
+| the `md-h1`…`md-h6`, `md-body`, `md-body-mono`, `md-caption`, `md-table-cell` and `md-table-header` classes | the `kbq-md-` class of the same name, for example `kbq-md-h1`                                                | rewritten, reported                |
+
+The light and dark files were copies of `theme.css`, which holds both themes. `v21-upgrade` rewrites them in style sheets, code, templates and the `styles` of `angular.json`, and keeps a single `theme.css` where both were loaded. A theme map built only to pass to `koobiq-theme()`, such as `kbq-light-theme($tokens)`, can go along with the argument: `kbq-light-theme()` and `kbq-dark-theme()` are deprecated and will be removed in 22.0.0, since nothing in the library reads their map. Read the CSS variables of the theme instead, for example `var(--kbq-foreground-contrast)`; the migration reports both functions. The markdown classes are rewritten in `class` attributes, `[class.…]` bindings and selectors; in any other string, such as `classList.add('md-h1')` or `[ngClass]`, they are reported.
+
+#### Tag input
+
+Validation belongs to the `<kbq-tag-list>` control, so the validation members of the tag input are removed. A `[formControl]` or `[ngModel]` bound to `<input kbqTagInputFor>` keeps working: `kbqAutocomplete` drives the input through it.
+
+| Removed                           | Use instead                                                                   | Migration |
+| --------------------------------- | ----------------------------------------------------------------------------- | --------- |
+| `KbqTagInput.ngControl`           | the control you bound to the input                                            | reported  |
+| `KbqTagInput.triggerValidation()` | nothing: it was a no-op, and the tag list control revalidates on every change | reported  |
+| `KbqTagTextControl.ngControl`     | nothing: the library never read it                                            | —         |
+
+`v21-upgrade` reports these uses in a file that names `KbqTagInput` or binds its `exportAs`, except on `this`, and a subclass of `KbqTagInput` that mentions either member. `KbqTagTextControl` is not exported, and a control passed to `KbqTagList.registerInput()` that still declares `ngControl` keeps compiling: the member was optional.
+
+#### Toast container
+
+| Removed                                          | Use instead                                                               | Migration |
+| ------------------------------------------------ | ------------------------------------------------------------------------- | --------- |
+| `--kbq-toast-stack-size-margin-top`              | `--kbq-toast-stack-size-margin-vertical`                                  | rewritten |
+| `--kbq-toast-stack-size-margin-right`            | `--kbq-toast-stack-size-margin-horizontal`                                | rewritten |
+| `KbqToastContainerComponent.dispatchScrollEvent` | nothing: the container reports its own reflow through `elementScrolled()` | reported  |
+
+The removed properties already set both edges: `-top` also set the bottom margin of a stack at the bottom, and `-right` the left margin of a stack on the left. `v21-upgrade` renames them in style sheets, templates and code, and reports a file that declares both a removed and a new name: the new one used to win, after the rename the cascade decides.
+
+#### Tree option
+
+| Removed                                                      | Use instead                                    | Migration |
+| ------------------------------------------------------------ | ---------------------------------------------- | --------- |
+| `KbqTreeOptionChange.isUserInput`                            | nothing: the tree never set it, it was `false` | reported  |
+| the second argument of the `KbqTreeOptionChange` constructor | nothing: `new KbqTreeOptionChange(option)`     | reported  |
+
+A check of `isUserInput` on a tree option change never passed: delete it with the branch it guarded. `v21-upgrade` reports `.isUserInput` in a file that names `KbqTreeOptionChange`, `$event.isUserInput` bound to an output of `<kbq-tree-option>`, and a second argument passed to the constructor or to `super()` in a subclass. The `isUserInput` of `KbqOptionSelectionChange` and of `KbqTreeSelectChange` stays.
+
+| Deprecated, removed in 22.0.0                     | Use instead                                                     | Migration |
+| ------------------------------------------------- | --------------------------------------------------------------- | --------- |
+| `(onSelectAll)` on `<kbq-tree-selection>`         | `(selectAllChange)`                                             | rewritten |
+| `(onCopy)` on `<kbq-tree-selection>`              | `(copyChange)`                                                  | rewritten |
+| `(onSelectionChange)` on `<kbq-tree-option>`      | `(selectionChange)`                                             | rewritten |
+| `KbqTreeSelection.onSelectAll`, `.onCopy` in code | `selectAllChange`, `copyChange`                                 | reported  |
+| `KbqTreeOption.onSelectionChange` in code         | `selectionChange`                                               | reported  |
+| `KbqTreeNode.mostRecentTreeNode`                  | a query of the nodes, for example `viewChildren(KbqTreeOption)` | reported  |
+
+The replacements emit the same events. The `onSelectAll` and `onCopy` outputs of `kbq-list-selection` and the `onSelectAll` output of `kbq-tree-select` are not deprecated and stay.
+
+#### Running the migration
+
+`v21-upgrade` is registered for 21.0.0, so an `ng update` to that version runs it:
+
+```bash
+ng g @koobiq/components:v21-upgrade --project "<your project>"
+```
+
+With `--fix false` it only reports what it would change.
+
+### ThemePalette removal (21.0.0)
+
+`ThemePalette` is removed from `@koobiq/components/core`: `KbqComponentColors` describes the colors the components support.
+
+| Removed                                                   | Use instead                                                          | Migration |
+| --------------------------------------------------------- | -------------------------------------------------------------------- | --------- |
+| `ThemePalette.Error`, `.Warning`, `.Success`              | `KbqComponentColors.Error`, `.Warning`, `.Success`                   | rewritten |
+| `ThemePalette.Primary`, `.Secondary`, `.Info`, `.Default` | no color, or a member of `KbqComponentColors` the component supports | reported  |
+| `ThemePalette.Empty`                                      | an unset `color`                                                     | reported  |
+| the `ThemePalette` type                                   | `KbqComponentColors`                                                 | reported  |
+
+`Error`, `Warning` and `Success` have the same values in both enums, so the rewrite changes nothing on screen. `Primary`, `Secondary` (`Default` is its alias) and `Info` set a `kbq-primary`, `kbq-secondary` or `kbq-info` class that no component styles, so such a component was drawn without its color rules; without a color it takes its default one. `Empty` is `''`, which also falls back to the default color, while `KbqComponentColors.Empty` is `'empty'`, a color of its own: do not swap one for the other.
+
+`v21-upgrade` rewrites the three members and drops the `ThemePalette` import once nothing else names it. It reports every other use in a file that imports `ThemePalette` from `@koobiq/components/core`, including a field that hands the enum to a template. A re-export of `ThemePalette` from `@koobiq/components/core` is left as is and reported: `KbqComponentColors` has other members and values, so re-export it under its own name and migrate the files that import `ThemePalette` through it.
+
+### Unused core API removal (21.0.0)
+
+`@koobiq/components/core` drops the undocumented exports, members and Sass that nothing in the library used. They were never deprecated: most are leftovers of removed features or implementation details that leaked into the public API.
+
+| Removed                                                                                                            | Use instead                                                                                                                                                                                            | Migration |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------- |
+| `POSITION_MAP`, `EXTENDED_OVERLAY_POSITIONS`, `POSITION_PRIORITY_STRATEGY`, the twelve `*_POSITION_PRIORITY` lists | `kbqPlacement` on the trigger; copy a value you need                                                                                                                                                   | reported  |
+| `ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT`, `SELECT_PANEL_VIEWPORT_PADDING`, `NUMBER_FORMAT_REGEXP`, `isWithin()`       | a value or function of your own                                                                                                                                                                        | reported  |
+| `KBQ_SELECT_SCROLL_STRATEGY_PROVIDER`                                                                              | nothing: `KBQ_SELECT_SCROLL_STRATEGY` has a root default; provide the token itself to change it                                                                                                        | reported  |
+| `KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR`                                                                             | nothing: `KbqCheckable` registers itself                                                                                                                                                               | reported  |
+| `KbqHover`                                                                                                         | `(mouseenter)` and `(mouseleave)`, or `:hover`                                                                                                                                                         | reported  |
+| `CanColor`                                                                                                         | `Signal<KbqComponentColors \| string>`, or `KbqColorDirective`                                                                                                                                         | reported  |
+| `KbqAnimationCurves`, `KbqAnimationDurations`                                                                      | constants of your own: the library animates in CSS                                                                                                                                                     | reported  |
+| `KbqRectangleItem`, `countGroupLabelsBeforeOption()`                                                               | no replacement                                                                                                                                                                                         | reported  |
+| `KbqPopUp.markForCheck()`                                                                                          | nothing after `updateClassMap()` or a change of `visibility`, which re-render the pop-up; for another field, `changeDetectorRef.markForCheck()` in a subclass, `instance.detectChanges()` in a trigger | reported  |
+| `KbqPopUp.warning`, `.handleBodyInteraction()`, the protected `closeOnInteraction`                                 | no replacement: `warning` did nothing, nothing called `handleBodyInteraction()`, and `closeOnInteraction` only gated it                                                                                | reported  |
+| `KbqDecimalPipe.isSpecialFormatForRULocale()`, `KbqRoundDecimalPipe.roundingOptions`                               | private now: the pipe arguments and the formatters locale configuration                                                                                                                                | reported  |
+| `KbqFormElement.isRow`                                                                                             | the `kbq-form__row` class of the element                                                                                                                                                               | reported  |
+| `KbqLineSetter` and the `kbq-2-line`, `kbq-3-line`, `kbq-multi-line` classes of a list item                        | nothing: no style read them; `KbqListItem.lines` counts the lines                                                                                                                                      | reported  |
+| the `mcListIcon` attribute of a list item                                                                          | `kbq-list-icon`                                                                                                                                                                                        | rewritten |
+| the `mcLine` attribute                                                                                             | `kbq-line`                                                                                                                                                                                             | rewritten |
+
+The Sass that goes is reachable only through a deep import, since `@koobiq/components` forwards none of it:
+
+- the modules `core/styles/functions` (its index, `number` and `string`), `typography/typography-utils`, `common/clearfix` and `common/popup`;
+- `kbq-markdown-typography-config()`, the `typography-utils` getters (`kbq-typography-level()`, `kbq-font-size()`…), `popup-params`, `input-placeholder`, `rtl-value()` and `kbq-typography-css-variables`;
+- the timing variables of `core/styles/functions/timing` but `$ease-out-circ`, `$ease-in-out-quad` and `$ease-in-out-circ`.
+
+For typography, use the `--kbq-typography-*` CSS variables or `kbq-typography-level-to-styles-css-variables()` of `core/styles/common/tokens`; copy anything else into your own styles. `v21-upgrade` reports each load and use. The compiled CSS also loses a few prefixes for browsers the library does not support: `-ms-text-size-adjust`, `-ms-overflow-style`, `-moz-` and `-ms-user-select`, the old flexbox `display` values and an `@-moz-document` copy of `.layout-fill`.
+
+#### Deprecated for removal in 22.0.0
+
+The documented core API that has a replacement is deprecated instead; `v21-upgrade` reports each use:
+
+| Deprecated                                                                                                       | Use instead                                                                                                               |
+| ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| the unprefixed date pipes (`absoluteLongDate`…`durationShort`), their `ImpurePipe` twins and `BaseFormatterPipe` | the `kbq*` pipe of the same format with the same arguments, for example `kbqAbsoluteLongDate`: it follows a locale change |
+| the `mcHighlight` pipe (`KbqHighlightPipe`)                                                                      | `kbqHighlightBold` (`KbqHighlightBoldPipe`)                                                                               |
+| `isDigit()`                                                                                                      | `isNumberKey()`                                                                                                           |
+| `isBoolean()`                                                                                                    | `typeof value === 'boolean'`                                                                                              |
+| `KbqMeasureScrollbarService`                                                                                     | `element.offsetWidth - element.clientWidth` of the element that scrolls                                                   |
+| `FocusKeyManager.getFocusOrigin()`                                                                               | the origin passed to `setFocusOrigin()`                                                                                   |
+| `dateInput` of the datepicker locale configuration                                                               | `KBQ_DATE_FORMATS`: nothing reads `dateInput`                                                                             |
+
 ### Actions panel overlay container (21.0.0)
 
 {/* migration-step-components(actions-panel) */}
@@ -339,7 +800,7 @@ It only reports the call sites — there is nothing to rewrite, because the opti
 
 {/* migration-step-components(splitter) */}
 
-`@koobiq/components/splitter` now resolves to a rewritten splitter: it lays panels out with CSS grid and adds per-panel size constraints, collapsing, snap points, full keyboard support and the WAI-ARIA `separator` pattern. The previous implementation — `KbqSplitterComponent`, `KbqSplitterAreaDirective`, `KbqGutterDirective`, `KbqGutterGhostDirective`, `KbqSplitterModule` and the `Direction` enum — moved to `@koobiq/components/splitter/deprecated` unchanged, and will be removed in a future major version.
+`@koobiq/components/splitter` now resolves to a rewritten splitter: it lays panels out with CSS grid and adds per-panel size constraints, collapsing, snap points, full keyboard support and the WAI-ARIA `separator` pattern. The previous implementation — `KbqSplitterComponent`, `KbqSplitterAreaDirective`, `KbqGutterDirective`, `KbqGutterGhostDirective`, `KbqSplitterModule` and the `Direction` enum — moved to `@koobiq/components/splitter/deprecated` unchanged, and will be removed in 22.0.0.
 
 **Most unmigrated imports break loudly.** `KbqSplitterComponent`, `KbqSplitterAreaDirective`, `KbqGutterDirective`, `KbqGutterGhostDirective` and `Direction` live at the `/deprecated` path only, so the build stops with `TS2305: … has no exported member`.
 
@@ -365,7 +826,7 @@ Until 21.0.0 an open `dropdown`, `select` or `popover` panel lowered the **share
 
 The whole mechanism was removed: the input, the token, the class and the stylesheet rule. It operated on the container rather than on individual overlays, so it could not lower a panel without lowering every other overlay — modals, sidepanels, toasts and tooltips included — and it did so from whichever component happened to open first.
 
-**The overlay container now stays at `z-index: 1000` at all times, so panels render above `kbq-navbar` and `kbq-top-bar` instead of sliding under them.**
+**Panels now render above `kbq-navbar` and `kbq-top-bar` instead of sliding under them.** They open in the browser top layer (see Overlays in the top layer in Upgrade to Angular 21); with `usePopover: false` the overlay container stays at `z-index: 1000`, above the bars at `990`.
 
 #### Running the migration
 
@@ -437,6 +898,7 @@ In version 21.0.0 `KbqAppSwitcherTrigger` moved `selectedApp` and `selectedSite`
 | `header` / `footer`                                                                  | properties          | removed                                                            |
 | `KbqAppSwitcherComponent.isTrapFocus` / `updateTrapFocus()`                          | public API          | removed                                                            |
 | `KbqAppSwitcherDropdownApp.getIcon()`                                                | public method       | removed                                                            |
+| `KbqAppSwitcherComponent.activeSite` / `activeApp`                                   | protected           | removed: the context of the flyout's `kbqDropdownContent` template |
 | `KbqAppSwitcherListItem.collapsed`                                                   | property            | `ModelSignal<boolean>`                                             |
 | `app` / `site` inputs of `KbqAppSwitcherListItem` / `-DropdownApp` / `-DropdownSite` | optional inputs     | `input.required` signals                                           |
 
@@ -482,6 +944,8 @@ The schematic emits warnings for what cannot be rewritten safely:
 **`header` / `footer`**: removed. The popup never rendered either, so the value was pushed into the overlay and dropped — delete the usage.
 
 **`isTrapFocus` / `updateTrapFocus()`**: removed from `KbqAppSwitcherComponent`. Its template never bound `[cdkTrapFocus]`, so neither did anything.
+
+**`activeSite` / `activeApp`** of a `KbqAppSwitcherComponent` subclass: removed. Each flyout of another site or group reads its site and app from the context of its `kbqDropdownContent` template, which `kbqDropdownTriggerData` fills.
 
 **`KbqAppSwitcherDropdownApp.getIcon()`**: removed. Inline markup is sanitized by `KbqAppSwitcherIconSanitizer` and rendered by the component itself.
 
@@ -745,32 +1209,38 @@ It follows that `value` can name a toggle `selected` does not hold — `selected
 
 **`valueChange` no longer echoes a value that was just assigned.** It fires when the group's value actually changes, not for every write: assigning what the group already reports, or what it answers with unchanged, emits nothing. That is what stops a two-way binding from being written back over. Code that used `(valueChange)` as an "assignment happened" signal, or a test counting emissions during init, needs re-checking — `(change)` still fires per interaction.
 
+**Changing the `value` of the selected toggle changes the value of the group.** The group follows it and reports it through `valueChange`, so `[(value)]` stays in step; a form control keeps its value until the user picks a toggle, as for any change made from code.
+
 **The group implements `OnDestroy` and no longer emits after teardown.** A selected toggle schedules its own removal from the selection on a microtask, which used to outlive the group and reach it with a `valueChange` once the whole group had already been destroyed. The group ignores that late sync now. A test asserting the old emission, or code that relied on it to clean up after a destroyed group, needs re-checking.
 
 **Styles.** The keyboard-focus `border-color` is set by the theme alone, from `--kbq-button-toggle-item-states-focused-outline`; the structural stylesheet no longer declares it from the raw `--kbq-states-line-focus-theme` token, so overriding the component token works regardless of import order. The theme also stopped targeting `.kbq-icon-button`, a class `KbqButton` never emitted, in favour of `.kbq-button-icon`.
 
 ### Form field review (21.0.0)
 
-{/* migration-step-components(form-field, input, select) */}
+{/* migration-step-components(form-field, input, select, textarea, tree-select, timezone, tag-list, timepicker, datepicker) */}
 
 The review of `<kbq-form-field>` finished the move of the container and the hint family to signals, gave the icon-only cleaner and password toggle real button semantics, and removed the deprecated `mixinColor`. Most of it stops your code from compiling, but the accessibility part changes rendered markup silently.
 
 **The content queries and their `has*` getters are signals.** `control`, `stepper` and `connectionContainerRef` were already signals and are unchanged; everything else moved in this release:
 
-| Member                                                                                                  | Before             | After                    |
-| ------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------ |
-| `cleaner`, `passwordToggle`                                                                             | `T \| null`        | `Signal<T \| undefined>` |
-| `hint`, `passwordHints`, `prefix`, `suffix`                                                             | `QueryList<T>`     | `Signal<readonly T[]>`   |
-| `hasCleaner`, `hasHint`, `hasPasswordHint`, `hasPasswordToggle`, `hasPrefix`, `hasStepper`, `hasSuffix` | getter             | `Signal<boolean>`        |
-| `hasError`, `hasLabel`, `hasReactivePasswordHint`                                                       | `protected` getter | `protected` signal       |
+| Member                                                                               | Before             | After                    |
+| ------------------------------------------------------------------------------------ | ------------------ | ------------------------ |
+| `cleaner`, `passwordToggle`                                                          | `T \| null`        | `Signal<T \| undefined>` |
+| `hint`, `prefix`, `suffix`                                                           | `QueryList<T>`     | `Signal<readonly T[]>`   |
+| `hasCleaner`, `hasHint`, `hasPasswordToggle`, `hasPrefix`, `hasStepper`, `hasSuffix` | getter             | `Signal<boolean>`        |
+| `hasError`, `hasLabel`, `hasReactivePasswordHint`                                    | `protected` getter | `protected` signal       |
 
-**The hint inputs are signals.** `fillTextOff` and `compact` became signal inputs on `KbqHint` and everything that extends it — `KbqError`, `KbqPasswordHint`, `KbqReactivePasswordHint`. `KbqPasswordHint.regex` became a `model()`, so it is read as a call and written through `.set()`. Template bindings (`[fillTextOff]`, `[compact]`, `[regex]`) are unaffected.
+`passwordHints` and `hasPasswordHint` were removed together with `KbqPasswordHint`: see Form field under Deprecated API removal (21.0.0).
+
+**The hint inputs are signals.** `fillTextOff` and `compact` became signal inputs on `KbqHint` and everything that extends it — `KbqError` and `KbqReactivePasswordHint`. Template bindings (`[fillTextOff]`, `[compact]`) are unaffected.
 
 **The cleaner and the password toggle are buttons now.** Both were focusable graphics with no role and no accessible name. `<kbq-cleaner>` renders `role="button"` and a localized `aria-label`, and activates on <kbd>Space</kbd> as well as <kbd>Enter</kbd>. The toggle's icon renders `role="button"`, an `aria-label` that follows the state ("Show password" / "Hide password") and `aria-pressed`. Because the cleaner now owns the `aria-label` host binding, an `[attr.aria-label]` written by hand is overwritten — it has to move to the new `[aria-label]` input.
 
 **The form field describes its control.** Hints and the error are linked to the control through `aria-describedby`, `kbq-error` renders `role="alert"`, and `KbqInput` / `KbqInputPassword` / `KbqSelect` render `aria-invalid` (`KbqSelect` also renders `aria-required`). Nothing here breaks a build — it changes rendered markup.
 
 **`mixinColor` was removed.** It was deprecated, unused inside the library, and logged a dev-mode warning on every instance. `KbqColorDirective` replaces it and exposes the same `color` input.
+
+**`KbqFormFieldControl` is signal-based.** The form field used to re-check its control whenever the control emitted `stateChanges`. Now `value`, `id`, `placeholder`, `focused`, `empty`, `required`, `disabled` and `errorState` are signals, `stateChanges` is gone, and the form field derives its own state from them. The built-in controls expose that state as signals too: `KbqInput`, `KbqInputPassword`, `KbqTextarea`, `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect`, `KbqTagList`, `KbqTimepicker` and `KbqDatepickerInput`. Their `errorStateMatcher` is a signal input. Template bindings (`[value]`, `[disabled]`, `[placeholder]`, `[required]`, `[id]`) are unaffected.
 
 #### Running the migration
 
@@ -809,9 +1279,9 @@ if (formField.hasCleaner() && formField.hint().length && hint.fillTextOff()) {
 <span>{{ field.hasHint() }}</span>
 ```
 
-A receiver is matched by its explicit type annotation (`KbqFormField`, `KbqHint`, `KbqError`, `KbqPasswordHint`, `KbqReactivePasswordHint`) — parameters, class fields including content queries, constructor parameter-properties and typed locals.
+A receiver is matched by its explicit type annotation (`KbqFormField`, `KbqHint`, `KbqError`, `KbqReactivePasswordHint`) — parameters, class fields including content queries, constructor parameter-properties and typed locals.
 
-**Writes to `KbqPasswordHint.regex` become `.set()`:** `hint.regex = /x/` → `hint.regex.set(/x/)`.
+**Reads of a control's state become calls**, and a write goes through `.set()` where the member stays writable: `disabled` on `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect`, `KbqTagList`, `KbqTimepicker` and `KbqDatepickerInput` (`select.disabled = true` → `select.disabled.set(true)`), `value` on `KbqInput`, `KbqInputPassword`, `KbqTextarea`, `KbqTagList`, `KbqSelect` and `KbqTimezoneSelect`. A value set on a select selects its options on the next change detection and does not emit `valueChange`. A template reference variable on `<kbq-select>`, `<kbq-tree-select>`, `<kbq-timezone-select>` or `<kbq-tag-list>` is migrated too.
 
 **The cleaner's accessible name moves to the input:** `<kbq-cleaner [attr.aria-label]="label" />` → `<kbq-cleaner [aria-label]="label" />`.
 
@@ -819,35 +1289,67 @@ A receiver is matched by its explicit type annotation (`KbqFormField`, `KbqHint`
 
 #### What you need to fix manually
 
-**The `QueryList` API is gone.** `hint`, `passwordHints`, `prefix` and `suffix` are signals over a readonly array, so `.changes`, `.first`, `.last`, `.toArray()` and `.get(i)` no longer exist. React to the queries with `computed()` / `effect()` instead of subscribing to `.changes`, and index the array directly. Every occurrence is reported with its file.
+**The `QueryList` API is gone.** `hint`, `prefix` and `suffix` are signals over a readonly array, so `.changes`, `.first`, `.last`, `.toArray()` and `.get(i)` no longer exist. React to the queries with `computed()` / `effect()` instead of subscribing to `.changes`, and index the array directly. Every occurrence is reported with its file.
 
 **`cleaner` and `passwordToggle` return `undefined`, not `null`.** A strict `=== null` comparison silently stops matching — use a truthiness check or `== null`.
 
 **Assignments to `fillTextOff` and `compact` no longer compile.** They are read-only signal inputs; drive them with a template binding.
 
-**Assignments to the `KbqFormField` content queries no longer compile either** — `cleaner`, `passwordToggle`, `hint`, `passwordHints`, `prefix` and `suffix` are read-only signals. `cleaner` was writable only because of an internal workaround, which is gone; the rest were a `QueryList`, which test code used to reassign to fake the projected content. Project the content into the form field instead.
+**Assignments to the `KbqFormField` content queries no longer compile either** — `cleaner`, `passwordToggle`, `hint`, `prefix` and `suffix` are read-only signals. `cleaner` was writable only because of an internal workaround, which is gone; the rest were a `QueryList`, which test code used to reassign to fake the projected content. Project the content into the form field instead.
 
-**`KbqPasswordHint.icon` is `protected`.** Derive the state from `checked` / `hasError` instead of reading the icon name.
+**`hovered` and `onHoverChanged()` were removed.** Nothing read them, and their pointer listeners ran change detection on every hover. Bind `(mouseenter)` / `(mouseleave)` on `<kbq-form-field>` yourself, or style with `:hover`. Each use is reported with its file.
 
-**`KBQ_FORM_FIELD_REF.control` is typed.** It used to be `any`, so `formField.control.placeholder` compiled and was silently `undefined` — the library had exactly that bug. Call the signal first: `formField.control().placeholder`.
+**`KBQ_FORM_FIELD_REF.control` is typed.** It used to be `any`, so `formField.control.placeholder` compiled and was silently `undefined` — the library had exactly that bug. Call the signal first: `formField.control().placeholder()` — the control's state is a signal as well.
+
+**A custom form field control has to expose signals.** Implement each state member as a `Signal` — an `input()`, a `computed()` or a `signal()` the control writes — and drop `stateChanges`: the form field no longer subscribes to anything. Code that subscribed to `control.stateChanges` reads the signals in a `computed()` or an `effect()` instead.
+
+```ts
+// Before
+export class ColorInput implements KbqFormFieldControl<string> {
+    readonly stateChanges = new Subject<void>();
+    focused = false;
+    // value, id, placeholder, empty, required, disabled and errorState as plain properties
+
+    onFocus() {
+        this.focused = true;
+        this.stateChanges.next();
+    }
+}
+
+// After
+export class ColorInput implements KbqFormFieldControl<string> {
+    private readonly focusedState = signal(false);
+    readonly focused = this.focusedState.asReadonly();
+    readonly placeholder = input<string>();
+    // value, id, empty, required, disabled and errorState as signals too
+
+    onFocus() {
+        this.focusedState.set(true);
+    }
+}
+```
+
+**The rest of a control's state is read-only.** Assignments to `placeholder`, `required` and `id` no longer compile, nor do assignments to `disabled` on the native-element controls and to `value` on `KbqTreeSelect`, `KbqTimepicker` and `KbqDatepickerInput`: bind them in the template, or set the value through a form control. Each write is reported with its file.
+
+**`KbqInputPassword.elementType` is a read-only signal.** It was a writable `string`; it is a `Signal<'text' | 'password'>` now, and only `toggleType()` changes it. A read becomes a call — the schematic rewrites `password.elementType` to `password.elementType()`, also through a `#ref="kbqInputPassword"` — and an assignment no longer compiles: call `toggleType()` to show or hide the password. Each write is reported with its file.
+
+**A custom `KBQ_INPUT_VALUE_ACCESSOR` or `KBQ_TEXTAREA_VALUE_ACCESSOR` may build a new object on every read of `value`.** `KbqInput`, `KbqInputPassword` and `KbqTextarea` take an object value as changed only together with a change of the element's text; a primitive value is compared as it is. An accessor whose object changes while the text stays the same hands it over with `value.set()` of the control.
+
+**The error state helpers changed with it.** `KbqErrorStateTracker` no longer takes a `stateChanges` subject, and its `errorState` — like `CanUpdateErrorState.errorState` — is a `Signal<boolean>`; `CanUpdateErrorState` no longer declares `errorStateMatcher`. The deprecated `mixinErrorState` and `CanUpdateErrorStateCtor` were removed. `KbqIconErrorStateContext` is signal-based too, and so are `id`, `placeholder`, `focused` and `empty` of `KbqTagInput`: their reads become calls, a write is reported.
+
+`KbqInput`, `KbqInputPassword`, `KbqTextarea`, `KbqSelect`, `KbqTreeSelect` and `KbqTagList` compute their error state with that tracker, which takes `defaultErrorStateMatcher`, `parentForm` and `parentFormGroup` when the control is created: assigning one of those fields afterwards has no effect, so provide an `ErrorStateMatcher` or bind `errorStateMatcher` instead. A matcher that returns `null` or `undefined` reports `false`.
+
+**`KbqDatepicker` is no longer a form field control.** It provided the contract without implementing it; the form field now always finds the `kbqDatepicker` input. The input renders its `id` now, so the form field label is associated with it.
 
 **Custom locale data needs three more `a11y` keys** — `clear`, `showPassword` and `hidePassword` — for the accessible names of the cleaner and the password toggle. A locale object literal without them stops type-checking; data registered through `KBQ_LOCALE_DATA` falls back to the ru-RU strings.
-
-**The `KbqPasswordHint` rules engine is deprecated.** `PasswordRules`, `regExpPasswordValidator` and `hasPasswordStrengthError` will be removed in the next major release — migrate to `KbqReactivePasswordHint`, which derives its state from the form control validators. `regExpPasswordValidator` is also typed `Partial<Record<PasswordRules, RegExp>>` now, so indexing it yields `RegExp | undefined`; it never had entries for `Length` and `Custom`.
-
-**Three fixed bugs change behaviour.** A failing password strength check used to call `setErrors({ passwordStrength: true })`, wiping every other error on the control — it now merges. A `PasswordRules.Length` hint compared against `undefined` bounds, so a valid-length password was always reported as failing; the bounds now default to `0` and `Infinity`, and the guard only throws when neither `min` nor `max` is set. And the hint now checks the control's current value instead of waiting for the control to be focused with a value that differs from the last one it saw — a rule was left unchecked for a control that was already filled when the hint appeared, which is the usual case for an edit form.
-
-**Snapshot and DOM-query tests.** Beyond the ARIA attributes above, the generated id of `KbqPasswordHint` changed prefix from `kbq-hint-N` to `kbq-password-hint-N` so that it stops colliding with `KbqHint`. Nothing should depend on a generated id, but selectors keyed on it will stop matching.
 
 **Stylesheets that fought `!important`.** `.kbq-form-field_no-borders` and `.kbq-form-field_in-overlay` used `!important` to beat the state theme; they now override the `--kbq-form-field-*` tokens instead. The computed result is the same, but an override written specifically to outrank the old `!important` can be simplified.
 
 ### Theme service review (21.0.0)
 
-`ThemeService` moved to signals, gained a built-in `auto` mode that follows the OS color scheme, and now persists the selected mode to `localStorage` out of the box. `ThemeService` keeps working under its old name and the deprecated `KbqTheme.selected` field is still kept in sync — nothing is forced to change, but new code should move to `KbqThemeService`.
+`KbqThemeService` replaces `ThemeService`: its state is signals, it has a built-in `auto` mode that follows the OS color scheme, and it persists the selection out of the box. `ThemeService`, `KbqTheme` and `KbqDefaultThemes` are removed in the same release: see Core under Deprecated API removal (21.0.0) for what `v21-upgrade` rewrites and reports.
 
-**It's `KbqThemeService` now.** `ThemeService` is exported as a `@deprecated` alias of `KbqThemeService` and will be removed in a future major version. There is no `ng update` schematic for the rename — swap the import when convenient.
-
-**`current` (a `BehaviorSubject<KbqTheme | null>`) is deprecated in favor of a few signals.** It still exists and stays in sync, so `current.value` and `current.pipe(...)` keep working. `selection()` is the raw selected value (`'auto'`, or a specific theme's `name`); `auto()` is whether that's currently `'auto'`; `currentTheme()` is the resolved `KbqTheme` object, equivalent to `current.value`; `colorScheme()` is the strictly `'light' | 'dark'` polarity of `currentTheme()` — reach for this, not a theme's `name`, when you just need to know which of the two you're in (e.g. driving CSS `light-dark()`).
+**`current` and `getTheme()` become signals.** `currentTheme()` is the active `KbqThemeConfig`, the former `current.value`; `colorScheme()` is its strictly `'light' | 'dark'` polarity — reach for this, not a theme's `name`, when you just need to know which of the two you're in (e.g. driving CSS `light-dark()`); `mode()` is the selected mode: `'light'`, `'dark'` or `'auto'`.
 
 ```ts
 // Before
@@ -857,13 +1359,13 @@ themeService.current.pipe(map((theme) => theme?.className)).subscribe(...);
 themeService.currentTheme(); // read directly, or wrap with toObservable() if you need a stream
 ```
 
-**`setTheme(index | theme)` is deprecated in favor of `selectTheme(name)`.** Selecting by array index was fragile once `auto` stopped being a regular registered theme. `selectTheme(name)` selects any registered theme directly, including the built-in `'light'`/`'dark'`; `setAuto()` and `toggle()` are the two convenience methods kept for the common cases actually used in this library — there is no `setLight()`/`setDark()`.
+**`setTheme(index | theme)` gives way to `setMode()` and `selectTheme()`.** Selecting by array index was fragile once `auto` stopped being a regular registered theme. `setMode('light' | 'dark' | 'auto')` selects by polarity and `toggle()` switches between light and dark. `selectTheme(name)` pins one registered theme by name over the mode until `selectTheme(null)`, `setMode()` or `toggle()`; `staticTheme()` reads the pinned name.
 
-**`auto` mode is handled inside the service.** If you were reading `window.matchMedia('(prefers-color-scheme: …)')` yourself and rewriting a theme's `className` to fake a "system" option (as the docs app used to), call `themeService.setAuto()` instead and read `currentTheme()`/`colorScheme()` — the OS listener and the DOM update are both handled internally now.
+**`auto` mode is handled inside the service.** If you were reading `window.matchMedia('(prefers-color-scheme: …)')` yourself and rewriting a theme's `className` to fake a "system" option (as the docs app used to), call `themeService.setMode('auto')` instead and read `currentTheme()`/`colorScheme()` — the OS listener and the DOM update are both handled internally now. `'auto'` is the default mode.
 
-**Persistence is on by default.** The selection is now saved to `localStorage` (key `kbq-theme-mode` by default) and restored on init through the `KBQ_THEME_STORE` token, the same swappable-store pattern as `KBQ_STATE_STORE`. If you rolled your own persistence under a different key (as the docs app did, under `docs_theme`), configure `kbqThemeProvider({ storageKey: '…' })` instead of dropping it — existing users keep their saved preference, **provided the old value was already a mode/theme name**. If your old storage held something else (an index, a boolean, …), write a small `KbqThemeStore` wrapping `KbqThemeLocalStorageStore` that translates `getSelection()`'s return value before handing it back — see `DocsThemeStore` in the docs app's own `apps/docs/src/app/services/theme-store.ts` for the pattern. `KbqThemeCookieStore` is also available for apps that render with live Angular SSR and want the initial server-rendered HTML to already reflect the visitor's saved selection — read its doc comment first, since it doesn't help a build-time prerendered/static site.
+**Persistence is on by default.** The mode and the pinned theme are saved to `localStorage` (key `kbq-theme-mode` by default) and restored on init through the `KBQ_THEME_STORE` token, the same swappable-store pattern as `KBQ_STATE_STORE`. If you rolled your own persistence under a different key (as the docs app did, under `docs_theme`), configure `kbqThemeProvider({ storageKey: '…' })` instead of dropping it — existing users keep their saved preference, **provided the old value was already a mode** (`'light'`, `'dark'` or `'auto'`). If your old storage held something else (an index, a boolean, …), write a small `KbqThemeStore` wrapping `KbqThemeLocalStorageStore` that translates what `getMode()` returns before handing it back. `KbqThemeCookieStore` is also available for apps that render with live Angular SSR and want the initial server-rendered HTML to already reflect the visitor's saved selection — read its doc comment first, since it doesn't help a build-time prerendered/static site.
 
-**Custom themes and DI-based setup.** `setThemes()` still accepts any array of `{ name, className, colorScheme? }` objects — `colorScheme` (`'light' | 'dark'`) is optional: when set, it's each theme's own polarity, independent of its `name`, and is what `colorScheme()` (and `toggle()`) key off; when omitted, `colorScheme()` falls back to the OS preference for that theme. New: `kbqThemeProvider({ themes, mode, storageKey, autoLight, autoDark })` configures the service through DI instead of calling `setThemes()`/`setTheme()` imperatively. The active theme is always applied as a CSS class on `<body>` — the design tokens' `.kbq-light`/`.kbq-dark` styles depend on it, so there's no attribute-based alternative. `auto` resolves to the theme named `autoLight`/`autoDark` (`'light'`/`'dark'` by default) — set these if your custom theme set doesn't use those names, otherwise `auto` won't match any registered theme.
+**Custom themes and DI-based setup.** `setThemes()` accepts an array of `KbqThemeConfig` objects, `{ name, className, colorScheme }`. `colorScheme` (`'light' | 'dark'`) is required: it is each theme's own polarity, independent of its `name`, and a mode resolves to the first registered theme whose `colorScheme` matches it; `colorScheme()` and `toggle()` key off it too. New: `kbqThemeProvider({ themes, mode, theme, storageKey })` configures the service through DI instead of calling `setThemes()`/`setTheme()` imperatively; `theme` pins a theme by name until the user selects something. The active theme is always applied as a CSS class on `<body>` — the design tokens' `.kbq-light`/`.kbq-dark` styles depend on it, so there's no attribute-based alternative.
 
 ### Explicit tag content slots (21.0.0)
 
@@ -933,7 +1435,7 @@ Source order is not used to infer a suffix: under the old projection rule all su
 
 {/* cspell:ignore addClassModificatorForIcons */}
 
-**Deprecated imperative placement and styles.** Replace calls to `addClassModificatorForIcons()` with explicit slot directives, and migrate custom selectors from `.kbq-icon_left` to `.kbq-tag-prefix`. The method and the old selector are deprecated and will be removed in the next major version.
+**Deprecated imperative placement and styles.** Replace calls to `addClassModificatorForIcons()` with explicit slot directives, and migrate custom selectors from `.kbq-icon_left` to `.kbq-tag-prefix`. The method and the old selector are deprecated and will be removed in 22.0.0.
 
 ### Scrollbar overlayscrollbars implementation deprecation (21.0.0)
 
@@ -941,7 +1443,7 @@ Source order is not used to infer a suffix: under the old projection rule all su
 
 Until 21.0.0, `@koobiq/components/scrollbar` wrapped the third-party `overlayscrollbars` library: the `KbqScrollbar` component (`kbq-scrollbar` / `[kbq-scrollbar]`) and the low-level `KbqScrollbarDirective` (`[kbqScrollbar]`), with `options`, `events`, `defer` inputs and raw access to `scrollbarInstance`.
 
-As of 21.0.0, `@koobiq/components/scrollbar` provides a new dependency-free `KbqScrollbar` component with the `<kbq-scrollbar>` selector and a different public API. The previous implementation has not gone away — it moved, unchanged, to `@koobiq/components/scrollbar/deprecated` and will be removed in a future major version.
+As of 21.0.0, `@koobiq/components/scrollbar` provides a new dependency-free `KbqScrollbar` component with the `<kbq-scrollbar>` selector and a different public API. The previous implementation has not gone away — it moved, unchanged, to `@koobiq/components/scrollbar/deprecated` and will be removed in 22.0.0.
 
 #### Running the migration
 
@@ -982,6 +1484,24 @@ After fully moving to the new component and removing imports from `@koobiq/compo
 ```bash
 npm uninstall overlayscrollbars
 ```
+
+#### The kbq-scrollbar class
+
+The global `kbq-scrollbar` class, styled by `koobiq-theme()`, and its variables are deprecated and will be removed in 22.0.0. Library components no longer carry the class, so these variables set on `.kbq-scrollbar` no longer reach the scrollbars of the autocomplete, code block, file upload, markdown, modal, popover, select, sidepanel, tabs, textarea or tree select. `v21-upgrade` reports the class, `kbq-scrollbar-theme()` and the variables the new scrollbar does not share.
+
+| Deprecated, removed in 22.0.0                                                                                                                                                                                       | Use instead                                                                                                                                                |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| the `kbq-scrollbar` class, `kbq-scrollbar-theme()`                                                                                                                                                                  | `kbqNativeScrollbar` on the element that scrolls, with `kbqNativeScrollbarDescendants` for the scrollbars inside it as the class did, or `<kbq-scrollbar>` |
+| `--kbq-scrollbar-size-track-dimension`                                                                                                                                                                              | `--kbq-scrollbar-track-size`                                                                                                                               |
+| `--kbq-scrollbar-size-thumb-width`                                                                                                                                                                                  | `--kbq-scrollbar-thumb-gap`, the gap on each side of the thumb: (track size - thumb width) / 2                                                             |
+| `--kbq-scrollbar-size-thumb-min-size`                                                                                                                                                                               | `--kbq-scrollbar-thumb-min-size`                                                                                                                           |
+| `--kbq-scrollbar-size-thumb-border-radius`                                                                                                                                                                          | nothing: the thumb takes `--kbq-size-border-radius`                                                                                                        |
+| `--kbq-scrollbar-thumb-default-background`, `--kbq-scrollbar-thumb-hover-background`, `--kbq-scrollbar-thumb-active-background`                                                                                     | the same variables                                                                                                                                         |
+| `--kbq-scrollbar-thumb-disabled-background`                                                                                                                                                                         | nothing: the new scrollbar has no disabled state                                                                                                           |
+| `--kbq-scrollbar-track-default-background`, `--kbq-scrollbar-track-hover-background`, `--kbq-scrollbar-track-active-background`                                                                                     | nothing: the class did not read them; the new scrollbar paints its track with `--kbq-scrollbar-track-background`                                           |
+| `--kbq-scrollbar-track-default-border`, `--kbq-scrollbar-track-hover-border`, `--kbq-scrollbar-track-active-border`, `--kbq-scrollbar-size-track-padding-vertical`, `--kbq-scrollbar-size-track-padding-horizontal` | nothing: the class did not read them                                                                                                                       |
+
+Set the variables on the element that carries `kbqNativeScrollbar` or on `<kbq-scrollbar>`: their defaults are declared on that element itself, as with the class.
 
 ### Link component instead of the directive (21.0.0)
 
@@ -1095,11 +1615,14 @@ and `kbq-tree-select` is no longer wiped by the next `setLocale()`.
 `KBQ_<SECTION>_LOCALE_CONFIGURATION`, its defaults `KBQ_<SECTION>_DEFAULT_LOCALE_CONFIGURATION`, the
 override helper `kbq<Section>LocaleConfigurationProvider()` and the type `Kbq<Section>LocaleConfiguration` —
 so `navbar` lost the `VERTICAL_` its type never had, `input` the `NUMBER_`, and `sizeUnits` its
-`kbqFilesizeFormatter…` helper. The names in a 20.x release stay as deprecated aliases; the schematic moves
-you onto the new ones. Removed outright, because they duplicated a name that already existed:
-`KbqFilterBarConfiguration` and `KbqVerticalNavbarConfiguration` (use `KbqFilterBarLocaleConfiguration` and
-`KbqNavbarLocaleConfiguration`), the deprecated `Kbq*LocaleConfig` type aliases, and
-`kbqInjectKbqClampedLocaleConfiguration`. The unused `navbarIc` locale section is gone too.
+`kbqFilesizeFormatter…` helper. The names in a 20.x release stay as deprecated aliases until 22.0.0; the
+schematic moves you onto the new ones. `KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION` is only reported, because it is
+the `number` slice of the section rather than the whole of it: read `KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION.number`,
+the same object. Removed outright, with no alias, and renamed by the schematic: `KbqFilterBarConfiguration` (now
+`KbqFilterBarLocaleConfiguration`), the `Kbq*LocaleConfig` types (now `Kbq*LocaleConfiguration`, with
+`KbqNumberInputLocaleConfig` becoming `KbqInputNumberLocaleConfiguration`) and
+`kbqInjectKbqClampedLocaleConfiguration` (now `kbqInjectClampedTextLocaleConfiguration`). The unused `navbarIc`
+locale section is gone too.
 
 **Reading and overriding no longer share a word.** A component resolves its strings into
 `localeConfiguration()`, a signal — the member was called `configuration` on seven components and
@@ -1404,15 +1927,12 @@ It reports `number | undefined` now, and a value that is not cleanly numeric —
 | `.softWrap` / `.viewAll` / `.canDownload`   | Read as a call — rewritten for you                                  |
 | `.files` / `.activeFileIndex` / `.hideTabs` | Read as a call — rewritten for you                                  |
 | `.softWrap = …`                             | `.softWrap.set(…)` — rewritten for you; a compound form is reported |
-| `.canLoad = …` / `.codeFiles = …`           | Bind the attribute; both are backing inputs now                     |
 | `.maxHeight()`                              | `?? 0` for the common reading, or handle the unset state explicitly |
 | `.file = …` on a `KbqCodeBlockHighlight`    | Bind `[file]`; the value is readable as `file()` now                |
 
 **The `max-height` applied while `viewAll` is off is a `computed`.** It was a getter read from a `[style.max-height.px]` binding, so it only re-evaluated when something else marked the view dirty.
 
 **`hideTabs` reports what was bound; `tabsHidden()` is what the header does.** The rule that a single file without a filename hides the bar is derived now instead of being written into `hideTabs`, so a read of `hideTabs` no longer folds it in. `tabsHidden` is public for exactly that reading.
-
-**`canLoad` and `codeFiles` fill in rather than write.** The deprecated aliases used to write into `canDownload` and `files`, so which of each pair won depended on the order they sat in the template. Either attribute now turns the download button on, and `codeFiles` applies while `files` is empty.
 
 **An `activeFileIndex` outside `files` renders the first file, and an empty `files` renders no code at all.** Both used to reach `files[activeFileIndex]` and throw on the undefined result — `<kbq-code-block />` and `[files]="[]"` were enough. The index itself is left as bound: resetting it wrote `activeFileIndexChange` back into a `[(activeFileIndex)]` while the parent was still updating, which handed the parent the wrong file and, in the other binding order, `NG0100`.
 
@@ -1426,11 +1946,11 @@ Handled by `code-block-signals`: the reads and the plain writes are rewritten, t
 
 {/* migration-subsection-components(dl) */}
 
-`KbqDlComponent` was already fully signal-based, so the review had nothing to migrate. What it found were the five inputs that never got a coercion transform, sitting next to siblings that had one:
+`KbqDlComponent` was already fully signal-based, so the review had nothing to migrate. What it found were the four inputs that never got a coercion transform, sitting next to siblings that had one:
 
 ```ts
 readonly verticalBreakpoint = input(400, { transform: numberAttribute });
-readonly minWidth = input<number | undefined>();          // no transform
+readonly dtMinWidth = input<number | undefined>();        // no transform
 readonly wide = input(false);                              // no transform
 ```
 
@@ -1442,7 +1962,7 @@ readonly wide = input(false);                              // no transform
 
 `vertical` is tri-state: `null` means "decide from `verticalBreakpoint`". `booleanAttribute` would have folded that into `false`, so it uses a transform that preserves `null`.
 
-**`minWidth`, `dtMinWidth` and `ddMinWidth` are numeric inputs** reporting `number | undefined`, which is what an unbound description list always held. A numeric literal behaves exactly as before — `Math.max` applies `ToNumber` to its arguments, so `<kbq-dl dtMinWidth="120">` produced `120` on either side of the change. What moved is a value that is not a finite number: `<kbq-dl dtMinWidth>` and `<kbq-dl dtMinWidth="abc">` used to reach the arithmetic as a string and come out as `0`, and report `undefined` now, so the layout falls back to the measured term width and a `?? fallback` at the call site fires.
+**`dtMinWidth` and `ddMinWidth` are numeric inputs** reporting `number | undefined`, which is what an unbound description list always held. A numeric literal behaves exactly as before — `Math.max` applies `ToNumber` to its arguments, so `<kbq-dl dtMinWidth="120">` produced `120` on either side of the change. What moved is a value that is not a finite number: `<kbq-dl dtMinWidth>` and `<kbq-dl dtMinWidth="abc">` used to reach the arithmetic as a string and come out as `0`, and report `undefined` now, so the layout falls back to the measured term width and a `?? fallback` at the call site fires.
 
 **`dtWidth` is writable rather than a `model()`.** It is the one numeric input whose value goes back to the consumer through `[(dtWidth)]`, and `model()` takes no `transform`, so a `dtWidth="120"` that nothing coerced reached the layout as a string: `setDtWidth` opens with `Number.isFinite`, which is `false` for a string, so the value skipped the clamp against `dtMinWidth` and a column could render narrower than its own minimum. It is now an aliased input plus a `linkedSignal` and an explicit `dtWidthChange` output. `[(dtWidth)]` is unchanged, and so is reading or writing `dtWidth()`; only code that typed the member as `ModelSignal<number | null>` has to say `WritableSignal<number | null>` instead. A value that is not a finite number reads as `null`, the state that restores the default column ratio.
 
@@ -1499,6 +2019,7 @@ Changes with no call site to match on:
 - <kbd>Home</kbd> and <kbd>End</kbd> move the highlight in a dropdown without a search field, where they used to scroll
   the page.
 - Clicking a control inside `kbqDropdownFooter` no longer closes the panel.
+- An <kbd>Escape</kbd> that a pop-up inside the panel already handled, such as the tooltip of a truncated item, closes that pop-up alone; the next <kbd>Escape</kbd> closes the dropdown.
 - Disabled items publish `aria-disabled`.
 - A sibling the pointer crosses on the way to a submenu keeps its default background. The rule was already there, but its selector never matched anything.
 - `<kbq-dropdown>` keeps the classes it did not transfer to the panel: the `class` input used to clear the host element outright, taking a `[class.x]` binding from another directive with it.
@@ -1529,7 +2050,7 @@ What the schematic reports instead of fixing:
 | `panel.classList`                           | `protected` now. It is one `computed`; set `class` on `<kbq-dropdown>` to add your own            |
 | A class implementing `KbqDropdownPanel`     | Every member changed shape. `adoptItems` is optional and replaces the `items.reset(…)` on it      |
 
-One member did not move: `KbqDropdownItem.textElement` stays a `@ViewChild`, because it implements `KbqTitleTextRef` and five other components implement it the same way.
+One member is still read as a property: `KbqDropdownItem.textElement` is a getter typed `ElementRef`, because it implements `KbqTitleTextRef` and five other components implement it the same way.
 
 `KbqOptionActionParent` in `@koobiq/components/core` describes the trigger structurally, so TypeScript never checks it against `KbqDropdownTrigger`. It follows the trigger here: `restoreFocus` is a `WritableSignal<boolean>` and `dropdownClosed` an `OutputRef<void>`. A host that implements that contract by hand has to follow too — the mismatch surfaces at runtime, not at compile time.
 
@@ -1607,6 +2128,8 @@ Reported by `file-upload-cva-and-primitives`.
 
 #### Filter bar
 
+{/* migration-subsection-components(filter-bar) */}
+
 The popover that saves and renames a filter was reworked, and so were the strings around it.
 
 **`filters.saveChanges` and `filters.saveAsNew` were split.** Each did two jobs: the label of a dropdown item and the header of the popover that item opens. The header now captions the unlabelled name field, which reads wrong on a dropdown item, so each key became two:
@@ -1674,6 +2197,8 @@ The widget semantics moved at the same time. The host carried a `tabindex` and n
 
 Three smaller changes reach a consumer. `saved` and `canceled` are public, so a `viewChild(KbqInlineEdit)` can subscribe to them. `--kbq-inline-edit-panel-shadow` is read by the panel, which used to declare the token and then hardcode the value it stood for, so setting it finally changes the shadow. And the private `.kbq-mask`, `.kbq-mask__fade` and `.kbq-mask__container` classes were renamed to their `.kbq-inline-edit__menu-mask*` equivalents, giving back a namespace that looked library-wide.
 
+The date and time pickers follow the same rules: `cancel()` and `rollback()` restore a picker bound with `[value]` or with a form control, and a picker whose form control rejects its value blocks the save like any other control.
+
 Handled by `inline-edit-a11y-and-types`: the `modeAsReadonly` reads are rewritten, the rest is reported.
 
 #### Input
@@ -1710,7 +2235,7 @@ Fixes with nothing to migrate: the numeric inputs coerce their value, so a stati
 
 Migrated by `input-number-surface`, which rewrites the signal reads and reports the rest. The rewrite is scoped to a receiver the file annotates as `KbqNumberInput` and to a `#ref="kbqNumberInput"` template reference — `min`, `max` and `step` are too common to match on the member name alone, so a receiver whose type is only inferred, an index read and a destructuring are all left for you.
 
-`KbqNumberInput.value` and `disabled` stay accessors deliberately. Both setters do more than store: `value` reformats the field and notifies the `ControlValueAccessor`, `disabled` blurs the element. A `model()` cannot intercept a write, so converting either would drop the side effect an external `[(value)]` depends on.
+`KbqNumberInput.value` and `disabled` are read-only getters rather than `model()`s, because a new value does more than get stored: whether it comes from the `[value]` or `[disabled]` binding or from the form control, the directive reformats the field and emits `valueChange`, and for `disabled` emits `disabledChange` and, when disabling, blurs the element.
 
 #### Icon
 
@@ -1720,18 +2245,18 @@ Icons were in the accessibility tree and icon buttons were not buttons. `<i kbq-
 <i kbq-icon="kbq-triangle-exclamation_16" role="img" aria-hidden="false" aria-label="Error"></i>
 ```
 
-`kbq-icon-button` is never hidden, and on a host that is not a native `<button>` — which is 129 of the 180 call sites in this repository alone — it supplies the semantics the element does not have: `role="button"`, `aria-disabled` and Enter/Space activation. It stands down when the key event is already `defaultPrevented`, so a handler on the same element that calls `preventDefault()` keeps sole ownership of the key. It also warns in dev mode when it has neither `aria-label` nor `aria-labelledby`, because a glyph gives it no accessible name at all.
+`kbq-icon-button` is not hidden by default, and on a host that is not a native `<button>` — which is 129 of the 180 call sites in this repository alone — it supplies the semantics the element does not have: `role="button"` and `aria-disabled`. It does not activate itself from Enter or Space: bind `(keydown.enter)` and `(keydown.space)` next to `(click)`, calling `preventDefault()` on Space so the page does not scroll, or put the icon button on a `<button>`. It also warns in dev mode when it has neither `aria-label` nor `aria-labelledby`, because a glyph gives it no accessible name at all.
 
 **A `contentChild(KbqIcon)` still resolves only a bare icon.** Host metadata is inherited through `ɵɵInheritDefinitionFeature` and DI tokens are not, so such a query walks past an icon button and an icon item even though both carry the `.kbq-icon` class. Registering the subclasses under the token was tried and reverted: an icon button is an interactive control, and every query of this kind is looking for a decorative icon to position or tint. Answering one with a button made `KbqAlert` lay out an empty icon box for a dismissible alert with no status icon, and re-tint its close button to the alert color; answering one with an icon item collapsed the pair `KbqAlert` compares to report two projected status icons. A host that wants both asks for both, the way `KbqAlert` does.
 
-| Pattern                         | Manual migration                                                         |
-| ------------------------------- | ------------------------------------------------------------------------ |
-| `small` on a plain `[kbq-icon]` | Drop it — nothing ever read it; `KbqIconButton.small` is unaffected      |
-| `(keydown…)` on an icon button  | `preventDefault()` to keep sole ownership of Enter and Space             |
-| `[tabindex]` on an icon button  | `number \| null` instead of `any`; a numeric string is still transformed |
-| `.name` on a `KbqIcon` subclass | Override the protected `appliesMaxHeight` instead                        |
+| Pattern                                                   | Manual migration                                                                      |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `small` on a `[kbq-icon]` or a `[kbq-icon-item]`          | Drop it — nothing ever read it; on an icon button `v21-upgrade` rewrites it to `size` |
+| `(click)` and no `(keydown…)` on a non-button icon button | Bind `(keydown.enter)` and `(keydown.space)`, or use a `<button>`                     |
+| `[tabindex]` on an icon button                            | `number \| null` instead of `any`; a numeric string is still transformed              |
+| `.name` on a `KbqIcon` subclass                           | Override the protected `appliesMaxHeight` instead                                     |
 
-Three fixes with nothing to migrate. The SVG resolution stream no longer terminates on the first name that does not resolve — which the documented font-icon default guarantees on the very first frame — so a stale `<svg>` is removed on the fallback path, the inline `max-height` is cleared as well as set, and an element whose `[kbq-icon]` changes renders the icon it was asked for at the size it was asked for. `autoColor` is reactive, so turning it on after init subscribes and turning it off resets `hasError`. And the `--kbq-icon-*-color` tokens are no longer declared on `.kbq-icon`: they are consumed with their design token as the `var()` fallback, so a container can finally re-theme the icons inside it — reading one back with `getComputedStyle` returns an empty string now.
+Three fixes with nothing to migrate. The SVG resolution stream no longer terminates on the first name that does not resolve — which the documented font-icon default guarantees on the very first frame — so a stale `<svg>` is removed on the fallback path, the inline `max-height` is cleared as well as set, and an element whose `[kbq-icon]` changes renders the icon it was asked for at the size it was asked for. `autoColor` takes effect when it is turned on after init and lets go of the error color when it is turned off. And the `--kbq-icon-*-color` tokens are no longer declared on `.kbq-icon`: they are consumed with their design token as the `var()` fallback, so a container can finally re-theme the icons inside it — reading one back with `getComputedStyle` returns an empty string now.
 
 Reported by `icon-semantics-and-api`.
 
@@ -1777,7 +2302,9 @@ Handled by `link-signals`: the `disabled` reads are rewritten, the rest is repor
 
 `size` and `card` were already signals in 20.2.0 and did not change.
 
-Handled by `loader-overlay-signals`: the `text` and `caption` reads are rewritten, the rest is reported.
+**`transparent` and `card` are deprecated in favour of `surface`** and will be removed in 22.0.0. `surface` wins over both when set: use `surface="bg"` (or `bg-secondary` / `bg-tertiary`, to match what lies underneath) for a transparent overlay, `surface="solid"` for an opaque one, and `surface="card"` instead of `card`. An overlay that binds none of them keeps rendering as `surface="bg"`.
+
+Handled by `loader-overlay-signals`: the `text` and `caption` reads are rewritten, the rest is reported. `v21-upgrade` reports `transparent` and `card`.
 
 #### Markdown
 
@@ -1827,7 +2354,7 @@ Each flow is two members now, and you bind one of them:
 
 `KbqModalService.create()` and `confirm()` also stopped forcing a no-op handler into the options — the dialog emits and closes on its own when no handler is bound.
 
-**<kbd>Escape</kbd> has one implementation for both entry paths.** It used to be handled twice: the service path filtered on `kbqCloseByESC` and ran through `kbqOnCancel` but ignored a veto, while the declarative path closed unconditionally, ignoring `kbqCloseByESC` entirely and skipping `kbqOnCancel`. Escape is the Cancel button now — it honours `kbqCloseByESC`, and a `kbqOnCancel` returning `false` stops it. The keyboard table's third row, "Submit the form by pressing Enter in any text input", described behaviour that was never implemented and is gone from the guide.
+**<kbd>Escape</kbd> has one implementation for both entry paths.** It used to be handled twice: the service path filtered on `kbqCloseByESC` and ran through `kbqOnCancel` but ignored a veto, while the declarative path closed unconditionally, ignoring `kbqCloseByESC` entirely and skipping `kbqOnCancel`. Escape is the Cancel button now — it honours `kbqCloseByESC`, and a `kbqCancelClick` returning `false` stops it — except an Escape a control inside the dialog already handled, such as a datepicker closing its calendar. The keyboard table's third row, "Submit the form by pressing Enter in any text input", described behaviour that was never implemented and is gone from the guide.
 
 **A service-created dialog is destroyed with its opener.** `ModalBuilderForService` disposed its overlay from exactly one place — the `kbqAfterClose` subscription — and nothing tied it to the caller. Destroying the component that opened it, through a route change or an `*ngIf`, left the dialog painted over the next view, `afterClose` never emitted, and `document.body { overflow: hidden }` was never released, so the page could no longer be scrolled at all. The dialog's lifetime is bound to `options.injector` now, or to the root environment injector when none is passed, and the overlay is created with `disposeOnNavigation: true`. The body scroll lock is released from `ngOnDestroy` as well, and `KbqModalControlService` releases a modal that was created and destroyed without ever being shown — it used to hold that modal, its view and its subscriptions forever.
 
@@ -1898,6 +2425,8 @@ The navbar finished its move to signals, and `KbqNavbarItem` and `KbqNavbarBrand
 
 Additive: an icon marked with `kbqNavbarItemSuffix` is shown after the title. Without the attribute every icon of an item is rendered before the title, wherever it is written. Two fixes come for free: a vertical navbar item with a clipped title shows its tooltip, and a horizontal navbar collapses its items before its content overflows.
 
+**Tabbing out of the navbar leaves `tabIndex` alone.** `kbq-navbar` and `kbq-vertical-navbar` take themselves out of the tab order in the DOM only, so `(tabIndexChange)` is not emitted and a bound `[tabIndex]` is kept instead of being reset to `0`. A navbar with no item stays out of the tab order without writing `tabIndex` either: `(tabIndexChange)` no longer fires when items appear or disappear, and a bound `[tabIndex]` applies as soon as there is an item.
+
 Handled by `navbar-signals-and-aria`: the `kbqTooltip` binding, the signal reads and writes and the orientation booleans are rewritten, the rest is reported.
 
 #### Notification center
@@ -1928,6 +2457,8 @@ Reported by `notification-center-signals`. The handler rename is applied for you
 Hover mode was broken end to end by a dead expression. `this.leaveDelay ?? 500` looks like a default, but the base class sets the field to `0`, and `0 ?? 500` is `0` — so the panel closed before the pointer could cross the 8px gap to it, the documented interactive content was unreachable even for pointer users, and the auto-hide watchdog spun as an `interval(0)` for as long as the panel stayed open.
 
 The delay is derived from the trigger now, and `kbqLeaveDelay` is a write-only input that records having been bound. Bound in the template, the bound value stands; not bound, the `trigger` setter re-derives the delay on every change, so a popover switched to `hover` later gets the hover default instead of the `0` it was born with.
+
+A bound `undefined` or `null`, or a value that is not a number, counts as unbound: the hover default applies again, where it used to become `NaN` and close the panel at once. `kbqEnterDelay` and `kbqPopoverOffset` fall back the same way, to `0` and `8`.
 
 A programmatic `trigger.leaveDelay = 500` records nothing, so the next write to `trigger` overwrites it. That is the one change here with no compile error behind it.
 
@@ -2062,6 +2593,10 @@ The order shows up in three places: the array emitted to the form, the tags in t
 
 Two more fixes with nothing to migrate: the locale subscription created in the constructor had no teardown, and a root-provided singleton held every created-then-destroyed select for the lifetime of the app; and the select carries combobox/listbox/option ARIA now, with a keyboard-operable tag-remove control, so hand-rolled `role` or `aria-*` attributes on the host are duplicates.
 
+The rest of the select inputs followed. `hasBackdrop`, `compareWith` and `searchMinOptionsThreshold` are signals: read them as calls — `compareWith()(a, b)`; `searchMinOptionsThreshold()` still reports the resolved number. `multiple`, `tabIndex` and `selectAllHandler` are signal inputs read through a getter. None of the six can be assigned any more: bind them in the template. Changing `[multiple]` after the first render still throws.
+
+`KbqTimezoneSelect` extends `KbqSelect`, so everything above applies to it as well, and a file that names only the timezone select is reported too.
+
 Reported by `select-signal-inputs`.
 
 #### Sidepanel
@@ -2085,7 +2620,11 @@ Reported by `select-signal-inputs`.
 
 The container is a dialog to assistive technology at last: `role="dialog"`, `aria-modal` for a modal panel, and an `aria-labelledby` pointing at the `kbq-sidepanel-header` title, with `ariaLabel` / `ariaLabelledBy` on the config for a panel that has no header. While a modal sidepanel is open the rest of the page is `aria-hidden`, so a screen reader stops walking the page behind it. Any `role` or `aria-*` you were stamping on the container yourself is a duplicate now.
 
-Four smaller fixes with nothing to migrate: a component-provided `KbqSidepanelService` closes the panels it opened when it is destroyed, instead of leaving an orphaned overlay behind; `closeAll()` no longer reverses the live stack in place; the indent strip belongs to the top panel of a stack alone, where a stack three deep used to draw one strip per level and closing a lower panel left the one above exposing a panel that was no longer there; a second `close('B')` before the animation finishes no longer overwrites the `'A'` the first call promised; and a click inside a sidepanel at another edge no longer closes an unrelated panel. `KbqSidepanelService` is `providedIn: 'root'`, and `KbqSidepanelAnimationState` is exported from the entry point.
+Four smaller fixes with nothing to migrate: a component-provided `KbqSidepanelService` closes the panels it opened when it is destroyed, instead of leaving an orphaned overlay behind; `closeAll()` no longer reverses the live stack in place; the indent strip belongs to the top panel of a stack alone, where a stack three deep used to draw one strip per level and closing a lower panel left the one above exposing a panel that was no longer there; a second `close('B')` before the animation finishes no longer overwrites the `'A'` the first call promised; and a click inside a sidepanel at another edge no longer closes an unrelated panel. `KbqSidepanelService` is `providedIn: 'root'`.
+
+**<kbd>Escape</kbd> closes one layer at a time.** A sidepanel, the actions panel, the notification center and the dropdown no longer close on an Escape that a layer above them or a control inside them already handled — a tooltip, a popover, a confirm dialog opened over the panel, a control closing a popup of its own. The notification center now marks the Escape it closes on as handled (`preventDefault()`), so a sidepanel underneath stays open. A handler of your own that calls `preventDefault()` on Escape keeps these panels open too.
+
+**The sidepanel reports its transitions after the render that applies them.** `beforeClosed()` and `afterOpened()` no longer fire synchronously inside `open()` or `close()`: a subscription made right after `close()` is notified, and a sidepanel opened from `afterOpened()` of a lower one lands on top of the stack. Code that relied on `beforeClosed()` having fired by the time `close()` returned waits for the emission.
 
 Reported by `sidepanel-non-modal-behavior`.
 
@@ -2139,6 +2678,8 @@ Reported by `table-cell-content`.
 
 #### Tabs
 
+{/* migration-subsection-components(tabs) */}
+
 `KbqTabGroup` shipped no part of the ARIA tabs pattern, while `KbqTabNavBar` in the same package shipped all of it. The group now renders it too: the label strip is a `role="tablist"` (carrying `aria-orientation="vertical"` when `vertical` is set), each label a `role="tab"` with `aria-selected` and `aria-controls`, and each body a `role="tabpanel"` with `aria-labelledby` and a tab stop while it is the active one. Hand-rolled `role` or `aria-*` attributes on those elements are duplicates now, and a label carries `aria-disabled` in place of the bare `disabled` attribute that no assistive technology reads off a `div`.
 
 The roving `tabindex` follows the header's focus position rather than the selection, and a disabled tab gets `-1` rather than no attribute at all. A group whose selected tab was disabled — the default when the first tab is disabled — had no element with `tabindex="0"` and could not be reached with <kbd>Tab</kbd> at all.
@@ -2151,7 +2692,6 @@ The roving `tabindex` follows the header's focus position rather than the select
 | -------------------------- | ------------------------------------------------------------------ |
 | `.resizeStream`            | Drop the call — the shared `ResizeObserver` re-measures on its own |
 | `<kbq-tab-group disabled>` | Disable the tabs: `<kbq-tab [disabled]="true">`                    |
-| `.disabled` on a `KbqTab`  | Signal input: read `tab.disabled()`, bind `[disabled]` to write    |
 | `.getTabIndex(tab, index)` | `getTabIndex(tab, tabHeader, index)`; `null` is now `-1`           |
 | `KbqVerticalTabsCssStyler` | Stop importing it — the class follows the `vertical` binding       |
 | `.kbq-tab-label[disabled]` | Target `.kbq-disabled`, or `[aria-disabled="true"]` in a test      |
@@ -2173,7 +2713,9 @@ Reported by `tabs-signals-and-aria`.
 
 {/* migration-subsection-components(tag, tag-list, tag-input, tag-autocomplete) */}
 
-What stays an accessor stays for a reason the code enforces, not for want of a transform — a backing input carries `booleanAttribute`, and a signal over it reads back as one. `KbqTagList` implements `KbqFormFieldControl` and `KbqTagInput` implements `KbqTagTextControl`, which declare `value`, `id`, `placeholder`, `required` and `disabled` as plain properties. `KbqTag.disabled` stays a plain boolean because the focus key manager skips items by reading it as a value, and a signal — a function — is always truthy. `disabled`, `tabindex` and `value` on the tag and `draggable`, `tabIndex` on the tag list fold in state a signal cannot track: the tag list's form control, whose `disabled` is a plain property, and the projected text. Those keep their read and write syntax.
+What stays an accessor stays for a reason the code enforces, not for want of a transform — a backing input carries `booleanAttribute`, and a signal over it reads back as one. `KbqTag.disabled` stays a plain boolean because the focus key manager skips items by reading it as a value, and a signal — a function — is always truthy. `disabled`, `tabindex` and `value` on the tag, `draggable`, `tabIndex` on the tag list and `disabled` on the tag input keep their setters; `KbqTag.value` falls back to the projected text. Those keep their read and write syntax.
+
+The form-field state moved. `value`, `id`, `placeholder`, `focused`, `empty`, `required`, `disabled` and `errorState` of `KbqTagList` are signals: `form-field-signals` rewrites the reads into calls and a write to `disabled` or `value` into `.set()`, and reports a write to the rest (see Form field review (21.0.0)). `id`, `placeholder`, `focused` and `empty` of `KbqTagInput` are read-only signals: `form-field-signals` rewrites their reads into calls too, and reports a write.
 
 Everything else moved:
 
@@ -2196,17 +2738,17 @@ Handled by `tags-signals`: reads of the members that moved are rewritten, includ
 
 #### Textarea
 
-`KbqTextarea` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` as plain members — that interface is how the form field reads them, so they stay plain accessors. What moved are the four inputs the textarea owns.
+The `KbqFormFieldControl` members of `KbqTextarea` — `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` — are signals: `form-field-signals` rewrites the reads in TypeScript into calls and a write to `value` into `.set()`, and reports a write to the rest (see Form field review (21.0.0)). The four inputs the textarea owns moved too.
 
 `canGrow` was the odd one: its getter returned `!maxRowLimitReached && bound`, so it reported `false` once the textarea hit `maxRows` even though the consumer had asked for growth. The folded value is an internal `growing` computed now, and `canGrow()` reports what was bound. At the row limit the element keeps its own scrollbar rather than gaining a native resize handle: `kbq-textarea_max-row-limit-reached` sets `resize: unset`, which follows `kbq-textarea-resizable` in the stylesheet and wins on source order.
 
-| Pattern                                                 | Manual migration                                                                                                                        |
-| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `.maxRows` / `.maxRowLimitReached`                      | Read as calls — rewritten for you                                                                                                       |
-| `.freeRowsHeight`                                       | `freeRowsHeight()`, and expect `undefined` when unbound — reported                                                                      |
-| `.canGrow`                                              | `canGrow()`, and expect what was bound — not `false` at the row limit                                                                   |
-| `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Bind them in the template; the inputs are read-only                                                                                     |
-| `.grow()` / a detached `.grow`                          | Protected now; the textarea re-measures on every value and input change, and `stateChanges.next()` covers a layout change it cannot see |
+| Pattern                                                 | Manual migration                                                                                                                       |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `.maxRows` / `.maxRowLimitReached`                      | Read as calls — rewritten for you                                                                                                      |
+| `.freeRowsHeight`                                       | `freeRowsHeight()`, and expect `undefined` when unbound — reported                                                                     |
+| `.canGrow`                                              | `canGrow()`, and expect what was bound — not `false` at the row limit                                                                  |
+| `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Bind them in the template; the inputs are read-only                                                                                    |
+| `.grow()` / a detached `.grow`                          | Protected now; the textarea re-measures on every value and input change, and a layout change it cannot see is measured at the next one |
 
 **`maxRows` and `freeRowsHeight` report `number | undefined`.** Both were declared non-nullable while an unbound `maxRows` held `undefined`, and `maxRowLimitReached` compared against it — `rowsCount > undefined` is false, which is why unlimited growth worked at all. `freeRowsHeight` differs: `ngOnInit` used to assign the measured line height into the input, so an unbound read came back with a number once the first microtask had run. The fallback is internal now and the input stays `undefined`, so a call site doing `gap + 'px'` starts producing `"undefined" + "px"` with no diagnostic — the migration reports those reads rather than rewriting them.
 
@@ -2226,13 +2768,14 @@ The disagreement went further than a wrong value. The form's own validator reads
 
 The rest of the release is the forms contract the component never kept:
 
-| Pattern                                                   | Manual migration                                                                                      |
-| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `.timepickerList` on a `KbqTimeRangeEditor`               | Removed with the subscription that wrote `errorState` by hand; provide an `ErrorStateMatcher` instead |
-| `.errorState = …` on a `KbqTimeRangeTitleAsControl`       | Derived now; drive the state through the bound form control                                           |
-| `.value` / `.empty` / `.required` / `.disabled` on it     | Same — they are getters, and a write throws                                                           |
-| `.id` / `.placeholder` / `.controlType` / `.stateChanges` | Readonly; `id` is generated and `stateChanges` emits on every state move                              |
-| `.kbq-radio-group .kbq-time-range-editor__range`          | The from/to block is a sibling of the radiogroup now, not a descendant                                |
+| Pattern                                               | Manual migration                                                                                      |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `.timepickerList` on a `KbqTimeRangeEditor`           | Removed with the subscription that wrote `errorState` by hand; provide an `ErrorStateMatcher` instead |
+| `.errorState = …` on a `KbqTimeRangeTitleAsControl`   | A read-only signal now; drive the state through the bound form control and read it with a call        |
+| `.value` / `.empty` / `.required` / `.disabled` on it | Same — read-only signals derived from the host and the bound control                                  |
+| `.id` / `.placeholder` / `.focused` / `.controlType`  | Read-only; `id` is generated, `controlType` is a constant                                             |
+| `.stateChanges` on it                                 | Removed; read the signals in a `computed()` or an `effect()`                                          |
+| `.kbq-radio-group .kbq-time-range-editor__range`      | The from/to block is a sibling of the radiogroup now, not a descendant                                |
 
 `setDisabledState` is implemented on both `KbqTimeRange` and `KbqTimeRangeEditor`. A disabled control leaves the tab order, refuses to open the popover, disables the editor's own form and takes a `kbq-disabled` host class — it used to look and behave enabled while Angular silently discarded the value. `KbqTimeRangeTitle` gained a `disabled` input for the built-in trigger.
 
@@ -2240,7 +2783,7 @@ The rest of the release is the forms contract the component never kept:
 
 `valueCorrected` compares the outcome instead of the shape of the input. It used to fire on every write of a value with no `startDateTime`, which the `allTime` preset legitimately produces, so a host that wrote the payload back looped on it. A handler that counted emissions sees fewer of them.
 
-`KbqTimeRangeTitleAsControl` is a real `KbqFormFieldControl` now. Every member was previously declared and never assigned, so a `kbq-form-field` around it rendered once against `undefined` state: it could not float the label, could not show the error state, and clicking it focused nothing. The members are derived from the host and the bound `NgControl`, and `stateChanges` emits when any of them moves.
+`KbqTimeRangeTitleAsControl` is a real `KbqFormFieldControl` now. Every member was previously declared and never assigned, so a `kbq-form-field` around it rendered once against `undefined` state: it could not float the label, could not show the error state, and clicking it focused nothing. The members are read-only signals derived from the host and the bound `NgControl`, and `stateChanges` was removed with the rest of the `KbqFormFieldControl` contract.
 
 Two markup changes: the from/to block moved out of the `role="radiogroup"` element — a radiogroup must not own four date and time fields — and the popover footer dropped its unnamed `role="group"`. The from/to prefixes carry an `id` that all four inputs point at with `aria-labelledby`, replacing an `aria-label` on a bare `<span>`, where it is inert.
 
@@ -2257,7 +2800,7 @@ Handled by `time-range-title-for`: the key is removed from time-range locale lit
 
 #### Timepicker
 
-`KbqTimepicker` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` as plain members — those stay plain accessors. The four inputs the timepicker owns moved.
+The `KbqFormFieldControl` members of `KbqTimepicker` — `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` — are signals: `form-field-signals` rewrites the reads in TypeScript into calls and a write to `disabled` into `.set()`, and reports a write to the rest (see Form field review (21.0.0)). The four inputs the timepicker owns moved too.
 
 `min` and `max` parsed in their setters and reported the parsed result, so an unparseable bound value read back as `null`. They report what was bound now; the parsed values stay internal and still drive the validators.
 
@@ -2295,7 +2838,7 @@ Two types changed with it. `KbqTimezoneGroup.countryCode` is `string | null` —
 
 `kbq-timezone-select` rejects `multiple` with an error instead of accepting it, and `multiline` with it — that input switches the select to multiple selection just the same, and it had been left as a way around the check. Both guides always said it does not support multiple selection, but nothing enforced it: the input was inherited, `[multiple]="true"` compiled cleanly and put the component into a state its template cannot render — the user selected five zones and the field showed one. Use `kbq-select` for multiple selection.
 
-Four fixes with nothing to migrate. The forked panel template is back in sync with `select.html`: it binds `viewportMargin`, `handleClick` and the `kbq-select-overlay` pane class, drops the deprecated no-op `offsetY`, and projects `kbq-select-footer` and `kbq-select-matcher` — a projected footer used to fall into the trailing catch-all and render _inside_ the scrollable option list. The option's overflow tooltip carries the same filtered city list the option renders, instead of the unfiltered one measured against the filtered box. The search placeholder follows the active locale instead of latching to whichever one was applied first, and a placeholder the consumer binds still wins. And `UtcOffsetPipe` and `CitiesByFilterPipe` are exported, while `KbqTimezoneModule` re-exports `KbqOptionModule`, so the documented usage with `kbq-optgroup` works from the module alone.
+Four fixes with nothing to migrate. The forked panel template is back in sync with `select.html`: it binds `viewportMargin`, `handleClick` and the `kbq-select-overlay` pane class, no longer binds `offsetY`, which is removed (see the select removals above), and projects `kbq-select-footer` and `kbq-select-matcher` — a projected footer used to fall into the trailing catch-all and render _inside_ the scrollable option list. The option's overflow tooltip carries the same filtered city list the option renders, instead of the unfiltered one measured against the filtered box. The search placeholder follows the active locale instead of latching to whichever one was applied first, and a placeholder the consumer binds still wins. And `UtcOffsetPipe` and `CitiesByFilterPipe` are exported, while `KbqTimezoneModule` re-exports `KbqOptionModule`, so the documented usage with `kbq-optgroup` works from the module alone.
 
 Typeahead finds the city. The option reported its whole line as its label, and that line opens with `UTC`, so typing a city's first letters in the field never moved past the first option, and a zone west of UTC — written with U+2212, which no keyboard types — could not be reached by typing at all. The label is the city now. What it costs: typing `utc+03` no longer moves anywhere; offsets are matched by the search.
 
@@ -2344,8 +2887,8 @@ class MyToast extends KbqToastComponent {
 | `.elementRef`                                                            | `inject<ElementRef<HTMLElement>>(ElementRef)`                                                                                                            |
 | `.ttl` / `.delay`                                                        | The countdown moved into the service — pass the lifetime as `show()`'s `duration`                                                                        |
 | `.isTemplateRef()` / `.themePalette` / `.toastStyle`                     | Removed; they only existed for the old rendering path                                                                                                    |
-| `.style` / `.icon` / `.role` / `.closeButton`                            | Now `protected`. `data`, `id`, `hovered`, `focused`, `animationState`, `close()` and `onAnimation()` are still public                                    |
-| `service.animation.getValue()` / `.value`                                | A `Subject<AnimationEvent>` now, not a `BehaviorSubject` — nothing is replayed to a late subscriber                                                      |
+| `.style` / `.icon` / `.role` / `.closeButton`                            | Now `protected`. `data`, `id`, `hovered`, `focused` and `close()` are still public                                                                       |
+| `service.animation.getValue()` / `.value`                                | Removed with `@angular/animations`, see "Animations without @angular/animations" above                                                                   |
 | A `KBQ_TOAST_FACTORY` component that does not extend `KbqToastComponent` | Rejected: `show()` reads the numeric `id` the service keys its stack by, and throws when it is missing rather than stacking a toast it can never dismiss |
 
 **The data you pass in is no longer written to.** `show()` used to default `style` to `contrast` and `icon` to `true` by assigning them onto the caller's object; both defaults are resolved inside the toast now. Anything that read those keys back after `show()` — or rendered the same object somewhere else, which is what `kbq-notification-center` does — has to apply its own defaults.
@@ -2362,15 +2905,18 @@ The flip is silent. Markup that never mentioned the input compiles unchanged and
 
 Already opted out, so nothing to do for them: the built-in overflow hints (`kbq-title`, `kbqEllipsisCenter`, the option and timezone hints) and any tooltip whose `kbqTrigger` is `manual` or `none` — hovering such a pane neither opens nor closes it, so there is nothing hoverable to protect.
 
-| Pattern                                           | Manual migration                                                                         |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `kbqTooltip` with no `ignoreTooltipPointerEvents` | Add `[ignoreTooltipPointerEvents]="true"` where a pane overlays a click target           |
-| `.scheduler`                                      | Removed; schedule on a scheduler you own                                                 |
-| `getMouseLeaveListener(delay)`                    | Drop the argument — the listener reads the trigger's own `leaveDelay`                    |
-| `placementChange`                                 | Emits `KbqPopUpPlacementValues`; reading is unaffected, emitting a plain `string` breaks |
-| `.content` / `.header` / `.context` / `.modifier` | `unknown` and the real enum replaced `any`; a value read out needs a cast                |
+| Pattern                                                    | Manual migration                                                                                                                              |
+| ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `kbqTooltip` with no `ignoreTooltipPointerEvents`          | Add `[ignoreTooltipPointerEvents]="true"` where a pane overlays a click target                                                                |
+| `.scheduler`                                               | Removed; schedule on a scheduler you own                                                                                                      |
+| `getMouseLeaveListener(delay)`                             | Drop the argument — the listener reads the trigger's own `leaveDelay`                                                                         |
+| `placementChange`                                          | Emits `KbqPopUpPlacementValues`; reading is unaffected, emitting a plain `string` breaks                                                      |
+| `.content` / `.header` / `.context` / `.modifier`          | `unknown` and the real enum replaced `any`; a value read out needs a cast                                                                     |
+| `KBQ_TOOLTIP_OPEN_TIME` / `KBQ_TOOLTIP_OPEN_TIME_PROVIDER` | Deprecated no-ops, removed in 22.0.0: set the window with `KBQ_TOOLTIP_INSTANT_SHOW_WINDOW`, restart it with `KbqTooltipDelayTracker.reset()` |
 
 Three fixes with nothing to migrate: the pane carries `role="tooltip"` and the trigger points `aria-describedby` at it, so a host that added either by hand can drop it; <kbd>Escape</kbd> closes a hover tooltip on a non-focusable element, which previously only worked while the trigger itself had focus; and `KbqTooltipTrigger` can be imported standalone, because `KBQ_TOOLTIP_SCROLL_STRATEGY` has a factory default and the NgModule is no longer load-bearing.
+
+`[kbqTooltipOffset]` bound to `null`, `undefined` or a value that is not a number keeps the gap of the stylesheet, as documented. It used to write `NaNpx`, which browsers dropped, so an open tooltip kept the gap set before; switching the binding to `null` on an open tooltip removes that gap now.
 
 Reported by `tooltip-pointer-events-and-types`, which reports the _absence_ of the input: a file that renders `kbqTooltip` and never writes `ignoreTooltipPointerEvents` is exactly the file whose behavior changed.
 
@@ -2425,6 +2971,10 @@ The tree moved its inputs and its query members to signals. Six members that use
 
 Two of the six are silent rather than loud. `KbqTreeBase` is exported and is the documented extension point for a custom tree: a subclass reading `this.nodeDefs.length` now gets `0` — the arity of the signal function — instead of the number of node definitions, and `this.nodeDefs.changes.subscribe(…)` throws. And `KbqTreeNodeToggle` kept `disabled` as the input alias (the input itself is declared as `disabledInput`), so every template binding keeps working and only imperative writes break.
 
+The inputs of `KbqTreeSelection` and `KbqTreeOption` followed: `treeControl`, `dataSource`, `disabled`, `tabIndex` and `selectAllHandler` of the tree, `disabled` and `showCheckbox` of the option are signal inputs read through a getter. A read is unchanged, a programmatic write no longer compiles: bind them. `multiple` is an input now too, and its getter never had a setter: set the selection mode through `multipleMode`, which stays writable. `autoSelect`, `noUnselectLast`, `typeAhead` and `selectAll` stay writable, since `KbqTreeSelect` writes them.
+
+A `[dataSource]` bound back to `undefined` clears the tree as `null` does, and `dataSource` reports `null` rather than `undefined` while no source is set.
+
 Reported by `tree-signals`. A project that renders a tree at all also gets a summary of all six members, because five of them are only visible at a call site that writes them — a consumer that merely reads one gets a value whose type changed under it and no diagnostic at all.
 
 #### Tree select
@@ -2453,6 +3003,12 @@ The review typed the surface and dropped the members that only existed to feed t
 `KbqTreeSelectChange` is generic and its `value` is no longer `any`, so a handler that relied on the implicit widening needs the type argument.
 
 Three fixes with nothing to migrate: the embedded tree is set up through `KbqTreeSelection.initializeForEmbedding()` instead of a second manual `ngAfterContentInit()`, which used to leave duplicate subscriptions on query lists that are never re-created — so every options change was handled several times, on the search-filtering hot path; the dead `{ provide: KbqTree, useExisting: KbqTreeSelect }` provider is gone, since `KbqTreeSelect` never satisfied `KbqTree` structurally and anything injecting `KbqTree` from inside a tree-select was getting an object that only looked right; and the component renders a host `id` and carries combobox ARIA, so the form field label's `[attr.for]` resolves instead of dangling.
+
+`hasBackdrop` and `searchMinOptionsThreshold` are signals like on `KbqSelect`, and `multiple`, `autoSelect`, `tabIndex` and `selectAllHandler` are signal inputs read through a getter. None of them can be assigned any more: bind them in the template.
+
+**A `multiple` value is ordered by the panel now.** `sortValues()` compared the selected data nodes against the rendered options, so it never matched anything and the selection kept the order the values were written in. The default is now each node's place in the tree, collapsed branches included; a node missing from the data sorts last. The order shows in `value()` and in the trigger tags. `[sortComparator]` gets what it always received — two selected data nodes — and its third argument is now every data node of the tree in panel order (`treeControl.dataNodes`) instead of the rendered `KbqTreeOption[]`, as `KbqTreeSelectSortComparator<T>` types it. A comparator typed with `KbqTreeOption` has to take your node type instead; `() => 0` keeps the write order.
+
+Three more fixes with nothing to migrate: a value the form writes before the tree data arrives (over HTTP, say) is applied once the nodes arrive, in `KbqTreeSelect` and in `KbqTreeSelection` alike, until the user changes the selection; replacing `dataSource.data` with equal new nodes no longer marks the control dirty or emits `valueChanges` and `(selectionChange)`; and a node value of `0` or `''` is selected instead of clearing the selection.
 
 Reported by `tree-select-signals`.
 
@@ -2600,7 +3156,7 @@ Storage format:
 - An entry written by 20.2.0 under the bare, unprefixed key is still read, so an upgrade does not reset
   what users had. It is never rewritten or removed — an unprefixed key is not necessarily ours, and an
   application storing its own `settings` must not lose it to a component keyed `stateSavingKey="settings"`.
-  The first save moves the state under the prefix. This bridge is removed in the next major.
+  The first save moves the state under the prefix. This bridge is removed in 22.0.0.
 
 The `accordion-state-saving-default` schematic reports every consumer the default reaches. It is
 warn-only: the markup whose behavior changed is exactly the markup that says nothing about the input, and
@@ -2843,4 +3399,4 @@ removed is printed for every file, because a handler may have done more than cle
 
 ### After the migration
 
-The migration is regex-based and does not rewrite aliased imports, local variables, or re-exports — **review the diff before committing**, rebuild the project and run your tests. The full list of breaking changes is on the [Angular 20 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.en.md) page.
+The migration is regex-based and does not rewrite aliased imports, local variables, or re-exports — **review the diff before committing**, rebuild the project and run your tests. The full lists of breaking changes are on the [Angular 21 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-21-breaking-changes.en.md) and [Angular 20 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.en.md) pages.

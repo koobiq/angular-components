@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KBQ_WINDOW } from '@koobiq/components/core';
+import { KBQ_ANIMATIONS_CONFIG, KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqSkeleton } from './skeleton';
 
 const waveAnimationName = 'kbq-skeleton-wave';
@@ -134,9 +134,26 @@ describe(KbqSkeleton.name, () => {
         expect(button.hasAttribute('inert')).toBe(false);
     });
 
+    it('should run the wave by default', () => {
+        getSkeletons(createFixture()).forEach((element) =>
+            expect(element.classList).not.toContain('kbq-animations-disabled')
+        );
+    });
+
+    it('should keep the fill still when animations are disabled', () => {
+        TestBed.configureTestingModule({
+            providers: [{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }]
+        });
+
+        const skeletons = getSkeletons(createFixture());
+
+        expect(skeletons.length).toBe(2);
+        skeletons.forEach((element) => expect(element.classList).toContain('kbq-animations-disabled'));
+    });
+
     it('should shift the wave by the host offset on every pass', () => {
         const [element] = getSkeletons(createFixture());
-        const rect = jest.spyOn(element, 'getBoundingClientRect').mockReturnValue({ left: 42 } as DOMRect);
+        const rect = vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ left: 42 } as DOMRect);
 
         stubAnimation(element, 0);
         dispatchAnimationEvent(element, 'animationstart');
@@ -154,9 +171,9 @@ describe(KbqSkeleton.name, () => {
     it('should not write an unchanged offset back', () => {
         const [element] = getSkeletons(createFixture());
 
-        jest.spyOn(element, 'getBoundingClientRect').mockReturnValue({ left: 42 } as DOMRect);
+        vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ left: 42 } as DOMRect);
 
-        const write = jest.spyOn(element.style, 'setProperty');
+        const write = vi.spyOn(element.style, 'setProperty');
 
         dispatchAnimationEvent(element, 'animationiteration');
         env.flushFrames();
@@ -219,7 +236,7 @@ describe(KbqSkeleton.name, () => {
         const fixture = createFixture();
         const [, button] = getSkeletons(fixture);
 
-        jest.spyOn(button, 'getBoundingClientRect').mockReturnValue({ left: 42 } as DOMRect);
+        vi.spyOn(button, 'getBoundingClientRect').mockReturnValue({ left: 42 } as DOMRect);
         fixture.componentInstance.loading.set(true);
         fixture.detectChanges();
         dispatchAnimationEvent(button, 'animationiteration');
@@ -246,7 +263,7 @@ describe(KbqSkeleton.name, () => {
         const fixture = createFixture();
         const [element] = getSkeletons(fixture);
 
-        jest.spyOn(element, 'getBoundingClientRect').mockReturnValue({ left: 42 } as DOMRect);
+        vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ left: 42 } as DOMRect);
         dispatchAnimationEvent(element, 'animationiteration');
         env.flushFrames();
         fixture.destroy();

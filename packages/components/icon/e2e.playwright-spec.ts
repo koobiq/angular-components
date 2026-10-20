@@ -40,6 +40,17 @@ test.describe('KbqIconModule', () => {
         });
     });
 
+    test.describe('E2eIconUnresolvedName', () => {
+        // ICN-BUG-03: an unresolved name removed whatever svg the host held, projected content included.
+        test('keeps projected svg content when the name does not resolve', async ({ page }) => {
+            await page.goto('/E2eIconUnresolvedName');
+
+            // Not `toBeVisible`: the literal svg has no size of its own, so presence is what matters.
+            await expect(page.getByTestId('e2eIconProjectedSvg')).toBeAttached();
+            await expect(page.getByTestId('e2eIconUnresolvedName').locator('svg')).toHaveCount(1);
+        });
+    });
+
     test.describe('E2eIconSvgDropdown', () => {
         test('svg icons in a dropdown panel', async ({ page }) => {
             await page.goto('/E2eIconSvgDropdown');

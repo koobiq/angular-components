@@ -1,14 +1,30 @@
-import { Component, Type, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { Component, effect, signal, Type, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
 import { KbqSidebar, KbqSidebarModule, SidebarPositions } from './index';
+
+/**
+ * Gives `element` a width transition that runs until the returned function ends it. jsdom has no Web Animations
+ * API, so without one every transition ends right after the render it starts in.
+ */
+const holdTransition = (element: HTMLElement): (() => void) => {
+    let finish!: () => void;
+    const finished = new Promise<void>((resolve) => (finish = resolve));
+
+    element.getAnimations = () => [
+        { finished, effect: { getComputedTiming: () => ({ endTime: 200 }) } } as unknown as Animation
+    ];
+
+    return () => {
+        delete (element as Partial<HTMLElement>).getAnimations;
+        finish();
+    };
+};
 
 describe(KbqSidebarModule.name, () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 KbqSidebarModule,
                 TestSidebar
             ]
@@ -49,6 +65,18 @@ describe(KbqSidebarModule.name, () => {
             expect(sidebarComponent.opened).toBeTruthy();
         });
 
+        it('should close when the bound state turns undefined', async () => {
+            const host: HTMLElement = fixture.nativeElement.querySelector('kbq-sidebar');
+
+            testComponent.state = undefined;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(sidebarComponent.opened).toBe(false);
+            expect(host.classList).not.toContain('kbq-sidebar_opened');
+            expect(host.style.width).toBe('32px');
+        });
+
         it('should change state by method', () => {
             expect(sidebarComponent.opened).toBeTruthy();
 
@@ -63,6 +91,18 @@ describe(KbqSidebarModule.name, () => {
             expect(sidebarComponent.opened).toBeTruthy();
         });
 
+        it('should render the opened state assigned in code', async () => {
+            const host: HTMLElement = fixture.nativeElement.querySelector('kbq-sidebar');
+
+            sidebarComponent.opened = false;
+            await fixture.whenStable();
+
+            expect(host.classList).not.toContain('kbq-sidebar_opened');
+            expect(host.style.width).toBe('32px');
+            expect(fixture.nativeElement.textContent).toContain('kbq-sidebar-closed');
+            expect(fixture.nativeElement.textContent).not.toContain('kbq-sidebar-opened');
+        });
+
         it('should change position', () => {
             expect(sidebarComponent.position()).toBe(SidebarPositions.Left);
 
@@ -72,8 +112,8 @@ describe(KbqSidebarModule.name, () => {
             expect(sidebarComponent.position()).toBe(SidebarPositions.Right);
         });
 
-        it('should fire change event', fakeAsync(() => {
-            const changeSpy = jest.fn();
+        it('should fire change event', async () => {
+            const changeSpy = vi.fn();
 
             sidebarComponent.stateChanged.subscribe(changeSpy);
 
@@ -81,14 +121,35 @@ describe(KbqSidebarModule.name, () => {
 
             sidebarComponent.toggle();
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             expect(sidebarComponent.opened).toBeFalsy();
             expect(changeSpy).toHaveBeenCalledWith(false);
-        }));
+        });
+
+        it('should transition the width only while it moves between the states', async () => {
+            const host: HTMLElement = fixture.nativeElement.querySelector('kbq-sidebar');
+
+            expect(host.classList).not.toContain('kbq-sidebar_toggling');
+
+            const finish = holdTransition(host);
+
+            sidebarComponent.toggle();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(host.classList).toContain('kbq-sidebar_toggling');
+
+            finish();
+            // The end of the transition reaches the sidebar through a chain of promises.
+            await new Promise((resolve) => setTimeout(resolve));
+            await fixture.whenStable();
+
+            expect(host.classList).not.toContain('kbq-sidebar_toggling');
+        });
 
         it('should toggle on `BracketLeft` keypress', () => {
-            const toggleSpy = jest.spyOn(sidebarComponent, 'toggle');
+            const toggleSpy = vi.spyOn(sidebarComponent, 'toggle');
 
             expect(testComponent.position).toBe(SidebarPositions.Left);
 
@@ -98,7 +159,7 @@ describe(KbqSidebarModule.name, () => {
         });
 
         it('should NOT toggle on `BracketRight` keypress', () => {
-            const toggleSpy = jest.spyOn(sidebarComponent, 'toggle');
+            const toggleSpy = vi.spyOn(sidebarComponent, 'toggle');
 
             expect(testComponent.position).toBe(SidebarPositions.Left);
 
@@ -132,11 +193,11 @@ class TestSidebar {
 
     position: SidebarPositions = SidebarPositions.Left;
 
-    state: boolean = true;
+    state: boolean | undefined = true;
 
     readonly sidebar = viewChild.required(KbqSidebar);
 
-    readonly onStateChanged = jest.fn();
+    readonly onStateChanged = vi.fn();
 }
 
 /** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
@@ -181,7 +242,7 @@ class UncontrolledSidebar {
     /** An empty key leaves the sidebar on the key derived from its position in the document. */
     stateSavingKey = 'sidebar-key';
 
-    readonly onStateChanged = jest.fn();
+    readonly onStateChanged = vi.fn();
 }
 
 describe(`${KbqSidebarModule.name} state saving`, () => {
@@ -202,7 +263,7 @@ describe(`${KbqSidebarModule.name} state saving`, () => {
         store = new InMemoryStateStore();
 
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqSidebarModule, UncontrolledSidebar, TestSidebar]
+            imports: [KbqSidebarModule, UncontrolledSidebar, TestSidebar]
         }).compileComponents();
     });
 
@@ -226,6 +287,24 @@ describe(`${KbqSidebarModule.name} state saving`, () => {
         fixture.detectChanges();
 
         expect(fixture.componentInstance.sidebar().opened).toBe(true);
+    });
+
+    it('reports the state restored from the new key', async () => {
+        store.setState('sidebar-key', { opened: true });
+        store.setState('other-key', { opened: false });
+
+        const fixture = create(UncontrolledSidebar);
+        const { onStateChanged } = fixture.componentInstance;
+
+        await fixture.whenStable();
+        onStateChanged.mockClear();
+
+        fixture.componentInstance.stateSavingKey = 'other-key';
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(fixture.componentInstance.sidebar().opened).toBe(false);
+        expect(onStateChanged).toHaveBeenCalledExactlyOnceWith(false);
     });
 
     it('restores the width alongside the opened state', () => {
@@ -265,6 +344,40 @@ describe(`${KbqSidebarModule.name} state saving`, () => {
 
         // The width is captured on the way out, and jsdom reports no layout, so it lands as `0px`.
         expect(store.getState('sidebar-key')).toEqual({ opened: false, width: '0px' });
+    });
+
+    it('keeps the opened width when it closes while it still widens', async () => {
+        const fixture = create(UncontrolledSidebar);
+        const sidebar = fixture.componentInstance.sidebar();
+        const host: HTMLElement = fixture.nativeElement.querySelector('kbq-sidebar');
+        let offsetWidth = 200;
+
+        Object.defineProperty(host, 'offsetWidth', { configurable: true, get: () => offsetWidth });
+        await fixture.whenStable();
+
+        sidebar.toggle();
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const finish = holdTransition(host);
+
+        sidebar.toggle();
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        // Halfway from the closed width to the opened one.
+        offsetWidth = 116;
+        sidebar.toggle();
+        fixture.detectChanges();
+        finish();
+        await fixture.whenStable();
+
+        expect(store.getState('sidebar-key')).toEqual({ opened: false, width: '200px' });
+
+        sidebar.toggle();
+        fixture.detectChanges();
+
+        expect(host.style.width).toBe('200px');
     });
 
     it('persists the width the content declares', () => {
@@ -352,7 +465,7 @@ describe(`${KbqSidebarModule.name} state saving`, () => {
         const fixture = create(UncontrolledSidebar);
         const service = TestBed.inject(KbqStateSavingService);
 
-        // Mapped to plain data on purpose: deep-comparing a live directive makes jest serialize it,
+        // Mapped to plain data on purpose: deep-comparing a live directive makes the runner serialize it,
         // which throws while building the diff and hides the real failure.
         expect(service.components().map(({ name, key, enabled }) => ({ name, key, enabled }))).toEqual([
             { name: 'kbq-sidebar', key: 'sidebar-key', enabled: true }
@@ -363,8 +476,39 @@ describe(`${KbqSidebarModule.name} state saving`, () => {
         expect(service.components()).toEqual([]);
     });
 
+    it('should not make an effect that clears the saved state re-run when saving is turned back on', () => {
+        const fixture = create(UncontrolledSidebar);
+        const sidebar = fixture.componentInstance.sidebar();
+        const clear = signal(false);
+        let runs = 0;
+
+        TestBed.runInInjectionContext(() =>
+            effect(() => {
+                // Capped, so that a regression fails instead of hanging.
+                if (!clear() || runs === 10) return;
+
+                runs++;
+                sidebar.clearSavedState();
+            })
+        );
+
+        clear.set(true);
+        TestBed.tick();
+        sidebar.toggle();
+
+        fixture.componentInstance.useStateSaving = false;
+        fixture.detectChanges();
+        TestBed.tick();
+        fixture.componentInstance.useStateSaving = true;
+        fixture.detectChanges();
+        TestBed.tick();
+
+        expect(store.getState('sidebar-key')).not.toBeNull();
+        expect(runs).toBe(1);
+    });
+
     it('persists nothing when the sidebar is not in the document as it initializes', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         store.setState('sidebar-key', { opened: false });
 

@@ -7,20 +7,21 @@ import {
     computed,
     DestroyRef,
     inject,
-    Input,
     input,
     numberAttribute,
     OnChanges,
     Renderer2,
+    signal,
     SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KbqColorDirective } from '@koobiq/components/core';
-import { defer, of, ReplaySubject, Subscription } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { KbqColorDirective, KbqComponentColors } from '@koobiq/components/core';
+import { defer, Subscription } from 'rxjs';
 import { KBQ_ICON_ERROR_STATE_CONTEXT } from './icon-error-state-context';
 import { KbqIconRegistry } from './icon-registry';
+
+/** Marks an injected `<svg>` with the name it renders, so hydration can recognize and adopt it. */
+const ICON_NAME_ATTRIBUTE = 'data-kbq-icon-name';
 
 /**
  * Renders an icon on the element it is applied to: a `@koobiq/icons` font glyph by default, or an inline
@@ -39,8 +40,8 @@ import { KbqIconRegistry } from './icon-registry';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq kbq-icon',
-        '[class]': 'svgIcon ? null : iconName',
-        '[class.kbq-error]': 'color === "error" || hasError',
+        '[class]': 'svgIcon() ? null : iconName',
+        '[class.kbq-error]': 'colorIsError() || hasError || autoColorError',
         '[attr.aria-hidden]': 'resolvedAriaHidden()'
     }
 })
@@ -59,7 +60,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      * Whether the icon is hidden from assistive technology. Left unbound, it falls back to
      * `defaultAriaHidden`, which is `true` for a decorative icon and `false` for an interactive one.
      */
-    readonly ariaHidden = input<boolean | undefined, unknown>(undefined, {
+    readonly ariaHidden = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
         alias: 'aria-hidden',
         // `null` is how a template says "leave it unset" (`cond ? true : null`), so it means the default
         // rather than `false` — `booleanAttribute(null)` would turn it into an explicit opt-out.
@@ -85,8 +86,8 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      * icon name (`kbq-plus_16` → 16), which is the `@koobiq/icons` convention; a name without one is
      * rendered at whatever size the surrounding styles give it.
      */
-    readonly iconSize = input(undefined, {
-        transform: (value: unknown): number | undefined => {
+    readonly iconSize = input<number | undefined, number | string | null | undefined>(undefined, {
+        transform: (value) => {
             const size = numberAttribute(value);
 
             return Number.isNaN(size) ? undefined : size;
@@ -97,39 +98,46 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      * Whether the icon follows the error state of the host it sits in (a form field, for one), painting
      * itself red while that host reports an error.
      */
-    // Kept as an accessor `@Input()` rather than an `input()`: `KbqCleaner` writes it from its own
-    // constructor, and an `input()` has no setter to write. The setter is also where the error-state
-    // subscription is made and torn down, which a signal input cannot intercept.
-    @Input({ transform: booleanAttribute })
-    get autoColor(): boolean {
-        return this.autoColorEnabled;
-    }
+    autoColor = false;
 
-    set autoColor(value: boolean) {
-        if (this.autoColorEnabled === value) return;
-
-        this.autoColorEnabled = value;
-
-        // A subclass may write this from its constructor (`KbqCleaner` does), and the error-state context
-        // is a form field reading a required `contentChild` — touching it that early throws NG0951.
-        if (this.contentInitialized) {
-            this.trackErrorState();
-        }
-    }
-
-    private autoColorEnabled = false;
-    private contentInitialized = false;
-    private errorStateSubscription: Subscription | null = null;
-
-    /** Whether the host this icon follows is currently in an error state. Only ever set with `autoColor`. */
+    /**
+     * Whether the icon takes the error color whatever its `color` is. Set by a host that tints the icons
+     * it holds, such as `KbqEmptyState`.
+     */
     hasError: boolean = false;
 
+    /**
+     * Whether `autoColor` takes the error color from the host's error state.
+     * @docs-private
+     */
+    protected get autoColorError(): boolean {
+        return this.autoColor && this.hostErrorState();
+    }
+
+    // The host's error state through a signal of the icon's own: the host's control reads it in its host bindings, in
+    // the same reactive consumer as the icon's, where a signal read again after others costs a scan of all it has read
+    // so far.
+    private readonly hostErrorState = computed(() => !!this.errorStateContext?.errorState());
+
+    /**
+     * Whether `color` is the error color. A signal of its own because the color class binding already reads
+     * `color`: the host bindings of every icon in a view run in that view's reactive consumer, which finds a
+     * signal read a second time by scanning all it has read so far, O(N²) per check across N icons.
+     * @internal
+     */
+    protected readonly colorIsError = computed(() => this.color() === KbqComponentColors.Error);
+
     /** Name of an icon within a `@koobiq/icons`. Accepts "namespace:name" syntax. */
-    // TODO: Skipped for migration because:
-    //  Subclass KbqIconButton overrides this input with `@Input({ alias: 'kbq-icon-button' })`
-    //  using a plain string, which is incompatible with InputSignal<string>.
-    //  Migrate KbqIconButton.iconName together as a follow-up.
-    @Input({ alias: 'kbq-icon' }) iconName: string | undefined;
+    iconName: string | undefined;
+
+    /** @docs-private */
+    readonly autoColorInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'autoColor',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon' });
 
     /**
      * Whether the host gets an inline `max-height` matching the icon size. Only the bare icon does: the
@@ -141,24 +149,52 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      * True when icon is being rendered as inline SVG.
      * @docs-private
      */
-    protected svgIcon = false;
+    // Starts from the DOM, not `false`: on a hydrated page the svg is already there, and `false`
+    // would show the font class until the async resolution catches up.
+    protected readonly svgIcon = signal(!!this.findTaggedSvg());
 
-    /** @docs-private */
-    protected readonly svgIconName = new ReplaySubject<string | undefined>(1);
+    /**
+     * Name the inline SVG is resolved for, which is `iconName` however that was set.
+     * @docs-private
+     */
+    protected get svgIconName(): string | undefined {
+        return this.iconName;
+    }
+
+    /** Resolution of the inline SVG, replaced whenever the name changes. */
+    private svgIconSubscription = Subscription.EMPTY;
+
+    /** The `<svg>` injected for the resolved name — or already on the host, tagged, from SSR. */
+    private injectedSvg: SVGElement | null = this.findTaggedSvg();
+
+    /** Whether the content is initialized, which is when the inline SVG is first resolved. */
+    private contentInitialized = false;
+
+    constructor() {
+        super();
+
+        this.destroyRef.onDestroy(() => this.svgIconSubscription.unsubscribe());
+    }
 
     getHostElement() {
         return this.elementRef.nativeElement;
     }
 
+    /** An `<svg>` already on the host, tagged with the name it renders — e.g. one SSR left behind. */
+    private findTaggedSvg(): SVGElement | null {
+        return this.getHostElement().querySelector(`svg[${ICON_NAME_ATTRIBUTE}]`);
+    }
+
     /**
-     * Sets the icon name outside of the template, keeping the SVG resolution stream in sync.
-     * `ngOnChanges` does not run for values assigned in a constructor, so subclasses have to use this.
+     * Sets the icon name from code and resolves its inline SVG again. Before the content is initialized,
+     * assigning `iconName` does the same.
      *
      * @docs-private
      */
     protected setIconName(name: string): void {
         this.iconName = name;
-        this.svgIconName.next(name);
+
+        if (this.contentInitialized) this.resolveSvgIcon();
     }
 
     /** @docs-private */
@@ -179,102 +215,90 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.iconName) {
-            this.svgIconName.next(changes['iconName'].currentValue);
-        }
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        // A bound `undefined` is a value as well: auto color turns off and the icon is removed.
+        if (changes['autoColorInput']) this.autoColor = this.autoColorInput() ?? false;
 
-        // A name change reaches `updateMaxHeight` through the resolution stream; an explicit size does not.
-        if (changes.iconSize && this.contentInitialized) {
-            this.updateMaxHeight();
-        }
+        // A name change reaches the size through the resolution; an explicit size resolves nothing.
+        if (changes['iconSize'] && this.contentInitialized) this.applyIconSize();
+
+        if (changes['iconNameInput']) this.setIconName(this.iconNameInput() ?? '');
     }
 
     ngAfterContentInit(): void {
-        this.contentInitialized = true;
-        this.destroyRef.onDestroy(() => this.errorStateSubscription?.unsubscribe());
-
-        if (this.autoColorEnabled) {
-            this.trackErrorState();
-        }
-
         this.updateMaxHeight();
 
-        this.svgIconName
-            .pipe(
-                // `catchError` inside the `switchMap` keeps an unresolved name from completing the outer
-                // subscription: in the default font-icon setup every name is unresolved, so a terminal
-                // `error` callback would leave the icon unable to render any later name at all.
-                //
-                // `defer` puts the lookup itself inside the inner observable, so a consumer-supplied
-                // resolver that throws is caught here too rather than escaping the `switchMap` project
-                // function — where it would reach the outer subscription and kill it for good.
-                switchMap((name) =>
-                    this.registry && name
-                        ? defer(() => this.registry!.getNamedSvgIcon(name)).pipe(catchError(() => of(null)))
-                        : of(null)
-                ),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe((svg) => this.renderSvgIcon(svg));
+        this.contentInitialized = true;
+        this.resolveSvgIcon();
+    }
+
+    /** Renders `svgIconName` as inline SVG when the registry knows it, dropping a resolution still pending. */
+    private resolveSvgIcon(): void {
+        const name = this.svgIconName;
+
+        this.svgIconSubscription.unsubscribe();
+
+        if (!this.registry || !name) {
+            this.renderSvgIcon(null);
+
+            return;
+        }
+
+        const registry = this.registry;
+
+        // Deferred so that a resolver or a literal that throws falls back to the font class as well, and the
+        // next name is resolved again.
+        this.svgIconSubscription = defer(() => registry.getNamedSvgIcon(name)).subscribe({
+            next: (svg) => this.renderSvgIcon(svg),
+            error: () => this.renderSvgIcon(null)
+        });
     }
 
     /** Injects the resolved `<svg>`, or drops back to the font class when the name did not resolve. */
     private renderSvgIcon(svg: SVGElement | null): void {
         const host = this.getHostElement();
-        const previous = host.querySelector('svg');
+        const previous = this.injectedSvg;
 
+        // A matching svg is already there (SSR's, most likely) — leave it rather than replace it,
+        // which would duplicate it if the replacement raced the DOM it's reusing.
+        if (previous && svg && previous.getAttribute(ICON_NAME_ATTRIBUTE) === this.iconName) {
+            this.svgIcon.set(true);
+            this.applyIconSize();
+
+            return;
+        }
+
+        // Only the element injected here (or adopted above): an `<svg>` projected into the host is
+        // the consumer's content.
         if (previous) {
             this.renderer.removeChild(host, previous);
         }
 
-        this.svgIcon = !!svg;
+        this.injectedSvg = svg;
+        this.svgIcon.set(!!svg);
 
         if (svg) {
-            const size = this.resolveIconSize();
-
-            if (size !== undefined) {
-                this.renderer.setAttribute(svg, 'width', `${size}`);
-                this.renderer.setAttribute(svg, 'height', `${size}`);
+            if (this.iconName) {
+                this.renderer.setAttribute(svg, ICON_NAME_ATTRIBUTE, this.iconName);
             }
 
             this.renderer.insertBefore(host, svg, host.firstChild);
         }
 
-        this.updateMaxHeight();
-        this.changeDetectorRef.markForCheck();
+        this.applyIconSize();
     }
 
-    private trackErrorState(): void {
-        this.errorStateSubscription?.unsubscribe();
-        this.errorStateSubscription = null;
+    /** Sizes the injected `<svg>` and the host's `max-height` to the resolved icon size. */
+    private applyIconSize(): void {
+        const size = this.resolveIconSize();
+        const svg = this.injectedSvg;
 
-        if (!this.autoColorEnabled) {
-            this.setHasError(false);
-
-            return;
+        if (svg && size !== undefined) {
+            this.renderer.setAttribute(svg, 'width', `${size}`);
+            this.renderer.setAttribute(svg, 'height', `${size}`);
         }
 
-        const context = this.errorStateContext;
-
-        if (!context) return;
-
-        // `errorState` and `stateChanges` are read back off the context on every emission: the form field
-        // exposes both as getters over the control it currently holds, which can be replaced at runtime.
-        // Torn down by the `onDestroy` registered in `ngAfterContentInit`, so that toggling `autoColor`
-        // does not pile up one destroy callback per toggle.
-        this.errorStateSubscription = context.stateChanges.subscribe(() => this.setHasError(context.errorState));
-
-        this.setHasError(context.errorState);
-    }
-
-    // Writes unconditionally, with no `value === this.hasError` guard: `markForCheck()` here is the only
-    // thing that wakes an `OnPush` ancestor whose own state changed but whose icon-button children read it
-    // through a plain (non-signal) property — `kbq-stepper`'s arrows disable through `control().disabled`
-    // this way, with no signal of their own to trigger a recheck. Skipping the call when `hasError` does
-    // not change would silently strand them at whatever `disabled` they had on creation.
-    private setHasError(value: boolean): void {
-        this.hasError = value;
-        this.changeDetectorRef.markForCheck();
+        this.updateMaxHeight();
     }
 
     private resolveIconSize(): number | undefined {

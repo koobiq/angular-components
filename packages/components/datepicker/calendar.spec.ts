@@ -46,7 +46,7 @@ describe('KbqCalendar', () => {
         it(`should update today's date`, () => {
             let fakeToday = adapter.createDate(2018, 0, 1);
 
-            jest.spyOn(adapter, 'today').mockImplementation(() => fakeToday);
+            vi.spyOn(adapter, 'today').mockImplementation(() => fakeToday);
 
             calendarInstance.activeDate = fakeToday;
             calendarInstance.updateTodaysDate();
@@ -82,7 +82,7 @@ describe('KbqCalendar', () => {
         });
 
         it('should complete the stateChanges stream', () => {
-            const spy = jest.fn();
+            const spy = vi.fn();
             const subscription = calendarInstance.stateChanges.subscribe({ complete: spy });
 
             fixture.destroy();
@@ -97,7 +97,6 @@ describe('KbqCalendar', () => {
 
                 beforeEach(() => {
                     calendarBodyEl = calendarElement.querySelector('.kbq-calendar__content') as HTMLElement;
-                    expect(calendarBodyEl).not.toBeNull();
 
                     dispatchFakeEvent(calendarBodyEl, 'focus');
                     fixture.detectChanges();
@@ -214,7 +213,7 @@ describe('KbqCalendar', () => {
 
         it('should re-render the month view when the minDate changes', () => {
             fixture.detectChanges();
-            const initSpyFn = jest.spyOn(calendarInstance.monthView(), 'init');
+            const initSpyFn = vi.spyOn(calendarInstance.monthView(), 'init');
 
             testComponent.minDate = adapter.createDate(2017, 10, 1);
             fixture.detectChanges();
@@ -224,12 +223,29 @@ describe('KbqCalendar', () => {
 
         it('should re-render the month view when the maxDate changes', () => {
             fixture.detectChanges();
-            const initSpyFn = jest.spyOn(calendarInstance.monthView(), 'init');
+            const initSpyFn = vi.spyOn(calendarInstance.monthView(), 'init');
 
             testComponent.maxDate = adapter.createDate(2017, 11, 1);
             fixture.detectChanges();
 
             expect(initSpyFn).toHaveBeenCalled();
+        });
+
+        it('should lift the min date when its binding becomes unset', () => {
+            const disabledCells = () =>
+                calendarElement.querySelectorAll('.kbq-calendar__body-cell-content.kbq-disabled');
+
+            testComponent.startAt = adapter.createDate(2016, 0, 1);
+            testComponent.minDate = adapter.createDate(2016, 0, 15);
+            fixture.detectChanges();
+
+            expect(disabledCells().length).toBe(14);
+
+            testComponent.minDate = undefined;
+            fixture.detectChanges();
+
+            expect(calendarInstance.minDate).toBeNull();
+            expect(disabledCells().length).toBe(0);
         });
 
         it('should update the minDate in the child view if it changed after an interaction', () => {
@@ -297,7 +313,6 @@ describe('KbqCalendar', () => {
 
             beforeEach(() => {
                 tableBodyEl = calendarElement.querySelector('.kbq-calendar__body') as HTMLElement;
-                expect(tableBodyEl).not.toBeNull();
 
                 dispatchFakeEvent(tableBodyEl, 'focus');
                 fixture.detectChanges();
@@ -359,7 +374,7 @@ class CalendarWithMinMax {
     adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
 
     startAt: DateTime;
-    minDate = this.adapter.createDate(2016, 0, 1);
+    minDate: DateTime | undefined = this.adapter.createDate(2016, 0, 1);
     maxDate = this.adapter.createDate(2018, 0, 1);
 }
 

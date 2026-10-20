@@ -3,6 +3,7 @@ import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import {
     BEHAVIOUR_NOTE,
     COMPONENT_MENTIONS,
@@ -315,8 +316,7 @@ export default function localeConfigurationProviders(options: Schema): Rule {
         const rootDir = root ? tree.getDir(root as Path) : tree.root;
         const filePaths: Path[] = [];
 
-        rootDir.visit((filePath: Path) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
+        visitProjectFiles(rootDir, (filePath: Path) => {
             if (!filePath.endsWith(TS_EXT) && !filePath.endsWith(HTML_EXT)) return;
 
             filePaths.push(filePath);
