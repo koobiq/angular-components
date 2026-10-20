@@ -1,16 +1,22 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { Component, viewChild } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { Component, ErrorHandler, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter, Router } from '@angular/router';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import type { Mock } from 'vitest';
 import { DocsVersionPickerDirective } from './version-picker.directive';
 
 const VERSIONS = {
+    '18': { version: '18.39.5', date: '2026-06-01T09:36:28.529Z', url: 'https://v18.koobiq.io/' },
     '19': { version: '19.8.1', date: '2026-06-09T17:42:13.456Z', url: 'https://v19.koobiq.io/' },
     '20': { version: '20.0.0', date: '2026-06-17T16:18:32.278Z', url: 'https://v20.koobiq.io/' },
     next: { version: 'Next', url: 'https://next.koobiq.io' }
 };
+
+const PAGE = '/en/components/button/api?tab=1#inputs';
+
+const sitemapOf = (host: string): string => `<urlset><url><loc>${host}/en/components/button/api</loc></url></urlset>`;
 
 @Component({
     selector: 'docs-test-app',
@@ -23,42 +29,44 @@ class TestApp {
 
 describe(DocsVersionPickerDirective.name, () => {
     let assign: Mock;
+    let handleError: Mock;
     let httpMock: HttpTestingController;
+    let fixture: ComponentFixture<TestApp>;
     let picker: DocsVersionPickerDirective;
 
     const pick = (name: string): void => picker.goToVersion(picker.versions.find((version) => version.name === name)!);
 
     beforeEach(async () => {
-        const { href, pathname, search, hash } = new URL(
-            'https://next.koobiq.io/en/components/button/api?tab=1#inputs'
-        );
-
         assign = vi.fn();
+        handleError = vi.fn();
         TestBed.configureTestingModule({
             providers: [
                 provideHttpClient(),
                 provideHttpClientTesting(),
-                { provide: KBQ_WINDOW, useValue: { location: { href, pathname, search, hash, assign } } }
+                provideRouter([{ path: '**', children: [] }]),
+                { provide: ErrorHandler, useValue: { handleError } },
+                { provide: KBQ_WINDOW, useValue: { location: { href: `https://next.koobiq.io${PAGE}`, assign } } }
             ]
         });
         httpMock = TestBed.inject(HttpTestingController);
+        await TestBed.inject(Router).navigateByUrl(PAGE);
 
-        const fixture = TestBed.createComponent(TestApp);
-
+        fixture = TestBed.createComponent(TestApp);
         await fixture.whenStable();
         httpMock.expectOne('https://next.koobiq.io/assets/versions.json').flush(VERSIONS);
         picker = fixture.componentInstance.picker();
     });
 
-    afterEach(() => httpMock.verify());
+    afterEach(() => {
+        vi.useRealTimers();
+        httpMock.verify();
+    });
 
     it('opens the same page in the picked version', () => {
         pick('20');
-        httpMock
-            .expectOne('https://koobiq.io/sitemap.xml')
-            .flush('<urlset><url><loc>https://koobiq.io/en/components/button/api</loc></url></urlset>');
+        httpMock.expectOne('https://koobiq.io/sitemap.xml').flush(sitemapOf('https://koobiq.io'));
 
-        expect(assign).toHaveBeenCalledWith('https://koobiq.io/en/components/button/api?tab=1#inputs');
+        expect(assign).toHaveBeenCalledWith(`https://koobiq.io${PAGE}`);
     });
 
     it('stays on the page when the current version is picked', () => {
@@ -67,11 +75,54 @@ describe(DocsVersionPickerDirective.name, () => {
         expect(assign).not.toHaveBeenCalled();
     });
 
-    it('opens the home page of a version whose sitemap it cannot read', () => {
+    it('marks the picker busy until the picked version answers', () => {
+        pick('19');
+        fixture.detectChanges();
+
+        expect(picker.pending()).toBe(true);
+        expect(fixture.nativeElement.querySelector('[docsVersionPicker]').getAttribute('aria-busy')).toBe('true');
+
+        httpMock.expectOne('https://v19.koobiq.io/sitemap.xml').flush(sitemapOf('https://koobiq.io'));
+        fixture.detectChanges();
+
+        expect(picker.pending()).toBe(false);
+        expect(fixture.nativeElement.querySelector('[docsVersionPicker]').hasAttribute('aria-busy')).toBe(false);
+    });
+
+    it('opens the version picked last, whichever answers first', () => {
+        pick('19');
+        const first = httpMock.expectOne('https://v19.koobiq.io/sitemap.xml');
+
+        pick('18');
+        httpMock.expectOne('https://v18.koobiq.io/sitemap.xml').flush(sitemapOf('https://koobiq.io'));
+        first.flush(sitemapOf('https://koobiq.io'));
+
+        expect(assign).toHaveBeenCalledExactlyOnceWith(`https://v18.koobiq.io${PAGE}`);
+    });
+
+    it('reads the sitemaps of the other versions once the dropdown opens, and once only', () => {
+        picker.prefetch();
+        const requests = ['https://v18.koobiq.io', 'https://v19.koobiq.io', 'https://koobiq.io'].map((host) =>
+            httpMock.expectOne(`${host}/sitemap.xml`)
+        );
+
+        requests.forEach((request) => request.flush(sitemapOf('https://koobiq.io')));
+        picker.prefetch();
+        pick('19');
+
+        expect(assign).toHaveBeenCalledWith(`https://v19.koobiq.io${PAGE}`);
+    });
+
+    it('opens the home page of a version whose sitemap it cannot read, and tries again on the next pick', () => {
         pick('19');
         httpMock.expectOne('https://v19.koobiq.io/sitemap.xml').error(new ProgressEvent('error'));
 
         expect(assign).toHaveBeenCalledWith('https://v19.koobiq.io/');
+
+        pick('19');
+        httpMock.expectOne('https://v19.koobiq.io/sitemap.xml').flush(sitemapOf('https://koobiq.io'));
+
+        expect(assign).toHaveBeenLastCalledWith(`https://v19.koobiq.io${PAGE}`);
     });
 
     it('opens the home page of a version whose sitemap does not answer in time', async () => {
@@ -82,9 +133,19 @@ describe(DocsVersionPickerDirective.name, () => {
         const request = httpMock.expectOne('https://v19.koobiq.io/sitemap.xml');
 
         await vi.advanceTimersByTimeAsync(3000);
-        vi.useRealTimers();
 
         expect(request.cancelled).toBe(true);
+        expect(assign).toHaveBeenCalledWith('https://v19.koobiq.io/');
+    });
+
+    it('reports a sitemap it cannot parse and still opens the version', () => {
+        pick('19');
+        httpMock
+            .expectOne('https://v19.koobiq.io/sitemap.xml')
+            .flush('<urlset><url><loc>https://[</loc></url></urlset>');
+
+        // Thrown by the URL of the test environment, whose TypeError is not the one of this realm.
+        expect(handleError).toHaveBeenCalledWith(expect.objectContaining({ name: 'TypeError' }));
         expect(assign).toHaveBeenCalledWith('https://v19.koobiq.io/');
     });
 });

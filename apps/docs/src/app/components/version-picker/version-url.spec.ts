@@ -1,4 +1,4 @@
-import { docsGetVersionPageUrl, docsParseSitemapPaths } from './version-url';
+import { docsGetVersionPageUrl, docsGetVersionSitemapUrl, docsParseSitemapPaths } from './version-url';
 
 const SITEMAP = `<?xml version="1.0" encoding="UTF-8" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -13,9 +13,6 @@ const SITEMAP = `<?xml version="1.0" encoding="UTF-8" ?>
 	<url><loc>https://koobiq.io/ru/components/button/overview</loc></url>
 </urlset>`;
 
-const location = (url: string): Pick<Location, 'pathname' | 'search' | 'hash'> =>
-    new URL(url, 'https://next.koobiq.io');
-
 describe(docsParseSitemapPaths.name, () => {
     it('reads the path of every page, whatever host and trailing slash the sitemap gives it', () => {
         expect(docsParseSitemapPaths(SITEMAP)).toEqual(
@@ -29,6 +26,16 @@ describe(docsParseSitemapPaths.name, () => {
                 '/ru/components/button/overview'
             ])
         );
+    });
+});
+
+describe(docsGetVersionSitemapUrl.name, () => {
+    it.each([
+        ['https://koobiq.io/', 'https://koobiq.io/sitemap.xml'],
+        ['https://next.koobiq.io', 'https://next.koobiq.io/sitemap.xml'],
+        ['https://koobiq.io/v19', 'https://koobiq.io/v19/sitemap.xml']
+    ])('finds the sitemap of %s', (versionUrl, sitemapUrl) => {
+        expect(docsGetVersionSitemapUrl(versionUrl)).toBe(sitemapUrl);
     });
 });
 
@@ -53,19 +60,20 @@ describe(docsGetVersionPageUrl.name, () => {
         ['the home page of a locale the sitemap leaves out', '/ru', '/ru'],
         ['the root for a page outside every locale', '/examples/button-overview', '/'],
         ['the root for the 404 page', '/404', '/']
-    ])('opens %s', (_name, from, to) => {
-        expect(docsGetVersionPageUrl(location(from), 'https://koobiq.io/', pagePaths)).toBe(`https://koobiq.io${to}`);
+    ])('opens %s', (_name, appUrl, page) => {
+        expect(docsGetVersionPageUrl(appUrl, 'https://koobiq.io/', pagePaths)).toBe(`https://koobiq.io${page}`);
     });
 
     it('opens the root of a version whose pages it does not know', () => {
-        expect(docsGetVersionPageUrl(location('/en/components/button/api'), 'https://v19.koobiq.io/', null)).toBe(
+        expect(docsGetVersionPageUrl('/en/components/button/api', 'https://v19.koobiq.io/', null)).toBe(
             'https://v19.koobiq.io/'
         );
     });
 
-    it('builds the address on a version URL without a trailing slash', () => {
-        expect(docsGetVersionPageUrl(location('/en/components/button/api'), 'https://next.koobiq.io', pagePaths)).toBe(
-            'https://next.koobiq.io/en/components/button/api'
-        );
+    it.each([
+        ['without a trailing slash', 'https://next.koobiq.io', 'https://next.koobiq.io/en/components/button/api'],
+        ['below the root of its host', 'https://koobiq.io/v19', 'https://koobiq.io/v19/en/components/button/api']
+    ])('opens the page in a version whose URL is %s', (_name, versionUrl, page) => {
+        expect(docsGetVersionPageUrl('/en/components/button/api', versionUrl, pagePaths)).toBe(page);
     });
 });

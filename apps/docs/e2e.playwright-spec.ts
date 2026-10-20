@@ -347,7 +347,7 @@ test.describe('docs app', () => {
     test('opens the same page in the version picked in the footer', async ({ page }) => {
         const pageUrl = 'https://koobiq.io/en/components/select/api';
 
-        // The committed version list makes 20 the latest version, which koobiq.io serves.
+        // The picker sends the latest version to koobiq.io, whichever version the committed list makes the latest.
         await page.route('https://koobiq.io/sitemap.xml', (route) =>
             route.fulfill({
                 contentType: 'application/xml',
@@ -361,7 +361,7 @@ test.describe('docs app', () => {
         await waitForHydration(page);
 
         await page.locator('docs-sidenav .docs-footer__control').last().click();
-        await dropdownItem(page, '20').click();
+        await dropdownItem(page, '(latest)').click();
 
         await expect(page).toHaveURL(pageUrl);
     });

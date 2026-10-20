@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { afterNextRender, ChangeDetectorRef, DestroyRef, Directive, inject } from '@angular/core';
+import { afterNextRender, ChangeDetectorRef, DestroyRef, Directive, ErrorHandler, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 import { KBQ_WINDOW } from '@koobiq/components/core';
-import { catchError, map, of, timeout } from 'rxjs';
-import { docsGetVersionPageUrl, docsParseSitemapPaths } from './version-url';
+import { catchError, map, Observable, of, shareReplay, Subscription, timeout } from 'rxjs';
+import { docsGetVersionPageUrl, docsGetVersionSitemapUrl, docsParseSitemapPaths } from './version-url';
 
-/** How long a click on a version waits for its sitemap before it opens the home page of that version. */
+/** How long a picked version waits for its sitemap before the reader is taken to its home page. */
 const SITEMAP_TIMEOUT = 3000;
 
 type DocsVersion = {
@@ -19,6 +20,9 @@ type DocsVersion = {
 
 @Directive({
     selector: '[docsVersionPicker]',
+    host: {
+        '[attr.aria-busy]': 'pending() || null'
+    },
     exportAs: 'docsVersionPicker'
 })
 export class DocsVersionPickerDirective {
@@ -26,10 +30,19 @@ export class DocsVersionPickerDirective {
     versions: DocsVersion[] = [];
     isNext: boolean = false;
 
+    /** Whether a picked version is still being checked for the page the reader is on. */
+    readonly pending = signal(false);
+
     private readonly httpClient = inject(HttpClient);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly window = inject(KBQ_WINDOW);
+    private readonly router = inject(Router);
+    private readonly errorHandler = inject(ErrorHandler);
     private readonly destroyRef = inject(DestroyRef);
+
+    /** Pages of each version read so far, by version URL. */
+    private readonly pagePaths = new Map<string, Observable<Set<string> | null>>();
+    private navigation = Subscription.EMPTY;
 
     constructor() {
         // Fetches an external, non-local URL: must never run during SSR/prerendering, or a
@@ -67,22 +80,55 @@ export class DocsVersionPickerDirective {
             });
     }
 
+    /** Starts reading the pages of the other versions, so that picking one does not wait for them. */
+    prefetch(): void {
+        this.versions
+            .filter(({ selected }) => !selected)
+            .forEach(({ url }) => this.getPagePaths(url).pipe(takeUntilDestroyed(this.destroyRef)).subscribe());
+    }
+
     /** Opens the page the reader is on in the given version, or the closest page that version has. */
     goToVersion(version: DocsVersion): void {
         if (version.selected) return;
 
-        this.httpClient
-            .get(new URL('/sitemap.xml', version.url).href, { responseType: 'text' })
-            .pipe(
+        // The version picked last wins, whichever answers first.
+        this.navigation.unsubscribe();
+        this.pending.set(true);
+        this.navigation = this.getPagePaths(version.url)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((pagePaths) => {
+                // Cleared before leaving, or a page restored from the back-forward cache would keep spinning.
+                this.pending.set(false);
+                this.window.location.assign(docsGetVersionPageUrl(this.router.url, version.url, pagePaths));
+            });
+    }
+
+    private getPagePaths(versionUrl: string): Observable<Set<string> | null> {
+        let pagePaths = this.pagePaths.get(versionUrl);
+
+        if (!pagePaths) {
+            pagePaths = this.httpClient.get(docsGetVersionSitemapUrl(versionUrl), { responseType: 'text' }).pipe(
                 timeout(SITEMAP_TIMEOUT),
-                map(docsParseSitemapPaths),
-                // A version deployed before its sitemap was shared with other origins cannot be checked: its home page.
-                catchError(() => of(null)),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe((pagePaths) =>
-                this.window.location.assign(docsGetVersionPageUrl(this.window.location, version.url, pagePaths))
+                // Unreachable, too slow, or not shared with other origins, like a version deployed before it was:
+                // nothing to check the page against. Not kept, so that a later pick tries again.
+                catchError(() => {
+                    this.pagePaths.delete(versionUrl);
+
+                    return of(null);
+                }),
+                map((sitemap) => (sitemap === null ? null : docsParseSitemapPaths(sitemap))),
+                // A sitemap that does not parse is a bug to hear about, but the reader still gets to the version.
+                catchError((error: unknown) => {
+                    this.errorHandler.handleError(error);
+
+                    return of(null);
+                }),
+                shareReplay(1)
             );
+            this.pagePaths.set(versionUrl, pagePaths);
+        }
+
+        return pagePaths;
     }
 
     private setSelectedVersion(): void {

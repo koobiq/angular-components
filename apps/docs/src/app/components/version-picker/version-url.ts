@@ -1,40 +1,55 @@
+/** Host the sitemap of every version names, whatever host serves that version. */
+const CANONICAL_ORIGIN = 'https://koobiq.io';
+
 const trimTrailingSlash = (path: string): string => (path.length > 1 ? path.replace(/\/+$/, '') : path);
 
-/** Paths of the pages a docs version lists in its sitemap, whose URLs name the canonical host whatever the version. */
+/**
+ * Resolves an address of the docs app, which starts with a slash, in a version. The version URL is taken as a
+ * directory, so a version kept below the root of its host keeps its own path.
+ */
+const resolveInVersion = (appUrl: string, versionUrl: string): string =>
+    new URL(`.${appUrl}`, versionUrl.endsWith('/') ? versionUrl : `${versionUrl}/`).href;
+
+/** Address of the sitemap of a docs version. */
+export const docsGetVersionSitemapUrl = (versionUrl: string): string => resolveInVersion('/sitemap.xml', versionUrl);
+
+/** Paths of the pages a docs version lists in its sitemap, relative to the root of the docs app. */
 export const docsParseSitemapPaths = (xml: string): Set<string> =>
     new Set(
         Array.from(xml.matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/g), ([, loc]) =>
-            trimTrailingSlash(new URL(loc, 'https://koobiq.io').pathname)
+            trimTrailingSlash(new URL(loc, CANONICAL_ORIGIN).pathname)
         )
     );
 
 /**
- * Address of the open page in another docs version: the same page when the version has it, else the first page of the
- * same item (its overview, or the first tab of the design tokens), else the home page in the same locale, else the
- * root. Without the pages of the version to check against, the root.
+ * Address in another docs version of the page at `appUrl` (as the router gives it): the same page when the version
+ * has it, else the first page of the same item (its overview, or the first tab of the design tokens), else the home
+ * page in the same locale, else the root. Without the pages of the version to check against, the root.
  */
-export const docsGetVersionPageUrl = (
-    { pathname, search, hash }: Pick<Location, 'pathname' | 'search' | 'hash'>,
-    versionUrl: string,
-    pagePaths: Set<string> | null
-): string => {
-    const toVersion = (path: string): string => new URL(path, versionUrl).href;
+export const docsGetVersionPageUrl = (appUrl: string, versionUrl: string, pagePaths: Set<string> | null): string => {
+    if (!pagePaths) return resolveInVersion('/', versionUrl);
 
-    if (!pagePaths) return toVersion('/');
-
+    const { pathname, search, hash } = new URL(appUrl, CANONICAL_ORIGIN);
     const path = trimTrailingSlash(pathname);
 
-    if (pagePaths.has(path)) return toVersion(`${path}${search}${hash}`);
+    if (pagePaths.has(path)) return resolveInVersion(`${path}${search}${hash}`, versionUrl);
 
-    const firstPageUnder = (prefix: string): string | undefined =>
-        Array.from(pagePaths).find((pagePath) => pagePath.startsWith(`${prefix}/`));
+    const firstPageUnder = (prefix: string): string | undefined => {
+        for (const pagePath of pagePaths) {
+            if (pagePath.startsWith(`${prefix}/`)) return pagePath;
+        }
+
+        return undefined;
+    };
     const [locale, category, id] = path.split('/').slice(1);
     const itemPage = id && firstPageUnder(`/${locale}/${category}/${id}`);
 
-    if (itemPage) return toVersion(itemPage);
+    if (itemPage) return resolveInVersion(itemPage, versionUrl);
 
     // A version may leave the home page of a locale out of its sitemap while still serving the locale.
-    if (locale && (pagePaths.has(`/${locale}`) || firstPageUnder(`/${locale}`))) return toVersion(`/${locale}`);
+    if (locale && (pagePaths.has(`/${locale}`) || firstPageUnder(`/${locale}`))) {
+        return resolveInVersion(`/${locale}`, versionUrl);
+    }
 
-    return toVersion('/');
+    return resolveInVersion('/', versionUrl);
 };

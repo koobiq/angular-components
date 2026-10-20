@@ -68,12 +68,17 @@
             class="docs-footer__control kbq-text-big"
             [class.kbq-active]="versionDropdownDropdownTrigger.opened"
             [kbqDropdownTriggerFor]="versionDropdown"
+            (dropdownOpened)="versionPicker.prefetch()"
         >
             {{ version }}
             @if (versionPicker.isNext) {
                 <span>.next</span>
             }
-            <i kbq-icon="kbq-chevron-down-s_16" [color]="'contrast'"></i>
+            @if (versionPicker.pending()) {
+                <kbq-progress-spinner mode="indeterminate" [color]="'contrast'" />
+            } @else {
+                <i kbq-icon="kbq-chevron-down-s_16" [color]="'contrast'"></i>
+            }
 
             <kbq-dropdown #versionDropdown="kbqDropdown" [class]="'docs-dropdown'">
                 <div class="kbq-dropdown__group-header">
