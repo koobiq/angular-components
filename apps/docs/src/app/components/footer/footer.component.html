@@ -74,11 +74,7 @@
             @if (versionPicker.isNext) {
                 <span>.next</span>
             }
-            @if (versionPicker.pending()) {
-                <kbq-progress-spinner mode="indeterminate" [color]="'contrast'" />
-            } @else {
-                <i kbq-icon="kbq-chevron-down-s_16" [color]="'contrast'"></i>
-            }
+            <i kbq-icon="kbq-chevron-down-s_16" [color]="'contrast'"></i>
 
             <kbq-dropdown #versionDropdown="kbqDropdown" [class]="'docs-dropdown'">
                 <div class="kbq-dropdown__group-header">

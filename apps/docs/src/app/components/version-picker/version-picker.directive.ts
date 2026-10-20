@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { afterNextRender, ChangeDetectorRef, DestroyRef, Directive, ErrorHandler, inject, signal } from '@angular/core';
+import { afterNextRender, ChangeDetectorRef, DestroyRef, Directive, ErrorHandler, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { KBQ_WINDOW } from '@koobiq/components/core';
@@ -20,18 +20,12 @@ type DocsVersion = {
 
 @Directive({
     selector: '[docsVersionPicker]',
-    host: {
-        '[attr.aria-busy]': 'pending() || null'
-    },
     exportAs: 'docsVersionPicker'
 })
 export class DocsVersionPickerDirective {
     selected: DocsVersion;
     versions: DocsVersion[] = [];
     isNext: boolean = false;
-
-    /** Whether a picked version is still being checked for the page the reader is on. */
-    readonly pending = signal(false);
 
     private readonly httpClient = inject(HttpClient);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -42,6 +36,8 @@ export class DocsVersionPickerDirective {
 
     /** Pages of each version read so far, by version URL. */
     private readonly pagePaths = new Map<string, Observable<Set<string> | null>>();
+    /** Versions whose sitemap could not be read, tried again the next time the dropdown opens. */
+    private readonly failed = new Set<string>();
     private navigation = Subscription.EMPTY;
 
     constructor() {
@@ -82,6 +78,9 @@ export class DocsVersionPickerDirective {
 
     /** Starts reading the pages of the other versions, so that picking one does not wait for them. */
     prefetch(): void {
+        this.failed.forEach((url) => this.pagePaths.delete(url));
+        this.failed.clear();
+
         this.versions
             .filter(({ selected }) => !selected)
             .forEach(({ url }) => this.getPagePaths(url).pipe(takeUntilDestroyed(this.destroyRef)).subscribe());
@@ -93,14 +92,11 @@ export class DocsVersionPickerDirective {
 
         // The version picked last wins, whichever answers first.
         this.navigation.unsubscribe();
-        this.pending.set(true);
         this.navigation = this.getPagePaths(version.url)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((pagePaths) => {
-                // Cleared before leaving, or a page restored from the back-forward cache would keep spinning.
-                this.pending.set(false);
-                this.window.location.assign(docsGetVersionPageUrl(this.router.url, version.url, pagePaths));
-            });
+            .subscribe((pagePaths) =>
+                this.window.location.assign(docsGetVersionPageUrl(this.router.url, version.url, pagePaths))
+            );
     }
 
     private getPagePaths(versionUrl: string): Observable<Set<string> | null> {
@@ -110,9 +106,9 @@ export class DocsVersionPickerDirective {
             pagePaths = this.httpClient.get(docsGetVersionSitemapUrl(versionUrl), { responseType: 'text' }).pipe(
                 timeout(SITEMAP_TIMEOUT),
                 // Unreachable, too slow, or not shared with other origins, like a version deployed before it was:
-                // nothing to check the page against. Not kept, so that a later pick tries again.
+                // nothing to check the page against. Kept, so that a pick does not wait for it again.
                 catchError(() => {
-                    this.pagePaths.delete(versionUrl);
+                    this.failed.add(versionUrl);
 
                     return of(null);
                 }),
