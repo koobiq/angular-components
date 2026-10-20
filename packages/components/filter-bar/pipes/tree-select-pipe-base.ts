@@ -26,7 +26,7 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
     dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
 
     /** @docs-private */
-    readonly select = viewChild.required(KbqTreeSelect);
+    readonly select = viewChild.required<KbqTreeSelect<KbqTreeSelectFlatNode>>(KbqTreeSelect);
 
     constructor() {
         super();

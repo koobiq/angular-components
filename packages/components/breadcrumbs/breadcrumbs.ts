@@ -69,6 +69,7 @@ export const kbqBreadcrumbsConfigurationProvider = (configuration: Partial<KbqBr
     }
 })
 export class KbqBreadcrumbsSeparator {
+    // TODO: the library reads the template with `{ read: TemplateRef }`; kept as public API at the DS-2196 review.
     readonly templateRef = inject<TemplateRef<unknown>>(TemplateRef);
 }
 
@@ -112,6 +113,7 @@ export class KbqBreadcrumbButton implements OnInit {
     selector: '[kbqBreadcrumbView]'
 })
 export class KbqBreadcrumbView {
+    // TODO: the library reads the template with `{ read: TemplateRef }`; kept as public API at the DS-2196 review.
     readonly templateRef = inject<TemplateRef<unknown>>(TemplateRef);
 }
 

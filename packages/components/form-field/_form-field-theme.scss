@@ -97,9 +97,7 @@
         }
 
         // Invalid by control `ErrorStateMatcher`
-        &.kbq-form-field_invalid,
-        // Invalid by `KbqValidateDirective`
-        &.kbq-form-field_has-validate-directive.ng-invalid {
+        &.kbq-form-field_invalid {
             @include _kbq-form-field-state(states-error);
         }
 
@@ -122,9 +120,7 @@
                 }
 
                 // Invalid by control `ErrorStateMatcher`
-                &.kbq-form-field_invalid,
-                // Invalid by `KbqValidateDirective`
-                &.kbq-form-field_has-validate-directive.ng-invalid {
+                &.kbq-form-field_invalid {
                     @include _kbq-form-field-state(states-error);
 
                     &.cdk-focused .kbq-form-field__container {

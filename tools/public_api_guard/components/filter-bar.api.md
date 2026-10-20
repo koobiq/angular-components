@@ -333,7 +333,6 @@ export class KbqFilters implements OnInit {
     get showFilterSavingError(): boolean;
     set showFilterSavingError(value: boolean);
     stopEventPropagation(event: Event): void;
-    protected readonly styles: typeof KbqButtonStyles;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilters, "kbq-filters", ["kbqFilters"], { "filters": { "alias": "filters"; "required": true; "isSignal": true; }; }, { "onSelectFilter": "onSelectFilter"; "onSave": "onSave"; "onChangeFilter": "onChangeFilter"; "onRemoveFilter": "onRemoveFilter"; "onResetFilterChanges": "onResetFilterChanges"; }, never, ["*"], true, never>;
     // (undocumented)
@@ -460,6 +459,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     // (undocumented)
     protected readonly formatter: DateFormatter<any>;
     protected formGroup: FormGroup;
+    protected readonly fromLabelId: string;
     protected abstract getDefaultEnd(): D;
     protected abstract getDefaultStart(): D;
     // (undocumented)
@@ -476,6 +476,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     ngAfterViewInit(): void;
     // (undocumented)
     onApplyPeriod(): void;
+    protected onDateInputTab(): void;
     // (undocumented)
     onFocusEndInput(): void;
     // (undocumented)
@@ -490,7 +491,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     open(): void;
     protected readonly placements: typeof PopUpPlacements;
     readonly popover: _angular_core.Signal<KbqPopoverTrigger>;
-    readonly returnButton: _angular_core.Signal<KbqButton>;
+    readonly returnButton: _angular_core.Signal<KbqButton | undefined>;
     protected readonly showEndCalendar: _angular_core.WritableSignal<boolean>;
     // (undocumented)
     showList(): void;
@@ -500,6 +501,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     get start(): D;
     get startMax(): any;
     protected readonly styles: typeof KbqButtonStyles;
+    protected readonly toLabelId: string;
     protected abstract usesTime(): boolean;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqPipeDateBaseComponent<any>, never, never, {}, {}, never, never, true, never>;
@@ -632,7 +634,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     get selectedAllEqualsSelectedNothing(): boolean;
     // (undocumented)
     toggleSelectAllNode(emitEvent?: boolean): void;
-    readonly tree: _angular_core.Signal<KbqTreeSelection>;
+    readonly tree: _angular_core.Signal<KbqTreeSelection<KbqTreeSelectFlatNode>>;
     updateTemplates: (templates: KbqPipeTemplate[] | null) => void;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeMultiTreeSelectComponent, "kbq-pipe-multi-tree-select", never, {}, {}, never, never, true, never>;
@@ -841,7 +843,7 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
     onOpen(): void;
     open(): void;
     readonly searchControl: FormControl<string | null>;
-    readonly select: _angular_core.Signal<KbqTreeSelect>;
+    readonly select: _angular_core.Signal<KbqTreeSelect<KbqTreeSelectFlatNode>>;
     // (undocumented)
     protected transformer: (node: KbqTreeSelectNode, level: number, parent: KbqTreeSelectFlatNode | null) => KbqTreeSelectFlatNode;
     // (undocumented)

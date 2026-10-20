@@ -1,12 +1,13 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { SelectionModel } from '@angular/cdk/collections';
+import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import {
     Component,
     DebugElement,
     Directive,
     DoCheck,
     effect,
+    EventEmitter,
     InputSignal,
     signal,
     Type,
@@ -46,7 +47,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqTitleDirective, KbqTitleModule } from '@koobiq/components/title';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
@@ -82,6 +83,20 @@ describe('KbqTreeSelection', () => {
             providers
         }).compileComponents();
     }
+
+    describe('node template context', () => {
+        it('should hand each node its index, as the CDK tree does', () => {
+            configureKbqTreeTestingModule();
+
+            const fixture = TestBed.createComponent(TreeWithNodeIndexApp);
+
+            fixture.detectChanges();
+
+            const indexes = getNodes(fixture.nativeElement).map((node) => node.getAttribute('data-index'));
+
+            expect(indexes).toEqual(['0', '1', '2', '3', '4']);
+        });
+    });
 
     describe('flat tree', () => {
         describe('should initialize', () => {
@@ -2217,15 +2232,8 @@ describe('KbqTreeSelection', () => {
             let fixture: ComponentFixture<TreeMultipleWithDisabledNodes>;
             let component: TreeMultipleWithDisabledNodes;
 
-            // The model is declared over `SelectionModelOption`, but what it actually holds is whatever the
-            // consumer's tree control produced — here a `FileFlatNode`. The cast documents that gap rather
-            // than pretending the declared shape is what comes back out.
             const selectedValues = () =>
-                component
-                    .tree()
-                    .selectionModel.selected.map((node) =>
-                        component.treeControl.getValue(node as unknown as FileFlatNode)
-                    );
+                component.tree().selectionModel.selected.map((node) => component.treeControl.getValue(node));
 
             const pressKey = async (keyCode: number, modifier?: 'ctrlKey' | 'shiftKey') => {
                 const event = createKeyboardEvent('keydown', keyCode);
@@ -2845,7 +2853,7 @@ describe('KbqTreeSelection', () => {
                 await vi.runOnlyPendingTimersAsync();
 
                 expect(tree().getSelectedValues()).toBe(0);
-                expect((tree().selectionModel.selected[0] as unknown as FileFlatNode).name).toBe('rootNode_1');
+                expect(tree().selectionModel.selected[0].name).toBe('rootNode_1');
             });
         });
 
@@ -3441,6 +3449,18 @@ class TreeAppWithTitle extends TreeParams {}
 class TreeAppWithTitleText extends TreeParams {}
 
 @Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node; let i = index" [attr.data-index]="i">
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeWithNodeIndexApp extends TreeParams {}
+
+@Component({
     imports: [KbqTreeModule, FormsModule],
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
@@ -3585,7 +3605,7 @@ class KbqTreeAppMultipleCheckbox extends TreeParams {
 class TreeSelectionWithFormControl extends TreeParams {
     readonly control = new FormControl<string | null>(null);
     readonly onSelectionChange = vi.fn();
-    readonly tree = viewChild.required(KbqTreeSelection);
+    readonly tree = viewChild.required<KbqTreeSelection<FileFlatNode>>(KbqTreeSelection);
 }
 
 @Component({
@@ -3806,7 +3826,7 @@ class TreeWithTrackBy {
 })
 class TreeMultipleWithDisabledNodes extends TreeParams {
     disabledNodes: string[] = [];
-    readonly tree = viewChild.required(KbqTreeSelection);
+    readonly tree = viewChild.required<KbqTreeSelection<FileFlatNode>>(KbqTreeSelection);
 }
 
 @Component({
@@ -4636,6 +4656,37 @@ describe('KbqTreeSelection inputs', () => {
         expectTypeOf<KbqTreeSelection['treeControlInput']>().toEqualTypeOf<InputSignal<FlatTreeControl<any>>>();
         expectTypeOf<KbqTree['treeControlInput']>().toEqualTypeOf<InputSignal<TreeControl<any>>>();
         expect(fixture.componentInstance.tree().treeControl).toBe(fixture.componentInstance.treeControl);
+    });
+
+    // The types are checked by `check-spec-types`. A template infers `T` from the inputs, so they carry it; a query that
+    // names the data node gets the model, the options and the event source typed by it, one that does not keeps `any`.
+    // What the model holds is the node itself, not the option.
+    it('should hold the data nodes in a selection model typed by them', async () => {
+        const fixture = TestBed.createComponent(TreeMultipleWithDisabledNodes);
+        const { tree, treeControl } = fixture.componentInstance;
+
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        tree().unorderedOptions.first.selectViaInteraction();
+
+        expectTypeOf<KbqTreeSelection<FileFlatNode>['treeControlInput']>().toEqualTypeOf<
+            InputSignal<FlatTreeControl<FileFlatNode>>
+        >();
+        expectTypeOf<KbqTreeSelection<FileFlatNode>['dataSourceInput']>().toEqualTypeOf<
+            InputSignal<DataSource<FileFlatNode> | Observable<FileFlatNode[]> | FileFlatNode[] | null | undefined>
+        >();
+        expectTypeOf<KbqTreeSelection['selectionModel']>().toEqualTypeOf<SelectionModel<any>>();
+        expectTypeOf(tree().selectionModel).toEqualTypeOf<SelectionModel<FileFlatNode>>();
+        expectTypeOf(tree().unorderedOptions.first.data).toEqualTypeOf<FileFlatNode>();
+        expectTypeOf(tree().selectionChange).toEqualTypeOf<
+            EventEmitter<KbqTreeSelectionChange<KbqTreeOption<FileFlatNode>, FileFlatNode>>
+        >();
+        expectTypeOf<KbqTreeSelectionChange<KbqTreeOption<FileFlatNode>, FileFlatNode>['source']>().toEqualTypeOf<
+            KbqTreeSelection<FileFlatNode>
+        >();
+        expect(tree().selectionModel.selected).toHaveLength(1);
+        expect(tree().selectionModel.selected[0]).toBe(treeControl.dataNodes[0]);
     });
 });
 

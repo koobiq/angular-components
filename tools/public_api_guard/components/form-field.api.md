@@ -7,7 +7,6 @@
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
@@ -231,8 +230,6 @@ export class KbqLegend {
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     constructor();
     protected get accessibleName(): string;
-    // (undocumented)
-    protected readonly changeDetectorRef: ChangeDetectorRef;
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);
     readonly contentInput: InputSignal<KbqTooltipTrigger['content'] | undefined>;

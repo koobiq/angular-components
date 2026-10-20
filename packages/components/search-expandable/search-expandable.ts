@@ -4,7 +4,6 @@ import {
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     DestroyRef,
     effect,
@@ -124,8 +123,6 @@ export class KbqSearchExpandable
     protected readonly focusMonitor = inject(FocusMonitor);
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
-    /** @docs-private */
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
     protected readonly nativeElement: HTMLElement = inject(ElementRef).nativeElement;
     private readonly carrier = inject(KbqLocaleOverridesDirective, { self: true });

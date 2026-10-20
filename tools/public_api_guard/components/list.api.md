@@ -20,7 +20,6 @@ import * as i3 from '@koobiq/components/core';
 import * as i4 from '@koobiq/components/icon';
 import { IFocusableOption } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
-import { KbqLine } from '@koobiq/components/core';
 import { KbqMultipleInput } from '@koobiq/components/core';
 import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOptionActionComponent } from '@koobiq/components/core';
@@ -66,7 +65,7 @@ export type KbqListDragCursor = 'auto' | 'grab';
 export type KbqListDragPreview = 'text' | 'full';
 
 // @public
-export class KbqListItem implements AfterContentChecked {
+export class KbqListItem {
     // (undocumented)
     getHostElement(): HTMLElement;
     // (undocumented)
@@ -74,11 +73,7 @@ export class KbqListItem implements AfterContentChecked {
     // (undocumented)
     protected handleFocus(): void;
     // (undocumented)
-    get lines(): QueryList<KbqLine>;
-    // (undocumented)
-    ngAfterContentChecked(): void;
-    // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListItem, "kbq-list-item, a[kbq-list-item]", never, {}, {}, ["linesQuery"], ["[kbq-list-icon]", "[kbq-line]", "*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListItem, "kbq-list-item, a[kbq-list-item]", never, {}, {}, never, ["[kbq-list-icon]", "[kbq-line]", "*"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqListItem, never>;
 }
@@ -90,7 +85,7 @@ export class KbqListModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqListModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqListModule, never, [typeof i1$1.A11yModule, typeof i1.CdkDragHandle, typeof i3.KbqPseudoCheckboxModule, typeof i3.KbqLine, typeof i3.KbqOptionModule, typeof i3.KbqActionContainer, typeof i4.KbqIconModule, typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption], [typeof i1.CdkDragHandle, typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption, typeof i3.KbqOptionModule]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqListModule, never, [typeof i1$1.A11yModule, typeof i1.CdkDragHandle, typeof i3.KbqPseudoCheckboxModule, typeof i3.KbqOptionModule, typeof i3.KbqActionContainer, typeof i4.KbqIconModule, typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption], [typeof i1.CdkDragHandle, typeof KbqList, typeof KbqListSelection, typeof KbqListItem, typeof KbqListOption, typeof KbqListOptionCaption, typeof i3.KbqOptionModule]>;
 }
 
 // @public

@@ -15,7 +15,6 @@ const OWNERS = [
     'KbqTreeSelect',
     'KbqAutocomplete',
     'KbqListSelection',
-    'KbqListItem',
     'KbqFocusableComponent',
     'KbqNavbar',
     'KbqVerticalNavbar',
@@ -31,7 +30,6 @@ const OWNERS = [
 const MEMBERS = [
     'options',
     'tags',
-    'lines',
     'focusableItems',
     'radios',
     'unorderedOptions',
@@ -49,16 +47,16 @@ export const warnPatterns: WarnPattern[] = [
         message:
             'A subclass of a Koobiq component whose query members are getters over signal queries now: options of ' +
             'KbqSelect, KbqAutocomplete and KbqListSelection, tags of KbqSelect, KbqTreeSelect and KbqTagList, ' +
-            'KbqListItem.lines, focusableItems of KbqNavbar and KbqVerticalNavbar, KbqRadioGroup.radios, ' +
+            'focusableItems of KbqNavbar and KbqVerticalNavbar, KbqRadioGroup.radios, ' +
             'KbqTreeSelection.unorderedOptions, KbqAppSwitcherComponent.allItems and textElement of KbqTag and ' +
             'KbqDropdownItem. A subclass can no longer redeclare them as fields: remove the redeclaration, or override ' +
             'the getter. This pattern also matches a query of the subclass itself — check before changing it.'
     },
     {
         anchor: `\\b(?:${OWNERS})\\b`,
-        pattern: '\\.\\s*(?:options|tags|lines|focusableItems|radios|unorderedOptions|textElement)\\s*=[^=]',
+        pattern: '\\.\\s*(?:options|tags|focusableItems|radios|unorderedOptions|textElement)\\s*=[^=]',
         message:
-            'The query members of KbqSelect, KbqAutocomplete, KbqListSelection, KbqListItem, the navbar, ' +
+            'The query members of KbqSelect, KbqAutocomplete, KbqListSelection, the navbar, ' +
             'KbqRadioGroup, KbqTagList, KbqTag, KbqDropdownItem and KbqTreeSelection are read-only getters now, so a ' +
             'write no longer compiles. Render the items in the template instead. This pattern also matches a write ' +
             'to an unrelated object in the same file — check before changing it.'

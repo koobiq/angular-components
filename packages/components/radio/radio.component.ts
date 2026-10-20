@@ -285,6 +285,7 @@ export class KbqRadioGroup
         }
     }
 
+    // Kept at the DS-2196 review, like `KbqButtonToggle.markForCheck()`, which the migration guide promises stays.
     /**
      * Marks every radio button of the group for a change-detection check.
      *
@@ -657,6 +658,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
         this.focusMonitor.focusVia(this.inputElement(), origin);
     }
 
+    // Kept at the DS-2196 review, like `KbqButtonToggle.markForCheck()`, which the migration guide promises stays.
     /**
      * Marks the radio button as needing checking for change detection.
      *

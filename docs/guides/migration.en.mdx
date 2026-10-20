@@ -14,6 +14,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **21.0.0**: removal of the APIs deprecated before 21.0.0.
 - **21.0.0**: removal of `ThemePalette`.
 - **21.0.0**: removal of the core API nothing in the library used, and deprecation of its legacy API.
+- **21.0.0**: removal of the component API and styles nothing in the library used.
 - **21.0.0**: the actions panel overlay container.
 - **21.0.0**: legacy splitter deprecation.
 - **21.0.0**: removal of the overlay demotion mechanism.
@@ -469,7 +470,7 @@ ng g @koobiq/components:tabs-signals-and-aria --project "<your project>"
 
 #### Query lists
 
-The `options` of `KbqSelect`, `KbqAutocomplete` and `KbqListSelection`, the `tags` of `KbqSelect` and `KbqTagList`, `KbqListItem.lines`, `KbqRadioGroup.radios`, `KbqTreeSelection.unorderedOptions`, the `focusableItems` of `KbqNavbar` and `KbqVerticalNavbar`, and the `textElement` of `KbqTag` and `KbqDropdownItem` are getters over signal queries. They keep their types — a `QueryList` whose `changes` emit as before, or an `ElementRef` — so reading them works as before. Before the content is initialized a `QueryList` is empty rather than `undefined`.
+The `options` of `KbqSelect`, `KbqAutocomplete` and `KbqListSelection`, the `tags` of `KbqSelect` and `KbqTagList`, `KbqRadioGroup.radios`, `KbqTreeSelection.unorderedOptions`, the `focusableItems` of `KbqNavbar` and `KbqVerticalNavbar`, and the `textElement` of `KbqTag` and `KbqDropdownItem` are getters over signal queries. They keep their types — a `QueryList` whose `changes` emit as before, or an `ElementRef` — so reading them works as before. Before the content is initialized a `QueryList` is empty rather than `undefined`.
 
 - **A subclass** that redeclared one of them, with a query decorator or as a field, removes the redeclaration or overrides the getter.
 - **A write** to one of them no longer compiles: render the items in the template.
@@ -504,7 +505,7 @@ The state that components and services expose for reading is a signal, where it 
 - **A getter backed by a signal is a tracked read.** `isOpen` of the pop-up triggers, `opened` of `KbqDropdownTrigger`, `KbqDatepicker` and `KbqSidebar`, `panelOpen` of `KbqSelect`, `KbqTreeSelect` and `KbqAutocompleteTrigger`, `expanded` of `KbqAccordionItem`, `isOpened` of `KbqSearchExpandable`, `selected` of the options, `selectedIndex` of `KbqTabGroup` and `isActive` of `KbqTab` keep their type, but reading one inside an `effect()` or a `computed()` makes it follow that state: an effect that opens or closes a component depending on one reads it with `untracked()`. The commands of the components — `open()`, `close()`, `toggle()`, `select()`, `writeValue()` and the like — read nothing an effect calling them would follow.
 - **A number input bound to `undefined` or `null`** falls back to its default instead of becoming `NaN`: `tabIndex` of `kbq-checkbox`, `kbq-toggle`, `kbq-radio-button`, `kbq-search-expandable` and `kbqTabLink` reads `0` (a tab link no longer renders `tabindex="NaN"`), `selectedIndex` of `kbq-tab-group` selects the first enabled tab, `offset` of `kbqAppSwitcher` takes the default offset, and `tabIndex` of `kbq-list-selection` and `kbq-tree-selection` gives back the default tab stop (`0`, or `-1` without options). A value that is not a finite number counts the same.
 - **Tabbing out of a list, tag list or tree leaves `tabIndex` alone.** `kbq-list-selection`, `kbq-tag-list` and `kbq-tree-selection` take themselves out of the tab order in the DOM only, so `tabIndex` reads the same value while the focus leaves, and then put back the tab stop they render. A tag list with a tag input renders no `tabindex` again instead of keeping `-1`, and a tree keeps a bound `[tabIndex]` when its rendered nodes change.
-- **A subclass** of `KbqToastComponent`, `KbqPopUp` or `KbqPopUpTrigger` sets its hover state with the protected `setHovered()`; one of `KbqPipeSelectComponent` drops its `super.ngOnInit()` call, and one of `KbqDatepickerToggleIconComponent` its `super.ngAfterContentInit()` and `super.ngOnDestroy()` calls, since the classes no longer implement them. The protected `isListMode`, `showStartCalendar` and `showEndCalendar` of the date pipes are signals.
+- **A subclass** of `KbqToastComponent`, `KbqPopUp` or `KbqPopUpTrigger` sets its hover state with the protected `setHovered()`; one of `KbqPipeSelectComponent` drops its `super.ngOnInit()` call, and one of `KbqDatepickerToggleIconComponent` its `super.ngAfterContentInit()` and `super.ngOnDestroy()` calls, since the classes no longer implement them. The protected `isListMode`, `showStartCalendar` and `showEndCalendar` of the date pipes are signals, `returnButton` may be `undefined` (the back button renders only when the pipe template has `values`), and a date pipe template binds `(keydown.tab)` and `(keydown.shift.tab)` of its date inputs to `onDateInputTab()`, which hides the calendars before the browser moves the focus.
 - **`KbqFileItem`** keeps its `loading` and `progress` subjects, which the application updates.
 
 `v21-upgrade` reports these reads, writes and `super` calls:
@@ -747,7 +748,9 @@ With `--fix false` it only reports what it would change.
 | `KbqPopUp.warning`, `.handleBodyInteraction()`, the protected `closeOnInteraction`                                 | no replacement: `warning` did nothing, nothing called `handleBodyInteraction()`, and `closeOnInteraction` only gated it                                                                                | reported  |
 | `KbqDecimalPipe.isSpecialFormatForRULocale()`, `KbqRoundDecimalPipe.roundingOptions`                               | private now: the pipe arguments and the formatters locale configuration                                                                                                                                | reported  |
 | `KbqFormElement.isRow`                                                                                             | the `kbq-form__row` class of the element                                                                                                                                                               | reported  |
-| `KbqLineSetter` and the `kbq-2-line`, `kbq-3-line`, `kbq-multi-line` classes of a list item                        | nothing: no style read them; `KbqListItem.lines` counts the lines                                                                                                                                      | reported  |
+| `KbqLineSetter` and the `kbq-2-line`, `kbq-3-line`, `kbq-multi-line` classes of a list item                        | nothing: no style read them                                                                                                                                                                            | reported  |
+| `KbqLine`, `KbqListItem.lines`                                                                                     | nothing: only `lines` read `KbqLine`, and nothing counted the lines; the `kbq-line` attribute still places an element in the text of a list item                                                       | reported  |
+| `KbqSelectSearch.hasPlaceholder()`                                                                                 | the placeholder of the search input                                                                                                                                                                    | reported  |
 | the `mcListIcon` attribute of a list item                                                                          | `kbq-list-icon`                                                                                                                                                                                        | rewritten |
 | the `mcLine` attribute                                                                                             | `kbq-line`                                                                                                                                                                                             | rewritten |
 
@@ -772,6 +775,26 @@ The documented core API that has a replacement is deprecated instead; `v21-upgra
 | `KbqMeasureScrollbarService`                                                                                     | `element.offsetWidth - element.clientWidth` of the element that scrolls                                                   |
 | `FocusKeyManager.getFocusOrigin()`                                                                               | the origin passed to `setFocusOrigin()`                                                                                   |
 | `dateInput` of the datepicker locale configuration                                                               | `KBQ_DATE_FORMATS`: nothing reads `dateInput`                                                                             |
+
+### Unused component API removal (21.0.0)
+
+The component entry points drop the exports, members and styles that nothing in the library used. They were never deprecated: most are leftovers of removed features or implementation details that leaked into the public API. `v21-upgrade` reports each use.
+
+| Removed                                                                     | Use instead                                                                                            |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `normalizeSplitter()`, `isInt()`, `isDigit()` of `@koobiq/components/input` | `value.replace(/,/g, '.')`, `/^-?\d+$/.test(value)`; `isFloat()` stays                                 |
+| `KbqTimeRangeTranslateTypeMap`                                              | `Record<KbqTimeRangeType, KbqTimeRangeTranslationType>`                                                |
+| `KbqTabBodyOriginState`                                                     | `'left' \| 'right'`                                                                                    |
+| `KbqDatepickerIntl`                                                         | nothing: no view rendered its labels; the texts come from `kbqDatepickerLocaleConfigurationProvider()` |
+| `KbqDropdown.onPanelReached()`                                              | nothing: nothing subscribed to it                                                                      |
+| the protected `KbqTreeSelection.getItemHeight()`                            | `options.first?.getHeight() ?? 0`                                                                      |
+| the protected `KbqTreeSelection.setFocusedOption()`                         | `this.keyManager.setActiveItem(option)`                                                                |
+| `KbqTagList.tagSelectionChanges`, `.shouldLabelFloat`                       | the `selectionChange` output of each tag; `!empty() \|\| focused()`                                    |
+| `KbqTreeNodeOutlet.changeDetectorRef`                                       | `ChangeDetectorRef`, injected where you need it                                                        |
+
+A subclass loses the protected members nothing read: `changeDetectorRef` of `KbqAccordion`, `KbqAccordionItem`, `KbqPasswordToggle`, `KbqIcon` and `KbqSearchExpandable`, `KbqAccordionTrigger.nativeElement`, `KbqNotificationCenterComponent.dateAdapter`, `KbqFilters.styles`, and `isHorizontalOverflown`, `isVerticalOverflown` and `child` of `KbqTitleDirective`. Inject what the subclass needs itself; `isOverflown` of the title covers both directions.
+
+The styles lose the rules for classes nothing sets: `kbq-control_has-validate-directive` and `kbq-form-field_has-validate-directive`, left from the `KbqValidateDirective` removed in 20.0.0 (the form field, select and tree select show an error through their `ErrorStateMatcher`), and the `kbq-no-select` utility class: set `user-select: none` in your own styles.
 
 ### Actions panel overlay container (21.0.0)
 
@@ -2974,6 +2997,8 @@ Two of the six are silent rather than loud. `KbqTreeBase` is exported and is the
 The inputs of `KbqTreeSelection` and `KbqTreeOption` followed: `treeControl`, `dataSource`, `disabled`, `tabIndex` and `selectAllHandler` of the tree, `disabled` and `showCheckbox` of the option are signal inputs read through a getter. A read is unchanged, a programmatic write no longer compiles: bind them. `multiple` is an input now too, and its getter never had a setter: set the selection mode through `multipleMode`, which stays writable. `autoSelect`, `noUnselectLast`, `typeAhead` and `selectAll` stay writable, since `KbqTreeSelect` writes them.
 
 A `[dataSource]` bound back to `undefined` clears the tree as `null` does, and `dataSource` reports `null` rather than `undefined` while no source is set.
+
+`KbqTreeSelection`, `KbqTreeOption` and `KbqTreeSelect` take the type of the data node, `T`, `any` by default. `selectionModel` is `SelectionModel<T>` instead of a model over an unexported interface that did not describe the nodes it holds, and `KbqTreeOption.data` is the node rather than the option type it was declared with. A template infers `T` of the tree from `[treeControl]`, `[dataSource]`, `[trackBy]` and `[selectAllHandler]`, so with `strictTemplates` a tree whose bindings name different node types no longer compiles: give them the same type. A query names it: `viewChild.required<KbqTreeSelection<Node>>(KbqTreeSelection)`.
 
 Reported by `tree-signals`. A project that renders a tree at all also gets a summary of all six members, because five of them are only visible at a call site that writes them — a consumer that merely reads one gets a value whose type changed under it and no diagnostic at all.
 

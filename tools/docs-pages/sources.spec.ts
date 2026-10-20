@@ -12,7 +12,7 @@ describe(findRoutesWithoutPage.name, () => {
             '/en/components/alert/examples',
             '/ru/components/alert/overview',
             '/en/main/design-tokens/colors',
-            '/en/icons',
+            '/en/main/icons',
             '/404'
         ];
 

@@ -37,6 +37,7 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KBQ_WINDOW, kbqAnimationsDisabled, kbqInjectNativeElement } from '@koobiq/components/core';
 import {
+    asapScheduler,
     asyncScheduler,
     audit,
     concat,
@@ -48,6 +49,7 @@ import {
     merge,
     NEVER,
     Observable,
+    observeOn,
     of,
     share,
     startWith,
@@ -95,16 +97,16 @@ function zoneFree<T>(): MonoTypeOperatorFunction<T> {
     return (source) => new Observable<T>((subscriber) => ngZone.runOutsideAngular(() => source.subscribe(subscriber)));
 }
 
-function zoneFreeScheduler(): SchedulerLike {
+function zoneFreeScheduler(scheduler: SchedulerLike = asyncScheduler): SchedulerLike {
     const ngZone = inject(NgZone);
 
     return {
-        now: () => Date.now(),
+        now: () => scheduler.now(),
         schedule<T>(work: (this: SchedulerAction<T>, state?: T) => void, delay?: number, state?: T): Subscription {
             let subscription!: Subscription;
 
             ngZone.runOutsideAngular(() => {
-                subscription = asyncScheduler.schedule(work, delay, state);
+                subscription = scheduler.schedule(work, delay, state);
             });
 
             return subscription;
@@ -694,12 +696,15 @@ class KbqScrollbarThumb {
                 this.applyValueNow(this.getValueNow(dimension));
             });
 
-        // Wait until Angular has applied `orientation` before calculating the initial ARIA value.
-        afterNextRender(() => {
-            const dimension = this.getDimension();
-
-            this.applyPosition(this.getPosition(dimension));
-            this.applyValueNow(this.getValueNow(dimension));
+        // Wait until Angular has applied `orientation` before calculating the initial ARIA value. Read and written in
+        // phases of their own, so that the thumbs rendered together read in one layout rather than each after another's
+        // write.
+        afterNextRender({
+            earlyRead: () => this.getDimension(),
+            write: (dimension) => {
+                this.applyPosition(this.getPosition(dimension));
+                this.applyValueNow(this.getValueNow(dimension));
+            }
         });
     }
 
@@ -898,6 +903,10 @@ class KbqScrollbarTrack {
                         a.paddingBlockStart === b.paddingBlockStart &&
                         a.paddingInlineStart === b.paddingInlineStart
                 ),
+                // Written once the observer's callback returns, still ahead of the frame: the callback hands one batch
+                // to the tracks of every viewport in it, and a write between them makes the next track's read force a
+                // layout. Outside Angular, as the write needs no change detection.
+                observeOn(zoneFreeScheduler(asapScheduler)),
                 takeUntilDestroyed()
             )
             .subscribe((metrics) => this.applyGeometry(metrics));

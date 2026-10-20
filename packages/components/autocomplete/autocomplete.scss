@@ -45,12 +45,6 @@
     .kbq-option {
         @include select.item-active-area(var(--kbq-size-3xs));
     }
-
-    // We need to offset horizontal dividers by their height, because
-    // they throw off the keyboard navigation inside the panel.
-    .kbq-divider-horizontal {
-        margin-top: -1px;
-    }
 }
 
 // Layout, typography and the transparent text around the hint are set inline by `kbqCreateTextMirror`, since they

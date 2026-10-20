@@ -259,7 +259,7 @@ export class KbqTreeSelectChange<T = any> {
     ],
     exportAs: 'kbqTreeSelect'
 })
-export class KbqTreeSelect
+export class KbqTreeSelect<T = any>
     extends KbqAbstractSelect
     implements
         AfterViewChecked,
@@ -315,8 +315,13 @@ export class KbqTreeSelect
     /** The cached font-size of the trigger element. */
     triggerFontSize = 0;
 
-    /** Deals with the selection logic. */
-    selectionModel: SelectionModel<any>;
+    /**
+     * Deals with the selection logic. The projected `kbq-tree-selection` shares the same instance.
+     *
+     * `T` is the type of the data nodes, the same as the projected tree's. A template infers it from `[clearPredicate]`
+     * alone, apart from the tree; a query names it: `viewChild.required<KbqTreeSelect<Node>>(KbqTreeSelect)`.
+     */
+    selectionModel: SelectionModel<T>;
 
     /** Emits once the panel has rendered (`'showing'`) or has been removed (`'void'`). */
     protected readonly panelDoneAnimatingStream = new Subject<string>();
@@ -357,7 +362,7 @@ export class KbqTreeSelect
         }
     ];
 
-    protected options: QueryList<KbqTreeOption>;
+    protected options: QueryList<KbqTreeOption<T>>;
 
     /**
      * Trigger - is a clickable field to open select dropdown panel
@@ -400,7 +405,7 @@ export class KbqTreeSelect
 
     readonly customTagTemplateRef = contentChild('kbqSelectTagContent', { read: TemplateRef });
 
-    readonly tree = contentChild(KbqTreeSelection);
+    readonly tree = contentChild<KbqTreeSelection<T>>(KbqTreeSelection);
 
     readonly search = contentChild(KbqSelectSearch);
 
@@ -462,7 +467,7 @@ export class KbqTreeSelect
      * Event emitted whenever the tree's `selectAllOptions()` runs — a click on the `selectAll` master
      * checkbox, the Ctrl/Cmd + A shortcut, or a custom `selectAllHandler` that delegates to it.
      */
-    readonly onSelectAll = output<KbqSelectAllEvent<KbqTreeOption, KbqTreeSelect>>();
+    readonly onSelectAll = output<KbqSelectAllEvent<KbqTreeOption<T>, KbqTreeSelect<T>>>();
 
     /** Classes to be passed to the select panel. Supports the same syntax as the `[class]` binding. */
     readonly panelClass = input<
@@ -519,9 +524,10 @@ export class KbqTreeSelect
      * option. Disabled nodes are kept by default. Bind a stable reference — a new function on every
      * change detection re-runs the predicate over the whole selection.
      *
-     * Not consulted by `writeValue` / `reset()`, which always clear everything.
+     * Not consulted by `writeValue` / `reset()`, which always clear everything. The parameter type becomes the select's
+     * `T` in a template: type it with the tree's node, not with an option.
      */
-    readonly clearPredicate = input<(node: any) => boolean, (node: any) => boolean>(
+    readonly clearPredicate = input<(node: T) => boolean, (node: T) => boolean>(
         this.defaultOptions?.clearPredicate ?? ((node) => !this.isNodeDisabled(node)),
         {
             transform: (fn) => {
@@ -661,8 +667,8 @@ export class KbqTreeSelect
 
     /** @docs-private */
     readonly selectAllHandlerInput = input<
-        ((event: KeyboardEvent, select: KbqTreeSelect) => void) | undefined,
-        ((event: KeyboardEvent, select: KbqTreeSelect) => void) | undefined
+        ((event: KeyboardEvent, select: KbqTreeSelect<T>) => void) | undefined,
+        ((event: KeyboardEvent, select: KbqTreeSelect<T>) => void) | undefined
     >(undefined, {
         alias: 'selectAllHandler',
         transform: kbqSelectAllHandlerTransform
@@ -671,12 +677,12 @@ export class KbqTreeSelect
     /**
      * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used.
      */
-    get selectAllHandler(): (event: KeyboardEvent, select: KbqTreeSelect) => void {
+    get selectAllHandler(): (event: KeyboardEvent, select: KbqTreeSelect<T>) => void {
         return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
     }
 
     /** Function for handling the combination Ctrl + A (select all). By default, the internal handler is used. */
-    private defaultSelectAllHandler(event: KeyboardEvent, select: KbqTreeSelect): void {
+    private defaultSelectAllHandler(event: KeyboardEvent, select: KbqTreeSelect<T>): void {
         const searchInput = isInput(event) ? (event.target as HTMLInputElement) : null;
 
         if (shouldSelectSearchText(searchInput)) {
@@ -798,7 +804,7 @@ export class KbqTreeSelect
     }
 
     /** Selected nodes the cleaner removes, in selection order. */
-    private get clearTargets(): any[] {
+    private get clearTargets(): T[] {
         return this.selectionModel?.selected.filter((node) => runClearPredicate(this.clearPredicate(), node)) ?? [];
     }
 
@@ -806,7 +812,7 @@ export class KbqTreeSelect
      * The tree answers for any node; the option is asked only for its own `[disabled]` input, and a
      * node inside a collapsed branch has no option to ask.
      */
-    private isNodeDisabled(node: any): boolean {
+    private isNodeDisabled(node: T): boolean {
         const tree = this.tree();
 
         if (!tree) return false;
@@ -818,13 +824,10 @@ export class KbqTreeSelect
 
     /**
      * Colour of the trigger's tags and arrow.
-     *
-     * A `computed()` rather than a getter: it used to read the host's class list on every change
-     * detection pass, twice per pass, through the two template bindings that consume it.
      * @docs-private
      */
     readonly colorForState = computed<KbqComponentColors>(() =>
-        this.invalidState() ? KbqComponentColors.Error : KbqComponentColors.ContrastFade
+        this.errorState() ? KbqComponentColors.Error : KbqComponentColors.ContrastFade
     );
 
     /** Full set of classes for the panel: base class, form-field theme and custom `panelClass`. */
@@ -884,9 +887,6 @@ export class KbqTreeSelect
      * its own form field, and that is only guaranteed to have been wired by `ngAfterContentInit`.
      */
     private readonly contentInitialized = signal(false);
-
-    /** Reactive mirror of the state the error colour is derived from. */
-    private readonly invalidState = signal(false);
 
     /**
      * The last value the form wrote while the tree could not resolve all of it yet — before the content was
@@ -1019,14 +1019,6 @@ export class KbqTreeSelect
         if (this.ngControl) {
             this.updateErrorState();
         }
-
-        // The legacy `kbqValidate` directive marks the host with a class, which no signal observes.
-        // Mirroring it here is what lets everything derived from it be a `computed()` instead of a getter
-        // re-evaluated by every binding on every pass.
-        // A disjunction, not a choice between the two: `errorState` still colours the control when the
-        // legacy directive is present, which is how `KbqSelect` reads it. A consumer matcher that reports
-        // an error for a valid control is the state the two forms disagree on.
-        this.invalidState.set((this.hasLegacyValidateDirective() && !!this.ngControl?.invalid) || this.errorState());
     }
 
     ngAfterContentInit() {
@@ -1037,7 +1029,7 @@ export class KbqTreeSelect
         tree.resetFocusedItemOnBlur = false;
 
         this.multipleValue = this.multipleInput();
-        this.selectionModel = new SelectionModel<any>(this.multiSelection);
+        this.selectionModel = new SelectionModel<T>(this.multiSelection);
 
         this.syncSelectionState();
 
@@ -1399,7 +1391,7 @@ export class KbqTreeSelect
         this.disabled.set(isDisabled);
     }
 
-    get selected(): any {
+    get selected(): T | T[] {
         return this.multiSelection ? this.selectionModel?.selected : this.selectionModel?.selected[0];
     }
 
@@ -1414,7 +1406,8 @@ export class KbqTreeSelect
             return '';
         }
 
-        return this.tree()!.treeControl.getViewValue(this.selected);
+        // Shown in single selection, where `selected` is the node.
+        return this.tree()!.treeControl.getViewValue(this.selected as T);
     }
 
     private readonly emptyValue = signal(true);
@@ -1423,7 +1416,7 @@ export class KbqTreeSelect
     readonly empty = this.emptyValue.asReadonly();
 
     /** First selected node that is not disabled — the one the panel highlights when it opens. */
-    protected get firstSelected() {
+    protected get firstSelected(): T | undefined {
         return this.selectionModel.selected.filter((node) => !this.tree()!.treeControl.isDisabled(node))[0];
     }
 
@@ -1526,9 +1519,13 @@ export class KbqTreeSelect
             .filter(({ disabled }) => !disabled)
             .findIndex(({ value }) => value === selectedOption.value);
 
-        this.selectionModel.deselect(
-            this.selected.find((value) => this.tree()!.treeControl.getValue(value) === selectedOption.value)
+        const removed = this.selectionModel.selected.find(
+            (node) => this.tree()!.treeControl.getValue(node) === selectedOption.value
         );
+
+        if (removed !== undefined) {
+            this.selectionModel.deselect(removed);
+        }
 
         this.selectionChange.emit(
             new KbqTreeSelectChange(
@@ -1750,14 +1747,6 @@ export class KbqTreeSelect
         this.pendingTimers.add(handle);
     }
 
-    /**
-     * Whether the host is marked by the legacy `kbqValidate` directive, which reports validity through
-     * `ngControl` instead of through the form field's error state.
-     */
-    private hasLegacyValidateDirective(): boolean {
-        return this.elementRef.nativeElement.classList.contains('kbq-control_has-validate-directive');
-    }
-
     private closingActions() {
         const backdrop = this.overlayDir.overlayRef!.backdropClick();
         const outsidePointerEvents = this.overlayDir
@@ -1932,7 +1921,7 @@ export class KbqTreeSelect
         } else {
             // Indexed once: `indexOf` in the comparator would scan the whole data set on every comparison.
             const order = new Map(nodes.map((node, index) => [node, index]));
-            const indexOf = (node: unknown) => order.get(node) ?? nodes.length;
+            const indexOf = (node: T) => order.get(node) ?? nodes.length;
 
             this.selectionModel.sort((a, b) => indexOf(a) - indexOf(b));
         }
@@ -1959,7 +1948,7 @@ export class KbqTreeSelect
             return;
         }
 
-        const selectedOption = this.options.find((option) => (option.data as any) === this.firstSelected);
+        const selectedOption = this.options.find((option) => option.data === this.firstSelected);
 
         tree.keyManager.setFocusOrigin('keyboard');
 

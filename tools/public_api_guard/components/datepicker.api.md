@@ -79,7 +79,6 @@ export const KBQ_DATEPICKER_VALUE_ACCESSOR: any;
 
 // @public
 export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
-    constructor();
     get activeDate(): D;
     set activeDate(value: D | null);
     readonly dateClass: _angular_core.InputSignal<(date: D) => KbqCalendarCellCssClasses>;
@@ -403,25 +402,6 @@ export class KbqDatepickerInputEvent<D> {
     target: KbqDatepickerInput<D>;
     targetElement: HTMLElement;
     value: D | null;
-}
-
-// @public
-export class KbqDatepickerIntl {
-    calendarLabel: string;
-    readonly changes: Subject<void>;
-    nextMonthLabel: string;
-    nextMultiYearLabel: string;
-    nextYearLabel: string;
-    openCalendarLabel: string;
-    prevMonthLabel: string;
-    prevMultiYearLabel: string;
-    prevYearLabel: string;
-    switchToMonthViewLabel: string;
-    switchToMultiYearViewLabel: string;
-    // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepickerIntl, never>;
-    // (undocumented)
-    static ɵprov: _angular_core.ɵɵInjectableDeclaration<KbqDatepickerIntl>;
 }
 
 // @public

@@ -91,6 +91,7 @@ export class KbqTabLabelWrapper implements OnChanges, AfterViewInit {
         this.elementRef.nativeElement.focus({ preventScroll: true });
     }
 
+    // TODO: nothing in the library uses it; kept as public API at the DS-2196 review. Document or deprecate it.
     getOffsetLeft(): number {
         return this.elementRef.nativeElement.offsetLeft;
     }

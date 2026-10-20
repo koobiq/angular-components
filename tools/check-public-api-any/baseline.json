@@ -30,7 +30,7 @@
     "loader-overlay": 2,
     "modal": 26,
     "navbar": 3,
-    "notification-center": 9,
+    "notification-center": 8,
     "overflow-items": 7,
     "popover": 11,
     "radio": 12,
@@ -53,7 +53,7 @@
     "toggle": 1,
     "tooltip": 6,
     "top-bar": 1,
-    "tree": 38,
-    "tree-select": 28,
+    "tree": 39,
+    "tree-select": 24,
     "username": 7
 }

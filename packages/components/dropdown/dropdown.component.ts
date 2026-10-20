@@ -558,15 +558,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     }
 
     /**
-     * Stream that emits when the pointer reaches the panel the active safe area protects (as opposed
-     * to leaving the safe area, which closes the panel instead).
-     * @docs-private
-     */
-    onPanelReached(): Observable<void> {
-        return this.panelReached.asObservable();
-    }
-
-    /**
      * Stream that emits the sibling trigger that should open once a forced safe-area switch has
      * closed the trigger it was protecting.
      * @docs-private

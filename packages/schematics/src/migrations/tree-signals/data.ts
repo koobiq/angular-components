@@ -14,6 +14,10 @@
  *   `tabIndex` / `selectAllHandler`, `KbqTreeOption.disabled` / `showCheckbox` — field or accessor pair → getter
  *   over a signal input that keeps the alias, so templates are unaffected
  *
+ * `KbqTreeSelection`, `KbqTreeOption` and `KbqTreeSelect` also took the type of the data node, `T`. A template
+ * infers it from the bindings of the tree, so bindings that name different node types stop compiling under
+ * `strictTemplates`; only the compiler sees that, so the summary names it.
+ *
  * Nothing is rewritten. What replaces a write is a template binding or a different member, and
  * neither can be derived from the assignment; a read of a signal-backed member has to be checked
  * against its new value rather than mechanically suffixed with `()`.
@@ -123,5 +127,11 @@ export const SUMMARY: string[] = [
     '  - KbqTreeNodeToggleBaseDirective.recursive (InputSignalWithTransform)',
     '  - KbqTreeOption.onFocus and KbqTreeOption.onBlur (Observable, not Subject)',
     '  - KbqTree and KbqTreeSelection treeControl, dataSource; KbqTreeSelection disabled, tabIndex,',
-    '    selectAllHandler; KbqTreeOption disabled, showCheckbox (signal inputs read through a getter; bind them)'
+    '    selectAllHandler; KbqTreeOption disabled, showCheckbox (signal inputs read through a getter; bind them)',
+    '',
+    'KbqTreeSelection, KbqTreeOption and KbqTreeSelect take the type of the data node, T (`any` by default):',
+    '  - a template infers T of kbq-tree-selection from [treeControl], [dataSource], [trackBy] and',
+    '    [selectAllHandler]; with strictTemplates, bindings that name different node types no longer compile.',
+    '    Give them the same node type.',
+    '  - a query names T: viewChild.required<KbqTreeSelection<Node>>(KbqTreeSelection).'
 ];

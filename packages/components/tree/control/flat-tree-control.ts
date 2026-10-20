@@ -36,6 +36,7 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
         this.setFilters(new FilterByViewValue<T>(this), new FilterParentsForNodes<T>(this));
     }
 
+    // TODO: nothing in the library uses it; kept as public API at the DS-2196 review. Document or deprecate it.
     getFilters(): FlatTreeControlFilter<T>[] {
         return this.filters;
     }

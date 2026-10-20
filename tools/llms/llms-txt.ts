@@ -1,6 +1,5 @@
 import {
     DocsStructureCategory,
-    DocsStructureCategoryId,
     DocsStructureItem,
     DocsStructureItemId,
     DocsStructureItemTab
@@ -87,11 +86,9 @@ export const renderLlmsTxt = (categories: LlmsCategory[], sources: LlmsPageSourc
         `> ${SUMMARY}`,
         `${renderPackage(header)} Every link below leads to one item of the documentation as Markdown, in English, in the order of its tabs: the overview with the full source of its examples, the API, the extra examples. Without \`.md\`, the address opens the page itself.`,
         header.rules,
-        ...categories
-            .filter(({ category }) => category.id !== DocsStructureCategoryId.Icons)
-            .map(({ category, items }) =>
-                [`## ${category.name.en}`, items.map((item) => renderItemLink(item, sources)).join('\n')].join('\n\n')
-            ),
+        ...categories.map(({ category, items }) =>
+            [`## ${category.name.en}`, items.map((item) => renderItemLink(item, sources)).join('\n')].join('\n\n')
+        ),
         `## Icons\n\n${renderIconLinks(header)}`,
         `## Optional\n\n- [Full documentation](${LLMS_SITE_ORIGIN}/${LLMS_FULL_TXT}): every item above in one file, several megabytes long: search it rather than read it whole.`
     ].join('\n\n') + '\n';

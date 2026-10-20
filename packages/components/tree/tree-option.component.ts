@@ -56,7 +56,7 @@ export interface KbqTreeOptionEvent {
  * Declared as an interface rather than as `KbqTreeSelection` so the token stays free of a circular
  * import, and so anything embedding options only has to provide these members.
  */
-export interface KbqTreeOptionParent {
+export interface KbqTreeOptionParent<T = any> {
     /** Whether the whole tree is disabled. */
     disabled: boolean;
     /** Whether more than one option can be selected at a time. */
@@ -69,14 +69,14 @@ export interface KbqTreeOptionParent {
     optionShouldHoldFocusOnBlur: boolean;
     /** State of the tree-level "select all" checkbox. */
     selectAllState: KbqPseudoCheckboxState;
-    treeControl: FlatTreeControl<any>;
-    selectionModel: SelectionModel<any>;
-    unorderedOptions: QueryList<KbqTreeOption>;
-    setSelectedOptionsByClick(option: KbqTreeOption, shiftKey: boolean, ctrlKey: boolean): void;
+    treeControl: FlatTreeControl<T>;
+    selectionModel: SelectionModel<T>;
+    unorderedOptions: QueryList<KbqTreeOption<T>>;
+    setSelectedOptionsByClick(option: KbqTreeOption<T>, shiftKey: boolean, ctrlKey: boolean): void;
 }
 
 /** Injection token used to provide the parent component to options. */
-export const KBQ_TREE_OPTION_PARENT_COMPONENT = new InjectionToken<KbqTreeOptionParent>(
+export const KBQ_TREE_OPTION_PARENT_COMPONENT: InjectionToken<KbqTreeOptionParent> = new InjectionToken(
     'KBQ_TREE_OPTION_PARENT_COMPONENT'
 );
 
@@ -140,13 +140,13 @@ const samePredicates = (a: TreeOptionPredicates, b: TreeOptionPredicates): boole
     },
     exportAs: 'kbqTreeOption'
 })
-export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, DoCheck, KbqTitleTextRef {
+export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterContentInit, DoCheck, KbqTitleTextRef {
     private changeDetectorRef = inject(ChangeDetectorRef);
     private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly destroyRef = inject(DestroyRef);
     // Intersected with the rendering base because `KbqTreeNode` resolves its level and expansion state
     // through it; the option itself only ever touches the `KbqTreeOptionParent` half.
-    override tree: KbqTreeOptionParent & KbqTreeBase<any>;
+    override tree: KbqTreeOptionParent<T> & KbqTreeBase<T>;
 
     private readonly focusEvents = new Subject<KbqTreeOptionEvent>();
 
@@ -330,7 +330,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         return this.selectAllRow() ? 0 : super.level;
     }
 
-    get toggleElement(): KbqTreeNodeToggleBaseDirective<KbqTreeOption> | undefined {
+    get toggleElement(): KbqTreeNodeToggleBaseDirective<T> | undefined {
         return this.toggleElementComponent() || this.toggleElementDirective();
     }
 
@@ -378,7 +378,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     constructor() {
-        const tree = inject(KBQ_TREE_OPTION_PARENT_COMPONENT) as KbqTreeOptionParent & KbqTreeBase<any>;
+        const tree = inject(KBQ_TREE_OPTION_PARENT_COMPONENT) as KbqTreeOptionParent<T> & KbqTreeBase<T>;
 
         super();
 
@@ -449,7 +449,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         return descendants.some((child) => this.tree?.selectionModel.isSelected(child));
     }
 
-    updateParentsCheckboxState(node) {
+    updateParentsCheckboxState(node: T) {
         this.tree.treeControl.getParents(node, []).forEach((parent) => {
             const parentOption = this.tree.unorderedOptions.find((option) => option.data === parent);
 

@@ -1107,21 +1107,11 @@ export class KbqSelect
         return !this.options.find((option: KbqOption) => option === this.firstSelected);
     }
 
-    /**
-     * Whether the legacy `KbqValidateDirective` marks this control. The class it writes never changes
-     * after the host is created, so it is probed once instead of on every change detection pass.
-     */
-    private hasLegacyValidateDirective = false;
-
-    // Mirror of `NgControl.invalid` for the legacy directive. The validity changes outside this OnPush view and
-    // is no signal, so nothing else would repaint the trigger when it flips.
-    private readonly legacyInvalid = signal(false);
-
     /** @docs-private */
     get colorForState(): KbqComponentColors {
         if (this.disabled()) return KbqComponentColors.Empty;
 
-        return this.legacyInvalid() || this.errorState() ? KbqComponentColors.Error : KbqComponentColors.ContrastFade;
+        return this.errorState() ? KbqComponentColors.Error : KbqComponentColors.ContrastFade;
     }
 
     /** Whether multiple choice is enabled. True if multiple or multiline mode is active. */
@@ -1288,11 +1278,6 @@ export class KbqSelect
         }
 
         afterNextRender(() => {
-            this.hasLegacyValidateDirective = this.elementRef.nativeElement.classList.contains(
-                'kbq-control_has-validate-directive'
-            );
-            this.syncLegacyInvalid();
-
             this.observeVisibility();
 
             if (this.multiple && !this.multiline()) {
@@ -1424,11 +1409,6 @@ export class KbqSelect
     updateErrorState() {
         this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
         this.errorStateTracker.updateErrorState();
-        this.syncLegacyInvalid();
-    }
-
-    private syncLegacyInvalid(): void {
-        this.legacyInvalid.set(this.hasLegacyValidateDirective && !!this.ngControl?.invalid);
     }
 
     /**
@@ -1867,6 +1847,7 @@ export class KbqSelect
         }
     }
 
+    // TODO: nothing in the library uses it; kept as public API at the DS-2196 review. Document or deprecate it.
     /**
      * Gets the height of a single option item.
      * @returns The height in pixels of the first option, or 0 if no options exist.

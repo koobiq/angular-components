@@ -7,7 +7,6 @@
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DestroyRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
@@ -45,7 +44,6 @@ export const KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION: InjectionToken<KbqSearc
 export class KbqSearchExpandable implements OnChanges, ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy {
     constructor();
     protected readonly a11yLocaleConfiguration: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
-    protected readonly changeDetectorRef: ChangeDetectorRef;
     protected readonly control: FormControl<string>;
     protected readonly destroyRef: DestroyRef;
     get disabled(): boolean;

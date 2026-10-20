@@ -61,6 +61,7 @@ export function KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => 
     return () => overlay.scrollStrategies.reposition();
 }
 
+// Redundant to the root factory of the token; kept so an app can restore the default under its own override (#DS-2196).
 /** @docs-private */
 export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_DATEPICKER_SCROLL_STRATEGY,

@@ -1,6 +1,6 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
-import { ChangeDetectionStrategy, Component, DebugElement, Provider, Type } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, DebugElement, Provider, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
@@ -629,6 +629,29 @@ describe(KbqCodeBlock.name, () => {
         const { nativeElement } = createComponent(BaseCodeBlock);
 
         expect(nativeElement.querySelector('.kbq-code-block__main').tabIndex).toBe(-1);
+    });
+
+    it('should let the code content be focused once a render finds it overflowing', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const content: HTMLElement = fixture.nativeElement.querySelector('.kbq-code-block__main');
+
+        Object.defineProperties(content, { scrollWidth: { value: 200 }, clientWidth: { value: 100 } });
+        fixture.detectChanges();
+
+        expect(content.tabIndex).toBe(0);
+    });
+
+    // A binding would only reach the element a round of change detection later, after the hooks of the render.
+    it('should give the hooks later in the render the tab index it measured', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const content: HTMLElement = fixture.nativeElement.querySelector('.kbq-code-block__main');
+        let tabIndexInHook: number | undefined;
+
+        Object.defineProperties(content, { scrollWidth: { value: 200 }, clientWidth: { value: 100 } });
+        afterNextRender(() => (tabIndexInHook = content.tabIndex), { injector: fixture.componentRef.injector });
+        fixture.detectChanges();
+
+        expect(tabIndexInHook).toBe(0);
     });
 
     it('should show actionbar when tabs are visible', () => {

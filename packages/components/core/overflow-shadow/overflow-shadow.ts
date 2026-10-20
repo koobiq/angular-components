@@ -69,13 +69,19 @@ export class KbqOverflowShadowContainer implements OnInit {
     /** Optional debounce for scroll events, in milliseconds. Default is 0. */
     readonly debounce = input(0, { transform: numberAttribute });
 
-    /** Current shadow state. Updated on every scroll event. */
-    readonly overflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
+    /** Current shadow state. Re-checked on every scroll event and resize; changes only when an edge does. */
+    readonly overflow = signal<KbqOverflowShadowState>(
+        { top: false, bottom: false },
+        { equal: (a, b) => a.top === b.top && a.bottom === b.bottom }
+    );
 
     constructor() {
-        afterNextRender(() => {
-            this.checkOverflow();
-            this.observeResize();
+        // In the read phase, so that containers rendered together measure in one layout rather than one each.
+        afterNextRender({
+            read: () => {
+                this.checkOverflow();
+                this.observeResize();
+            }
         });
     }
 
