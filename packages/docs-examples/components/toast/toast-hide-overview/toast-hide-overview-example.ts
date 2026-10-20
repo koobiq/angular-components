@@ -2,7 +2,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { switchMap, timer } from 'rxjs';
@@ -14,7 +14,7 @@ import { switchMap, timer } from 'rxjs';
     selector: 'toast-hide-overview-example',
     imports: [
         KbqButtonModule,
-        KbqLinkModule,
+        KbqLink,
         KbqProgressBarModule,
         NgTemplateOutlet
     ],

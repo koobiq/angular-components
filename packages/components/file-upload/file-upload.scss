@@ -1,5 +1,6 @@
 @use './file-upload-theme' as theme;
 @use '../form-field/form-field';
+@use '../core/styles/common/link';
 
 .kbq-file-upload {
     box-sizing: border-box;
@@ -17,6 +18,11 @@
         align-items: baseline;
         gap: var(--dropzone-gap, var(--kbq-file-upload-size-dropzone-content-gap-horizontal));
     }
+}
+
+// The file input of a browse link is visually hidden inside its label, so the link shows the keyboard focus
+.kbq-file-loader.cdk-keyboard-focused > .kbq-file-upload__browse-link {
+    @include link.kbq-link-keyboard-focus-outline();
 }
 
 .kbq-file-upload__hint {

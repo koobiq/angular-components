@@ -46,7 +46,7 @@ describe(DocsLiveExampleViewerComponent.name, () => {
     const exitFullscreenDescriptor = Object.getOwnPropertyDescriptor(document, 'exitFullscreen');
     const requestFullscreenDescriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'requestFullscreen');
 
-    const toggle = (): HTMLElement => fixture.nativeElement.querySelector('.docs-live-example__footer [kbq-link]');
+    const toggle = (): HTMLElement => fixture.nativeElement.querySelector('.docs-live-example__footer [kbqLink]');
     const fullscreenButton = (): HTMLButtonElement =>
         fixture.nativeElement.querySelector('[aria-label="Enter full screen"]');
     const setFullscreenElement = (element: Element | null): void => {

@@ -14,7 +14,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet, UrlSegment } from '@angular/router';
 import { KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
@@ -48,7 +48,8 @@ const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/
     selector: 'docs-component-viewer',
     imports: [
         KbqTabsModule,
-        KbqLinkModule,
+        KbqLink,
+        KbqLinkPrefix,
         RouterOutlet,
         RouterLink,
         RouterLinkActive,

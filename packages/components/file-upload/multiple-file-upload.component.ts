@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { CdkMonitorFocus, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { AsyncPipe, isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
@@ -59,6 +59,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
     selector: 'kbq-multiple-file-upload,kbq-file-upload[multiple]',
     imports: [
         AsyncPipe,
+        CdkMonitorFocus,
         NgTemplateOutlet,
         KbqFileDropDirective,
         KbqIconButton,

@@ -114,6 +114,11 @@
             "factory": "./migrations/splitter-deprecated-path/index",
             "schema": "./migrations/splitter-deprecated-path/schema.json"
         },
+        "link-deprecated-path": {
+            "description": "Rewrites @koobiq/components/link imports to @koobiq/components/link/deprecated - the directive implementation moved there when the KbqLink component with slots and the external input was promoted to @koobiq/components/link",
+            "factory": "./migrations/link-deprecated-path/index",
+            "schema": "./migrations/link-deprecated-path/schema.json"
+        },
         "filter-bar-rename-action": {
             "description": "Removes the `name` and `error` keys from filter-bar locale configurations, splits `saveChanges` / `saveAsNew` into `…Header` and `…Button` keys, and reports the rename rework: renaming a filter no longer marks it saved, so it stops persisting the pending pipe edits",
             "factory": "./migrations/filter-bar-rename-action/index",

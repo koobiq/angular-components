@@ -4,7 +4,7 @@ import { KbqAlert, KbqAlertCloseButton, KbqAlertControl, KbqAlertTitle } from '@
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon, KbqIconButton, KbqIconItem } from '@koobiq/components/icon';
-import { KbqLink } from '@koobiq/components/link';
+import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
 
 /**
  * @title Alert content
@@ -19,6 +19,7 @@ import { KbqLink } from '@koobiq/components/link';
         KbqButton,
         KbqButtonCssStyler,
         KbqLink,
+        KbqLinkSuffix,
         KbqIcon,
         KbqIconItem,
         KbqIconButton

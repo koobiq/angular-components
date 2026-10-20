@@ -1,0 +1,137 @@
+@use 'sass:string';
+@use '../core/styles/common/tokens';
+@use '../core/styles/common/link';
+
+// Sass writes an escape in a quoted string as the character itself, an invisible one here. Unquoted, the
+// joiner reaches the CSS as the `\2060` escape.
+$_kbq-link-word-joiner: string.unquote('"\\2060"');
+
+// Only an icon or an image after the text keeps its distance from it: the punctuation ending a sentence
+// follows the last word immediately.
+@mixin _kbq-link-gaps($gap, $external-icon-gap) {
+    .kbq-link__prefix + .kbq-link__text {
+        margin-inline-start: $gap;
+    }
+
+    .kbq-link__trailing {
+        > .kbq-icon,
+        > img,
+        > svg {
+            margin-inline-start: $gap;
+        }
+
+        > .kbq-link__external-icon {
+            margin-inline-start: $external-icon-gap;
+        }
+    }
+}
+
+// The hosts of the component only: the deprecated directive shares the `kbq-link` class, and `:where()` keeps it
+// out without adding to the specificity of a rule.
+// @TODO: drop `:where([kbqlink])` together with `link/deprecated`: the plain `.kbq-link` is enough then.
+.kbq-link:where([kbqlink]) {
+    display: inline;
+
+    text-decoration: none;
+
+    @include link.kbq-link-root();
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+    @include link.kbq-link-states('.kbq-link__text');
+
+    &.kbq-link_use-visited:visited:not(.kbq-disabled),
+    &.kbq-link_use-visited.kbq-visited:not(.kbq-disabled) {
+        @include link.kbq-link-visited-states('.kbq-link__text');
+    }
+
+    &.cdk-keyboard-focused {
+        @include link.kbq-link-keyboard-focus-outline();
+    }
+
+    // The vertical padding covers the gap between the lines of a wrapped link, so the pointer moving from one
+    // line to the next stays on the link. It changes neither the line height nor the focus ring, drawn around
+    // the link itself, so a link that fits on one line keeps it too.
+    .kbq-link__text {
+        padding-block: var(--kbq-link-size-multiline-hit-area-gap);
+
+        @include link.kbq-link-text();
+    }
+
+    // The states color the underline whatever the mode: a link underlined on hover only, or never, has no line
+    &.kbq-link_underline_hover:not(:hover, .kbq-hovered, :active, .kbq-active),
+    &.kbq-link_underline_none {
+        .kbq-link__text {
+            text-decoration-line: none;
+        }
+    }
+
+    .kbq-link__prefix.kbq-icon,
+    .kbq-link__trailing .kbq-icon {
+        vertical-align: baseline;
+
+        &:has(> svg) {
+            vertical-align: middle;
+            line-height: 0;
+        }
+    }
+
+    // The trailing part starts with a word joiner and does not wrap inside, so the last word of the text, the
+    // punctuation and the trailing icon fit on a line together or wrap together, whatever the icon size. The
+    // joiner is kept out of the accessible name.
+    .kbq-link__trailing {
+        white-space: nowrap;
+
+        &:not(:empty)::before {
+            // Firefox before 128 and Safari before 17.4 drop the declaration with the alternative text
+            content: $_kbq-link-word-joiner;
+            content: $_kbq-link-word-joiner / '';
+        }
+
+        // Only the joint stays on one line: a suffix, such as a caption, wraps inside like the text
+        > .kbq-link__suffix {
+            white-space: normal;
+        }
+    }
+
+    @include _kbq-link-gaps(var(--kbq-link-size-normal-content-padding), 1px);
+
+    &.kbq-link_size_compact {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+
+        .kbq-link__prefix.kbq-icon {
+            vertical-align: text-top;
+        }
+
+        .kbq-link__trailing .kbq-icon {
+            vertical-align: middle;
+        }
+
+        .kbq-link__external-icon {
+            margin-bottom: 1px;
+        }
+
+        @include _kbq-link-gaps(var(--kbq-link-size-compact-content-padding), 0px);
+    }
+
+    &.kbq-link_size_big {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+        @include _kbq-link-gaps(var(--kbq-link-size-big-content-padding), 2px);
+    }
+
+    // An icon without a color of its own takes the color of the link in every state
+    .kbq-icon.kbq-empty {
+        color: inherit !important;
+    }
+
+    @media print {
+        &[data-print]:not(.kbq-disabled) {
+            .kbq-link__text {
+                text-decoration: none;
+            }
+
+            &::after {
+                content: ':\a' attr(data-print);
+                white-space: pre;
+            }
+        }
+    }
+}

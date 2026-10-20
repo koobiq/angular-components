@@ -101,7 +101,22 @@ import {
     E2eInlineEditTruncation
 } from '../components/inline-edit/e2e';
 import { E2eInputStateAndStyle } from '../components/input/e2e';
-import { E2eLinkStates, E2eLinkTrailingIconWrap, E2eLinkWithCaption } from '../components/link/e2e';
+import {
+    E2eDeprecatedLinkStates,
+    E2eDeprecatedLinkTrailingIconWrap,
+    E2eDeprecatedLinkWithCaption
+} from '../components/link/deprecated/e2e';
+import {
+    E2eLinkCaptionWrap,
+    E2eLinkCustomContent,
+    E2eLinkIcons,
+    E2eLinkMultiline,
+    E2eLinkPrint,
+    E2eLinkRtl,
+    E2eLinkSize,
+    E2eLinkStates,
+    E2eLinkTrailingIconWrap
+} from '../components/link/e2e';
 import {
     E2eListDragAndDrop,
     E2eListDragGrouped,
@@ -371,8 +386,17 @@ const components: Record<string, Type<unknown>> = {
     E2eBadgeStyles,
     E2eBadgeAsyncIcon,
     E2eLinkStates,
-    E2eLinkWithCaption,
+    E2eLinkCaptionWrap,
+    E2eLinkSize,
+    E2eLinkIcons,
+    E2eLinkCustomContent,
+    E2eLinkMultiline,
+    E2eLinkPrint,
+    E2eLinkRtl,
     E2eLinkTrailingIconWrap,
+    E2eDeprecatedLinkStates,
+    E2eDeprecatedLinkWithCaption,
+    E2eDeprecatedLinkTrailingIconWrap,
     E2eTagInputStates,
     E2eTagInputSeparators,
     E2eModalStates,

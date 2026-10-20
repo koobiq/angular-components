@@ -26,7 +26,7 @@ Used by default.
 
 ##### Small size
 
-Used where a small-sized link is needed (for example, in a field caption).
+Used where a small-sized link is needed (for example, in a field caption). Set it with `size`: `compact`, `normal` (the default) or `big`.
 
 <Example id="link-caption" />
 
@@ -54,8 +54,8 @@ For navigating to external pages. External pages are all pages outside the produ
 <div class="kbq-callout__header">Note</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-To denote external links, use the `kbq-north-east_16` icon.
-This icon has specially adjusted spacing, so for correct display add the `.kbq-link_external` class to the link element.
+To mark an external link, add `external`: the icon appears by itself.
+To open the page in a new tab, add `target="_blank"` as well.
 
 </div>
 </div>
@@ -86,6 +86,8 @@ An analog of a button. Does not reload the page, does not open in a new tab or b
 
 <Example id="link-pseudo" />
 
+Make a pseudo-link from a `<span>`, or add `pseudo` to an `<a>` without a `href`. It is pressed with Enter and Space, like a button. A `<button>` does not suit a pseudo-link inside text: a button does not wrap to the next line.
+
 A link should not lead to the same page it is on. Such links are useless and only confuse the user: you click, the page loads, and you end up where you started. The exception is interfaces with refreshable content, where a link duplicates a page refresh.
 
 Use a pseudo-link when you need to embed an action in text. For all other cases, use a ghost button.
@@ -93,6 +95,8 @@ Use a pseudo-link when you need to embed an action in text. For all other cases,
 #### Links when printing pages
 
 When printing a page, the link text may change to the full link address. This can be useful if using a printed version of the page is an expected use case. For example, links to CVE databases can be preserved in a vulnerability scan report. The link should be clean: "http://www" can be omitted.
+
+Add `print` to a link, and its address is printed after the text. To print something else, pass the text: `print="koobiq.io/link"`.
 
 In the printed page:
 
@@ -121,7 +125,8 @@ It is important that a link not only looks like a link but also works like one. 
 
 | <div style="min-width: 110px;">Key</div>                                                      | Action                        |
 | --------------------------------------------------------------------------------------------- | ----------------------------- |
-| <span class="docs-hot-key-button">Space</span> \ <span class="docs-hot-key-button">⏎</span>   | Follow the link               |
+| <span class="docs-hot-key-button">⏎</span>                                                    | Follow the link               |
+| <span class="docs-hot-key-button">Space</span> \ <span class="docs-hot-key-button">⏎</span>   | Press a pseudo-link           |
 | <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">F10</span> | Open context menu (for links) |
 |                                                                                               | (Applicable on Windows only.) |
 
@@ -133,7 +138,11 @@ In multiline links, each line is underlined:
 
 <Example id="link-multi-line" />
 
-It is important that in multiline links the hover zone covers the line spacing.
+It is important that in multiline links the hover zone covers the line spacing — the link does this by itself.
+
+##### Underline
+
+By default a link is always underlined, and a pseudo-link only on hover. To change this, set `underline`: `always`, `hover` or `none`.
 
 ##### Syntax
 
@@ -144,11 +153,20 @@ Related prepositions are included in the link:
 
 <Example id="link-prepositions" />
 
+The period at the end of a sentence is colored like the link but is not underlined. Put it in an element with `kbqLinkSuffix`:
+
+```html
+<a kbqLink href="https://koobiq.io">
+    to the Technical support center
+    <span kbqLinkSuffix>.</span>
+</a>
+```
+
 ##### Icons
 
 By default — on the left. Exception — the external navigation icon.
 
-The icon is within the click area but is not underlined.
+The icon is within the click area but is not underlined. Mark an icon on the left with `kbqLinkPrefix` and an icon on the right with `kbqLinkSuffix`.
 
 <Example id="link-icons" />
 
@@ -163,3 +181,13 @@ Marking visited links is useful on collection pages — article roundups, readin
 ##### Disabled
 
 <Example id="link-disabled" />
+
+#### Default settings
+
+`kbqLinkOptionsProvider` sets the defaults for the whole application or for one component: `size`, `underline`, `pseudoUnderline` (the underline of pseudo-links) and `useVisited`. A value set on a link overrides them.
+
+```ts
+bootstrapApplication(AppComponent, {
+    providers: [kbqLinkOptionsProvider({ size: 'compact', useVisited: true })]
+});
+```

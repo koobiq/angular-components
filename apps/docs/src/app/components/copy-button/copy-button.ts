@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, input, signal, ViewEncapsulation } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { DocsClipboardService } from 'src/app/services/clipboard';
 import { DocsLocaleState } from 'src/app/services/locale';
 
@@ -10,12 +10,11 @@ const SUCCESS_LABEL_DURATION = 1000;
     selector: 'docs-copy-button',
     imports: [
         KbqIconModule,
-        KbqLinkModule
+        KbqLink
     ],
     template: `
         <span
-            kbq-link
-            pseudo
+            kbqLink
             role="button"
             tabindex="0"
             [attr.aria-label]="t('copy')"
@@ -25,7 +24,7 @@ const SUCCESS_LABEL_DURATION = 1000;
         >
             @if (isLabelSuccessVisible()) {
                 <i class="kbq kbq-check_16" aria-hidden="true"></i>
-                <span class="kbq-link__text" role="status">{{ t('copied') }}</span>
+                <span role="status">{{ t('copied') }}</span>
             } @else {
                 <i class="kbq kbq-square-multiple-o_16" aria-hidden="true"></i>
             }

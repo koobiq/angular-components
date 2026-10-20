@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DebugElement, model, Provider, Type
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { KbqLinkModule } from '../link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqDynamicTranslation } from './dynamic-translation';
 import { KbqDynamicTranslationModule } from './module';
 
@@ -24,10 +24,10 @@ const getDynamicTranslationDebugElement = (debugElement: DebugElement): DebugEle
 
 @Component({
     selector: 'test-dynamic-translation',
-    imports: [KbqDynamicTranslationModule, KbqLinkModule],
+    imports: [KbqDynamicTranslationModule, KbqLink],
     template: `
         <kbq-dynamic-translation [text]="text()">
-            <a *kbqDynamicTranslationSlot="'testSlot1'; let context" kbq-link href="#">{{ context }}</a>
+            <a *kbqDynamicTranslationSlot="'testSlot1'; let context" kbqLink href="#">{{ context }}</a>
             <strong *kbqDynamicTranslationSlot="'testSlot2'; let context">{{ context }}</strong>
             <ul *kbqDynamicTranslationSlot="'testListSlot'; let list">
                 @for (item of list; track $index) {

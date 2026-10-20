@@ -361,9 +361,10 @@ export class E2eFileUploadStateAndStyle {
                 item.classList.add('kbq-hovered');
             });
 
-            this.document.querySelectorAll<HTMLElement>('.dev-focused-link .kbq-link').forEach((link) => {
-                link.classList.add('cdk-focused');
-                link.classList.add('cdk-keyboard-focused');
+            // Keyboard focus lands on the hidden file input, and the label around the browse link shows it
+            this.document.querySelectorAll<HTMLElement>('.dev-focused-link .kbq-file-loader').forEach((loader) => {
+                loader.classList.add('cdk-focused');
+                loader.classList.add('cdk-keyboard-focused');
             });
 
             // The single-file upload clears the classes applied above once its own focus monitor
@@ -376,9 +377,9 @@ export class E2eFileUploadStateAndStyle {
                         button.classList.add('cdk-keyboard-focused');
                     });
 
-                this.document.querySelectorAll<HTMLElement>('.dev-focused-link .kbq-link').forEach((link) => {
-                    link.classList.add('cdk-focused');
-                    link.classList.add('cdk-keyboard-focused');
+                this.document.querySelectorAll<HTMLElement>('.dev-focused-link .kbq-file-loader').forEach((loader) => {
+                    loader.classList.add('cdk-focused');
+                    loader.classList.add('cdk-keyboard-focused');
                 });
 
                 // Set last, so the spec has one signal that is reachable only after the re-application

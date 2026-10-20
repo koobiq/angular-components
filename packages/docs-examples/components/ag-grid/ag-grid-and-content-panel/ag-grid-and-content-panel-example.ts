@@ -6,7 +6,7 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 import { AgGridModule } from 'ag-grid-angular';
 import {
@@ -97,7 +97,7 @@ export class ExampleGrid {
     imports: [
         KbqButtonModule,
         KbqBadgeModule,
-        KbqLinkModule,
+        KbqLink,
         KbqIconModule,
         KbqContentPanelModule,
         KbqModalModule,
@@ -143,7 +143,7 @@ export class ExampleGrid {
                         <div class="example-content-header-title" kbqContentPanelHeaderTitle>
                             <span>Selected row {{ selectedRowIndex() }}</span>
                             <kbq-badge [badgeColor]="badgeColors.FadeError">8,6</kbq-badge>
-                            <a kbq-link pseudo>July 21, 2025 2:29 PM</a>
+                            <a kbqLink pseudo>July 21, 2025 2:29 PM</a>
                         </div>
                         <div class="example-content-header-actions" kbqContentPanelHeaderActions>
                             <button

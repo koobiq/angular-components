@@ -1,4 +1,3 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import {
     afterNextRender,
@@ -6,12 +5,10 @@ import {
     Component,
     computed,
     DestroyRef,
-    effect,
     ElementRef,
     inject,
     InjectionToken,
     input,
-    OnDestroy,
     Provider,
     signal,
     viewChild,
@@ -38,7 +35,7 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
     // no need format line with ng-content it's broke textContent for markdownService.parseToHtml()
     template: `
         <pre #contentWrapper class="kbq-markdown__input" ngPreserveWhitespaces><ng-content /></pre>
-        <div #outputWrapper class="kbq-markdown__output" [innerHtml]="resultHtml()"></div>
+        <div class="kbq-markdown__output" [innerHtml]="resultHtml()"></div>
     `,
     styleUrls: ['./markdown.scss', 'markdown-tokens.scss'],
     // The rendered content comes from `[innerHtml]`, so its scrollbars can only be customized from the host.
@@ -50,22 +47,18 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
     },
     hostDirectives: [KbqNativeScrollbar]
 })
-export class KbqMarkdown implements OnDestroy {
+export class KbqMarkdown {
     private readonly markdownService = inject(KbqMarkdownService);
     private readonly sanitizer = inject(DomSanitizer);
     private readonly markedOptions =
         inject<MarkedOptions | undefined>(KBQ_MARKDOWN_MARKED_OPTIONS, { optional: true }) ?? undefined;
-    private readonly focusMonitor = inject(FocusMonitor);
     private readonly contentObserver = inject(ContentObserver);
     private readonly destroyRef = inject(DestroyRef);
 
     private readonly contentWrapper = viewChild.required<ElementRef<HTMLPreElement>>('contentWrapper');
-    private readonly outputWrapper = viewChild.required<ElementRef<HTMLDivElement>>('outputWrapper');
 
     /** Text content projected into the component, re-read after every render that changes it. */
     private readonly projectedText = signal<string | null>(null);
-
-    private readonly links: HTMLAnchorElement[] = [];
 
     /** `Markdown` text. Falls back to the projected content while it is empty. */
     readonly markdownText = input<string | null>(null);
@@ -90,31 +83,6 @@ export class KbqMarkdown implements OnDestroy {
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => this.readProjectedText(host));
         });
-
-        effect((onCleanup) => {
-            if (!this.resultHtml()) {
-                this.stopMonitoringLinks();
-
-                return;
-            }
-
-            // The anchors only exist once the `[innerHtml]` binding has been applied, so the monitor is
-            // attached a microtask later — and dropped again if the text changes or the view goes away
-            // before that microtask runs.
-            let cancelled = false;
-
-            onCleanup(() => (cancelled = true));
-
-            Promise.resolve().then(() => {
-                if (!cancelled) {
-                    this.startMonitoringLinks();
-                }
-            });
-        });
-    }
-
-    ngOnDestroy(): void {
-        this.stopMonitoringLinks();
     }
 
     /** The content observer fires on any mutation, so only a real text change is worth a re-render. */
@@ -128,20 +96,5 @@ export class KbqMarkdown implements OnDestroy {
 
     private getResultHTML(markdown: string): SafeHtml {
         return this.sanitizer.bypassSecurityTrustHtml(this.markdownService.parseToHtml(markdown, this.markedOptions));
-    }
-
-    private startMonitoringLinks(): void {
-        this.stopMonitoringLinks();
-        this.outputWrapper()
-            .nativeElement.querySelectorAll<HTMLAnchorElement>('.kbq-markdown__a')
-            .forEach((link) => {
-                this.links.push(link);
-                this.focusMonitor.monitor(link, true);
-            });
-    }
-
-    private stopMonitoringLinks(): void {
-        this.links.forEach((link) => this.focusMonitor.stopMonitoring(link));
-        this.links.length = 0;
     }
 }

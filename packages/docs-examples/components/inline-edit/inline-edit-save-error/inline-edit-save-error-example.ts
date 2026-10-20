@@ -11,7 +11,7 @@ import {
     KbqInlineEditSaveHandler
 } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { Observable, of, switchMap, throwError, timer } from 'rxjs';
 
@@ -40,7 +40,7 @@ class ExampleSaveError extends Error {
         KbqInputModule,
         KbqButtonModule,
         KbqIconModule,
-        KbqLinkModule,
+        KbqLink,
         KbqToastModule
     ],
     template: `
@@ -86,41 +86,13 @@ class ExampleSaveError extends Error {
 
         <!-- The failure is not about the value, so the same value is worth sending again. -->
         <ng-template #retryActions let-toast>
-            <a
-                kbq-link
-                pseudo
-                role="button"
-                (click)="retry(toast)"
-                (keydown.enter)="retry(toast)"
-                (keydown.space)="$event.preventDefault(); retry(toast)"
-            >
-                Retry
-            </a>
+            <a kbqLink pseudo (click)="retry(toast)">Retry</a>
         </ng-template>
 
         <!-- The server rejected the value, so the user either fixes it or drops it. -->
         <ng-template #rejectedActions let-toast>
-            <a
-                kbq-link
-                pseudo
-                role="button"
-                class="layout-margin-right-m"
-                (click)="edit(toast)"
-                (keydown.enter)="edit(toast)"
-                (keydown.space)="$event.preventDefault(); edit(toast)"
-            >
-                Edit
-            </a>
-            <a
-                kbq-link
-                pseudo
-                role="button"
-                (click)="discard(toast)"
-                (keydown.enter)="discard(toast)"
-                (keydown.space)="$event.preventDefault(); discard(toast)"
-            >
-                Discard changes
-            </a>
+            <a kbqLink pseudo class="layout-margin-right-m" (click)="edit(toast)">Edit</a>
+            <a kbqLink pseudo (click)="discard(toast)">Discard changes</a>
         </ng-template>
 
         <!-- Closing the notification without reacting discards the unsaved value as well. -->

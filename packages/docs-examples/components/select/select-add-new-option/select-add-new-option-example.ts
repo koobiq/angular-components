@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqForm, KbqFormElement } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLink } from '@koobiq/components/link';
+import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
@@ -18,7 +18,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
         KbqButtonModule,
         KbqForm,
         KbqFormElement,
-        KbqLink
+        KbqLink,
+        KbqLinkPrefix
     ],
     template: `
         <form novalidate class="kbq-form-vertical">
@@ -39,8 +40,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
                     There are no suitable accounts of this type (Terminal) in Mega App
                 </div>
                 <div class="layout-padding-top-xs">
-                    <span kbq-link pseudo>
-                        <i kbq-icon="kbq-plus_16"></i>
+                    <span kbqLink>
+                        <i kbq-icon="kbq-plus_16" kbqLinkPrefix></i>
                         New Account
                     </span>
                 </div>

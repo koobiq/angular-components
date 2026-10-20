@@ -106,20 +106,20 @@
     }
     @if (context.browseLink) {
         <label
-            kbq-link
-            pseudo
             kbqFileLoader
+            cdkMonitorSubtreeFocus
             [onlyDirectory]="null"
             [accept]="acceptedFiles"
             [disabled]="disabled"
             [describedBy]="describedBy()"
             [invalid]="invalid"
             [for]="fileUploadContext.id() || inputId()"
-            [tabIndex]="-1"
             [multiple]="true"
             (fileChange)="onFileSelectedViaClick($event)"
         >
-            {{ context.browseLink }}
+            <span class="kbq-file-upload__browse-link" kbqLink size="normal" [disabled]="disabled" [tabIndex]="-1">
+                {{ context.browseLink }}
+            </span>
         </label>
     }
     @if (context.captionTextSeparator) {
@@ -127,17 +127,17 @@
     }
     @if (context.browseLinkFolder) {
         <label
-            kbq-link
-            pseudo
             kbqFileLoader
+            cdkMonitorSubtreeFocus
             [onlyDirectory]="true"
             [disabled]="disabled"
             [describedBy]="describedBy()"
             [invalid]="invalid"
-            [tabIndex]="-1"
             (fileChange)="onFileSelectedViaClick($event)"
         >
-            {{ context.browseLinkFolder }}
+            <span class="kbq-file-upload__browse-link" kbqLink size="normal" [disabled]="disabled" [tabIndex]="-1">
+                {{ context.browseLinkFolder }}
+            </span>
         </label>
     }
 </ng-template>

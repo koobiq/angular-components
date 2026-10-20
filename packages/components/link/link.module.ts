@@ -1,12 +1,15 @@
-import { A11yModule } from '@angular/cdk/a11y';
 import { NgModule } from '@angular/core';
-import { KbqLink } from './link.component';
+import { KbqLink, KbqLinkPrefix, KbqLinkSuffix } from './link';
 
+const COMPONENTS = [
+    KbqLink,
+    KbqLinkPrefix,
+    KbqLinkSuffix
+];
+
+/** @docs-private */
 @NgModule({
-    imports: [
-        A11yModule,
-        KbqLink
-    ],
-    exports: [KbqLink]
+    imports: COMPONENTS,
+    exports: COMPONENTS
 })
 export class KbqLinkModule {}

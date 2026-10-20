@@ -18,7 +18,7 @@ import { KbqComponentColors, KbqFormattersModule, KbqThemeService, PopUpPlacemen
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
@@ -56,7 +56,7 @@ enum NavbarIcItems {
         KbqButtonModule,
         KbqDropdownModule,
         AsyncPipe,
-        KbqLinkModule,
+        KbqLink,
         LuxonDateModule,
         KbqFormattersModule,
         KbqNavbarModule

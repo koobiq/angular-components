@@ -6,7 +6,7 @@
 
     <div class="e2e-nav">
         @for (link of links; track link.path) {
-            <a kbq-link compact noUnderline [routerLink]="link.path">
+            <a kbqLink underline="none" size="compact" [routerLink]="link.path">
                 {{ link.path }}
             </a>
         }

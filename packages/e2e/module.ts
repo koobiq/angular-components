@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, isDevMode } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { DevThemeToggle } from '../components-dev/theme-toggle';
 import { e2eRoutes } from './routes';
 
 @Component({
     selector: 'e2e-app',
-    imports: [DevThemeToggle, RouterOutlet, RouterLink, KbqLinkModule],
+    imports: [DevThemeToggle, RouterOutlet, RouterLink, KbqLink],
     templateUrl: 'template.html',
     styleUrl: 'main.scss',
     changeDetection: ChangeDetectionStrategy.OnPush

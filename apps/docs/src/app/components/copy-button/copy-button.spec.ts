@@ -25,7 +25,7 @@ describe(DocsCopyButtonComponent.name, () => {
     let fixture: ComponentFixture<DocsCopyButtonComponent>;
     let copy: jest.Mock;
 
-    const control = (): HTMLElement => fixture.nativeElement.querySelector('[kbq-link]');
+    const control = (): HTMLElement => fixture.nativeElement.querySelector('[kbqLink]');
 
     beforeEach(() => {
         copy = jest.fn().mockReturnValue(true);

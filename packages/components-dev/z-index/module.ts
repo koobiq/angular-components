@@ -7,7 +7,6 @@ import { KbqOptionModule, KbqOverlayLayer, PopUpPlacements, ThemePalette } from 
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqPopoverModule } from '@koobiq/components/popover';
@@ -47,7 +46,6 @@ export class DevToastComponent extends KbqToastComponent {
         CdkScrollableModule,
         KbqButtonModule,
         KbqIconModule,
-        KbqLinkModule,
         KbqToastModule,
         KbqProgressBarModule,
         KbqDropdownModule,

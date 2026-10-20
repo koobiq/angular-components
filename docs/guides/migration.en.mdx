@@ -21,6 +21,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **21.0.0**: the theme service review — signals, `auto` mode and built-in persistence.
 - **21.0.0**: explicit prefix and suffix slots for tag content.
 - **21.0.0**: deprecation of the overlayscrollbars-based Scrollbar implementation.
+- **21.0.0**: the link component instead of the directive — the `kbqLink` selector, slots, `external` and `size`.
 - **21.0.0**: the locale layer typing — a typed `getParams`, partial locale data and signals.
 - **21.0.0**: `multiple` on the selection list and tree became a real, changeable input.
 - **21.0.0**: the component review — closed internals, signal inputs and the behavior fixes it uncovered.
@@ -982,6 +983,65 @@ After fully moving to the new component and removing imports from `@koobiq/compo
 npm uninstall overlayscrollbars
 ```
 
+### Link component instead of the directive (21.0.0)
+
+{/* migration-step-components(link) */}
+
+`@koobiq/components/link` now resolves to the `KbqLink` component with the `[kbqLink]` selector. It wraps the text itself and underlines only the text, while icons and the period ending a sentence go to the `kbqLinkPrefix` and `kbqLinkSuffix` slots. The `external` input adds the external link icon, the `size` input sets the size and the `underline` input the underline. The hover zone of a wrapped link covers the gap between its lines by itself. A link on any element but an `<a>` is a pseudo link by itself: it gets the `button` role and is pressed with Enter and Space. A click on a disabled link is stopped, a programmatic one included. The previous directive — `KbqLink` and `KbqLinkModule` with the `[kbq-link]` selector, whose markup needed the `kbq-link__text` wrapper and the `kbq-link_external` and `kbq-text-with-dot` classes — moved to `@koobiq/components/link/deprecated` unchanged and will be removed in a future major version.
+
+**An unmigrated import breaks silently, which is the case the migration exists for.** Both entry points export `KbqLink` and `KbqLinkModule`, so the import keeps compiling but brings in the component with the `[kbqLink]` selector. The `kbq-link` attribute in the templates no longer matches anything, and the links lose their styles.
+
+#### Running the migration
+
+The `link-deprecated-path` schematic is registered for 21.0.0, so `ng update` to that version runs it on its own:
+
+```bash
+ng g @koobiq/components:link-deprecated-path --project "<your project>"
+```
+
+It rewrites the `@koobiq/components/link` specifier to `@koobiq/components/link/deprecated` in every `.ts` file. Templates need no changes: they keep working against the directive at its new path. Run it once, before moving anything to the component: it cannot tell an import pointed back at the component from an old one, and a second run moves that import to `/deprecated` again.
+
+#### Moving to the component
+
+This is a separate, manual step: point the import back at `@koobiq/components/link` and rewrite the markup.
+
+| Before                                                       | After                                                                                     |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| `kbq-link`                                                   | `kbqLink`                                                                                 |
+| `big` / `compact`                                            | `size="big"` / `size="compact"`                                                           |
+| `noUnderline`                                                | `underline="none"`; nothing on a pseudo link, which got its underline on hover before too |
+| `multiline`                                                  | Nothing: the hover zone of a wrapped link covers the gap between its lines by itself      |
+| `pseudo` on a `<span>`, a `<button>` or a `<label>`          | Nothing: such a link is a pseudo link anyway                                              |
+| `<span class="kbq-link__text">Text</span>`                   | `Text`                                                                                    |
+| An icon before the text                                      | The icon with `kbqLinkPrefix`                                                             |
+| An icon after the text                                       | The icon with `kbqLinkSuffix`                                                             |
+| `class="kbq-link_external"` and the `kbq-north-east_16` icon | `external`                                                                                |
+| `class="kbq-text-with-dot"` and `<span>.</span>`             | `<span kbqLinkSuffix>.</span>`                                                            |
+| A caption or other content that is not underlined            | An element with `kbqLinkSuffix`                                                           |
+
+```html
+<!-- Before -->
+<a class="kbq-link_external" href="https://koobiq.io" target="_blank" kbq-link>
+    <span class="kbq-link__text">Technical support center</span>
+    <i kbq-icon="kbq-north-east_16"></i>
+</a>
+
+<!-- After -->
+<a href="https://koobiq.io" target="_blank" kbqLink external>Technical support center</a>
+```
+
+**`external` does not open the page in a new tab.** That still takes `target="_blank"`.
+
+**A pseudo link gets the `button` role.** If you handled Enter and Space on it yourself, remove those handlers, call `preventDefault()` in them or give the element a role in the template: the component leaves a key that is already handled to its handler, and an element with a role of its own alone, together with its keyboard. A `<button>` and a `<label>` get neither the role nor the keyboard. A `<span>` that looked like a regular link is a pseudo link now, underlined only on hover; if it leads to a page, make it an `<a>` with a `href`.
+
+**The CSS modifiers changed.** Styles written against the classes of the directive do not reach the component: `kbq-link_compact` and `kbq-link_big` became `kbq-link_size_compact` and `kbq-link_size_big`, `kbq-link_no-underline` became `kbq-link_underline_none`, the `print` attribute became `data-print`, and `kbq-text-only`, `kbq-text-with-icon`, `kbq-link_multiline` and `kbq-link_print` are gone, as are `kbq-icon_left` and `kbq-icon_right` on the icons inside a link. The links of `KbqMarkdownService` carry only the `kbq-markdown__a` class now.
+
+**What every link repeated goes into one provider.** `kbqLinkOptionsProvider` sets the default `size`, the underline of links and pseudo links and `useVisited` for the whole application or for one injector.
+
+**The link is a component now.** An element carries one component only, so `<label kbqLink kbqFileLoader>` fails with NG0300: put the link inside, `<label kbqFileLoader><span kbqLink>Browse</span></label>`. The link also renders its own content around what you project, so bind `[innerHTML]` on an element inside it rather than on the link.
+
+**The directive and the component can be moved one at a time.** Their selectors differ, so both fit into one standalone component; the classes share their names, so one of the imports needs an alias: `import { KbqLink as KbqLinkDeprecated } from '@koobiq/components/link/deprecated'`.
+
 ### Locale layer typing (21.0.0)
 
 The locale layer is fully typed now, every localized component takes its strings through one shared
@@ -1676,6 +1736,8 @@ Three fixes with nothing to migrate. The SVG resolution stream no longer termina
 Reported by `icon-semantics-and-api`.
 
 #### Link
+
+This part describes the directive, which moved to `@koobiq/components/link/deprecated`; the component that replaces it is described above, in "Link component instead of the directive".
 
 The three inputs the automated signal migration skipped were all accessors, and each did something beyond storing a value: `disabled` wrote a separate signal, `tabIndex` folded in the disabled state, and `print` was a setter with no getter that also computed the printed URL.
 

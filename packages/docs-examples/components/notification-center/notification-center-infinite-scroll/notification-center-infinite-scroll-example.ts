@@ -9,7 +9,6 @@ import { KbqComponentColors, KbqFormattersModule, KbqThemeService } from '@koobi
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLink } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import {
     KbqNotificationCenterModule,
@@ -71,7 +70,6 @@ enum NavbarIcItems {
         KbqFormattersModule,
         KbqDropdownModule,
         KbqEmptyStateModule,
-        KbqLink,
         KbqNavbarModule,
         KbqTopBarModule
     ],

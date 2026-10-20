@@ -4,7 +4,7 @@ import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqFormattersModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { createNotifications, injectExampleText } from '../localized-data';
@@ -20,7 +20,7 @@ import { createNotifications, injectExampleText } from '../localized-data';
         KbqIconModule,
         KbqNavbarModule,
         AsyncPipe,
-        KbqLinkModule,
+        KbqLink,
         LuxonDateModule,
         KbqFormattersModule
     ],

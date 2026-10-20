@@ -116,7 +116,7 @@ test.describe('docs app', () => {
         await page.goto('/en/components/select/examples');
         await waitForHydration(page);
 
-        const toggle = page.locator('.docs-live-example__footer [kbq-link]').first();
+        const toggle = page.locator('.docs-live-example__footer [kbqlink]').first();
 
         await expect(toggle).toHaveAttribute('aria-expanded', 'false');
         await toggle.click();

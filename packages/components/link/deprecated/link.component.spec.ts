@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from './index';
 
-describe('KbqLink', () => {
+describe('KbqLink (deprecated)', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [

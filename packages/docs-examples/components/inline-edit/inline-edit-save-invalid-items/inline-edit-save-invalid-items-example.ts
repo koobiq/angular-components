@@ -11,7 +11,7 @@ import {
     KbqInlineEditSaveErrorContext,
     KbqInlineEditSaveHandler
 } from '@koobiq/components/inline-edit';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
@@ -39,7 +39,7 @@ class ExampleRolesError extends Error {
         KbqBadgeModule,
         KbqButtonModule,
         KbqIconModule,
-        KbqLinkModule,
+        KbqLink,
         KbqTagsModule,
         KbqToastModule
     ],
@@ -106,27 +106,8 @@ class ExampleRolesError extends Error {
         </ng-template>
 
         <ng-template #actions let-toast>
-            <a
-                kbq-link
-                pseudo
-                role="button"
-                class="layout-margin-right-m"
-                (click)="edit(toast)"
-                (keydown.enter)="edit(toast)"
-                (keydown.space)="$event.preventDefault(); edit(toast)"
-            >
-                Edit
-            </a>
-            <a
-                kbq-link
-                pseudo
-                role="button"
-                (click)="discard(toast)"
-                (keydown.enter)="discard(toast)"
-                (keydown.space)="$event.preventDefault(); discard(toast)"
-            >
-                Discard changes
-            </a>
+            <a kbqLink pseudo class="layout-margin-right-m" (click)="edit(toast)">Edit</a>
+            <a kbqLink pseudo (click)="discard(toast)">Discard changes</a>
         </ng-template>
 
         <!-- Closing the notification without reacting discards the unsaved value as well. -->

@@ -53,6 +53,7 @@
             "@koobiq/components/inline-edit": ["packages/components/inline-edit/index.ts"],
             "@koobiq/components/input": ["packages/components/input/index.ts"],
             "@koobiq/components/link": ["packages/components/link/index.ts"],
+            "@koobiq/components/link/deprecated": ["packages/components/link/deprecated/index.ts"],
             "@koobiq/components/list": ["packages/components/list/index.ts"],
             "@koobiq/components/loader-overlay": ["packages/components/loader-overlay/index.ts"],
             "@koobiq/components/markdown": ["packages/components/markdown/index.ts"],

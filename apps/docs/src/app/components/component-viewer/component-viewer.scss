@@ -430,7 +430,7 @@
 }
 
 // The name of an entry in a type, linked to its section, keeps the font of the type. `.docs-api` is in the selector
-// for weight: `koobiq-typography()` sets the one of `.kbq-link` inside `.docs`, where two class names would only tie.
+// for weight: a size of the link component sets the font with two class names, which would only tie.
 .docs-api .docs-api__term-type .kbq-link {
     font: inherit;
     letter-spacing: inherit;

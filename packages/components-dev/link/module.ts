@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink, KbqLinkPrefix, KbqLinkSuffix } from '@koobiq/components/link';
 import {
     LinkApplicationExample,
     LinkCaptionExample,
@@ -72,7 +72,7 @@ export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
-    imports: [KbqLinkModule, KbqIconModule, DevDocsExamples, DevThemeToggle],
+    imports: [KbqLink, KbqLinkPrefix, KbqLinkSuffix, KbqIconModule, DevDocsExamples, DevThemeToggle],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
