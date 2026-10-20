@@ -299,7 +299,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            expect(component.select().selected.length).toBeGreaterThan(0);
+            expect(component.select().selectionModel.selected.length).toBeGreaterThan(0);
             expect(component.allOptionsSelected).toBe(false);
             expect(component.selectAllCheckboxState).toBe('indeterminate');
         });
@@ -700,7 +700,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             const selectedWithoutSelectAll = component
                 .select()
-                .selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length;
+                .selectionModel.selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length;
 
             expect(selectedCount).toBe(selectedWithoutSelectAll);
         });

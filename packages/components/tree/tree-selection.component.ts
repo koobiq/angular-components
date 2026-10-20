@@ -87,9 +87,9 @@ export const KBQ_SELECTION_TREE_VALUE_ACCESSOR: Provider = {
 /** How long the key manager collects keystrokes before matching them against the option labels. */
 const typeAheadDebounce = 200;
 
-export class KbqTreeSelectAllEvent<T> {
+export class KbqTreeSelectAllEvent<T, N = any> {
     constructor(
-        public source: KbqTreeSelection,
+        public source: KbqTreeSelection<N>,
         public options: T[]
     ) {}
 }
@@ -102,32 +102,27 @@ export class KbqTreeSelectAllEvent<T> {
  * @param option - instance of KbqTreeOption
  * @param event - original keyboard event (optional) that triggered the copy
  */
-export class KbqTreeCopyEvent<T> {
+export class KbqTreeCopyEvent<T, N = any> {
     constructor(
-        public source: KbqTreeSelection,
+        public source: KbqTreeSelection<N>,
         public option: T,
         public event?: KeyboardEvent
     ) {}
 }
 
-export class KbqTreeNavigationChange<T> {
+export class KbqTreeNavigationChange<T, N = any> {
     constructor(
-        public source: KbqTreeSelection,
+        public source: KbqTreeSelection<N>,
         public option: T
     ) {}
 }
 
-export class KbqTreeSelectionChange<T> {
+export class KbqTreeSelectionChange<T, N = any> {
     constructor(
-        public source: KbqTreeSelection,
+        public source: KbqTreeSelection<N>,
         public option: T,
         public options?: T[]
     ) {}
-}
-
-interface SelectionModelOption {
-    id: number | string;
-    value: string;
 }
 
 @Component({
@@ -195,8 +190,8 @@ interface SelectionModelOption {
     ],
     exportAs: 'kbqTreeSelection'
 })
-export class KbqTreeSelection
-    extends KbqTreeBase<any, FlatTreeControl<any>>
+export class KbqTreeSelection<T = any>
+    extends KbqTreeBase<T, FlatTreeControl<T>>
     implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy
 {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -214,9 +209,9 @@ export class KbqTreeSelection
      */
     inSelect = !!inject(KBQ_FORM_FIELD, { optional: true, host: true });
 
-    renderedOptions = new QueryList<KbqTreeOption>();
+    renderedOptions = new QueryList<KbqTreeOption<T>>();
 
-    keyManager: FocusKeyManager<KbqTreeOption>;
+    keyManager: FocusKeyManager<KbqTreeOption<T>>;
 
     /**
      * Accessible name of the tree. Set it whenever the tree has no visible label of its own; a tree
@@ -250,8 +245,11 @@ export class KbqTreeSelection
      * The instance is replaced whenever {@link multiple} changes the multiplicity, because CDK freezes that
      * flag at construction. Subscribe to {@link selectionChange} rather than to `selectionModel.changed`:
      * a subscription taken on the model directly is left behind on the discarded instance.
+     *
+     * `T` is the type of the data nodes, inferred from `[treeControl]` in a template. A query names it:
+     * `viewChild.required<KbqTreeSelection<Node>>(KbqTreeSelection)`.
      */
-    selectionModel: SelectionModel<SelectionModelOption>;
+    selectionModel: SelectionModel<T>;
 
     resetFocusedItemOnBlur: boolean = true;
 
@@ -267,30 +265,30 @@ export class KbqTreeSelection
     ownsKeyboard: boolean = true;
 
     /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
-    readonly selectAllOption = viewChild(KbqTreeOption);
+    readonly selectAllOption = viewChild<KbqTreeOption<T>>(KbqTreeOption);
 
     private readonly unorderedOptionsQuery = contentChildren(KbqTreeOption);
     private readonly unorderedOptionsList = kbqQueryListFrom(this.unorderedOptionsQuery);
 
-    get unorderedOptions(): QueryList<KbqTreeOption> {
+    get unorderedOptions(): QueryList<KbqTreeOption<T>> {
         return this.unorderedOptionsList();
     }
 
-    readonly navigationChange = output<KbqTreeNavigationChange<KbqTreeOption>>();
+    readonly navigationChange = output<KbqTreeNavigationChange<KbqTreeOption<T>, T>>();
 
     /**
      * Emits when the selection changes. A stream rather than an `output()`: `KbqTreeSelect` pipes it with rxjs.
      */
-    readonly selectionChange = new EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>();
+    readonly selectionChange = new EventEmitter<KbqTreeSelectionChange<KbqTreeOption<T>, T>>();
 
     /** @docs-private */
     readonly selectionChangeOutput = outputFromObservable(this.selectionChange, { alias: 'selectionChange' });
 
     /** Emits after "select all" ran, with the options it could act on. */
-    readonly selectAllChange = output<KbqTreeSelectAllEvent<KbqTreeOption>>();
+    readonly selectAllChange = output<KbqTreeSelectAllEvent<KbqTreeOption<T>, T>>();
 
     /** @deprecated Use `selectAllChange` instead. Will be removed in 22.0.0. */
-    readonly onSelectAll = output<KbqTreeSelectAllEvent<KbqTreeOption>>({ alias: 'onSelectAll' });
+    readonly onSelectAll = output<KbqTreeSelectAllEvent<KbqTreeOption<T>, T>>({ alias: 'onSelectAll' });
 
     /**
      * Emits when the active option is copied with Ctrl/Cmd + C. Subscribing replaces the built-in
@@ -298,20 +296,20 @@ export class KbqTreeSelection
      * `observed`, which `OutputEmitterRef` does not have. A template listener subscribes to it through
      * the output below.
      */
-    readonly copyChange = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>();
+    readonly copyChange = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption<T>, T>>();
 
     /** @docs-private */
     readonly copyChangeOutput = outputFromObservable(this.copyChange, { alias: 'copyChange' });
 
     /** @deprecated Use `copyChange` instead. Will be removed in 22.0.0. */
-    readonly onCopy = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>();
+    readonly onCopy = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption<T>, T>>();
 
     /** @docs-private */
     readonly onCopyOutput = outputFromObservable(this.onCopy, { alias: 'onCopy' });
 
-    private sortedNodes: KbqTreeOption[] = [];
+    private sortedNodes: T[] = [];
 
-    private lastSyncedDataNodes: readonly any[] | null = null;
+    private lastSyncedDataNodes: readonly T[] | null = null;
 
     /** @docs-private */
     readonly autoSelectInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
@@ -492,10 +490,7 @@ export class KbqTreeSelection
      * is looking at, and selecting them would contradict a master checkbox that can only report on what
      * is on screen. Without a filter the whole data set qualifies, collapsed branches included.
      */
-    // `any`, not `unknown`: `treeControl`/`selectionModel` are themselves `any`-typed data-node generics
-    // pre-dating this feature (`KbqTreeBase<any>`, `SelectionModel<any>`), so `unknown`
-    // here would only relocate the unsafety into a cast at every call site, not remove it.
-    private get selectAllTargets(): any[] {
+    private get selectAllTargets(): T[] {
         // `treeControl` is an input, so it is still unset on the change-detection pass that sets it:
         // a consumer reading `allOptionsSelected`/`selectAllState` off a template reference — which is
         // exactly how the docs suggest swapping the trigger label — would otherwise get a TypeError
@@ -521,7 +516,7 @@ export class KbqTreeSelection
     }
 
     /** Adapter shared by the master checkbox and the Ctrl/Cmd + A handler, so the two cannot drift apart. */
-    private get selectAllAdapter(): KbqSelectAllAdapter<any> {
+    private get selectAllAdapter(): KbqSelectAllAdapter<T> {
         return {
             items: this.selectAllTargets,
             isSelectable: () => true,
@@ -614,7 +609,7 @@ export class KbqTreeSelection
      * The model this tree built for itself. `KbqTreeSelect` overwrites {@link selectionModel} with one it
      * shares with the tree, and the two diverging is how a mode change knows the model is not ours to swap.
      */
-    private ownSelectionModel: SelectionModel<SelectionModelOption>;
+    private ownSelectionModel: SelectionModel<T>;
 
     constructor() {
         super();
@@ -624,7 +619,7 @@ export class KbqTreeSelection
         // Single selection until the `multiple` input says otherwise. A model has to exist this early
         // because `KbqTreeOption.setSelected` refuses to touch the selection without one, and a static
         // `multiple` attribute reaches the input right after the constructor, before any node exists.
-        this.selectionModel = this.ownSelectionModel = new SelectionModel<SelectionModelOption>(false);
+        this.selectionModel = this.ownSelectionModel = new SelectionModel<T>(false);
 
         effect(() => {
             this.multipleInput();
@@ -756,7 +751,7 @@ export class KbqTreeSelection
         );
 
         // `initiallySelectedValues` seeds the model without emitting.
-        this.selectionModel = this.ownSelectionModel = new SelectionModel<SelectionModelOption>(multiple, kept);
+        this.selectionModel = this.ownSelectionModel = new SelectionModel<T>(multiple, kept);
         this.bindSelectionModel();
 
         // Reconciles both directions against the model that is actually in use now, so no node is left
@@ -832,7 +827,7 @@ export class KbqTreeSelection
                 .subscribe(this.updateRenderedOptions);
         }
 
-        this.keyManager = new FocusKeyManager<KbqTreeOption>(this.renderedOptions)
+        this.keyManager = new FocusKeyManager<KbqTreeOption<T>>(this.renderedOptions)
             .withVerticalOrientation(true)
             .withHorizontalOrientation(null);
 
@@ -895,7 +890,7 @@ export class KbqTreeSelection
      * change handled twice, and the whole option sweep run twice per emission. Only the subscription that
      * depends on the model has to move, which is exactly what `bindSelectionModel` does.
      */
-    initializeForEmbedding(selectionModel: SelectionModel<SelectionModelOption>): void {
+    initializeForEmbedding(selectionModel: SelectionModel<T>): void {
         this.selectionModel = selectionModel;
 
         this.bindSelectionModel();
@@ -1010,7 +1005,7 @@ export class KbqTreeSelection
             const activeItem = this.keyManager.activeItem;
 
             if (activeItem.isExpandable && activeItem.isExpanded) {
-                this.treeControl.collapse(activeItem.data as KbqTreeOption);
+                this.treeControl.collapse(activeItem.data);
                 this.saveState();
             } else {
                 this.setActiveParentOption(activeItem);
@@ -1021,7 +1016,7 @@ export class KbqTreeSelection
             const activeItem = this.keyManager.activeItem;
 
             if (activeItem.isExpandable && !activeItem.isExpanded) {
-                this.treeControl.expand(activeItem.data as KbqTreeOption);
+                this.treeControl.expand(activeItem.data);
                 this.saveState();
             } else if (activeItem.isExpandable) {
                 this.setActiveFirstChildOption(activeItem);
@@ -1087,7 +1082,7 @@ export class KbqTreeSelection
     }
 
     /** @docs-private */
-    setSelectedOptionsByKey(option: KbqTreeOption, shiftKey: boolean, ctrlKey: boolean): void {
+    setSelectedOptionsByKey(option: KbqTreeOption<T>, shiftKey: boolean, ctrlKey: boolean): void {
         if (shiftKey && this.multiple) {
             this.selectActiveOptions();
 
@@ -1105,7 +1100,7 @@ export class KbqTreeSelection
     }
 
     /** @docs-private */
-    setSelectedOptionsByClick(option: KbqTreeOption, shiftKey: boolean, ctrlKey: boolean): void {
+    setSelectedOptionsByClick(option: KbqTreeOption<T>, shiftKey: boolean, ctrlKey: boolean): void {
         if (option.disabled || !option.selectable()) {
             return;
         }
@@ -1167,7 +1162,7 @@ export class KbqTreeSelection
     }
 
     /** @docs-private */
-    protected setFocusedOption(option: KbqTreeOption): void {
+    protected setFocusedOption(option: KbqTreeOption<T>): void {
         this.keyManager.setActiveItem(option);
     }
 
@@ -1193,10 +1188,10 @@ export class KbqTreeSelection
 
     /** @docs-private */
     renderNodeChanges(
-        data: KbqTreeOption[],
-        dataDiffer: IterableDiffer<KbqTreeOption> = this.dataDiffer,
+        data: T[] | ReadonlyArray<T>,
+        dataDiffer: IterableDiffer<T> = this.dataDiffer,
         viewContainer: ViewContainerRef = this.nodeOutlet.viewContainer,
-        parentData?: KbqTreeOption
+        parentData?: T
     ): void {
         // Not `super.renderNodeChanges`: that would run change detection over this very view before
         // `sortedNodes` is refreshed, so the "select all" row — which is rendered off `isEmpty` — would
@@ -1224,19 +1219,19 @@ export class KbqTreeSelection
     }
 
     /** @docs-private */
-    protected emitNavigationEvent(option: KbqTreeOption): void {
+    protected emitNavigationEvent(option: KbqTreeOption<T>): void {
         this.navigationChange.emit(new KbqTreeNavigationChange(this, option));
     }
 
     /** @docs-private */
-    protected emitChangeEvent(option: KbqTreeOption): void {
+    protected emitChangeEvent(option: KbqTreeOption<T>): void {
         this.selectionChange.emit(new KbqTreeSelectionChange(this, option, [option]));
     }
 
     /** @docs-private */
     readonly selectAllHandlerInput = input<
-        ((event: KeyboardEvent, tree: KbqTreeSelection) => void) | undefined,
-        ((event: KeyboardEvent, tree: KbqTreeSelection) => void) | undefined
+        ((event: KeyboardEvent, tree: KbqTreeSelection<T>) => void) | undefined,
+        ((event: KeyboardEvent, tree: KbqTreeSelection<T>) => void) | undefined
     >(undefined, {
         alias: 'selectAllHandler',
         transform: kbqSelectAllHandlerTransform
@@ -1246,11 +1241,11 @@ export class KbqTreeSelection
      * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used,
      * which toggles the selection of all non-disabled, selectable options.
      */
-    get selectAllHandler(): (event: KeyboardEvent, tree: KbqTreeSelection) => void {
+    get selectAllHandler(): (event: KeyboardEvent, tree: KbqTreeSelection<T>) => void {
         return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
     }
 
-    private defaultSelectAllHandler(event: KeyboardEvent, tree: KbqTreeSelection): void {
+    private defaultSelectAllHandler(event: KeyboardEvent, tree: KbqTreeSelection<T>): void {
         event.preventDefault();
 
         tree.selectAllOptions();
@@ -1300,7 +1295,7 @@ export class KbqTreeSelection
         option.preventBlur = true;
 
         if (this.copyChange.observed || this.onCopy.observed) {
-            const copyEvent = new KbqTreeCopyEvent(this, this.keyManager.activeItem as KbqTreeOption, event);
+            const copyEvent = new KbqTreeCopyEvent(this, option, event);
 
             this.copyChange.emit(copyEvent);
             this.onCopy.emit(copyEvent);
@@ -1426,7 +1421,7 @@ export class KbqTreeSelection
         if (this.selectionModel.isEmpty() || !currentNodes?.length) return;
 
         const selected = this.selectionModel.selected;
-        const currentNodesSet = new Set<any>(currentNodes);
+        const currentNodesSet = new Set<T>(currentNodes);
 
         let hasOrphans = false;
 
@@ -1462,7 +1457,7 @@ export class KbqTreeSelection
         return this.renderedOptions.first ? this.renderedOptions.first.getHeight() : 0;
     }
 
-    setStateChildren(option: KbqTreeOption, state: boolean) {
+    setStateChildren(option: KbqTreeOption<T>, state: boolean) {
         untracked(() => {
             const valuesToChange = this.treeControl.getDescendants(option.data);
 
@@ -1491,7 +1486,7 @@ export class KbqTreeSelection
      * disabled ancestor and narrows `level` to that ancestor's level. Without narrowing, the scan would
      * continue against the original level and land on a preceding sibling of the parent.
      */
-    private setActiveParentOption(activeOption: KbqTreeOption): void {
+    private setActiveParentOption(activeOption: KbqTreeOption<T>): void {
         const options = this.renderedOptions.toArray();
 
         let level = activeOption.level;
@@ -1526,7 +1521,7 @@ export class KbqTreeSelection
      * A disabled child cannot take focus, so the walk continues while the options stay inside the
      * subtree, and stops as soon as the level falls back to the active option's own.
      */
-    private setActiveFirstChildOption(activeOption: KbqTreeOption): void {
+    private setActiveFirstChildOption(activeOption: KbqTreeOption<T>): void {
         const options = this.renderedOptions.toArray();
 
         for (let index = this.keyManager.activeItemIndex + 1; index < options.length; index++) {
@@ -1554,7 +1549,7 @@ export class KbqTreeSelection
     }
 
     private updateRenderedOptions = () => {
-        const orderedOptions: KbqTreeOption[] = [];
+        const orderedOptions: KbqTreeOption<T>[] = [];
 
         // The "select all" row is rendered by this component's own template, so it never reaches the
         // `unorderedOptions` content query — but it is the first thing on screen and has to lead the
@@ -1583,8 +1578,8 @@ export class KbqTreeSelection
         this.updateScrollSize();
     };
 
-    private getSortedNodes(viewContainer: ViewContainerRef) {
-        const array: KbqTreeOption[] = [];
+    private getSortedNodes(viewContainer: ViewContainerRef): T[] {
+        const array: T[] = [];
 
         for (let i = 0; i < viewContainer.length; i++) {
             const viewRef = viewContainer.get(i) as any;
@@ -1653,7 +1648,7 @@ export class KbqTreeSelection
         this.renderedOptions.filter((option) => option.hasFocus).forEach((option) => (option.hasFocus = false));
     }
 
-    private canDeselectLast(option: KbqTreeOption): boolean {
+    private canDeselectLast(option: KbqTreeOption<T>): boolean {
         return !(this.noUnselectLast && this.selectionModel.selected.length === 1 && option.selected);
     }
 

@@ -2913,6 +2913,8 @@ The inputs of `KbqTreeSelection` and `KbqTreeOption` followed: `treeControl`, `d
 
 A `[dataSource]` bound back to `undefined` clears the tree as `null` does, and `dataSource` reports `null` rather than `undefined` while no source is set.
 
+`KbqTreeSelection`, `KbqTreeOption` and `KbqTreeSelect` take the type of the data node, `T`, `any` by default. `selectionModel` is `SelectionModel<T>` instead of a model over an unexported interface that did not describe the nodes it holds, and `KbqTreeOption.data` is the node rather than the option type it was declared with. A template infers `T` of the tree from `[treeControl]`, `[dataSource]`, `[trackBy]` and `[selectAllHandler]`, so with `strictTemplates` a tree whose bindings name different node types no longer compiles: give them the same type. A query names it: `viewChild.required<KbqTreeSelection<Node>>(KbqTreeSelection)`.
+
 Reported by `tree-signals`. A project that renders a tree at all also gets a summary of all six members, because five of them are only visible at a call site that writes them — a consumer that merely reads one gets a value whose type changed under it and no diagnostic at all.
 
 #### Tree select

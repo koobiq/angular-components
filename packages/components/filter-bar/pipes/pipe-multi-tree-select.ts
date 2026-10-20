@@ -50,7 +50,7 @@ import { KbqTreeSelectPipeBase } from './tree-select-pipe-base';
 })
 export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSelectValue[]> implements OnInit {
     /** @docs-private */
-    readonly tree = viewChild.required(KbqTreeSelection);
+    readonly tree = viewChild.required<KbqTreeSelection<KbqTreeSelectFlatNode>>(KbqTreeSelection);
 
     /** selected value */
     get selected() {
@@ -75,7 +75,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     }
 
     get numberOfSelectedLeaves(): number {
-        return this.select().selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length;
+        return this.select().selectionModel.selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length;
     }
 
     /** true if all options selected */
@@ -247,8 +247,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
 
                 // The locked nodes are already selected and stay out of "select all" either way — leaving
                 // them out here keeps them out of the model's `added` payload too.
-                // @todo DS-3827
-                selectionModel.select(...(dataNodesForSelect.filter((node) => !this.isLockedNode(node)) as any));
+                selectionModel.select(...dataNodesForSelect.filter((node) => !this.isLockedNode(node)));
             }
         }
 
@@ -348,8 +347,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
 
     /** Puts back every locked node the tree's own cascades may have deselected. */
     private enforceLockedNodes(): void {
-        // The tree-select exposes the very same model the tree owns, but untyped — which is what the
-        // surrounding code (`toggleParents`) already relies on to pass flat nodes around.
+        // The tree-select exposes the very same model the tree owns.
         const { selectionModel } = this.select();
         const missing = this.lockedDataNodes.filter((node) => !selectionModel.isSelected(node));
 
