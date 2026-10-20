@@ -79,7 +79,7 @@ Rules for code that uses Koobiq:
 - [Select](https://koobiq.io/en/components/select.md): Select - allows the user to select one or more values from a predefined list. Entry point: `@koobiq/components/select`.
 - [Sidebar](https://koobiq.io/en/components/sidebar.md): Component designed to add collapsible side content. Entry point: `@koobiq/components/sidebar`.
 - [Sidepanel](https://koobiq.io/en/components/sidepanel.md): A sidepanel is a window that slides in from the edge of the screen and appears on top of the main page content. Entry point: `@koobiq/components/sidepanel`.
-- [Skeleton](https://koobiq.io/en/components/skeleton.md): `KbqSkeleton` is a temporary placeholder that occupies the space of the loading element and displays its approximate layout while the actual content is still loading. Entry point: `@koobiq/components/skeleton`.
+- [Skeleton](https://koobiq.io/en/components/skeleton.md): A skeleton is a temporary placeholder that previews the approximate shape of content while it loads. Entry point: `@koobiq/components/skeleton`.
 - [Split button](https://koobiq.io/en/components/split-button.md): A split button combines several related actions into a single control. Entry point: `@koobiq/components/split-button`.
 - [Splitter](https://koobiq.io/en/components/splitter.md): Splitter resizes neighboring panels by dragging the separator. Entry point: `@koobiq/components/splitter`.
 - [Table](https://koobiq.io/en/components/table.md): A table is similar to a grid but simpler in structure. Entry point: `@koobiq/components/table`.

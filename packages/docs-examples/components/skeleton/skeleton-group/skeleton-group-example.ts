@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqSkeletonGroup } from '@koobiq/components/skeleton';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToggleModule } from '@koobiq/components/toggle';
@@ -11,13 +11,13 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  */
 @Component({
     selector: 'skeleton-group-example',
-    imports: [KbqSkeletonGroup, KbqToggleModule, FormsModule, KbqTagsModule, KbqBadgeModule],
+    imports: [KbqSkeletonGroup, KbqToggleModule, FormsModule, KbqTagsModule, KbqLinkModule],
     template: `
         <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
 
         @if (loading()) {
             <kbq-skeleton-group preset="tag" />
-            <kbq-skeleton-group preset="badge" [count]="5" />
+            <kbq-skeleton-group preset="link" [count]="4" />
         } @else {
             <kbq-tag-list>
                 <kbq-tag [color]="colors.ContrastFade">LDAP</kbq-tag>
@@ -25,10 +25,10 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
                 <kbq-tag [color]="colors.Error">Blocked</kbq-tag>
             </kbq-tag-list>
             <div class="example-row">
-                <kbq-badge [badgeColor]="badgeColors.FadeTheme">New</kbq-badge>
-                <kbq-badge [badgeColor]="badgeColors.FadeSuccess">Active</kbq-badge>
-                <kbq-badge [badgeColor]="badgeColors.FadeError">Blocked</kbq-badge>
-                <kbq-badge [badgeColor]="badgeColors.FadeContrast">Archived</kbq-badge>
+                <a kbq-link pseudo>Overview</a>
+                <a kbq-link pseudo>API</a>
+                <a kbq-link pseudo>Examples</a>
+                <a kbq-link pseudo>Changelog</a>
             </div>
         }
     `,
@@ -43,7 +43,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         .example-row {
             display: flex;
             flex-wrap: wrap;
-            gap: var(--kbq-size-xxs);
+            gap: var(--kbq-size-s);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -51,5 +51,4 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 export class SkeletonGroupExample {
     protected readonly loading = model(true);
     protected readonly colors = KbqComponentColors;
-    protected readonly badgeColors = KbqBadgeColors;
 }
