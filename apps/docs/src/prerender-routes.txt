@@ -12,6 +12,7 @@
 /en/main/design-tokens/sizes
 /en/main/design-tokens/palette
 /en/main/design-tokens/semantic
+/en/main/icons
 /en/main/schematics/overview
 /en/main/migration/overview
 /en/components/accordion/overview
@@ -196,7 +197,6 @@
 /en/other/validation/overview
 /en/other/validation/examples
 /en/other/search-smart/overview
-/en/icons
 /ru
 /ru/main/installation/overview
 /ru/main/versioning/overview
@@ -210,6 +210,7 @@
 /ru/main/design-tokens/sizes
 /ru/main/design-tokens/palette
 /ru/main/design-tokens/semantic
+/ru/main/icons
 /ru/main/schematics/overview
 /ru/main/migration/overview
 /ru/components/accordion/overview
@@ -394,5 +395,4 @@
 /ru/other/validation/overview
 /ru/other/validation/examples
 /ru/other/search-smart/overview
-/ru/icons
 /404

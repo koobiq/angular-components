@@ -61,11 +61,11 @@ describe(DocsLocaleService.name, () => {
     });
 
     it('rebuilds the navigation commands preserving query params and fragment', () => {
-        const service = createService('/ru/icons?s=arrow#top');
+        const service = createService('/ru/main/icons?s=arrow#top');
 
         service.setLocale(DocsLocale.En);
 
-        expect(router.navigate).toHaveBeenCalledWith(['/', 'en', 'icons'], {
+        expect(router.navigate).toHaveBeenCalledWith(['/', 'en', 'main', 'icons'], {
             queryParams: { s: 'arrow' },
             fragment: 'top'
         });

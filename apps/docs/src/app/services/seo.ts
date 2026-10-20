@@ -2,10 +2,9 @@ import { DOCUMENT } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { DOCS_DEFAULT_LOCALE, DOCS_SUPPORTED_LOCALES, DocsLocale } from '../constants/locale';
-import { docsGetMarkdownPath } from '../page-paths';
+import { docsGetMarkdownPath, docsHasMarkdown } from '../page-paths';
 import { DOCS_SEO_DESCRIPTIONS } from '../seo-descriptions';
 import {
-    docsGetCategoryById,
     docsGetItemById,
     DocsStructureCategoryId,
     DocsStructureItem,
@@ -33,13 +32,6 @@ const FALLBACK_IMAGE: DocsSeoImageSource = {
     width: 2048,
     height: 1024,
     twitterCard: 'summary_large_image'
-};
-
-const ICONS_IMAGE: DocsSeoImageSource = {
-    path: '/assets/images/welcome/icons-light.png',
-    width: 400,
-    height: 280,
-    twitterCard: 'summary'
 };
 
 const TAB_TITLE: Record<DocsStructureItemTab | DocsStructureTokensTab, Record<DocsLocale, string>> = {
@@ -135,6 +127,8 @@ const resolveTabDescription = (item: DocsStructureItem, tab: string | undefined,
         return docsTranslateTemplate('seoTokensDescription', locale, tabTitle);
     }
 
+    if (item.id === DocsStructureItemId.Icons) return DOCS_TRANSLATIONS.seoIconsDescription[locale];
+
     return generatedDescriptions[item.id]?.[locale] ?? docsTranslateTemplate('seoItemDescription', locale, itemName);
 };
 
@@ -191,23 +185,8 @@ export const docsResolveSeo = (
             ...resolveItemSeo(item, tab, locale),
             canonicalUrl,
             alternates,
-            markdownUrl: docsGetMarkdownPath(item, locale),
+            markdownUrl: docsHasMarkdown(item) ? docsGetMarkdownPath(item, locale) : null,
             locale
-        };
-    }
-
-    if (categoryId === DocsStructureCategoryId.Icons) {
-        const categoryName = docsGetCategoryById(DocsStructureCategoryId.Icons)!.name[locale];
-
-        return {
-            title: `${categoryName} ${TITLE_SEPARATOR} ${SITE_NAME}`,
-            description: DOCS_TRANSLATIONS.seoIconsDescription[locale],
-            canonicalUrl,
-            alternates,
-            markdownUrl: null,
-            image: resolveImage(ICONS_IMAGE, docsTranslateTemplate('seoImageAlt', locale, categoryName)),
-            locale,
-            noIndex: false
         };
     }
 

@@ -45,7 +45,7 @@ export class DocsLocaleService {
         this.locale$.next(locale);
 
         // should update only URL which contain locale
-        // e.g. - /ru/icons -> /en/icons
+        // e.g. - /ru/main/icons -> /en/main/icons
         // but not /404 -> /en
         if (!this.getLocaleFromURL(this.router.url)) {
             return;

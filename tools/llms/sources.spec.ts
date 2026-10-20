@@ -13,7 +13,7 @@ describe(resolveSiteUrl.name, () => {
     });
 
     it('gives any other link within the site the origin of the site', () => {
-        expect(resolveSiteUrl('/en/icons')).toBe('https://koobiq.io/en/icons');
+        expect(resolveSiteUrl('/en/main/icons')).toBe('https://koobiq.io/en/main/icons');
         expect(resolveSiteUrl('/en/components/unknown')).toBe('https://koobiq.io/en/components/unknown');
     });
 

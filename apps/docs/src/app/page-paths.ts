@@ -1,7 +1,6 @@
 import { DOCS_SUPPORTED_LOCALES } from './constants/locale';
 import {
     docsGetItems,
-    DocsStructureCategoryId,
     DocsStructureItem,
     DocsStructureItemId,
     DocsStructureItemTab,
@@ -19,6 +18,8 @@ const getLocalizedContentPaths = (): string[] => {
             return Object.values(DocsStructureTokensTab).map((tab) => `${categoryId}/${id}/${tab}`);
         }
 
+        if (id === DocsStructureItemId.Icons) return [`${categoryId}/${id}`];
+
         const tabs = [`${categoryId}/${id}/${DocsStructureItemTab.Overview}`];
 
         if (hasApi) tabs.push(`${categoryId}/${id}/${DocsStructureItemTab.Api}`);
@@ -27,8 +28,14 @@ const getLocalizedContentPaths = (): string[] => {
         return tabs;
     });
 
-    return ['', ...paths, DocsStructureCategoryId.Icons];
+    return ['', ...paths];
 };
+
+/**
+ * Whether `tools/llms` writes the Markdown of a structure item. The icons page has none: it is built from the metadata
+ * of `@koobiq/icons`, and `llms.txt` links the reference that package publishes for agents instead.
+ */
+export const docsHasMarkdown = ({ id }: Pick<DocsStructureItem, 'id'>): boolean => id !== DocsStructureItemId.Icons;
 
 /**
  * Path of the Markdown of a structure item — every tab of it in one file, for agents — next to its pages in a locale:

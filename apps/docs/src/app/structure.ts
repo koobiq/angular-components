@@ -9,6 +9,7 @@ export enum DocsStructureItemId {
     Localization = 'localization',
     Typography = 'typography',
     DesignTokens = 'design-tokens',
+    Icons = 'icons',
     Schematics = 'schematics',
     Migration = 'migration',
     SearchSmart = 'search-smart',
@@ -127,8 +128,7 @@ export type DocsStructureItem = {
 export enum DocsStructureCategoryId {
     Main = 'main',
     Components = 'components',
-    Other = 'other',
-    Icons = 'icons'
+    Other = 'other'
 }
 
 export type DocsStructureCategory = {
@@ -261,6 +261,16 @@ const structure: DocsStructure = makeStructure({
                         en: 'Design tokens'
                     },
                     svgPreview: 'tokens',
+                    hasApi: false,
+                    hasExamples: false
+                },
+                {
+                    id: DocsStructureItemId.Icons,
+                    name: {
+                        ru: 'Иконки',
+                        en: 'Icons'
+                    },
+                    svgPreview: 'icons',
                     hasApi: false,
                     hasExamples: false
                 },
@@ -1263,17 +1273,6 @@ const structure: DocsStructure = makeStructure({
                     isNew: expiresAt('2026-09-25')
                 }
             ]
-        }
-    ],
-    [DocsStructureCategoryId.Icons]: [
-        {
-            id: DocsStructureCategoryId.Icons,
-            name: {
-                ru: 'Иконки',
-                en: 'Icons'
-            },
-            isPreviewed: false,
-            items: []
         }
     ]
 });

@@ -109,6 +109,11 @@ export const DOCS_ROUTES: Routes = [
                     { path: '**', redirectTo: DocsStructureTokensTab.Colors }
                 ]
             },
+            {
+                path: `${DocsStructureCategoryId.Main}/${DocsStructureItemId.Icons}`,
+                loadComponent: () =>
+                    import('./components/icons-viewer/icons-viewer.component').then((m) => m.DocsIconsViewerComponent)
+            },
             // The migration guide narrows its page to a picked upgrade range, so it is claimed ahead of
             // the generic `main/:id` branch, whose overview renders a page as is.
             {
@@ -159,13 +164,12 @@ export const DOCS_ROUTES: Routes = [
                 ])
             },
 
-            /**
-             * Icons section routes
-             */
+            // The former address of the icons page, still linked from outside. The redirect is relative, so the
+            // search query and the opened icon carry over.
             {
-                path: DocsStructureCategoryId.Icons,
-                loadComponent: () =>
-                    import('./components/icons-viewer/icons-viewer.component').then((m) => m.DocsIconsViewerComponent)
+                path: DocsStructureItemId.Icons,
+                redirectTo: `${DocsStructureCategoryId.Main}/${DocsStructureItemId.Icons}`,
+                pathMatch: 'full'
             }
         ]
     },

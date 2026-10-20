@@ -27,12 +27,7 @@ import {
 import { filter } from 'rxjs/operators';
 import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleState } from 'src/app/services/locale';
-import {
-    docsGetCategories,
-    DocsStructureCategory,
-    DocsStructureCategoryId,
-    DocsStructureItemTab
-} from 'src/app/structure';
+import { docsGetCategories, DocsStructureCategory, DocsStructureItemTab } from 'src/app/structure';
 import { DocsDocStates } from '../../services/doc-states';
 import { DocsPagePrefetch } from '../../services/page-resolver';
 import { DocsFooterComponent } from '../footer/footer.component';
@@ -207,13 +202,6 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
     }
 
     protected handleCategoryClick(event: Event, node: TreeFlatNode): void {
-        if (node.id === DocsStructureCategoryId.Icons) {
-            // We should navigate to the /icons page instead of expanding the category
-            this.router.navigate([this.locale(), node.id]);
-
-            return;
-        }
-
         this.treeControl.toggle(node);
         event.stopPropagation();
     }
