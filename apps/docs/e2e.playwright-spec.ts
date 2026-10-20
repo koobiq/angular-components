@@ -185,6 +185,28 @@ test.describe('docs app', () => {
         await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
     });
 
+    test('opens the same page in the version picked in the footer', async ({ page }) => {
+        const pageUrl = 'https://koobiq.io/en/components/select/api';
+
+        // The picker sends the latest version to koobiq.io, whichever version the committed list makes the latest.
+        await page.route('https://koobiq.io/sitemap.xml', (route) =>
+            route.fulfill({
+                contentType: 'application/xml',
+                headers: { 'Access-Control-Allow-Origin': '*' },
+                body: `<urlset><url><loc>${pageUrl}</loc></url></urlset>`
+            })
+        );
+        await page.route(pageUrl, (route) => route.fulfill({ contentType: 'text/html', body: '<!doctype html>' }));
+
+        await page.goto('/en/components/select/api');
+        await waitForHydration(page);
+
+        await page.locator('docs-sidenav .docs-footer__control').last().click();
+        await dropdownItem(page, '(latest)').click();
+
+        await expect(page).toHaveURL(pageUrl);
+    });
+
     test('redirects an unknown component id to the 404 page without a console error', async ({ page }) => {
         const errors: string[] = [];
 

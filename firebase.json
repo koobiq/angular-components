@@ -98,6 +98,16 @@
                     ]
                 },
                 {
+                    // The version picker of every other version reads it to open the same page there.
+                    "source": "/sitemap.xml",
+                    "headers": [
+                        {
+                            "key": "Access-Control-Allow-Origin",
+                            "value": "*"
+                        }
+                    ]
+                },
+                {
                     "source": "/assets/stackblitz/**",
                     "headers": [
                         {
@@ -219,6 +229,16 @@
                             // The versions file should not be cached as it may change
                             // at any time and otherwise old versions would be rendered.
                             "value": "no-cache"
+                        }
+                    ]
+                },
+                {
+                    // The version picker of every other version reads it to open the same page there.
+                    "source": "/sitemap.xml",
+                    "headers": [
+                        {
+                            "key": "Access-Control-Allow-Origin",
+                            "value": "*"
                         }
                     ]
                 },
