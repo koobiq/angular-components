@@ -7,7 +7,7 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { combineLatest } from 'rxjs';
 
-const E2E_BUTTON_STATES: E2eButtonState[] = [
+const E2E_BUTTON_STATES: ButtonState[] = [
     { title: 'disabled', disabled: true },
     { title: 'checked', checked: true },
     { title: 'normal' },
@@ -17,7 +17,7 @@ const E2E_BUTTON_STATES: E2eButtonState[] = [
     { title: 'progress', progress: true }
 ];
 
-type E2eButtonState = Partial<{
+type ButtonState = Partial<{
     title: string;
     disabled: boolean;
     checked: boolean;
@@ -27,12 +27,12 @@ type E2eButtonState = Partial<{
     progress: boolean;
 }>;
 
-type E2eButtonOrientation = Partial<{
+type ButtonOrientation = Partial<{
     vertical: boolean;
     multiple: boolean;
 }>;
 
-type DevButton = E2eButtonState & E2eButtonOrientation;
+type DevButton = ButtonState & ButtonOrientation;
 
 @Component({
     selector: 'e2e-button-toggle-states',
@@ -117,9 +117,9 @@ export class E2eButtonToggleStates {
     readonly showTitle = model(true);
     readonly showSuffixIcon = model(false);
 
-    private readonly states: E2eButtonState[] = E2E_BUTTON_STATES;
+    private readonly states: ButtonState[] = E2E_BUTTON_STATES;
 
-    private readonly orientation: E2eButtonOrientation[] = [
+    private readonly orientation: ButtonOrientation[] = [
         { vertical: false },
         { multiple: true },
         { vertical: true },
@@ -213,7 +213,7 @@ export class E2eButtonToggleStatesStretched {
     readonly showTitle = model(true);
     readonly showSuffixIcon = model(false);
 
-    readonly states: E2eButtonState[] = E2E_BUTTON_STATES;
+    readonly states: ButtonState[] = E2E_BUTTON_STATES;
 
     constructor() {
         combineLatest([toObservable(this.showPrefixIcon), toObservable(this.showSuffixIcon)])

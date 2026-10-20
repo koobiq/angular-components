@@ -1,80 +1,82 @@
-`KbqSkeleton` is a temporary placeholder that occupies the space of the loading element and displays its approximate layout while the actual content is still loading.
+A skeleton is a temporary placeholder that previews the approximate shape of content while it loads. Use one when you know where the elements will appear.
 
-Put the `kbqSkeleton` directive on a ready-made component or on text: while the data loads, the placeholder repeats its shape and size.
+### Basic block
 
-<Example id="skeleton-overview" />
+The `<kbq-skeleton>` element is a basic rectangular block. Set its width and height with CSS. Combine several blocks into a custom composition when no preset fits.
+
+<Example id="skeleton-basic" />
 
 ### Presets
 
-Until the data loads, show a preset in place of the component: a placeholder with the sizes from the design.
-
-#### Elements
-
-Placeholders of a [button](en/components/button), a [badge](en/components/badge), a [tag](en/components/tag), an [icon](en/components/icon) and a [link](en/components/link).
-
-<Example id="skeleton-elements" />
+Presets are ready-made placeholders for Koobiq components. Combine them to create a placeholder for an entire page.
 
 #### Typography
 
-A placeholder of text at any level of [typography](en/main/typography/overview).
+`KbqSkeletonTypography` creates a placeholder with line heights that match the selected [Koobiq typography style](en/main/design-tokens/typography). When there are several lines, their widths alternate randomly. The uneven right edge makes the placeholder look more like a paragraph.
 
 <Example id="skeleton-typography" />
 
-#### Description list
+#### Separate elements
 
-A placeholder of a [description list](en/components/dl).
+Placeholders for [buttons](en/components/button), [badges](en/components/badge), [tags](en/components/tag), [icons](en/components/icon), and [links](en/components/link) match the height of their components. You can set their width with CSS.
+
+<Example id="skeleton-elements" />
+
+#### Element groups
+
+`KbqSkeletonGroup` displays a row of placeholders of the same type: buttons, badges, tags, icons, or links.
+
+<Example id="skeleton-group" />
+
+#### Parameter block
+
+The `KbqSkeletonDl` component displays a placeholder for a set of parameters and their values.
 
 <Example id="skeleton-dl" />
 
 #### Table
 
-A placeholder of a [table](en/components/table).
+While a [table](en/components/table) or [AG Grid](en/components/ag-grid/overview) is loading, `KbqSkeletonTable` imitates its structure. You can set:
 
-<Example id="skeleton-table" />
-
-For [AG Grid](en/components/ag-grid/overview), the preset has row selection and pinned columns.
+- the number of columns and the width of each column;
+- the number of rows;
+- whether to show checkboxes for selecting rows.
 
 <Example id="skeleton-grid" />
 
-#### Group
-
-A row of identical placeholders, such as for a [tag list](en/components/tag-list) or a row of [badges](en/components/badge).
-
-<Example id="skeleton-group" />
-
 #### Form field
 
-A placeholder of a [form field](en/components/form-field).
+`KbqSkeletonFormField` shows the label, field, and hint below it as one placeholder. The preset supports a multiline field and a label placed to its left.
 
 <Example id="skeleton-form-field" />
 
-#### Accordion
+#### Expandable section
 
-A placeholder of an [accordion](en/components/accordion).
+`KbqSkeletonAccordion` displays a placeholder for the [accordion](en/components/accordion) component. The skeleton shows all groups collapsed.
 
 <Example id="skeleton-accordion" />
 
-#### Checkbox, radio button and toggle
+#### Checkbox, radio button, and toggle
 
-A placeholder of a [checkbox](en/components/checkbox), a [radio button](en/components/radio) or a [toggle](en/components/toggle).
+`KbqSkeletonCheckable` displays simplified placeholders for the label and a [checkbox](en/components/checkbox), [radio button](en/components/radio), or [toggle](en/components/toggle). You can also show a hint.
 
 <Example id="skeleton-checkable" />
 
 #### Tabs
 
-A placeholder of [tabs](en/components/tabs). A preset nested in `<kbq-skeleton-tabs>` is shown in place of the text.
+`KbqSkeletonTabs` creates a placeholder for tabs. You can customize the tab content. By default, it shows lines of text.
 
 <Example id="skeleton-tabs" />
 
-#### Tree
+#### Hierarchical list
 
-A placeholder of a [tree](en/components/tree).
+`KbqSkeletonTree` displays a placeholder for a hierarchical list. The second node is expanded to show the nested structure.
 
 <Example id="skeleton-tree" />
 
 #### Global configuration
 
-A provider sets how many lines and items the presets show without attributes, for an application or a part of it. The values below are the defaults. The keys it leaves out come from the closest provider above.
+Use `kbqSkeletonPresetsConfigurationProvider` to configure presets for the entire application or individual pages.
 
 ```ts
 import { kbqSkeletonPresetsConfigurationProvider } from '@koobiq/components/skeleton';
@@ -98,31 +100,37 @@ import { kbqSkeletonPresetsConfigurationProvider } from '@koobiq/components/skel
 })
 ```
 
+### Skeleton for a rendered element
+
+The `kbqSkeleton` directive turns rendered elements and their content into placeholders that preserve their size.
+
+<Example id="skeleton-directive" />
+
 ### Usage examples
 
 #### Code block
 
-While the code loads, a `<kbq-skeleton>` of a fixed height holds the place of the [code block](en/components/code-block).
+While the [code block](en/components/code-block) loads, a fixed-height skeleton appears in its place.
 
 <Example id="skeleton-code-block" />
 
-#### Panel loading
+#### Loading in parts
 
-The data of a [side panel](en/components/sidepanel) often arrives in parts. While a part loads, a preset holds its place, and the parts that have loaded show up at once, without waiting for the rest.
+Data loads in parts. Placeholders disappear as the data updates.
 
 <Example id="skeleton-in-sidepanel" />
 
 ### Guidelines
 
-The placeholder should follow the structure of the page with real content, so that the content appears in the same places once it loads.
+Use a skeleton when:
 
-Use:
+- The page or section structure is known in advance, and the data is loading for the first time.
+- Loading takes a few seconds.
 
-- When waiting for page content to load and display, to provide a sense of page structure and minimize layout shifts.
-- If the page load takes 2 to 10 seconds, use skeletons.
+Do not use a skeleton in these cases:
 
-Don't use:
-
-- If loading takes less than 1 second, no loading indicators are needed.
-- If you need to show loading for a single element, such as a video, use a [progress spinner](en/components/progress-spinner). Skeletons are better suited for full-page loading.
-- For long-running processes such as file conversion or data upload/download, use [progress bars](en/components/progress-bar) or [progress spinners](en/components/progress-spinner) that show the remaining time or the percentage done.
+- Loading takes less than 1 second; the skeleton can appear briefly and cause the interface to flicker.
+- Use a [progress spinner](en/components/progress-spinner) when an action is in progress, such as saving, deleting, or submitting a form.
+- For long-running tasks, such as file conversion or data transfer, use a [progress bar](en/components/progress-bar) or a [progress spinner](en/components/progress-spinner).
+- You can keep the previous content on screen during an update. Show the update state separately.
+- Another indicator already shows that content is loading.

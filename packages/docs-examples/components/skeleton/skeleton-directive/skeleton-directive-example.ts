@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqAlertModule } from '@koobiq/components/alert';
+import { KbqAlertColors, KbqAlertModule, KbqAlertStyles } from '@koobiq/components/alert';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -8,10 +8,10 @@ import { KbqSkeleton } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
- * @title Skeleton overview
+ * @title Skeleton directive
  */
 @Component({
-    selector: 'skeleton-overview-example',
+    selector: 'skeleton-directive-example',
     imports: [
         KbqSkeleton,
         KbqToggleModule,
@@ -28,8 +28,20 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             <div class="kbq-title">
                 <span [kbqSkeleton]="loading()">Denial-of-service attack</span>
             </div>
-            <kbq-badge [badgeColor]="badgeColors.FadeError" [kbqSkeleton]="loading()">Critical</kbq-badge>
+            <kbq-badge [badgeColor]="badgeColors.FadeError" [compact]="true" [kbqSkeleton]="loading()">
+                Critical
+            </kbq-badge>
         </div>
+        <kbq-alert
+            class="example-alert"
+            [alertColor]="alertColors.Error"
+            [alertStyle]="alertStyles.Colored"
+            [compact]="true"
+            [kbqSkeleton]="loading()"
+        >
+            <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
+            Protection is enabled on three servers
+        </kbq-alert>
         <div class="kbq-text-normal">
             <span [kbqSkeleton]="loading()">
                 In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator seeks
@@ -37,12 +49,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
                 disrupting services of a host connected to a network.
             </span>
         </div>
-        <kbq-alert [compact]="true" [kbqSkeleton]="loading()">
-            <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
-            Protection is enabled on three servers
-        </kbq-alert>
         <div class="example-actions">
-            <button kbq-button [kbqSkeleton]="loading()">Read more</button>
+            <button kbq-button color="contrast" [kbqSkeleton]="loading()">Read more</button>
             <div kbq-button-group>
                 <button kbq-button [kbqSkeleton]="loading()">Block</button>
                 <button kbq-button [kbqSkeleton]="loading()">Ignore</button>
@@ -65,6 +73,10 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             gap: var(--kbq-size-s);
         }
 
+        .example-alert {
+            align-self: stretch;
+        }
+
         .example-actions {
             display: flex;
             align-items: center;
@@ -73,7 +85,9 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonOverviewExample {
+export class SkeletonDirectiveExample {
     protected readonly loading = model(true);
     protected readonly badgeColors = KbqBadgeColors;
+    protected readonly alertColors = KbqAlertColors;
+    protected readonly alertStyles = KbqAlertStyles;
 }

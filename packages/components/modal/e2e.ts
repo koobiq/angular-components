@@ -84,7 +84,7 @@ export class E2eModalStates {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class E2eModalFullCustomContent {
+class ModalFullCustomContent {
     protected readonly caption = inject<string | undefined>(KBQ_MODAL_DATA, { optional: true });
     protected readonly items = Array.from({ length: 30 }, (_, i) => `Item #${i}`);
 }
@@ -114,14 +114,14 @@ export class E2eModalFullCustom {
     protected open(): void {
         this.modal.open({
             kbqWidth: '400px',
-            kbqComponent: E2eModalFullCustomContent
+            kbqComponent: ModalFullCustomContent
         });
     }
 
     protected openWithCaption(): void {
         this.modal.open({
             kbqWidth: '400px',
-            kbqComponent: E2eModalFullCustomContent,
+            kbqComponent: ModalFullCustomContent,
             data: 'Full custom modal caption'
         });
     }
@@ -241,7 +241,7 @@ const E2E_MODAL_DYNAMIC_PARAGRAPH =
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class E2eModalDynamicContentBody {
+class ModalDynamicContentBody {
     protected readonly paragraphs = signal([E2E_MODAL_DYNAMIC_PARAGRAPH]);
 
     protected toggle(): void {
@@ -251,7 +251,7 @@ export class E2eModalDynamicContentBody {
 
 @Component({
     selector: 'e2e-modal-dynamic-content-custom',
-    imports: [KbqModalModule, E2eModalDynamicContentBody],
+    imports: [KbqModalModule, ModalDynamicContentBody],
     template: `
         <kbq-modal-title>Custom modal</kbq-modal-title>
 
@@ -261,7 +261,7 @@ export class E2eModalDynamicContentBody {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class E2eModalDynamicContentCustom {}
+class ModalDynamicContentCustom {}
 
 @Component({
     selector: 'e2e-modal-dynamic-content',
@@ -283,7 +283,7 @@ export class E2eModalDynamicContent {
         this.modal.create({
             kbqWidth: '400px',
             kbqTitle: 'Default modal',
-            kbqContent: E2eModalDynamicContentBody,
+            kbqContent: ModalDynamicContentBody,
             kbqOkText: 'Ok'
         });
     }
@@ -291,7 +291,7 @@ export class E2eModalDynamicContent {
     protected openConfirm(): void {
         this.modal.confirm({
             kbqWidth: '400px',
-            kbqContent: E2eModalDynamicContentBody,
+            kbqContent: ModalDynamicContentBody,
             kbqOkText: 'Ok'
         });
     }
@@ -299,7 +299,7 @@ export class E2eModalDynamicContent {
     protected openCustom(): void {
         this.modal.open({
             kbqWidth: '400px',
-            kbqComponent: E2eModalDynamicContentCustom
+            kbqComponent: ModalDynamicContentCustom
         });
     }
 
@@ -310,7 +310,7 @@ export class E2eModalDynamicContent {
             kbqWidth: '400px',
             kbqStyle: { maxHeight: 'none' },
             kbqTitle: 'Tall modal',
-            kbqContent: E2eModalDynamicContentBody,
+            kbqContent: ModalDynamicContentBody,
             kbqOkText: 'Ok'
         });
     }

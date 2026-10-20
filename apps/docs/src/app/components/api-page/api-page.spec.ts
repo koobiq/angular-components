@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { By, provideClientHydration, withIncrementalHydration } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { BehaviorSubject, map } from 'rxjs';
@@ -89,21 +89,40 @@ describe(DocsApiPage.name, () => {
 
     beforeEach(() => {
         copyWithToast = vi.fn();
+        // Rendered in the browser alone, as a route of `RenderMode.Client` is: the flag the server sets for one.
+        document.body.setAttribute('ngcm', '');
 
         TestBed.configureTestingModule({
             providers: [
                 provideRouter([]),
                 provideDocsLocale(DocsLocale.Ru),
-                { provide: DocsClipboardService, useValue: { copyWithToast } }
+                { provide: DocsClipboardService, useValue: { copyWithToast } },
+                // As the app has it: the code blocks are `@defer` blocks with a `hydrate` trigger.
+                provideClientHydration(withIncrementalHydration())
             ]
         });
     });
 
-    const render = (entryPoint = ENTRY_POINT, selectedMember: string | null = null): HTMLElement => {
+    afterEach(() => document.body.removeAttribute('ngcm'));
+
+    const createFixture = (entryPoint = ENTRY_POINT, selectedMember: string | null = null) => {
         const fixture = TestBed.createComponent(DocsApiPage);
 
         fixture.componentRef.setInput('entryPoint', entryPoint);
         fixture.componentRef.setInput('selectedMember', selectedMember);
+        fixture.detectChanges();
+
+        return fixture;
+    };
+
+    const render = (entryPoint = ENTRY_POINT, selectedMember: string | null = null): HTMLElement =>
+        createFixture(entryPoint, selectedMember).nativeElement;
+
+    // The code blocks are `@defer` blocks: they render once their dependencies have loaded.
+    const renderCodeBlocks = async (entryPoint = ENTRY_POINT): Promise<HTMLElement> => {
+        const fixture = createFixture(entryPoint);
+
+        await fixture.whenStable();
         fixture.detectChanges();
 
         return fixture.nativeElement;
@@ -112,8 +131,8 @@ describe(DocsApiPage.name, () => {
     const getTexts = (element: Element, selector: string): string[] =>
         Array.from(element.querySelectorAll(selector), (node) => node.textContent!.trim());
 
-    it('renders the import of the module, then each entry anchored by its name, with its kind', () => {
-        const page = render();
+    it('renders the import of the module, then each entry anchored by its name, with its kind', async () => {
+        const page = await renderCodeBlocks();
 
         expect(page.querySelector('.docs-api__import')?.textContent).toContain(
             "import { KbqAlertModule } from '@koobiq/components/alert';"
@@ -147,12 +166,14 @@ describe(DocsApiPage.name, () => {
         expect(page.querySelector('.docs-api__entry-name')?.tagName).toBe('H3');
     });
 
-    it('leaves the import out for an entry point without a module', () => {
-        expect(render({ ...ENTRY_POINT, primaryExport: undefined }).querySelector('.docs-api__import')).toBeNull();
+    it('leaves the import out for an entry point without a module', async () => {
+        const page = await renderCodeBlocks({ ...ENTRY_POINT, primaryExport: undefined });
+
+        expect(page.querySelector('.docs-api__import')).toBeNull();
     });
 
-    it('renders the HTML of a text as it is, and its code in a code block', () => {
-        const description = render().querySelector('.docs-api__entry-description')!;
+    it('renders the HTML of a text as it is, and its code in a code block', async () => {
+        const description = (await renderCodeBlocks()).querySelector('.docs-api__entry-description')!;
 
         expect(getTexts(description, '.kbq-markdown__p')).toEqual(['Shows important information.']);
         expect(description.querySelector('kbq-code-block')?.textContent).toContain('<kbq-alert alertColor="error" />');
@@ -375,6 +396,6 @@ describe(DocsApiPage.name, () => {
     });
 
     it('has no axe violations', async () => {
-        await expect(render()).toHaveNoViolations();
+        await expect(await renderCodeBlocks()).toHaveNoViolations();
     });
 });

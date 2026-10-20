@@ -8,7 +8,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Skeleton table preset
  */
 @Component({
-    selector: 'skeleton-table-example',
+    selector: 'dev-skeleton-table-example',
     imports: [KbqSkeletonTable, KbqToggleModule, FormsModule, KbqTableModule],
     template: `
         <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
@@ -46,7 +46,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonTableExample {
+export class DevSkeletonTableExample {
     protected readonly loading = model(true);
     protected readonly columns = ['Address', 'Port', 'Protocol'];
     protected readonly servers = [

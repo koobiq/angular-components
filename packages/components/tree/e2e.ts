@@ -242,7 +242,7 @@ export class E2eTreeStates implements AfterViewInit {
     protected readonly popUpPlacements = PopUpPlacements;
 }
 
-const DATA_OBJECT_FOR_TREE_TWO_LINE_NODE_EXAMPLE = {
+const DATA_OBJECT_FOR_TREE_TWO_LINE_NODE = {
     rootNode_1_long_text_long_long_long_long_long_text: 'app',
     States: {
         Normal: ''
@@ -430,7 +430,7 @@ export class E2eTreeTwoLineNode implements AfterViewInit {
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-        this.dataSource.data = buildFileTree(DATA_OBJECT_FOR_TREE_TWO_LINE_NODE_EXAMPLE, 0);
+        this.dataSource.data = buildFileTree(DATA_OBJECT_FOR_TREE_TWO_LINE_NODE, 0);
     }
 
     ngAfterViewInit(): void {

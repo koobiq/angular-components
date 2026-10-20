@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideClientHydration, withIncrementalHydration } from '@angular/platform-browser';
 import {
     ActivatedRoute,
     convertToParamMap,
@@ -225,7 +226,9 @@ describe(DocsComponentApiPageComponent.name, () => {
                         data: of({ page: ALERT_API }),
                         queryParamMap: queryParamMap.asObservable()
                     }
-                }
+                },
+                // As the app has it: the code blocks of the tab are `@defer` blocks with a `hydrate` trigger.
+                provideClientHydration(withIncrementalHydration())
             ]
         });
 
@@ -237,11 +240,14 @@ describe(DocsComponentApiPageComponent.name, () => {
     };
 
     beforeEach(() => {
+        // Rendered in the browser alone, as a route of `RenderMode.Client` is: the flag the server sets for one.
+        document.body.setAttribute('ngcm', '');
         setScrollPosition = vi.spyOn(DocsAnchorsComponent.prototype, 'setScrollPosition').mockImplementation(() => {});
         scrollToElement = vi.spyOn(DocsAnchorsComponent.prototype, 'scrollToElement').mockImplementation(() => {});
     });
 
     afterEach(() => {
+        document.body.removeAttribute('ngcm');
         setScrollPosition.mockRestore();
         scrollToElement.mockRestore();
     });

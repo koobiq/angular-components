@@ -1,5 +1,15 @@
 @if (importFiles().length) {
-    <kbq-code-block class="docs-code-block docs-api__import" filled [files]="importFiles()" />
+    <!-- On a tab that came from the server, the code blocks stay as it rendered them until hovered: highlight.js loads
+         for the block a reader points at. After a navigation in the app they render, and highlight, straight away. -->
+    <!-- A block that is still dehydrated follows neither its bindings nor the view around it: keyed by the import and
+         held in an element of its own, it goes away whole when the tab of another entry point is reached in the app. -->
+    @for (files of [importFiles()]; track files) {
+        <div>
+            @defer (on immediate; hydrate on hover) {
+                <kbq-code-block class="docs-code-block docs-api__import" filled [files]="files" />
+            }
+        </div>
+    }
 }
 
 @for (group of entryPoint().groups; track group.id) {
@@ -46,10 +56,12 @@
                 }
 
                 <!-- The declaration itself, set apart from the filled blocks of code around it: the import, the examples. -->
-                <kbq-code-block
-                    class="docs-code-block"
-                    [files]="[{ content: entry.signature, language: 'typescript' }]"
-                />
+                @defer (on immediate; hydrate on hover) {
+                    <kbq-code-block
+                        class="docs-code-block"
+                        [files]="[{ content: entry.signature, language: 'typescript' }]"
+                    />
+                }
 
                 @if (entry.params || entry.returns) {
                     <docs-api-call [params]="entry.params" [returns]="entry.returns" />
