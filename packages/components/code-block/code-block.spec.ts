@@ -617,6 +617,20 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
     });
 
+    it('should leave the code content focusable when rendered on the server', () => {
+        const { nativeElement } = createComponent(BaseCodeBlock, [
+            { provide: Platform, useValue: { isBrowser: false } satisfies Partial<Platform> }
+        ]);
+
+        expect(nativeElement.querySelector('.kbq-code-block__main').tabIndex).toBe(0);
+    });
+
+    it('should not let the code content be focused in the browser when nothing overflows', () => {
+        const { nativeElement } = createComponent(BaseCodeBlock);
+
+        expect(nativeElement.querySelector('.kbq-code-block__main').tabIndex).toBe(-1);
+    });
+
     it('should show actionbar when tabs are visible', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
@@ -644,6 +658,27 @@ describe(KbqCodeBlock.name, () => {
         await vi.advanceTimersByTimeAsync(HOVER_DEBOUNCE_TIME);
         fixture.detectChanges();
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeFalsy();
+    });
+
+    it('should show actionbar for a block that comes to life under the pointer', () => {
+        const originalMatches = Element.prototype.matches;
+        // jsdom keeps no pointer: `:hover` stands for one resting over the code block, which sees no `mouseenter`.
+        const matches = vi.spyOn(Element.prototype, 'matches').mockImplementation(function (
+            this: Element,
+            selectors: string
+        ) {
+            return selectors === ':hover'
+                ? this.classList.contains('kbq-code-block')
+                : originalMatches.call(this, selectors);
+        });
+
+        try {
+            const { debugElement } = createComponent(CodeBlockWithDefaultOptions);
+
+            expect(geCodeBlockDebugElement(debugElement).classes['kbq-code-block_show-actionbar']).toBeTruthy();
+        } finally {
+            matches.mockRestore();
+        }
     });
 
     it('should always show actionbar when alwaysShowActionbar is enabled', async () => {

@@ -382,6 +382,58 @@ test.describe('docs app', () => {
         expect(errors).toEqual([]);
     });
 
+    // The code blocks of the API tab are `@defer` blocks hydrated on hover: they arrive highlighted, and the
+    // browser loads highlight.js for the one a reader points at rather than for the tab as it opens.
+    test('loads highlight.js for the API tab once a code block is hovered', async ({ page }) => {
+        const errors = collectErrors(page);
+        const scriptBodies: Promise<string>[] = [];
+
+        page.on('response', (response) => {
+            if (response.request().resourceType() === 'script') {
+                scriptBodies.push(response.text().catch(() => ''));
+            }
+        });
+
+        // Told apart by a message of highlight.js itself: the build names the chunk by its hash.
+        const highlightJsChunks = async (): Promise<number> =>
+            (await Promise.all(scriptBodies)).filter((body) =>
+                body.includes('did you forget to load/include a language module')
+            ).length;
+
+        await page.goto('/en/components/select/api');
+        await waitForHydration(page);
+        // A block that rendered on its own after hydration would request highlight.js once the browser is idle:
+        // leave it a second past that before asserting that nothing came.
+        await page.evaluate(() => new Promise((resolve) => requestIdleCallback(() => setTimeout(resolve, 1000))));
+
+        expect(await highlightJsChunks()).toBe(0);
+
+        const signature = page.locator('kbq-code-block').nth(1);
+
+        await signature.hover();
+
+        await expect(signature).toHaveClass(/kbq-code-block_show-actionbar/);
+        await expect.poll(highlightJsChunks).toBeGreaterThan(0);
+        expect(errors).toEqual([]);
+    });
+
+    // An API tab reached in the app reuses the page of the previous one, and a block that is still dehydrated follows
+    // neither its bindings nor the view around it.
+    for (const [entryPoint, imports] of [
+        ['tooltip', ["from '@koobiq/components/tooltip'"]],
+        ['core', []]
+    ] as const) {
+        test(`shows the import of the ${entryPoint} API tab reached by a link on another one`, async ({ page }) => {
+            await page.goto('/en/components/select/api');
+            await waitForHydration(page);
+
+            await page.locator(`docs-api-page a[href^="/en/components/${entryPoint}/api"]`).first().click();
+            await expect(page).toHaveURL(new RegExp(`/en/components/${entryPoint}/api`));
+
+            await expect(page.locator('.docs-api__import')).toHaveText(imports.map((text) => new RegExp(text)));
+        });
+    }
+
     test('scrolls to the member a link points at and highlights it', async ({ page }) => {
         await page.goto('/en/components/select/api?member=KbqSelect-panelClass');
         await waitForHydration(page);
