@@ -1,6 +1,13 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { parseDts, type DtsFile, type DtsInput, type DtsOutput, type DtsSymbol } from '../dts/parse-dts.js';
+import {
+    parseDts,
+    type DtsFile,
+    type DtsInput,
+    type DtsMember,
+    type DtsOutput,
+    type DtsSymbol
+} from '../dts/parse-dts.js';
 import type { PackageRef } from './project.js';
 
 /**
@@ -269,6 +276,40 @@ export const readComponentsApi = (pkg: PackageRef | undefined): ComponentsApi | 
     };
 
     /**
+     * A host directive's own inputs and members, walking its `extends` chain the same way `add`
+     * walks the host's — a host directive is itself a directive, and the thing it hosts may expose
+     * a member the host directive only inherits. `KbqButtonGroupRoot` exposes `color`, declared not
+     * on itself but on `KbqColorDirective` in `core`; reading only its own declaration left every
+     * input it exposes through that chain with no type.
+     */
+    const declaredChain = (name: string, origin: string, depth = 0): { inputs: DtsInput[]; members: DtsMember[] } => {
+        const empty = { inputs: [], members: [] };
+
+        if (depth > 8) return empty;
+
+        const located = locate(name, origin);
+
+        if (!located) return empty;
+
+        const { symbol, entryPoint } = located;
+
+        if (!symbol.base) return { inputs: symbol.inputs, members: symbol.members };
+
+        const base = declaredChain(symbol.base, entryPoint, depth + 1);
+
+        return {
+            inputs: [
+                ...symbol.inputs,
+                ...base.inputs.filter((input) => !symbol.inputs.some((it) => it.alias === input.alias))
+            ],
+            members: [
+                ...symbol.members,
+                ...base.members.filter((member) => !symbol.members.some((it) => it.name === member.name))
+            ]
+        };
+    };
+
+    /**
      * Inputs reach an element three ways and all three are usable in a template, so all three are
      * reported: declared on the class, inherited from a base directive, or exposed by a host
      * directive. Reading only the class's own declaration drops `color` from every button in the
@@ -304,10 +345,11 @@ export const readComponentsApi = (pkg: PackageRef | undefined): ComponentsApi | 
                 outputs.push({ ...output, ...(type ? { type } : {}), ...(depth === 0 ? {} : { from: origin }) });
             }
 
-            // The host directive's own map already states the public name, so the directive itself
-            // does not have to be resolved to know what a template may write.
+            // The host directive's own map already states the public name, so only its *type* needs
+            // the directive resolved — and resolved up its own `extends` chain, since the type may
+            // live there rather than on the host directive itself.
             for (const host of symbolAt.hostDirectives) {
-                const declared = locate(host.directive, origin)?.symbol;
+                const declared = declaredChain(host.directive, origin);
 
                 for (const [own, exposed] of Object.entries(host.inputs)) {
                     if (taken.has(exposed)) continue;
@@ -318,8 +360,8 @@ export const readComponentsApi = (pkg: PackageRef | undefined): ComponentsApi | 
                     // publicly, which is its *alias* — `kbqLocaleOverrides` for a property named
                     // `overrides`. Looking the member up by the key finds nothing; it has to be
                     // resolved back to the property name first.
-                    const source = declared?.inputs.find((input) => input.alias === own || input.name === own);
-                    const member = declared?.members.find((entry) => entry.name === (source?.name ?? own));
+                    const source = declared.inputs.find((input) => input.alias === own || input.name === own);
+                    const member = declared.members.find((entry) => entry.name === (source?.name ?? own));
                     const type = member?.accepts ?? bindableType(member?.signature);
 
                     inputs.push({
@@ -337,7 +379,7 @@ export const readComponentsApi = (pkg: PackageRef | undefined): ComponentsApi | 
 
                     takenOutputs.add(exposed);
 
-                    const type = bindableType(declared?.members.find((member) => member.name === own)?.signature);
+                    const type = bindableType(declared.members.find((member) => member.name === own)?.signature);
 
                     outputs.push({
                         name: own,
