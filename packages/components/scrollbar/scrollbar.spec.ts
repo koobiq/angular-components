@@ -60,13 +60,17 @@ const setMetrics = (el: HTMLElement, metrics: ElementMetrics): void => {
 const getScrollable = (fixture: ComponentFixture<unknown>): CdkScrollable =>
     fixture.debugElement.query(By.directive(KbqScrollbar)).injector.get(CdkScrollable);
 
-// Replaces jsdom's inactive `ResizeObserver` with a controllable stream.
-const createResizeTrigger = (): { provider: Provider; triggerResize: () => void } => {
+// Replaces jsdom's inactive `ResizeObserver` with a controllable stream. A resize resolves once the microtask the track
+// writes its geometry in has run.
+const createResizeTrigger = (): { provider: Provider; triggerResize: () => Promise<void> } => {
     const resizes = new Subject<ResizeObserverEntry[]>();
 
     return {
         provider: { provide: SharedResizeObserver, useValue: { observe: () => resizes } },
-        triggerResize: () => resizes.next([])
+        triggerResize: async () => {
+            resizes.next([]);
+            await Promise.resolve();
+        }
     };
 };
 
@@ -369,6 +373,16 @@ describe(KbqScrollbar.name, () => {
             readonly scrollbar = viewChild.required(KbqScrollbar, { read: ElementRef });
         }
 
+        @Component({
+            selector: 'test-scrollbar-tracks',
+            imports: [KbqScrollbar],
+            template: `
+                <kbq-scrollbar kbqScrollbarMode="always">first</kbq-scrollbar>
+                <kbq-scrollbar kbqScrollbarMode="always">second</kbq-scrollbar>
+            `
+        })
+        class TestScrollbarTracks {}
+
         const getViewportEl = (fixture: ComponentFixture<TestScrollbarTrackVisibility>): HTMLElement =>
             fixture.componentInstance.scrollbar().nativeElement;
 
@@ -561,7 +575,7 @@ describe(KbqScrollbar.name, () => {
 
             setMetrics(getViewportEl(fixture), { clientHeight: 50 });
 
-            triggerResize();
+            await triggerResize();
             fixture.detectChanges();
 
             expect(trackEl.style.blockSize).toBe('49px');
@@ -575,7 +589,7 @@ describe(KbqScrollbar.name, () => {
 
             setMetrics(getViewportEl(fixture), { clientHeight: 0, clientWidth: 0 });
 
-            triggerResize();
+            await triggerResize();
             fixture.detectChanges();
 
             // A negative size is dropped by CSSOM while the margin paired with it is not, so an
@@ -619,7 +633,7 @@ describe(KbqScrollbar.name, () => {
                     : realGetComputedStyle(el)
             );
 
-            triggerResize();
+            await triggerResize();
             fixture.detectChanges();
 
             expect(trackEl.style.blockSize).toBe('49px');
@@ -632,6 +646,31 @@ describe(KbqScrollbar.name, () => {
             expect(trackEl.style.marginInlineStart).toBe('-6px');
             expect(trackEl.style.insetInlineStart).toBe('-6px');
             expect(trackEl.style.marginInlineEnd).toBe('-23px');
+        });
+
+        // A write between two reads of one batch forces the second read to lay the page out again.
+        it('reads every viewport of a resize batch before writing the geometry of any track', async () => {
+            const { provider, triggerResize } = createResizeTrigger();
+            const fixture = createComponent(TestScrollbarTracks, [provider]);
+            const viewports: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('kbq-scrollbar'));
+            const tracks: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('kbq-scrollbar-track'));
+            let readAfterWrite = false;
+
+            viewports.forEach((viewport) =>
+                Object.defineProperty(viewport, 'clientHeight', {
+                    configurable: true,
+                    get: () => {
+                        readAfterWrite ||= tracks.some(({ style }) => style.blockSize !== '');
+
+                        return 50;
+                    }
+                })
+            );
+
+            await triggerResize();
+
+            expect(readAfterWrite).toBe(false);
+            expect(tracks.map(({ style }) => style.blockSize)).toEqual(['49px', '49px']);
         });
 
         it('toggles kbq-scrollbar-track_revealed while scrolling and clears it after scrolling stops', async () => {
@@ -911,6 +950,35 @@ describe(KbqScrollbar.name, () => {
             expect(thumb.style.insetInlineStart).not.toBe('');
             expect(thumb.style.width).not.toBe('');
             expect(thumb.style.top).toBe('');
+        });
+
+        // A thumb that reads after another one has written forces a layout per thumb created in the render.
+        it('reads the viewport for every thumb created in a render before positioning any of them', async () => {
+            const fixture = createComponent(TestScrollbarThumb);
+            const viewport = fixture.componentInstance.viewport().nativeElement;
+            const getThumbs = () =>
+                Array.from(
+                    (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>('.kbq-scrollbar-track__thumb')
+                );
+            let readAfterWrite = false;
+
+            setMetrics(viewport, { clientHeight: 100, scrollHeight: 300, clientWidth: 100, scrollWidth: 300 });
+            Object.defineProperty(viewport, 'scrollTop', {
+                configurable: true,
+                get: () => {
+                    readAfterWrite ||= getThumbs().some(
+                        ({ style }) => style.top !== '' || style.insetInlineStart !== ''
+                    );
+
+                    return 0;
+                }
+            });
+
+            await tickFrame();
+            fixture.detectChanges();
+
+            expect(getThumbs().length).toBe(2);
+            expect(readAfterWrite).toBe(false);
         });
 
         it('drags the vertical thumb to update the viewport scrollTop, not scrollLeft', async () => {
