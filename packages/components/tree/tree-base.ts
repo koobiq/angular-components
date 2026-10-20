@@ -405,6 +405,8 @@ export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>>
         // Node context that will be provided to created embedded view
         const context = new KbqTreeNodeOutletContext<T>(nodeData);
 
+        context.index = index;
+
         // If the tree is flat tree, then use the `getLevel` function in flat tree control
         // Otherwise, use the level of parent node.
         const treeControl = this.treeControl;

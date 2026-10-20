@@ -8,7 +8,6 @@ import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
@@ -29,7 +28,6 @@ import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit, AfterContentChecked {
     constructor();
     protected readonly allItems: Signal<readonly KbqAccordionItem[]>;
-    protected readonly changeDetectorRef: ChangeDetectorRef;
     clearSavedState(): void;
     closeAll(): void;
     readonly collapsible: _angular_core.InputSignal<boolean>;
@@ -121,7 +119,6 @@ export class KbqAccordionHeader {
 export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
     constructor();
     readonly accordion: KbqAccordion;
-    protected readonly changeDetectorRef: ChangeDetectorRef;
     close(): void;
     readonly closed: _angular_core.OutputEmitterRef<void>;
     readonly content: _angular_core.Signal<any>;
@@ -193,7 +190,6 @@ export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {
     get isHug(): boolean;
     // (undocumented)
     get isHugSpaceBetween(): boolean;
-    protected readonly nativeElement: HTMLElement;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)

@@ -2,7 +2,6 @@ import {
     AfterContentInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
     DestroyRef,
@@ -51,7 +50,6 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      * @docs-private
      */
     protected readonly errorStateContext = inject(KBQ_ICON_ERROR_STATE_CONTEXT, { optional: true });
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     protected readonly registry = inject(KbqIconRegistry, { optional: true });
     protected readonly destroyRef = inject(DestroyRef);
     protected readonly renderer = inject(Renderer2);

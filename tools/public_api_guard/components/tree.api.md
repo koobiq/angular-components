@@ -332,8 +332,6 @@ export class KbqTreeNodeDef<T> {
 // @public (undocumented)
 export class KbqTreeNodeOutlet {
     // (undocumented)
-    changeDetectorRef: ChangeDetectorRef;
-    // (undocumented)
     viewContainer: ViewContainerRef;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTreeNodeOutlet, "[kbqTreeNodeOutlet]", never, {}, {}, never, never, true, never>;
@@ -587,7 +585,6 @@ export class KbqTreeSelection<T = any> extends KbqTreeBase<T, FlatTreeControl<T>
     focus($event: any): void;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
-    protected getItemHeight(): number;
     getSelectedValues(): any[];
     handleKeydown(event: KeyboardEvent): void;
     highlightSelectedOption(): void;
@@ -658,7 +655,6 @@ export class KbqTreeSelection<T = any> extends KbqTreeBase<T, FlatTreeControl<T>
     readonly selectionChangeOutput: _angular_core.OutputRef<KbqTreeSelectionChange<KbqTreeOption<T>, T>>;
     selectionModel: SelectionModel<T>;
     setDisabledState(isDisabled: boolean): void;
-    protected setFocusedOption(option: KbqTreeOption<T>): void;
     setOptionsFromValues(values: any[]): void;
     setSelectedOptionsByClick(option: KbqTreeOption<T>, shiftKey: boolean, ctrlKey: boolean): void;
     setSelectedOptionsByKey(option: KbqTreeOption<T>, shiftKey: boolean, ctrlKey: boolean): void;

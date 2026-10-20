@@ -250,6 +250,7 @@ export function kbqTooltipScrollStrategyFactory(overlay: Overlay): () => ScrollS
     return () => overlay.scrollStrategies.close();
 }
 
+// Redundant to the root factory of the token; kept so an app can restore the default under its own override (#DS-2196).
 /** @docs-private */
 export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_TOOLTIP_SCROLL_STRATEGY,

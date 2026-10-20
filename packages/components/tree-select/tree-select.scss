@@ -26,11 +26,5 @@
     }
 }
 
-.kbq-form-field-type-select {
-    &:not(.kbq-disabled) .kbq-form-field-flex {
-        cursor: pointer;
-    }
-}
-
 @include kbq-tree-select-theme();
 @include kbq-tree-select-typography();

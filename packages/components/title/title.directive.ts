@@ -119,24 +119,6 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
         );
     }
 
-    /**
-     * Whether the text is clipped horizontally: the parent `offsetWidth` is smaller than the child `scrollWidth`.
-     * @docs-private */
-    protected get isHorizontalOverflown(): boolean {
-        const child = this.child;
-
-        return !!child && this.parent.offsetWidth < child.scrollWidth;
-    }
-
-    /**
-     * Whether the text is clipped vertically: the parent `offsetHeight` is smaller than the child `scrollHeight`.
-     * @docs-private */
-    protected get isVerticalOverflown(): boolean {
-        const child = this.child;
-
-        return !!child && this.parent.offsetHeight < child.scrollHeight;
-    }
-
     /** Trimmed `textContent` of the measured parent, used as the default tooltip content. */
     get viewValue(): string {
         return (this.parent.textContent || '').trim();
@@ -152,14 +134,6 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
             this.componentInstance?.parentTextElement?.nativeElement ||
             this.elementRef.nativeElement
         );
-    }
-
-    /**
-     * First effective text element used for overflow detection (the first entry of `childElements`).
-     * `undefined` only if the `#kbqTitleText` query is emptied at runtime.
-     * @docs-private */
-    protected get child(): HTMLElement | undefined {
-        return this.childElements[0];
     }
 
     /** Whether the host element contains exactly one child node and that node is a text node.

@@ -9,7 +9,6 @@ import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { DateAdapter } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
@@ -56,7 +55,6 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY: InjectionToken<() => Scrol
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit, KbqNotificationCenterPanel {
     constructor();
     protected readonly a11yLocaleConfiguration: Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
-    protected readonly dateAdapter: DateAdapter<any>;
     escapeHandler(event?: KeyboardEvent): void;
     isTrapFocus: boolean;
     readonly localeConfiguration: Signal<_koobiq_components_core.KbqNotificationCenterLocaleConfiguration>;

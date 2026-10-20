@@ -10,7 +10,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { kbqAnimationsDisabled, kbqInjectNativeElement } from '@koobiq/components/core';
+import { kbqAnimationsDisabled } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqAccordion } from './accordion';
 import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
@@ -41,8 +41,6 @@ import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
 export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {
     private readonly platform = inject(Platform);
 
-    /** @docs-private */
-    protected readonly nativeElement = kbqInjectNativeElement();
     /** @docs-private */
     protected readonly accordion: KbqAccordion = inject(KbqAccordion);
 

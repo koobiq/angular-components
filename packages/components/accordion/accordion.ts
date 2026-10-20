@@ -8,7 +8,6 @@ import {
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
     contentChildren,
@@ -109,8 +108,6 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
     protected readonly focusMonitor = inject(FocusMonitor);
     /** @docs-private */
     protected readonly elementRef = inject(ElementRef);
-    /** @docs-private */
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
     protected readonly selectionDispatcher = inject(UniqueSelectionDispatcher);
     /** @docs-private */

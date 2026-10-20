@@ -109,10 +109,6 @@ export class KbqSelectSearch implements AfterContentInit {
         }
     }
 
-    hasPlaceholder(): boolean {
-        return !!this.formField?.control().placeholder();
-    }
-
     focus(): void {
         this.formField.focus();
     }

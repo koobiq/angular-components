@@ -251,9 +251,6 @@ export class KbqTimeRangeTitlePlaceholder {
 }
 
 // @public
-export type KbqTimeRangeTranslateTypeMap = Record<KbqTimeRangeType, KbqTimeRangeTranslationType>;
-
-// @public
 export type KbqTimeRangeTranslationType = Exclude<DurationUnit, 'quarters' | 'milliseconds'> | 'other';
 
 // @public

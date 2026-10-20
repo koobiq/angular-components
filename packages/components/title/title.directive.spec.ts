@@ -122,54 +122,6 @@ describe('KbqTitleDirective', () => {
         });
     });
 
-    describe('isHorizontalOverflown getter', () => {
-        it('should return true when parent offsetWidth < child scrollWidth', () => {
-            const { debugElement } = createComponent(SimpleTitleComponent);
-            const directive = getTitleDirective(debugElement);
-            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
-
-            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
-            vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
-
-            expect(directive['isHorizontalOverflown']).toBe(true);
-        });
-
-        it('should return false when parent offsetWidth >= child scrollWidth', () => {
-            const { debugElement } = createComponent(SimpleTitleComponent);
-            const directive = getTitleDirective(debugElement);
-            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
-
-            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(200);
-            vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(100);
-
-            expect(directive['isHorizontalOverflown']).toBe(false);
-        });
-    });
-
-    describe('isVerticalOverflown getter', () => {
-        it('should return true when parent offsetHeight < child scrollHeight', () => {
-            const { debugElement } = createComponent(SimpleTitleComponent);
-            const directive = getTitleDirective(debugElement);
-            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
-
-            vi.spyOn(el, 'offsetHeight', 'get').mockReturnValue(30);
-            vi.spyOn(el, 'scrollHeight', 'get').mockReturnValue(60);
-
-            expect(directive['isVerticalOverflown']).toBe(true);
-        });
-
-        it('should return false when parent offsetHeight >= child scrollHeight', () => {
-            const { debugElement } = createComponent(SimpleTitleComponent);
-            const directive = getTitleDirective(debugElement);
-            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
-
-            vi.spyOn(el, 'offsetHeight', 'get').mockReturnValue(60);
-            vi.spyOn(el, 'scrollHeight', 'get').mockReturnValue(30);
-
-            expect(directive['isVerticalOverflown']).toBe(false);
-        });
-    });
-
     describe('isOverflown getter', () => {
         it('should return true when content is vertically overflown', () => {
             const { debugElement } = createComponent(SimpleTitleComponent);
@@ -753,16 +705,14 @@ describe('KbqTitleDirective', () => {
             expect(directive.viewValue).toBe('Container text');
         });
 
-        it('should compute overflow between #kbqTitleContainer (parent) and #kbqTitleText (child)', () => {
+        it('should measure #kbqTitleText (child) against #kbqTitleContainer (parent)', () => {
             const { debugElement } = createComponent(WithRefsTitleComponent);
             const directive = getTitleDirective(debugElement);
             const containerEl = debugElement.query(By.css('.container-el')).nativeElement;
             const textEl = debugElement.query(By.css('.text-el')).nativeElement;
 
-            vi.spyOn(containerEl, 'offsetWidth', 'get').mockReturnValue(100);
-            vi.spyOn(textEl, 'scrollWidth', 'get').mockReturnValue(200);
-
-            expect(directive['isHorizontalOverflown']).toBe(true);
+            expect(directive['parent']).toBe(containerEl);
+            expect(directive['childElements']).toEqual([textEl]);
         });
     });
 
@@ -775,10 +725,8 @@ describe('KbqTitleDirective', () => {
 
             // parentTextElement is not provided → parent falls back to host elementRef.
             // textElement IS provided → child must be the inner span.
-            vi.spyOn(hostEl, 'offsetWidth', 'get').mockReturnValue(100);
-            vi.spyOn(innerEl, 'scrollWidth', 'get').mockReturnValue(200);
-
-            expect(directive['isHorizontalOverflown']).toBe(true);
+            expect(directive['parent']).toBe(hostEl);
+            expect(directive['childElements']).toEqual([innerEl]);
         });
     });
 

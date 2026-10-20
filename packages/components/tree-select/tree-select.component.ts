@@ -824,13 +824,10 @@ export class KbqTreeSelect<T = any>
 
     /**
      * Colour of the trigger's tags and arrow.
-     *
-     * A `computed()` rather than a getter: it used to read the host's class list on every change
-     * detection pass, twice per pass, through the two template bindings that consume it.
      * @docs-private
      */
     readonly colorForState = computed<KbqComponentColors>(() =>
-        this.invalidState() ? KbqComponentColors.Error : KbqComponentColors.ContrastFade
+        this.errorState() ? KbqComponentColors.Error : KbqComponentColors.ContrastFade
     );
 
     /** Full set of classes for the panel: base class, form-field theme and custom `panelClass`. */
@@ -890,9 +887,6 @@ export class KbqTreeSelect<T = any>
      * its own form field, and that is only guaranteed to have been wired by `ngAfterContentInit`.
      */
     private readonly contentInitialized = signal(false);
-
-    /** Reactive mirror of the state the error colour is derived from. */
-    private readonly invalidState = signal(false);
 
     /**
      * The last value the form wrote while the tree could not resolve all of it yet — before the content was
@@ -1025,14 +1019,6 @@ export class KbqTreeSelect<T = any>
         if (this.ngControl) {
             this.updateErrorState();
         }
-
-        // The legacy `kbqValidate` directive marks the host with a class, which no signal observes.
-        // Mirroring it here is what lets everything derived from it be a `computed()` instead of a getter
-        // re-evaluated by every binding on every pass.
-        // A disjunction, not a choice between the two: `errorState` still colours the control when the
-        // legacy directive is present, which is how `KbqSelect` reads it. A consumer matcher that reports
-        // an error for a valid control is the state the two forms disagree on.
-        this.invalidState.set((this.hasLegacyValidateDirective() && !!this.ngControl?.invalid) || this.errorState());
     }
 
     ngAfterContentInit() {
@@ -1759,14 +1745,6 @@ export class KbqTreeSelect<T = any>
         });
 
         this.pendingTimers.add(handle);
-    }
-
-    /**
-     * Whether the host is marked by the legacy `kbqValidate` directive, which reports validity through
-     * `ngControl` instead of through the form field's error state.
-     */
-    private hasLegacyValidateDirective(): boolean {
-        return this.elementRef.nativeElement.classList.contains('kbq-control_has-validate-directive');
     }
 
     private closingActions() {

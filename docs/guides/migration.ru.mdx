@@ -14,6 +14,7 @@
 - **21.0.0**: удаление API, устаревших до 21.0.0.
 - **21.0.0**: удаление `ThemePalette`.
 - **21.0.0**: удаление API core, которым не пользовалась библиотека, и устаревание его прежнего API.
+- **21.0.0**: удаление API и стилей компонентов, которыми не пользовалась библиотека.
 - **21.0.0**: контейнер оверлея панели действий.
 - **21.0.0**: устаревание прежнего splitter.
 - **21.0.0**: удаление механизма понижения оверлея.
@@ -468,7 +469,7 @@ ng g @koobiq/components:tabs-signals-and-aria --project "<your project>"
 
 #### Списки запросов
 
-`options` у `KbqSelect`, `KbqAutocomplete` и `KbqListSelection`, `tags` у `KbqSelect` и `KbqTagList`, `KbqListItem.lines`, `KbqRadioGroup.radios`, `KbqTreeSelection.unorderedOptions`, `focusableItems` у `KbqNavbar` и `KbqVerticalNavbar`, а также `textElement` у `KbqTag` и `KbqDropdownItem` стали геттерами поверх сигнальных запросов. Их типы не изменились — это `QueryList`, чей `changes` срабатывает как раньше, или `ElementRef`, — поэтому чтение работает как раньше. До инициализации содержимого `QueryList` пуст, а не равен `undefined`.
+`options` у `KbqSelect`, `KbqAutocomplete` и `KbqListSelection`, `tags` у `KbqSelect` и `KbqTagList`, `KbqRadioGroup.radios`, `KbqTreeSelection.unorderedOptions`, `focusableItems` у `KbqNavbar` и `KbqVerticalNavbar`, а также `textElement` у `KbqTag` и `KbqDropdownItem` стали геттерами поверх сигнальных запросов. Их типы не изменились — это `QueryList`, чей `changes` срабатывает как раньше, или `ElementRef`, — поэтому чтение работает как раньше. До инициализации содержимого `QueryList` пуст, а не равен `undefined`.
 
 - **Наследник**, который объявлял один из них заново через декоратор запроса или как поле, убирает это объявление или переопределяет геттер.
 - **Запись** в любой из них больше не компилируется: элементы задаются в шаблоне.
@@ -746,7 +747,9 @@ ng g @koobiq/components:v21-upgrade --project "<your project>"
 | `KbqPopUp.warning`, `.handleBodyInteraction()`, защищенное `closeOnInteraction`                                      | без замены: `warning` ничего не делал, `handleBodyInteraction()` никто не вызывал, а `closeOnInteraction` проверял только он                                                                                   | сообщается     |
 | `KbqDecimalPipe.isSpecialFormatForRULocale()`, `KbqRoundDecimalPipe.roundingOptions`                                 | теперь закрыты: аргументы пайпа и конфигурация локали для форматирования                                                                                                                                       | сообщается     |
 | `KbqFormElement.isRow`                                                                                               | класс `kbq-form__row` у элемента                                                                                                                                                                               | сообщается     |
-| `KbqLineSetter` и классы `kbq-2-line`, `kbq-3-line`, `kbq-multi-line` у пункта списка                                | ничего: их не читал ни один стиль; строки считает `KbqListItem.lines`                                                                                                                                          | сообщается     |
+| `KbqLineSetter` и классы `kbq-2-line`, `kbq-3-line`, `kbq-multi-line` у пункта списка                                | ничего: их не читал ни один стиль                                                                                                                                                                              | сообщается     |
+| `KbqLine`, `KbqListItem.lines`                                                                                       | ничего: `KbqLine` читал только `lines`, а строки никто не считал; атрибут `kbq-line` по-прежнему помещает элемент в текст пункта списка                                                                        | сообщается     |
+| `KbqSelectSearch.hasPlaceholder()`                                                                                   | плейсхолдер поля поиска                                                                                                                                                                                        | сообщается     |
 | атрибут `mcListIcon` у пункта списка                                                                                 | `kbq-list-icon`                                                                                                                                                                                                | переписывается |
 | атрибут `mcLine`                                                                                                     | `kbq-line`                                                                                                                                                                                                     | переписывается |
 
@@ -771,6 +774,26 @@ ng g @koobiq/components:v21-upgrade --project "<your project>"
 | `KbqMeasureScrollbarService`                                                                                 | `element.offsetWidth - element.clientWidth` у прокручиваемого элемента                                       |
 | `FocusKeyManager.getFocusOrigin()`                                                                           | источник, переданный в `setFocusOrigin()`                                                                    |
 | `dateInput` в конфигурации локали datepicker                                                                 | `KBQ_DATE_FORMATS`: `dateInput` никто не читает                                                              |
+
+### Удаление неиспользуемого API компонентов (21.0.0)
+
+Из точек входа компонентов удалены экспорты, члены и стили, которыми библиотека не пользовалась. Устаревшими они не помечались: в основном это остатки удаленных возможностей или детали реализации, попавшие в публичный API. `v21-upgrade` сообщает о каждом использовании.
+
+| Удалено                                                                     | Что использовать                                                                                                  |
+| --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `normalizeSplitter()`, `isInt()`, `isDigit()` из `@koobiq/components/input` | `value.replace(/,/g, '.')`, `/^-?\d+$/.test(value)`; `isFloat()` остается                                         |
+| `KbqTimeRangeTranslateTypeMap`                                              | `Record<KbqTimeRangeType, KbqTimeRangeTranslationType>`                                                           |
+| `KbqTabBodyOriginState`                                                     | `'left' \| 'right'`                                                                                               |
+| `KbqDatepickerIntl`                                                         | ничего: его подписи не выводило ни одно представление; тексты задает `kbqDatepickerLocaleConfigurationProvider()` |
+| `KbqDropdown.onPanelReached()`                                              | ничего: на него никто не подписывался                                                                             |
+| защищенный `KbqTreeSelection.getItemHeight()`                               | `options.first?.getHeight() ?? 0`                                                                                 |
+| защищенный `KbqTreeSelection.setFocusedOption()`                            | `this.keyManager.setActiveItem(option)`                                                                           |
+| `KbqTagList.tagSelectionChanges`, `.shouldLabelFloat`                       | выход `selectionChange` каждого тега; `!empty() \|\| focused()`                                                   |
+| `KbqTreeNodeOutlet.changeDetectorRef`                                       | `ChangeDetectorRef`, внедренный там, где он нужен                                                                 |
+
+Наследник теряет защищенные члены, которые никто не читал: `changeDetectorRef` у `KbqAccordion`, `KbqAccordionItem`, `KbqPasswordToggle`, `KbqIcon` и `KbqSearchExpandable`, `KbqAccordionTrigger.nativeElement`, `KbqNotificationCenterComponent.dateAdapter`, `KbqFilters.styles`, а также `isHorizontalOverflown`, `isVerticalOverflown` и `child` у `KbqTitleDirective`. Внедрите нужное в самом наследнике; `isOverflown` у title учитывает оба направления.
+
+Из стилей ушли правила для классов, которые никто не ставит: `kbq-control_has-validate-directive` и `kbq-form-field_has-validate-directive` остались от `KbqValidateDirective`, удаленной в 20.0.0 (поле формы, select и tree select показывают ошибку через свой `ErrorStateMatcher`), и служебный класс `kbq-no-select`: задайте `user-select: none` в своих стилях.
 
 ### Контейнер оверлея панели действий (21.0.0)
 

@@ -3337,14 +3337,6 @@ export const kbqIsTextLaidOutFromStart: (computedStyle: CSSStyleDeclaration) => 
 export function kbqLeaveTabOrderOnTabOut(tabOut: Observable<void>, host: HTMLElement, renderedTabIndex: () => number | null, destroyRef: DestroyRef): void;
 
 // @public
-export class KbqLine {
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLine, "[kbq-line]", never, {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLine, never>;
-}
-
-// @public
 export const kbqListenForCaretMoves: (renderer: Renderer2, element: HTMLElement, callback: () => void) => (() => void);
 
 // @public
@@ -4318,8 +4310,6 @@ export class KbqSelectSearch implements AfterContentInit {
     protected formField: KbqFormFieldRef;
     // (undocumented)
     handleKeydown(event: KeyboardEvent): void;
-    // (undocumented)
-    hasPlaceholder(): boolean;
     // (undocumented)
     isSearchChanged: boolean;
     // (undocumented)

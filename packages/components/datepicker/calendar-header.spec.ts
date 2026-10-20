@@ -6,7 +6,6 @@ import { DateAdapter } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 import { KbqCalendarHeader } from './calendar-header.component';
 import { KbqCalendar } from './calendar.component';
-import { KbqDatepickerIntl } from './datepicker-intl';
 import { KbqDatepickerModule } from './datepicker-module';
 
 describe('KbqCalendarHeader', () => {
@@ -20,7 +19,6 @@ describe('KbqCalendarHeader', () => {
                 StandardCalendar
             ],
             providers: [
-                KbqDatepickerIntl,
                 { provide: DateAdapter, useClass: LuxonDateAdapter }
             ]
         }).compileComponents();

@@ -14,7 +14,7 @@ than `undefined`.
 | ------------------------------------------------------------------------------------------------------- | ------------ |
 | `options` of `KbqSelect`, `KbqAutocomplete` and `KbqListSelection`                                      | `QueryList`  |
 | `tags` of `KbqSelect`, `KbqTreeSelect` (protected) and `KbqTagList`                                     | `QueryList`  |
-| `KbqListItem.lines`, `KbqRadioGroup.radios`, `KbqTreeSelection.unorderedOptions`                        | `QueryList`  |
+| `KbqRadioGroup.radios`, `KbqTreeSelection.unorderedOptions`                                             | `QueryList`  |
 | `focusableItems` of `KbqNavbar` and `KbqVerticalNavbar`, `KbqAppSwitcherComponent.allItems` (protected) | `QueryList`  |
 | `textElement` of `KbqTag` and `KbqDropdownItem`                                                         | `ElementRef` |
 | `KbqCodeBlock.tabLinkTemplate` (protected)                                                              | Signal       |

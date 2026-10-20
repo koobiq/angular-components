@@ -75,6 +75,7 @@ export function KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY(scrollDispatcher: ScrollDis
     return kbqRepositionScrollStrategyFactory(scrollDispatcher);
 }
 
+// Redundant to the root factory of the token; kept so an app can restore the default under its own override (#DS-2196).
 /** @docs-private */
 export const KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_DROPDOWN_SCROLL_STRATEGY,

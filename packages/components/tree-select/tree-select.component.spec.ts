@@ -151,18 +151,17 @@ class TreeSelectWithDIErrorStateMatcher {
     imports: [KbqTreeSelectModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
-            <kbq-tree-select class="kbq-control_has-validate-directive" [formControl]="control" />
+            <kbq-tree-select [formControl]="control" />
         </kbq-form-field>
     `,
     providers: [
         kbqErrorStateMatcherProvider(customErrorStateMatcher)
     ]
 })
-class TreeSelectWithLegacyValidateAndValidControl {
+class TreeSelectWithErrorStateOnValidControl {
     readonly treeSelect = viewChild.required(KbqTreeSelect);
 
-    // Valid and untouched, which `customErrorStateMatcher` reports as an error state: the one combination
-    // where the legacy directive's own verdict and `errorState` disagree.
+    // Valid and untouched, which `customErrorStateMatcher` reports as an error state.
     readonly control = new FormControl<string>('', { nonNullable: true });
 }
 
@@ -6121,8 +6120,8 @@ describe('KbqTreeSelect', () => {
     });
 
     describe('ErrorStateMatcher', () => {
-        it('should keep the error colour when the legacy validate directive is present and only the error state reports a problem', () => {
-            const fixture = createComponent(TreeSelectWithLegacyValidateAndValidControl);
+        it('should colour the trigger by the error state, not by the control validity', () => {
+            const fixture = createComponent(TreeSelectWithErrorStateOnValidControl);
             const treeSelect = fixture.componentInstance.treeSelect();
 
             expect(treeSelect.ngControl?.invalid).toBe(false);
