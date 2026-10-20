@@ -1,11 +1,9 @@
-import assert from 'node:assert/strict';
-import { test } from 'node:test';
-import { loadCatalog } from '../src/catalog.ts';
-import { parseGuide, titleFromId } from '../src/indexer/parse-guide.ts';
-import { findSection, guideCaveat, pickGuide } from '../src/sources/guides.ts';
-import { toolGetGuide } from '../src/tools.ts';
-import type { Guide } from '../src/types.ts';
-import { CONSUMER } from './project.ts';
+import { loadCatalog } from '../src/catalog';
+import { parseGuide, titleFromId } from '../src/indexer/parse-guide';
+import { findSection, guideCaveat, pickGuide } from '../src/sources/guides';
+import { toolGetGuide } from '../src/tools';
+import type { Guide } from '../src/types';
+import { CONSUMER } from './project';
 
 /**
  * Guides are the one source where being out of date is silent: prose describing a mechanism the
@@ -20,19 +18,19 @@ const guide = (over: Partial<Guide> = {}): Guide => ({
     lang: 'en',
     since: '20.3.1',
     lede: 'lede',
-    sections: [{ heading: 'Setup', body: 'body', examples: [] }],
+    sections: [{ heading: 'Setup', depth: 3, body: 'body', examples: [] }],
     ...over
 });
 
 test('a project on the same major is told nothing extra', () => {
-    assert.equal(guideCaveat(guide({ since: '20.0.0' }), '20.3.1'), null);
+    expect(guideCaveat(guide({ since: '20.0.0' }), '20.3.1')).toBe(null);
 });
 
 test('a project on another major is warned', () => {
     const warning = guideCaveat(guide({ since: '20.3.1' }), '18.4.0') ?? '';
 
-    assert.match(warning, /from 20\.3\.1 and this project is on 18\.4\.0/);
-    assert.match(warning, /different major/);
+    expect(warning).toMatch(/from 20\.3\.1 and this project is on 18\.4\.0/);
+    expect(warning).toMatch(/different major/);
 });
 
 test('a guide that exists only in the working tree says so, whatever the version', () => {
@@ -40,7 +38,7 @@ test('a guide that exists only in the working tree says so, whatever the version
     // answering nothing, which is what sent agents to llms.txt in the first place.
     const warning = guideCaveat(guide({ unreleased: true }), '20.3.1') ?? '';
 
-    assert.match(warning, /not in any release yet/);
+    expect(warning).toMatch(/not in any release yet/);
 });
 
 test('the asked-for language wins, and the other is a fallback rather than a miss', () => {
@@ -50,17 +48,17 @@ test('the asked-for language wins, and the other is a fallback rather than a mis
         guide({ id: 'localization', title: 'Localization', lang: 'ru' })
     ];
 
-    assert.equal(pickGuide(both, 'theming', 'ru')?.lang, 'ru');
-    assert.equal(pickGuide(both, 'theming', 'en')?.lang, 'en');
-    assert.equal(pickGuide(both, 'localization', 'en')?.lang, 'ru', 'falling back beats answering nothing');
-    assert.equal(pickGuide(both, 'nonexistent', 'en'), null);
+    expect(pickGuide(both, 'theming', 'ru')?.lang).toBe('ru');
+    expect(pickGuide(both, 'theming', 'en')?.lang).toBe('en');
+    expect(pickGuide(both, 'localization', 'en')?.lang, 'falling back beats answering nothing').toBe('ru');
+    expect(pickGuide(both, 'nonexistent', 'en')).toBe(null);
 });
 
 test('a section is found by an exact heading or by part of one', () => {
     const subject = guide({
         sections: [
-            { heading: 'Switching themes', body: 'a', examples: [] },
-            { heading: 'Theme selectors', body: 'b', examples: [] }
+            { heading: 'Switching themes', depth: 3, body: 'a', examples: [] },
+            { heading: 'Theme selectors', depth: 3, body: 'b', examples: [] }
         ]
     });
 
@@ -70,9 +68,9 @@ test('a section is found by an exact heading or by part of one', () => {
         return hit.kind === 'found' ? hit.section.body : null;
     };
 
-    assert.equal(body('Theme selectors'), 'b');
-    assert.equal(body('switching'), 'a');
-    assert.equal(body('nothing like this'), null);
+    expect(body('Theme selectors')).toBe('b');
+    expect(body('switching')).toBe('a');
+    expect(body('nothing like this')).toBe(null);
 });
 
 test('a heading that repeats is addressed by its parent, not answered with the first match', () => {
@@ -90,8 +88,8 @@ test('a heading that repeats is addressed by its parent, not answered with the f
 
     const bare = findSection([subject], subject, 'Running the migration');
 
-    assert.equal(bare.kind, 'ambiguous');
-    assert.deepEqual(bare.kind === 'ambiguous' ? bare.paths : [], [
+    expect(bare.kind).toBe('ambiguous');
+    expect(bare.kind === 'ambiguous' ? bare.paths : []).toEqual([
         'Step one > Running the migration',
         'Step two > Running the migration'
     ]);
@@ -102,10 +100,10 @@ test('a heading that repeats is addressed by its parent, not answered with the f
         return hit.kind === 'found' ? hit.section.body : null;
     };
 
-    assert.equal(body('Step two > Running the migration'), 'second');
-    assert.equal(body('Step one > Running the migration'), 'first');
+    expect(body('Step two > Running the migration')).toBe('second');
+    expect(body('Step one > Running the migration')).toBe('first');
     // A unique heading stays addressable on its own: the path is not an extra hoop.
-    assert.equal(body('Step one'), 'one');
+    expect(body('Step one')).toBe('one');
 });
 
 test('a heading quoted in the other language still resolves', () => {
@@ -129,9 +127,9 @@ test('a heading quoted in the other language still resolves', () => {
 
     const hit = findSection([en, ru], ru, 'Upgrade plan');
 
-    assert.equal(hit.kind, 'found');
-    assert.equal(hit.kind === 'found' && hit.section.body, 'план', 'the text must come back in the asked-for language');
-    assert.equal(hit.kind === 'found' && hit.viaLang, 'en', 'the answer should say how it was addressed');
+    expect(hit.kind).toBe('found');
+    expect(hit.kind === 'found' && hit.section.body, 'the text must come back in the asked-for language').toBe('план');
+    expect(hit.kind === 'found' && hit.viaLang, 'the answer should say how it was addressed').toBe('en');
 });
 
 test('cross-language addressing is refused once the two texts stop lining up', () => {
@@ -156,7 +154,7 @@ test('cross-language addressing is refused once the two texts stop lining up', (
         ]
     });
 
-    assert.equal(findSection([en, ru], ru, 'After the migration').kind, 'missing');
+    expect(findSection([en, ru], ru, 'After the migration').kind).toBe('missing');
 });
 
 test('a heading inside a fenced block is not a heading', () => {
@@ -164,11 +162,8 @@ test('a heading inside a fenced block is not a heading', () => {
         ['### Real', 'text', '```bash', '# not a heading', '```', '### Also real', 'more'].join('\n')
     );
 
-    assert.deepEqual(
-        sections.map((section) => section.heading),
-        ['Real', 'Also real']
-    );
-    assert.match(sections[0]?.body ?? '', /# not a heading/, 'the comment belongs in the snippet');
+    expect(sections.map((section) => section.heading)).toEqual(['Real', 'Also real']);
+    expect(sections[0]?.body ?? '', 'the comment belongs in the snippet').toMatch(/# not a heading/);
 });
 
 test('both spellings of an example reference are captured', () => {
@@ -178,28 +173,28 @@ test('both spellings of an example reference are captured', () => {
         ['### A', '<!-- example(validation-on-open) -->', '### B', '<Example id="theme-css-variables" />'].join('\n')
     );
 
-    assert.deepEqual(sections[0]?.examples, ['validation-on-open']);
-    assert.deepEqual(sections[1]?.examples, ['theme-css-variables']);
+    expect(sections[0]?.examples).toEqual(['validation-on-open']);
+    expect(sections[1]?.examples).toEqual(['theme-css-variables']);
 });
 
 test('text before the first heading becomes the lede, not a nameless section', () => {
     const { lede, sections } = parseGuide(['Intro paragraph.', '', '### First', 'body'].join('\n'));
 
-    assert.equal(lede, 'Intro paragraph.');
-    assert.equal(sections.length, 1);
+    expect(lede).toBe('Intro paragraph.');
+    expect(sections.length).toBe(1);
 });
 
 test('titles read as prose rather than as file stems', () => {
-    assert.equal(titleFromId('search-smart'), 'Search smart');
-    assert.equal(titleFromId('angular-20-breaking-changes'), 'Angular 20 breaking changes');
+    expect(titleFromId('search-smart')).toBe('Search smart');
+    expect(titleFromId('angular-20-breaking-changes')).toBe('Angular 20 breaking changes');
 });
 
 test('the bundled guides answer the setup question that sent agents to llms.txt', () => {
     const answer = toolGetGuide(loadCatalog(CONSUMER), { id: 'theming', section: 'prebuilt' });
 
-    assert.match(answer, /@koobiq\/components\/prebuilt-themes\/theme\.css/);
-    assert.match(answer, /kbq-app-background/);
-    assert.match(answer, /Text as shipped in \d+\.\d+\.\d+/, 'the answer must name the release it describes');
+    expect(answer).toMatch(/@koobiq\/components\/prebuilt-themes\/theme\.css/);
+    expect(answer).toMatch(/kbq-app-background/);
+    expect(answer, 'the answer must name the release it describes').toMatch(/Text as shipped in \d+\.\d+\.\d+/);
 });
 
 test('a guide is read in three narrowing steps, each affordable', () => {
@@ -208,28 +203,28 @@ test('a guide is read in three narrowing steps, each affordable', () => {
     const sections = toolGetGuide(catalog, { id: 'theming' });
     const one = toolGetGuide(catalog, { id: 'theming', section: 'prebuilt' });
 
-    assert.match(listing, /theming/);
-    assert.match(listing, /migration/);
+    expect(listing).toMatch(/theming/);
+    expect(listing).toMatch(/migration/);
 
     // The narrowing is the whole point: `migration` is 218 KB, and no step here may approach it.
-    assert.ok(listing.length < 2000, `listing was ${listing.length} chars`);
-    assert.ok(sections.length < 1500, `section list was ${sections.length} chars`);
-    assert.ok(one.length < 3000, `one section was ${one.length} chars`);
+    expect(listing.length < 2000, `listing was ${listing.length} chars`).toBeTruthy();
+    expect(sections.length < 1500, `section list was ${sections.length} chars`).toBeTruthy();
+    expect(one.length < 3000, `one section was ${one.length} chars`).toBeTruthy();
 });
 
 test('the migration guide is split by release, so one upgrade can be read alone', () => {
     const catalog = loadCatalog(CONSUMER);
     const listed = toolGetGuide(catalog, { id: 'migration' });
 
-    assert.match(listed, /\(20\.2\.0\)|Angular 20/, 'sections should be tagged with the release they apply to');
-    assert.ok(catalog.guides().find((entry) => entry.id === 'migration')!.sections.length > 10);
+    expect(listed, 'sections should be tagged with the release they apply to').toMatch(/\(20\.2\.0\)|Angular 20/);
+    expect(catalog.guides().find((entry) => entry.id === 'migration')!.sections.length > 10).toBeTruthy();
 });
 
 test('an unknown guide names the real ones instead of guessing', () => {
     const catalog = loadCatalog(CONSUMER);
 
-    assert.match(toolGetGuide(catalog, { id: 'tehming' }), /Unknown guide "tehming"/);
-    assert.match(toolGetGuide(catalog, { id: 'tehming' }), /Available: .*theming/);
+    expect(toolGetGuide(catalog, { id: 'tehming' })).toMatch(/Unknown guide "tehming"/);
+    expect(toolGetGuide(catalog, { id: 'tehming' })).toMatch(/Available: .*theming/);
 });
 
 test('only the current text is bundled, and it stays small enough to ship', () => {
@@ -243,11 +238,11 @@ test('only the current text is bundled, and it stays small enough to ship', () =
     // trim exists to keep out.
     const limit = 260 + 200;
 
-    assert.ok(guides.length >= 14, `only ${guides.length} guides`);
-    assert.ok(
+    expect(guides.length >= 14, `only ${guides.length} guides`).toBeTruthy();
+    expect(
         size < limit,
         `guides.json grew to ${Math.round(size)} KB (budget ${limit} KB) — revisions may have crept back in`
-    );
+    ).toBeTruthy();
 });
 
 test('every guide has the same sections in both languages', () => {
@@ -262,7 +257,7 @@ test('every guide has the same sections in both languages', () => {
 
         if (!en || !ru) continue;
 
-        assert.equal(ru.sections.length, en.sections.length, `${id} has diverged between en and ru`);
+        expect(ru.sections.length, `${id} has diverged between en and ru`).toBe(en.sections.length);
     }
 });
 
@@ -272,16 +267,16 @@ test('an English heading reaches the Russian text of the real migration guide', 
     // nothing there.
     const answer = toolGetGuide(loadCatalog(CONSUMER), { id: 'migration', section: 'Upgrade plan', lang: 'ru' });
 
-    assert.match(answer, /План обновления/);
-    assert.match(answer, /en heading/);
-    assert.ok(!/No section/.test(answer), answer.split('\n')[0]);
+    expect(answer).toMatch(/План обновления/);
+    expect(answer).toMatch(/en heading/);
+    expect(!/No section/.test(answer), `${answer.split('\n')[0]}`).toBeTruthy();
 });
 
 test('a heading repeated across releases lists its addresses instead of picking one', () => {
     const answer = toolGetGuide(loadCatalog(CONSUMER), { id: 'migration', section: 'Запуск миграции', lang: 'ru' });
 
-    assert.match(answer, /names \d+ sections/);
-    assert.match(answer, / > Запуск миграции/, 'the addresses offered have to be the composite ones');
+    expect(answer).toMatch(/names \d+ sections/);
+    expect(answer, 'the addresses offered have to be the composite ones').toMatch(/ > Запуск миграции/);
 });
 
 test('a section listing hands out addresses that work when passed back', () => {
@@ -293,11 +288,11 @@ test('a section listing hands out addresses that work when passed back', () => {
         .filter((line) => line.startsWith('  ') && line.trim().length > 0)
         .map((line) => line.trim());
 
-    assert.ok(addresses.length > 10, `only ${addresses.length} addresses in the listing`);
+    expect(addresses.length > 10, `only ${addresses.length} addresses in the listing`).toBeTruthy();
 
     for (const address of addresses) {
         const answer = toolGetGuide(catalog, { id: 'migration', section: address, lang: 'ru' });
 
-        assert.ok(!/^No section|names \d+ sections/m.test(answer), `"${address}" does not resolve`);
+        expect(!/^No section|names \d+ sections/m.test(answer), `"${address}" does not resolve`).toBeTruthy();
     }
 });

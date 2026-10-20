@@ -1,11 +1,9 @@
-import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
-import { test } from 'node:test';
 import ts from 'typescript';
-import { parseDts } from '../src/dts/parse-dts.ts';
-import { listEntryPointTypings } from '../src/sources/components.ts';
-import { resolveProject } from '../src/sources/project.ts';
-import { CONSUMER } from './project.ts';
+import { parseDts } from '../src/dts/parse-dts';
+import { listEntryPointTypings } from '../src/sources/components';
+import { resolveProject } from '../src/sources/project';
+import { componentsAvailable, CONSUMER } from './project';
 
 /**
  * Holds the hand-written `.d.ts` reader to what the TypeScript compiler reads from the same files.
@@ -108,39 +106,41 @@ const files = ((): { id: string; source: string }[] => {
         .sort((a, b) => a.id.localeCompare(b.id));
 })();
 
-test('the installed package was found, so the rest of this file means something', () => {
-    assert.ok(files.length >= 50, `only ${files.length} entry points read from ${CONSUMER}`);
-});
+// `unit:all` sweeps this file in `units.yml` too, which never builds the library — skipped, not
+// failed, is the honest report there. `unit:mcp:dts` runs it for real after `build:components`.
+describe.skipIf(!componentsAvailable())('the live .d.ts reader against the TypeScript compiler', () => {
+    test('the installed package was found, so the rest of this file means something', () => {
+        expect(files.length >= 50, `only ${files.length} entry points read from ${CONSUMER}`).toBeTruthy();
+    });
 
-test('every declaration in the installed package agrees with the TypeScript compiler', () => {
-    let checked = 0;
+    test('every declaration in the installed package agrees with the TypeScript compiler', () => {
+        let checked = 0;
 
-    for (const { id, source } of files) {
-        const expected = viaCompiler(source);
-        const actual = parseDts(source).symbols;
+        for (const { id, source } of files) {
+            const expected = viaCompiler(source);
+            const actual = parseDts(source).symbols;
 
-        for (const [name, declared] of expected) {
-            const mine = actual.get(name);
+            for (const [name, declared] of expected) {
+                const mine = actual.get(name);
 
-            assert.ok(mine, `${id}: ${name} was not found at all`);
-            assert.equal(mine.selector ?? null, declared.selector, `${id}: ${name} selector`);
+                expect(mine, `${id}: ${name} was not found at all`).toBeTruthy();
+                expect(mine!.selector ?? null, `${id}: ${name} selector`).toBe(declared.selector);
 
-            assert.deepEqual(
-                new Map(mine.inputs.map((input) => [input.name, input.alias])),
-                declared.inputs,
-                `${id}: ${name} inputs`
-            );
+                expect(
+                    new Map(mine!.inputs.map((input) => [input.name, input.alias])),
+                    `${id}: ${name} inputs`
+                ).toEqual(declared.inputs);
 
-            assert.deepEqual(
-                new Map(mine.outputs.map((output) => [output.name, output.alias])),
-                declared.outputs,
-                `${id}: ${name} outputs`
-            );
+                expect(
+                    new Map(mine!.outputs.map((output) => [output.name, output.alias])),
+                    `${id}: ${name} outputs`
+                ).toEqual(declared.outputs);
 
-            checked++;
+                checked++;
+            }
         }
-    }
 
-    // Guards against the whole thing passing because nothing was read.
-    assert.ok(checked > 250, `only ${checked} declarations compared`);
+        // Guards against the whole thing passing because nothing was read.
+        expect(checked > 250, `only ${checked} declarations compared`).toBeTruthy();
+    });
 });

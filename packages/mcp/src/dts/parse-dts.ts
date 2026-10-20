@@ -11,7 +11,7 @@ import { objectEntries, splitTopLevel, stringArray, stringLiteral, stripNamespac
  *
  * Line-based rather than compiler-based. `typescript` is ~22 MB and this server is run through
  * `npx`; the declarations being read are machine-generated, one per line, in a shape Angular has
- * emitted unchanged for several majors. `test/dts-against-tsc.test.ts` holds the parser to the
+ * emitted unchanged for several majors. `test/dts-against-tsc.spec.ts` holds the parser to the
  * real compiler's reading of the installed package, so the shortcut stays honest.
  */
 

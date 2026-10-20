@@ -1,9 +1,7 @@
-import assert from 'node:assert/strict';
-import { test } from 'node:test';
-import { loadCatalog } from '../src/catalog.ts';
-import { expand } from '../src/glossary.ts';
-import { search } from '../src/search.ts';
-import { CONSUMER } from './project.ts';
+import { loadCatalog } from '../src/catalog';
+import { expand } from '../src/glossary';
+import { search } from '../src/search';
+import { CONSUMER } from './project';
 
 /**
  * The questions people actually ask, and where the answer has to land.
@@ -44,15 +42,17 @@ for (const [query, expected, within] of ACCEPTANCE) {
         const hits = search(catalog, query, { limit: 8 });
         const at = hits.findIndex((hit) => hit.ref.includes(expected) || hit.label.includes(expected));
 
-        assert.ok(
+        expect(
             at >= 0 && at < within,
-            at < 0
-                ? `not found at all; got ${hits.map((hit) => hit.ref).join(', ') || '(nothing)'}`
-                : `found at #${at + 1}, wanted within ${within}; got ${hits
-                      .slice(0, within + 2)
-                      .map((hit) => hit.ref)
-                      .join(', ')}`
-        );
+            `${
+                at < 0
+                    ? `not found at all; got ${hits.map((hit) => hit.ref).join(', ') || '(nothing)'}`
+                    : `found at #${at + 1}, wanted within ${within}; got ${hits
+                          .slice(0, within + 2)
+                          .map((hit) => hit.ref)
+                          .join(', ')}`
+            }`
+        ).toBeTruthy();
     });
 }
 
@@ -63,25 +63,25 @@ test('a complete match outranks a partial one', () => {
     const complete = hits.findIndex((hit) => hit.ref === 'select');
     const partial = hits.findIndex((hit) => hit.ref !== 'select' && !hit.ref.includes('multiple'));
 
-    assert.ok(complete >= 0, 'the complete match is missing');
-    assert.ok(partial === -1 || complete < partial, 'a partial match came first');
+    expect(complete >= 0, 'the complete match is missing').toBeTruthy();
+    expect(partial === -1 || complete < partial, 'a partial match came first').toBeTruthy();
 });
 
 test('a query matching nothing still returns nothing', () => {
     // Partial matching must not turn every query into a hit list. One word of a phrase is a weak
     // answer; no word of it is not an answer at all.
-    assert.deepEqual(search(catalog, 'zzzqqq wwwxxx'), []);
+    expect(search(catalog, 'zzzqqq wwwxxx')).toEqual([]);
 });
 
 test('junk far below the best hit is cut rather than padded to the limit', () => {
     const hits = search(catalog, 'kbq-alert', { limit: 50 });
     const best = hits[0]!.score;
 
-    assert.ok(
+    expect(
         hits.every((hit) => hit.score >= best * 0.2),
         'a hit below the floor survived'
-    );
-    assert.ok(hits.length < 50, 'the list was padded out to the limit with weak matches');
+    ).toBeTruthy();
+    expect(hits.length < 50, 'the list was padded out to the limit with weak matches').toBeTruthy();
 });
 
 test('an inflected word matches its base form', () => {
@@ -89,8 +89,8 @@ test('an inflected word matches its base form', () => {
     const hits = search(catalog, 'удалить', { kinds: ['icon'], limit: 20 });
     const inflected = search(catalog, 'удаления', { kinds: ['icon'], limit: 20 });
 
-    assert.ok(hits.length > 0);
-    assert.ok(inflected.length > 0, 'the inflected form found nothing');
+    expect(hits.length > 0).toBeTruthy();
+    expect(inflected.length > 0, 'the inflected form found nothing').toBeTruthy();
 });
 
 test('endings may differ but stems may not', () => {
@@ -98,17 +98,17 @@ test('endings may differ but stems may not', () => {
     // worse than no rule, because the wrong answer would look exactly as confident.
     const byStem = search(catalog, 'списать', { kinds: ['entry-point'], limit: 10 });
 
-    assert.ok(
+    expect(
         !byStem.some((hit) => hit.ref === 'list'),
         `"списать" matched the list component through "список": ${byStem.map((hit) => hit.ref).join(', ')}`
-    );
+    ).toBeTruthy();
 });
 
 test('the glossary answers only where the data has no Russian', () => {
-    assert.deepEqual(expand('тень'), ['тень', 'shadow']);
-    assert.deepEqual(expand('оверлея'), ['оверлея', 'overlay'], 'an inflected form must reach the entry');
-    assert.deepEqual(expand('alert'), ['alert'], 'an English word is left alone');
-    assert.deepEqual(expand('абракадабра'), ['абракадабра']);
+    expect(expand('тень')).toEqual(['тень', 'shadow']);
+    expect(expand('оверлея'), 'an inflected form must reach the entry').toEqual(['оверлея', 'overlay']);
+    expect(expand('alert'), 'an English word is left alone').toEqual(['alert']);
+    expect(expand('абракадабра')).toEqual(['абракадабра']);
 });
 
 test('a literal match outranks one reached through the glossary', () => {
@@ -117,13 +117,12 @@ test('a literal match outranks one reached through the glossary', () => {
     const hits = search(catalog, 'тень', { limit: 10 });
     const translated = hits.find((hit) => hit.ref.includes('shadow'));
 
-    assert.ok(translated, 'the translation did not work at all');
+    expect(translated, 'the translation did not work at all').toBeTruthy();
 
     const literal = hits.find((hit) => /тень/i.test(hit.detail) || /тень/i.test(hit.label));
+    const literalNotBeaten = !literal || hits.indexOf(literal) < hits.indexOf(translated!);
 
-    if (literal) {
-        assert.ok(hits.indexOf(literal) < hits.indexOf(translated), 'the guess outranked the literal match');
-    }
+    expect(literalNotBeaten, 'the guess outranked the literal match').toBeTruthy();
 });
 
 test('restricting to one kind does not change what wins inside it', () => {
@@ -131,6 +130,6 @@ test('restricting to one kind does not change what wins inside it', () => {
     const tokensOnly = search(catalog, 'тень для оверлея', { kinds: ['token'], limit: 20 });
     const firstTokenOverall = all.find((hit) => hit.kind === 'token');
 
-    assert.ok(firstTokenOverall);
-    assert.equal(tokensOnly[0]?.ref, firstTokenOverall.ref);
+    expect(firstTokenOverall).toBeTruthy();
+    expect(tokensOnly[0]?.ref).toBe(firstTokenOverall!.ref);
 });

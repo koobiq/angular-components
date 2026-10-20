@@ -119,7 +119,7 @@ export const assertNothingMissed = (repo: string): string[] => {
  * KB, more than twice the budget of every other guide combined.
  *
  * Kept: the release-level depth (`##`–`###`) and the one instruction an agent actually has to run,
- * `Running the migration` / `Запуск миграции` — tested by name in `guides.test.ts`, so both spellings
+ * `Running the migration` / `Запуск миграции` — tested by name in `guides.spec.ts`, so both spellings
  * stay, not just the English one. Dropped: the component-by-component diff beneath it.
  */
 const MIGRATION_DEPTH4_KEEP = new Set(['Running the migration', 'Запуск миграции']);

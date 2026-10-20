@@ -1,12 +1,10 @@
-import assert from 'node:assert/strict';
-import { test } from 'node:test';
-import { loadCatalog } from '../src/catalog.ts';
-import { parseGuide } from '../src/indexer/parse-guide.ts';
-import { compare } from '../src/semver.ts';
-import { changesFor, meaningful, migrationSections, summarise, type ApiHistory } from '../src/sources/history.ts';
-import { toolMigrate, toolSearch } from '../src/tools.ts';
-import type { Guide } from '../src/types.ts';
-import { CONSUMER } from './project.ts';
+import { loadCatalog } from '../src/catalog';
+import { parseGuide } from '../src/indexer/parse-guide';
+import { compare } from '../src/semver';
+import { changesFor, meaningful, migrationSections, summarise, type ApiHistory } from '../src/sources/history';
+import { toolMigrate, toolSearch } from '../src/tools';
+import type { Guide } from '../src/types';
+import { CONSUMER } from './project';
 
 const catalog = loadCatalog(CONSUMER);
 
@@ -31,35 +29,34 @@ const history: ApiHistory = {
 test('the range excludes the version already installed and includes the target', () => {
     const range = summarise(history, '18.5.0', '19.0.0');
 
-    assert.deepEqual(range.releases, ['19.0.0'], '18.5.0 is what the project already has');
-    assert.deepEqual(
+    expect(range.releases, '18.5.0 is what the project already has').toEqual(['19.0.0']);
+    expect(
         range.impact.map((entry) => entry.entryPoint),
-        ['select', 'alert'],
         'an entry point that lost API must outrank one that only gained'
-    );
+    ).toEqual(['select', 'alert']);
 });
 
 test('compiler plumbing is not counted as a break', () => {
     // 72 of the 728 removals in the real file are `ngAcceptInputType_*` and `ɵ*`. Counting them
     // reports a break where nothing broke, and inflates the number an upgrade is planned around.
-    assert.equal(meaningful({ symbol: 'KbqSelect', member: 'ngAcceptInputType_x', change: 'removed' }), false);
-    assert.equal(meaningful({ symbol: 'KbqSelect', member: 'ɵfac', change: 'removed' }), false);
-    assert.equal(meaningful({ symbol: 'KbqSelect', member: 'multiple', change: 'updated' }), true);
+    expect(meaningful({ symbol: 'KbqSelect', member: 'ngAcceptInputType_x', change: 'removed' })).toBe(false);
+    expect(meaningful({ symbol: 'KbqSelect', member: 'ɵfac', change: 'removed' })).toBe(false);
+    expect(meaningful({ symbol: 'KbqSelect', member: 'multiple', change: 'updated' })).toBe(true);
 
     const range = summarise(history, '18.5.0', '19.0.0');
 
-    assert.equal(range.totals.removed, 0, 'the only removal in range was compiler plumbing');
-    assert.equal(range.totals.updated, 1);
+    expect(range.totals.removed, 'the only removal in range was compiler plumbing').toBe(0);
+    expect(range.totals.updated).toBe(1);
 });
 
 test('one entry point reports its own changes, oldest release first within a kind', () => {
     const range = summarise(history, '18.0.0', '20.0.0');
     const changes = changesFor(history, range, 'select');
 
-    assert.deepEqual(
-        changes.map((change) => `${change.version} ${change.change} ${change.member}`),
-        ['18.5.0 removed old', '19.0.0 updated multiple']
-    );
+    expect(changes.map((change) => `${change.version} ${change.change} ${change.member}`)).toEqual([
+        '18.5.0 removed old',
+        '19.0.0 updated multiple'
+    ]);
 });
 
 test('a migration heading takes the release from its nearest dated ancestor', () => {
@@ -81,18 +78,15 @@ test('a migration heading takes the release from its nearest dated ancestor', ()
     const guide: Guide = { id: 'migration', title: 'Migration', lang: 'en', since: '20.3.1', lede: '', sections };
     const { dated, undated } = migrationSections(guide, summarise(history, '20.0.0', '20.3.0'));
 
-    assert.deepEqual(
-        dated.map((entry) => entry.heading),
-        ['Filter-bar upgrade (20.2.0)']
-    );
-    assert.deepEqual(undated, [], 'a subsection under a dated parent is not undated');
+    expect(dated.map((entry) => entry.heading)).toEqual(['Filter-bar upgrade (20.2.0)']);
+    expect(undated, 'a subsection under a dated parent is not undated').toEqual([]);
 });
 
 test('a heading nobody could date is surfaced rather than dropped', () => {
     const { sections } = parseGuide(['### Upgrade to Angular 20', 'text'].join('\n'));
     const guide: Guide = { id: 'migration', title: 'Migration', lang: 'en', since: '20.3.1', lede: '', sections };
 
-    assert.deepEqual(migrationSections(guide, summarise(history, '18.0.0', '20.0.0')).undated, [
+    expect(migrationSections(guide, summarise(history, '18.0.0', '20.0.0')).undated).toEqual([
         'Upgrade to Angular 20'
     ]);
 });
@@ -100,43 +94,43 @@ test('a heading nobody could date is surfaced rather than dropped', () => {
 test('the real upgrade summary stays readable', () => {
     const output = toolMigrate(catalog, { from: '18.4.0', to: '19.0.0' });
 
-    assert.match(output, /Upgrading @koobiq\/components 18\.4\.0 → 19\.0\.0/);
-    assert.match(output, /LOST API/);
-    assert.match(output, /get_guide migration/);
+    expect(output).toMatch(/Upgrading @koobiq\/components 18\.4\.0 → 19\.0\.0/);
+    expect(output).toMatch(/LOST API/);
+    expect(output).toMatch(/get_guide migration/);
 
     // 18.4.0 → 19.0.0 is 2930 raw changes. The whole point of this tool is not returning them.
-    assert.ok(output.length < 2500, `summary was ${output.length} chars`);
+    expect(output.length < 2500, `summary was ${output.length} chars`).toBeTruthy();
 });
 
 test('`to` defaults to the version this project resolved', () => {
     const installed = catalog.project.packages.get('@koobiq/components')?.version;
 
-    assert.ok(installed);
-    assert.ok(toolMigrate(catalog, { from: '18.4.0' }).includes(`18.4.0 → ${installed}`));
+    expect(installed).toBeTruthy();
+    expect(toolMigrate(catalog, { from: '18.4.0' }).includes(`18.4.0 → ${installed}`)).toBeTruthy();
 });
 
 test('a backwards or empty range says so instead of returning nothing', () => {
     const output = toolMigrate(catalog, { from: '25.0.0' });
 
-    assert.match(output, /No recorded API changes/);
-    assert.match(output, /"from" must be lower than "to"/);
-    assert.match(output, /History covers/);
+    expect(output).toMatch(/No recorded API changes/);
+    expect(output).toMatch(/"from" must be lower than "to"/);
+    expect(output).toMatch(/History covers/);
 });
 
 test('an entry point that did not change names the ones that did', () => {
     const output = toolMigrate(catalog, { from: '20.0.0', to: '20.1.0', component: 'badge' });
 
-    assert.match(output, /badge did not change/);
-    assert.match(output, /Entry points that did: /);
+    expect(output).toMatch(/badge did not change/);
+    expect(output).toMatch(/Entry points that did: /);
 });
 
 test('a component answer gives the old and the new signature, not just the name', () => {
     // 20.0.0 is the signals migration: this is the release a reader most needs spelled out.
     const output = toolMigrate(catalog, { from: '19.8.0', to: '20.0.0', component: 'select' });
 
-    assert.match(output, /KbqSelect\.backdropClass/);
-    assert.match(output, /backdropClass: string → backdropClass: InputSignal<string>/);
-    assert.ok(!output.includes('ngAcceptInputType'), 'compiler plumbing leaked into the answer');
+    expect(output).toMatch(/KbqSelect\.backdropClass/);
+    expect(output).toMatch(/backdropClass: string → backdropClass: InputSignal<string>/);
+    expect(!output.includes('ngAcceptInputType'), 'compiler plumbing leaked into the answer').toBeTruthy();
 });
 
 test('removals are listed before updates, whatever release they fall in', () => {
@@ -144,8 +138,8 @@ test('removals are listed before updates, whatever release they fall in', () => 
     const firstRemoved = output.indexOf('  removed ');
     const firstUpdated = output.indexOf('  updated ');
 
-    assert.ok(firstRemoved > -1 && firstUpdated > -1, 'expected both kinds in this range');
-    assert.ok(firstRemoved < firstUpdated, 'what stops compiling must come first');
+    expect(firstRemoved > -1 && firstUpdated > -1, 'expected both kinds in this range').toBeTruthy();
+    expect(firstRemoved < firstUpdated, 'what stops compiling must come first').toBeTruthy();
 });
 
 test('when the list is cut short, the answer says which kinds were cut', () => {
@@ -154,8 +148,8 @@ test('when the list is cut short, the answer says which kinds were cut', () => {
     // true. The exact counts move with every release, so only the shape is asserted.
     const output = toolMigrate(catalog, { from: '18.4.0', to: '20.0.0', component: 'core' });
 
-    assert.match(output, /more not shown: .*\d+ updated/);
-    assert.match(output, /\d{3} changes — \d+ removed/, 'the total has to be stated, whatever it is');
+    expect(output).toMatch(/more not shown: .*\d+ updated/);
+    expect(output, 'the total has to be stated, whatever it is').toMatch(/\d{3} changes — \d+ removed/);
 });
 
 test('a Russian question about a component finds it', () => {
@@ -170,14 +164,17 @@ test('a Russian question about a component finds it', () => {
     for (const [query, expected] of cases) {
         const output = toolSearch(catalog, { query, limit: 5 });
 
-        assert.ok(output.includes(`"${expected}"`), `"${query}" did not find ${expected}:\n${output.slice(0, 300)}`);
+        expect(
+            output.includes(`"${expected}"`),
+            `"${query}" did not find ${expected}:\n${output.slice(0, 300)}`
+        ).toBeTruthy();
     }
 });
 
 test('a Russian question is answered with the Russian description', () => {
     const output = toolSearch(catalog, { query: 'вкладки', limit: 3 });
 
-    assert.match(output, /\p{Script=Cyrillic}/u, 'the detail line came back in English');
+    expect(output, 'the detail line came back in English').toMatch(/\p{Script=Cyrillic}/u);
 });
 
 test('indexing a second language stayed cheap', () => {
@@ -186,7 +183,7 @@ test('indexing a second language stayed cheap', () => {
         0
     );
 
-    assert.ok(russian > 500, `only ${russian} Russian strings indexed`);
+    expect(russian > 500, `only ${russian} Russian strings indexed`).toBeTruthy();
 });
 
 test('a `from` below the recorded history says the counts are partial', () => {
@@ -195,14 +192,17 @@ test('a `from` below the recorded history says the counts are partial', () => {
     // upgrading from 18.0.0 took 670 removals for the whole bill.
     const oldest = Object.keys(catalog.history()).sort(compare)[0];
 
-    assert.ok(oldest && oldest !== '18.0.0', `fixture drift: the history now starts at ${oldest}`);
+    expect(oldest && oldest !== '18.0.0', `fixture drift: the history now starts at ${oldest}`).toBeTruthy();
 
     const below = toolMigrate(catalog, { from: '18.0.0' });
 
-    assert.match(below, /INCOMPLETE/);
-    assert.ok(below.includes(`earliest release on record is ${oldest}`), below.split('\n')[1]);
+    expect(below).toMatch(/INCOMPLETE/);
+    expect(below.includes(`earliest release on record is ${oldest}`), `${below.split('\n')[1]}`).toBeTruthy();
     // Carried into the per-entry-point answer too, which is where the numbers get acted on.
-    assert.match(toolMigrate(catalog, { from: '18.0.0', component: 'select' }), /INCOMPLETE/);
+    expect(toolMigrate(catalog, { from: '18.0.0', component: 'select' })).toMatch(/INCOMPLETE/);
 
-    assert.ok(!/INCOMPLETE/.test(toolMigrate(catalog, { from: oldest })), 'the lowest recorded release is in range');
+    expect(
+        !/INCOMPLETE/.test(toolMigrate(catalog, { from: oldest })),
+        'the lowest recorded release is in range'
+    ).toBeTruthy();
 });

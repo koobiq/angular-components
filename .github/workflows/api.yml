@@ -25,8 +25,7 @@ jobs:
       - run: yarn run check-api-docs
       # Reads the manifest docs:api-gen has just written, like check-api-docs.
       - run: yarn run check-llms
-      # The MCP server reads the built typings of @koobiq/components and the committed data/ indexes,
-      # so its suite belongs here rather than with the Jest ones: `units.yml` never builds the
-      # library, and without the build every test that checks what the server reports about the API
-      # would have nothing to read.
-      - run: yarn run test:mcp
+      # The two MCP specs that read the built typings of @koobiq/components live here rather than in
+      # `units.yml`, which never builds the library: without the build they would have nothing to
+      # read. The rest of the MCP suite needs no build and runs as part of `units.yml`'s `unit:all`.
+      - run: yarn run unit:mcp:dts

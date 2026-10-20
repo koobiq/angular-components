@@ -67,7 +67,8 @@ KOOBIQ_COMPONENTS_ROOT=/path/to/package # also KOOBIQ_ICONS_ROOT, KOOBIQ_TOKENS_
 ```bash
 yarn build:mcp:data # regenerate the committed data/ from this repository (runs in the release pipeline)
 yarn build:mcp      # compile src → dist and assemble dist/mcp
-yarn test:mcp       # node:test, not Jest
+yarn unit:mcp       # Vitest, everything that does not need a built @koobiq/components
+yarn unit:mcp:dts   # the two specs that read the built typings; run build:components first
 yarn mcp:probe      # drive the real server over stdio and price every answer
 ```
 
