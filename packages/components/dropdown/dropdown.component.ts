@@ -96,6 +96,13 @@ export class KbqDropdownStaticContent {}
 })
 export class KbqDropdownFooter {}
 
+/** Header of a group of items in the dropdown panel. */
+@Directive({
+    selector: '[kbqDropdownGroupHeader]',
+    host: { class: 'kbq-dropdown__group-header' }
+})
+export class KbqDropdownGroupHeader {}
+
 @Component({
     selector: 'kbq-dropdown',
     imports: [KbqScrollbarViewport],

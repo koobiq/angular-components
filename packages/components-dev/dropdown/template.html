@@ -41,13 +41,13 @@
 
     <button kbq-dropdown-item>
         Text Normal
-        <div class="kbq-dropdown-item__caption">Caption</div>
+        <div kbqDropdownItemCaption>Caption</div>
     </button>
 
     <button kbq-dropdown-item>
         <i kbq-icon="kbq-circle-info_16" [color]="'contrast'"></i>
         Text Normal
-        <div class="kbq-dropdown-item__caption">Caption</div>
+        <div kbqDropdownItemCaption>Caption</div>
     </button>
 
     <button kbq-dropdown-item>
@@ -62,7 +62,7 @@
 
     <kbq-divider />
 
-    <div class="kbq-dropdown__group-header">Header</div>
+    <div kbqDropdownGroupHeader>Header</div>
 
     <button disabled kbq-dropdown-item>Disabled</button>
 
@@ -113,7 +113,7 @@
     <ng-template let-someValue="someValue" kbqDropdownContent>
         <button kbq-dropdown-item>
             Point 1
-            <span class="kbq-dropdown-item__caption">Some info</span>
+            <span kbqDropdownItemCaption>Some info</span>
         </button>
         <button kbq-dropdown-item>Value: {{ someValue }}</button>
     </ng-template>

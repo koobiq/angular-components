@@ -6,6 +6,7 @@ import {
     Component,
     computed,
     contentChild,
+    Directive,
     effect,
     ElementRef,
     inject,
@@ -38,6 +39,13 @@ const NON_LABEL_SELECTOR = '[kbq-icon], .kbq-icon, [kbqDropdownItemAction]';
 
 /** Hosts that already turn ENTER/SPACE into a click, or handle activation themselves (app-switcher items). */
 const SELF_ACTIVATING_HOST_SELECTOR = 'button, a[href], [role="menuitem"]';
+
+/** Secondary line of a `kbq-dropdown-item`, shown under the item's text. */
+@Directive({
+    selector: '[kbqDropdownItemCaption]',
+    host: { class: 'kbq-dropdown-item__caption' }
+})
+export class KbqDropdownItemCaption {}
 
 /**
  * This directive is intended to be used inside an kbq-dropdown tag.

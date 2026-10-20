@@ -43,13 +43,13 @@ interface CustomModalData {
 
                 <button kbq-dropdown-item>
                     Text Normal
-                    <div class="kbq-dropdown-item__caption">Caption</div>
+                    <div kbqDropdownItemCaption>Caption</div>
                 </button>
 
                 <button kbq-dropdown-item>
                     <i kbq-icon="kbq-circle-info_16" [color]="'contrast'"></i>
                     Text Normal
-                    <div class="kbq-dropdown-item__caption">Caption</div>
+                    <div kbqDropdownItemCaption>Caption</div>
                 </button>
 
                 <button kbq-dropdown-item>
@@ -64,7 +64,7 @@ interface CustomModalData {
 
                 <kbq-divider />
 
-                <div class="kbq-dropdown__group-header">Header</div>
+                <div kbqDropdownGroupHeader>Header</div>
 
                 <button disabled kbq-dropdown-item>Disabled</button>
 
