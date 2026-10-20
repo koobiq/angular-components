@@ -2974,10 +2974,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fontsource/jetbrains-mono@npm:^5.2.6":
-  version: 5.2.6
-  resolution: "@fontsource/jetbrains-mono@npm:5.2.6"
-  checksum: 10c0/51c8ce5ee3af0db9c4e5cfda6eb5f0e49b19c7aa481eb5063ac03699913ef54d6e008511d7fb9ed26d867d76657576d08f3f6959a13570934bb49d25b8ac8d9f
+"@fontsource/jetbrains-mono@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "@fontsource/jetbrains-mono@npm:5.3.0"
+  checksum: 10c0/1351b2350e893f5da39559ed90ff0e5e60bcc876b1f40531ad081ad4bf2f3cda3fa9e8940364aef5a7430ae3140685c9cd4819c36d8ad62bcd3fa37e3cc66b1d
   languageName: node
   linkType: hard
 
@@ -10566,7 +10566,7 @@ __metadata:
     "@eslint-community/eslint-plugin-eslint-comments": "npm:^4.8.1"
     "@eslint/js": "npm:^10.0.1"
     "@fontsource/inter": "npm:^5.2.8"
-    "@fontsource/jetbrains-mono": "npm:^5.2.6"
+    "@fontsource/jetbrains-mono": "npm:^5.3.0"
     "@koobiq/ag-grid-angular-theme": "npm:^34.6.0"
     "@koobiq/date-adapter": "npm:^3.5.1"
     "@koobiq/date-formatter": "npm:^3.5.1"
