@@ -483,4 +483,66 @@ test.describe('KbqFilterBarModule', () => {
             await expect(locator).toHaveScreenshot('06-no-options-tree-dark.png');
         });
     });
+
+    test.describe('E2eFilterBarDateWithoutValues', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eFilterBarDateWithoutValues');
+        const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
+
+        /** Opens the pipe from the keyboard, the path whose focus moves are checked here. */
+        const openPipe = async (page: Page) => {
+            await page.goto('/E2eFilterBarDateWithoutValues');
+            await getComponent(page).locator('.kbq-pipe__date button').first().focus();
+            await page.keyboard.press('Enter');
+
+            const panel = page.locator('.kbq-pipe-date__popover');
+            const [start, end] = [
+                panel.locator('input[formcontrolname="start"]'),
+                panel.locator('input[formcontrolname="end"]')
+            ];
+
+            await expect(start).toBeFocused();
+
+            return { panel, start, end, calendars: panel.locator('kbq-calendar') };
+        };
+
+        test('should open on the period editor and keep Tab out of the calendars', async ({ page }) => {
+            const { panel, start, end, calendars } = await openPipe(page);
+            const apply = panel.locator('.kbq-date-period__footer button');
+
+            await expect(panel.locator('.kbq-date-period__header')).toHaveCount(0);
+            await expect(calendars.first()).toBeVisible();
+
+            // jsdom performs no sequential focus navigation, so only a real browser shows where Tab lands.
+            await page.keyboard.press('Tab');
+            await expect(end).toBeFocused();
+            await expect(calendars.first()).toBeHidden();
+
+            await page.keyboard.press('Tab');
+            await expect(apply).toBeFocused();
+            await expect(calendars.last()).toBeHidden();
+
+            await page.keyboard.press('Shift+Tab');
+            await expect(end).toBeFocused();
+
+            await page.keyboard.press('Shift+Tab');
+            await expect(start).toBeFocused();
+
+            // Wraps through the focus trap to the footer: the start calendar does not stay open behind.
+            await page.keyboard.press('Shift+Tab');
+            await expect(apply).toBeFocused();
+            await expect(calendars.first()).toBeHidden();
+        });
+
+        test('states', async ({ page }) => {
+            const { calendars } = await openPipe(page);
+
+            await expect(calendars.first()).toBeVisible();
+
+            const locator = getScreenshotTarget(getComponent(page));
+
+            await expect(locator).toHaveScreenshot('07-date-without-values-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(locator).toHaveScreenshot('07-date-without-values-dark.png');
+        });
+    });
 });

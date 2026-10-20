@@ -180,7 +180,9 @@ element in a template):
 - the same on `hovered` of a pop-up or its trigger (tooltip, popover, notification center, app switcher), but
   not on `KbqDropdownItem.hovered`, which stays an event stream;
 - a subscription to, an assignment of or `| async` on `filteredOptions` of the filter bar, `super.ngOnInit()` in a
-  subclass of `KbqPipeSelectComponent`, and the date pipe flags read as fields in a subclass;
+  subclass of `KbqPipeSelectComponent`, the date pipe flags read as fields in a subclass, `returnButton()`
+  dereferenced in such a subclass, and a date pipe template that still hides the calendars on Tab with
+  `hideCalendars()`;
 - `hiddenItems` of `KbqSelect` read as a field;
 - `.value.next()`, `.value.getValue()`, `.value.subscribe()` and the like on `KbqSearchExpandable`;
 - `super.ngAfterContentInit()` and `super.ngOnDestroy()` in a subclass of `KbqDatepickerToggleIconComponent`.

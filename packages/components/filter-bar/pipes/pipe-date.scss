@@ -63,6 +63,11 @@
 
             gap: var(--kbq-size-s);
 
+            // No header: the pipe template has no presets to go back to.
+            &:first-child {
+                padding-block-start: var(--kbq-size-l);
+            }
+
             & .kbq-form__label {
                 padding-inline-start: var(--kbq-size-l);
             }
