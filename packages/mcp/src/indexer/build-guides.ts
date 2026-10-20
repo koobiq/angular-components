@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { compare, isRelease, sortReleases } from '../semver.js';
-import type { Guide } from '../types.js';
+import type { Guide, GuideSection } from '../types.js';
 import { dataDir, git, readBlobs, repoRoot, requireTags, stagedVersion } from './git.js';
 import { parseGuide, titleFromId } from './parse-guide.js';
 
@@ -110,6 +110,25 @@ export const assertNothingMissed = (repo: string): string[] => {
     return [...unknown].sort();
 };
 
+/**
+ * The migration guide gets one heading per release for the release-level story, and then, under
+ * most of them, a `#### Running the migration` step and an itemised after-the-fact diff — "what is
+ * fixed automatically", "what you need to fix manually", one `####` per component touched. That diff
+ * is what `ng update` already applies and what `migrate`'s own summary (from `history.json`) already
+ * reports from the typed API change; keeping it here too is why both languages together reached 877
+ * KB, more than twice the budget of every other guide combined.
+ *
+ * Kept: the release-level depth (`##`–`###`) and the one instruction an agent actually has to run,
+ * `Running the migration` / `Запуск миграции` — tested by name in `guides.test.ts`, so both spellings
+ * stay, not just the English one. Dropped: the component-by-component diff beneath it.
+ */
+const MIGRATION_DEPTH4_KEEP = new Set(['Running the migration', 'Запуск миграции']);
+
+const trimMigration = (id: string, sections: GuideSection[]): GuideSection[] =>
+    id === 'migration'
+        ? sections.filter((section) => section.depth <= 3 || MIGRATION_DEPTH4_KEEP.has(section.heading))
+        : sections;
+
 export const latestRelease = (repo: string): string | null =>
     sortReleases(
         git(repo, ['tag', '--list'])
@@ -131,8 +150,9 @@ export const buildGuides = (repo: string): Guide[] => {
         if (guides.has(key)) return;
 
         const { lede, sections } = parseGuide(source);
+        const trimmed = trimMigration(id, sections);
 
-        if (sections.length === 0 && lede.length === 0) return;
+        if (trimmed.length === 0 && lede.length === 0) return;
 
         guides.set(key, {
             id,
@@ -141,7 +161,7 @@ export const buildGuides = (repo: string): Guide[] => {
             since,
             ...(unreleased ? { unreleased } : {}),
             lede,
-            sections
+            sections: trimmed
         });
     };
 

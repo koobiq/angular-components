@@ -236,8 +236,18 @@ test('only the current text is bundled, and it stays small enough to ship', () =
     const guides = loadCatalog(CONSUMER).guides();
     const size = Buffer.byteLength(JSON.stringify(guides)) / 1024;
 
+    // Two budgets, not one picked number. Every guide but `migration`, both languages together,
+    // currently totals ~235 KB; `migration` itself is trimmed to its release-level headings plus the
+    // one "Running the migration" step per item (`trimMigration` in `build-guides.ts`) and currently
+    // totals ~180 KB. Each gets slack for a guide growing a paragraph, not for the itemised diff this
+    // trim exists to keep out.
+    const limit = 260 + 200;
+
     assert.ok(guides.length >= 14, `only ${guides.length} guides`);
-    assert.ok(size < 400, `guides.json grew to ${Math.round(size)} KB — revisions may have crept back in`);
+    assert.ok(
+        size < limit,
+        `guides.json grew to ${Math.round(size)} KB (budget ${limit} KB) — revisions may have crept back in`
+    );
 });
 
 test('every guide has the same sections in both languages', () => {
