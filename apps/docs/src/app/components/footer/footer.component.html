@@ -68,6 +68,7 @@
             class="docs-footer__control"
             [class.kbq-active]="versionDropdownDropdownTrigger.opened"
             [kbqDropdownTriggerFor]="versionDropdown"
+            (dropdownOpened)="versionPicker.prefetch()"
         >
             {{ version }}
             @if (versionPicker.isNext) {
