@@ -103,6 +103,12 @@
 		<loc>https://koobiq.io/ru/components/actions-panel/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/actions-panel/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/actions-panel/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/ag-grid/overview</loc>
 	</url>
 	<url>
@@ -167,6 +173,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/breadcrumbs/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/breadcrumbs/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/breadcrumbs/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/button/overview</loc>
@@ -253,6 +265,12 @@
 		<loc>https://koobiq.io/ru/components/code-block/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/code-block/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/code-block/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/content-panel/overview</loc>
 	</url>
 	<url>
@@ -337,6 +355,12 @@
 		<loc>https://koobiq.io/ru/components/dynamic-translation/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/dynamic-translation/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/dynamic-translation/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/empty-state/overview</loc>
 	</url>
 	<url>
@@ -361,6 +385,12 @@
 		<loc>https://koobiq.io/ru/components/file-upload/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/file-upload/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/file-upload/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/filter-bar/overview</loc>
 	</url>
 	<url>
@@ -371,6 +401,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/filter-bar/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/filter-bar/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/filter-bar/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/form-field/overview</loc>
@@ -433,6 +469,12 @@
 		<loc>https://koobiq.io/ru/components/inline-edit/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/inline-edit/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/inline-edit/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/input/overview</loc>
 	</url>
 	<url>
@@ -443,6 +485,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/input/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/input/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/input/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/layout-flex/overview</loc>
@@ -475,6 +523,12 @@
 		<loc>https://koobiq.io/ru/components/list/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/list/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/list/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/markdown/overview</loc>
 	</url>
 	<url>
@@ -487,6 +541,12 @@
 		<loc>https://koobiq.io/ru/components/markdown/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/markdown/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/markdown/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/modal/overview</loc>
 	</url>
 	<url>
@@ -497,6 +557,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/modal/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/modal/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/modal/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/navbar/overview</loc>
@@ -523,6 +589,12 @@
 		<loc>https://koobiq.io/ru/components/notification-center/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/notification-center/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/notification-center/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/overflow-items/overview</loc>
 	</url>
 	<url>
@@ -533,6 +605,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/overflow-items/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/overflow-items/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/overflow-items/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/loader-overlay/overview</loc>
@@ -557,6 +635,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/popover/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/popover/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/popover/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/progress-bar/overview</loc>
@@ -619,6 +703,12 @@
 		<loc>https://koobiq.io/ru/components/scrollbar/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/scrollbar/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/scrollbar/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/search-expandable/overview</loc>
 	</url>
 	<url>
@@ -643,6 +733,12 @@
 		<loc>https://koobiq.io/ru/components/select/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/select/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/select/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/sidebar/overview</loc>
 	</url>
 	<url>
@@ -655,6 +751,12 @@
 		<loc>https://koobiq.io/ru/components/sidebar/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/sidebar/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/sidebar/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/sidepanel/overview</loc>
 	</url>
 	<url>
@@ -665,6 +767,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/sidepanel/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/sidepanel/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/sidepanel/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/skeleton/overview</loc>
@@ -727,6 +835,12 @@
 		<loc>https://koobiq.io/ru/components/tabs/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/tabs/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tabs/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/tag/overview</loc>
 	</url>
 	<url>
@@ -751,6 +865,12 @@
 		<loc>https://koobiq.io/ru/components/tag-autocomplete/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/tag-autocomplete/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tag-autocomplete/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/tag-input/overview</loc>
 	</url>
 	<url>
@@ -761,6 +881,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/tag-input/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/tag-input/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tag-input/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/tag-list/overview</loc>
@@ -797,6 +923,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/time-range/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/time-range/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/time-range/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/timepicker/overview</loc>
@@ -847,6 +979,12 @@
 		<loc>https://koobiq.io/ru/components/toast/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/toast/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/toast/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/toggle/overview</loc>
 	</url>
 	<url>
@@ -869,6 +1007,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/tooltip/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/tooltip/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tooltip/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/top-bar/overview</loc>
@@ -895,6 +1039,12 @@
 		<loc>https://koobiq.io/ru/components/tree/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/tree/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tree/examples</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/tree-select/overview</loc>
 	</url>
 	<url>
@@ -905,6 +1055,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/tree-select/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/tree-select/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/tree-select/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/username/overview</loc>
@@ -923,6 +1079,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/other/date-formatter/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/other/date-formatter/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/other/date-formatter/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/other/filesize-formatter/overview</loc>
@@ -947,6 +1109,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/other/validation/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/other/validation/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/other/validation/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/cdk/a11y/overview</loc>
