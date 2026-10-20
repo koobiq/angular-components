@@ -1,13 +1,5 @@
-import {
-    AfterViewInit,
-    ApplicationRef,
-    Directive,
-    ElementRef,
-    inject,
-    signal,
-    untracked,
-    viewChild
-} from '@angular/core';
+import { _IdGenerator } from '@angular/cdk/a11y';
+import { AfterViewInit, Directive, ElementRef, inject, signal, untracked, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
@@ -29,7 +21,6 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     // matching the behaviour the `date`/`datetime` pipes had before this base class was extracted.
     protected readonly adapter: DateAdapter<any> = inject(DateAdapter);
     protected readonly formatter: DateFormatter<any> = inject(DateFormatter);
-    private readonly appRef = inject(ApplicationRef);
 
     /** @docs-private */
     protected readonly placements = PopUpPlacements;
@@ -48,6 +39,17 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     protected readonly showStartCalendar = signal(false);
     /** @docs-private */
     protected readonly showEndCalendar = signal(false);
+
+    /**
+     * Id of the "From" label, which names the start inputs.
+     * @docs-private
+     */
+    protected readonly fromLabelId = inject(_IdGenerator).getId('kbq-pipe-date-from-');
+    /**
+     * Id of the "To" label, which names the end inputs.
+     * @docs-private
+     */
+    protected readonly toLabelId = inject(_IdGenerator).getId('kbq-pipe-date-to-');
 
     // Loosely typed (`any`) so the values bind cleanly to the generic date directives: on a native
     // `<input>`, `[min]`/`[max]` resolve to the DOM property (`string | number`), which a concrete `D`
@@ -91,7 +93,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     // Optional: rendered only when the pipe template provides presets to go back to.
     readonly returnButton = viewChild('returnButton', { read: KbqButton });
 
-    private readonly startInput = viewChild('startInput', { read: ElementRef });
+    private readonly periodStartInput = viewChild('periodStartInput', { read: ElementRef });
 
     /** Resolves the `minDateTime` / `maxDateTime` bounds from the pipe template matching this pipe. */
     private updateDateBounds = (templates: KbqPipeTemplate[] | null) => {
@@ -154,6 +156,23 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         }
     }
 
+    /**
+     * Resolves the relative `start` of a preset (a duration-like object such as `{ days: -7 }`) against today.
+     * Anything else — a date instance, an ISO string left without its `end` — yields `undefined`, so the
+     * defaults apply instead of `plus()` throwing.
+     */
+    private toRelativeStart(value: unknown): D | undefined {
+        if (value == null || typeof value !== 'object' || this.adapter.isDateInstance(value)) return undefined;
+
+        try {
+            const start = this.adapter.today().plus(value);
+
+            return this.adapter.isValid(start) ? start : undefined;
+        } catch {
+            return undefined;
+        }
+    }
+
     /** Clamps `value` into the configured `[min, max]` bounds using full-instant comparison. */
     private clampToBounds(value: D): D {
         if (this.min && this.adapter.compareDateTime(value, this.min) < 0) return this.min;
@@ -206,6 +225,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     /** Whether the current pipe is disabled. */
     get disabled(): boolean {
         return (
+            !this.formGroup ||
             !this.adapter.isDateInstance(this.formGroup.controls.start.value) ||
             !this.adapter.isDateInstance(this.formGroup.controls.end.value) ||
             this.formGroup.invalid
@@ -241,10 +261,9 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
      * same class of issue as `min` configured later than `max`), not something to further engineer around.
      */
     private computeDefaultRange(): { start: D; end: D } {
-        let start: any = this.clampToBounds(
-            this.data.value?.start ? this.adapter.today().plus(this.data.value.start) : this.getDefaultStart()
-        );
-        let end: any = this.clampToBounds(this.data.value?.start ? this.adapter.today() : this.getDefaultEnd());
+        const relativeStart = this.toRelativeStart(this.data.value?.start);
+        let start: any = this.clampToBounds(relativeStart ?? this.getDefaultStart());
+        let end: any = this.clampToBounds(relativeStart ? this.adapter.today() : this.getDefaultEnd());
 
         if (this.minInterval && this.adapter.compareDateTime(end, start.plus(this.minInterval)) < 0) {
             end = this.clampToBounds(start.plus(this.minInterval));
@@ -343,25 +362,36 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         this.popover()
             .visibleChange.pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((visible) => {
-                if (visible) {
-                    if (this.noOptions) {
-                        // The "custom period" row would be the only one: skip the list.
-                        this.showPeriod();
-                    } else if (this.isListMode()) {
-                        // Move keyboard focus onto the period list so Enter selects a preset
-                        // instead of the focus trap landing on the "custom period" row.
-                        setTimeout(() => this.listSelection()?.focus());
-                    }
-                } else {
+                if (!visible) {
+                    // Reset on close, so the content the popover renders on its next open starts from the list.
+                    this.isListMode.set(true);
                     this.filterBar?.onClosePipe.emit(this.data);
+                } else if (this.noOptions) {
+                    // The "custom period" row would be the only one: skip the list.
+                    this.showPeriod();
+                } else {
+                    // Move keyboard focus onto the period list so Enter selects a preset
+                    // instead of the focus trap landing on the "custom period" row.
+                    setTimeout(() => this.listSelection()?.focus());
                 }
             });
+
+        // Subscribed after `KbqBasePipe.updateTemplates`, so `values` is current. A template that takes the presets
+        // away while the list is shown would leave the popover empty: move on to the period. Untracked, because the
+        // filter bar emits its templates from an effect.
+        this.filterBar?.internalTemplatesChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() =>
+            untracked(() => {
+                if (this.popover().isOpen && this.isListMode() && this.noOptions) {
+                    this.showPeriod();
+                }
+            })
+        );
     }
 
     /** keydown handler
      * @docs-private */
     onKeydown($event: KeyboardEvent) {
-        if (($event.ctrlKey || $event.metaKey) && $event.keyCode === ENTER) {
+        if (!this.disabled && ($event.ctrlKey || $event.metaKey) && $event.keyCode === ENTER) {
             this.onApplyPeriod();
         }
 
@@ -406,18 +436,22 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         setTimeout(() => {
             if (this.destroyed) return;
 
-            this.popover().updatePosition(true);
+            const origin = this.currentFocusOrigin;
             // Focus has to move into the period view: the list it replaces is being torn down (focus would
             // land on <body>), and without a list there is no back button, so the start input takes it and
-            // opens its calendar. Focus via FocusMonitor with the user's *current* input modality — not
+            // opens its calendar — except after a tap, where focusing an input would raise the on-screen
+            // keyboard. Focus via FocusMonitor with the user's *current* input modality — not
             // `KbqButton.focusViaKeyboard()`, which hardcodes `'keyboard'` and paints the ring even for a
             // mouse click on the "custom period" row. This also leaves FocusMonitor's last focus origin
             // truthful, so the native focus `showList()` performs on the way back inherits the right origin.
-            const target = this.returnButton()?.elementRef ?? this.startInput();
+            const target = this.returnButton()?.elementRef ?? (origin === 'touch' ? null : this.periodStartInput());
 
             if (target) {
-                this.focusMonitor.focusVia(target, this.currentFocusOrigin);
+                this.focusMonitor.focusVia(target, origin);
             }
+
+            // After the focus: the reposition has to measure the calendar that focusing the start input opens.
+            this.popover().updatePosition(true);
         });
     }
 
@@ -459,14 +493,15 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     }
 
     /**
-     * Hides the calendars before the browser moves focus on Tab.
+     * Hides the calendars before the browser moves focus on Tab or Shift+Tab out of a date input.
      * @docs-private
      */
-    onDateInputTab(): void {
+    protected onDateInputTab(): void {
         this.hideCalendars();
         // Change detection runs after the event, but the browser moves focus right after keydown: render now, or
-        // Tab lands on the still displayed calendar, which then hides with the focus inside it.
-        this.appRef.tick();
+        // Tab lands on the still displayed calendar, which then hides with the focus inside it. The popover is
+        // created in the trigger's view container, so this view's render reaches the calendars.
+        this.changeDetectorRef.detectChanges();
     }
 
     /**

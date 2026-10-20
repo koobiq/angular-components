@@ -460,6 +460,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     // (undocumented)
     protected readonly formatter: DateFormatter<any>;
     protected formGroup: FormGroup;
+    protected readonly fromLabelId: string;
     protected abstract getDefaultEnd(): D;
     protected abstract getDefaultStart(): D;
     // (undocumented)
@@ -476,7 +477,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     ngAfterViewInit(): void;
     // (undocumented)
     onApplyPeriod(): void;
-    onDateInputTab(): void;
+    protected onDateInputTab(): void;
     // (undocumented)
     onFocusEndInput(): void;
     // (undocumented)
@@ -501,6 +502,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     get start(): D;
     get startMax(): any;
     protected readonly styles: typeof KbqButtonStyles;
+    protected readonly toLabelId: string;
     protected abstract usesTime(): boolean;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqPipeDateBaseComponent<any>, never, never, {}, {}, never, never, true, never>;

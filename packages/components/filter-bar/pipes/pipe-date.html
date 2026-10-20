@@ -13,7 +13,7 @@
     [kbqPopoverDefaultPaddings]="false"
     [kbqPopoverPlacement]="placements.BottomLeft"
     [kbqPopoverPlacementPriority]="[placements.BottomLeft, placements.TopLeft]"
-    (kbqPopoverVisibleChange)="isListMode.set(true)"
+    [kbqPopoverAriaLabel]="data.name"
 >
     <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
     <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!formattedValue">
@@ -69,20 +69,24 @@
             }
 
             <form class="kbq-date-period__content kbq-form-horizontal" [formGroup]="formGroup">
-                <label class="kbq-form__label">{{ localeConfiguration().datePipe.customPeriodFrom }}</label>
+                <label class="kbq-form__label" [id]="fromLabelId">
+                    {{ localeConfiguration().datePipe.customPeriodFrom }}
+                </label>
 
                 <kbq-form-field
                     class="kbq-date-period__date kbq-form__control"
                     [class.kbq-focused]="showStartCalendar()"
                 >
                     <input
-                        #startInput
+                        #periodStartInput
                         formControlName="start"
                         [kbqCalendar]="startDateCalendar"
                         [min]="min"
                         [max]="startMax"
+                        [attr.aria-labelledby]="fromLabelId"
                         (focusin)="onFocusStartInput()"
                         (keydown.tab)="onDateInputTab()"
+                        (keydown.shift.tab)="onDateInputTab()"
                     />
                     <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
                 </kbq-form-field>
@@ -95,7 +99,9 @@
                     (selectedChange)="onSelectStartDate($event)"
                 />
 
-                <label class="kbq-form__label">{{ localeConfiguration().datePipe.customPeriodTo }}</label>
+                <label class="kbq-form__label" [id]="toLabelId">
+                    {{ localeConfiguration().datePipe.customPeriodTo }}
+                </label>
 
                 <kbq-form-field class="kbq-date-period__date kbq-form__control" [class.kbq-focused]="showEndCalendar()">
                     <input
@@ -103,8 +109,10 @@
                         [kbqCalendar]="endDateCalendar"
                         [min]="min"
                         [max]="max"
+                        [attr.aria-labelledby]="toLabelId"
                         (focusin)="onFocusEndInput()"
                         (keydown.tab)="onDateInputTab()"
+                        (keydown.shift.tab)="onDateInputTab()"
                     />
                     <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
                 </kbq-form-field>

@@ -291,7 +291,6 @@ describe('KbqPipeDateComponent', () => {
             const updatePosition = vi.fn();
 
             internal.popover = () => ({ updatePosition });
-            internal.returnButton = stubReturnButton();
             internal.showStartCalendar.set(true);
             internal.showEndCalendar.set(true);
 
@@ -342,6 +341,42 @@ describe('KbqPipeDateComponent', () => {
             vi.useFakeTimers();
 
             await shouldFocusReturnButtonWith('mouse');
+        });
+
+        it('should reposition after moving focus, so the reposition measures what that focus opens', async () => {
+            vi.useFakeTimers();
+
+            const internal = asInternal(getPipeComponent());
+            const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+            const updatePosition = vi.fn();
+
+            internal.popover = () => ({ updatePosition });
+            internal.returnButton = stubReturnButton();
+
+            getPipeComponent().showPeriod();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(focusViaSpy.mock.invocationCallOrder[0]).toBeLessThan(updatePosition.mock.invocationCallOrder[0]);
+        });
+
+        it('should render the "back" button and focus it when the template has presets', async () => {
+            vi.useFakeTimers();
+
+            const component = getPipeComponent();
+            const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
+
+            component.open();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            component.showPeriod();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const returnButton = overlayContainer.querySelector('.kbq-date-period__header button');
+
+            expect(returnButton).not.toBeNull();
+            expect(document.activeElement).toBe(returnButton);
         });
     });
 
@@ -631,7 +666,6 @@ describe('KbqPipeDateComponent', () => {
             fixture.detectChanges();
             await vi.runOnlyPendingTimersAsync();
 
-            asInternal(component).returnButton = stubReturnButton();
             component.showPeriod();
             fixture.detectChanges();
             await vi.runOnlyPendingTimersAsync();
@@ -650,39 +684,58 @@ describe('KbqPipeDateComponent', () => {
             expect(start.classList).toContain('kbq-calendar_hidden');
         });
 
-        // The browser moves focus right after keydown, so a calendar still displayed then takes the focus and
-        // hides with it inside. jsdom moves no focus, hence no `fixture.detectChanges()` after the keydown.
-        it('should hide the calendar of a date input within the Tab keydown', async () => {
-            vi.useFakeTimers();
+        // jsdom moves no focus, so these check that the calendar is hidden within the keydown, before a browser
+        // would move the focus — hence no `fixture.detectChanges()` after it.
+        describe('leaving a date input', () => {
+            const openPeriod = async () => {
+                const component = getPipeComponent();
+                const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
 
-            const component = getPipeComponent();
-            const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
+                component.open();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
 
-            component.open();
-            fixture.detectChanges();
-            await vi.runOnlyPendingTimersAsync();
+                component.showPeriod();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
 
-            asInternal(component).returnButton = stubReturnButton();
-            component.showPeriod();
-            fixture.detectChanges();
-            await vi.runOnlyPendingTimersAsync();
+                const [startInput, endInput] = Array.from(
+                    overlayContainer.querySelectorAll<HTMLInputElement>('input.kbq-datepicker')
+                );
+                const [start, end] = Array.from(overlayContainer.querySelectorAll('kbq-calendar'));
 
-            const [startInput, endInput] = Array.from(
-                overlayContainer.querySelectorAll<HTMLInputElement>('input.kbq-datepicker')
-            );
-            const [start, end] = Array.from(overlayContainer.querySelectorAll('kbq-calendar'));
+                return { component, startInput, endInput, start, end };
+            };
 
-            component.onFocusStartInput();
-            fixture.detectChanges();
-            dispatchKeyboardEvent(startInput, 'keydown', TAB, undefined, 'Tab');
+            it('should hide the calendar within the Tab keydown', async () => {
+                vi.useFakeTimers();
 
-            expect(start.classList).toContain('kbq-calendar_hidden');
+                const { component, startInput, endInput, start, end } = await openPeriod();
 
-            component.onFocusEndInput();
-            fixture.detectChanges();
-            dispatchKeyboardEvent(endInput, 'keydown', TAB, undefined, 'Tab');
+                component.onFocusStartInput();
+                fixture.detectChanges();
+                dispatchKeyboardEvent(startInput, 'keydown', TAB, undefined, 'Tab');
 
-            expect(end.classList).toContain('kbq-calendar_hidden');
+                expect(start.classList).toContain('kbq-calendar_hidden');
+
+                component.onFocusEndInput();
+                fixture.detectChanges();
+                dispatchKeyboardEvent(endInput, 'keydown', TAB, undefined, 'Tab');
+
+                expect(end.classList).toContain('kbq-calendar_hidden');
+            });
+
+            it('should hide the calendar within the Shift+Tab keydown', async () => {
+                vi.useFakeTimers();
+
+                const { component, startInput, start } = await openPeriod();
+
+                component.onFocusStartInput();
+                fixture.detectChanges();
+                startInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true }));
+
+                expect(start.classList).toContain('kbq-calendar_hidden');
+            });
         });
     });
 
@@ -691,14 +744,39 @@ describe('KbqPipeDateComponent', () => {
             setupSinglePipe({ value: null });
         });
 
-        it('should apply period on Ctrl+Enter and prevent default', () => {
+        const showPeriod = () => {
             const component = getPipeComponent();
+
+            asInternal(component).popover = () => ({ updatePosition: vi.fn() });
+            component.showPeriod();
+
+            return component;
+        };
+
+        it('should apply period on Ctrl+Enter and prevent default', () => {
+            const component = showPeriod();
             const applySpy = vi.spyOn(component, 'onApplyPeriod').mockImplementation(() => {});
             const event = { ctrlKey: true, metaKey: false, keyCode: 13, preventDefault: vi.fn() } as any;
 
             component.onKeydown(event);
 
             expect(applySpy).toHaveBeenCalled();
+            expect(event.preventDefault).toHaveBeenCalled();
+        });
+
+        it('should not apply on Ctrl+Enter while Apply is disabled', () => {
+            const component = showPeriod();
+            const applySpy = vi.spyOn(component, 'onApplyPeriod');
+            const event = { ctrlKey: true, metaKey: false, keyCode: 13, preventDefault: vi.fn() } as any;
+
+            // A cleared field: applying it would call `toISO()` on null.
+            asInternal(component).formGroup.controls.start.setValue(null);
+
+            expect(component.disabled).toBe(true);
+
+            component.onKeydown(event);
+
+            expect(applySpy).not.toHaveBeenCalled();
             expect(event.preventDefault).toHaveBeenCalled();
         });
 
@@ -743,10 +821,39 @@ describe('KbqPipeDateComponent', () => {
             expect(asInternal(component).isListMode()).toBe(true);
             expect(focus).toHaveBeenCalled();
         });
+
+        it('should go back to the list when the popover closes', () => {
+            const component = getPipeComponent();
+
+            asInternal(component).isListMode.set(false);
+            component.popover().visibleChange.emit(false);
+
+            expect(asInternal(component).isListMode()).toBe(true);
+        });
+
+        it('should move on to the period when a template update takes the presets away from the open list', async () => {
+            vi.useFakeTimers();
+
+            const component = getPipeComponent();
+            const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
+
+            component.open();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(overlayContainer.querySelector('kbq-list-option')).not.toBeNull();
+
+            fixture.componentInstance.pipeTemplates = [{ ...fixture.componentInstance.pipeTemplates[0], values: [] }];
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(asInternal(component).isListMode()).toBe(false);
+            expect(overlayContainer.querySelector('.kbq-date-period')).not.toBeNull();
+        });
     });
 
     describe('without values', () => {
-        beforeEach(() => {
+        const setupWithoutValues = (value: unknown = null) => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
             fixture.componentInstance.pipeTemplates = [
@@ -759,9 +866,9 @@ describe('KbqPipeDateComponent', () => {
                     disabled: false
                 }
             ];
-            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value })]);
             fixture.detectChanges();
-        });
+        };
 
         const openPopover = async () => {
             getPipeComponent().open();
@@ -773,6 +880,7 @@ describe('KbqPipeDateComponent', () => {
 
         it('should open straight on the custom period, without the list and the back button', async () => {
             vi.useFakeTimers();
+            setupWithoutValues();
 
             const component = getPipeComponent();
             const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
@@ -787,6 +895,7 @@ describe('KbqPipeDateComponent', () => {
 
         it('should focus the start input with the current modality, which opens its calendar', async () => {
             vi.useFakeTimers();
+            setupWithoutValues();
 
             const component = getPipeComponent();
             const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
@@ -804,6 +913,61 @@ describe('KbqPipeDateComponent', () => {
             );
             expect(document.activeElement).toBe(startInput);
             expect(asInternal(component).showStartCalendar()).toBe(true);
+        });
+
+        it('should leave the start input unfocused after a tap, so no on-screen keyboard comes up', async () => {
+            vi.useFakeTimers();
+            setupWithoutValues();
+
+            const component = getPipeComponent();
+            const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
+
+            Object.defineProperty(component, 'currentFocusOrigin', { get: () => 'touch' });
+
+            await openPopover();
+
+            expect(overlayContainer.querySelector('.kbq-date-period')).not.toBeNull();
+            expect(document.activeElement).not.toBe(overlayContainer.querySelector('input[formcontrolname="start"]'));
+            expect(asInternal(component).showStartCalendar()).toBe(false);
+        });
+
+        it('should name the panel after the pipe and each input after its label', async () => {
+            vi.useFakeTimers();
+            setupWithoutValues();
+
+            const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
+
+            await openPopover();
+
+            const panel = overlayContainer.querySelector('.kbq-popover')!;
+            const labelOf = (input: Element) =>
+                overlayContainer.querySelector(`#${input.getAttribute('aria-labelledby')}`)?.textContent?.trim();
+            const [startInput, endInput] = Array.from(overlayContainer.querySelectorAll('input.kbq-datepicker'));
+
+            expect(panel.getAttribute('role')).toBe('dialog');
+            expect(panel.getAttribute('aria-label')).toBe('test');
+            expect(labelOf(startInput)).toBe('с');
+            expect(labelOf(endInput)).toBe('по');
+        });
+
+        it('should open on the default period for a value it cannot resolve as a range or a preset', async () => {
+            vi.useFakeTimers();
+
+            for (const value of [
+                { start: adapter.today().minus({ days: 3 }), end: adapter.today() },
+                { start: adapter.today().toISO(), end: null }
+            ]) {
+                setupWithoutValues(value);
+
+                const component = getPipeComponent();
+
+                await openPopover();
+
+                const { start, end } = asInternal(component).formGroup.controls;
+
+                expect(adapter.sameDate(start.value, component.defaultStart)).toBe(true);
+                expect(adapter.sameDate(end.value, component.defaultEnd)).toBe(true);
+            }
         });
     });
 
@@ -1264,10 +1428,6 @@ describe('KbqPipeDateComponent', () => {
 
             const internal = asInternal(component);
 
-            // showPeriod()'s deferred focus-restore isn't relevant to hint rendering; stub it out so the
-            // real (isListMode-driven) template swap below isn't gated on the returnButton view query.
-            internal.returnButton = stubReturnButton();
-
             component.showPeriod();
             fixture.detectChanges();
             await vi.runOnlyPendingTimersAsync();
@@ -1314,8 +1474,6 @@ describe('KbqPipeDateComponent', () => {
             fixture.detectChanges();
 
             const internal = asInternal(component);
-
-            internal.returnButton = stubReturnButton();
 
             component.showPeriod();
             fixture.detectChanges();
