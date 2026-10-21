@@ -3,6 +3,11 @@ CHANGELOG_CURRENT.md
 
 .ai
 
+# local Claude Code settings and tooling
+.claude/settings.json
+.claude/launch.json
+.claude/playwright.system-chrome.config.ts
+
 # firebase artifacts
 .firebase
 
