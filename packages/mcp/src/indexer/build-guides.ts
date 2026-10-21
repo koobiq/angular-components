@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { compare, isRelease, sortReleases } from '../semver.js';
 import type { Guide, GuideSection } from '../types.js';
@@ -90,6 +90,19 @@ const locate = (paths: string[]): Located[] => {
  * those wrong whichever way it is written.
  */
 const detectLang = (source: string): 'en' | 'ru' => (/\p{Script=Cyrillic}/u.test(source) ? 'ru' : 'en');
+
+/**
+ * Ids of the public guides that exist on disk right now, git-free.
+ *
+ * Reads the working tree with `readdirSync` rather than `locate`'s usual `git ls-files` input, so
+ * `check-data-freshness.ts` can compare it against the committed `guides.json` without shelling out
+ * to git — the freshness gate it backs has to run the same whether or not history is even fetched.
+ */
+export const guideIdsOnDisk = (repo: string): Set<string> => {
+    const dir = join(repo, 'docs', 'guides');
+
+    return existsSync(dir) ? new Set(locate(readdirSync(dir)).map((entry) => entry.id)) : new Set();
+};
 
 /** Guide-shaped files in `docs/guides` that neither list mentions — a new guide nobody decided on. */
 export const assertNothingMissed = (repo: string): string[] => {

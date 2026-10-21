@@ -22,6 +22,22 @@ import type { ApiHistory, MemberChange } from '../sources/history.js';
 
 const GUARD_DIR = 'tools/public_api_guard/components';
 
+/**
+ * Entry points guarded right now, git-free — what `check-data-freshness.ts` compares against
+ * `history.json` to catch one the data has never recorded at all, added or otherwise.
+ */
+export const entryPointsOnDisk = (repo: string): Set<string> => {
+    const dir = join(repo, GUARD_DIR);
+
+    if (!existsSync(dir)) return new Set();
+
+    return new Set(
+        readdirSync(dir)
+            .filter((name) => name.endsWith('.api.md'))
+            .map((name) => basename(name, '.api.md'))
+    );
+};
+
 export const releasesFrom = (repo: string, lowest: string): string[] =>
     sortReleases(
         git(repo, ['tag', '--list'])

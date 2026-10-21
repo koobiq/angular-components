@@ -22,6 +22,11 @@ tmp
 temp
 /out-tsc
 
+# MCP server data regenerated on every build from the working tree — never committed, unlike the
+# two release-pipeline files in the same directory (guides.json, history.json)
+/packages/mcp/data/index.json
+/packages/mcp/data/examples.json
+
 # IDEs
 /.idea
 .project

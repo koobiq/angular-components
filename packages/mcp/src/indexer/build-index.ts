@@ -8,17 +8,16 @@ import { parseGuide } from './parse-guide.js';
 import { parseIconRenames } from './parse-renames.js';
 
 /**
- * Builds `data/index.json` from this repository.
+ * Builds `index.json` and `examples.json` from this repository.
  *
  * Runs against the repository rather than the published package on purpose: the package ships
- * only typings and styles — no MDX and no examples — so the docs surface has to be captured in the
- * release pipeline, where `build:mcp:data` regenerates the committed `data/`.
+ * only typings and styles — no MDX and no examples — so the docs surface has to be captured here.
+ * Neither file is committed: both are always a snapshot of the working tree, so `build:mcp` runs
+ * this on every build, straight into the package it assembles, rather than at release time like
+ * `guides.json`/`history.json`.
  *
- *   yarn build:mcp:data
+ *   yarn build:mcp
  */
-
-const indexPath = join(dataDir(), 'index.json');
-const examplesPath = join(dataDir(), 'examples.json');
 
 /** Example sources, keyed by example id then by file name. Loaded only when `get_example` runs. */
 export type ExampleSources = Record<string, Record<string, string>>;
@@ -148,12 +147,16 @@ export const buildIndex = (repo: string): ComponentIndex => {
 
 const main = (): void => {
     const repo = resolve(process.argv[2] ?? process.env.KOOBIQ_REPO ?? repoRoot());
+    // Unlike `guides.json`/`history.json`, this pair is never committed: `yarn build:mcp` runs this
+    // on every build, straight from the working tree, and `copy-to-dist.cjs` ships whatever is here
+    // alongside the two committed files. `build:mcp:data` does not call this builder any more —
+    // there is nothing here for the release pipeline to commit.
     const index = buildIndex(repo);
     const sources = collectExampleSources(repo, index);
 
     mkdirSync(dataDir(), { recursive: true });
-    writeFileSync(indexPath, JSON.stringify(index) + '\n');
-    writeFileSync(examplesPath, JSON.stringify(sources) + '\n');
+    writeFileSync(join(dataDir(), 'index.json'), JSON.stringify(index) + '\n');
+    writeFileSync(join(dataDir(), 'examples.json'), JSON.stringify(sources) + '\n');
 
     const symbols = index.components.reduce((total, entry) => total + entry.symbols.length, 0);
     const members = index.components.reduce(

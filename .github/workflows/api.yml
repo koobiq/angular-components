@@ -25,7 +25,12 @@ jobs:
       - run: yarn run check-api-docs
       # Reads the manifest docs:api-gen has just written, like check-api-docs.
       - run: yarn run check-llms
-      # The two MCP specs that read the built typings of @koobiq/components live here rather than in
-      # `units.yml`, which never builds the library: without the build they would have nothing to
-      # read. The rest of the MCP suite needs no build and runs as part of `units.yml`'s `unit:all`.
+      # guides.json/history.json are committed and only regenerated at release time: this is the
+      # gate that catches a guide or a guarded entry point added on a branch without rerunning
+      # `build:mcp:data`. Needs no git history, just the checkout `build-packages` already has.
+      - run: yarn run check-mcp-data
+      # The MCP specs that read the built typings of @koobiq/components, or the assembled dist/mcp
+      # over stdio, live here rather than in `units.yml`, which never builds either: without the
+      # build they would have nothing to read. The rest of the MCP suite needs no build and runs as
+      # part of `units.yml`'s `unit:all`.
       - run: yarn run unit:mcp:dts
