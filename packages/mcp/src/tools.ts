@@ -264,8 +264,18 @@ export const toolGetComponent = (
     const symbols = live?.read(entryPoint) ?? [];
 
     if (!live) {
+        const installed = catalog.project.packages.get('@koobiq/components');
+
         return [
-            `@koobiq/components is not installed in this project, so its API cannot be read.`,
+            // Two different problems, told apart: the package missing entirely (nothing to read) and
+            // the package present but in a layout this reader does not understand (a future ng-packagr
+            // change, most likely) — the second used to read exactly like the first, which hid a broken
+            // reader behind the same quiet fallback as an uninstalled project.
+            ...(installed ? [
+                      `@koobiq/components@${installed.version} is installed at ${installed.root}, but its typings could not be read.`,
+                      `Expected a "types" entry in its package.json "exports", or, on an older layout, "<entry point>/index.d.ts" — this reader may not know this version's layout yet.`,
+                      `The answer below comes from the index bundled with this server, which describes @koobiq/components@${catalog.index.sourceVersion}, not the version actually installed.`
+                  ] : [`@koobiq/components is not installed in this project, so its API cannot be read.`]),
             `Only the examples and documentation topics bundled with this server are available.`,
             component?.examples.length
                 ? `Examples (get_example): ${component.examples.map((it) => it.id).join(', ')}`

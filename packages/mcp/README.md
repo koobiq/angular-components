@@ -63,7 +63,7 @@ Where a package cannot be found by walking `node_modules` — this repository, w
 KOOBIQ_COMPONENTS_ROOT=/path/to/package # also KOOBIQ_ICONS_ROOT, KOOBIQ_TOKENS_ROOT
 ```
 
-## Working on it here
+## Development
 
 ```bash
 yarn build:mcp:data # regenerate the committed guides.json and history.json (runs in the release pipeline)

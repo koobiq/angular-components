@@ -1,7 +1,7 @@
 {
     "name": "@koobiq/mcp",
     "version": "{{VERSION}}",
-    "description": "MCP server for the Koobiq design system",
+    "description": "MCP server for the Koobiq design system: component API, icons, design tokens, guides and examples for @koobiq/components",
     "license": "MIT",
     "type": "module",
     "bin": {

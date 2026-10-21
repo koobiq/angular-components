@@ -109,7 +109,7 @@ export const indexSkew = (catalog: Catalog): string | null => {
 
         if (!Number.isNaN(indexMajor) && installed.major !== indexMajor) {
             problems.push(
-                `this project resolved @koobiq/components@${installed.version} but the index is from ${sourceVersion} — a different major. Install the matching major of @koobiq/mcp`
+                `this project resolved @koobiq/components@${installed.version}, a different major than the bundled index (${sourceVersion}) — @koobiq/mcp ships one index for every supported major (18-21), so the component API above is read live from the installed package and is accurate, but the bundled examples and guide text describe ${sourceVersion} and may not match`
             );
         } else if (installed.version !== sourceVersion) {
             problems.push(`project is on ${installed.version}, index is from ${sourceVersion}`);
