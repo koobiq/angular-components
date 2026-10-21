@@ -1409,6 +1409,9 @@ describe('KbqDropdown', () => {
 
             const panel = overlayContainerElement.querySelector(PANEL_SELECTOR) as HTMLElement;
 
+            // The scroll container `dropdown.scss` makes of the panel: specs run without the component stylesheets.
+            panel.style.overflowX = 'hidden';
+            panel.style.overflowY = 'auto';
             setMetrics(panel, { clientHeight: 100, scrollHeight: 500, clientWidth: 100, scrollWidth: 100 });
             await vi.advanceTimersByTimeAsync(300);
             fixture.detectChanges();
