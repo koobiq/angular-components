@@ -86,8 +86,8 @@ const locate = (paths: string[]): Located[] => {
  *
  * Decided by what is in it rather than by the convention of the day. Both guesses are needed: at
  * 18.0.0 `theming.md` opens with "Что нового?" and its translation sat in `theming.en.md`, while
- * `which-component-when.md` today is English with no suffix at all. A positional rule gets one of
- * those wrong whichever way it is written.
+ * `which-component-when.md` was English with no suffix at all for a while. A positional rule gets
+ * one of those wrong whichever way it is written.
  */
 const detectLang = (source: string): 'en' | 'ru' => (/\p{Script=Cyrillic}/u.test(source) ? 'ru' : 'en');
 
@@ -154,7 +154,7 @@ export const buildGuides = (repo: string): Guide[] => {
     const tag = latestRelease(repo);
     const guides = new Map<string, Guide>();
     const { version } = JSON.parse(readFileSync(join(repo, 'package.json'), 'utf-8')) as { version: string };
-    const staged = stagedVersion(repo, '18.0.0', version);
+    const staged = stagedVersion(version);
 
     const take = (id: string, named: 'en' | 'ru' | null, since: string, source: string, unreleased?: true): void => {
         const lang = named ?? detectLang(source);

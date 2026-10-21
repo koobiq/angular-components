@@ -53,7 +53,7 @@ const readProvenance = (repo: string, version: string): IndexProvenance => {
         commit: read(['rev-parse', '--short', 'HEAD']),
         // A release being staged has no tag yet: `git describe` answers nothing, but the version was
         // just bumped past the newest tag, so that version *is* the tag about to be created.
-        tag: read(['describe', '--tags', '--exact-match']) ?? stagedVersion(repo, '18.0.0', version),
+        tag: read(['describe', '--tags', '--exact-match']) ?? stagedVersion(version),
         dirtyFiles: status ? status.split('\n').filter(Boolean).length : 0
     };
 };

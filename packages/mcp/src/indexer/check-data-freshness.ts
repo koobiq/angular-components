@@ -1,18 +1,23 @@
 import { readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import type { ApiHistory } from '../sources/history.js';
 import type { Guide } from '../types.js';
 import { guideIdsOnDisk } from './build-guides.js';
-import { entryPointsOnDisk } from './build-history.js';
 import { repoRoot } from './git.js';
 
 /**
- * Checks the two committed data files against the working tree without touching git.
+ * Checks the committed `guides.json` against the working tree without touching git.
  *
- * `guides.json` and `history.json` are only regenerated at release time (`post-version-bump`), so
- * between releases a guide can be added or an entry point can be guarded and the commit that did it
- * never runs `build:mcp:data` — the committed data silently forgets both until the next release
- * rebuilds it from the tags. This runs on a plain checkout, in CI or locally, with no fetched tags.
+ * `guides.json` is only regenerated at release time (`post-version-bump`), but it also reads guides
+ * straight off disk for anything the newest release does not have yet, flagged `unreleased` — so a
+ * guide added or renamed on a branch and never run through `build:mcp:data` is missing here, not
+ * merely unreleased. This runs on a plain checkout, in CI or locally, with no fetched tags.
+ *
+ * `history.json` has no equivalent check. Outside a staged release it is built solely from git tags
+ * — `tools/public_api_guard` on disk is never read in that path — so its content cannot drift from
+ * the working tree between releases; the only way to see it change is for the release pipeline to
+ * run, which runs `build:mcp:data` unconditionally every time. A disk-vs-committed-data check here
+ * would instead flag every entry point added since the last tag, which is the common case on any
+ * branch adding a component, not a sign of anything forgotten.
  *
  *   yarn check-mcp-data
  */
@@ -21,33 +26,15 @@ const repo = resolve(process.argv[2] ?? repoRoot());
 const dataDir = join(repo, 'packages', 'mcp', 'data');
 
 const guides = JSON.parse(readFileSync(join(dataDir, 'guides.json'), 'utf-8')) as Guide[];
-const history = JSON.parse(readFileSync(join(dataDir, 'history.json'), 'utf-8')) as ApiHistory;
-
-const errors: string[] = [];
 
 const knownGuides = new Set(guides.map((guide) => guide.id));
 const missingGuides = [...guideIdsOnDisk(repo)].filter((id) => !knownGuides.has(id)).sort();
 
 if (missingGuides.length > 0) {
-    errors.push(
-        `data/guides.json does not know ${missingGuides.join(', ')}: run \`yarn run build:mcp:data\` and commit \`data/guides.json\`.`
+    process.stderr.write(
+        `❌ data/guides.json does not know ${missingGuides.join(', ')}: run \`yarn run build:mcp:data\` and commit \`data/guides.json\`.\n`
     );
-}
-
-// Only the ones history.json has never recorded under any release: an entry point untouched since
-// its first captured release legitimately never appears as a key, so its absence proves nothing.
-const everMentioned = new Set(Object.values(history).flatMap((release) => Object.keys(release)));
-const newEntryPoints = [...entryPointsOnDisk(repo)].filter((id) => !everMentioned.has(id)).sort();
-
-if (newEntryPoints.length > 0) {
-    errors.push(
-        `data/history.json has never recorded ${newEntryPoints.join(', ')}: run \`yarn run build:mcp:data\` and commit \`data/history.json\`.`
-    );
-}
-
-if (errors.length > 0) {
-    for (const error of errors) process.stderr.write(`❌ ${error}\n`);
     process.exitCode = 1;
 } else {
-    process.stdout.write('✅ data/guides.json and data/history.json are not behind the working tree\n');
+    process.stdout.write('✅ data/guides.json is not behind the working tree\n');
 }

@@ -139,9 +139,20 @@ export class BaseReleaseTask {
         }
     }
 
-    /** Runs the commands listed for the given stage under `release.hooks` in the project package.json. */
-    protected runReleaseCommands(commandType: LifecycleStage) {
-        const spawnOptions: ExecSyncOptions = { cwd: this.config.projectDir, stdio: 'inherit' };
+    /**
+     * Runs the commands listed for the given stage under `release.hooks` in the project package.json.
+     *
+     * `env` is merged into the child process's own environment rather than replacing it, and only
+     * for this call — `KOOBIQ_RELEASE` is how `post-version-bump` tells `@koobiq/mcp`'s data
+     * builders that the working tree *is* the release being staged, not a hint that should leak into
+     * `pre-publish`/`post-publish`, which run later, against the real tag.
+     */
+    protected runReleaseCommands(commandType: LifecycleStage, env: Record<string, string> = {}) {
+        const spawnOptions: ExecSyncOptions = {
+            cwd: this.config.projectDir,
+            stdio: 'inherit',
+            env: { ...process.env, ...env }
+        };
         const commands: string[] = this.packageJson?.release?.hooks?.[commandType] ?? [];
 
         for (const command of commands) {

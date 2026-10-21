@@ -20,8 +20,11 @@ are still supported.
     The CLI walks through the release and asks for confirmation at each step that needs it:
 
     - (**needs confirmation**) choose the bump: major, minor or patch
-    - write the new version to `package.json`, then run the `release.hooks["post-version-bump"]` commands:
-      `release:extract-docs-meta` regenerates the sitemap, the prerender routes and `llms.txt` for that version
+    - write the new version to `package.json`, then run the `release.hooks["post-version-bump"]` commands with
+      `KOOBIQ_RELEASE` set to the new version: `release:extract-docs-meta` regenerates the sitemap, the prerender
+      routes and `llms.txt` for that version, and `build:mcp:data` regenerates `packages/mcp/data/guides.json` and
+      `history.json` — `KOOBIQ_RELEASE` is what tells those two builders the working tree _is_ that release, so the
+      guide text and the API diff they capture are stamped with it instead of with the newest tag
     - (**needs confirmation**) enter a `release name`
         - you can use [angular-release-name-generator](https://www.npmjs.com/package/angular-release-name-generator)
     - (**needs confirmation**) generate the changelog section

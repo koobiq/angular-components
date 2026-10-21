@@ -22,22 +22,6 @@ import type { ApiHistory, MemberChange } from '../sources/history.js';
 
 const GUARD_DIR = 'tools/public_api_guard/components';
 
-/**
- * Entry points guarded right now, git-free — what `check-data-freshness.ts` compares against
- * `history.json` to catch one the data has never recorded at all, added or otherwise.
- */
-export const entryPointsOnDisk = (repo: string): Set<string> => {
-    const dir = join(repo, GUARD_DIR);
-
-    if (!existsSync(dir)) return new Set();
-
-    return new Set(
-        readdirSync(dir)
-            .filter((name) => name.endsWith('.api.md'))
-            .map((name) => basename(name, '.api.md'))
-    );
-};
-
 export const releasesFrom = (repo: string, lowest: string): string[] =>
     sortReleases(
         git(repo, ['tag', '--list'])
@@ -165,10 +149,11 @@ const main = (): void => {
     const releases = releasesFrom(repo, lowest);
     const history = buildHistory(repo, lowest);
     const { version } = JSON.parse(readFileSync(join(repo, 'package.json'), 'utf-8')) as { version: string };
+    const staged = stagedVersion(version);
 
     // The release being staged has no tag yet, so it is recorded from the working tree under the
     // version package.json was just bumped to.
-    if (stagedVersion(repo, lowest, version) && releases.at(-1)) {
+    if (staged && releases.at(-1)) {
         const changed = diff(readSurface(repo, releases.at(-1)!), readWorkingSurface(repo));
 
         if (Object.keys(changed).length > 0) history[version] = changed;
@@ -197,7 +182,7 @@ const main = (): void => {
     process.stdout.write(
         [
             `${outputPath}`,
-            `  releases with changes  ${Object.keys(history).length} of ${releases.length + (stagedVersion(repo, lowest, version) ? 1 : 0)}`,
+            `  releases with changes  ${Object.keys(history).length} of ${releases.length + (staged ? 1 : 0)}`,
             `  changes                ${changes}`,
             `  of those removals      ${removed}`,
             `  built in               ${((Date.now() - started) / 1000).toFixed(1)}s`,

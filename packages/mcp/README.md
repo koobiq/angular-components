@@ -68,7 +68,7 @@ KOOBIQ_COMPONENTS_ROOT=/path/to/package # also KOOBIQ_ICONS_ROOT, KOOBIQ_TOKENS_
 ```bash
 yarn build:mcp:data # regenerate the committed guides.json and history.json (runs in the release pipeline)
 yarn build:mcp      # regenerate index.json/examples.json, compile src → dist, assemble dist/mcp
-yarn check-mcp-data # gate: guides.json/history.json not behind docs/guides or tools/public_api_guard — no git needed
+yarn check-mcp-data # gate: guides.json not behind docs/guides — no git needed (history.json needs none: see below)
 yarn unit:mcp       # Vitest, everything that does not need a built @koobiq/components
 yarn unit:mcp:dts   # the specs that need a build: the .d.ts reader (build:components) and the stdio smoke test (build:mcp)
 yarn mcp:probe      # drive the real server over stdio and price every answer
@@ -78,3 +78,16 @@ Two of the four files in `data/` are committed — `guides.json` and `history.js
 at release time because they are read at git tags. The other two, `index.json` and `examples.json`,
 are always a snapshot of the working tree and are regenerated on every `build:mcp`, never committed.
 The live API tests read `dist/components`, so `yarn build:components` has to have run at least once.
+
+Running `build:mcp:data` on an ordinary branch reads the newest tag, same as any other checkout —
+only the release pipeline's `post-version-bump` hook sets `KOOBIQ_RELEASE` to the version just
+bumped, which is what tells `build-guides`/`build-history` that the working tree itself is that
+release, not a comparison against the tag. Without it, a branch whose version is already bumped past
+the last release (every feature branch on a fresh major, this one included) would have stamped
+`since: <next major>.0.0` on every guide instead of the real last release.
+
+`check-mcp-data` only checks `guides.json`: outside a staged release `history.json` is built solely
+from tags, never from `tools/public_api_guard` on disk, so nothing a branch does can make it stale —
+the only thing that changes it is the release pipeline, which regenerates it unconditionally every
+time. `guides.json` is different: it does read disk, for guides the newest release does not have yet,
+so a guide added or renamed without rerunning `build:mcp:data` really can go missing.
