@@ -1720,6 +1720,28 @@ describe('KbqDropdown', () => {
         });
     });
 
+    describe('content directives', () => {
+        beforeEach(() => {
+            const fixture = createComponent(ContentDirectivesDropdown);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+        });
+
+        it('should mark the item caption with the caption class', () => {
+            const caption = overlayContainerElement.querySelector('[kbqDropdownItemCaption]')!;
+
+            expect(caption.classList).toContain('kbq-dropdown-item__caption');
+        });
+
+        it('should mark the group header with the group header class', () => {
+            const header = overlayContainerElement.querySelector('[kbqDropdownGroupHeader]')!;
+
+            expect(header.classList).toContain('kbq-dropdown__group-header');
+        });
+    });
+
     describe('nested dropdown', () => {
         let fixture: ComponentFixture<NestedDropdown>;
         let instance: NestedDropdown;
@@ -4480,6 +4502,23 @@ class ActionDropdown {
     closeCallback = vi.fn();
     primaryClick = vi.fn();
     actionClick = vi.fn((event: MouseEvent) => event.preventDefault());
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <div kbqDropdownGroupHeader>Header</div>
+            <button kbq-dropdown-item>
+                Item
+                <div kbqDropdownItemCaption>Caption</div>
+            </button>
+        </kbq-dropdown>
+    `
+})
+class ContentDirectivesDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
 }
 
 @Component({

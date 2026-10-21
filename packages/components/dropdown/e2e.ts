@@ -40,13 +40,13 @@ import { KbqDropdownModule } from './dropdown.module';
 
             <button kbq-dropdown-item data-testid="e2eSubmenuTrigger" [kbqDropdownTriggerFor]="submenu">
                 Item with caption
-                <div class="kbq-dropdown-item__caption">Caption</div>
+                <div kbqDropdownItemCaption>Caption</div>
             </button>
 
             <button kbq-dropdown-item>
                 <i kbq-icon="kbq-bug_16" [color]="'contrast'"></i>
                 Item with icon and caption
-                <div class="kbq-dropdown-item__caption">Caption</div>
+                <div kbqDropdownItemCaption>Caption</div>
             </button>
 
             <button kbq-dropdown-item kbq-title>
@@ -57,7 +57,7 @@ import { KbqDropdownModule } from './dropdown.module';
 
             <kbq-divider />
 
-            <div class="kbq-dropdown__group-header">Group header</div>
+            <div kbqDropdownGroupHeader>Group header</div>
 
             <button kbq-dropdown-item>Item after header</button>
 
@@ -86,7 +86,7 @@ import { KbqDropdownModule } from './dropdown.module';
             <button kbq-dropdown-item>Submenu item</button>
             <button kbq-dropdown-item>
                 Item with caption
-                <div class="kbq-dropdown-item__caption">Caption</div>
+                <div kbqDropdownItemCaption>Caption</div>
             </button>
             <kbq-divider />
             <kbq-optgroup label="Subheading" />
@@ -96,13 +96,13 @@ import { KbqDropdownModule } from './dropdown.module';
             </button>
             <button kbq-dropdown-item disabled>
                 Disabled item
-                <div class="kbq-dropdown-item__caption">Caption</div>
+                <div kbqDropdownItemCaption>Caption</div>
             </button>
             <kbq-dropdown-footer>Dropdown footer</kbq-dropdown-footer>
         </kbq-dropdown>
 
         <kbq-dropdown #submenu2="kbqDropdown">
-            <div class="kbq-dropdown__group-header">Group header</div>
+            <div kbqDropdownGroupHeader>Group header</div>
             <button kbq-dropdown-item disabled>Item disabled</button>
             <button kbq-dropdown-item data-testid="e2eSubmenu2ItemWithIcon">
                 <i kbq-icon="kbq-bug_16" [color]="'contrast'"></i>
