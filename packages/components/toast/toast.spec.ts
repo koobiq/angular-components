@@ -886,7 +886,8 @@ describe('KbqToastService', () => {
         describe('shown as popovers', () => {
             // jsdom has no Popover API, and CDK shows an overlay host as a popover only where `showPopover` exists.
             // Like a browser, the stub keeps the top layer in the order the popovers were shown in, and hides a
-            // popover taken out of the DOM.
+            // popover taken out of the DOM. It also displays a shown popover: jsdom never matches `:popover-open`,
+            // so its default stylesheet hides every `[popover]`, and nothing inside one could take the focus.
             let topLayer: HTMLElement[];
             let removals: MutationObserver;
             let matches: MockInstance<Element['matches']>;
@@ -912,12 +913,15 @@ describe('KbqToastService', () => {
                     configurable: true,
                     value(this: HTMLElement) {
                         if (!shown().includes(this)) topLayer.push(this);
+
+                        this.style.display = 'block';
                     }
                 });
                 Object.defineProperty(HTMLElement.prototype, 'hidePopover', {
                     configurable: true,
                     value(this: HTMLElement) {
                         topLayer = shown().filter((element) => element !== this);
+                        this.style.removeProperty('display');
                     }
                 });
 

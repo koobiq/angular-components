@@ -336,7 +336,7 @@ describe('KbqDatepicker', () => {
                 fixture.detectChanges();
                 await vi.runOnlyPendingTimersAsync();
 
-                expect(getComputedStyle(popup).height).toBe('');
+                expect(popup.isConnected).toBe(false);
             });
 
             it('should close the popup when pressing ESCAPE', async () => {
