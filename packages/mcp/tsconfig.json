@@ -8,7 +8,7 @@
         "moduleResolution": "NodeNext",
         "lib": ["ES2023"],
         "types": ["node"],
-        "outDir": "dist",
+        "outDir": "../../dist/mcp/dist",
         "rootDir": "src",
         "strict": true,
         // The reason the `.d.ts` reader can trust `match[1]`: every indexed access is checked.

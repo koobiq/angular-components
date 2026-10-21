@@ -1,15 +1,17 @@
 const { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } = require('fs');
 const { resolve } = require('path');
 
-// Assembles `dist/mcp` — what the release publishes — from this package's build output and the
-// committed `data/`. The version is read from the root manifest and substituted into the copied
-// package.json and into the server's own reported version, the same way the CLI package does it.
+// `tsc` already emits straight into `dist/mcp/dist` (its `outDir`), the same way ng-packagr emits
+// library packages straight into `dist/components`. What's left to assemble here is everything
+// `tsc` does not produce: the manifest (version substituted from the root one, as the CLI package
+// does it), README, LICENSE, the committed `data/`, and the version substituted into the server's
+// own reported version.
 
 const root = resolve(__dirname, '..', '..', '..');
 const pkg = resolve(__dirname, '..');
 const out = resolve(root, 'dist', 'mcp');
 
-mkdirSync(resolve(out, 'dist'), { recursive: true });
+mkdirSync(out, { recursive: true });
 
 const version = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8')).version;
 
@@ -22,7 +24,6 @@ copyFileSync(resolve(pkg, 'README.md'), resolve(out, 'README.md'));
 
 if (existsSync(resolve(root, 'LICENSE'))) copyFileSync(resolve(root, 'LICENSE'), resolve(out, 'LICENSE'));
 
-cpSync(resolve(pkg, 'dist'), resolve(out, 'dist'), { recursive: true });
 cpSync(resolve(pkg, 'data'), resolve(out, 'data'), { recursive: true });
 
 const server = resolve(out, 'dist', 'server.js');
