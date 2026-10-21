@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 
 /**
  * @title Link general
  */
 @Component({
     selector: 'link-general-example',
-    imports: [KbqLinkModule],
+    imports: [KbqLink],
     template: `
-        <a kbq-link>Scan report</a>
+        <a kbqLink href="https://koobiq.io/en/components/link">Scan report</a>
     `,
     styles: `
         :host {

@@ -1,4 +1,3 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, DebugElement, signal, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -13,8 +12,6 @@ const createComponent = <T>(component: Type<T>, providers: any[] = []): Componen
     return fixture;
 };
 
-const getFocusMonitor = () => TestBed.inject(FocusMonitor);
-
 /**
  * Renders a change to the projected content and what the component makes of it: the content observer reports the
  * new text from a mutation callback that runs after the render, and only then is the result rendered.
@@ -28,18 +25,6 @@ const renderProjectedChange = async (fixture: ComponentFixture<unknown>): Promis
 const getMarkdownDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqMarkdown));
 };
-
-@Component({
-    selector: 'markdown-with-link',
-    imports: [KbqMarkdownModule],
-    template: `
-        <kbq-markdown [markdownText]="markdownText" />
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-class MarkdownWithLink {
-    readonly markdownText = '[koobiq](https://www.koobiq.io)';
-}
 
 @Component({
     selector: 'generate-html-from-markdown-string',
@@ -220,18 +205,6 @@ describe(KbqMarkdown.name, () => {
         expect(classList).toContain('kbq-native-scrollbar_descendants');
     });
 
-    it('should add "cdk-keyboard-focused" class on keyboard focus of <a>', async () => {
-        const fixture = createComponent(MarkdownWithLink);
-        const link: HTMLAnchorElement = fixture.nativeElement.querySelector('.kbq-markdown__a');
-
-        await fixture.whenStable();
-
-        expect(link.classList).not.toContain('cdk-keyboard-focused');
-
-        getFocusMonitor().focusVia(link, 'keyboard');
-
-        expect(link.classList).toContain('cdk-keyboard-focused');
-    });
     it('should clear the output when the text is cleared', async () => {
         const fixture = createComponent(MarkdownWithChangingText);
         const output: HTMLElement = fixture.nativeElement.querySelector('.kbq-markdown__output');

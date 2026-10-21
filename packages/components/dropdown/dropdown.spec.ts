@@ -1409,6 +1409,9 @@ describe('KbqDropdown', () => {
 
             const panel = overlayContainerElement.querySelector(PANEL_SELECTOR) as HTMLElement;
 
+            // The scroll container `dropdown.scss` makes of the panel: specs run without the component stylesheets.
+            panel.style.overflowX = 'hidden';
+            panel.style.overflowY = 'auto';
             setMetrics(panel, { clientHeight: 100, scrollHeight: 500, clientWidth: 100, scrollWidth: 100 });
             await vi.advanceTimersByTimeAsync(300);
             fixture.detectChanges();
@@ -1717,6 +1720,28 @@ describe('KbqDropdown', () => {
             const actionEl = item.querySelector('[kbqDropdownItemAction]') as HTMLElement;
 
             expect(actionEl.getAttribute('tabindex')).toBe('0');
+        });
+    });
+
+    describe('content directives', () => {
+        beforeEach(() => {
+            const fixture = createComponent(ContentDirectivesDropdown);
+
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+        });
+
+        it('should mark the item caption with the caption class', () => {
+            const caption = overlayContainerElement.querySelector('[kbqDropdownItemCaption]')!;
+
+            expect(caption.classList).toContain('kbq-dropdown-item__caption');
+        });
+
+        it('should mark the group header with the group header class', () => {
+            const header = overlayContainerElement.querySelector('[kbqDropdownGroupHeader]')!;
+
+            expect(header.classList).toContain('kbq-dropdown__group-header');
         });
     });
 
@@ -4480,6 +4505,23 @@ class ActionDropdown {
     closeCallback = vi.fn();
     primaryClick = vi.fn();
     actionClick = vi.fn((event: MouseEvent) => event.preventDefault());
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <div kbqDropdownGroupHeader>Header</div>
+            <button kbq-dropdown-item>
+                Item
+                <div kbqDropdownItemCaption>Caption</div>
+            </button>
+        </kbq-dropdown>
+    `
+})
+class ContentDirectivesDropdown {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
 }
 
 @Component({

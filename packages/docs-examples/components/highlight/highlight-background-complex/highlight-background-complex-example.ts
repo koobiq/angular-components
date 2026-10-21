@@ -38,7 +38,7 @@ type SearchResult = {
 
         @for (result of results; track result.url) {
             <article style="margin-bottom: var(--kbq-size-l)">
-                <a href="{{ result.url }}" target="_blank" kbq-link>
+                <a href="{{ result.url }}" target="_blank" kbqLink>
                     <span
                         class="kbq-text-big-strong"
                         [innerHTML]="result.title | kbqHighlightBackground: query()"

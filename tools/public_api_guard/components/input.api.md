@@ -44,13 +44,7 @@ export const BIG_STEP = 10;
 export function getPrecision(value: number): number;
 
 // @public
-export function isDigit(value: string): boolean;
-
-// @public
 export function isFloat(value: string): boolean;
-
-// @public
-export function isInt(value: string): boolean;
 
 // @public
 export const KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION: KbqInputLocaleConfiguration;
@@ -302,9 +296,6 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqNumberInput, never>;
 }
-
-// @public
-export function normalizeSplitter(value: string): string;
 
 // @public
 export const SMALL_STEP = 1;

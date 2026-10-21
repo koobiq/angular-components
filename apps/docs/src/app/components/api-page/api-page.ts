@@ -76,13 +76,13 @@ export class DocsApiText {
             @if (!part.link) {
                 <ng-container>{{ part.text }}</ng-container>
             } @else if (part.link.page) {
-                <a kbq-link noUnderline [fragment]="part.text" [routerLink]="getTabPath(part.link.page)">
+                <a kbqLink underline="none" [fragment]="part.text" [routerLink]="getTabPath(part.link.page)">
                     <ng-container>{{ part.text }}</ng-container>
                 </a>
             } @else {
                 <a
-                    kbq-link
-                    noUnderline
+                    kbqLink
+                    underline="none"
                     queryParamsHandling="merge"
                     [fragment]="part.text"
                     [queryParams]="withoutMember"

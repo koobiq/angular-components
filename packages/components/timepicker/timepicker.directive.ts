@@ -254,6 +254,7 @@ export class KbqTimepicker<D>
 
     readonly incorrectInput = output<void>();
 
+    // TODO: nothing in the library uses it; kept as public API at the DS-2196 review. Document or deprecate it.
     get hasSelection(): boolean {
         return this.selectionStart !== this.selectionEnd;
     }

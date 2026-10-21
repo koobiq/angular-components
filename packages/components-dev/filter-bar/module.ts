@@ -121,6 +121,60 @@ const DEV_DATA_OBJECT = {
 })
 export class DevDocsExamples {}
 
+/** Date pipes whose templates have no `values` open straight on the custom period. */
+@Component({
+    selector: 'dev-date-pipes-without-values',
+    imports: [KbqFilterBarModule],
+    template: `
+        <div>Date pipes without values</div>
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates">
+            @for (pipe of pipes; track pipe) {
+                <ng-container *kbqPipe="pipe" />
+            }
+        </kbq-filter-bar>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevDatePipesWithoutValues {
+    protected readonly pipes: KbqPipe[] = [
+        {
+            name: 'Date',
+            type: KbqPipeTypes.Date,
+            value: null,
+
+            cleanable: true,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Datetime',
+            type: KbqPipeTypes.Datetime,
+            value: null,
+
+            cleanable: true,
+            removable: false,
+            disabled: false
+        }
+    ];
+
+    protected readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Date',
+            type: KbqPipeTypes.Date,
+            cleanable: true,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Datetime',
+            type: KbqPipeTypes.Datetime,
+            cleanable: true,
+            removable: false,
+            disabled: false
+        }
+    ];
+}
+
 @Component({
     selector: 'dev-app',
     imports: [
@@ -131,6 +185,7 @@ export class DevDocsExamples {}
         KbqButtonModule,
         KbqLuxonDateModule,
         DevDocsExamples,
+        DevDatePipesWithoutValues,
         DevLocaleSelector,
         JsonPipe,
         ReactiveFormsModule

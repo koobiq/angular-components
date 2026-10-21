@@ -122,7 +122,14 @@ const UNUSED_EXPORTS: { symbols: string[]; message: string }[] = [
         symbols: ['KbqLineSetter'],
         message:
             '`KbqLineSetter` was removed, and a list item no longer gets the `kbq-2-line`, `kbq-3-line` and ' +
-            '`kbq-multi-line` classes: no style read them. Count the lines with `KbqListItem.lines`.'
+            '`kbq-multi-line` classes: no style read them.'
+    },
+    {
+        symbols: ['KbqLine'],
+        message:
+            '`KbqLine` was removed: only `KbqListItem.lines` read it. The `kbq-line` attribute still places an ' +
+            'element in the text of a list item; drop `KbqLine` from `imports`, and to count the lines, query ' +
+            'your own elements, for example `contentChildren(...)` of a directive of yours.'
     }
 ];
 
@@ -191,8 +198,8 @@ const DEPRECATED: { pattern: string; message: string }[] = [
 /**
  * Removed in 21.0.0: the `Default` members of `KbqThemeSelector` and `KbqThemeNames`, `KbqDefaultThemes`,
  * `KbqTheme`, the legacy `ThemeService`, `getOptionScrollPosition`, `ThemePalette`, the unused undocumented
- * exports and members with `KbqLineSetter`, and the `mcLine` and `mcListIcon` aliases. Also reports the core API
- * deprecated for removal in 22.0.0.
+ * exports and members with `KbqLineSetter`, `KbqLine` and `KbqListItem.lines`, and the `mcLine` and `mcListIcon`
+ * aliases. Also reports the core API deprecated for removal in 22.0.0.
  */
 export const core: AreaData = {
     tsReplacements: [
@@ -248,6 +255,20 @@ export const core: AreaData = {
                 'signal query instead: ' +
                 "`private readonly panel = viewChild.required<ElementRef<HTMLElement>>('panel');` and " +
                 '`override get elementRef(): ElementRef<HTMLElement> { return this.panel(); }`.'
+        },
+        {
+            anchor: '\\bKbqListItem\\b|<kbq-list-item\\b|\\bkbq-list-item\\b',
+            pattern: '\\.lines\\b',
+            message:
+                '`KbqListItem.lines` was removed with `KbqLine`: nothing in the library counted the lines. Query ' +
+                'the elements you mark with `kbq-line` yourself.'
+        },
+        {
+            anchor: '\\bKbqSelectSearch\\b',
+            pattern: '\\.hasPlaceholder\\s*\\(',
+            message:
+                '`KbqSelectSearch.hasPlaceholder()` was removed: nothing called it. Read the placeholder of the ' +
+                'search input instead.'
         },
         {
             anchor: '\\bKbqFormElement\\b|["\']kbqFormElement["\']',

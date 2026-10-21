@@ -15,7 +15,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { DevThemeToggle } from '../theme-toggle';
 
@@ -29,7 +29,8 @@ type IconMode = 'style' | 'adopted' | 'adopted-layer';
         KbqIconModule,
         KbqButtonModule,
         KbqBadgeModule,
-        KbqLinkModule,
+        KbqLink,
+        KbqLinkPrefix,
         KbqTagsModule,
         KbqFormFieldModule,
         KbqInputModule,

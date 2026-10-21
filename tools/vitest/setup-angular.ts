@@ -4,6 +4,7 @@ import '@angular/compiler';
 import { setupTestBed } from '@analogjs/vitest-angular/setup-testbed';
 import { DebugNode, provideCheckNoChangesConfig } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
+import type { JSDOM } from 'jsdom';
 import { expect, SnapshotSerializer, vi } from 'vitest';
 import './fail-on-console';
 import { toHaveNoViolations } from './to-have-no-violations';
@@ -27,12 +28,11 @@ ComponentFixture.prototype.detectChanges = function (this: ComponentFixture<unkn
 
 // jsdom reports its own errors — an API it does not implement, a resource it could not load, a stylesheet it could
 // not parse — through its virtual console, which Vitest leaves writing to the worker's console instead of this
-// context's. Forwarded, they reach the console gate like any other error.
-(
-    globalThis as typeof globalThis & {
-        _virtualConsole?: { on(event: 'jsdomError', listener: (error: Error) => void): void };
-    }
-)._virtualConsole?.on('jsdomError', (error) => console.error(error));
+// context's. Forwarded, they reach the console gate like any other error. Reached through the `jsdom` global Vitest
+// documents rather than a property of the window, which jsdom renames between majors.
+(globalThis as typeof globalThis & { jsdom: JSDOM }).jsdom.virtualConsole.on('jsdomError', (error) =>
+    console.error(error)
+);
 
 expect.extend({ toHaveNoViolations });
 

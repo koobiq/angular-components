@@ -174,7 +174,7 @@ describe(SCHEMATIC_NAME, () => {
         expect((await run(first)).readText(ts)).toBe(original);
     });
 
-    it('summarises the read-only members for a project that renders a tree', async () => {
+    it('summarises the read-only members and the node type for a project that renders a tree', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
         const messages = collectLogs();
@@ -184,6 +184,7 @@ describe(SCHEMATIC_NAME, () => {
         await run(first);
 
         expect(messages.join('\n')).toContain('became read-only and cannot be assigned');
+        expect(messages.join('\n')).toContain('take the type of the data node, T');
     });
 
     it('leaves the second project unreported when scoped to the first', async () => {

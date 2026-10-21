@@ -127,6 +127,7 @@ export class KbqToastComponent implements OnDestroy {
 
     private alreadyRead = false;
 
+    // TODO: nothing in the library uses it; kept as public API at the DS-2196 review. Document or deprecate it.
     get isFocusedOrHovered(): boolean {
         return this.hovered() || this.focused();
     }

@@ -1,10 +1,12 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
+import { SelectionModel } from '@angular/cdk/collections';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher, ViewportRuler } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
     Component,
     DebugElement,
+    InputSignalWithTransform,
     OnInit,
     Provider,
     Type,
@@ -149,18 +151,17 @@ class TreeSelectWithDIErrorStateMatcher {
     imports: [KbqTreeSelectModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
-            <kbq-tree-select class="kbq-control_has-validate-directive" [formControl]="control" />
+            <kbq-tree-select [formControl]="control" />
         </kbq-form-field>
     `,
     providers: [
         kbqErrorStateMatcherProvider(customErrorStateMatcher)
     ]
 })
-class TreeSelectWithLegacyValidateAndValidControl {
+class TreeSelectWithErrorStateOnValidControl {
     readonly treeSelect = viewChild.required(KbqTreeSelect);
 
-    // Valid and untouched, which `customErrorStateMatcher` reports as an error state: the one combination
-    // where the legacy directive's own verdict and `errorState` disagree.
+    // Valid and untouched, which `customErrorStateMatcher` reports as an error state.
     readonly control = new FormControl<string>('', { nonNullable: true });
 }
 
@@ -1784,7 +1785,7 @@ class ChildSelection {
 
     control = new UntypedFormControl(['Downloads', 'rootNode_1']);
 
-    readonly select = viewChild.required(KbqTreeSelect);
+    readonly select = viewChild.required<KbqTreeSelect<FileFlatNode>>(KbqTreeSelect);
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -1804,23 +1805,21 @@ class ChildSelection {
     descendantsAllSelected(node: FileFlatNode): boolean {
         const descendants = this.treeControl.getDescendants(node);
 
-        return descendants.every((child: any) => this.select()?.selectionModel?.isSelected(child));
+        return descendants.every((child) => this.select()?.selectionModel?.isSelected(child));
     }
 
     /** Whether part of the descendants are selected */
     descendantsPartiallySelected(node: FileFlatNode): boolean {
         const descendants = this.treeControl.getDescendants(node);
 
-        return descendants.some((child: any) => this.select()?.selectionModel?.isSelected(child));
+        return descendants.some((child) => this.select()?.selectionModel?.isSelected(child));
     }
 
-    pseudoCheckboxState(option: KbqTreeOption): KbqPseudoCheckboxState {
+    pseudoCheckboxState(option: KbqTreeOption<FileFlatNode>): KbqPseudoCheckboxState {
         if (option.isExpandable) {
-            const node: FileFlatNode = option.data as unknown as FileFlatNode;
-
-            if (this.descendantsAllSelected(node)) {
+            if (this.descendantsAllSelected(option.data)) {
                 return 'checked';
-            } else if (this.descendantsPartiallySelected(node)) {
+            } else if (this.descendantsPartiallySelected(option.data)) {
                 return 'indeterminate';
             }
         }
@@ -1829,7 +1828,7 @@ class ChildSelection {
     }
 
     private toggleChildren($event: KbqTreeSelectChange) {
-        const valuesToChange: any = this.treeControl.getDescendants($event.value.data);
+        const valuesToChange = this.treeControl.getDescendants($event.value.data);
 
         if ($event.value.selected) {
             this.select().selectionModel.deselect(...valuesToChange);
@@ -1838,7 +1837,7 @@ class ChildSelection {
         }
     }
 
-    private toggleParents(parent) {
+    private toggleParents(parent: FileFlatNode | undefined) {
         if (!parent) {
             return;
         }
@@ -1846,7 +1845,7 @@ class ChildSelection {
         const descendants = this.treeControl.getDescendants(parent);
         const isParentSelected = this.select().selectionModel.selected.includes(parent);
 
-        if (!isParentSelected && descendants.every((d: any) => this.select().selectionModel.selected.includes(d))) {
+        if (!isParentSelected && descendants.every((d) => this.select().selectionModel.selected.includes(d))) {
             this.select().selectionModel.select(parent);
             this.toggleParents(parent.parent);
         } else if (isParentSelected) {
@@ -5878,6 +5877,24 @@ describe('KbqTreeSelect', () => {
 
             expect(fixture.componentInstance.control.value).toContain('Applications');
         });
+
+        // The types are checked by `check-spec-types`: a query that names the data node gets the model typed by it,
+        // the tree's included, one that does not keeps `any`.
+        it('should share a selection model typed by the data node with the tree', () => {
+            const select = fixture.componentInstance.select();
+            const tree = select.tree()!;
+
+            // A template infers `T` of the select from this input alone.
+            expectTypeOf<KbqTreeSelect<FileFlatNode>['clearPredicate']>().toEqualTypeOf<
+                InputSignalWithTransform<(node: FileFlatNode) => boolean, (node: FileFlatNode) => boolean>
+            >();
+            expectTypeOf<KbqTreeSelect['selectionModel']>().toEqualTypeOf<SelectionModel<any>>();
+            expectTypeOf(select.selectionModel).toEqualTypeOf<SelectionModel<FileFlatNode>>();
+            expectTypeOf(select.selected).toEqualTypeOf<FileFlatNode | FileFlatNode[]>();
+            expectTypeOf(tree.selectionModel).toEqualTypeOf<SelectionModel<FileFlatNode>>();
+            expect(tree.selectionModel).toBe(select.selectionModel);
+            expect(select.selectionModel.selected.map(({ name }) => name).sort()).toEqual(['Downloads', 'rootNode_1']);
+        });
     });
 
     describe('tree embedding', () => {
@@ -6103,8 +6120,8 @@ describe('KbqTreeSelect', () => {
     });
 
     describe('ErrorStateMatcher', () => {
-        it('should keep the error colour when the legacy validate directive is present and only the error state reports a problem', () => {
-            const fixture = createComponent(TreeSelectWithLegacyValidateAndValidControl);
+        it('should colour the trigger by the error state, not by the control validity', () => {
+            const fixture = createComponent(TreeSelectWithErrorStateOnValidControl);
             const treeSelect = fixture.componentInstance.treeSelect();
 
             expect(treeSelect.ngControl?.invalid).toBe(false);

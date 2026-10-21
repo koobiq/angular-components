@@ -47,14 +47,7 @@ import { KbqCleaner, kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koo
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, startWith, takeUntil } from 'rxjs/operators';
 import { KbqTagTextControl } from './tag-text-control';
-import {
-    KbqTag,
-    KbqTagDragData,
-    KbqTagEditChange,
-    KbqTagEvent,
-    KbqTagFocusEvent,
-    KbqTagSelectionChange
-} from './tag.component';
+import { KbqTag, KbqTagDragData, KbqTagEditChange, KbqTagEvent, KbqTagFocusEvent } from './tag.component';
 
 // Increasing integer for generating unique ids for tag-list components.
 /** Change event object that is emitted when the tag list value has changed. */
@@ -156,15 +149,6 @@ export class KbqTagList
     );
 
     /**
-     * Combined stream of all of the child tags' selection change events.
-     *
-     * @docs-private
-     */
-    get tagSelectionChanges(): Observable<KbqTagSelectionChange> {
-        return merge(...this.tags.map((tag) => outputToObservable(tag.selectionChange)));
-    }
-
-    /**
      * Combined stream of all of the child tags' focus change events.
      *
      * @docs-private
@@ -223,6 +207,7 @@ export class KbqTagList
         return !!this.cleaner()?.canShow;
     }
 
+    // Kept at the DS-2196 review, like `KbqButtonToggle.markForCheck()`, which the migration guide promises stays.
     /**
      * Marks the list for a change-detection check.
      *
@@ -317,14 +302,6 @@ export class KbqTagList
 
         return (!tagInput || tagInput.empty()) && this.tagsQuery().length === 0;
     });
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     * @docs-private
-     */
-    get shouldLabelFloat(): boolean {
-        return !this.empty() || this.focused();
-    }
 
     /** @docs-private */
     readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {

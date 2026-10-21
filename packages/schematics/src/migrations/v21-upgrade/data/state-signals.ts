@@ -95,6 +95,21 @@ export const stateSignals: AreaData = {
                 '`this.isListMode()` and write `this.isListMode.set(value)`.'
         },
         {
+            anchor: '\\bextends\\s+KbqPipeDate(?:Base|time)?Component\\b',
+            pattern: '\\bthis\\.returnButton\\s*\\(\\s*\\)\\s*\\.',
+            message:
+                '`returnButton` of the date pipes may be `undefined`: the back button renders only when the pipe ' +
+                'template has `values`. Read it with `this.returnButton()?.`.'
+        },
+        {
+            anchor: 'kbq-date-period',
+            pattern: '\\(keydown\\.tab\\)\\s*=\\s*"hideCalendars\\(\\)"',
+            message:
+                'Bind `(keydown.tab)` and `(keydown.shift.tab)` of the date inputs of a date pipe template to ' +
+                '`onDateInputTab()`: it hides the calendars before the browser moves the focus, which ' +
+                '`hideCalendars()` no longer does without zone.js, so Tab lands in the calendar being hidden.'
+        },
+        {
             anchor: '@koobiq/components/select',
             pattern: '\\.hiddenItems\\b(?!\\s*\\()',
             message:

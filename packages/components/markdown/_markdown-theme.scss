@@ -1,10 +1,26 @@
 @use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/link';
 @use './markdown-tokens';
 
 @mixin kbq-markdown-theme() {
     .kbq-markdown {
         color: var(--kbq-foreground-contrast);
         background: var(--kbq-markdown-bg);
+
+        // A link of markdown is a bare `<a>`, the underlined text itself, and looks exactly like the link component
+        .kbq-markdown__a {
+            @include link.kbq-link-root();
+            @include link.kbq-link-text();
+            @include link.kbq-link-states('&');
+
+            &:visited {
+                @include link.kbq-link-visited-states('&');
+            }
+
+            &:focus-visible {
+                @include link.kbq-link-keyboard-focus-outline();
+            }
+        }
 
         // h1, h2, h3, h4, h5, h6
         @for $i from 1 through 6 {

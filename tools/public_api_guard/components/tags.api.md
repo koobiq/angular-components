@@ -282,7 +282,6 @@ export class KbqTagList implements AfterContentChecked, OnChanges, KbqFormFieldC
     readonly selectable: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get selected(): KbqTag[];
     setDisabledState(isDisabled: boolean): void;
-    get shouldLabelFloat(): boolean;
     get tabIndex(): number | null;
     set tabIndex(value: number);
     readonly tabIndexInput: _angular_core.InputSignal<number | undefined>;
@@ -292,7 +291,6 @@ export class KbqTagList implements AfterContentChecked, OnChanges, KbqFormFieldC
     get tagFocusChanges(): Observable<KbqTagFocusEvent>;
     get tagRemoveChanges(): Observable<KbqTagEvent>;
     get tags(): QueryList<KbqTag>;
-    get tagSelectionChanges(): Observable<KbqTagSelectionChange>;
     readonly uid: string;
     unselectAll(): void;
     updateErrorState(): void;

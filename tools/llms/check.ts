@@ -5,6 +5,7 @@
  */
 import { readFileSync } from 'fs';
 import { DocsLocale } from '../../apps/docs/src/app/constants/locale';
+import { docsHasMarkdown } from '../../apps/docs/src/app/page-paths';
 import { docsGetItems } from '../../apps/docs/src/app/structure';
 import { generateLlms, LLMS_TXT_PATH } from './generate';
 import { LLMS_FULL_TXT, LLMS_TXT } from './llms-txt';
@@ -39,6 +40,8 @@ const checkLlms = async (): Promise<void> => {
     const copies = new Set<string>();
 
     for (const item of docsGetItems()) {
+        if (!docsHasMarkdown(item)) continue;
+
         const english = files.get(getMarkdownPath(item, DocsLocale.En));
 
         for (const locale of Object.values(DocsLocale)) {

@@ -19,7 +19,7 @@ import {
     KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { injectLocalizedPeriods, injectLocalizedText } from '../localized-data';
 
@@ -46,7 +46,7 @@ const createSearchPipe = (name: string): KbqPipe => ({
     imports: [
         KbqFilterBarModule,
         LuxonDateModule,
-        KbqLinkModule
+        KbqLink
     ],
     template: `
         <kbq-filter-bar
@@ -78,7 +78,7 @@ const createSearchPipe = (name: string): KbqPipe => ({
         </ng-template>
 
         <ng-template #errorToastActions let-toast>
-            <a kbq-link [pseudo]="true" (click)="toast.close()">{{ text().retry }}</a>
+            <a kbqLink [pseudo]="true" (click)="toast.close()">{{ text().retry }}</a>
         </ng-template>
     `,
     providers: [DateFormatter],

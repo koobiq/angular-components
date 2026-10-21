@@ -1,6 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, Signal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Signal, signal, SimpleChange } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By, DomSanitizer } from '@angular/platform-browser';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -425,6 +425,45 @@ describe('KbqIcon', () => {
             fixture.detectChanges();
 
             expect(hostOf(fixture).querySelector('svg')).toBeNull();
+        });
+    });
+
+    describe('hydration', () => {
+        let registry: KbqIconRegistry;
+        let sanitizer: DomSanitizer;
+
+        const register = (name: string) => {
+            registry.addSvgIconLiteral(name, sanitizer.bypassSecurityTrustHtml(ICON_SVG));
+        };
+
+        beforeEach(() => {
+            registry = TestBed.inject(KbqIconRegistry);
+            sanitizer = TestBed.inject(DomSanitizer);
+        });
+
+        it('should adopt an already-rendered svg instead of duplicating it on a repeat resolution', () => {
+            register('kbq-plus_16');
+
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            const host = hostOf(fixture);
+            const svg = host.querySelector('svg');
+
+            expect(svg).not.toBeNull();
+
+            const icon = fixture.debugElement.query(By.directive(KbqIcon)).injector.get(KbqIcon);
+
+            // Angular never re-fires `ngOnChanges` for an unchanged value, so a repeat resolution of the
+            // same name can only be driven through the lifecycle hook directly, with a synthetic
+            // "unchanged" `SimpleChange` standing in for hydration resolving a name SSR already rendered.
+            icon.ngOnChanges({ iconNameInput: new SimpleChange('kbq-plus_16', 'kbq-plus_16', false) });
+            fixture.detectChanges();
+
+            expect(host.querySelectorAll('svg')).toHaveLength(1);
+            expect(host.querySelector('svg')).toBe(svg);
+            expect(host.classList).not.toContain('kbq-plus_16');
         });
     });
 

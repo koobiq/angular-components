@@ -21,6 +21,9 @@ const MC_HIGHLIGHT = 'The `mcHighlight` pipe (`KbqHighlightPipe`) is deprecated'
 const DEPRECATED_HELPERS = '`isDigit()`, `isBoolean()` and `KbqMeasureScrollbarService`';
 const LINE_SETTER = '`KbqLineSetter` was removed';
 const LINE_CLASSES = 'A list item no longer gets the `kbq-2-line`';
+const LINE = '`KbqLine` was removed';
+const LIST_ITEM_LINES = '`KbqListItem.lines` was removed';
+const SEARCH_PLACEHOLDER = '`KbqSelectSearch.hasPlaceholder()` was removed';
 const FOCUS_ORIGIN = '`FocusKeyManager.getFocusOrigin()` is deprecated';
 const DATE_INPUT = '`dateInput` of the datepicker locale configuration is deprecated';
 
@@ -593,6 +596,38 @@ describe('v21-upgrade: core', () => {
 
         expect(run.log).toContain(`setter.ts\n  ${LINE_SETTER}`);
         expect(run.log).toContain(`lines.scss\n  ${LINE_CLASSES}`);
+    });
+
+    it('reports KbqLine, KbqListItem.lines and KbqSelectSearch.hasPlaceholder()', async () => {
+        const run = await runV21Upgrade({
+            'line.ts': "import { KbqLine } from '@koobiq/components/core';\n",
+            'item.ts': [
+                "import { KbqListItem } from '@koobiq/components/list';",
+                'export const count = (item: KbqListItem) => item.lines.length;',
+                ''
+            ].join('\n'),
+            'item.html': '<kbq-list-item #item>{{ item.lines.length }}</kbq-list-item>\n',
+            'search.ts': [
+                "import { KbqSelectSearch } from '@koobiq/components/core';",
+                'export const empty = (search: KbqSelectSearch) => !search.hasPlaceholder();',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.log).toContain(`line.ts\n  ${LINE}`);
+        expect(run.log).toContain(`item.ts\n  ${LIST_ITEM_LINES}`);
+        expect(run.log).toContain(`item.html\n  ${LIST_ITEM_LINES}`);
+        expect(run.log).toContain(`search.ts\n  ${SEARCH_PLACEHOLDER}`);
+    });
+
+    it('leaves lines and hasPlaceholder of the app alone', async () => {
+        const run = await runV21Upgrade({
+            'own.ts':
+                'export const count = (text: { lines: string[]; hasPlaceholder(): boolean }) => text.lines.length;\n'
+        });
+
+        expect(run.log).not.toContain(LIST_ITEM_LINES);
+        expect(run.log).not.toContain(SEARCH_PLACEHOLDER);
     });
 
     it('reports the core API deprecated for removal in 22.0.0', async () => {

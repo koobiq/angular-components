@@ -14,18 +14,18 @@
         </div>
 
         <kbq-dropdown #languageDropdown="kbqDropdown" [class]="'docs-dropdown'">
-            <div class="kbq-dropdown__group-header">
+            <div kbqDropdownGroupHeader>
                 <span class="kbq-caps-compact-strong">{{ t('footerLanguageGroupHeader') }}</span>
             </div>
 
             <button kbq-dropdown-item [kbqDropdownTriggerFor]="docsLanguageDropdown">
                 {{ t('footerInterface') }}
-                <div class="kbq-dropdown-item__caption">{{ docsLanguageSwitch.currentValue.value }}</div>
+                <div kbqDropdownItemCaption>{{ docsLanguageSwitch.currentValue.value }}</div>
             </button>
 
             <button kbq-dropdown-item [kbqDropdownTriggerFor]="examplesLanguageDropdown">
                 {{ t('footerExamples') }}
-                <div class="kbq-dropdown-item__caption">{{ examplesLanguageSwitch.currentValue.value }}</div>
+                <div kbqDropdownItemCaption>{{ examplesLanguageSwitch.currentValue.value }}</div>
             </button>
         </kbq-dropdown>
     </div>
@@ -68,6 +68,7 @@
             class="docs-footer__control kbq-text-big"
             [class.kbq-active]="versionDropdownDropdownTrigger.opened"
             [kbqDropdownTriggerFor]="versionDropdown"
+            (dropdownOpened)="versionPicker.prefetch()"
         >
             {{ version }}
             @if (versionPicker.isNext) {
@@ -76,7 +77,7 @@
             <i kbq-icon="kbq-chevron-down-s_16" [color]="'contrast'"></i>
 
             <kbq-dropdown #versionDropdown="kbqDropdown" [class]="'docs-dropdown'">
-                <div class="kbq-dropdown__group-header">
+                <div kbqDropdownGroupHeader>
                     <div class="kbq-caps-compact-strong">
                         {{ t('footerVersionGroupHeader') }}
                     </div>

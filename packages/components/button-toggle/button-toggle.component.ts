@@ -833,6 +833,7 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
         this.change.emit(new KbqButtonToggleChange(this, this.value));
     }
 
+    // Kept at the DS-2196 review: the button-toggle review step of the migration guide promises it stays.
     /**
      * Marks the button toggle as needing checking for change detection.
      *

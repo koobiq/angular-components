@@ -1,3 +1,4 @@
+import { docsHasMarkdown } from '../../apps/docs/src/app/page-paths';
 import { DocsStructureItem, DocsStructureItemId, DocsStructureItemTab } from '../../apps/docs/src/app/structure';
 import { getNgModuleNames, renderApiAsMarkdown } from '../api-gen/rendering/markdown';
 import { renderDesignTokens } from './design-tokens';
@@ -32,6 +33,8 @@ export const renderItemMarkdown = (
     sources: LlmsPageSources,
     { depth, apiListedBy }: RenderItemOptions
 ): string | null => {
+    if (!docsHasMarkdown(item)) return null;
+
     const heading = (level: number) => '#'.repeat(depth + level);
     const overview = getPageSource(sources, item.id, DocsStructureItemTab.Overview);
     // An item without the tab may still have its page: a placeholder the site does not route to.

@@ -2114,6 +2114,13 @@
                         },
                         "tsConfig": "packages/components-dev/ssr/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/svg",
+                                "output": "/assets/SVGIcons"
+                            }
+                        ],
                         "styles": ["packages/components-dev/main.scss"],
                         "browser": "packages/components-dev/ssr/main.ts",
                         "server": "packages/components-dev/ssr/main.server.ts",

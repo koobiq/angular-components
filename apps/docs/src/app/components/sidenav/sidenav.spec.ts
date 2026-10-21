@@ -116,7 +116,7 @@ describe(DocsSidenav.name, () => {
 
         // `highlightSelectedOption()` focuses the option, so it may only run when the node changes.
         it('re-highlights when the route moves to another node', () => {
-            const { sidenav, highlight, navigateTo } = setup('/ru/icons');
+            const { sidenav, highlight, navigateTo } = setup('/ru/main/icons');
 
             navigateTo('/ru/components/button/overview');
 
@@ -125,16 +125,16 @@ describe(DocsSidenav.name, () => {
         });
 
         // The icons search writes `?s=` on every keystroke. `Location.path()` appends the query
-        // string, so the node id used to drift to `icons?s=...` (losing the menu highlight), and the
+        // string, so the node id used to drift to `main/icons?s=...` (losing the menu highlight), and the
         // re-highlight moved DOM focus onto the menu item, out of the search field (DOCS-BUG-08).
         it('ignores query-only navigations on the current page', () => {
-            const { sidenav, highlight, navigateTo } = setup('/ru/icons');
+            const { sidenav, highlight, navigateTo } = setup('/ru/main/icons');
 
-            expect(sidenav['selectedNodeId']()).toBe('icons');
+            expect(sidenav['selectedNodeId']()).toBe('main/icons');
 
-            navigateTo('/ru/icons?s=%D0%BA');
+            navigateTo('/ru/main/icons?s=%D0%BA');
 
-            expect(sidenav['selectedNodeId']()).toBe('icons');
+            expect(sidenav['selectedNodeId']()).toBe('main/icons');
             expect(highlight).not.toHaveBeenCalled();
         });
 
@@ -142,13 +142,13 @@ describe(DocsSidenav.name, () => {
         // writes that category's id back, even though it only expands and never navigates. Comparing
         // against the model instead of the last URL would let the next keystroke steal focus again.
         it('ignores query-only navigations after the tree wrote its own selection back', () => {
-            const { sidenav, highlight, navigateTo } = setup('/ru/icons');
+            const { sidenav, highlight, navigateTo } = setup('/ru/main/icons');
 
             sidenav['selectedNodeId'].set('components');
 
-            navigateTo('/ru/icons?s=%D0%BA');
+            navigateTo('/ru/main/icons?s=%D0%BA');
 
-            expect(sidenav['selectedNodeId']()).toBe('icons');
+            expect(sidenav['selectedNodeId']()).toBe('main/icons');
             expect(highlight).not.toHaveBeenCalled();
         });
     });

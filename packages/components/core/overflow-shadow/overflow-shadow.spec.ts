@@ -270,6 +270,22 @@ describe(KbqOverflowShadowContainer.name, () => {
 
             expect(fixture.componentInstance.container().overflow()).toEqual({ top: true, bottom: true });
         });
+
+        // A state that only looks new would re-render the shadows and run another round of change detection.
+        it('should keep the state when a check finds the same edges', () => {
+            const fixture = createComponent(TestHostComponent);
+            const { container } = fixture.componentInstance;
+            const body = fixture.debugElement.nativeElement.querySelector('[data-testid="body"]') as HTMLElement;
+
+            setScrollMetrics(body, { scrollTop: 50, clientHeight: 100, scrollHeight: 500 });
+            container().checkOverflow();
+
+            const state = container().overflow();
+
+            container().checkOverflow();
+
+            expect(container().overflow()).toBe(state);
+        });
     });
 
     describe('SharedResizeObserver', () => {

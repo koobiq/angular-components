@@ -1564,3 +1564,70 @@ export class E2eFilterBarNoOptions {
         ]
     };
 }
+
+/**
+ * A date pipe whose template has no presets: it opens straight on the period editor, with no back button. The fixed
+ * value keeps the inputs and the calendar the same from day to day.
+ */
+@Component({
+    selector: 'e2e-filter-bar-date-without-values',
+    imports: [KbqFilterBarModule, KbqLuxonDateModule],
+    template: `
+        <div class="e2e-filter-bar-date-without-values__target" data-testid="e2eScreenshotTarget">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
+                @for (pipe of filter.pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+            </kbq-filter-bar>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 8px;
+        }
+
+        /* The editor is portaled into the overlay, so the target needs room for it to overlap. */
+        .e2e-filter-bar-date-without-values__target {
+            height: 520px;
+            width: 360px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarDateWithoutValues'
+    }
+})
+export class E2eFilterBarDateWithoutValues {
+    readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Date',
+            id: 'E2eDateWithoutValues',
+            type: KbqPipeTypes.Date,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ];
+
+    readonly filter: KbqFilter = {
+        name: '',
+        readonly: false,
+        disabled: false,
+        changed: false,
+        saved: false,
+        pipes: [
+            {
+                name: 'Date',
+                id: 'E2eDateWithoutValues',
+                type: KbqPipeTypes.Date,
+                value: { start: '2025-03-10T00:00:00', end: '2025-03-14T00:00:00' },
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]
+    };
+}

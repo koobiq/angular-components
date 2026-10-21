@@ -330,13 +330,13 @@ describe('KbqDatepicker', () => {
                 const popup = document.querySelector('.cdk-overlay-pane')!;
 
                 expect(popup).not.toBeNull();
-                expect(parseInt(getComputedStyle(popup).height as string)).not.toBe(0);
+                expect(popup.querySelector('.kbq-datepicker__content')).not.toBeNull();
 
                 testComponent.datepicker().close();
                 fixture.detectChanges();
                 await vi.runOnlyPendingTimersAsync();
 
-                expect(getComputedStyle(popup).height).toBe('');
+                expect(popup.isConnected).toBe(false);
             });
 
             it('should close the popup when pressing ESCAPE', async () => {

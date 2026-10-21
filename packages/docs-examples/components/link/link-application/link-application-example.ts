@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
 
 /**
  * @title Link application
@@ -8,23 +8,24 @@ import { KbqLinkModule } from '@koobiq/components/link';
 @Component({
     selector: 'link-application-example',
     imports: [
-        KbqLinkModule,
+        KbqLink,
+        KbqLinkSuffix,
         KbqIconModule
     ],
     template: `
-        <a class="kbq-link_external" href="https://koobiq.io/en/components/link" target="_blank" kbq-link>
-            <span class="kbq-link__text">The scan report in Deep Inspector</span>
-            <i kbq-icon="kbq-north-east_16"></i>
+        <a href="https://koobiq.io/en/components/link" target="_blank" kbqLink external>
+            The scan report in Deep Inspector
         </a>
 
-        <a
-            class="kbq-link_external example-link-with-svg-icon"
-            href="https://koobiq.io/en/components/link"
-            target="_blank"
-            kbq-link
-        >
-            <span class="kbq-link__text">The scan report in Deep Inspector</span>
-            <img kbq-icon="" src="https://koobiq.io/assets/images/favicons/icon.svg" width="16" alt="icon" />
+        <a class="example-link-with-svg-icon" href="https://koobiq.io/en/components/link" target="_blank" kbqLink>
+            The scan report in Deep Inspector
+            <img
+                kbqLinkSuffix
+                kbq-icon=""
+                src="https://koobiq.io/assets/images/favicons/icon.svg"
+                width="16"
+                alt="icon"
+            />
         </a>
     `,
     styles: `
@@ -34,9 +35,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
             gap: var(--kbq-size-s);
         }
 
-        .example-link-with-svg-icon {
-            display: inline-flex;
-            align-items: center;
+        .example-link-with-svg-icon img {
+            vertical-align: text-bottom;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

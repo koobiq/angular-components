@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { DocsLocaleState } from 'src/app/services/locale';
 
 @Component({
     selector: 'docs-page-not-found',
     imports: [
-        KbqLinkModule,
+        KbqLink,
         RouterLink
     ],
     template: `
         <div class="kbq-display-compact">{{ t('pageNotFound') }}</div>
 
-        <a class="layout-margin-top-s" kbq-link routerLink="/">
+        <a class="layout-margin-top-s" kbqLink routerLink="/">
             {{ t('goToMainPage') }}
         </a>
     `,

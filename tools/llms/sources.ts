@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'fs';
 import { globSync } from 'glob';
 import { join, posix } from 'path';
 import { DocsLocale } from '../../apps/docs/src/app/constants/locale';
-import { docsGetMarkdownPath } from '../../apps/docs/src/app/page-paths';
+import { docsGetMarkdownPath, docsHasMarkdown } from '../../apps/docs/src/app/page-paths';
 import {
     docsGetItemById,
     DocsStructureCategoryId,
@@ -75,7 +75,7 @@ export const resolveSiteUrl = (url: string): string => {
         Object.values<string>(DocsLocale).includes(locale) &&
         docsGetItemById(id as DocsStructureItemId, categoryId as DocsStructureCategoryId);
 
-    if (item) return `${getMarkdownUrl(item)}${hash ? `#${hash}` : ''}`;
+    if (item && docsHasMarkdown(item)) return `${getMarkdownUrl(item)}${hash ? `#${hash}` : ''}`;
 
     return `${LLMS_SITE_ORIGIN}${path}${hash ? `#${hash}` : ''}`;
 };

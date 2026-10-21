@@ -96,6 +96,13 @@ export class KbqDropdownStaticContent {}
 })
 export class KbqDropdownFooter {}
 
+/** Header of a group of items in the dropdown panel. */
+@Directive({
+    selector: '[kbqDropdownGroupHeader]',
+    host: { class: 'kbq-dropdown__group-header' }
+})
+export class KbqDropdownGroupHeader {}
+
 @Component({
     selector: 'kbq-dropdown',
     imports: [KbqScrollbarViewport],
@@ -555,15 +562,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      */
     isSafeAreaOwner(item: KbqDropdownItem): boolean {
         return this.safeAreaOwner === item;
-    }
-
-    /**
-     * Stream that emits when the pointer reaches the panel the active safe area protects (as opposed
-     * to leaving the safe area, which closes the panel instead).
-     * @docs-private
-     */
-    onPanelReached(): Observable<void> {
-        return this.panelReached.asObservable();
     }
 
     /**

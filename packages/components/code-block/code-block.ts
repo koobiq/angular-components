@@ -4,10 +4,10 @@ import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
+    afterEveryRender,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
     contentChild,
@@ -348,29 +348,9 @@ export class KbqCodeBlock implements AfterViewInit {
         KBQ_CODE_BLOCK_LOCALE_CONFIGURATION
     );
 
-    /**
-     * Code content tab index.
-     *
-     * @docs-private
-     */
-    protected get codeContentTabIndex(): number {
-        return this.canCodeContentBeFocused ? 0 : -1;
-    }
-
-    /**
-     * Determines whether the code content can be focused.
-     *
-     * This checks if the scrollable code content element is present,
-     * has a scroll, and the calculated maximum height is not set.
-     */
+    /** Whether the code content scrolls with no maximum height set, which leaves keyboard users a way to scroll it. */
     private get canCodeContentBeFocused(): boolean {
-        // The server cannot measure the content, so it leaves it focusable: a block that stays dehydrated, as one
-        // under a `@defer` hydrate trigger does, would otherwise keep an overflow that no keyboard can scroll.
-        if (!this.platform.isBrowser) return true;
-
-        const element = this.scrollbarViewport().getNativeElement();
-
-        return !this.calculatedMaxHeight() && !!element && this.hasScroll(element);
+        return !this.calculatedMaxHeight() && this.hasScroll(this.scrollbarViewport().getNativeElement());
     }
 
     /**
@@ -384,7 +364,6 @@ export class KbqCodeBlock implements AfterViewInit {
 
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly injector = inject(Injector);
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly destroyRef = inject(DestroyRef);
     private readonly platform = inject(Platform);
     private readonly focusMonitor = inject(FocusMonitor);
@@ -410,6 +389,22 @@ export class KbqCodeBlock implements AfterViewInit {
 
     constructor() {
         this.trackHoverState();
+
+        // The template leaves the code content focusable, as the server renders it: the server cannot measure, and a
+        // block that stays dehydrated under a `@defer` hydrate trigger would otherwise keep an overflow that no keyboard
+        // can scroll. The browser measures in the phases of every render, so that blocks rendered together read in one
+        // layout, and writes to the element directly: a binding would only catch up a round of change detection later,
+        // after the hooks still to run in this render.
+        if (this.platform.isBrowser) {
+            afterEveryRender({
+                earlyRead: () => (this.canCodeContentBeFocused ? 0 : -1),
+                write: (tabIndex) => {
+                    const element = this.scrollbarViewport().getNativeElement();
+
+                    if (element.tabIndex !== tabIndex) element.tabIndex = tabIndex;
+                }
+            });
+        }
     }
 
     ngAfterViewInit(): void {
@@ -423,10 +418,6 @@ export class KbqCodeBlock implements AfterViewInit {
                     this.copyButtonTooltip()!.content = this.localeConfiguration().copyTooltip;
                 }
             });
-
-        // Should call `markForCheck` to ensure the `codeContentTabIndex` is updated after the view is initialized,
-        // for correct focus behavior.
-        this.changeDetectorRef.markForCheck();
     }
 
     /**

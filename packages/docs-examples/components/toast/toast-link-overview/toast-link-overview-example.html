@@ -1,22 +1,13 @@
 <ng-template #toastWithInlineLinkTemplate let-toast>
     <p>
         Запрос
-        <a kbq-link pseudo>REQ-20180101-02</a>
+        <a kbqLink pseudo>REQ-20180101-02</a>
         назначен на вас
     </p>
 </ng-template>
 
 <ng-template #toastActionsTemplate let-toast>
-    <a
-        kbq-link
-        pseudo
-        role="button"
-        (click)="toast.close()"
-        (keydown.enter)="toast.close()"
-        (keydown.space)="$event.preventDefault(); toast.close()"
-    >
-        Восстановить
-    </a>
+    <a kbqLink pseudo (click)="toast.close()">Восстановить</a>
 </ng-template>
 
 <button kbq-button (click)="showToastWithInlineLink(toastWithInlineLinkTemplate, toastActionsTemplate)">

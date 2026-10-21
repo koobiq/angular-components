@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqOptionBase } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
@@ -94,7 +93,7 @@ export class TreeSelectCleanerWithDisabledExample {
     protected readonly clearedDataSource = this.createDataSource(this.clearedTreeControl);
 
     /** Opts out of the default, which leaves the disabled nodes selected. */
-    protected readonly clearEverything = (_option: KbqOptionBase) => true;
+    protected readonly clearEverything = (_node: FlatNode) => true;
 
     protected isLocked(node: FlatNode): boolean {
         return lockedNodes.includes(node.name);

@@ -161,17 +161,6 @@
         justify-content: center;
 
         min-width: var(--kbq-form-field-size-addon-width);
-
-        // When used in a box or standard appearance form-field the arrow should be shifted up 50%.
-        .kbq-form-field-appearance-fill &,
-        .kbq-form-field-appearance-standard & {
-            transform: translateY(-50%);
-        }
-
-        // When used in a outline form-field the arrow should be shifted up 25%.
-        .kbq-form-field-appearance-outline & {
-            transform: translateY(-25%);
-        }
     }
 
     &.kbq-disabled {

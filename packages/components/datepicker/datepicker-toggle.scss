@@ -1,42 +1,5 @@
-@use '../core/styles/common/tokens' as *;
-
 .kbq-datepicker-toggle-icon {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-}
-
-.kbq-datepicker-toggle:focus {
-    outline: 0;
-}
-
-.kbq-datepicker-toggle__button.kbq-button-icon {
-    // @TODO define --kbq-datepicker-toggle-size-* in design-tokens; fallback matches the icon-button control size meanwhile
-    width: var(--kbq-datepicker-toggle-size-width, var(--kbq-size-3xl));
-    height: var(--kbq-datepicker-toggle-size-height, var(--kbq-size-3xl));
-    margin-left: 2px;
-}
-
-.kbq-form-field-appearance-legacy {
-    .kbq-form-field-prefix,
-    .kbq-form-field-suffix {
-        .kbq-datepicker-toggle__default-icon {
-            width: 1em;
-        }
-    }
-}
-
-.kbq-form-field:not(.kbq-form-field-appearance-legacy) {
-    .kbq-form-field-prefix,
-    .kbq-form-field-suffix {
-        .kbq-datepicker-toggle__default-icon {
-            display: block;
-            width: 1.5em;
-            height: 1.5em;
-        }
-
-        .kbq-button-icon .kbq-datepicker-toggle__default-icon {
-            margin: auto;
-        }
-    }
 }

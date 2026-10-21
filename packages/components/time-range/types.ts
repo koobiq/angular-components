@@ -81,8 +81,6 @@ export type KbqTimeRangeCustomizableTitleContext = Partial<KbqTimeRangeTitleCont
     $implicit: Partial<KbqTimeRangeTitleContext> & { formattedDate: string; popover: KbqPopoverTrigger };
 } & { formattedDate: string; popover: KbqPopoverTrigger };
 
-/** @docs-private */
-export type KbqTimeRangeTranslateTypeMap = Record<KbqTimeRangeType, KbqTimeRangeTranslationType>;
 /** Context for a time range option customization, combining meta information. */
 export type KbqTimeRangeOptionContext = KbqTimeRangeTypeContext &
     KbqTimeRangeUnits & { translationType: KbqTimeRangeTranslationType; formattedValue: string };

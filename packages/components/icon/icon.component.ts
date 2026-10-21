@@ -2,7 +2,6 @@ import {
     AfterContentInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
     DestroyRef,
@@ -19,6 +18,9 @@ import { KbqColorDirective, KbqComponentColors } from '@koobiq/components/core';
 import { defer, Subscription } from 'rxjs';
 import { KBQ_ICON_ERROR_STATE_CONTEXT } from './icon-error-state-context';
 import { KbqIconRegistry } from './icon-registry';
+
+/** Marks an injected `<svg>` with the name it renders, so hydration can recognize and adopt it. */
+const ICON_NAME_ATTRIBUTE = 'data-kbq-icon-name';
 
 /**
  * Renders an icon on the element it is applied to: a `@koobiq/icons` font glyph by default, or an inline
@@ -48,7 +50,6 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      * @docs-private
      */
     protected readonly errorStateContext = inject(KBQ_ICON_ERROR_STATE_CONTEXT, { optional: true });
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     protected readonly registry = inject(KbqIconRegistry, { optional: true });
     protected readonly destroyRef = inject(DestroyRef);
     protected readonly renderer = inject(Renderer2);
@@ -146,7 +147,9 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      * True when icon is being rendered as inline SVG.
      * @docs-private
      */
-    protected readonly svgIcon = signal(false);
+    // Starts from the DOM, not `false`: on a hydrated page the svg is already there, and `false`
+    // would show the font class until the async resolution catches up.
+    protected readonly svgIcon = signal(!!this.findTaggedSvg());
 
     /**
      * Name the inline SVG is resolved for, which is `iconName` however that was set.
@@ -159,8 +162,8 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     /** Resolution of the inline SVG, replaced whenever the name changes. */
     private svgIconSubscription = Subscription.EMPTY;
 
-    /** The `<svg>` injected for the resolved name. */
-    private injectedSvg: SVGElement | null = null;
+    /** The `<svg>` injected for the resolved name — or already on the host, tagged, from SSR. */
+    private injectedSvg: SVGElement | null = this.findTaggedSvg();
 
     /** Whether the content is initialized, which is when the inline SVG is first resolved. */
     private contentInitialized = false;
@@ -173,6 +176,11 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
     getHostElement() {
         return this.elementRef.nativeElement;
+    }
+
+    /** An `<svg>` already on the host, tagged with the name it renders — e.g. one SSR left behind. */
+    private findTaggedSvg(): SVGElement | null {
+        return this.getHostElement().querySelector(`svg[${ICON_NAME_ATTRIBUTE}]`);
     }
 
     /**
@@ -247,16 +255,31 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     /** Injects the resolved `<svg>`, or drops back to the font class when the name did not resolve. */
     private renderSvgIcon(svg: SVGElement | null): void {
         const host = this.getHostElement();
+        const previous = this.injectedSvg;
 
-        // Only the element injected here: an `<svg>` projected into the host is the consumer's content.
-        if (this.injectedSvg) {
-            this.renderer.removeChild(host, this.injectedSvg);
+        // A matching svg is already there (SSR's, most likely) — leave it rather than replace it,
+        // which would duplicate it if the replacement raced the DOM it's reusing.
+        if (previous && svg && previous.getAttribute(ICON_NAME_ATTRIBUTE) === this.iconName) {
+            this.svgIcon.set(true);
+            this.applyIconSize();
+
+            return;
+        }
+
+        // Only the element injected here (or adopted above): an `<svg>` projected into the host is
+        // the consumer's content.
+        if (previous) {
+            this.renderer.removeChild(host, previous);
         }
 
         this.injectedSvg = svg;
         this.svgIcon.set(!!svg);
 
         if (svg) {
+            if (this.iconName) {
+                this.renderer.setAttribute(svg, ICON_NAME_ATTRIBUTE, this.iconName);
+            }
+
             this.renderer.insertBefore(host, svg, host.firstChild);
         }
 

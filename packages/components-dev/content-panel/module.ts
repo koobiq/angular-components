@@ -4,7 +4,7 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { ContentPanelExamplesModule } from 'packages/docs-examples/components/content-panel';
 import { DevThemeToggle } from '../theme-toggle';
 
@@ -13,7 +13,7 @@ import { DevThemeToggle } from '../theme-toggle';
     imports: [
         KbqButtonModule,
         KbqBadgeModule,
-        KbqLinkModule,
+        KbqLink,
         KbqIconModule,
         KbqContentPanelModule
     ],
@@ -43,7 +43,7 @@ import { DevThemeToggle } from '../theme-toggle';
                     <div class="example-content-header-title" kbqContentPanelHeaderTitle>
                         <span>CVE-2017-112</span>
                         <kbq-badge [badgeColor]="badgeColors.FadeError">8,6</kbq-badge>
-                        <a kbq-link pseudo>July 21, 2025 2:29 PM</a>
+                        <a kbqLink pseudo>July 21, 2025 2:29 PM</a>
                     </div>
                     <div class="example-content-header-actions" kbqContentPanelHeaderActions>
                         @for (_i of headerActions; track $index) {

@@ -14,7 +14,7 @@ import {
     kbqIconsResolverProvider
 } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink, KbqLinkPrefix, KbqLinkSuffix } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 import { KbqTabsModule } from '@koobiq/components/tabs';
@@ -203,7 +203,9 @@ export class E2eIconStateAndStyle {
         KbqButtonModule,
         KbqSplitButtonModule,
         KbqFileUploadModule,
-        KbqLinkModule,
+        KbqLink,
+        KbqLinkPrefix,
+        KbqLinkSuffix,
         KbqFormFieldModule,
         KbqInputModule,
         FormsModule,
@@ -298,30 +300,27 @@ export class E2eIconStateAndStyle {
             <div class="layout-row layout-align-start-end">
                 <p class="layout-margin-top-3xs layout-margin-bottom-3xs">
                     Text
-                    <a kbq-link big>
-                        <i kbq-icon="kbq-calendar-o_16"></i>
-                        <span class="kbq-link__text">both icons</span>
-                        <i kbq-icon="kbq-arrow-right_16"></i>
+                    <a kbqLink size="big">
+                        <i kbq-icon="kbq-calendar-o_16" kbqLinkPrefix></i>
+                        both icons
+                        <i kbq-icon="kbq-arrow-right_16" kbqLinkSuffix></i>
                     </a>
                     text.
                 </p>
 
                 <p class="layout-margin-top-3xs layout-margin-bottom-3xs">
                     Text
-                    <a kbq-link>
-                        <i kbq-icon="kbq-calendar-o_16"></i>
-                        <span class="kbq-link__text">both icons</span>
-                        <i kbq-icon="kbq-arrow-right_16"></i>
+                    <a kbqLink>
+                        <i kbq-icon="kbq-calendar-o_16" kbqLinkPrefix></i>
+                        both icons
+                        <i kbq-icon="kbq-arrow-right_16" kbqLinkSuffix></i>
                     </a>
                     text.
                 </p>
 
                 <p class="layout-margin-top-3xs layout-margin-bottom-3xs">
                     Text
-                    <a class="kbq-link_external" kbq-link>
-                        <span class="kbq-link__text">external with icon</span>
-                        <i kbq-icon="kbq-north-east_16"></i>
-                    </a>
+                    <a kbqLink external>external with icon</a>
                     text.
                 </p>
             </div>
@@ -443,3 +442,20 @@ export class E2eIconSvg {
     }
 })
 export class E2eIconSvgDropdown {}
+
+/** An unregistered icon name next to a literal projected `<svg>` — the docs navbar's GitHub-link pattern. */
+@Component({
+    selector: 'e2e-icon-unresolved-name',
+    imports: [KbqIcon],
+    template: `
+        <i kbq-icon="kbq-unregistered-name_16" data-testid="e2eIconUnresolvedName">
+            <svg data-testid="e2eIconProjectedSvg" viewBox="0 0 16 16"><path d="M0 0h16v16H0z" /></svg>
+        </i>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-top-l layout-margin-bottom-l',
+        'data-testid': 'e2eIconUnresolvedNameHost'
+    }
+})
+export class E2eIconUnresolvedName {}

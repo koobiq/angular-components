@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { KbqTimeRangeLocaleConfiguration } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimeRangeService } from './time-range.service';
 import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTitleContext } from './types';
@@ -21,17 +21,17 @@ import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTi
     selector: 'kbq-time-range-title',
     imports: [
         NgTemplateOutlet,
-        KbqLinkModule,
+        KbqLink,
+        KbqLinkSuffix,
         KbqIconModule
     ],
     template: `
         @if (titleTemplate()) {
             <ng-container *ngTemplateOutlet="titleTemplate()!; context: titleContext() ?? null; injector: injector" />
         } @else {
-            <a kbq-link pseudo [disabled]="disabled()">
-                <span class="kbq-link__text">{{ formattedDate() }}</span>
-
-                <i kbq-icon="kbq-calendar-o_16"></i>
+            <a kbqLink pseudo size="normal" [disabled]="disabled()">
+                {{ formattedDate() }}
+                <i kbq-icon="kbq-calendar-o_16" kbqLinkSuffix></i>
             </a>
         }
     `,

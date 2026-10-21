@@ -19,7 +19,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { kbqInjectNativeElement, KbqStateSavingService } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqSkeleton } from '@koobiq/components/skeleton';
@@ -55,7 +55,7 @@ const isLoader = (component: Type<unknown> | DocsExampleLoader): component is Do
     selector: 'docs-live-example-viewer',
     imports: [
         DocsStackblitzButtonComponent,
-        KbqLinkModule,
+        KbqLink,
         KbqCodeBlockModule,
         NgComponentOutlet,
         KbqButtonModule,

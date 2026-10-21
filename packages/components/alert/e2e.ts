@@ -155,8 +155,8 @@ import {
                                 <i kbq-icon-item="kbq-circle-info_16"></i>
                                 <div kbq-alert-title>Header</div>
                                 Alert text
-                                <a kbq-alert-control kbq-link [pseudo]="true">Link1</a>
-                                <a kbq-alert-control kbq-link [pseudo]="true">Link2</a>
+                                <a kbq-alert-control kbqLink [pseudo]="true">Link1</a>
+                                <a kbq-alert-control kbqLink [pseudo]="true">Link2</a>
                             </kbq-alert>
                         </td>
                     }

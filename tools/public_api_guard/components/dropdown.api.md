@@ -93,7 +93,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    onPanelReached(): Observable<void>;
     onSwitchTarget(): Observable<KbqDropdownItem>;
     readonly overlapTriggerX: _angular_core.ModelSignal<boolean>;
     readonly overlapTriggerY: _angular_core.ModelSignal<boolean>;
@@ -152,6 +151,14 @@ export class KbqDropdownFooter {
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDropdownFooter, "[kbqDropdownFooter], kbq-dropdown-footer", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdownFooter, never>;
+}
+
+// @public
+export class KbqDropdownGroupHeader {
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDropdownGroupHeader, "[kbqDropdownGroupHeader]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdownGroupHeader, never>;
 }
 
 // @public
@@ -214,6 +221,14 @@ export interface KbqDropdownItemActionHost {
     readonly progress: Signal<boolean>;
 }
 
+// @public
+export class KbqDropdownItemCaption {
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDropdownItemCaption, "[kbqDropdownItemCaption]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdownItemCaption, never>;
+}
+
 // @public (undocumented)
 export class KbqDropdownModule {
     // (undocumented)
@@ -221,7 +236,7 @@ export class KbqDropdownModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqDropdownModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof KbqDropdownStaticContent, typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownFooter, typeof KbqDropdownSearch], [typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownStaticContent, typeof KbqDropdownFooter, typeof KbqDropdownSearch]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof KbqDropdownStaticContent, typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemCaption, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownFooter, typeof KbqDropdownGroupHeader, typeof KbqDropdownSearch], [typeof KbqDropdown, typeof KbqDropdownItem, typeof KbqDropdownItemCaption, typeof KbqDropdownItemAction, typeof KbqDropdownTrigger, typeof KbqDropdownContent, typeof KbqDropdownStaticContent, typeof KbqDropdownFooter, typeof KbqDropdownGroupHeader, typeof KbqDropdownSearch]>;
 }
 
 // @public
