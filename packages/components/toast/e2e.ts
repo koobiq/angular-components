@@ -1,6 +1,5 @@
 import { Overlay, OverlayRef, ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { DOCUMENT } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -208,12 +207,12 @@ export class E2eToastInteraction {
     private readonly toastService = inject(KbqToastService);
     private readonly overlay = inject(Overlay);
     private readonly viewContainerRef = inject(ViewContainerRef);
-    private readonly document = inject(DOCUMENT);
     private readonly overlayContent = viewChild.required<TemplateRef<unknown>>('overlayContent');
     private readonly anchoredOverlayContent = viewChild.required<TemplateRef<unknown>>('anchoredOverlayContent');
     private readonly closeOnScrollOrigin = viewChild.required('closeOnScrollOrigin', { read: ElementRef });
     private overlayRef: OverlayRef | null = null;
     private anchoredOverlayRef: OverlayRef | null = null;
+    private lastToast: HTMLElement | null = null;
 
     constructor() {
         inject(DestroyRef).onDestroy(() => {
@@ -229,9 +228,11 @@ export class E2eToastInteraction {
 
     /** Models a dropdown opened from the actions of a toast, which slides when a toast above it leaves. */
     protected anchorOverlayToLastToast(): void {
-        const toasts = this.document.querySelectorAll<HTMLElement>('.kbq-toast-overlay kbq-toast');
+        if (!this.lastToast?.isConnected) {
+            return;
+        }
 
-        this.attachAnchoredOverlay(toasts[toasts.length - 1], this.overlay.scrollStrategies.reposition());
+        this.attachAnchoredOverlay(this.lastToast, this.overlay.scrollStrategies.reposition());
     }
 
     private attachAnchoredOverlay(origin: HTMLElement, scrollStrategy: ScrollStrategy): void {
@@ -259,7 +260,7 @@ export class E2eToastInteraction {
     }
 
     show(duration: number): void {
-        this.toastService.show(
+        const { ref } = this.toastService.show(
             {
                 style: KbqToastStyle.Error,
                 title: 'Toast title',
@@ -267,5 +268,7 @@ export class E2eToastInteraction {
             },
             duration
         );
+
+        this.lastToast = ref.location.nativeElement;
     }
 }

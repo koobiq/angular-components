@@ -106,7 +106,8 @@ export class KbqToastContainerComponent extends CdkScrollable {
      * is. CDK keeps no public registry of attached overlays, but its keyboard dispatcher tracks each of them.
      */
     private repositionConnectedOverlays(): void {
-        for (const overlayRef of this.overlayKeyboardDispatcher._attachedOverlays) {
+        // A copy: a `positionChanges` handler may detach an overlay, which splices the list being iterated.
+        for (const overlayRef of this.overlayKeyboardDispatcher._attachedOverlays.slice()) {
             if (overlayRef.getConfig().positionStrategy instanceof FlexibleConnectedPositionStrategy) {
                 overlayRef.updatePosition();
             }

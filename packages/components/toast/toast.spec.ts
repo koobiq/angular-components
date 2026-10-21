@@ -24,7 +24,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { dispatchKeyboardEvent, dispatchMouseEvent, kbqShadowDomOverlayProvider } from '@koobiq/components/core';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Subject, Subscription } from 'rxjs';
+import { NEVER, Subject, Subscription } from 'rxjs';
 import type { Mock, MockInstance } from 'vitest';
 import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastComponent } from './toast.component';
@@ -1317,8 +1317,17 @@ describe('KbqToastService: stack reflow', () => {
         TestBed.configureTestingModule({
             imports: [KbqToastModule, ToastTooltipWrapper, ToastTemplateWrapper],
             // jsdom performs no layout, so the real observer would never fire, and a check that nothing reaches
-            // the scroll dispatcher would pass without a reflow ever happening.
-            providers: [{ provide: SharedResizeObserver, useValue: { observe: () => resized } }]
+            // the scroll dispatcher would pass without a reflow ever happening. Keyed on the container, so that
+            // the `kbq-title` directives inside a toast neither share the subject nor count as its observers.
+            providers: [
+                {
+                    provide: SharedResizeObserver,
+                    useValue: {
+                        observe: (target: Element) =>
+                            target.classList.contains('kbq-toast-container') ? resized : NEVER
+                    }
+                }
+            ]
         });
 
         service = TestBed.inject(KbqToastService);
@@ -1373,10 +1382,13 @@ describe('KbqToastService: stack reflow', () => {
     it('does not notify the global ScrollDispatcher when the stack reflows', () => {
         const id = showToastAndReflow();
 
+        // A second toast keeps the stack alive across the removal, so the reflow it causes reaches a container.
+        showToastAndReflow();
         service.hide(id);
         TestBed.inject(ApplicationRef).tick();
         resized.next([]);
 
+        expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(1);
         expect(scrolled).not.toHaveBeenCalled();
     });
 
