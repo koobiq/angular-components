@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqOptionModule } from '@koobiq/components/core';
-import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqFormFieldModule, KbqLabel } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -21,7 +21,9 @@ const PRIORITIES: string[] = ['Low', 'Medium', 'High', 'Critical'];
         KbqLabel,
         KbqOptionModule,
         KbqSelectModule,
-        KbqDlModule
+        KbqDl,
+        KbqDt,
+        KbqDd
     ],
     template: `
         <div class="example__section">

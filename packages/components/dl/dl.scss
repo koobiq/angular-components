@@ -27,18 +27,20 @@
     // Let the columns keep their `1fr` ratio instead of being stretched by an unbreakable string: `min-width: 0`
     // drops the grid item's content-based automatic minimum, and `break-word` breaks such a string only when it
     // does not fit. `anywhere` is deliberately avoided — it would also shrink the min-content size to a single
-    // character and leak that to any ancestor that sizes itself to content.
-    .kbq-dt,
-    .kbq-dd {
+    // character and leak that to any ancestor that sizes itself to content. Terms and descriptions are reached
+    // through child combinators, here and in the modifiers below, so the rules of a list stay off a list nested in
+    // one of its descriptions.
+    > .kbq-dt,
+    > .kbq-dd {
         min-width: 0;
         overflow-wrap: break-word;
     }
 
-    .kbq-dt {
+    > .kbq-dt {
         grid-column: 1;
     }
 
-    .kbq-dd {
+    > .kbq-dd {
         grid-column: 2 / span 3;
     }
 
@@ -97,19 +99,19 @@
             opacity: 0;
         }
 
-        &:hover::after {
+        &:is(:hover, .kbq-hover)::after {
             background-color: var(--kbq-description-list-resizer-state-hover-color);
         }
 
         // Keep the separator visible while it is focused (keyboard) or being dragged.
         &.cdk-keyboard-focused::after,
-        &:active::after {
+        &:is(:active, .kbq-active)::after {
             opacity: 1;
         }
 
         // Tint and thicken the line only while dragging; keyboard focus keeps the line at its default color and
         // width and is marked solely by the outline frame below.
-        &:active::after {
+        &:is(:active, .kbq-active)::after {
             width: var(--kbq-description-list-resizer-active-line-width);
             background-color: var(--kbq-description-list-resizer-state-active-color);
         }
@@ -124,8 +126,9 @@
     }
 
     @media (hover: hover) and (pointer: fine) {
-        // Reveal the separator on hover of the list.
-        &:hover .kbq-dl__resize-handle::after {
+        // Reveal the separator on hover of the list. Child combinators keep it to the list's own separator, not
+        // to the one of a list nested in a description.
+        &:is(:hover, .kbq-hover) > .kbq-dl__resize-track > .kbq-dl__resize-handle::after {
             opacity: 1;
         }
     }
@@ -141,11 +144,11 @@
             grid-template-columns: var(--kbq-description-list-dt-width) minmax(0, 1fr);
         }
 
-        .kbq-dt {
+        > .kbq-dt {
             grid-column: 1;
         }
 
-        .kbq-dd {
+        > .kbq-dd {
             grid-column: 2;
         }
     }
@@ -155,12 +158,12 @@
 
         row-gap: var(--kbq-description-list-size-vertical-content-gap-vertical);
 
-        .kbq-dt,
-        .kbq-dd {
+        > .kbq-dt,
+        > .kbq-dd {
             grid-column: 1;
         }
 
-        .kbq-dd:not(:last-child) {
+        > .kbq-dd:not(:last-child) {
             margin-bottom: var(--kbq-description-list-size-vertical-gap-vertical);
         }
     }

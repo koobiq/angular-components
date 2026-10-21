@@ -1,31 +1,70 @@
 Description list displays term-description pairs in adaptive, horizontal, or vertical layouts.
 
-### Default (adaptive)
-
 <Example id="dl-overview" />
 
-### Small (adaptive)
+### Wide layout
 
-<Example id="dl-small" />
+The `wide` attribute splits the width equally between terms and descriptions.
 
-### Horizontal
+<Example id="dl-wide" />
 
-<Example id="dl-horizontal-overview" />
+### Vertical layout
 
-### Vertical
+The `vertical` attribute switches the list to the vertical layout, with terms above descriptions.
 
-<Example id="dl-vertical-overview" />
+<Example id="dl-vertical" />
+
+### Adaptive layout
+
+Without the `vertical` attribute, the list becomes vertical when its width is at or below `verticalBreakpoint`. Resize the container to see it.
+
+<Example id="dl-vertical-breakpoint" />
+
+### Alignment
+
+The `verticalAlign` attribute aligns terms and descriptions within a row, and `horizontalAlign` within a column. Both attributes accept `start`, `center` and `end`.
+
+<Example id="dl-alignment" />
+
+### Term width
+
+The `dtWidth` attribute sets the width of the term column in pixels.
+
+<Example id="dl-dt-width" />
 
 ### Resizable
 
-The `resizable` flag allows changing column widths by dragging the separator.
-
-Minimum column widths are set with `dtMinWidth` and `ddMinWidth`. Two-way binding with `[(dtWidth)]` is used to set and preserve the width programmatically and synchronize it across lists.
+The `resizable` attribute lets the user change the width of the term column by dragging the separator or with the arrow keys. A double click on the separator collapses the column to its minimum width, and a second one restores it. The `resizerAriaLabel` attribute sets the accessible name of the separator.
 
 <Example id="dl-resizable" />
 
+#### Minimum widths
+
+The `dtMinWidth` and `ddMinWidth` attributes set the minimum widths of the term and description columns in pixels.
+
+<Example id="dl-min-width" />
+
+#### Shared width
+
+The two-way `[(dtWidth)]` binding keeps the width the user sets, so that it can be saved or shared between lists.
+
+<Example id="dl-width-sync" />
+
 ### Long text
 
-Text with spaces wraps at word boundaries, while strings without spaces wrap between characters. For example, identifiers, hashes, paths, and URLs wrap this way. The columns do not expand.
+Long strings without spaces, such as identifiers, hashes, paths and URLs, wrap within their column.
 
 <Example id="dl-long-text" />
+
+### Global options
+
+The `kbqDlOptionsProvider` function sets the default options of every list in the application or in a specific injector.
+
+```ts
+import { ApplicationConfig } from '@angular/core';
+import { kbqDlOptionsProvider } from '@koobiq/components/dl';
+
+export const appConfig: ApplicationConfig = {
+    providers: [kbqDlOptionsProvider({ wide: true, resizable: true })]
+};
+```

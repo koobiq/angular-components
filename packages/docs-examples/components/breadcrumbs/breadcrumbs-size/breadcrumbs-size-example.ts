@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqDefaultSizes } from '@koobiq/components/core';
-import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 
 /**
  * @title Breadcrumbs sizes
@@ -13,7 +13,9 @@ import { KbqDlModule } from '@koobiq/components/dl';
     imports: [
         RouterLink,
         KbqBreadcrumbsModule,
-        KbqDlModule,
+        KbqDl,
+        KbqDt,
+        KbqDd,
         TitleCasePipe
     ],
     template: `

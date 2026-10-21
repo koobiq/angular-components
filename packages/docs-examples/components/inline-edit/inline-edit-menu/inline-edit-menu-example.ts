@@ -2,7 +2,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
@@ -23,7 +23,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqIconButton,
         KbqDropdownModule,
         KbqTextareaModule,
-        KbqDlModule,
+        KbqDl,
+        KbqDt,
+        KbqDd,
         KbqToolTipModule,
         NgTemplateOutlet
     ],

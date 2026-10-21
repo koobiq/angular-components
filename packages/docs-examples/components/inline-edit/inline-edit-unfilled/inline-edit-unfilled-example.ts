@@ -1,7 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 
@@ -14,7 +14,9 @@ import { KbqInputModule } from '@koobiq/components/input';
         ReactiveFormsModule,
         KbqInlineEditModule,
         KbqInputModule,
-        KbqDlModule,
+        KbqDl,
+        KbqDt,
+        KbqDd,
         NgTemplateOutlet
     ],
     template: `

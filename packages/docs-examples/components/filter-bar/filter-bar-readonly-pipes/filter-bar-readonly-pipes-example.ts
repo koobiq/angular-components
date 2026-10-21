@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateFormatter } from '@koobiq/components/core';
-import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { injectLocalizedPeriods, injectLocalizedText } from '../localized-data';
@@ -25,7 +25,9 @@ const createSearchPipe = (name: string): KbqPipe => ({
     imports: [
         KbqFilterBarModule,
         LuxonDateModule,
-        KbqDlModule,
+        KbqDl,
+        KbqDt,
+        KbqDd,
         KbqLinkModule
     ],
     template: `
