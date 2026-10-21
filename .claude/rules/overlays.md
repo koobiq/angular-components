@@ -3,7 +3,7 @@ paths:
     - 'packages/components/core/overlay/**'
     - 'packages/components/core/pop-up/**'
     - 'packages/components/core/select/**'
-    - 'packages/components/{app-switcher,autocomplete,datepicker,dropdown,list,modal,navbar,popover,select,sidepanel,timepicker,toast,tooltip,tree,tree-select}/**/*.ts'
+    - 'packages/components/{actions-panel,app-switcher,autocomplete,datepicker,dropdown,inline-edit,list,modal,navbar,notification-center,popover,scrollbar,select,sidepanel,timepicker,toast,tooltip,tree,tree-select}/**/*.{ts,html}'
 ---
 
 # Overlays, panels and lists

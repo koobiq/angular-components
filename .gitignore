@@ -3,10 +3,15 @@ CHANGELOG_CURRENT.md
 
 .ai
 
-# local Claude Code settings and tooling
+# local Claude Code files: settings, permission grants, worktree copies of the repository, subagent
+# memory and personal notes; prettier and cspell read this file too, so only .claude/rules gets linted
 .claude/settings.json
+.claude/settings.local.json
 .claude/launch.json
 .claude/playwright.system-chrome.config.ts
+.claude/worktrees/
+.claude/agent-memory-local/
+CLAUDE.local.md
 
 # firebase artifacts
 .firebase

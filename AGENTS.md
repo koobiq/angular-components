@@ -213,7 +213,7 @@ The details of each area live in the rule files listed under [Agent Rules](#agen
 - Code comments and commit messages are written in English; user-facing documentation exists in English and Russian.
 - Fill the PR template: summary, list of notable changes, what reviewers should focus on.
 - Do not name a branch `test/<name>`: origin has a plain `test` branch, so git rejects the push of a nested ref.
-- After a rebase, check what git merges silently: the subsections of `docs/guides/migration.{en,ru}.mdx` still in their alphabetical slot, and no `var()` left pointing at a token that upstream removed.
+- After a rebase, check what git merges silently: a `####` subsection of `docs/guides/migration.{en,ru}.mdx` still sits under its own `###` step (the look-alike subsections of another step match as context), and no `var()` is left pointing at a token that upstream removed.
 
 ## Agent Rules
 
@@ -221,6 +221,7 @@ The details of each area live in the rule files listed under [Agent Rules](#agen
 - List each rule file in the table below with a plain Markdown link, so that agents that read only this file can open it. An `@` import would load the file at startup.
 - A rule a linter can check goes to its config (`eslint.config.js`, `.stylelintrc.js`, the commitlint config, cspell); the text keeps only the reason.
 - Write rules in English, one per bullet, each with its reason, and keep every rule in one place.
+- Claude Code reads this file natively from version 2.1.277 and stops doing so as soon as a `CLAUDE.md` or `CLAUDE.local.md` exists in the repository or a directory above it: add neither here, and keep personal notes in `~/.claude/CLAUDE.md`, which does not count.
 
 | Rule file                                              | Applies to                                                                       |
 | ------------------------------------------------------ | -------------------------------------------------------------------------------- |
@@ -258,14 +259,9 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Put host bindings and listeners in the `host` object of the `@Component` or `@Directive` decorator, not in `@HostBinding` / `@HostListener`
 - Use `NgOptimizedImage` for all static images (does not work for inline base64 images).
 
-### Server Side Rendering (SSR)
-
-- Use `inject(KBQ_WINDOW)` instead of the global `window`
-
 ### Accessibility Requirements
 
 - Components, docs examples and the docs site must pass all AXE checks and meet WCAG AA, including focus management, color contrast, and ARIA attributes.
-- Source all component-provided default ARIA text from `kbqInjectA11yLocaleConfiguration()`
 
 ### Components
 
@@ -283,11 +279,6 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 ### Form Validation
 
 - Use `ErrorStateMatcher` to control **when** errors are shown
-
-### State Management
-
-- Use signals for local component state
-- Use `computed()` for derived state
 
 ### Templates
 
