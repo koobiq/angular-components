@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import ts from 'typescript';
 import { parseDts } from '../src/dts/parse-dts';
 import { listEntryPointTypings } from '../src/sources/components';
@@ -95,15 +96,72 @@ const viaCompiler = (source: string): Map<string, Declared> => {
     return found;
 };
 
+/** Every declaration `viaCompiler` finds in `source` must agree with what `parseDts` reads there. */
+const assertAgrees = (id: string, source: string): number => {
+    const expected = viaCompiler(source);
+    const actual = parseDts(source).symbols;
+
+    for (const [name, declared] of expected) {
+        const mine = actual.get(name);
+
+        expect(mine, `${id}: ${name} was not found at all`).toBeTruthy();
+        expect(mine!.selector ?? null, `${id}: ${name} selector`).toBe(declared.selector);
+
+        expect(new Map(mine!.inputs.map((input) => [input.name, input.alias])), `${id}: ${name} inputs`).toEqual(
+            declared.inputs
+        );
+
+        expect(new Map(mine!.outputs.map((output) => [output.name, output.alias])), `${id}: ${name} outputs`).toEqual(
+            declared.outputs
+        );
+    }
+
+    return expected.size;
+};
+
+/**
+ * An entry point's own text, followed through its `export * from`/`export { … } from` chain and
+ * concatenated — 19.x publishes an entry point as `index.d.ts` re-exporting a sibling for every
+ * declaration in it, so the file `exports` names is an empty shell and `viaCompiler` would compare
+ * against nothing. Concatenating puts every declaration the chain reaches in front of both
+ * `viaCompiler` and `parseDts`, the same declarations `readEntryFile` merges when the server reads it.
+ */
+const chainedSource = (entry: string): string => {
+    const seen = new Set<string>([entry]);
+    const queue = [entry];
+    const chunks: string[] = [];
+
+    while (queue.length > 0) {
+        const path = queue.shift()!;
+        const source = readFileSync(path, 'utf-8');
+
+        chunks.push(source);
+
+        for (const specifier of parseDts(source).reexports) {
+            const resolved = ['.d.ts', '/index.d.ts', '.ts']
+                .map((suffix) => join(dirname(path), specifier + suffix))
+                .find((candidate) => existsSync(candidate));
+
+            if (resolved && !seen.has(resolved)) {
+                seen.add(resolved);
+                queue.push(resolved);
+            }
+        }
+    }
+
+    return chunks.join('\n');
+};
+
+const filesOf = (root: string): { id: string; source: string }[] =>
+    [...listEntryPointTypings(root)]
+        .filter(([id, path]) => id && existsSync(path))
+        .map(([id, path]) => ({ id, source: chainedSource(path) }))
+        .sort((a, b) => a.id.localeCompare(b.id));
+
 const files = ((): { id: string; source: string }[] => {
     const pkg = resolveProject(CONSUMER).packages.get('@koobiq/components');
 
-    if (!pkg) return [];
-
-    return [...listEntryPointTypings(pkg.root)]
-        .filter(([id, path]) => id && existsSync(path))
-        .map(([id, path]) => ({ id, source: readFileSync(path, 'utf-8') }))
-        .sort((a, b) => a.id.localeCompare(b.id));
+    return pkg ? filesOf(pkg.root) : [];
 })();
 
 // `unit:all` sweeps this file in `units.yml` too, which never builds the library — skipped, not
@@ -114,33 +172,28 @@ describe.skipIf(!componentsAvailable())('the live .d.ts reader against the TypeS
     });
 
     test('every declaration in the installed package agrees with the TypeScript compiler', () => {
-        let checked = 0;
-
-        for (const { id, source } of files) {
-            const expected = viaCompiler(source);
-            const actual = parseDts(source).symbols;
-
-            for (const [name, declared] of expected) {
-                const mine = actual.get(name);
-
-                expect(mine, `${id}: ${name} was not found at all`).toBeTruthy();
-                expect(mine!.selector ?? null, `${id}: ${name} selector`).toBe(declared.selector);
-
-                expect(
-                    new Map(mine!.inputs.map((input) => [input.name, input.alias])),
-                    `${id}: ${name} inputs`
-                ).toEqual(declared.inputs);
-
-                expect(
-                    new Map(mine!.outputs.map((output) => [output.name, output.alias])),
-                    `${id}: ${name} outputs`
-                ).toEqual(declared.outputs);
-
-                checked++;
-            }
-        }
+        const checked = files.reduce((total, { id, source }) => total + assertAgrees(id, source), 0);
 
         // Guards against the whole thing passing because nothing was read.
         expect(checked > 250, `only ${checked} declarations compared`).toBeTruthy();
     });
+});
+
+/**
+ * The same agreement, pinned against the four published layouts rather than against whatever is
+ * currently installed — fixtures, not a build, so this runs with no network and no `dist/components`.
+ */
+describe('the .d.ts reader against the TypeScript compiler, for every supported layout', () => {
+    const fixtures = join(import.meta.dirname, 'fixtures', 'packages');
+
+    for (const major of [18, 19, 20, 21] as const) {
+        test(`koobiq ${major}`, () => {
+            const checked = filesOf(join(fixtures, String(major))).reduce(
+                (total, { id, source }) => total + assertAgrees(id, source),
+                0
+            );
+
+            expect(checked > 0, `no declarations compared for ${major}`).toBeTruthy();
+        });
+    }
 });

@@ -1,0 +1,19 @@
+{
+    "name": "@koobiq/components",
+    "version": "19.8.7",
+    "exports": {
+        ".": {
+            "sass": "./_index.scss",
+            "types": "./index.d.ts",
+            "default": "./fesm2022/koobiq-components.mjs"
+        },
+        "./button": {
+            "types": "./button/index.d.ts",
+            "default": "./fesm2022/koobiq-components-button.mjs"
+        },
+        "./core": {
+            "types": "./core/index.d.ts",
+            "default": "./fesm2022/koobiq-components-core.mjs"
+        }
+    }
+}

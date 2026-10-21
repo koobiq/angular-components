@@ -41,3 +41,7 @@ apps/docs/src/app/seo-descriptions.ts
 # ignore the MCP server's generated indexes and build output
 /packages/mcp/data/
 /packages/mcp/dist/
+
+# excerpts lifted verbatim from published .d.ts files, kept byte-for-byte so the test they back
+# proves something about the real layout rather than about this repository's own style
+/packages/mcp/test/fixtures/packages/**/*.d.ts
