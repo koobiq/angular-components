@@ -272,8 +272,15 @@ export class KbqLink implements AfterViewChecked {
     constructor() {
         this.monitorFocus();
         this.blockActivationWhileDisabled();
-        this.activateOnEnterAndSpace();
-        this.trimTextAfterEveryRender();
+
+        // In the browser, after the first render: by then the template and the other directives on the element have
+        // their listeners in place, so a key one of them has already handled, as `kbqDropdownTriggerFor` does, is left
+        // to it
+        afterNextRender(() => this.activateOnEnterAndSpace());
+
+        // Text projected through another component is checked with the view that declares it, which does not check
+        // the view of this link
+        afterEveryRender(() => this.trimEdgeTextNodes());
     }
 
     /**
@@ -304,23 +311,12 @@ export class KbqLink implements AfterViewChecked {
         this.destroyRef.onDestroy(() => this.focusMonitor.stopMonitoring(this.nativeElement));
     }
 
-    // In the browser, after the first render: by then the template and the other directives on the element have
-    // their listeners in place, so a key one of them has already handled, as `kbqDropdownTriggerFor` does, is left
-    // to it
     private activateOnEnterAndSpace(): void {
-        afterNextRender(() => {
-            const unlisten = ['keydown.enter', 'keydown.space'].map((name) =>
-                this.renderer.listen(this.nativeElement, name, (event: KeyboardEvent) => this.activate(event))
-            );
+        const unlisten = ['keydown.enter', 'keydown.space'].map((name) =>
+            this.renderer.listen(this.nativeElement, name, (event: KeyboardEvent) => this.activate(event))
+        );
 
-            this.destroyRef.onDestroy(() => unlisten.forEach((remove) => remove()));
-        });
-    }
-
-    // Text projected through another component is checked with the view that declares it, which does not check
-    // the view of this link
-    private trimTextAfterEveryRender(): void {
-        afterEveryRender(() => this.trimEdgeTextNodes());
+        this.destroyRef.onDestroy(() => unlisten.forEach((remove) => remove()));
     }
 
     private activate(event: KeyboardEvent): void {
