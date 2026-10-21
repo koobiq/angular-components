@@ -93,7 +93,8 @@ export enum DocsStructureItemId {
     FilesizeFormatter = 'filesize-formatter',
     Forms = 'forms',
     NumberFormatter = 'number-formatter',
-    Validation = 'validation'
+    Validation = 'validation',
+    WhichComponentWhen = 'which-component-when'
 }
 
 export type DocsStructureItem = {
@@ -1272,6 +1273,17 @@ const structure: DocsStructure = makeStructure({
                     hasApi: false,
                     hasExamples: false,
                     isNew: expiresAt('2026-09-25')
+                },
+                {
+                    id: DocsStructureItemId.WhichComponentWhen,
+                    name: {
+                        ru: 'Какой компонент когда',
+                        en: 'Which component when'
+                    },
+                    svgPreview: '',
+                    isGuide: true,
+                    hasApi: false,
+                    hasExamples: false
                 }
             ]
         }

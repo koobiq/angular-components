@@ -197,6 +197,7 @@
 /en/other/validation/overview
 /en/other/validation/examples
 /en/other/search-smart/overview
+/en/other/which-component-when/overview
 /ru
 /ru/main/installation/overview
 /ru/main/versioning/overview
@@ -395,4 +396,5 @@
 /ru/other/validation/overview
 /ru/other/validation/examples
 /ru/other/search-smart/overview
+/ru/other/which-component-when/overview
 /404
