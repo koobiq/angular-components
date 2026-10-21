@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, signal, viewChildren } from '@angular/core';
 import { KbqClampedList, KbqClampedListTrigger } from '@koobiq/components/clamped-text';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqLink } from '@koobiq/components/link';
+import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
 
 /**
  * @title Clamped-list vertical
  */
 @Component({
     selector: 'clamped-list-overview-example',
-    imports: [KbqClampedList, KbqClampedListTrigger, KbqIcon, KbqLink],
+    imports: [KbqClampedList, KbqClampedListTrigger, KbqIcon, KbqLink, KbqLinkPrefix],
     template: `
         <!--@TODO update gap with paddings when link underline with text-decoration used (#DS-4778)-->
         <div
@@ -20,7 +20,7 @@ import { KbqLink } from '@koobiq/components/link';
         >
             @for (item of clampedList.visibleItems(); track item.id) {
                 <div class="layout-row layout-align-space-between-start">
-                    <a kbq-link target="_blank" [href]="item.url">
+                    <a kbqLink target="_blank" [href]="item.url">
                         {{ item.name }}
                     </a>
                     <div style="min-width: 45px;">
@@ -29,16 +29,16 @@ import { KbqLink } from '@koobiq/components/link';
                 </div>
             }
             @if (clampedList.hasToggle()) {
-                <a kbq-link kbqClampedListTrigger pseudo>
-                    @if (clampedList.isCollapsed()) {
-                        <i kbq-icon="kbq-chevron-down_16"></i>
-                        <span class="kbq-link__text">{{ clampedList.showMoreCountText() }}</span>
-                    } @else {
-                        <i kbq-icon="kbq-chevron-up_16"></i>
-                        <span class="kbq-link__text">
-                            {{ clampedList.localeConfiguration().closeText }}
-                        </span>
-                    }
+                <a kbqLink kbqClampedListTrigger pseudo>
+                    <i
+                        kbqLinkPrefix
+                        [kbq-icon]="clampedList.isCollapsed() ? 'kbq-chevron-down_16' : 'kbq-chevron-up_16'"
+                    ></i>
+                    {{
+                        clampedList.isCollapsed()
+                            ? clampedList.showMoreCountText()
+                            : clampedList.localeConfiguration().closeText
+                    }}
                 </a>
             }
         </div>

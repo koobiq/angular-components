@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqSkeletonGroup } from '@koobiq/components/skeleton';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToggleModule } from '@koobiq/components/toggle';
@@ -11,7 +11,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  */
 @Component({
     selector: 'skeleton-group-example',
-    imports: [KbqSkeletonGroup, KbqToggleModule, FormsModule, KbqTagsModule, KbqLinkModule],
+    imports: [KbqSkeletonGroup, KbqToggleModule, FormsModule, KbqTagsModule, KbqLink],
     template: `
         <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
 
@@ -25,10 +25,10 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
                 <kbq-tag [color]="colors.Error">Blocked</kbq-tag>
             </kbq-tag-list>
             <div class="example-row">
-                <a kbq-link pseudo>Overview</a>
-                <a kbq-link pseudo>API</a>
-                <a kbq-link pseudo>Examples</a>
-                <a kbq-link pseudo>Changelog</a>
+                <a kbqLink pseudo>Overview</a>
+                <a kbqLink pseudo>API</a>
+                <a kbqLink pseudo>Examples</a>
+                <a kbqLink pseudo>Changelog</a>
             </div>
         }
     `,

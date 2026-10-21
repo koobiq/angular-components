@@ -3,9 +3,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 
 /**
@@ -17,8 +16,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
         KbqAutocompleteModule,
         KbqInputModule,
         ReactiveFormsModule,
-        KbqLinkModule,
-        KbqIconModule,
+        KbqLink,
         KbqHighlightBackgroundPipe
     ],
     template: `
@@ -38,10 +36,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
                     </kbq-option>
                 }
                 <kbq-autocomplete-footer>
-                    <a class="kbq-link_external" kbq-link (click)="trigger.closePanel()">
-                        <span class="kbq-link__text">Link</span>
-                        <i kbq-icon="kbq-north-east_16"></i>
-                    </a>
+                    <a kbqLink external (click)="trigger.closePanel()">Link</a>
                 </kbq-autocomplete-footer>
             </kbq-autocomplete>
             <kbq-cleaner />

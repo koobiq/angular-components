@@ -10,13 +10,11 @@
             <i kbq-icon="kbq-circle-info_16" [color]="'error'"></i>
             <span>
                 Fill in at least one of the fields:
-                <span kbq-link pseudo (click)="seriesInput.focus()" (keydown.enter)="seriesInput.focus()">Series,</span>
+                <span kbqLink (click)="seriesInput.focus()">Series,</span>
                 <span>&nbsp;</span>
-                <span kbq-link pseudo (click)="numberInput.focus()" (keydown.enter)="numberInput.focus()">Number</span>
+                <span kbqLink (click)="numberInput.focus()">Number</span>
                 or
-                <span kbq-link pseudo (click)="lastNameInput.focus()" (keydown.enter)="lastNameInput.focus()">
-                    Last name
-                </span>
+                <span kbqLink (click)="lastNameInput.focus()">Last name</span>
             </span>
         </kbq-alert>
     }

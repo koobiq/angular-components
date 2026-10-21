@@ -6,7 +6,7 @@ import { KbqDataSizePipe } from '@koobiq/components/core';
 import { KbqEllipsisCenterModule } from '@koobiq/components/ellipsis-center';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -26,7 +26,7 @@ import { KbqSingleFileUploadComponent } from './single-file-upload.component';
         KbqFormFieldModule,
         KbqEllipsisCenterModule,
         KbqDataSizePipe,
-        KbqLinkModule,
+        KbqLink,
         NgTemplateOutlet,
         KbqFileDropDirective,
         KbqSingleFileUploadComponent,

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
 /**
@@ -9,7 +9,7 @@ import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components
 @Component({
     selector: 'toast-user-data-example',
     imports: [
-        KbqLinkModule,
+        KbqLink,
         KbqButtonModule
     ],
     templateUrl: 'toast-user-data-example.html',

@@ -19,17 +19,17 @@
         </ng-template>
 
         <ng-template #toastActionsTemplate let-toast>
-            <a kbq-link pseudo (click)="toast.close()">Кнопка 1</a>
-            <a kbq-link pseudo>Кнопка 1</a>
+            <a kbqLink pseudo (click)="toast.close()">Кнопка 1</a>
+            <a kbqLink pseudo>Кнопка 1</a>
         </ng-template>
 
         <ng-template #toastInfoActionsTemplate let-toast>
-            <a kbq-link pseudo>Обновить</a>
-            <a kbq-link pseudo>Что нового ?</a>
+            <a kbqLink pseudo>Обновить</a>
+            <a kbqLink pseudo>Что нового ?</a>
         </ng-template>
 
         <ng-template #toastErrorActionsTemplate let-toast>
-            <a kbq-link pseudo>Повторить</a>
+            <a kbqLink pseudo>Повторить</a>
         </ng-template>
 
         <ng-template #toastStickyContentTemplate let-toast>
@@ -37,7 +37,7 @@
         </ng-template>
 
         <ng-template #toastStickyActionsTemplate let-toast>
-            <a kbq-link pseudo (click)="toast.close()">Отмена</a>
+            <a kbqLink pseudo (click)="toast.close()">Отмена</a>
         </ng-template>
 
         <ng-template #toastCloseButtonTemplate let-toast>
@@ -52,7 +52,7 @@
 
         <ng-template #toastSingleActonContentTemplate let-toast>
             Политика&nbsp;
-            <a kbq-link>Почтовые серверы</a>
+            <a kbqLink>Почтовые серверы</a>
             &nbsp;удалена
         </ng-template>
 
@@ -61,22 +61,22 @@
         </ng-template>
 
         <ng-template #toastTwoActonActionsTemplate let-toast>
-            <a kbq-link pseudo class="layout-margin-right-m">Посмотреть</a>
-            <a kbq-link pseudo (click)="toast.close()">Отклонить</a>
+            <a kbqLink pseudo class="layout-margin-right-m">Посмотреть</a>
+            <a kbqLink pseudo (click)="toast.close()">Отклонить</a>
         </ng-template>
 
         <ng-template #toastManyActonActionsTemplate let-toast>
-            <a kbq-link pseudo>Восстановить</a>
-            <a kbq-link pseudo>Восстановить</a>
+            <a kbqLink pseudo>Восстановить</a>
+            <a kbqLink pseudo>Восстановить</a>
             <a
                 #dropdownTrigger1="kbqDropdownTrigger"
-                kbq-link
+                kbqLink
                 pseudo
                 [class.kbq-active]="dropdownTrigger1.opened"
                 [kbqDropdownTriggerFor]="dropdown"
             >
-                <span class="kbq-link__text">Еще</span>
-                <i kbq-icon="kbq-chevron-down-s_16"></i>
+                Еще
+                <i kbqLinkSuffix kbq-icon="kbq-chevron-down-s_16"></i>
             </a>
         </ng-template>
 
@@ -88,7 +88,7 @@
 
         <ng-template #toastWithInlineLinkTemplate let-toast>
             <p>
-                <a kbq-link>Запрос REQ-20180101-02</a>
+                <a kbqLink>Запрос REQ-20180101-02</a>
                 назначен на вас
             </p>
         </ng-template>

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqUserInfo, KbqUsername } from '@koobiq/components/username';
 
 /**
@@ -7,9 +7,9 @@ import { KbqUserInfo, KbqUsername } from '@koobiq/components/username';
  */
 @Component({
     selector: 'username-as-link-example',
-    imports: [KbqUsername, KbqLinkModule],
+    imports: [KbqUsername, KbqLink],
     template: `
-        <a kbq-link><kbq-username [userInfo]="userInfo" [type]="'inherit'" /></a>
+        <a kbqLink><kbq-username [userInfo]="userInfo" [type]="'inherit'" /></a>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -19,7 +19,7 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
-import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
 import { Subject } from 'rxjs';
 import type { Mock } from 'vitest';
@@ -2611,7 +2611,7 @@ class KbqTooltipWithTemplateRefContent {
 
 @Component({
     selector: 'kbq-tooltip-for-disabled-component',
-    imports: [KbqToolTipModule, KbqButtonModule, KbqIconModule, KbqLinkModule],
+    imports: [KbqToolTipModule, KbqButtonModule, KbqIconModule, KbqLink],
     template: `
         <div #buttonTooltip="kbqTooltip" kbqTooltip="kbq-button" [forDisabledComponent]="button">
             <button #button kbq-button aria-label="Create" [disabled]="disableState">
@@ -2630,8 +2630,8 @@ class KbqTooltipWithTemplateRefContent {
             ></i>
         </div>
 
-        <div #linkTooltip="kbqTooltip" kbqTooltip="kbq-link" [forDisabledComponent]="link">
-            <a #link="kbqLink" kbq-link kbqTooltip="Create" href="http://localhost:8080" [disabled]="disableState">
+        <div #linkTooltip="kbqTooltip" kbqTooltip="kbqLink" [forDisabledComponent]="link">
+            <a #link="kbqLink" kbqLink kbqTooltip="Create" href="http://localhost:8080" [disabled]="disableState">
                 kbq-link
             </a>
         </div>

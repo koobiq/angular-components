@@ -44,7 +44,7 @@ const onCellEnter = (cell: HTMLElement, destroyRef: DestroyRef, callback: (event
                 @for (host of hosts(); track host) {
                     <kbq-badge class="layout-margin-right-xxs" [kbqOverflowItem]="host">{{ host }}</kbq-badge>
                 }
-                <a kbq-link pseudo noUnderline role="button" kbqOverflowItemsResult (click)="collapsed.set(false)">
+                <a kbqLink pseudo kbqOverflowItemsResult (click)="collapsed.set(false)">
                     {{ overflow.hiddenItemIDs().size }} еще
                 </a>
             </div>
@@ -54,7 +54,7 @@ const onCellEnter = (cell: HTMLElement, destroyRef: DestroyRef, callback: (event
                     <kbq-badge class="layout-margin-right-xxs">{{ host }}</kbq-badge>
                 }
             </div>
-            <a kbq-link pseudo noUnderline role="button" (click)="collapsed.set(true)">Свернуть</a>
+            <a kbqLink pseudo (click)="collapsed.set(true)">Свернуть</a>
         }
     `,
     styles: `
@@ -113,7 +113,7 @@ export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularCo
         <div #overflow="kbqOverflowItems" kbqOverflowItems>
             @for (technique of techniques(); track technique.id) {
                 <a
-                    kbq-link
+                    kbqLink
                     target="_blank"
                     rel="noopener noreferrer"
                     [kbqOverflowItem]="technique.id"
@@ -124,9 +124,8 @@ export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularCo
                 </a>
             }
             <a
-                kbq-link
+                kbqLink
                 pseudo
-                noUnderline
                 role="button"
                 kbqOverflowItemsResult
                 kbqPopover
@@ -144,7 +143,7 @@ export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularCo
         <ng-template #allTechniquesContent>
             <div class="example-all-techniques">
                 @for (technique of techniques(); track technique.id) {
-                    <a kbq-link target="_blank" rel="noopener noreferrer" [href]="technique.url">{{ technique.id }}</a>
+                    <a kbqLink target="_blank" rel="noopener noreferrer" [href]="technique.url">{{ technique.id }}</a>
                 }
             </div>
         </ng-template>

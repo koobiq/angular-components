@@ -23,10 +23,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             <i #iconButton #button kbq-icon-button="kbq-plus_16" color="theme" [disabled]="disableState"></i>
         </div>
 
-        <div kbqTooltip="kbq-link" [forDisabledComponent]="link">
+        <div kbqTooltip="kbqLink" [forDisabledComponent]="link">
             <a
                 #link="kbqLink"
-                kbq-link
+                kbqLink
                 kbqTooltip="Create"
                 href="https://koobiq.io"
                 target="_blank"

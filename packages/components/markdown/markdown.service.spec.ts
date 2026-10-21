@@ -12,7 +12,7 @@ describe(KbqMarkdownService.name, () => {
 
     it('should alias the tags marked emits itself', () => {
         expect(service.parseToHtml('paragraph')).toContain('<p class="kbq-markdown__p">');
-        expect(service.parseToHtml('[title](https://koobiq.io)')).toContain('<a class="kbq-markdown__a ');
+        expect(service.parseToHtml('[title](https://koobiq.io)')).toContain('<a class="kbq-markdown__a"');
     });
 
     // `marked` hands raw HTML through untouched, so an author's own markup is what reaches the tag
@@ -37,5 +37,12 @@ describe(KbqMarkdownService.name, () => {
 
         expect(code).toContain('<pre class="kbq-markdown__pre">');
         expect(code).not.toContain('<pre class="kbq-markdown__p">');
+    });
+
+    it('should leave a tag whose name merely starts with an aliased name alone', () => {
+        const html = service.parseToHtml('An <abbr title="HyperText Markup Language">HTML</abbr> page');
+
+        expect(html).toContain('<abbr title="HyperText Markup Language">HTML</abbr>');
+        expect(html).not.toContain('kbq-markdown__a');
     });
 });

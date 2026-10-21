@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastService } from '@koobiq/components/toast';
 
@@ -11,7 +11,7 @@ import { KbqToastService } from '@koobiq/components/toast';
     selector: 'toast-progress-bar-overview-example',
     imports: [
         KbqProgressBarModule,
-        KbqLinkModule,
+        KbqLink,
         KbqButtonModule
     ],
     template: `
@@ -20,16 +20,7 @@ import { KbqToastService } from '@koobiq/components/toast';
         </ng-template>
 
         <ng-template #toastStickyActionsTemplate let-toast>
-            <a
-                kbq-link
-                pseudo
-                role="button"
-                (click)="toast.close()"
-                (keydown.enter)="toast.close()"
-                (keydown.space)="$event.preventDefault(); toast.close()"
-            >
-                Отмена
-            </a>
+            <a kbqLink pseudo (click)="toast.close()">Отмена</a>
         </ng-template>
 
         <button kbq-button (click)="showStickyToast(toastStickyContentTemplate, toastStickyActionsTemplate)">

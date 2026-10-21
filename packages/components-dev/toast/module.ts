@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, TemplateRef, ViewEncapsulation, inj
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
@@ -86,7 +86,8 @@ export class DevToastComponent extends KbqToastComponent {
     imports: [
         KbqButtonModule,
         KbqIconModule,
-        KbqLinkModule,
+        KbqLink,
+        KbqLinkSuffix,
         KbqToastModule,
         KbqProgressBarModule,
         KbqDropdownModule,

@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
 import { KbqTimeRange, KbqTimeRangeType } from '@koobiq/components/time-range';
 
 /**
@@ -15,26 +15,25 @@ import { KbqTimeRange, KbqTimeRangeType } from '@koobiq/components/time-range';
         ReactiveFormsModule,
         KbqTimeRange,
         LuxonDateModule,
-        KbqLinkModule,
+        KbqLink,
+        KbqLinkSuffix,
         KbqIconModule
     ],
     template: `
         <ng-template #titleTemplate let-context>
-            <a kbq-link pseudo>
-                <span class="kbq-link__text">
-                    @if (context.startDateTime && context.endDateTime) {
-                        {{
-                            dateFormatter.rangeLongDate(
-                                dateAdapter.deserialize(context.startDateTime),
-                                dateAdapter.deserialize(context.endDateTime)
-                            )
-                        }}
-                    } @else {
-                        {{ context.formattedDate }}
-                    }
-                </span>
+            <a kbqLink pseudo>
+                @if (context.startDateTime && context.endDateTime) {
+                    {{
+                        dateFormatter.rangeLongDate(
+                            dateAdapter.deserialize(context.startDateTime),
+                            dateAdapter.deserialize(context.endDateTime)
+                        )
+                    }}
+                } @else {
+                    {{ context.formattedDate }}
+                }
 
-                <i kbq-icon="kbq-calendar-o_16"></i>
+                <i kbqLinkSuffix kbq-icon="kbq-calendar-o_16"></i>
             </a>
         </ng-template>
 

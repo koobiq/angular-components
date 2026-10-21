@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqDynamicTranslationModule } from '@koobiq/components/dynamic-translation';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 
 /**
  * @title Dynamic translation overview example
  */
 @Component({
     selector: 'dynamic-translation-overview-example',
-    imports: [KbqDynamicTranslationModule, KbqLinkModule],
+    imports: [KbqDynamicTranslationModule, KbqLink],
     template: `
         <kbq-dynamic-translation text="Incident created. [[link:Open in a new tab]] to continue working.">
             <a
                 *kbqDynamicTranslationSlot="'link'; let context"
-                kbq-link
+                kbqLink
                 href="https://koobiq.io/en/components/dynamic-translation"
                 target="_blank"
             >

@@ -1,8 +1,13 @@
 @use 'sass:string';
 
-@use '../core/styles/common/tokens' as *;
+@use '../../core/styles/common/tokens' as *;
 
 @use './link-tokens';
+
+// The links this theme styles: the directive and any markup that carries its classes. The `KbqLink` component
+// shares the `kbq-link` class but brings a stylesheet of its own, and `:where()` keeps it out without changing the
+// specificity of a single rule here.
+$_kbq-link: '.kbq-link:where(:not([kbqlink]))';
 
 // Unquoted, so that the joiner reaches the CSS as an escape rather than as an invisible character
 $_kbq-link-word-joiner: string.unquote('"\\2060"');
@@ -164,7 +169,7 @@ $_kbq-link-trailing-icon-reserve: 15.5px;
 }
 
 @mixin kbq-link-theme() {
-    .kbq-link {
+    #{$_kbq-link} {
         @include kbq-link-geometry();
 
         @include kbq-link-state();
@@ -243,15 +248,15 @@ $_kbq-link-trailing-icon-reserve: 15.5px;
 }
 
 @mixin kbq-link-typography() {
-    .kbq-link {
+    #{$_kbq-link} {
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
-    .kbq-link.kbq-link_compact {
+    #{$_kbq-link}.kbq-link_compact {
         @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 
-    .kbq-link.kbq-link_big {
+    #{$_kbq-link}.kbq-link_big {
         @include kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 }

@@ -127,13 +127,11 @@ const isHtmlElement = (tag: string): tag is HtmlElement => Object.hasOwn(HTML_EL
 /** Markdown that renders as a block element, which the browser would move out of `<p>` as well. */
 const BLOCK_NODES = new Set(['blockquote', 'code', 'heading', 'list', 'paragraph', 'table', 'thematicBreak']);
 
-const LINK_CLASSES = 'docs-markdown__a kbq-link kbq-text-only kbq-link_use-visited';
-
 /** Classes of the documentation typography for an element the page writes in HTML. */
 const getElementClass = (tag: string): string | null => {
     if (!MARKDOWN_TAGS_TO_CLASS_ALIAS.includes(tag) && !MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS.includes(tag)) return null;
 
-    return tag === 'a' ? `${CLASS_PREFIX}__a ${LINK_CLASSES}` : `${CLASS_PREFIX}__${tag}`;
+    return `${CLASS_PREFIX}__${tag}`;
 };
 
 /**

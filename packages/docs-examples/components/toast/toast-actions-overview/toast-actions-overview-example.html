@@ -5,68 +5,20 @@
 </ng-template>
 
 <ng-template #toastSingleActonActionsTemplate let-toast>
-    <a
-        kbq-link
-        pseudo
-        role="button"
-        (click)="toast.close()"
-        (keydown.enter)="toast.close()"
-        (keydown.space)="$event.preventDefault(); toast.close()"
-    >
-        Восстановить
-    </a>
+    <a kbqLink pseudo (click)="toast.close()">Восстановить</a>
 </ng-template>
 
 <ng-template #toastTwoActonActionsTemplate let-toast>
-    <a
-        kbq-link
-        pseudo
-        role="button"
-        class="layout-margin-right-m"
-        (click)="toast.close()"
-        (keydown.enter)="toast.close()"
-        (keydown.space)="$event.preventDefault(); toast.close()"
-    >
-        Посмотреть
-    </a>
-    <a
-        kbq-link
-        pseudo
-        role="button"
-        (click)="toast.close()"
-        (keydown.enter)="toast.close()"
-        (keydown.space)="$event.preventDefault(); toast.close()"
-    >
-        Отклонить
-    </a>
+    <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">Посмотреть</a>
+    <a kbqLink pseudo (click)="toast.close()">Отклонить</a>
 </ng-template>
 
 <ng-template #toastManyActionActionsTemplate let-toast>
-    <a
-        kbq-link
-        pseudo
-        role="button"
-        class="layout-margin-right-m"
-        (click)="toast.close()"
-        (keydown.enter)="toast.close()"
-        (keydown.space)="$event.preventDefault(); toast.close()"
-    >
-        Действие 1
-    </a>
-    <a
-        kbq-link
-        pseudo
-        role="button"
-        class="layout-margin-right-m"
-        (click)="toast.close()"
-        (keydown.enter)="toast.close()"
-        (keydown.space)="$event.preventDefault(); toast.close()"
-    >
-        Действие 2
-    </a>
-    <a kbq-link pseudo role="button" [kbqDropdownTriggerFor]="dropdown">
-        <span class="kbq-link__text">Еще</span>
-        <i kbq-icon="kbq-chevron-down-s_16"></i>
+    <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">Действие 1</a>
+    <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">Действие 2</a>
+    <a kbqLink pseudo role="button" [kbqDropdownTriggerFor]="dropdown">
+        Еще
+        <i kbqLinkSuffix kbq-icon="kbq-chevron-down-s_16"></i>
     </a>
 </ng-template>
 <kbq-dropdown #dropdown="kbqDropdown">

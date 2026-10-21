@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastComponent } from './toast.component';
@@ -22,7 +22,7 @@ import { KbqToastStyle } from './toast.type';
 
 @Component({
     selector: 'e2e-toast-states',
-    imports: [KbqToastModule, KbqIconModule, KbqLinkModule, KbqProgressBarModule],
+    imports: [KbqToastModule, KbqIconModule, KbqLink, KbqProgressBarModule],
     template: `
         <div data-testid="e2eScreenshotTarget">
             <ng-template #toastIconTemplate>
@@ -42,8 +42,8 @@ import { KbqToastStyle } from './toast.type';
             </ng-template>
 
             <ng-template #toastActionsTemplate>
-                <a kbq-link pseudo>Кнопка 1</a>
-                <a kbq-link pseudo>Кнопка 1</a>
+                <a kbqLink pseudo>Кнопка 1</a>
+                <a kbqLink pseudo>Кнопка 1</a>
             </ng-template>
 
             <kbq-toast-container

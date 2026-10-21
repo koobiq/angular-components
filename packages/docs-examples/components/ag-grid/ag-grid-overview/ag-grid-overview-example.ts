@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -16,9 +16,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
     selector: 'example-link-cell-renderer',
-    imports: [KbqLinkModule],
+    imports: [KbqLink],
     template: `
-        <a kbq-link href="https://koobiq.io/en/components/ag-grid" target="_blank">{{ cellValue }}</a>
+        <a kbqLink href="https://koobiq.io/en/components/ag-grid" target="_blank">{{ cellValue }}</a>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

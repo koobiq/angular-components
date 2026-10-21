@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsLanguagePreferences } from 'src/app/services/preferences';
 import { docsKoobiqVersion } from '../../version';
@@ -11,7 +10,6 @@ import { DocsVersionPickerDirective } from '../version-picker/version-picker.dir
     selector: 'docs-footer',
     imports: [
         KbqIconModule,
-        KbqLinkModule,
         KbqDropdownModule,
         DocsVersionPickerDirective
     ],

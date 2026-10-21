@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, viewChild } from '@angular/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { DocsLocaleState } from '../../services/locale';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
 
@@ -10,7 +10,7 @@ import { DocsAnchorsComponent } from '../anchors/anchors.component';
     imports: [
         DocsAnchorsComponent,
         KbqDividerModule,
-        KbqLinkModule
+        KbqLink
     ],
     template: `
         <div class="docs-component-viewer__article">
@@ -27,10 +27,10 @@ import { DocsAnchorsComponent } from '../anchors/anchors.component';
                 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
                     @if (isRuLocale()) {
                         Если вы нашли ошибку или хотите доработать статью,
-                        <a big href="https://github.com/koobiq/angular-components/issues/new/choose" kbq-link>создайте запрос на&nbsp;GitHub</a>.
+                        <a size="big" href="https://github.com/koobiq/angular-components/issues/new/choose" kbqLink>создайте запрос на&nbsp;GitHub</a>.
                     } @else {
                         If you found a mistake or want to improve the article,
-                        <a big href="https://github.com/koobiq/angular-components/issues/new/choose" kbq-link>create an issue on GitHub</a>.
+                        <a size="big" href="https://github.com/koobiq/angular-components/issues/new/choose" kbqLink>create an issue on GitHub</a>.
                     }
                 </div>
             </div>

@@ -12,141 +12,117 @@
     <tr>
         <td>
             <div style="width: 200px">
-                <a href="https://koobiq.io/en/components/link" kbq-link [compact]="true" [disabled]="true">
-                    <i kbq-icon="kbq-clock_16"></i>
-                    <span class="kbq-link__text">Отчет сканирования Отчет сканирования</span>
+                <a href="https://koobiq.io/en/components/link" kbqLink size="compact" [disabled]="true">
+                    <i kbqLinkPrefix kbq-icon="kbq-clock_16"></i>
+                    Отчет сканирования Отчет сканирования
                 </a>
             </div>
         </td>
         <td>
             <div style="width: 200px">
-                <a href="https://koobiq.io/en/components/link" kbq-link [compact]="true">
-                    <i kbq-icon="kbq-clock_16"></i>
-                    <span class="kbq-link__text">Отчет сканирования Отчет сканирования</span>
+                <a href="https://koobiq.io/en/components/link" kbqLink size="compact">
+                    <i kbqLinkPrefix kbq-icon="kbq-clock_16"></i>
+                    Отчет сканирования Отчет сканирования
                 </a>
             </div>
         </td>
     </tr>
     <tr>
         <td>
-            <a href="http://localhost:3003/" kbq-link print [compact]="true" [disabled]="true">Отчет сканирования</a>
+            <a href="http://localhost:3003/" kbqLink print size="compact" [disabled]="true">Отчет сканирования</a>
         </td>
         <td>
-            <a href="http://localhost:3003/" kbq-link print="localhost:3003/" [compact]="true">Отчет сканирования</a>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <a href="{{ url }}" kbq-link noUnderline [compact]="true" [disabled]="true">Отчет сканирования</a>
-        </td>
-        <td>
-            <a href="{{ url }}" kbq-link noUnderline [compact]="true">Отчет сканирования</a>
+            <a href="http://localhost:3003/" kbqLink print="localhost:3003/" size="compact">Отчет сканирования</a>
         </td>
     </tr>
     <tr>
         <td>
-            <a href="{{ url }}" kbq-link target="_blank" class="kbq-link_external" [compact]="true" [disabled]="true">
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
-            </a>
+            <a href="{{ url }}" kbqLink underline="none" size="compact" [disabled]="true">Отчет сканирования</a>
         </td>
         <td>
-            <a href="{{ url }}" kbq-link target="_blank" class="kbq-link_external" [compact]="true">
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
-            </a>
+            <a href="{{ url }}" kbqLink underline="none" size="compact">Отчет сканирования</a>
         </td>
     </tr>
     <tr>
         <td>
-            <a href="{{ url }}" kbq-link target="_blank" class="kbq-link_external" [compact]="true" [disabled]="true">
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
-            </a>
+            <a href="{{ url }}" kbqLink external target="_blank" size="compact" [disabled]="true">Отчет сканирования</a>
         </td>
         <td>
-            <a href="{{ url }}" kbq-link target="_blank" class="kbq-link_external" [compact]="true">
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
-            </a>
+            <a href="{{ url }}" kbqLink external target="_blank" size="compact">Отчет сканирования</a>
         </td>
     </tr>
     <tr>
         <td>
-            <a
-                href="{{ url }}"
-                kbq-link
-                target="_blank"
-                useVisited
-                class="kbq-link_external"
-                [compact]="true"
-                [disabled]="true"
-            >
-                <i kbq-icon="kbq-calendar-o_16"></i>
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
+            <a href="{{ url }}" kbqLink external target="_blank" size="compact" [disabled]="true">Отчет сканирования</a>
+        </td>
+        <td>
+            <a href="{{ url }}" kbqLink external target="_blank" size="compact">Отчет сканирования</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ url }}" kbqLink external target="_blank" useVisited size="compact" [disabled]="true">
+                <i kbqLinkPrefix kbq-icon="kbq-calendar-o_16"></i>
+                Отчет сканирования
             </a>
         </td>
         <td>
-            <a href="{{ url }}" kbq-link target="_blank" useVisited class="kbq-link_external" [compact]="true">
-                <i kbq-icon="kbq-calendar-o_16"></i>
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
+            <a href="{{ url }}" kbqLink external target="_blank" useVisited size="compact">
+                <i kbqLinkPrefix kbq-icon="kbq-calendar-o_16"></i>
+                Отчет сканирования
             </a>
         </td>
     </tr>
     <tr class="kbq-text-compact">
         <td>
             В
-            <span kbq-link pseudo [compact]="true" [disabled]="true">западной традиции</span>
+            <span kbqLink size="compact" [disabled]="true">западной традиции</span>
             рыбой выступает фрагмент латинского текста из философского трактата Цицерона
-            <span kbq-link pseudo class="kbq-text-with-dot" [compact]="true" [disabled]="true">
-                <span class="kbq-link__text">«О пределах добра и зла», написанного в 45 году до нашей эры</span>
-                <span>.</span>
+            <span kbqLink size="compact" [disabled]="true">
+                «О пределах добра и зла», написанного в 45 году до нашей эры
+                <span kbqLinkSuffix>.</span>
             </span>
-            <span kbq-link pseudo class="kbq-text-with-dot" [compact]="true" [disabled]="true">
-                <span class="kbq-link__text">
-                    Впервые этот текст был применен для набора шрифтовых образцов неизвестным печатником еще в XVI веке
-                </span>
-                <span>.</span>
+            <span kbqLink size="compact" [disabled]="true">
+                Впервые этот текст был применен для набора шрифтовых образцов неизвестным печатником еще в XVI веке
+
+                <span kbqLinkSuffix>.</span>
             </span>
         </td>
         <td>
             В
-            <span kbq-link pseudo [compact]="true">западной традиции</span>
+            <span kbqLink size="compact">западной традиции</span>
             рыбой выступает фрагмент латинского текста из философского трактата Цицерона
-            <span kbq-link pseudo class="kbq-text-with-dot" [compact]="true">
-                <span class="kbq-link__text">«О пределах добра и зла», написанного в 45 году до нашей эры</span>
-                <span>.</span>
+            <span kbqLink size="compact">
+                «О пределах добра и зла», написанного в 45 году до нашей эры
+                <span kbqLinkSuffix>.</span>
             </span>
-            <span kbq-link pseudo class="kbq-text-with-dot" [compact]="true">
-                <span class="kbq-link__text">
-                    Впервые этот текст был применен для набора шрифтовых образцов неизвестным печатником еще в XVI веке
-                </span>
-                <span>.</span>
+            <span kbqLink size="compact">
+                Впервые этот текст был применен для набора шрифтовых образцов неизвестным печатником еще в XVI веке
+
+                <span kbqLinkSuffix>.</span>
             </span>
         </td>
     </tr>
     <tr>
         <td>
-            <span kbq-link pseudo [compact]="true" [disabled]="true">Отчет сканирования (pseudo)</span>
+            <span kbqLink size="compact" [disabled]="true">Отчет сканирования (pseudo)</span>
         </td>
         <td>
-            <span kbq-link pseudo [compact]="true">Отчет сканирования (pseudo)</span>
+            <span kbqLink size="compact">Отчет сканирования (pseudo)</span>
         </td>
     </tr>
     <tr>
         <td>
-            <span kbq-link pseudo [compact]="true" [disabled]="true">
-                <i kbq-icon="kbq-calendar-o_16"></i>
-                <span class="kbq-link__text">Отчет сканирования (pseudo)</span>
+            <span kbqLink size="compact" [disabled]="true">
+                <i kbqLinkPrefix kbq-icon="kbq-calendar-o_16"></i>
+                Отчет сканирования (pseudo)
             </span>
         </td>
 
         <td>
-            <span kbq-link pseudo [compact]="true">
-                <i kbq-icon="kbq-calendar-o_16"></i>
-                <span class="kbq-link__text">Отчет сканирования (pseudo)</span>
+            <span kbqLink size="compact">
+                <i kbqLinkPrefix kbq-icon="kbq-calendar-o_16"></i>
+                Отчет сканирования (pseudo)
             </span>
         </td>
     </tr>
@@ -164,133 +140,117 @@
     <tr>
         <td>
             <div style="width: 200px">
-                <a href="https://koobiq.io/en/components/link" kbq-link [disabled]="true">
-                    <i kbq-icon="kbq-clock_16"></i>
-                    <span class="kbq-link__text">Отчет сканирования Отчет сканирования</span>
+                <a href="https://koobiq.io/en/components/link" kbqLink [disabled]="true">
+                    <i kbqLinkPrefix kbq-icon="kbq-clock_16"></i>
+                    Отчет сканирования Отчет сканирования
                 </a>
             </div>
         </td>
         <td>
             <div style="width: 200px">
-                <a href="https://koobiq.io/en/components/link" kbq-link>
-                    <i kbq-icon="kbq-clock_16"></i>
-                    <span class="kbq-link__text">Отчет сканирования Отчет сканирования</span>
+                <a href="https://koobiq.io/en/components/link" kbqLink>
+                    <i kbqLinkPrefix kbq-icon="kbq-clock_16"></i>
+                    Отчет сканирования Отчет сканирования
                 </a>
             </div>
         </td>
     </tr>
     <tr>
         <td>
-            <a href="http://localhost:3003/" kbq-link print [disabled]="true">Отчет сканирования</a>
+            <a href="http://localhost:3003/" kbqLink print [disabled]="true">Отчет сканирования</a>
         </td>
         <td>
-            <a href="http://localhost:3003/" kbq-link print="localhost:3003/">Отчет сканирования</a>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <a href="{{ url }}" kbq-link noUnderline [disabled]="true">Отчет сканирования</a>
-        </td>
-        <td>
-            <a href="{{ url }}" kbq-link noUnderline>Отчет сканирования</a>
+            <a href="http://localhost:3003/" kbqLink print="localhost:3003/">Отчет сканирования</a>
         </td>
     </tr>
     <tr>
         <td>
-            <a href="{{ url }}" kbq-link target="_blank" class="kbq-link_external" [disabled]="true">
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
-            </a>
+            <a href="{{ url }}" kbqLink underline="none" [disabled]="true">Отчет сканирования</a>
         </td>
         <td>
-            <a href="{{ url }}" kbq-link target="_blank" class="kbq-link_external">
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
-            </a>
+            <a href="{{ url }}" kbqLink underline="none">Отчет сканирования</a>
         </td>
     </tr>
     <tr>
         <td>
-            <a href="{{ url }}" kbq-link target="_blank" class="kbq-link_external" [disabled]="true">
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
-            </a>
+            <a href="{{ url }}" kbqLink external target="_blank" [disabled]="true">Отчет сканирования</a>
         </td>
         <td>
-            <a href="{{ url }}" kbq-link target="_blank" class="kbq-link_external">
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
-            </a>
+            <a href="{{ url }}" kbqLink external target="_blank">Отчет сканирования</a>
         </td>
     </tr>
     <tr>
         <td>
-            <a href="{{ url }}" kbq-link target="_blank" useVisited class="kbq-link_external" [disabled]="true">
-                <i kbq-icon="kbq-calendar-o_16"></i>
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
+            <a href="{{ url }}" kbqLink external target="_blank" [disabled]="true">Отчет сканирования</a>
+        </td>
+        <td>
+            <a href="{{ url }}" kbqLink external target="_blank">Отчет сканирования</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ url }}" kbqLink external target="_blank" useVisited [disabled]="true">
+                <i kbqLinkPrefix kbq-icon="kbq-calendar-o_16"></i>
+                Отчет сканирования
             </a>
         </td>
         <td>
-            <a href="{{ url }}" kbq-link target="_blank" useVisited class="kbq-link_external">
-                <i kbq-icon="kbq-calendar-o_16"></i>
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
+            <a href="{{ url }}" kbqLink external target="_blank" useVisited>
+                <i kbqLinkPrefix kbq-icon="kbq-calendar-o_16"></i>
+                Отчет сканирования
             </a>
         </td>
     </tr>
     <tr class="kbq-text-normal">
         <td>
             В
-            <span kbq-link pseudo [disabled]="true">западной традиции</span>
+            <span kbqLink [disabled]="true">западной традиции</span>
             рыбой выступает фрагмент латинского текста из философского трактата Цицерона
-            <span kbq-link pseudo class="kbq-text-with-dot" [disabled]="true">
-                <span class="kbq-link__text">«О пределах добра и зла», написанного в 45 году до нашей эры</span>
-                <span>.</span>
+            <span kbqLink [disabled]="true">
+                «О пределах добра и зла», написанного в 45 году до нашей эры
+                <span kbqLinkSuffix>.</span>
             </span>
-            <span kbq-link pseudo class="kbq-text-with-dot" [disabled]="true">
-                <span class="kbq-link__text">
-                    Впервые этот текст был применен для набора шрифтовых образцов неизвестным печатником еще в XVI веке
-                </span>
-                <span>.</span>
+            <span kbqLink [disabled]="true">
+                Впервые этот текст был применен для набора шрифтовых образцов неизвестным печатником еще в XVI веке
+
+                <span kbqLinkSuffix>.</span>
             </span>
         </td>
         <td>
             В
-            <span kbq-link pseudo>западной традиции</span>
+            <span kbqLink>западной традиции</span>
             рыбой выступает фрагмент латинского текста из философского трактата Цицерона
-            <span kbq-link pseudo class="kbq-text-with-dot">
-                <span class="kbq-link__text">«О пределах добра и зла», написанного в 45 году до нашей эры</span>
-                <span>.</span>
+            <span kbqLink>
+                «О пределах добра и зла», написанного в 45 году до нашей эры
+                <span kbqLinkSuffix>.</span>
             </span>
-            <span kbq-link pseudo class="kbq-text-with-dot">
-                <span class="kbq-link__text">
-                    Впервые этот текст был применен для набора шрифтовых образцов неизвестным печатником еще в XVI веке
-                </span>
-                <span>.</span>
+            <span kbqLink>
+                Впервые этот текст был применен для набора шрифтовых образцов неизвестным печатником еще в XVI веке
+
+                <span kbqLinkSuffix>.</span>
             </span>
         </td>
     </tr>
     <tr>
         <td>
-            <span kbq-link pseudo [disabled]="true">Отчет сканирования (pseudo)</span>
+            <span kbqLink [disabled]="true">Отчет сканирования (pseudo)</span>
         </td>
         <td>
-            <span kbq-link pseudo>Отчет сканирования (pseudo)</span>
+            <span kbqLink>Отчет сканирования (pseudo)</span>
         </td>
     </tr>
     <tr>
         <td>
-            <span kbq-link pseudo [disabled]="true">
-                <i kbq-icon="kbq-calendar-o_16"></i>
-                <span class="kbq-link__text">Отчет сканирования (pseudo)</span>
+            <span kbqLink [disabled]="true">
+                <i kbqLinkPrefix kbq-icon="kbq-calendar-o_16"></i>
+                Отчет сканирования (pseudo)
             </span>
         </td>
 
         <td>
-            <span kbq-link pseudo>
-                <i kbq-icon="kbq-calendar-o_16"></i>
-                <span class="kbq-link__text">Отчет сканирования (pseudo)</span>
+            <span kbqLink>
+                <i kbqLinkPrefix kbq-icon="kbq-calendar-o_16"></i>
+                Отчет сканирования (pseudo)
             </span>
         </td>
     </tr>
@@ -308,133 +268,117 @@
     <tr>
         <td>
             <div style="width: 200px">
-                <a big href="https://koobiq.io/en/components/link" kbq-link [disabled]="true">
-                    <i kbq-icon="kbq-clock_16"></i>
-                    <span class="kbq-link__text">Отчет сканирования Отчет сканирования</span>
+                <a size="big" href="https://koobiq.io/en/components/link" kbqLink [disabled]="true">
+                    <i kbqLinkPrefix kbq-icon="kbq-clock_16"></i>
+                    Отчет сканирования Отчет сканирования
                 </a>
             </div>
         </td>
         <td>
             <div style="width: 200px">
-                <a big href="https://koobiq.io/en/components/link" kbq-link>
-                    <i kbq-icon="kbq-clock_16"></i>
-                    <span class="kbq-link__text">Отчет сканирования Отчет сканирования</span>
+                <a size="big" href="https://koobiq.io/en/components/link" kbqLink>
+                    <i kbqLinkPrefix kbq-icon="kbq-clock_16"></i>
+                    Отчет сканирования Отчет сканирования
                 </a>
             </div>
         </td>
     </tr>
     <tr>
         <td>
-            <a big href="http://localhost:3003/" kbq-link print [disabled]="true">Отчет сканирования</a>
+            <a size="big" href="http://localhost:3003/" kbqLink print [disabled]="true">Отчет сканирования</a>
         </td>
         <td>
-            <a big href="http://localhost:3003/" kbq-link print="localhost:3003/">Отчет сканирования</a>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <a href="{{ url }}" big kbq-link noUnderline [disabled]="true">Отчет сканирования</a>
-        </td>
-        <td>
-            <a href="{{ url }}" big kbq-link noUnderline>Отчет сканирования</a>
+            <a size="big" href="http://localhost:3003/" kbqLink print="localhost:3003/">Отчет сканирования</a>
         </td>
     </tr>
     <tr>
         <td>
-            <a href="{{ url }}" big kbq-link target="_blank" class="kbq-link_external" [disabled]="true">
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
-            </a>
+            <a href="{{ url }}" size="big" kbqLink underline="none" [disabled]="true">Отчет сканирования</a>
         </td>
         <td>
-            <a href="{{ url }}" big kbq-link target="_blank" class="kbq-link_external">
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
-            </a>
+            <a href="{{ url }}" size="big" kbqLink underline="none">Отчет сканирования</a>
         </td>
     </tr>
     <tr>
         <td>
-            <a href="{{ url }}" big kbq-link target="_blank" class="kbq-link_external" [disabled]="true">
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
-            </a>
+            <a href="{{ url }}" size="big" kbqLink external target="_blank" [disabled]="true">Отчет сканирования</a>
         </td>
         <td>
-            <a href="{{ url }}" big kbq-link target="_blank" class="kbq-link_external">
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
-            </a>
+            <a href="{{ url }}" size="big" kbqLink external target="_blank">Отчет сканирования</a>
         </td>
     </tr>
     <tr>
         <td>
-            <a href="{{ url }}" big kbq-link target="_blank" useVisited class="kbq-link_external" [disabled]="true">
-                <i kbq-icon="kbq-calendar-o_16"></i>
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
+            <a href="{{ url }}" size="big" kbqLink external target="_blank" [disabled]="true">Отчет сканирования</a>
+        </td>
+        <td>
+            <a href="{{ url }}" size="big" kbqLink external target="_blank">Отчет сканирования</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{ url }}" size="big" kbqLink external target="_blank" useVisited [disabled]="true">
+                <i kbqLinkPrefix kbq-icon="kbq-calendar-o_16"></i>
+                Отчет сканирования
             </a>
         </td>
         <td>
-            <a href="{{ url }}" big kbq-link target="_blank" useVisited class="kbq-link_external">
-                <i kbq-icon="kbq-calendar-o_16"></i>
-                <span class="kbq-link__text">Отчет сканирования</span>
-                <i kbq-icon="kbq-north-east_16"></i>
+            <a href="{{ url }}" size="big" kbqLink external target="_blank" useVisited>
+                <i kbqLinkPrefix kbq-icon="kbq-calendar-o_16"></i>
+                Отчет сканирования
             </a>
         </td>
     </tr>
     <tr>
         <td>
             В
-            <span big kbq-link pseudo [disabled]="true">западной традиции</span>
+            <span size="big" kbqLink [disabled]="true">западной традиции</span>
             рыбой выступает фрагмент латинского текста из философского трактата Цицерона
-            <span big kbq-link pseudo class="kbq-text-with-dot" [disabled]="true">
-                <span class="kbq-link__text">«О пределах добра и зла», написанного в 45 году до нашей эры</span>
-                <span>.</span>
+            <span size="big" kbqLink [disabled]="true">
+                «О пределах добра и зла», написанного в 45 году до нашей эры
+                <span kbqLinkSuffix>.</span>
             </span>
-            <span big kbq-link pseudo class="kbq-text-with-dot" [disabled]="true">
-                <span class="kbq-link__text">
-                    Впервые этот текст был применен для набора шрифтовых образцов неизвестным печатником еще в XVI веке
-                </span>
-                <span>.</span>
+            <span size="big" kbqLink [disabled]="true">
+                Впервые этот текст был применен для набора шрифтовых образцов неизвестным печатником еще в XVI веке
+
+                <span kbqLinkSuffix>.</span>
             </span>
         </td>
         <td>
             В
-            <span big kbq-link pseudo>западной традиции</span>
+            <span size="big" kbqLink>западной традиции</span>
             рыбой выступает фрагмент латинского текста из философского трактата Цицерона
-            <span big kbq-link pseudo class="kbq-text-with-dot">
-                <span class="kbq-link__text">«О пределах добра и зла», написанного в 45 году до нашей эры</span>
-                <span>.</span>
+            <span size="big" kbqLink>
+                «О пределах добра и зла», написанного в 45 году до нашей эры
+                <span kbqLinkSuffix>.</span>
             </span>
-            <span big kbq-link pseudo class="kbq-text-with-dot">
-                <span class="kbq-link__text">
-                    Впервые этот текст был применен для набора шрифтовых образцов неизвестным печатником еще в XVI веке
-                </span>
-                <span>.</span>
+            <span size="big" kbqLink>
+                Впервые этот текст был применен для набора шрифтовых образцов неизвестным печатником еще в XVI веке
+
+                <span kbqLinkSuffix>.</span>
             </span>
         </td>
     </tr>
     <tr>
         <td>
-            <span big kbq-link pseudo [disabled]="true">Отчет сканирования (pseudo)</span>
+            <span size="big" kbqLink [disabled]="true">Отчет сканирования (pseudo)</span>
         </td>
         <td>
-            <span big kbq-link pseudo>Отчет сканирования (pseudo)</span>
+            <span size="big" kbqLink>Отчет сканирования (pseudo)</span>
         </td>
     </tr>
     <tr>
         <td>
-            <span big kbq-link pseudo [disabled]="true">
-                <i kbq-icon="kbq-calendar-o_16"></i>
-                <span class="kbq-link__text">Отчет сканирования (pseudo)</span>
+            <span size="big" kbqLink [disabled]="true">
+                <i kbqLinkPrefix kbq-icon="kbq-calendar-o_16"></i>
+                Отчет сканирования (pseudo)
             </span>
         </td>
 
         <td>
-            <span big kbq-link pseudo>
-                <i kbq-icon="kbq-calendar-o_16"></i>
-                <span class="kbq-link__text">Отчет сканирования (pseudo)</span>
+            <span size="big" kbqLink>
+                <i kbqLinkPrefix kbq-icon="kbq-calendar-o_16"></i>
+                Отчет сканирования (pseudo)
             </span>
         </td>
     </tr>
