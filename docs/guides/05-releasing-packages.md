@@ -28,7 +28,10 @@ are still supported.
     - (**needs confirmation**) enter a `release name`
         - you can use [angular-release-name-generator](https://www.npmjs.com/package/angular-release-name-generator)
     - (**needs confirmation**) generate the changelog section
-    - commit the bumped `package.json` and `CHANGELOG.md` as `chore: bump version to X.Y.Z w/ changelog`
+    - commit the bumped `package.json` and `CHANGELOG.md` as `chore: bump version to X.Y.Z w/ changelog` — this
+      stages everything the hooks above touched too, so `apps/docs/src/{llms.txt,sitemap.xml,prerender-routes.txt}`
+      and `packages/mcp/data/{guides.json,history.json}` showing up changed in this commit is expected, not a
+      mistake to drop
     - create a signed annotated git tag `X.Y.Z` whose message is the changelog section
     - push the branch and the tag
 
