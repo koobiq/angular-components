@@ -56,13 +56,6 @@ const setMetrics = (el: HTMLElement, metrics: ElementMetrics): void => {
     }
 };
 
-// Specs run without the component stylesheets, so a viewport keeps the initial `overflow: visible` and is no
-// scroll container. Longhands, because jsdom does not expand the `overflow` shorthand into the computed style.
-const setScrollContainer = (el: HTMLElement): void => {
-    el.style.overflowX = 'auto';
-    el.style.overflowY = 'auto';
-};
-
 /** `CdkScrollable` lives on `<kbq-scrollbar>`'s own element injector (via `KbqScrollbarViewport`'s hostDirectives), not the test host root. */
 const getScrollable = (fixture: ComponentFixture<unknown>): CdkScrollable =>
     fixture.debugElement.query(By.directive(KbqScrollbar)).injector.get(CdkScrollable);
@@ -369,11 +362,16 @@ describe(KbqScrollbar.name, () => {
             vi.useRealTimers();
         });
 
+        // The `overflow: auto` that `scrollbar.scss` gives the host, which specs run without. In longhands: jsdom does
+        // not expand the shorthand into the computed style. Left at the initial `visible`, the viewport is no scroll
+        // container and paints no bar whatever its metrics.
         @Component({
             selector: 'test-scrollbar-track-visibility',
             imports: [KbqScrollbar],
             template: `
-                <kbq-scrollbar kbqScrollbarMode="always">content</kbq-scrollbar>
+                <kbq-scrollbar kbqScrollbarMode="always" style="overflow-x: auto; overflow-y: auto">
+                    content
+                </kbq-scrollbar>
             `
         })
         class TestScrollbarTrackVisibility {
@@ -408,7 +406,6 @@ describe(KbqScrollbar.name, () => {
         it('shows only the vertical bar when content overflows vertically only', async () => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
 
-            setScrollContainer(getViewportEl(fixture));
             setMetrics(getViewportEl(fixture), {
                 clientHeight: 100,
                 scrollHeight: 500,
@@ -426,7 +423,6 @@ describe(KbqScrollbar.name, () => {
         it('shows only the horizontal bar when content overflows horizontally only', async () => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
 
-            setScrollContainer(getViewportEl(fixture));
             setMetrics(getViewportEl(fixture), {
                 clientHeight: 100,
                 scrollHeight: 100,
@@ -444,7 +440,6 @@ describe(KbqScrollbar.name, () => {
         it('marks both bars _has-horizontal/_has-vertical when both axes overflow', async () => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
 
-            setScrollContainer(getViewportEl(fixture));
             setMetrics(getViewportEl(fixture), {
                 clientHeight: 100,
                 scrollHeight: 500,
@@ -550,7 +545,7 @@ describe(KbqScrollbar.name, () => {
                 selector: 'test-flash-no-overflow',
                 imports: [KbqScrollbar],
                 template: `
-                    <kbq-scrollbar>content</kbq-scrollbar>
+                    <kbq-scrollbar style="overflow-x: auto; overflow-y: auto">content</kbq-scrollbar>
                 `
             })
             class TestFlashNoOverflow {
@@ -725,7 +720,6 @@ describe(KbqScrollbar.name, () => {
             const getAnimated = async (
                 fixture: ComponentFixture<TestScrollbarTrackVisibility>
             ): Promise<HTMLElement[]> => {
-                setScrollContainer(getViewportEl(fixture));
                 setMetrics(getViewportEl(fixture), {
                     clientHeight: 100,
                     scrollHeight: 500,
@@ -772,12 +766,13 @@ describe(KbqScrollbar.name, () => {
             vi.useRealTimers();
         });
 
+        // A scroll container, as in the visibility tests: specs run without the component stylesheets.
         @Component({
             selector: 'test-scrollbar-click-suppression',
             imports: [KbqScrollbar],
             template: `
                 <div (click)="hostClick()">
-                    <kbq-scrollbar [kbqScrollbarMode]="mode">
+                    <kbq-scrollbar style="overflow-x: auto; overflow-y: auto" [kbqScrollbarMode]="mode">
                         <button type="button" class="item">item</button>
                     </kbq-scrollbar>
                 </div>
@@ -790,7 +785,6 @@ describe(KbqScrollbar.name, () => {
         }
 
         const setup = async (fixture: ComponentFixture<TestScrollbarClickSuppression>) => {
-            setScrollContainer(fixture.componentInstance.scrollbar().nativeElement);
             setMetrics(fixture.componentInstance.scrollbar().nativeElement, {
                 clientHeight: 100,
                 scrollHeight: 500,
@@ -899,11 +893,17 @@ describe(KbqScrollbar.name, () => {
             vi.useRealTimers();
         });
 
+        // A scroll container, as in the visibility tests: specs run without the component stylesheets.
         @Component({
             selector: 'test-scrollbar-thumb',
             imports: [KbqScrollbarViewport],
             template: `
-                <div #viewport kbqScrollbarViewport kbqScrollbarMode="always"></div>
+                <div
+                    #viewport
+                    kbqScrollbarViewport
+                    kbqScrollbarMode="always"
+                    style="overflow-x: auto; overflow-y: auto"
+                ></div>
             `
         })
         class TestScrollbarThumb {
@@ -918,7 +918,6 @@ describe(KbqScrollbar.name, () => {
         ): Promise<{ viewport: HTMLElement; bar: HTMLElement; thumb: HTMLElement }> => {
             const viewport = fixture.componentInstance.viewport().nativeElement;
 
-            setScrollContainer(viewport);
             setMetrics(viewport, {
                 clientHeight: 100,
                 scrollHeight: 300,
@@ -975,7 +974,6 @@ describe(KbqScrollbar.name, () => {
                 );
             let readAfterWrite = false;
 
-            setScrollContainer(viewport);
             setMetrics(viewport, { clientHeight: 100, scrollHeight: 300, clientWidth: 100, scrollWidth: 300 });
             Object.defineProperty(viewport, 'scrollTop', {
                 configurable: true,
@@ -1087,7 +1085,13 @@ describe(KbqScrollbar.name, () => {
                 selector: 'test-scrollbar-thumb-rtl',
                 imports: [Dir, KbqScrollbarViewport],
                 template: `
-                    <div #viewport kbqScrollbarViewport kbqScrollbarMode="always" dir="rtl"></div>
+                    <div
+                        #viewport
+                        kbqScrollbarViewport
+                        kbqScrollbarMode="always"
+                        dir="rtl"
+                        style="overflow-x: auto; overflow-y: auto"
+                    ></div>
                 `
             })
             class TestScrollbarThumbRtl extends TestScrollbarThumb {}
@@ -1124,7 +1128,13 @@ describe(KbqScrollbar.name, () => {
                 selector: 'test-scrollbar-thumb-rtl-centering',
                 imports: [Dir, KbqScrollbarViewport],
                 template: `
-                    <div #viewport kbqScrollbarViewport kbqScrollbarMode="always" dir="rtl"></div>
+                    <div
+                        #viewport
+                        kbqScrollbarViewport
+                        kbqScrollbarMode="always"
+                        dir="rtl"
+                        style="overflow-x: auto; overflow-y: auto"
+                    ></div>
                 `
             })
             class TestScrollbarThumbRtlCentering extends TestScrollbarThumb {}
@@ -1149,7 +1159,12 @@ describe(KbqScrollbar.name, () => {
                 imports: [KbqScrollbarViewport],
                 template: `
                     <div dir="rtl">
-                        <div #viewport kbqScrollbarViewport kbqScrollbarMode="always"></div>
+                        <div
+                            #viewport
+                            kbqScrollbarViewport
+                            kbqScrollbarMode="always"
+                            style="overflow-x: auto; overflow-y: auto"
+                        ></div>
                     </div>
                 `
             })

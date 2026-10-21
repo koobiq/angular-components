@@ -330,7 +330,7 @@ describe('KbqDatepicker', () => {
                 const popup = document.querySelector('.cdk-overlay-pane')!;
 
                 expect(popup).not.toBeNull();
-                expect(parseInt(getComputedStyle(popup).height as string)).not.toBe(0);
+                expect(popup.querySelector('.kbq-datepicker__content')).not.toBeNull();
 
                 testComponent.datepicker().close();
                 fixture.detectChanges();
