@@ -148,10 +148,11 @@ describe('non-class entries', () => {
 describe('reading members from source', () => {
     const { KbqDl } = readSourceFile('packages/components/dl/dl.ts').classes;
 
+    // The default is the initializer argument as written, an expression as well as a literal.
     it('reads the initializer API and the default of a signal input', () => {
         expect(KbqDl.members.verticalBreakpoint).toEqual({
             signalApi: 'input',
-            defaultValue: '400',
+            defaultValue: 'this.options.verticalBreakpoint',
             binding: { input: 'verticalBreakpoint', required: false }
         });
     });
@@ -160,7 +161,7 @@ describe('reading members from source', () => {
         expect(KbqDl.members.verticalAlign).toEqual({
             signalApi: 'input',
             declaredType: 'KbqDlAlign',
-            defaultValue: "'start'",
+            defaultValue: 'this.options.verticalAlign',
             binding: { input: 'verticalAlign', required: false }
         });
     });
