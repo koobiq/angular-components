@@ -409,6 +409,82 @@ right after `waitForHydration`, which waits for the network to go idle; the guid
 URL after that, so a single count could see the prerendered page with every step. **Fix:** both bounds are
 polled. **Verified:** the filter tests ×8 at 6 workers locally (48/48).
 
+## Follow-up, 2026-10-21
+
+### `docs app › shows the import of the core API tab reached by a link on another one`
+
+7 occurrences in the 31 `e2e:docs` runs of 2026-10-20 and 2026-10-21, 5 of them on `main`: `Test timeout of
+30000ms exceeded`, the test reported at 31.8–34.1 s. In the runs that passed it took 16.9–30.0 s (median 22 s),
+against 2.2–4.6 s for its `tooltip` twin, which makes the same navigation to a tab of 11 entries. Not a race:
+the trace of run 39592727535 has the core API tab fully rendered when the time ran out, with `toHaveURL`
+blocked for 8 s on a main thread that was still busy 23 s after the click. The time is the render itself.
+
+The test navigates in the app from the select API tab to the core one, the only entry point without an import
+that another tab links to (`link` and `scrollbar` have none either, their modules being `@docs-private`, but
+no tab links to them). The core tab is the largest by far: 484 entries and 376 members, 506 code blocks and
+some 40,000 DOM nodes, against 11 entries and 13 blocks for `tooltip`. Its code blocks are `@defer (on
+immediate; hydrate on hover)` blocks, so after a navigation in the app every one of them renders at once.
+
+Measured on `main` at `997656544`, with a CDP trace of the navigation on a 16-core desktop: the import block
+of the previous tab goes away 3.0 s after the click and the main thread settles after 4.5–6.2 s; at a 4× CPU
+throttle, about what four workers on four vCPUs cost (see [e2e-performance.md](e2e-performance.md)), after
+17.5 s and 19.3 s. The test itself took 7.3 s locally. Where the 5 s go, without throttling:
+
+- Creating the page, one task of 2.0 s. More than half of it is the 847 blocks of JSDoc HTML that
+  `docs-api-text` binds through `[innerHTML]`: 750 ms of `readystatechange` and `DOMContentLoaded` events
+  dispatched on the inert documents the sanitizer parses them into, and 540 ms of parsing. The rest is change
+  detection.
+- 631 forced layouts, 1.8 s, from `kbq-title` on the 493 links of the anchors list. Each instance measures its
+  text when its `ResizeObserver` first fires, debounced in a timer of its own, and the measurement appends a
+  probe span to the container and reads it back: a write and a read per anchor, so each is a layout of the
+  whole page.
+- Highlighting the 506 blocks once highlight.js has loaded, 0.4 s, and the change detection after it, 0.6 s,
+  with 86 more forced layouts from the scrollbar track of each block measuring its viewport.
+
+**Fix.** `test.slow()` for the core case, which triples its budget to 90 s: the assertion needs this tab,
+since nothing smaller proves that the dehydrated import block of the previous tab goes away whole, and the
+30 s of the docs config were sized for hydration plus one example chunk, not for a tab of this size. Nothing
+in the page changed. **Verified:** the docs suite once, 42/42 with the core case at 8.1 s while the whole suite ran in
+parallel on the 16-core desktop, and the two cases ×5 (10/10, core at 5.0–5.9 s), against the 90 s budget.
+
+**`kbq-title` fixed in the same change.** The directive measured on the report its `ResizeObserver` makes for
+an element it starts observing, that is once per instance on creation, and again on every resize and content
+change, while nothing reads the verdict before `handleElementEnter` measures afresh and `hideTooltip` disables
+the tooltip on leave. It now measures only while the pointer or the keyboard focus is on the host, both tracked
+separately: a click on a hovered host reports a mouse focus origin, which hides the tooltip while the pointer
+stays where it was, and the gate is re-checked when the debounce fires, since the pointer may have left in
+between. Measured the same way, **with every block still rendering** (that is, before the follow-up below), forced
+layouts went from 726 (2.35 s) to 95 (0.64 s, the scrollbar tracks of the 506 blocks), the main-thread time of
+the navigation from 6.9 s to 4.9–5.0 s, and the test from 5.0–5.9 s to 3.6–4.9 s locally. Not enough to drop
+`test.slow()`: at the 3–4.5× of a CI worker that is still 13–22 s.
+
+**Follow-up, the same day: the code blocks render as they come into view.** The signature blocks and the code
+blocks of the JSDoc are `@defer (on viewport; hydrate on hover)` blocks now, each with a placeholder that the
+block's own classes lay out (`DocsApiCodePlaceholder` in `api-page.ts`, down to the table the line numbers
+plugin wraps a file of several lines in), so that the page is as tall before a block renders as after and a link
+to a heading lands on it; the import block stays `on immediate`. The server renders every block as before, and a
+block that came from the server still hydrates on hover: the prerendered pages differ by one empty anchor comment
+per block. After the navigation to the core tab 3 blocks render instead of 506, and the page has 22,500 nodes
+instead of 40,800. Measured as above, on the same desktop and the same day: the main thread settles after
+3.3–3.4 s instead of 4.7 s, and the import block of the previous tab goes away after 2.3 s instead of 2.8 s; at
+the 4× throttle, whose runs vary widely, the main thread settles after 19–34 s in four runs (three of them
+within 19–23 s) instead of 26–81 s in three, while the import block goes away after 14–24 s instead of 14–17 s.
+Measured **before the `kbq-title` change above**, so its 720 forced layouts (2.4 s) are still in these numbers.
+The two changes ship together and neither was measured with the other in place, so the figures of this entry
+bound the committed state from either side rather than describing it: the next measurement starts from the
+commit, not from these numbers. What is left is the sanitizer: the 2.1 s task that creates the page, 1.2 s of it
+the sanitizer running at every visit over HTML the build generated from the repository's own JSDoc, is what the
+import test waits for, and a change of its own, left for later. `test.slow()` stays until it lands.
+
+**The trade-off of `on viewport`.** A block nobody scrolls to never renders, so an API tab reached in the app
+prints its unseen blocks as the placeholder: the code is there, as text in the placeholder, without the
+highlighting and the block chrome. A server-rendered visit is unaffected, and the alternative — a second
+trigger such as `on idle` — would render all 506 blocks again a moment after the navigation, which is the cost
+this change removes. Left as is deliberately; revisit it together with the sanitizer. **Verified:** the docs
+suite once, 43/43 with the core case at 8.0 s in parallel on the 16-core desktop, and the API tab tests ×5
+(30/30, core at 6.6–9.0 s), plus a test that reaches the tooltip API tab from its overview, scrolls the
+signature of its enum into view and compares the height of the block with that of its placeholder.
+
 ## Not fixed
 
 - **`tabs › E2eTabsStates › states`** — 1 occurrence, 18769 px by Playwright's count, 27480 raw. The
