@@ -14,7 +14,8 @@ paths:
 - The committed baselines under `__screenshots__` are compared with `threshold: 0` and have no platform suffix, so a native run outside Linux fails on font rasterization alone. `e2e:components` is still useful for the assertion-based specs; use `e2e:docker` whenever screenshots are involved, and never regenerate a baseline any other way. Without a local Docker, comment `/approve-snapshots` on the pull request.
 - The container runs with `CI=true`, so `test.only` is rejected. Retries are 0 everywhere, CI included, so a flaky test fails the run and is named; set `PLAYWRIGHT_RETRIES=<n>` to absorb a known flake and `PLAYWRIGHT_WORKERS=<n>` to change the worker cap.
 - `/approve-snapshots` commits every baseline that differed in the run. Restore the ones the branch cannot affect with `git checkout origin/main -- <png>` instead of approving them.
-- Before approving, diff the failed screenshots pixel by pixel: ±1 per channel on rounded corners is anti-aliasing, hundreds of pixels in a glyph or an icon is a regression.
+- Before approving, diff the failed screenshots pixel by pixel: ±1 per channel on rounded corners is anti-aliasing, hundreds of pixels in a glyph or an icon is a regression. The failure message counts only pixels past the threshold, so a small count is no sign of a flake. A CI actual that is byte-identical to `git show origin/main:<png>` proves the branch does not change that render.
+- To check the framing of a new shot without Docker, run the spec natively once and look at the `-actual.png` it writes; never commit it.
 - Outside Docker, run a new screenshot spec with `--update-snapshots=none`: the default `missing` mode writes a non-Linux baseline.
 
 ## Wiring

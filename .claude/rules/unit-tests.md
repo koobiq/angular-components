@@ -30,5 +30,7 @@ Vitest setup (`vitest.config.mts`, `tools/vitest/`) that shapes how specs are wr
 - Pin an Angular error that fires only in dev mode (NG0309, NG0100) with a unit spec: e2e and the docs build run in production mode, so nothing else catches it.
 - `strictPropertyInitialization` is off and `useDefineForClassFields` is `false`, so an optional or uninitialized field guards nothing at runtime. Guard sentinel and first-emission invariants with a spec, and check that the spec fails once the regression is put back.
 - Build expected strings that contain NBSP, narrow spaces or dashes from named constants (`const NBSP = ' '`), not literal characters: they are invisible in review and get swapped when retyped.
-- A bug that needs zone.js reproduces only in `tools/check-angular`, the consumer app with zone.js; the repo's TestBed is zoneless.
+- A bug that needs zone.js reproduces only in `tools/check-angular`, the consumer app with zone.js; the repo's TestBed is zoneless. Such bugs so far had one shape — zone ran change detection between two listeners of the same click — and a repo spec models it by calling `fixture.detectChanges()` from a listener placed between them.
+- Stub geometry as a getter that returns 0 unless the element is connected: static numbers let broken measurement code pass.
+- With `HttpTestingController`, a request that an rxjs `timeout` cancelled still sits in the open list: take it with `expectOne()` before `verify()` and check `request.cancelled`.
 - In docs app specs, `@koobiq/docs-examples` and `@koobiq/docs-examples/loader` resolve to the stubs in `apps/docs/src/testing/` (root `tsconfig.json` paths), so no real example loads. A spec that needs one remaps the path.
