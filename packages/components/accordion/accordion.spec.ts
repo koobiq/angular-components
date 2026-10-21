@@ -812,7 +812,7 @@ describe('KbqAccordion', () => {
             expect(document.activeElement).toBe(contentInput);
         });
 
-        it('a key pressed inside the content should not activate the first item', () => {
+        it('a key pressed inside the content should not move focus to the first item or toggle it', () => {
             const { items, contentInput } = createInteractiveFixture();
 
             // No `setActiveItem` beforehand: the removed `setFirstItemActive()` used to focus the
