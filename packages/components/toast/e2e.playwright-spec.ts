@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from '../../e2e/utils';
+import { e2eEnableDarkTheme, e2eSettleFrames, e2eWaitForSettledContent } from '../../e2e/utils';
 
 test.describe('KbqToastModule', () => {
     test.describe('E2eToastStates', () => {
@@ -19,9 +19,51 @@ test.describe('KbqToastModule', () => {
     test.describe('E2eToastInteraction', () => {
         const getToast = (page: Page) => page.locator('.kbq-toast-overlay kbq-toast');
         const getCloseButton = (page: Page) => getToast(page).locator('[kbq-toast-close-button]');
+        const getStack = (page: Page) => page.locator('.kbq-toast-overlay kbq-toast-container');
+        const getAnchoredOverlay = (page: Page) => page.getByTestId('e2eAnchoredOverlay');
+
+        /** The stack reports a new size from a resize observer, a frame or more after its animations end. */
+        const waitForSettledStack = async (page: Page) => {
+            await e2eWaitForSettledContent(getStack(page));
+            await e2eSettleFrames(page);
+        };
 
         test.beforeEach(async ({ page }) => {
             await page.goto('/E2eToastInteraction');
+        });
+
+        test('keeps an overlay that closes on scroll open when toasts appear', async ({ page }) => {
+            await page.getByTestId('e2eOpenCloseOnScrollOverlay').click();
+            await expect(getAnchoredOverlay(page)).toBeVisible();
+
+            await page.getByTestId('e2eShowStickyToast').click();
+            await expect(getToast(page)).toBeVisible();
+            await waitForSettledStack(page);
+
+            await page.getByTestId('e2eShowStickyToast').click();
+            await expect(getToast(page)).toHaveCount(2);
+            await waitForSettledStack(page);
+
+            await expect(getAnchoredOverlay(page)).toBeVisible();
+        });
+
+        test('moves an overlay anchored to a toast along with the stack', async ({ page }) => {
+            await page.getByTestId('e2eShowStickyToast').click();
+            await page.getByTestId('e2eShowStickyToast').click();
+            await expect(getToast(page)).toHaveCount(2);
+            await waitForSettledStack(page);
+
+            await page.getByTestId('e2eAnchorOverlayToLastToast').click();
+            await expect(getAnchoredOverlay(page)).toBeVisible();
+
+            await getCloseButton(page).first().click();
+            await expect(getToast(page)).toHaveCount(1);
+            await waitForSettledStack(page);
+
+            const toast = (await getToast(page).boundingBox())!;
+            const overlay = (await getAnchoredOverlay(page).boundingBox())!;
+
+            expect(Math.abs(overlay.y - (toast.y + toast.height))).toBeLessThanOrEqual(1);
         });
 
         test('renders the toast in the overlay, at the configured stack position', async ({ page }) => {
