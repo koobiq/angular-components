@@ -184,7 +184,7 @@ Marking visited links is useful on collection pages — article roundups, readin
 
 #### Default settings
 
-`kbqLinkOptionsProvider` sets the defaults for the whole application or for one component: `size`, `underline`, `pseudoUnderline` (the underline of pseudo-links) and `useVisited`. A value set on a link overrides them.
+`kbqLinkOptionsProvider` sets the defaults for the whole application or for one component: `size`, `underline` and `useVisited`. While `underline` is not set, a link is always underlined and a pseudo-link only on hover; once set, it applies to both. A value set on a link overrides them.
 
 ```ts
 bootstrapApplication(AppComponent, {

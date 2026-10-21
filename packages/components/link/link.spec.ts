@@ -480,8 +480,7 @@ describe(KbqLink.name, () => {
                 providers: [
                     kbqLinkOptionsProvider({
                         size: 'compact',
-                        underline: 'hover',
-                        pseudoUnderline: 'none',
+                        underline: 'none',
                         useVisited: true
                     })
                 ]
@@ -491,7 +490,7 @@ describe(KbqLink.name, () => {
             const pseudo = getLink(createLink(PseudoLink));
 
             expect(link.classList).toContain('kbq-link_size_compact');
-            expect(link.classList).toContain('kbq-link_underline_hover');
+            expect(link.classList).toContain('kbq-link_underline_none');
             expect(link.classList).toContain('kbq-link_use-visited');
             expect(pseudo.classList).toContain('kbq-link_underline_none');
         });

@@ -53,8 +53,7 @@ export class KbqLinkModule {
 // @public
 export type KbqLinkOptions = {
     size: KbqDefaultSizes;
-    underline: KbqLinkUnderline;
-    pseudoUnderline: KbqLinkUnderline;
+    underline?: KbqLinkUnderline;
     useVisited: boolean;
 };
 

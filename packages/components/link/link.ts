@@ -45,18 +45,17 @@ const ACTIVATION_KEYS = ['Enter', ' ', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 export type KbqLinkOptions = {
     /** Size of a link: its typography and the gaps to its icons. */
     size: KbqDefaultSizes;
-    /** When the text of a link is underlined. */
-    underline: KbqLinkUnderline;
-    /** When the text of a pseudo link is underlined. */
-    pseudoUnderline: KbqLinkUnderline;
+    /**
+     * When the text of a link and of a pseudo link is underlined. Unset, a link is always underlined and a pseudo
+     * link only on hover.
+     */
+    underline?: KbqLinkUnderline;
     /** Whether a visited link is styled differently. */
     useVisited: boolean;
 };
 
 const KBQ_LINK_DEFAULT_OPTIONS: KbqLinkOptions = {
     size: 'normal',
-    underline: 'always',
-    pseudoUnderline: 'hover',
     useVisited: false
 };
 
@@ -213,8 +212,8 @@ export class KbqLink implements AfterViewChecked {
     readonly external = input(false, { transform: booleanAttribute });
 
     /**
-     * When the text is underlined. Defaults to the app-wide {@link KBQ_LINK_OPTIONS}: `underline` for a link,
-     * `pseudoUnderline` for a pseudo link.
+     * When the text is underlined. Defaults to the app-wide {@link KBQ_LINK_OPTIONS}, and without one there to
+     * `always` for a link and `hover` for a pseudo link.
      */
     readonly underline = input<KbqLinkUnderline>();
 
@@ -239,7 +238,7 @@ export class KbqLink implements AfterViewChecked {
 
     /** @docs-private */
     protected readonly underlineMode = computed(
-        () => this.underline() ?? (this.isPseudo() ? this.options.pseudoUnderline : this.options.underline)
+        () => this.underline() ?? this.options.underline ?? (this.isPseudo() ? 'hover' : 'always')
     );
 
     /**
