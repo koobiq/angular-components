@@ -26,7 +26,10 @@ const provideDocsLocale = (locale: DocsLocale) => {
     };
 };
 
-const paragraph = (text: string): DocsApiBlock => ({ type: 'html', html: `<p class="kbq-markdown__p">${text}</p>` });
+const paragraph = (text: string): DocsApiBlock => ({
+    type: 'html',
+    html: `<p class="kbq-markdown__p" data-docsearch-content>${text}</p>`
+});
 
 const ENTRY_POINT: DocsApiEntryPoint = {
     path: '@koobiq/components/alert',
@@ -177,6 +180,14 @@ describe(DocsApiPage.name, () => {
 
         expect(getTexts(description, '.kbq-markdown__p')).toEqual(['Shows important information.']);
         expect(description.querySelector('kbq-code-block')?.textContent).toContain('<kbq-alert alertColor="error" />');
+    });
+
+    // The sanitizer would drop them from the HTML of a text, which the JSDoc compiles to at build time.
+    it('keeps the attributes the search reads the headings and the text by', async () => {
+        const page = await renderCodeBlocks();
+
+        expect(getTexts(page, '[data-docsearch-lvl2]')).toContain('KbqAlert');
+        expect(getTexts(page, '[data-docsearch-content]')).toContain('Shows important information.');
     });
 
     it('lists the members anchored by their id, with their badges and type', () => {

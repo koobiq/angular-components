@@ -17,7 +17,7 @@
         <!-- A tab of one group needs no heading for it; under one, an entry is a level below. -->
         @if (isGrouped()) {
             <div class="docs-api__group-header">
-                <h3 class="docs-header-link kbq-markdown__h3 docs-api__group-name" [id]="group.id">
+                <h3 class="docs-header-link kbq-markdown__h3 docs-api__group-name" data-docsearch-lvl2 [id]="group.id">
                     {{ group.title }}
                 </h3>
                 <docs-api-link [heading]="group.id" [name]="group.title" />
@@ -27,11 +27,19 @@
             <section class="docs-api__entry" [class.docs-api__entry_deprecated]="entry.deprecated">
                 <div class="docs-api__entry-header">
                     @if (isGrouped()) {
-                        <h4 class="docs-header-link kbq-markdown__h4 docs-api__entry-name" [id]="entry.name">
+                        <h4
+                            class="docs-header-link kbq-markdown__h4 docs-api__entry-name"
+                            data-docsearch-lvl2
+                            [id]="entry.name"
+                        >
                             {{ entry.name }}
                         </h4>
                     } @else {
-                        <h3 class="docs-header-link kbq-markdown__h3 docs-api__entry-name" [id]="entry.name">
+                        <h3
+                            class="docs-header-link kbq-markdown__h3 docs-api__entry-name"
+                            data-docsearch-lvl2
+                            [id]="entry.name"
+                        >
                             {{ entry.name }}
                         </h3>
                     }

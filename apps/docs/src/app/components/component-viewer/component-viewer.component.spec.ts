@@ -10,6 +10,7 @@ import {
     Router,
     UrlSegment
 } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { BehaviorSubject, map, of } from 'rxjs';
 import type { MockInstance } from 'vitest';
 import { DocsLocale } from '../../constants/locale';
@@ -291,5 +292,63 @@ describe(DocsComponentApiPageComponent.name, () => {
 
         expect(fixture.nativeElement.querySelector('#KbqAlert-title').classList).toContain('docs-api__member_selected');
         expect(scrollToElement).not.toHaveBeenCalled();
+    });
+});
+
+// The search crawler groups the records of a page by the `data-docsearch-lvl0` of the viewer.
+describe('the group of a page in the search', () => {
+    const open = async (path: string, locale = DocsLocale.En): Promise<RouterTestingHarness> => {
+        TestBed.configureTestingModule({
+            providers: [
+                provideRouter([
+                    {
+                        path: ':category/:id',
+                        component: DocsComponentViewerComponent,
+                        children: [
+                            { path: 'overview', component: DocsCompiledPage },
+                            { path: 'api', component: DocsComponentApiPageComponent, data: { page: ALERT_API } }
+                        ]
+                    }
+                ]),
+                provideDocsLocale(locale),
+                provideClientHydration(withIncrementalHydration())
+            ]
+        });
+
+        const harness = await RouterTestingHarness.create();
+
+        await harness.navigateByUrl(path);
+
+        return harness;
+    };
+
+    const group = (harness: RouterTestingHarness): string | null =>
+        harness.routeNativeElement!.getAttribute('data-docsearch-lvl0');
+
+    beforeEach(() => {
+        document.body.setAttribute('ngcm', '');
+        vi.spyOn(DocsAnchorsComponent.prototype, 'setScrollPosition').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        document.body.removeAttribute('ngcm');
+        vi.restoreAllMocks();
+    });
+
+    it.each([
+        [DocsLocale.En, 'Components'],
+        [DocsLocale.Ru, 'Компоненты']
+    ])('is the category of the item in the language of the page (%s)', async (locale, category) => {
+        expect(group(await open('/components/alert/overview', locale))).toBe(category);
+    });
+
+    it('is the API on the API tab, and the category again once the reader leaves it', async () => {
+        const harness = await open('/components/alert/api');
+
+        expect(group(harness)).toBe('API');
+
+        await harness.navigateByUrl('/components/alert/overview');
+
+        expect(group(harness)).toBe('Components');
     });
 });

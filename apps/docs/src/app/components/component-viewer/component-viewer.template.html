@@ -2,7 +2,7 @@
      only redirects to /404 on a later tick. Rendering the header unguarded threw in between. -->
 @if (structureItem) {
     <div class="docs-component-header">
-        <div docsRegisterHeader class="docs-component-name">
+        <div docsRegisterHeader class="docs-component-name" data-docsearch-lvl1>
             {{ structureItem.name[locale()!] }}
         </div>
         @if (!structureItem.isGuide) {
@@ -53,5 +53,5 @@
 }
 
 <div #tabNavPanel="kbqTabNavPanel" kbqTabNavPanel>
-    <router-outlet />
+    <router-outlet (activate)="onTabActivate($event)" />
 </div>

@@ -19,7 +19,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     ],
     template: `
         <div class="docs-component-header">
-            <div class="docs-component-name" docsRegisterHeader>
+            <div class="docs-component-name" docsRegisterHeader data-docsearch-lvl1>
                 {{ t('designTokens') }}
             </div>
             <div class="docs-component-navbar layout-padding-top-s">
@@ -43,7 +43,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-component-viewer',
-        '[attr.data-docsearch-category]': 'structureItem?.id'
+        '[attr.data-docsearch-lvl0]': 'searchGroup()'
     }
 })
 export class DocsDesignTokensViewer extends DocsComponentViewerComponent {
