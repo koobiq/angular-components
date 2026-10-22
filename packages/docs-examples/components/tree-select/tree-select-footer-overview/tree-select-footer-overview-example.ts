@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 
@@ -102,7 +102,7 @@ export const DATA_OBJECT = {
  */
 @Component({
     selector: 'tree-select-footer-overview-example',
-    imports: [KbqTreeSelectModule, FormsModule, KbqTreeModule, KbqIconModule, KbqLinkModule],
+    imports: [KbqTreeSelectModule, FormsModule, KbqTreeModule, KbqIconModule, KbqLink],
     template: `
         <kbq-form-field>
             <kbq-tree-select [(ngModel)]="selected">
@@ -124,15 +124,7 @@ export const DATA_OBJECT = {
                 <kbq-cleaner />
 
                 <kbq-select-footer>
-                    <a
-                        class="kbq-link_external"
-                        href="https://koobiq.io/en/components/tree-select"
-                        kbq-link
-                        target="_blank"
-                    >
-                        <span class="kbq-link__text">Ссылка</span>
-                        <i kbq-icon="kbq-north-east_16"></i>
-                    </a>
+                    <a href="https://koobiq.io/en/components/tree-select" kbqLink external target="_blank">Ссылка</a>
                 </kbq-select-footer>
             </kbq-tree-select>
         </kbq-form-field>

@@ -5,7 +5,7 @@ import { KbqComponentColors, KbqOptionModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqTitleModule } from '@koobiq/components/title';
 import {
     DropdownDisabledExample,
@@ -99,7 +99,7 @@ export class DevDocsExamples {}
     selector: 'dev-app',
     imports: [
         FormsModule,
-        KbqLinkModule,
+        KbqLink,
         KbqIconModule,
         KbqButtonModule,
         KbqDropdownModule,

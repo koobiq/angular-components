@@ -99,8 +99,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
             process.exit(0);
         }
 
-        this.git.stageAllChanges();
-        this.git.createNewCommit(`chore: bump version to ${newVersionName} w/ changelog`);
+        this.commitReleaseChanges(newVersionName);
 
         console.info();
         console.info(green(`  ✓   Created the staging commit for: "${newVersionName}".`));
@@ -124,7 +123,14 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
 
         // Create and push the release tag before publishing to NPM.
         this.createReleaseTag(newVersionName, releaseNotes);
-        this.git.pushBranchToRemote(upstreamRemote, branchName);
+
+        // The tag push publishes the release, so it must not go out without the commit it points to.
+        if (!this.git.pushBranchToRemote(upstreamRemote, branchName)) {
+            console.error(red(`  ✘   Could not push the "${branchName}" branch upstream.`));
+            console.error(red(`      The release tag "${newVersionName}" was not pushed.`));
+            process.exit(1);
+        }
+
         this.pushReleaseTag(newVersionName, upstreamRemote);
 
         console.info();

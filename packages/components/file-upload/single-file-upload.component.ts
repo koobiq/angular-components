@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { CdkMonitorFocus, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
     afterNextRender,
@@ -57,6 +57,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
 @Component({
     selector: 'kbq-single-file-upload,kbq-file-upload:not([multiple])',
     imports: [
+        CdkMonitorFocus,
         KbqFileDropDirective,
         KbqLink,
         KbqIcon,

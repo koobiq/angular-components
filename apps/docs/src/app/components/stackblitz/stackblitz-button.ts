@@ -1,25 +1,23 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, ViewEncapsulation } from '@angular/core';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { ExampleData } from '@koobiq/docs-examples';
 import { DocsStackblitzWriter } from './stackblitz-writer';
 
 @Component({
     selector: 'docs-stackblitz-button',
-    imports: [KbqIconModule, KbqLinkModule],
+    imports: [KbqLink],
     template: `
         <span
-            kbq-link
-            big
-            class="kbq-link_external"
+            kbqLink
+            size="big"
+            external
             role="button"
             tabindex="0"
             (click)="openStackBlitz()"
             (keydown.enter)="openStackBlitz()"
             (keydown.space)="$event.preventDefault(); openStackBlitz()"
         >
-            <span class="kbq-link__text">StackBlitz</span>
-            <i kbq-icon="kbq-north-east_16"></i>
+            StackBlitz
         </span>
     `,
     // The host is a layout-less wrapper: `display: contents` keeps the link itself the flex item of

@@ -14,7 +14,7 @@ import {
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -62,7 +62,7 @@ export class DevDocsExamples {}
         KbqInputModule,
         KbqCheckboxModule,
         KbqRadioModule,
-        KbqLinkModule,
+        KbqLink,
         KbqToolTipModule,
         KbqDropdownModule,
         DevDocsExamples,

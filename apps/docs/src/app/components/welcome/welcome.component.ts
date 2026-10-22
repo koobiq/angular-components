@@ -12,7 +12,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { KbqThemeService } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -25,7 +24,6 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     selector: 'docs-welcome',
     imports: [
         KbqIconModule,
-        KbqLinkModule,
         RouterLink,
         NgOptimizedImage,
         DocsRegisterHeaderDirective

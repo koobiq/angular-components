@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqTableModule } from '@koobiq/components/table';
 
 /**
@@ -10,7 +10,7 @@ import { KbqTableModule } from '@koobiq/components/table';
     selector: 'badge-table-example',
     imports: [
         KbqBadgeModule,
-        KbqLinkModule,
+        KbqLink,
         KbqTableModule
     ],
     templateUrl: 'badge-table-example.html',

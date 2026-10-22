@@ -9,6 +9,7 @@ import {
     DOWN_ARROW,
     ENTER,
     KbqComponentColors,
+    KbqOrientation,
     leftIconClassName,
     rightIconClassName,
     SPACE
@@ -1463,6 +1464,40 @@ describe(KbqButtonGroupRoot.name, () => {
     });
 });
 
+describe('KbqButtonGroup', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [ButtonGroupTestApp]
+        }).compileComponents();
+    });
+
+    it.each<KbqOrientation>(['horizontal', 'vertical'])(
+        'should mark the %s orientation with a class',
+        (orientation) => {
+            const fixture = TestBed.createComponent(ButtonGroupTestApp);
+
+            fixture.componentInstance.orientation = orientation;
+            fixture.detectChanges();
+
+            const group: HTMLElement = fixture.nativeElement.querySelector('kbq-button-group');
+
+            expect(group.classList).toContain(`kbq-button-group_${orientation}`);
+        }
+    );
+
+    it.each<KbqOrientation>(['horizontal', 'vertical'])(
+        'should have no accessibility violations in the %s orientation',
+        async (orientation) => {
+            const fixture = TestBed.createComponent(ButtonGroupTestApp);
+
+            fixture.componentInstance.orientation = orientation;
+            fixture.detectChanges();
+
+            await expect(fixture.nativeElement).toHaveNoViolations();
+        }
+    );
+});
+
 @Component({
     selector: 'test-app',
     imports: [KbqButtonModule, KbqDropdownModule],
@@ -1918,4 +1953,17 @@ class OverriddenChildTestComponent {
     readonly ownColor = KbqComponentColors.Theme;
 
     showExtra = false;
+}
+
+@Component({
+    imports: [KbqButtonModule],
+    template: `
+        <kbq-button-group [orientation]="orientation">
+            <button kbq-button>First</button>
+            <button kbq-button>Second</button>
+        </kbq-button-group>
+    `
+})
+class ButtonGroupTestApp {
+    orientation: KbqOrientation = 'horizontal';
 }

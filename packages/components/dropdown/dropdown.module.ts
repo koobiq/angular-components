@@ -3,10 +3,10 @@ import { NgModule } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqDropdownContent } from './dropdown-content.directive';
 import { KbqDropdownItemAction } from './dropdown-item-action';
-import { KbqDropdownItem } from './dropdown-item.component';
+import { KbqDropdownItem, KbqDropdownItemCaption } from './dropdown-item.component';
 import { KbqDropdownSearch } from './dropdown-search';
 import { KbqDropdownTrigger } from './dropdown-trigger.directive';
-import { KbqDropdown, KbqDropdownFooter, KbqDropdownStaticContent } from './dropdown.component';
+import { KbqDropdown, KbqDropdownFooter, KbqDropdownGroupHeader, KbqDropdownStaticContent } from './dropdown.component';
 
 @NgModule({
     imports: [
@@ -15,20 +15,24 @@ import { KbqDropdown, KbqDropdownFooter, KbqDropdownStaticContent } from './drop
         KbqDropdownStaticContent,
         KbqDropdown,
         KbqDropdownItem,
+        KbqDropdownItemCaption,
         KbqDropdownItemAction,
         KbqDropdownTrigger,
         KbqDropdownContent,
         KbqDropdownFooter,
+        KbqDropdownGroupHeader,
         KbqDropdownSearch
     ],
     exports: [
         KbqDropdown,
         KbqDropdownItem,
+        KbqDropdownItemCaption,
         KbqDropdownItemAction,
         KbqDropdownTrigger,
         KbqDropdownContent,
         KbqDropdownStaticContent,
         KbqDropdownFooter,
+        KbqDropdownGroupHeader,
         KbqDropdownSearch
     ]
 })

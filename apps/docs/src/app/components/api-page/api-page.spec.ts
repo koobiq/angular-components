@@ -359,7 +359,7 @@ describe(DocsApiPage.name, () => {
         ]);
         // Links of the design system, set apart from the type by their colour rather than an underline.
         expect(
-            Array.from(type.querySelectorAll('a'), ({ classList }) => classList.contains('kbq-link_no-underline'))
+            Array.from(type.querySelectorAll('a'), ({ classList }) => classList.contains('kbq-link_underline_none'))
         ).toEqual([
             true,
             true

@@ -7,13 +7,21 @@ exports[`KbqDynamicTranslationModule > should change text dynamically 1`] = `
   
   
   <a
-    class="kbq-link kbq-text-only"
+    class="kbq-link kbq-link_size_normal kbq-link_underline_always"
     href="#"
-    kbq-link=""
-    print="localhost/#"
+    kbqlink=""
     tabindex="0"
   >
-    NEW slot context
+    <span
+      class="kbq-link__text"
+    >
+      NEW slot context
+    </span>
+    <span
+      class="kbq-link__trailing"
+    >
+      
+    </span>
   </a>
   
   
@@ -104,13 +112,21 @@ exports[`KbqDynamicTranslationModule > should handle slots without context 1`] =
   
   
   <a
-    class="kbq-link kbq-text-only"
+    class="kbq-link kbq-link_size_normal kbq-link_underline_always"
     href="#"
-    kbq-link=""
-    print="localhost/#"
+    kbqlink=""
     tabindex="0"
   >
-    
+    <span
+      class="kbq-link__text"
+    >
+      
+    </span>
+    <span
+      class="kbq-link__trailing"
+    >
+      
+    </span>
   </a>
   
   
@@ -172,13 +188,21 @@ exports[`KbqDynamicTranslationModule > should render component with 2 slots 1`] 
   
   
   <a
-    class="kbq-link kbq-text-only"
+    class="kbq-link kbq-link_size_normal kbq-link_underline_always"
     href="#"
-    kbq-link=""
-    print="localhost/#"
+    kbqlink=""
     tabindex="0"
   >
-    slot1 context
+    <span
+      class="kbq-link__text"
+    >
+      slot1 context
+    </span>
+    <span
+      class="kbq-link__trailing"
+    >
+      
+    </span>
   </a>
   
   

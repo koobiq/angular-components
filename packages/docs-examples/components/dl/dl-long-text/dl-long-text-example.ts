@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqDlModule } from '@koobiq/components/dl';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 
 /**
  * @title Description list with long text
  */
 @Component({
     selector: 'dl-long-text-example',
-    imports: [KbqDlModule, KbqLinkModule],
+    imports: [KbqDlModule, KbqLink],
     template: `
         @let dtMinWidth = 100;
         @let ddMinWidth = 200;
@@ -35,8 +35,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
 
             <kbq-dt>threat.mitre_attack.technique_url</kbq-dt>
             <kbq-dd>
-                <a kbq-link multiline href="https://attack.mitre.org/techniques/T1204/002/">
-                    <span class="kbq-link__text">https://attack.mitre.org/techniques/T1204/002/</span>
+                <a kbqLink href="https://attack.mitre.org/techniques/T1204/002/">
+                    https://attack.mitre.org/techniques/T1204/002/
                 </a>
             </kbq-dd>
         </kbq-dl>

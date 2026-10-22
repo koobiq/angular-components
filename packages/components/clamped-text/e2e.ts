@@ -119,7 +119,7 @@ export class E2eClampedTextStates {
             }
 
             @if (clampedList.hasToggle()) {
-                <a data-testid="e2eClampedListTrigger" kbq-link kbqClampedListTrigger pseudo>
+                <a data-testid="e2eClampedListTrigger" kbqLink kbqClampedListTrigger pseudo>
                     @if (clampedList.isCollapsed()) {
                         {{ clampedList.showMoreCountText() }}
                     } @else {

@@ -2,14 +2,14 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 
 /**
  * @title Dropdown with footer
  */
 @Component({
     selector: 'dropdown-with-footer-example',
-    imports: [KbqDropdownModule, KbqButtonModule, KbqLinkModule, KbqIconModule],
+    imports: [KbqDropdownModule, KbqButtonModule, KbqLink, KbqIconModule],
     template: `
         <button kbq-button [kbqDropdownTriggerFor]="appDropdown">
             Trigger
@@ -25,14 +25,13 @@ import { KbqLinkModule } from '@koobiq/components/link';
 
             <kbq-dropdown-footer>
                 <a
-                    class="kbq-link_external"
                     href="https://github.com/koobiq/angular-components"
                     target="_blank"
                     rel="noopener noreferrer"
-                    kbq-link
+                    kbqLink
+                    external
                 >
-                    <span class="kbq-link__text">GitHub</span>
-                    <i kbq-icon="kbq-north-east_16"></i>
+                    GitHub
                 </a>
             </kbq-dropdown-footer>
         </kbq-dropdown>

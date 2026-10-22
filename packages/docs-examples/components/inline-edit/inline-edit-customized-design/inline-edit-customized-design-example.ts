@@ -4,7 +4,7 @@ import { KbqOptionModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -22,7 +22,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqOptionModule,
         KbqSelectModule,
         KbqIconModule,
-        KbqLinkModule,
+        KbqLink,
         KbqTagsModule
     ],
     template: `
@@ -33,7 +33,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 @if (!linkControl.value) {
                     <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                 } @else {
-                    <a kbq-link target="_blank" [href]="linkControl.value">{{ linkControl.value }}</a>
+                    <a kbqLink target="_blank" [href]="linkControl.value">{{ linkControl.value }}</a>
                 }
             </div>
             <kbq-form-field kbqInlineEditEditMode>

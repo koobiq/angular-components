@@ -11,7 +11,7 @@ const EXAMPLES: Record<string, LiveExample> = {
     'ag-grid-overview': example('AgGridOverviewExample', 'components/ag-grid')
 };
 
-const LINK_CLASS = 'kbq-markdown__a docs-markdown__a kbq-link kbq-text-only kbq-link_use-visited';
+const LINK_CLASS = 'kbq-markdown__a';
 
 const compile = (source: string, url: string | null = '/en/components/alert/overview') =>
     compilePage(source, { path: 'alert.en.mdx', examples: EXAMPLES, url });

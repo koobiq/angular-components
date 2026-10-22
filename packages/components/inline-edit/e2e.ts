@@ -8,7 +8,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { NEVER, throwError } from 'rxjs';
@@ -472,7 +472,7 @@ export class E2eInlineEditSelectChain {
         KbqInlineEditModule,
         KbqFormFieldModule,
         KbqInputModule,
-        KbqLinkModule,
+        KbqLink,
         KbqIconModule,
         KbqLabel
     ],
@@ -490,7 +490,7 @@ export class E2eInlineEditSelectChain {
                 </kbq-label>
 
                 <div kbqInlineEditViewMode>
-                    <a kbq-link href="https://example.com" data-testid="e2eInlineEditInteractiveContentLink">
+                    <a kbqLink href="https://example.com" data-testid="e2eInlineEditInteractiveContentLink">
                         example.com
                     </a>
                 </div>

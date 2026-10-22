@@ -8,7 +8,6 @@ import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/scrollbar';
 import { InjectionToken } from '@angular/core';
 import { MarkedOptions } from 'marked';
-import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 
@@ -19,11 +18,9 @@ export const CLASS_PREFIX: string;
 export const KBQ_MARKDOWN_MARKED_OPTIONS: InjectionToken<MarkedOptions<string, string>>;
 
 // @public
-export class KbqMarkdown implements OnDestroy {
+export class KbqMarkdown {
     constructor();
     readonly markdownText: i0.InputSignal<string | null>;
-    // (undocumented)
-    ngOnDestroy(): void;
     protected readonly resultHtml: i0.Signal<SafeHtml | null>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqMarkdown, "kbq-markdown", never, { "markdownText": { "alias": "markdownText"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, [{ directive: typeof i1.KbqNativeScrollbar; inputs: {}; outputs: {}; }]>;

@@ -5,7 +5,6 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqThemeMode, KbqThemeNames, KbqThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map, Observable } from 'rxjs';
@@ -27,7 +26,6 @@ interface DocsThemeOption {
         RouterLink,
         KbqButtonModule,
         KbqDropdownModule,
-        KbqLinkModule,
         KbqIconModule,
         KbqSelectModule,
         KbqTopBarModule,

@@ -5,7 +5,7 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqFormattersModule } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
@@ -36,7 +36,7 @@ enum NavbarIcItems {
         KbqIconModule,
         KbqButtonModule,
         KbqDropdownModule,
-        KbqLinkModule,
+        KbqLink,
         LuxonDateModule,
         KbqFormattersModule
     ],

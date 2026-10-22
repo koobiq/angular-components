@@ -1,0 +1,117 @@
+// The look of a link, shared by the `KbqLink` component, the links of markdown and the browse link of file-upload
+
+@mixin kbq-link-tokens() {
+    --kbq-link-size-state-focused-outline-offset: 0px;
+    --kbq-link-size-state-focused-outline-width: 2px;
+    --kbq-link-size-multiline-hit-area-gap: calc((1lh - 1em) / 2);
+    --kbq-link-size-compact-content-padding: var(--kbq-size-xxs);
+    --kbq-link-size-normal-content-padding: var(--kbq-size-xxs);
+    --kbq-link-size-big-content-padding: var(--kbq-size-xxs);
+    --kbq-link-underline-width: 1px;
+    /* THEME TOKENS */
+    --kbq-link-text: var(--kbq-foreground-theme);
+    --kbq-link-border-bottom: var(--kbq-line-theme-fade);
+    --kbq-link-state-visited-text: var(--kbq-foreground-visited);
+    --kbq-link-state-visited-border-bottom: var(--kbq-line-visited-fade, var(--kbq-line-visited));
+    --kbq-link-state-visited-hover-text: var(--kbq-states-foreground-visited-hover);
+    --kbq-link-state-visited-hover-border-bottom: var(--kbq-line-visited-fade, var(--kbq-line-visited));
+    --kbq-link-state-visited-active-text: var(--kbq-states-foreground-visited-active);
+    --kbq-link-state-visited-active-border-bottom: var(--kbq-line-visited-fade, var(--kbq-line-visited));
+    --kbq-link-state-hover-text: var(--kbq-states-foreground-theme-hover);
+    --kbq-link-state-hover-border-bottom: var(--kbq-line-theme-fade);
+    --kbq-link-state-active-text: var(--kbq-states-foreground-theme-active);
+    --kbq-link-state-active-border-bottom: var(--kbq-line-theme-fade);
+    --kbq-link-state-focused-outline: var(--kbq-states-line-focus-theme);
+    --kbq-link-state-disabled-text: var(--kbq-states-foreground-disabled);
+    --kbq-link-state-disabled-border-bottom: var(--kbq-states-line-disabled);
+}
+
+// Like a native link, it changes colors at once, without a transition
+@mixin kbq-link-root() {
+    cursor: pointer;
+
+    outline-offset: var(--kbq-link-size-state-focused-outline-offset);
+
+    &:focus {
+        outline: none;
+    }
+}
+
+// The underline itself: its color comes from the states
+@mixin kbq-link-text() {
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-thickness: var(--kbq-link-underline-width);
+    text-underline-offset: calc(var(--kbq-link-size-multiline-hit-area-gap) + var(--kbq-link-underline-width));
+}
+
+@mixin kbq-link-keyboard-focus-outline() {
+    outline-style: solid;
+    outline-width: var(--kbq-link-size-state-focused-outline-width);
+    outline-color: var(--kbq-link-state-focused-outline);
+}
+
+// `$underline` is the element that draws the underline, `&` for the link itself. Its color is set on that element
+// directly: Chromium does not pass a visited `text-decoration-color` on through `inherit`.
+@mixin kbq-link-states($underline) {
+    color: var(--kbq-link-text);
+
+    #{$underline} {
+        text-decoration-color: var(--kbq-link-border-bottom);
+    }
+
+    &:hover,
+    &.kbq-hovered {
+        color: var(--kbq-link-state-hover-text);
+
+        #{$underline} {
+            text-decoration-color: var(--kbq-link-state-hover-border-bottom);
+        }
+    }
+
+    &:active,
+    &.kbq-active {
+        color: var(--kbq-link-state-active-text);
+
+        #{$underline} {
+            text-decoration-color: var(--kbq-link-state-active-border-bottom);
+        }
+    }
+
+    &.kbq-disabled {
+        cursor: default;
+        pointer-events: none;
+        color: var(--kbq-link-state-disabled-text);
+
+        #{$underline} {
+            text-decoration-color: var(--kbq-link-state-disabled-border-bottom);
+        }
+    }
+}
+
+// Included under the selector that marks the link visited
+@mixin kbq-link-visited-states($underline) {
+    color: var(--kbq-link-state-visited-text);
+
+    #{$underline} {
+        text-decoration-color: var(--kbq-link-state-visited-border-bottom);
+    }
+
+    &:hover,
+    &.kbq-hovered {
+        color: var(--kbq-link-state-visited-hover-text);
+
+        #{$underline} {
+            text-decoration-color: var(--kbq-link-state-visited-hover-border-bottom);
+        }
+    }
+
+    &:active,
+    &.kbq-active {
+        color: var(--kbq-link-state-visited-active-text);
+
+        #{$underline} {
+            text-decoration-color: var(--kbq-link-state-visited-active-border-bottom);
+        }
+    }
+}
