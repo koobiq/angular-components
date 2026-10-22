@@ -109,7 +109,7 @@ Rules for code that uses Koobiq:
 - [Number formatter](https://koobiq.io/en/other/number-formatter.md): Every language has its own norms for writing numbers: the decimal separator, digit grouping, the labels for thousands and millions.
 - [Validation](https://koobiq.io/en/other/validation.md): Form-field controls display errors via [`ErrorStateMatcher`](https://koobiq.io/en/other/validation.md) — a small policy object that decides _when_ to surface a control's existing errors.
 - [Smart search](https://koobiq.io/en/other/search-smart.md): Search fields in the kit's components leave matching entirely to the consumer, and the default reach-for is substring search.
-- [Which component when](https://koobiq.io/en/other/which-component-when.md): Maps a **task** to a Koobiq component, and names the neighboring component it is confused with.
+- [When to use](https://koobiq.io/en/other/which-component-when.md): Maps a **task** to a Koobiq component, and names the neighboring component it is confused with.
 
 ## Icons
 

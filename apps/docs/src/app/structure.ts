@@ -1277,8 +1277,8 @@ const structure: DocsStructure = makeStructure({
                 {
                     id: DocsStructureItemId.WhichComponentWhen,
                     name: {
-                        ru: 'Какой компонент когда',
-                        en: 'Which component when'
+                        ru: 'Когда использовать',
+                        en: 'When to use'
                     },
                     svgPreview: '',
                     isGuide: true,
