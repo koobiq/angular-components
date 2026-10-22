@@ -884,6 +884,64 @@ describe('KbqTreeSelection', () => {
         });
     });
 
+    describe('tri-state checkbox in a deep tree', () => {
+        let fixture: ComponentFixture<TreeWithDeepThirdStateCheckbox>;
+        let component: TreeWithDeepThirdStateCheckbox;
+
+        const optionFor = (value: string): KbqTreeOption =>
+            component.tree.renderedOptions.find((option) => option.value === value)!;
+
+        // `tick` rather than `flush`: the tree re-syncs its options through rxjs `delay`, which runs on `setInterval`.
+        const settle = () => {
+            fixture.detectChanges();
+            tick(1);
+            fixture.detectChanges();
+        };
+
+        beforeEach(() => {
+            configureKbqTreeTestingModule();
+            fixture = TestBed.createComponent(TreeWithDeepThirdStateCheckbox);
+
+            component = fixture.componentInstance;
+            treeElement = fixture.nativeElement.querySelector('kbq-tree-selection');
+
+            fixture.detectChanges();
+        });
+
+        afterEach(() => jest.restoreAllMocks());
+
+        // An ancestor that rolled the change up through its own ancestors again made a node at depth d cost
+        // 2^d updates, so both counts below ran into the thousands.
+        it('should update each ancestor a number of times linear in depth', fakeAsync(() => {
+            component.treeControl.expandAll();
+            settle();
+
+            const root = optionFor('node-0');
+            const rootUpdates = jest.spyOn(root, 'updateCheckboxState');
+            const rollUps = jest.spyOn(KbqTreeOption.prototype, 'updateParentsCheckboxState');
+
+            dispatchEvent(optionFor(`node-${DEEP_CHAIN_DEPTH}`).getHostElement(), createMouseEvent('click'));
+            settle();
+
+            expect(rootUpdates.mock.calls.length).toBeLessThanOrEqual(DEEP_CHAIN_DEPTH);
+            expect(rollUps.mock.calls.length).toBeLessThanOrEqual(DEEP_CHAIN_DEPTH);
+
+            expect(optionFor(`node-${DEEP_CHAIN_DEPTH}`).checkboxState).toBe('checked');
+            expect(optionFor(`node-${DEEP_CHAIN_DEPTH - 1}`).checkboxState).toBe('indeterminate');
+            expect(root.checkboxState).toBe('indeterminate');
+        }));
+
+        it('should not roll every newly rendered row up through its ancestors', fakeAsync(() => {
+            const rollUps = jest.spyOn(KbqTreeOption.prototype, 'updateParentsCheckboxState');
+
+            component.treeControl.expandAll();
+            settle();
+
+            expect(getNodes(treeElement).length).toBe(component.treeControl.dataNodes.length);
+            expect(rollUps.mock.calls.length).toBeLessThanOrEqual(component.treeControl.dataNodes.length);
+        }));
+    });
+
     describe('kbq-title', () => {
         let fixture: ComponentFixture<TreeAppWithTitle>;
         let titleDirective: KbqTitleDirective;
@@ -1547,4 +1605,43 @@ class FiltrationKbqTreeApp {
 })
 class TreeWithActionButtonApp extends TreeParams {
     @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
+}
+
+const DEEP_CHAIN_DEPTH = 12;
+
+/** `node-<level>` down to `DEEP_CHAIN_DEPTH`, each next to a `leaf-<level>`: every node has a long chain of ancestors. */
+function buildDeepChain(): object {
+    let chain: object | null = null;
+
+    for (let level = DEEP_CHAIN_DEPTH; level >= 0; level--) {
+        chain = { [`node-${level}`]: chain, [`leaf-${level}`]: 'file' };
+    }
+
+    return chain!;
+}
+
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection multiple="checkbox" [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
+                {{ node.name }}
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
+                <kbq-tree-node-toggle />
+
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeWithDeepThirdStateCheckbox extends TreeParams {
+    @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
+
+    constructor() {
+        super();
+
+        this.dataSource.data = this.treeData = buildFileTree(buildDeepChain(), 0);
+    }
 }
