@@ -288,7 +288,7 @@ test('the live reader finds entry points nested inside another one', () => {
 
     const nested = live.entryPoints.filter((id) => id.includes('/'));
 
-    expect(nested).toEqual(['scrollbar/deprecated', 'splitter/deprecated']);
+    expect(nested).toEqual(['link/deprecated', 'scrollbar/deprecated', 'splitter/deprecated']);
     // Reading it is the point: a top-level scan reports the entry point as having no API at all.
     expect((live.read('scrollbar/deprecated') ?? []).length > 0, 'nested entry point read as empty').toBeTruthy();
 });

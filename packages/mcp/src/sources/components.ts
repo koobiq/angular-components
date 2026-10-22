@@ -188,10 +188,9 @@ const typingsFromExports = (root: string): Map<string, string> | null => {
 /**
  * Entry point directories, discovered rather than listed: the set changes every few releases.
  *
- * One level down as well, because two entry points are nested inside another's directory —
- * `scrollbar/deprecated` and `splitter/deprecated`. A top-level scan finds 64 where the package
- * publishes 66, and the two it misses are the ones a project that has not migrated off the
- * deprecated scrollbar still imports.
+ * One level down as well, because some entry points are nested inside another's directory —
+ * `scrollbar/deprecated`, `splitter/deprecated` and `link/deprecated` today. A top-level scan
+ * misses exactly the ones a project that has not migrated off a deprecated API still imports.
  */
 const typingsFromDirectories = (root: string): Map<string, string> => {
     const found = new Map<string, string>();

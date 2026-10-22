@@ -81,7 +81,7 @@ const readMdxPage = (repo: string, id: string, lang: 'en' | 'ru'): { sections: s
 /**
  * Import path per entry point, keyed the way an API report is named.
  *
- * Not `@koobiq/components/<id>`, because two entry points are nested and their report flattens the
+ * Not `@koobiq/components/<id>`, because some entry points are nested and their report flattens the
  * slash: `scrollbar-deprecated.api.md` describes `@koobiq/components/scrollbar/deprecated`, and the
  * flattened spelling resolves to nothing. An entry point is a directory with an `ng-package.json`,
  * so the repository's own layout is what gets read rather than a list kept in step by hand.
