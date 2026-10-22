@@ -3366,17 +3366,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/design-tokens@npm:^3.20.0":
-  version: 3.20.0
-  resolution: "@koobiq/design-tokens@npm:3.20.0"
-  checksum: 10c0/cdfe9a4e8e2b3e20876fd9a0b438cf9994f3b85dc5ac7344ba122038e8d7757eaebdd8784a538bc3e6c20edc2e5f7b982a7bc34858da1fa88d0db07930d79a2d
+"@koobiq/design-tokens@npm:^3.20.1":
+  version: 3.20.1
+  resolution: "@koobiq/design-tokens@npm:3.20.1"
+  checksum: 10c0/c6c2666d6e114e4b9e65e2cadd9ff5422ec30654ac920a666a2556f6a826a9a923d8aa5927b2265e130e7f33dd0e04c692bd0219f36a44256a1d9f0d12edeb0a
   languageName: node
   linkType: hard
 
-"@koobiq/icons@npm:^12.3.0":
-  version: 12.3.0
-  resolution: "@koobiq/icons@npm:12.3.0"
-  checksum: 10c0/e687c16137432bf434339a70c76e8baa8e2c78dbeb703eebe8d2a26a3487acb7c375a849bf2b22b388a52e268073beef13da76405ab1eee63fd71bc8bd2043ea
+"@koobiq/icons@npm:^12.4.0":
+  version: 12.4.0
+  resolution: "@koobiq/icons@npm:12.4.0"
+  checksum: 10c0/041be39e6948232e9c0fadb433be4c7a6f8a5c78cd8f5ed0149cab6e1eb5dc29be3ed650aea004ef13c47dbb428b93098a69816acdfde572f533f4fe694a63e2
   languageName: node
   linkType: hard
 
@@ -3400,10 +3400,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/tokens-builder@npm:^3.20.0":
-  version: 3.20.0
-  resolution: "@koobiq/tokens-builder@npm:3.20.0"
-  checksum: 10c0/786e7a7ded222e8e240887e25d4dcb4d2ebbe1672aa014ec3036a322006fcad64116d87fac7871868966c943c05ebef38f115066070351c2318a288738c3e210
+"@koobiq/tokens-builder@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "@koobiq/tokens-builder@npm:4.0.1"
+  peerDependencies:
+    style-dictionary: ^5.0.0
+  checksum: 10c0/cd4ef07b2c2a07c04b9ac1f672796b4a2c5497da0d93a72067e5a4c43e3e1920263c6a022fb523c637816f97941552f2665e15aecf029fcbf15f79371cbaf090
   languageName: node
   linkType: hard
 
@@ -10274,11 +10276,11 @@ __metadata:
     "@koobiq/ag-grid-angular-theme": "npm:^34.6.0"
     "@koobiq/date-adapter": "npm:^3.5.1"
     "@koobiq/date-formatter": "npm:^3.5.1"
-    "@koobiq/design-tokens": "npm:^3.20.0"
-    "@koobiq/icons": "npm:^12.3.0"
+    "@koobiq/design-tokens": "npm:^3.20.1"
+    "@koobiq/icons": "npm:^12.4.0"
     "@koobiq/luxon-date-adapter": "npm:^3.5.1"
     "@koobiq/moment-date-adapter": "npm:^3.5.1"
-    "@koobiq/tokens-builder": "npm:^3.20.0"
+    "@koobiq/tokens-builder": "npm:^4.0.1"
     "@maskito/angular": "npm:^5.1.0"
     "@maskito/core": "npm:^5.1.0"
     "@maskito/kit": "npm:^5.6.0"
