@@ -84,11 +84,19 @@ bootstrapApplication(AppComponent, {
 ]
 ```
 
-`@koobiq/design-tokens` поставляет токены code-block, scrollbar и skeleton отдельными,
-подключаемыми по выбору файлами — но их значения уже вшиты в `prebuilt-themes/theme.css` на этапе
-сборки самого `@koobiq/components`, поэтому все три компонента оформлены без дополнительного импорта.
-Подключайте `@koobiq/design-tokens/web/component-tokens-{light,dark}.css` сами только тогда, когда
-нужно переопределить эти значения на другие, отличные от тех, с которыми собран `@koobiq/components`.
+Токены code-block, scrollbar и skeleton поставляются отдельными файлами, подключаемыми по желанию.
+При обычном подключении делать ничего не нужно: их значения уже входят в `prebuilt-themes/theme.css`,
+файл собирается вместе с библиотекой. Отдельно эти файлы нужны только если вы собираете стили
+библиотеки сами из SCSS-исходников:
+
+```scss
+@use '@koobiq/design-tokens/web/component-tokens';
+@use '@koobiq/design-tokens/web/component-tokens-light';
+@use '@koobiq/design-tokens/web/component-tokens-dark';
+```
+
+Чтобы поменять значения по умолчанию, подключать файлы не нужно — просто задайте нужные
+CSS-переменные в своих стилях, см. [руководство по темам](/ru/main/theming/overview).
 
 ### Настройка темы
 

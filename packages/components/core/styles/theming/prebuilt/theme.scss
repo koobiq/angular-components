@@ -1,6 +1,13 @@
 @use '../../core';
 @use '../../koobiq-theme' as koobiq-theme;
 
+// The component tokens v4 ships as opt-in files (code-block, scrollbar, skeleton). They are part of
+// the prebuilt theme: baked in here so the published `prebuilt-themes/theme.css` — and any build of
+// this SCSS source — carries them with no extra step for the consumer.
+@use '@koobiq/design-tokens/web/component-tokens';
+@use '@koobiq/design-tokens/web/component-tokens-light';
+@use '@koobiq/design-tokens/web/component-tokens-dark';
+
 @include core.kbq-core();
 
 // Include all theme styles for the components.

@@ -73,31 +73,11 @@ async function postProcessCss({ css, from }: { css: string; from: string }) {
     console.log(`End time: ${(end - start) / 1000} seconds.`);
 })();
 
-/**
- * `@koobiq/design-tokens` v4 ships code-block, scrollbar and skeleton tokens as opt-in files,
- * separate from the rest of the tokens a consumer always loads. Appending them here, at
- * `@koobiq/components`' own build time, means every consumer gets the three components styled
- * through the single mandatory `prebuilt-themes/*.css` import, with no separate step to remember —
- * and the values still come from `@koobiq/design-tokens` itself, not a hand-kept copy that can
- * drift from it.
- */
-const COMPONENT_TOKENS_FILES = [
-    'component-tokens.css',
-    'component-tokens-light.css',
-    'component-tokens-dark.css'
-];
-
-function readComponentTokens(): string {
-    return COMPONENT_TOKENS_FILES.map((file) =>
-        fs.readFileSync(`node_modules/@koobiq/design-tokens/web/${file}`, 'utf-8')
-    ).join('\n');
-}
-
 function copyPrebuiltThemes(src: string, dist: string, file: string) {
-    const content = fs.readFileSync(`${src}/${file}`, 'utf-8');
+    const content = fs.readFileSync(`${src}/${file}`);
 
     isDirectoryExist(`${dist}/${file}`);
-    fs.writeFileSync(`${dist}/${file}`, content + '\n' + readComponentTokens());
+    fs.writeFileSync(`${dist}/${file}`, content);
 }
 
 function copyFiles(src: string, dist: string) {

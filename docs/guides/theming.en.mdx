@@ -6,7 +6,7 @@ There are three layers.
 
 **Global variables** describe the design system: colors, sizes, fonts. They come from the `@koobiq/design-tokens` package and are declared under the theme selector — `.kbq-light` or `.kbq-dark`. These are the values you reach for in your own styles.
 
-**Component variables** are used inside Koobiq components. Each one is named after its component (`--kbq-button-*`, `--kbq-alert-*`) and points to a global variable. The component declares them itself, so nothing extra has to be included.
+**Component variables** are used inside Koobiq components. Each one is named after its component (`--kbq-button-*`, `--kbq-alert-*`) and points to a global variable. The component declares them itself, so nothing extra has to be included. The exception is code-block, scrollbar and skeleton: their tokens live in `@koobiq/design-tokens`, but with the default setup nothing has to be done for them either — their values are already part of the prebuilt styles.
 
 **Your styles** use the global variables directly. No imports, no mixins, no registration in a single theme entry point.
 
@@ -16,7 +16,7 @@ Adding a theme to the page means putting a class on `<body>`. Everything below i
 
 - [Install the Koobiq package](/en/main/installation).
 - Include `css-tokens.css`, `css-tokens-light.css` and `css-tokens-dark.css` — these hold the global values.
-- Include the prebuilt styles in your main stylesheet. Components and overlays (popups, dropdowns) need this to render correctly — it also carries the values of the three components whose tokens the package ships as opt-in files instead — [code-block](/en/components/code-block), [scrollbar](/en/components/scrollbar) and [skeleton](/en/components/skeleton) — baked in at `@koobiq/components`' own build time, so you don't need `component-tokens*.css` unless you want to override those values:
+- Include the prebuilt styles in your main stylesheet. Components and overlays (popups, dropdowns) need this to render correctly. It also carries the token values of code-block, scrollbar and skeleton, so no separate files are needed for them:
 
 ```sass
 @use '@koobiq/components/prebuilt-themes/theme.css';
@@ -232,7 +232,7 @@ The variables of a component are declared next to its code, in its tokens file, 
 <div class="kbq-callout__header">Note</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-Version 4.0.0 of `@koobiq/design-tokens` removed the component tokens, except for code-block, scrollbar and skeleton, which it now ships as opt-in files — `component-tokens.css` and its light and dark halves, baked into `@koobiq/components`' own `prebuilt-themes/theme.css` so you don't need to load them yourself. Everything else is carried by the components themselves. If copies of the removed tokens are still in your own `css-tokens.css`, `css-tokens-light.css`, `css-tokens-dark.css` or `css-tokens-font.css`, delete them, and run `npx koobiq-tokens-codemod src` to find what else the upgrade touches.
+Version 4.0.0 of `@koobiq/design-tokens` removed the component tokens, except for code-block, scrollbar and skeleton. Their tokens ship as separate files — `component-tokens.css` and its light and dark parts — and their values are already part of `@koobiq/components`' own `prebuilt-themes/theme.css`, so you don't need to load them yourself. Everything else is carried by the components themselves. If copies of the removed tokens are still in your own `css-tokens.css`, `css-tokens-light.css`, `css-tokens-dark.css` or `css-tokens-font.css`, delete them, and run `npx koobiq-tokens-codemod src` to find what else the upgrade touches.
 
 </div>
 </div>
