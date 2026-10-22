@@ -53,7 +53,8 @@ const SEARCH_DEBOUNCE_TIME = 300;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'docs-icons-viewer'
+        class: 'docs-icons-viewer',
+        '[attr.data-docsearch-lvl0]': "t('iconsTitle')"
     },
     hostDirectives: [KbqScrollbarViewport]
 })

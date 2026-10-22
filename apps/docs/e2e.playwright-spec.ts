@@ -1,5 +1,6 @@
 import { expect, Page, test } from '@playwright/test';
 import { join } from 'node:path';
+import { DocsLocale } from './src/app/constants/locale';
 import { DOCS_SEO_DESCRIPTIONS } from './src/app/seo-descriptions';
 
 /**
@@ -736,6 +737,64 @@ test.describe('prerendered SEO metadata', () => {
         await page.goto('/unknown-page');
         await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,follow');
     });
+});
+
+// The Algolia crawler reads the records of the search off a page by the `data-docsearch-*` attributes its configuration
+// in the Algolia dashboard selects (`src/app/components/docsearch/docsearch.ts` describes them). A page that lost them
+// would not fail the crawl: it would only drop out of the search once the next release is crawled.
+test.describe('search index', () => {
+    const record = {
+        lvl0: 'data-docsearch-lvl0',
+        lvl1: 'data-docsearch-lvl1',
+        lvl2: 'data-docsearch-lvl2',
+        content: 'data-docsearch-content'
+    };
+    const byAttribute = (page: Page, name: string) => page.locator(`[${name}]`);
+
+    // The crawler of koobiq.io renders JavaScript, while another one reads the prerendered HTML alone.
+    for (const javaScriptEnabled of [true, false]) {
+        test.describe(`with JavaScript ${javaScriptEnabled ? 'enabled' : 'disabled'}`, () => {
+            test.use({ javaScriptEnabled });
+
+            const open = async (page: Page, url: string): Promise<void> => {
+                await page.goto(url);
+
+                if (javaScriptEnabled) await waitForHydration(page);
+            };
+
+            for (const [locale, group] of [
+                [DocsLocale.En, 'Components'],
+                [DocsLocale.Ru, 'Компоненты']
+            ]) {
+                test(`reads an overview page in its language (${locale})`, async ({ page }) => {
+                    await open(page, `/${locale}/components/alert/overview`);
+
+                    // The `lang` facet the search filters by.
+                    await expect(page.locator('html')).toHaveAttribute('lang', locale);
+                    await expect(byAttribute(page, record.lvl0)).toHaveAttribute(record.lvl0, group);
+                    await expect(byAttribute(page, record.lvl1)).toHaveText('Alert');
+                    await expect(byAttribute(page, record.lvl2).first()).not.toBeEmpty();
+                    await expect(byAttribute(page, record.content).first()).not.toBeEmpty();
+                });
+            }
+
+            test('reads an API tab as a group of its own', async ({ page }) => {
+                await open(page, '/en/components/select/api');
+
+                await expect(byAttribute(page, record.lvl0)).toHaveAttribute(record.lvl0, 'API');
+                await expect(byAttribute(page, record.lvl1)).toHaveText('Select');
+                await expect(byAttribute(page, record.lvl2).first()).not.toBeEmpty();
+                await expect(byAttribute(page, record.content).first()).not.toBeEmpty();
+            });
+
+            test('reads the icons page', async ({ page }) => {
+                await open(page, '/en/main/icons');
+
+                await expect(byAttribute(page, record.lvl0)).toHaveAttribute(record.lvl0, 'Icons');
+                await expect(byAttribute(page, record.lvl1)).toHaveText('Icons');
+            });
+        });
+    }
 });
 
 // `tools/llms` writes an index for agents and the Markdown of every item next to its pages; a copy of the site that

@@ -10,6 +10,7 @@ import {
     Signal,
     ViewEncapsulation
 } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Params, RouterLink } from '@angular/router';
 import { KbqBadge } from '@koobiq/components/badge';
 import { KbqCodeBlock, KbqCodeBlockFile } from '@koobiq/components/code-block';
@@ -85,7 +86,7 @@ export class DocsApiCodePlaceholder {
     selector: 'docs-api-text',
     imports: [KbqCodeBlock, DocsApiCodePlaceholder],
     template: `
-        @for (block of blocks(); track $index) {
+        @for (block of renderedBlocks(); track $index) {
             @if (block.type === 'code') {
                 <!-- Triggered like the other code blocks of the API tab: see its template. -->
                 @defer (on viewport; hydrate on hover) {
@@ -108,6 +109,16 @@ export class DocsApiCodePlaceholder {
 })
 export class DocsApiText {
     readonly blocks = input.required<DocsApiBlock[]>();
+
+    private readonly sanitizer = inject(DomSanitizer);
+
+    // The HTML is compiled from the JSDoc of the repository at build time, so it is trusted rather than sanitized: the
+    // sanitizer would drop the `data-docsearch-*` attributes the search crawler reads the text by.
+    protected readonly renderedBlocks = computed(() =>
+        this.blocks().map((block) =>
+            block.type === 'code' ? block : { ...block, html: this.sanitizer.bypassSecurityTrustHtml(block.html) }
+        )
+    );
 }
 
 /**

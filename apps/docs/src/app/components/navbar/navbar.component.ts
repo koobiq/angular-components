@@ -12,7 +12,7 @@ import { DocsLocale } from 'src/app/constants/locale';
 import { DOCS_TRANSLATIONS } from 'src/app/services/i18n';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsDocStates, DocsNavbarState } from '../../services/doc-states';
-import { DocsDocsearchDirective } from '../docsearch/docsearch.directive';
+import { DocsDocsearch } from '../docsearch/docsearch';
 
 /** A theme mode selectable from the navbar's theme dropdown. */
 interface DocsThemeOption {
@@ -29,7 +29,7 @@ interface DocsThemeOption {
         KbqIconModule,
         KbqSelectModule,
         KbqTopBarModule,
-        DocsDocsearchDirective,
+        DocsDocsearch,
         AsyncPipe
     ],
     templateUrl: 'navbar.template.html',
