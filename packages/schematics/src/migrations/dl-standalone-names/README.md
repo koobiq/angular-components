@@ -42,8 +42,8 @@ Only what is imported from `@koobiq/components/dl`, read from the TypeScript AST
 
 ## Running it manually
 
-To preview without writing, pass `--fix=false`:
-
 ```
 ng generate @koobiq/components:dl-standalone-names --project my-app
 ```
+
+Pass `--fix=false` to see what would change without writing files.
