@@ -2,7 +2,13 @@ import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { createSearchPredicate, tokenizeSearchQuery } from '@koobiq/components/core';
-import { KbqTimezoneModule, KbqTimezoneOption, KbqTimezoneZone, offsetFormatter, resolveZoneOffset } from './index';
+import {
+    KbqTimezoneModule,
+    KbqTimezoneOption,
+    KbqTimezoneZone,
+    offsetFormatter,
+    resolveZoneOffset
+} from '@koobiq/components/timezone';
 
 const zone: KbqTimezoneZone = {
     id: 'America/Sao_Paulo',

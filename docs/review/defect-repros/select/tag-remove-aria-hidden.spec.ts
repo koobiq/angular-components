@@ -32,7 +32,9 @@ describe('KbqSelect triage: remove control of the built-in tags', () => {
     let fixture: ComponentFixture<MultiSelectWithDefaultTags>;
 
     const getRemoveControls = (): HTMLElement[] =>
-        Array.from(fixture.nativeElement.querySelectorAll<HTMLElement>('.kbq-select__trigger .kbq-tag-remove'));
+        Array.from(
+            (fixture.nativeElement as HTMLElement).querySelectorAll<HTMLElement>('.kbq-select__trigger .kbq-tag-remove')
+        );
 
     beforeEach(async () => {
         TestBed.configureTestingModule({ imports: [MultiSelectWithDefaultTags] });

@@ -63,7 +63,7 @@ describe('triage: ellipsis-center with content already inside the host', () => {
     });
 
     it('DEFECT: other content is kept beside the halves and is ignored by the tail length', () => {
-        const host = fixture.componentInstance.withContent().nativeElement;
+        const host: HTMLElement = fixture.componentInstance.withContent().nativeElement;
         const children = Array.from(host.children).map((child) => child.className);
 
         expect(children).toEqual([
@@ -83,7 +83,7 @@ describe('triage: ellipsis-center with content already inside the host', () => {
     });
 
     it('DEFECT: the open tooltip of a host with other content is linked through aria-describedby', async () => {
-        const host = fixture.componentInstance.withContent().nativeElement;
+        const host: HTMLElement = fixture.componentInstance.withContent().nativeElement;
 
         expect(fixture.componentInstance.withContentDirective().disabled).toBe(false);
         expect(host.textContent).toBe(`Draft:${NAME}`);

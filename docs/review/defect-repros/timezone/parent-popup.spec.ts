@@ -5,8 +5,14 @@ import { By } from '@angular/platform-browser';
 import { KBQ_PARENT_POPUP, dispatchMouseEvent } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
-import { KbqTimezoneModule, KbqTimezoneOption, KbqTimezoneSelect, KbqTimezoneZone } from './index';
-import { KbqTimezoneOptionTooltip, TOOLTIP_VISIBLE_ROWS_COUNT } from './timezone-option.directive';
+import {
+    KbqTimezoneModule,
+    KbqTimezoneOption,
+    KbqTimezoneOptionTooltip,
+    KbqTimezoneSelect,
+    KbqTimezoneZone,
+    TOOLTIP_VISIBLE_ROWS_COUNT
+} from '@koobiq/components/timezone';
 
 const zones: KbqTimezoneZone[] = [
     {

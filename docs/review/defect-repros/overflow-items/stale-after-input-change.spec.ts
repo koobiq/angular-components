@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { KbqFlexWrap } from '@koobiq/components/core';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { EMPTY, Subject } from 'rxjs';
+import type { Mock } from 'vitest';
 
 // jsdom has no layout: every element reports the width set in its inline style.
 const stubLayout = () =>
@@ -41,7 +42,7 @@ describe('triage: KbqOverflowItems input changes', () => {
     let directive: KbqOverflowItems;
     let itemC: KbqOverflowItem;
     let hostResize$: Subject<void>;
-    let changesSpy: ReturnType<typeof vi.fn>;
+    let changesSpy: Mock<(value: ReadonlySet<unknown>) => void>;
 
     const settle = async () => {
         fixture.detectChanges();
