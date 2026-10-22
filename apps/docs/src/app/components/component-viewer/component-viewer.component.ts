@@ -75,7 +75,7 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
     // Stays `null` for an unknown id: the redirect to /404 is async, so the template renders at
     // least once with nothing resolved and has to tolerate it.
     protected structureItem: DocsStructureItem | null = null;
-    protected readonly isApiTab = signal(false);
+    private readonly isApiTab = signal(false);
     private structureCategory: DocsStructureCategory | null = null;
 
     private readonly activatedRoute = inject(ActivatedRoute);
