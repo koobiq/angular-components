@@ -108,6 +108,11 @@ describe('KbqPipeDateComponent', () => {
             .compileComponents();
 
         adapter = TestBed.inject(DateAdapter);
+        // One "today" for the spec and the component: two reads apart in time fall on different days when a run
+        // crosses midnight.
+        const frozenToday = adapter.today();
+
+        adapter.today = () => frozenToday;
     });
 
     afterEach(() => vi.useRealTimers());

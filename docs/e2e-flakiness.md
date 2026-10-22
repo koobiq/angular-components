@@ -485,25 +485,112 @@ suite once, 43/43 with the core case at 8.0 s in parallel on the 16-core desktop
 (30/30, core at 6.6–9.0 s), plus a test that reaches the tooltip API tab from its overview, scrolls the
 signature of its enum into view and compares the height of the block with that of its placeholder.
 
+## Follow-up, 2026-10-22
+
+Measured against `main` at `85314215f`. Every `E2E tests` run of 2026-10-01 to 2026-10-22 (400) and the
+logs of every failed job: discarding the jobs with more than ten failures (design-tokens bumps, branches
+rewriting a component), a flake is a test that failed on `main` or on unrelated branches. After the switch
+to zoneless change detection (`75ef67281`, 2026-10-19) the share of red runs on `main` went from 6 of 56 to
+14 of 41. Eight of the fourteen were the docs `core API tab` case of the 2026-10-21 entry, which has not
+failed since its fix landed (0 of 27 runs).
+
+### The render that lands after the read
+
+The e2e app renders without zone.js since `75ef67281`: what an action changes reaches the DOM with the change
+detection the scheduler runs a task or a frame later, so a value read once right after the action is the one
+from before it. Four tests failed that way, and nothing about the load reproduced it: CDP CPU throttling at
+6× under 16 to 64 workers passed 480 runs of the originals, since it slows every task without changing their
+order. What reproduces CI 10 times out of 10, with its exact errors, is an init script that holds back
+zero-delay timers and animation frames by 100 ms once the page is set up, which pushes the change detection
+past Playwright's next command. With it the originals failed 10/10 and the fixes passed 10/10.
+
+- `scrollbar › E2eScrollbarContentChanges › … nothing reported`, both hosts, `toHaveCount(1)` received 0:
+  the test scrolled before the class carrying the transform was applied, when there was nothing to scroll,
+  and the bar measures again only on a scroll — so it never came. The test now waits for the class, polls
+  that the viewport overflows, scrolls and polls `scrollTop` before counting.
+- `textarea › should shrink…` and `should grow to maxRows…` (`150 < 150`, `90 > 90`): one `boundingBox()`
+  right after the paste, while the height is written by an effect and `asapScheduler`. The height is now
+  polled against the one before the paste, and the maxRows tests wait for
+  `kbq-textarea_max-row-limit-reached`.
+- `app-switcher › the clear button restores the full list…` (`22 < 11`): the list was counted once, on the
+  render after the first typed letter. The counts are web-first assertions now.
+- docs `migration guide filter › reproduces a filtered URL on reload…` (33 against 2): the steps were
+  counted once after hydration, before the guide applied the range. The tests wait for
+  `docs-migration-guide_ready`, which the guide sets in the task that filters.
+
+**The guard.** ESLint now rejects `expect(await …)` in the specs and in `packages/e2e/utils`, and the 109
+remaining reads were rewritten into web-first assertions or `expect.poll`; where a poll would pass on its
+first sample — nothing changed, nothing arrived — the test first waits for a sign that the action landed and
+then reads once into a constant. That pass found more of the same, none of them seen failing yet: the drop
+indicator of `list` and the term width and `aria-valuemin` of `dl` read before the render a drag causes,
+`modal`'s layout read before the scrollbar track a content change brings, `button-toggle` measuring icons
+before the click had re-laid them out, `sidepanel` (WebKit) tabbing before the initial focus had landed, and
+`tree-select` pressing arrow keys before the panel focused its first option.
+
+`expect.soft(await …)` and `expect((await …).x)` still slip past the selector — 24 reads in 10 files, all
+taken right after the page loads.
+
+### `tabs › E2eTabsStates › states` — explained
+
+Nine occurrences, three of them on `main` on 2026-10-22 and one on `20.4.x`. The two paginated strips whose
+selected tab is the last one measure that label once, in the selection's `scrollCorrection` 100 ms after
+the first render, and Inter 500 and the kbq-icons font are requested only by that first layout — 284 to
+427 ms in the CI traces. A strip measured in the fallback faces rests at 326 px instead of 377: 35 px of
+label offset, 12 of label width and 4 of the arrow, whose glyph is 4 px narrower before its font arrives,
+which is why the audit above found that 51 px matched no constant. One face late gives 352. Holding the
+fonts back with `page.route` reproduces CI's received image byte for byte, and the per-strip combinations
+reproduce every recurring count exactly: 326 + 326 = 18746, 326 + 377 = 9379, 352 + 377 = 6529,
+326 + 352 = 15896. Nothing measured again once the fonts loaded: the `ResizeObserver` watches the
+fixed-width box, and content changes compare the text.
+
+**Fix.** `KbqPaginatedTabHeader` repeats its last scroll correction and re-checks pagination on
+`document.fonts` `loadingdone`, unless the user has moved the strip since — a press, the wheel or an arrow
+drops the request. The scenario renders behind a trigger the spec presses after `e2eWaitForFonts`, and the
+spec asserts where each paginated strip rests before the shot, so a recurrence fails on a named position.
+The committed baselines already held the 377 px rest; none moved. **Verified:** 150/150 at 16 workers, and
+the late-font probe now settles on the baseline.
+
+### `datepicker` — keys faster than the timers
+
+Two more occurrences of `scrolls back to the part the caret returns to`, now as a corrupted value:
+`31.12.024` for `24.01.2024`. A digit is parsed, and the next part selected, on timers; when keys arrive
+before them, `2`, `4` and `0` all go into the day (clamped to 31) and the year is left with three digits. A
+scanner, an autotype or a busy page does the same to a user. The `pendingCaret` fix of the arrow keys
+covered one timer of several. **Fix:** every timer a key starts goes through one queue, and a keydown first
+runs what is still waiting, so each key acts on what a slow typist's would; `pendingCaret` is gone. A unit
+spec types the whole date in one task (it got `31.01.2020` before the fix), and the e2e test types part by
+part, polling the selection in between. `KbqTimepicker` has the same race and was left for a change of its
+own.
+
+### `input` — a step before the commit
+
+`KbqNumberInput keyboard › should step by step and bigStep from the keyboard` got `1,5` for `10,5`, once on
+`main`: typing commits the value on a timer, and ArrowUp stepped from the last committed one. In a unit spec
+"10" and an immediate ArrowUp gave `0,5`. **Fix:** a step first commits a reformat still pending.
+
+### Burn-in
+
+A pull request now runs the specs it adds, edits or reaches through its component ten times over after
+the full run (`tools/e2e/changed-specs.mjs`, at most five specs), so a test that passes only most of the
+time fails on the pull request that brings it. See [06-testing.md](guides/06-testing.md).
+
+### Unit tests
+
+None of the 24 red `Unit tests` runs of the same window was a flake: each failed the same way on every run
+of its branch. Locally the suite times out under load instead: with three runs at once, 16 to 21 tests per
+run exceeded 2 s, and 291 of the 300 tests over 2 s were the first of their file, which pays the file's cold
+start — the TypeScript program of a schematic, the first render. `testTimeout` is therefore 2 s on CI and
+10 s locally; under the same load that gives 0 timeouts.
+
 ## Not fixed
 
-- **`tabs › E2eTabsStates › states`** — 1 occurrence, 18769 px by Playwright's count, 27480 raw. The
-  diff is confined to the two paginated tab strips, and both are shifted horizontally by exactly the
-  same 102 device pixels (51 CSS), a pure translation: correlating a band of labels against the
-  baseline bottoms out at a mean absolute difference of 0.95. Playwright captured two consecutive
-  identical frames, so the strip was at rest at the wrong offset rather than mid-animation, which
-  `waitForSettledTabScroll` in that spec cannot help with — it waits for scroll quiet, and the strip
-  was quiet. The obvious suspect does not hold up: `scrollCorrection` in `paginated-tab-header.ts`
-  reads the live `scrollLeft`, but it cancels out of the target algebraically, and 51 px matches
-  neither the paginator width (40 px) nor any other constant in that file. No mechanism established,
-  and it did not reproduce in 20 local repeats at 8 workers or 5 at 16. Nothing was changed.
 - **`datepicker › scrolls back to the part the caret returns to`** — 1 occurrence in 99 CI runs, and it
   did not reproduce in 200 local repeats under 16 workers. The second occurrence (2026-10-08, the
   selection stuck on the month, `3,5` instead of `0,2`) gave the mechanism: an arrow key reads the
   input's `selectionStart` and sets the new selection on a timer, so a second key that arrives before
   that timer runs moves on from the old selection and lands on the same part again. Fixed in the
   input: a key moves on from the part the previous one is about to select. A unit spec presses both
-  keys in one task.
+  keys in one task. That fix covered one timer of several: see the 2026-10-22 follow-up.
 - **`notification-center › states`** — 1 occurrence, 3831 px. Initially attributed to the scrollbar
   reveal and gated accordingly; that was wrong. A `MutationObserver` running from first paint records
   no reveal on this route at all, and `scrollToBottom()` is reachable only from a `loadingMore`
@@ -516,9 +603,6 @@ signature of its enum into view and compares the height of the block with that o
   `snapshotPathTemplate`, so the fix is a separate WebKit project — but that moves those baselines
   _and_ re-renders them under a Safari descriptor, which would confound the verification of the
   sidepanel fix. Separate change.
-- **91 `expect(await …)` reads** that take a computed style or geometry once, with no retry, right
-  after an action that settles asynchronously. Concentrated in `list` (24) and `button-toggle` (18).
-  None has been observed failing.
 
 ## Incidental
 

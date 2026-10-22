@@ -363,10 +363,9 @@ test.describe('KbqFormFieldModule', () => {
             test('the suppression is a running transition, not a finished one', async ({ page }) => {
                 const { control } = await autofill(page, 'state_default');
 
-                expect(await e2eRunningAnimations(control)).toContainEqual([
-                    'background-color',
-                    AUTOFILL_SUPPRESSION_DURATION
-                ]);
+                await expect
+                    .poll(() => e2eRunningAnimations(control))
+                    .toContainEqual(['background-color', AUTOFILL_SUPPRESSION_DURATION]);
             });
 
             for (const [state, token] of [
@@ -454,7 +453,7 @@ test.describe('KbqFormFieldModule', () => {
                 // background painted over the ring. Nothing paints over it now: the control is
                 // transparent and the ring is an inset shadow on the container, drawn above the
                 // tint. The geometry compensation is gone, and this is what replaces it.
-                expect(await container.evaluate((el) => getComputedStyle(el).boxShadow)).not.toBe('none');
+                await expect(container).not.toHaveCSS('box-shadow', 'none');
                 expect(alphaOf(await control.evaluate((el) => getComputedStyle(el).backgroundColor))).toBe(0);
             });
 
@@ -489,10 +488,9 @@ test.describe('KbqFormFieldModule', () => {
                 // painted Chrome's raw opaque blue, which in the dark theme was a near-white block
                 // with dark text. It is now suppressed the same way as the others.
                 expect(alphaOf(await control.evaluate((el) => getComputedStyle(el).backgroundColor))).toBe(0);
-                expect(await e2eRunningAnimations(control)).toContainEqual([
-                    'background-color',
-                    AUTOFILL_SUPPRESSION_DURATION
-                ]);
+                await expect
+                    .poll(() => e2eRunningAnimations(control))
+                    .toContainEqual(['background-color', AUTOFILL_SUPPRESSION_DURATION]);
                 await expect(getContainer(field)).toHaveCSS('background-image', await tintLayer(field));
             });
 
@@ -550,8 +548,10 @@ test.describe('KbqFormFieldModule', () => {
                 // Nothing in the autofill rules keys on `:hover`; the state does, and the state is
                 // what owns every channel except the tint. Read once, so a rule that changes the
                 // paint and reverts cannot slip through.
-                expect(await paint(control)).toBe(before.control);
-                expect(await paint(container)).toBe(before.container);
+                const hovered = { control: await paint(control), container: await paint(container) };
+
+                expect(hovered.control).toBe(before.control);
+                expect(hovered.container).toBe(before.container);
                 await expect(container).toHaveCSS('background-image', await tintLayer(field));
             });
 
@@ -798,10 +798,10 @@ test.describe('KbqFormFieldModule', () => {
             const expectStillSuppressed = async (page: Page, cell: string) => {
                 const control = getField(page, cell).locator('.kbq-input');
 
-                expect(await e2eRunningAnimations(control)).toContainEqual([
-                    'background-color',
-                    AUTOFILL_SUPPRESSION_DURATION
-                ]);
+                // A fast-forwarded transition is gone for good, so the poll cannot outwait it.
+                await expect
+                    .poll(() => e2eRunningAnimations(control))
+                    .toContainEqual(['background-color', AUTOFILL_SUPPRESSION_DURATION]);
             };
 
             /**
@@ -846,8 +846,11 @@ test.describe('KbqFormFieldModule', () => {
                     expect(forced).toBe(target === 'e2eStateMatrix' ? STATES.length : (CONTROLS.length - 1) * 2);
 
                     // Forcing reaches elements that are scrolled out of the shot, so the count above
-                    // says nothing about whether they are in it.
-                    expect(await countOutside(matrix)).toBe(0);
+                    // says nothing about whether they are in it. Read once, now that the count has
+                    // proved the matrix rendered: a poll for 0 would pass on an empty one.
+                    const outside = await countOutside(matrix);
+
+                    expect(outside).toBe(0);
                     expect((await matrix.boundingBox())!.width).toBeLessThanOrEqual(1200);
 
                     await expectStillSuppressed(page, probeCell);

@@ -143,9 +143,22 @@ test.describe('KbqSidepanel', () => {
                     () => !!document.querySelector('.kbq-sidepanel-content')?.contains(document.activeElement)
                 );
 
+            // The initial focus lands after the panel turns visible; start the loop from inside.
+            await expect.poll(focusIsInsidePanel).toBe(true);
+
             for (let i = 0; i < 6; i++) {
+                const focusedBefore = await page.evaluateHandle(() => document.activeElement);
+
                 await page.keyboard.press('Tab');
-                expect(await focusIsInsidePanel()).toBe(true);
+                // Read once, after the focus has moved: it starts inside, so a retrying check would pass on
+                // the element the Tab leaves.
+                await expect
+                    .poll(() => focusedBefore.evaluate((element) => element !== document.activeElement))
+                    .toBe(true);
+                await focusedBefore.dispose();
+                const focusInside = await focusIsInsidePanel();
+
+                expect(focusInside).toBe(true);
             }
         });
     });

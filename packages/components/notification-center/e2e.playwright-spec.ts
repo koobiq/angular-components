@@ -157,7 +157,7 @@ test.describe('KbqNotificationCenterModule', () => {
                 await page.keyboard.press('Tab');
             }
 
-            expect(await isFocusInsidePanel(page)).toBe(true);
+            await expect.poll(() => isFocusInsidePanel(page)).toBe(true);
         });
 
         test('Escape closes the panel and returns focus to the trigger', async ({ page }) => {
@@ -181,7 +181,7 @@ test.describe('KbqNotificationCenterModule', () => {
             await page.getByTestId('kbq-notification-center-remove-group-button').first().click();
 
             await expect(groups).toHaveCount(initialCount - 1);
-            expect(await isFocusInsidePanel(page)).toBe(true);
+            await expect.poll(() => isFocusInsidePanel(page)).toBe(true);
         });
     });
 });

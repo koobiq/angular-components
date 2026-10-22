@@ -99,7 +99,10 @@ test.describe('KbqClampedText', () => {
             await trigger.press('Space');
 
             await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-            expect(await page.evaluate(() => window.scrollY)).toBe(0);
+            // Read once: the page is unscrolled before the key too, so a poll would pass on its first sample.
+            const scrollY = await page.evaluate(() => window.scrollY);
+
+            expect(scrollY).toBe(0);
         });
     });
 });

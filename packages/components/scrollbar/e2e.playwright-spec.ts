@@ -68,8 +68,8 @@ test.describe('KbqScrollbar', () => {
             await expect(verticalThumb).toBeVisible();
             await expect(horizontalThumb).toBeVisible();
 
-            expect(await verticalThumb.evaluate((el) => el.getBoundingClientRect().width)).toBe(14);
-            expect(await horizontalThumb.evaluate((el) => el.getBoundingClientRect().height)).toBe(14);
+            await expect.poll(() => verticalThumb.evaluate((el) => el.getBoundingClientRect().width)).toBe(14);
+            await expect.poll(() => horizontalThumb.evaluate((el) => el.getBoundingClientRect().height)).toBe(14);
         });
 
         test('pressing the thumb applies --kbq-scrollbar-thumb-active-background', async ({ page }) => {
@@ -344,7 +344,7 @@ test.describe('KbqScrollbar', () => {
 
         test('scrollToBottom/scrollToTop scroll the vertical axis to the exact edges', async ({ page }) => {
             // 5 blocks * 150px = 750px content, 150px viewport => 600px of vertical scroll range.
-            expect(await scrollTop(page)).toBe(0);
+            await expect.poll(() => scrollTop(page)).toBe(0);
 
             await page.getByTestId('scroll-bottom').click();
             await expect.poll(() => scrollTop(page)).toBe(600);
@@ -355,7 +355,7 @@ test.describe('KbqScrollbar', () => {
 
         test('scrollEnd/scrollStart scroll the horizontal axis to the exact edges', async ({ page }) => {
             // Each block is 300px wide inside a 150px viewport => 150px of horizontal scroll range.
-            expect(await scrollLeft(page)).toBe(0);
+            await expect.poll(() => scrollLeft(page)).toBe(0);
 
             await page.getByTestId('scroll-end').click();
             await expect.poll(() => scrollLeft(page)).toBe(150);
@@ -530,8 +530,18 @@ test.describe('KbqScrollbar', () => {
                 // A transform grows the scrollable size without resizing a box or touching the DOM inside, so
                 // nothing reports it; scrolling, which only works once there is something to scroll, has to.
                 test('shows a bar once the viewport is scrolled after a change nothing reported', async ({ page }) => {
+                    const viewport = page.getByTestId(testId);
+
                     await trigger(page, 'Shift');
-                    await page.getByTestId(testId).evaluate((el) => el.scrollTo({ top: 40 }));
+                    // The transform lands with the next change detection, and a scroll before it finds nothing to
+                    // scroll: no scroll event fires and nothing measures the viewport again.
+                    await expect(page.getByTestId('e2eScrollbarContentChanges')).toContainClass(
+                        'e2e-scrollbar-content-changes_shifted'
+                    );
+                    await expect.poll(() => viewport.evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(true);
+
+                    await viewport.evaluate((el) => el.scrollTo({ top: 40 }));
+                    await expect.poll(() => viewport.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
                     await expect(getBar(page, testId)).toHaveCount(1);
                 });
 
@@ -589,7 +599,7 @@ test.describe('KbqScrollbar', () => {
             await getOuter(page).evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
 
             await expect.poll(() => outerScrollTop(page)).toBe(350);
-            expect(await innerScrollTop(page)).toBe(0);
+            await expect.poll(() => innerScrollTop(page)).toBe(0);
         });
 
         test('scrolling the inner scrollbar does not move the outer one', async ({ page }) => {
@@ -597,7 +607,7 @@ test.describe('KbqScrollbar', () => {
             await getInner(page).evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
 
             await expect.poll(() => innerScrollTop(page)).toBe(600);
-            expect(await outerScrollTop(page)).toBe(0);
+            await expect.poll(() => outerScrollTop(page)).toBe(0);
         });
     });
 
@@ -637,7 +647,7 @@ test.describe('KbqScrollbar', () => {
         test('customizes KbqScrollbarViewport in native mode without rendering a custom track', async ({ page }) => {
             const viewport = page.getByTestId('e2eNativeScrollbarViewport');
 
-            expect((await nativeScrollbarStyle(viewport)).scrollbarWidth).toBe('14px');
+            await expect.poll(async () => (await nativeScrollbarStyle(viewport)).scrollbarWidth).toBe('14px');
             await expect(viewport.locator('kbq-scrollbar-track')).not.toBeAttached();
             await expect(viewport).not.toHaveClass(/kbq-scrollbar-viewport_native-scrollbar-hidden/);
         });
@@ -720,7 +730,7 @@ test.describe('KbqScrollbar', () => {
             const x = barBox.x + barBox.width / 2;
             const y = headerBox.y + headerBox.height / 2;
 
-            expect(await topmostAt(page, x, y)).toBe('track');
+            await expect.poll(() => topmostAt(page, x, y)).toBe('track');
         });
 
         test('the track does not paint above page-level layers outside the viewport', async ({ page }) => {
@@ -734,7 +744,7 @@ test.describe('KbqScrollbar', () => {
             const x = barBox.x + barBox.width / 2;
             const y = siblingBox.y + siblingBox.height / 2;
 
-            expect(await topmostAt(page, x, y)).toBe('e2eScrollbarStackingSibling');
+            await expect.poll(() => topmostAt(page, x, y)).toBe('e2eScrollbarStackingSibling');
         });
     });
 });

@@ -46,37 +46,42 @@ test.describe('KbqDl', () => {
             const block = getComponent(page);
             const list = getList(block);
             const separator = getSeparator(block);
-            const getLineOpacity = () => separator.evaluate((element) => getComputedStyle(element, '::after').opacity);
 
-            expect(await getLineOpacity()).toBe('0');
+            await expect(separator).toHaveCSS('opacity', '0', { pseudo: 'after' });
 
             await list.hover({ position: { x: 1, y: 1 } });
-            expect(await getLineOpacity()).toBe('1');
+            await expect(separator).toHaveCSS('opacity', '1', { pseudo: 'after' });
 
             await page.mouse.move(0, 0);
-            expect(await getLineOpacity()).toBe('0');
+            await expect(separator).toHaveCSS('opacity', '0', { pseudo: 'after' });
 
             await page.keyboard.press('Tab');
             await expect(separator).toBeFocused();
-            expect(await getLineOpacity()).toBe('1');
+            await expect(separator).toHaveCSS('opacity', '1', { pseudo: 'after' });
         });
 
         test('should remove the keyboard focus outline when pointer dragging starts', async ({ page }) => {
             await page.goto('/E2eDlResizable');
 
             const separator = getSeparator(getComponent(page));
-            const getOutlineStyle = () => separator.evaluate((element) => getComputedStyle(element).outlineStyle);
+            const getDocumentCursor = () => page.locator('body').evaluate((element) => element.style.cursor);
 
             await page.keyboard.press('Tab');
             await expect(separator).toBeFocused();
-            expect(await getOutlineStyle()).toBe('solid');
+            await expect(separator).toHaveCSS('outline-style', 'solid');
 
             await separator.hover();
             await page.mouse.down();
-            expect(await getOutlineStyle()).toBe('none');
+            await expect(separator).toHaveCSS('outline-style', 'none');
+            await expect.poll(getDocumentCursor).toBe('col-resize');
 
             await page.mouse.up();
-            expect(await getOutlineStyle()).toBe('none');
+            // The drag hands the body cursor back on pointerup. Read the outline once after that: a retrying
+            // matcher would pass on the `none` left from the drag before the pointerup is handled.
+            await expect.poll(getDocumentCursor).toBe('');
+            const outlineAfterDrag = await separator.evaluate((element) => getComputedStyle(element).outlineStyle);
+
+            expect(outlineAfterDrag).toBe('none');
         });
 
         test('should keep the resize cursor outside the handle and restore it after drag', async ({ page }) => {
@@ -117,8 +122,9 @@ test.describe('KbqDl', () => {
             const block = getComponent(page);
             const separator = getSeparator(block);
             const term = getFirstTerm(block);
+            const getTermWidth = async () => (await term.boundingBox())!.width;
 
-            const startWidth = (await term.boundingBox())!.width;
+            const startWidth = await getTermWidth();
 
             await separator.hover();
             const box = (await separator.boundingBox())!;
@@ -127,14 +133,13 @@ test.describe('KbqDl', () => {
             const dragOffset = 60;
 
             await page.mouse.down();
-            expect(await separator.evaluate((element) => getComputedStyle(element, '::after').width)).toBe('3px');
+            await expect(separator).toHaveCSS('width', '3px', { pseudo: 'after' });
             await page.mouse.move(startX + dragOffset, startY, { steps: 5 });
             await page.mouse.up();
 
-            const endWidth = (await term.boundingBox())!.width;
-
-            expect(endWidth).toBeGreaterThan(startWidth);
-            expect(endWidth).toBeCloseTo(startWidth + dragOffset, 0);
+            // The column follows the last move a render later.
+            await expect.poll(getTermWidth).toBeGreaterThan(startWidth);
+            await expect.poll(getTermWidth).toBeCloseTo(startWidth + dragOffset, 0);
             await expect(getList(block)).toHaveClass(resizedClass);
         });
 
@@ -177,11 +182,12 @@ test.describe('KbqDl', () => {
             const separator = getSeparator(block);
             const termWidth = Math.round((await getFirstTerm(block).boundingBox())!.width);
 
-            // With no `dtMinWidth`/`ddMinWidth`, the resizer falls back to the measured term width.
-            const ariaValueMin = Number(await separator.getAttribute('aria-valuemin'));
+            // With no `dtMinWidth`/`ddMinWidth`, the resizer falls back to the measured term width, which is taken
+            // after the first render and bound a render later.
+            const getAriaValueMin = async () => Number(await separator.getAttribute('aria-valuemin'));
 
-            expect(ariaValueMin).toBeGreaterThan(0);
-            expect(ariaValueMin).toBeCloseTo(termWidth, 0);
+            await expect.poll(getAriaValueMin).toBeGreaterThan(0);
+            await expect.poll(getAriaValueMin).toBeCloseTo(termWidth, 0);
         });
     });
 });

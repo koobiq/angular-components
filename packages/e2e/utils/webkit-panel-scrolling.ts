@@ -128,10 +128,14 @@ export function e2eDescribeWebkitPanelScrolling(config: E2eWebkitPanelScrollingC
 
             await e2eSettleFrames(page);
 
-            expect(await e2eScrollTopOf(port)).toBeGreaterThan(0);
-            expect(await e2eIsFullyInView(port, activeItem)).toBe(true);
+            await expect.poll(() => e2eScrollTopOf(port)).toBeGreaterThan(0);
+            await expect.poll(() => e2eIsFullyInView(port, activeItem)).toBe(true);
+
+            // Read once, past the reveal above: a poll for 0 would pass on a sample taken before a page scroll.
+            const pageScrollY = await page.evaluate(() => window.scrollY);
+
             // The page is deliberately made scrollable in beforeEach, so this can actually fail.
-            expect(await page.evaluate(() => window.scrollY)).toBe(0);
+            expect(pageScrollY).toBe(0);
         });
     });
 }

@@ -60,7 +60,8 @@ describe('kbqGetTextQuery', () => {
             const started = performance.now();
 
             expect(kbqGetTextQuery(value, value.length)).toBeNull();
-            expect(performance.now() - started).toBeLessThan(100);
+            // Retrying an anchored pattern from every position takes seconds here.
+            expect(performance.now() - started).toBeLessThan(1000);
         });
     });
 

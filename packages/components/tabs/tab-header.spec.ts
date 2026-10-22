@@ -25,6 +25,16 @@ const RESIZE_AUDIT_TIME = 100;
 /** How long (ms) a scroll waits before the header renders the arrows again. See `SCROLL_CD_THROTTLE`. */
 const SCROLL_CD_THROTTLE = 48;
 
+/** Debounce (ms) in front of every scroll correction. See `SCROLL_CORRECTION_DEBOUNCE`. */
+const SCROLL_CORRECTION_DEBOUNCE = 100;
+
+/** Stubs box metrics as getters that read 0 off the page, so a measurement taken before attaching cannot pass. */
+const stubGeometry = (element: HTMLElement, metrics: Record<string, () => number>): void => {
+    for (const [name, read] of Object.entries(metrics)) {
+        Object.defineProperty(element, name, { configurable: true, get: () => (element.isConnected ? read() : 0) });
+    }
+};
+
 @Injectable()
 class MockResizeObserver extends SharedResizeObserver {
     // A plain `Subject`, not a `BehaviorSubject`: the latter replays its initial `[]` to every new
@@ -553,6 +563,130 @@ describe('KbqTabHeader', () => {
                 fixture.detectChanges();
 
                 expect(checkPaginationEnabledSpy).toHaveBeenCalled();
+            });
+        });
+
+        // A label is measured in whatever face is in when the correction runs, and the real one only resizes
+        // the labels — no resize of the scroll box, no change of the text.
+        describe('webfonts', () => {
+            let fonts: EventTarget;
+
+            beforeEach(() => {
+                vi.useFakeTimers();
+
+                // jsdom has no `FontFaceSet`; the header only listens to it.
+                fonts = new EventTarget();
+                Object.defineProperty(document, 'fonts', { configurable: true, value: fonts });
+
+                fixture = TestBed.createComponent(SimpleTabHeaderApp);
+                appComponent = fixture.componentInstance;
+            });
+
+            afterEach(() => Reflect.deleteProperty(document, 'fonts'));
+
+            /**
+             * Selects the last label and lets the header reveal it, measured in a fallback face: the strip
+             * shows 100px of 400px and the label ends at 330px, so the strip rests at 330 - 100 + 20 (the arrow).
+             */
+            const revealLastLabel = async () => {
+                appComponent.selectedIndex = 3;
+                fixture.detectChanges();
+
+                const header = appComponent.tabHeader();
+                const container = header.tabListContainer.nativeElement;
+                const label = { offsetLeft: 300, offsetWidth: 30 };
+                let scrollLeft = 0;
+
+                Object.defineProperty(container, 'scrollLeft', {
+                    configurable: true,
+                    get: () => scrollLeft,
+                    set: (value: number) => {
+                        scrollLeft = Math.max(0, Math.min(300, value));
+                    }
+                });
+                stubGeometry(container, { scrollWidth: () => 400, clientWidth: () => 100 });
+                stubGeometry(header.nextPaginator.nativeElement, { clientWidth: () => 20 });
+                stubGeometry(header.previousPaginator.nativeElement, { clientWidth: () => 20 });
+                stubGeometry(header.items.get(3)!.elementRef.nativeElement, {
+                    offsetLeft: () => label.offsetLeft,
+                    offsetWidth: () => label.offsetWidth
+                });
+
+                await vi.advanceTimersByTimeAsync(SCROLL_CORRECTION_DEBOUNCE);
+                fixture.detectChanges();
+
+                expect(container.scrollLeft).toBe(250);
+
+                return { header, container, label };
+            };
+
+            /** The real face swaps in: wider than the fallback, so the labels before it push the last one on. */
+            const loadWebfonts = (label: { offsetLeft: number; offsetWidth: number }): void => {
+                label.offsetLeft = 320;
+                label.offsetWidth = 40;
+                fonts.dispatchEvent(new Event('loadingdone'));
+            };
+
+            it('should reveal the selected label again once webfonts finish loading', async () => {
+                const { container, label } = await revealLastLabel();
+
+                loadWebfonts(label);
+
+                // Behind the same debounce as every other correction.
+                expect(container.scrollLeft).toBe(250);
+
+                await vi.advanceTimersByTimeAsync(SCROLL_CORRECTION_DEBOUNCE);
+
+                // 360 - 100 + 20: where the header would have put it had the face been in from the start.
+                expect(container.scrollLeft).toBe(280);
+            });
+
+            it.each([
+                ['an arrow', (header: KbqTabHeader) => header.handlePaginatorClick('before')],
+                [
+                    'the wheel',
+                    (header: KbqTabHeader) => {
+                        const container = header.tabListContainer.nativeElement;
+
+                        container.scrollLeft = 200;
+                        container.dispatchEvent(new WheelEvent('wheel'));
+                    }
+                ]
+            ])('should leave the strip where the user moved it with %s', async (_, move) => {
+                const { header, container, label } = await revealLastLabel();
+
+                move(header);
+
+                const moved = container.scrollLeft;
+
+                expect(moved).not.toBe(250);
+
+                loadWebfonts(label);
+                await vi.advanceTimersByTimeAsync(SCROLL_CORRECTION_DEBOUNCE);
+
+                expect(container.scrollLeft).toBe(moved);
+            });
+
+            it('should recheck pagination once webfonts finish loading', async () => {
+                fixture.detectChanges();
+
+                const header = appComponent.tabHeader();
+                let scrollWidth = 100;
+
+                stubGeometry(header.tabListContainer.nativeElement, {
+                    scrollWidth: () => scrollWidth,
+                    clientWidth: () => 100
+                });
+                await vi.advanceTimersByTimeAsync(SCROLL_CORRECTION_DEBOUNCE);
+                fixture.detectChanges();
+
+                expect(header.showPaginationControls).toBe(false);
+
+                scrollWidth = 400;
+                fonts.dispatchEvent(new Event('loadingdone'));
+                fixture.detectChanges();
+
+                expect(header.showPaginationControls).toBe(true);
             });
         });
     });

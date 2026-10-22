@@ -27,7 +27,8 @@ import {
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
-    ruRUFormattersData
+    ruRUFormattersData,
+    typeInElement
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { BIG_STEP, KbqInput, KbqInputModule, KbqNumberInput, SMALL_STEP, add, getPrecision } from './index';
@@ -2225,6 +2226,74 @@ describe('KbqNumberInput', () => {
             // The model alone would have missed this: `formatNumber` renders `toString()` digit for digit.
             expect(inputElement.value).toBe('1,006');
             expect(fixture.componentInstance.inputNumberDirective().value).toBe(1.006);
+        });
+    });
+
+    // `onInput` commits the typed value from a `setTimeout(0)`, so a fast typist or a scanner presses the
+    // arrow before it runs. The step must land where it lands once that commit has run.
+    describe('stepping before the typed value is committed', () => {
+        let fixture: ComponentFixture<NumberInputConfigurable>;
+        let inputElement: HTMLInputElement;
+        let valueChange: Mock;
+
+        const pressArrow = (keyCode: number, shiftKey: boolean) => {
+            const event = createKeyboardEvent('keydown', keyCode);
+
+            Object.defineProperty(event, 'shiftKey', { get: () => shiftKey });
+            dispatchEvent(inputElement, event);
+        };
+
+        beforeEach(async () => {
+            vi.useFakeTimers();
+
+            fixture = createComponent(NumberInputConfigurable);
+            fixture.componentInstance.localeService.setLocale('ru-RU');
+            fixture.componentInstance.step = 0.5;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+            valueChange = vi.fn();
+            fixture.componentInstance.inputNumberDirective().valueChange.subscribe(valueChange);
+        });
+
+        it.each([
+            ['up by step', UP_ARROW, false, 10.5, '10,5'],
+            ['down by step', DOWN_ARROW, false, 9.5, '9,5'],
+            ['up by bigStep', UP_ARROW, true, 20, '20'],
+            ['down by bigStep', DOWN_ARROW, true, 0, '0']
+        ])('should step %s from the typed value', async (_, keyCode, shiftKey, expected, viewValue) => {
+            typeInElement('10', inputElement);
+            pressArrow(keyCode, shiftKey);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(inputElement.value).toBe(viewValue);
+            expect(fixture.componentInstance.value).toBe(expected);
+            expect(fixture.componentInstance.inputNumberDirective().value).toBe(expected);
+            // The emissions of a settled keystroke followed by a step: the typed value, then the stepped one.
+            expect(valueChange.mock.calls).toEqual([[10], [expected]]);
+        });
+
+        it('should leave the caret at the end of the stepped value, as after a settled keystroke', async () => {
+            fixture.componentInstance.step = 1;
+            fixture.componentInstance.value = 9999;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            // Prepending a digit groups the value, and its reformat queues a caret correction for that edit.
+            inputElement.value = '19999';
+            inputElement.setSelectionRange(1, 1);
+            dispatchFakeEvent(inputElement, 'input');
+            pressArrow(UP_ARROW, false);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe(`20${defaultLocaleGroupSep}000`);
+            expect(inputElement.selectionStart).toBe(inputElement.value.length);
         });
     });
 

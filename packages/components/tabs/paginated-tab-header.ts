@@ -293,6 +293,13 @@ export abstract class KbqPaginatedTabHeader
      */
     private readonly scrollCorrectionRequest = new ReplaySubject<{ index: number; behavior: ScrollBehavior }>(1);
 
+    /**
+     * The latest scroll-correction request, repeated once webfonts finish loading: a label measured in the
+     * fallback face moves when the real one swaps in. Dropped as soon as the user moves the strip, so the
+     * repeat never pulls it back from where they took it.
+     */
+    private lastScrollCorrection: { index: number; behavior: ScrollBehavior } | null = null;
+
     protected readonly destroyRef = inject(DestroyRef);
     public readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -394,10 +401,14 @@ export abstract class KbqPaginatedTabHeader
                     this.scrollProgress.next();
                 });
 
-            // Any wheel/trackpad input should immediately take over from a running inertia coast.
+            // Any wheel/trackpad input should immediately take over from a running inertia coast, and from
+            // a correction waiting to be repeated.
             fromEvent<WheelEvent>(container, 'wheel', passiveEventListenerOptions)
                 .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => this.cancelInertia());
+                .subscribe(() => {
+                    this.cancelInertia();
+                    this.lastScrollCorrection = null;
+                });
 
             fromEvent<PointerEvent>(container, 'pointerdown')
                 .pipe(takeUntilDestroyed(this.destroyRef))
@@ -446,6 +457,19 @@ export abstract class KbqPaginatedTabHeader
         this.scrollCorrectionRequest
             .pipe(debounceTime(SCROLL_CORRECTION_DEBOUNCE), takeUntilDestroyed(this.destroyRef))
             .subscribe(({ index, behavior }) => this.scrollCorrection(index, behavior));
+
+        // A webfont that arrives after the strip was measured resizes the labels without resizing the scroll
+        // box or changing the text, so neither observer above sees it. Re-measuring also re-renders the
+        // underline, which reads the selected label's offsets from the template.
+        if (this.platform.isBrowser && this.document.fonts) {
+            fromEvent(this.document.fonts, 'loadingdone')
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => {
+                    this.updatePagination();
+
+                    if (this.lastScrollCorrection) this.scrollCorrectionRequest.next(this.lastScrollCorrection);
+                });
+        }
     }
 
     ngAfterContentInit() {
@@ -537,7 +561,7 @@ export abstract class KbqPaginatedTabHeader
         // If the selected index has changed, scroll to the label.
         if (this.selectedIndexChanged) {
             this.selectedIndexChanged = false;
-            this.scrollCorrectionRequest.next({ index: this.selectedIndex, behavior: 'smooth' });
+            this.requestScrollCorrection(this.selectedIndex, 'smooth');
         }
     }
 
@@ -642,7 +666,7 @@ export abstract class KbqPaginatedTabHeader
         item.elementRef.nativeElement.focus({ preventScroll: true });
 
         if (this.showPaginationControls) {
-            this.scrollCorrectionRequest.next({ index: tabIndex, behavior: 'auto' });
+            this.requestScrollCorrection(tabIndex, 'auto');
         }
     }
 
@@ -659,6 +683,8 @@ export abstract class KbqPaginatedTabHeader
      * should be called sparingly.
      */
     scrollHeader(direction: ScrollDirection) {
+        this.lastScrollCorrection = null;
+
         const container = this.tabListContainer.nativeElement;
         const viewLength = container.clientWidth;
         const amount = (direction === 'before' ? -1 : 1) * viewLength * SCROLL_DISTANCE;
@@ -822,6 +848,12 @@ export abstract class KbqPaginatedTabHeader
         this.tabListContainer.nativeElement.scrollTo({ left, behavior });
     }
 
+    /** Queues a {@link scrollCorrection} behind the debounce, and keeps it to repeat once webfonts load. */
+    private requestScrollCorrection(index: number, behavior: ScrollBehavior): void {
+        this.lastScrollCorrection = { index, behavior };
+        this.scrollCorrectionRequest.next(this.lastScrollCorrection);
+    }
+
     /**
      * Moves the tab list such that the desired tab label (marked by index) is moved into view.
      *
@@ -905,8 +937,10 @@ export abstract class KbqPaginatedTabHeader
 
         // Any press on the strip takes over from a running inertia coast, whatever the pointer
         // type — otherwise a tap on a touch-panning device, or a press on a nested control, would
-        // leave the previous coast running underneath it.
+        // leave the previous coast running underneath it. The same goes for a correction waiting to
+        // be repeated; a press that changes the selection queues a fresh one.
         this.cancelInertia();
+        this.lastScrollCorrection = null;
 
         // Touch keeps its existing interaction model (pagination arrows); only mouse/pen drag here.
         if (this.dragState || event.pointerType === 'touch' || event.button !== 0) return;

@@ -39,7 +39,11 @@ const luxon = { find: /^luxon$/, replacement: resolve(root, 'node_modules/luxon/
 
 const shared = {
     globals: true,
-    testTimeout: 2000,
+    // The first test of a file pays the file's cold start (the first render, a TypeScript program for a
+    // schematic), which takes 3-7 s on a machine busy with other work, such as a Docker e2e run. Locally
+    // that is noise; on the dedicated CI runner it has never fired, so the tight limit stays there and
+    // still flags a test that has become slow.
+    testTimeout: isCI ? 2000 : 10_000,
     clearMocks: true,
     silent: isCI,
     exclude: ['**/node_modules/**', '**/dist/**', '.claude/**']

@@ -23,14 +23,15 @@ describe(parseVersionName.name, () => {
      * quantifiers over the same digits there were exponentially many ways to split a run of them
      * between the two — every one of which the engine tried before rejecting a string that ends in
      * a character no split can rescue. 26 digits cost ~0.5s when this was written, quadrupling with
-     * every two digits added, so the budget below is a floor rather than a measurement.
+     * every two digits added, so 30 digits take seconds there and the budget below leaves a loaded
+     * machine plenty of room.
      */
     it('should reject a long run of digits without backtracking over it', () => {
         const start = Date.now();
 
-        expect(parseVersionName(`18.10.0-rc.${'0'.repeat(26)}!`)).toBeNull();
+        expect(parseVersionName(`18.10.0-rc.${'0'.repeat(30)}!`)).toBeNull();
 
-        expect(Date.now() - start).toBeLessThan(100);
+        expect(Date.now() - start).toBeLessThan(1000);
     });
 });
 

@@ -310,19 +310,18 @@ test.describe('KbqListModule', () => {
             // Read it off the option the pointer ends over, not off the body: CDK hides the preview from
             // hit testing, so the cursor the user sees is the one resolved from whatever lies under it.
             // `source-3` is never cloned during the drag, unlike the option being dragged.
-            const cursorUnderPointer = () =>
-                page.getByTestId('source-3').evaluate((option) => getComputedStyle(option).cursor);
+            const optionUnderPointer = page.getByTestId('source-3');
 
-            expect(await cursorUnderPointer()).toBe('grab');
+            await expect(optionUnderPointer).toHaveCSS('cursor', 'grab');
 
             await pressAndMoveOnto(page, 'source-1', 'source-3');
 
-            expect(await cursorUnderPointer()).toBe('grabbing');
+            await expect(optionUnderPointer).toHaveCSS('cursor', 'grabbing');
 
             await page.mouse.up();
             await expect(page.locator('.cdk-drag-preview')).toHaveCount(0);
 
-            expect(await cursorUnderPointer()).toBe('grab');
+            await expect(optionUnderPointer).toHaveCSS('cursor', 'grab');
         });
 
         test('stops the options from reacting to hover while one is being dragged', async ({ page }) => {
@@ -340,31 +339,36 @@ test.describe('KbqListModule', () => {
 
             await pressAndMoveOnto(page, 'source-1', 'source-2');
 
-            expect(await backgroundOf('source-2')).toBe(atRest);
+            // Read once, after the drag has started: the expected value is the resting one, so only that wait
+            // shows the read is taken mid-drag.
+            await expect(page.locator('.cdk-drag-preview')).toHaveCount(1);
+            const dragged = await backgroundOf('source-2');
+
+            expect(dragged).toBe(atRest);
 
             await page.mouse.up();
         });
 
         test('turns the cursor to no-drop away from any list that would take the option', async ({ page }) => {
-            const bodyCursor = () => page.evaluate(() => getComputedStyle(document.body).cursor);
+            const body = page.locator('body');
 
             await pressAndMoveOnto(page, 'source-1', 'source-3');
 
-            expect(await bodyCursor()).toBe('grabbing');
+            await expect(body).toHaveCSS('cursor', 'grabbing');
 
             // The lists sit at the top left of the page, so the bottom right corner is outside both.
             const viewport = page.viewportSize()!;
 
             await page.mouse.move(viewport.width - 1, viewport.height - 1, { steps: 5 });
 
-            expect(await bodyCursor()).toBe('no-drop');
+            await expect(body).toHaveCSS('cursor', 'no-drop');
 
             // Back over the list — a plain move, the button is still down from the drag above.
             const target = (await page.getByTestId('source-3').boundingBox())!;
 
             await page.mouse.move(target.x + target.width / 2, target.y + target.height / 2, { steps: 5 });
 
-            expect(await bodyCursor()).toBe('grabbing');
+            await expect(body).toHaveCSS('cursor', 'grabbing');
 
             await page.mouse.up();
         });
@@ -378,11 +382,13 @@ test.describe('KbqListModule', () => {
 
             await expect(indicator).toBeVisible();
 
-            // Dropping past the midpoint of the last option puts the indicator at the list's end.
+            // Dropping past the midpoint of the last option puts the indicator at the list's end. It is shown
+            // by an earlier move, so it can still be on its way there when it turns visible.
             const lastOption = (await page.getByTestId('source-3').boundingBox())!;
-            const indicatorBox = (await indicator.boundingBox())!;
 
-            expect(Math.abs(indicatorBox.y - (lastOption.y + lastOption.height))).toBeLessThanOrEqual(2);
+            await expect
+                .poll(async () => Math.abs((await indicator.boundingBox())!.y - (lastOption.y + lastOption.height)))
+                .toBeLessThanOrEqual(2);
 
             await page.mouse.up();
             await expect(indicator).toHaveCount(0);
@@ -499,10 +505,15 @@ test.describe('KbqListModule', () => {
         });
 
         test('advertises the grab on the handle rather than on the row', async ({ page }) => {
-            const cursorOf = (locator: Locator) => locator.evaluate((element) => getComputedStyle(element).cursor);
+            await expect(handleOf(page, 'handle-1')).toHaveCSS('cursor', 'grab');
 
-            expect(await cursorOf(handleOf(page, 'handle-1'))).toBe('grab');
-            expect(await cursorOf(page.getByTestId('handle-1'))).toBe('pointer');
+            // Read once, after the handle's grab has shown the row's drag classes in place: `pointer` is also
+            // the row's cursor before them, so a retrying matcher could pass on a row not yet draggable.
+            const rowCursor = await page
+                .getByTestId('handle-1')
+                .evaluate((element) => getComputedStyle(element).cursor);
+
+            expect(rowCursor).toBe('pointer');
         });
     });
 
@@ -544,26 +555,26 @@ test.describe('KbqListModule', () => {
 
             // Without this the assertion below would also hold on a list that cannot be dragged at all.
             await expect(option).toHaveClass(/kbq-list-option_draggable/);
-            expect(await option.evaluate((element) => getComputedStyle(element).cursor)).toBe('pointer');
+            // Read once, after that class: `pointer` is also the row's cursor before it.
+            const cursor = await option.evaluate((element) => getComputedStyle(element).cursor);
+
+            expect(cursor).toBe('pointer');
         });
 
         test('keeps the group header on the same cursor as the divider mid-drag', async ({ page }) => {
-            const cursorOf = (selector: string) =>
-                page
-                    .locator(selector)
-                    .first()
-                    .evaluate((element) => getComputedStyle(element).cursor);
+            const header = page.locator('.kbq-optgroup-label').first();
+            const divider = page.locator('kbq-divider').first();
 
             // The header carries a cursor of its own, unlike the divider, and keeps it outside a drag.
-            expect(await cursorOf('.kbq-optgroup-label')).toBe('default');
+            await expect(header).toHaveCSS('cursor', 'default');
 
             // Dropped onto a row inside the group, so the pointer never leaves the list that takes it.
             await pressAndMoveOnto(page, 'row-1', 'row-4');
 
             // Crossing a header is still being over the list, so it must not read as leaving it. Pinned
             // against `grabbing` as well as against the divider — otherwise two arrows would agree too.
-            expect(await cursorOf('kbq-divider')).toBe('grabbing');
-            expect(await cursorOf('.kbq-optgroup-label')).toBe('grabbing');
+            await expect(divider).toHaveCSS('cursor', 'grabbing');
+            await expect(header).toHaveCSS('cursor', 'grabbing');
 
             await page.mouse.up();
         });
@@ -686,7 +697,7 @@ test.describe('KbqListModule', () => {
             const dragged = await page.getByTestId('captioned').evaluate((el) => getComputedStyle(el).backgroundColor);
 
             expect(dragged).toBe(resting);
-            expect(await page.evaluate(() => getComputedStyle(document.body).cursor)).toBe('grabbing');
+            await expect(page.locator('body')).toHaveCSS('cursor', 'grabbing');
 
             await page.mouse.up();
         });

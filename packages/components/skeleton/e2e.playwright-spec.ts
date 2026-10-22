@@ -87,11 +87,11 @@ test.describe('KbqSkeleton', () => {
         });
 
         test('should keep an explicit zero radius', async ({ page }) => {
-            expect(await radius(host(page, 'loading', 'square'))).toBe('0px');
+            await expect(host(page, 'loading', 'square')).toHaveCSS('border-top-left-radius', '0px');
         });
 
         test('should let a class override the radius of the kbq-skeleton element', async ({ page }) => {
-            expect(await radius(host(page, 'loading', 'circle'))).toBe('50%');
+            await expect(host(page, 'loading', 'circle')).toHaveCSS('border-top-left-radius', '50%');
         });
     });
 
@@ -111,7 +111,7 @@ test.describe('KbqSkeleton', () => {
         test('should stretch a standalone skeleton across a block at the height of a class', async ({ page }) => {
             const [width] = await dimensions(page.getByTestId('block-container'));
 
-            expect(await dimensions(page.getByTestId('block'))).toEqual([width, 100]);
+            await expect.poll(() => dimensions(page.getByTestId('block'))).toEqual([width, 100]);
         });
 
         test('should take the height of the text of its typography level', async ({ page }) => {
@@ -130,7 +130,7 @@ test.describe('KbqSkeleton', () => {
             );
 
             // A single line, such as a heading, takes half of the width.
-            expect(await dimensions(heading.locator('.kbq-skeleton'))).toEqual([width / 2, height - gap]);
+            await expect.poll(() => dimensions(heading.locator('.kbq-skeleton'))).toEqual([width / 2, height - gap]);
         });
 
         test('should let a class resize a preset', async ({ page }) => {

@@ -1724,13 +1724,15 @@ describe('KbqNotificationCenter', () => {
         it('always orders groups and items from newest to oldest, regardless of input order', () => {
             const service = getService();
 
-            // Two days × two times, provided deliberately scrambled. Midday UTC times keep each
-            // pair in the same day-group regardless of the test machine's timezone.
+            // Two days × two times, provided deliberately scrambled. Local times keep each pair in one
+            // day-group in every timezone: 15:00 UTC is already the next day east of UTC+9.
+            const local = (dateTime: string) => new Date(dateTime).toISOString();
+
             service.items = [
-                createItem('1a', '2025-10-01T12:00:00.000Z'),
-                createItem('2b', '2025-10-02T15:00:00.000Z'),
-                createItem('1b', '2025-10-01T15:00:00.000Z'),
-                createItem('2a', '2025-10-02T12:00:00.000Z')
+                createItem('1a', local('2025-10-01T12:00:00')),
+                createItem('2b', local('2025-10-02T15:00:00')),
+                createItem('1b', local('2025-10-01T15:00:00')),
+                createItem('2a', local('2025-10-02T12:00:00'))
             ];
 
             // Newest day first; within each day the newest notification first.

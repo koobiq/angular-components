@@ -36,6 +36,9 @@ jobs:
       pull-requests: write # for thollander/actions-comment-pull-request to comment on PRs
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The merge commit of a pull request and its parents: the burn-in below diffs it against the base.
+          fetch-depth: 2
       # No setup-node and no browser install: node is already on the runner, tools/e2e/run.js only
       # reads package.json, and the browsers come baked into the image. That removes the ~174 MB
       # `playwright install` download this job used to nurse through a timeout — but it is not a
@@ -84,6 +87,32 @@ jobs:
             ---
 
             💡 Comment `/approve-snapshots` to approve snapshot changes.
+      # The specs a pull request adds, edits or reaches through its component, repeated: a test that passes only
+      # most of the time fails here, on the pull request that brings it, rather than later on main.
+      - id: burn-in-specs
+        if: ${{ github.event_name == 'pull_request' }}
+        run: node tools/e2e/changed-specs.mjs HEAD^1 HEAD >> "$GITHUB_OUTPUT"
+      - id: burn-in
+        if: ${{ steps.burn-in-specs.outputs.specs != '' }}
+        # Through the environment rather than interpolated into the script, since the pull request names the files.
+        run: npm run e2e:docker -- yarn playwright test $BURN_IN_SPECS --repeat-each=10
+        env:
+          PLAYWRIGHT_WORKERS: 100%
+          BURN_IN_SPECS: ${{ steps.burn-in-specs.outputs.specs }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ failure() && steps.burn-in.outcome == 'failure' }}
+        id: upload-burn-in-report
+        with:
+          name: playwright-report-burn-in
+          path: playwright-report/
+          retention-days: 5
+      - uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3.0.1
+        if: ${{ failure() && steps.burn-in.outcome == 'failure' }}
+        with:
+          message: |
+            ### 🔁 E2E burn-in failed
+
+            A spec this pull request adds, edits or reaches through its component failed when run ten times over: it is flaky. Review the [report](${{ steps.upload-burn-in-report.outputs.artifact-url }}) and see [docs/e2e-flakiness.md](https://github.com/koobiq/angular-components/blob/main/docs/e2e-flakiness.md) for the usual causes.
 
   # Functional smoke for the documentation site. A separate job so it runs in parallel with the
   # component suite instead of sharing its time budget.

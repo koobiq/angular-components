@@ -145,6 +145,22 @@ On PowerShell the assignment is separate: `$env:PLAYWRIGHT_RETRIES = '2'; yarn r
 
 The `E2E tests` workflow takes the same value as a `retries` input through `workflow_dispatch`.
 
+### Burn-in on pull requests
+
+After the full run, the `tests` job of a pull request runs again the specs the change adds, edits or
+reaches through its component, ten times over, so a test that passes only most of the time fails on
+the pull request that brings it. `tools/e2e/changed-specs.mjs` picks them; a change that reaches more
+than five specs gets no burn-in, since the full run has just covered them. The same selection
+locally:
+
+```bash
+node tools/e2e/run.js yarn playwright test $(node tools/e2e/changed-specs.mjs | sed 's/^specs=//') --repeat-each=10
+```
+
+The unit tests have no burn-in: they have not flaked on CI. Locally they time out under load
+instead — the first test of a file pays its cold start — which is why `testTimeout` is 10 seconds
+there and 2 seconds on CI.
+
 [e2e-flakiness.md](../e2e-flakiness.md) records what the first run at zero retries found: the
 mechanisms behind each flake the suite had, and which ones remain unexplained.
 
