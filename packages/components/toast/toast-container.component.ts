@@ -1,5 +1,5 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { CdkScrollable } from '@angular/cdk/overlay';
+import { CdkScrollable, FlexibleConnectedPositionStrategy, OverlayKeyboardDispatcher } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -14,7 +14,7 @@ import {
     inject,
     viewChild
 } from '@angular/core';
-import { Observable, map, merge } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqToastService } from './toast.service';
 import { KbqToastData } from './toast.type';
 
@@ -35,26 +35,19 @@ export class KbqToastContainerComponent extends CdkScrollable {
 
     readonly viewContainer = viewChild.required('container', { read: ViewContainerRef });
 
-    /**
-     * Emits while the stack re-lays-out. Toasts are ordinary flow children, so removing one slides the
-     * rest for as long as its height animates — and an overlay opened from inside a toast is anchored to
-     * a trigger that is moving. CDK only re-measures the origin on a scroll or a viewport resize, so the
-     * stack has to say when it moved.
-     *
-     * The container's own box tracks the reflow exactly: continuously while a leaving toast animates its
-     * height away, and once for a removal that is not animated at all, such as a template toast.
-     */
-    private readonly reflowed: Observable<Event> = inject(SharedResizeObserver)
-        .observe(this.elementRef.nativeElement)
-        .pipe(map(() => new Event('scroll')));
+    private readonly overlayKeyboardDispatcher = inject(OverlayKeyboardDispatcher);
 
-    /**
-     * `ScrollDispatcher` subscribes to this method when the container registers itself, so merging the
-     * reflow signal in re-broadcasts it to every overlay that repositions on scroll — which is what
-     * `kbq-select` and the dropdown trigger do by default.
-     */
-    override elementScrolled(): Observable<Event> {
-        return merge(super.elementScrolled(), this.reflowed);
+    constructor() {
+        super();
+
+        // Toasts are ordinary flow children, so removing one slides the rest for as long as its height animates,
+        // and an overlay opened from inside a toast is left behind its trigger: CDK re-measures the origin only on
+        // a scroll or a viewport resize. The container's box tracks the reflow exactly. It is not reported as a
+        // scroll: `ScrollDispatcher` is global, and every close-on-scroll overlay of the app would close.
+        inject(SharedResizeObserver)
+            .observe(this.elementRef.nativeElement)
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.repositionConnectedOverlays());
     }
 
     createToast<C>(data: KbqToastData, componentType, onTop: boolean): ComponentRef<C> {
@@ -90,12 +83,25 @@ export class KbqToastContainerComponent extends CdkScrollable {
     }
 
     /**
+     * Re-applies the position of every overlay anchored to an element; one whose origin has not moved stays where it
+     * is. CDK keeps no public registry of attached overlays, but its keyboard dispatcher tracks each of them.
+     */
+    private repositionConnectedOverlays(): void {
+        // A copy: a `positionChanges` handler may detach an overlay, which splices the list being iterated.
+        for (const overlayRef of this.overlayKeyboardDispatcher._attachedOverlays.slice()) {
+            if (overlayRef.getConfig().positionStrategy instanceof FlexibleConnectedPositionStrategy) {
+                overlayRef.updatePosition();
+            }
+        }
+    }
+
+    /**
      * Fakes a scroll on the container so that overlays anchored inside a toast are repositioned by their
      * `RepositionScrollStrategy` when the stack shifts.
      *
-     * @deprecated The container reports its own reflow through `elementScrolled()`, so nothing calls this.
+     * @deprecated The container repositions the overlays anchored inside it on its own, so nothing calls this.
      * It is kept only for callers that already hold a container reference — the instance created by
-     * `KbqToastService` is not exposed.
+     * `KbqToastService` is not exposed. The fake scroll also closes every close-on-scroll overlay of the app.
      */
     dispatchScrollEvent = () => {
         this.elementRef.nativeElement.dispatchEvent(new Event('scroll'));
