@@ -17,5 +17,9 @@ jobs:
       - uses: ./.github/workflows/actions/setup-node
       # Build styles which are required for unit tests
       - run: yarn run styles:build-all
+      # index.json/examples.json are never committed (see packages/mcp/README.md) and `unit:all`
+      # does not go through the `unit:mcp` script that regenerates them — read straight from the
+      # repository, no `dist/components` needed, so this stays cheap here.
+      - run: yarn run build:mcp:index
       # One Vitest run for every package: the `angular` and `node` projects of vitest.config.mts.
       - run: yarn run unit:all

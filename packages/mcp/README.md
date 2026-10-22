@@ -24,8 +24,8 @@ an agent cannot tell a wrong name from a right one.
 
 | File            | Committed? | Built by                       | What is in it                                                                                                                                     |
 | --------------- | ---------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `index.json`    | no         | `build:mcp`, every build       | Entry points, symbols and members per component, the section headings and opening sentence of every documentation page, and the icon rename table |
-| `examples.json` | no         | `build:mcp`, every build       | Source of every live example, keyed by example id then by file name                                                                               |
+| `index.json`    | no         | `build:mcp:index`, every build | Entry points, symbols and members per component, the section headings and opening sentence of every documentation page, and the icon rename table |
+| `examples.json` | no         | `build:mcp:index`, every build | Source of every live example, keyed by example id then by file name                                                                               |
 | `guides.json`   | yes        | `build:mcp:data`, release only | Guide prose, cut into sections — installation, theming, migration and the rest of `PUBLIC_GUIDES` in `build-guides.ts`                            |
 | `history.json`  | yes        | `build:mcp:data`, release only | Per-release API diff, one entry per entry point that changed, read from `tools/public_api_guard` at each tag                                      |
 
@@ -116,12 +116,13 @@ KOOBIQ_COMPONENTS_ROOT=/path/to/package # also KOOBIQ_ICONS_ROOT, KOOBIQ_TOKENS_
 ## Development
 
 ```bash
-yarn build:mcp:data # regenerate the committed guides.json and history.json (runs in the release pipeline)
-yarn build:mcp      # regenerate index.json/examples.json, compile src → dist, assemble dist/mcp
-yarn check-mcp-data # gate: guides.json not behind docs/guides — no git needed (history.json needs none: see above)
-yarn unit:mcp       # Vitest, everything that does not need a built @koobiq/components
-yarn unit:mcp:dts   # the specs that need a build: the .d.ts reader (build:components) and the stdio smoke test (build:mcp)
-yarn mcp:probe      # drive the real server over stdio and price every answer
+yarn build:mcp:data  # regenerate the committed guides.json and history.json (runs in the release pipeline)
+yarn build:mcp:index # regenerate index.json/examples.json alone — what unit:mcp needs, no dist/components
+yarn build:mcp       # build:mcp:index, then compile src → dist and assemble dist/mcp
+yarn check-mcp-data  # gate: guides.json not behind docs/guides — no git needed (history.json needs none: see above)
+yarn unit:mcp        # Vitest, everything that does not need a built @koobiq/components (regenerates its own index first)
+yarn unit:mcp:dts    # the specs that need a build: the .d.ts reader (build:components) and the stdio smoke test (build:mcp)
+yarn mcp:probe       # drive the real server over stdio and price every answer
 ```
 
 See "The four files in `data/`" above for what each command actually regenerates. The live API tests
