@@ -84,11 +84,19 @@ After installation, you need to include the library styles. Add the following fi
 ]
 ```
 
-`@koobiq/design-tokens` ships code-block, scrollbar and skeleton's tokens as opt-in files, separate
-from the rest — but `prebuilt-themes/theme.css` already carries their values, baked in at
-`@koobiq/components`' own build time, so the three render styled without an extra import. Load
-`@koobiq/design-tokens/web/component-tokens-{light,dark}.css` yourself only to override those values
-to something other than what `@koobiq/components` shipped with.
+`@koobiq/design-tokens` ships code-block, scrollbar and skeleton tokens as opt-in files. With the
+default setup you need none of them: their values are already compiled into
+`prebuilt-themes/theme.css`. Load the files yourself only if you build the library styles from SCSS
+sources:
+
+```scss
+@use '@koobiq/design-tokens/web/component-tokens';
+@use '@koobiq/design-tokens/web/component-tokens-light';
+@use '@koobiq/design-tokens/web/component-tokens-dark';
+```
+
+To change the default values, don't load the files — set the CSS variables in your own stylesheet,
+see the [theming guide](/en/main/theming/overview).
 
 ### Setting up theme
 
