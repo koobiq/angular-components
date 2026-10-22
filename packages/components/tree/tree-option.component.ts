@@ -263,7 +263,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     ngAfterContentInit(): void {
         if (this.selectAllRow()) return;
 
-        Promise.resolve().then(this.updateCheckboxState);
+        // Its own state only: a row being rendered changes no ancestor's.
+        Promise.resolve().then(() => this.syncCheckboxState());
 
         this.value = this.tree.treeControl.getValue(this.data);
     }
@@ -281,28 +282,21 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     updateParentsCheckboxState(node) {
-        this.tree.treeControl.getParents(node, []).forEach((parent) => {
-            const parentOption = this.tree.unorderedOptions.find((option) => option.data === parent);
+        const parents = new Set(this.tree.treeControl.getParents(node, []));
 
-            parentOption?.updateCheckboxState();
+        if (!parents.size) return;
+
+        // Each ancestor reads its state off the selection rather than off its children, so it is only recomputed:
+        // rolling up again from every ancestor made a node at depth d cost 2^d updates.
+        this.tree.unorderedOptions.forEach((option: KbqTreeOption) => {
+            if (parents.has(option.data)) option.syncCheckboxState();
         });
     }
 
     updateCheckboxState = () => {
         if (this.selectAllRow()) return;
 
-        if (this.checkboxThirdState() && this.isExpandable) {
-            if (this.descendantsAllSelected()) {
-                this.checkboxState = 'checked';
-            } else if (this.descendantsPartiallySelected()) {
-                this.checkboxState = 'indeterminate';
-            } else {
-                this.checkboxState = this.selected ? 'checked' : 'unchecked';
-            }
-        } else {
-            this.checkboxState = this.selected ? 'checked' : 'unchecked';
-        }
-
+        this.syncCheckboxState();
         this.updateParentsCheckboxState(this.data);
     };
 
@@ -440,8 +434,9 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     markForCheck() {
         this.changeDetectorRef.markForCheck();
 
+        // Its own state only: after a change the tree calls this on every rendered option, ancestors included.
         if (this.showCheckbox) {
-            this.updateCheckboxState();
+            this.syncCheckboxState();
         }
     }
 
@@ -450,5 +445,22 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         if (this.disabled || !this.tree.inSelect) return;
 
         this.focus('mouse');
+    }
+
+    /** Recomputes the option's own checkbox state, leaving its ancestors as they are. */
+    private syncCheckboxState(): void {
+        if (this.selectAllRow()) return;
+
+        if (this.checkboxThirdState() && this.isExpandable) {
+            if (this.descendantsAllSelected()) {
+                this.checkboxState = 'checked';
+            } else if (this.descendantsPartiallySelected()) {
+                this.checkboxState = 'indeterminate';
+            } else {
+                this.checkboxState = this.selected ? 'checked' : 'unchecked';
+            }
+        } else {
+            this.checkboxState = this.selected ? 'checked' : 'unchecked';
+        }
     }
 }
