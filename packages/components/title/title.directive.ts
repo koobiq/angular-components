@@ -21,7 +21,7 @@ import {
     PopUpTriggers
 } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { debounceTime, skip, throttleTime } from 'rxjs';
+import { debounceTime, filter, skip, throttleTime } from 'rxjs';
 
 /**
  * Shows a tooltip with the full text of the host element, but only when that text is truncated —
@@ -168,6 +168,19 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     /** Debounce/throttle interval (ms) applied to the resize and content-observer streams. */
     private readonly debounceInterval: number = 100;
 
+    /** Whether the host holds the keyboard focus, as the focus monitor reports it. */
+    private keyboardFocused = false;
+
+    /**
+     * Whether the pointer or the keyboard focus is on the host: the only time the overflow verdict is read. The two
+     * are tracked apart — `hovered` comes from the pop-up base, which binds it to the same `mouseenter`/`mouseleave`
+     * — because a click on a hovered host reports a mouse focus origin that hides the tooltip while the pointer stays
+     * where it was.
+     */
+    private get entered(): boolean {
+        return this.hovered() || this.keyboardFocused;
+    }
+
     /** Projected text elements marked with the `#kbqTitleText` template reference. */
     private readonly childContainer: Signal<readonly ElementRef<HTMLElement>[]> = contentChildren('kbqTitleText', {
         descendants: true,
@@ -184,8 +197,10 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
 
         // The input is otherwise read only on hover and on host mutations, neither of which a programmatic
         // rebind triggers: without this, changing `[kbq-title]` while the tooltip is open leaves the overlay
-        // showing the previous text, and `disabled` keeps the verdict computed for the old content. The
-        // initial value is skipped — `ngAfterViewInit` seeds the content once the queries are resolved.
+        // showing the previous text, and `disabled` keeps the verdict computed for the old content. Measured
+        // here whether or not the host is entered, unlike the observer streams below: a rebind is the
+        // consumer's own doing, one host at a time, and `disabled` is public. The initial value is skipped —
+        // `ngAfterViewInit` seeds the content once the queries are resolved.
         toObservable(this.titleContent)
             .pipe(skip(1), takeUntilDestroyed())
             .subscribe(() => {
@@ -214,14 +229,27 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
             ];
         }
 
+        // Measured only while the host is entered: nothing reads the verdict before `handleElementEnter` measures
+        // afresh, and `hideTooltip` disables the tooltip on leave. The gate is re-checked when the timer fires, since
+        // the pointer may have left in between and the verdict would otherwise re-enable a tooltip the leave had just
+        // disabled. A measurement appends a probe span to the container and reads it back, so each one forces a layout
+        // of the whole page — see `docs/e2e-flakiness.md` for what that costs on a page of hundreds of titled hosts.
         this.resizeObserver
             .observe(this.parent)
-            .pipe(debounceTime(this.debounceInterval), takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                debounceTime(this.debounceInterval),
+                filter(() => this.entered),
+                takeUntilDestroyed(this.destroyRef)
+            )
             .subscribe(() => this.setDerivedDisabled(!this.isOverflown));
 
         this.contentObserver
             .observe(this.parent)
-            .pipe(throttleTime(this.debounceInterval), takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                throttleTime(this.debounceInterval),
+                filter(() => this.entered),
+                takeUntilDestroyed(this.destroyRef)
+            )
             .subscribe(() => {
                 this.setDerivedDisabled(!this.isOverflown);
                 this.content = this.resolvedContent;
@@ -232,6 +260,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((origin) => {
                 if (origin === 'keyboard') {
+                    this.keyboardFocused = true;
                     this.handleElementEnter();
                     // `handleElementEnter()` only re-enables the tooltip. Without an explicit `show()` a
                     // keyboard user gets nothing: the trigger is locked to hover, so the base class binds no
@@ -250,6 +279,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
                     this.triggerName = 'blur';
                 }
 
+                this.keyboardFocused = false;
                 // Disabling hides an open tooltip on the way through `setDerivedDisabled`.
                 this.hideTooltip();
             });

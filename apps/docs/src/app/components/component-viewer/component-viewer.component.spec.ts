@@ -12,6 +12,7 @@ import {
 } from '@angular/router';
 import { BehaviorSubject, map, of } from 'rxjs';
 import type { MockInstance } from 'vitest';
+import { DocsIntersectionObserverStub } from '../../../testing/intersection-observer.stub';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
 import { DOCS_API_PAGES } from '../../services/page-resolver';
@@ -242,6 +243,7 @@ describe(DocsComponentApiPageComponent.name, () => {
     beforeEach(() => {
         // Rendered in the browser alone, as a route of `RenderMode.Client` is: the flag the server sets for one.
         document.body.setAttribute('ngcm', '');
+        vi.stubGlobal('IntersectionObserver', DocsIntersectionObserverStub);
         setScrollPosition = vi.spyOn(DocsAnchorsComponent.prototype, 'setScrollPosition').mockImplementation(() => {});
         scrollToElement = vi.spyOn(DocsAnchorsComponent.prototype, 'scrollToElement').mockImplementation(() => {});
     });
@@ -250,6 +252,8 @@ describe(DocsComponentApiPageComponent.name, () => {
         document.body.removeAttribute('ngcm');
         setScrollPosition.mockRestore();
         scrollToElement.mockRestore();
+        vi.unstubAllGlobals();
+        DocsIntersectionObserverStub.reset();
     });
 
     it('renders the API as the article, followed by the improvement callout', () => {
@@ -260,7 +264,7 @@ describe(DocsComponentApiPageComponent.name, () => {
         expect(article.querySelector('.kbq-callout')).not.toBeNull();
     });
 
-    // A signature is a code block, and the page is stable once highlight.js has loaded to highlight it.
+    // The entries render with the view; their code blocks wait to come into view, and hold nothing up.
     it('scrolls the anchors into position once the entries have rendered', async () => {
         await createPage().whenStable();
 
