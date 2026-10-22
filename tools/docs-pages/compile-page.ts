@@ -135,7 +135,7 @@ const getElementClass = (tag: string): string | null => {
 };
 
 /**
- * The attributes the search crawler reads the records of a page by (`DOCS_SEARCH_RECORD` in
+ * The attributes the search crawler reads the records of a page by (described in
  * `apps/docs/src/app/components/docsearch/docsearch.ts`): the headings of the sections and the paragraphs of the text.
  */
 const SEARCH_ATTRIBUTES = new Map([

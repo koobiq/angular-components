@@ -1,3 +1,17 @@
+// The Algolia crawler that fills the index reads the records of a page by attributes, one per level of the
+// `recordProps` of `helpers.docsearch()`: the markup says what a record is made of, so restyling a page leaves the
+// search alone.
+// - `data-docsearch-lvl0`: the group of the page in the results, the value of the one element of the page with it;
+// - `data-docsearch-lvl1`: the title of the page, the text of the one element that has it;
+// - `data-docsearch-lvl2`: a heading of a section;
+// - `data-docsearch-content`: a paragraph of the text.
+// Every record also gets the `lang` facet the search filters by, which `helpers.docsearch()` takes from `<html lang>`.
+//
+// The crawler's configuration lives in the Algolia dashboard (crawler `koobiq`, Editor: `actions`) rather than in this
+// repository and selects these attributes, so renaming one has to be made there too. The pages set them in the
+// templates of the viewers and of the API tab, and in the headings and paragraphs `tools/docs-pages/compile-page.ts`
+// renders. The crawl does not fail on a page that lost them, it only drops the page from the search.
+
 import { afterNextRender, DestroyRef, Directive, inject } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import docsearch, { DocSearchInstance, DocSearchProps } from '@docsearch/js/docsearch';
@@ -9,30 +23,6 @@ import { DocsLocaleState } from '../../services/locale';
 
 /** The index the crawler writes and the search reads. */
 const INDEX_NAME = 'koobiq';
-
-/**
- * The attributes the Algolia crawler that fills the search index reads the records of a page by, one per level of the
- * `recordProps` of `helpers.docsearch()`: the markup says what a record is made of, so restyling a page leaves the
- * search alone. Every record also gets the `lang` facet the search filters by, which `helpers.docsearch()` takes
- * from `<html lang>`.
- *
- * The crawler's configuration lives in the Algolia dashboard (crawler `koobiq`, Editor: `actions`) rather than in this
- * repository and selects these attributes, so renaming one has to be made there too. The pages set them in the
- * templates of the viewers and of the API tab, and in the headings and paragraphs `tools/docs-pages/compile-page.ts`
- * renders. The crawl does not fail on a page that lost them, it only drops the page from the search: the docs smoke
- * suite (`apps/docs/e2e.playwright-spec.ts`) checks them instead, with a copy of these names, since importing this
- * file would load Angular into it.
- */
-export const DOCS_SEARCH_RECORD = {
-    /** The group of the page in the results, as the value of the one element of the page that has it. */
-    lvl0: 'data-docsearch-lvl0',
-    /** The title of the page: the text of the one element that has it. */
-    lvl1: 'data-docsearch-lvl1',
-    /** A heading of a section. */
-    lvl2: 'data-docsearch-lvl2',
-    /** A paragraph of the text. */
-    content: 'data-docsearch-content'
-} as const;
 
 const SELECTOR = 'docs-docsearch';
 const HOST = 'koobiq.io';

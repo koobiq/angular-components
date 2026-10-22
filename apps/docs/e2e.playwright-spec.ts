@@ -701,12 +701,10 @@ test.describe('prerendered SEO metadata', () => {
     });
 });
 
-// The Algolia crawler renders a page and reads the records of the search off it by the attributes of
-// `DOCS_SEARCH_RECORD`, which its configuration in the Algolia dashboard selects. A page that lost them would not fail
-// the crawl: it would only drop out of the search once the next release is crawled.
+// The Algolia crawler reads the records of the search off a page by the `data-docsearch-*` attributes its configuration
+// in the Algolia dashboard selects (`src/app/components/docsearch/docsearch.ts` describes them). A page that lost them
+// would not fail the crawl: it would only drop out of the search once the next release is crawled.
 test.describe('search index', () => {
-    // A copy of `DOCS_SEARCH_RECORD` from `src/app/components/docsearch/docsearch.ts`: importing that file would load
-    // Angular here.
     const record = {
         lvl0: 'data-docsearch-lvl0',
         lvl1: 'data-docsearch-lvl1',

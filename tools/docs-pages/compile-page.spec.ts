@@ -50,7 +50,7 @@ describe(compilePage.name, () => {
         );
     });
 
-    // The search crawler reads a page by these attributes: `DOCS_SEARCH_RECORD` in `apps/docs`.
+    // The search crawler reads a page by these attributes: `apps/docs/src/app/components/docsearch/docsearch.ts`.
     it('marks the headings of the sections and the paragraphs for the search', () => {
         expect(compile('## Usage\n\n### Size\n\n#### Small\n\n##### Note\n\nText.').template).toBe(
             [
