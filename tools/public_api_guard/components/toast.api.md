@@ -15,7 +15,6 @@ import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqReadStateDirective } from '@koobiq/components/core';
-import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
 import * as rxjs from 'rxjs';
@@ -109,13 +108,13 @@ export const kbqToastConfigurationProvider: (configuration: Partial<KbqToastConf
 
 // @public (undocumented)
 export class KbqToastContainerComponent extends CdkScrollable {
+    constructor();
     // (undocumented)
     createTemplate<C>(data: KbqToastData, template: TemplateRef<any>, onTop: boolean): EmbeddedViewRef<C>;
     // (undocumented)
     createToast<C>(data: KbqToastData, componentType: any, onTop: boolean): ComponentRef<C>;
     // @deprecated
     dispatchScrollEvent: () => void;
-    elementScrolled(): Observable<Event>;
     // (undocumented)
     getInjector(data: KbqToastData): Injector;
     // (undocumented)
