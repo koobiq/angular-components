@@ -2,7 +2,11 @@
 CHANGELOG_CURRENT.md
 
 .ai
-.claude
+
+# Claude Code: personal settings, session worktrees and machine-local configs
+/.claude/settings.local.json
+/.claude/worktrees/
+/.claude/playwright.system-chrome.config.ts
 
 # firebase artifacts
 .firebase

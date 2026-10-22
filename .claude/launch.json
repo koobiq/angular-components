@@ -1,0 +1,337 @@
+{
+    "version": "0.0.1",
+    "configurations": [
+        {
+            "name": "e2e-static",
+            "runtimeExecutable": "node",
+            "runtimeArgs": [
+                "tools/e2e/serve.mjs",
+                "--skip-build",
+                "--port",
+                "4321"
+            ],
+            "port": 4321
+        },
+        {
+            "name": "docs-static",
+            "runtimeExecutable": "node",
+            "runtimeArgs": [
+                "tools/serve-docs.mjs"
+            ],
+            "port": 4300
+        },
+        {
+            "name": "dev-list",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-list",
+                "--port",
+                "3003"
+            ],
+            "port": 3003
+        },
+        {
+            "name": "dev-e2e",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-e2e",
+                "--port",
+                "4200"
+            ],
+            "port": 4200
+        },
+        {
+            "name": "dev-tree-select",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-tree-select",
+                "--port",
+                "4205"
+            ],
+            "port": 4205
+        },
+        {
+            "name": "dev-navbar",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-navbar",
+                "--port",
+                "4206"
+            ],
+            "port": 4206
+        },
+        {
+            "name": "dev-notification-center",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-notification-center",
+                "--port",
+                "4207"
+            ],
+            "port": 4207
+        },
+        {
+            "name": "dev-popover",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-popover",
+                "--port",
+                "4208"
+            ],
+            "port": 4208
+        },
+        {
+            "name": "dev-select",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-select",
+                "--port",
+                "4209"
+            ],
+            "port": 4209
+        },
+        {
+            "name": "dev-tree",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-tree",
+                "--port",
+                "4210"
+            ],
+            "port": 4210
+        },
+        {
+            "name": "dev-modal",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-modal",
+                "--port",
+                "4211"
+            ],
+            "port": 4211
+        },
+        {
+            "name": "dev-dropdown",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-dropdown",
+                "--port",
+                "4212"
+            ],
+            "port": 4212
+        },
+        {
+            "name": "dev-date-pipes",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-date-pipes",
+                "--port",
+                "4213"
+            ],
+            "port": 4213
+        },
+        {
+            "name": "dev-filter-bar",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-filter-bar",
+                "--port",
+                "4214"
+            ],
+            "port": 4214
+        },
+        {
+            "name": "dev-accordion",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-accordion",
+                "--port",
+                "4215"
+            ],
+            "port": 4215
+        },
+        {
+            "name": "dev-toast",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-toast",
+                "--port",
+                "4216"
+            ],
+            "port": 4216
+        },
+        {
+            "name": "dev-ssr",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-ssr",
+                "--port",
+                "4217"
+            ],
+            "port": 4217
+        },
+        {
+            "name": "dev-input",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-input",
+                "--port",
+                "4220"
+            ],
+            "port": 4220
+        },
+        {
+            "name": "dev-select-paddings",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-select",
+                "--port",
+                "4221"
+            ],
+            "port": 4221
+        },
+        {
+            "name": "koobiq-docs",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "koobiq-docs",
+                "--configuration=development",
+                "--port",
+                "4300"
+            ],
+            "port": 4300
+        },
+        {
+            "name": "dev-tabs",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-tabs",
+                "--port",
+                "4222"
+            ],
+            "port": 4222
+        },
+        {
+            "name": "dev-sidebar",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-sidebar",
+                "--port",
+                "4223"
+            ],
+            "port": 4223
+        },
+        {
+            "name": "dev-content-panel",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-content-panel",
+                "--port",
+                "4224"
+            ],
+            "port": 4224
+        },
+        {
+            "name": "dev-sidepanel",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-sidepanel",
+                "--port",
+                "4225"
+            ],
+            "port": 4225
+        },
+        {
+            "name": "dev-tooltip",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-tooltip",
+                "--port",
+                "4241"
+            ],
+            "port": 4241
+        },
+        {
+            "name": "dev-autocomplete",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-autocomplete",
+                "--port",
+                "4242"
+            ],
+            "port": 4242
+        },
+        {
+            "name": "dev-tag",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-tag",
+                "--port",
+                "4243"
+            ],
+            "port": 4243
+        },
+        {
+            "name": "dev-validation",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": [
+                "ng",
+                "serve",
+                "dev-validation",
+                "--port",
+                "4250"
+            ],
+            "port": 4250
+        }
+    ]
+}
