@@ -146,28 +146,29 @@ describe('non-class entries', () => {
 });
 
 describe('reading members from source', () => {
-    const { KbqDlComponent } = readSourceFile('packages/components/dl/dl.component.ts').classes;
+    const { KbqDl } = readSourceFile('packages/components/dl/dl.ts').classes;
 
+    // The default is the initializer argument as written, an expression as well as a literal.
     it('reads the initializer API and the default of a signal input', () => {
-        expect(KbqDlComponent.members.verticalBreakpoint).toEqual({
+        expect(KbqDl.members.verticalBreakpoint).toEqual({
             signalApi: 'input',
-            defaultValue: '400',
+            defaultValue: 'this.options.verticalBreakpoint',
             binding: { input: 'verticalBreakpoint', required: false }
         });
     });
 
     it('reads the type argument as the declared type', () => {
-        expect(KbqDlComponent.members.verticalAlign).toEqual({
+        expect(KbqDl.members.verticalAlign).toEqual({
             signalApi: 'input',
             declaredType: 'KbqDlAlign',
-            defaultValue: "'start'",
+            defaultValue: 'this.options.verticalAlign',
             binding: { input: 'verticalAlign', required: false }
         });
     });
 
     // `undefined` is what an input without a default gets, so it is not shown as one.
     it('reads no default when the source passes undefined', () => {
-        expect(KbqDlComponent.members.resizerAriaLabel).toEqual({
+        expect(KbqDl.members.resizerAriaLabel).toEqual({
             signalApi: 'input',
             declaredType: 'string | undefined',
             binding: { input: 'resizerAriaLabel', required: false }
@@ -175,7 +176,7 @@ describe('reading members from source', () => {
     });
 
     it('reads an output with its payload type', () => {
-        expect(KbqDlComponent.members.dtWidthChange).toEqual({
+        expect(KbqDl.members.dtWidthChange).toEqual({
             signalApi: 'output',
             declaredType: 'number | null',
             binding: { output: 'dtWidthChange' }

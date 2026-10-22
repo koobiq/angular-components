@@ -257,18 +257,26 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/divider').then((m) => m.DividerOverviewExample);
         case 'divider-vertical':
             return import('@koobiq/docs-examples/components/divider').then((m) => m.DividerVerticalExample);
-        case 'dl-horizontal-overview':
-            return import('@koobiq/docs-examples/components/dl').then((m) => m.DlHorizontalOverviewExample);
+        case 'dl-alignment':
+            return import('@koobiq/docs-examples/components/dl').then((m) => m.DlAlignmentExample);
+        case 'dl-dt-width':
+            return import('@koobiq/docs-examples/components/dl').then((m) => m.DlDtWidthExample);
         case 'dl-long-text':
             return import('@koobiq/docs-examples/components/dl').then((m) => m.DlLongTextExample);
+        case 'dl-min-width':
+            return import('@koobiq/docs-examples/components/dl').then((m) => m.DlMinWidthExample);
         case 'dl-overview':
             return import('@koobiq/docs-examples/components/dl').then((m) => m.DlOverviewExample);
         case 'dl-resizable':
             return import('@koobiq/docs-examples/components/dl').then((m) => m.DlResizableExample);
-        case 'dl-small':
-            return import('@koobiq/docs-examples/components/dl').then((m) => m.DlSmallExample);
-        case 'dl-vertical-overview':
-            return import('@koobiq/docs-examples/components/dl').then((m) => m.DlVerticalOverviewExample);
+        case 'dl-vertical-breakpoint':
+            return import('@koobiq/docs-examples/components/dl').then((m) => m.DlVerticalBreakpointExample);
+        case 'dl-vertical':
+            return import('@koobiq/docs-examples/components/dl').then((m) => m.DlVerticalExample);
+        case 'dl-wide':
+            return import('@koobiq/docs-examples/components/dl').then((m) => m.DlWideExample);
+        case 'dl-width-sync':
+            return import('@koobiq/docs-examples/components/dl').then((m) => m.DlWidthSyncExample);
         case 'dropdown-disabled':
             return import('@koobiq/docs-examples/components/dropdown').then((m) => m.DropdownDisabledExample);
         case 'dropdown-item-action':

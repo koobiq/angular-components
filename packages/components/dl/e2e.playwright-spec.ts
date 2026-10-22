@@ -1,15 +1,33 @@
 import { expect, Locator, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from '../../e2e/utils';
 
-test.describe('KbqDlModule', () => {
+test.describe('KbqDl', () => {
     test.describe('E2eDlStates', () => {
-        const getComponent = (page: Page) => page.getByTestId('e2eDlStates');
-
-        test('states', async ({ page }) => {
+        test('should draw the horizontal, wide, fixed-width and vertical layouts', async ({ page }) => {
             await page.goto('/E2eDlStates');
-            await expect(getComponent(page)).toHaveScreenshot('01-light.png');
+
+            const target = page.getByTestId('e2eDlStates').getByTestId('e2eScreenshotTarget');
+
+            await expect(target).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
-            await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
+            await expect(target).toHaveScreenshot('01-dark.png');
+        });
+    });
+
+    test.describe('E2eDlResizerStates', () => {
+        test('should draw the separator at rest, under the hovered list, hovered, focused and dragged', async ({
+            page
+        }) => {
+            await page.goto('/E2eDlResizerStates');
+
+            const target = page.getByTestId('e2eDlResizerStates').getByTestId('e2eScreenshotTarget');
+
+            // The states are forced once the first render is done; shoot only after the last of them is in place.
+            await expect(target.locator('.kbq-dl__resize-handle.kbq-active')).toHaveCount(1);
+
+            await expect(target).toHaveScreenshot('02-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('02-dark.png');
         });
     });
 

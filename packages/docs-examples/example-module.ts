@@ -1563,16 +1563,28 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "divider-vertical-example.ts",
     "importPath": "components/divider"
   },
-  "dl-horizontal-overview": {
-    "packagePath": "components/dl/dl-horizontal-overview",
-    "title": "Description list horizontal",
-    "componentName": "DlHorizontalOverviewExample",
+  "dl-alignment": {
+    "packagePath": "components/dl/dl-alignment",
+    "title": "Description list alignment",
+    "componentName": "DlAlignmentExample",
     "files": [
-      "dl-horizontal-overview-example.ts"
+      "dl-alignment-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "dl-horizontal-overview-example",
-    "primaryFile": "dl-horizontal-overview-example.ts",
+    "selector": "dl-alignment-example",
+    "primaryFile": "dl-alignment-example.ts",
+    "importPath": "components/dl"
+  },
+  "dl-dt-width": {
+    "packagePath": "components/dl/dl-dt-width",
+    "title": "Description list term width",
+    "componentName": "DlDtWidthExample",
+    "files": [
+      "dl-dt-width-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dl-dt-width-example",
+    "primaryFile": "dl-dt-width-example.ts",
     "importPath": "components/dl"
   },
   "dl-long-text": {
@@ -1585,6 +1597,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "dl-long-text-example",
     "primaryFile": "dl-long-text-example.ts",
+    "importPath": "components/dl"
+  },
+  "dl-min-width": {
+    "packagePath": "components/dl/dl-min-width",
+    "title": "Description list minimum widths",
+    "componentName": "DlMinWidthExample",
+    "files": [
+      "dl-min-width-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dl-min-width-example",
+    "primaryFile": "dl-min-width-example.ts",
     "importPath": "components/dl"
   },
   "dl-overview": {
@@ -1601,7 +1625,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "dl-resizable": {
     "packagePath": "components/dl/dl-resizable",
-    "title": "Description list resizable example",
+    "title": "Description list resizable",
     "componentName": "DlResizableExample",
     "files": [
       "dl-resizable-example.ts"
@@ -1611,28 +1635,52 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dl-resizable-example.ts",
     "importPath": "components/dl"
   },
-  "dl-small": {
-    "packagePath": "components/dl/dl-small",
-    "title": "Description list small",
-    "componentName": "DlSmallExample",
+  "dl-vertical-breakpoint": {
+    "packagePath": "components/dl/dl-vertical-breakpoint",
+    "title": "Description list vertical breakpoint",
+    "componentName": "DlVerticalBreakpointExample",
     "files": [
-      "dl-small-example.ts"
+      "dl-vertical-breakpoint-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "dl-small-example",
-    "primaryFile": "dl-small-example.ts",
+    "selector": "dl-vertical-breakpoint-example",
+    "primaryFile": "dl-vertical-breakpoint-example.ts",
     "importPath": "components/dl"
   },
-  "dl-vertical-overview": {
-    "packagePath": "components/dl/dl-vertical-overview",
+  "dl-vertical": {
+    "packagePath": "components/dl/dl-vertical",
     "title": "Description list vertical",
-    "componentName": "DlVerticalOverviewExample",
+    "componentName": "DlVerticalExample",
     "files": [
-      "dl-vertical-overview-example.ts"
+      "dl-vertical-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "dl-vertical-overview-example",
-    "primaryFile": "dl-vertical-overview-example.ts",
+    "selector": "dl-vertical-example",
+    "primaryFile": "dl-vertical-example.ts",
+    "importPath": "components/dl"
+  },
+  "dl-wide": {
+    "packagePath": "components/dl/dl-wide",
+    "title": "Description list wide",
+    "componentName": "DlWideExample",
+    "files": [
+      "dl-wide-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dl-wide-example",
+    "primaryFile": "dl-wide-example.ts",
+    "importPath": "components/dl"
+  },
+  "dl-width-sync": {
+    "packagePath": "components/dl/dl-width-sync",
+    "title": "Description list shared width",
+    "componentName": "DlWidthSyncExample",
+    "files": [
+      "dl-width-sync-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dl-width-sync-example",
+    "primaryFile": "dl-width-sync-example.ts",
     "importPath": "components/dl"
   },
   "dropdown-disabled": {
@@ -8026,12 +8074,16 @@ export type LiveExampleId =
   | 'datepicker-required'
   | 'divider-overview'
   | 'divider-vertical'
-  | 'dl-horizontal-overview'
+  | 'dl-alignment'
+  | 'dl-dt-width'
   | 'dl-long-text'
+  | 'dl-min-width'
   | 'dl-overview'
   | 'dl-resizable'
-  | 'dl-small'
-  | 'dl-vertical-overview'
+  | 'dl-vertical-breakpoint'
+  | 'dl-vertical'
+  | 'dl-wide'
+  | 'dl-width-sync'
   | 'dropdown-disabled'
   | 'dropdown-item-action'
   | 'dropdown-item-link'

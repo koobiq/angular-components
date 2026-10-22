@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqSkeletonDl } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
@@ -9,7 +9,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  */
 @Component({
     selector: 'skeleton-dl-example',
-    imports: [KbqSkeletonDl, KbqToggleModule, FormsModule, KbqDlModule],
+    imports: [KbqSkeletonDl, KbqToggleModule, FormsModule, KbqDl, KbqDt, KbqDd],
     template: `
         <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
 

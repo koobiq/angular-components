@@ -1,26 +1,38 @@
 import { NgModule } from '@angular/core';
-import { DlHorizontalOverviewExample } from './dl-horizontal-overview/dl-horizontal-overview-example';
+import { DlAlignmentExample } from './dl-alignment/dl-alignment-example';
+import { DlDtWidthExample } from './dl-dt-width/dl-dt-width-example';
 import { DlLongTextExample } from './dl-long-text/dl-long-text-example';
+import { DlMinWidthExample } from './dl-min-width/dl-min-width-example';
 import { DlOverviewExample } from './dl-overview/dl-overview-example';
 import { DlResizableExample } from './dl-resizable/dl-resizable-example';
-import { DlSmallExample } from './dl-small/dl-small-example';
-import { DlVerticalOverviewExample } from './dl-vertical-overview/dl-vertical-overview-example';
+import { DlVerticalBreakpointExample } from './dl-vertical-breakpoint/dl-vertical-breakpoint-example';
+import { DlVerticalExample } from './dl-vertical/dl-vertical-example';
+import { DlWideExample } from './dl-wide/dl-wide-example';
+import { DlWidthSyncExample } from './dl-width-sync/dl-width-sync-example';
 
 export {
-    DlHorizontalOverviewExample,
+    DlAlignmentExample,
+    DlDtWidthExample,
     DlLongTextExample,
+    DlMinWidthExample,
     DlOverviewExample,
     DlResizableExample,
-    DlSmallExample,
-    DlVerticalOverviewExample
+    DlVerticalBreakpointExample,
+    DlVerticalExample,
+    DlWideExample,
+    DlWidthSyncExample
 };
 
 const EXAMPLES = [
     DlOverviewExample,
-    DlHorizontalOverviewExample,
-    DlVerticalOverviewExample,
-    DlSmallExample,
+    DlWideExample,
+    DlVerticalExample,
+    DlVerticalBreakpointExample,
+    DlAlignmentExample,
+    DlDtWidthExample,
     DlResizableExample,
+    DlMinWidthExample,
+    DlWidthSyncExample,
     DlLongTextExample
 ];
 
