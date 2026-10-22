@@ -1,0 +1,12 @@
+{
+    "permissions": {
+        "allow": [
+            "PowerShell(Select-Object *)",
+            "PowerShell(Get-ChildItem *)",
+            "PowerShell(Select-String *)",
+            "PowerShell(Test-Path *)",
+            "PowerShell(Format-Table *)",
+            "PowerShell(Write-Output *)"
+        ]
+    }
+}
