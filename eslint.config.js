@@ -157,8 +157,9 @@ module.exports = tseslint.config(
             // ignore Yarn's bundled release/plugin binaries (flat config lints .cjs by default,
             // unlike the previous `--ext=.js,.ts,.html`)
             '.yarn',
-            // ignore git-ignored local tooling directories: `eslint .` walks into them, and the
-            // files there belong to no tsconfig project, so the type-aware rules fail on them
+            // ignore the local tooling directories: `eslint .` walks into them, and the files there
+            // (worktree copies of the repository, local settings) belong to no tsconfig project, so the
+            // type-aware rules fail on them; .claude/rules holds Markdown only
             '.ai',
             '.claude',
             // a separate npm project with its own Angular and its own runner, see its README
