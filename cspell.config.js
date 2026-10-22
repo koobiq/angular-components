@@ -10,7 +10,9 @@ const config = {
         '**/dist/**',
         '**/node_modules/**',
         '**/CHANGELOG.md',
-        '**/public_api_guard/**'
+        '**/public_api_guard/**',
+        // instructions for AI agents, full of code identifiers; not user-facing documentation
+        '.claude/rules/**'
     ],
     import: [
         'tools/cspell-locales/en.json',

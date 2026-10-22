@@ -1,8 +1,12 @@
+<!-- The code blocks are `@defer` blocks with two triggers. On a tab that came from the server they stay as it rendered
+     them until hovered: highlight.js loads for the block a reader points at. After a navigation in the app they render
+     as they come into view, each from a placeholder of its height, because rendering every block of a large tab at once
+     kept the main thread busy for seconds. A block nobody scrolls to therefore stays a placeholder, printed as plain
+     code: see docs/e2e-flakiness.md for that trade-off and for the measurements. -->
 @if (importFiles().length) {
-    <!-- On a tab that came from the server, the code blocks stay as it rendered them until hovered: highlight.js loads
-         for the block a reader points at. After a navigation in the app they render, and highlight, straight away. -->
-    <!-- A block that is still dehydrated follows neither its bindings nor the view around it: keyed by the import and
-         held in an element of its own, it goes away whole when the tab of another entry point is reached in the app. -->
+    <!-- The import block renders at once, being above the fold. A block that is still dehydrated follows neither its
+         bindings nor the view around it: keyed by the import and held in an element of its own, it goes away whole when
+         the tab of another entry point is reached in the app. -->
     @for (files of [importFiles()]; track files) {
         <div>
             @defer (on immediate; hydrate on hover) {
@@ -64,11 +68,13 @@
                 }
 
                 <!-- The declaration itself, set apart from the filled blocks of code around it: the import, the examples. -->
-                @defer (on immediate; hydrate on hover) {
+                @defer (on viewport; hydrate on hover) {
                     <kbq-code-block
                         class="docs-code-block"
                         [files]="[{ content: entry.signature, language: 'typescript' }]"
                     />
+                } @placeholder {
+                    <docs-api-code-placeholder [code]="entry.signature" />
                 }
 
                 @if (entry.params || entry.returns) {

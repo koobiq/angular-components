@@ -442,12 +442,17 @@ test.describe('docs app', () => {
     });
 
     // An API tab reached in the app reuses the page of the previous one, and a block that is still dehydrated follows
-    // neither its bindings nor the view around it.
+    // neither its bindings nor the view around it. `core` is the only entry point without an import that another tab
+    // links to, and the largest by far: 484 entries with 847 blocks of JSDoc to sanitize at every visit, which
+    // took 17–30 s on CI and 7 s on a 16-core desktop before the changes of that day (see docs/e2e-flakiness.md,
+    // 2026-10-21).
     for (const [entryPoint, imports] of [
         ['tooltip', ["from '@koobiq/components/tooltip'"]],
         ['core', []]
     ] as const) {
         test(`shows the import of the ${entryPoint} API tab reached by a link on another one`, async ({ page }) => {
+            test.slow(entryPoint === 'core', 'the core API tab takes seconds to create after the navigation');
+
             await page.goto('/en/components/select/api');
             await waitForHydration(page);
 
@@ -457,6 +462,39 @@ test.describe('docs app', () => {
             await expect(page.locator('.docs-api__import')).toHaveText(imports.map((text) => new RegExp(text)));
         });
     }
+
+    // After a navigation in the app the code blocks render as they come into view, each from a placeholder of its
+    // height: the page is as tall before a block renders as after, so a link to a heading below lands on it. The tab
+    // is reached from its overview, which lands at its top; the signature of the enum is a block of several lines,
+    // laid out as a table, well below the fold there.
+    test('renders the code blocks of an API tab reached in the app as they come into view', async ({ page }) => {
+        await page.goto('/en/components/tooltip/overview');
+        await waitForHydration(page);
+
+        await page.locator('docs-component-viewer a[href="/en/components/tooltip/api"]').click();
+        await expect(page).toHaveURL(/\/en\/components\/tooltip\/api$/);
+
+        const entry = page.locator('.docs-api__entry', { has: page.locator('#TooltipModifier') });
+        const placeholder = entry.locator(':scope > docs-api-code-placeholder');
+
+        await expect(page.locator('kbq-code-block').first()).toBeVisible();
+        await expect(placeholder.locator('table')).toBeAttached();
+
+        const placeholderHeight = await placeholder.evaluate((element) => element.getBoundingClientRect().height);
+
+        // Straight there: the article scrolls smoothly, and a smooth scroll would render every block it passes.
+        await placeholder.evaluate((element) => element.scrollIntoView({ behavior: 'instant' }));
+
+        const block = entry.locator(':scope > kbq-code-block');
+
+        await expect(block.locator('code[data-highlighted-markup]')).toBeAttached();
+        await expect(placeholder).toHaveCount(0);
+
+        const blockHeight = await block.evaluate((element) => element.getBoundingClientRect().height);
+
+        // Within a pixel: the two boxes are laid out separately, and a sub-pixel difference moves nothing on screen.
+        expect(Math.abs(blockHeight - placeholderHeight)).toBeLessThanOrEqual(1);
+    });
 
     test('scrolls to the member a link points at and highlights it', async ({ page }) => {
         await page.goto('/en/components/select/api?member=KbqSelect-panelClass');
