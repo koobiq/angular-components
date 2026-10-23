@@ -1,41 +1,83 @@
-import { ESLint } from 'eslint';
+import { ESLint, Linter } from 'eslint';
 import tseslint from 'typescript-eslint';
-import { componentsJsDocConfig } from './jsdoc';
+import { publishedJsDocConfig } from './jsdoc';
 
-const eslint = new ESLint({
-    overrideConfigFile: true,
-    overrideConfig: [{ languageOptions: { parser: tseslint.parser } }, componentsJsDocConfig]
-});
+const overrideConfig: Linter.Config[] = [{ languageOptions: { parser: tseslint.parser } }, publishedJsDocConfig];
+const filePath = 'packages/components/probe/probe.ts';
+const eslint = new ESLint({ overrideConfigFile: true, overrideConfig });
+// lint-staged runs `eslint --fix` on every commit, so a fix that drops text loses it without anyone seeing
+const fixingEslint = new ESLint({ overrideConfigFile: true, overrideConfig, fix: true });
 
 /**
- * Messages of the checks the config adds through `jsdoc/no-restricted-syntax`, which read the AST of a comment: a
- * change of that AST in a plugin update turns them off without an error, so each one is pinned here.
+ * Messages of the checks the config adds through `jsdoc/no-restricted-syntax` and a `forbid-*` rule of its own, which
+ * read the AST of a comment: a change of that AST in a plugin update turns them off without an error, so each one is
+ * pinned here.
  */
-const restrictedSyntax = async (code: string): Promise<string[]> => {
-    const [result] = await eslint.lintText(code, { filePath: 'packages/components/probe/probe.ts' });
+const restrictedSyntax = async (code: string, path = filePath): Promise<string[]> => {
+    const [result] = await eslint.lintText(code, { filePath: path });
 
     return result.messages
-        .filter(({ ruleId }) => ruleId === 'jsdoc/no-restricted-syntax')
+        .filter(({ ruleId }) => ruleId === 'jsdoc/no-restricted-syntax' || ruleId?.startsWith('jsdoc/forbid-'))
         .map(({ message }) => message);
 };
 
-describe('componentsJsDocConfig', () => {
-    // lint-staged runs `eslint --fix` on every commit, so a fix that drops text loses it without anyone seeing
-    it('reports text after `@docs-private` and `@internal`, and its fix keeps that text', async () => {
+describe('publishedJsDocConfig', () => {
+    it('checks the date adapters and the experimental package too', async () => {
+        const code = '/**\n * Text.\n *\n * @see Other\n */\nexport const a = 1;';
+
+        for (const path of [
+            'packages/components-experimental/probe/probe.ts',
+            'packages/angular-luxon-adapter/adapter/probe.ts',
+            'packages/angular-moment-adapter/adapter/probe.ts'
+        ]) {
+            expect(await restrictedSyntax(code, path)).toEqual([
+                expect.stringContaining('The docs do not show `@see`')
+            ]);
+        }
+    });
+
+    it('reports a default written into `@param`', async () => {
+        const code =
+            '/**\n * Reads it.\n *\n * @param [value=1] The value.\n */\nexport function read(value = 1): number {\n    return value;\n}';
+
+        expect(await restrictedSyntax(code)).toEqual([expect.stringContaining('Leave the default of a parameter')]);
+    });
+
+    it('reports text after `@docs-private` and `@internal`', async () => {
         const code =
             '/** @docs-private Some text. */\nexport const a = 1;\n\n/**\n * @internal\n * More text.\n */\nexport const b = 1;';
-        const [fixed] = await new ESLint({
-            overrideConfigFile: true,
-            overrideConfig: [{ languageOptions: { parser: tseslint.parser } }, componentsJsDocConfig],
-            fix: true
-        }).lintText(code, { filePath: 'packages/components/probe/probe.ts' });
 
         expect(await restrictedSyntax(code)).toEqual([
             expect.stringContaining('Put `@docs-private` and `@internal` after the text'),
             expect.stringContaining('Put `@docs-private` and `@internal` after the text')
         ]);
-        expect(fixed.output ?? code).toContain('Some text.');
-        expect(fixed.output ?? code).toContain('More text.');
+    });
+
+    it('keeps every text through `--fix`', async () => {
+        const code = [
+            '/** @docs-private Some text. */',
+            'export const a = 1;',
+            '',
+            '/**',
+            ' * @internal',
+            ' * More text.',
+            ' */',
+            'export const b = 1;',
+            '',
+            'export class C {',
+            '    /**',
+            '     * Scroll strategy.',
+            '     *',
+            '     * @default `RepositionScrollStrategy`',
+            '     */',
+            '    strategy?: () => number = () => 1;',
+            '}'
+        ].join('\n');
+        const [{ output = code }] = await fixingEslint.lintText(code, { filePath });
+
+        for (const text of ['Some text.', 'More text.', 'Scroll strategy.', 'RepositionScrollStrategy']) {
+            expect(output).toContain(text);
+        }
     });
 
     it('accepts the tags the docs read', async () => {
@@ -124,7 +166,7 @@ describe('componentsJsDocConfig', () => {
     it('reports `@docs-private` and `@internal` on a private member only', async () => {
         const code = [
             'export class A {',
-            '    /** @docs-private */',
+            '    /** Text. @docs-private */',
             '    private a = 1;',
             '',
             '    /** @internal */',
