@@ -112,8 +112,8 @@ Rules for code that uses Koobiq:
 
 ## Icons
 
-- [Icons](https://raw.githubusercontent.com/koobiq/icons/12.3.0/llms.txt): the llms.txt of `@koobiq/icons` 12.3.0, with its packages, the naming of the icons and how to import them.
-- [Icon reference](https://raw.githubusercontent.com/koobiq/icons/12.3.0/llms-full.txt): every icon name with its sizes, tags and imports.
+- [Icons](https://raw.githubusercontent.com/koobiq/icons/12.4.0/llms.txt): the llms.txt of `@koobiq/icons` 12.4.0, with its packages, the naming of the icons and how to import them.
+- [Icon reference](https://raw.githubusercontent.com/koobiq/icons/12.4.0/llms-full.txt): every icon name with its sizes, tags and imports.
 
 ## Optional
 
