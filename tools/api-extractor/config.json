@@ -29,6 +29,7 @@
         "inline-edit",
         "input",
         "link",
+        "link/deprecated",
         "list",
         "loader-overlay",
         "modal",

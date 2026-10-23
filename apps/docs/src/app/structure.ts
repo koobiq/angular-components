@@ -732,7 +732,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'link',
                     hasApi: true,
                     apiId: 'link',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-20')
                 },
                 {
                     id: DocsStructureItemId.List,

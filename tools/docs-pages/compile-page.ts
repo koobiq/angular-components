@@ -127,13 +127,28 @@ const isHtmlElement = (tag: string): tag is HtmlElement => Object.hasOwn(HTML_EL
 /** Markdown that renders as a block element, which the browser would move out of `<p>` as well. */
 const BLOCK_NODES = new Set(['blockquote', 'code', 'heading', 'list', 'paragraph', 'table', 'thematicBreak']);
 
-const LINK_CLASSES = 'docs-markdown__a kbq-link kbq-text-only kbq-link_use-visited';
-
 /** Classes of the documentation typography for an element the page writes in HTML. */
 const getElementClass = (tag: string): string | null => {
     if (!MARKDOWN_TAGS_TO_CLASS_ALIAS.includes(tag) && !MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS.includes(tag)) return null;
 
-    return tag === 'a' ? `${CLASS_PREFIX}__a ${LINK_CLASSES}` : `${CLASS_PREFIX}__${tag}`;
+    return `${CLASS_PREFIX}__${tag}`;
+};
+
+/**
+ * The attributes the search crawler reads the records of a page by (described in
+ * `apps/docs/src/app/components/docsearch/docsearch.ts`): the headings of the sections and the paragraphs of the text.
+ */
+const SEARCH_ATTRIBUTES = new Map([
+    ['h3', 'data-docsearch-lvl2'],
+    ['h4', 'data-docsearch-lvl2'],
+    ['p', 'data-docsearch-content']
+]);
+
+/** The search attribute of an element as it goes into the opening tag, after the class. */
+const renderSearchAttribute = (tag: string): string => {
+    const name = SEARCH_ATTRIBUTES.get(tag);
+
+    return name ? ` ${name}` : '';
 };
 
 /**
@@ -261,7 +276,7 @@ export function compilePage(
 
         endCaption();
 
-        return `<p class="${CLASS_PREFIX}__p">${parts.join('')}</p>`;
+        return `<p class="${CLASS_PREFIX}__p"${renderSearchAttribute('p')}>${parts.join('')}</p>`;
     };
 
     // A tight list renders the paragraphs of its items without `<p>`, as Markdown renderers do.
@@ -356,8 +371,11 @@ export function compilePage(
         }
 
         const elementClass = [getElementClass(tag), attributes.get('class')].filter(Boolean).join(' ');
-        // The class goes first, as on the elements the page writes in Markdown.
+        const searchAttribute = SEARCH_ATTRIBUTES.get(tag);
+        // The class and the search attribute go first, as on the elements the page writes in Markdown.
         const ordered = new Map<string, string | null>(elementClass ? [['class', elementClass]] : []);
+
+        if (searchAttribute) ordered.set(searchAttribute, null);
 
         for (const [name, value] of attributes) {
             if (name === 'class') continue;
@@ -407,13 +425,13 @@ export function compilePage(
                 if (headingDepth) {
                     const nestedTag = `h${headingDepth}`;
 
-                    return `<${nestedTag} class="${CLASS_PREFIX}__${nestedTag}">${renderChildren(node, { ...context, inParagraph: true })}</${nestedTag}>`;
+                    return `<${nestedTag} class="${CLASS_PREFIX}__${nestedTag}"${renderSearchAttribute(nestedTag)}>${renderChildren(node, { ...context, inParagraph: true })}</${nestedTag}>`;
                 }
 
                 const tag = `h${node.depth}`;
                 const id = LINKED_HEADING_DEPTHS.includes(node.depth) ? ` id="${escapeText(takeHeadingId(node))}"` : '';
 
-                return `<${tag}${id} class="docs-header-link ${CLASS_PREFIX}__${tag}">${renderChildren(node, { ...context, inParagraph: true })}</${tag}>`;
+                return `<${tag}${id} class="docs-header-link ${CLASS_PREFIX}__${tag}"${renderSearchAttribute(tag)}>${renderChildren(node, { ...context, inParagraph: true })}</${tag}>`;
             }
             case 'text':
                 return renderText(node.value);

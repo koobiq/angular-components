@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateFormatter } from '@koobiq/components/core';
-import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { injectLocalizedPeriods, injectLocalizedText } from '../localized-data';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
@@ -25,8 +25,10 @@ const createSearchPipe = (name: string): KbqPipe => ({
     imports: [
         KbqFilterBarModule,
         LuxonDateModule,
-        KbqDlModule,
-        KbqLinkModule
+        KbqDl,
+        KbqDt,
+        KbqDd,
+        KbqLink
     ],
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates()" [(filter)]="activeFilter">
@@ -45,12 +47,12 @@ const createSearchPipe = (name: string): KbqPipe => ({
 
         <kbq-dl [verticalBreakpoint]="590">
             <kbq-dt>{{ text().user }}</kbq-dt>
-            <kbq-dd><span kbq-link pseudo (click)="setUser(text().user, 'rturov')">rturov</span></kbq-dd>
+            <kbq-dd><span kbqLink (click)="setUser(text().user, 'rturov')">rturov</span></kbq-dd>
 
             @for (item of text().readonlyPipes; track item) {
                 <kbq-dt>{{ item.name }}</kbq-dt>
                 <kbq-dd>
-                    <span kbq-link pseudo (click)="addPipe(item.name, item.value)">{{ item.value }}</span>
+                    <span kbqLink (click)="addPipe(item.name, item.value)">{{ item.value }}</span>
                 </kbq-dd>
             }
         </kbq-dl>

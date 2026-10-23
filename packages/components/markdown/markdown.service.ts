@@ -25,13 +25,11 @@ export class KbqMarkdownService {
         let transformed = htmlContent;
 
         MARKDOWN_TAGS_TO_CLASS_ALIAS.forEach((tag) => {
-            transformed = transformed.replace(new RegExp(`<${tag}`, 'g'), (_match: string) => {
-                if (tag === 'a') {
-                    return `<${tag} class="${CLASS_PREFIX}__${tag} kbq-link kbq-text-only kbq-link_use-visited"`;
-                }
-
-                return `<${tag} class="${CLASS_PREFIX}__${tag}"`;
-            });
+            transformed = transformed.replace(
+                // The whole tag name: `<a` must not take `<abbr>` or `<aside>` for a link
+                new RegExp(`<${tag}(?=[\\s/>])`, 'g'),
+                () => `<${tag} class="${CLASS_PREFIX}__${tag}"`
+            );
         });
 
         MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS.forEach((tag) => {

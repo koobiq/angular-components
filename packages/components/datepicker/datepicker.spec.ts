@@ -97,6 +97,14 @@ const typeIntoDatepickerInput = async (fixture: ComponentFixture<unknown>, value
     fixture.detectChanges();
 };
 
+/** A printable key the way a browser delivers it: unless the keydown is prevented, the key replaces the selection. */
+const pressKey = (input: HTMLInputElement, key: string): void => {
+    if (dispatchKeyboardEvent(input, 'keydown', key.charCodeAt(0), undefined, key).defaultPrevented) return;
+
+    input.setRangeText(key, input.selectionStart!, input.selectionEnd!, 'end');
+    dispatchFakeEvent(input, 'input');
+};
+
 /** Feeds a clipboard payload to the directive's `(paste)` handler. Call with fake timers. */
 const pasteIntoDatepickerInput = async (fixture: ComponentFixture<unknown>, value: string) => {
     fixture.debugElement.query(By.directive(KbqDatepickerInput)).triggerEventHandler('paste', {
@@ -330,13 +338,13 @@ describe('KbqDatepicker', () => {
                 const popup = document.querySelector('.cdk-overlay-pane')!;
 
                 expect(popup).not.toBeNull();
-                expect(parseInt(getComputedStyle(popup).height as string)).not.toBe(0);
+                expect(popup.querySelector('.kbq-datepicker__content')).not.toBeNull();
 
                 testComponent.datepicker().close();
                 fixture.detectChanges();
                 await vi.runOnlyPendingTimersAsync();
 
-                expect(getComputedStyle(popup).height).toBe('');
+                expect(popup.isConnected).toBe(false);
             });
 
             it('should close the popup when pressing ESCAPE', async () => {
@@ -560,6 +568,63 @@ describe('KbqDatepicker', () => {
                 await vi.advanceTimersByTimeAsync(0);
 
                 expect([input.selectionStart, input.selectionEnd]).toEqual([0, input.value.search(/\D/)]);
+            });
+
+            it('should type into the part the key moves to when the digits come before the selection lands', async () => {
+                vi.useFakeTimers();
+
+                const fixture = createComponent(StandardDatepicker, [KbqLuxonDateModule]);
+
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                const input = getDatepickerInputElement(fixture);
+
+                input.focus();
+                input.setSelectionRange(input.value.search(/\d+$/), input.value.length);
+
+                dispatchKeyboardEvent(input, 'keydown', LEFT_ARROW);
+                pressKey(input, '1');
+                pressKey(input, '2');
+                await vi.advanceTimersByTimeAsync(10);
+
+                expect(input.value).toBe('01.12.2020');
+            });
+        });
+
+        describe('typing', () => {
+            // Each digit is parsed, and the next part selected, on timers: a scanner, an autotype or a busy page
+            // delivers the next keys before those run.
+            it.each([
+                ['one at a time', true],
+                ['before the timers of the previous ones run', false]
+            ])('should fill the parts in turn with the keys typed %s', async (_, runTimersBetweenKeys) => {
+                vi.useFakeTimers();
+
+                const fixture = createComponent(StandardDatepicker, [KbqLuxonDateModule]);
+
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                const input = getDatepickerInputElement(fixture);
+
+                input.focus();
+                input.select();
+
+                for (const key of '24012024') {
+                    pressKey(input, key);
+
+                    if (runTimersBetweenKeys) await vi.advanceTimersByTimeAsync(10);
+                }
+
+                await vi.advanceTimersByTimeAsync(10);
+
+                expect(input.value).toBe('24.01.2024');
+                expect([input.selectionStart, input.selectionEnd]).toEqual([
+                    input.value.search(/\d+$/),
+                    input.value.length
+                ]);
+                expect(fixture.componentInstance.datepickerInput().value()?.toISODate()).toBe('2024-01-24');
             });
         });
 

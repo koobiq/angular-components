@@ -143,8 +143,7 @@ export class KbqButtonGroupRoot extends KbqColorDirective<KbqButtonColor> implem
     host: {
         role: 'group',
         class: 'kbq-button-group',
-        '[class]': '"kbq-button-group_" + orientation()',
-        '[attr.aria-orientation]': 'orientation()'
+        '[class]': '"kbq-button-group_" + orientation()'
     },
     hostDirectives: [
         { directive: KbqButtonGroupRoot, inputs: ['color', 'kbqStyle', 'disabled'] }

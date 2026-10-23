@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
@@ -11,7 +11,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [
         KbqSelectModule,
         KbqIconModule,
-        KbqLinkModule
+        KbqLink
     ],
     template: `
         <div class="example-row">
@@ -51,15 +51,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                     <kbq-select-footer>
-                        <a
-                            class="kbq-link_external"
-                            href="https://koobiq.io/en/components/select"
-                            target="_blank"
-                            kbq-link
-                        >
-                            <span class="kbq-link__text">Link</span>
-                            <i kbq-icon="kbq-north-east_16"></i>
-                        </a>
+                        <a href="https://koobiq.io/en/components/select" target="_blank" kbqLink external>Link</a>
                     </kbq-select-footer>
                 </kbq-select>
             </kbq-form-field>

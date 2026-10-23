@@ -85,8 +85,6 @@ yarn run docs:build                    # Build docs app for production (prerende
 
 Libraries are built by the custom `@koobiq/builders:packager` builder around ng-packagr. It replaces the `{{VERSION}}` and `{{NG_VERSION}}` placeholders in the package manifests and in `packages/components/core/version.ts`; `{{NG_VERSION}}` comes from `requiredAngularVersion` in the root `package.json`. Never hardcode a version in those files.
 
-`@angular/build` is installed through a yarn `patch:` from `.yarn/patches/` that ports angular/angular-cli@6d9b360e5: without it a one-shot build never disposes its esbuild contexts and `ng build` never exits. The patch is cut for one version and Dependabot ignores the package, so bump it by hand with the rest of `@angular/*` and re-cut the patch for the new version (`yarn patch @angular/build`, then `yarn patch-commit -s`). Drop the patch and its entry in `.github/dependabot.yml` once the 21.x line ships the fix; 21.2.27 does not, 22.1.0 does.
-
 The docs app resolves `@koobiq/*` from `dist/` (see `apps/docs/tsconfig.app.json`), so rebuild the libraries before `docs:build`, and again after changing a component you want to see on the site. `yarn run docs` runs the whole chain in the right order.
 
 ### Development
@@ -137,30 +135,7 @@ yarn run e2e:docker:update-snapshots                                            
 yarn run e2e:docker yarn playwright test packages/components/select -g "single select" # One spec inside the container
 ```
 
-The committed baselines under `__screenshots__` are compared with `threshold: 0` and have no
-platform suffix, so a native run outside Linux fails on font rasterization alone. `e2e:components`
-is still useful for the assertion-based specs; use `e2e:docker` whenever screenshots are involved,
-and never regenerate a baseline any other way. Without a local Docker, comment `/approve-snapshots`
-on the pull request. The container runs with `CI=true`, so `test.only` is rejected. Retries are 0
-everywhere, CI included, so a flaky test fails the run and is named; set `PLAYWRIGHT_RETRIES=<n>` to
-absorb a known flake and `PLAYWRIGHT_WORKERS=<n>` to change the worker cap. `@playwright/test` is
-pinned exactly because a patch release can change the bundled Chromium and invalidate every
-baseline — upgrade it on its own branch and refresh the baselines in the same PR.
-
-Vitest setup (`vitest.config.mts`, `tools/vitest/`) that shapes how specs are written:
-
-- The `angular` project compiles specs with `@analogjs/vite-plugin-angular` and runs each file in a jsdom VM context (`vmForks`); the `node` project runs schematics, the CLI and `tools/`. Globals (`describe`, `it`, `expect`, `vi`) are on.
-- `tools/vitest/fail-on-console.ts`: any `console.error` or `console.warn` during a test fails it.
-- `tools/vitest/to-have-no-violations.ts` registers `toHaveNoViolations()`, which runs axe-core on an element of the document: `await expect(fixture.nativeElement).toHaveNoViolations()`. The matcher is async, and ESLint requires the `await`. jsdom renders nothing, so the rules that need rendering are off: the color rules and `label-content-name-mismatch`, which draws text on a canvas.
-- `testTimeout` is 2 seconds; `clearMocks` is on. Vitest also fails the run on an error thrown after a test, such as a listener left behind by a destroyed injector.
-- TestBed is zoneless, with the exhaustive `checkNoChanges`: a binding that changed without notifying change detection fails the spec, OnPush views included. State a view reads that is written while change detection runs has to be a signal — a `markForCheck()` made then does not reach a view already checked.
-- Without zone.js nothing renders on its own: a check made right after an event needs `fixture.detectChanges()` or `await fixture.whenStable()`, and `whenStable()` does not wait for a bare `setTimeout` (use `PendingTasks` for library work worth waiting for). `fixture.detectChanges()` also marks the test host for check, so plain fields of a test wrapper still render.
-- zone.js is not loaded, and ESLint bans `fakeAsync`, `tick`, `flush` and `waitForAsync`. Time is driven with `vi.useFakeTimers()` (`await vi.advanceTimersByTimeAsync(ms)`, `await vi.runOnlyPendingTimersAsync()`). With all timers faked, `whenStable()` hangs once a render is scheduled, because the zoneless scheduler waits on a faked timer: advance the timers and call `fixture.detectChanges()`, or fake only `setTimeout`/`clearTimeout`. A zero-delay timer set from inside another timer fires 1 ms later on the fake clock. axe-core needs real timers.
-- Event and typing helpers (`dispatchFakeEvent`, `dispatchKeyboardEvent`, `dispatchMouseEvent`, `typeInElement`, ...) are exported from `@koobiq/components/core`.
-- jsdom has no Web Animations API, so what a component waits for with `kbqAfterAnimations` ends right after the next render. A spec that has to hold an animation open stubs `element.getAnimations` with an animation whose `finished` it resolves (see `toast.spec.ts`).
-- Test host components carry no `Kbq` prefix (`TestApp`, `BasicSelect`); lint does not check this.
-
-Playwright specifics (`playwright.config.ts`, `docs/guides/06-testing.md`): the per-test timeout is 15 seconds, and screenshot flakes almost always come from shooting before the state has settled — assert the settled state first. `docs/e2e-flakiness.md` records the mechanisms found so far and `docs/e2e-performance.md` where the time of a test goes; the helpers in `packages/e2e/utils` (for example `e2eWaitForSettledScrollbars`) exist for that.
+How specs are written and how screenshots stay stable is in [unit-tests.md](.claude/rules/unit-tests.md) and [e2e.md](.claude/rules/e2e.md).
 
 ### Linting
 
@@ -175,8 +150,6 @@ yarn run eslint:fix && yarn run stylelint:fix && yarn run prettier:fix # Auto-fi
 ```
 
 CI runs ESLint and stylelint with `--max-warnings=0`, so a warning fails the build. Formatting is prettier with 120 columns, 4-space indent, single quotes and no trailing commas, plus the `organize-imports`, `multiline-arrays` and `sh` plugins — let it order imports and break arrays rather than fighting it. The `sh` plugin formats shell scripts, the Dockerfile, husky hooks, ignore files and the shell snippets in Markdown. Quote placeholders in those snippets (`--project "<your project>"`): unquoted, `<` and `>` are redirects, and the plugin either rewrites the command or silently skips the block.
-
-ESLint also checks the JSDoc of `packages/components` with `eslint-plugin-jsdoc`. TypeScript reads a `@word` that starts a line as a tag and keeps the text after it in that tag, so an unknown tag, a block `@link` (write a Markdown link or `{@link Name}`), `@property` or `@todo` takes that text out of the generated docs.
 
 ### API Management
 
@@ -213,24 +186,16 @@ Every pull request runs these workflows:
 
 A docs preview is deployed to Firebase for pull requests opened from this repository.
 
+A pull request that conflicts with `main` gets no check runs at all: rebase it rather than waiting. When CI fails on a file the branch did not change, look at `main`'s own runs first: pull requests merge on old green checks, so `main` can be red.
+
 ## Architecture Notes
+
+The details of each area live in the rule files listed under [Agent Rules](#agent-rules).
 
 ### Library packaging
 
 - `@koobiq/components` has an empty root barrel; consumers import from `@koobiq/components/<name>`. `core` is the shared entry point: common behaviors (`disabled`, `color`, `tabindex`, `error-state`), a11y, keycodes, datetime and formatters, forms, locales, overlay helpers (panel width and height resolvers, scroll strategies), the pop-up base classes, option and selection models, theme configuration and stores, the testing helpers, utils and validators.
-- Every component keeps a `Kbq<Name>Module` that imports and re-exports its standalone components and directives. A new directive has to be added there too, or NgModule consumers will not see it.
-- `@internal` removes a declaration from the published typings: `stripInternal` is on in the config that emits the typings of every published package (its `tsconfig.lib.json`, `packages/cli/tsconfig.release.json` for the CLI), while the JavaScript still contains it. The API tab of the docs site hides such declarations too, so they need no `@docs-private`. TypeScript strips a declaration when any comment in front of it contains the text `@internal`, `//` comments included. Moving a public member under `@internal` removes it for consumers, so it is a breaking change.
-- Entry points are compiled against each other's typings, so an `@internal` declaration may be used only inside its own entry point: using or overriding it from another one, or referencing it from a public signature, breaks the build or leaves invalid typings, which `check-typings` catches. A member has to stay in the typings when it implements an interface (`ngOnInit`, `writeValue`, `stateChanges`) or when a type requires it structurally without an `implements` clause (`KbqOption.setActiveStyles` for the CDK `ActiveDescendantKeyManager` in autocomplete). A declaration re-exported by name (`export { X } from './x'`) cannot be stripped either: the typings bundler fails on the dangling export, while `export *` is fine.
-- `@docs-private` only hides a declaration from the API tab of the docs site and keeps it in the typings. It is the tag for what consumers can reach but should not rely on, including everything the previous rule keeps out of `@internal`.
-- Published packages depend only on `tslib` at runtime; everything else is a peer dependency. `check-peer-deps` and `check-npm-resolution` guard the ranges because Yarn tolerates peer conflicts that npm rejects for consumers.
-- Supported release lines: `main` is `21.x`; `20.4.x` (the 20 line), `19.x` and `18.x` have their own branches and receive backports. Releases are cut by maintainers with `yarn run release:stage:commit`; the tag push publishes the packages listed under `release.packages` in the root `package.json` (see `docs/guides/05-releasing-packages.md`).
-
-### Styling and theming
-
-- Components use `ViewEncapsulation.None` with `kbq-`-prefixed classes. Stylelint enforces the prefix (`dev-`, `e2e-`, `example-`, `docs-` in the other packages; `cdk-` and `ng-` always allowed) and kebab-case mixin names.
-- `<name>-tokens.scss` declares the component's `--kbq-<name>-*` custom properties in terms of the global `--kbq-*` tokens from `@koobiq/design-tokens`; `_<name>-theme.scss` consumes them. A component-specific look is expressed by redefining that component's tokens, not by editing the shared theme mixins.
-- `packages/components/_index.scss` forwards `core`, the theming API and `_koobiq-theme.scss`, whose `koobiq-theme()` and `koobiq-typography()` mixins aggregate the global (directive-level) themes. `styles:build-all` compiles every SCSS file to `dist/scss-compiled` and copies the prebuilt theme (`theme.css`, light and dark in one file) into `dist/components/prebuilt-themes`, which is what the package `exports` expose.
-- Motion is CSS: `@angular/animations` is deprecated and banned by ESLint. A component that has to act once an animation ends (a panel detaching after its exit) waits with `kbqAfterAnimations` from `core`, which ends at once when nothing animates; a template element uses `animate.enter` / `animate.leave`. Every animated element binds `[class.kbq-animations-disabled]` to `kbqAnimationsDisabled()` and includes the `kbq-animations-off()` mixin in its most specific animated rule, which also covers `prefers-reduced-motion: reduce`.
+- Supported release lines: `main` is `21.x`; `20.4.x` (the 20 line), `19.x` and `18.x` have their own branches and receive backports. Releases are cut by maintainers with `yarn run release:stage:commit`; the tag push publishes the packages listed under `release.packages` in the root `package.json` (see `docs/guides/05-releasing-packages.md`). A maintenance branch runs push CI from its own copies of the workflows, so it is added to `push.branches` on that branch, not on `main`.
 
 ### Localization and accessibility text
 
@@ -241,31 +206,37 @@ A docs preview is deployed to Firebase for pull requests opened from this reposi
 
 - `KBQ_WINDOW` from `@koobiq/components/core` and Angular's `DOCUMENT` replace the globals. ESLint's `no-restricted-globals` bans `window`, `document`, `navigator`, `localStorage`, `requestAnimationFrame`, `getComputedStyle`, `matchMedia` and the rest of that family in `packages/components`; specs and e2e code are exempt.
 
-### E2E wiring
-
-- `packages/components/<name>/e2e.ts` exports standalone `E2e<Name><Scenario>` components with a `data-testid` host attribute and an inner `data-testid="e2eScreenshotTarget"` for screenshots. `packages/e2e/scenarios.ts` re-exports every `e2e.ts`, and `packages/e2e/routes.ts` turns each exported component with the `E2e` prefix into a route whose path is the export name (the production build mangles class names, so the path cannot come from `component.name`); a spec navigates with `page.goto('/E2eButtonStateAndStyle')`. A new scenario needs no registration. Lint requires the `E2e` prefix of every exported class, so keep helper components local; a helper Angular forces to export (NG3004 when another template binds its inputs or outputs, fixed in Angular 22.2.3) drops the prefix under an `eslint-disable` comment, like `TopBarActionsRow` in `top-bar/e2e.ts`.
-- Specs locate everything by test id, take the light screenshot, call `e2eEnableDarkTheme(page)` and take the dark one; baselines are named `NN-light.png` / `NN-dark.png` (and `NN-rtl.png` where relevant), with a short name of the scenario after the number when it helps tell the screenshots of one component apart (`04-validation-light.png`).
-- Selectors, CSS classes and exported symbols in e2e code use the `e2e` prefix (lint checks selectors and exports); dev apps use `dev`, the docs app `docs`. Local classes and types go without a prefix, and markup copied from a docs example drops its `example` prefixes and suffixes.
-
-### Documentation pipeline
-
-- Page content is MDX next to the code: `<name>.{en,ru}.mdx` (overview), `examples.<name>.{en,ru}.mdx` (examples tab), `docs/guides/*.{en,ru}.mdx` and `docs/data-grid/**`. Every page exists in both languages — update both. `build:docs-content` compiles the pages with `tools/docs-pages` into Angular components under `dist/docs-pages`, which the app imports as `@koobiq/docs-pages` and `docsPageResolver` picks per route, so the pages are prerendered with their live examples. It also regenerates the SEO descriptions and runs `docs:api-gen` (`tools/api-gen`), which writes the public API of every entry point as typed data under `dist/docs-pages-api` (`@koobiq/docs-pages-api`) — per entry its signature as the source declares it and the members worth explaining, the JSDoc compiled to HTML — for the one component of the API tab, `DocsApiPage`, to render, and writes the manifest `check-api-docs` and `tools/llms` read to `dist/docs-content/api-manifest`.
-- The same build runs `docs:generate-llms` (`tools/llms`), the documentation for agents, in English only — a model reads it just as well and answers in the language it is asked in: the Markdown of every structure item, every tab of it in one file, with the full source of its examples and the API from the manifest, in `dist/docs-llms`, which the site serves next to the pages of the item under every locale (`/en/components/button.md`, `/ru/components/button.md`: the same English text), each page linking its own by a relative `rel="alternate"`, so that the next version and the previews of pull requests lead to their own files; `llms-full.txt`, all of it in one file; and the index `apps/docs/src/llms.txt`, which opens with the hand-written rules of `docs/llms/rules.md`. The index is committed and `check-llms` fails once it is out of date — after a change to `structure.ts`, to the first sentence of an overview or to the rules, run `yarn run docs:generate-llms` and commit it. The check also fails on a file an agent cannot read without the site: a leftover of MDX or HTML, a heading that skips a level, a link to a page the site does not have.
-- A live example is `<Example id="alert-overview" />`, with the key from `example-module.ts`. The build fails, with the position in the file, on what `tools/docs-pages/compile-page.ts` cannot turn into Angular: an unknown example, imports and `{expressions}`, HTML outside its short list of elements (write the rest in Markdown). MDX syntax applies: comments are `{/* */}`, `<br />` needs the slash, a literal `{` or `<` is escaped with a backslash. The JSDoc of the public API goes through the same compiler in `docs:api-gen`, whose errors name the declaration: the same rules apply there, `{@link Name}` becomes inline code, a block of code has to stand on its own rather than inside a list or a quote, and an `@example` without a fence of its own is taken as TypeScript. Every overview or examples tab that `structure.ts` routes to needs a page. `docs:start:dev` rebuilds the pages on save.
-- `apps/docs/src/app/structure.ts` is the single source of the navigation (`hasApi`, `hasExamples`, `isNew` with an expiry date); the routes, the sitemap, the prerender route list and `llms.txt` are all derived from it.
-- Examples live in `packages/docs-examples/components/<name>/<example-name>/<example-name>-example.ts` with a `/** @title ... */` JSDoc, selector `<example-name>-example` and class `<ExampleName>Example`, registered in that folder's `index.ts` NgModule. After adding or renaming one, run `yarn run build:docs-examples-module` to regenerate the committed `packages/docs-examples/example-module.ts` and `packages/docs-examples/loader/index.ts` (the `@koobiq/docs-examples/loader` entry point, kept apart so the pages that show examples do not load it).
-- Committed generated files — never hand-edit: `packages/docs-examples/example-module.ts`, `packages/docs-examples/loader/index.ts`, `tools/public_api_guard/**`, `tools/check-public-api-any/baseline.json`, `tools/check-api-docs/baseline.json`, `apps/docs/src/llms.txt`, `apps/docs/src/sitemap.xml`, `apps/docs/src/prerender-routes.txt`, `apps/docs/src/app/seo-descriptions.ts`, `apps/docs/src/assets/versions.json`, `apps/docs/src/app/components/design-tokens-viewers/data/*.ts`. The docs metadata files are kept current in the branch that changes their source, because CI compares them: after a route is added, removed or renamed in `structure.ts`, run `yarn run docs:generate-sitemap`, `yarn run docs:generate-prerender-routes` and `yarn run docs:generate-llms` and commit the result (`apps/docs/src/app/page-paths.spec.ts` checks the first two, `check-llms` the last); `seo-descriptions.ts` follows the first paragraph of every overview, `unit:tools` checks it, and `yarn run docs:generate-seo-descriptions` regenerates it. the release CLI reruns the first three through `release:extract-docs-meta` after bumping the version; `versions.json` is left to the release.
-
-### Schematics
-
-- `packages/schematics/src/ng-add` sets up a consumer project; `src/migrations/<name>/` holds the `ng update` migrations, registered in `src/migrations.json` with the version they ship in. A breaking change to a component ships with a migration there, or at least a warning that points at the manual steps. Build with `build:schematics`, test with `unit:schematics`.
-
 ## Conventions
 
 - Commits and PR titles follow `type(scope): subject` (conventional commits, header at most 120 characters). Scopes are the directory names under `apps/` and `packages/components/` plus `core`, `components`, `experimental`, `schematics`, `cli`, `e2e`, `examples`, `dev`, `deps`, `deps-dev` and the rest of the list in the commitlint config at the repo root. Tracker references go in the subject as `(#DS-1234)`, for example `fix(select): panel scrolling in Safari (#DS-3299)`.
 - Public symbols are prefixed `Kbq` (classes, enums, interfaces), `kbq` (functions, directive attributes, CSS classes) or `KBQ_` (injection tokens); selectors are `kbq-<name>` or `[kbq-<name>]`.
 - Code comments and commit messages are written in English; user-facing documentation exists in English and Russian.
 - Fill the PR template: summary, list of notable changes, what reviewers should focus on.
+- Do not name a branch `test/<name>`: origin has a plain `test` branch, so git rejects the push of a nested ref.
+- After a rebase, check what git merges silently: a `####` subsection of `docs/guides/migration.{en,ru}.mdx` still sits under its own `###` step (the look-alike subsections of another step match as context), and no `var()` is left pointing at a token that upstream removed.
+
+## Agent Rules
+
+- This file holds what applies to any task. A rule about some files only goes to `.claude/rules/<topic>.md`, with the globs it covers in a `paths` frontmatter list: Claude Code loads it once it reads or edits a matching file, so it costs no context before.
+- List each rule file in the table below with a plain Markdown link, so that agents that read only this file can open it. An `@` import would load the file at startup.
+- A rule a linter can check goes to its config (`eslint.config.js`, `.stylelintrc.js`, the commitlint config, cspell); the text keeps only the reason.
+- Write rules in English, one per bullet, each with its reason, and keep every rule in one place.
+- Claude Code reads this file natively from version 2.1.277 and stops doing so as soon as a `CLAUDE.md` or `CLAUDE.local.md` exists in the repository or a directory above it: add neither here, and keep personal notes in `~/.claude/CLAUDE.md`, which does not count.
+
+| Rule file                                              | Applies to                                                                       |
+| ------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| [components.md](.claude/rules/components.md)           | TypeScript of `packages/components`: packaging, typings, JSDoc, Angular patterns |
+| [overlays.md](.claude/rules/overlays.md)               | Overlays, panels, lists and selection models                                     |
+| [styles.md](.claude/rules/styles.md)                   | SCSS and theming                                                                 |
+| [unit-tests.md](.claude/rules/unit-tests.md)           | Vitest specs                                                                     |
+| [e2e.md](.claude/rules/e2e.md)                         | `e2e.ts` scenarios, Playwright specs and baselines                               |
+| [docs.md](.claude/rules/docs.md)                       | MDX pages, the docs app and its pipeline                                         |
+| [docs-examples.md](.claude/rules/docs-examples.md)     | Docs examples and dev apps                                                       |
+| [generated-files.md](.claude/rules/generated-files.md) | Committed generated files and how to regenerate them                             |
+| [schematics.md](.claude/rules/schematics.md)           | `ng add` and `ng update` migrations                                              |
+| [deps.md](.claude/rules/deps.md)                       | Dependencies, patches, tsconfigs and licenses                                    |
+| [release.md](.claude/rules/release.md)                 | Release CLI                                                                      |
+| [adapters.md](.claude/rules/adapters.md)               | Luxon and Moment date adapters                                                   |
 
 ## Best Practices
 
@@ -288,14 +259,9 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Put host bindings and listeners in the `host` object of the `@Component` or `@Directive` decorator, not in `@HostBinding` / `@HostListener`
 - Use `NgOptimizedImage` for all static images (does not work for inline base64 images).
 
-### Server Side Rendering (SSR)
-
-- Use `inject(KBQ_WINDOW)` instead of the global `window`
-
 ### Accessibility Requirements
 
 - Components, docs examples and the docs site must pass all AXE checks and meet WCAG AA, including focus management, color contrast, and ARIA attributes.
-- Source all component-provided default ARIA text from `kbqInjectA11yLocaleConfiguration()`
 
 ### Components
 
@@ -313,11 +279,6 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 ### Form Validation
 
 - Use `ErrorStateMatcher` to control **when** errors are shown
-
-### State Management
-
-- Use signals for local component state
-- Use `computed()` for derived state
 
 ### Templates
 

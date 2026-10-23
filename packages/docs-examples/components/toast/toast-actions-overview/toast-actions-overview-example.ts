@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } fr
 import { outputToObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { take } from 'rxjs/operators';
 
@@ -12,7 +12,8 @@ import { take } from 'rxjs/operators';
 @Component({
     selector: 'toast-actions-overview-example',
     imports: [
-        KbqLinkModule,
+        KbqLink,
+        KbqLinkSuffix,
         KbqDropdownModule,
         KbqButtonModule
     ],

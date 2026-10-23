@@ -3,7 +3,7 @@ import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -170,7 +170,9 @@ export class E2eSkeletonStates {}
         KbqSkeletonTable,
         KbqSkeletonGroup,
         KbqSkeletonFormField,
-        KbqDlModule,
+        KbqDl,
+        KbqDt,
+        KbqDd,
         KbqTableModule,
         KbqFormFieldModule,
         KbqInputModule,

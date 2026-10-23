@@ -27,6 +27,7 @@ export * from '../components/form-field/e2e';
 export * from '../components/icon/e2e';
 export * from '../components/inline-edit/e2e';
 export * from '../components/input/e2e';
+export * from '../components/link/deprecated/e2e';
 export * from '../components/link/e2e';
 export * from '../components/list/e2e';
 export * from '../components/loader-overlay/e2e';

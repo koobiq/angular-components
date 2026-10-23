@@ -2,7 +2,7 @@
      only redirects to /404 on a later tick. Rendering the header unguarded threw in between. -->
 @if (structureItem) {
     <div class="docs-component-header">
-        <div docsRegisterHeader class="docs-component-name">
+        <div docsRegisterHeader class="docs-component-name" data-docsearch-lvl1>
             {{ structureItem.name[locale()!] }}
         </div>
         @if (!structureItem.isGuide) {
@@ -42,9 +42,9 @@
                 </nav>
 
                 @if (githubSourceUrl) {
-                    <a kbq-link big target="_blank" rel="noopener noreferrer" [href]="githubSourceUrl">
-                        <i kbq-icon="kbq-code_16"></i>
-                        <span class="kbq-link__text">{{ t('viewSourceOnGitHub') }}</span>
+                    <a kbqLink size="big" target="_blank" rel="noopener noreferrer" [href]="githubSourceUrl">
+                        <i kbqLinkPrefix kbq-icon="kbq-code_16"></i>
+                        {{ t('viewSourceOnGitHub') }}
                     </a>
                 }
             </div>
@@ -53,5 +53,5 @@
 }
 
 <div #tabNavPanel="kbqTabNavPanel" kbqTabNavPanel>
-    <router-outlet />
+    <router-outlet (activate)="onTabActivate($event)" />
 </div>

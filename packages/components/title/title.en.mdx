@@ -8,7 +8,7 @@ The `kbq-title` directive shows a [tooltip](/en/components/tooltip) with the ful
 - Works both with plain text and with complex nested markup via the `#kbqTitleContainer` (measured container) and `#kbqTitleText` (text element) template references.
 - Supports multiple `#kbqTitleText` elements: the tooltip is shown if any of them overflows.
 - Lets you provide custom tooltip content — a string or a template — through the `[kbq-title]` attribute.
-- Automatically tracks content changes and container resizes — including those that do not resize the window, such as dragging a splitter or collapsing a sidebar — and recalculates overflow.
+- While the pointer or the keyboard focus is on the element, tracks content changes and container resizes — including those that do not resize the window, such as dragging a splitter or collapsing a sidebar — and shows or hides the tooltip as the text starts or stops fitting.
 - Accessibility: the tooltip opens on keyboard focus and hides when focus is lost.
 
 ### Container and text

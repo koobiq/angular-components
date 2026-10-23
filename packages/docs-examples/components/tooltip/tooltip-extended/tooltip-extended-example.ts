@@ -24,7 +24,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <p class="layout-margin-no-top layout-margin-no-bottom">
             A low Earth orbit (LEO) is an
             <a
-                kbq-link
+                kbqLink
                 href="https://en.wikipedia.org/wiki/Geocentric_orbit"
                 [kbqTooltip]="tooltipContent"
                 [kbqTooltipClass]="'example__custom-tooltip'"

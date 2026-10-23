@@ -498,20 +498,121 @@ describe('KbqTitleDirective', () => {
     });
 
     describe('resize handling', () => {
-        it('should update disabled=true after debounceTime(100) on a container resize when not overflown', async () => {
+        it('should not measure on the report the observer makes for an element it starts observing', async () => {
             vi.useFakeTimers();
 
             const { debugElement } = createComponent(SimpleTitleComponent, [provideMockResizeObserver()]);
             const directive = getTitleDirective(debugElement);
+            const isOverflown = vi.spyOn(directive, 'isOverflown', 'get');
 
-            // JSDOM defaults: all sizing = 0 → isOverflown = false → disabled = !false = true
+            getResizeObserver().changes.next([]);
+            await vi.advanceTimersByTimeAsync(100);
+
+            expect(isOverflown).not.toHaveBeenCalled();
+        });
+
+        it('should set disabled=true after debounceTime(100) on a resize that makes the content fit', async () => {
+            vi.useFakeTimers();
+
+            const { debugElement } = createComponent(SimpleTitleComponent, [provideMockResizeObserver()]);
+            const directive = getTitleDirective(debugElement);
+            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+            const scrollWidth = vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+
+            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            dispatchMouseEvent(el, 'mouseenter');
+
+            expect(directive.disabled).toBe(false);
+
+            scrollWidth.mockReturnValue(50);
             getResizeObserver().changes.next([]);
             await vi.advanceTimersByTimeAsync(100);
 
             expect(directive.disabled).toBe(true);
         });
 
-        it('should set disabled=false after resize when content is overflown', async () => {
+        it('should set disabled=false after a resize that makes the content overflow', async () => {
+            vi.useFakeTimers();
+
+            const { debugElement } = createComponent(SimpleTitleComponent, [provideMockResizeObserver()]);
+            const directive = getTitleDirective(debugElement);
+            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+
+            // JSDOM defaults: all sizing = 0 → isOverflown = false → disabled = !false = true
+            dispatchMouseEvent(el, 'mouseenter');
+
+            expect(directive.disabled).toBe(true);
+
+            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            getResizeObserver().changes.next([]);
+            await vi.advanceTimersByTimeAsync(100);
+
+            expect(directive.disabled).toBe(false);
+        });
+
+        it('should re-check the overflow on a resize while the keyboard focus is on the host', async () => {
+            vi.useFakeTimers();
+
+            const { debugElement } = createComponent(FocusTitleComponent, [provideMockResizeObserver()]);
+            const directive = getTitleDirective(debugElement);
+            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+
+            TestBed.inject(FocusMonitor).focusVia(el, 'keyboard');
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(directive.disabled).toBe(true);
+
+            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            getResizeObserver().changes.next([]);
+            await vi.advanceTimersByTimeAsync(100);
+
+            expect(directive.disabled).toBe(false);
+        });
+
+        it('should stop re-checking once the pointer has left', async () => {
+            vi.useFakeTimers();
+
+            const { debugElement } = createComponent(SimpleTitleComponent, [provideMockResizeObserver()]);
+            const directive = getTitleDirective(debugElement);
+            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+
+            dispatchMouseEvent(el, 'mouseenter');
+            dispatchMouseEvent(el, 'mouseleave');
+
+            const isOverflown = vi.spyOn(directive, 'isOverflown', 'get');
+
+            getResizeObserver().changes.next([]);
+            await vi.advanceTimersByTimeAsync(100);
+
+            expect(isOverflown).not.toHaveBeenCalled();
+        });
+
+        it('should keep re-checking after a click while the pointer is on the host', async () => {
+            vi.useFakeTimers();
+
+            const { debugElement } = createComponent(FocusTitleComponent, [provideMockResizeObserver()]);
+            const directive = getTitleDirective(debugElement);
+            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+
+            dispatchMouseEvent(el, 'mouseenter');
+            // A click focuses the host: the monitor reports a mouse origin, which hides the tooltip, while the
+            // pointer stays where it was.
+            TestBed.inject(FocusMonitor).focusVia(el, 'mouse');
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(directive.disabled).toBe(true);
+
+            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            getResizeObserver().changes.next([]);
+            await vi.advanceTimersByTimeAsync(100);
+
+            expect(directive.disabled).toBe(false);
+        });
+
+        it('should drop a measurement whose debounce outlived the pointer', async () => {
             vi.useFakeTimers();
 
             const { debugElement } = createComponent(SimpleTitleComponent, [provideMockResizeObserver()]);
@@ -520,10 +621,16 @@ describe('KbqTitleDirective', () => {
 
             vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
             vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
-            getResizeObserver().changes.next([]);
-            await vi.advanceTimersByTimeAsync(100);
+            dispatchMouseEvent(el, 'mouseenter');
 
             expect(directive.disabled).toBe(false);
+
+            getResizeObserver().changes.next([]);
+            await vi.advanceTimersByTimeAsync(50);
+            dispatchMouseEvent(el, 'mouseleave');
+            await vi.advanceTimersByTimeAsync(50);
+
+            expect(directive.disabled).toBe(true);
         });
 
         it('should observe the measured container instead of registering a window listener', () => {
@@ -545,16 +652,24 @@ describe('KbqTitleDirective', () => {
             fakeContentObserver = { observe: vi.fn().mockReturnValue(contentObserverSubject.asObservable()) };
         });
 
-        it('should set disabled=true when content changes and there is no overflow', async () => {
+        it('should set disabled=true when the content changes and no longer overflows', async () => {
             vi.useFakeTimers();
 
             const { debugElement } = createComponent(ContentObserverTitleComponent, [
                 { provide: ContentObserver, useValue: fakeContentObserver }
             ]);
             const directive = getTitleDirective(debugElement);
+            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+            const scrollWidth = vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+
+            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            dispatchMouseEvent(el, 'mouseenter');
+
+            expect(directive.disabled).toBe(false);
 
             // throttleTime(100) leading-edge emits synchronously on the first next(),
             // so advancing by 0 only flushes microtasks — no need to advance by 100.
+            scrollWidth.mockReturnValue(50);
             contentObserverSubject.next([]);
             await vi.advanceTimersByTimeAsync(0);
 
@@ -570,11 +685,30 @@ describe('KbqTitleDirective', () => {
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
+            dispatchMouseEvent(el, 'mouseenter');
             el.textContent = ' Updated Text ';
             contentObserverSubject.next([]);
             await vi.advanceTimersByTimeAsync(0);
 
             expect(directive.content).toBe('Updated Text');
+        });
+
+        it('should leave a content change alone while the pointer is not on the host', async () => {
+            vi.useFakeTimers();
+
+            const { debugElement } = createComponent(ContentObserverTitleComponent, [
+                { provide: ContentObserver, useValue: fakeContentObserver }
+            ]);
+            const directive = getTitleDirective(debugElement);
+            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+            const isOverflown = vi.spyOn(directive, 'isOverflown', 'get');
+
+            el.textContent = ' Updated Text ';
+            contentObserverSubject.next([]);
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(isOverflown).not.toHaveBeenCalled();
+            expect(directive.content).toBe('Initial');
         });
     });
 

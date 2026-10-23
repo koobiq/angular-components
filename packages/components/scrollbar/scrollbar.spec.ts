@@ -362,11 +362,16 @@ describe(KbqScrollbar.name, () => {
             vi.useRealTimers();
         });
 
+        // The `overflow: auto` that `scrollbar.scss` gives the host, which specs run without. In longhands: jsdom does
+        // not expand the shorthand into the computed style. Left at the initial `visible`, the viewport is no scroll
+        // container and paints no bar whatever its metrics.
         @Component({
             selector: 'test-scrollbar-track-visibility',
             imports: [KbqScrollbar],
             template: `
-                <kbq-scrollbar kbqScrollbarMode="always">content</kbq-scrollbar>
+                <kbq-scrollbar kbqScrollbarMode="always" style="overflow-x: auto; overflow-y: auto">
+                    content
+                </kbq-scrollbar>
             `
         })
         class TestScrollbarTrackVisibility {
@@ -540,7 +545,7 @@ describe(KbqScrollbar.name, () => {
                 selector: 'test-flash-no-overflow',
                 imports: [KbqScrollbar],
                 template: `
-                    <kbq-scrollbar>content</kbq-scrollbar>
+                    <kbq-scrollbar style="overflow-x: auto; overflow-y: auto">content</kbq-scrollbar>
                 `
             })
             class TestFlashNoOverflow {
@@ -761,12 +766,13 @@ describe(KbqScrollbar.name, () => {
             vi.useRealTimers();
         });
 
+        // A scroll container, as in the visibility tests: specs run without the component stylesheets.
         @Component({
             selector: 'test-scrollbar-click-suppression',
             imports: [KbqScrollbar],
             template: `
                 <div (click)="hostClick()">
-                    <kbq-scrollbar [kbqScrollbarMode]="mode">
+                    <kbq-scrollbar style="overflow-x: auto; overflow-y: auto" [kbqScrollbarMode]="mode">
                         <button type="button" class="item">item</button>
                     </kbq-scrollbar>
                 </div>
@@ -887,11 +893,17 @@ describe(KbqScrollbar.name, () => {
             vi.useRealTimers();
         });
 
+        // A scroll container, as in the visibility tests: specs run without the component stylesheets.
         @Component({
             selector: 'test-scrollbar-thumb',
             imports: [KbqScrollbarViewport],
             template: `
-                <div #viewport kbqScrollbarViewport kbqScrollbarMode="always"></div>
+                <div
+                    #viewport
+                    kbqScrollbarViewport
+                    kbqScrollbarMode="always"
+                    style="overflow-x: auto; overflow-y: auto"
+                ></div>
             `
         })
         class TestScrollbarThumb {
@@ -1073,7 +1085,13 @@ describe(KbqScrollbar.name, () => {
                 selector: 'test-scrollbar-thumb-rtl',
                 imports: [Dir, KbqScrollbarViewport],
                 template: `
-                    <div #viewport kbqScrollbarViewport kbqScrollbarMode="always" dir="rtl"></div>
+                    <div
+                        #viewport
+                        kbqScrollbarViewport
+                        kbqScrollbarMode="always"
+                        dir="rtl"
+                        style="overflow-x: auto; overflow-y: auto"
+                    ></div>
                 `
             })
             class TestScrollbarThumbRtl extends TestScrollbarThumb {}
@@ -1110,7 +1128,13 @@ describe(KbqScrollbar.name, () => {
                 selector: 'test-scrollbar-thumb-rtl-centering',
                 imports: [Dir, KbqScrollbarViewport],
                 template: `
-                    <div #viewport kbqScrollbarViewport kbqScrollbarMode="always" dir="rtl"></div>
+                    <div
+                        #viewport
+                        kbqScrollbarViewport
+                        kbqScrollbarMode="always"
+                        dir="rtl"
+                        style="overflow-x: auto; overflow-y: auto"
+                    ></div>
                 `
             })
             class TestScrollbarThumbRtlCentering extends TestScrollbarThumb {}
@@ -1135,7 +1159,12 @@ describe(KbqScrollbar.name, () => {
                 imports: [KbqScrollbarViewport],
                 template: `
                     <div dir="rtl">
-                        <div #viewport kbqScrollbarViewport kbqScrollbarMode="always"></div>
+                        <div
+                            #viewport
+                            kbqScrollbarViewport
+                            kbqScrollbarMode="always"
+                            style="overflow-x: auto; overflow-y: auto"
+                        ></div>
                     </div>
                 `
             })

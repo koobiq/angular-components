@@ -812,18 +812,22 @@ describe('KbqAccordion', () => {
             expect(document.activeElement).toBe(contentInput);
         });
 
-        it('a key pressed inside the content should not activate the first item', () => {
+        it('a key pressed inside the content should not move focus to the first item or toggle it', () => {
             const { items, contentInput } = createInteractiveFixture();
 
             // No `setActiveItem` beforehand: the removed `setFirstItemActive()` used to focus the
             // first trigger and toggle it on the very first key pressed anywhere inside the accordion.
+            // Opened through the item rather than its trigger, which would make it the active one.
+            items[0].injector.get(KbqAccordionItem).open();
+            fixture.detectChanges();
+
             contentInput.focus();
 
             dispatchKeyboardEvent(contentInput, 'keydown', ENTER);
             fixture.detectChanges();
 
             expect(document.activeElement).toBe(contentInput);
-            expect(items[0].nativeElement.getAttribute('data-state')).toBe('closed');
+            expect(items[0].nativeElement.getAttribute('data-state')).toBe('open');
             expect(items[1].nativeElement.getAttribute('data-state')).toBe('closed');
         });
 

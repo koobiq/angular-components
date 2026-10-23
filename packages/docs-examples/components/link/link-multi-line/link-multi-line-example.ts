@@ -1,20 +1,19 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
 
 /**
  * @title Link multi-line
  */
 @Component({
     selector: 'link-multi-line-example',
-    imports: [KbqLinkModule, KbqIconModule],
+    imports: [KbqLink, KbqLinkPrefix, KbqIconModule],
     template: `
         <p>
             I fully agree
-            <a kbq-link class="kbq-link_external" multiline>
-                <i kbq-icon="kbq-scroll-o_16"></i>
-                <span class="kbq-link__text">with the terms of the license agreement</span>
-                <i kbq-icon="kbq-north-east_16"></i>
+            <a kbqLink external href="https://koobiq.io/en/components/link" target="_blank">
+                <i kbqLinkPrefix kbq-icon="kbq-scroll-o_16"></i>
+                with the terms of the license agreement
             </a>
         </p>
     `,

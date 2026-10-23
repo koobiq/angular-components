@@ -11,7 +11,7 @@ const EXAMPLES: Record<string, LiveExample> = {
     'ag-grid-overview': example('AgGridOverviewExample', 'components/ag-grid')
 };
 
-const LINK_CLASS = 'kbq-markdown__a docs-markdown__a kbq-link kbq-text-only kbq-link_use-visited';
+const LINK_CLASS = 'kbq-markdown__a';
 
 const compile = (source: string, url: string | null = '/en/components/alert/overview') =>
     compilePage(source, { path: 'alert.en.mdx', examples: EXAMPLES, url });
@@ -30,7 +30,7 @@ const readStaticText = (nodes: TmplAstNode[]): string =>
 describe(compilePage.name, () => {
     it('renders Markdown with the classes of the documentation typography', () => {
         expect(compile('An intro with **bold**, _stress_ and `code`.').template).toBe(
-            '<p class="kbq-markdown__p">An intro with <strong>bold</strong>, <em>stress</em> and <code class="kbq-markdown__code">code</code>.</p>'
+            '<p class="kbq-markdown__p" data-docsearch-content>An intro with <strong>bold</strong>, <em>stress</em> and <code class="kbq-markdown__code">code</code>.</p>'
         );
     });
 
@@ -38,15 +38,28 @@ describe(compilePage.name, () => {
         expect(compile('# Alert\n\n### Size\n\n#### Размер шрифта').template).toBe(
             [
                 '<h1 class="docs-header-link kbq-markdown__h1">Alert</h1>',
-                '<h3 id="size" class="docs-header-link kbq-markdown__h3">Size</h3>',
-                '<h4 id="размер-шрифта" class="docs-header-link kbq-markdown__h4">Размер шрифта</h4>'
+                '<h3 id="size" class="docs-header-link kbq-markdown__h3" data-docsearch-lvl2>Size</h3>',
+                '<h4 id="размер-шрифта" class="docs-header-link kbq-markdown__h4" data-docsearch-lvl2>Размер шрифта</h4>'
             ].join('\n')
         );
     });
 
     it('leaves the comments of a heading out of its id', () => {
         expect(compile('### Size {/* cspell:ignore sz */}').template).toBe(
-            '<h3 id="size" class="docs-header-link kbq-markdown__h3">Size </h3>'
+            '<h3 id="size" class="docs-header-link kbq-markdown__h3" data-docsearch-lvl2>Size </h3>'
+        );
+    });
+
+    // The search crawler reads a page by these attributes: `apps/docs/src/app/components/docsearch/docsearch.ts`.
+    it('marks the headings of the sections and the paragraphs for the search', () => {
+        expect(compile('## Usage\n\n### Size\n\n#### Small\n\n##### Note\n\nText.').template).toBe(
+            [
+                '<h2 id="usage" class="docs-header-link kbq-markdown__h2">Usage</h2>',
+                '<h3 id="size" class="docs-header-link kbq-markdown__h3" data-docsearch-lvl2>Size</h3>',
+                '<h4 id="small" class="docs-header-link kbq-markdown__h4" data-docsearch-lvl2>Small</h4>',
+                '<h5 id="note" class="docs-header-link kbq-markdown__h5">Note</h5>',
+                '<p class="kbq-markdown__p" data-docsearch-content>Text.</p>'
+            ].join('\n')
         );
     });
 
@@ -55,7 +68,12 @@ describe(compilePage.name, () => {
         expect(
             compilePage('## Usage\n\n### Usage', { path: 'KbqAlert', examples: {}, url: null, headingDepth: 4 })
                 .template
-        ).toBe(['<h4 class="kbq-markdown__h4">Usage</h4>', '<h4 class="kbq-markdown__h4">Usage</h4>'].join('\n'));
+        ).toBe(
+            [
+                '<h4 class="kbq-markdown__h4" data-docsearch-lvl2>Usage</h4>',
+                '<h4 class="kbq-markdown__h4" data-docsearch-lvl2>Usage</h4>'
+            ].join('\n')
+        );
     });
 
     // Angular drops a text node of whitespace alone, which would join the words around it.
@@ -86,7 +104,7 @@ describe(compilePage.name, () => {
         });
 
         expect(template).toBe(
-            '<p class="kbq-markdown__p"><code class="kbq-markdown__code">{{ value }}</code> <em>and</em> ' +
+            '<p class="kbq-markdown__p" data-docsearch-content><code class="kbq-markdown__code">{{ value }}</code> <em>and</em> ' +
                 '<code class="kbq-markdown__code">@for</code>: &#34;a&#34; &#38; ' +
                 `<a class="${LINK_CLASS}" href="/b" title="{{ b }}">b</a></p>`
         );
@@ -101,8 +119,8 @@ describe(compilePage.name, () => {
     it('keeps the paragraphs of a loose list', () => {
         expect(compile('3. one\n\n4. two').template).toBe(
             '<ol start="3" class="kbq-markdown__ol">' +
-                '<li class="kbq-markdown__li"><p class="kbq-markdown__p">one</p></li>' +
-                '<li class="kbq-markdown__li"><p class="kbq-markdown__p">two</p></li>' +
+                '<li class="kbq-markdown__li"><p class="kbq-markdown__p" data-docsearch-content>one</p></li>' +
+                '<li class="kbq-markdown__li"><p class="kbq-markdown__p" data-docsearch-content>two</p></li>' +
                 '</ol>'
         );
     });
@@ -119,14 +137,14 @@ describe(compilePage.name, () => {
 
     it('renders quotes, rules and hard line breaks', () => {
         expect(compile('> Quoted  \nline\n\n---').template).toBe(
-            '<blockquote class="kbq-markdown__blockquote"><p class="kbq-markdown__p">Quoted<br>line</p></blockquote>\n' +
+            '<blockquote class="kbq-markdown__blockquote"><p class="kbq-markdown__p" data-docsearch-content>Quoted<br>line</p></blockquote>\n' +
                 '<hr class="kbq-markdown__hr">'
         );
     });
 
     it('sets the text after an image in italics, as its caption', () => {
         expect(compile('![Button states](./assets/button.png)\nBasic states').template).toBe(
-            '<p class="kbq-markdown__p"><img class="kbq-markdown__img" src="./assets/button.png" alt="Button states">' +
+            '<p class="kbq-markdown__p" data-docsearch-content><img class="kbq-markdown__img" src="./assets/button.png" alt="Button states">' +
                 '<em>\nBasic states</em></p>'
         );
     });
@@ -134,7 +152,7 @@ describe(compilePage.name, () => {
     // With a base href of `/`, a bare `#size` would lead to the start page.
     it('resolves links to a fragment of the page against its URL', () => {
         expect(compile('[Size](#size), [button](/en/components/button/overview)').template).toBe(
-            `<p class="kbq-markdown__p"><a class="${LINK_CLASS}" href="/en/components/alert/overview#size">Size</a>, ` +
+            `<p class="kbq-markdown__p" data-docsearch-content><a class="${LINK_CLASS}" href="/en/components/alert/overview#size">Size</a>, ` +
                 `<a class="${LINK_CLASS}" href="/en/components/button/overview">button</a></p>`
         );
         expect(compile('[Size](#size)', null).template).toContain('href="#size"');
@@ -143,16 +161,20 @@ describe(compilePage.name, () => {
     // GFM turns the URL in the text into a link of its own, which would nest one link in another.
     it('renders a URL inside a link as text', () => {
         expect(compile('See <a href="https://koobiq.io">www.koobiq.io</a>.').template).toBe(
-            `<p class="kbq-markdown__p">See <a class="${LINK_CLASS}" href="https://koobiq.io">www.koobiq.io</a>.</p>`
+            `<p class="kbq-markdown__p" data-docsearch-content>See <a class="${LINK_CLASS}" href="https://koobiq.io">www.koobiq.io</a>.</p>`
         );
     });
 
     it('renders HTML with the classes of the documentation typography', () => {
         expect(compile('Press <kbd>Esc</kbd> or <a href="#close" target="_self">close</a>.').template).toBe(
-            `<p class="kbq-markdown__p">Press <kbd>Esc</kbd> or <a class="${LINK_CLASS}" href="/en/components/alert/overview#close" target="_self">close</a>.</p>`
+            `<p class="kbq-markdown__p" data-docsearch-content>Press <kbd>Esc</kbd> or <a class="${LINK_CLASS}" href="/en/components/alert/overview#close" target="_self">close</a>.</p>`
         );
         expect(compile('<ul class="tokens">\n<li>alert</li>\n</ul>').template).toBe(
             '<ul class="kbq-markdown__ul tokens"><li class="kbq-markdown__li">alert</li></ul>'
+        );
+        // A paragraph written in HTML is text the search reads as well.
+        expect(compile('<div>\n<p class="lead" title="Lead">An alert</p>\n</div>').template).toBe(
+            '<div><p class="kbq-markdown__p lead" data-docsearch-content title="Lead">An alert</p></div>'
         );
     });
 
@@ -163,7 +185,7 @@ describe(compilePage.name, () => {
                 '<div class="callout">\n<div class="header">Note</div>\n<div class="content">\n\nRequired.\n\n</div>\n</div>'
             ).template
         ).toBe(
-            '<div class="callout"><div class="header">Note</div><div class="content"><p class="kbq-markdown__p">Required.</p></div></div>'
+            '<div class="callout"><div class="header">Note</div><div class="content"><p class="kbq-markdown__p" data-docsearch-content>Required.</p></div></div>'
         );
         expect(
             compile(
@@ -177,7 +199,7 @@ describe(compilePage.name, () => {
     it('skips comments, which are meant for the tools', () => {
         expect(
             compile('{/* cspell:ignore arrowless */}\n\nThe arrowless popover {/* prettier-ignore */}.').template
-        ).toBe('\n<p class="kbq-markdown__p">The arrowless popover .</p>');
+        ).toBe('\n<p class="kbq-markdown__p" data-docsearch-content>The arrowless popover .</p>');
     });
 
     // The migration guide wraps its steps in sections, and reads its tool comments to tag them.
@@ -192,8 +214,8 @@ describe(compilePage.name, () => {
 
         expect(page.template).toBe(
             '<div title="mdxFlowExpression"></div>' +
-                '<div title="heading"><h3 id="size" class="docs-header-link kbq-markdown__h3">Size</h3></div>' +
-                '<div title="paragraph"><p class="kbq-markdown__p">Text</p></div>'
+                '<div title="heading"><h3 id="size" class="docs-header-link kbq-markdown__h3" data-docsearch-lvl2>Size</h3></div>' +
+                '<div title="paragraph"><p class="kbq-markdown__p" data-docsearch-content>Text</p></div>'
         );
     });
 

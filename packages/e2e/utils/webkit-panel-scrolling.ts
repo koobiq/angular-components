@@ -86,8 +86,11 @@ export function e2eDescribeWebkitPanelScrolling(config: E2eWebkitPanelScrollingC
             // Nothing may move the panel afterwards — a deferred focus scroll used to land right here.
             await e2eSettleFrames(page);
 
+            // Read once, past the frames a deferred scroll lands in: a poll for "unmoved" passes on its first sample.
+            const settled = await e2eScrollTopOf(port);
+
             // A deferred focus scroll moves the panel by at least a row; a pixel of settling is not movement.
-            expect(Math.abs((await e2eScrollTopOf(port)) - scrolled)).toBeLessThanOrEqual(1);
+            expect(Math.abs(settled - scrolled)).toBeLessThanOrEqual(1);
         });
 
         test('does not move the list when the pointer lands on a partially clipped row', async ({ page }) => {
@@ -128,10 +131,14 @@ export function e2eDescribeWebkitPanelScrolling(config: E2eWebkitPanelScrollingC
 
             await e2eSettleFrames(page);
 
-            expect(await e2eScrollTopOf(port)).toBeGreaterThan(0);
-            expect(await e2eIsFullyInView(port, activeItem)).toBe(true);
+            await expect.poll(() => e2eScrollTopOf(port)).toBeGreaterThan(0);
+            await expect.poll(() => e2eIsFullyInView(port, activeItem)).toBe(true);
+
+            // Read once, past the reveal above: a poll for 0 would pass on a sample taken before a page scroll.
+            const pageScrollY = await page.evaluate(() => window.scrollY);
+
             // The page is deliberately made scrollable in beforeEach, so this can actually fail.
-            expect(await page.evaluate(() => window.scrollY)).toBe(0);
+            expect(pageScrollY).toBe(0);
         });
     });
 }

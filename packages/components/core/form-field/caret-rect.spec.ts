@@ -23,7 +23,10 @@ const styleAsField = (element: HTMLElement) => {
         paddingLeft: `${PADDING}px`,
         paddingRight: `${PADDING}px`,
         paddingTop: `${PADDING}px`,
+        // A border without a style computes to a zero width.
+        borderLeftStyle: 'solid',
         borderLeftWidth: `${BORDER}px`,
+        borderTopStyle: 'solid',
         borderTopWidth: `${BORDER}px`,
         lineHeight: `${LINE_HEIGHT}px`,
         fontSize: '16px'

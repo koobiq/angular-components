@@ -37,6 +37,8 @@ describe('kbqCreateTextMirror', () => {
                 lineHeight: '20px',
                 paddingTop: '6px',
                 paddingLeft: '12px',
+                // A border without a style computes to a zero width.
+                borderStyle: 'solid',
                 borderLeftWidth: '1px',
                 borderRightWidth: '1px',
                 borderTopWidth: '1px',

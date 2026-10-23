@@ -24,7 +24,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqLocaleOverridesDirective } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
 import { debounce, timer } from 'rxjs';
 import { KbqClampedListTrigger } from './clamped-list';
 import {
@@ -42,7 +42,8 @@ import {
     selector: 'kbq-clamped-text',
     imports: [
         KbqIcon,
-        KbqLinkModule,
+        KbqLink,
+        KbqLinkPrefix,
         KbqClampedListTrigger
     ],
     template: `
@@ -59,16 +60,11 @@ import {
         </div>
 
         @if (hasToggle()) {
-            <span class="kbq-clamped-text__toggle" kbq-link noUnderline pseudo kbqClampedListTrigger>
+            <span class="kbq-clamped-text__toggle" kbqLink size="normal" kbqClampedListTrigger>
                 @let config = localeConfiguration();
 
-                @if (collapsedState()) {
-                    <i kbq-icon="kbq-chevron-down_16"></i>
-                    <span class="kbq-link__text">{{ config.openText }}</span>
-                } @else {
-                    <i kbq-icon="kbq-chevron-up_16"></i>
-                    <span class="kbq-link__text">{{ config.closeText }}</span>
-                }
+                <i kbqLinkPrefix [kbq-icon]="collapsedState() ? 'kbq-chevron-down_16' : 'kbq-chevron-up_16'"></i>
+                {{ collapsedState() ? config.openText : config.closeText }}
             </span>
         }
     `,

@@ -98,6 +98,10 @@ test.describe('KbqButtonModule', () => {
             };
         };
 
+        // The classes that style a button are bound, and a native button centres its content as well, so a
+        // centred icon proves nothing before they arrive.
+        const expectRendered = (button: Locator) => expect(button).toHaveClass(/\bkbq-button(-icon)?\b/);
+
         test('clamps a hug-width button to its container instead of overflowing it', async ({ page }) => {
             await page.goto('/E2eButtonTruncation');
 
@@ -192,9 +196,12 @@ test.describe('KbqButtonModule', () => {
 
                 const button = page.getByTestId(placement.testId);
 
+                await expectRendered(button);
                 // `vertical-align: middle` aligns to the x-height rather than the line box centre and
                 // leaves the icon ~1px low, so a default-slot icon needs a flex context to sit true.
-                expect((await getOffset(button, button.locator(placement.icon).first())).y).toBeLessThanOrEqual(0.5);
+                await expect
+                    .poll(() => getOffset(button, button.locator(placement.icon).first()).then(({ y }) => y))
+                    .toBeLessThanOrEqual(0.5);
             });
         }
 
@@ -211,8 +218,11 @@ test.describe('KbqButtonModule', () => {
 
                 const button = page.getByTestId(testId);
 
+                await expectRendered(button);
                 // a lone icon has no label to sit next to, so the slot margins must not apply to it
-                expect((await getOffset(button, button.locator('.kbq-icon').first())).x).toBeLessThanOrEqual(0.5);
+                await expect
+                    .poll(() => getOffset(button, button.locator('.kbq-icon').first()).then(({ x }) => x))
+                    .toBeLessThanOrEqual(0.5);
             });
         }
 

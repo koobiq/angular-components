@@ -6,7 +6,7 @@ import { DocsLocaleService } from '../../services/locale';
 import { DocsNavbarComponent } from './navbar.component';
 
 // The search widget is not what these tests are about.
-vi.mock('@docsearch/js', () => ({ __esModule: true, default: () => ({ destroy: () => undefined }) }));
+vi.mock('@docsearch/js/docsearch', () => ({ __esModule: true, default: () => ({ destroy: () => undefined }) }));
 
 const provideDocsLocale = (locale: DocsLocale) => {
     const changes = new BehaviorSubject<DocsLocale>(locale);

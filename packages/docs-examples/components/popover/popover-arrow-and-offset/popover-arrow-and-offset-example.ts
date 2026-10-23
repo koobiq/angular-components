@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, viewChild } from '@a
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { PopUpSizes } from '@koobiq/components/core';
-import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
@@ -15,7 +15,9 @@ import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
     imports: [
         KbqButtonModule,
         KbqPopoverModule,
-        KbqDlModule,
+        KbqDl,
+        KbqDt,
+        KbqDd,
         KbqToggleModule,
         KbqButtonToggleModule,
         KbqInputModule

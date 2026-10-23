@@ -113,7 +113,7 @@ test.describe('KbqProgressBar', () => {
 
                 const indeterminate = await fillWidth('e2eProgressBarIndeterminate');
 
-                expect(await fillWidth('e2eProgressBarComplete')).toBeCloseTo(1, 1);
+                await expect.poll(() => fillWidth('e2eProgressBarComplete')).toBeCloseTo(1, 1);
                 // Suppressing the animation used to leave the fill at `width: auto`, i.e. a full track
                 // that is indistinguishable from a finished operation.
                 expect(indeterminate).toBeLessThan(0.5);

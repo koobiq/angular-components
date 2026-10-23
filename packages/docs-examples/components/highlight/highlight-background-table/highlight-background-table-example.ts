@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqTableModule } from '@koobiq/components/table';
 
 type CompanyRow = {
@@ -18,7 +18,7 @@ type CompanyRow = {
     selector: 'highlight-background-table-example',
     imports: [
         KbqTableModule,
-        KbqLinkModule,
+        KbqLink,
         KbqHighlightBackgroundPipe
     ],
     template: `
@@ -35,11 +35,8 @@ type CompanyRow = {
                 @for (row of rows; track row.city) {
                     <tr [class.highlight-table__row_with-note]="row.note">
                         <td>
-                            <a kbq-link href="#" (click)="$event.preventDefault()">
-                                <span
-                                    class="kbq-link__text"
-                                    [innerHTML]="row.city | kbqHighlightBackground: keyword"
-                                ></span>
+                            <a kbqLink href="#" (click)="$event.preventDefault()">
+                                <span [innerHTML]="row.city | kbqHighlightBackground: keyword"></span>
                             </a>
                         </td>
                         <td [innerHTML]="row.company | kbqHighlightBackground: keyword"></td>

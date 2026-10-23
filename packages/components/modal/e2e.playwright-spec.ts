@@ -85,21 +85,36 @@ test.describe('KbqModalModule', () => {
             expect(box.y).toBeGreaterThanOrEqual(0);
             expect(Math.round(box.y + box.height)).toBeLessThanOrEqual(height);
 
+            const wrap = page.locator('.kbq-modal-wrap');
             const body = page.locator('.kbq-modal-body');
+            const header = page.locator('.kbq-modal-header');
+            const footer = page.locator('.kbq-modal-footer');
 
-            expect(await body.evaluate((el) => el.scrollHeight - el.clientHeight)).toBeGreaterThan(0);
+            await expect.poll(() => body.evaluate((el) => el.scrollHeight - el.clientHeight)).toBeGreaterThan(0);
+
+            // Read once, after the overflowing body has proved the layout is in: a poll for 0 would pass on
+            // a sample taken before it.
+            const wrapOverflow = await wrap.evaluate((el) => el.scrollHeight - el.clientHeight);
+
             // The wrapper is not the scroller — the body is.
-            expect(await page.locator('.kbq-modal-wrap').evaluate((el) => el.scrollHeight - el.clientHeight)).toBe(0);
+            expect(wrapOverflow).toBe(0);
 
-            const headerBefore = (await page.locator('.kbq-modal-header').boundingBox())!;
-            const footerBefore = (await page.locator('.kbq-modal-footer').boundingBox())!;
+            const headerBefore = (await header.boundingBox())!;
+            const footerBefore = (await footer.boundingBox())!;
 
             await body.evaluate((el) => {
                 el.scrollTop = el.scrollHeight;
             });
 
-            expect((await page.locator('.kbq-modal-header').boundingBox())!.y).toBe(headerBefore.y);
-            expect((await page.locator('.kbq-modal-footer').boundingBox())!.y).toBe(footerBefore.y);
+            // The header shadow is the render the scroll causes. Read once after it: a poll for an unchanged
+            // position would pass on a sample taken before.
+            await expect.poll(() => e2eHasOverflowShadow(header)).toBe(true);
+
+            const headerAfter = (await header.boundingBox())!;
+            const footerAfter = (await footer.boundingBox())!;
+
+            expect(headerAfter.y).toBe(headerBefore.y);
+            expect(footerAfter.y).toBe(footerBefore.y);
         });
 
         test('hides the page behind the dialog and keeps the keyboard inside it', async ({ page }) => {
@@ -114,7 +129,7 @@ test.describe('KbqModalModule', () => {
             await expect(container).toHaveAttribute('aria-modal', 'true');
 
             // Everything behind the overlay is out of the accessibility tree and the tab order.
-            expect(await getComponent(page).evaluate((el) => !!el.closest('[inert]'))).toBe(true);
+            await expect.poll(() => getComponent(page).evaluate((el) => !!el.closest('[inert]'))).toBe(true);
 
             for (let step = 0; step < 8; step++) {
                 await page.keyboard.press('Tab');
@@ -145,9 +160,7 @@ test.describe('KbqModalModule', () => {
             expect(Math.round(containerBox.y + containerBox.height)).toBeLessThanOrEqual(height);
             expect(Math.round(bodyBox.y + bodyBox.height)).toBe(Math.round(containerBox.y + containerBox.height));
             // The extra bottom padding of a dialog without a footer keeps the last line off the rounded corner.
-            expect(await page.locator('.kbq-modal-body').evaluate((el) => getComputedStyle(el).paddingBottom)).not.toBe(
-                '0px'
-            );
+            await expect(page.locator('.kbq-modal-body')).not.toHaveCSS('padding-bottom', '0px');
         });
     });
 
@@ -233,6 +246,12 @@ test.describe('KbqModalModule', () => {
 
         const isScrollable = (element: Locator) => element.evaluate((el) => el.scrollHeight > el.clientHeight);
 
+        // The bar of the viewport's own track follows its overflow a render later, the last one a change of
+        // content causes. The layout is read once past it: a poll for an unchanged layout would pass on a
+        // sample taken before.
+        const getVerticalBar = (viewport: Locator) =>
+            viewport.locator(':scope > kbq-scrollbar-track .kbq-scrollbar-track__bar_vertical');
+
         // Class names of the elements inside the dialog that can scroll with a browser-rendered scrollbar.
         //
         // This is what the layout assertions below cannot check for themselves: Playwright launches
@@ -271,19 +290,32 @@ test.describe('KbqModalModule', () => {
                 const toggle = body.getByTestId('e2eToggleContent');
 
                 await expect(paragraph).toBeVisible();
+
+                // Read once, past the visible paragraph: polled, `false` would already hold before the content renders.
+                const scrollableAtOpen = await isScrollable(body);
+
                 // Guards the premise: without a body that starts short and then overflows, nothing is tested.
-                expect(await isScrollable(body)).toBe(false);
+                expect(scrollableAtOpen).toBe(false);
 
                 const layout = await getLayout(paragraph);
 
                 await toggle.click();
                 await expect.poll(() => isScrollable(body)).toBe(true);
-                expect(await getLayout(paragraph)).toEqual(layout);
-                expect(await getNativeScrollers(page.locator('.kbq-modal'))).toEqual([]);
+                await expect(getVerticalBar(body)).toHaveCount(1);
+
+                const layoutScrolling = await getLayout(paragraph);
+                const nativeScrollers = await getNativeScrollers(page.locator('.kbq-modal'));
+
+                expect(layoutScrolling).toEqual(layout);
+                expect(nativeScrollers).toEqual([]);
 
                 await toggle.click();
                 await expect.poll(() => isScrollable(body)).toBe(false);
-                expect(await getLayout(paragraph)).toEqual(layout);
+                await expect(getVerticalBar(body)).toHaveCount(0);
+
+                const layoutShort = await getLayout(paragraph);
+
+                expect(layoutShort).toEqual(layout);
             });
         }
 
@@ -300,18 +332,31 @@ test.describe('KbqModalModule', () => {
             const toggle = container.getByTestId('e2eToggleContent');
 
             await expect(container).toBeVisible();
-            expect(await isScrollable(wrap)).toBe(false);
+
+            // Read once, past the visible dialog: polled, `false` would already hold before the content renders.
+            const scrollableAtOpen = await isScrollable(wrap);
+
+            expect(scrollableAtOpen).toBe(false);
 
             const placement = await getPlacement(container);
 
             await toggle.click();
             await expect.poll(() => isScrollable(wrap)).toBe(true);
-            expect(await getPlacement(container)).toEqual(placement);
-            expect(await getNativeScrollers(page.locator('.kbq-modal'))).toEqual([]);
+            await expect(getVerticalBar(wrap)).toHaveCount(1);
+
+            const placementScrolling = await getPlacement(container);
+            const nativeScrollers = await getNativeScrollers(page.locator('.kbq-modal'));
+
+            expect(placementScrolling).toEqual(placement);
+            expect(nativeScrollers).toEqual([]);
 
             await toggle.click();
             await expect.poll(() => isScrollable(wrap)).toBe(false);
-            expect(await getPlacement(container)).toEqual(placement);
+            await expect(getVerticalBar(wrap)).toHaveCount(0);
+
+            const placementShort = await getPlacement(container);
+
+            expect(placementShort).toEqual(placement);
         });
     });
 

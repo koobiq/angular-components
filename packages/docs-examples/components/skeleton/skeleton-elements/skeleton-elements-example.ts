@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import {
     KbqSkeletonBadge,
     KbqSkeletonButton,
@@ -30,7 +30,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         KbqBadgeModule,
         KbqButtonModule,
         KbqIconModule,
-        KbqLinkModule,
+        KbqLink,
         KbqTagsModule
     ],
     template: `
@@ -51,7 +51,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
                     <i kbqTagRemove kbq-icon-button="kbq-xmark-s_16"></i>
                 </kbq-tag>
                 <i aria-label="Edit" kbq-icon-button="kbq-pencil_16"></i>
-                <a kbq-link pseudo>History</a>
+                <a kbqLink pseudo>History</a>
             }
         </div>
     `,

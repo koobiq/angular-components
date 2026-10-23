@@ -13,7 +13,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonColor, KbqButtonModule, KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqFormattersModule, PopUpPlacements } from '@koobiq/components/core';
-import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
@@ -43,7 +43,9 @@ type ExampleAction = {
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule,
-        KbqDlModule,
+        KbqDl,
+        KbqDt,
+        KbqDd,
         KbqBadgeModule,
         KbqDropdownModule,
         KbqOverflowItemsModule,

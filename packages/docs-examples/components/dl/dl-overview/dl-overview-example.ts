@@ -1,53 +1,38 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 
 /**
  * @title Description list
  */
 @Component({
     selector: 'dl-overview-example',
-    imports: [
-        KbqDlModule
-    ],
+    imports: [KbqDl, KbqDt, KbqDd],
     template: `
         <kbq-dl>
-            <kbq-dt>Тип инцидента</kbq-dt>
-            <kbq-dd>Вредоносное ПО</kbq-dd>
+            <kbq-dt>Incident type</kbq-dt>
+            <kbq-dd>Malware infection</kbq-dd>
 
-            <kbq-dt>Идентификатор</kbq-dt>
-            <kbq-dd>INC-2022-125-78253</kbq-dd>
+            <kbq-dt>Identifier</kbq-dt>
+            <kbq-dd>INC-2026-125-78253</kbq-dd>
 
-            <kbq-dt>Статус</kbq-dt>
-            <kbq-dd>Новый</kbq-dd>
+            <kbq-dt>Status</kbq-dt>
+            <kbq-dd>New</kbq-dd>
 
-            <kbq-dt>Ответственный</kbq-dt>
-            <kbq-dd>Иванов Иван</kbq-dd>
+            <kbq-dt>Assignee</kbq-dt>
+            <kbq-dd>John Smith</kbq-dd>
 
-            <kbq-dt>Описание</kbq-dt>
+            <kbq-dt>Description</kbq-dt>
             <kbq-dd>
-                Здесь нужно добавить очень длинное описание, но Я не знаю, что еще можно сюда добавить, поэтому Вы
-                видите этот текст.
+                An employee opened an attachment in a phishing email, and the file ran malicious code on the
+                workstation.
             </kbq-dd>
         </kbq-dl>
-
-        <br />
-
-        <kbq-dl [wide]="true">
-            <kbq-dt>File</kbq-dt>
-            <kbq-dd>125 КБ</kbq-dd>
-
-            <kbq-dt>File</kbq-dt>
-            <kbq-dd>125 КБ</kbq-dd>
-
-            <kbq-dt>File</kbq-dt>
-            <kbq-dd>125 КБ</kbq-dd>
-
-            <kbq-dt>File</kbq-dt>
-            <kbq-dd>125 КБ</kbq-dd>
-
-            <kbq-dt>File</kbq-dt>
-            <kbq-dd>125 КБ</kbq-dd>
-        </kbq-dl>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: var(--kbq-size-l);
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

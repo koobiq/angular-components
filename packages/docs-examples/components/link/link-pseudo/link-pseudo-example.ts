@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 
 /**
  * @title Link pseudo
  */
 @Component({
     selector: 'link-pseudo-example',
-    imports: [KbqLinkModule],
+    imports: [KbqLink],
     template: `
-        <span kbq-link pseudo>Scan report</span>
+        <span kbqLink>Scan report</span>
     `,
     styles: `
         :host {

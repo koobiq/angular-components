@@ -1,0 +1,302 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqLinkModule } from './link.module';
+
+@Component({
+    selector: 'e2e-deprecated-link-states',
+    imports: [KbqLinkModule, KbqIconModule],
+    template: `
+        <!-- Default Links -->
+        <p>
+            Text
+            <a kbq-link>default link</a>
+            text.
+        </p>
+        <p>
+            Text
+            <a kbq-link big>big link</a>
+            text
+        </p>
+        <p>
+            Text
+            <a kbq-link compact>compact link</a>
+            text
+        </p>
+
+        <!-- Pseudo Links -->
+        <p>
+            Text
+            <span kbq-link pseudo>pseudo link</span>
+            text.
+        </p>
+
+        <!-- Disabled Links -->
+        <p>
+            Text
+            <a kbq-link [disabled]="true">disabled link</a>
+            text.
+        </p>
+        <p>
+            Text
+            <span kbq-link pseudo [disabled]="true">disabled pseudo link</span>
+            text.
+        </p>
+
+        <!-- No Underline -->
+        <p>
+            Text
+            <a kbq-link noUnderline>no underline link</a>
+            text.
+        </p>
+
+        <!-- External -->
+        <p>
+            Text
+            <a class="kbq-link_external" kbq-link>
+                <span class="kbq-link__text">external with icon</span>
+                <i kbq-icon="kbq-north-east_16"></i>
+            </a>
+            text.
+        </p>
+
+        <!-- Links with Icons -->
+        <p>
+            Text
+            <a kbq-link>
+                <i kbq-icon="kbq-calendar-o_16"></i>
+                <span class="kbq-link__text">both icons</span>
+                <i kbq-icon="kbq-arrow-right_16"></i>
+            </a>
+            text.
+        </p>
+        <p>
+            Text
+            <a kbq-link compact>
+                <i kbq-icon="kbq-calendar-o_16"></i>
+                <span class="kbq-link__text">both icons</span>
+                <i kbq-icon="kbq-arrow-right_16"></i>
+            </a>
+            text.
+        </p>
+        <p>
+            Text
+            <a kbq-link big>
+                <i kbq-icon="kbq-calendar-o_16"></i>
+                <span class="kbq-link__text">both icons</span>
+                <i kbq-icon="kbq-arrow-right_16"></i>
+            </a>
+            text.
+        </p>
+
+        <!-- Hovered -->
+        <p>
+            Text
+            <a kbq-link class="kbq-hovered">
+                <i kbq-icon="kbq-calendar-o_16"></i>
+                <span class="kbq-link__text">hovered link</span>
+            </a>
+            text.
+        </p>
+        <p>
+            Text
+            <span kbq-link pseudo class="kbq-hovered">
+                <i kbq-icon="kbq-calendar-o_16"></i>
+                <span class="kbq-link__text">pseudo hovered</span>
+            </span>
+            text.
+        </p>
+        <p>
+            Text
+            <a kbq-link useVisited class="kbq-hovered kbq-visited">
+                <i kbq-icon="kbq-calendar-o_16"></i>
+                <span class="kbq-link__text">hovered visited link</span>
+            </a>
+            text.
+        </p>
+
+        <!-- Hovered -->
+        <p>
+            Text
+            <a kbq-link class="kbq-active">
+                <i kbq-icon="kbq-calendar-o_16"></i>
+                <span class="kbq-link__text">active link</span>
+            </a>
+            text.
+        </p>
+        <p>
+            Text
+            <a kbq-link pseudo class="kbq-active">
+                <i kbq-icon="kbq-calendar-o_16"></i>
+                <span class="kbq-link__text">pseudo active</span>
+            </a>
+            text.
+        </p>
+        <p>
+            Text
+            <a kbq-link useVisited class="kbq-visited kbq-active">
+                <i kbq-icon="kbq-calendar-o_16"></i>
+                <span class="kbq-link__text">active visited link</span>
+            </a>
+            text.
+        </p>
+
+        <p>
+            Text
+            <a kbq-link useVisited class="kbq-visited">
+                <i kbq-icon="kbq-calendar-o_16"></i>
+                <span class="kbq-link__text">visited link</span>
+            </a>
+            text.
+        </p>
+        <p>
+            Text
+            <span kbq-link useVisited pseudo class="kbq-visited">
+                <i kbq-icon="kbq-calendar-o_16"></i>
+                <span class="kbq-link__text">pseudo visited</span>
+            </span>
+            text.
+        </p>
+
+        <!-- Focused -->
+        <p>
+            Text
+            <a kbq-link class="cdk-keyboard-focused">focused</a>
+            text.
+        </p>
+        <p>
+            Text
+            <a kbq-link multiline class="cdk-keyboard-focused">
+                <i kbq-icon="kbq-calendar-o_16"></i>
+                <span class="kbq-link__text">multiline focused</span>
+            </a>
+            text.
+        </p>
+    `,
+    styles: `
+        :host {
+            display: inline-grid;
+            grid-template-columns: repeat(3, 120px);
+            gap: var(--kbq-size-xs);
+            padding: var(--kbq-size-s);
+        }
+
+        p {
+            margin: 0;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eDeprecatedLinkStates'
+    }
+})
+export class E2eDeprecatedLinkStates {}
+
+@Component({
+    selector: 'e2e-deprecated-link-with-caption',
+    imports: [KbqLinkModule, KbqIconModule],
+    template: `
+        <p>
+            <a kbq-link>
+                <span class="kbq-link__text">link</span>
+                <span class="e2e-link-caption">caption</span>
+            </a>
+        </p>
+        <p>
+            <a kbq-link class="kbq-hovered">
+                <span class="kbq-link__text">hovered</span>
+                <span class="e2e-link-caption">caption</span>
+            </a>
+        </p>
+        <p>
+            <span kbq-link class="cdk-keyboard-focused">
+                <span class="kbq-link__text">focused</span>
+                <span class="e2e-link-caption">caption</span>
+            </span>
+        </p>
+        <p>
+            <span kbq-link pseudo>
+                <span class="kbq-link__text">pseudo</span>
+                <span class="e2e-link-caption">caption</span>
+            </span>
+        </p>
+        <p>
+            <a kbq-link pseudo class="kbq-hovered">
+                <span class="kbq-link__text">pseudo hovered</span>
+                <span class="e2e-link-caption">caption</span>
+            </a>
+        </p>
+        <p>
+            <span kbq-link pseudo class="cdk-keyboard-focused">
+                <span class="kbq-link__text">pseudo focused</span>
+                <span class="e2e-link-caption">caption</span>
+            </span>
+        </p>
+        <p>
+            <a class="kbq-link_external" kbq-link>
+                <span class="kbq-link__text">external</span>
+                <i kbq-icon="kbq-north-east_16"></i>
+                <span class="e2e-link-caption">caption</span>
+            </a>
+        </p>
+    `,
+    styles: `
+        :host {
+            display: inline-grid;
+            grid-template-columns: repeat(3, 120px);
+            gap: var(--kbq-size-xs);
+            padding: var(--kbq-size-s);
+        }
+
+        p {
+            margin: 0;
+        }
+
+        .e2e-link-caption {
+            display: block;
+            color: var(--kbq-foreground-contrast-secondary);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eDeprecatedLinkWithCaption'
+    }
+})
+export class E2eDeprecatedLinkWithCaption {}
+
+@Component({
+    selector: 'e2e-deprecated-link-trailing-icon-wrap',
+    imports: [KbqLinkModule, KbqIconModule],
+    template: `
+        @for (size of sizes; track size) {
+            <div data-testid="e2eDeprecatedLinkTrailingIconWrapItem">
+                <a kbq-link class="kbq-link_external" [compact]="size === 'compact'" [big]="size === 'big'">
+                    <span class="kbq-link__text">Technical support center</span>
+                    <i kbq-icon="kbq-north-east_16"></i>
+                </a>
+            </div>
+            <div data-testid="e2eDeprecatedLinkTrailingIconWrapItem">
+                <a kbq-link [compact]="size === 'compact'" [big]="size === 'big'">
+                    <i kbq-icon="kbq-calendar-o_16"></i>
+                    <span class="kbq-link__text">Scan report</span>
+                    <i kbq-icon="kbq-arrow-right_16"></i>
+                </a>
+            </div>
+        }
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--kbq-size-xs);
+            padding: var(--kbq-size-s);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eDeprecatedLinkTrailingIconWrap'
+    }
+})
+export class E2eDeprecatedLinkTrailingIconWrap {
+    protected readonly sizes = ['normal', 'compact', 'big'] as const;
+}

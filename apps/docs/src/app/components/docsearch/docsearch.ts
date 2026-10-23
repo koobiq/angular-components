@@ -1,40 +1,36 @@
+// The Algolia crawler that fills the index reads the records of a page by attributes, one per level of the
+// `recordProps` of `helpers.docsearch()`: the markup says what a record is made of, so restyling a page leaves the
+// search alone.
+// - `data-docsearch-lvl0`: the group of the page in the results, the value of the one element of the page with it;
+// - `data-docsearch-lvl1`: the title of the page, the text of the one element that has it;
+// - `data-docsearch-lvl2`: a heading of a section;
+// - `data-docsearch-content`: a paragraph of the text.
+// Every record also gets the `lang` facet the search filters by, which `helpers.docsearch()` takes from `<html lang>`.
+//
+// The crawler's configuration lives in the Algolia dashboard (crawler `koobiq`, Editor: `actions`) rather than in this
+// repository and selects these attributes, so renaming one has to be made there too. The pages set them in the
+// templates of the viewers and of the API tab, and in the headings and paragraphs `tools/docs-pages/compile-page.ts`
+// renders. The crawl does not fail on a page that lost them, it only drops the page from the search.
+
 import { afterNextRender, DestroyRef, Directive, inject } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import docsearch, { DocSearchInstance, DocSearchProps } from '@docsearch/js';
-import type { DocSearchAskAiModalTranslations } from '@docsearch/react';
+import docsearch, { DocSearchInstance, DocSearchProps } from '@docsearch/js/docsearch';
 import { KBQ_WINDOW, KbqThemeService } from '@koobiq/components/core';
 import { combineLatest } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleState } from '../../services/locale';
 
+/** The index the crawler writes and the search reads. */
+const INDEX_NAME = 'koobiq';
+
 const SELECTOR = 'docs-docsearch';
 const HOST = 'koobiq.io';
 const PROTOCOL = 'https:';
 
-// `any` here is intentional: `unknown` fails the `extends AnyFunction` check below for
-// concrete function types (contravariant parameter checking rejects `unknown` params).
-type AnyFunction = (...args: any[]) => any;
+type DocSearchTranslations = NonNullable<DocSearchProps['translations']>;
 
-/**
- * Forces every non-function translation leaf to be provided so a newly added key
- * (e.g. from enabling Ask AI) fails at compile time instead of silently rendering
- * an empty string in the UI. Function-valued overrides stay optional since they
- * have no meaningful "required" value.
- */
-type DeepRequired<T> = T extends AnyFunction
-    ? T
-    : T extends object
-      ? { [K in keyof T as T[K] extends AnyFunction | undefined ? never : K]-?: DeepRequired<T[K]> } & {
-            [K in keyof T as T[K] extends AnyFunction | undefined ? K : never]?: T[K];
-        }
-      : T;
-
-type DocSearchTranslations = Omit<NonNullable<DocSearchProps['translations']>, 'modal'> & {
-    modal?: DocSearchAskAiModalTranslations;
-};
-
-const TRANSLATION_RU: DeepRequired<DocSearchTranslations> = {
+const TRANSLATION_RU: DocSearchTranslations = {
     button: {
         buttonText: 'Поиск',
         buttonAriaLabel: 'Поиск'
@@ -45,23 +41,9 @@ const TRANSLATION_RU: DeepRequired<DocSearchTranslations> = {
             clearButtonAriaLabel: 'Очистить запрос',
             closeButtonText: 'Отмена',
             closeButtonAriaLabel: 'Отмена',
-            placeholderText: 'Поиск в документации',
-            placeholderTextAskAi: 'Задайте вопрос ИИ-ассистенту',
-            placeholderTextAskAiStreaming: 'Получаем ответ…',
+            placeholderText: 'Поиск по документации на koobiq.io',
             enterKeyHint: 'Enter',
-            enterKeyHintAskAi: 'Enter',
-            searchInputLabel: 'Поиск',
-            backToKeywordSearchButtonText: 'Вернуться к поиску',
-            backToKeywordSearchButtonAriaLabel: 'Вернуться к поиску',
-            newConversationPlaceholder: 'Задайте новый вопрос',
-            conversationHistoryTitle: 'История диалогов',
-            startNewConversationText: 'Начать новый диалог',
-            viewConversationHistoryText: 'Показать историю диалогов',
-            threadDepthErrorPlaceholder: 'Достигнута максимальная длина диалога'
-        },
-        newConversation: {
-            newConversationTitle: 'Новый диалог с ИИ',
-            newConversationDescription: 'Задайте вопрос, и ИИ-ассистент найдёт ответ в документации'
+            searchInputLabel: 'Поиск'
         },
         startScreen: {
             recentSearchesTitle: 'Недавние',
@@ -69,9 +51,7 @@ const TRANSLATION_RU: DeepRequired<DocSearchTranslations> = {
             saveRecentSearchButtonTitle: 'Сохранить этот поиск',
             removeRecentSearchButtonTitle: 'Удалить этот поиск из истории',
             favoriteSearchesTitle: 'Избранное',
-            removeFavoriteSearchButtonTitle: 'Удалить этот поиск из избранного',
-            recentConversationsTitle: 'Недавние диалоги',
-            removeRecentConversationButtonTitle: 'Удалить этот диалог из истории'
+            removeFavoriteSearchButtonTitle: 'Удалить этот поиск из избранного'
         },
         errorScreen: {
             titleText: 'Не удалось получить результаты',
@@ -79,13 +59,11 @@ const TRANSLATION_RU: DeepRequired<DocSearchTranslations> = {
         },
         footer: {
             selectText: 'Выбрать',
-            submitQuestionText: 'Задать вопрос',
             selectKeyAriaLabel: 'Клавиша Enter',
             navigateText: 'Вниз (вверх)',
             navigateUpKeyAriaLabel: 'Клавиша стрелка вверх',
             navigateDownKeyAriaLabel: 'Клавиша стрелка вниз',
             closeText: 'Закрыть',
-            backToSearchText: 'Вернуться к поиску',
             closeKeyAriaLabel: 'Клавиша Escape',
             poweredByText: 'Работает на'
         },
@@ -104,52 +82,16 @@ const TRANSLATION_RU: DeepRequired<DocSearchTranslations> = {
             reportMissingResultsLinkText: 'Сообщите нам.'
         },
         resultsScreen: {
-            askAiPlaceholder: 'Спросить ИИ-ассистента:',
-            noResultsAskAiPlaceholder: 'Спросить ИИ-ассистента вместо этого:',
             resultsSectionTitle: 'Результаты поиска',
-            askAiResultsTitle: 'ИИ-ассистент',
-            resultBadgeLabelText: 'Категория',
-            recentConversationTimestampFallback: 'Некоторое время назад'
-        },
-        askAiScreen: {
-            disclaimerText: 'Ответы ИИ-ассистента могут быть неточными. Проверяйте важную информацию.',
-            relatedSourcesText: 'Источник',
-            relatedSourcesTextPlural: 'Источники',
-            suggestedPromptsTitleText: 'Возможные вопросы',
-            thinkingText: 'Думаю…',
-            copyButtonText: 'Копировать',
-            copyButtonCopiedText: 'Скопировано',
-            copyButtonTitle: 'Копировать ответ',
-            likeButtonTitle: 'Полезный ответ',
-            dislikeButtonTitle: 'Бесполезный ответ',
-            thanksForFeedbackText: 'Спасибо за отзыв!',
-            feedbackPanelTitle: 'Что было не так? (необязательно)',
-            feedbackDetailsPlaceholder: 'Добавьте подробности…',
-            feedbackDisclaimerText: 'Не указывайте персональные данные.',
-            feedbackSubmitButtonText: 'Отправить',
-            feedbackCloseButtonTitle: 'Закрыть',
-            feedbackTagIncorrect: 'Неверный или неполный ответ',
-            feedbackTagNotWhatIAsked: 'Ответ не на мой вопрос',
-            feedbackTagSlowOrBuggy: 'Медленная работа или ошибка',
-            feedbackTagStyleOrTone: 'Стиль или тон ответа',
-            feedbackTagSafetyOrLegal: 'Безопасность или юридические риски',
-            feedbackTagOther: 'Другое',
-            preToolCallText: 'Ищу',
-            duringToolCallText: 'Ищу',
-            afterToolCallText: 'Найдено по запросу',
-            savedMemoryToolResultText: 'Сохранено в память',
-            memoryToolResultText: 'Использована память',
-            stoppedStreamingText: 'Генерация ответа остановлена',
-            errorTitleText: 'Не удалось получить ответ',
-            threadDepthExceededMessage: 'Диалог завершён для сохранения точности ответов.',
-            startNewConversationButtonText: 'Начать новый диалог'
+            resultBadgeLabelText: 'Категория'
         }
     }
 };
 
+// The placeholder names koobiq.io: the index holds its pages alone, whichever site of a version the search is opened on.
 const TRANSLATIONS: Record<DocsLocale, DocSearchTranslations> = {
     [DocsLocale.Ru]: TRANSLATION_RU,
-    [DocsLocale.En]: {}
+    [DocsLocale.En]: { modal: { searchBox: { placeholderText: 'Search the docs on koobiq.io' } } }
 };
 
 /** Algolia DocSearch component implementation */
@@ -159,7 +101,7 @@ const TRANSLATIONS: Record<DocsLocale, DocSearchTranslations> = {
         class: 'layout-align-center-center'
     }
 })
-export class DocsDocsearchDirective extends DocsLocaleState {
+export class DocsDocsearch extends DocsLocaleState {
     private readonly window = inject(KBQ_WINDOW);
     private readonly destroyRef = inject(DestroyRef);
     private readonly theme = inject(KbqThemeService);
@@ -203,13 +145,10 @@ export class DocsDocsearchDirective extends DocsLocaleState {
                     maxResultsPerGroup: 20,
                     theme,
                     indices: [
-                        { name: 'koobiq', searchParameters: { hitsPerPage: 40, facetFilters: [`lang:${locale}`] } }
+                        { name: INDEX_NAME, searchParameters: { hitsPerPage: 40, facetFilters: [`lang:${locale}`] } }
                     ],
                     transformItems: this.transformItems,
-                    translations: TRANSLATIONS[locale],
-                    askAi: {
-                        agentId: 'f6ddad78-2e0d-4f11-8cf0-d7e34c354d0e'
-                    }
+                    translations: TRANSLATIONS[locale]
                 });
             });
     }

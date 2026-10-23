@@ -131,13 +131,13 @@ export const kbqToastConfigurationProvider: (configuration: Partial<KbqToastConf
 
 // @public (undocumented)
 export class KbqToastContainerComponent extends CdkScrollable {
+    constructor();
     // (undocumented)
     protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     // (undocumented)
     createTemplate(data: KbqToastData, template: TemplateRef<any>, onTop: boolean): EmbeddedViewRef<KbqToastTemplateContext>;
     // (undocumented)
     createToast<C>(data: KbqToastData, componentType: Type<C>, onTop: boolean): ComponentRef<C>;
-    elementScrolled(): Observable<Event>;
     // (undocumented)
     getInjector(data: KbqToastData): Injector;
     // (undocumented)

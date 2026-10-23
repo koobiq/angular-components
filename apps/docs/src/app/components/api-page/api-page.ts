@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     computed,
@@ -9,6 +10,7 @@ import {
     Signal,
     ViewEncapsulation
 } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Params, RouterLink } from '@angular/router';
 import { KbqBadge } from '@koobiq/components/badge';
 import { KbqCodeBlock, KbqCodeBlockFile } from '@koobiq/components/code-block';
@@ -36,20 +38,65 @@ const DOCS_API_LOCALE = new InjectionToken<Signal<DocsLocale>>('DOCS_API_LOCALE'
 const opensElsewhere = ({ button, ctrlKey, metaKey, shiftKey, altKey }: MouseEvent): boolean =>
     button !== 0 || ctrlKey || metaKey || shiftKey || altKey;
 
+/**
+ * Holds the place of a code block until the block renders. On a tab reached in the app the blocks render as they come
+ * into view, and the page has to be as tall before a block renders as after, or a link to a heading below it would
+ * land off its heading. The block's own classes lay the placeholder out, down to the table the line numbers plugin
+ * wraps a file of several lines in; a file of one line stays text, as the plugin leaves it. Never rendered on the
+ * server, which renders the block itself.
+ */
+@Component({
+    selector: 'docs-api-code-placeholder',
+    template: `
+        <div class="kbq-code-block__main kbq-scrollbar-viewport_native-scrollbar-hidden">
+            @if (lines().length > 1) {
+                <pre
+                    class="kbq-code-block__pre"
+                ><code class="hljs kbq-code-block__code"><table class="hljs-ln"><tbody>@for (line of lines(); track $index) {<tr><td class="hljs-ln-line hljs-ln-code">{{ line }}</td></tr>}</tbody></table></code></pre>
+            } @else {
+                <pre class="kbq-code-block__pre"><code class="hljs kbq-code-block__code">{{ code() }}</code></pre>
+            }
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'docs-code-block kbq-code-block kbq-code-block_hide-tabs kbq-code-block_hide-line-numbers',
+        '[class.kbq-code-block_filled]': 'filled()',
+        '[class.kbq-code-block_no-border]': 'filled()',
+        '[class.kbq-code-block_outline]': '!filled()'
+    }
+})
+export class DocsApiCodePlaceholder {
+    readonly code = input.required<string>();
+    /** Whether the block is filled, as the blocks of JSDoc are, rather than outlined, as a signature is. */
+    readonly filled = input(false, { transform: booleanAttribute });
+
+    /** The lines of the code, a last line of whitespace alone dropped, as the plugin drops it. */
+    protected readonly lines = computed(() => {
+        const lines = this.code().split(/\r\n|\r|\n/);
+
+        if (lines[lines.length - 1].trim() === '') lines.pop();
+
+        return lines;
+    });
+}
+
 /** JSDoc text: the HTML compiled from its Markdown, and the code in between, highlighted. */
 @Component({
     selector: 'docs-api-text',
-    imports: [KbqCodeBlock],
+    imports: [KbqCodeBlock, DocsApiCodePlaceholder],
     template: `
-        @for (block of blocks(); track $index) {
+        @for (block of renderedBlocks(); track $index) {
             @if (block.type === 'code') {
-                <!-- Static until hovered, like the other code blocks of the API tab. -->
-                @defer (on immediate; hydrate on hover) {
+                <!-- Triggered like the other code blocks of the API tab: see its template. -->
+                @defer (on viewport; hydrate on hover) {
                     <kbq-code-block
                         class="docs-code-block"
                         filled
                         [files]="[{ content: block.code, language: block.language }]"
                     />
+                } @placeholder {
+                    <docs-api-code-placeholder filled [code]="block.code" />
                 }
             } @else {
                 <div [innerHTML]="block.html"></div>
@@ -62,6 +109,16 @@ const opensElsewhere = ({ button, ctrlKey, metaKey, shiftKey, altKey }: MouseEve
 })
 export class DocsApiText {
     readonly blocks = input.required<DocsApiBlock[]>();
+
+    private readonly sanitizer = inject(DomSanitizer);
+
+    // The HTML is compiled from the JSDoc of the repository at build time, so it is trusted rather than sanitized: the
+    // sanitizer would drop the `data-docsearch-*` attributes the search crawler reads the text by.
+    protected readonly renderedBlocks = computed(() =>
+        this.blocks().map((block) =>
+            block.type === 'code' ? block : { ...block, html: this.sanitizer.bypassSecurityTrustHtml(block.html) }
+        )
+    );
 }
 
 /**
@@ -76,13 +133,13 @@ export class DocsApiText {
             @if (!part.link) {
                 <ng-container>{{ part.text }}</ng-container>
             } @else if (part.link.page) {
-                <a kbq-link noUnderline [fragment]="part.text" [routerLink]="getTabPath(part.link.page)">
+                <a kbqLink underline="none" [fragment]="part.text" [routerLink]="getTabPath(part.link.page)">
                     <ng-container>{{ part.text }}</ng-container>
                 </a>
             } @else {
                 <a
-                    kbq-link
-                    noUnderline
+                    kbqLink
+                    underline="none"
                     queryParamsHandling="merge"
                     [fragment]="part.text"
                     [queryParams]="withoutMember"
@@ -223,7 +280,7 @@ const TEMPLATE_KINDS = new Set(['component', 'directive', 'pipe']);
  */
 @Component({
     selector: 'docs-api-page',
-    imports: [KbqBadge, KbqCodeBlock, DocsApiText, DocsApiCall, DocsApiLink, DocsApiType],
+    imports: [KbqBadge, KbqCodeBlock, DocsApiCodePlaceholder, DocsApiText, DocsApiCall, DocsApiLink, DocsApiType],
     templateUrl: './api-page.html',
     providers: [{ provide: DOCS_API_LOCALE, useFactory: () => inject(DocsApiPage).locale }],
     changeDetection: ChangeDetectionStrategy.OnPush,

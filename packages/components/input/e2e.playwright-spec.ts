@@ -131,6 +131,9 @@ test.describe('KbqInputModule', () => {
 
                 await control.click();
                 await control.pressSequentially('10');
+                // `aria-valuenow` follows the committed model, so the step starts from a settled keystroke. A
+                // step that beats the deferred commit is covered by the unit spec.
+                await expect(control).toHaveAttribute('aria-valuenow', '10');
                 await control.press('ArrowUp');
 
                 await expect(control).toHaveValue('10,5');

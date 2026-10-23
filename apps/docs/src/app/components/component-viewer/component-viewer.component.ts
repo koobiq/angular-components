@@ -5,6 +5,7 @@ import {
     Component,
     ElementRef,
     inject,
+    signal,
     Type,
     untracked,
     viewChild,
@@ -14,7 +15,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet, UrlSegment } from '@angular/router';
 import { KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
@@ -24,6 +25,7 @@ import { DocsLocaleState } from 'src/app/services/locale';
 import {
     docsGetCategoryById,
     docsGetItemById,
+    DocsStructureCategory,
     DocsStructureCategoryId,
     DocsStructureItem,
     DocsStructureItemId,
@@ -48,7 +50,8 @@ const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/
     selector: 'docs-component-viewer',
     imports: [
         KbqTabsModule,
-        KbqLinkModule,
+        KbqLink,
+        KbqLinkPrefix,
         RouterOutlet,
         RouterLink,
         RouterLinkActive,
@@ -62,7 +65,7 @@ const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-component-viewer',
-        '[attr.data-docsearch-category]': 'structureCategoryId'
+        '[attr.data-docsearch-lvl0]': 'searchGroup()'
     },
     // Panels of the live examples slide under the site header while the article scrolls.
     hostDirectives: [KbqScrollbarViewport, KbqOverlayLayer]
@@ -72,7 +75,8 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
     // Stays `null` for an unknown id: the redirect to /404 is async, so the template renders at
     // least once with nothing resolved and has to tolerate it.
     protected structureItem: DocsStructureItem | null = null;
-    protected structureCategoryId: DocsStructureCategoryId;
+    private readonly isApiTab = signal(false);
+    private structureCategory: DocsStructureCategory | null = null;
 
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly router = inject(Router);
@@ -105,7 +109,7 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
                 }
 
                 this.structureItem = docItem;
-                this.structureCategoryId = docsGetCategoryById(this.structureItem.categoryId!)!.id;
+                this.structureCategory = docsGetCategoryById(this.structureItem.categoryId!)!;
             });
 
         this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
@@ -114,6 +118,17 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
     /** Loads the page of a tab while the pointer is over its link or the focus is on it. */
     protected prefetchTab(tab: DocsStructureItemTab): void {
         if (this.structureItem) this.pagePrefetch.prefetch(this.structureItem.id, tab, this.locale());
+    }
+
+    protected onTabActivate(tab: object): void {
+        this.isApiTab.set(tab instanceof DocsComponentApiPageComponent);
+    }
+
+    /** The group of the page in the search results: the category of the item, or the API on its API tab. */
+    protected searchGroup(): string | null {
+        if (this.isApiTab()) return 'API';
+
+        return this.structureCategory?.name[this.locale()] ?? null;
     }
 
     /** Link to the item's source directory on GitHub, or `null` when the item has no known path. */

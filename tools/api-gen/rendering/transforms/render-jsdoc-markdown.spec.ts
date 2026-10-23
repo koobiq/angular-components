@@ -1,6 +1,9 @@
 import { renderJsDocMarkdown } from './render-jsdoc-markdown';
 
-const paragraph = (html: string) => ({ type: 'html', html: `<p class="kbq-markdown__p">${html}</p>` });
+const paragraph = (html: string) => ({
+    type: 'html',
+    html: `<p class="kbq-markdown__p" data-docsearch-content>${html}</p>`
+});
 
 describe(renderJsDocMarkdown.name, () => {
     it('compiles the prose into one block of HTML', () => {
@@ -8,7 +11,7 @@ describe(renderJsDocMarkdown.name, () => {
             {
                 type: 'html',
                 html:
-                    '<p class="kbq-markdown__p">Shows a <code class="kbq-markdown__code">hint</code>.</p>' +
+                    '<p class="kbq-markdown__p" data-docsearch-content>Shows a <code class="kbq-markdown__code">hint</code>.</p>' +
                     '<ul class="kbq-markdown__ul"><li class="kbq-markdown__li">one</li><li class="kbq-markdown__li">two</li></ul>'
             }
         ]);
@@ -37,7 +40,7 @@ describe(renderJsDocMarkdown.name, () => {
 
     it('renders the headings of a comment below the heading of its entry', () => {
         expect(renderJsDocMarkdown('## Usage', 'KbqAlert')).toEqual([
-            { type: 'html', html: '<h4 class="kbq-markdown__h4">Usage</h4>' }
+            { type: 'html', html: '<h4 class="kbq-markdown__h4" data-docsearch-lvl2>Usage</h4>' }
         ]);
     });
 

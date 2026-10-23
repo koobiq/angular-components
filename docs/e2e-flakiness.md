@@ -409,25 +409,188 @@ right after `waitForHydration`, which waits for the network to go idle; the guid
 URL after that, so a single count could see the prerendered page with every step. **Fix:** both bounds are
 polled. **Verified:** the filter tests ×8 at 6 workers locally (48/48).
 
+## Follow-up, 2026-10-21
+
+### `docs app › shows the import of the core API tab reached by a link on another one`
+
+7 occurrences in the 31 `e2e:docs` runs of 2026-10-20 and 2026-10-21, 5 of them on `main`: `Test timeout of
+30000ms exceeded`, the test reported at 31.8–34.1 s. In the runs that passed it took 16.9–30.0 s (median 22 s),
+against 2.2–4.6 s for its `tooltip` twin, which makes the same navigation to a tab of 11 entries. Not a race:
+the trace of run 39592727535 has the core API tab fully rendered when the time ran out, with `toHaveURL`
+blocked for 8 s on a main thread that was still busy 23 s after the click. The time is the render itself.
+
+The test navigates in the app from the select API tab to the core one, the only entry point without an import
+that another tab links to (`link` and `scrollbar` have none either, their modules being `@docs-private`, but
+no tab links to them). The core tab is the largest by far: 484 entries and 376 members, 506 code blocks and
+some 40,000 DOM nodes, against 11 entries and 13 blocks for `tooltip`. Its code blocks are `@defer (on
+immediate; hydrate on hover)` blocks, so after a navigation in the app every one of them renders at once.
+
+Measured on `main` at `997656544`, with a CDP trace of the navigation on a 16-core desktop: the import block
+of the previous tab goes away 3.0 s after the click and the main thread settles after 4.5–6.2 s; at a 4× CPU
+throttle, about what four workers on four vCPUs cost (see [e2e-performance.md](e2e-performance.md)), after
+17.5 s and 19.3 s. The test itself took 7.3 s locally. Where the 5 s go, without throttling:
+
+- Creating the page, one task of 2.0 s. More than half of it is the 847 blocks of JSDoc HTML that
+  `docs-api-text` binds through `[innerHTML]`: 750 ms of `readystatechange` and `DOMContentLoaded` events
+  dispatched on the inert documents the sanitizer parses them into, and 540 ms of parsing. The rest is change
+  detection.
+- 631 forced layouts, 1.8 s, from `kbq-title` on the 493 links of the anchors list. Each instance measures its
+  text when its `ResizeObserver` first fires, debounced in a timer of its own, and the measurement appends a
+  probe span to the container and reads it back: a write and a read per anchor, so each is a layout of the
+  whole page.
+- Highlighting the 506 blocks once highlight.js has loaded, 0.4 s, and the change detection after it, 0.6 s,
+  with 86 more forced layouts from the scrollbar track of each block measuring its viewport.
+
+**Fix.** `test.slow()` for the core case, which triples its budget to 90 s: the assertion needs this tab,
+since nothing smaller proves that the dehydrated import block of the previous tab goes away whole, and the
+30 s of the docs config were sized for hydration plus one example chunk, not for a tab of this size. Nothing
+in the page changed. **Verified:** the docs suite once, 42/42 with the core case at 8.1 s while the whole suite ran in
+parallel on the 16-core desktop, and the two cases ×5 (10/10, core at 5.0–5.9 s), against the 90 s budget.
+
+**`kbq-title` fixed in the same change.** The directive measured on the report its `ResizeObserver` makes for
+an element it starts observing, that is once per instance on creation, and again on every resize and content
+change, while nothing reads the verdict before `handleElementEnter` measures afresh and `hideTooltip` disables
+the tooltip on leave. It now measures only while the pointer or the keyboard focus is on the host, both tracked
+separately: a click on a hovered host reports a mouse focus origin, which hides the tooltip while the pointer
+stays where it was, and the gate is re-checked when the debounce fires, since the pointer may have left in
+between. Measured the same way, **with every block still rendering** (that is, before the follow-up below), forced
+layouts went from 726 (2.35 s) to 95 (0.64 s, the scrollbar tracks of the 506 blocks), the main-thread time of
+the navigation from 6.9 s to 4.9–5.0 s, and the test from 5.0–5.9 s to 3.6–4.9 s locally. Not enough to drop
+`test.slow()`: at the 3–4.5× of a CI worker that is still 13–22 s.
+
+**Follow-up, the same day: the code blocks render as they come into view.** The signature blocks and the code
+blocks of the JSDoc are `@defer (on viewport; hydrate on hover)` blocks now, each with a placeholder that the
+block's own classes lay out (`DocsApiCodePlaceholder` in `api-page.ts`, down to the table the line numbers
+plugin wraps a file of several lines in), so that the page is as tall before a block renders as after and a link
+to a heading lands on it; the import block stays `on immediate`. The server renders every block as before, and a
+block that came from the server still hydrates on hover: the prerendered pages differ by one empty anchor comment
+per block. After the navigation to the core tab 3 blocks render instead of 506, and the page has 22,500 nodes
+instead of 40,800. Measured as above, on the same desktop and the same day: the main thread settles after
+3.3–3.4 s instead of 4.7 s, and the import block of the previous tab goes away after 2.3 s instead of 2.8 s; at
+the 4× throttle, whose runs vary widely, the main thread settles after 19–34 s in four runs (three of them
+within 19–23 s) instead of 26–81 s in three, while the import block goes away after 14–24 s instead of 14–17 s.
+Measured **before the `kbq-title` change above**, so its 720 forced layouts (2.4 s) are still in these numbers.
+The two changes ship together and neither was measured with the other in place, so the figures of this entry
+bound the committed state from either side rather than describing it: the next measurement starts from the
+commit, not from these numbers. What is left is the sanitizer: the 2.1 s task that creates the page, 1.2 s of it
+the sanitizer running at every visit over HTML the build generated from the repository's own JSDoc, is what the
+import test waits for, and a change of its own, left for later. `test.slow()` stays until it lands.
+
+**The trade-off of `on viewport`.** A block nobody scrolls to never renders, so an API tab reached in the app
+prints its unseen blocks as the placeholder: the code is there, as text in the placeholder, without the
+highlighting and the block chrome. A server-rendered visit is unaffected, and the alternative — a second
+trigger such as `on idle` — would render all 506 blocks again a moment after the navigation, which is the cost
+this change removes. Left as is deliberately; revisit it together with the sanitizer. **Verified:** the docs
+suite once, 43/43 with the core case at 8.0 s in parallel on the 16-core desktop, and the API tab tests ×5
+(30/30, core at 6.6–9.0 s), plus a test that reaches the tooltip API tab from its overview, scrolls the
+signature of its enum into view and compares the height of the block with that of its placeholder.
+
+## Follow-up, 2026-10-22
+
+Measured against `main` at `85314215f`. Every `E2E tests` run of 2026-10-01 to 2026-10-22 (400) and the
+logs of every failed job: discarding the jobs with more than ten failures (design-tokens bumps, branches
+rewriting a component), a flake is a test that failed on `main` or on unrelated branches. After the switch
+to zoneless change detection (`75ef67281`, 2026-10-19) the share of red runs on `main` went from 6 of 56 to
+14 of 41. Eight of the fourteen were the docs `core API tab` case of the 2026-10-21 entry, which has not
+failed since its fix landed (0 of 27 runs).
+
+### The render that lands after the read
+
+The e2e app renders without zone.js since `75ef67281`: what an action changes reaches the DOM with the change
+detection the scheduler runs a task or a frame later, so a value read once right after the action is the one
+from before it. Four tests failed that way, and nothing about the load reproduced it: CDP CPU throttling at
+6× under 16 to 64 workers passed 480 runs of the originals, since it slows every task without changing their
+order. What reproduces CI 10 times out of 10, with its exact errors, is an init script that holds back
+zero-delay timers and animation frames by 100 ms once the page is set up, which pushes the change detection
+past Playwright's next command. With it the originals failed 10/10 and the fixes passed 10/10.
+
+- `scrollbar › E2eScrollbarContentChanges › … nothing reported`, both hosts, `toHaveCount(1)` received 0:
+  the test scrolled before the class carrying the transform was applied, when there was nothing to scroll,
+  and the bar measures again only on a scroll — so it never came. The test now waits for the class, polls
+  that the viewport overflows, scrolls and polls `scrollTop` before counting.
+- `textarea › should shrink…` and `should grow to maxRows…` (`150 < 150`, `90 > 90`): one `boundingBox()`
+  right after the paste, while the height is written by an effect and `asapScheduler`. The height is now
+  polled against the one before the paste, and the maxRows tests wait for
+  `kbq-textarea_max-row-limit-reached`.
+- `app-switcher › the clear button restores the full list…` (`22 < 11`): the list was counted once, on the
+  render after the first typed letter. The counts are web-first assertions now.
+- docs `migration guide filter › reproduces a filtered URL on reload…` (33 against 2): the steps were
+  counted once after hydration, before the guide applied the range. The tests wait for
+  `docs-migration-guide_ready`, which the guide sets in the task that filters.
+
+**The guard.** ESLint now rejects `expect(await …)` in the specs and in `packages/e2e/utils`, and the 109
+remaining reads were rewritten into web-first assertions or `expect.poll`; where a poll would pass on its
+first sample — nothing changed, nothing arrived — the test first waits for a sign that the action landed and
+then reads once into a constant. That pass found more of the same, none of them seen failing yet: the drop
+indicator of `list` and the term width and `aria-valuemin` of `dl` read before the render a drag causes,
+`modal`'s layout read before the scrollbar track a content change brings, `button-toggle` measuring icons
+before the click had re-laid them out, `sidepanel` (WebKit) tabbing before the initial focus had landed, and
+`tree-select` pressing arrow keys before the panel focused its first option.
+
+`expect.soft(await …)` and `expect((await …).x)` still slip past the selector — 24 reads in 10 files, all
+taken right after the page loads.
+
+### `tabs › E2eTabsStates › states` — explained
+
+Nine occurrences, three of them on `main` on 2026-10-22 and one on `20.4.x`. The two paginated strips whose
+selected tab is the last one measure that label once, in the selection's `scrollCorrection` 100 ms after
+the first render, and Inter 500 and the kbq-icons font are requested only by that first layout — 284 to
+427 ms in the CI traces. A strip measured in the fallback faces rests at 326 px instead of 377: 35 px of
+label offset, 12 of label width and 4 of the arrow, whose glyph is 4 px narrower before its font arrives,
+which is why the audit above found that 51 px matched no constant. One face late gives 352. Holding the
+fonts back with `page.route` reproduces CI's received image byte for byte, and the per-strip combinations
+reproduce every recurring count exactly: 326 + 326 = 18746, 326 + 377 = 9379, 352 + 377 = 6529,
+326 + 352 = 15896. Nothing measured again once the fonts loaded: the `ResizeObserver` watches the
+fixed-width box, and content changes compare the text.
+
+**Fix.** `KbqPaginatedTabHeader` repeats its last scroll correction and re-checks pagination on
+`document.fonts` `loadingdone`, unless the user has moved the strip since — a press, the wheel or an arrow
+drops the request. The scenario renders behind a trigger the spec presses after `e2eWaitForFonts`, and the
+spec asserts where each paginated strip rests before the shot, so a recurrence fails on a named position.
+The committed baselines already held the 377 px rest; none moved. **Verified:** 150/150 at 16 workers, and
+the late-font probe now settles on the baseline.
+
+### `datepicker` — keys faster than the timers
+
+Two more occurrences of `scrolls back to the part the caret returns to`, now as a corrupted value:
+`31.12.024` for `24.01.2024`. A digit is parsed, and the next part selected, on timers; when keys arrive
+before them, `2`, `4` and `0` all go into the day (clamped to 31) and the year is left with three digits. A
+scanner, an autotype or a busy page does the same to a user. The `pendingCaret` fix of the arrow keys
+covered one timer of several. **Fix:** every timer a key starts goes through one queue, and a keydown first
+runs what is still waiting, so each key acts on what a slow typist's would; `pendingCaret` is gone. A unit
+spec types the whole date in one task (it got `31.01.2020` before the fix), and the e2e test types part by
+part, polling the selection in between. `KbqTimepicker` has the same race and was left for a change of its
+own.
+
+### `input` — a step before the commit
+
+`KbqNumberInput keyboard › should step by step and bigStep from the keyboard` got `1,5` for `10,5`, once on
+`main`: typing commits the value on a timer, and ArrowUp stepped from the last committed one. In a unit spec
+"10" and an immediate ArrowUp gave `0,5`. **Fix:** a step first commits a reformat still pending.
+
+### Burn-in
+
+A pull request now runs the specs it adds, edits or reaches through its component again after the full
+run (`tools/e2e/changed-specs.mjs`): ten times over for up to five specs, three for up to twenty, twice
+beyond that, so a test that passes only most of the time fails on the pull request that brings it. See [06-testing.md](guides/06-testing.md).
+
+### Unit tests
+
+None of the 24 red `Unit tests` runs of the same window was a flake: each failed the same way on every run
+of its branch. Locally the suite times out under load instead: with three runs at once, 16 to 21 tests per
+run exceeded 2 s, and 291 of the 300 tests over 2 s were the first of their file, which pays the file's cold
+start — the TypeScript program of a schematic, the first render. `testTimeout` is therefore 2 s on CI and
+10 s locally; under the same load that gives 0 timeouts.
+
 ## Not fixed
 
-- **`tabs › E2eTabsStates › states`** — 1 occurrence, 18769 px by Playwright's count, 27480 raw. The
-  diff is confined to the two paginated tab strips, and both are shifted horizontally by exactly the
-  same 102 device pixels (51 CSS), a pure translation: correlating a band of labels against the
-  baseline bottoms out at a mean absolute difference of 0.95. Playwright captured two consecutive
-  identical frames, so the strip was at rest at the wrong offset rather than mid-animation, which
-  `waitForSettledTabScroll` in that spec cannot help with — it waits for scroll quiet, and the strip
-  was quiet. The obvious suspect does not hold up: `scrollCorrection` in `paginated-tab-header.ts`
-  reads the live `scrollLeft`, but it cancels out of the target algebraically, and 51 px matches
-  neither the paginator width (40 px) nor any other constant in that file. No mechanism established,
-  and it did not reproduce in 20 local repeats at 8 workers or 5 at 16. Nothing was changed.
 - **`datepicker › scrolls back to the part the caret returns to`** — 1 occurrence in 99 CI runs, and it
   did not reproduce in 200 local repeats under 16 workers. The second occurrence (2026-10-08, the
   selection stuck on the month, `3,5` instead of `0,2`) gave the mechanism: an arrow key reads the
   input's `selectionStart` and sets the new selection on a timer, so a second key that arrives before
   that timer runs moves on from the old selection and lands on the same part again. Fixed in the
   input: a key moves on from the part the previous one is about to select. A unit spec presses both
-  keys in one task.
+  keys in one task. That fix covered one timer of several: see the 2026-10-22 follow-up.
 - **`notification-center › states`** — 1 occurrence, 3831 px. Initially attributed to the scrollbar
   reveal and gated accordingly; that was wrong. A `MutationObserver` running from first paint records
   no reveal on this route at all, and `scrollToBottom()` is reachable only from a `loadingMore`
@@ -440,9 +603,6 @@ polled. **Verified:** the filter tests ×8 at 6 workers locally (48/48).
   `snapshotPathTemplate`, so the fix is a separate WebKit project — but that moves those baselines
   _and_ re-renders them under a Safari descriptor, which would confound the verification of the
   sidepanel fix. Separate change.
-- **91 `expect(await …)` reads** that take a computed style or geometry once, with no retry, right
-  after an action that settles asynchronously. Concentrated in `list` (24) and `button-toggle` (18).
-  None has been observed failing.
 
 ## Incidental
 

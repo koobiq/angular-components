@@ -17,6 +17,44 @@ const pasteFromClipboard = async (page: Page, textarea: Locator, text: string) =
     await page.keyboard.press('ControlOrMeta+v');
 };
 
+/** The height once it holds across two frames, or `null` while it is still changing. */
+const heldHeight = (textarea: Locator): Promise<number | null> =>
+    textarea.evaluate(
+        (el) =>
+            new Promise<number | null>((resolve) => {
+                const first = el.getBoundingClientRect().height;
+
+                requestAnimationFrame(() =>
+                    requestAnimationFrame(() => {
+                        const second = el.getBoundingClientRect().height;
+
+                        resolve(second === first ? second : null);
+                    })
+                );
+            })
+    );
+
+// The height is set by `grow()`, a task or more after the value changes, so a read straight after a paste can
+// still return the height of the previous text. Waiting for it to hold rather than to change also measures a
+// paste that leaves it as it was.
+const pasteAndMeasure = async (page: Page, textarea: Locator, text: string): Promise<number> => {
+    await pasteFromClipboard(page, textarea, text);
+    await expect(textarea).toHaveValue(text);
+    await expect.poll(() => heldHeight(textarea)).not.toBeNull();
+
+    return getHeight(textarea);
+};
+
+// The initial value overflows the two rows of a bare textarea until `grow()` has measured it.
+const expectInitialValueGrown = (textarea: Locator) =>
+    expect
+        .poll(() =>
+            textarea.evaluate((el: HTMLTextAreaElement) => el.value !== '' && el.scrollHeight <= el.clientHeight)
+        )
+        .toBe(true);
+
+const MAX_ROW_LIMIT_REACHED = 'kbq-textarea_max-row-limit-reached';
+
 test.describe('KbqTextareaModule', () => {
     test.use({ permissions: ['clipboard-read', 'clipboard-write'] });
 
@@ -37,18 +75,16 @@ test.describe('KbqTextareaModule', () => {
         test('should grow initially when ngModel has multiple lines', async ({ page }) => {
             await page.goto('/E2eTextareaGrowBehavior');
 
-            expect(await getHeight(getTextarea(page))).toBeGreaterThan(50);
+            await expect.poll(() => getHeight(getTextarea(page))).toBeGreaterThan(50);
         });
 
         test('should grow when content gets longer', async ({ page }) => {
             await page.goto('/E2eTextareaGrowBehavior');
             const textarea = getTextarea(page);
 
-            await pasteFromClipboard(page, textarea, 'test\ntest');
-            const shortHeight = await getHeight(textarea);
-
-            await pasteFromClipboard(page, textarea, 'test\ntest\ntest\ntest\ntest\ntest');
-            const longHeight = await getHeight(textarea);
+            await expectInitialValueGrown(textarea);
+            const shortHeight = await pasteAndMeasure(page, textarea, 'test\ntest');
+            const longHeight = await pasteAndMeasure(page, textarea, 'test\ntest\ntest\ntest\ntest\ntest');
 
             expect(longHeight).toBeGreaterThan(shortHeight);
         });
@@ -57,11 +93,9 @@ test.describe('KbqTextareaModule', () => {
             await page.goto('/E2eTextareaGrowBehavior');
             const textarea = getTextarea(page);
 
-            await pasteFromClipboard(page, textarea, 'test\ntest\ntest\ntest\ntest\ntest');
-            const longHeight = await getHeight(textarea);
-
-            await pasteFromClipboard(page, textarea, 'test\ntest');
-            const shortHeight = await getHeight(textarea);
+            await expectInitialValueGrown(textarea);
+            const longHeight = await pasteAndMeasure(page, textarea, 'test\ntest\ntest\ntest\ntest\ntest');
+            const shortHeight = await pasteAndMeasure(page, textarea, 'test\ntest');
 
             expect(shortHeight).toBeLessThan(longHeight);
         });
@@ -73,12 +107,14 @@ test.describe('KbqTextareaModule', () => {
         test('should grow initially when ngModel has multiple lines', async ({ page }) => {
             await page.goto('/E2eTextareaGrowMaxRows');
 
-            expect(await getHeight(getTextarea(page))).toBeGreaterThan(50);
+            await expect.poll(() => getHeight(getTextarea(page))).toBeGreaterThan(50);
         });
 
         test('should grow to maxRows height when pasting text exceeding maxRows', async ({ page }) => {
             await page.goto('/E2eTextareaGrowMaxRows');
             const textarea = getTextarea(page);
+
+            await expectInitialValueGrown(textarea);
             const shortHeight = await getHeight(textarea);
 
             await pasteFromClipboard(
@@ -86,7 +122,8 @@ test.describe('KbqTextareaModule', () => {
                 textarea,
                 'line1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10'
             );
-            expect(await getHeight(textarea)).toBeGreaterThan(shortHeight);
+            await expect(textarea).toContainClass(MAX_ROW_LIMIT_REACHED);
+            await expect.poll(() => getHeight(textarea)).toBeGreaterThan(shortHeight);
         });
 
         test('should not grow beyond maxRows height', async ({ page }) => {
@@ -94,14 +131,21 @@ test.describe('KbqTextareaModule', () => {
             const textarea = getTextarea(page);
 
             await pasteFromClipboard(page, textarea, 'line1\nline2\nline3\nline4\nline5');
+            await expect(textarea).toContainClass(MAX_ROW_LIMIT_REACHED);
             const atMaxRowsHeight = await getHeight(textarea);
+
+            // Below the limit and back: the class returning is what proves the longer text has been measured, since
+            // the height it is expected to keep is the one it already has.
+            await pasteFromClipboard(page, textarea, 'line1\nline2\nline3');
+            await expect(textarea).not.toContainClass(MAX_ROW_LIMIT_REACHED);
 
             await pasteFromClipboard(
                 page,
                 textarea,
                 'line1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10'
             );
-            expect(await getHeight(textarea)).toBe(atMaxRowsHeight);
+            await expect(textarea).toContainClass(MAX_ROW_LIMIT_REACHED);
+            await expect.poll(() => getHeight(textarea)).toBe(atMaxRowsHeight);
         });
     });
 
@@ -122,11 +166,21 @@ test.describe('KbqTextareaModule', () => {
             await textarea.click();
             await expect(textarea).toBeFocused();
 
-            expect(await page.evaluate(() => window.scrollY)).toBe(scrollYBefore);
+            // Sampled two frames later, once whatever the component does in response to the focus has rendered.
+            const scrollPositions = (): Promise<{ page: number; textarea: number }> =>
+                textarea.evaluate(
+                    (el: HTMLTextAreaElement) =>
+                        new Promise<{ page: number; textarea: number }>((resolve) =>
+                            requestAnimationFrame(() =>
+                                requestAnimationFrame(() => resolve({ page: window.scrollY, textarea: el.scrollTop }))
+                            )
+                        )
+                );
 
-            const textareaScrollTop = await textarea.evaluate((el: HTMLTextAreaElement) => el.scrollTop);
+            // Read once: the positions are meant not to change, so a poll would pass on its first sample.
+            const scrolled = await scrollPositions();
 
-            expect(textareaScrollTop).toBe(0);
+            expect(scrolled).toEqual({ page: scrollYBefore, textarea: 0 });
         });
     });
 });

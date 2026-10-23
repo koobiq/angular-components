@@ -5,54 +5,79 @@
 ```ts
 
 import { AfterViewChecked } from '@angular/core';
-import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import * as i1 from '@angular/cdk/a11y';
-import { OnDestroy } from '@angular/core';
-import { Renderer2 } from '@angular/core';
+import { InjectionToken } from '@angular/core';
+import { KbqDefaultSizes } from '@koobiq/components/core';
+import { Provider } from '@angular/core';
 
 // @public
-export class KbqLink implements AfterViewInit, AfterViewChecked, OnDestroy {
+export const KBQ_LINK_OPTIONS: InjectionToken<KbqLinkOptions>;
+
+// @public
+export class KbqLink implements AfterViewChecked {
     constructor();
     protected readonly ariaDisabledAttribute: _angular_core.Signal<true | null>;
-    readonly big: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    readonly compact: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly disabledSignal: _angular_core.WritableSignal<boolean>;
+    readonly external: _angular_core.InputSignalWithTransform<boolean, unknown>;
     focus(): void;
-    getHostElement(): HTMLAnchorElement;
-    protected readonly hasIcon: _angular_core.Signal<boolean>;
-    protected readonly hostTabIndex: _angular_core.Signal<number>;
-    readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    getHostElement(): HTMLElement;
+    protected readonly hostTabIndex: _angular_core.Signal<number | null>;
+    protected readonly isPseudo: _angular_core.Signal<boolean>;
     protected readonly nativeDisabledAttribute: _angular_core.Signal<true | null>;
     ngAfterViewChecked(): void;
-    // (undocumented)
-    ngAfterViewInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    readonly noUnderline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly print: _angular_core.InputSignal<string | null | undefined>;
-    protected readonly printMode: _angular_core.Signal<boolean>;
     readonly pseudo: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
-    protected readonly renderer: Renderer2;
+    protected readonly role: _angular_core.Signal<string | null>;
+    readonly size: _angular_core.InputSignal<KbqDefaultSizes>;
     readonly tabIndex: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly underline: _angular_core.InputSignal<KbqLinkUnderline | undefined>;
+    protected readonly underlineMode: _angular_core.Signal<KbqLinkUnderline>;
     readonly useVisited: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqLink, "[kbq-link]", ["kbqLink"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "pseudo": { "alias": "pseudo"; "required": false; "isSignal": true; }; "noUnderline": { "alias": "noUnderline"; "required": false; "isSignal": true; }; "big": { "alias": "big"; "required": false; "isSignal": true; }; "compact": { "alias": "compact"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "useVisited": { "alias": "useVisited"; "required": false; "isSignal": true; }; "print": { "alias": "print"; "required": false; "isSignal": true; }; }, {}, ["icons"], never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqLink, "[kbqLink]", ["kbqLink"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "pseudo": { "alias": "pseudo"; "required": false; "isSignal": true; }; "external": { "alias": "external"; "required": false; "isSignal": true; }; "underline": { "alias": "underline"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; "useVisited": { "alias": "useVisited"; "required": false; "isSignal": true; }; "print": { "alias": "print"; "required": false; "isSignal": true; }; }, {}, never, ["[kbqLinkPrefix]", "*", "[kbqLinkSuffix]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqLink, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqLinkModule {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqLinkModule, never>;
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqLinkModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqLinkModule, never, [typeof i1.A11yModule, typeof KbqLink], [typeof KbqLink]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqLinkModule, never, [typeof KbqLink, typeof KbqLinkPrefix, typeof KbqLinkSuffix], [typeof KbqLink, typeof KbqLinkPrefix, typeof KbqLinkSuffix]>;
 }
+
+// @public
+export type KbqLinkOptions = {
+    size: KbqDefaultSizes;
+    underline?: KbqLinkUnderline;
+    useVisited: boolean;
+};
+
+// @public
+export function kbqLinkOptionsProvider(options: Partial<KbqLinkOptions>): Provider;
+
+// @public
+export class KbqLinkPrefix {
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqLinkPrefix, "[kbqLinkPrefix]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqLinkPrefix, never>;
+}
+
+// @public
+export class KbqLinkSuffix {
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqLinkSuffix, "[kbqLinkSuffix]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqLinkSuffix, never>;
+}
+
+// @public
+export type KbqLinkUnderline = 'always' | 'hover' | 'none';
 
 // (No @packageDocumentation comment for this package)
 

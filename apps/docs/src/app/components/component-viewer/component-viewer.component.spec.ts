@@ -10,8 +10,10 @@ import {
     Router,
     UrlSegment
 } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { BehaviorSubject, map, of } from 'rxjs';
 import type { MockInstance } from 'vitest';
+import { DocsIntersectionObserverStub } from '../../../testing/intersection-observer.stub';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
 import { DOCS_API_PAGES } from '../../services/page-resolver';
@@ -242,6 +244,7 @@ describe(DocsComponentApiPageComponent.name, () => {
     beforeEach(() => {
         // Rendered in the browser alone, as a route of `RenderMode.Client` is: the flag the server sets for one.
         document.body.setAttribute('ngcm', '');
+        vi.stubGlobal('IntersectionObserver', DocsIntersectionObserverStub);
         setScrollPosition = vi.spyOn(DocsAnchorsComponent.prototype, 'setScrollPosition').mockImplementation(() => {});
         scrollToElement = vi.spyOn(DocsAnchorsComponent.prototype, 'scrollToElement').mockImplementation(() => {});
     });
@@ -250,6 +253,8 @@ describe(DocsComponentApiPageComponent.name, () => {
         document.body.removeAttribute('ngcm');
         setScrollPosition.mockRestore();
         scrollToElement.mockRestore();
+        vi.unstubAllGlobals();
+        DocsIntersectionObserverStub.reset();
     });
 
     it('renders the API as the article, followed by the improvement callout', () => {
@@ -260,7 +265,7 @@ describe(DocsComponentApiPageComponent.name, () => {
         expect(article.querySelector('.kbq-callout')).not.toBeNull();
     });
 
-    // A signature is a code block, and the page is stable once highlight.js has loaded to highlight it.
+    // The entries render with the view; their code blocks wait to come into view, and hold nothing up.
     it('scrolls the anchors into position once the entries have rendered', async () => {
         await createPage().whenStable();
 
@@ -291,5 +296,67 @@ describe(DocsComponentApiPageComponent.name, () => {
 
         expect(fixture.nativeElement.querySelector('#KbqAlert-title').classList).toContain('docs-api__member_selected');
         expect(scrollToElement).not.toHaveBeenCalled();
+    });
+});
+
+// The search crawler groups the records of a page by the `data-docsearch-lvl0` of the viewer.
+describe('the group of a page in the search', () => {
+    const open = async (path: string, locale = DocsLocale.En): Promise<RouterTestingHarness> => {
+        TestBed.configureTestingModule({
+            providers: [
+                provideRouter([
+                    {
+                        path: ':category/:id',
+                        component: DocsComponentViewerComponent,
+                        children: [
+                            { path: 'overview', component: DocsCompiledPage },
+                            { path: 'api', component: DocsComponentApiPageComponent, data: { page: ALERT_API } }
+                        ]
+                    }
+                ]),
+                provideDocsLocale(locale),
+                provideClientHydration(withIncrementalHydration())
+            ]
+        });
+
+        const harness = await RouterTestingHarness.create();
+
+        await harness.navigateByUrl(path);
+
+        return harness;
+    };
+
+    const group = (harness: RouterTestingHarness): string | null =>
+        harness.routeNativeElement!.getAttribute('data-docsearch-lvl0');
+
+    beforeEach(() => {
+        document.body.setAttribute('ngcm', '');
+        // The code blocks of the API tab render as they come into view, which jsdom cannot tell.
+        vi.stubGlobal('IntersectionObserver', DocsIntersectionObserverStub);
+        vi.spyOn(DocsAnchorsComponent.prototype, 'setScrollPosition').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        document.body.removeAttribute('ngcm');
+        vi.unstubAllGlobals();
+        DocsIntersectionObserverStub.reset();
+        vi.restoreAllMocks();
+    });
+
+    it.each([
+        [DocsLocale.En, 'Components'],
+        [DocsLocale.Ru, 'Компоненты']
+    ])('is the category of the item in the language of the page (%s)', async (locale, category) => {
+        expect(group(await open('/components/alert/overview', locale))).toBe(category);
+    });
+
+    it('is the API on the API tab, and the category again once the reader leaves it', async () => {
+        const harness = await open('/components/alert/api');
+
+        expect(group(harness)).toBe('API');
+
+        await harness.navigateByUrl('/components/alert/overview');
+
+        expect(group(harness)).toBe('Components');
     });
 });

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
 /**
@@ -9,21 +9,12 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 @Component({
     selector: 'toast-overview-example',
     imports: [
-        KbqLinkModule,
+        KbqLink,
         KbqButtonModule
     ],
     template: `
         <ng-template #toastAction let-toast>
-            <a
-                kbq-link
-                pseudo
-                role="button"
-                (click)="toast.close()"
-                (keydown.enter)="toast.close()"
-                (keydown.space)="$event.preventDefault(); toast.close()"
-            >
-                Обновить
-            </a>
+            <a kbqLink pseudo (click)="toast.close()">Обновить</a>
         </ng-template>
 
         <div class="demo-block">

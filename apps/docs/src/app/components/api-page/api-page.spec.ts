@@ -4,6 +4,7 @@ import { provideRouter, Router } from '@angular/router';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { BehaviorSubject, map } from 'rxjs';
 import type { Mock } from 'vitest';
+import { DocsIntersectionObserverStub } from '../../../testing/intersection-observer.stub';
 import { DOCS_API_MEMBER_PARAM } from '../../constants/api-page';
 import { DocsLocale } from '../../constants/locale';
 import { DocsClipboardService } from '../../services/clipboard';
@@ -26,7 +27,10 @@ const provideDocsLocale = (locale: DocsLocale) => {
     };
 };
 
-const paragraph = (text: string): DocsApiBlock => ({ type: 'html', html: `<p class="kbq-markdown__p">${text}</p>` });
+const paragraph = (text: string): DocsApiBlock => ({
+    type: 'html',
+    html: `<p class="kbq-markdown__p" data-docsearch-content>${text}</p>`
+});
 
 const ENTRY_POINT: DocsApiEntryPoint = {
     path: '@koobiq/components/alert',
@@ -91,6 +95,7 @@ describe(DocsApiPage.name, () => {
         copyWithToast = vi.fn();
         // Rendered in the browser alone, as a route of `RenderMode.Client` is: the flag the server sets for one.
         document.body.setAttribute('ngcm', '');
+        vi.stubGlobal('IntersectionObserver', DocsIntersectionObserverStub);
 
         TestBed.configureTestingModule({
             providers: [
@@ -103,7 +108,11 @@ describe(DocsApiPage.name, () => {
         });
     });
 
-    afterEach(() => document.body.removeAttribute('ngcm'));
+    afterEach(() => {
+        document.body.removeAttribute('ngcm');
+        vi.unstubAllGlobals();
+        DocsIntersectionObserverStub.reset();
+    });
 
     const createFixture = (entryPoint = ENTRY_POINT, selectedMember: string | null = null) => {
         const fixture = TestBed.createComponent(DocsApiPage);
@@ -118,12 +127,24 @@ describe(DocsApiPage.name, () => {
     const render = (entryPoint = ENTRY_POINT, selectedMember: string | null = null): HTMLElement =>
         createFixture(entryPoint, selectedMember).nativeElement;
 
-    // The code blocks are `@defer` blocks: they render once their dependencies have loaded.
+    const getPlaceholders = (element: Element): HTMLElement[] =>
+        Array.from(element.querySelectorAll('docs-api-code-placeholder'));
+
+    // The code blocks are `@defer` blocks: the import renders once its dependencies have loaded, the others once they
+    // have come into view as well.
     const renderCodeBlocks = async (entryPoint = ENTRY_POINT): Promise<HTMLElement> => {
         const fixture = createFixture(entryPoint);
+        const placeholders = getPlaceholders(fixture.nativeElement);
 
+        // Asserted here, so that a page that stopped rendering placeholders cannot leave every test built on this
+        // helper passing over a tab whose blocks never rendered.
+        expect(placeholders.length).toBeGreaterThan(0);
+
+        DocsIntersectionObserverStub.enter(...placeholders);
         await fixture.whenStable();
         fixture.detectChanges();
+
+        expect(getPlaceholders(fixture.nativeElement)).toEqual([]);
 
         return fixture.nativeElement;
     };
@@ -177,6 +198,94 @@ describe(DocsApiPage.name, () => {
 
         expect(getTexts(description, '.kbq-markdown__p')).toEqual(['Shows important information.']);
         expect(description.querySelector('kbq-code-block')?.textContent).toContain('<kbq-alert alertColor="error" />');
+    });
+
+    // The sanitizer would drop them from the HTML of a text, which the JSDoc compiles to at build time.
+    it('keeps the attributes the search reads the headings and the text by', async () => {
+        const page = await renderCodeBlocks();
+
+        expect(getTexts(page, '[data-docsearch-lvl2]')).toContain('KbqAlert');
+        expect(getTexts(page, '[data-docsearch-content]')).toContain('Shows important information.');
+    });
+
+    // Until a block comes into view, its placeholder stands in: laid out by the block's classes, so that the page is as
+    // tall before the block renders as after. The lines of a file of several lines are the rows of a table, as the
+    // line numbers plugin lays them out; a file of one line, or of one line and a line break, stays text.
+    it('holds the place of each code block with its code, laid out like the block, until it comes into view', async () => {
+        const fixture = createFixture();
+
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const page: HTMLElement = fixture.nativeElement;
+        const placeholders = getPlaceholders(page);
+
+        expect(Array.from(page.querySelectorAll('kbq-code-block'), ({ className }) => className)).toEqual([
+            expect.stringContaining('docs-api__import')
+        ]);
+        expect(placeholders.map(({ textContent }) => textContent)).toEqual([
+            '<kbq-alert alertColor="error" />',
+            "@Component({ selector: 'kbq-alert' })class KbqAlert {}",
+            'const KBQ_ALERT: string;'
+        ]);
+        expect(placeholders.map(({ classList }) => Array.from(classList).filter((name) => name.includes('_')))).toEqual(
+            [
+                [
+                    'kbq-code-block_hide-tabs',
+                    'kbq-code-block_hide-line-numbers',
+                    'kbq-code-block_filled',
+                    'kbq-code-block_no-border'
+                ],
+                ['kbq-code-block_hide-tabs', 'kbq-code-block_hide-line-numbers', 'kbq-code-block_outline'],
+                ['kbq-code-block_hide-tabs', 'kbq-code-block_hide-line-numbers', 'kbq-code-block_outline']
+            ]
+        );
+        expect(placeholders.map((placeholder) => getTexts(placeholder, '.hljs-ln-code'))).toEqual([
+            [],
+            ["@Component({ selector: 'kbq-alert' })", 'class KbqAlert {}'],
+            []
+        ]);
+        expect(
+            getPlaceholders(render(withSignature('class KbqActionsPanel {}\n')))[0].querySelector('table')
+        ).toBeNull();
+    });
+
+    it('renders a code block once it comes into view, and leaves the others to come', async () => {
+        const fixture = createFixture();
+        const [example, signature] = getPlaceholders(fixture.nativeElement);
+
+        DocsIntersectionObserverStub.enter(signature);
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const page: HTMLElement = fixture.nativeElement;
+        const blocks = Array.from(page.querySelectorAll('kbq-code-block'));
+
+        expect(blocks.map(({ classList }) => classList.contains('docs-api__import'))).toEqual([true, false]);
+        expect(blocks[1].textContent).toContain('class KbqAlert {}');
+        expect(signature.isConnected).toBe(false);
+        expect(getPlaceholders(page)).toEqual([example, expect.any(HTMLElement)]);
+    });
+
+    // The placeholder holds the block's place, so it has to carry the block's own modifier classes: a block that
+    // starts laying itself out differently has to be followed here, or the page would jump as it renders.
+    it('carries the modifier classes of the block it stands in for', async () => {
+        // Sorted: the block and the placeholder set the same classes in a different order.
+        const modifiers = (element: Element): string[] =>
+            Array.from(element.classList)
+                .filter((name) => name.startsWith('kbq-code-block_'))
+                .sort();
+        const fixture = createFixture();
+        const placeholders = getPlaceholders(fixture.nativeElement).map(modifiers);
+
+        DocsIntersectionObserverStub.enter(...getPlaceholders(fixture.nativeElement));
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        // The import block renders on its own, before any of the placeholders, and comes first in document order.
+        const blocks = Array.from(fixture.nativeElement.querySelectorAll('kbq-code-block'), modifiers);
+
+        expect(blocks.slice(1)).toEqual(placeholders);
     });
 
     it('lists the members anchored by their id, with their badges and type', () => {
@@ -312,8 +421,8 @@ describe(DocsApiPage.name, () => {
         ]);
     });
 
-    /** An entry point of one class whose one member is of `type`. */
-    const withMemberType = (type: DocsApiTypePart[]): DocsApiEntryPoint => ({
+    /** An entry point of one class, declared by `signature`, whose one member is of `type`. */
+    const withEntry = (signature: string, type: DocsApiTypePart[] = []): DocsApiEntryPoint => ({
         path: '@koobiq/components/actions-panel',
         groups: [
             {
@@ -323,13 +432,17 @@ describe(DocsApiPage.name, () => {
                     {
                         name: 'KbqActionsPanel',
                         kind: 'class',
-                        signature: 'class KbqActionsPanel {}',
+                        signature,
                         members: [{ id: 'KbqActionsPanel-open', name: 'open()', type }]
                     }
                 ]
             }
         ]
     });
+
+    const withSignature = (signature: string): DocsApiEntryPoint => withEntry(signature);
+
+    const withMemberType = (type: DocsApiTypePart[]): DocsApiEntryPoint => withEntry('class KbqActionsPanel {}', type);
 
     it('links the entries a type names to their sections, on this tab or on the tab of their entry point', () => {
         const type = render(
@@ -348,7 +461,7 @@ describe(DocsApiPage.name, () => {
         ]);
         // Links of the design system, set apart from the type by their colour rather than an underline.
         expect(
-            Array.from(type.querySelectorAll('a'), ({ classList }) => classList.contains('kbq-link_no-underline'))
+            Array.from(type.querySelectorAll('a'), ({ classList }) => classList.contains('kbq-link_underline_none'))
         ).toEqual([
             true,
             true
@@ -397,5 +510,14 @@ describe(DocsApiPage.name, () => {
 
     it('has no axe violations', async () => {
         await expect(await renderCodeBlocks()).toHaveNoViolations();
+    });
+
+    it('has no axe violations with the code blocks still to come into view', async () => {
+        const fixture = createFixture();
+
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        await expect(fixture.nativeElement).toHaveNoViolations();
     });
 });

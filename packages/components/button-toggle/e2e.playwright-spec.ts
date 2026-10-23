@@ -167,9 +167,7 @@ test.describe('KbqButtonToggleModule', () => {
 
             await button.hover();
 
-            const after = await button.evaluate((element) => getComputedStyle(element).backgroundColor);
-
-            expect(after).not.toBe(before);
+            await expect(button).not.toHaveCSS('background-color', before);
         });
 
         test('reaches the group with Tab and walks it with the arrow keys', async ({ page }) => {
@@ -213,6 +211,11 @@ test.describe('KbqButtonToggleModule', () => {
 
             await togglePrefix(locator);
             await toggleTitle(locator);
+
+            // the class lands after the icon-only layout, which the measurement must not predate
+            await expect(
+                getScreenshotTarget(locator).locator('kbq-button-toggle').first().locator('button')
+            ).toHaveClass(/kbq-button_no-label/);
 
             await expectIconsCentred(locator);
         });
@@ -271,8 +274,8 @@ test.describe('KbqButtonToggleModule', () => {
                     const across = axes.acrossCentre(first);
 
                     // no dead strip in between, and no overlap either
-                    expect(await axes.at(gapMid - 1, across)).toEqual({ tag: 'button', index: 0 });
-                    expect(await axes.at(gapMid + 1, across)).toEqual({ tag: 'button', index: 1 });
+                    await expect.poll(() => axes.at(gapMid - 1, across)).toEqual({ tag: 'button', index: 0 });
+                    await expect.poll(() => axes.at(gapMid + 1, across)).toEqual({ tag: 'button', index: 1 });
                 });
 
                 test(`reaches into the padding the group frames its items with, ${orientation}`, async ({ page }) => {
@@ -285,14 +288,12 @@ test.describe('KbqButtonToggleModule', () => {
                     const [acrossStart, acrossEnd] = axes.across(box);
 
                     // the outermost items have no neighbour to share with, so they take the padding whole
-                    expect(await axes.at(alongStart + 1, axes.acrossCentre(pills[0]))).toEqual({
-                        tag: 'button',
-                        index: 0
-                    });
-                    expect(await axes.at(alongEnd - 1, axes.acrossCentre(pills[last]))).toEqual({
-                        tag: 'button',
-                        index: last
-                    });
+                    await expect
+                        .poll(() => axes.at(alongStart + 1, axes.acrossCentre(pills[0])))
+                        .toEqual({ tag: 'button', index: 0 });
+                    await expect
+                        .poll(() => axes.at(alongEnd - 1, axes.acrossCentre(pills[last])))
+                        .toEqual({ tag: 'button', index: last });
 
                     // and on the cross axis every item does, on both sides — the offset comes from the
                     // rule none of the positional selectors touch, so a middle item is as much of a
@@ -300,8 +301,10 @@ test.describe('KbqButtonToggleModule', () => {
                     for (let index = 0; index < pills.length; index++) {
                         const alongCentre = axes.alongCentre(pills[index]);
 
-                        expect(await axes.at(alongCentre, acrossStart + 1)).toEqual({ tag: 'button', index });
-                        expect(await axes.at(alongCentre, acrossEnd - 1)).toEqual({ tag: 'button', index });
+                        await expect
+                            .poll(() => axes.at(alongCentre, acrossStart + 1))
+                            .toEqual({ tag: 'button', index });
+                        await expect.poll(() => axes.at(alongCentre, acrossEnd - 1)).toEqual({ tag: 'button', index });
                     }
                 });
             }
@@ -317,8 +320,8 @@ test.describe('KbqButtonToggleModule', () => {
 
                 // the split is drawn the same either way: a disabled item's share of the gutter is
                 // still its own, rather than a wider catchment for the enabled neighbour
-                expect(await getOwnerAt(page, gapMid - 1, across)).toEqual({ tag: 'button', index: 0 });
-                expect(await getOwnerAt(page, gapMid + 1, across)).toEqual({ tag: 'button', index: 1 });
+                await expect.poll(() => getOwnerAt(page, gapMid - 1, across)).toEqual({ tag: 'button', index: 0 });
+                await expect.poll(() => getOwnerAt(page, gapMid + 1, across)).toEqual({ tag: 'button', index: 1 });
 
                 await page.mouse.click(gapMid - 1, across);
 
@@ -329,44 +332,41 @@ test.describe('KbqButtonToggleModule', () => {
 
             test('claims the same gutters for an icon-only item', async ({ page }) => {
                 const group = await openGroup(page, { iconOnly: true });
-                const box = (await group.boundingBox())!;
-                const [first, second] = await getPillBoxes(group);
-                const across = first.y + first.height / 2;
 
                 // An item with nothing but an icon in it, which lays its content out differently and
                 // is the narrowest pill a group can hand a gutter to. It stays a `.kbq-button`: the
                 // second class the hit-area selectors name, `.kbq-button-icon`, is unreachable inside
                 // a toggle, because the icon is projected through the toggle's own wrapper and so is
                 // never content of the button `KbqButtonCssStyler` counts. `.kbq-button_no-label` is
-                // what marks the case here.
+                // what marks the case here — and it lands after the icon-only layout, so the boxes
+                // below are measured once it is in place.
                 await expect(group.locator('kbq-button-toggle').first().locator('button')).toHaveClass(
                     /kbq-button_no-label/
                 );
 
-                expect(await getOwnerAt(page, box.x + 1, across)).toEqual({ tag: 'button', index: 0 });
-                expect(await getOwnerAt(page, (first.x + first.width + second.x) / 2 - 1, across)).toEqual({
-                    tag: 'button',
-                    index: 0
-                });
-                expect(await getOwnerAt(page, (first.x + first.width + second.x) / 2 + 1, across)).toEqual({
-                    tag: 'button',
-                    index: 1
-                });
+                const box = (await group.boundingBox())!;
+                const [first, second] = await getPillBoxes(group);
+                const across = first.y + first.height / 2;
+
+                await expect.poll(() => getOwnerAt(page, box.x + 1, across)).toEqual({ tag: 'button', index: 0 });
+                await expect
+                    .poll(() => getOwnerAt(page, (first.x + first.width + second.x) / 2 - 1, across))
+                    .toEqual({ tag: 'button', index: 0 });
+                await expect
+                    .poll(() => getOwnerAt(page, (first.x + first.width + second.x) / 2 + 1, across))
+                    .toEqual({ tag: 'button', index: 1 });
             });
 
             test('paints the hover state from a pointer in the gap', async ({ page }) => {
                 const group = await openGroup(page);
                 const second = group.locator('kbq-button-toggle').nth(1).locator('button');
                 const [first, secondBox] = await getPillBoxes(group);
-                const getBackground = () =>
-                    second.evaluate((element: HTMLElement) => getComputedStyle(element).backgroundColor);
-
-                const before = await getBackground();
+                const before = await second.evaluate((element) => getComputedStyle(element).backgroundColor);
 
                 // 1px past the midline, i.e. still outside the pill this must light up
                 await page.mouse.move((first.x + first.width + secondBox.x) / 2 + 1, first.y + first.height / 2);
 
-                expect(await getBackground()).not.toBe(before);
+                await expect(second).not.toHaveCSS('background-color', before);
             });
 
             test('activates a toggle from a click in the gap', async ({ page }) => {
@@ -392,11 +392,12 @@ test.describe('KbqButtonToggleModule', () => {
 
                 // the first item is laid out at the trailing edge now, so it claims the padding there
                 expect(pills[0].x).toBeGreaterThan(pills[pills.length - 1].x);
-                expect(await getOwnerAt(page, box.x + box.width - 1, across)).toEqual({ tag: 'button', index: 0 });
-                expect(await getOwnerAt(page, box.x + 1, across)).toEqual({
-                    tag: 'button',
-                    index: pills.length - 1
-                });
+                await expect
+                    .poll(() => getOwnerAt(page, box.x + box.width - 1, across))
+                    .toEqual({ tag: 'button', index: 0 });
+                await expect
+                    .poll(() => getOwnerAt(page, box.x + 1, across))
+                    .toEqual({ tag: 'button', index: pills.length - 1 });
             });
         });
     });
@@ -441,29 +442,32 @@ test.describe('KbqButtonToggleModule', () => {
             const gapMid = (first.x + first.width + second.x) / 2;
             const across = first.y + first.height / 2;
 
-            expect(await getOwnerAt(page, gapMid - 1, across)).toEqual({ tag: 'button', index: 0 });
-            expect(await getOwnerAt(page, gapMid + 1, across)).toEqual({ tag: 'button', index: 1 });
+            await expect.poll(() => getOwnerAt(page, gapMid - 1, across)).toEqual({ tag: 'button', index: 0 });
+            await expect.poll(() => getOwnerAt(page, gapMid + 1, across)).toEqual({ tag: 'button', index: 1 });
 
-            expect(await getOwnerAt(page, box.x + 1, across)).toEqual({ tag: 'button', index: 0 });
-            expect(await getOwnerAt(page, box.x + box.width - 1, across)).toEqual({
-                tag: 'button',
-                index: pills.length - 1
-            });
+            await expect.poll(() => getOwnerAt(page, box.x + 1, across)).toEqual({ tag: 'button', index: 0 });
+            await expect
+                .poll(() => getOwnerAt(page, box.x + box.width - 1, across))
+                .toEqual({ tag: 'button', index: pills.length - 1 });
         });
 
         test('centres icons vertically', async ({ page }) => {
             await page.goto('/E2eButtonToggleStatesStretched');
             const locator = getComponent(page);
+            const toggle = getScreenshotTarget(locator).locator('kbq-button-toggle').first();
 
             // beside a label is the case this variant makes hard: it is the only one wide enough to
             // clip its label, so it is the only one that has to keep the label box a block container
             await togglePrefix(locator);
             await toggleSuffix(locator);
 
+            // each measurement waits for the layout it is about, or it would measure the previous one
+            await expect(toggle.locator('.kbq-button-toggle-wrapper > .kbq-icon')).toHaveCount(2);
             await expectIconsCentred(locator);
 
             await toggleTitle(locator);
 
+            await expect(toggle.locator('button')).toHaveClass(/kbq-button_no-label/);
             await expectIconsCentred(locator);
         });
 
@@ -531,8 +535,20 @@ test.describe('KbqButtonToggleModule', () => {
 
             // `min-width: 0` is on the label box alone, so it is the only flex item that absorbs the
             // shrink — an icon that shrank with it would be clipped instead of the label
+            await expect(icons).toHaveCount(2);
+            // Read once the label has shrunk: an icon at full size before that proves nothing.
+            await expect
+                .poll(async () => {
+                    const { scroll, client } = await getLabelWidths(toggle);
+
+                    return scroll - client;
+                })
+                .toBeGreaterThan(0);
+
             for (let index = 0; index < (await icons.count()); index++) {
-                expect((await icons.nth(index).boundingBox())!.width).toBeGreaterThan(15);
+                const { width } = (await icons.nth(index).boundingBox())!;
+
+                expect(width).toBeGreaterThan(15);
             }
 
             await expectIconsSpacedFromLabel(toggle);

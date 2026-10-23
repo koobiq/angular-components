@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpSizes } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 
 /**
@@ -13,7 +13,8 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     imports: [
         KbqPopoverModule,
         KbqButtonModule,
-        KbqLinkModule,
+        KbqLink,
+        KbqLinkSuffix,
         KbqIcon
     ],
     templateUrl: 'popover-small-example.html',

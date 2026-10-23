@@ -105,6 +105,17 @@ export class BaseReleaseTask {
         }
     }
 
+    /** Commits every change of the release. Exits when Git fails, so that nothing gets tagged or pushed. */
+    protected commitReleaseChanges(newVersionName: string) {
+        const message = `chore: bump version to ${newVersionName} w/ changelog`;
+
+        if (this.git.stageAllChanges() && this.git.createNewCommit(message)) return;
+
+        console.error(red(`  ✘   Could not create the staging commit for "${newVersionName}".`));
+        console.error(red(`      The version bump and the changelog are left uncommitted.`));
+        process.exit(1);
+    }
+
     /** Prompts the user with a confirmation question and a specified message. */
     protected async promptConfirm(message: string): Promise<boolean> {
         return (
