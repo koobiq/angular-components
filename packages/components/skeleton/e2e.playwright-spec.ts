@@ -36,6 +36,24 @@ const dimensions = (locator: Locator): Promise<[number, number]> =>
         return [width, height];
     });
 
+const widthOf = (locator: Locator): Promise<number> => dimensions(locator).then(([width]) => width);
+
+// Without a timeout `toPass` retries until the test times out, leaving a soft failure no time for the rest.
+const RETRY = { timeout: 5_000 };
+
+/**
+ * Compares a preset with the component it stands in for, both read again on every attempt of `toPass`: right after
+ * the page loads the component may not have rendered its rows yet, and an icon is as wide as its glyph until the
+ * icon font arrives.
+ */
+const sameAs = (preset: () => Promise<unknown[]>, real: () => Promise<unknown[]>) => async (): Promise<void> => {
+    const [presetValue, realValue] = await Promise.all([preset(), real()]);
+
+    // Two lists that have not rendered yet are equal as well.
+    expect(realValue).not.toHaveLength(0);
+    expect(presetValue).toEqual(realValue);
+};
+
 test.describe('KbqSkeleton', () => {
     // The screenshots run with reduced motion, so the wave stands still and every skeleton shows only its fill.
     test.describe('screenshots', () => {
@@ -66,7 +84,7 @@ test.describe('KbqSkeleton', () => {
 
                 // Guards the fixture: a host without a radius of its own would prove nothing here.
                 expect.soft(own, testId).not.toBe('0px');
-                expect.soft(await radius(host(page, 'loading', testId)), testId).toBe(own);
+                await expect.soft(host(page, 'loading', testId), testId).toHaveCSS('border-top-left-radius', own);
             }
         });
 
@@ -76,22 +94,24 @@ test.describe('KbqSkeleton', () => {
                 const expected = await skeletonRadius(loading);
 
                 expect.soft(expected, testId).not.toBe('0px');
-                expect.soft(await radius(loading), testId).toBe(expected);
+                await expect.soft(loading, testId).toHaveCSS('border-top-left-radius', expected);
             }
         });
 
         test('should give a host its own radius back once loaded', async ({ page }) => {
             for (const testId of ['text', 'block']) {
-                expect.soft(await radius(host(page, 'loaded', testId)), testId).toBe('0px');
+                // Guards the fixture: a host the skeleton styles have not reached reads 0px as well.
+                await expect.soft(host(page, 'loading', testId), testId).not.toHaveCSS('border-top-left-radius', '0px');
+                await expect.soft(host(page, 'loaded', testId), testId).toHaveCSS('border-top-left-radius', '0px');
             }
         });
 
         test('should keep an explicit zero radius', async ({ page }) => {
-            expect(await radius(host(page, 'loading', 'square'))).toBe('0px');
+            await expect(host(page, 'loading', 'square')).toHaveCSS('border-top-left-radius', '0px');
         });
 
         test('should let a class override the radius of the kbq-skeleton element', async ({ page }) => {
-            expect(await radius(host(page, 'loading', 'circle'))).toBe('50%');
+            await expect(host(page, 'loading', 'circle')).toHaveCSS('border-top-left-radius', '50%');
         });
     });
 
@@ -104,14 +124,14 @@ test.describe('KbqSkeleton', () => {
             const sizes = { button: [72, 32], badge: [56, 24], tag: [56, 24], icon: [24, 24], link: [32, 20] };
 
             for (const [testId, size] of Object.entries(sizes)) {
-                expect.soft(await dimensions(page.getByTestId(testId)), testId).toEqual(size);
+                await expect.poll(() => dimensions(page.getByTestId(testId)), testId).toEqual(size);
             }
         });
 
         test('should stretch a standalone skeleton across a block at the height of a class', async ({ page }) => {
             const [width] = await dimensions(page.getByTestId('block-container'));
 
-            expect(await dimensions(page.getByTestId('block'))).toEqual([width, 100]);
+            await expect.poll(() => dimensions(page.getByTestId('block'))).toEqual([width, 100]);
         });
 
         test('should take the height of the text of its typography level', async ({ page }) => {
@@ -130,12 +150,12 @@ test.describe('KbqSkeleton', () => {
             );
 
             // A single line, such as a heading, takes half of the width.
-            expect(await dimensions(heading.locator('.kbq-skeleton'))).toEqual([width / 2, height - gap]);
+            await expect.poll(() => dimensions(heading.locator('.kbq-skeleton'))).toEqual([width / 2, height - gap]);
         });
 
         test('should let a class resize a preset', async ({ page }) => {
-            expect.soft(await dimensions(page.getByTestId('wide-button'))).toEqual([120, 32]);
-            expect.soft((await dimensions(page.getByTestId('narrow-paragraph')))[0]).toBe(300);
+            await expect.poll(() => dimensions(page.getByTestId('wide-button'))).toEqual([120, 32]);
+            await expect.poll(() => widthOf(page.getByTestId('narrow-paragraph'))).toBe(300);
         });
 
         test('should repeat the lengths of the lines of a paragraph', async ({ page }) => {
@@ -155,22 +175,37 @@ test.describe('KbqSkeleton', () => {
             const terms = page.getByTestId('dl').locator('.kbq-skeleton-dl__term');
             const realTerms = page.getByTestId('real-dl').locator('kbq-dt');
 
-            expect(pitch(await tops(terms))).toEqual(pitch(await tops(realTerms)));
-            expect((await dimensions(terms.first()))[0]).toBe(120);
+            await expect(
+                sameAs(
+                    () => tops(terms).then(pitch),
+                    () => tops(realTerms).then(pitch)
+                )
+            ).toPass(RETRY);
+            await expect.poll(() => widthOf(terms.first())).toBe(120);
         });
 
         test('should keep the rows of a table', async ({ page }) => {
             const table = page.getByTestId('table');
             const realTable = page.getByTestId('real-table');
 
-            expect.soft(await dimensions(table.locator('.kbq-skeleton-table__cell_header').first())).toEqual([
-                expect.any(Number),
-                (await dimensions(realTable.locator('th')))[1]
-            ]);
-            expect.soft(await dimensions(table.locator('.kbq-skeleton-table__cell').last())).toEqual([
-                expect.any(Number),
-                (await dimensions(realTable.locator('td').first()))[1]
-            ]);
+            const anyWidth = ([, height]: [number, number]) => [expect.any(Number), height];
+
+            await expect
+                .soft(
+                    sameAs(
+                        () => dimensions(table.locator('.kbq-skeleton-table__cell_header').first()),
+                        () => dimensions(realTable.locator('th')).then(anyWidth)
+                    )
+                )
+                .toPass(RETRY);
+            await expect
+                .soft(
+                    sameAs(
+                        () => dimensions(table.locator('.kbq-skeleton-table__cell').last()),
+                        () => dimensions(realTable.locator('td').first()).then(anyWidth)
+                    )
+                )
+                .toPass(RETRY);
         });
 
         test('should keep the lines of a form field', async ({ page }) => {
@@ -210,17 +245,29 @@ test.describe('KbqSkeleton', () => {
             const preset = page.getByTestId('form-field-bare');
             const real = page.getByTestId('real-form-field-bare');
 
-            expect
-                .soft(await boxesIn(preset, '.kbq-skeleton-form-field__control'))
-                .toEqual(await boxesIn(real, '.kbq-form-field__container'));
-            expect.soft(await dimensions(preset)).toEqual(await dimensions(real));
+            await expect
+                .soft(
+                    sameAs(
+                        () => boxesIn(preset, '.kbq-skeleton-form-field__control'),
+                        () => boxesIn(real, '.kbq-form-field__container')
+                    )
+                )
+                .toPass(RETRY);
+            await expect
+                .soft(
+                    sameAs(
+                        () => dimensions(preset),
+                        () => dimensions(real)
+                    )
+                )
+                .toPass(RETRY);
         });
 
         test('should give the table columns their own widths', async ({ page }) => {
             const cells = page.getByTestId('table-widths').locator('.kbq-skeleton-table__cell');
 
-            expect.soft((await dimensions(cells.first()))[0]).toBe(160);
-            expect.soft((await dimensions(cells.last()))[0]).toBe(48);
+            await expect.poll(() => widthOf(cells.first())).toBe(160);
+            await expect.poll(() => widthOf(cells.last())).toBe(48);
         });
     });
 
@@ -233,12 +280,22 @@ test.describe('KbqSkeleton', () => {
             const preset = page.getByTestId('accordion');
             const real = page.getByTestId('real-accordion');
 
-            expect
-                .soft(await boxesIn(preset, '.kbq-skeleton-accordion__item'))
-                .toEqual(await boxesIn(real, '.kbq-accordion-item'));
-            expect
-                .soft(centers(await boxesIn(preset, '.kbq-skeleton-accordion__icon')))
-                .toEqual(centers(await boxesIn(real, '.kbq-accordion-trigger__icon')));
+            await expect
+                .soft(
+                    sameAs(
+                        () => boxesIn(preset, '.kbq-skeleton-accordion__item'),
+                        () => boxesIn(real, '.kbq-accordion-item')
+                    )
+                )
+                .toPass(RETRY);
+            await expect
+                .soft(
+                    sameAs(
+                        () => boxesIn(preset, '.kbq-skeleton-accordion__icon').then(centers),
+                        () => boxesIn(real, '.kbq-accordion-trigger__icon').then(centers)
+                    )
+                )
+                .toPass(RETRY);
         });
 
         test('should keep the control and the lines of a checkbox, a radio button and a toggle', async ({ page }) => {
@@ -254,12 +311,24 @@ test.describe('KbqSkeleton', () => {
                 // The text of the component is as wide as its words: only where its lines are is compared.
                 const lines = (boxes: number[][]) => boxes.map(([left, top, , height]) => [left, top, height]);
 
-                expect
-                    .soft(await boxesIn(preset, '.kbq-skeleton-checkable__control'), control)
-                    .toEqual(await boxesIn(real, realControl));
-                expect
-                    .soft(lines(await boxesIn(preset, '.kbq-skeleton-checkable__text')), control)
-                    .toEqual(lines(await boxesIn(real, realText)));
+                await expect
+                    .soft(
+                        sameAs(
+                            () => boxesIn(preset, '.kbq-skeleton-checkable__control'),
+                            () => boxesIn(real, realControl)
+                        ),
+                        control
+                    )
+                    .toPass(RETRY);
+                await expect
+                    .soft(
+                        sameAs(
+                            () => boxesIn(preset, '.kbq-skeleton-checkable__text').then(lines),
+                            () => boxesIn(real, realText).then(lines)
+                        ),
+                        control
+                    )
+                    .toPass(RETRY);
             }
         });
 
@@ -267,24 +336,46 @@ test.describe('KbqSkeleton', () => {
             const heights = (boxes: number[][]) => boxes.map(([, , , height]) => height);
             const tops = (boxes: number[][]) => boxes.map(([, top]) => top);
 
-            expect
-                .soft(heights(await boxesIn(page.getByTestId('tabs'), '.kbq-skeleton-tabs__tab')))
-                .toEqual(heights(await boxesIn(page.getByTestId('real-tabs'), '.kbq-tab-label')));
-            expect
-                .soft(pitch(tops(await boxesIn(page.getByTestId('vertical-tabs'), '.kbq-skeleton-tabs__tab'))))
-                .toEqual(pitch(tops(await boxesIn(page.getByTestId('real-vertical-tabs'), '.kbq-tab-label'))));
+            const rows = (boxes: number[][]) => pitch(tops(boxes));
+
+            await expect
+                .soft(
+                    sameAs(
+                        () => boxesIn(page.getByTestId('tabs'), '.kbq-skeleton-tabs__tab').then(heights),
+                        () => boxesIn(page.getByTestId('real-tabs'), '.kbq-tab-label').then(heights)
+                    )
+                )
+                .toPass(RETRY);
+            await expect
+                .soft(
+                    sameAs(
+                        () => boxesIn(page.getByTestId('vertical-tabs'), '.kbq-skeleton-tabs__tab').then(rows),
+                        () => boxesIn(page.getByTestId('real-vertical-tabs'), '.kbq-tab-label').then(rows)
+                    )
+                )
+                .toPass(RETRY);
         });
 
         test('should keep the nodes of a tree and the toggles of every level', async ({ page }) => {
             const preset = page.getByTestId('tree');
             const real = page.getByTestId('real-tree');
 
-            expect
-                .soft(await boxesIn(preset, '.kbq-skeleton-tree__node'))
-                .toEqual(await boxesIn(real, 'kbq-tree-option'));
-            expect
-                .soft(centers(await boxesIn(preset, '.kbq-skeleton-tree__toggle')))
-                .toEqual(centers(await boxesIn(real, 'kbq-tree-node-toggle')));
+            await expect
+                .soft(
+                    sameAs(
+                        () => boxesIn(preset, '.kbq-skeleton-tree__node'),
+                        () => boxesIn(real, 'kbq-tree-option')
+                    )
+                )
+                .toPass(RETRY);
+            await expect
+                .soft(
+                    sameAs(
+                        () => boxesIn(preset, '.kbq-skeleton-tree__toggle').then(centers),
+                        () => boxesIn(real, 'kbq-tree-node-toggle').then(centers)
+                    )
+                )
+                .toPass(RETRY);
         });
     });
 });

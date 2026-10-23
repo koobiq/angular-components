@@ -12,7 +12,7 @@ import {
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_WINDOW, KbqComponentColors } from '@koobiq/components/core';
-import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconModule } from '@koobiq/components/icon';
 import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef } from '@koobiq/components/modal';
@@ -36,7 +36,9 @@ export type DocsIconPreviewModalData = {
         KbqSelectModule,
         KbqButtonModule,
         KbqModalModule,
-        KbqDlModule,
+        KbqDl,
+        KbqDt,
+        KbqDd,
         KbqToolTipModule,
         KbqBadgeModule,
         DocsCodeSnippetDirective

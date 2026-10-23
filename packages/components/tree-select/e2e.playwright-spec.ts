@@ -575,10 +575,22 @@ test.describe('KbqTreeSelectModule', () => {
             await page.goto('/E2eTreeSelectPositioning');
             await openPanel(page);
 
+            const options = page.locator('.cdk-overlay-pane kbq-tree-option');
+
+            // The panel focuses its first option a task after it opens; the arrow keys have to start from there.
+            await expect(options.first()).toBeFocused();
+
             const initial = await panelScrollTop(page);
 
             for (let i = 0; i < 3; i++) await page.keyboard.press('ArrowDown');
-            expect(await panelScrollTop(page)).toBe(initial);
+
+            // Focusing an option is what scrolls it into view. Read once after it: a poll for an unchanged
+            // offset would pass on a sample taken before.
+            await expect(options.nth(3)).toBeFocused();
+
+            const after = await panelScrollTop(page);
+
+            expect(after).toBe(initial);
         });
 
         test('should scroll down to keep the active option in view on long DOWN_ARROW sequence', async ({ page }) => {
@@ -607,7 +619,7 @@ test.describe('KbqTreeSelectModule', () => {
             for (let i = 0; i < 20; i++) await page.keyboard.press('ArrowDown');
 
             await page.keyboard.press('Home');
-            expect(await panelScrollTop(page)).toBe(0);
+            await expect.poll(() => panelScrollTop(page)).toBe(0);
         });
 
         test('should scroll to the bottom when pressing END', async ({ page }) => {

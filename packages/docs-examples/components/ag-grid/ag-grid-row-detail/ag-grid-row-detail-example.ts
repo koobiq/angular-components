@@ -8,7 +8,7 @@ import {
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { AgGridModule } from 'ag-grid-angular';
 import {
@@ -42,7 +42,7 @@ type ExampleRowData = {
 
 @Component({
     selector: 'example-row-detail',
-    imports: [KbqButtonModule, KbqDlModule],
+    imports: [KbqButtonModule, KbqDl, KbqDt, KbqDd],
     template: `
         <div class="example-row-detail-card">
             <kbq-dl>

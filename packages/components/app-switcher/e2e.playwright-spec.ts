@@ -7,6 +7,8 @@ test.describe('KbqAppSwitcherModule', () => {
     // overlay panel so it never ambiguously matches the always-present inline instance.
     const overlay = (page: Page) => page.locator('.kbq-app-switcher__panel');
     const listItem = (page: Page) => overlay(page).locator('.kbq-app-switcher-list-item');
+    // The selected site of E2eAppSwitcherWithSitesStates: two groups of four aliases under their headers, and one app.
+    const WITH_SITES_FULL_LIST = 11;
 
     const openStates = async (page: Page) => {
         await page.goto('/E2eAppSwitcherStates');
@@ -88,15 +90,17 @@ test.describe('KbqAppSwitcherModule', () => {
             const focused = focusedItem(page);
 
             // Focus is a background fill only — no ring/border/box-shadow, like the dropdown.
-            expect(await focused.evaluate((el) => getComputedStyle(el).boxShadow)).toBe('none');
+            await expect(focused).toHaveCSS('box-shadow', 'none');
 
             // The focus background matches a hovered sibling's background.
             const focusBackground = await focused.evaluate((el) => getComputedStyle(el).backgroundColor);
             const sibling = listItem(page).nth(2);
 
             await sibling.hover();
+            // Gated on `:hover` so that the comparison cannot pass on the sibling's background from before the hover.
+            await expect.poll(() => sibling.evaluate((el) => el.matches(':hover'))).toBe(true);
 
-            expect(await sibling.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(focusBackground);
+            await expect(sibling).toHaveCSS('background-color', focusBackground);
         });
 
         test('End and Home move to the last and first item', async ({ page }) => {
@@ -161,15 +165,9 @@ test.describe('KbqAppSwitcherModule', () => {
             await openWithSites(page);
 
             await page.keyboard.type('phantom');
-            await expect(listItem(page).first()).toBeVisible();
-
-            const texts = await listItem(page).allTextContents();
-
-            expect(texts.length).toBeGreaterThan(0);
-
-            for (const text of texts) {
-                expect(text.toLowerCase()).toContain('phantom');
-            }
+            // Each keystroke renders its own results, and those of the first letters match more than the query.
+            await expect(listItem(page).filter({ hasNotText: 'phantom' })).toHaveCount(0);
+            await expect(listItem(page)).not.toHaveCount(0);
         });
 
         test('a query with no match shows an announced empty state', async ({ page }) => {
@@ -190,31 +188,33 @@ test.describe('KbqAppSwitcherModule', () => {
 
         test('the clear button restores the full list and is named for assistive technology', async ({ page }) => {
             await openWithSites(page);
-            const before = await listItem(page).count();
+            await expect(listItem(page)).toHaveCount(WITH_SITES_FULL_LIST);
 
             await page.keyboard.type('phantom');
-            expect(await listItem(page).count()).toBeLessThan(before);
+            await expect(listItem(page).filter({ hasNotText: 'phantom' })).toHaveCount(0);
+            await expect(listItem(page)).not.toHaveCount(0);
 
             const cleaner = overlay(page).locator('kbq-cleaner');
 
             await expect(cleaner).toHaveAttribute('aria-label', /.+/);
             await cleaner.click();
 
-            await expect(listItem(page)).toHaveCount(before);
+            await expect(listItem(page)).toHaveCount(WITH_SITES_FULL_LIST);
         });
 
         test('clicking a group header collapses and expands its aliases', async ({ page }) => {
             await openWithSites(page);
             const header = overlay(page).locator('.kbq-app-switcher-list-item[aria-expanded]').first();
-            const expanded = await listItem(page).count();
+
+            await expect(listItem(page)).toHaveCount(WITH_SITES_FULL_LIST);
 
             await header.click();
             await expect(header).toHaveAttribute('aria-expanded', 'false');
-            expect(await listItem(page).count()).toBeLessThan(expanded);
+            await expect.poll(() => listItem(page).count()).toBeLessThan(WITH_SITES_FULL_LIST);
 
             await header.click();
             await expect(header).toHaveAttribute('aria-expanded', 'true');
-            await expect(listItem(page)).toHaveCount(expanded);
+            await expect(listItem(page)).toHaveCount(WITH_SITES_FULL_LIST);
         });
 
         test('the search field is named even though it only shows a placeholder', async ({ page }) => {

@@ -118,7 +118,10 @@ test.describe('KbqFilterBarModule', () => {
                 expect(lastBox.x + lastBox.width).toBeLessThanOrEqual(pipeBox.x + pipeBox.width + 1);
             }
 
-            expect((await component.locator('.kbq-pipe__input').boundingBox())!.width).toBe(240);
+            // Read once, past the caps above: the input pipe is 240px wide without the token too.
+            const inputBox = (await component.locator('.kbq-pipe__input').boundingBox())!;
+
+            expect(inputBox.width).toBe(240);
         });
 
         test('truncates the saved filter name', async ({ page }) => {
@@ -146,14 +149,6 @@ test.describe('KbqFilterBarModule', () => {
     });
 
     test.describe('E2eFilterBarPanelMaxHeight', () => {
-        /** Reads a resolved CSS length off the first element matching the selector. */
-        const computed = (page: Page, selector: string, property: string): Promise<string> =>
-            page.evaluate(
-                ({ selector, property }) =>
-                    getComputedStyle(document.querySelector<HTMLElement>(selector)!).getPropertyValue(property),
-                { selector, property }
-            );
-
         /** Whether the scrollable list overflows, i.e. whether the user gets a scrollbar. */
         const scrolls = (page: Page, selector: string): Promise<boolean> =>
             page.evaluate((selector) => {
@@ -187,7 +182,7 @@ test.describe('KbqFilterBarModule', () => {
 
             const selector = await openPipe(page, page.locator('.kbq-pipe__select').first(), '.kbq-select__content');
 
-            expect(await computed(page, selector, 'max-height')).toBe('256px');
+            await expect(page.locator(selector)).toHaveCSS('max-height', '256px');
         });
 
         test('should not scroll a list of eight options at the default height', async ({ page }) => {
@@ -198,7 +193,11 @@ test.describe('KbqFilterBarModule', () => {
             // would fit and a full list of eight would scroll behind a clipped row.
             const selector = await openPipe(page, page.locator('.kbq-pipe__select').first(), '.kbq-select__content');
 
-            expect(await scrolls(page, selector)).toBe(false);
+            // Read once, after all eight options are in: an empty list does not scroll either.
+            await expect(page.locator(`${selector} .kbq-option`)).toHaveCount(8);
+            const overflows = await scrolls(page, selector);
+
+            expect(overflows).toBe(false);
         });
 
         test('should scroll once a list exceeds the default height', async ({ page }) => {
@@ -206,40 +205,28 @@ test.describe('KbqFilterBarModule', () => {
 
             const selector = await openPipe(page, page.locator('.kbq-pipe__select').nth(1), '.kbq-select__content');
 
-            expect(await computed(page, selector, 'max-height')).toBe('256px');
-            expect(await scrolls(page, selector)).toBe(true);
+            await expect(page.locator(selector)).toHaveCSS('max-height', '256px');
+            await expect.poll(() => scrolls(page, selector)).toBe(true);
         });
 
         test('should apply panelMaxHeight from the pipe template to a select pipe', async ({ page }) => {
-            expect(
-                await computed(
-                    page,
-                    await openPipeByClass(page, '.kbq-pipe__multiselect', '.kbq-select__content'),
-                    'max-height'
-                )
-            ).toBe('192px');
+            const selector = await openPipeByClass(page, '.kbq-pipe__multiselect', '.kbq-select__content');
+
+            await expect(page.locator(selector)).toHaveCSS('max-height', '192px');
         });
 
         test('should apply panelMaxHeight from the pipe template to a tree-select pipe', async ({ page }) => {
-            expect(
-                await computed(
-                    page,
-                    await openPipeByClass(page, '.kbq-pipe__tree-select', '.kbq-tree-select__content'),
-                    'max-height'
-                )
-            ).toBe('128px');
+            const selector = await openPipeByClass(page, '.kbq-pipe__tree-select', '.kbq-tree-select__content');
+
+            await expect(page.locator(selector)).toHaveCSS('max-height', '128px');
         });
 
         test('should keep the 256px default for a multi-tree-select pipe', async ({ page }) => {
             // `kbq-tree-select` renders `.kbq-tree-select__content`, so a filter-bar rule aimed at
             // `.kbq-select__content` never matched this panel. Both now resolve through the same token.
-            expect(
-                await computed(
-                    page,
-                    await openPipeByClass(page, '.kbq-pipe__multi-tree-select', '.kbq-tree-select__content'),
-                    'max-height'
-                )
-            ).toBe('256px');
+            const selector = await openPipeByClass(page, '.kbq-pipe__multi-tree-select', '.kbq-tree-select__content');
+
+            await expect(page.locator(selector)).toHaveCSS('max-height', '256px');
         });
     });
 
@@ -263,9 +250,6 @@ test.describe('KbqFilterBarModule', () => {
             return option;
         };
 
-        const computed = (locator: Locator, property: string): Promise<string> =>
-            locator.evaluate((element, property) => getComputedStyle(element).getPropertyValue(property), property);
-
         /** Overflow of the name line: a two-line option gives each line its own clipping box. */
         const getNameWidths = (option: Locator) =>
             option
@@ -279,12 +263,12 @@ test.describe('KbqFilterBarModule', () => {
         test('should wrap the option text only under multilineOptions', async ({ page }) => {
             const truncated = await openPipe(page, TRUNCATED);
 
-            expect(await computed(truncated.locator('.kbq-option-text'), 'white-space')).toBe('nowrap');
+            await expect(truncated.locator('.kbq-option-text')).toHaveCSS('white-space', 'nowrap');
 
             const multiline = await openPipe(page, MULTILINE);
 
             // The panel is portaled into the overlay, so this also proves the `panelClass` modifier reaches it.
-            expect(await computed(multiline.locator('.kbq-option-text'), 'white-space')).toBe('normal');
+            await expect(multiline.locator('.kbq-option-text')).toHaveCSS('white-space', 'normal');
         });
 
         test('should truncate the long option with an ellipsis without multilineOptions', async ({ page }) => {
@@ -296,17 +280,19 @@ test.describe('KbqFilterBarModule', () => {
             expect(scroll).toBeGreaterThan(client);
 
             // The line has to clip itself, or the clipped text gets no `…`.
-            expect(await computed(name, 'overflow-x')).toBe('hidden');
-            expect(await computed(name, 'text-overflow')).toBe('ellipsis');
+            await expect(name).toHaveCSS('overflow-x', 'hidden');
+            await expect(name).toHaveCSS('text-overflow', 'ellipsis');
         });
 
         test('should wrap the long option under multilineOptions instead of clipping it', async ({ page }) => {
             const option = await openPipe(page, MULTILINE);
+
+            // The wrapped rows make the option taller than 48px, and nothing overflows horizontally once they have.
+            await expect.poll(async () => (await option.boundingBox())?.height).toBeGreaterThan(48);
+
             const { scroll, client } = await getNameWidths(option);
 
-            // Nothing overflows horizontally, and the wrapped rows make the option taller than 48px.
             expect(scroll).toBeLessThanOrEqual(client);
-            expect((await option.boundingBox())!.height).toBeGreaterThan(48);
         });
 
         test('should show the truncation tooltip on a clipped two-line option', async ({ page }) => {
@@ -328,7 +314,7 @@ test.describe('KbqFilterBarModule', () => {
             const option = await openPipe(page, MULTILINE);
 
             // The caption is a secondary line: `text-compact`, not the option's own `text-normal`.
-            expect(await computed(option.locator('.kbq-option-caption'), 'font-size')).toBe('12px');
+            await expect(option.locator('.kbq-option-caption')).toHaveCSS('font-size', '12px');
         });
 
         test('states', async ({ page }) => {

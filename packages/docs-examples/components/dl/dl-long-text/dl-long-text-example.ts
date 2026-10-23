@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqLink } from '@koobiq/components/link';
 
 /**
@@ -7,12 +7,9 @@ import { KbqLink } from '@koobiq/components/link';
  */
 @Component({
     selector: 'dl-long-text-example',
-    imports: [KbqDlModule, KbqLink],
+    imports: [KbqDl, KbqDt, KbqDd, KbqLink],
     template: `
-        @let dtMinWidth = 100;
-        @let ddMinWidth = 200;
-
-        <kbq-dl resizable [dtMinWidth]="dtMinWidth" [ddMinWidth]="ddMinWidth">
+        <kbq-dl resizable [dtMinWidth]="100" [ddMinWidth]="200">
             <kbq-dt>security.incident.description</kbq-dt>
             <kbq-dd>
                 An employee opened the
@@ -33,10 +30,10 @@ import { KbqLink } from '@koobiq/components/link';
                 C:\\Users\\Administrator\\AppData\\Local\\Temp\\SecurityUpdate\\packages\\windows\\x64\\security_update.exe
             </kbq-dd>
 
-            <kbq-dt>threat.mitre_attack.technique_url</kbq-dt>
+            <kbq-dt>threat.indicator.reference</kbq-dt>
             <kbq-dd>
-                <a kbqLink href="https://attack.mitre.org/techniques/T1204/002/">
-                    https://attack.mitre.org/techniques/T1204/002/
+                <a kbqLink pseudo>
+                    https://www.virustotal.com/gui/file/5cfeaa7084b508d0ea762d8cfed396b6029eed6005d381b16e725755ec801014/detection
                 </a>
             </kbq-dd>
         </kbq-dl>
@@ -45,6 +42,7 @@ import { KbqLink } from '@koobiq/components/link';
         :host {
             display: block;
             max-width: 600px;
+            padding: var(--kbq-size-l);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

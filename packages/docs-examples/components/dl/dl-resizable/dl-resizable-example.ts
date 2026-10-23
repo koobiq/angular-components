@@ -1,57 +1,39 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
-import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqDivider } from '@koobiq/components/divider';
-import { KbqDlModule } from '@koobiq/components/dl';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 
 /**
- * @title Description list resizable example
+ * @title Description list resizable
  */
 @Component({
     selector: 'dl-resizable-example',
-    imports: [KbqDlModule, KbqBadgeModule, KbqDivider],
+    imports: [KbqDl, KbqDt, KbqDd],
     template: `
-        @let dtMinWidth = 100;
-        @let ddMinWidth = 200;
-
-        <kbq-dl resizable [dtMinWidth]="dtMinWidth" [ddMinWidth]="ddMinWidth" [(dtWidth)]="dtWidth">
+        <kbq-dl resizable>
             <kbq-dt>Incident type</kbq-dt>
-            <kbq-dd>
-                <kbq-badge badgeColor="fade-error">DDoS</kbq-badge>
-            </kbq-dd>
+            <kbq-dd>Malware infection</kbq-dd>
+
             <kbq-dt>Identifier</kbq-dt>
             <kbq-dd>INC-2026-125-78253</kbq-dd>
+
+            <kbq-dt>Status</kbq-dt>
+            <kbq-dd>New</kbq-dd>
+
+            <kbq-dt>Assignee</kbq-dt>
+            <kbq-dd>John Smith</kbq-dd>
+
             <kbq-dt>Description</kbq-dt>
             <kbq-dd>
-                In a distributed denial-of-service attack (DDoS attack), the incoming traffic flooding the victim
-                originates from many different sources.
-            </kbq-dd>
-        </kbq-dl>
-
-        <kbq-divider />
-
-        <kbq-dl resizable [dtMinWidth]="dtMinWidth" [ddMinWidth]="ddMinWidth" [(dtWidth)]="dtWidth">
-            <kbq-dt>Incident type</kbq-dt>
-            <kbq-dd>
-                <kbq-badge badgeColor="fade-warning">Brute-force</kbq-badge>
-            </kbq-dd>
-            <kbq-dt>Identifier</kbq-dt>
-            <kbq-dd>INC-2026-13-44357</kbq-dd>
-            <kbq-dt>Description</kbq-dt>
-            <kbq-dd>
-                In cryptography, a brute-force attack consists of an attacker submitting many passwords or passphrases
-                with the hope of eventually guessing correctly.
+                An employee opened an attachment in a phishing email, and the file ran malicious code on the
+                workstation.
             </kbq-dd>
         </kbq-dl>
     `,
     styles: `
         :host {
-            display: flex;
-            flex-direction: column;
-            gap: var(--kbq-size-l);
+            display: block;
+            padding: var(--kbq-size-l);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DlResizableExample {
-    readonly dtWidth = model(150);
-}
+export class DlResizableExample {}

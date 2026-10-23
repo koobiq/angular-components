@@ -2,7 +2,8 @@ import { DOCS_SEO_DESCRIPTIONS } from '../../apps/docs/src/app/seo-descriptions'
 import { collectSeoDescriptions, DocsSeoDescriptions } from './generate-seo-descriptions';
 import { DOCS_PAGE_OVERVIEW_SOURCES } from './sources';
 
-vi.setConfig({ testTimeout: 10_000 });
+// Compiles every overview page: 2-6 s on its own, past 10 s on a busy machine.
+vi.setConfig({ testTimeout: 30_000 });
 
 const locales = ['en', 'ru'] as const;
 

@@ -590,8 +590,8 @@ export class KbqDatepickerInput<D>
 
     private separatorPositions: number[];
 
-    /** Start of the part a caret key selects on a timer, until the selection lands there. */
-    private pendingCaret: { start: number } | null = null;
+    /** Work the keys left to timers, in the order the timers run. */
+    private readonly deferred = new Map<ReturnType<typeof setTimeout>, () => void>();
 
     constructor() {
         this.validator = Validators.compose([
@@ -781,6 +781,10 @@ export class KbqDatepickerInput<D>
             return;
         }
 
+        // Keys from a scanner, an autotype or a busy page arrive before the timers the previous ones set. Run that
+        // work first, so that each key acts on the value and selection a slower typist's would.
+        this.runDeferred();
+
         const keyCode = event.keyCode;
 
         if (this.isLetterKey(event)) {
@@ -821,12 +825,12 @@ export class KbqDatepickerInput<D>
             if (newValue !== formattedValue) {
                 this.setViewValue(formattedValue, true);
 
-                setTimeout(this.onInput);
+                this.defer(this.onInput);
             } else {
                 this.incorrectInput.emit();
             }
         } else {
-            setTimeout(this.onInput);
+            this.defer(this.onInput);
         }
     }
 
@@ -1084,7 +1088,7 @@ export class KbqDatepickerInput<D>
 
         this.setViewValue(this.getNewValue(event.key, position));
 
-        setTimeout(this.onInput);
+        this.defer(this.onInput);
     }
 
     private getNewValue(key: string, position: number) {
@@ -1441,8 +1445,7 @@ export class KbqDatepickerInput<D>
             return;
         }
 
-        // A key pressed before the previous one's selection has landed moves on from where that one goes.
-        let cursorPos = this.pendingCaret?.start ?? (this.selectionStart as number);
+        let cursorPos = this.selectionStart as number;
 
         if ([HOME, PAGE_UP].includes(keyCode)) {
             cursorPos = 0;
@@ -1481,15 +1484,7 @@ export class KbqDatepickerInput<D>
     }
 
     private selectDigitByCursor(cursorPos: number): void {
-        const pendingCaret = { start: this.getDateEditMetrics(cursorPos)[1] };
-
-        this.pendingCaret = pendingCaret;
-
-        setTimeout(() => {
-            if (this.pendingCaret === pendingCaret) {
-                this.pendingCaret = null;
-            }
-
+        this.defer(() => {
             const [, selectionStart, selectionEnd] = this.getDateEditMetrics(cursorPos);
 
             this.setSelection(selectionStart, selectionEnd);
@@ -1497,7 +1492,7 @@ export class KbqDatepickerInput<D>
     }
 
     private selectNextDigitByCursor(cursorPos: number): void {
-        setTimeout(() => {
+        this.defer(() => {
             const [, , endPositionOfCurrentDigit] = this.getDateEditMetrics(cursorPos);
             const [, selectionStart, selectionEnd] = this.getDateEditMetrics(endPositionOfCurrentDigit + 1);
 
@@ -1506,7 +1501,7 @@ export class KbqDatepickerInput<D>
     }
 
     private selectNextDigit(cursorPos: number, cycle: boolean = false): void {
-        setTimeout(() => {
+        this.defer(() => {
             const lastValue = cycle ? 0 : cursorPos;
             const nextSeparatorPos: number = this.viewValue.indexOf(this.separator, cursorPos);
 
@@ -1516,6 +1511,26 @@ export class KbqDatepickerInput<D>
 
             this.setSelection(selectionStart, selectionEnd);
         });
+    }
+
+    /** Runs `work` on a timer, or earlier if the next key comes first. */
+    private defer(work: () => void): void {
+        const timer = setTimeout(() => {
+            this.deferred.delete(timer);
+            work();
+        });
+
+        this.deferred.set(timer, work);
+    }
+
+    /** Runs the work still waiting for its timer, including what that work defers in turn. */
+    private runDeferred(): void {
+        // A Map iteration also visits the entries added during it.
+        for (const [timer, work] of this.deferred) {
+            clearTimeout(timer);
+            this.deferred.delete(timer);
+            work();
+        }
     }
 
     /** Checks whether the input is invalid based on the native validation. */

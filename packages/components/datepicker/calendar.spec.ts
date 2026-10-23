@@ -21,6 +21,11 @@ describe('KbqCalendar', () => {
 
     beforeEach(inject([DateAdapter], (d: LuxonDateAdapter) => {
         adapter = d;
+        // One "today" for the spec and the component: two reads apart in time fall on different days when a run
+        // crosses midnight.
+        const frozenToday = adapter.today();
+
+        adapter.today = () => frozenToday;
     }));
 
     describe('standard calendar', () => {
