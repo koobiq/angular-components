@@ -90,6 +90,22 @@ export const warnPatterns: readonly WarnPattern[] = [
         anchor: RADIO_ANCHOR,
         pattern: REMOVED_TOKENS_PATTERN,
         message: REMOVED_TOKENS_MESSAGE
+    },
+    {
+        anchor: RADIO_ANCHOR,
+        pattern: 'hostDirectives[^\\]]*\\bKbqRadioGroup\\b|\\bdirective\\s*:\\s*KbqRadioGroup\\b',
+        message:
+            'KbqRadioGroup is a component now, so it can no longer be applied through hostDirectives: a ' +
+            'component cannot be a host directive. Render a <kbq-radio-group> element in the template instead.'
+    },
+    {
+        anchor: RADIO_ANCHOR,
+        pattern: '\\bextends\\s+KbqRadioGroup\\b',
+        message:
+            'KbqRadioGroup is a component now. A subclass decorated with @Directive fails at runtime with NG0903 ' +
+            '(directives cannot inherit components), so decorate it with @Component instead. Its template ' +
+            "replaces the group's, so repeat <ng-content /> in it and, to keep the validation error, the " +
+            'kbq-error slot. Wrapping the group rather than extending it avoids both.'
     }
 ];
 
@@ -127,6 +143,10 @@ export const SUMMARY: readonly string[] = [
     '  KbqRadioGroup accepts [color]: one binding colors every button in the group, so the error palette ' +
         'no longer has to be repeated per option. The error color is also mirrored as aria-invalid, and ' +
         '[required] as aria-required, on the group element.',
+    '  KbqRadioGroup is a component now. A kbq-error put inside the group is rendered under the options only ' +
+        'while the group is in the error state, a kbq-hint put directly inside it is moved under the options ' +
+        'after the error, and both are referenced from its aria-describedby. A component cannot be a host ' +
+        'directive, and a @Directive cannot extend it.',
     "  KbqRadioButton.focus() takes a FocusOrigin and routes through the FocusMonitor, so focus('keyboard') " +
         'leaves the visible ring the theme paints off .cdk-keyboard-focused. KbqRadioGroup has a focus() of ' +
         'its own that forwards to the checked option, or to the first enabled one.',

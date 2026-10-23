@@ -8,8 +8,11 @@ import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
+import { CanUpdateErrorState } from '@koobiq/components/core';
 import { ControlValueAccessor } from '@angular/forms';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { ErrorStateMatcher } from '@koobiq/components/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i1 from '@angular/cdk/a11y';
 import { KbqColorDirective } from '@koobiq/components/core';
@@ -86,7 +89,8 @@ export class KbqRadioChange {
 }
 
 // @public
-export class KbqRadioGroup extends KbqColorDirective implements AfterContentChecked, OnChanges, AfterContentInit, ControlValueAccessor {
+export class KbqRadioGroup extends KbqColorDirective implements AfterContentChecked, OnChanges, OnInit, DoCheck, AfterContentInit, ControlValueAccessor, CanUpdateErrorState {
+    constructor();
     // (undocumented)
     readonly big: _angular_core.InputSignal<boolean>;
     readonly change: _angular_core.OutputEmitterRef<KbqRadioChange>;
@@ -97,6 +101,8 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentChec
     set disabled(value: boolean);
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     emitChangeEvent(): void;
+    readonly errorState: _angular_core.Signal<boolean>;
+    readonly errorStateMatcher: _angular_core.InputSignal<ErrorStateMatcher | undefined>;
     focus(origin?: FocusOrigin): void;
     readonly labelPosition: _angular_core.InputSignalWithTransform<"before" | "after", "before" | "after">;
     markRadiosForCheck(): void;
@@ -105,7 +111,11 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentChec
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
+    ngDoCheck(): void;
+    // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
+    ngOnInit(): void;
     onTouched: () => any;
     get radios(): QueryList<KbqRadioButton>;
     registerOnChange(fn: (value: any) => void): void;
@@ -116,12 +126,13 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentChec
     readonly selectedInput: _angular_core.InputSignal<KbqRadioButton | null | undefined>;
     setDisabledState(isDisabled: boolean): void;
     touch(): void;
+    updateErrorState(): void;
     get value(): any;
     set value(newValue: any);
     readonly valueInput: _angular_core.InputSignal<{} | null | undefined>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqRadioGroup, "kbq-radio-group", ["kbqRadioGroup"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "selectedInput": { "alias": "selected"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; }, { "change": "change"; }, ["radiosQuery"], never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqRadioGroup, "kbq-radio-group", ["kbqRadioGroup"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "big": { "alias": "big"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "selectedInput": { "alias": "selected"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; }, { "change": "change"; }, ["error", "hints", "radiosQuery"], ["*", "kbq-error", "kbq-hint"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqRadioGroup, never>;
 }

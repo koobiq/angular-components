@@ -1902,6 +1902,8 @@ Two DOM details that only matter to a stylesheet reaching into the component: th
 
 **An enabled `<kbq-checkbox>` no longer carries `disabled="false"` on its host.** The host binding rendered the boolean verbatim, so every enabled checkbox shipped the attribute — enough for a consumer stylesheet or test selector written as `kbq-checkbox[disabled]` to match all of them.
 
+**A `kbq-hint` describes the checkbox now instead of being part of its name.** The input is named by the label text alone through `aria-labelledby`, and the hint - after the validation error, while one is shown - reaches it through `aria-describedby`, as with the radio buttons. A test or a screen-reader script that expected the hint in the name needs updating.
+
 Handled by `checkbox-signals`: the one-way input reads are rewritten, the rest is reported.
 
 #### Clamped text
@@ -2566,6 +2568,8 @@ The accessibility work has nothing to migrate, but it changes what a screen read
 So `group.required` becomes `group.required()` while `button.required` is left alone — the button's copy folds in the group's value, which is why it stayed an accessor. `id` is read-only now: bind `[id]` rather than assigning to it, and bind `null` or an empty string to keep the generated one.
 
 `KbqRadioGroup.value`, `.selected` and `.disabled` are deliberately unchanged. `ControlValueAccessor` writes the first and last, the buttons write `selected`, and `writeValue` has to resolve the checked button synchronously before the first render — none of which a read-only `input()` supports, and a `model()` carries no `transform`, which `disabled` needs to coerce an attribute.
+
+**`KbqRadioGroup` is a component now.** A `kbq-error` put inside the group is rendered under the buttons only while the group is in the error state, lined up with the option text, and a `kbq-hint` put directly inside the group is moved under the buttons too, after the error; the group references both from its `aria-describedby`. A component cannot be applied through `hostDirectives`, and a subclass decorated with `@Directive` fails at runtime with NG0903: render a `<kbq-radio-group>` element instead, or decorate the subclass with `@Component` and repeat `<ng-content />` and the `kbq-error` slot in its template.
 
 Reported by `radio-signals-and-aria`.
 

@@ -5,11 +5,19 @@
             !checkboxLabel.textContent || !checkboxLabel.textContent.trim()
         "
     >
+        <!--
+            The wrapping label would fold the error and the hint into the accessible name, so the name is
+            overridden with an explicit `aria-labelledby` pointing at the label text alone, and the error and
+            the hint arrive as a description instead.
+        -->
         <input
             #input
             type="checkbox"
             class="kbq-checkbox-input cdk-visually-hidden"
             [attr.aria-checked]="getAriaChecked()"
+            [attr.aria-describedby]="ariaDescribedBy()"
+            [attr.aria-invalid]="ariaInvalid()"
+            [attr.aria-labelledby]="labelId()"
             [attr.name]="name()"
             [attr.value]="value()"
             [checked]="checked"
@@ -28,9 +36,16 @@
     </div>
 
     <div class="kbq-checkbox__text-container">
-        <span #checkboxLabel class="kbq-checkbox-label" (cdkObserveContent)="onLabelTextChange()">
+        <span #checkboxLabel class="kbq-checkbox-label" [id]="labelId()" (cdkObserveContent)="onLabelTextChange()">
             <ng-content />
         </span>
+
+        <!-- The error comes before the hint, as in a form field. -->
+        @if (showError()) {
+            <div class="kbq-checkbox__error" [id]="errorId()">
+                <ng-content select="kbq-error" />
+            </div>
+        }
 
         <ng-content select="kbq-hint" />
     </div>

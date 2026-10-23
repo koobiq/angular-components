@@ -1,5 +1,6 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { _IdGenerator, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
+import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentChecked,
     AfterContentInit,
@@ -11,10 +12,12 @@ import {
     computed,
     contentChild,
     contentChildren,
-    Directive,
+    DoCheck,
+    effect,
     ElementRef,
     forwardRef,
     inject,
+    Injector,
     input,
     OnChanges,
     OnDestroy,
@@ -22,18 +25,23 @@ import {
     output,
     Provider,
     QueryList,
+    Renderer2,
     signal,
     SimpleChanges,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { KbqColorDirective, kbqOptionalNumberAttribute, kbqQueryListFrom } from '@koobiq/components/core';
-import { KbqHint } from '@koobiq/components/form-field';
-
-// Increasing integer for generating unique ids for radio components.
-let nextUniqueId = 0;
+import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR, NgControl, NgForm } from '@angular/forms';
+import {
+    CanUpdateErrorState,
+    ErrorStateMatcher,
+    KbqColorDirective,
+    KbqErrorStateTracker,
+    kbqOptionalNumberAttribute,
+    kbqQueryListFrom
+} from '@koobiq/components/core';
+import { KbqError, KbqHint } from '@koobiq/components/form-field';
 
 /** Change event object emitted by KbqRadio. */
 export class KbqRadioChange {
@@ -64,15 +72,42 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: Provider = {
  * `aria-labelledby` attribute pointing at the visible group label: the host is the very element the
  * consumer writes, so an input aliased to the same name would only write back what is already there —
  * and would wipe an `[attr.aria-label]` binding, which never reaches the input.
+ *
+ * To show a validation error, bind the group to a form control and put the error text in a `kbq-error` inside the
+ * group. A `kbq-hint` put inside the group is shown under the options, below the error.
  */
-@Directive({
+@Component({
     selector: 'kbq-radio-group',
+    // Styled by `radio.scss`, which the buttons carry: the error and the hints of a group stand under its buttons.
+    template: `
+        <ng-content />
+
+        <!--
+            Under the options, as in a form field: the error first, rendered only in the error state so that
+            assistive technology announces the alert as it appears, then the hints of the group.
+        -->
+        @if (showError() || hints().length) {
+            <div class="kbq-radio-group__subscript">
+                @if (showError()) {
+                    <div class="kbq-radio-group__error" [id]="errorId">
+                        <ng-content select="kbq-error" />
+                    </div>
+                }
+
+                <ng-content select="kbq-hint" />
+            </div>
+        }
+    `,
     providers: [KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
     host: {
         role: 'radiogroup',
         class: 'kbq-radio-group',
         '[class.kbq-radio-group_normal]': '!big()',
         '[class.kbq-radio-group_big]': 'big()',
+        '[class.kbq-radio-group_label-before]': "labelPosition() === 'before'",
+        '[class.kbq-invalid]': 'errorState()',
         '[attr.aria-required]': "required() ? 'true' : null",
         // A signal of its own: the color class binding reads `color` first, and the host bindings of every group in a
         // view run in that view's reactive consumer, where a signal read again after others costs a scan of all it has
@@ -83,15 +118,39 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: Provider = {
 })
 export class KbqRadioGroup
     extends KbqColorDirective
-    implements AfterContentChecked, OnChanges, AfterContentInit, ControlValueAccessor
+    implements
+        AfterContentChecked,
+        OnChanges,
+        OnInit,
+        DoCheck,
+        AfterContentInit,
+        ControlValueAccessor,
+        CanUpdateErrorState
 {
+    private readonly injector = inject(Injector);
+
+    // The control is resolved in `ngOnInit`: `NgControl` injects the group as its value accessor, so injecting it
+    // back from the constructor is a cyclic dependency.
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        inject(ErrorStateMatcher),
+        null,
+        inject(FormGroupDirective, { optional: true }),
+        inject(NgForm, { optional: true })
+    );
+
+    /** Whether the radio group is in an error state. */
+    readonly errorState = this.errorStateTracker.errorState;
+
+    /** An object used to control when the error state is shown. */
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
+
     readonly big = input<boolean>(false);
 
     /**
      * Name of the radio button group. All radio buttons inside this group will use this name,
      * unless they were given one of their own.
      */
-    readonly name = input<string>(`kbq-radio-group-${nextUniqueId++}`);
+    readonly name = input<string>(inject(_IdGenerator).getId('kbq-radio-group-'));
 
     /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
     readonly labelPosition = input<'before' | 'after', 'before' | 'after'>('after', {
@@ -181,10 +240,37 @@ export class KbqRadioGroup
     readonly required = input(false, { transform: booleanAttribute });
 
     /**
-     * Value of `aria-invalid`.
+     * Value of `aria-invalid`: set whenever the group is painted as invalid.
      * @internal
      */
-    protected readonly ariaInvalid = computed(() => (this.color() === 'error' ? 'true' : null));
+    protected readonly ariaInvalid = computed(() => (this.errorState() || this.color() === 'error' ? 'true' : null));
+
+    /** Error text projected into the group. */
+    private readonly error = contentChild(KbqError, { descendants: false });
+
+    /**
+     * Whether the projected `kbq-error` is shown. Without one, nothing is rendered under the options.
+     * @internal
+     */
+    protected readonly showError = computed(() => this.errorState() && !!this.error());
+
+    /**
+     * Id of the element wrapping the projected `kbq-error`.
+     * @internal
+     */
+    protected readonly errorId = inject(_IdGenerator).getId('kbq-radio-group-error-');
+
+    /**
+     * Hints of the group itself, shown under the options. The hints of the buttons are their own.
+     * @internal
+     */
+    protected readonly hints = contentChildren(KbqHint, { descendants: false });
+
+    /** Ids the group last added to `aria-describedby` of the host, so the consumer's own survive an update. */
+    private ownDescribedByIds: string[] = [];
+
+    private readonly renderer = inject(Renderer2);
+    private readonly isBrowser = inject(Platform).isBrowser;
 
     /**
      * Event emitted when the group value changes.
@@ -240,13 +326,51 @@ export class KbqRadioGroup
         });
     }
 
-    /**
-     * Initialize properties once content children are available.
-     * This allows us to propagate relevant attributes to associated buttons.
-     */
-    ngAfterContentChecked(): void {
-        // Syncs the list here so `changes` emits after the projected items are bound and before the host bindings.
-        this.radiosList();
+    constructor() {
+        super();
+
+        // Written by hand rather than bound: the host is the element the consumer writes, and a host binding would
+        // overwrite an `[attr.aria-describedby]` the consumer binds on it. Not on the server: after hydration the ids
+        // it wrote would be read back as the consumer's own.
+        effect(() => {
+            if (!this.isBrowser) return;
+
+            const ids = [...(this.showError() ? [this.errorId] : []), ...this.hints().map((hint) => hint.id())];
+
+            untracked(() => this.setDescribedByIds(ids));
+        });
+    }
+
+    ngOnInit(): void {
+        this.errorStateTracker.ngControl = this.injector.get(NgControl, null, { self: true, optional: true });
+    }
+
+    ngDoCheck(): void {
+        // Re-evaluated on every check: a submit of the parent form notifies nothing a signal could follow.
+        if (this.errorStateTracker.ngControl) this.updateErrorState();
+    }
+
+    /** Updates the error state based on the error state matcher. */
+    updateErrorState(): void {
+        this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
+        this.errorStateTracker.updateErrorState();
+    }
+
+    /** Writes the error and the hints of the group to `aria-describedby` of the host, after the consumer's own ids. */
+    private setDescribedByIds(ids: string[]): void {
+        const element = this.elementRef.nativeElement;
+        const consumerIds = (element.getAttribute('aria-describedby') ?? '')
+            .split(/\s+/)
+            .filter((id) => id && !this.ownDescribedByIds.includes(id));
+        const next = [...consumerIds, ...ids];
+
+        this.ownDescribedByIds = ids;
+
+        if (next.length) {
+            this.renderer.setAttribute(element, 'aria-describedby', next.join(' '));
+        } else {
+            this.renderer.removeAttribute(element, 'aria-describedby');
+        }
     }
 
     ngAfterContentInit() {
@@ -254,6 +378,15 @@ export class KbqRadioGroup
         // possibly be set by NgModel on KbqRadioGroup, and it is possible that the OnInit of the
         // NgModel occurs *after* the OnInit of the KbqRadioGroup.
         this.isInitialized = true;
+    }
+
+    /**
+     * Initialize properties once content children are available.
+     * This allows us to propagate relevant attributes to associated buttons.
+     */
+    ngAfterContentChecked(): void {
+        // Syncs the list here so `changes` emits after the projected items are bound and before the host bindings.
+        this.radiosList();
     }
 
     /**
@@ -506,7 +639,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
      */
     protected readonly big = computed(() => !!this.radioGroup?.big());
 
-    private readonly uniqueId: string = `kbq-radio-${++nextUniqueId}`;
+    private readonly uniqueId: string = inject(_IdGenerator).getId('kbq-radio-');
 
     /**
      * A unique id for the radio button. If none is supplied — or `null` is bound explicitly — it is

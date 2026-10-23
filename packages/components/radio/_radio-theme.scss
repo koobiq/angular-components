@@ -76,10 +76,16 @@
         }
     }
 
-    // A color on the group is a single binding for every button in it, so the error palette does not
-    // have to be repeated per option.
-    .kbq-radio-group.kbq-error .kbq-radio-button {
+    // A color or an error state on the group is a single binding for every button in it, so the error
+    // palette does not have to be repeated per option.
+    .kbq-radio-group.kbq-error .kbq-radio-button,
+    .kbq-radio-group.kbq-invalid .kbq-radio-button {
         @include kbq-radio-color(error);
+    }
+
+    // A hint of the group reads like the hints of its options; the error keeps its own color.
+    .kbq-radio-group__subscript .kbq-hint:where(:not(.kbq-error)) .kbq-hint__text {
+        color: var(--kbq-radio-theme-default-caption);
     }
 }
 
@@ -98,5 +104,14 @@
         & .kbq-hint .kbq-hint__text {
             @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
+    }
+
+    // The error and the hints under the group read at the size of the hints of its options.
+    .kbq-radio-group_normal .kbq-radio-group__subscript .kbq-hint__text {
+        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+    }
+
+    .kbq-radio-group_big .kbq-radio-group__subscript .kbq-hint__text {
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

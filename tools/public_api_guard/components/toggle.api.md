@@ -6,7 +6,10 @@
 
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
+import { CanUpdateErrorState } from '@koobiq/components/core';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { ErrorStateMatcher } from '@koobiq/components/core';
 import * as i1$1 from '@angular/cdk/a11y';
 import * as i1 from '@koobiq/components/core';
 import { KbqCheckableClickAction } from '@koobiq/components/core';
@@ -27,8 +30,8 @@ export class KbqToggleChange {
 // @public
 export type KbqToggleClickAction = KbqCheckableClickAction;
 
-// @public (undocumented)
-export class KbqToggleComponent extends KbqColorDirective implements OnChanges, AfterViewInit, OnDestroy {
+// @public
+export class KbqToggleComponent extends KbqColorDirective implements OnChanges, DoCheck, AfterViewInit, OnDestroy, CanUpdateErrorState {
     constructor();
     protected readonly animationsDisabled: boolean;
     // (undocumented)
@@ -50,6 +53,8 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
+    readonly errorState: Signal<boolean>;
+    readonly errorStateMatcher: _angular_core.InputSignal<ErrorStateMatcher | undefined>;
     // (undocumented)
     focus(): void;
     // (undocumented)
@@ -74,6 +79,8 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
+    ngDoCheck(): void;
+    // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -88,12 +95,12 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     get tabIndex(): number;
     set tabIndex(value: number);
     readonly tabIndexInput: _angular_core.InputSignalWithTransform<number | undefined, string | number | null | undefined>;
-    // (undocumented)
     protected readonly uniqueId: string;
+    updateErrorState(): void;
     // (undocumented)
     readonly value: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "loading": { "alias": "loading"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "checkedInput": { "alias": "checked"; "required": false; "isSignal": true; }; "indeterminateInput": { "alias": "indeterminate"; "required": false; "isSignal": true; }; "clickActionInput": { "alias": "clickAction"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, [{ directive: typeof i1.KbqCheckable; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "big": { "alias": "big"; "required": false; "isSignal": true; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "loading": { "alias": "loading"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "checkedInput": { "alias": "checked"; "required": false; "isSignal": true; }; "indeterminateInput": { "alias": "indeterminate"; "required": false; "isSignal": true; }; "clickActionInput": { "alias": "clickAction"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, ["error"], ["*", "kbq-error", "kbq-hint"], true, [{ directive: typeof i1.KbqCheckable; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqToggleComponent, never>;
 }
