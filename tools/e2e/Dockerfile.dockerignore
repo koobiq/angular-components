@@ -30,6 +30,9 @@
 !.yarn/patches/
 !.yarn/patches/**
 
+# The workspace manifest that package.json's `workspaces` field points at; `yarn install` reads it.
+!tools/tokens/package.json
+
 # Workspace and TypeScript configuration: the image builds `dev-e2e` out of angular.json, and
 # playwright.config.ts compiles the specs against tsconfig.playwright-spec.json.
 !angular.json
