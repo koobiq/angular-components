@@ -1,0 +1,11 @@
+{
+    "name": "@koobiq/tokens-docs",
+    "private": true,
+    "installConfig": {
+        "hoistingLimits": "workspaces"
+    },
+    "dependencies": {
+        "@koobiq/tokens-builder": "^4.0.0",
+        "style-dictionary": "^5.0.0"
+    }
+}

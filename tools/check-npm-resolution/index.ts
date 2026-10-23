@@ -112,7 +112,7 @@ const documentedInstalls = [
     `overlayscrollbars@${rootPackageJson.dependencies!.overlayscrollbars}`,
     '@koobiq/icons',
     // The guide holds this one to the major the peer range allows; bare, it takes whatever major is `latest`.
-    '@koobiq/design-tokens@^3',
+    `@koobiq/design-tokens@${caret(rootPackageJson.devDependencies!['@koobiq/design-tokens'])}`,
     '@koobiq/date-adapter',
     '@koobiq/date-formatter',
     '@koobiq/luxon-date-adapter',

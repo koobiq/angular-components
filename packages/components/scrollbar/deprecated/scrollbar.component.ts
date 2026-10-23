@@ -64,7 +64,7 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
             <ng-content />
         </div>
     `,
-    styleUrls: ['./scrollbar.component.scss', 'scrollbar-tokens.scss'],
+    styleUrls: ['./scrollbar.component.scss'],
     providers: [
         { provide: KBQ_OVERFLOW_SHADOW_SOURCE, useExisting: forwardRef(() => KbqScrollbar) }
     ],
