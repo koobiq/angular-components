@@ -167,7 +167,11 @@ test.describe('KbqPopoverModule', () => {
             await page.waitForTimeout(200);
 
             await expect(content).toBeVisible();
-            expect(await content.evaluate((el) => el.scrollTop)).toBeGreaterThan(0);
+            // Read once: the scroll holds from the moment it is set, so only the wait above gives a reset the
+            // time to land.
+            const scrollTop = await content.evaluate((el) => el.scrollTop);
+
+            expect(scrollTop).toBeGreaterThan(0);
         });
     });
 

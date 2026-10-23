@@ -94,7 +94,7 @@ test.describe('KbqSplitter', () => {
         });
 
         test('should run the separator line to both ends of the boundary', async ({ page }) => {
-            expect(await lineInsetsOf(page, 'x')).toEqual([0, 0]);
+            await expect.poll(() => lineInsetsOf(page, 'x')).toEqual([0, 0]);
         });
 
         test('should move the boundary with the pointer', async ({ page }) => {
@@ -106,6 +106,8 @@ test.describe('KbqSplitter', () => {
 
         test('should size the panels through the grid rather than an inline size on them', async ({ page }) => {
             await dragSeparator(page, -80);
+            // The panels carry no inline size before the drag either, so the read below waits for its render.
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(220);
 
             // `KbqResizer` runs with `disableSizeUpdate`, so the drag reports sizes and writes none: a panel
             // carrying its own width would fight the track the splitter computed for it.
@@ -371,7 +373,10 @@ test.describe('KbqSplitter', () => {
 
             // The drag has to have started for the assertion below to mean anything.
             await expect(getSeparator(page, 1)).toBeFocused();
-            expect(await content.evaluate((element) => element.scrollTop)).toBe(0);
+            // Read once: the box is unscrolled before the focus too, so a poll would pass on its first sample.
+            const scrollTop = await content.evaluate((element) => element.scrollTop);
+
+            expect(scrollTop).toBe(0);
             await expect.poll(() => heightOf(editor)).toBe(height);
         });
     });
@@ -527,6 +532,17 @@ test.describe('KbqSplitter', () => {
         const lineColor = (page: Page) =>
             getSeparator(page).evaluate((element) => getComputedStyle(element, '::after').backgroundColor);
 
+        /**
+         * Whether the element under the centre of the separator matches `state`. A disabled separator takes no
+         * pointer events, so that element is what tells that the pointer has arrived or pressed.
+         */
+        const beneathSeparatorMatches = (page: Page, state: ':hover' | ':active') =>
+            getSeparator(page).evaluate((separator, state) => {
+                const { x, y, width, height } = separator.getBoundingClientRect();
+
+                return !!document.elementFromPoint(x + width / 2, y + height / 2)?.matches(state);
+            }, state);
+
         test('should not light up under the pointer', async ({ page }) => {
             await page.goto('/E2eSplitterDisabled');
 
@@ -536,11 +552,19 @@ test.describe('KbqSplitter', () => {
             // eslint-disable-next-line playwright/no-force-option -- the hover over a disabled separator is the point; actionability checks would refuse it
             await separator.hover({ force: true });
 
-            expect(await lineColor(page)).toBe(resting);
+            // The colour is meant not to change, so a poll would pass on a sample from before the pointer arrived:
+            // each state is read once, after the element beneath shows it has landed.
+            await expect.poll(() => beneathSeparatorMatches(page, ':hover')).toBe(true);
+            const hovered = await lineColor(page);
+
+            expect(hovered).toBe(resting);
 
             await page.mouse.down();
 
-            expect(await lineColor(page)).toBe(resting);
+            await expect.poll(() => beneathSeparatorMatches(page, ':active')).toBe(true);
+            const pressed = await lineColor(page);
+
+            expect(pressed).toBe(resting);
 
             await page.mouse.up();
         });
@@ -564,7 +588,7 @@ test.describe('KbqSplitter', () => {
 
             await separator.hover();
 
-            expect(await lineColor(page)).not.toBe(resting);
+            await expect.poll(() => lineColor(page)).not.toBe(resting);
         });
     });
 
@@ -580,24 +604,38 @@ test.describe('KbqSplitter', () => {
         test('should keep the line hidden while the cursor still advertises the resize', async ({ page }) => {
             const separator = getSeparator(page);
 
-            expect(await lineOpacity(page)).toBe('0');
+            await expect.poll(() => lineOpacity(page)).toBe('0');
 
             await separator.hover();
 
-            // The whole point of this appearance: hovering reveals nothing, only the cursor gives it away.
-            expect(await lineOpacity(page)).toBe('0');
+            // The whole point of this appearance: hovering reveals nothing, only the cursor gives it away. Read
+            // after the hover has landed rather than polled, since a poll would pass on a sample from before it.
+            await expect.poll(() => separator.evaluate((element) => element.matches(':hover'))).toBe(true);
+            const hovered = await lineOpacity(page);
+
+            expect(hovered).toBe('0');
             await expect(separator).toHaveCSS('cursor', 'col-resize');
         });
 
         test('should keep the line hidden while the separator is being dragged', async ({ page }) => {
+            const splitter = page.locator('kbq-splitter');
+
             await dragSeparator(page, -60, { release: false });
 
-            expect(await lineOpacity(page)).toBe('0');
+            // The line is hidden at rest too, so a poll would pass on a sample from before the drag: each state is
+            // read once, after it has rendered.
             await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(240);
+            await expect(splitter).toContainClass('kbq-splitter_dragging');
+            const dragged = await lineOpacity(page);
+
+            expect(dragged).toBe('0');
 
             await page.mouse.up();
 
-            expect(await lineOpacity(page)).toBe('0');
+            await expect(splitter).not.toContainClass('kbq-splitter_dragging');
+            const released = await lineOpacity(page);
+
+            expect(released).toBe('0');
         });
 
         test('should still show the keyboard focus frame, the only indicator this appearance has', async ({ page }) => {
@@ -608,8 +646,10 @@ test.describe('KbqSplitter', () => {
             await expect(separator).toHaveClass(/cdk-keyboard-focused/);
             await expect(separator).not.toHaveCSS('outline-style', 'none');
 
-            // The frame appears, the line does not.
-            expect(await lineOpacity(page)).toBe('0');
+            // The frame appears, the line does not — read once, as the line is hidden before the focus too.
+            const opacity = await lineOpacity(page);
+
+            expect(opacity).toBe('0');
         });
 
         test('should show the line for the divider appearance, which is what transparent differs from', async ({
@@ -617,7 +657,7 @@ test.describe('KbqSplitter', () => {
         }) => {
             await page.goto('/E2eSplitterConstraints');
 
-            expect(await lineOpacity(page)).toBe('1');
+            await expect.poll(() => lineOpacity(page)).toBe('1');
         });
     });
 
@@ -627,7 +667,7 @@ test.describe('KbqSplitter', () => {
         });
 
         test('should run the separator line to both ends of the boundary', async ({ page }) => {
-            expect(await lineInsetsOf(page, 'y')).toEqual([0, 0]);
+            await expect.poll(() => lineInsetsOf(page, 'y')).toEqual([0, 0]);
         });
 
         test('should resize along the block axis', async ({ page }) => {

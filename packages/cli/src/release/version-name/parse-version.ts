@@ -5,7 +5,7 @@
  * to split between the two quantifiers, so a near-miss such as `0.0.0-rc.000000000000000000000000!`
  * cost hundreds of milliseconds of backtracking and grew fourfold with every two digits added.
  */
-const versionNameRegex = /^(\d+)\.(\d+)\.(\d+)(?:-(alpha|beta|rc)\.(\d+))?$/;
+export const versionNameRegex = /^(\d+)\.(\d+)\.(\d+)(?:-(alpha|beta|rc)\.(\d+))?$/;
 
 export class Version {
     constructor(

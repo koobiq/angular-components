@@ -73,8 +73,8 @@ test.describe('KbqOverlayLayer', () => {
             const x = paneBox.x + paneBox.width / 2;
 
             expect(paneBox.y).toBeLessThan(barBottom - EDGE_OFFSET);
-            expect(await getPaintTargetAt(page, x, barBottom - EDGE_OFFSET)).toBe('.kbq-top-bar');
-            expect(await getPaintTargetAt(page, x, barBottom + EDGE_OFFSET)).toBe('.cdk-overlay-pane');
+            await expect.poll(() => getPaintTargetAt(page, x, barBottom - EDGE_OFFSET)).toBe('.kbq-top-bar');
+            await expect.poll(() => getPaintTargetAt(page, x, barBottom + EDGE_OFFSET)).toBe('.cdk-overlay-pane');
 
             await e2eWaitForSettledScrollbars(page, 1);
 
@@ -94,9 +94,9 @@ test.describe('KbqOverlayLayer', () => {
             const barBottom = await getBarBottom(page);
 
             expect(paneBox.y).toBeLessThan(barBottom);
-            expect(await getPaintTargetAt(page, paneBox.x + paneBox.width / 2, (paneBox.y + barBottom) / 2)).toBe(
-                '.cdk-overlay-pane'
-            );
+            await expect
+                .poll(() => getPaintTargetAt(page, paneBox.x + paneBox.width / 2, (paneBox.y + barBottom) / 2))
+                .toBe('.cdk-overlay-pane');
         });
     });
 
