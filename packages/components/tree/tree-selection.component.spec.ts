@@ -1,7 +1,7 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, DebugElement, ViewChild, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, flushMicrotasks, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
@@ -21,6 +21,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqTitleDirective, KbqTitleModule } from '@koobiq/components/title';
+import { BehaviorSubject } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
@@ -1635,7 +1636,43 @@ describe('KbqTreeSelection', () => {
             settle();
 
             expect(getNodes(treeElement).length).toBe(component.treeControl.dataNodes.length);
-            expect(rollUps.mock.calls.length).toBeLessThanOrEqual(component.treeControl.dataNodes.length);
+            expect(rollUps).not.toHaveBeenCalled();
+        }));
+    });
+
+    describe('tri-state checkbox over replaced data', () => {
+        let fixture: ComponentFixture<TreeWithStreamedThirdStateCheckbox>;
+        let component: TreeWithStreamedThirdStateCheckbox;
+
+        const optionFor = (value: string): KbqTreeOption =>
+            component.tree.renderedOptions.find((option) => option.value === value)!;
+
+        beforeEach(() => {
+            configureKbqTreeTestingModule();
+            fixture = TestBed.createComponent(TreeWithStreamedThirdStateCheckbox);
+
+            component = fixture.componentInstance;
+
+            fixture.detectChanges();
+        });
+
+        it('should recompute a branch as soon as rows are added under it', fakeAsync(() => {
+            const [branch, child, sibling] = component.dataSource.value;
+
+            dispatchEvent(optionFor('child').getHostElement(), createMouseEvent('click'));
+            fixture.detectChanges();
+            tick(1);
+            fixture.detectChanges();
+
+            expect(optionFor('branch').checkboxState).toBe('checked');
+
+            component.emit([branch, child, { id: 4, name: 'added', level: 1, expandable: false }, sibling]);
+            // Microtasks only: the pass over the rendered options that follows waits for a timer.
+            flushMicrotasks();
+
+            expect(optionFor('branch').checkboxState).toBe('indeterminate');
+
+            tick(1);
         }));
     });
 
@@ -2419,7 +2456,10 @@ class FiltrationKbqTreeApp {
 
 const DEEP_CHAIN_DEPTH = 12;
 
-/** `node-<level>` down to `DEEP_CHAIN_DEPTH`, each next to a `leaf-<level>`: every node has a long chain of ancestors. */
+/**
+ * `node-<level>` nested down to `node-<DEEP_CHAIN_DEPTH>`, a `leaf-<level>` beside each: every ancestor of the deepest
+ * node also holds an unselected leaf.
+ */
 function buildDeepChain(): object {
     let chain: object | null = null;
 
@@ -2453,5 +2493,57 @@ class TreeWithDeepThirdStateCheckbox extends TreeParams {
         super();
 
         this.dataSource.data = this.treeData = buildFileTree(buildDeepChain(), 0);
+    }
+}
+
+interface TrackedNode {
+    id: number;
+    name: string;
+    level: number;
+    expandable: boolean;
+}
+
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection multiple="checkbox" [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
+                {{ node.name }}
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
+                <kbq-tree-node-toggle />
+
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeWithStreamedThirdStateCheckbox {
+    @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
+
+    // A stream that keeps the objects of untouched nodes: the differ then reports only the rows that really changed.
+    readonly dataSource = new BehaviorSubject<TrackedNode[]>([]);
+
+    readonly treeControl = new FlatTreeControl<TrackedNode>(
+        (node) => node.level,
+        (node) => node.expandable,
+        (node) => node.name,
+        (node) => node.name
+    );
+
+    hasChild = (_: number, node: TrackedNode) => node.expandable;
+
+    constructor() {
+        this.emit([
+            { id: 1, name: 'branch', level: 0, expandable: true },
+            { id: 2, name: 'child', level: 1, expandable: false },
+            { id: 3, name: 'sibling', level: 0, expandable: false }
+        ]);
+    }
+
+    emit(nodes: TrackedNode[]): void {
+        this.treeControl.dataNodes = nodes;
+        this.dataSource.next(nodes);
     }
 }
