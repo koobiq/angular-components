@@ -96,7 +96,8 @@ export class KbqSingleFileUploadComponent
 {
     /**
      * A value responsible for progress spinner type.
-     * Loading logic depends on selected mode */
+     * Loading logic depends on selected mode
+     */
     readonly progressMode = input<ProgressSpinnerMode>('determinate');
     /** Array of file type specifiers */
     readonly accept = input<string[]>();
@@ -126,16 +127,15 @@ export class KbqSingleFileUploadComponent
     }
 
     /**
-     * Controls whether to display the file size information.
-     * @default true
+     * Controls whether to display the file size information. Defaults to `true`.
      */
     readonly showFileSize = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     /**
-     * Determines which kind of items the upload component can accept.
-     * @default 'file'
+     * Determines which kind of items the upload component can accept. Defaults to `'file'`.
      */
     readonly allowed = input<KbqFileUploadAllowedTypeValues>(KbqFileUploadAllowedType.File);
+
     /**
      * Controls whether to display fullscreen dropzone.
      * Provide configuration object to enable, or undefined to disable.
@@ -144,6 +144,7 @@ export class KbqSingleFileUploadComponent
 
     /** Emits an event containing an updated file. */
     readonly fileChange = output<KbqFileItem | null>();
+
     /**
      * Emits the files a selection or a drop discarded: everything past the first one, since the
      * component holds a single file. `accept` is not part of this — it only filters the OS dialog.
@@ -164,12 +165,16 @@ export class KbqSingleFileUploadComponent
                 .join(' ') || null
     );
 
-    /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
+    /**
+     * cvaOnChange function registered via registerOnChange (ControlValueAccessor).
+     *
      * @docs-private
      */
     cvaOnChange = (_: KbqFileItem | null) => {};
 
-    /** onTouch function registered via registerOnTouch (ControlValueAccessor).
+    /**
+     * onTouch function registered via registerOnTouch (ControlValueAccessor).
+     *
      * @docs-private
      */
     onTouched = () => {};
@@ -192,6 +197,7 @@ export class KbqSingleFileUploadComponent
     /**
      * Indicates an invalid state based on file errors or `errorState`,
      * applying a CSS class in HTML for visual feedback.
+     *
      * @docs-private
      */
     get invalid(): boolean {
@@ -301,8 +307,11 @@ export class KbqSingleFileUploadComponent
         this.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     }
 
-    /** Implemented as part of ControlValueAccessor.
-     * @docs-private */
+    /**
+     * Implemented as part of ControlValueAccessor.
+     *
+     * @docs-private
+     */
     writeValue(file: File | KbqFileItem | null): void {
         // Writes the list directly instead of going through the `file` setter: that setter is the
         // view→model half of the CVA, so routing Angular's model→view callback through it would mark
@@ -321,21 +330,29 @@ export class KbqSingleFileUploadComponent
         this.setFileList(file ? [file instanceof File ? this.mapToFileItem(file) : file] : []);
     }
 
-    /** Implemented as part of ControlValueAccessor.
-     * @docs-private */
+    /**
+     * Implemented as part of ControlValueAccessor.
+     *
+     * @docs-private
+     */
     registerOnChange(fn: any): void {
         this.cvaOnChange = fn;
     }
 
-    /** Implemented as part of ControlValueAccessor.
-     * @docs-private */
+    /**
+     * Implemented as part of ControlValueAccessor.
+     *
+     * @docs-private
+     */
     registerOnTouched(fn: any): void {
         this.onTouched = fn;
     }
 
     /**
      * Sets the disabled state of the control. Implemented as a part of ControlValueAccessor.
+     *
      * @param isDisabled Whether the control should be disabled.
+     *
      * @docs-private
      */
     setDisabledState(isDisabled: boolean): void {
@@ -412,6 +429,7 @@ export class KbqSingleFileUploadComponent
      * Marks the control touched once focus leaves the whole uploader, so the default
      * `ErrorStateMatcher` shows a `required` error to a user who tabbed through without attaching
      * anything. Moving between the browse link and the remove control stays inside and does not count.
+     *
      * @docs-private
      */
     protected onFocusOut({ relatedTarget }: FocusEvent): void {

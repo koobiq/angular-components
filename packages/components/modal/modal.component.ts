@@ -138,6 +138,7 @@ export class KbqModalComponent<T = any, R = any>
     /**
      * Whether the dialog and its dim layer move without motion. Read from the dialog's own injector, under
      * `options.injector` when the service opened it.
+     *
      * @internal
      */
     readonly animationsDisabled = kbqAnimationsDisabled();
@@ -235,7 +236,6 @@ export class KbqModalComponent<T = any, R = any>
     /** @docs-private */
     readonly kbqBeforeCloseOutput = outputFromObservable(this.kbqBeforeClose, { alias: 'kbqBeforeClose' });
 
-    // --- Predefined OK & Cancel buttons
     /** Caption of the predefined OK button. The button is not rendered without it. */
     readonly kbqOkText = input<string | undefined>(this.options?.kbqOkText);
     /** Color of the predefined OK button. */
@@ -305,6 +305,7 @@ export class KbqModalComponent<T = any, R = any>
      * Scroll-shadow state published by `KbqModalBody` when the modal content is composed
      * manually (`kbq-modal-title`/`kbq-modal-body`/`kbq-modal-footer`), so the header/footer
      * can render matching shadows without a direct template reference between them.
+     *
      * @docs-private
      */
     readonly bodyOverflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
@@ -621,6 +622,7 @@ export class KbqModalComponent<T = any, R = any>
     /**
      * Drives the dim layer's animation on its own, which is what lets `KbqModalControlService` fade
      * out the layer of a dialog another one has covered.
+     *
      * @docs-private
      */
     animateMaskTo(state: AnimationState): void {
@@ -631,6 +633,7 @@ export class KbqModalComponent<T = any, R = any>
     /**
      * Turns the dim layer off or back on without touching `kbqMask`, so a dialog covered by another
      * one stops painting its own layer. See `maskEnabled`.
+     *
      * @docs-private
      */
     setMaskEnabled(enabled: boolean): void {
@@ -698,7 +701,6 @@ export class KbqModalComponent<T = any, R = any>
         }
     }
 
-    // AoT
     /** @docs-private */
     protected onClickOkCancel(type: 'ok' | 'cancel') {
         this.handleCloseResult(type, (doClose) => doClose !== false);
@@ -749,9 +751,11 @@ export class KbqModalComponent<T = any, R = any>
         }
     }
 
-    // Lookup a button's property, if the prop is a function, call & then return the result, otherwise, return itself.
-    // AoT
-    /** @docs-private */
+    /**
+     * Lookup a button's property, if the prop is a function, call & then return the result, otherwise, return itself.
+     *
+     * @docs-private
+     */
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     protected getButtonCallableProp(options: IModalButtonOptions<T>, prop: string): {} {
         const value = options[prop];
@@ -764,9 +768,11 @@ export class KbqModalComponent<T = any, R = any>
         return typeof value === 'function' ? value.apply(options, args) : value;
     }
 
-    // On kbqFooter's modal button click
-    // AoT
-    /** @docs-private */
+    /**
+     * On kbqFooter's modal button click.
+     *
+     * @docs-private
+     */
     protected onButtonClick(button: IModalButtonOptions<T>) {
         // Call onClick directly
         const result = this.getButtonCallableProp(button, 'onClick');
@@ -1028,6 +1034,7 @@ export class KbqModalComponent<T = any, R = any>
     /**
      * Create a component dynamically but not attach to any View
      * (this action will be executed when bodyContainer is ready)
+     *
      * @param component Component class
      */
     private createDynamicComponent(component: Type<T>) {

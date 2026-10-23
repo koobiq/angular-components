@@ -6,6 +6,7 @@ export interface KbqMultiSelectPipeStateHost {
     readonly filterBar: KbqFilterBarHost | null;
     /** Whether every selectable option is currently selected (pipe-specific). */
     allOptionsSelected(): boolean;
+
     /**
      * Template-provided values whose selection the user cannot remove, already resolved into the shape
      * the pipe stores in `data.value` (pipe-specific).

@@ -124,8 +124,7 @@ export class KbqBadge {
 
     /**
      * Color of the badge. An empty, `null` or `undefined` value falls back to the default, so a read of the
-     * signal reports the color the badge actually renders in.
-     * @default 'fade-contrast'
+     * signal reports the color the badge actually renders in. Defaults to `'fade-contrast'`.
      */
     readonly badgeColor = input(KbqBadgeColors.FadeContrast as string | KbqBadgeColors, {
         transform: (value: string | KbqBadgeColors | null | undefined): string | KbqBadgeColors =>

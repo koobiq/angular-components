@@ -42,12 +42,13 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
     );
 
 /**
+ * The component-wrapper for `overlayscrollbars` library.
+ *
  * @deprecated Wraps `overlayscrollbars`. Superseded by the dependency-free
  * `@koobiq/components/scrollbar`. Will be removed in 22.0.0 — see
  * `@koobiq/components/scrollbar/deprecated`'s migration path via `ng update`.
- * @docs-private
  *
- * The component-wrapper for `overlayscrollbars` library.
+ * @docs-private
  */
 @Component({
     selector: 'kbq-scrollbar, [kbq-scrollbar]',
@@ -135,7 +136,7 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy, KbqOverflowShadow
         this.contentElement()?.nativeElement.scroll(options);
     }
 
-    /** @docs-private Implementation of `KbqOverflowShadowSource`. */
+    /** Implementation of `KbqOverflowShadowSource`. @docs-private */
     getScrollElement(): HTMLElement | null {
         return this.contentElement()?.nativeElement ?? null;
     }

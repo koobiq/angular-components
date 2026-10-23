@@ -98,18 +98,21 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly focused = this.focusedValue.asReadonly();
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly autofilled = kbqInjectAutofilled();
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     controlType: string = 'textarea';
@@ -125,6 +128,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
@@ -134,6 +138,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly id = computed(() => this.idInput() || this.uid);
@@ -143,6 +148,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly placeholder = linkedSignal(() => this.placeholderInput());
@@ -152,6 +158,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
@@ -162,6 +169,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
     /**
      * Implemented as part of KbqFormFieldControl. Follows what the user types; a value bound with `[value]` or set
      * here is written to the element.
+     *
      * @docs-private
      */
     readonly value: WritableSignal<string>;
@@ -174,6 +182,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly empty = this.emptyValue.asReadonly();
@@ -370,6 +379,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     onContainerClick() {
@@ -379,6 +389,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
     /**
      * Reads the native value back, since it changes without notice: through the forms API, which writes the
      * element directly, or by the user typing into a textarea that no form listens to.
+     *
      * @docs-private
      */
     dirtyCheckNativeValue() {

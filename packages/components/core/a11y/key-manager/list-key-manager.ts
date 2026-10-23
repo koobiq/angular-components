@@ -114,6 +114,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     /**
      * Sets the predicate function that determines which items should be skipped by the
      * list key manager.
+     *
      * @param predicate Function that determines whether the given item should be skipped.
      */
     skipPredicate(predicate: (item: T) => boolean): this {
@@ -124,6 +125,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
     /**
      * Configures whether the key manager should be able to move the selection vertically.
+     *
      * @param enabled Whether vertical selection should be enabled.
      */
     withVerticalOrientation(enabled: boolean = true): this {
@@ -135,6 +137,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     /**
      * Configures the key manager to move the selection horizontally.
      * Passing in `null` will disable horizontal movement.
+     *
      * @param direction Direction in which the selection can be moved.
      */
     withHorizontalOrientation(direction: 'ltr' | 'rtl' | null): this {
@@ -145,6 +148,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
     /**
      * Turns on typeahead mode which allows users to set the active item by typing.
+     *
      * @param debounceInterval Time to wait after the last keystroke before setting the active item.
      * @param searchLetterIndex letter index for incremental search, if is -1 search is disabled
      */
@@ -197,6 +201,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     /**
      * Configures the key manager to activate the first and last items
      * respectively when the Home or End key is pressed.
+     *
      * @param enabled Whether pressing the Home or End key activates the first/last item.
      */
     withHomeAndEnd(enabled: boolean = true): this {
@@ -207,12 +212,14 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
     /**
      * Sets the active item to the item at the index specified.
+     *
      * @param index The index of the item to be set as active or item The item to be set as active.
      */
     setActiveItem(index: number | T): void;
 
     /**
      * Sets the active item to the item at the index specified.
+     *
      * @param item The index of the item to be set as active.
      */
     setActiveItem(item: any): void {
@@ -229,6 +236,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
     /**
      * Sets the active item depending on the key event passed in.
+     *
      * @param event Keyboard event to be used for determining which element should be active.
      */
     onKeydown(event: KeyboardEvent): void {
@@ -367,12 +375,14 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
     /**
      * Allows setting the active without any other effects.
+     *
      * @param index Index of the item to be set as active.
      */
     updateActiveItem(index: number): void;
 
     /**
      * Allows setting the active item without any other effects.
+     *
      * @param item Item to be set as active or index Index of the item to be set as active..
      */
     updateActiveItem(item: number | T): void;

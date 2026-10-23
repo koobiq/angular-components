@@ -18,6 +18,7 @@ import { KbqAccordionContentDirective } from './accordion-content.directive';
 export class KbqAccordionContent {
     /**
      * Whether the content expands and collapses without motion.
+     *
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();

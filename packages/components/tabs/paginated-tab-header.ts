@@ -120,6 +120,7 @@ export type KbqPaginatedTabHeaderItem = FocusableOption & { elementRef: ElementR
 
 /**
  * Base class for a tab header that supported pagination.
+ *
  * @docs-private
  */
 @Directive()
@@ -754,6 +755,7 @@ export abstract class KbqPaginatedTabHeader
     /**
      * Handles the user pressing down on one of the paginators.
      * Starts scrolling the header after a certain amount of time.
+     *
      * @param direction In which direction the paginator should be scrolled.
      */
     handlePaginatorPress(direction: ScrollDirection, mouseEvent?: MouseEvent) {
@@ -848,6 +850,7 @@ export abstract class KbqPaginatedTabHeader
 
     /**
      * Scrolls the header to a given logical position (see {@link logicalScrollPosition}).
+     *
      * @param value Logical position to scroll to.
      * @param behavior Scroll animation behavior; `'auto'` jumps instantly, `'smooth'` animates.
      */

@@ -26,7 +26,9 @@ export type KbqDelayLoadingIndicatorOptions = {
  * has to follow the operation itself and change immediately.
  *
  * @example
+ * ```ts
  * readonly showIndicator$ = this.loading$.pipe(kbqDelayLoadingIndicator());
+ * ```
  */
 export function kbqDelayLoadingIndicator(
     options: KbqDelayLoadingIndicatorOptions = {}

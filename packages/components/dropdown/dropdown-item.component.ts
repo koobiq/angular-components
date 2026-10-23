@@ -115,6 +115,7 @@ export class KbqDropdownItem
 
     /**
      * Value of the `disabled` and `aria-disabled` attributes.
+     *
      * @internal
      */
     protected readonly disabledAttribute = computed(() => this.disabled() || null);
@@ -147,6 +148,7 @@ export class KbqDropdownItem
 
     /**
      * Whether the progress shimmer stands still.
+     *
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();

@@ -370,6 +370,7 @@ export class KbqListSelection<T = any>
      * Kept apart from {@link options} because that query is public API and means "the options the consumer
      * projected" — a synthetic entry there would corrupt `getSelectedOptionValues`, the drop-indicator
      * geometry and every consumer tally built on it.
+     *
      * @docs-private
      */
     readonly navigableOptions = new QueryList<KbqListOption<T>>();
@@ -676,6 +677,7 @@ export class KbqListSelection<T = any>
      * their own bindings. Without this the row keeps painting a state the options have already left, and
      * a click on a checkbox showing `indeterminate` over an already-full selection takes the deselect
      * branch — doing the opposite of what the user was shown.
+     *
      * @docs-private
      */
     refreshSelectAllState(): void {
@@ -1135,6 +1137,7 @@ export class KbqListSelection<T = any>
 
     /**
      * Rendered height of the element, or 0 when it is not laid out (SSR, jsdom, `display: none`).
+     *
      * @docs-private
      */
     getHeight(): number {
@@ -1143,6 +1146,7 @@ export class KbqListSelection<T = any>
 
     /**
      * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     *
      * @docs-private
      */
     onTouched: () => void = () => {};
@@ -1348,6 +1352,7 @@ export class KbqListSelection<T = any>
 
     /**
      * Utility to ensure all indexes are valid.
+     *
      * @param index The index to be checked.
      * @returns True if the index is valid for our list of options.
      */
@@ -1797,6 +1802,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
      * Such a row has no `value` and no place in the `SelectionModel`, so everything that would resolve
      * it against the list's selection is skipped; its checkbox state and its selected look are driven
      * from the outside instead. It also stays out of the drag-and-drop registry — see the constructor.
+     *
      * @docs-private
      */
     readonly selectAllRow = input(false, { transform: booleanAttribute });
@@ -1827,6 +1833,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
 
     /**
      * Value of `aria-disabled`: the disabled state, but a signal of its own, since `kbq-disabled` reads that one.
+     *
      * @internal
      */
     protected readonly ariaDisabled = computed(() => this.disabled || null);
@@ -2145,6 +2152,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
 
     /**
      * Rendered height of the element, or 0 when it is not laid out (SSR, jsdom, `display: none`).
+     *
      * @docs-private
      */
     getHeight(): number {

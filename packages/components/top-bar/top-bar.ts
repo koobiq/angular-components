@@ -82,6 +82,7 @@ export class KbqTopBar {
 
     /**
      * Whether the shadow appears without fading in.
+     *
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();

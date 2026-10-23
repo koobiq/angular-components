@@ -158,6 +158,7 @@ export class KbqSelectSearch implements AfterContentInit {
  * Abstract class representing a customizable select component with an overlay.
  *
  * This class provides base functionality for handling the overlay positioning.
+ *
  * @docs-private
  */
 @Directive()

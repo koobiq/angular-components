@@ -77,6 +77,7 @@ export interface KbqAppSwitcherApp {
     name: string;
     id: string | number;
     type?: string | number;
+
     /**
      * Inline SVG markup for the application icon. Use this for SVG icons that should be rendered directly in
      * the DOM.
@@ -97,6 +98,7 @@ export interface KbqAppSwitcherSite {
     name: string;
     id: string | number;
     status?: string;
+
     /**
      * Inline SVG markup for the site icon. Use this for SVG icons that should be rendered directly in the DOM.
      * Sanitized the same way as `KbqAppSwitcherApp.icon`.
@@ -315,6 +317,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
      *
      * Not `required`: it only exists in multi-site mode, and reading a required query with no match throws -
      * which a single-site switcher with a search field would do on the first `mouseenter`.
+     *
      * @docs-private
      */
     readonly otherSites = viewChild<KbqDropdown>('otherSites');
@@ -330,10 +333,8 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     /** Roving-focus manager over the inline menu items (flat app rows and other-site rows). */
     protected keyManager: FocusKeyManager<KbqDropdownItem>;
 
-    /** @docs-private */
     private readonly menuItems = new QueryList<KbqDropdownItem>();
 
-    /** @docs-private */
     private readonly dir = inject(Directionality, { optional: true });
 
     /**
@@ -436,8 +437,11 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
         this.hide(0);
     }
 
-    /** Handles keyboard navigation across the app-switcher menu items.
-     * @docs-private */
+    /**
+     * Handles keyboard navigation across the app-switcher menu items.
+     *
+     * @docs-private
+     */
     protected keydownHandler(event: KeyboardEvent): void {
         const keyCode = event.keyCode;
 
@@ -569,11 +573,14 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
         return !!(event.target as HTMLElement)?.attributes.getNamedItem('kbqinput');
     }
 
-    /** Syncs the key manager's active item with focus that arrives via Tab, click or a closing flyout.
+    /**
+     * Syncs the key manager's active item with focus that arrives via Tab, click or a closing flyout.
      * Clears the active item (index -1) when focus lands on a focusable element that isn't one of
      * `menuItems` (e.g. the search field's clear button) - otherwise a stale `activeItem` from before
      * the focus move would keep receiving Enter/Space/arrow-key actions meant for the new target.
-     * @docs-private */
+     *
+     * @docs-private
+     */
     protected focusinHandler(event: FocusEvent): void {
         if (!this.keyManager) return;
 
@@ -582,8 +589,11 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
         this.keyManager.updateActiveItem(index);
     }
 
-    /** Closes the popup once focus leaves the menu and its site flyouts, mirroring the dropdown.
-     * @docs-private */
+    /**
+     * Closes the popup once focus leaves the menu and its site flyouts, mirroring the dropdown.
+     *
+     * @docs-private
+     */
     protected focusoutHandler(event: FocusEvent): void {
         const next = event.relatedTarget as HTMLElement | null;
 
@@ -597,8 +607,11 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
         }
     }
 
-    /** Selects an application belonging to one of the other sites.
-     * @docs-private */
+    /**
+     * Selects an application belonging to one of the other sites.
+     *
+     * @docs-private
+     */
     selectAppInSite(site: KbqAppSwitcherSite | undefined, app: KbqAppSwitcherApp) {
         if (!site) return;
 
@@ -641,6 +654,7 @@ export class KbqAppSwitcherTrigger
     /**
      * Optional so a standalone consumer works without `kbqAppSwitcherProvider()`; an application-level
      * provider for `KBQ_APP_SWITCHER_SCROLL_STRATEGY` still wins over this fallback.
+     *
      * @docs-private
      */
     protected scrollStrategy: () => ScrollStrategy =
@@ -653,9 +667,7 @@ export class KbqAppSwitcherTrigger
     arrow: boolean = false;
     /** @docs-private */
     customClass: string;
-    /** @docs-private */
     private hasBackdrop: boolean = false;
-    /** @docs-private */
     private size: KbqPopUpSizeValues = PopUpSizes.Medium;
     /** @docs-private */
     content: string | TemplateRef<any>;
@@ -665,20 +677,29 @@ export class KbqAppSwitcherTrigger
         return this.appsCount > KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH;
     }
 
-    /** Number of applications to choose from
-     * @docs-private */
+    /**
+     * Number of applications to choose from
+     *
+     * @docs-private
+     */
     get appsCount(): number {
         return this.appsCountComputed();
     }
 
-    /** Whether the sites are used or not
-     * @docs-private */
+    /**
+     * Whether the sites are used or not
+     *
+     * @docs-private
+     */
     get sitesMode(): boolean {
         return this.sitesModeComputed();
     }
 
-    /** Applications of the currently selected site, grouped for rendering.
-     * @docs-private */
+    /**
+     * Applications of the currently selected site, grouped for rendering.
+     *
+     * @docs-private
+     */
     get currentApps(): KbqAppSwitcherApp[] {
         return this.currentAppsComputed();
     }
@@ -704,8 +725,10 @@ export class KbqAppSwitcherTrigger
         this.originalSites = value;
     }
 
-    /** Function to group the apps by type. The first argument is an app object with type.
-     * The second is a groups object and third is an array for untyped apps */
+    /**
+     * Function to group the apps by type. The first argument is an app object with type.
+     * The second is a groups object and third is an array for untyped apps
+     */
     get groupBy(): KbqAppSwitcherGroupBy {
         return this.groupBySignal();
     }
@@ -723,6 +746,7 @@ export class KbqAppSwitcherTrigger
      * Looked up by id among the parsed sites, so re-selecting a site never regroups it again. Falls back to
      * the raw value when the id is unknown (a stale id, or `selectedSite` set before `sites`) instead of
      * throwing.
+     *
      * @docs-private
      */
     readonly parsedSelectedSite = computed<KbqAppSwitcherSite | undefined>(() => {
@@ -766,12 +790,16 @@ export class KbqAppSwitcherTrigger
      *
      * Not to be confused with `KbqAppSwitcherComponent.trigger`, which is the back-reference from the popup to
      * this directive.
+     *
      * @docs-private
      */
     trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
 
-    /** Sites exactly as supplied through `sites`, without grouping.
-     * @docs-private */
+    /**
+     * Sites exactly as supplied through `sites`, without grouping.
+     *
+     * @docs-private
+     */
     get originalSites(): KbqAppSwitcherSite[] {
         return this.originalSitesSignal();
     }

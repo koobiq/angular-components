@@ -93,6 +93,7 @@ export class KbqProgressSpinner extends KbqColorDirective {
 
     /**
      * Whether the indeterminate spinner stands still and the determinate one follows a new value at once.
+     *
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();

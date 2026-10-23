@@ -153,7 +153,6 @@ export class FileValidators {
      * Validator that checks if the file size is less than or equal to the provided `maxSize`.
      *
      * @param maxSize - The maximum allowed file size in bytes.
-     *
      * @returns A ValidatorFn function that checks the file size.
      *
      * ## Usage:

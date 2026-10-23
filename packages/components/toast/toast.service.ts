@@ -323,7 +323,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         this.detachOverlay();
     }
 
-    /** @docs-private Reports that the pointer entered or left the toast with the given id. */
+    /** Reports that the pointer entered or left the toast with the given id. @docs-private */
     setHovered(id: number, hovered: boolean): void {
         if (hovered === this.hoveredToasts.has(id)) {
             return;
@@ -338,7 +338,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         this.updatePauseState();
     }
 
-    /** @docs-private Reports the origin the toast with the given id is focused with, or `null` once it is not. */
+    /** Reports the origin the toast with the given id is focused with, or `null` once it is not. @docs-private */
     setFocused(id: number, origin: FocusOrigin): void {
         if ((this.focusedToasts.get(id) ?? null) === origin) {
             return;

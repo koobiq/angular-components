@@ -81,6 +81,7 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
     /**
      * Tab index the host renders: {@link tabIndex}, or `-1` while there is no item to hand the focus to. Derived
      * rather than written to the model, which a consumer may bind.
+     *
      * @docs-private
      */
     protected readonly renderedTabIndex = computed(() =>
@@ -133,6 +134,7 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
     /**
      * Monitored with `checkChildren`, because the navbar is one composite widget: the host owns the tab stop
      * but hands focus straight to an item, and without it that hand-off reads as the navbar being blurred.
+     *
      * @docs-private
      */
     ngAfterViewInit(): void {
@@ -349,7 +351,9 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
      * layout, so a measurement taken afterwards forces a synchronous reflow for each of the remaining items. The
      * width an item frees by collapsing comes from its own record of both presentations, see
      * `KbqNavbarItem.measureWidths()`.
-     * @docs-private */
+     *
+     * @docs-private
+     */
     updateExpandedStateForItems = () => {
         // Untracked: called from a consumer's `effect()`, the items and their collapsed state read here would make the
         // effect run again on every collapse it makes.

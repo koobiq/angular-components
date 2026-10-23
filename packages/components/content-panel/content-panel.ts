@@ -114,10 +114,12 @@ export class KbqContentPanelHeader {
     protected readonly contentPanelContainer = inject(KbqContentPanelContainer);
     /** @docs-private */
     protected readonly contentPanel = inject(KbqContentPanel);
+
     /**
      * @docs-private
      */
     protected readonly buttonStyles = KbqButtonStyles;
+
     /**
      * @docs-private
      */
@@ -198,6 +200,7 @@ export class KbqContentPanel {
 
     /**
      * Current body overflow state. Read by the header and footer to render their `box-shadow`.
+     *
      * @docs-private
      */
     readonly bodyOverflow = computed(
@@ -290,13 +293,11 @@ export class KbqContentPanelContainer implements OnInit {
     private readonly stateSaving = inject(KbqStateSaving);
 
     /**
-     * Whether the content panel is opened.
+     * Whether the content panel is opened. Defaults to `undefined`.
      *
      * Bound through the `opened` attribute. Unset it is `undefined` rather than `false`, which is how the
      * container tells an application that drives the panel from one that leaves it to remember its own
      * state. Read {@link isOpened} for the state itself.
-     *
-     * @default undefined
      */
     readonly openedInput = input(undefined, {
         alias: 'opened',
@@ -310,8 +311,7 @@ export class KbqContentPanelContainer implements OnInit {
 
     /**
      * Whether the content panel can not be closed by clicking on the close button or pressing the ESCAPE key.
-     *
-     * @default false
+     * Defaults to `false`.
      */
     readonly disableClose = input(false, { transform: booleanAttribute });
 
@@ -326,29 +326,24 @@ export class KbqContentPanelContainer implements OnInit {
     readonly disableResizer = input(false, { transform: booleanAttribute });
 
     /**
-     * Minimum width of the `KbqContentPanel`.
-     *
-     * @default 480
+     * Minimum width of the `KbqContentPanel`. Defaults to `480`.
      */
     readonly minWidth = input(480, { transform: numberAttribute });
 
     /**
-     * Width of the `KbqContentPanel`.
-     *
-     * @default 640
+     * Width of the `KbqContentPanel`. Defaults to `640`.
      */
     readonly width = input(640, { transform: numberAttribute });
 
     /**
-     * Max width of the `KbqContentPanel`.
-     *
-     * @default 800
+     * Max width of the `KbqContentPanel`. Defaults to `800`.
      */
     readonly maxWidth = input(800, { transform: numberAttribute });
 
     /**
      * A linked signal rather than a plain one: it follows the input whenever the input changes, and keeps
      * a local write until then — which is what lets a restored state survive the input's initial value.
+     *
      * @docs-private
      */
     protected readonly openedState = linkedSignal(() => this.openedInput() ?? false);
@@ -365,6 +360,7 @@ export class KbqContentPanelContainer implements OnInit {
 
     /**
      * The room the content leaves for the opened panel.
+     *
      * @docs-private
      */
     protected readonly contentMargin = computed(() =>
@@ -374,6 +370,7 @@ export class KbqContentPanelContainer implements OnInit {
     /**
      * Whether the margin of the content transitions: only while it makes room for the panel opening or
      * closing, so that a resize of the panel moves the content at once.
+     *
      * @docs-private
      */
     protected readonly contentAnimating = signal(false);

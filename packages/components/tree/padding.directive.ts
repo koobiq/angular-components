@@ -61,6 +61,7 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
     }
 
     withIcon: boolean;
+
     /**
      * Horizontal room a toggle takes up in a row: its own 16px box plus the option's 8px `gap`. A node
      * without a toggle reserves the same amount so its content lines up with a sibling that has one —
@@ -101,7 +102,6 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
      * This has been extracted to a util because of TS 4 and VE.
      * View Engine doesn't support property rename inheritance.
      * TS 4.0 doesn't allow properties to override accessors or vice-versa.
-     * @docs-private
      */
     private setLevelInput(value: number) {
         // Set to null as the fallback value so that _setPadding can fall back to the node level if the

@@ -41,7 +41,7 @@ export interface KbqFormFieldControlRef<T = unknown> {
  * @docs-private
  */
 export interface KbqFormFieldRef {
-    /** @see KbqFormField.control */
+    /** The form field control, as `KbqFormField.control` reads it. */
     readonly control: Signal<KbqFormFieldControlRef>;
     /** Use when KbqFormField is in an overlay container. */
     inOverlay: ModelSignal<boolean>;

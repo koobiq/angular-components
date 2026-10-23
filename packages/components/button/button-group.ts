@@ -26,6 +26,7 @@ import { KbqButton, KbqButtonColor, KbqButtonStyleInput, KbqButtonStyles } from 
 })
 export class KbqButtonGroupRoot extends KbqColorDirective<KbqButtonColor> implements OnChanges {
     private readonly buttons = contentChildren(KbqButton);
+
     /**
      * Style applied to the group and propagated to every nested button.
      * A button that sets its own `kbqStyle` keeps it.
@@ -151,8 +152,7 @@ export class KbqButtonGroupRoot extends KbqColorDirective<KbqButtonColor> implem
 })
 export class KbqButtonGroup {
     /**
-     * Layout direction: `'horizontal'` or `'vertical'`
-     * @default 'horizontal'
+     * Layout direction: `'horizontal'` or `'vertical'`. Defaults to `'horizontal'`.
      */
     readonly orientation = input<KbqOrientation>('horizontal');
 }

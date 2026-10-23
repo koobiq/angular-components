@@ -146,9 +146,9 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     readonly optionTemplate = input<TemplateRef<KbqTimeRangeOptionContext>>();
     /** Whether the popover is drawn with an arrow. */
     readonly arrow = input(true, { transform: booleanAttribute });
+
     /**
-     * Keeps the manual range visible even when `range` is not in the list of options.
-     * @see availableTimeRangeTypes
+     * Keeps the manual range visible even when `range` is not in {@link availableTimeRangeTypes}.
      */
     readonly showRangeAsDefault = input(true);
     /** Falls back to a default value instead of holding `null`. */
@@ -159,7 +159,9 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
 
     /**
      * Used to calculate time range.
-     * @docs-private */
+     *
+     * @docs-private
+     */
     protected readonly normalizedDefaultRangeValue = computed(() => ({
         ...this.timeRangeService.getDefaultRangeValue(),
         ...this.defaultRangeValue()
@@ -249,6 +251,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     /**
      * Lets the editor tell an "apply" gesture from a plain focus loss before the click even lands - the
      * `focusout` it reacts to is dispatched between this `mousedown` and the `click` below.
+     *
      * @docs-private
      */
     protected onFooterPointerDown(): void {
@@ -279,6 +282,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     /**
      * Applying is always offered; an invalid editor keeps the popover open and sends the user to the
      * first field at fault instead.
+     *
      * @docs-private
      */
     onApply(popover: KbqPopoverTrigger): void {

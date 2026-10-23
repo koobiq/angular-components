@@ -15,6 +15,7 @@ export interface CanUpdateErrorState {
  *
  * The state depends on the form control and its parent form, which notify nothing a signal could follow, so
  * the owner calls `updateErrorState` from `ngDoCheck`.
+ *
  * @docs-private
  */
 export class KbqErrorStateTracker implements CanUpdateErrorState {

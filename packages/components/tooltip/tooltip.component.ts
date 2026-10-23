@@ -79,6 +79,7 @@ export const KBQ_TOOLTIP_OPEN_TIME = new InjectionToken<{ value: number }>('kbq-
 
 /**
  * @deprecated Replaced by {@link KbqTooltipDelayTracker}. Providing it has no effect. Will be removed in 22.0.0.
+ *
  * @docs-private
  */
 export const KBQ_TOOLTIP_OPEN_TIME_PROVIDER = {
@@ -151,6 +152,7 @@ export class KbqTooltipComponent extends KbqPopUp {
      *
      * Public only because the trigger is a separate class and overwrites it with its own id — nothing outside
      * the pair should read or write it, or the accessibility link between them breaks.
+     *
      * @docs-private
      */
     id: string = `kbq-tooltip-${nextTooltipUniqueId++}`;
@@ -179,6 +181,7 @@ export class KbqTooltipComponent extends KbqPopUp {
      * trigger pushes new data, so that changing `kbqTooltipOffset` on an open tooltip actually moves it.
      *
      * Public only because the trigger calls it from the outside; it is not part of the supported surface.
+     *
      * @docs-private
      */
     applyOffset(): void {
@@ -250,8 +253,11 @@ export function kbqTooltipScrollStrategyFactory(overlay: Overlay): () => ScrollS
     return () => overlay.scrollStrategies.close();
 }
 
-// Redundant to the root factory of the token; kept so an app can restore the default under its own override (#DS-2196).
-/** @docs-private */
+/**
+ * Redundant to the root factory of the token; kept so an app can restore the default under its own override (#DS-2196).
+ *
+ * @docs-private
+ */
 export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_TOOLTIP_SCROLL_STRATEGY,
     deps: [Overlay],
@@ -288,6 +294,7 @@ export class KbqTooltipTrigger
      * when set. An input rather than a DI override so it applies to this tooltip instance only, without
      * leaking into other `kbqTooltip`s nested inside the same host (DI overrides are visible to every
      * descendant in the element-injector tree, not just the element they're declared on).
+     *
      * @docs-private
      */
     readonly scrollStrategyOverride = input<(() => ScrollStrategy) | undefined>(undefined, {
@@ -303,6 +310,7 @@ export class KbqTooltipTrigger
     }
     /** @docs-private */
     protected parentPopup = inject<KbqParentPopup>(KBQ_PARENT_POPUP, { optional: true });
+
     /**
      * Pop-ups anchored to the very same element — a popover, a dropdown, a select and so on. Resolved with
      * `self` so a pop-up further up the tree (which the tooltip merely lives inside) is not picked up; that
@@ -438,7 +446,9 @@ export class KbqTooltipTrigger
      * `kbqTooltipDisabled="false"` cannot override it, as for a hint that repeats text the host never clipped.
      * Otherwise the explicit value wins in both directions, so `false` on a wrapped control that is not disabled
      * still asks for a tooltip.
-     * @docs-private */
+     *
+     * @docs-private
+     */
     protected readonly derivedDisabledWins: boolean = false;
 
     // Kept apart so the consumer's binding and the state the trigger derives cannot overwrite each other,
@@ -516,6 +526,7 @@ export class KbqTooltipTrigger
 
     /** Input (`kbqTooltipArrow`) — whether to render the tooltip's arrow/pointer. Defaults to `false`. */
     arrow: boolean = false;
+
     /**
      * Input (`kbqTooltipOffset`) — distance in pixels between the tooltip and its trigger. `null`, the default, keeps
      * the gap of the stylesheet.
@@ -902,7 +913,9 @@ export class KbqTooltipTrigger
      * Records the state the subclass derived from its own content and re-folds it with the consumer's
      * `kbqTooltipDisabled`. Subclasses call this instead of writing `disabled`, which would be read back as
      * the consumer's own value and lose whichever of the two was written first.
-     * @docs-private */
+     *
+     * @docs-private
+     */
     protected setDerivedDisabled(value: boolean): void {
         this.derivedDisabled = value;
 
@@ -1008,6 +1021,7 @@ export class KbqTooltipTrigger
 
     /**
      * Records whether the pointer left the host while muted, see `pointerLeftWhileMuted`.
+     *
      * @docs-private
      */
     protected trackPointerLeave(event: MouseEvent): void {
@@ -1028,7 +1042,9 @@ export class KbqTooltipTrigger
      * `triggerName` is `mouseleave` and the pop-up itself is hovered. Hiding through the instance keeps
      * `visibleChange(false)` firing, so `isOpen`, `kbqVisibleChange` and the `kbqVisible` input stay in sync.
      * Does nothing when the tooltip is already detached or when closing is prevented.
-     * @docs-private */
+     *
+     * @docs-private
+     */
     hideAsInactive(): void {
         if (this.preventClose) return;
 
@@ -1093,7 +1109,9 @@ export class KbqTooltipTrigger
      *
      * Exists for components that own a tooltip through `hostDirectives` instead of extending this class and
      * therefore cannot reach the protected overlay configuration (e.g. `KbqNavbarItem`).
-     * @docs-private */
+     *
+     * @docs-private
+     */
     setOverlayPanelClass(panelClass: string | string[]): void {
         this.overlayConfig.panelClass = panelClass;
     }
@@ -1149,6 +1167,7 @@ export class KbqTooltipTrigger
      *
      * The inherited `keydownHandler` is a host binding on the trigger and therefore only fires while the
      * trigger itself has focus, which a hover-opened tooltip never has.
+     *
      * @docs-private
      */
     createOverlay(): OverlayRef {
@@ -1315,6 +1334,7 @@ export class KbqTooltipTrigger
 
     /**
      * Anchors the overlay to the caret of the field.
+     *
      * @docs-private
      */
     protected applyRelativeToCaret() {

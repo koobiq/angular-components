@@ -38,8 +38,11 @@ export class KbqFilterRefresher {
     /** KbqFilterBar host seam */
     private readonly filterBar = inject(KBQ_FILTER_BAR_HOST, { optional: true });
 
-    /** Localized strings of the filter-bar, falling back to the defaults outside a bar.
-     * @docs-private */
+    /**
+     * Localized strings of the filter-bar, falling back to the defaults outside a bar.
+     *
+     * @docs-private
+     */
     protected readonly localeConfiguration = computed(
         () => this.filterBar?.localeConfiguration() ?? KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION
     );

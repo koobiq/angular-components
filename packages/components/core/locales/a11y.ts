@@ -13,9 +13,8 @@ export const KBQ_A11Y_LOCALE_CONFIGURATION = new InjectionToken<KbqA11yLocaleCon
 );
 
 /**
- * Utility provider. Only the names you pass are overridden; the rest keep following the active locale.
- *
- * @see KBQ_A11Y_LOCALE_CONFIGURATION
+ * Utility provider of {@link KBQ_A11Y_LOCALE_CONFIGURATION}. Only the names you pass are overridden;
+ * the rest keep following the active locale.
  */
 export const kbqA11yLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqA11yLocaleConfiguration>

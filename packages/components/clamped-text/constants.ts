@@ -28,9 +28,8 @@ export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION = new InjectionToken<KbqClamp
 );
 
 /**
- * Utility provider. Only the strings you pass are overridden; the rest keep following the active locale.
- *
- * @see KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION
+ * Utility provider of {@link KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION}. Only the strings you pass are overridden;
+ * the rest keep following the active locale.
  */
 export const kbqClampedTextLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqClampedTextLocaleConfiguration>
@@ -61,8 +60,9 @@ export interface KbqClamped {
 }
 
 /**
- * Injection function that creates a reactive locale configuration signal.
- * @see {KbqClampedText, KbqClampedList}
+ * Injection function that creates a reactive locale configuration signal for {@link KbqClampedText} and
+ * {@link KbqClampedList}.
+ *
  * @docs-private
  */
 export function kbqInjectClampedTextLocaleConfiguration(): Signal<KbqClampedTextLocaleConfiguration> {

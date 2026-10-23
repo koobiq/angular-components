@@ -38,6 +38,7 @@ export class KbqDropdownSearch implements AfterContentInit {
     /**
      * Panel this field searches. A nested panel declared inside its parent's content shares the view with
      * it, so the parent has to be able to tell which of the projected fields is its own.
+     *
      * @docs-private
      */
     readonly panel = inject(KBQ_DROPDOWN_PANEL, { optional: true });

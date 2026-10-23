@@ -21,6 +21,7 @@ export type DropdownCloseReason = void | 'click' | 'keydown' | 'tab';
 
 /**
  * Interface for a custom dropdown panel that can be used with `kbqDropdownTriggerFor`.
+ *
  * @docs-private
  */
 export interface KbqDropdownPanel {
@@ -94,6 +95,7 @@ export interface KbqDropdownDefaultOptions {
 
 /**
  * Injection token used to provide the parent dropdown to dropdown-specific components.
+ *
  * @docs-private
  */
 export const KBQ_DROPDOWN_PANEL = new InjectionToken<KbqDropdownPanel>('KBQ_DROPDOWN_PANEL');
