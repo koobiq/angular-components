@@ -17,13 +17,30 @@ const pasteFromClipboard = async (page: Page, textarea: Locator, text: string) =
     await page.keyboard.press('ControlOrMeta+v');
 };
 
-// The height is set by `grow()`, a task or more after the value changes, so a read straight after a paste can
-// still return the height of the previous text.
-const pasteAndMeasure = async (page: Page, textarea: Locator, text: string): Promise<number> => {
-    const before = await getHeight(textarea);
+/** The height once it holds across two frames, or `null` while it is still changing. */
+const heldHeight = (textarea: Locator): Promise<number | null> =>
+    textarea.evaluate(
+        (el) =>
+            new Promise<number | null>((resolve) => {
+                const first = el.getBoundingClientRect().height;
 
+                requestAnimationFrame(() =>
+                    requestAnimationFrame(() => {
+                        const second = el.getBoundingClientRect().height;
+
+                        resolve(second === first ? second : null);
+                    })
+                );
+            })
+    );
+
+// The height is set by `grow()`, a task or more after the value changes, so a read straight after a paste can
+// still return the height of the previous text. Waiting for it to hold rather than to change also measures a
+// paste that leaves it as it was.
+const pasteAndMeasure = async (page: Page, textarea: Locator, text: string): Promise<number> => {
     await pasteFromClipboard(page, textarea, text);
-    await expect.poll(() => getHeight(textarea)).not.toBe(before);
+    await expect(textarea).toHaveValue(text);
+    await expect.poll(() => heldHeight(textarea)).not.toBeNull();
 
     return getHeight(textarea);
 };
@@ -150,7 +167,7 @@ test.describe('KbqTextareaModule', () => {
             await expect(textarea).toBeFocused();
 
             // Sampled two frames later, once whatever the component does in response to the focus has rendered.
-            const scrollPositions = () =>
+            const scrollPositions = (): Promise<{ page: number; textarea: number }> =>
                 textarea.evaluate(
                     (el: HTMLTextAreaElement) =>
                         new Promise<{ page: number; textarea: number }>((resolve) =>
@@ -160,7 +177,10 @@ test.describe('KbqTextareaModule', () => {
                         )
                 );
 
-            await expect.poll(scrollPositions).toEqual({ page: scrollYBefore, textarea: 0 });
+            // Read once: the positions are meant not to change, so a poll would pass on its first sample.
+            const scrolled = await scrollPositions();
+
+            expect(scrolled).toEqual({ page: scrollYBefore, textarea: 0 });
         });
     });
 });

@@ -118,7 +118,10 @@ test.describe('KbqFilterBarModule', () => {
                 expect(lastBox.x + lastBox.width).toBeLessThanOrEqual(pipeBox.x + pipeBox.width + 1);
             }
 
-            expect((await component.locator('.kbq-pipe__input').boundingBox())!.width).toBe(240);
+            // Read once, past the caps above: the input pipe is 240px wide without the token too.
+            const inputBox = (await component.locator('.kbq-pipe__input').boundingBox())!;
+
+            expect(inputBox.width).toBe(240);
         });
 
         test('truncates the saved filter name', async ({ page }) => {
@@ -283,11 +286,13 @@ test.describe('KbqFilterBarModule', () => {
 
         test('should wrap the long option under multilineOptions instead of clipping it', async ({ page }) => {
             const option = await openPipe(page, MULTILINE);
+
+            // The wrapped rows make the option taller than 48px, and nothing overflows horizontally once they have.
+            await expect.poll(async () => (await option.boundingBox())?.height).toBeGreaterThan(48);
+
             const { scroll, client } = await getNameWidths(option);
 
-            // Nothing overflows horizontally, and the wrapped rows make the option taller than 48px.
             expect(scroll).toBeLessThanOrEqual(client);
-            expect((await option.boundingBox())!.height).toBeGreaterThan(48);
         });
 
         test('should show the truncation tooltip on a clipped two-line option', async ({ page }) => {

@@ -569,13 +569,13 @@ describe('KbqTabHeader', () => {
         // A label is measured in whatever face is in when the correction runs, and the real one only resizes
         // the labels — no resize of the scroll box, no change of the text.
         describe('webfonts', () => {
-            let fonts: EventTarget;
+            let fonts: EventTarget & { status: FontFaceSetLoadStatus };
 
             beforeEach(() => {
                 vi.useFakeTimers();
 
-                // jsdom has no `FontFaceSet`; the header only listens to it.
-                fonts = new EventTarget();
+                // jsdom has no `FontFaceSet`; the header only listens to it and reads its status.
+                fonts = Object.assign(new EventTarget(), { status: 'loading' as FontFaceSetLoadStatus });
                 Object.defineProperty(document, 'fonts', { configurable: true, value: fonts });
 
                 fixture = TestBed.createComponent(SimpleTabHeaderApp);
@@ -620,22 +620,31 @@ describe('KbqTabHeader', () => {
                 return { header, container, label };
             };
 
-            /** The real face swaps in: wider than the fallback, so the labels before it push the last one on. */
-            const loadWebfonts = (label: { offsetLeft: number; offsetWidth: number }): void => {
-                label.offsetLeft = 320;
-                label.offsetWidth = 40;
+            /** A face finishes loading and moves the last label to `offsetLeft`, `offsetWidth`. */
+            const loadFont = (
+                label: { offsetLeft: number; offsetWidth: number },
+                offsetLeft: number,
+                offsetWidth: number
+            ): void => {
+                label.offsetLeft = offsetLeft;
+                label.offsetWidth = offsetWidth;
+                fonts.status = 'loaded';
                 fonts.dispatchEvent(new Event('loadingdone'));
             };
+
+            /** Lets a `loadingdone` through its audit and the correction it repeats through its debounce. */
+            const settleAfterFont = () => vi.advanceTimersByTimeAsync(RESIZE_AUDIT_TIME + SCROLL_CORRECTION_DEBOUNCE);
 
             it('should reveal the selected label again once webfonts finish loading', async () => {
                 const { container, label } = await revealLastLabel();
 
-                loadWebfonts(label);
+                // The real face is wider, so the labels before the last one push it on.
+                loadFont(label, 320, 40);
 
                 // Behind the same debounce as every other correction.
                 expect(container.scrollLeft).toBe(250);
 
-                await vi.advanceTimersByTimeAsync(SCROLL_CORRECTION_DEBOUNCE);
+                await settleAfterFont();
 
                 // 360 - 100 + 20: where the header would have put it had the face been in from the start.
                 expect(container.scrollLeft).toBe(280);
@@ -661,10 +670,38 @@ describe('KbqTabHeader', () => {
 
                 expect(moved).not.toBe(250);
 
-                loadWebfonts(label);
-                await vi.advanceTimersByTimeAsync(SCROLL_CORRECTION_DEBOUNCE);
+                loadFont(label, 320, 40);
+                await settleAfterFont();
 
                 expect(container.scrollLeft).toBe(moved);
+            });
+
+            // A font loaded later for some other text says nothing about the labels, which may since have been
+            // moved out of view by the layout: only the first measurement in the final faces is repeated.
+            it('should not repeat a correction once it has measured with every font loaded', async () => {
+                fonts.status = 'loaded';
+
+                const { container, label } = await revealLastLabel();
+
+                loadFont(label, 320, 40);
+                await settleAfterFont();
+
+                expect(container.scrollLeft).toBe(250);
+            });
+
+            it('should repeat a correction for the fonts only once', async () => {
+                const { container, label } = await revealLastLabel();
+
+                loadFont(label, 320, 40);
+                await settleAfterFont();
+
+                expect(container.scrollLeft).toBe(280);
+
+                // Out of view again, as a later layout could leave it: a repeat would move the strip to 300.
+                loadFont(label, 360, 40);
+                await settleAfterFont();
+
+                expect(container.scrollLeft).toBe(280);
             });
 
             it('should recheck pagination once webfonts finish loading', async () => {
@@ -684,6 +721,7 @@ describe('KbqTabHeader', () => {
 
                 scrollWidth = 400;
                 fonts.dispatchEvent(new Event('loadingdone'));
+                await vi.advanceTimersByTimeAsync(RESIZE_AUDIT_TIME);
                 fixture.detectChanges();
 
                 expect(header.showPaginationControls).toBe(true);

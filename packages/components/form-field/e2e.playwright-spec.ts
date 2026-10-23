@@ -177,6 +177,19 @@ test.describe('KbqFormFieldModule', () => {
             return parts.length === 4 ? Number(parts[3]) : 1;
         };
 
+        /**
+         * The alpha of an autofilled control's background, read once it has left the transition's start value.
+         *
+         * The parked transition holds Chrome's `rgb(232, 240, 254)` at alpha 0, so the tests assert the alpha, not the
+         * colour. Right after forcing, the control still reads the start value, `rgba(0, 0, 0, 0)`, which a transition
+         * of any length would pass; it settles on the blue a frame later.
+         */
+        const readControlAlpha = async (control: Locator): Promise<number> => {
+            await expect(control).not.toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+
+            return alphaOf(await control.evaluate((element) => getComputedStyle(element).backgroundColor));
+        };
+
         const resolveToken = (field: Locator, token: string): Promise<string> =>
             e2eResolveCssValue(field, 'background-color', `var(${token})`);
 
@@ -354,10 +367,10 @@ test.describe('KbqFormFieldModule', () => {
                 // Chrome paints its own background on an autofilled control with a UA `!important`
                 // rule that an author declaration cannot out-rank. What does out-rank it is a
                 // running transition, which is why the stylesheet parks `background-color` on a
-                // 600000s one. The used value is Chrome's `rgb(232, 240, 254)` held at alpha 0 — so
-                // assert the alpha, not the colour: immediately after forcing it still reads
-                // `rgba(0, 0, 0, 0)` and only settles on the blue a frame later.
-                expect(alphaOf(await control.evaluate((el) => getComputedStyle(el).backgroundColor))).toBe(0);
+                // 600000s one.
+                const alpha = await readControlAlpha(control);
+
+                expect(alpha).toBe(0);
             });
 
             test('the suppression is a running transition, not a finished one', async ({ page }) => {
@@ -441,7 +454,9 @@ test.describe('KbqFormFieldModule', () => {
                 // the container. A second, translucent coat here would make the control's rectangle
                 // visibly darker than the container's padding around it.
                 await expect(control).toHaveCSS('box-shadow', 'none');
-                expect(alphaOf(await control.evaluate((el) => getComputedStyle(el).backgroundColor))).toBe(0);
+                const alpha = await readControlAlpha(control);
+
+                expect(alpha).toBe(0);
             });
         });
 
@@ -454,7 +469,9 @@ test.describe('KbqFormFieldModule', () => {
                 // transparent and the ring is an inset shadow on the container, drawn above the
                 // tint. The geometry compensation is gone, and this is what replaces it.
                 await expect(container).not.toHaveCSS('box-shadow', 'none');
-                expect(alphaOf(await control.evaluate((el) => getComputedStyle(el).backgroundColor))).toBe(0);
+                const alpha = await readControlAlpha(control);
+
+                expect(alpha).toBe(0);
             });
 
             test('the control keeps one height focused or not', async ({ page }) => {
@@ -469,10 +486,12 @@ test.describe('KbqFormFieldModule', () => {
                     await expect(control).toHaveCSS('padding-top', '5px');
                 }
 
-                expect((await focused.container.boundingBox())!.height).toBeCloseTo(
-                    (await plain.container.boundingBox())!.height,
-                    1
-                );
+                // Read once, past the probe `e2eForceAutofill` waits for: the heights match unforced
+                // too, so a poll would pass on a sample from before the forcing.
+                const focusedHeight = (await focused.container.boundingBox())!.height;
+                const plainHeight = (await plain.container.boundingBox())!.height;
+
+                expect(focusedHeight).toBeCloseTo(plainHeight, 1);
             });
         });
 
@@ -487,7 +506,9 @@ test.describe('KbqFormFieldModule', () => {
                 // autofill rules, so nothing suppressed the UA background: an autofilled textarea
                 // painted Chrome's raw opaque blue, which in the dark theme was a near-white block
                 // with dark text. It is now suppressed the same way as the others.
-                expect(alphaOf(await control.evaluate((el) => getComputedStyle(el).backgroundColor))).toBe(0);
+                const alpha = await readControlAlpha(control);
+
+                expect(alpha).toBe(0);
                 await expect
                     .poll(() => e2eRunningAnimations(control))
                     .toContainEqual(['background-color', AUTOFILL_SUPPRESSION_DURATION]);
@@ -847,11 +868,13 @@ test.describe('KbqFormFieldModule', () => {
 
                     // Forcing reaches elements that are scrolled out of the shot, so the count above
                     // says nothing about whether they are in it. Read once, now that the count has
-                    // proved the matrix rendered: a poll for 0 would pass on an empty one.
+                    // proved the matrix rendered: a poll for 0, or for a narrow box, would pass on an
+                    // empty one.
                     const outside = await countOutside(matrix);
+                    const { width } = (await matrix.boundingBox())!;
 
                     expect(outside).toBe(0);
-                    expect((await matrix.boundingBox())!.width).toBeLessThanOrEqual(1200);
+                    expect(width).toBeLessThanOrEqual(1200);
 
                     await expectStillSuppressed(page, probeCell);
                     await expectSettledAnimations(matrix);

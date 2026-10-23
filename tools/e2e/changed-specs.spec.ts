@@ -1,4 +1,4 @@
-import { reachedSpecs } from './changed-specs.mjs';
+import { burnInRepeat, reachedSpecs } from './changed-specs.mjs';
 
 const SPECS = [
     'packages/components/button/e2e.playwright-spec.ts',
@@ -51,5 +51,11 @@ describe(reachedSpecs.name, () => {
         expect(reachedSpecs(['packages/components/button/button.ts'], [...SPECS, unsafe])).toEqual([
             'packages/components/button/e2e.playwright-spec.ts'
         ]);
+    });
+});
+
+describe(burnInRepeat.name, () => {
+    it('repeats a narrow change ten times and a wider one fewer times, but never skips it', () => {
+        expect([1, 5, 6, 20, 21, 65].map(burnInRepeat)).toEqual([10, 10, 3, 3, 2, 2]);
     });
 });

@@ -86,8 +86,11 @@ export function e2eDescribeWebkitPanelScrolling(config: E2eWebkitPanelScrollingC
             // Nothing may move the panel afterwards — a deferred focus scroll used to land right here.
             await e2eSettleFrames(page);
 
+            // Read once, past the frames a deferred scroll lands in: a poll for "unmoved" passes on its first sample.
+            const settled = await e2eScrollTopOf(port);
+
             // A deferred focus scroll moves the panel by at least a row; a pixel of settling is not movement.
-            expect(Math.abs((await e2eScrollTopOf(port)) - scrolled)).toBeLessThanOrEqual(1);
+            expect(Math.abs(settled - scrolled)).toBeLessThanOrEqual(1);
         });
 
         test('does not move the list when the pointer lands on a partially clipped row', async ({ page }) => {

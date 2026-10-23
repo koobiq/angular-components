@@ -39,9 +39,10 @@ const getStripPositions = (page: Page): Promise<Record<string, string>> =>
                         strip.scrollLeft -
                         (strip.clientWidth - nextArrow.clientWidth);
 
+                    // `scrollLeft` snaps to device pixels where the box metrics are whole CSS pixels.
                     return [
                         group,
-                        overshoot === 0 ? againstNextArrow : `selected tab ${overshoot}px past the next arrow`
+                        Math.abs(overshoot) <= 1 ? againstNextArrow : `selected tab ${overshoot}px past the next arrow`
                     ];
                 })
             ),

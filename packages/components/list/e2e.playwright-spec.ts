@@ -299,7 +299,10 @@ test.describe('KbqListModule', () => {
 
             // The target position is shown by the indicator, so the list itself must stay perfectly
             // still: no option may be nudged aside to open a gap at any point during the drag.
-            expect([...new Set(await sampling)]).toEqual([atRest]);
+            // Awaited once: the frames are a finished recording, not a value to retry.
+            const frames = await sampling;
+
+            expect([...new Set(frames)]).toEqual([atRest]);
 
             await page.mouse.up();
         });
@@ -664,7 +667,7 @@ test.describe('KbqListModule', () => {
             await page.goto('/E2eListDragPreview');
             const preview = await pickUp(page, 'long');
 
-            expect((await preview.boundingBox())!.width).toBe(480);
+            await expect.poll(async () => (await preview.boundingBox())?.width).toBe(480);
 
             // A cap alone would also hold on text that happens to fit; this is the ellipsis itself.
             for (const line of ['label', 'caption']) {
@@ -709,7 +712,7 @@ test.describe('KbqListModule', () => {
 
             await expect(preview).toHaveClass(/kbq-list-option/);
             await expect(preview.locator('kbq-pseudo-checkbox')).toHaveCount(1);
-            expect((await preview.boundingBox())!.width).toBe(rowWidth);
+            await expect.poll(async () => (await preview.boundingBox())?.width).toBe(rowWidth);
 
             await page.mouse.up();
         });

@@ -295,8 +295,8 @@ export abstract class KbqPaginatedTabHeader
 
     /**
      * The latest scroll-correction request, repeated once webfonts finish loading: a label measured in the
-     * fallback face moves when the real one swaps in. Dropped as soon as the user moves the strip, so the
-     * repeat never pulls it back from where they took it.
+     * fallback face moves when the real one swaps in. Dropped once a correction has measured with no font
+     * loading, and as soon as the user moves the strip, so the repeat never pulls it back from where they took it.
      */
     private lastScrollCorrection: { index: number; behavior: ScrollBehavior } | null = null;
 
@@ -456,19 +456,32 @@ export abstract class KbqPaginatedTabHeader
 
         this.scrollCorrectionRequest
             .pipe(debounceTime(SCROLL_CORRECTION_DEBOUNCE), takeUntilDestroyed(this.destroyRef))
-            .subscribe(({ index, behavior }) => this.scrollCorrection(index, behavior));
+            .subscribe(({ index, behavior }) => {
+                this.scrollCorrection(index, behavior);
+
+                // Measured with no font left loading, the labels are in their final faces. Kept any longer, the
+                // request would let a font loaded later for unrelated text pull the strip back to the selection.
+                if (this.document.fonts?.status !== 'loading') this.lastScrollCorrection = null;
+            });
 
         // A webfont that arrives after the strip was measured resizes the labels without resizing the scroll
         // box or changing the text, so neither observer above sees it. Re-measuring also re-renders the
         // underline, which reads the selected label's offsets from the template.
         if (this.platform.isBrowser && this.document.fonts) {
-            fromEvent(this.document.fonts, 'loadingdone')
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => {
-                    this.updatePagination();
+            const fonts = this.document.fonts;
 
-                    if (this.lastScrollCorrection) this.scrollCorrectionRequest.next(this.lastScrollCorrection);
-                });
+            // Audited like a resize: faces arrive in bursts, and every header on the page measures on each one.
+            this.ngZone.runOutsideAngular(() =>
+                fromEvent(fonts, 'loadingdone')
+                    .pipe(auditTime(RESIZE_AUDIT_TIME), takeUntilDestroyed(this.destroyRef))
+                    .subscribe(() => {
+                        if (this.disablePagination) return;
+
+                        this.ngZone.run(() => this.updatePagination());
+
+                        if (this.lastScrollCorrection) this.scrollCorrectionRequest.next(this.lastScrollCorrection);
+                    })
+            );
         }
     }
 

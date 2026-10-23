@@ -536,9 +536,19 @@ test.describe('KbqButtonToggleModule', () => {
             // `min-width: 0` is on the label box alone, so it is the only flex item that absorbs the
             // shrink — an icon that shrank with it would be clipped instead of the label
             await expect(icons).toHaveCount(2);
+            // Read once the label has shrunk: an icon at full size before that proves nothing.
+            await expect
+                .poll(async () => {
+                    const { scroll, client } = await getLabelWidths(toggle);
+
+                    return scroll - client;
+                })
+                .toBeGreaterThan(0);
 
             for (let index = 0; index < (await icons.count()); index++) {
-                expect((await icons.nth(index).boundingBox())!.width).toBeGreaterThan(15);
+                const { width } = (await icons.nth(index).boundingBox())!;
+
+                expect(width).toBeGreaterThan(15);
             }
 
             await expectIconsSpacedFromLabel(toggle);

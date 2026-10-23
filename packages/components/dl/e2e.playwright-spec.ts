@@ -170,7 +170,12 @@ test.describe('KbqDl', () => {
             await page.keyboard.press('ArrowRight');
 
             await expect(getList(block)).toHaveClass(resizedClass);
-            expect((await term.boundingBox())!.width).toBeGreaterThanOrEqual(startWidth);
+
+            // Read once: the class and the column width are host bindings of one render, and a poll
+            // for `>=` would pass on the width from before the key.
+            const width = (await term.boundingBox())!.width;
+
+            expect(width).toBeGreaterThanOrEqual(startWidth);
         });
 
         test('should default the dt and dd minimums to the measured term width when they are not set', async ({

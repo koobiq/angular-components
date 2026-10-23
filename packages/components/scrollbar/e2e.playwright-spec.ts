@@ -599,7 +599,11 @@ test.describe('KbqScrollbar', () => {
             await getOuter(page).evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
 
             await expect.poll(() => outerScrollTop(page)).toBe(350);
-            await expect.poll(() => innerScrollTop(page)).toBe(0);
+
+            // Read once, past the outer scroll: a poll for an offset that stays 0 would pass on its first sample.
+            const innerScrolled = await innerScrollTop(page);
+
+            expect(innerScrolled).toBe(0);
         });
 
         test('scrolling the inner scrollbar does not move the outer one', async ({ page }) => {
@@ -607,7 +611,11 @@ test.describe('KbqScrollbar', () => {
             await getInner(page).evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
 
             await expect.poll(() => innerScrollTop(page)).toBe(600);
-            await expect.poll(() => outerScrollTop(page)).toBe(0);
+
+            // Read once, past the inner scroll: a poll for an offset that stays 0 would pass on its first sample.
+            const outerScrolled = await outerScrollTop(page);
+
+            expect(outerScrolled).toBe(0);
         });
     });
 

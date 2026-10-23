@@ -844,7 +844,9 @@ test.describe('documentation for agents', () => {
     });
 
     test('answers a Markdown file it does not have with a 404 rather than the app', async ({ request }) => {
-        expect((await request.get('/en/components/missing.md')).status()).toBe(404);
+        const response = await request.get('/en/components/missing.md');
+
+        expect(response.status()).toBe(404);
     });
 
     test('points every page of an item at the English Markdown at its own address, on the host that serves it', async ({

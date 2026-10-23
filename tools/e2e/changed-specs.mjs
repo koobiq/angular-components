@@ -5,16 +5,20 @@
  *
  *   node tools/e2e/changed-specs.mjs [<git diff revisions>]   # default: origin/main...HEAD
  *
- * Prints `specs=<paths separated by spaces>` in the format of $GITHUB_OUTPUT. The list is empty when nothing
- * qualifies, and also when a change reaches more specs than a burn-in is worth: a change to a shared module
- * reaches most of the suite, which the full run has just covered once.
+ * Prints `specs=<paths separated by spaces>` and `repeat=<times>` in the format of $GITHUB_OUTPUT; the list is
+ * empty when nothing qualifies. Only committed changes count.
  *
  * Plain JavaScript with no dependencies: the job runs it on the runner, where nothing is installed.
  */
 import { execFileSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 
-export const MAX_BURN_IN_SPECS = 5;
+/**
+ * How many times over the burn-in runs `specCount` specs. Fewer for a wider change, rather than none: a broad
+ * change is the likeliest to bring a flake, and twice over still catches the frequent ones at the cost of about
+ * two more runs of the suite.
+ */
+export const burnInRepeat = (specCount) => (specCount <= 5 ? 10 : specCount <= 20 ? 3 : 2);
 
 const COMPONENTS = 'packages/components/';
 const SPEC = /\.playwright-spec\.ts$/;
@@ -72,13 +76,9 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
     );
     const specs = git('ls-files', COMPONENTS).filter((file) => SPEC.test(file));
     const reached = reachedSpecs(changedFiles, specs);
-    const selected = reached.length > MAX_BURN_IN_SPECS ? [] : reached;
 
-    if (reached.length > MAX_BURN_IN_SPECS) {
-        console.error(`No burn-in: the change reaches ${reached.length} specs, which the full run has just covered.`);
-    } else if (!reached.length) {
-        console.error('No burn-in: the change reaches no component spec.');
-    }
+    if (!reached.length) console.error('No burn-in: the change reaches no component spec.');
 
-    console.log(`specs=${selected.join(' ')}`);
+    console.log(`specs=${reached.join(' ')}`);
+    console.log(`repeat=${burnInRepeat(reached.length)}`);
 }

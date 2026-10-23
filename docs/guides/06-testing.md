@@ -148,13 +148,15 @@ The `E2E tests` workflow takes the same value as a `retries` input through `work
 ### Burn-in on pull requests
 
 After the full run, the `tests` job of a pull request runs again the specs the change adds, edits or
-reaches through its component, ten times over, so a test that passes only most of the time fails on
-the pull request that brings it. `tools/e2e/changed-specs.mjs` picks them; a change that reaches more
-than five specs gets no burn-in, since the full run has just covered them. The same selection
-locally:
+reaches through its component, so a test that passes only most of the time fails on the pull request
+that brings it. `tools/e2e/changed-specs.mjs` picks them and how many times over: ten for up to five
+specs, three for up to twenty, twice beyond that. The same selection locally, from what the branch has
+committed since `origin/main` — the guard keeps an empty selection from running the whole suite:
 
 ```bash
-node tools/e2e/run.js yarn playwright test $(node tools/e2e/changed-specs.mjs | sed 's/^specs=//') --repeat-each=10
+out=$(node tools/e2e/changed-specs.mjs)
+specs=$(echo "$out" | sed -n 's/^specs=//p')
+[ -n "$specs" ] && node tools/e2e/run.js yarn playwright test $specs --repeat-each="$(echo "$out" | sed -n 's/^repeat=//p')"
 ```
 
 The unit tests have no burn-in: they have not flaked on CI. Locally they time out under load

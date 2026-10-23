@@ -570,9 +570,9 @@ own.
 
 ### Burn-in
 
-A pull request now runs the specs it adds, edits or reaches through its component ten times over after
-the full run (`tools/e2e/changed-specs.mjs`, at most five specs), so a test that passes only most of the
-time fails on the pull request that brings it. See [06-testing.md](guides/06-testing.md).
+A pull request now runs the specs it adds, edits or reaches through its component again after the full
+run (`tools/e2e/changed-specs.mjs`): ten times over for up to five specs, three for up to twenty, twice
+beyond that, so a test that passes only most of the time fails on the pull request that brings it. See [06-testing.md](guides/06-testing.md).
 
 ### Unit tests
 

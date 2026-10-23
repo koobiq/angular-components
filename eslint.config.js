@@ -671,15 +671,19 @@ module.exports = tseslint.config(
             // plugin:eslint — the e2e app is zoneless, so the render an action causes lands a task or a frame
             // later and a value read once right after it is the one from before: the flake most of
             // docs/e2e-flakiness.md comes down to. A value that cannot change, such as a response body, is read
-            // into a constant first.
+            // into a constant first. `expect` and `expect.soft` alike, with the read anywhere in the subject
+            // (`expect(f(await …))`, `expect((await …).y)`) but not inside a function passed to it (`toPass`).
             'no-restricted-syntax': [
                 2,
-                {
-                    selector: 'CallExpression[callee.name="expect"] > AwaitExpression',
+                ...[
+                    '> AwaitExpression',
+                    '> :not(ArrowFunctionExpression, FunctionExpression) AwaitExpression'
+                ].map((read) => ({
+                    selector: `CallExpression:matches([callee.name="expect"], [callee.object.name="expect"][callee.property.name="soft"]) ${read}`,
                     message:
                         'A value read once can predate the render the last action causes: assert on the locator, ' +
                         'which retries, or use expect.poll().'
-                }
+                }))
             ]
         }
     },
