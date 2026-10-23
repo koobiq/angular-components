@@ -1,3 +1,9 @@
+## 20.3.4 (2026-10-23)
+
+### Koobiq
+
+ * bug fix  **toast:** stop closing other overlays when the toast stack reflows ([#DS-5407](https://github.com/koobiq/angular-components/issues/issue/DS-5407)) ([#2211](https://github.com/koobiq/angular-components/issues/2211)) ([3be5d93](https://github.com/koobiq/angular-components/commit/3be5d93a685d693b671f8fda420fc1b89f11ea5e))
+
 ## 20.3.3 (2026-10-14)
 
 ### Cli
