@@ -195,7 +195,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     ngAfterContentInit(): void {
-        // Its own state only: a row being rendered changes no ancestor's.
+        // Its own state only: rendering a row changes no ancestor's, and the tree recomputes every row once the data
+        // nodes change.
         Promise.resolve().then(() => this.syncCheckboxState());
 
         this.value = this.tree.treeControl.getValue(this.data);
@@ -218,8 +219,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
         if (!parents.size) return;
 
-        // Each ancestor reads its state off the selection rather than off its children, so it is only recomputed:
-        // rolling up again from every ancestor made a node at depth d cost 2^d updates.
+        // Each ancestor reads its state off the selection rather than off its children, so recomputing it is enough.
         this.tree.unorderedOptions.forEach((option: KbqTreeOption) => {
             if (parents.has(option.data)) option.syncCheckboxState();
         });
@@ -373,7 +373,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     markForCheck() {
         this.changeDetectorRef.markForCheck();
 
-        // Its own state only: after a change the tree calls this on every rendered option, ancestors included.
+        // Its own state only: after a selection or data change the tree calls this on every option.
         if (this.showCheckbox) {
             this.syncCheckboxState();
         }
