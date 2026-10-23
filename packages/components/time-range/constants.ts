@@ -30,8 +30,6 @@ export function createMissingDateImplError(componentName: string, provider: stri
     );
 }
 
-// TODO: a consumer cannot call this: `KbqTimeRangeService` is not exported from the entry point. Export the
-// service or take a `DateAdapter`, then add a docs example (#DS-2196).
 /**
  * Validates that the 'from' date-time is not greater than the 'to' date-time in a range form.
  * Returns an error if the start date-time occurs after the end date-time.
@@ -39,6 +37,8 @@ export function createMissingDateImplError(componentName: string, provider: stri
  * @param timeRangeService - Service used to manipulate date-time values.
  */
 export const rangeValidator = <T>(timeRangeService: KbqTimeRangeService<T>): ValidatorFn => {
+    // TODO: a consumer cannot call this: `KbqTimeRangeService` is not exported from the entry point. Export the
+    // service or take a `DateAdapter`, then add a docs example (#DS-2196).
     return (control: AbstractControl) => {
         const form = control.value;
 

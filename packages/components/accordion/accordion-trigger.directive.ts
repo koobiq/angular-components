@@ -32,12 +32,14 @@ export class KbqAccordionTriggerDirective {
 
     /**
      * Value of `aria-expanded`.
+     *
      * @internal
      */
     protected readonly expanded = computed(() => this.item.expanded);
 
     /**
      * Value of `data-state`.
+     *
      * @internal
      */
     protected readonly dataState = computed(() => this.item.dataState);
@@ -64,6 +66,7 @@ export class KbqAccordionTriggerDirective {
     /**
      * Keeps the accordion's key manager in sync with native focus so that arrow-key navigation
      * continues from the header the user has just tabbed/focused into.
+     *
      * @docs-private
      */
     onFocus(): void {

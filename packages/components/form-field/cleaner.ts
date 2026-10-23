@@ -26,6 +26,7 @@ export interface KbqCleanerContextBase {
     readonly control: KbqFormFieldControl<unknown>;
     /** Overrides the default `cleanerControl.ngControl?.reset()` behavior when the cleaner is activated. */
     clear?(): void;
+
     /**
      * Whether the control still holds something the cleaner would remove — a host that keeps part of
      * its value back reports `false` once only that part is left. Defaults to `true`.
@@ -50,6 +51,7 @@ export const KBQ_CLEANER_CONTEXT = new InjectionToken<KbqCleanerContext | null>(
 
 /**
  * Utility provider for `KBQ_CLEANER_CONTEXT`, built from a factory that resolves the current host's `KbqCleanerContext`.
+ *
  * @docs-private
  */
 export const kbqCleanerFactoryProvider = (factory: () => KbqCleanerContext): Provider => ({
@@ -94,6 +96,7 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
 
     /**
      * Whether the cleaner can be displayed for the current control state.
+     *
      * @docs-private
      */
     get canShow(): boolean {
@@ -143,6 +146,7 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
 
     /**
      * Clears the owning control in response to pointer or keyboard activation.
+     *
      * @docs-private
      */
     clear(event: Event): void {

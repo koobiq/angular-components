@@ -639,7 +639,7 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
     }
 
     /**
-     * Subscribes to changes in the tab labels. This is needed, because the @Input for the label is
+     * Subscribes to changes in the tab labels. This is needed, because the `@Input` for the label is
      * on the KbqTab component, whereas the data binding is inside the KbqTabGroup. In order for the
      * binding to be updated, we need to subscribe to changes in it and trigger change detection
      * manually.

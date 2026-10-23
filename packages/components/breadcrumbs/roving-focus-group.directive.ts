@@ -47,6 +47,7 @@ export class RdxRovingFocusGroupDirective implements OnChanges {
             this.orientation = this.orientationInput();
         }
     }
+
     /**
      * Reading direction the arrow keys are mapped against, written onto the host as `dir`. Left unset,
      * no attribute is emitted — the element inherits the document direction, and the key mapping follows
@@ -74,6 +75,7 @@ export class RdxRovingFocusGroupDirective implements OnChanges {
     /**
      * Reading direction the arrow keys are actually mapped against: the input when it is set, the
      * ambient `Directionality` otherwise.
+     *
      * @docs-private
      */
     readonly resolvedDir = computed<Direction>(() => this.dir() ?? this.directionality?.valueSignal() ?? 'ltr');
@@ -148,6 +150,7 @@ export class RdxRovingFocusGroupDirective implements OnChanges {
      * outside the group's DOM subtree — a dropdown replaying a hidden item's template, for instance —
      * instantiates it a second time via `ngTemplateOutlet`. That copy is not reachable by this group's
      * arrow keys and must not register, or the trail ends up with a phantom, unfocusable duplicate.
+     *
      * @docs-private
      */
     registerItem(item: HTMLElement, tabStopId?: string) {

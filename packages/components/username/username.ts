@@ -107,18 +107,20 @@ export class KbqUsername {
     readonly isCompact = input(false, { transform: booleanAttribute });
     /** Format string for rendering the user's full name. */
     readonly fullNameFormat = input<string>(kbqDefaultFullNameFormat);
+
     /**
-     * Display mode of the username.
-     * @default inline
+     * Display mode of the username. Defaults to `'inline'`.
      */
     readonly mode = input<KbqUsernameMode>('inline');
+
     /**
-     * Visual style of the username.
-     * @default default
+     * Visual style of the username. Defaults to `'default'`.
      */
     readonly type = input<KbqUsernameStyle>('default');
+
     /**
      * Custom projected view for username rendering.
+     *
      * @docs-private
      */
     protected readonly customView = contentChild(KbqUsernameCustomView);
@@ -126,8 +128,11 @@ export class KbqUsername {
     /** @docs-private */
     protected readonly localeConfiguration = kbqInjectUsernameLocaleConfiguration();
 
-    /** Name as rendered, i.e. abbreviated according to `fullNameFormat`.
-     * @docs-private */
+    /**
+     * Name as rendered, i.e. abbreviated according to `fullNameFormat`.
+     *
+     * @docs-private
+     */
     protected readonly formattedName = computed(() =>
         kbqFormatUsername(this.userInfo(), this.fullNameFormat(), this.mapping)
     );
@@ -135,23 +140,33 @@ export class KbqUsername {
     /**
      * Whether the profile yields any name at all. A profile carrying only one of the name fields still
      * has a name, and the formatter degrades to whatever it finds.
+     *
      * @docs-private
      */
     protected readonly hasName = computed(() => !!this.formattedName());
 
-    /** Unabbreviated name, offered as the tooltip of the truncated primary part.
-     * @docs-private */
+    /**
+     * Unabbreviated name, offered as the tooltip of the truncated primary part.
+     *
+     * @docs-private
+     */
     protected readonly expandedName = computed(() =>
         kbqFormatUsername(this.userInfo(), expandFormat(this.fullNameFormat()), this.mapping)
     );
 
-    /** Tooltip of the secondary part: the login with the site hint it renders inline.
-     * @docs-private */
+    /**
+     * Tooltip of the secondary part: the login with the site hint it renders inline.
+     *
+     * @docs-private
+     */
     protected readonly secondaryTitle = computed(() => this.withSite(this.userInfo()?.login || ''));
 
-    /** Tooltip of the compact layout, whose single part carries the name — or the login when there is
+    /**
+     * Tooltip of the compact layout, whose single part carries the name — or the login when there is
      * none — followed by the site.
-     * @docs-private */
+     *
+     * @docs-private
+     */
     protected readonly compactTitle = computed(() =>
         this.withSite(this.hasName() ? this.expandedName() || this.formattedName() : this.userInfo()?.login || '')
     );
@@ -161,6 +176,7 @@ export class KbqUsername {
      * only, so in `text` mode nothing is ever clipped and the verdict `kbq-title` computes is known in
      * advance. Attaching it there would cost a `MutationObserver` per part and a forced layout read on
      * every resize and every content mutation, for a tooltip that could never show.
+     *
      * @docs-private
      */
     protected readonly canTruncate = computed(() => this.mode() !== 'text');

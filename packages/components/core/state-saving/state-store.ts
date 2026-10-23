@@ -26,6 +26,7 @@ export interface KbqStateStore {
     setState(key: string, state: unknown): void;
     /** Removes the payload persisted under the key. */
     removeState(key: string): void;
+
     /**
      * Optional. Every key this store currently holds.
      *
@@ -33,6 +34,7 @@ export interface KbqStateStore {
      * the storage cannot be enumerated, and the service reports the live components alone.
      */
     keys?(): string[];
+
     /**
      * Optional. Emits whenever entries change outside this instance — the same app open in another tab,
      * most commonly. `KbqStateSavingService` re-emits it, so a panel listing the entries can refresh.

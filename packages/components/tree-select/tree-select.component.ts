@@ -129,28 +129,32 @@ export type KbqTreeSelectOptions = Partial<{
      * If set to null or an empty string, the panel will grow to match the longest option's text.
      */
     panelWidth: KbqPanelWidth;
+
     /**
      * Minimum width of the panel. If minWidth is larger than window width or property set to null, it will be ignored.
      */
     panelMinWidth: KbqPanelMinWidth;
+
     /**
      * Maximum width of the panel. Caps growth by content only — it never overrides the trigger width or an
      * explicit `panelWidth`. If null, the `--kbq-panel-size-width-max` token applies.
      */
     panelMaxWidth: KbqPanelMaxWidth;
+
     /**
      * Maximum height of the panel's scrollable option list. Does not include the search field or the
      * footer. If null, the `--kbq-select-panel-size-max-height` token applies.
      */
     panelMaxHeight: KbqPanelMaxHeight;
+
     /**
      * Whether to enable hiding search by default if options is less than minimum.
      *
-     * - `'auto'` uses `KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD` as min value.
+     * - `'auto'` uses {@link KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD} as min value.
      * - number - will enables search hiding and uses value as min.
-     * @see KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD
      */
     searchMinOptionsThreshold: 'auto' | number;
+
     /**
      * Decides which selected nodes the projected `KbqCleaner` removes. Disabled nodes are kept when this
      * is not set. Overridden per instance by the `clearPredicate` attribute.
@@ -174,6 +178,7 @@ export class KbqTreeSelectChange<T = any> {
     constructor(
         /** Select the change comes from. */
         public source: KbqTreeSelect,
+
         /**
          * Option the change is about — a `KbqTreeOption` whenever the changed node is rendered, and the
          * raw value of the node when it is not. `null` when the change is not about a single option,
@@ -394,6 +399,7 @@ export class KbqTreeSelect<T = any>
 
     /**
      * Reference to the optional cleaner element for clearing selection.
+     *
      * @docs-private
      */
     readonly cleaner = contentChild(KbqCleaner, { descendants: false });
@@ -502,6 +508,7 @@ export class KbqTreeSelect<T = any>
 
     /**
      * Id of the element that names the control: its own `aria-labelledby`, or else the form-field label.
+     *
      * @internal
      */
     protected readonly resolvedAriaLabelledby = computed(
@@ -757,6 +764,7 @@ export class KbqTreeSelect<T = any>
     /**
      * `panelMaxHeight` rendered as a CSS length for the `--kbq-select-panel-size-max-height` token.
      * A non-finite value (e.g. `null`) leaves the stylesheet default in place.
+     *
      * @docs-private
      */
     protected readonly panelMaxHeightToken = computed(() => kbqResolvePanelMaxHeightToken(this.panelMaxHeight()));
@@ -765,7 +773,7 @@ export class KbqTreeSelect<T = any>
      * Controls when the search functionality is displayed based on the number of available options.
      *
      * Automatically enables search hiding if value provided, even if `defaultOptions.searchMinOptionsThreshold` is provided.
-     * @default undefined
+     * Defaults to `undefined`.
      */
     readonly searchMinOptionsThreshold = computed<number | undefined>(
         () =>
@@ -789,6 +797,7 @@ export class KbqTreeSelect<T = any>
 
     /**
      * Whether the cleaner (clear button) should be shown.
+     *
      * @docs-private
      */
     get canShowCleaner(): boolean {
@@ -797,6 +806,7 @@ export class KbqTreeSelect<T = any>
 
     /**
      * Whether the cleaner still has a node to remove.
+     *
      * @docs-private
      */
     get canClear(): boolean {
@@ -824,6 +834,7 @@ export class KbqTreeSelect<T = any>
 
     /**
      * Colour of the trigger's tags and arrow.
+     *
      * @docs-private
      */
     readonly colorForState = computed<KbqComponentColors>(() =>
@@ -1175,6 +1186,7 @@ export class KbqTreeSelect<T = any>
      *
      * Deselects on the model directly: `tree.setOptionsFromValues([])` starts by clearing the whole
      * model and would take the kept nodes with it.
+     *
      * @docs-private
      */
     clear(): void {
@@ -1198,12 +1210,14 @@ export class KbqTreeSelect<T = any>
 
     /**
      * Called when the value changes. Needed to properly implement `ControlValueAccessor`.
+     *
      * @docs-private
      */
     onChange: (value: any) => void = () => {};
 
     /**
      * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     *
      * @docs-private
      */
     onTouched = () => {};
@@ -1504,6 +1518,7 @@ export class KbqTreeSelect<T = any>
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     onContainerClick() {
@@ -1561,6 +1576,7 @@ export class KbqTreeSelect<T = any>
     /**
      * Recounts the tags of the trigger that do not fit on its first line and refreshes the "+N"
      * counter. Runs on window resize and whenever the rendered tags change.
+     *
      * @docs-private
      */
     protected calculateHiddenItems = () => {

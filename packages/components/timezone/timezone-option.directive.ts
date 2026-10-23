@@ -44,7 +44,9 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     /**
      * The hint shows rows the option had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for an
      * option that fits.
-     * @docs-private */
+     *
+     * @docs-private
+     */
     protected override readonly derivedDisabledWins = true;
 
     constructor() {

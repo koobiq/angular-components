@@ -8,9 +8,10 @@ export const KBQ_INVALID_VALUE_ERROR = 'Argument "value" must be a finite number
  * @param value - size in bytes.
  * @param system - unit system defining abbreviations and base scaling (SI/IEC).
  * @returns Object with the formatted size info.
- *
  * @example
+ * ```ts
  * getFormattedSizeParts(1500, 'SI'); // { value: "1.50", unit: "KB" }
+ * ```
  */
 export function getFormattedSizeParts(value: number, system: KbqUnitSystem): { value: string; unit: string } {
     const { result, unit } = getHumanizedBytes(value, system);

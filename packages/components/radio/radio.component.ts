@@ -48,6 +48,7 @@ export class KbqRadioChange {
 /**
  * Provider Expression that allows kbq-radio-group to register as a ControlValueAccessor. This
  * allows it to support [(ngModel)] and ngControl.
+ *
  * @docs-private
  */
 export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: Provider = {
@@ -182,6 +183,7 @@ export class KbqRadioGroup
 
     /**
      * Value of `aria-invalid`.
+     *
      * @internal
      */
     protected readonly ariaInvalid = computed(() => (this.color() === 'error' ? 'true' : null));
@@ -220,12 +222,14 @@ export class KbqRadioGroup
 
     /**
      * Called when the value changes. Needed to properly implement `ControlValueAccessor`.
+     *
      * @docs-private
      */
     controlValueAccessorChangeFn: (value: any) => void = () => {};
 
     /**
      * onTouch function registered via registerOnTouch (ControlValueAccessor).
+     *
      * @docs-private
      */
     onTouched: () => any = () => {};
@@ -285,7 +289,6 @@ export class KbqRadioGroup
         }
     }
 
-    // Kept at the DS-2196 review, like `KbqButtonToggle.markForCheck()`, which the migration guide promises stays.
     /**
      * Marks every radio button of the group for a change-detection check.
      *
@@ -293,6 +296,7 @@ export class KbqRadioGroup
      * group's, so it re-renders on its own and nothing in the library calls this any more.
      */
     markRadiosForCheck() {
+        // Kept at the DS-2196 review, like `KbqButtonToggle.markForCheck()`, which the migration guide promises stays.
         if (this.radios) {
             this.radios.forEach((radio) => radio.markForCheck());
         }
@@ -308,6 +312,7 @@ export class KbqRadioGroup
     /**
      * Registers a callback to be triggered when the model value changes.
      * Implemented as part of ControlValueAccessor.
+     *
      * @param fn Callback to be registered.
      */
     registerOnChange(fn: (value: any) => void) {
@@ -317,6 +322,7 @@ export class KbqRadioGroup
     /**
      * Registers a callback to be triggered when the control is touched.
      * Implemented as part of ControlValueAccessor.
+     *
      * @param fn Callback to be registered.
      */
     registerOnTouched(fn: any) {
@@ -325,6 +331,7 @@ export class KbqRadioGroup
 
     /**
      * Sets the disabled state of the control. Implemented as a part of ControlValueAccessor.
+     *
      * @param isDisabled Whether the control should be disabled.
      */
     setDisabledState(isDisabled: boolean) {
@@ -502,6 +509,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
 
     /**
      * Whether the button takes the big size of its group.
+     *
      * @internal
      */
     protected readonly big = computed(() => !!this.radioGroup?.big());
@@ -658,7 +666,6 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
         this.focusMonitor.focusVia(this.inputElement(), origin);
     }
 
-    // Kept at the DS-2196 review, like `KbqButtonToggle.markForCheck()`, which the migration guide promises stays.
     /**
      * Marks the radio button as needing checking for change detection.
      *
@@ -666,6 +673,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
      * re-renders on its own and nothing in the library calls this any more.
      */
     markForCheck() {
+        // Kept at the DS-2196 review, like `KbqButtonToggle.markForCheck()`, which the migration guide promises stays.
         this.changeDetector.markForCheck();
     }
 

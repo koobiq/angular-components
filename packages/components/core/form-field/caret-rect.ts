@@ -63,9 +63,7 @@ export const kbqGetCaretRect = (element: KbqTextAnchor): KbqCaretRect | null => 
 
 /**
  * Rectangle of the text selected in `element`, in viewport coordinates, collapsing to the caret rectangle
- * when nothing is selected.
- *
- * @see {@link kbqGetCaretRect}
+ * ({@link kbqGetCaretRect}) when nothing is selected.
  */
 export const kbqGetSelectionRect = (element: KbqTextAnchor): KbqCaretRect | null => {
     return measure(element, false);

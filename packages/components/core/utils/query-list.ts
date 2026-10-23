@@ -20,6 +20,7 @@ import { DestroyRef, effect, EnvironmentInjector, inject, QueryList, Signal, unt
  *     this.optionsList();
  * }
  * ```
+ *
  * @docs-private
  */
 export function kbqQueryListFrom<T>(query: Signal<readonly T[]>): () => QueryList<T> {

@@ -62,19 +62,24 @@ export const KBQ_DEFAULT_THEMES: KbqThemeConfig[] = [
 
 /** Settings accepted by `KBQ_THEME_CONFIG` / `kbqThemeProvider()`. */
 export interface KbqThemeSettings<T extends KbqThemeConfig = KbqThemeConfig> {
-    /** Themes available to the service. @default KBQ_DEFAULT_THEMES */
+    /** Themes available to the service. Defaults to `KBQ_DEFAULT_THEMES`. */
     themes: T[];
-    /** Initial mode, used only when nothing is persisted yet in the `KBQ_THEME_STORE`. @default 'auto' */
+    /** Initial mode, used only when nothing is persisted yet in the `KBQ_THEME_STORE`. Defaults to `'auto'`. */
     mode: KbqThemeMode;
+
     /**
      * Name of the theme pinned initially, overriding `mode` resolution — see `KbqThemeService.staticTheme`.
      * Used only when nothing is persisted yet in the `KBQ_THEME_STORE` — a `KbqThemeStore` reads a pin the
      * user cleared and one that was never set back the same way, so a persisted mode is what tells the two
      * apart. Clearing the pin through `selectTheme(null)` without ever calling `setMode()` leaves nothing
-     * persisted, and this theme applies again on the next load. @default null
+     * persisted, and this theme applies again on the next load. Defaults to `null`.
      */
     theme: string | null;
-    /** Key used to persist the selection — a `localStorage` key or cookie name, depending on `KBQ_THEME_STORE`. @default 'kbq-theme-mode' */
+
+    /**
+     * Key used to persist the selection — a `localStorage` key or cookie name, depending on `KBQ_THEME_STORE`.
+     * Defaults to `'kbq-theme-mode'`.
+     */
     storageKey: string;
 }
 
@@ -117,6 +122,7 @@ export interface KbqThemeStore {
     getMode(): KbqThemeMode | null;
     /** Persists the mode. */
     setMode(mode: KbqThemeMode): void;
+
     /**
      * Returns the previously saved static theme name, or `null` when nothing is available.
      * Raw value only — applying `KbqThemeSettings.theme` as the default is the caller's job, not this method's.
@@ -124,6 +130,7 @@ export interface KbqThemeStore {
     getStaticTheme(): string | null;
     /** Persists the static theme name, or clears it when `null`. */
     setStaticTheme(name: string | null): void;
+
     /**
      * Optional. Emits whenever the stored values change outside this instance — the same app open in
      * another tab, most commonly. `KbqThemeService` re-reads the store on every emission, so a theme
@@ -326,6 +333,7 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
     private readonly config = inject(KBQ_THEME_CONFIG) as KbqThemeSettings<T>;
 
     private readonly renderer: Renderer2;
+
     /**
      * Resolved once and kept, so the initial read and the change subscription can never end up watching
      * two different objects — a server-side `matchMedia` stub typically returns a fresh one per call.
@@ -341,6 +349,7 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
     readonly themes = this.themesState.asReadonly();
     /** Selected fixed `'light'`/`'dark'` mode, or `'auto'` to follow the OS color scheme. Set via `setMode()`. */
     readonly mode = this.modeState.asReadonly();
+
     /**
      * Name of a theme selected out of `themes()`,
      * overriding `mode` resolution in `currentTheme()` until

@@ -33,6 +33,7 @@ export enum ModalSize {
 
 /**
  * Duration when perform animations (ms)
+ *
  * @internal
  */
 export const MODAL_ANIMATE_DURATION = 300;
@@ -75,6 +76,7 @@ export const KBQ_MODAL = new InjectionToken<KbqModal>('KBQ_MODAL');
  * values of its inputs, which is how the imperative path reaches signal inputs at all: a dialog
  * created by the service has no template bindings, so an input keeps its initial value for life.
  * Never provided on the declarative path, where the bindings carry the same values.
+ *
  * @docs-private
  */
 export const KBQ_MODAL_OPTIONS = new InjectionToken<ModalOptions>('KBQ_MODAL_OPTIONS');
@@ -121,11 +123,13 @@ export interface ModalOptions<C = any, R = any> {
     kbqFooter?: string | TemplateRef<{}> | IModalButtonOptions<C>[];
     /** Element or overlay the dialog is rendered into. STATIC — read once, on init. */
     kbqGetContainer?: HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) | null;
+
     /**
      * Emitter that mirrors the dialog's own open event. It is subscribed to the dialog, never
      * substituted for it, so `afterOpen` on the returned `KbqModalRef` keeps working alongside.
      */
     kbqAfterOpen?: EventEmitter<void>;
+
     /**
      * Emitter that mirrors the dialog's own close event. It is subscribed to the dialog, never
      * substituted for it, so `afterClose` on the returned `KbqModalRef` keeps working alongside.
@@ -140,13 +144,13 @@ export interface ModalOptions<C = any, R = any> {
     /** Accessible name for a dialog rendered without `kbqTitle` — a confirm or a header-less dialog. */
     kbqAriaLabel?: string;
 
-    // --- Predefined OK & Cancel buttons
     /** Caption of the predefined OK button. The button is not rendered without it. */
     kbqOkText?: string;
     /** Color of the predefined OK button. Default is `KbqComponentColors.Contrast`. */
     kbqOkType?: KbqButtonColor;
     /** Whether the predefined OK button renders its progress state. */
     kbqOkLoading?: boolean;
+
     /**
      * Decision handler of the predefined OK button. Returning `false` (or a promise of `false`)
      * keeps the dialog open; anything else closes it. Pair of the `kbqOnOk` output — bind one.
@@ -158,6 +162,7 @@ export interface ModalOptions<C = any, R = any> {
     kbqCancelText?: string;
     /** Whether the predefined Cancel button renders its progress state. */
     kbqCancelLoading?: boolean;
+
     /**
      * Decision handler of the predefined Cancel button, the close button, <kbd>Escape</kbd> and the
      * dim layer. Returning `false` (or a promise of `false`) keeps the dialog open. Pair of the

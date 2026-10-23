@@ -6,6 +6,7 @@ import { Directive, effect, ElementRef, inject, InjectionToken, Signal } from '@
  * imports `KbqDropdownItemAction` for its `contentChild` query, so an import back from here would
  * form a circular dependency between the two files, which breaks the query at runtime (the
  * predicate ends up captured as `undefined`).
+ *
  * @docs-private
  */
 export interface KbqDropdownItemActionHost {

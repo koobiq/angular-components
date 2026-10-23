@@ -191,11 +191,13 @@ export function kbqInjectUsernameFormatter(): <T>(profile: T, format?: string) =
 export interface KbqUsernameTextOptions {
     /** Formats the login segment. Defaults to identity. */
     formatLogin?: (login: string) => string;
+
     /**
      * Formats the site segment.
      * Defaults to wrapping in parentheses, matching kbq-username display.
      */
     formatSite?: (site: string) => string;
+
     /**
      * Wraps every segment in `U+2068`/`U+2069` so that a right-to-left name keeps its order next to a
      * left-to-right login, and the parentheses around the site stay attached to it.

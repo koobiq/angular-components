@@ -16,6 +16,7 @@ export class FocusKeyManager<T> extends ListKeyManager<IFocusableOption & T> {
 
     /**
      * Sets the active item or index to the item that is specified and focuses it.
+     *
      * @param item Item to be set as active.
      */
     setActiveItem(item: number | T): void;
@@ -30,6 +31,7 @@ export class FocusKeyManager<T> extends ListKeyManager<IFocusableOption & T> {
 
     /**
      * Sets the focus origin that will be passed in to the items for any subsequent `focus` calls.
+     *
      * @param origin Focus origin to be used when focusing items.
      */
     setFocusOrigin(origin: FocusOrigin): this {

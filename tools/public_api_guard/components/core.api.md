@@ -3212,7 +3212,6 @@ export interface KbqFormFieldControlRef<T = unknown> {
 
 // @public
 export interface KbqFormFieldRef {
-    // (undocumented)
     readonly control: Signal<KbqFormFieldControlRef>;
     // (undocumented)
     focus(): void;
@@ -4387,7 +4386,6 @@ export type KbqSizeUnitsConfig = KbqSizeUnitsLocaleConfiguration;
 export interface KbqSizeUnitsLocaleConfiguration {
     defaultPrecision: number;
     defaultUnitSystem: KbqMeasurementSystemType;
-    // (undocumented)
     unitSystems: {
         [KbqMeasurementSystem.SI]: KbqUnitSystem;
         [KbqMeasurementSystem.IEC]: KbqUnitSystem;

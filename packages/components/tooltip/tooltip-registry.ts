@@ -11,6 +11,7 @@ export const KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT = new InjectionToken<boolean>('
 
 /**
  * Contract of a tooltip taking part in the "only one tooltip is visible at a time" group.
+ *
  * @docs-private
  */
 export interface KbqExclusiveTooltip {

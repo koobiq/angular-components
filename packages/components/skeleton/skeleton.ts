@@ -166,6 +166,7 @@ export class KbqSkeleton {
 
     /**
      * Whether the fill stands still, without the wave.
+     *
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();

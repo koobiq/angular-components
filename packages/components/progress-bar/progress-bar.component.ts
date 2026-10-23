@@ -107,6 +107,7 @@ export class KbqProgressBar extends KbqColorDirective {
     /**
      * Whether the fill follows a new value without a transition, and the indeterminate fill pulses in place instead
      * of sliding, as under reduced motion.
+     *
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();

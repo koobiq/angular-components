@@ -2,6 +2,7 @@
 export interface KbqTimezoneZone {
     /** IANA time zone name, e.g. `Europe/Berlin`. Used as the form value and to resolve the offset. */
     id: string;
+
     /**
      * Fixed offset from UTC, written as `HH:MM:SS` with an optional leading `-` (`03:00:00`, `-02:00:00`).
      *
@@ -24,6 +25,7 @@ export interface KbqTimezoneZone {
 export interface KbqTimezoneGroup {
     /** Label of the group: a country name, or the "other countries" label of an aggregate bucket. */
     countryName: string;
+
     /**
      * Country the group stands for, or `null` for an aggregate bucket that spans several countries
      * (the one `collapseOtherCountries` produces).

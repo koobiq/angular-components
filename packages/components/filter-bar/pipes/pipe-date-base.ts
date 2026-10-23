@@ -42,11 +42,14 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
 
     /**
      * Id of the "From" label, which names the start inputs.
+     *
      * @docs-private
      */
     protected readonly fromLabelId = inject(_IdGenerator).getId('kbq-pipe-date-from-');
+
     /**
      * Id of the "To" label, which names the end inputs.
+     *
      * @docs-private
      */
     protected readonly toLabelId = inject(_IdGenerator).getId('kbq-pipe-date-to-');
@@ -55,13 +58,17 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     // `<input>`, `[min]`/`[max]` resolve to the DOM property (`string | number`), which a concrete `D`
     // could not satisfy inside this generic component (matching the existing `any` date handling here).
     // The runtime values are adapter-deserialized dates.
+
     /**
      * Lower bound instant applied to the calendars, date inputs and (datetime) timepickers.
+     *
      * @docs-private
      */
     protected min: any;
+
     /**
      * Upper bound instant applied to the calendars, date inputs and (datetime) timepickers.
+     *
      * @docs-private
      */
     protected max: any;
@@ -282,6 +289,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
 
     /**
      * Upper bound for the START date input: the earlier of the END value and the configured `max`.
+     *
      * @docs-private
      */
     get startMax(): any {
@@ -303,6 +311,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
      * `[min, max]` (`kbqDatepickerMin`/`kbqDatepickerMax`, `kbqTimepickerLowerThenMin`/
      * `kbqTimepickerHigherThenMax`) or unparseable typed text (`kbqDatepickerParse`/`kbqTimepickerParse`)
      * — is left to the field's own error styling instead of being mislabelled as an ordering problem.
+     *
      * @docs-private
      */
     protected get isPeriodInverted(): boolean {
@@ -318,6 +327,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
 
     /**
      * Localized "period too short" hint with the `minInterval` limit interpolated and locale-formatted.
+     *
      * @docs-private
      */
     get minIntervalErrorHint(): string {
@@ -329,6 +339,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
 
     /**
      * Localized "period too long" hint with the `maxInterval` limit interpolated and locale-formatted.
+     *
      * @docs-private
      */
     get maxIntervalErrorHint(): string {
@@ -388,8 +399,11 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         );
     }
 
-    /** keydown handler
-     * @docs-private */
+    /**
+     * keydown handler
+     *
+     * @docs-private
+     */
     onKeydown($event: KeyboardEvent) {
         if (!this.disabled && ($event.ctrlKey || $event.metaKey) && $event.keyCode === ENTER) {
             this.onApplyPeriod();
@@ -494,6 +508,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
 
     /**
      * Hides the calendars before the browser moves focus on Tab or Shift+Tab out of a date input.
+     *
      * @docs-private
      */
     protected onDateInputTab(): void {

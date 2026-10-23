@@ -47,7 +47,7 @@ export class KbqTimeRangeService<T> {
      * end of that day.
      */
     readonly minDate = computed(() => this.boundsSource().min() ?? null);
-    /** @see minDate */
+    /** Upper bound of the owning component, read the way `minDate` reads the lower one. */
     readonly maxDate = computed(() => this.boundsSource().max() ?? null);
 
     readonly timeRangeConfig: Record<KbqTimeRangeType, Omit<KbqCustomTimeRangeType, 'type'>> = {

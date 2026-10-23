@@ -12,6 +12,7 @@ export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' |
  * interchangeable with `<kbq-checkbox>` and should *not* be used if the user would directly
  * interact with the checkbox. The pseudo-checkbox should only be used as an implementation detail
  * of more complex components that appropriately handle selected / checked state.
+ *
  * @docs-private
  */
 @Component({

@@ -14,6 +14,7 @@ import { KbqTab } from './tab.component';
 
 /**
  * Used in the `kbq-tab-group` view to display tab labels.
+ *
  * @docs-private
  */
 @Directive({

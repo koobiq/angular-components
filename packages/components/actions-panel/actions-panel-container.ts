@@ -138,6 +138,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
 
     private readonly actionsPanel = inject(KbqActionsPanel);
     private readonly renderer = inject(Renderer2);
+
     /**
      * Actions panel locale configuration.
      *

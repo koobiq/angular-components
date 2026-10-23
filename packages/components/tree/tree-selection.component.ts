@@ -591,6 +591,7 @@ export class KbqTreeSelection<T = any>
      * Whether the tree is changing the selection model itself — to a value the form wrote, or onto the nodes of
      * reloaded data — rather than acting on the user. A host sharing the model, such as `KbqTreeSelect`, reports
      * no such change.
+     *
      * @docs-private
      */
     get syncingSelection(): boolean {
@@ -1350,6 +1351,7 @@ export class KbqTreeSelection<T = any>
 
     /**
      * Called when the value changes. Needed to properly implement `ControlValueAccessor`.
+     *
      * @docs-private
      */
     onChange: (value: any) => void = () => {};
@@ -1360,6 +1362,7 @@ export class KbqTreeSelection<T = any>
 
     /**
      * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     *
      * @docs-private
      */
     onTouched = () => {};
@@ -1622,6 +1625,7 @@ export class KbqTreeSelection<T = any>
 
     /**
      * Utility to ensure all indexes are valid.
+     *
      * @param index The index to be checked.
      * @returns True if the index is valid for our list of options.
      */

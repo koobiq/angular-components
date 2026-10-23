@@ -1,5 +1,6 @@
 /**
  * Returns an error to be thrown when there is no usable data.
+ *
  * @docs-private
  */
 export function getTreeNoValidDataSourceError() {
@@ -8,6 +9,7 @@ export function getTreeNoValidDataSourceError() {
 
 /**
  * Returns an error to be thrown when there are multiple nodes that are missing a when function.
+ *
  * @docs-private
  */
 export function getTreeMultipleDefaultNodeDefsError() {
@@ -16,6 +18,7 @@ export function getTreeMultipleDefaultNodeDefsError() {
 
 /**
  * Returns an error to be thrown when there are no matching node defs for a particular set of data.
+ *
  * @docs-private
  */
 export function getTreeMissingMatchingNodeDefError() {
@@ -24,6 +27,7 @@ export function getTreeMissingMatchingNodeDefError() {
 
 /**
  * Returns an error to be thrown when there are tree control.
+ *
  * @docs-private
  */
 export function getTreeControlMissingError() {
@@ -33,6 +37,7 @@ export function getTreeControlMissingError() {
 /**
  * Returns an error to be thrown when the selection mode of a tree is changed while its `SelectionModel`
  * belongs to a host `KbqTreeSelect`.
+ *
  * @docs-private
  */
 export function getKbqTreeSelectionOwnedMultipleError() {

@@ -167,12 +167,10 @@ export class KbqDateTimezoneService {
 }
 
 /**
- * Utility provider for the time zone dates are rendered in.
+ * Utility provider of {@link KBQ_DATE_TIMEZONE}, the time zone dates are rendered in.
  *
  * Provides {@link KbqDateTimezoneService} alongside the token, so listing it in a component's `providers`
  * scopes the zone to that subtree instead of resolving the root service and silently doing nothing.
- *
- * @see KBQ_DATE_TIMEZONE
  */
 export const kbqDateTimezoneProvider = (timezone: KbqTimezoneLike): Provider[] => [
     KbqDateTimezoneService,
