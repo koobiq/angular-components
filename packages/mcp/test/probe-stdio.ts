@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 import { createInterface } from 'node:readline';
+import { resolveProject } from '../src/sources/project.ts';
 import { CONSUMER } from './project.ts';
 
 /**
@@ -12,6 +13,9 @@ import { CONSUMER } from './project.ts';
  * transport actually work together.
  *
  *   yarn mcp:probe
+ *
+ * `KOOBIQ_PROBE_SERVER=/path/to/dist/server.js yarn mcp:probe` runs that packaged artefact instead
+ * of `src/server.ts` under `tsx` — the thing a real project actually installs, not its source.
  */
 
 const PROJECT = CONSUMER;
@@ -21,7 +25,10 @@ const PROJECT = CONSUMER;
  * package, and in a monorepo there is no telling which `node_modules` it was hoisted into.
  */
 const tsxCli = (): string => createRequire(import.meta.url).resolve('tsx/cli');
-const SERVER = resolve(import.meta.dirname, '..', 'src', 'server.ts');
+
+const PACKAGED_SERVER = process.env.KOOBIQ_PROBE_SERVER;
+const SERVER = PACKAGED_SERVER ? resolve(PACKAGED_SERVER) : resolve(import.meta.dirname, '..', 'src', 'server.ts');
+const SPAWN_ARGS = PACKAGED_SERVER ? [SERVER] : [tsxCli(), SERVER];
 
 /**
  * A range, not a number. JSON tokenizes worse than prose — punctuation, quoted identifiers and
@@ -34,7 +41,7 @@ const midpoint = (value: string): number => Math.round(value.length / 3);
 
 type Response = { id?: number; result?: unknown; error?: { message: string } };
 
-const child = spawn(process.execPath, [tsxCli(), SERVER], {
+const child = spawn(process.execPath, SPAWN_ARGS, {
     cwd: PROJECT,
     stdio: ['pipe', 'pipe', 'pipe']
 });
@@ -100,10 +107,39 @@ const CALLS: { label: string; name: string; args: Record<string, unknown> }[] = 
     { label: 'устаревший токен', name: 'get_token', args: { name: 'theme-default' } },
     { label: 'исходник примера', name: 'get_example', args: { id: 'validation-on-submit' } },
     { label: 'несуществующий компонент', name: 'get_component', args: { id: 'selekt' } },
-    { label: 'несуществующая иконка', name: 'get_icon', args: { name: 'dumpster_16' } }
+    { label: 'несуществующая иконка', name: 'get_icon', args: { name: 'dumpster_16' } },
+    { label: 'перечень компонентов, с описаниями', name: 'list_components', args: { detail: 'summary' } },
+    { label: 'перечень гайдов', name: 'get_guide', args: {} },
+    { label: 'разделы одного гайда', name: 'get_guide', args: { id: 'theming' } },
+    { label: 'один раздел гайда', name: 'get_guide', args: { id: 'theming', section: 'How to use' } },
+    { label: 'миграция, что сломалось при обновлении', name: 'migrate', args: { from: '18.4.0' } },
+    { label: 'миграция одной точки входа', name: 'migrate', args: { from: '18.4.0', component: 'select' } },
+    {
+        label: 'какой компонент нужен (англ.)',
+        name: 'which_component_when',
+        args: { task: 'pick several values from a long list' }
+    },
+    {
+        label: 'какой компонент нужен (рус.)',
+        name: 'which_component_when',
+        args: { task: 'выбрать несколько значений из длинного списка' }
+    }
 ];
 
 const main = async (): Promise<void> => {
+    const project = resolveProject(PROJECT);
+    const resolved = [...project.packages.values()].map((pkg) => `${pkg.name}@${pkg.version}`);
+
+    process.stdout.write(
+        [
+            `consumer: ${PROJECT}`,
+            `server: ${PACKAGED_SERVER ? `packaged (${SERVER})` : 'source (tsx, src/server.ts)'}`,
+            `framework: ${project.framework}`,
+            `resolved packages: ${resolved.length ? resolved.join(', ') : '(none — nothing installed yet)'}`,
+            ''
+        ].join('\n')
+    );
+
     const initialize = await call('initialize', {
         protocolVersion: '2025-11-25',
         capabilities: {},
