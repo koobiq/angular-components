@@ -6,6 +6,10 @@
         // Every entry point is compiled against the typings of the others, so a declaration marked
         // `@internal` must not be used outside its own entry point or referenced by a public signature.
         "stripInternal": true,
+        // ng-packagr turns incremental compilation on with the Angular cache, and a program restored from it
+        // orders the members of an inferred union differently, so the typings and the API golden would
+        // depend on the state of the cache.
+        "incremental": false,
         "inlineSources": true,
         "types": [],
         "paths": {

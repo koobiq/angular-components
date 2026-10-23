@@ -5,6 +5,7 @@
     },
     "angularCompilerOptions": {
         "extendedDiagnostics": {
+            "defaultCategory": "error",
             "checks": {
                 "optionalChainNotNullable": "suppress"
             }

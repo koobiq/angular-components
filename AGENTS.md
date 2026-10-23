@@ -87,6 +87,10 @@ Libraries are built by the custom `@koobiq/builders:packager` builder around ng-
 
 The docs app resolves `@koobiq/*` from `dist/` (see `apps/docs/tsconfig.app.json`), so rebuild the libraries before `docs:build`, and again after changing a component you want to see on the site. `yarn run docs` runs the whole chain in the right order.
 
+`docs:build`, `ssr:build` and the dev-e2e build behind `serve:e2e` fail on any builder warning (`tools/build-strict.mjs`). Fix the cause, or silence an expected warning where it comes from: `allowedCommonJsDependencies` in `angular.json` for the package the warning names, the budgets, `stylePreprocessorOptions.sass.silenceDeprecations`. Angular's extended diagnostics are errors (`extendedDiagnostics.defaultCategory` in the root `tsconfig.json`); a tsconfig that declares its own `extendedDiagnostics` repeats it.
+
+The Angular CLI cache (`.angular/cache`) is on locally and off in CI; `yarn run clean` empties it. Every published library sets `"incremental": false` in its `tsconfig.lib.json`, or its typings would depend on the cache.
+
 ### Development
 
 ```bash
@@ -180,7 +184,7 @@ Every pull request runs these workflows:
 | Unit tests                        | `styles:build-all`, then `unit:all` (one Vitest run of the `angular` and `node` projects)                                                                    |
 | E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                                             |
 | API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs` and `check-llms`                             |
-| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build`                              |
+| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs and `ssr:build`, both fail on a warning   |
 | Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label                                       |
 | License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                                                   |
 

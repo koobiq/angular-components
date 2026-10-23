@@ -45,8 +45,8 @@ const mapping: KbqFormatKeyToProfileMappingExtended = {
                     @let fullName = userInfo | kbqUsernameCustom: fullNameFormat;
                     <span kbqUsernamePrimary>{{ fullName }}</span>
 
-                    @if (userInfo?.login) {
-                        <span kbqUsernameSecondary kbq-title class="kbq-mono-normal">[{{ userInfo?.login }}]</span>
+                    @if (userInfo.login) {
+                        <span kbqUsernameSecondary kbq-title class="kbq-mono-normal">[{{ userInfo.login }}]</span>
                     }
                 </kbq-username-custom-view>
             </kbq-username>

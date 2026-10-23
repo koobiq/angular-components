@@ -147,7 +147,7 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
     ],
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates()" [(filter)]="filter">
-            @for (pipe of filter?.pipes; track pipe) {
+            @for (pipe of filter.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
 
