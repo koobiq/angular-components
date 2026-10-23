@@ -1,3 +1,13 @@
+## 20.4.2 (2026-10-23)
+
+### Koobiq
+
+ * bug fix  **toast:** stop closing other overlays when the toast stack reflows ([#DS-5407](https://github.com/koobiq/angular-components/issues/issue/DS-5407)) ([#2211](https://github.com/koobiq/angular-components/issues/2211)) ([67d3977](https://github.com/koobiq/angular-components/commit/67d3977a9762515ffb87f07e7e0ed231199de725))
+
+### Documentation
+
+ * feature  keep the open page when switching the docs version ([#DS-5492](https://github.com/koobiq/angular-components/issues/issue/DS-5492)) ([#2193](https://github.com/koobiq/angular-components/issues/2193)) ([a83ee2a](https://github.com/koobiq/angular-components/commit/a83ee2ac747d2b4d7e91dbf00cf7bbcfddde4047))
+
 ## 20.4.1 (2026-10-14)
 
 ### Cli
