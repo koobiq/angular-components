@@ -20,6 +20,24 @@ const restrictedSyntax = async (code: string): Promise<string[]> => {
 };
 
 describe('componentsJsDocConfig', () => {
+    // lint-staged runs `eslint --fix` on every commit, so a fix that drops text loses it without anyone seeing
+    it('reports text after `@docs-private` and `@internal`, and its fix keeps that text', async () => {
+        const code =
+            '/** @docs-private Some text. */\nexport const a = 1;\n\n/**\n * @internal\n * More text.\n */\nexport const b = 1;';
+        const [fixed] = await new ESLint({
+            overrideConfigFile: true,
+            overrideConfig: [{ languageOptions: { parser: tseslint.parser } }, componentsJsDocConfig],
+            fix: true
+        }).lintText(code, { filePath: 'packages/components/probe/probe.ts' });
+
+        expect(await restrictedSyntax(code)).toEqual([
+            expect.stringContaining('Put `@docs-private` and `@internal` after the text'),
+            expect.stringContaining('Put `@docs-private` and `@internal` after the text')
+        ]);
+        expect(fixed.output ?? code).toContain('Some text.');
+        expect(fixed.output ?? code).toContain('More text.');
+    });
+
     it('accepts the tags the docs read', async () => {
         const code = [
             '/**',

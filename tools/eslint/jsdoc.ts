@@ -91,8 +91,17 @@ export const componentsJsDocConfig = jsdoc({
                         comment: 'JsdocBlock[delimiterLineBreak="\\n"][preterminalLineBreak=""]',
                         message: 'Close a block of several lines with `*/` on a line of its own.'
                     },
+                    // the text after `@docs-private` or `@internal` belongs to the tag, not to the description;
+                    // a one-line block reads the first word after a tag as a name
+                    {
+                        comment: `JsdocBlock:has(JsdocTag[tag=/^(${hidingJsDocTags.join('|')})$/]:matches([description=/\\S/], [name=/\\S/]))`,
+                        message:
+                            'Put `@docs-private` and `@internal` after the text: the text after them belongs to the tag.'
+                    },
                     // Angular's extractor leaves a private member out of the docs by itself, while `@internal` would
-                    // also take it out of the typings, where it decides whether two classes are compatible
+                    // also take it out of the typings, where it decides whether two classes are compatible.
+                    // The rule takes the first entry whose comment matches a block and only then checks its context,
+                    // so an entry with a context stays last: put first, it would hide the entries after it
                     {
                         context:
                             ':matches(PropertyDefinition, MethodDefinition, AccessorProperty, TSParameterProperty)[accessibility="private"], :matches(PropertyDefinition, MethodDefinition, AccessorProperty)[key.type="PrivateIdentifier"]',
@@ -110,8 +119,8 @@ export const componentsJsDocConfig = jsdoc({
         'jsdoc/check-param-names': [1, { checkDestructured: false, disableMissingParamChecks: true }],
         // `@docs-private` closing a one-line comment is meant as a tag; the rule reads a name up to the hyphen
         'jsdoc/escape-inline-tags': [1, { allowedInlineTags: ['docs'] }],
-        // the text after `@docs-private` belongs to the tag, not to the description
-        'jsdoc/empty-tags': [1, { tags: ['docs-private'] }],
+        // its fix deletes the text after the tag rather than moving it; `no-restricted-syntax` checks it instead
+        'jsdoc/empty-tags': 0,
         // what has to be documented is up to `check-api-docs`
         'jsdoc/require-jsdoc': 0,
         'jsdoc/require-param': 0,
