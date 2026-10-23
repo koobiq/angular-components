@@ -95,6 +95,15 @@ const mockPreHeight = (debugElement: DebugElement, height: number): void => {
     Object.defineProperty(pre, 'offsetHeight', { get: () => height, configurable: true });
 };
 
+// jsdom applies no stylesheet, so the padding the component reads from the computed style is set inline.
+const mockCodePaddingBottom = (debugElement: DebugElement, padding: number): void => {
+    getCodeElement(debugElement).style.paddingBottom = `${padding}px`;
+};
+
+const mockHorizontalScroll = (content: HTMLElement): void => {
+    Object.defineProperties(content, { scrollWidth: { value: 200 }, clientWidth: { value: 100 } });
+};
+
 @Component({
     imports: [KbqCodeBlockModule],
     template: `
@@ -641,6 +650,43 @@ describe(KbqCodeBlock.name, () => {
         expect(content.tabIndex).toBe(0);
     });
 
+    it('should let the code content be focused when it scrolls sideways under a maxHeight it fits', async () => {
+        const fixture = createComponent(MaxHeightCodeBlock, [
+            { provide: SharedResizeObserver, useValue: new MockSharedResizeObserver() }
+        ]);
+        const content: HTMLElement = fixture.nativeElement.querySelector('.kbq-code-block__main');
+
+        // The code is shorter than the limit (jsdom measures it at 0), so no "view all" button leads in.
+        mockHorizontalScroll(content);
+        fixture.detectChanges();
+
+        expect(getViewAllButtonElement(fixture.debugElement)).toBeNull();
+        expect(content.tabIndex).toBe(0);
+        await expect(fixture.nativeElement).toHaveNoViolations();
+    });
+
+    it('should not let the code content be focused while maxHeight collapses it', () => {
+        const mockResizeObserver = new MockSharedResizeObserver();
+        const fixture = createComponent(MaxHeightCodeBlock, [
+            { provide: SharedResizeObserver, useValue: mockResizeObserver }
+        ]);
+        const { debugElement } = fixture;
+        const content: HTMLElement = fixture.nativeElement.querySelector('.kbq-code-block__main');
+
+        mockHorizontalScroll(content);
+        mockPreHeight(debugElement, 500);
+        mockResizeObserver.triggerResize();
+        fixture.detectChanges();
+
+        expect(getViewAllButtonElement(debugElement)).toBeInstanceOf(HTMLButtonElement);
+        expect(content.tabIndex).toBe(-1);
+
+        geCodeBlockDebugElement(debugElement).componentInstance.toggleViewAll();
+        fixture.detectChanges();
+
+        expect(content.tabIndex).toBe(0);
+    });
+
     // A binding would only reach the element a round of change detection later, after the hooks of the render.
     it('should give the hooks later in the render the tab index it measured', () => {
         const fixture = createComponent(BaseCodeBlock);
@@ -910,6 +956,52 @@ describe(KbqCodeBlock.name, () => {
             fixture.detectChanges();
 
             expect(getViewAllButtonElement(debugElement)).toBeInstanceOf(HTMLButtonElement);
+        });
+
+        it('should not show viewAll button when only the bottom padding of the code runs past maxHeight', () => {
+            const mockResizeObserver = new MockSharedResizeObserver();
+            const fixture = createComponent(MaxHeightCodeBlock, [
+                { provide: SharedResizeObserver, useValue: mockResizeObserver }
+            ]);
+            const { debugElement } = fixture;
+
+            // The last line ends at 196px: the 6px that the limit clips are padding, and clipped padding
+            // hides no code. Measured at the element, the padding used to earn a button that revealed nothing.
+            mockCodePaddingBottom(debugElement, 14);
+            mockPreHeight(debugElement, 210);
+            mockResizeObserver.triggerResize();
+            fixture.detectChanges();
+
+            expect(getViewAllButtonElement(debugElement)).toBeNull();
+        });
+
+        it('should keep viewAll button whatever padding the button itself adds below the code', () => {
+            const mockResizeObserver = new MockSharedResizeObserver();
+            const fixture = createComponent(MaxHeightCodeBlock, [
+                { provide: SharedResizeObserver, useValue: mockResizeObserver }
+            ]);
+            const { debugElement } = fixture;
+
+            mockCodePaddingBottom(debugElement, 14);
+            mockPreHeight(debugElement, 230);
+            mockResizeObserver.triggerResize();
+            fixture.detectChanges();
+
+            expect(getViewAllButtonElement(debugElement)).toBeInstanceOf(HTMLButtonElement);
+
+            // The button deepens the padding, and the deeper element must not count as taller code.
+            mockCodePaddingBottom(debugElement, 32);
+            mockPreHeight(debugElement, 248);
+            mockResizeObserver.triggerResize();
+            fixture.detectChanges();
+
+            expect(getViewAllButtonElement(debugElement)).toBeInstanceOf(HTMLButtonElement);
+
+            mockPreHeight(debugElement, 230);
+            mockResizeObserver.triggerResize();
+            fixture.detectChanges();
+
+            expect(getViewAllButtonElement(debugElement)).toBeNull();
         });
 
         it('should hide viewAll button when content shrinks below maxHeight', () => {
@@ -1210,11 +1302,35 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.maxHeight()).toBeUndefined();
     });
 
+    it('should leave code that fits maxHeight at its natural height', () => {
+        const fixture = createComponent(MaxHeightCodeBlock, [
+            { provide: SharedResizeObserver, useValue: new MockSharedResizeObserver() }
+        ]);
+        const main = fixture.nativeElement.querySelector('.kbq-code-block__main') as HTMLElement;
+
+        // Clipped at the limit, code that fits would still scroll by its own bottom padding, with no
+        // button to expand it; jsdom measures the code at 0, which fits.
+        expect(main.style.maxHeight).toBe('');
+    });
+
+    it('should keep the max height on the server, where nothing measures the code', () => {
+        const fixture = createComponent(MaxHeightCodeBlock, [
+            { provide: Platform, useValue: { isBrowser: false } satisfies Partial<Platform> }
+        ]);
+        const main = fixture.nativeElement.querySelector('.kbq-code-block__main') as HTMLElement;
+
+        expect(main.style.maxHeight).toBe('200px');
+    });
+
     it('should drop the calculated max height once viewAll is on', () => {
-        const fixture = createComponent(BaseCodeBlock);
+        const mockResizeObserver = new MockSharedResizeObserver();
+        const fixture = createComponent(BaseCodeBlock, [
+            { provide: SharedResizeObserver, useValue: mockResizeObserver }
+        ]);
         const { componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
 
+        mockPreHeight(fixture.debugElement, 500);
         componentInstance.maxHeight = 200;
         fixture.detectChanges();
 
