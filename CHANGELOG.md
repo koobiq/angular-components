@@ -1,3 +1,11 @@
+## 19.8.8 (2026-10-23)
+
+### Koobiq
+
+ * bug fix  **loader-overlay:** null-safe parent class on early destroy ([#DS-5755](https://github.com/koobiq/angular-components/issues/issue/DS-5755)) ([#2170](https://github.com/koobiq/angular-components/issues/2170)) ([c62f4f8](https://github.com/koobiq/angular-components/commit/c62f4f858068e2ad06e84e6a477535820e9e79e8))
+ * bug fix  **toast:** stop closing other overlays when the toast stack reflows ([#DS-5407](https://github.com/koobiq/angular-components/issues/issue/DS-5407)) ([#2220](https://github.com/koobiq/angular-components/issues/2220)) ([d44da30](https://github.com/koobiq/angular-components/commit/d44da30bc83d696f8d7de615287be43f6be86a4e))
+ * feature  **docs:** keep the open page when switching the docs version ([#DS-5492](https://github.com/koobiq/angular-components/issues/issue/DS-5492)) ([#2204](https://github.com/koobiq/angular-components/issues/2204)) ([ae623a8](https://github.com/koobiq/angular-components/commit/ae623a8275b65ca772ede0966c5d355738e9f81d))
+
 ## 19.8.7 (2026-10-14)
 
 ### Cli
