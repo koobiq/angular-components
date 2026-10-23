@@ -2226,6 +2226,140 @@ describe('KbqTreeSelection', () => {
                 expect(optionFor('Pictures').checkboxState).toBe('unchecked');
                 expect(optionFor('Sun').selected).toBe(false);
             });
+
+            it('should catch up with a selection made while the checkbox was hidden', async () => {
+                vi.useFakeTimers();
+
+                const tree = component.tree();
+
+                tree.multipleMode = MultipleMode.KEYBOARD;
+                await settle();
+
+                tree.selectionModel.select(component.treeControl.hasValue('Sun')!);
+                await settle();
+
+                expect(optionFor('Pictures').checkboxState).toBe('unchecked');
+
+                tree.multipleMode = MultipleMode.CHECKBOX;
+                await settle();
+
+                expect(optionFor('Pictures').checkboxState).toBe('indeterminate');
+            });
+        });
+
+        describe('tri-state checkbox over replaced data', () => {
+            let fixture: ComponentFixture<TreeWithTrackedThirdStateCheckbox>;
+            let component: TreeWithTrackedThirdStateCheckbox;
+
+            const optionFor = (value: string): KbqTreeOption =>
+                component.tree().renderedOptions.find((option) => option.value === value)!;
+
+            const settle = async () => {
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(0);
+                fixture.detectChanges();
+            };
+
+            beforeEach(() => {
+                configureKbqTreeTestingModule();
+                fixture = TestBed.createComponent(TreeWithTrackedThirdStateCheckbox);
+
+                component = fixture.componentInstance;
+                treeElement = fixture.nativeElement.querySelector('kbq-tree-selection');
+
+                fixture.detectChanges();
+            });
+
+            // Only the moved row is refreshed, and no row is added, removed or moved, so nothing re-renders the list.
+            it('should recompute an ancestor a node moves under in place', async () => {
+                vi.useFakeTimers();
+
+                const [branch, child, sibling] = component.dataSource.value;
+
+                dispatchEvent(getNodeByText(treeElement, 'child'), createMouseEvent('click'));
+                await settle();
+
+                expect(optionFor('branch').checkboxState).toBe('checked');
+
+                component.emit([branch, child, { ...sibling, level: 1 }]);
+                await settle();
+
+                expect(optionFor('branch').checkboxState).toBe('indeterminate');
+            });
+
+            it('should recompute a branch as soon as rows are added under it', async () => {
+                vi.useFakeTimers();
+
+                const [branch, child, sibling] = component.dataSource.value;
+
+                dispatchEvent(getNodeByText(treeElement, 'child'), createMouseEvent('click'));
+                await settle();
+
+                component.emit([branch, child, { id: 4, name: 'added', level: 1, expandable: false }, sibling]);
+                // Microtasks only: the pass over the rendered options that follows waits for a timer.
+                await Promise.resolve();
+
+                expect(optionFor('branch').checkboxState).toBe('indeterminate');
+            });
+        });
+
+        describe('tri-state checkbox in a deep tree', () => {
+            let fixture: ComponentFixture<TreeWithDeepThirdStateCheckbox>;
+            let component: TreeWithDeepThirdStateCheckbox;
+
+            const optionFor = (value: string): KbqTreeOption =>
+                component.tree().renderedOptions.find((option) => option.value === value)!;
+
+            const settle = async () => {
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(0);
+                fixture.detectChanges();
+            };
+
+            beforeEach(() => {
+                configureKbqTreeTestingModule();
+                fixture = TestBed.createComponent(TreeWithDeepThirdStateCheckbox);
+
+                component = fixture.componentInstance;
+                treeElement = fixture.nativeElement.querySelector('kbq-tree-selection');
+
+                fixture.detectChanges();
+            });
+
+            // An ancestor that rolled the change up through its own ancestors again made a node at depth d cost
+            // 2^d updates, so both counts below ran into the thousands.
+            it('should update each ancestor a number of times linear in depth', async () => {
+                vi.useFakeTimers();
+
+                component.treeControl.expandAll();
+                await settle();
+
+                const root = optionFor('node-0');
+                const rootUpdates = vi.spyOn(root, 'checkboxState', 'set');
+                const rollUps = vi.spyOn(component.treeControl, 'getParents');
+
+                dispatchEvent(getNodeByText(treeElement, `node-${DEEP_CHAIN_DEPTH}`), createMouseEvent('click'));
+                await settle();
+
+                expect(rootUpdates.mock.calls.length).toBeLessThanOrEqual(DEEP_CHAIN_DEPTH);
+                expect(rollUps.mock.calls.length).toBeLessThanOrEqual(DEEP_CHAIN_DEPTH);
+
+                expect(optionFor(`node-${DEEP_CHAIN_DEPTH}`).checkboxState).toBe('checked');
+                expect(optionFor(`node-${DEEP_CHAIN_DEPTH - 1}`).checkboxState).toBe('indeterminate');
+                expect(root.checkboxState).toBe('indeterminate');
+            });
+
+            it('should not roll every newly rendered row up through its ancestors', async () => {
+                vi.useFakeTimers();
+
+                const rollUps = vi.spyOn(component.treeControl, 'getParents');
+
+                component.treeControl.expandAll();
+                await settle();
+
+                expect(getNodes(treeElement).length).toBe(component.treeControl.dataNodes.length);
+                expect(rollUps).not.toHaveBeenCalled();
+            });
         });
 
         describe('disabled options', () => {
@@ -3755,6 +3889,48 @@ class TreeWithThirdStateCheckbox extends TreeParams {
     readonly tree = viewChild.required(KbqTreeSelection);
 }
 
+const DEEP_CHAIN_DEPTH = 12;
+
+/**
+ * `node-<level>` nested down to `node-<DEEP_CHAIN_DEPTH>`, a `leaf-<level>` beside each: every ancestor of the deepest
+ * node also holds an unselected leaf.
+ */
+function buildDeepChain(): object {
+    let chain: object | null = null;
+
+    for (let level = DEEP_CHAIN_DEPTH; level >= 0; level--) {
+        chain = { [`node-${level}`]: chain, [`leaf-${level}`]: 'file' };
+    }
+
+    return chain!;
+}
+
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection multiple="checkbox" [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
+                {{ node.name }}
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
+                <kbq-tree-node-toggle />
+
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeWithDeepThirdStateCheckbox extends TreeParams {
+    readonly tree = viewChild.required(KbqTreeSelection);
+
+    constructor() {
+        super();
+
+        this.dataSource.data = this.treeData = buildFileTree(buildDeepChain(), 0);
+    }
+}
+
 /** Node identified by its `id`, so a rename or a re-level reuses the view instead of rebuilding it. */
 interface TrackedNode {
     id: number;
@@ -3791,6 +3967,59 @@ class TreeWithTrackBy {
         this.emit([
             { id: 1, name: 'src', level: 0, expandable: false },
             { id: 2, name: 'docs', level: 1, expandable: false }
+        ]);
+    }
+
+    emit(nodes: TrackedNode[]): void {
+        this.treeControl.dataNodes = nodes;
+        this.dataSource.next(nodes);
+    }
+}
+
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection
+            multiple="checkbox"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+            [trackBy]="trackById"
+        >
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
+                {{ node.name }}
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
+                <kbq-tree-node-toggle />
+
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeWithTrackedThirdStateCheckbox {
+    readonly tree = viewChild.required(KbqTreeSelection);
+
+    // A stream that keeps the objects of untouched nodes, as `TreeWithTrackBy` does: the differ then reports only the
+    // rows that really changed.
+    readonly dataSource = new BehaviorSubject<TrackedNode[]>([]);
+
+    readonly treeControl = new FlatTreeControl<TrackedNode>(
+        (node) => node.level,
+        (node) => node.expandable,
+        (node) => node.name,
+        (node) => node.name
+    );
+
+    trackById = (_: number, node: TrackedNode) => node.id;
+
+    hasChild = (_: number, node: TrackedNode) => node.expandable;
+
+    constructor() {
+        this.emit([
+            { id: 1, name: 'branch', level: 0, expandable: true },
+            { id: 2, name: 'child', level: 1, expandable: false },
+            { id: 3, name: 'sibling', level: 0, expandable: false }
         ]);
     }
 
