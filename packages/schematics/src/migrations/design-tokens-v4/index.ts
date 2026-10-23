@@ -51,9 +51,10 @@ export default function migrate(): Rule {
             `\`${PACKAGE}\` was set to "${VERSIONS.KOOBIQ_DESIGN_TOKENS}". Two things need doing by hand:`,
             '',
             '1. Run `npx koobiq-tokens-codemod src` over your own styles and templates. It rewrites',
-            '   the import paths that moved (`web/new/**` → `web/css/**`) and the tokens that have a',
-            '   one-for-one replacement, and reports the rest — the removed `--kbq-palette-*` scale,',
-            '   `--kbq-background-overlay-theme`, and any component token you referenced directly.',
+            '   the import paths that moved (`web/new/**` → `web/css/**`), the tokens with a',
+            '   one-for-one replacement, and the removed overlay tokens (as color-mix()). For the',
+            '   old `--kbq-palette-*` scale it suggests the nearest `--kbq-plt-*`; `--fix-palette`',
+            '   and `--palette-to-color` turn the suggestion into a rewrite.',
             '2. Look at your code blocks and scrollbars. Those are the only two places v4 changes',
             '   pixels without being asked.'
         ]);

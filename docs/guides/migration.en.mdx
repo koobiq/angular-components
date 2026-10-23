@@ -3448,7 +3448,7 @@ ng g @koobiq/components:design-tokens-v4 --project "<your project>"
 
 #### What is fixed automatically
 
-**The `@koobiq/design-tokens` entry in `package.json`** is rewritten to `^4.0.0`, wherever it was declared — `dependencies` or `devDependencies` — and added to `dependencies` when it was declared nowhere (a project can reach the tokens through the library's own peer dependency alone, with npm having installed them and nothing in `package.json` saying so). An install is scheduled afterwards.
+**The `@koobiq/design-tokens` entry in `package.json`** is rewritten to `^4.1.0`, wherever it was declared — `dependencies` or `devDependencies` — and added to `dependencies` when it was declared nowhere (a project can reach the tokens through the library's own peer dependency alone, with npm having installed them and nothing in `package.json` saying so). An install is scheduled afterwards.
 
 #### What you need to fix manually
 
@@ -3458,8 +3458,10 @@ The rest of the upgrade is in your project's own stylesheets. `@koobiq/design-to
 npx koobiq-tokens-codemod src
 ```
 
+It rewrites the moved import paths (`web/new/**` → `web/css/**`), the tokens with a one-for-one replacement, and the two removed overlay tokens: `var(--kbq-background-overlay-theme)` and `var(--kbq-background-overlay-error)` become `color-mix(in srgb, var(--kbq-background-overlay-base-…) calc(var(--kbq-opacity-overlay) * 100%), transparent)`. The result is not pixel-identical to v3 — look at your overlays after the rewrite.
+
+- **The old `--kbq-palette-*` scale.** The 0–100 scale has no direct mapping onto the 1–20 one, so by default the codemod only suggests the nearest `--kbq-plt-*` and prints the ΔE. Two flags turn the suggestion into a rewrite: `--fix-palette` (nearest `--kbq-plt-*`, applied only when ΔE ≤ 3; adjust the threshold with `--palette-delta-e`) and `--palette-to-color` (the literal v3 color inlined as the value). Alpha steps and uses with a fallback are never rewritten — replace those by hand.
 - **Review code blocks and scrollbars.** These are the only two places v4 changes pixels without being asked; the codemod does not touch them because nothing about their custom properties changed, only the values behind them.
-- **A `--kbq-palette-*` reference the codemod flags but cannot rewrite automatically** has to be replaced by eye — the 0–100 scale has no mechanical mapping onto v4's 1–20 one.
 
 ### After the migration
 

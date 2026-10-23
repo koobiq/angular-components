@@ -2,7 +2,7 @@
 
 This schematic moves a project to `@koobiq/design-tokens` 4, which `@koobiq/components` now requires.
 
-The bump is not optional — `@koobiq/components` declares `@koobiq/design-tokens@^4.0.0` as a peer
+The bump is not optional — `@koobiq/components` declares `@koobiq/design-tokens@^4.1.0` as a peer
 dependency now. v4 removed the component tokens except for code-block, scrollbar and skeleton, which it
 ships as opt-in files; a project needs nothing extra for those three, since `@koobiq/components`' own
 `prebuilt-themes/theme.css` already bakes their values in.
@@ -69,7 +69,7 @@ ng g ./dist/components/schematics/collection.json:design-tokens-v4 --project koo
 {
     "dependencies": {
         "@koobiq/components": "^21.0.0",
-        "@koobiq/design-tokens": "^4.0.0"
+        "@koobiq/design-tokens": "^4.1.0"
     }
 }
 ```
