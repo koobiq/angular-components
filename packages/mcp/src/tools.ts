@@ -641,9 +641,36 @@ export const toolMigrate = (
                 .join('\n');
         }
 
+        // A member added inside the range has no shape to compare against `from` — it simply did
+        // not exist there — so a later `updated` or `removed` entry for it inside the same range
+        // describes a version the reader was never on. Collapsed per member (oldest first, as
+        // `changesFor` returns them) so the 60-item cap below cannot show one without the other:
+        // sorting `removed`/`updated` ahead of `added` used to let an `added` member's later
+        // `updated` entry survive the cut while its `added` entry — the one that actually matters
+        // to this reader — fell off the end.
+        const byMember = new Map<string, typeof changes>();
+
+        for (const change of changes) {
+            const key = `${change.symbol}.${change.member ?? ''}`;
+
+            byMember.set(key, [...(byMember.get(key) ?? []), change]);
+        }
+
+        const netChanges = [...byMember.values()].flatMap((group) => {
+            const added = group.find((change) => change.change === 'added');
+
+            if (!added) return group;
+
+            // Re-removed inside the same range: this reader never had it and still does not — no
+            // visible change to report.
+            return group.at(-1)!.change === 'removed' ? [] : [added];
+        });
+
         // Removals first regardless of release order: a reader fixing an upgrade wants the breaks.
         const order = { removed: 0, updated: 1, added: 2 } as const;
-        const sorted = [...changes].sort((a, b) => order[a.change] - order[b.change] || compare(a.version, b.version));
+        const sorted = [...netChanges].sort(
+            (a, b) => order[a.change] - order[b.change] || compare(a.version, b.version)
+        );
 
         const shown = sorted.slice(0, 60);
         const name = (change: (typeof sorted)[number]): string =>
@@ -652,9 +679,9 @@ export const toolMigrate = (
         return [
             `${entryPoint}: ${range.from} → ${to}`,
             partial,
-            `${changes.length} changes — ${changes.filter((change) => change.change === 'removed').length} removed, ` +
-                `${changes.filter((change) => change.change === 'updated').length} updated, ` +
-                `${changes.filter((change) => change.change === 'added').length} added`,
+            `${netChanges.length} changes — ${netChanges.filter((change) => change.change === 'removed').length} removed, ` +
+                `${netChanges.filter((change) => change.change === 'updated').length} updated, ` +
+                `${netChanges.filter((change) => change.change === 'added').length} added`,
             '',
             ...shown.map((change) =>
                 change.change === 'updated'

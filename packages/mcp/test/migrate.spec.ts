@@ -133,6 +133,16 @@ test('a component answer gives the old and the new signature, not just the name'
     expect(!output.includes('ngAcceptInputType'), 'compiler plumbing leaked into the answer').toBeTruthy();
 });
 
+test('a member added inside the range is never shown as merely updated', () => {
+    // `virtualOptionFactory` was added in 19.8.0 and changed shape (plain callback → InputSignal) in
+    // 20.0.0. A reader upgrading from 18.39.5 never had either version of it — showing the 20.0.0
+    // `updated` entry without the `added` one implies they already had it.
+    const output = toolMigrate(catalog, { from: '18.39.5', to: '21.0.0', component: 'select' });
+    const line = output.split('\n').find((row) => row.includes('virtualOptionFactory'));
+
+    expect(line).toMatch(/^\s*added\s+KbqSelect\.virtualOptionFactory\s+\(19\.8\.0\)$/);
+});
+
 test('removals are listed before updates, whatever release they fall in', () => {
     const output = toolMigrate(catalog, { from: '18.4.0', to: '20.0.0', component: 'tabs' });
     const firstRemoved = output.indexOf('  removed ');
