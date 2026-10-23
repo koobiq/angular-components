@@ -169,7 +169,10 @@ module.exports = tseslint.config(
             // ignore index.html
             '**/index.html',
             // ignore mocks
-            '**/mock.ts'
+            '**/mock.ts',
+            // excerpts lifted verbatim from published .d.ts files — linting them would rewrite
+            // them to this repository's style, which is exactly what the fixture must not be
+            'packages/mcp/test/fixtures/packages/**/*.d.ts'
         ]
     },
 

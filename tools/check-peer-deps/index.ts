@@ -40,7 +40,7 @@ const fail = (pkg: string, message: string) => failures.push(`${pkg}: ${message}
  * declare some, so a manifest that loses the field is reported rather than silently skipped — an
  * unchecked package looks identical to a valid one in the CI log.
  */
-const packagesWithoutPeers = ['cli'];
+const packagesWithoutPeers = ['cli', 'mcp'];
 
 /** Source manifest of every package listed in the root `release.packages`. */
 const publishedPackages = (rootPackageJson.release?.packages || [])

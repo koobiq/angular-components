@@ -94,6 +94,7 @@ export default defineConfig({
                     include: [
                         'packages/schematics/**/*.spec.ts',
                         'packages/cli/**/*.spec.ts',
+                        'packages/mcp/**/*.spec.ts',
                         'tools/**/*.spec.ts'
                     ],
                     exclude: [

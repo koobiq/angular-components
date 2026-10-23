@@ -107,7 +107,7 @@ export class StageReleaseTask extends BaseReleaseTask {
         }
 
         // Generated files that embed the version, such as the docs llms.txt, have to see the new one.
-        this.runReleaseCommands('post-version-bump');
+        this.runReleaseCommands('post-version-bump', { KOOBIQ_RELEASE: newVersionName });
 
         await promptAndGenerateChangelog(join(this.config.projectDir, CHANGELOG_FILE_NAME), this.config);
 
