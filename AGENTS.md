@@ -123,7 +123,7 @@ yarn run unit:cli
 yarn run unit:koobiq-docs            # Docs app specs
 yarn run unit:tools                  # Specs under tools/
 yarn run unit:mcp                    # MCP server, everything that does not need a built @koobiq/components (regenerates its own index first)
-yarn run unit:mcp:dts                # The MCP specs that need a build: the .d.ts reader (needs build:components) and the stdio smoke test (needs build:mcp)
+yarn run unit:mcp:dts                # The MCP specs that need a build: the live reader and the tools built on it, the .d.ts parser check, and the stdio smoke test (dist/mcp)
 yarn run check-spec-types            # Type-check the specs, which Vitest compiles unchecked (part of the lint gate)
 npx vitest run "<TEST_PATH_PATTERN>" # Run specific tests (e.g., npx vitest run packages/components/button/button.component.spec.ts)
 npx vitest run "<TEST_PATH_PATTERN>" -t "<test name pattern>"

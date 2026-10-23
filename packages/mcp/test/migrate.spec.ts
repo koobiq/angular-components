@@ -4,7 +4,7 @@ import { compare } from '../src/semver';
 import { changesFor, meaningful, migrationSections, summarise, type ApiHistory } from '../src/sources/history';
 import { toolMigrate, toolSearch } from '../src/tools';
 import type { Guide } from '../src/types';
-import { CONSUMER } from './project';
+import { componentsAvailable, CONSUMER } from './project';
 
 const catalog = loadCatalog(CONSUMER);
 
@@ -102,7 +102,9 @@ test('the real upgrade summary stays readable', () => {
     expect(output.length < 2500, `summary was ${output.length} chars`).toBeTruthy();
 });
 
-test('`to` defaults to the version this project resolved', () => {
+// `unit:all` sweeps this file in `units.yml` too, which never builds the library — skipped, not
+// failed, is the honest report there; every other test here reads only the committed history.
+test.skipIf(!componentsAvailable())('`to` defaults to the version this project resolved', () => {
     const installed = catalog.project.packages.get('@koobiq/components')?.version;
 
     expect(installed).toBeTruthy();
