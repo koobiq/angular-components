@@ -105,10 +105,14 @@ export class KbqAlert {
     protected readonly iconItem = contentChild(KbqIconItem, { descendants: false });
     /** @docs-private */
     protected readonly icon = contentChild(KbqIcon, { descendants: false });
-    // NB: `button` must keep the default `descendants: true` — it does not gate a projection slot, it
-    // reports whether the already-projected `[kbq-alert-control]` slot contains a button (which can sit
-    // inside a wrapper element), and drives the `_has-button` button-stack padding.
-    /** @docs-private */
+
+    /**
+     * Must keep the default `descendants: true`: it does not gate a projection slot, it reports whether the
+     * already-projected `[kbq-alert-control]` slot contains a button (which can sit inside a wrapper element),
+     * and drives the `_has-button` button-stack padding.
+     *
+     * @docs-private
+     */
     protected readonly button = contentChild(KbqButton);
     /** @docs-private */
     protected readonly title = contentChild(KbqAlertTitle, { descendants: false });
@@ -125,8 +129,7 @@ export class KbqAlert {
 
     /**
      * Status of the alert. Drives the background in the `colored` style and auto-tints an uncolored
-     * projected status icon to the matching color (`info` icons become `contrast`).
-     * @default 'info'
+     * projected status icon to the matching color (`info` icons become `contrast`). Defaults to `'info'`.
      */
     readonly alertColor = input(KbqAlertColors.Info, {
         transform: (value: KbqEnumValues<KbqAlertColors> | null | undefined): KbqEnumValues<KbqAlertColors> =>

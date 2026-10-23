@@ -258,7 +258,9 @@ export class KbqCheckbox extends KbqColorDirective implements OnChanges, AfterVi
      * Toggles checked state if element is not disabled.
      * Do not toggle on (change) event since IE doesn't fire change event when
      *   indeterminate checkbox is clicked.
+     *
      * @param event Input click event
+     *
      * @docs-private
      */
     protected onInputClick(event: Event): void {

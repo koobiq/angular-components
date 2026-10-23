@@ -29,6 +29,7 @@ export class KbqFileUploadContext {
     readonly multiple = input(null, { transform: booleanAttribute });
     /** File type specifiers */
     readonly accept = input<string | null>(null);
+
     /**
      * Reflects webkitdirectory attribute, which indicates that elements can only select directories instead of files.
      */
@@ -74,6 +75,7 @@ export class KbqFileLoader {
     readonly accept = input<string | null>(null);
     /** id for file input  */
     readonly for = input<string | null>(null);
+
     /**
      * Reflects webkitdirectory attribute,
      * which indicates that elements can only select directories instead of files.
@@ -118,6 +120,7 @@ export class KbqFileLoader {
 export class KbqFileList<T> {
     /** Current list of items. */
     readonly list = model<T[]>([]);
+
     /**
      * Emits an event containing a tuple of file and file's index when removed from the file list.
      * Useful when handle removed files, skipping filtering file list.

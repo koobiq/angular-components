@@ -17,6 +17,7 @@ export type KbqPanelMaxHeight = number | null;
  * default applies again. A negative value is clamped to `0` because `max-height` rejects negative lengths
  * at computed-value time, which would drop the declaration and leave the list unbounded rather than at
  * its default height.
+ *
  * @docs-private
  */
 export function kbqResolvePanelMaxHeightToken(panelMaxHeight: KbqPanelMaxHeight | undefined): string | null {
@@ -28,12 +29,14 @@ export function kbqResolvePanelMaxHeightToken(panelMaxHeight: KbqPanelMaxHeight 
 /**
  * Default cap of an overlay panel's scrollable content, in pixels. Mirrors the stylesheet default of
  * `--kbq-select-panel-size-max-height` so that the two cannot drift apart.
+ *
  * @docs-private
  */
 export const KBQ_PANEL_DEFAULT_MAX_HEIGHT = 256;
 
 /**
  * Geometry needed to work out how tall an anchored panel's scrollable list may be.
+ *
  * @docs-private
  */
 export interface KbqPanelSpaceContext {
@@ -45,6 +48,7 @@ export interface KbqPanelSpaceContext {
     viewportHeight: number;
     /** Margin the overlay keeps from the viewport edge, i.e. `cdkConnectedOverlayViewportMargin`. */
     viewportMargin: number;
+
     /**
      * Everything in the panel that is not the scrollable list and therefore adds to its total height: the
      * trigger gap, the list padding, a search field and a footer.
@@ -54,6 +58,7 @@ export interface KbqPanelSpaceContext {
 
 /**
  * How much room the panel's scrollable list has on each side of the trigger. Negative means it does not fit.
+ *
  * @docs-private
  */
 export interface KbqPanelSideSpace {
@@ -66,6 +71,7 @@ export interface KbqPanelSideSpace {
  *
  * Returns `null` for geometry that cannot be trusted — a collapsed trigger rect or a zero-height viewport, which
  * is what a DOM without layout reports, on the server and under jsdom.
+ *
  * @docs-private
  */
 export function kbqResolvePanelSideSpace(context: KbqPanelSpaceContext): KbqPanelSideSpace | null {
@@ -85,6 +91,7 @@ export function kbqResolvePanelSideSpace(context: KbqPanelSpaceContext): KbqPane
 
 /**
  * What the DOM reports about the first row of a trigger that lays its content out in rows.
+ *
  * @docs-private
  */
 export interface KbqTriggerFirstRowMeasurements {
@@ -109,6 +116,7 @@ export interface KbqTriggerFirstRowMeasurements {
  * Returns `null` for geometry that cannot be trusted: a collapsed rect (the server, a DOM without layout), or
  * a row container that is not what drives the trigger's height, which a result reaching past the trigger's own
  * bottom edge gives away.
+ *
  * @docs-private
  */
 export function kbqResolveTriggerFirstRowOffset(measurements: KbqTriggerFirstRowMeasurements): number | null {
@@ -133,6 +141,7 @@ export function kbqResolveTriggerFirstRowOffset(measurements: KbqTriggerFirstRow
 /**
  * Room the panel's scrollable list has when it is anchored to the trigger's first row instead of to the
  * trigger's bottom edge. The same arithmetic as {@link kbqResolvePanelSideSpace}, on a trigger cut to one row.
+ *
  * @docs-private
  */
 export function kbqResolveOverlapPanelSpace(context: KbqPanelSpaceContext, firstRowOffset: number): number | null {
@@ -143,6 +152,7 @@ export function kbqResolveOverlapPanelSpace(context: KbqPanelSpaceContext, first
 
 /**
  * Everything the first-row anchor decision needs beyond {@link KbqPanelSpaceContext}.
+ *
  * @docs-private
  */
 export interface KbqPanelAnchorOptions {
@@ -166,6 +176,7 @@ export interface KbqPanelAnchorOptions {
  *
  * `anchored` widens the height test by one row, so that deselecting a single option cannot bounce a panel
  * sitting right on the boundary across several hundred pixels.
+ *
  * @docs-private
  */
 export function kbqShouldAnchorPanelToFirstRow(

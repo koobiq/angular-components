@@ -26,13 +26,6 @@ export abstract class KbqModalRef<C = any, R = unknown> {
 
     abstract triggerCancel(): void;
 
-    // /**
-    //  * Return the ComponentRef of kbqContent when specify kbqContent as a Component
-    //  * Note: this method may return undefined if the Component has not ready yet.
-    //    (it only available after Modal's ngOnInit)
-    //  */
-    // abstract getContentComponentRef(): ComponentRef<{}>;
-
     /**
      * Return the component instance of kbqContent when specify kbqContent as a Component
      * Note: this method may return undefined if the Component has not ready yet.

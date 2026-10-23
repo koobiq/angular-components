@@ -85,6 +85,7 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
      * `[attr.aria-label]` binding on that element — which never reaches the aliased input. Falling
      * straight through to the localized default would replace the specific name they set ("Delete
      * file") with the generic one, so a name already on the element outranks the default.
+     *
      * @docs-private
      */
     protected get resolvedAriaLabel(): string {
@@ -100,6 +101,7 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
 
     /**
      * Value of the `disabled` and `aria-disabled` attributes.
+     *
      * @internal
      */
     protected readonly disabledAttribute = computed(() => this.disabled() || null);

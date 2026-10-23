@@ -219,7 +219,7 @@ The details of each area live in the rule files listed under [Agent Rules](#agen
 
 - This file holds what applies to any task. A rule about some files only goes to `.claude/rules/<topic>.md`, with the globs it covers in a `paths` frontmatter list: Claude Code loads it once it reads or edits a matching file, so it costs no context before.
 - List each rule file in the table below with a plain Markdown link, so that agents that read only this file can open it. An `@` import would load the file at startup.
-- A rule a linter can check goes to its config (`eslint.config.js`, `.stylelintrc.js`, the commitlint config, cspell); the text keeps only the reason.
+- A rule a linter can check goes to its config (`eslint.config.ts`, `.stylelintrc.js`, the commitlint config, cspell); the text keeps only the reason.
 - Write rules in English, one per bullet, each with its reason, and keep every rule in one place.
 - Claude Code reads this file natively from version 2.1.277 and stops doing so as soon as a `CLAUDE.md` or `CLAUDE.local.md` exists in the repository or a directory above it: add neither here, and keep personal notes in `~/.claude/CLAUDE.md`, which does not count.
 
@@ -295,5 +295,6 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 - Prefer clear naming and structure over comments. Add concise comments only to explain non-obvious rationale or constraints; never restate the code
 - Use `/** JSDoc */` for user-facing public API documentation and `//` for implementation comments. Omit details apparent from names, types, or signatures
+- Keep one comment block over a declaration rather than stacking a `//` note on its `/** */`, which reads as two unrelated comments: merge the note into the JSDoc when the declaration is hidden with `@docs-private` or `@internal`, and move it next to the code it explains when the JSDoc is public documentation. A TODO stays a `//` comment either way: the published typings carry JSDoc into every consumer's editor
 - Don't commit commented-out code or comments describing change history
 - Update or remove comments that become outdated because of your changes

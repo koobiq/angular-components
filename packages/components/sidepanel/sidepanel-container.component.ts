@@ -103,12 +103,14 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     /**
      * The state of the sidepanel: on screen, closing, or stacked under another one.
+     *
      * @internal
      */
     readonly animationState = signal<KbqSidepanelAnimationState>(KbqSidepanelAnimationState.Void);
 
     /**
      * Reports each state transition starting and ending.
+     *
      * @internal
      */
     readonly animationStateChanged = new Subject<KbqSidepanelAnimationEvent>();
@@ -210,6 +212,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     /**
      * Transform of the panel in its current state.
+     *
      * @internal
      */
     protected readonly stateTransform = computed((): string | null => {
@@ -233,6 +236,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     /**
      * Opacity of the panel in its current state.
+     *
      * @internal
      */
     protected readonly stateOpacity = computed((): number | null => {

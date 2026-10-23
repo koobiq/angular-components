@@ -138,6 +138,7 @@ export class KbqDlComponent {
     /**
      * Backing input of `dtWidth`. Public because a signal input cannot be `protected` without breaking
      * the binding for a `strictTemplates` consumer.
+     *
      * @docs-private
      */
     readonly dtWidthInput = input<number | null, unknown>(null, {
@@ -182,10 +183,11 @@ export class KbqDlComponent {
     protected readonly resizeDirection = signal<KbqResizerDirection>([1, 0]);
 
     /**
-     * @docs-private
      * Cursor shown over the separator: it advertises not just that the column is resizable but the
      * direction still available — grow-only at the minimum width, shrink-only at the maximum, `default` when there is
      * no room to move the border at all.
+     *
+     * @docs-private
      */
     protected readonly resizeCursor = signal<string>('col-resize');
 
@@ -203,10 +205,10 @@ export class KbqDlComponent {
         return width === null ? null : width <= this.verticalBreakpoint();
     });
 
-    /** @docs-private Effective vertical layout, combining the explicit `vertical` input and the auto-detection. */
+    /** Effective vertical layout, combining the explicit `vertical` input and the auto-detection. @docs-private */
     protected readonly isVertical = computed(() => this.vertical() ?? this.autoVertical() ?? false);
 
-    /** @docs-private Whether the column resize separator is currently rendered. */
+    /** Whether the column resize separator is currently rendered. @docs-private */
     protected readonly resizerVisible = computed(() => this.resizable() && !this.isVertical());
 
     /** Rendered term width used as the default minimum for both areas. */
@@ -218,7 +220,7 @@ export class KbqDlComponent {
     /** Effective minimum width of the `kbq-dd` area. */
     private readonly resolvedDdMinWidth = computed(() => this.ddMinWidth() ?? this.measuredDtWidth());
 
-    /** @docs-private Minimum `kbq-dt` width, clamped to a non-negative value. */
+    /** Minimum `kbq-dt` width, clamped to a non-negative value. @docs-private */
     protected readonly normalizedDtMinWidth = computed(() => Math.max(0, this.resolvedDtMinWidth()));
 
     protected get maxDtWidth(): number {
@@ -256,7 +258,7 @@ export class KbqDlComponent {
     private readonly resizeHandle = viewChild<ElementRef<HTMLElement>>('resizeHandle');
     private readonly terms = contentChildren(KbqDtComponent, { read: ElementRef });
 
-    /** @docs-private Resolved accessible name of the resize separator. */
+    /** Resolved accessible name of the resize separator. @docs-private */
     protected readonly resolvedResizerAriaLabel = computed(
         () => this.resizerAriaLabel() || this.a11yLocaleConfiguration().resizeColumns
     );
@@ -315,9 +317,10 @@ export class KbqDlComponent {
     }
 
     /**
-     * @docs-private
      * Demotes the separator's focus origin to the pointer when a mouse drag starts, so the keyboard-focus frame
      * hides for the whole drag and does not linger afterwards. Keyboard focus keeps the frame as usual.
+     *
+     * @docs-private
      */
     protected handleResizeStart(): void {
         const handle = this.resizeHandle()?.nativeElement;

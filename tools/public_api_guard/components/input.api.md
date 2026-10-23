@@ -234,7 +234,6 @@ export class KbqMinValidator implements Validator, OnChanges {
 // @public (undocumented)
 export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     constructor();
-    // (undocumented)
     protected readonly ariaValueMax: _angular_core.Signal<number | null>;
     protected readonly ariaValueMin: _angular_core.Signal<number | null>;
     readonly bigStep: _angular_core.InputSignalWithTransform<number, NumberInput>;

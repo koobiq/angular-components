@@ -39,25 +39,19 @@ export class KbqTable {
     private readonly platform = inject(Platform);
 
     /**
-     * Whether a line is drawn under every body row. Toggles the `kbq-table_bordered` class.
-     *
-     * @default false
+     * Whether a line is drawn under every body row. Toggles the `kbq-table_bordered` class. Defaults to `false`.
      */
     readonly border = input(false, { transform: booleanAttribute });
 
     /**
      * Whether the background change on row hover is suppressed. Toggles the `kbq-table_disable-hover`
-     * class. Use it when rows are not interactive and the highlight would be misleading.
-     *
-     * @default false
+     * class. Use it when rows are not interactive and the highlight would be misleading. Defaults to `false`.
      */
     readonly disableHover = input(false, { transform: booleanAttribute });
 
     /**
      * Whether the header stays visible while the table scrolls. Toggles the `kbq-table_sticky-header`
-     * class.
-     *
-     * @default false
+     * class. Defaults to `false`.
      */
     readonly stickyHeader = input(false, { transform: booleanAttribute });
 

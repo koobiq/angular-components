@@ -85,12 +85,14 @@ export const kbqInputLocaleConfigurationProvider = (
 
 /**
  * Default of `bigStep`.
+ *
  * @docs-private
  */
 export const BIG_STEP = 10;
 
 /**
  * Default of `step`.
+ *
  * @docs-private
  */
 export const SMALL_STEP = 1;
@@ -135,6 +137,7 @@ function getFractionDigits(value: number): number {
 
 /**
  * Decimal scale of `value`: `10 ** <number of fraction digits>`.
+ *
  * @docs-private
  */
 export function getPrecision(value: number): number {
@@ -144,6 +147,7 @@ export function getPrecision(value: number): number {
 /**
  * Adds two decimal numbers without IEEE-754 drift: both operands are rounded into integer space at
  * the larger of the two scales, added there, and scaled back.
+ *
  * @docs-private
  */
 export function add(value1: number, value2: number): number {
@@ -197,6 +201,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
     /**
      * Discriminator read by `kbq-stepper` to find the control it drives.
+     *
      * @docs-private
      */
     controlType: string = 'input-number';
@@ -282,7 +287,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
      */
     protected readonly ariaValueMin = computed(() => (Number.isFinite(this.min()) ? this.min() : null));
 
-    /** @see ariaValueMin */
+    /** The upper bound, reported the way `ariaValueMin` reports the lower one. */
     protected readonly ariaValueMax = computed(() => (Number.isFinite(this.max()) ? this.max() : null));
 
     protected get fractionSeparator(): KbqInputNumberLocaleConfiguration['fractionSeparator'] {
@@ -388,6 +393,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
     /**
      * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     *
      * @docs-private
      */
     onTouched = () => {};

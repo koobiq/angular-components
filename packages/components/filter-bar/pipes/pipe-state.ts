@@ -9,12 +9,12 @@ import { KbqBasePipe } from './base-pipe';
     selector: '[kbqPipeState]'
 })
 export class KbqPipeState<T> {
-    /** @docs-private */
     private readonly button = inject(KbqButton);
-    /** @docs-private */
     private readonly pipe = inject(KbqBasePipe);
-    /** KbqFilterBar instance
-     * @docs-private */
+
+    /**
+     * KbqFilterBar instance
+     */
     private readonly filterBar = inject(KBQ_FILTER_BAR_HOST);
 
     /**

@@ -63,11 +63,13 @@ export interface PipeStatesConfig {
     createPipe: (overrides: Partial<KbqPipe>) => KbqPipe;
     /** Spec factory that wraps pipes into a filter. */
     createFilter: (pipes: KbqPipe[]) => KbqFilter;
+
     /**
      * Produces a fresh, non-empty value valid for this pipe type. Used for the
      * required/cleanable/removable/disabled fixtures; the empty fixture always uses `null`.
      */
     nonEmptyValue: () => unknown;
+
     /**
      * Creates the fixture and resolves the filter-bar debug element. Invoked inside the shared
      * `beforeEach`, i.e. after the spec's own `TestBed.configureTestingModule` has run.

@@ -5,6 +5,7 @@ import { KbqCheckedState } from './checkbox';
 /**
  * Provider Expression that allows `KbqCheckable` to register as a `ControlValueAccessor`, so any host
  * applying it via `hostDirectives` gets `[(ngModel)]`/`formControl` support without wiring up its own.
+ *
  * @docs-private
  */
 const KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR: Provider = {
@@ -27,6 +28,7 @@ export const KBQ_CHECKABLE_CLICK_ACTION = new InjectionToken<KbqCheckableClickAc
 
 /**
  * Represents the different states that require custom transitions between them.
+ *
  * @docs-private
  */
 export enum TransitionCheckState {
@@ -67,6 +69,7 @@ export class KbqCheckable implements ControlValueAccessor {
 
     /**
      * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     *
      * @docs-private
      */
     onTouched: () => any = () => {};

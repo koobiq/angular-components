@@ -156,6 +156,7 @@ export class KbqToastComponent implements OnDestroy {
 
     /**
      * Plays the exit animation of a toast taken off the stack, then calls `done`.
+     *
      * @docs-private
      */
     leave(done: () => void): void {

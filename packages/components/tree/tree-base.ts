@@ -310,6 +310,7 @@ export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>>
      * Applies the data changes to the view container without running change detection, and reports
      * whether anything moved. Split out of `renderNodeChanges` so a subclass can update the state its
      * own template reads before the single change-detection pass, instead of running a second one.
+     *
      * @docs-private
      */
     protected applyNodeChanges(
@@ -438,6 +439,7 @@ export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>>
 
     /**
      * Called by a `KbqTreeNode` while it is being constructed, so `insertNode` can hand it its data.
+     *
      * @docs-private
      */
     registerNode(node: KbqTreeNode<T>): void {
@@ -644,6 +646,7 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     /**
      * Emits after the tree reused this node's view for a different data object, so a directive on the
      * same element can re-derive what it computed from the previous one.
+     *
      * @docs-private
      */
     readonly refreshed = new Subject<void>();
@@ -684,6 +687,7 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     /**
      * Called by the tree once `data` has been replaced on a reused view. State a subclass derived from
      * the previous node — its value, its level — is stale at this point and has to be recomputed.
+     *
      * @docs-private
      */
     refresh(): void {

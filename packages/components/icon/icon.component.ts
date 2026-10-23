@@ -47,6 +47,7 @@ const ICON_NAME_ATTRIBUTE = 'data-kbq-icon-name';
 export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnChanges {
     /**
      * Host providing error state for `autoColor`, when the icon sits inside one (e.g. a form field).
+     *
      * @docs-private
      */
     protected readonly errorStateContext = inject(KBQ_ICON_ERROR_STATE_CONTEXT, { optional: true });
@@ -106,6 +107,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
     /**
      * Whether `autoColor` takes the error color from the host's error state.
+     *
      * @docs-private
      */
     protected get autoColorError(): boolean {
@@ -121,6 +123,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      * Whether `color` is the error color. A signal of its own because the color class binding already reads
      * `color`: the host bindings of every icon in a view run in that view's reactive consumer, which finds a
      * signal read a second time by scanning all it has read so far, O(N²) per check across N icons.
+     *
      * @internal
      */
     protected readonly colorIsError = computed(() => this.color() === KbqComponentColors.Error);
@@ -145,6 +148,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
     /**
      * True when icon is being rendered as inline SVG.
+     *
      * @docs-private
      */
     // Starts from the DOM, not `false`: on a hydrated page the svg is already there, and `false`
@@ -153,6 +157,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
     /**
      * Name the inline SVG is resolved for, which is `iconName` however that was set.
+     *
      * @docs-private
      */
     protected get svgIconName(): string | undefined {

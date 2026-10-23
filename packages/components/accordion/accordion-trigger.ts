@@ -49,6 +49,7 @@ export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {
 
     /**
      * Whether the icon turns without motion.
+     *
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();

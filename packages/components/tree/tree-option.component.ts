@@ -257,6 +257,7 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
      * (`getValue`, `isDisabled`, `isExpandable`, descendants) is skipped — those accessors belong to the
      * consumer and must never be handed a node their data source has never seen. Its checkbox state and
      * selection are driven from the outside instead.
+     *
      * @docs-private
      */
     readonly selectAllRow = input<boolean, unknown>(false, { transform: booleanAttribute });
@@ -425,6 +426,7 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
      * The value and the checkbox state were derived from the node this view held before it was reused,
      * and `ngAfterContentInit` does not run again. A stale `value` drops the row out of the tree's
      * `renderedOptions`, so it renders but can no longer be focused, selected or copied.
+     *
      * @docs-private
      */
     override refresh(): void {
@@ -563,6 +565,7 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
      *
      * The "select all" row is navigable but is not a data node, and its label is a localized phrase —
      * answering type-ahead with it would hijack every query starting with that letter.
+     *
      * @docs-private
      */
     getLabel(): string {

@@ -165,28 +165,32 @@ export type KbqSelectOptions = Partial<{
      * If set to null or an empty string, the panel will grow to match the longest option's text.
      */
     panelWidth: KbqPanelWidth;
+
     /**
      * Minimum width of the panel. If minWidth is larger than window width or property set to null, it will be ignored.
      */
     panelMinWidth: KbqPanelMinWidth;
+
     /**
      * Maximum width of the panel. Caps growth by content only — it never overrides the trigger width or an
      * explicit `panelWidth`. If null, the `--kbq-panel-size-width-max` token applies.
      */
     panelMaxWidth: KbqPanelMaxWidth;
+
     /**
      * Maximum height of the panel's scrollable option list. Does not include the search field or the
      * footer. If null, the `--kbq-select-panel-size-max-height` token applies.
      */
     panelMaxHeight: KbqPanelMaxHeight;
+
     /**
      * Whether to enable hiding search by default if options is less than minimum.
      *
-     * - `'auto'` uses `KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD` as min value.
+     * - `'auto'` uses {@link KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD} as min value.
      * - number - will enables search hiding and uses value as min.
-     * @see KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD
      */
     searchMinOptionsThreshold: 'auto' | number;
+
     /**
      * Decides which selected options the projected `KbqCleaner` removes. Disabled options are kept when
      * this is not set. Overridden per instance by the `clearPredicate` attribute.
@@ -474,6 +478,7 @@ export class KbqSelect
 
     /**
      * Reference to the optional cleaner element for clearing selection.
+     *
      * @docs-private
      */
     readonly cleaner = contentChild(KbqCleaner, { descendants: false });
@@ -496,6 +501,7 @@ export class KbqSelect
      * Kept as a separate list rather than folded into `options` because `options` is public API — the
      * filter-bar pipes, `firstFiltered` and the tallies below all mean "the options the consumer
      * projected", and a synthetic entry there would quietly corrupt every one of them.
+     *
      * @docs-private
      */
     readonly navigableOptions = new QueryList<KbqOption>();
@@ -519,6 +525,7 @@ export class KbqSelect
 
     /**
      * Formats the hidden items counter.
+     *
      * @param hiddenItemsText Template string with the `{{ number }}` placeholder.
      * @param hiddenItems Number of hidden items to display.
      */
@@ -589,8 +596,7 @@ export class KbqSelect
      * Automatically enables search hiding if value provided, even if `defaultOptions.searchMinOptionsThreshold` is provided.
      *
      * Accepts `'auto'`, which resolves to `KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD`; the getter therefore
-     * reports the resolved number, never `'auto'`.
-     * @default undefined
+     * reports the resolved number, never `'auto'`. Defaults to `undefined`.
      */
     readonly searchMinOptionsThreshold = computed<number | undefined>(
         () =>
@@ -679,6 +685,7 @@ export class KbqSelect
     /**
      * Event that emits whenever the raw value of the select changes. This is here primarily
      * to facilitate the two-way binding for the `value` input.
+     *
      * @docs-private
      */
     readonly valueChange = output<any>();
@@ -853,6 +860,7 @@ export class KbqSelect
     /**
      * `panelMaxHeight` rendered as a CSS length for the `--kbq-select-panel-size-max-height` token.
      * A non-finite value (e.g. `null`) leaves the stylesheet default in place.
+     *
      * @docs-private
      */
     protected readonly panelMaxHeightToken = computed(() => kbqResolvePanelMaxHeightToken(this.panelMaxHeight()));
@@ -1008,6 +1016,7 @@ export class KbqSelect
 
     /**
      * Whether the cleaner (clear button) should be shown.
+     *
      * @docs-private
      */
     get canShowCleaner(): boolean {
@@ -1016,6 +1025,7 @@ export class KbqSelect
 
     /**
      * Whether the cleaner still has an option to remove.
+     *
      * @docs-private
      */
     get canClear(): boolean {
@@ -1075,6 +1085,7 @@ export class KbqSelect
      * that wrapped past the single line is still in the DOM. Its remove control has to leave the tab order
      * with it, or focus lands on something the user cannot see — and the browser scrolls the clipped list
      * to reveal it, shifting the row that is on screen.
+     *
      * @docs-private
      */
     protected isTriggerValueVisible(index: number): boolean {
@@ -1151,6 +1162,7 @@ export class KbqSelect
 
     /**
      * Id of the listbox the trigger owns, referenced by `aria-controls` while the panel is open.
+     *
      * @docs-private
      */
     protected readonly panelId = `${this.uid}-panel`;
@@ -1160,6 +1172,7 @@ export class KbqSelect
      *
      * A `<label for>` does not associate with a custom element, so the relationship is expressed the
      * other way around — from the control to the label.
+     *
      * @docs-private
      */
     protected get ariaLabelledby(): string | null {
@@ -1173,6 +1186,7 @@ export class KbqSelect
      * contents — the placeholder is rendered as a plain `<span>`, so it names nothing. Falling back to it
      * keeps the ordinary label-less select named. A form-field label still wins: it names the select
      * through `aria-labelledby`, which takes precedence over `aria-label`.
+     *
      * @docs-private
      */
     protected get resolvedAriaLabel(): string | null {
@@ -1186,6 +1200,7 @@ export class KbqSelect
      * The same container is both the `listbox` and the projection target for those states, and a `listbox`
      * is required to own `option` children. `aria-busy` says the list is still being filled in rather than
      * malformed, and keeps it from being announced as an option list with nothing in it.
+     *
      * @docs-private
      */
     protected get isOptionsListBusy(): boolean {
@@ -1440,6 +1455,7 @@ export class KbqSelect
 
     /**
      * Clears the options `clearPredicate` accepts, which by default leaves the disabled ones selected.
+     *
      * @docs-private
      */
     clear(): void {
@@ -1453,12 +1469,14 @@ export class KbqSelect
 
     /**
      * Called when the value changes. Needed to properly implement `ControlValueAccessor`.
+     *
      * @docs-private
      */
     onChange: (value: any) => void = () => {};
 
     /**
      * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     *
      * @docs-private
      */
     onTouched = () => {};
@@ -1657,6 +1675,7 @@ export class KbqSelect
 
     /**
      * Checks if the current direction is RTL (right-to-left).
+     *
      * @returns True if RTL mode is active, false otherwise.
      */
     isRtl(): boolean {
@@ -1666,6 +1685,7 @@ export class KbqSelect
     /**
      * Handles all keyboard events for the select.
      * Delegates to appropriate handler based on panel state.
+     *
      * @param event The keyboard event to handle.
      */
     handleKeydown(event: KeyboardEvent): void {
@@ -1775,6 +1795,7 @@ export class KbqSelect
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     onContainerClick(event?: MouseEvent) {
@@ -1790,6 +1811,7 @@ export class KbqSelect
 
     /**
      * Handles removal of a matched item in the trigger.
+     *
      * @param option The option to remove from selection.
      * @param $event The mouse or keyboard event that triggered the removal.
      */
@@ -1847,18 +1869,20 @@ export class KbqSelect
         }
     }
 
-    // TODO: nothing in the library uses it; kept as public API at the DS-2196 review. Document or deprecate it.
     /**
      * Gets the height of a single option item.
+     *
      * @returns The height in pixels of the first option, or 0 if no options exist.
      */
     getItemHeight(): number {
+        // TODO: nothing in the library uses it; kept as public API at the DS-2196 review. Document or deprecate it.
         return this.options.first ? this.options.first.getHeight() : 0;
     }
 
     /**
      * Handles click events on the select.
      * Closes the panel if click is inside the footer.
+     *
      * @param $event The mouse event to handle.
      */
     handleClick($event: MouseEvent) {
@@ -2299,6 +2323,7 @@ export class KbqSelect
     /**
      * Sets the selected option based on a value.
      * If no option can be found with the designated value, the select trigger is cleared.
+     *
      * @param value The value to select. Can be a single value or array for multiple selection.
      */
     private setSelectionByValue(value: any | any[]): void {
@@ -2341,6 +2366,7 @@ export class KbqSelect
 
     /**
      * Finds the option that corresponds to the given value.
+     *
      * @param value The value to find.
      * @returns The matching option or undefined if not found.
      */
@@ -2356,6 +2382,7 @@ export class KbqSelect
 
     /**
      * Finds and selects an option based on its value.
+     *
      * @returns Option that has the corresponding value, when it is currently rendered.
      */
     private selectValue(value: any): KbqOption | undefined {

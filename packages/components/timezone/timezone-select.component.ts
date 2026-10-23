@@ -41,12 +41,18 @@ export function getKbqTimezoneSelectMultipleError(): Error {
     return Error('`kbq-timezone-select` does not support multiple selection.');
 }
 
-/** default configuration of timezone
- * @docs-private */
+/**
+ * default configuration of timezone
+ *
+ * @docs-private
+ */
 export const KBQ_TIMEZONE_DEFAULT_LOCALE_CONFIGURATION: KbqTimezoneLocaleConfiguration = ruRULocaleData.timezone;
 
-/** Injection Token for providing the default configuration of timezone
- * @docs-private */
+/**
+ * Injection Token for providing the default configuration of timezone
+ *
+ * @docs-private
+ */
 export const KBQ_TIMEZONE_LOCALE_CONFIGURATION = new InjectionToken<KbqTimezoneLocaleConfiguration>(
     'KbqTimezoneLocaleConfiguration',
     { factory: () => KBQ_TIMEZONE_DEFAULT_LOCALE_CONFIGURATION }

@@ -49,7 +49,6 @@ import { filter, startWith, takeUntil } from 'rxjs/operators';
 import { KbqTagTextControl } from './tag-text-control';
 import { KbqTag, KbqTagDragData, KbqTagEditChange, KbqTagEvent, KbqTagFocusEvent } from './tag.component';
 
-// Increasing integer for generating unique ids for tag-list components.
 /** Change event object that is emitted when the tag list value has changed. */
 export class KbqTagListChange {
     constructor(
@@ -207,12 +206,12 @@ export class KbqTagList
         return !!this.cleaner()?.canShow;
     }
 
-    // Kept at the DS-2196 review, like `KbqButtonToggle.markForCheck()`, which the migration guide promises stays.
     /**
      * Marks the list for a change-detection check.
      *
      * Kept for back-compatibility. The cleaner's visibility is derived from signals of the list and its
      * tags, so the list re-renders on its own and nothing in the library calls this any more.
+     * Kept at the DS-2196 review, like `KbqButtonToggle.markForCheck()`, which the migration guide promises stays.
      *
      * @docs-private
      */
@@ -222,6 +221,7 @@ export class KbqTagList
 
     /**
      * Whether the cleaner still has a tag to remove, and so is worth showing at all.
+     *
      * @docs-private
      */
     get canClear(): boolean {
@@ -249,18 +249,21 @@ export class KbqTagList
     /**
      * Implemented as part of KbqFormFieldControl. Set with `[value]`, by the form control and by the rendered
      * tags.
+     *
      * @docs-private
      */
     readonly value = linkedSignal(() => this.valueInput());
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly id = computed(() => this.registeredInput()?.id() ?? this.uid);
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
@@ -270,6 +273,7 @@ export class KbqTagList
 
     /**
      * Implemented as part of KbqFormFieldControl. Taken from the `kbqTagInput` when there is one.
+     *
      * @docs-private
      */
     readonly placeholder = computed(() => {
@@ -295,6 +299,7 @@ export class KbqTagList
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly empty = computed(() => {
@@ -311,6 +316,7 @@ export class KbqTagList
 
     /**
      * Implemented as part of KbqFormFieldControl. Also set by the bound form control.
+     *
      * @docs-private
      */
     readonly disabled = linkedSignal(() => this.disabledInput());
@@ -389,6 +395,7 @@ export class KbqTagList
     /**
      * Event that emits whenever the raw value of the tag-list changes. This is here primarily
      * to facilitate the two-way binding for the `value` input.
+     *
      * @docs-private
      */
     readonly valueChange = output<any>();

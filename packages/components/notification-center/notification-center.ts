@@ -93,7 +93,7 @@ const SCROLLED_TO_BOTTOM_AUDIT_TIME = 100;
  * 100% zoom one device pixel is wider than one CSS pixel, which scales the residual by ~1/zoom and
  * pushes it past 1. 2px covers zoom down to 50% and is imperceptible as a trigger threshold.
  *
- * @see https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight
+ * See [`Element.scrollHeight`](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight) on MDN.
  */
 const SCROLLED_TO_BOTTOM_TOLERANCE = 2;
 
@@ -180,8 +180,11 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 
     private readonly carrier = inject(KbqLocaleOverridesDirective, { self: true });
 
-    /** Accessible names for the icon-only toolbar buttons.
-     * @docs-private */
+    /**
+     * Accessible names for the icon-only toolbar buttons.
+     *
+     * @docs-private
+     */
     protected readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
 
     /**
@@ -196,19 +199,28 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION
     );
 
-    /** Id of the panel heading, referenced by the host's `aria-labelledby`.
-     * @docs-private */
+    /**
+     * Id of the panel heading, referenced by the host's `aria-labelledby`.
+     *
+     * @docs-private
+     */
     protected readonly titleId = this.idGenerator.getId('kbq-notification-center-title-');
 
-    /** Id of the panel element, set by the trigger so it can point `aria-controls` at it.
-     * @docs-private */
+    /**
+     * Id of the panel element, set by the trigger so it can point `aria-controls` at it.
+     *
+     * @docs-private
+     */
     protected panelId: string;
 
     /** @docs-private */
     protected popoverMode: boolean;
 
-    /** Distance in pixels from the bottom of the list at which the next page is requested.
-     * @docs-private */
+    /**
+     * Distance in pixels from the bottom of the list at which the next page is requested.
+     *
+     * @docs-private
+     */
     protected scrolledToBottomOffset: number = 0;
 
     /** Re-measures the list outside of a scroll event: on first render and whenever the state changes. */
@@ -220,6 +232,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     /**
      * Text of the panel's single live region. The panel keeps one persistent region and only changes
      * its text, because a region inserted together with its content is not reliably announced.
+     *
      * @docs-private
      */
     protected get statusMessage(): string {
@@ -338,16 +351,22 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         this.scheduleScrolledToBottomCheck();
     }
 
-    /** Removes a whole day group, keeping keyboard focus inside the panel.
-     * @docs-private */
+    /**
+     * Removes a whole day group, keeping keyboard focus inside the panel.
+     *
+     * @docs-private
+     */
     protected removeGroup(group: KbqNotificationsGroup): void {
         this.restoreFocusAfterRemove();
 
         this.service.removeGroup(group);
     }
 
-    /** Removes every notification, keeping keyboard focus inside the panel.
-     * @docs-private */
+    /**
+     * Removes every notification, keeping keyboard focus inside the panel.
+     *
+     * @docs-private
+     */
     protected removeAll(): void {
         this.restoreFocusAfterRemove();
 
@@ -392,8 +411,11 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         return Array.from(this.elementRef.nativeElement.querySelectorAll<HTMLElement>(REMOVE_BUTTON_SELECTOR));
     }
 
-    /** Retries loading the next page from the bottom error row.
-     * @docs-private */
+    /**
+     * Retries loading the next page from the bottom error row.
+     *
+     * @docs-private
+     */
     protected retryLoadMore(): void {
         // The retry button is about to unmount; keep keyboard focus inside the panel instead of
         // letting it fall back to <body>.
@@ -457,8 +479,10 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         );
     }
 
-    /** Whether the list is scrolled to within `scrolledToBottomOffset` pixels of the bottom.
-     * Sub-pixel measurement error is absorbed by `SCROLLED_TO_BOTTOM_TOLERANCE`. */
+    /**
+     * Whether the list is scrolled to within `scrolledToBottomOffset` pixels of the bottom.
+     * Sub-pixel measurement error is absorbed by `SCROLLED_TO_BOTTOM_TOLERANCE`.
+     */
     private isScrolledToBottom(): boolean {
         const { scrollTop, clientHeight, scrollHeight } = this.scrollContainer().getNativeElement();
 
@@ -535,8 +559,11 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         this.isTrapFocus = isTrapFocus;
     }
 
-    /** Closes the panel on `Escape` inside it, unless a control there spent the key closing a popup of its own.
-     * @docs-private */
+    /**
+     * Closes the panel on `Escape` inside it, unless a control there spent the key closing a popup of its own.
+     *
+     * @docs-private
+     */
     escapeHandler(event?: KeyboardEvent) {
         if (event?.defaultPrevented) return;
 
@@ -566,13 +593,20 @@ export class KbqNotificationCenterTrigger
     /** @docs-private */
     protected readonly service = inject(KbqNotificationCenterService);
 
-    /** Id handed to the panel so `aria-controls` can point at it while it is open.
-     * @docs-private */
+    /**
+     * Id handed to the panel so `aria-controls` can point at it while it is open.
+     *
+     * @docs-private
+     */
     protected readonly panelId = inject(_IdGenerator).getId('kbq-notification-center-panel-');
 
-    // not used
-    /** @docs-private */
+    /**
+     * Not used.
+     *
+     * @docs-private
+     */
     arrow: boolean = false;
+
     /** @docs-private */
     customClass: string;
     /** @docs-private */
@@ -804,9 +838,11 @@ export class KbqNotificationCenterTrigger
         }
     }
 
-    /** Updates the current position.
+    /**
+     * Updates the current position.
      *
-     * @docs-private */
+     * @docs-private
+     */
     updatePosition(reapplyPosition: boolean = false) {
         this.overlayRef = this.createOverlay();
 

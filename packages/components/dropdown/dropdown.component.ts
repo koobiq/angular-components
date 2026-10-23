@@ -255,6 +255,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
     /**
      * `panelMinWidth` as a CSS length for `--kbq-dropdown-size-container-width-min`.
+     *
      * @docs-private
      */
     protected readonly panelMinWidthToken = computed(() => {
@@ -288,6 +289,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
     /**
      * Dropdown content that will be rendered lazily.
+     *
      * @docs-private
      */
     readonly lazyContent = contentChild(KbqDropdownContent);
@@ -297,6 +299,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
     /**
      * Whether the `closed` being emitted closes the panels this one is nested in too, see `closeChain`.
+     *
      * @internal
      */
     closingChain = false;
@@ -469,6 +472,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      * panel. Meanwhile, if a different nested trigger is hovered, `switchTarget()` emits it —
      * immediately if it's outside the triangle, otherwise after a grace period (see
      * `NESTED_HOVER_SWITCH_DELAY`). Replaces any safe area already being tracked.
+     *
      * @docs-private
      */
     activateSafeArea(owner: KbqDropdownItem, origin: KbqPoint, getPanelRect: () => DOMRect, onExit: () => void): void {
@@ -532,6 +536,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
     /**
      * Stops tracking the current safe area, if any.
+     *
      * @docs-private
      */
     deactivateSafeArea(): void {
@@ -550,6 +555,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
     /**
      * Whether a safe area is currently being tracked.
+     *
      * @docs-private
      */
     isSafeAreaActive(): boolean {
@@ -558,6 +564,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
     /**
      * Whether `item` is the nested trigger currently protected by an active safe area.
+     *
      * @docs-private
      */
     isSafeAreaOwner(item: KbqDropdownItem): boolean {
@@ -567,6 +574,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     /**
      * Stream that emits the sibling trigger that should open once a forced safe-area switch has
      * closed the trigger it was protecting.
+     *
      * @docs-private
      */
     onSwitchTarget(): Observable<KbqDropdownItem> {
@@ -634,6 +642,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
     /**
      * Applies the panel's initial focus, see `applyInitialFocus`.
+     *
      * @param origin Action from which the focus originated. Used to set the correct styling.
      */
     focusFirstItem(origin: FocusOrigin = 'program'): void {
@@ -685,6 +694,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      * Moves focus back into the projected search field, reporting whether there was one. A nested panel
      * restores focus through this instead of onto its trigger item, which would strand the caret outside
      * the query.
+     *
      * @docs-private
      */
     restoreFocus(): boolean {
@@ -717,6 +727,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     /**
      * Lends this panel the parent's items, for a submenu whose own items were initialised as children of
      * the root panel. Ignored once the panel has items of its own.
+     *
      * @docs-private
      */
     adoptItems(items: readonly KbqDropdownItem[]): void {
@@ -726,8 +737,10 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     /**
      * Adds classes to the dropdown panel based on its position. Can be used by
      * consumers to add specific styling based on the position.
+     *
      * @param posX Position of the dropdown along the x axis.
      * @param posY Position of the dropdown along the y axis.
+     *
      * @docs-private
      */
     setPositionClasses(
@@ -739,6 +752,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
     /**
      * Called by the trigger when it attaches the panel and when it detaches it.
+     *
      * @docs-private
      */
     setOpened(opened: boolean): void {
@@ -768,6 +782,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     /**
      * Emits `closed` for an activated item, which closes every panel up to the root. Its reason follows the focus
      * origin, so after keyboard navigation it is the `'keydown'` that Escape reports for closing one panel alone.
+     *
      * @internal
      */
     closeChain(reason: DropdownCloseReason): void {

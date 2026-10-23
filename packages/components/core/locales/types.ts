@@ -139,6 +139,7 @@ export type KbqUsernameLocaleConfiguration = {
 export type KbqDatepickerLocaleConfiguration = {
     /** Placeholder of the date input, in the locale's own notation (e.g. `дд.мм.гггг`). */
     placeholder: string;
+
     /**
      * Parsing/formatting pattern for the date input.
      *
@@ -284,6 +285,7 @@ export type KbqNumberFormatOptions = {
  *
  * Maps each rounding unit to its localized label and carries the surrounding
  * formatting options.
+ *
  * @docs-private
  */
 export type KbqNumberRoundingLocaleConfiguration = {

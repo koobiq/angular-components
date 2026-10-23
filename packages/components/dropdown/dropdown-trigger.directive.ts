@@ -75,8 +75,11 @@ export function KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY(scrollDispatcher: ScrollDis
     return kbqRepositionScrollStrategyFactory(scrollDispatcher);
 }
 
-// Redundant to the root factory of the token; kept so an app can restore the default under its own override (#DS-2196).
-/** @docs-private */
+/**
+ * Redundant to the root factory of the token; kept so an app can restore the default under its own override (#DS-2196).
+ *
+ * @docs-private
+ */
 export const KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_DROPDOWN_SCROLL_STRATEGY,
     deps: [ScrollDispatcher],
@@ -170,16 +173,17 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     /**
      * Element whose width the panel should match. Defaults to the trigger itself.
      * Useful when the trigger is only a part of a larger control, e.g. `kbq-split-button`.
+     *
      * @docs-private
      */
     widthOrigin?: KbqPanelWidthOrigin;
 
-    // `model()` because `kbq-navbar-item` writes it.
     /** Position offset of the dropdown in the X axis. */
+    // `model()` because `kbq-navbar-item` writes it.
     readonly offsetX = model<number | undefined>(undefined);
 
-    // `undefined` means "use the computed offset", so it must not be coerced to `NaN`.
     /** Position offset of the dropdown in the Y axis. */
+    // `undefined` means "use the computed offset", so it must not be coerced to `NaN`.
     readonly offsetY = input<number | undefined, unknown>(undefined, {
         transform: (value) => (value == null ? undefined : numberAttribute(value))
     });
@@ -205,16 +209,16 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
      */
     readonly autoFocus = input(true, { alias: 'kbqDropdownTriggerAutoFocus', transform: booleanAttribute });
 
-    // `model()` because `KbqOptionActionComponent` writes it.
     /**
      * Whether focus should be restored when the menu is closed.
      * Note that disabling this option can have accessibility implications
      * and it's up to you to manage focus, if you decide to turn it off.
      */
+    // `model()` because `KbqOptionActionComponent` writes it.
     readonly restoreFocus = model(true, { alias: 'kbqDropdownTriggerRestoreFocus' });
 
-    // Not `input.required`, so that `throwKbqDropdownMissingError` reports a missing panel.
     /** References the dropdown instance that the trigger is associated with. */
+    // Not `input.required`, so that `throwKbqDropdownMissingError` reports a missing panel.
     readonly dropdown = input<KbqDropdownPanel>(undefined as unknown as KbqDropdownPanel, {
         alias: 'kbqDropdownTriggerFor'
     });
@@ -247,6 +251,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     /**
      * `aria-expanded` only where a role allows it: on a generic `<div>`/`<span>` it fails `aria-allowed-attr`.
+     *
      * @docs-private
      */
     protected get ariaExpanded(): boolean | null {
@@ -309,6 +314,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     /**
      * Subscribes the triggers of a panel to its `closed` once, so that an emission closes the triggers that had the
      * panel open when it began: a trigger that a `dropdownClosed` handler opens on the way stays open.
+     *
      * @returns Teardown that unbinds the trigger.
      */
     private static bindToPanel(dropdown: KbqDropdownPanel, trigger: KbqDropdownTrigger): () => void {
@@ -724,6 +730,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     /**
      * This method builds the configuration object needed to create the overlay, the OverlayState.
+     *
      * @returns OverlayConfig
      */
     private getOverlayConfig(): OverlayConfig {
@@ -758,6 +765,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     /**
      * Sets the appropriate positions on a position strategy
      * so the overlay connects with the trigger correctly.
+     *
      * @param positionStrategy Strategy whose position to update.
      */
     private setPosition(positionStrategy: FlexibleConnectedPositionStrategy) {

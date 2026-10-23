@@ -126,6 +126,7 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
 
     /**
      * Whether the sidebar opens and closes without motion.
+     *
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
@@ -133,6 +134,7 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
     /**
      * Whether the sidebar moves between the opened and closed states: only then is its width transitioned, so
      * the first render and a width written from outside, such as by a splitter, apply at once.
+     *
      * @docs-private
      */
     protected readonly toggling = signal(false);

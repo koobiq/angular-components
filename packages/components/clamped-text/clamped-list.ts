@@ -28,14 +28,14 @@ export class KbqClampedList<T> implements KbqClamped {
     readonly isCollapsed = model<boolean>(true);
     /** The list of items to display. */
     readonly items = input<T[]>([]);
+
     /**
-     * Maximum number of items visible in collapsed state.
-     * @default 10
+     * Maximum number of items visible in collapsed state. Defaults to `10`.
      */
     readonly collapsedVisibleCount = input(10, { transform: numberAttribute });
+
     /**
-     * Minimum number of hidden items required to show the toggle trigger.
-     * @default 6
+     * Minimum number of hidden items required to show the toggle trigger. Defaults to `6`.
      */
     readonly hiddenThreshold = input(6, { transform: numberAttribute });
 

@@ -27,6 +27,7 @@ export const KBQ_ANIMATIONS_CONFIG = new InjectionToken<KbqAnimationsConfig>('KB
  * Whether Koobiq components render state changes without motion: turned off by `KBQ_ANIMATIONS_CONFIG`,
  * by `provideNoopAnimations()`, or by the user's `prefers-reduced-motion` setting. Reads the setting once,
  * so a component calls it in its injection context.
+ *
  * @docs-private
  */
 export function kbqAnimationsDisabled(): boolean {
@@ -44,6 +45,7 @@ export function kbqAnimationsDisabled(): boolean {
  * Settles once the CSS animations and transitions running on an element have finished, cancelled ones
  * included, or once `timeout` milliseconds have passed when it is given: a paused animation never finishes.
  * `null` when none runs — animations turned off, reduced motion, no Web Animations API (the server, jsdom).
+ *
  * @docs-private
  */
 export function kbqAnimationsSettled(element: Element | null | undefined, timeout?: number): Promise<void> | null {
@@ -69,6 +71,7 @@ export function kbqAnimationsSettled(element: Element | null | undefined, timeou
  * have finished, and right after that render when none runs (see `kbqAnimationsSettled`). An animation
  * that does not finish in `MAX_ANIMATION_TIMEOUT` (a paused one) is no longer waited for. On the server,
  * where nothing renders, calls back in a microtask. The wait ends with the injector; `destroy()` cancels it.
+ *
  * @docs-private
  */
 export function kbqAfterAnimations(

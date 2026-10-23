@@ -12,6 +12,7 @@ export const KBQ_MODAL_DATA = new InjectionToken<unknown>('KbqModalData');
 
 /**
  * A builder used for managing service creating modals
+ *
  * @docs-private
  */
 export class ModalBuilderForService {

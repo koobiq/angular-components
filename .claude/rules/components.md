@@ -21,8 +21,9 @@ paths:
 
 ## JSDoc
 
-- ESLint checks the JSDoc of `packages/components` with `eslint-plugin-jsdoc`. TypeScript reads a `@word` that starts a line as a tag and keeps the text after it in that tag, so an unknown tag, a block `@link` (write a Markdown link or `{@link Name}`), `@property` or `@todo` takes that text out of the generated docs.
-- `docs:api-gen` compiles the JSDoc with the MDX compiler of the docs pages, and its errors name the declaration: `{@link Name}` becomes inline code, a block of code has to stand on its own rather than inside a list or a quote, and an `@example` without a fence of its own is taken as TypeScript. The MDX rules of the pages apply to JSDoc prose too: a literal `{` or `<` is escaped with a backslash (`Array\<string>`), HTML outside the compiler's short element list is rejected, and `<br />` needs the slash.
+- ESLint checks the JSDoc of `packages/components` with the recommended set of `eslint-plugin-jsdoc`, less its requirements, and keeps one layout of a block; the setup lives in `tools/eslint/jsdoc.ts`. TypeScript reads any `@word` after a space as a tag, in the middle of a line too, and keeps the text after it in that tag, while the docs show only the description, `@deprecated`, `@example`, `@param` and `@returns`. So ESLint allows these tags and `@docs-private` and `@internal`, which hide a declaration: any other one, a standard JSDoc tag such as `@see`, `@default`, `@description` or a block `@link` (write a Markdown link or `{@link Name}`) included, takes its text out of the generated docs. So does `@docs-private` written before the description: put it after the text.
+- End the description of an input or a field with its default, ``Defaults to `true`.``: the API tab shows a field of a class or an interface without its initializer, and one wording for every member reads the same in the docs and in the editor.
+- `docs:api-gen` compiles the JSDoc with the MDX compiler of the docs pages, and its errors name the declaration: `{@link Name}` becomes inline code, and a block of code has to stand on its own rather than inside a list or a quote. The MDX rules of the pages apply to JSDoc prose too: a literal `{` or `<` is escaped with a backslash (`Array\<string>`), HTML outside the compiler's short element list is rejected, and `<br />` needs the slash.
 
 ## Angular
 

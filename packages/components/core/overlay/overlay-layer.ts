@@ -216,8 +216,10 @@ export class KbqOverlayLayer implements OnDestroy {
     }
 
     /**
-     * @internal Created with the first panel, so an element that never opens one is left untouched. Lives inside the
-     * host to share its stacking context with a bar rendered in the same scrolling viewport.
+     * Created with the first panel, so an element that never opens one is left untouched. Lives inside the host to
+     * share its stacking context with a bar rendered in the same scrolling viewport.
+     *
+     * @internal
      */
     getContainerElement(): HTMLElement {
         if (!this.container) {

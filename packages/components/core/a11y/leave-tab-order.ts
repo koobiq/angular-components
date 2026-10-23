@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
  * @param host Element holding the widget's tab stop.
  * @param renderedTabIndex Tab index the host binding renders, `null` for none. Read when the host is put back.
  * @param destroyRef Lifetime of the widget, which also ends a pending restore.
+ *
  * @docs-private
  */
 export function kbqLeaveTabOrderOnTabOut(

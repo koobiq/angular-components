@@ -13,9 +13,8 @@ export const KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION = new InjectionToken<KbqFileUp
 );
 
 /**
- * Utility provider. Only the labels you pass are overridden; the rest keep following the active locale.
- *
- * @see KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION
+ * Utility provider of {@link KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION}. Only the labels you pass are overridden;
+ * the rest keep following the active locale.
  */
 export const kbqFileUploadLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqFileUploadLocaleConfiguration>

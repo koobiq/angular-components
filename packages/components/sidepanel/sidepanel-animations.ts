@@ -12,6 +12,7 @@ export enum KbqSidepanelAnimationState {
 
 /**
  * A state transition of the sidepanel container: started, or ended — finished, or interrupted by the next one.
+ *
  * @internal
  */
 export interface KbqSidepanelAnimationEvent {

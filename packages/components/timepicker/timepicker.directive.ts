@@ -98,12 +98,18 @@ export const KBQ_TIMEPICKER_VALIDATORS: any = {
     multi: true
 };
 
-/** Default configuration of the timepicker.
- * @docs-private */
+/**
+ * Default configuration of the timepicker.
+ *
+ * @docs-private
+ */
 export const KBQ_TIMEPICKER_DEFAULT_LOCALE_CONFIGURATION: KbqTimepickerLocaleConfiguration = ruRULocaleData.timepicker;
 
-/** Injection token for providing the default configuration of the timepicker.
- * @docs-private */
+/**
+ * Injection token for providing the default configuration of the timepicker.
+ *
+ * @docs-private
+ */
 export const KBQ_TIMEPICKER_LOCALE_CONFIGURATION = new InjectionToken<KbqTimepickerLocaleConfiguration>(
     'KbqTimepickerLocaleConfiguration',
     { factory: () => KBQ_TIMEPICKER_DEFAULT_LOCALE_CONFIGURATION }
@@ -181,12 +187,14 @@ export class KbqTimepicker<D>
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly focused = this.focusedValue.asReadonly();
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     controlType: string = 'timepicker';
@@ -199,6 +207,7 @@ export class KbqTimepicker<D>
 
     /**
      * Implemented as part of KbqFormFieldControl. Defaults to the localized pattern of `format`.
+     *
      * @docs-private
      */
     readonly placeholder = computed(() => this.placeholderInput() ?? this.timeFormatPlaceholder);
@@ -220,6 +229,7 @@ export class KbqTimepicker<D>
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
@@ -279,6 +289,7 @@ export class KbqTimepicker<D>
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly empty = this.emptyValue.asReadonly();
@@ -527,6 +538,7 @@ export class KbqTimepicker<D>
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     onContainerClick() {
@@ -878,7 +890,8 @@ export class KbqTimepicker<D>
     }
 
     /**
-     * @description Get params for arrow-keys (up/down) time value edit.
+     * Get params for arrow-keys (up/down) time value edit.
+     *
      * @param cursorPosition Current cursor position in timeString
      */
     private getTimeEditMetrics(cursorPosition: number): {
@@ -913,7 +926,7 @@ export class KbqTimepicker<D>
     }
 
     /**
-     * @description Create time string for displaying inside input element of UI
+     * Create time string for displaying inside input element of UI
      */
     private getTimeStringFromDate(value: D | null, timeFormat: TimeFormats): string {
         if (!value || !this.dateAdapter.isValid(value)) {

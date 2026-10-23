@@ -13,9 +13,8 @@ export const KBQ_POPOVER_CONFIRM_LOCALE_CONFIGURATION = new InjectionToken<KbqPo
 );
 
 /**
- * Utility provider. Only the strings you pass are overridden; the rest keep following the active locale.
- *
- * @see KBQ_POPOVER_CONFIRM_LOCALE_CONFIGURATION
+ * Utility provider of {@link KBQ_POPOVER_CONFIRM_LOCALE_CONFIGURATION}. Only the strings you pass are overridden;
+ * the rest keep following the active locale.
  */
 export const kbqPopoverConfirmLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqPopoverConfirmLocaleConfiguration>

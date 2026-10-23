@@ -96,8 +96,11 @@ export function KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY(scrollDispatcher: Scrol
     return kbqRepositionScrollStrategyFactory(scrollDispatcher);
 }
 
-// Redundant to the root factory of the token; kept so an app can restore the default under its own override (#DS-2196).
-/** @docs-private */
+/**
+ * Redundant to the root factory of the token; kept so an app can restore the default under its own override (#DS-2196).
+ *
+ * @docs-private
+ */
 export const KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_AUTOCOMPLETE_SCROLL_STRATEGY,
     deps: [ScrollDispatcher],
@@ -106,6 +109,7 @@ export const KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 
 /**
  * Provider that allows the autocomplete to register as a ControlValueAccessor.
+ *
  * @docs-private
  */
 export const KBQ_AUTOCOMPLETE_VALUE_ACCESSOR: Provider = {
@@ -125,6 +129,7 @@ const TEXT_FIELD_TYPES = new Set(['text', 'search', 'email', 'tel', 'url', 'text
 
 /**
  * Creates an error to be thrown when attempting to use an autocomplete trigger without a panel.
+ *
  * @internal
  */
 export function getKbqAutocompleteMissingPanelError(): Error {
@@ -233,6 +238,7 @@ export class KbqAutocompleteTrigger
 
     /**
      * `autocomplete` attribute to be set on the input element.
+     *
      * @docs-private
      */
     readonly autocompleteAttribute = input<string>('off', { alias: 'autocomplete' });
@@ -249,6 +255,7 @@ export class KbqAutocompleteTrigger
     /**
      * Event handler for input blur events.
      * Determines whether the blur event is triggered outside the specific target
+     *
      * @returns A boolean indicating if the blur event happened outside the target element
      */
     readonly onInputBlur = input(
@@ -422,12 +429,14 @@ export class KbqAutocompleteTrigger
 
     /**
      * Called when the value changes. Needed to properly implement `ControlValueAccessor`.
+     *
      * @docs-private
      */
     onChange: (value: any) => void = () => {};
 
     /**
      * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     *
      * @docs-private
      */
     onTouched: () => void = () => {};
@@ -770,7 +779,8 @@ export class KbqAutocompleteTrigger
         this.previousValue = inputValue;
     }
 
-    /** This method closes the panel, and if a value is specified, also sets the associated
+    /**
+     * This method closes the panel, and if a value is specified, also sets the associated
      * control to that value. It will also mark the control as dirty if this interaction
      * stemmed from the user.
      */

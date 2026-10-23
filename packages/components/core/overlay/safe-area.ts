@@ -2,12 +2,14 @@
  * A simple (x, y) coordinate. Picked from the DOM's own `DOMPointReadOnly` rather than hand-rolled, so
  * a plain `{ x, y }` literal (e.g. from a `MouseEvent`) satisfies it without constructing a `DOMPoint` —
  * `DOMPoint` isn't implemented in every runtime (e.g. jsdom).
+ *
  * @docs-private
  */
 export type KbqPoint = Pick<DOMPointReadOnly, 'x' | 'y'>;
 
 /**
  * A triangle described by its three vertices.
+ *
  * @docs-private
  */
 export interface KbqTriangle {
@@ -18,6 +20,7 @@ export interface KbqTriangle {
 
 /**
  * Whether `point` lies within (or on the edge of) `rect`.
+ *
  * @docs-private
  */
 export function isPointInRect(point: KbqPoint, rect: DOMRect): boolean {
@@ -29,6 +32,7 @@ export function isPointInRect(point: KbqPoint, rect: DOMRect): boolean {
  *
  * Uses the sign of the cross product of each triangle edge with the point: the point is inside
  * only if it's consistently on the same side of all three edges.
+ *
  * @docs-private
  */
 export function isPointInTriangle(point: KbqPoint, triangle: KbqTriangle): boolean {
@@ -52,6 +56,7 @@ export function isPointInTriangle(point: KbqPoint, triangle: KbqTriangle): boole
  * trigger) to the top and bottom corners of `targetRect` (typically a submenu panel) that are nearest
  * to `origin` — the submenu can open on either side of its trigger, so the nearest edge is picked by
  * comparing distances rather than assuming a fixed side.
+ *
  * @docs-private
  */
 export function getSafeTriangleVertices(origin: KbqPoint, targetRect: DOMRect): KbqTriangle {

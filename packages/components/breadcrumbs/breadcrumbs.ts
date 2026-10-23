@@ -133,15 +133,18 @@ export class KbqBreadcrumbItem {
      * This text will be shown if breadcrumb item is hidden in dropdown.
      */
     readonly text = input<string>('');
+
     /**
      * Indicates whether the breadcrumb item is disabled.
      */
     readonly disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
+
     /**
      * Indicates whether the breadcrumb item is the current/active item, which the trail exposes as
      * `aria-current="page"`. The last item of a trail is current regardless of this input.
      */
     readonly current = input<boolean, unknown>(false, { transform: booleanAttribute });
+
     /**
      * A reference to a custom template provided for the breadcrumb item content.
      * The template can be used to override the default appearance of the breadcrumb.
@@ -149,6 +152,7 @@ export class KbqBreadcrumbItem {
     readonly customTemplateRef = contentChild<KbqBreadcrumbView, TemplateRef<unknown>>(KbqBreadcrumbView, {
         read: TemplateRef
     });
+
     /**
      * An optional `RouterLink` instance for navigating to a specific route.
      * Injected from the host element, if available and projecting to the hidden breadcrumb item in dropdown.
@@ -204,30 +208,34 @@ export class KbqBreadcrumbs {
      * assistive technology can tell them apart. Left unset, the name comes from the active locale.
      */
     readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+
     /**
-     * Determines if a negative margin should be applied to the first breadcrumb item.
-     *
-     * @see KbqBreadcrumbsConfiguration
+     * Determines if a negative margin should be applied to the first breadcrumb item. The default comes from
+     * {@link KbqBreadcrumbsConfiguration}.
      */
     readonly firstItemNegativeMargin = input<boolean, unknown>(this.configuration.firstItemNegativeMargin, {
         transform: booleanAttribute
     });
+
     /**
      * Size of the breadcrumbs. Affects font size.
      * Default value is taken from the global configuration.
      */
     readonly size = input<KbqDefaultSizes>(this.configuration.size);
+
     /**
      * Maximum number of visible breadcrumb items.
      * Remaining items are collapsed into a dropdown if the total exceeds this value.
      * Default value is taken from the global configuration.
      */
     readonly max = input<number | null>(this.configuration.max);
+
     /**
      * Indicates whether the breadcrumbs are disabled.
      * When disabled, every item and the expand button stop navigating and leave the tab order.
      */
     readonly disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
+
     /**
      * Wrapping behavior of the breadcrumb items.
      */

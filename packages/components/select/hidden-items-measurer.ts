@@ -22,6 +22,7 @@ export type KbqSelectMatcherMeasurement = {
  * select's own trigger element. Kept apart from the component because it is pure DOM geometry with no
  * bearing on the select's state — and because the two measurements it makes have to share a single
  * layout pass, which is easy to lose sight of when they live among the component's other concerns.
+ *
  * @docs-private
  */
 @Injectable()
@@ -34,6 +35,7 @@ export class KbqSelectHiddenItemsMeasurer {
      *
      * Both clones are attached before either is read, so the browser resolves layout once for the pair
      * instead of once per clone.
+     *
      * @param trigger Trigger element of the select, used both as the source of the clones and as their host.
      */
     measure(trigger: HTMLElement): KbqSelectMatcherMeasurement {
