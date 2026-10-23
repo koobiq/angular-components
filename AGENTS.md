@@ -79,7 +79,9 @@ yarn run build:angular-luxon-adapter   # Build Luxon date adapter
 yarn run build:angular-moment-adapter  # Build Moment date adapter
 yarn run build:cli                     # Build release management CLI
 yarn run build:schematics              # Build Angular CLI schematics
-yarn run build:mcp                     # Build the MCP server; build:mcp:data alone regenerates what it serves
+yarn run build:mcp                     # Build the MCP server: regenerate index.json/examples.json, compile src → dist, assemble dist/mcp
+yarn run build:mcp:data                # Regenerate the committed guides.json and history.json (run by the release pipeline, not in CI)
+yarn run check-mcp-data                # Gate: packages/mcp/data/guides.json not behind docs/guides (no git needed)
 yarn run styles:build-all              # Compile all SCSS into dist/scss-compiled and the prebuilt themes into dist/components/prebuilt-themes
 yarn run docs                          # Build every package, generate docs content and examples, then serve the docs site
 yarn run docs:build                    # Build docs app for production (prerendered)
@@ -120,8 +122,8 @@ yarn run unit:schematics # Run schematics tests
 yarn run unit:cli
 yarn run unit:koobiq-docs            # Docs app specs
 yarn run unit:tools                  # Specs under tools/
-yarn run unit:mcp                    # MCP server, everything that does not need a built @koobiq/components
-yarn run unit:mcp:dts                # The two MCP specs that read the built typings; needs build:components first
+yarn run unit:mcp                    # MCP server, everything that does not need a built @koobiq/components (regenerates its own index first)
+yarn run unit:mcp:dts                # The MCP specs that need a build: the .d.ts reader (needs build:components) and the stdio smoke test (needs build:mcp)
 yarn run check-spec-types            # Type-check the specs, which Vitest compiles unchecked (part of the lint gate)
 npx vitest run "<TEST_PATH_PATTERN>" # Run specific tests (e.g., npx vitest run packages/components/button/button.component.spec.ts)
 npx vitest run "<TEST_PATH_PATTERN>" -t "<test name pattern>"
@@ -178,15 +180,15 @@ The guard reads the flattened typings ng-packagr writes to `dist/components/type
 
 Every pull request runs these workflows:
 
-| Workflow                          | What it runs                                                                                                                                                 |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-spec-types`, `check-tokens-data` |
-| Unit tests                        | `styles:build-all`, then `unit:all` (one Vitest run of the `angular` and `node` projects)                                                                    |
-| E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                                             |
-| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs`, `check-llms` and `unit:mcp:dts`             |
-| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build`                              |
-| Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label                                       |
-| License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                                                   |
+| Workflow                          | What it runs                                                                                                                                                                               |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-spec-types`, `check-tokens-data`                               |
+| Unit tests                        | `styles:build-all`, `build:mcp:index` (regenerates `packages/mcp/data/index.json`/`examples.json`, never committed), then `unit:all` (one Vitest run of the `angular` and `node` projects) |
+| E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                                                                           |
+| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs`, `check-llms`, `check-mcp-data` and `unit:mcp:dts`                         |
+| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build`                                                            |
+| Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label                                                                     |
+| License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                                                                                 |
 
 A docs preview is deployed to Firebase for pull requests opened from this repository.
 
