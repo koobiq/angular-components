@@ -1,4 +1,6 @@
 import { FocusMonitor, FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { MutationObserverFactory } from '@angular/cdk/observers';
+import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
@@ -11,6 +13,7 @@ import {
     EnvironmentInjector,
     inject,
     input,
+    NgZone,
     OnDestroy,
     OnInit,
     Renderer2,
@@ -78,13 +81,18 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly inputModalityDetector = inject(InputModalityDetector);
     private readonly environmentInjector = inject(EnvironmentInjector);
+    private readonly mutationObserverFactory = inject(MutationObserverFactory);
+    private readonly ngZone = inject(NgZone);
+    private readonly isBrowser = inject(Platform).isBrowser;
 
     private readonly externalIndicator = contentChild(KbqLoaderOverlayIndicator);
     private readonly externalText = contentChild(KbqLoaderOverlayText);
     private readonly externalCaption = contentChild(KbqLoaderOverlayCaption);
 
     private parent: HTMLElement | null = null;
-    private parentWasInert = false;
+    // Only the siblings this overlay made inert get the attribute back, so an `inert` of the consumer's stays.
+    private readonly inertSiblings = new Set<Element>();
+    private siblingsObserver: MutationObserver | null = null;
     private previouslyFocused: HTMLElement | null = null;
     private previousFocusOrigin: FocusOrigin = null;
 
@@ -160,29 +168,55 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
         this.parent = this.nativeElement.parentElement;
 
         if (this.parent) {
-            // Covering the parent only blocks the pointer: `inert` also takes the content behind the overlay out of
-            // the tab order, text selection and the accessibility tree. The overlay itself is inert too, which is
-            // harmless because it has nothing to interact with.
-            // An `inert` that comes with the class was set by an overlay (on the server, before hydration, or by
-            // another overlay in this parent), so only one without it is the consumer's to keep.
-            this.parentWasInert =
-                this.parent.hasAttribute('inert') && !this.parent.classList.contains(kbqLoaderOverlayParent);
-            this.saveFocus(this.parent);
             this.renderer.addClass(this.parent, kbqLoaderOverlayParent);
-            this.renderer.setAttribute(this.parent, 'inert', '');
+
+            // Not on the server: there `inert` is serialized into the HTML and outlives an overlay the client does not
+            // hydrate.
+            if (this.isBrowser) {
+                this.saveFocus(this.parent);
+                this.blockSiblings(this.parent);
+            }
         }
     }
 
     ngOnDestroy(): void {
+        this.siblingsObserver?.disconnect();
+
         if (this.parent) {
             this.renderer.removeClass(this.parent, kbqLoaderOverlayParent);
-
-            if (!this.parentWasInert) {
-                this.renderer.removeAttribute(this.parent, 'inert');
-            }
-
+            this.inertSiblings.forEach((sibling) => this.renderer.removeAttribute(sibling, 'inert'));
             this.restoreFocus();
         }
+    }
+
+    // Covering the parent only blocks the pointer: `inert` on the content behind the overlay also takes it out of the
+    // tab order, text selection and the accessibility tree. The overlay itself stays interactive, so its text can be
+    // selected and an action placed on it can be used.
+    private blockSiblings(parent: HTMLElement): void {
+        for (const sibling of Array.from(parent.children)) {
+            this.makeInert(sibling);
+        }
+
+        // Content rendered behind the overlay while it is shown, such as the rows of a list, is blocked as well. Outside
+        // the zone, so that every change of that content does not run change detection.
+        this.ngZone.runOutsideAngular(() => {
+            this.siblingsObserver = this.mutationObserverFactory.create((records) => {
+                for (const record of records) {
+                    record.addedNodes.forEach((node) => {
+                        if (node.nodeType === Node.ELEMENT_NODE) this.makeInert(node as Element);
+                    });
+                }
+            });
+            this.siblingsObserver?.observe(parent, { childList: true });
+        });
+    }
+
+    private makeInert(element: Element): void {
+        // A sibling this overlay already blocked can come back after a move, still carrying its `inert`.
+        if (element === this.nativeElement || this.inertSiblings.has(element) || element.hasAttribute('inert')) return;
+
+        this.renderer.setAttribute(element, 'inert', '');
+        this.inertSiblings.add(element);
     }
 
     // Remembers the element `inert` is about to take the focus from.

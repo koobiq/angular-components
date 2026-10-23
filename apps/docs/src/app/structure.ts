@@ -756,7 +756,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'overlay',
                     hasApi: true,
                     apiId: 'loader-overlay',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-11-06')
                 },
                 {
                     id: DocsStructureItemId.Markdown,

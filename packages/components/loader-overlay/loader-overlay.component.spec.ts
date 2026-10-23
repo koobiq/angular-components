@@ -1,4 +1,5 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor, InputModalityDetector } from '@angular/cdk/a11y';
+import { Platform } from '@angular/cdk/platform';
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -363,45 +364,68 @@ describe('KbqLoaderOverlay', () => {
         expect(() => overlay.ngOnDestroy()).not.toThrow();
     });
 
-    it('should make the parent inert while the overlay is shown', () => {
+    it('should make the content behind the overlay inert, but not the overlay itself', () => {
+        const fixture = TestBed.createComponent(OverlayToggled);
+
+        fixture.detectChanges();
+
+        const parent = fixture.nativeElement.querySelector('.loader-overlay-container') as HTMLElement;
+        const behind = fixture.nativeElement.querySelector('.behind') as HTMLElement;
+        const action = fixture.nativeElement.querySelector('.action') as HTMLElement;
+
+        expect(behind.hasAttribute('inert')).toBe(true);
+        expect(parent.hasAttribute('inert')).toBe(false);
+        expect(action.closest('[inert]')).toBeNull();
+
+        fixture.componentInstance.shown.set(false);
+        fixture.detectChanges();
+
+        expect(behind.hasAttribute('inert')).toBe(false);
+    });
+
+    it('should make content rendered behind the overlay while it is shown inert', async () => {
+        const fixture = TestBed.createComponent(OverlayOverList);
+
+        fixture.detectChanges();
+
+        fixture.componentInstance.rows.set(['first', 'second']);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const rows = Array.from(fixture.nativeElement.querySelectorAll('.row')) as HTMLElement[];
+
+        expect(rows.map((row) => row.hasAttribute('inert'))).toEqual([true, true]);
+
+        fixture.componentInstance.shown.set(false);
+        fixture.detectChanges();
+
+        expect(rows.map((row) => row.hasAttribute('inert'))).toEqual([false, false]);
+    });
+
+    it('should leave an inert set by the consumer on the content behind the overlay', () => {
+        const fixture = TestBed.createComponent(OverlayOverInertContent);
+
+        fixture.detectChanges();
+
+        const behind = fixture.nativeElement.querySelector('.behind') as HTMLElement;
+
+        fixture.componentInstance.shown.set(false);
+        fixture.detectChanges();
+
+        expect(behind.hasAttribute('inert')).toBe(true);
+    });
+
+    it('should leave the content behind the overlay alone on the server', () => {
+        TestBed.overrideProvider(Platform, { useValue: { isBrowser: false } });
+
         const fixture = TestBed.createComponent(OverlayToggled);
 
         fixture.detectChanges();
 
         const parent = fixture.nativeElement.querySelector('.loader-overlay-container') as HTMLElement;
 
-        expect(parent.hasAttribute('inert')).toBe(true);
-
-        fixture.componentInstance.shown.set(false);
-        fixture.detectChanges();
-
-        expect(parent.hasAttribute('inert')).toBe(false);
-    });
-
-    it('should leave the parent inert when it was inert before the overlay', () => {
-        const fixture = TestBed.createComponent(OverlayToggledInInertParent);
-
-        fixture.detectChanges();
-
-        const parent = fixture.nativeElement.querySelector('.loader-overlay-container') as HTMLElement;
-
-        fixture.componentInstance.shown.set(false);
-        fixture.detectChanges();
-
-        expect(parent.hasAttribute('inert')).toBe(true);
-    });
-
-    it('should remove an inert the parent got from an overlay before this one, such as on the server', () => {
-        const fixture = TestBed.createComponent(OverlayToggledInParentMarkedByOverlay);
-
-        fixture.detectChanges();
-
-        const parent = fixture.nativeElement.querySelector('.loader-overlay-container') as HTMLElement;
-
-        fixture.componentInstance.shown.set(false);
-        fixture.detectChanges();
-
-        expect(parent.hasAttribute('inert')).toBe(false);
+        expect(parent.classList).toContain('kbq-loader-overlay_parent');
+        expect(fixture.nativeElement.querySelector('[inert]')).toBeNull();
     });
 
     it('should give the focus back to the element the overlay took it from', async () => {
@@ -413,6 +437,7 @@ describe('KbqLoaderOverlay', () => {
         const behind = fixture.nativeElement.querySelector('.behind') as HTMLButtonElement;
         const focusVia = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
+        TestBed.inject(InputModalityDetector);
         dispatchKeyboardEvent(behind, 'keydown', ENTER);
         behind.focus();
         fixture.componentInstance.shown.set(true);
@@ -488,7 +513,11 @@ describe('KbqLoaderOverlay', () => {
             <button class="behind" type="button">Behind the overlay</button>
 
             @if (shown()) {
-                <kbq-loader-overlay />
+                <kbq-loader-overlay>
+                    <div kbq-loader-overlay-caption>
+                        <button class="action" type="button">Cancel</button>
+                    </div>
+                </kbq-loader-overlay>
             }
         </div>
     `
@@ -498,32 +527,39 @@ class OverlayToggled {
 }
 
 @Component({
-    selector: 'overlay-toggled-in-inert-parent',
+    selector: 'overlay-over-list',
     imports: [KbqLoaderOverlayModule],
     template: `
-        <div class="loader-overlay-container" inert>
+        <div class="loader-overlay-container">
+            @for (row of rows(); track row) {
+                <button class="row" type="button">{{ row }}</button>
+            }
+
             @if (shown()) {
                 <kbq-loader-overlay />
             }
         </div>
     `
 })
-class OverlayToggledInInertParent {
+class OverlayOverList {
+    readonly rows = signal(['first']);
     readonly shown = signal(true);
 }
 
 @Component({
-    selector: 'overlay-toggled-in-parent-marked-by-overlay',
+    selector: 'overlay-over-inert-content',
     imports: [KbqLoaderOverlayModule],
     template: `
-        <div class="loader-overlay-container kbq-loader-overlay_parent" inert>
+        <div class="loader-overlay-container">
+            <div class="behind" inert>Behind the overlay</div>
+
             @if (shown()) {
                 <kbq-loader-overlay />
             }
         </div>
     `
 })
-class OverlayToggledInParentMarkedByOverlay {
+class OverlayOverInertContent {
     readonly shown = signal(true);
 }
 

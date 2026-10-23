@@ -1,10 +1,14 @@
 @use '../core/styles/common/squircle' as *;
 @use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/vendor-prefixes';
 
 @use './loader-overlay-theme' as *;
 
 .kbq-loader-overlay_parent {
     position: relative;
+
+    // Text placed straight in the parent is not an element, so `inert` cannot reach it.
+    @include vendor-prefixes.user-select(none);
 }
 
 .kbq-loader-overlay-text,
@@ -31,6 +35,7 @@
     bottom: 0;
     left: 0;
     @include kbq-squircle-inherit();
+    @include vendor-prefixes.user-select(text);
 
     // todo
     z-index: 10;
