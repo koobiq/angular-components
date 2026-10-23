@@ -160,6 +160,12 @@ export class KbqTreeSelection
 
     @Input() declare treeControl: FlatTreeControl<any>;
 
+    /** `treeControl.dataNodes` the options' checkbox states were last recomputed against. */
+    private checkboxSyncedDataNodes: unknown[] | null = null;
+
+    // Angular 19 has no `DestroyRef.destroyed`.
+    private isDestroyed = false;
+
     @Output() readonly navigationChange = new EventEmitter<KbqTreeNavigationChange<KbqTreeOption>>();
 
     @Output() readonly selectionChange = new EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>();
@@ -329,6 +335,8 @@ export class KbqTreeSelection
 
     ngOnDestroy(): void {
         super.ngOnDestroy();
+
+        this.isDestroyed = true;
 
         this.focusMonitor.stopMonitoring(this.elementRef);
     }
@@ -532,6 +540,24 @@ export class KbqTreeSelection
         this.sortedNodes = this.getSortedNodes(viewContainer);
 
         this.nodeOutlet.changeDetectorRef.detectChanges();
+
+        this.scheduleCheckboxSync();
+    }
+
+    /**
+     * Recomputes every option's checkbox state after `dataNodes` is replaced, which moves the descendants a branch
+     * counts: no selection change follows to do it. A microtask later, as a flat data source assigns `dataNodes` only
+     * after it emits.
+     */
+    private scheduleCheckboxSync(): void {
+        Promise.resolve().then(() => {
+            const dataNodes = this.treeControl?.dataNodes ?? null;
+
+            if (this.isDestroyed || dataNodes === this.checkboxSyncedDataNodes) return;
+
+            this.checkboxSyncedDataNodes = dataNodes;
+            this.unorderedOptions?.forEach((option) => option.markForCheck());
+        });
     }
 
     emitNavigationEvent(option: KbqTreeOption): void {
