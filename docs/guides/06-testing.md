@@ -53,7 +53,8 @@ The suite brings its own server: `tools/e2e/serve.mjs` builds `dev-e2e` in its p
 configuration and serves the output as static files. That build happens once, at startup, and a
 server already listening on 4200 is reused exactly as it is — so a standing `yarn run serve:e2e`, or
 one left behind by another checkout, has to be restarted after any change it serves. `ng serve`
-watched; this does not.
+watched; this does not. The build goes through `tools/build-strict.mjs`, so a builder warning fails
+it the same way an error does.
 
 The documentation site has its own smoke suite. It runs against the prerendered build, so that has to
 exist first:

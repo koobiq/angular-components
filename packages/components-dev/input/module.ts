@@ -51,7 +51,6 @@ export class DevDocsExamples {}
         KbqInputModule,
         KbqToolTipModule,
         KbqIconModule,
-        DevDocsExamples,
         KbqNormalizeWhitespace,
         DevThemeToggle,
         KbqToggleComponent

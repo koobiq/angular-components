@@ -36,7 +36,7 @@
                     [ngModel]="data.value?.name"
                 >
                     <kbq-list-option (click)="showPeriod()" (keydown.enter)="showPeriod()">
-                        {{ localeConfiguration().datePipe?.customPeriod }}
+                        {{ localeConfiguration().datePipe.customPeriod }}
                         <!-- prevents [kbq-icon] from matching icon slot in kbq-list-option, keeping chevron after label text -->
                         <ng-container>
                             <i kbq-icon="kbq-chevron-right_16" color="contrast-fade"></i>

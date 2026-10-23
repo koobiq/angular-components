@@ -27,7 +27,7 @@ const createSearchPipe = (name: string): KbqPipe => ({
     imports: [KbqFilterBarModule],
     template: `
         <kbq-filter-bar [filter]="activeFilter()" (filterChange)="onFilterChange($event)">
-            @for (pipe of activeFilter()?.pipes; track pipe) {
+            @for (pipe of activeFilter().pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
         </kbq-filter-bar>
