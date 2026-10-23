@@ -1,4 +1,7 @@
-# When to use
+# which_component_when data source
+
+Not a page of koobiq.io. This file is the data the `which_component_when` tool of the Koobiq MCP server parses; it
+is `.md` rather than `.mdx` on purpose, so the docs site build skips it — see [Provenance](#provenance).
 
 Maps a **task** to a Koobiq component, and names the neighboring component it is confused with.
 
@@ -36,8 +39,10 @@ only what they are — was written for this guide from the docs, the public API 
 rather than scattering it back into the MDX pages: the comparisons cross component boundaries, and a page about one
 component is the wrong place to say which other component wins.
 
-The MCP server reads this file as an ordinary guide: `build-guides.ts` picks it up from `docs/guides` along with
-the rest, in both languages. This file is the single source of truth — the server holds no copy of the mapping.
+The MCP server reads this file as an ordinary guide — `build-guides.ts` picks it up from `docs/guides` along with
+the rest, in both languages — but it never becomes a page of koobiq.io: `tools/docs-pages/sources.ts` globs only
+`docs/guides/**/*.mdx`, and the `.md` extension here is deliberate, not an oversight. This file is the single
+source of truth — the server holds no copy of the mapping.
 
 ## Disambiguation
 

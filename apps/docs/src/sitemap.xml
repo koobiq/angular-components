@@ -595,9 +595,6 @@
 		<loc>https://koobiq.io/en/other/search-smart/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/other/which-component-when/overview</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/ru</loc>
 	</url>
 	<url>
@@ -1190,8 +1187,5 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/other/search-smart/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/other/which-component-when/overview</loc>
 	</url>
 </urlset>

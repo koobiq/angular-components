@@ -350,9 +350,5 @@ export const DOCS_SEO_DESCRIPTIONS = {
     "versioning": {
         "en": "Our releases follow the versioning described in the Semver spec.",
         "ru": "Для наших релизов мы придерживаемся версионирования основанного на Semver spec."
-    },
-    "which-component-when": {
-        "en": "Maps a task to a Koobiq component, and names the neighboring component it is confused with.",
-        "ru": "Сопоставляет задачу с компонентом Koobiq и называет соседний компонент, с которым его путают."
     }
 } as const;

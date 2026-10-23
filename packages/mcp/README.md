@@ -34,6 +34,12 @@ cannot change their meaning, so there is nothing to commit. `guides.json` and `h
 different: both are read from git, at release tags, not from whatever happens to be on disk, which
 is why they are committed and only change in a release commit (see "Release staging" below).
 
+A guide in `PUBLIC_GUIDES` is normally a page of the docs site, authored as `.mdx` under
+`docs/guides`. `which-component-when` is the exception: it is `.md`, on purpose, because
+`tools/docs-pages/sources.ts` globs only `*.mdx` and never builds it into a page — the file exists
+solely as the data `which_component_when` parses. `GUIDE_FILE` in `build-guides.ts` matches either
+extension, so a guide can take the same path when it should stay off the site.
+
 ### Guide text, releases and `since`
 
 A guide's text is read from the **newest release tag**, not the working tree, even though the
