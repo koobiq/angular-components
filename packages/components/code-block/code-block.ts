@@ -156,7 +156,15 @@ export class KbqCodeBlock implements AfterViewInit {
     private readonly preElementRef = viewChild<ElementRef<HTMLElement>>('codeBlockPre');
 
     /** @docs-private */
-    protected readonly contentExceedsMaxHeight = signal(false);
+    private readonly codeElementRef = viewChild<ElementRef<HTMLElement>>('codeBlockCode');
+
+    /**
+     * Whether the code runs past `maxHeight`, or `undefined` until the browser has measured it. The server
+     * never measures, and its markup keeps the limit so that a block hydrated later holds its height.
+     *
+     * @docs-private
+     */
+    protected readonly contentExceedsMaxHeight = signal<boolean | undefined>(undefined);
 
     /** @docs-private */
     protected readonly tabLinkTemplate = contentChild<
@@ -223,7 +231,11 @@ export class KbqCodeBlock implements AfterViewInit {
     protected readonly calculatedMaxHeight = computed<number | null>(() => {
         const maxHeight = this.maxHeight();
 
-        return maxHeight && maxHeight > 0 && !this.viewAll() ? maxHeight : null;
+        // Code that fits is left at its natural height: clipped at the limit it would scroll by its own
+        // bottom padding, with nothing hidden to reveal and no "view all" button to reveal it.
+        return maxHeight && maxHeight > 0 && !this.viewAll() && this.contentExceedsMaxHeight() !== false
+            ? maxHeight
+            : null;
     });
 
     /**
@@ -348,7 +360,10 @@ export class KbqCodeBlock implements AfterViewInit {
         KBQ_CODE_BLOCK_LOCALE_CONFIGURATION
     );
 
-    /** Whether the code content scrolls with no maximum height set, which leaves keyboard users a way to scroll it. */
+    /**
+     * Whether the code content scrolls while nothing collapses it, which leaves keyboard users a way to scroll it.
+     * Collapsed under `maxHeight` it is clipped instead, and the "view all" button is the way in.
+     */
     private get canCodeContentBeFocused(): boolean {
         return !this.calculatedMaxHeight() && this.hasScroll(this.scrollbarViewport().getNativeElement());
     }
@@ -583,8 +598,20 @@ export class KbqCodeBlock implements AfterViewInit {
     private measureContentOverflow(): void {
         const maxHeight = this.maxHeight();
         const preElement = this.preElementRef()?.nativeElement;
+        const codeElement = this.codeElementRef()?.nativeElement;
 
-        this.contentExceedsMaxHeight.set(!!maxHeight && !!preElement && preElement.offsetHeight > maxHeight);
+        if (!maxHeight || !preElement || !codeElement) {
+            this.contentExceedsMaxHeight.set(false);
+
+            return;
+        }
+
+        // The limit is checked against the end of the last line, not of the element: the bottom padding is
+        // what gets clipped first, and clipped padding hides no code. Read from the computed style because
+        // the "view all" button, once shown, deepens that padding, and measuring it would keep the button.
+        const paddingBottom = parseFloat(this.window.getComputedStyle(codeElement).paddingBottom) || 0;
+
+        this.contentExceedsMaxHeight.set(preElement.offsetHeight - paddingBottom > maxHeight);
     }
 
     /** Whether the element has scroll. */

@@ -58,7 +58,7 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly canDownloadInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly canToggleSoftWrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly componentColor: typeof KbqComponentColors;
-    protected readonly contentExceedsMaxHeight: _angular_core.WritableSignal<boolean>;
+    protected readonly contentExceedsMaxHeight: _angular_core.WritableSignal<boolean | undefined>;
     protected copyCode(): void;
     protected downloadCode(): void;
     protected readonly fallbackFileName: string;
