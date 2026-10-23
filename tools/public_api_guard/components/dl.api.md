@@ -5,28 +5,33 @@
 ```ts
 
 import * as _angular_core from '@angular/core';
-import * as i1$1 from '@angular/cdk/a11y';
 import * as i1 from '@koobiq/components/core';
-import * as i2 from '@angular/cdk/platform';
+import { InjectionToken } from '@angular/core';
 import { KbqResizerDirection } from '@koobiq/components/resizer';
 import { KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
-
-// @public (undocumented)
-export class KbqDdComponent {
-    // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDdComponent, "kbq-dd", never, {}, {}, never, ["*"], true, never>;
-    // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDdComponent, never>;
-}
+import { Provider } from '@angular/core';
 
 // @public
-export type KbqDlAlign = 'start' | 'center' | 'end';
+export const KBQ_DL_OPTIONS: InjectionToken<KbqDlOptions>;
 
-// @public (undocumented)
-export class KbqDlComponent {
-    constructor();
+// @public
+export class KbqDd {
     // (undocumented)
-    protected get currentDtWidth(): number;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDd, "kbq-dd", never, {}, {}, never, ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDd, never>;
+}
+
+// @public @deprecated (undocumented)
+export const KbqDdComponent: typeof KbqDd;
+
+// @public @deprecated (undocumented)
+export type KbqDdComponent = KbqDd;
+
+// @public
+export class KbqDl {
+    constructor();
+    protected readonly currentDtWidth: _angular_core.Signal<number>;
     readonly ddMinWidth: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
     readonly dtMinWidth: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
     readonly dtWidth: _angular_core.WritableSignal<number | null>;
@@ -38,12 +43,12 @@ export class KbqDlComponent {
     protected handleResizeStart(): void;
     readonly horizontalAlign: _angular_core.InputSignal<KbqDlAlign>;
     protected readonly isVertical: _angular_core.Signal<boolean>;
-    // (undocumented)
-    protected get maxDtWidth(): number;
+    protected readonly maxDtWidth: _angular_core.Signal<number>;
     protected readonly normalizedDtMinWidth: _angular_core.Signal<number>;
     readonly resizable: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    protected readonly resizeCursor: _angular_core.WritableSignal<string>;
-    protected readonly resizeDirection: _angular_core.WritableSignal<KbqResizerDirection>;
+    protected readonly resizeCursor: _angular_core.Signal<"col-resize" | "default" | "e-resize" | "w-resize">;
+    protected readonly resized: _angular_core.Signal<boolean>;
+    protected readonly resizeDirection: _angular_core.Signal<KbqResizerDirection>;
     readonly resizerAriaLabel: _angular_core.InputSignal<string | undefined>;
     protected readonly resizerVisible: _angular_core.Signal<boolean>;
     protected readonly resolvedResizerAriaLabel: _angular_core.Signal<string>;
@@ -52,28 +57,59 @@ export class KbqDlComponent {
     readonly verticalBreakpoint: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly wide: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDlComponent, "kbq-dl", never, { "verticalBreakpoint": { "alias": "verticalBreakpoint"; "required": false; "isSignal": true; }; "wide": { "alias": "wide"; "required": false; "isSignal": true; }; "resizable": { "alias": "resizable"; "required": false; "isSignal": true; }; "dtWidthInput": { "alias": "dtWidth"; "required": false; "isSignal": true; }; "dtMinWidth": { "alias": "dtMinWidth"; "required": false; "isSignal": true; }; "ddMinWidth": { "alias": "ddMinWidth"; "required": false; "isSignal": true; }; "resizerAriaLabel": { "alias": "resizerAriaLabel"; "required": false; "isSignal": true; }; "verticalAlign": { "alias": "verticalAlign"; "required": false; "isSignal": true; }; "horizontalAlign": { "alias": "horizontalAlign"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; }, { "dtWidthChange": "dtWidthChange"; }, ["terms"], ["*"], true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDl, "kbq-dl", never, { "verticalBreakpoint": { "alias": "verticalBreakpoint"; "required": false; "isSignal": true; }; "wide": { "alias": "wide"; "required": false; "isSignal": true; }; "resizable": { "alias": "resizable"; "required": false; "isSignal": true; }; "dtWidthInput": { "alias": "dtWidth"; "required": false; "isSignal": true; }; "dtMinWidth": { "alias": "dtMinWidth"; "required": false; "isSignal": true; }; "ddMinWidth": { "alias": "ddMinWidth"; "required": false; "isSignal": true; }; "resizerAriaLabel": { "alias": "resizerAriaLabel"; "required": false; "isSignal": true; }; "verticalAlign": { "alias": "verticalAlign"; "required": false; "isSignal": true; }; "horizontalAlign": { "alias": "horizontalAlign"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; }, { "dtWidthChange": "dtWidthChange"; }, ["terms"], ["*"], true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDlComponent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDl, never>;
 }
 
-// @public (undocumented)
+// @public
+export type KbqDlAlign = 'start' | 'center' | 'end';
+
+// @public @deprecated (undocumented)
+export const KbqDlComponent: typeof KbqDl;
+
+// @public @deprecated (undocumented)
+export type KbqDlComponent = KbqDl;
+
+// @public
 export class KbqDlModule {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDlModule, never>;
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqDlModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDlModule, never, [typeof i1$1.A11yModule, typeof i2.PlatformModule, typeof KbqDlComponent, typeof KbqDtComponent, typeof KbqDdComponent], [typeof KbqDlComponent, typeof KbqDtComponent, typeof KbqDdComponent]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDlModule, never, [typeof KbqDl, typeof KbqDt, typeof KbqDd], [typeof KbqDl, typeof KbqDt, typeof KbqDd]>;
 }
 
-// @public (undocumented)
-export class KbqDtComponent {
+// @public
+export type KbqDlOptions = {
+    verticalBreakpoint: number;
+    vertical: boolean | null;
+    wide: boolean;
+    resizable: boolean;
+    dtWidth: number | null;
+    dtMinWidth?: number;
+    ddMinWidth?: number;
+    verticalAlign: KbqDlAlign;
+    horizontalAlign: KbqDlAlign;
+};
+
+// @public
+export function kbqDlOptionsProvider(options: Partial<KbqDlOptions>): Provider;
+
+// @public
+export class KbqDt {
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDtComponent, "kbq-dt", never, {}, {}, never, ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDt, "kbq-dt", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDtComponent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDt, never>;
 }
+
+// @public @deprecated (undocumented)
+export const KbqDtComponent: typeof KbqDt;
+
+// @public @deprecated (undocumented)
+export type KbqDtComponent = KbqDt;
 
 // (No @packageDocumentation comment for this package)
 

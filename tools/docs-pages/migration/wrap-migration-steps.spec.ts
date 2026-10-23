@@ -25,7 +25,7 @@ describe('docsMigrationGuideLayout', () => {
     // The page mounts the reader's "done" mark there: under the heading, ahead of the step's body.
     it('should leave a host for the done mark right under the step heading', () => {
         expect(compile('### A step (21.0.0)\n\nbody')).toContain(
-            '</h3>\n<div data-docs-migration-done></div>\n<p class="kbq-markdown__p">body</p>'
+            '</h3>\n<div data-docs-migration-done></div>\n<p class="kbq-markdown__p" data-docsearch-content>body</p>'
         );
     });
 
@@ -36,7 +36,7 @@ describe('docsMigrationGuideLayout', () => {
 
         expect(template.startsWith(INTRO)).toBe(true);
         expect(template).toMatch(
-            /^<section [^>]*><h2 [^>]*data-docs-migration-title>How to upgrade<\/h2>\n<p class="kbq-markdown__p">lead<\/p><\/section>/
+            /^<section [^>]*><h2 [^>]*data-docs-migration-title>How to upgrade<\/h2>\n<p class="kbq-markdown__p" data-docsearch-content>lead<\/p><\/section>/
         );
     });
 
@@ -165,7 +165,7 @@ describe('docsMigrationGuideLayout', () => {
         );
 
         expect(template).toContain(
-            '<p class="kbq-markdown__p">intro</p>\n<div class="docs-migration-component" data-docs-migration-components="alert">'
+            '<p class="kbq-markdown__p" data-docsearch-content>intro</p>\n<div class="docs-migration-component" data-docs-migration-components="alert">'
         );
         expect(template).toContain('<div class="docs-migration-component" data-docs-migration-components="dl">');
         expect(template).toContain(

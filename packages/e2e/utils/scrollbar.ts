@@ -60,12 +60,13 @@ export const e2eExpectNoScrollbarAfterFlash = async (viewport: Locator, settledS
     // Present, so the empty bar and thumb counts below cannot come from a track that was never built.
     await expect(viewport.locator('kbq-scrollbar-track')).toHaveCount(1);
 
-    expect(
-        await viewport.evaluate((element) => ({
-            horizontal: element.scrollWidth > element.clientWidth,
-            vertical: element.scrollHeight > element.clientHeight
-        }))
-    ).toEqual({ horizontal: false, vertical: false });
+    // Read once, past the waits above: polled, "no overflow" would already hold before the content renders.
+    const overflow = await viewport.evaluate((element) => ({
+        horizontal: element.scrollWidth > element.clientWidth,
+        vertical: element.scrollHeight > element.clientHeight
+    }));
+
+    expect(overflow).toEqual({ horizontal: false, vertical: false });
 
     await expect(track.locator('.kbq-scrollbar-track__bar')).toHaveCount(0);
     await expect(track.locator('.kbq-scrollbar-track__thumb')).toHaveCount(0);

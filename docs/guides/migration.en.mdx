@@ -1969,7 +1969,7 @@ Handled by `code-block-signals`: the reads and the plain writes are rewritten, t
 
 {/* migration-subsection-components(dl) */}
 
-`KbqDlComponent` was already fully signal-based, so the review had nothing to migrate. What it found were the four inputs that never got a coercion transform, sitting next to siblings that had one:
+The description list was already fully signal-based, so the review had nothing to migrate. What it found were the four inputs that never got a coercion transform, sitting next to siblings that had one:
 
 ```ts
 readonly verticalBreakpoint = input(400, { transform: numberAttribute });
@@ -1992,6 +1992,8 @@ readonly wide = input(false);                              // no transform
 **Bindings change meaning too**, and no compile error points at them. `[vertical]="row.vertical"` resolving to `undefined` left the input `undefined`, which is not `null`, so the list stayed pinned horizontal; it is `null` now and the breakpoint decides. On `wide`, every falsy non-boolean inverts: `[wide]="items.length"` with `0`, or `[wide]="label"` with an empty string, was falsy and is `true` now. A numeric binding that resolves to a non-number reads as `undefined` instead of reaching the arithmetic.
 
 Reported by `dl-attribute-coercion`, which covers static attributes and bindings alike, in `.html` files and inline templates.
+
+**`KbqDlComponent`, `KbqDtComponent` and `KbqDdComponent` are `KbqDl`, `KbqDt` and `KbqDd`**, the names the newer components use, and they are imported directly: `KbqDlModule` still works, but is no longer documented. The old names are deprecated aliases of the same classes until 22.0.0, so nothing breaks before then. Rewritten by `dl-standalone-names`: the renamed classes wherever they are imported from `@koobiq/components/dl`, and `KbqDlModule` wherever it is an element of an array, such as `imports`, `exports` or a `TestBed` configuration, which becomes `KbqDl, KbqDt, KbqDd`. A `KbqDlModule` anywhere else, such as `importProvidersFrom(KbqDlModule)`, is kept and reported, and a barrel file that re-exports an old name keeps exporting it.
 
 #### Divider
 

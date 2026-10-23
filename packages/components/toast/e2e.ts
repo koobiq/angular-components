@@ -1,10 +1,11 @@
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef, ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
+    ElementRef,
     inject,
     TemplateRef,
     viewChild,
@@ -171,11 +172,29 @@ export class E2eToastStates implements AfterViewInit {
         <button kbq-button data-testid="e2eShowToast" (click)="show(2000)">Show</button>
         <button kbq-button data-testid="e2eShowStickyToast" (click)="show(0)">Show sticky</button>
         <button kbq-button data-testid="e2eOpenOverlay" (click)="openOverlay()">Open overlay</button>
+        <button
+            #closeOnScrollOrigin
+            kbq-button
+            data-testid="e2eOpenCloseOnScrollOverlay"
+            (click)="openCloseOnScrollOverlay()"
+        >
+            Open close-on-scroll overlay
+        </button>
+        <button kbq-button data-testid="e2eAnchorOverlayToLastToast" (click)="anchorOverlayToLastToast()">
+            Anchor overlay to the last toast
+        </button>
 
         <ng-template #overlayContent>
             <div
                 data-testid="e2eOverlay"
                 style="width: 50vw; height: 100vh; background: var(--kbq-background-bg-secondary)"
+            ></div>
+        </ng-template>
+
+        <ng-template #anchoredOverlayContent>
+            <div
+                data-testid="e2eAnchoredOverlay"
+                style="width: 120px; height: 24px; background: var(--kbq-background-bg-secondary)"
             ></div>
         </ng-template>
     `,
@@ -189,10 +208,43 @@ export class E2eToastInteraction {
     private readonly overlay = inject(Overlay);
     private readonly viewContainerRef = inject(ViewContainerRef);
     private readonly overlayContent = viewChild.required<TemplateRef<unknown>>('overlayContent');
+    private readonly anchoredOverlayContent = viewChild.required<TemplateRef<unknown>>('anchoredOverlayContent');
+    private readonly closeOnScrollOrigin = viewChild.required('closeOnScrollOrigin', { read: ElementRef });
     private overlayRef: OverlayRef | null = null;
+    private anchoredOverlayRef: OverlayRef | null = null;
+    private lastToast: HTMLElement | null = null;
 
     constructor() {
-        inject(DestroyRef).onDestroy(() => this.overlayRef?.dispose());
+        inject(DestroyRef).onDestroy(() => {
+            this.overlayRef?.dispose();
+            this.anchoredOverlayRef?.dispose();
+        });
+    }
+
+    /** Models a tooltip: anchored to its trigger and closed by any scroll outside of it. */
+    protected openCloseOnScrollOverlay(): void {
+        this.attachAnchoredOverlay(this.closeOnScrollOrigin().nativeElement, this.overlay.scrollStrategies.close());
+    }
+
+    /** Models a dropdown opened from the actions of a toast, which slides when a toast above it leaves. */
+    protected anchorOverlayToLastToast(): void {
+        if (!this.lastToast?.isConnected) {
+            return;
+        }
+
+        this.attachAnchoredOverlay(this.lastToast, this.overlay.scrollStrategies.reposition());
+    }
+
+    private attachAnchoredOverlay(origin: HTMLElement, scrollStrategy: ScrollStrategy): void {
+        this.anchoredOverlayRef?.dispose();
+        this.anchoredOverlayRef = this.overlay.create({
+            positionStrategy: this.overlay
+                .position()
+                .flexibleConnectedTo(origin)
+                .withPositions([{ originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' }]),
+            scrollStrategy
+        });
+        this.anchoredOverlayRef.attach(new TemplatePortal(this.anchoredOverlayContent(), this.viewContainerRef));
     }
 
     /** Covers the corner of the stack with an overlay opened after the stack's own. */
@@ -208,7 +260,7 @@ export class E2eToastInteraction {
     }
 
     show(duration: number): void {
-        this.toastService.show(
+        const { ref } = this.toastService.show(
             {
                 style: KbqToastStyle.Error,
                 title: 'Toast title',
@@ -216,5 +268,7 @@ export class E2eToastInteraction {
             },
             duration
         );
+
+        this.lastToast = ref.location.nativeElement;
     }
 }

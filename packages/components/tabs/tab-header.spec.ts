@@ -25,6 +25,16 @@ const RESIZE_AUDIT_TIME = 100;
 /** How long (ms) a scroll waits before the header renders the arrows again. See `SCROLL_CD_THROTTLE`. */
 const SCROLL_CD_THROTTLE = 48;
 
+/** Debounce (ms) in front of every scroll correction. See `SCROLL_CORRECTION_DEBOUNCE`. */
+const SCROLL_CORRECTION_DEBOUNCE = 100;
+
+/** Stubs box metrics as getters that read 0 off the page, so a measurement taken before attaching cannot pass. */
+const stubGeometry = (element: HTMLElement, metrics: Record<string, () => number>): void => {
+    for (const [name, read] of Object.entries(metrics)) {
+        Object.defineProperty(element, name, { configurable: true, get: () => (element.isConnected ? read() : 0) });
+    }
+};
+
 @Injectable()
 class MockResizeObserver extends SharedResizeObserver {
     // A plain `Subject`, not a `BehaviorSubject`: the latter replays its initial `[]` to every new
@@ -553,6 +563,168 @@ describe('KbqTabHeader', () => {
                 fixture.detectChanges();
 
                 expect(checkPaginationEnabledSpy).toHaveBeenCalled();
+            });
+        });
+
+        // A label is measured in whatever face is in when the correction runs, and the real one only resizes
+        // the labels — no resize of the scroll box, no change of the text.
+        describe('webfonts', () => {
+            let fonts: EventTarget & { status: FontFaceSetLoadStatus };
+
+            beforeEach(() => {
+                vi.useFakeTimers();
+
+                // jsdom has no `FontFaceSet`; the header only listens to it and reads its status.
+                fonts = Object.assign(new EventTarget(), { status: 'loading' as FontFaceSetLoadStatus });
+                Object.defineProperty(document, 'fonts', { configurable: true, value: fonts });
+
+                fixture = TestBed.createComponent(SimpleTabHeaderApp);
+                appComponent = fixture.componentInstance;
+            });
+
+            afterEach(() => Reflect.deleteProperty(document, 'fonts'));
+
+            /**
+             * Selects the last label and lets the header reveal it, measured in a fallback face: the strip
+             * shows 100px of 400px and the label ends at 330px, so the strip rests at 330 - 100 + 20 (the arrow).
+             */
+            const revealLastLabel = async () => {
+                appComponent.selectedIndex = 3;
+                fixture.detectChanges();
+
+                const header = appComponent.tabHeader();
+                const container = header.tabListContainer.nativeElement;
+                const label = { offsetLeft: 300, offsetWidth: 30 };
+                let scrollLeft = 0;
+
+                Object.defineProperty(container, 'scrollLeft', {
+                    configurable: true,
+                    get: () => scrollLeft,
+                    set: (value: number) => {
+                        scrollLeft = Math.max(0, Math.min(300, value));
+                    }
+                });
+                stubGeometry(container, { scrollWidth: () => 400, clientWidth: () => 100 });
+                stubGeometry(header.nextPaginator.nativeElement, { clientWidth: () => 20 });
+                stubGeometry(header.previousPaginator.nativeElement, { clientWidth: () => 20 });
+                stubGeometry(header.items.get(3)!.elementRef.nativeElement, {
+                    offsetLeft: () => label.offsetLeft,
+                    offsetWidth: () => label.offsetWidth
+                });
+
+                await vi.advanceTimersByTimeAsync(SCROLL_CORRECTION_DEBOUNCE);
+                fixture.detectChanges();
+
+                expect(container.scrollLeft).toBe(250);
+
+                return { header, container, label };
+            };
+
+            /** A face finishes loading and moves the last label to `offsetLeft`, `offsetWidth`. */
+            const loadFont = (
+                label: { offsetLeft: number; offsetWidth: number },
+                offsetLeft: number,
+                offsetWidth: number
+            ): void => {
+                label.offsetLeft = offsetLeft;
+                label.offsetWidth = offsetWidth;
+                fonts.status = 'loaded';
+                fonts.dispatchEvent(new Event('loadingdone'));
+            };
+
+            /** Lets a `loadingdone` through its audit and the correction it repeats through its debounce. */
+            const settleAfterFont = () => vi.advanceTimersByTimeAsync(RESIZE_AUDIT_TIME + SCROLL_CORRECTION_DEBOUNCE);
+
+            it('should reveal the selected label again once webfonts finish loading', async () => {
+                const { container, label } = await revealLastLabel();
+
+                // The real face is wider, so the labels before the last one push it on.
+                loadFont(label, 320, 40);
+
+                // Behind the same debounce as every other correction.
+                expect(container.scrollLeft).toBe(250);
+
+                await settleAfterFont();
+
+                // 360 - 100 + 20: where the header would have put it had the face been in from the start.
+                expect(container.scrollLeft).toBe(280);
+            });
+
+            it.each([
+                ['an arrow', (header: KbqTabHeader) => header.handlePaginatorClick('before')],
+                [
+                    'the wheel',
+                    (header: KbqTabHeader) => {
+                        const container = header.tabListContainer.nativeElement;
+
+                        container.scrollLeft = 200;
+                        container.dispatchEvent(new WheelEvent('wheel'));
+                    }
+                ]
+            ])('should leave the strip where the user moved it with %s', async (_, move) => {
+                const { header, container, label } = await revealLastLabel();
+
+                move(header);
+
+                const moved = container.scrollLeft;
+
+                expect(moved).not.toBe(250);
+
+                loadFont(label, 320, 40);
+                await settleAfterFont();
+
+                expect(container.scrollLeft).toBe(moved);
+            });
+
+            // A font loaded later for some other text says nothing about the labels, which may since have been
+            // moved out of view by the layout: only the first measurement in the final faces is repeated.
+            it('should not repeat a correction once it has measured with every font loaded', async () => {
+                fonts.status = 'loaded';
+
+                const { container, label } = await revealLastLabel();
+
+                loadFont(label, 320, 40);
+                await settleAfterFont();
+
+                expect(container.scrollLeft).toBe(250);
+            });
+
+            it('should repeat a correction for the fonts only once', async () => {
+                const { container, label } = await revealLastLabel();
+
+                loadFont(label, 320, 40);
+                await settleAfterFont();
+
+                expect(container.scrollLeft).toBe(280);
+
+                // Out of view again, as a later layout could leave it: a repeat would move the strip to 300.
+                loadFont(label, 360, 40);
+                await settleAfterFont();
+
+                expect(container.scrollLeft).toBe(280);
+            });
+
+            it('should recheck pagination once webfonts finish loading', async () => {
+                fixture.detectChanges();
+
+                const header = appComponent.tabHeader();
+                let scrollWidth = 100;
+
+                stubGeometry(header.tabListContainer.nativeElement, {
+                    scrollWidth: () => scrollWidth,
+                    clientWidth: () => 100
+                });
+                await vi.advanceTimersByTimeAsync(SCROLL_CORRECTION_DEBOUNCE);
+                fixture.detectChanges();
+
+                expect(header.showPaginationControls).toBe(false);
+
+                scrollWidth = 400;
+                fonts.dispatchEvent(new Event('loadingdone'));
+                await vi.advanceTimersByTimeAsync(RESIZE_AUDIT_TIME);
+                fixture.detectChanges();
+
+                expect(header.showPaginationControls).toBe(true);
             });
         });
     });

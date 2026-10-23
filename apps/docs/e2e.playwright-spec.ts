@@ -1,5 +1,6 @@
 import { expect, Page, test } from '@playwright/test';
 import { join } from 'node:path';
+import { DocsLocale } from './src/app/constants/locale';
 import { DOCS_SEO_DESCRIPTIONS } from './src/app/seo-descriptions';
 
 /**
@@ -326,8 +327,8 @@ test.describe('docs app', () => {
                 { x: paneBox.x + paneBox.width / 2, y }
             );
 
-        expect(await paintedAt(headerBottom - overlap / 2)).toBe('header');
-        expect(await paintedAt(headerBottom + overlap / 2)).toBe('pane');
+        await expect.poll(() => paintedAt(headerBottom - overlap / 2)).toBe('header');
+        await expect.poll(() => paintedAt(headerBottom + overlap / 2)).toBe('pane');
         expect(errors).toEqual([]);
     });
 
@@ -429,7 +430,10 @@ test.describe('docs app', () => {
         // leave it a second past that before asserting that nothing came.
         await page.evaluate(() => new Promise((resolve) => requestIdleCallback(() => setTimeout(resolve, 1000))));
 
-        expect(await highlightJsChunks()).toBe(0);
+        // Read once on purpose: a poll would pass on its first sample, before anything could arrive.
+        const chunks = await highlightJsChunks();
+
+        expect(chunks).toBe(0);
 
         const signature = page.locator('kbq-code-block').nth(1);
 
@@ -545,7 +549,9 @@ test.describe('prerendered pages compiled from MDX', () => {
         await expect(page.locator('h3#size')).toHaveText('Size');
         await expect(page.locator('docs-live-example-viewer alert-overview-example')).toBeVisible();
         // Nothing is fetched to render the page, so no document is serialized into the transfer state.
-        expect(await response?.text()).not.toContain('docs-content/');
+        const html = await response?.text();
+
+        expect(html).not.toContain('docs-content/');
     });
 
     test('hold the place of the examples that render only in the browser with a skeleton', async ({ page }) => {
@@ -583,13 +589,16 @@ test.describe('migration guide filter', () => {
     const MIGRATION_URL = '/en/main/migration/overview';
 
     const visibleSteps = (page: Page) => page.locator('.docs-migration-step:not([hidden])');
+    // Set in the same task that applies the picked range, after hydration and the network going idle: a count
+    // taken before it sees the prerendered guide with every step.
+    const waitForFilter = (page: Page) => expect(page.locator('.docs-migration-guide_ready')).toHaveCount(1);
 
     test('opens on the pickers and shows the steps once both versions are picked', async ({ page }) => {
         for (const query of ['', '?from=17']) {
             await page.goto(MIGRATION_URL + query);
             await waitForHydration(page);
 
-            expect(await page.locator('.docs-migration-step').count()).toBeGreaterThan(1);
+            await expect.poll(() => page.locator('.docs-migration-step').count()).toBeGreaterThan(1);
             await expect(visibleSteps(page)).toHaveCount(0);
             await expect(page.locator('.docs-migration-guide__prompt')).toBeVisible();
         }
@@ -619,8 +628,9 @@ test.describe('migration guide filter', () => {
 
         await page.goto(MIGRATION_URL + '?from=20.2.0&to=21.0.0');
         await waitForHydration(page);
+        await waitForFilter(page);
 
-        expect(await subsections.count()).toBeGreaterThan(1);
+        await expect.poll(() => subsections.count()).toBeGreaterThan(1);
 
         await page.goto(MIGRATION_URL + '?from=20.2.0&to=21.0.0&components=select');
         await waitForHydration(page);
@@ -672,8 +682,12 @@ test.describe('migration guide filter', () => {
 
         await page.goto(MIGRATION_URL + '?from=20.0.0&to=20.2.0');
         await waitForHydration(page);
+        await waitForFilter(page);
 
         const shown = await visibleSteps(page).count();
+
+        expect(shown).toBeGreaterThan(0);
+        expect(shown).toBeLessThan(await page.locator('.docs-migration-step').count());
 
         await page.reload();
         await waitForHydration(page);
@@ -720,7 +734,7 @@ test.describe('prerendered SEO metadata', () => {
     test('serves the whole migration guide without hydration', async ({ page }) => {
         await page.goto('/en/main/migration/overview');
 
-        expect(await page.locator('.docs-migration-step').count()).toBeGreaterThan(1);
+        await expect.poll(() => page.locator('.docs-migration-step').count()).toBeGreaterThan(1);
         await expect(page.locator('.docs-migration-step[hidden]')).toHaveCount(0);
         await expect(page.locator('.docs-migration-step').first()).toBeVisible();
     });
@@ -736,6 +750,64 @@ test.describe('prerendered SEO metadata', () => {
         await page.goto('/unknown-page');
         await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,follow');
     });
+});
+
+// The Algolia crawler reads the records of the search off a page by the `data-docsearch-*` attributes its configuration
+// in the Algolia dashboard selects (`src/app/components/docsearch/docsearch.ts` describes them). A page that lost them
+// would not fail the crawl: it would only drop out of the search once the next release is crawled.
+test.describe('search index', () => {
+    const record = {
+        lvl0: 'data-docsearch-lvl0',
+        lvl1: 'data-docsearch-lvl1',
+        lvl2: 'data-docsearch-lvl2',
+        content: 'data-docsearch-content'
+    };
+    const byAttribute = (page: Page, name: string) => page.locator(`[${name}]`);
+
+    // The crawler of koobiq.io renders JavaScript, while another one reads the prerendered HTML alone.
+    for (const javaScriptEnabled of [true, false]) {
+        test.describe(`with JavaScript ${javaScriptEnabled ? 'enabled' : 'disabled'}`, () => {
+            test.use({ javaScriptEnabled });
+
+            const open = async (page: Page, url: string): Promise<void> => {
+                await page.goto(url);
+
+                if (javaScriptEnabled) await waitForHydration(page);
+            };
+
+            for (const [locale, group] of [
+                [DocsLocale.En, 'Components'],
+                [DocsLocale.Ru, 'Компоненты']
+            ]) {
+                test(`reads an overview page in its language (${locale})`, async ({ page }) => {
+                    await open(page, `/${locale}/components/alert/overview`);
+
+                    // The `lang` facet the search filters by.
+                    await expect(page.locator('html')).toHaveAttribute('lang', locale);
+                    await expect(byAttribute(page, record.lvl0)).toHaveAttribute(record.lvl0, group);
+                    await expect(byAttribute(page, record.lvl1)).toHaveText('Alert');
+                    await expect(byAttribute(page, record.lvl2).first()).not.toBeEmpty();
+                    await expect(byAttribute(page, record.content).first()).not.toBeEmpty();
+                });
+            }
+
+            test('reads an API tab as a group of its own', async ({ page }) => {
+                await open(page, '/en/components/select/api');
+
+                await expect(byAttribute(page, record.lvl0)).toHaveAttribute(record.lvl0, 'API');
+                await expect(byAttribute(page, record.lvl1)).toHaveText('Select');
+                await expect(byAttribute(page, record.lvl2).first()).not.toBeEmpty();
+                await expect(byAttribute(page, record.content).first()).not.toBeEmpty();
+            });
+
+            test('reads the icons page', async ({ page }) => {
+                await open(page, '/en/main/icons');
+
+                await expect(byAttribute(page, record.lvl0)).toHaveAttribute(record.lvl0, 'Icons');
+                await expect(byAttribute(page, record.lvl1)).toHaveText('Icons');
+            });
+        });
+    }
 });
 
 // `tools/llms` writes an index for agents and the Markdown of every item next to its pages; a copy of the site that
@@ -766,11 +838,15 @@ test.describe('documentation for agents', () => {
         const full = await request.get('/llms-full.txt');
 
         expect(full.status()).toBe(200);
-        expect(await full.text()).toContain('\n## Button\n');
+        const text = await full.text();
+
+        expect(text).toContain('\n## Button\n');
     });
 
     test('answers a Markdown file it does not have with a 404 rather than the app', async ({ request }) => {
-        expect((await request.get('/en/components/missing.md')).status()).toBe(404);
+        const response = await request.get('/en/components/missing.md');
+
+        expect(response.status()).toBe(404);
     });
 
     test('points every page of an item at the English Markdown at its own address, on the host that serves it', async ({
@@ -788,6 +864,9 @@ test.describe('documentation for agents', () => {
         const markdown = await page.request.get('/ru/components/alert.md');
 
         expect(markdown.status()).toBe(200);
-        expect(await markdown.text()).toBe(await (await page.request.get('/en/components/alert.md')).text());
+        const english = await page.request.get('/en/components/alert.md');
+        const [text, englishText] = await Promise.all([markdown.text(), english.text()]);
+
+        expect(text).toBe(englishText);
     });
 });

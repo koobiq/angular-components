@@ -29,11 +29,15 @@ test.describe('KbqNotificationCenterModule', () => {
 
             await title.click();
             await expect(time).toHaveClass(/kbq-notification-item-time_read/);
-
-            expect((await title.boundingBox())?.width).toBe(titleBefore?.width);
-            expect((await item.boundingBox())?.height).toBe(itemBefore?.height);
             // The hidden dot moves before the time, which takes the dot's place at the edge.
-            expect((await timeValue.boundingBox())!.x).toBeGreaterThan(timeValueBefore!.x);
+            await expect.poll(async () => (await timeValue.boundingBox())?.x).toBeGreaterThan(timeValueBefore!.x);
+
+            // Read once the time has moved: a poll for an unchanged box would pass on the unread layout.
+            const titleAfter = await title.boundingBox();
+            const itemAfter = await item.boundingBox();
+
+            expect(titleAfter?.width).toBe(titleBefore?.width);
+            expect(itemAfter?.height).toBe(itemBefore?.height);
         });
     });
 
@@ -157,7 +161,7 @@ test.describe('KbqNotificationCenterModule', () => {
                 await page.keyboard.press('Tab');
             }
 
-            expect(await isFocusInsidePanel(page)).toBe(true);
+            await expect.poll(() => isFocusInsidePanel(page)).toBe(true);
         });
 
         test('Escape closes the panel and returns focus to the trigger', async ({ page }) => {
@@ -181,7 +185,7 @@ test.describe('KbqNotificationCenterModule', () => {
             await page.getByTestId('kbq-notification-center-remove-group-button').first().click();
 
             await expect(groups).toHaveCount(initialCount - 1);
-            expect(await isFocusInsidePanel(page)).toBe(true);
+            await expect.poll(() => isFocusInsidePanel(page)).toBe(true);
         });
     });
 });

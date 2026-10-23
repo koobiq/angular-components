@@ -487,9 +487,13 @@ test.describe('KbqSelectModule', () => {
 
             await page.getByTestId('e2eSelect').click();
             await page.locator('.cdk-overlay-pane .kbq-select__panel').waitFor();
+            // Focusing the option is when the panel scrolls it into view: a polled scroll could predate that.
+            await expect(page.getByTestId('e2eOption-steak-0')).toBeFocused();
+
+            const scrollTop = await panelScrollTop(page);
 
             // No option selected → panel cannot center; scrollTop should stay at 0.
-            expect(await panelScrollTop(page)).toBe(0);
+            expect(scrollTop).toBe(0);
 
             const trigger = await box(page.getByTestId('e2eSelect'));
             const firstOption = await box(page.getByTestId('e2eOption-steak-0'));
@@ -516,9 +520,12 @@ test.describe('KbqSelectModule', () => {
             const selected = page.locator('.cdk-overlay-pane kbq-option.kbq-selected');
 
             await expect(selected).toContainText('Pizza');
+            await expect(page.getByTestId('e2eOption-pizza-1')).toBeFocused();
+
+            const scrollTop = await panelScrollTop(page);
 
             // Cannot centre a near-top option, so scroll stays at 0.
-            expect(await panelScrollTop(page)).toBe(0);
+            expect(scrollTop).toBe(0);
         });
 
         test('should keep the selected middle option visible inside the panel viewport', async ({ page }) => {
@@ -838,9 +845,12 @@ test.describe('KbqSelectModule', () => {
 
             await page.getByTestId('e2eSelect').click();
             await page.locator('.cdk-overlay-pane .kbq-select__panel').waitFor();
+            await expect(page.getByTestId('e2eOption-steak-0')).toBeFocused();
+
+            const scrollTop = await panelScrollTop(page);
 
             // No additional scroll possible — panel falls back to opening above the trigger.
-            expect(await panelScrollTop(page)).toBe(0);
+            expect(scrollTop).toBe(0);
 
             const triggerBox = await box(page.getByTestId('e2eSelect'));
             const overlayBox = await box(page.locator('.cdk-overlay-pane'));
@@ -1209,15 +1219,6 @@ test.describe('KbqSelectModule', () => {
     });
 
     test.describe('panelMaxHeight', () => {
-        /** Reads a resolved CSS length off the first element matching the selector. */
-        async function computed(page: Page, selector: string, property: string): Promise<string> {
-            return page.evaluate(
-                ({ selector, property }) =>
-                    getComputedStyle(document.querySelector<HTMLElement>(selector)!).getPropertyValue(property),
-                { selector, property }
-            );
-        }
-
         test('should cap the option list at panelMaxHeight', async ({ page }) => {
             await page.goto('/E2eSelectPanelMaxHeight');
 
@@ -1226,14 +1227,16 @@ test.describe('KbqSelectModule', () => {
             const content = page.locator('.cdk-overlay-pane .kbq-select__content');
 
             await content.waitFor();
-            expect(await computed(page, '.cdk-overlay-pane .kbq-select__content', 'max-height')).toBe('256px');
+            await expect(content).toHaveCSS('max-height', '256px');
 
             await page.keyboard.press('Escape');
+            // Gone before the reopen, so the assertion below cannot read the closing panel.
+            await expect(content).toHaveCount(0);
             await page.getByTestId('e2eGrowPanelButton').click();
             await page.getByTestId('e2eSelect').click();
             await content.waitFor();
 
-            expect(await computed(page, '.cdk-overlay-pane .kbq-select__content', 'max-height')).toBe('2000px');
+            await expect(content).toHaveCSS('max-height', '2000px');
         });
 
         test('should keep the panel inside the viewport when panelMaxHeight exceeds it', async ({ page }) => {
@@ -1259,13 +1262,11 @@ test.describe('KbqSelectModule', () => {
 
             await viewport.waitFor();
 
-            const selector = '.cdk-overlay-pane .cdk-virtual-scroll-viewport';
-
             // `min-height` and `max-height` are both pinned to the token, so with virtual scroll the value
             // is an exact height: three 32px options still occupy the full 300px.
-            expect(await computed(page, selector, 'min-height')).toBe('300px');
-            expect(await computed(page, selector, 'max-height')).toBe('300px');
-            expect((await box(viewport)).height).toBe(300);
+            await expect(viewport).toHaveCSS('min-height', '300px');
+            await expect(viewport).toHaveCSS('max-height', '300px');
+            await expect.poll(async () => (await viewport.boundingBox())?.height).toBe(300);
         });
 
         test('should flip the panel above the trigger when a tall panel does not fit below', async ({ page }) => {

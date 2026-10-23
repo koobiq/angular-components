@@ -1,7 +1,14 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ESCAPE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { CdkScrollable, Overlay, OverlayContainer, OverlayRef, ScrollDispatcher } from '@angular/cdk/overlay';
+import {
+    CdkScrollable,
+    Overlay,
+    OverlayContainer,
+    OverlayRef,
+    ScrollDispatcher,
+    ScrollStrategy
+} from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import {
     ApplicationRef,
@@ -17,7 +24,7 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { dispatchKeyboardEvent, dispatchMouseEvent, kbqShadowDomOverlayProvider } from '@koobiq/components/core';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Subject, Subscription } from 'rxjs';
+import { NEVER, Subject, Subscription } from 'rxjs';
 import type { Mock, MockInstance } from 'vitest';
 import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastComponent } from './toast.component';
@@ -1292,33 +1299,42 @@ class ToastTooltipWrapper {
 })
 class ToastOverlayContent {}
 
-describe('KbqToastService: global scroll notifications', () => {
+describe('KbqToastService: stack reflow', () => {
     // `KbqPopUpTrigger` default enter delay (400ms) plus a buffer for the deferred show.
     const tooltipEnterDelay = 410;
 
+    let resized: Subject<ResizeObserverEntry[]>;
     let service: KbqToastService;
+    let overlay: Overlay;
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
     let scrolled: Mock;
     let scrollSubscription: Subscription;
 
-    /** Renders the toast container and the toast itself — the container registers as a scrollable in `ngOnInit`. */
-    const renderToast = () => {
-        const { id } = service.show(createToastData(), 0);
-
-        TestBed.inject(ApplicationRef).tick();
-
-        return id;
-    };
-
     beforeEach(() => {
+        resized = new Subject<ResizeObserverEntry[]>();
+
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, ToastTooltipWrapper]
+            imports: [KbqToastModule, ToastTooltipWrapper, ToastTemplateWrapper],
+            // jsdom performs no layout, so the real observer would never fire, and a check that nothing reaches
+            // the scroll dispatcher would pass without a reflow ever happening. Keyed on the container, so that
+            // the `kbq-title` directives inside a toast neither share the subject nor count as its observers.
+            providers: [
+                {
+                    provide: SharedResizeObserver,
+                    useValue: {
+                        observe: (target: Element) =>
+                            target.classList.contains('kbq-toast-container') ? resized : NEVER
+                    }
+                }
+            ]
         });
 
         service = TestBed.inject(KbqToastService);
+        overlay = TestBed.inject(Overlay);
         overlayContainer = TestBed.inject(OverlayContainer);
         overlayContainerElement = overlayContainer.getContainerElement();
+        // `scrolled(0)` and `CloseScrollStrategy` deliver synchronously, so no flushing is needed.
         scrolled = vi.fn();
         scrollSubscription = TestBed.inject(ScrollDispatcher).scrolled(0).subscribe(scrolled);
     });
@@ -1330,25 +1346,60 @@ describe('KbqToastService: global scroll notifications', () => {
         vi.useRealTimers();
     });
 
-    it('does not notify the global ScrollDispatcher when a toast is shown, animated and hidden', () => {
-        const id = renderToast();
+    /** The container registers itself as a scrollable in `ngOnInit`, which needs a change-detection pass to run. */
+    const showToast = () => {
+        const { id } = service.show(createToastData(), 0);
 
-        service.hide(id);
         TestBed.inject(ApplicationRef).tick();
 
+        return id;
+    };
+
+    /** Shows a toast the way a browser reports it: the stack's box changes size. */
+    const showToastAndReflow = () => {
+        const id = showToast();
+
+        resized.next([]);
+
+        return id;
+    };
+
+    /** The strategies only subscribe once the overlay is actually attached. */
+    const attachConnectedOverlay = (scrollStrategy: ScrollStrategy): OverlayRef => {
+        const overlayRef = overlay.create({
+            positionStrategy: overlay
+                .position()
+                .flexibleConnectedTo(document.body)
+                .withPositions([{ originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' }]),
+            scrollStrategy
+        });
+
+        overlayRef.attach(new ComponentPortal(ToastOverlayContent));
+
+        return overlayRef;
+    };
+
+    it('does not notify the global ScrollDispatcher when the stack reflows', () => {
+        const id = showToastAndReflow();
+
+        // A second toast keeps the stack alive across the removal, so the reflow it causes reaches a container.
+        showToastAndReflow();
+        service.hide(id);
+        TestBed.inject(ApplicationRef).tick();
+        resized.next([]);
+
+        expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(1);
         expect(scrolled).not.toHaveBeenCalled();
     });
 
     it('keeps an overlay with the close-on-scroll strategy attached when a toast appears', () => {
         // Models a third-party overlay (the reported case is a Mosaic popover in a micro-frontend):
         // `CloseScrollStrategy` detaches on any emission that did not originate inside its own overlay.
-        const overlay = TestBed.inject(Overlay);
-        const overlayRef: OverlayRef = overlay.create({ scrollStrategy: overlay.scrollStrategies.close() });
+        const overlayRef = overlay.create({ scrollStrategy: overlay.scrollStrategies.close() });
 
         overlayRef.attach(new ComponentPortal(ToastOverlayContent));
-        expect(overlayRef.hasAttached()).toBe(true);
 
-        renderToast();
+        showToastAndReflow();
 
         expect(overlayRef.hasAttached()).toBe(true);
 
@@ -1368,7 +1419,7 @@ describe('KbqToastService: global scroll notifications', () => {
         fixture.detectChanges();
         expect(overlayContainerElement.querySelector('.kbq-tooltip')).toBeTruthy();
 
-        renderToast();
+        showToastAndReflow();
         await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
@@ -1378,81 +1429,10 @@ describe('KbqToastService: global scroll notifications', () => {
         await vi.runOnlyPendingTimersAsync();
     });
 
-    it('keeps the container registered as a scrollable, so a real scroll still reaches the dispatcher', () => {
-        renderToast();
-
-        overlayContainerElement.querySelector('kbq-toast-container')!.dispatchEvent(new Event('scroll'));
-
-        expect(scrolled).toHaveBeenCalled();
-    });
-});
-
-describe('KbqToastService: stack reflow', () => {
-    let resized: Subject<ResizeObserverEntry[]>;
-    let service: KbqToastService;
-    let overlayContainer: OverlayContainer;
-
-    beforeEach(() => {
-        resized = new Subject<ResizeObserverEntry[]>();
-
-        TestBed.configureTestingModule({
-            imports: [KbqToastModule, ToastTemplateWrapper],
-            // jsdom performs no layout, so the real observer would never fire.
-            providers: [{ provide: SharedResizeObserver, useValue: { observe: () => resized } }]
-        });
-
-        service = TestBed.inject(KbqToastService);
-        overlayContainer = TestBed.inject(OverlayContainer);
-    });
-
-    afterEach(() => {
-        service.ngOnDestroy();
-        overlayContainer.ngOnDestroy();
-    });
-
-    /** The container registers itself in `ngOnInit`, which needs a change-detection pass to run. */
-    const showToast = () => {
-        service.show(createToastData(), 0);
-        TestBed.inject(ApplicationRef).tick();
-    };
-
-    /** `reposition()` and `scrolled(0)` both deliver synchronously, so no flushing is needed. */
-    const collectScrolls = () => {
-        const sources: (CdkScrollable | void)[] = [];
-
-        TestBed.inject(ScrollDispatcher)
-            .scrolled(0)
-            .subscribe((source) => sources.push(source));
-
-        return sources;
-    };
-
-    it('reports a reflow of the stack through the scroll dispatcher', () => {
+    it('repositions an overlay anchored to an element when the stack reflows', () => {
         showToast();
 
-        const sources = collectScrolls();
-
-        resized.next([]);
-
-        expect(sources.length).toBe(1);
-        expect((sources[0] as CdkScrollable).getElementRef().nativeElement.classList).toContain('kbq-toast-container');
-    });
-
-    it('repositions an overlay anchored inside a toast', () => {
-        showToast();
-
-        const overlay = TestBed.inject(Overlay);
-        const overlayRef = overlay.create({
-            positionStrategy: overlay
-                .position()
-                .flexibleConnectedTo(document.body)
-                .withPositions([{ originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' }]),
-            scrollStrategy: overlay.scrollStrategies.reposition()
-        });
-
-        // The strategy only subscribes once the overlay is actually attached.
-        overlayRef.attach(new ComponentPortal(ToastOverlayContent));
-
+        const overlayRef = attachConnectedOverlay(overlay.scrollStrategies.reposition());
         const updatePosition = vi.spyOn(overlayRef, 'updatePosition');
 
         resized.next([]);
@@ -1462,37 +1442,64 @@ describe('KbqToastService: stack reflow', () => {
         overlayRef.dispose();
     });
 
-    it('reports a reflow caused by a template toast, which is removed without an animation', () => {
+    it('repositions an anchored overlay that closes on scroll without closing it', () => {
+        showToast();
+
+        const overlayRef = attachConnectedOverlay(overlay.scrollStrategies.close());
+        const updatePosition = vi.spyOn(overlayRef, 'updatePosition');
+
+        resized.next([]);
+
+        expect(updatePosition).toHaveBeenCalled();
+        expect(overlayRef.hasAttached()).toBe(true);
+
+        overlayRef.dispose();
+    });
+
+    it('repositions on a reflow caused by a template toast, which is removed without an animation', () => {
         const fixture = TestBed.createComponent(ToastTemplateWrapper);
 
         fixture.detectChanges();
 
         // A second toast has to outlive the removal, otherwise the whole overlay — container included —
-        // is torn down and there is nothing left to report the reflow.
+        // is torn down and there is nothing left to watch the stack.
         showToast();
 
         const { id } = service.showTemplate({}, fixture.componentInstance.template(), 0);
 
         TestBed.inject(ApplicationRef).tick();
 
-        const sources = collectScrolls();
+        const overlayRef = attachConnectedOverlay(overlay.scrollStrategies.reposition());
+        const updatePosition = vi.spyOn(overlayRef, 'updatePosition');
 
         // A template toast has no exit animation to wait for — watching the container's box is what makes
-        // this case report at all.
+        // this case reposition at all.
         service.hideTemplate(id);
         resized.next([]);
 
-        expect(sources.length).toBe(1);
+        expect(updatePosition).toHaveBeenCalled();
+
+        overlayRef.dispose();
     });
 
-    it('still reports real scroll events on the container', () => {
+    it('stops watching the stack once the container is destroyed', () => {
         showToast();
 
-        const container = overlayContainer.getContainerElement().querySelector('kbq-toast-container')!;
-        const sources = collectScrolls();
+        expect(resized.observed).toBe(true);
+
+        service.ngOnDestroy();
+
+        expect(resized.observed).toBe(false);
+    });
+
+    it('keeps the container registered as a scrollable, so a real scroll still reaches the dispatcher', () => {
+        showToast();
+
+        const container = overlayContainerElement.querySelector('kbq-toast-container')!;
 
         container.dispatchEvent(new Event('scroll'));
 
-        expect(sources.length).toBe(1);
+        expect(scrolled).toHaveBeenCalledTimes(1);
+        expect((scrolled.mock.calls[0][0] as CdkScrollable).getElementRef().nativeElement).toBe(container);
     });
 });

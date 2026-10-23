@@ -57,10 +57,22 @@ describe('kbqGetTextQuery', () => {
 
         it('should stop at once at a long run of word characters that does not reach the caret', () => {
             const value = `${'a'.repeat(40_000)}!`;
-            const started = performance.now();
+            // Counted rather than timed, so the machine does not matter: every match of a regular expression goes
+            // through `exec`, and what it is handed is what the scan reads. A pattern anchored at the caret would
+            // be handed the whole run, and retried from every position of it, which takes seconds.
+            const exec = vi.spyOn(RegExp.prototype, 'exec');
+            let result: ReturnType<typeof kbqGetTextQuery>;
+            let charactersRead: number;
 
-            expect(kbqGetTextQuery(value, value.length)).toBeNull();
-            expect(performance.now() - started).toBeLessThan(100);
+            try {
+                result = kbqGetTextQuery(value, value.length);
+                charactersRead = exec.mock.calls.reduce((sum, [input]) => sum + String(input).length, 0);
+            } finally {
+                exec.mockRestore();
+            }
+
+            expect(result).toBeNull();
+            expect(charactersRead).toBeLessThanOrEqual(2);
         });
     });
 

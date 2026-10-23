@@ -81,28 +81,41 @@ test.describe('KbqDatepickerModule', () => {
             });
 
             const input = page.locator('input.kbq-datepicker');
+            const readSelection = async () => (await readState(input)).selection;
 
             await input.click();
             await page.keyboard.press('Control+a');
-            // Typing is what scrolls the field: the browser follows the caret to the end of the value.
-            await page.keyboard.type('24012024', { delay: 30 });
-
-            await expect.poll(async () => (await readState(input)).value).toBe('24.01.2024');
-
-            const typed = await readState(input);
+            // Typing is what scrolls the field: the browser follows the caret to the end of the value. Each
+            // part goes in once the input has parsed the previous one and selected the next, since keys that
+            // outrun those timers are the unit specs' concern, not this test's.
+            await page.keyboard.type('24');
+            await expect.poll(readSelection).toBe('3,5');
+            await page.keyboard.type('01');
+            await expect.poll(readSelection).toBe('6,10');
+            await page.keyboard.type('2024');
 
             // Without an overflow, and without the field actually being scrolled away from the start,
             // the assertion below would hold for a field that never moved.
-            expect(typed.overflowing).toBe(true);
-            expect(typed.scrollLeft).toBeGreaterThan(0);
-            expect(typed.selection).toBe('6,10');
+            await expect
+                .poll(async () => {
+                    const { value, selection, overflowing, scrollLeft } = await readState(input);
+
+                    return { value, selection, overflowing, scrolled: scrollLeft > 0 };
+                })
+                .toEqual({ value: '24.01.2024', selection: '6,10', overflowing: true, scrolled: true });
 
             // Back through the month and onto the day, which the field is currently scrolled past.
             await page.keyboard.press('ArrowLeft');
+            await expect.poll(readSelection).toBe('3,5');
             await page.keyboard.press('ArrowLeft');
 
-            await expect.poll(async () => (await readState(input)).selection).toBe('0,2');
-            expect((await readState(input)).scrollLeft).toBe(0);
+            await expect
+                .poll(async () => {
+                    const { selection, scrollLeft } = await readState(input);
+
+                    return { selection, scrollLeft };
+                })
+                .toEqual({ selection: '0,2', scrollLeft: 0 });
         });
     });
 
@@ -120,19 +133,13 @@ test.describe('KbqDatepickerModule', () => {
             await page.getByTestId('e2eDatepickerToggle').click();
             await page.locator(panelSelector).waitFor();
 
-            const { hitsPane, hitsPanelContent } = await probeTriggerPanelGap(
-                page,
-                triggerSelector,
-                panelSelector,
-                'bottom'
-            );
-
             // A point 2px below the trigger's bottom edge — the former physical dead gap.
             // It must now resolve to the overlay pane (which covers it via transparent padding) but NOT to
             // real panel content, so it can no longer be clicked through onto the content beneath the panel
             // AND this can't pass merely because offsetY:0 collapsed the gap to nothing (no padding at all).
-            expect(hitsPane).toBe(true);
-            expect(hitsPanelContent).toBe(false);
+            await expect
+                .poll(() => probeTriggerPanelGap(page, triggerSelector, panelSelector, 'bottom'))
+                .toEqual({ hitsPane: true, hitsPanelContent: false });
         });
 
         test('above (flipped): the gap is covered by the pane, not real panel content', async ({ page }) => {
@@ -143,6 +150,12 @@ test.describe('KbqDatepickerModule', () => {
             await page.getByTestId('e2eDatepickerToggle').click();
             await page.locator(panelSelector).waitFor();
 
+            // Polled first: it holds only once the pane is in place, while the boxes below would also pass for a
+            // pane not positioned yet.
+            await expect
+                .poll(() => probeTriggerPanelGap(page, triggerSelector, panelSelector, 'top'))
+                .toEqual({ hitsPane: true, hitsPanelContent: false });
+
             // Sanity check the flip actually happened, otherwise this would silently re-test "below".
             const triggerBox = await page.locator(triggerSelector).boundingBox();
             const panelBox = await page.locator('.cdk-overlay-pane').boundingBox();
@@ -150,16 +163,6 @@ test.describe('KbqDatepickerModule', () => {
             expect(triggerBox).not.toBeNull();
             expect(panelBox).not.toBeNull();
             expect(panelBox!.y + panelBox!.height).toBeLessThanOrEqual(triggerBox!.y + 2);
-
-            const { hitsPane, hitsPanelContent } = await probeTriggerPanelGap(
-                page,
-                triggerSelector,
-                panelSelector,
-                'top'
-            );
-
-            expect(hitsPane).toBe(true);
-            expect(hitsPanelContent).toBe(false);
         });
     });
 });

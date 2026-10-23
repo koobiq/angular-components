@@ -121,7 +121,10 @@ test.describe('KbqNavbarModule', () => {
                 return sizes;
             };
 
-            expect(new Set(await sample()).size).toBe(1);
+            // Read once: the samples already span the debounce window, and a retry would pass on any quiet stretch.
+            const sizes = await sample();
+
+            expect(new Set(sizes).size).toBe(1);
         });
     });
 

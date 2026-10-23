@@ -32,7 +32,10 @@ const param = (name: string, type: string, description = '', isOptional = false)
     isRestParam: false
 });
 
-const paragraph = (html: string) => ({ type: 'html', html: `<p class="kbq-markdown__p">${html}</p>` });
+const paragraph = (html: string) => ({
+    type: 'html',
+    html: `<p class="kbq-markdown__p" data-docsearch-content>${html}</p>`
+});
 
 const getEntries = (entries: DocEntry[]) =>
     getApiEntryPoint(entries, 'components', 'alert').groups.flatMap((group) => group.entries);

@@ -304,8 +304,8 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
     private valueFromPaste: number | null;
 
-    /** Pending `onInput` reformats, cancelled on destroy. */
-    private readonly pendingReformats = new Set<ReturnType<typeof setTimeout>>();
+    /** Pending `onInput` reformats by timer handle: cancelled on destroy, run at once before a step. */
+    private readonly pendingReformats = new Map<ReturnType<typeof setTimeout>, (correctCaret: boolean) => void>();
 
     constructor() {
         // The inputs stay `undefined` until a template binds them, so an unbound one does not override what a
@@ -338,7 +338,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         });
 
         this.destroyRef.onDestroy(() => {
-            this.pendingReformats.forEach(clearTimeout);
+            this.pendingReformats.forEach((_, handle) => clearTimeout(handle));
             this.pendingReformats.clear();
         });
     }
@@ -454,7 +454,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         // Deferred so the browser has applied the keystroke to the native value before it is reformatted.
         // The handle is tracked and cleared on destroy: a directive torn down between the keystroke and the
         // timeout must not write to a detached node nor push a change into a control the view no longer owns.
-        const handle = setTimeout(() => {
+        const reformat = (correctCaret: boolean) => {
             this.pendingReformats.delete(handle);
 
             const fromPaste = event.inputType === 'insertFromPaste';
@@ -466,7 +466,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
                 /*this.viewValue is raw and should be reformatted to localized number */
                 formattedValue = this.formatViewValue();
 
-                if (this.withThousandSeparator()) {
+                if (correctCaret && this.withThousandSeparator()) {
                     this.correctCaretForSeparator(currentValueLength, previousSelectionStart);
                 }
             }
@@ -476,9 +476,10 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             if (this.viewValue !== '-') {
                 this.viewToModelUpdate(formattedValue);
             }
-        });
+        };
+        const handle = setTimeout(() => reformat(true));
 
-        this.pendingReformats.add(handle);
+        this.pendingReformats.set(handle, reformat);
     }
 
     onPaste(event: ClipboardEvent) {
@@ -501,6 +502,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
     stepUp(step: number) {
         this.nativeElement.focus();
+        this.commitPendingReformats();
 
         const res = Math.max(Math.min(add(this.value || 0, step), this.max()), this.min());
 
@@ -513,6 +515,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
     stepDown(step: number) {
         this.nativeElement.focus();
+        this.commitPendingReformats();
 
         const res = Math.min(Math.max(add(this.value || 0, -step), this.min()), this.max());
 
@@ -543,6 +546,18 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     };
 
     private cvaOnChange: (value: any) => void = () => {};
+
+    /**
+     * Commits a keystroke whose reformat is still pending, so a step pressed right after typing starts from
+     * the typed value rather than the last committed one. The caret correction is skipped: the step rewrites
+     * the value it would apply to.
+     */
+    private commitPendingReformats(): void {
+        this.pendingReformats.forEach((reformat, handle) => {
+            clearTimeout(handle);
+            reformat(false);
+        });
+    }
 
     /**
      * Moves the caret one position when a group separator was inserted or removed by the reformat, so it

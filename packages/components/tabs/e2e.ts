@@ -1,4 +1,4 @@
-import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, inject, Injector, signal } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { kbqScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
 import { KbqTabsModule } from '@koobiq/components/tabs';
@@ -27,215 +27,228 @@ const e2eTabLabelStateSetter = (testid: string) => {
     selector: 'e2e-tabs-states',
     imports: [KbqTabsModule, KbqIconModule],
     template: `
-        <!-- base -->
-        <kbq-tab-group>
-            @for (tab of tabs.slice(0, 2); track tab) {
-                <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
-            }
-        </kbq-tab-group>
+        <!--
+            Rendered on demand rather than with the page, so that a spec can load the fonts first: the paginated
+            strips scroll their selected tab into view from a measurement of the labels — see e2eWaitForFonts.
+        -->
+        @if (shown()) {
+            <!-- base -->
+            <kbq-tab-group>
+                @for (tab of tabs.slice(0, 2); track tab) {
+                    <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- base with icons -->
-        <kbq-tab-group [activeTab]="tabs[5]">
-            @for (tab of tabs; track tab) {
-                <kbq-tab [tabId]="tab">
-                    <ng-template kbq-tab-label>
-                        <i kbq-icon="kbq-bug_16"></i>
-                        {{ tab }}
-                    </ng-template>
-                    Active tab is {{ tab }}
-                </kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- base with icons -->
+            <kbq-tab-group data-testid="e2eTabsWithIcons" [activeTab]="tabs[5]">
+                @for (tab of tabs; track tab) {
+                    <kbq-tab [tabId]="tab">
+                        <ng-template kbq-tab-label>
+                            <i kbq-icon="kbq-bug_16"></i>
+                            {{ tab }}
+                        </ng-template>
+                        Active tab is {{ tab }}
+                    </kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- underlined with icons only -->
-        <kbq-tab-group underlined data-testid="e2eTabsUnderlinedIconsOnly">
-            @for (tab of tabs.slice(0, 5); track tab) {
-                <kbq-tab>
-                    <ng-template kbqTabLabel iconOnly>
-                        <i kbq-icon="kbq-bug_16"></i>
-                    </ng-template>
-                </kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- underlined with icons only -->
+            <kbq-tab-group underlined data-testid="e2eTabsUnderlinedIconsOnly">
+                @for (tab of tabs.slice(0, 5); track tab) {
+                    <kbq-tab>
+                        <ng-template kbqTabLabel iconOnly>
+                            <i kbq-icon="kbq-bug_16"></i>
+                        </ng-template>
+                    </kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- underlined -->
-        <kbq-tab-group underlined data-testid="e2eTabsUnderlined">
-            @for (tab of tabs; track tab) {
-                <kbq-tab [tabId]="tab" [disabled]="$index === 1">
-                    <ng-template kbq-tab-label>
-                        <i kbq-icon="kbq-bug_16"></i>
-                        {{ tab }}
-                    </ng-template>
-                    Active tab is {{ tab }}
-                </kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- underlined -->
+            <kbq-tab-group underlined data-testid="e2eTabsUnderlined">
+                @for (tab of tabs; track tab) {
+                    <kbq-tab [tabId]="tab" [disabled]="$index === 1">
+                        <ng-template kbq-tab-label>
+                            <i kbq-icon="kbq-bug_16"></i>
+                            {{ tab }}
+                        </ng-template>
+                        Active tab is {{ tab }}
+                    </kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- stretched -->
-        <kbq-tab-group kbq-stretch-tabs [activeTab]="tabs[2]">
-            @for (tab of tabs.slice(0, 2); track tab) {
-                <kbq-tab [disabled]="$first" [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- stretched -->
+            <kbq-tab-group kbq-stretch-tabs [activeTab]="tabs[2]">
+                @for (tab of tabs.slice(0, 2); track tab) {
+                    <kbq-tab [disabled]="$first" [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- underlined with text and icon states -->
-        <kbq-tab-group underlined data-testid="e2eTabsUnderlinedTextIcon">
-            @for (tab of tabs.slice(0, 4); track tab) {
-                <kbq-tab [tabId]="tab" [disabled]="$index === 3">
-                    <ng-template kbq-tab-label>
-                        <i kbq-icon="kbq-bug_16"></i>
-                        Text {{ $index }}
-                    </ng-template>
-                    Active tab is {{ tab }}
-                </kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- underlined with text and icon states -->
+            <kbq-tab-group underlined data-testid="e2eTabsUnderlinedTextIcon">
+                @for (tab of tabs.slice(0, 4); track tab) {
+                    <kbq-tab [tabId]="tab" [disabled]="$index === 3">
+                        <ng-template kbq-tab-label>
+                            <i kbq-icon="kbq-bug_16"></i>
+                            Text {{ $index }}
+                        </ng-template>
+                        Active tab is {{ tab }}
+                    </kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- stretched with icons -->
-        <kbq-tab-group kbq-stretch-tabs>
-            @for (tab of tabs.slice(0, 2); track tab) {
-                <kbq-tab [tabId]="tab">
-                    <ng-template kbq-tab-label>
-                        <i kbq-icon="kbq-bug_16"></i>
-                        {{ tab }}
-                    </ng-template>
-                    Active tab is {{ tab }}
-                </kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- stretched with icons -->
+            <kbq-tab-group kbq-stretch-tabs>
+                @for (tab of tabs.slice(0, 2); track tab) {
+                    <kbq-tab [tabId]="tab">
+                        <ng-template kbq-tab-label>
+                            <i kbq-icon="kbq-bug_16"></i>
+                            {{ tab }}
+                        </ng-template>
+                        Active tab is {{ tab }}
+                    </kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- stretched and underlined -->
-        <kbq-tab-group kbq-stretch-tabs underlined>
-            @for (tab of tabs.slice(0, 2); track tab) {
-                <kbq-tab [tabId]="tab" [disabled]="$last">
-                    <ng-template kbq-tab-label>
-                        <i kbq-icon="kbq-bug_16"></i>
-                        {{ tab }}
-                    </ng-template>
-                    Active tab is {{ tab }}
-                </kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- stretched and underlined -->
+            <kbq-tab-group kbq-stretch-tabs underlined>
+                @for (tab of tabs.slice(0, 2); track tab) {
+                    <kbq-tab [tabId]="tab" [disabled]="$last">
+                        <ng-template kbq-tab-label>
+                            <i kbq-icon="kbq-bug_16"></i>
+                            {{ tab }}
+                        </ng-template>
+                        Active tab is {{ tab }}
+                    </kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- underlined with text and icon disabled -->
-        <kbq-tab-group underlined data-testid="e2eTabsUnderlinedTextIconDisabled" [onSurface]="true">
-            @for (tab of tabs.slice(0, 1); track tab) {
-                <kbq-tab [tabId]="tab" [disabled]="$first">
-                    <ng-template kbq-tab-label>
-                        <i kbq-icon="kbq-bug_16"></i>
-                        Text {{ $index }}
-                    </ng-template>
-                    Active tab is {{ tab }}
-                </kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- underlined with text and icon disabled -->
+            <kbq-tab-group underlined data-testid="e2eTabsUnderlinedTextIconDisabled" [onSurface]="true">
+                @for (tab of tabs.slice(0, 1); track tab) {
+                    <kbq-tab [tabId]="tab" [disabled]="$first">
+                        <ng-template kbq-tab-label>
+                            <i kbq-icon="kbq-bug_16"></i>
+                            Text {{ $index }}
+                        </ng-template>
+                        Active tab is {{ tab }}
+                    </kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- vertical -->
-        <kbq-tab-group vertical [style.height.px]="100">
-            @for (tab of tabs; track tab) {
-                <kbq-tab [disabled]="$index === 1" [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- vertical -->
+            <kbq-tab-group vertical [style.height.px]="100">
+                @for (tab of tabs; track tab) {
+                    <kbq-tab [disabled]="$index === 1" [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- vertical with icons -->
-        <kbq-tab-group vertical [style.height.px]="100" [activeTab]="tabs[2]">
-            @for (tab of tabs; track tab) {
-                <kbq-tab [tabId]="tab" [disabled]="$index === 1">
-                    <ng-template kbq-tab-label>
-                        <i kbq-icon="kbq-bug_16"></i>
-                        {{ tab }}
-                    </ng-template>
-                    Active tab is {{ tab }}
-                </kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- vertical with icons -->
+            <kbq-tab-group vertical [style.height.px]="100" [activeTab]="tabs[2]">
+                @for (tab of tabs; track tab) {
+                    <kbq-tab [tabId]="tab" [disabled]="$index === 1">
+                        <ng-template kbq-tab-label>
+                            <i kbq-icon="kbq-bug_16"></i>
+                            {{ tab }}
+                        </ng-template>
+                        Active tab is {{ tab }}
+                    </kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- vertical with icons only -->
-        <kbq-tab-group vertical data-testid="e2eTabsVerticalIconsOnly" [style.height.px]="130" [activeTab]="tabs[2]">
-            @for (tab of tabs; track tab) {
-                <kbq-tab [tabId]="tab" [disabled]="$index === 1">
-                    <ng-template kbqTabLabel iconOnly>
-                        <i kbq-icon="kbq-bug_16"></i>
-                    </ng-template>
-                    Active tab is {{ tab }}
-                </kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- vertical with icons only -->
+            <kbq-tab-group
+                vertical
+                data-testid="e2eTabsVerticalIconsOnly"
+                [style.height.px]="130"
+                [activeTab]="tabs[2]"
+            >
+                @for (tab of tabs; track tab) {
+                    <kbq-tab [tabId]="tab" [disabled]="$index === 1">
+                        <ng-template kbqTabLabel iconOnly>
+                            <i kbq-icon="kbq-bug_16"></i>
+                        </ng-template>
+                        Active tab is {{ tab }}
+                    </kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- base on-surface -->
-        <kbq-tab-group [onSurface]="true">
-            @for (tab of tabs.slice(0, 2); track tab) {
-                <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- base on-surface -->
+            <kbq-tab-group [onSurface]="true">
+                @for (tab of tabs.slice(0, 2); track tab) {
+                    <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- base with icons on-surface -->
-        <kbq-tab-group [onSurface]="true" [activeTab]="tabs[5]">
-            @for (tab of tabs; track tab) {
-                <kbq-tab [tabId]="tab">
-                    <ng-template kbq-tab-label>
-                        <i kbq-icon="kbq-bug_16"></i>
-                        {{ tab }}
-                    </ng-template>
-                    Active tab is {{ tab }}
-                </kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- base with icons on-surface -->
+            <kbq-tab-group data-testid="e2eTabsWithIconsOnSurface" [onSurface]="true" [activeTab]="tabs[5]">
+                @for (tab of tabs; track tab) {
+                    <kbq-tab [tabId]="tab">
+                        <ng-template kbq-tab-label>
+                            <i kbq-icon="kbq-bug_16"></i>
+                            {{ tab }}
+                        </ng-template>
+                        Active tab is {{ tab }}
+                    </kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- underlined on-surface -->
-        <kbq-tab-group underlined [onSurface]="true">
-            @for (tab of tabs; track tab) {
-                <kbq-tab [tabId]="tab" [disabled]="$index === 1">
-                    <ng-template kbq-tab-label>
-                        <i kbq-icon="kbq-bug_16"></i>
-                        {{ tab }}
-                    </ng-template>
-                    Active tab is {{ tab }}
-                </kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- underlined on-surface -->
+            <kbq-tab-group underlined data-testid="e2eTabsUnderlinedOnSurface" [onSurface]="true">
+                @for (tab of tabs; track tab) {
+                    <kbq-tab [tabId]="tab" [disabled]="$index === 1">
+                        <ng-template kbq-tab-label>
+                            <i kbq-icon="kbq-bug_16"></i>
+                            {{ tab }}
+                        </ng-template>
+                        Active tab is {{ tab }}
+                    </kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- vertical on-surface -->
-        <kbq-tab-group vertical [onSurface]="true" [style.height.px]="100">
-            @for (tab of tabs; track tab) {
-                <kbq-tab [disabled]="$index === 1" [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- vertical on-surface -->
+            <kbq-tab-group vertical [onSurface]="true" [style.height.px]="100">
+                @for (tab of tabs; track tab) {
+                    <kbq-tab [disabled]="$index === 1" [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- transparent -->
-        <kbq-tab-group [transparent]="true">
-            @for (tab of tabs.slice(0, 2); track tab) {
-                <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- transparent -->
+            <kbq-tab-group [transparent]="true">
+                @for (tab of tabs.slice(0, 2); track tab) {
+                    <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- transparent on-surface -->
-        <kbq-tab-group [transparent]="true" [onSurface]="true">
-            @for (tab of tabs.slice(0, 2); track tab) {
-                <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- transparent on-surface -->
+            <kbq-tab-group [transparent]="true" [onSurface]="true">
+                @for (tab of tabs.slice(0, 2); track tab) {
+                    <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- vertical bound to false: the layout must follow the binding, not the attribute -->
-        <kbq-tab-group data-testid="e2eTabsVerticalBoundFalse" [vertical]="false">
-            @for (tab of tabs.slice(0, 2); track tab) {
-                <kbq-tab [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
-            }
-        </kbq-tab-group>
+            <!-- vertical bound to false: the layout must follow the binding, not the attribute -->
+            <kbq-tab-group data-testid="e2eTabsVerticalBoundFalse" [vertical]="false">
+                @for (tab of tabs.slice(0, 2); track tab) {
+                    <kbq-tab [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+                }
+            </kbq-tab-group>
 
-        <!-- nav bar on-surface -->
-        <nav kbqTabNavBar [onSurface]="true">
-            @for (tab of tabs.slice(0, 3); track tab) {
-                <a kbqTabLink [active]="$first" [disabled]="$index === 1">{{ tab }}</a>
-            }
-        </nav>
+            <!-- nav bar on-surface -->
+            <nav kbqTabNavBar [onSurface]="true">
+                @for (tab of tabs.slice(0, 3); track tab) {
+                    <a kbqTabLink [active]="$first" [disabled]="$index === 1">{{ tab }}</a>
+                }
+            </nav>
 
-        <!-- nav bar transparent on-surface -->
-        <nav kbqTabNavBar [transparent]="true" [onSurface]="true">
-            @for (tab of tabs.slice(0, 3); track tab) {
-                <a kbqTabLink [active]="$first" [disabled]="$index === 1">{{ tab }}</a>
-            }
-        </nav>
+            <!-- nav bar transparent on-surface -->
+            <nav kbqTabNavBar [transparent]="true" [onSurface]="true">
+                @for (tab of tabs.slice(0, 3); track tab) {
+                    <a kbqTabLink [active]="$first" [disabled]="$index === 1">{{ tab }}</a>
+                }
+            </nav>
+        } @else {
+            <button type="button" data-testid="e2eTabsStatesTrigger" (click)="show()">Show tabs</button>
+        }
     `,
     styles: `
         :host {
@@ -264,13 +277,19 @@ export class E2eTabsStates {
         'Phishing'
     ] as const;
 
-    constructor() {
+    protected readonly shown = signal(false);
+
+    private readonly injector = inject(Injector);
+
+    protected show(): void {
+        this.shown.set(true);
+
         // Registered separately rather than as one callback: an index that drifts out of range throws,
         // and a shared callback would let that failure silently skip every setup after it — which is
         // how a stale index once emptied two groups' states without any test noticing.
-        afterNextRender(() => this.setupTabsUnderlinedIconsOnlyStates());
-        afterNextRender(() => this.setupTabsUnderlinedTextIconStates());
-        afterNextRender(() => this.setupTabsVerticalIconsOnlyStates());
+        afterNextRender(() => this.setupTabsUnderlinedIconsOnlyStates(), { injector: this.injector });
+        afterNextRender(() => this.setupTabsUnderlinedTextIconStates(), { injector: this.injector });
+        afterNextRender(() => this.setupTabsVerticalIconsOnlyStates(), { injector: this.injector });
     }
 
     private setupTabsUnderlinedIconsOnlyStates(): void {
