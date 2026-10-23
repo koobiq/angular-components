@@ -2226,6 +2226,81 @@ describe('KbqTreeSelection', () => {
                 expect(optionFor('Pictures').checkboxState).toBe('unchecked');
                 expect(optionFor('Sun').selected).toBe(false);
             });
+
+            it('should catch up with a selection made while the checkbox was hidden', async () => {
+                vi.useFakeTimers();
+
+                const tree = component.tree();
+
+                tree.multipleMode = MultipleMode.KEYBOARD;
+                await settle();
+
+                tree.selectionModel.select(component.treeControl.hasValue('Sun')!);
+                await settle();
+
+                expect(optionFor('Pictures').checkboxState).toBe('unchecked');
+
+                tree.multipleMode = MultipleMode.CHECKBOX;
+                await settle();
+
+                expect(optionFor('Pictures').checkboxState).toBe('indeterminate');
+            });
+        });
+
+        describe('tri-state checkbox over replaced data', () => {
+            let fixture: ComponentFixture<TreeWithTrackedThirdStateCheckbox>;
+            let component: TreeWithTrackedThirdStateCheckbox;
+
+            const optionFor = (value: string): KbqTreeOption =>
+                component.tree().renderedOptions.find((option) => option.value === value)!;
+
+            const settle = async () => {
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(0);
+                fixture.detectChanges();
+            };
+
+            beforeEach(() => {
+                configureKbqTreeTestingModule();
+                fixture = TestBed.createComponent(TreeWithTrackedThirdStateCheckbox);
+
+                component = fixture.componentInstance;
+                treeElement = fixture.nativeElement.querySelector('kbq-tree-selection');
+
+                fixture.detectChanges();
+            });
+
+            // Only the moved row is refreshed, and no row is added, removed or moved, so nothing re-renders the list.
+            it('should recompute an ancestor a node moves under in place', async () => {
+                vi.useFakeTimers();
+
+                const [branch, child, sibling] = component.dataSource.value;
+
+                dispatchEvent(getNodeByText(treeElement, 'child'), createMouseEvent('click'));
+                await settle();
+
+                expect(optionFor('branch').checkboxState).toBe('checked');
+
+                component.emit([branch, child, { ...sibling, level: 1 }]);
+                await settle();
+
+                expect(optionFor('branch').checkboxState).toBe('indeterminate');
+            });
+
+            it('should recompute a branch as soon as rows are added under it', async () => {
+                vi.useFakeTimers();
+
+                const [branch, child, sibling] = component.dataSource.value;
+
+                dispatchEvent(getNodeByText(treeElement, 'child'), createMouseEvent('click'));
+                await settle();
+
+                component.emit([branch, child, { id: 4, name: 'added', level: 1, expandable: false }, sibling]);
+                // Microtasks only: the pass over the rendered options that follows waits for a timer.
+                await Promise.resolve();
+
+                expect(optionFor('branch').checkboxState).toBe('indeterminate');
+            });
         });
 
         describe('tri-state checkbox in a deep tree', () => {
@@ -2283,7 +2358,7 @@ describe('KbqTreeSelection', () => {
                 await settle();
 
                 expect(getNodes(treeElement).length).toBe(component.treeControl.dataNodes.length);
-                expect(rollUps.mock.calls.length).toBeLessThanOrEqual(component.treeControl.dataNodes.length);
+                expect(rollUps).not.toHaveBeenCalled();
             });
         });
 
@@ -3816,7 +3891,10 @@ class TreeWithThirdStateCheckbox extends TreeParams {
 
 const DEEP_CHAIN_DEPTH = 12;
 
-/** `node-<level>` down to `DEEP_CHAIN_DEPTH`, each next to a `leaf-<level>`: every node has a long chain of ancestors. */
+/**
+ * `node-<level>` nested down to `node-<DEEP_CHAIN_DEPTH>`, a `leaf-<level>` beside each: every ancestor of the deepest
+ * node also holds an unselected leaf.
+ */
 function buildDeepChain(): object {
     let chain: object | null = null;
 
@@ -3889,6 +3967,59 @@ class TreeWithTrackBy {
         this.emit([
             { id: 1, name: 'src', level: 0, expandable: false },
             { id: 2, name: 'docs', level: 1, expandable: false }
+        ]);
+    }
+
+    emit(nodes: TrackedNode[]): void {
+        this.treeControl.dataNodes = nodes;
+        this.dataSource.next(nodes);
+    }
+}
+
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection
+            multiple="checkbox"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+            [trackBy]="trackById"
+        >
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
+                {{ node.name }}
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
+                <kbq-tree-node-toggle />
+
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeWithTrackedThirdStateCheckbox {
+    readonly tree = viewChild.required(KbqTreeSelection);
+
+    // A stream that keeps the objects of untouched nodes, as `TreeWithTrackBy` does: the differ then reports only the
+    // rows that really changed.
+    readonly dataSource = new BehaviorSubject<TrackedNode[]>([]);
+
+    readonly treeControl = new FlatTreeControl<TrackedNode>(
+        (node) => node.level,
+        (node) => node.expandable,
+        (node) => node.name,
+        (node) => node.name
+    );
+
+    trackById = (_: number, node: TrackedNode) => node.id;
+
+    hasChild = (_: number, node: TrackedNode) => node.expandable;
+
+    constructor() {
+        this.emit([
+            { id: 1, name: 'branch', level: 0, expandable: true },
+            { id: 2, name: 'child', level: 1, expandable: false },
+            { id: 3, name: 'sibling', level: 0, expandable: false }
         ]);
     }
 
