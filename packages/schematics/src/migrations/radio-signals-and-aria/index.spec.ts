@@ -140,6 +140,37 @@ describe(SCHEMATIC_NAME, () => {
             expect(messages.join('\n')).toContain('KbqRadioGroup | null');
         });
 
+        it('reports KbqRadioGroup in hostDirectives, which a component cannot be', async () => {
+            const { messages } = await migrateTs(
+                "import { Directive } from '@angular/core';\n" +
+                    IMPORTS +
+                    '@Directive({ selector: "[appGroup]", hostDirectives: [KbqRadioGroup] })\n' +
+                    'export class AppGroup {}\n'
+            );
+
+            expect(messages.join('\n')).toContain('can no longer be applied through hostDirectives');
+        });
+
+        it('reports KbqRadioGroup in the object form of hostDirectives, inputs first', async () => {
+            const { messages } = await migrateTs(
+                "import { Directive } from '@angular/core';\n" +
+                    IMPORTS +
+                    '@Directive({\n' +
+                    '    selector: "[appGroup]",\n' +
+                    "    hostDirectives: [{ inputs: ['name'], directive: KbqRadioGroup }]\n" +
+                    '})\n' +
+                    'export class AppGroup {}\n'
+            );
+
+            expect(messages.join('\n')).toContain('can no longer be applied through hostDirectives');
+        });
+
+        it('reports a subclass of KbqRadioGroup, which a directive can no longer be', async () => {
+            const { messages } = await migrateTs(IMPORTS + 'export class AppGroup extends KbqRadioGroup {}\n');
+
+            expect(messages.join('\n')).toContain('NG0903');
+        });
+
         it('reports a programmatic write to the now read-only id', async () => {
             const { messages } = await migrateTs(
                 IMPORTS + "export class App { set(b: KbqRadioButton) { b.id = 'custom'; } }\n"

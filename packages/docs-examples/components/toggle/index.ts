@@ -6,6 +6,7 @@ import { ToggleLabelLeftExample } from './toggle-label-left/toggle-label-left-ex
 import { ToggleLoadingExample } from './toggle-loading/toggle-loading-example';
 import { ToggleMultilineExample } from './toggle-multiline/toggle-multiline-example';
 import { ToggleOverviewExample } from './toggle-overview/toggle-overview-example';
+import { ToggleValidationExample } from './toggle-validation/toggle-validation-example';
 import { ToggleWithHintExample } from './toggle-with-hint/toggle-with-hint-example';
 
 export {
@@ -16,6 +17,7 @@ export {
     ToggleLoadingExample,
     ToggleMultilineExample,
     ToggleOverviewExample,
+    ToggleValidationExample,
     ToggleWithHintExample
 };
 
@@ -27,7 +29,8 @@ const EXAMPLES = [
     ToggleDisabledExample,
     ToggleErrorExample,
     ToggleLabelLeftExample,
-    ToggleWithHintExample
+    ToggleWithHintExample,
+    ToggleValidationExample
 ];
 
 @NgModule({

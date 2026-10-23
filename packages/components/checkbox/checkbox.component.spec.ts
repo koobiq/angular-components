@@ -1,8 +1,17 @@
 import { Component, DebugElement, effect, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import {
+    FormControl,
+    FormGroup,
+    FormsModule,
+    NgModel,
+    ReactiveFormsModule,
+    UntypedFormControl,
+    Validators
+} from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { dispatchFakeEvent } from '@koobiq/components/core';
+import { dispatchFakeEvent, ErrorStateMatcher } from '@koobiq/components/core';
+import { KbqError, KbqHint } from '@koobiq/components/form-field';
 import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
 import { KbqCheckbox, KbqCheckboxChange, KbqCheckboxModule } from './index';
 
@@ -985,6 +994,157 @@ describe('KbqCheckbox', () => {
         });
     });
 
+    describe('error state', () => {
+        let errorFixture: ComponentFixture<CheckboxWithErrorState>;
+        let host: HTMLElement;
+        let input: HTMLInputElement;
+
+        const create = (): void => {
+            errorFixture = TestBed.createComponent(CheckboxWithErrorState);
+            errorFixture.detectChanges();
+
+            host = errorFixture.debugElement.query(By.directive(KbqCheckbox)).nativeElement;
+            input = host.querySelector('input')!;
+        };
+
+        const errorElement = (): HTMLElement | null => host.querySelector('.kbq-checkbox__error');
+        const hintElement = (): HTMLElement => host.querySelector('kbq-hint')!;
+
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [CheckboxWithErrorState, CheckboxWithoutErrorMessage, CheckboxWithErrorColor]
+            });
+        });
+
+        it('should not show an error before the control is touched', () => {
+            create();
+
+            expect(host.classList).not.toContain('kbq-invalid');
+            expect(input.hasAttribute('aria-invalid')).toBe(false);
+            expect(input.getAttribute('aria-describedby')).toBe(hintElement().id);
+            expect(errorElement()).toBeNull();
+        });
+
+        it('should be named by the label text alone and described by the hint', () => {
+            create();
+
+            const label: HTMLElement = host.querySelector('.kbq-checkbox-label')!;
+
+            expect(input.getAttribute('aria-labelledby')).toBe(label.id);
+            expect(label.textContent!.trim()).toBe('I agree');
+            expect(input.getAttribute('aria-describedby')).toBe(hintElement().id);
+        });
+
+        it('should show the error between the label and the hint, wherever it is written', () => {
+            create();
+            errorFixture.componentInstance.form.controls.agreement.markAsTouched();
+            errorFixture.detectChanges();
+
+            const label: HTMLElement = host.querySelector('.kbq-checkbox-label')!;
+
+            // The host writes the hint first.
+            expect(label.compareDocumentPosition(errorElement()!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+            expect(
+                errorElement()!.compareDocumentPosition(hintElement()) & Node.DOCUMENT_POSITION_FOLLOWING
+            ).toBeTruthy();
+        });
+
+        it('should show the error once focus leaves an invalid control, without a forced check', async () => {
+            create();
+
+            input.focus();
+            dispatchFakeEvent(input, 'focus');
+            input.blur();
+            dispatchFakeEvent(input, 'blur');
+            await errorFixture.whenStable();
+
+            expect(host.classList).toContain('kbq-invalid');
+            expect(input.getAttribute('aria-invalid')).toBe('true');
+            expect(errorElement()!.textContent).toContain('Agreement is required');
+            expect(input.getAttribute('aria-describedby')).toBe(`${errorElement()!.id} ${hintElement().id}`);
+        });
+
+        it('should show the error once the parent form is submitted', () => {
+            create();
+
+            dispatchFakeEvent(errorFixture.nativeElement.querySelector('form'), 'submit');
+            errorFixture.detectChanges();
+
+            expect(host.classList).toContain('kbq-invalid');
+            expect(errorElement()).not.toBeNull();
+        });
+
+        it('should hide the error once the control becomes valid', () => {
+            create();
+            errorFixture.componentInstance.form.controls.agreement.markAsTouched();
+            errorFixture.detectChanges();
+
+            expect(host.classList).toContain('kbq-invalid');
+
+            input.click();
+            errorFixture.detectChanges();
+
+            expect(host.classList).not.toContain('kbq-invalid');
+            expect(errorElement()).toBeNull();
+        });
+
+        it('should render nothing under the label without a projected error', () => {
+            const fixture = TestBed.createComponent(CheckboxWithoutErrorMessage);
+
+            fixture.componentInstance.control.markAsTouched();
+            fixture.detectChanges();
+
+            const checkbox: HTMLElement = fixture.debugElement.query(By.directive(KbqCheckbox)).nativeElement;
+
+            expect(checkbox.classList).toContain('kbq-invalid');
+            expect(checkbox.querySelector('.kbq-checkbox__error')).toBeNull();
+            expect(checkbox.querySelector('input')!.hasAttribute('aria-describedby')).toBe(false);
+        });
+
+        it('should not show an error while the control is disabled', () => {
+            create();
+            errorFixture.componentInstance.form.controls.agreement.markAsTouched();
+            errorFixture.componentInstance.form.controls.agreement.disable();
+            errorFixture.detectChanges();
+
+            expect(host.classList).not.toContain('kbq-invalid');
+        });
+
+        it('should decide the error state with the matcher bound to the input', () => {
+            create();
+            errorFixture.componentInstance.errorStateMatcher = { isErrorState: () => true };
+            errorFixture.detectChanges();
+
+            expect(host.classList).toContain('kbq-invalid');
+        });
+
+        it('should decide the error state with the provided matcher', () => {
+            TestBed.overrideProvider(ErrorStateMatcher, { useValue: { isErrorState: () => true } });
+            create();
+
+            expect(host.classList).toContain('kbq-invalid');
+        });
+
+        it('should mark a checkbox colored as an error invalid without a form control', () => {
+            const colorFixture = TestBed.createComponent(CheckboxWithErrorColor);
+
+            colorFixture.detectChanges();
+
+            const colorInput: HTMLInputElement = colorFixture.nativeElement.querySelector('input');
+
+            expect(colorInput.getAttribute('aria-invalid')).toBe('true');
+        });
+
+        it('should have no violations while showing the error', async () => {
+            create();
+            errorFixture.componentInstance.form.controls.agreement.markAsTouched();
+            errorFixture.detectChanges();
+
+            await expect(errorFixture.nativeElement).toHaveNoViolations();
+        });
+    });
+
     describe('called from an effect', () => {
         let host: CheckboxDrivenByEffect;
         let input: HTMLInputElement;
@@ -1207,6 +1367,44 @@ class CheckboxWithChangeEvent {
 })
 class CheckboxWithFormControl {
     formControl = new UntypedFormControl();
+}
+
+/** Required checkbox in a reactive form, with an error message. */
+@Component({
+    imports: [KbqCheckboxModule, ReactiveFormsModule, KbqHint, KbqError],
+    template: `
+        <form [formGroup]="form">
+            <kbq-checkbox formControlName="agreement" [errorStateMatcher]="errorStateMatcher">
+                I agree
+                <kbq-hint>Read the terms first</kbq-hint>
+                <kbq-error>Agreement is required</kbq-error>
+            </kbq-checkbox>
+        </form>
+    `
+})
+class CheckboxWithErrorState {
+    readonly form = new FormGroup({ agreement: new FormControl(false, Validators.requiredTrue) });
+    errorStateMatcher: ErrorStateMatcher | undefined;
+}
+
+/** Checkbox colored as an error, outside any form. */
+@Component({
+    imports: [KbqCheckboxModule],
+    template: `
+        <kbq-checkbox color="error">I agree</kbq-checkbox>
+    `
+})
+class CheckboxWithErrorColor {}
+
+/** Required checkbox with no error message. */
+@Component({
+    imports: [KbqCheckboxModule, ReactiveFormsModule],
+    template: `
+        <kbq-checkbox [formControl]="control">I agree</kbq-checkbox>
+    `
+})
+class CheckboxWithoutErrorMessage {
+    readonly control = new FormControl(false, Validators.requiredTrue);
 }
 
 /** Test component without label */

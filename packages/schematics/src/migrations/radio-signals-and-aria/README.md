@@ -41,12 +41,14 @@ Reads and writes of those are unchanged.
 
 ## What it only reports
 
-| Pattern                      | Manual migration                                          |
-| ---------------------------- | --------------------------------------------------------- |
-| `[isFocused]` / `.isFocused` | Read the `cdk-*-focused` classes, or call `focus(origin)` |
-| `.radioGroup`                | Guard the access — the button may not be in a group       |
-| `.id = …`                    | Bind `[id]` instead; `id` is read-only now                |
-| `--kbq-radio-size-*-top`     | Delete the override; no rule read it                      |
+| Pattern                           | Manual migration                                                                                                |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `[isFocused]` / `.isFocused`      | Read the `cdk-*-focused` classes, or call `focus(origin)`                                                       |
+| `.radioGroup`                     | Guard the access — the button may not be in a group                                                             |
+| `.id = …`                         | Bind `[id]` instead; `id` is read-only now                                                                      |
+| `--kbq-radio-size-*-top`          | Delete the override; no rule read it                                                                            |
+| `hostDirectives: [KbqRadioGroup]` | Render a `<kbq-radio-group>` element; a component cannot be a host directive                                    |
+| `extends KbqRadioGroup`           | Decorate the subclass with `@Component` and repeat `<ng-content />` and the `kbq-error` slot, or wrap the group |
 
 `KbqRadioButton.isFocused` was removed outright: a published input that nothing read. `radioGroup` is
 typed `KbqRadioGroup | null` — it was always injected with `{ optional: true }` and the non-null
@@ -63,6 +65,8 @@ assertion only hid it.
   group unnamed for assistive technology.
 - A `kbq-hint` projected into a button is exposed through `aria-describedby` instead of being folded
   into the button's accessible name.
+- `KbqRadioGroup` is a component: a `kbq-error` put inside it is rendered under the options only
+  while the group is in the error state, and the group references it from its `aria-describedby`.
 - `[color]` on the group colors every button in it, `[required]` reaches the group as
   `aria-required`, and an error color as `aria-invalid`.
 - The native input carries its option value, so a group inside a plain `<form>` submits that value

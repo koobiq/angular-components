@@ -10,10 +10,10 @@ import {
     viewChildren
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { dispatchFakeEvent, ErrorStateMatcher, KbqComponentColors } from '@koobiq/components/core';
+import { KbqError, KbqFormFieldModule, KbqHint } from '@koobiq/components/form-field';
 import { KbqRadioButton, KbqRadioGroup, KbqRadioModule } from './index';
 
 describe('KbqRadio', () => {
@@ -839,6 +839,171 @@ describe('KbqRadio', () => {
         });
     });
 
+    describe('error state', () => {
+        let fixture: ComponentFixture<RadioGroupWithErrorState>;
+        let group: HTMLElement;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(RadioGroupWithErrorState);
+            fixture.detectChanges();
+
+            group = fixture.debugElement.query(By.directive(KbqRadioGroup)).nativeElement;
+        });
+
+        const errorElement = (): HTMLElement | null => group.querySelector('.kbq-radio-group__error');
+
+        it('should render the projected error under the options only in the error state', () => {
+            const hint: HTMLElement = group.querySelector('.kbq-radio-group__subscript kbq-hint')!;
+
+            expect(errorElement()).toBeNull();
+            expect(group.getAttribute('aria-describedby')).toBe(hint.id);
+
+            fixture.componentInstance.form.controls.delivery.markAsTouched();
+            fixture.detectChanges();
+
+            expect(errorElement()!.textContent).toContain('Choose a delivery method');
+            expect(group.getAttribute('aria-describedby')).toBe(`${errorElement()!.id} ${hint.id}`);
+        });
+
+        it('should show the error between the options and the hint of the group, wherever it is written', () => {
+            fixture.componentInstance.form.controls.delivery.markAsTouched();
+            fixture.detectChanges();
+
+            const lastButton: HTMLElement = group.querySelectorAll('kbq-radio-button')[1] as HTMLElement;
+            const hint: HTMLElement = group.querySelector('.kbq-radio-group__subscript kbq-hint')!;
+
+            // The host writes the hint first.
+            expect(lastButton.compareDocumentPosition(errorElement()!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+            expect(errorElement()!.compareDocumentPosition(hint) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+        });
+
+        it('should mark the group whose labels come before the buttons', () => {
+            fixture.componentInstance.labelPosition = 'before';
+            fixture.detectChanges();
+
+            expect(group.classList).toContain('kbq-radio-group_label-before');
+        });
+
+        it('should keep the aria-describedby written on the group beside the error', () => {
+            const describedFixture = TestBed.createComponent(RadioGroupWithDescriptionAndError);
+
+            describedFixture.detectChanges();
+
+            const describedGroup: HTMLElement = describedFixture.debugElement.query(
+                By.directive(KbqRadioGroup)
+            ).nativeElement;
+
+            expect(describedGroup.getAttribute('aria-describedby')).toBe('delivery-note');
+
+            describedFixture.componentInstance.control.markAsTouched();
+            describedFixture.detectChanges();
+
+            const error: HTMLElement = describedGroup.querySelector('.kbq-radio-group__error')!;
+
+            expect(describedGroup.getAttribute('aria-describedby')).toBe(`delivery-note ${error.id}`);
+        });
+
+        it('should keep an aria-describedby bound on the group beside the error', () => {
+            const boundFixture = TestBed.createComponent(RadioGroupWithBoundDescription);
+
+            boundFixture.detectChanges();
+
+            const boundGroup: HTMLElement = boundFixture.debugElement.query(By.directive(KbqRadioGroup)).nativeElement;
+
+            expect(boundGroup.getAttribute('aria-describedby')).toBe('delivery-note');
+
+            boundFixture.componentInstance.control.markAsTouched();
+            boundFixture.detectChanges();
+
+            const error: HTMLElement = boundGroup.querySelector('.kbq-radio-group__error')!;
+
+            expect(boundGroup.getAttribute('aria-describedby')).toBe(`delivery-note ${error.id}`);
+
+            boundFixture.componentInstance.control.setValue('courier');
+            boundFixture.detectChanges();
+
+            expect(boundGroup.getAttribute('aria-describedby')).toBe('delivery-note');
+        });
+
+        it('should render nothing under the options without a projected error', () => {
+            const plainFixture = TestBed.createComponent(RadioGroupWithoutErrorMessage);
+
+            plainFixture.componentInstance.control.markAsTouched();
+            plainFixture.detectChanges();
+
+            const plainGroup: HTMLElement = plainFixture.debugElement.query(By.directive(KbqRadioGroup)).nativeElement;
+
+            expect(plainGroup.classList).toContain('kbq-invalid');
+            expect(plainGroup.querySelector('.kbq-radio-group__error')).toBeNull();
+            expect(plainGroup.hasAttribute('aria-describedby')).toBe(false);
+        });
+
+        it('should not show an error before the group is touched', () => {
+            expect(group.classList).not.toContain('kbq-invalid');
+            expect(group.hasAttribute('aria-invalid')).toBe(false);
+        });
+
+        it('should show the error once focus leaves an invalid group, without a forced check', async () => {
+            const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            TestBed.inject(FocusMonitor).focusVia(input, 'keyboard');
+            input.blur();
+            await fixture.whenStable();
+
+            expect(group.classList).toContain('kbq-invalid');
+            expect(group.getAttribute('aria-invalid')).toBe('true');
+        });
+
+        it('should show the error once the parent form is submitted', () => {
+            dispatchFakeEvent(fixture.nativeElement.querySelector('form'), 'submit');
+            fixture.detectChanges();
+
+            expect(group.classList).toContain('kbq-invalid');
+        });
+
+        it('should hide the error once a button is selected', () => {
+            fixture.componentInstance.form.controls.delivery.markAsTouched();
+            fixture.detectChanges();
+
+            expect(group.classList).toContain('kbq-invalid');
+
+            fixture.debugElement.queryAll(By.css('label'))[0].nativeElement.click();
+            fixture.detectChanges();
+
+            expect(group.classList).not.toContain('kbq-invalid');
+        });
+
+        it('should decide the error state with the matcher bound to the input', () => {
+            fixture.componentInstance.errorStateMatcher = { isErrorState: () => true };
+            fixture.detectChanges();
+
+            expect(group.classList).toContain('kbq-invalid');
+        });
+
+        it('should validate a required group bound with ngModel', async () => {
+            const ngModelFixture = TestBed.createComponent(RequiredRadioGroupWithNgModel);
+
+            ngModelFixture.detectChanges();
+            // NgModel registers its control with the form through a microtask.
+            await ngModelFixture.whenStable();
+            dispatchFakeEvent(ngModelFixture.nativeElement.querySelector('form'), 'submit');
+            ngModelFixture.detectChanges();
+
+            const ngModelGroup: HTMLElement = ngModelFixture.debugElement.query(
+                By.directive(KbqRadioGroup)
+            ).nativeElement;
+
+            expect(ngModelGroup.classList).toContain('kbq-invalid');
+        });
+
+        it('should have no violations while showing the error', async () => {
+            fixture.componentInstance.form.controls.delivery.markAsTouched();
+            fixture.detectChanges();
+
+            await expect(fixture.nativeElement).toHaveNoViolations();
+        });
+    });
+
     describe('called from an effect', () => {
         let fixture: ComponentFixture<RadioGroupDrivenByEffect>;
         let host: RadioGroupDrivenByEffect;
@@ -1093,4 +1258,84 @@ class RadioGroupWithNgModel {
 })
 class RadioGroupWithFormControl {
     readonly control = new FormControl<string | null>(null);
+}
+
+@Component({
+    imports: [KbqRadioModule, ReactiveFormsModule, KbqHint, KbqError],
+    template: `
+        <form [formGroup]="form">
+            <kbq-radio-group
+                aria-label="Delivery"
+                formControlName="delivery"
+                [errorStateMatcher]="errorStateMatcher"
+                [labelPosition]="labelPosition"
+            >
+                <kbq-radio-button [value]="'courier'">Courier</kbq-radio-button>
+                <kbq-radio-button [value]="'pickup'">Pickup</kbq-radio-button>
+                <kbq-hint>Courier delivery takes a day</kbq-hint>
+                <kbq-error>Choose a delivery method</kbq-error>
+            </kbq-radio-group>
+        </form>
+    `
+})
+class RadioGroupWithErrorState {
+    readonly form = new FormGroup({ delivery: new FormControl<string | null>(null, Validators.required) });
+    errorStateMatcher: ErrorStateMatcher | undefined;
+    labelPosition: 'before' | 'after' = 'after';
+}
+
+@Component({
+    imports: [KbqRadioModule, ReactiveFormsModule, KbqError],
+    template: `
+        <p id="delivery-note">Delivery takes a day</p>
+        <kbq-radio-group aria-describedby="delivery-note" aria-label="Delivery" [formControl]="control">
+            <kbq-radio-button [value]="'courier'">Courier</kbq-radio-button>
+            <kbq-error>Choose a delivery method</kbq-error>
+        </kbq-radio-group>
+    `
+})
+class RadioGroupWithDescriptionAndError {
+    readonly control = new FormControl<string | null>(null, Validators.required);
+}
+
+@Component({
+    imports: [KbqRadioModule, ReactiveFormsModule, KbqError],
+    template: `
+        <p id="delivery-note">Delivery takes a day</p>
+        <kbq-radio-group aria-label="Delivery" [attr.aria-describedby]="description" [formControl]="control">
+            <kbq-radio-button [value]="'courier'">Courier</kbq-radio-button>
+            <kbq-error>Choose a delivery method</kbq-error>
+        </kbq-radio-group>
+    `
+})
+class RadioGroupWithBoundDescription {
+    readonly control = new FormControl<string | null>(null, Validators.required);
+    description = 'delivery-note';
+}
+
+@Component({
+    imports: [KbqRadioModule, ReactiveFormsModule],
+    template: `
+        <kbq-radio-group aria-label="Delivery" [formControl]="control">
+            <kbq-radio-button [value]="'courier'">Courier</kbq-radio-button>
+        </kbq-radio-group>
+    `
+})
+class RadioGroupWithoutErrorMessage {
+    readonly control = new FormControl<string | null>(null, Validators.required);
+}
+
+@Component({
+    imports: [KbqRadioModule, FormsModule],
+    template: `
+        <form>
+            <kbq-radio-group aria-label="Delivery" name="delivery" required [(ngModel)]="model">
+                <kbq-radio-button [value]="'courier'">Courier</kbq-radio-button>
+                <kbq-radio-button [value]="'pickup'">Pickup</kbq-radio-button>
+            </kbq-radio-group>
+        </form>
+    `
+})
+class RequiredRadioGroupWithNgModel {
+    model: string | null = null;
 }

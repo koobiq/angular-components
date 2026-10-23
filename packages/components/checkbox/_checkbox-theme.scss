@@ -17,7 +17,8 @@
         color: var(--kbq-#{$base}-default-text);
     }
 
-    & .kbq-hint .kbq-hint__text {
+    // A projected `kbq-error` is a hint too, and keeps its own color. `:where` leaves the specificity as it was.
+    & .kbq-hint:where(:not(.kbq-error)) .kbq-hint__text {
         color: var(--kbq-#{$base}-default-caption);
     }
 
@@ -89,7 +90,8 @@
     .kbq-checkbox {
         @include kbq-checkbox-color(theme);
 
-        &.kbq-error {
+        &.kbq-error,
+        &.kbq-invalid {
             @include kbq-checkbox-color(error);
         }
     }

@@ -1147,6 +1147,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "checkbox-overview-example.ts",
     "importPath": "components/checkbox"
   },
+  "checkbox-validation": {
+    "packagePath": "components/checkbox/checkbox-validation",
+    "title": "Checkbox validation",
+    "componentName": "CheckboxValidationExample",
+    "files": [
+      "checkbox-validation-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "checkbox-validation-example",
+    "primaryFile": "checkbox-validation-example.ts",
+    "importPath": "components/checkbox"
+  },
   "pseudo-checkbox": {
     "packagePath": "components/checkbox/pseudo-checkbox",
     "title": "Pseudo checkbox",
@@ -4838,6 +4850,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "radio-style-example.ts",
     "importPath": "components/radio"
   },
+  "radio-validation": {
+    "packagePath": "components/radio/radio-validation",
+    "title": "Radio validation",
+    "componentName": "RadioValidationExample",
+    "files": [
+      "radio-validation-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "radio-validation-example",
+    "primaryFile": "radio-validation-example.ts",
+    "importPath": "components/radio"
+  },
   "resizer-overview": {
     "packagePath": "components/resizer/resizer-overview",
     "title": "Resizer overview example",
@@ -6947,6 +6971,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "toggle-overview-example.ts",
     "importPath": "components/toggle"
   },
+  "toggle-validation": {
+    "packagePath": "components/toggle/toggle-validation",
+    "title": "Toggle validation",
+    "componentName": "ToggleValidationExample",
+    "files": [
+      "toggle-validation-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "toggle-validation-example",
+    "primaryFile": "toggle-validation-example.ts",
+    "importPath": "components/toggle"
+  },
   "toggle-with-hint": {
     "packagePath": "components/toggle/toggle-with-hint",
     "title": "Toggle With Hint",
@@ -7992,6 +8028,7 @@ export type LiveExampleId =
   | 'checkbox-indeterminate'
   | 'checkbox-multiline'
   | 'checkbox-overview'
+  | 'checkbox-validation'
   | 'pseudo-checkbox'
   | 'clamped-list-dotted'
   | 'clamped-list-overview'
@@ -8289,6 +8326,7 @@ export type LiveExampleId =
   | 'radio-multiline'
   | 'radio-overview'
   | 'radio-style'
+  | 'radio-validation'
   | 'resizer-overview'
   | 'native-scrollbar'
   | 'scrollbar-overview'
@@ -8462,6 +8500,7 @@ export type LiveExampleId =
   | 'toggle-loading'
   | 'toggle-multiline'
   | 'toggle-overview'
+  | 'toggle-validation'
   | 'toggle-with-hint'
   | 'tooltip-arrow'
   | 'tooltip-disabled-for-component'

@@ -15,6 +15,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <toggle-overview-example />
         <toggle-disabled-example />
         <toggle-error-example />
+        <toggle-validation-example />
         <toggle-indeterminate-example />
         <toggle-loading-example />
         <toggle-with-hint-example />
