@@ -3400,12 +3400,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/tokens-builder@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "@koobiq/tokens-builder@npm:4.0.1"
-  peerDependencies:
-    style-dictionary: ^5.0.0
-  checksum: 10c0/cd4ef07b2c2a07c04b9ac1f672796b4a2c5497da0d93a72067e5a4c43e3e1920263c6a022fb523c637816f97941552f2665e15aecf029fcbf15f79371cbaf090
+"@koobiq/tokens-builder@npm:^3.20.1":
+  version: 3.20.1
+  resolution: "@koobiq/tokens-builder@npm:3.20.1"
+  checksum: 10c0/b283f6b7d5773f87d8822b854d47cbaf253e7ae92671326095150719f704d2091a9bb3383aa5a07181f7c471d8e42425c3d3c6d14af2e978a9b280bc3c2aabee
   languageName: node
   linkType: hard
 
@@ -10280,7 +10278,7 @@ __metadata:
     "@koobiq/icons": "npm:^12.4.0"
     "@koobiq/luxon-date-adapter": "npm:^3.5.1"
     "@koobiq/moment-date-adapter": "npm:^3.5.1"
-    "@koobiq/tokens-builder": "npm:^4.0.1"
+    "@koobiq/tokens-builder": "npm:^3.20.1"
     "@maskito/angular": "npm:^5.1.0"
     "@maskito/core": "npm:^5.1.0"
     "@maskito/kit": "npm:^5.6.0"

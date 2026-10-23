@@ -76,6 +76,10 @@ updates:
       # minor and patch updates are automated.
       - dependency-name: '@koobiq/design-tokens'
         update-types: ['version-update:semver-major']
+      # Majors can carry breaking token renames/removals that need a manual review, so only
+      # minor and patch updates are automated.
+      - dependency-name: '@koobiq/tokens-builder'
+        update-types: ['version-update:semver-major']
     groups:
       # Security fixes arrive as a single pull request rather than one per advisory.
       security:
