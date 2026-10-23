@@ -1,7 +1,9 @@
+import { FocusMonitor, InputModalityDetector } from '@angular/cdk/a11y';
+import { Platform } from '@angular/cdk/platform';
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
+import { dispatchKeyboardEvent, ENTER, KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import {
     KbqLoaderOverlay,
@@ -361,7 +363,222 @@ describe('KbqLoaderOverlay', () => {
 
         expect(() => overlay.ngOnDestroy()).not.toThrow();
     });
+
+    it('should make the content behind the overlay inert, but not the overlay itself', () => {
+        const fixture = TestBed.createComponent(OverlayToggled);
+
+        fixture.detectChanges();
+
+        const parent = fixture.nativeElement.querySelector('.loader-overlay-container') as HTMLElement;
+        const behind = fixture.nativeElement.querySelector('.behind') as HTMLElement;
+        const action = fixture.nativeElement.querySelector('.action') as HTMLElement;
+
+        expect(behind.hasAttribute('inert')).toBe(true);
+        expect(parent.hasAttribute('inert')).toBe(false);
+        expect(action.closest('[inert]')).toBeNull();
+
+        fixture.componentInstance.shown.set(false);
+        fixture.detectChanges();
+
+        expect(behind.hasAttribute('inert')).toBe(false);
+    });
+
+    it('should make content rendered behind the overlay while it is shown inert', async () => {
+        const fixture = TestBed.createComponent(OverlayOverList);
+
+        fixture.detectChanges();
+
+        fixture.componentInstance.rows.set(['first', 'second']);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const rows = Array.from(fixture.nativeElement.querySelectorAll('.row')) as HTMLElement[];
+
+        expect(rows.map((row) => row.hasAttribute('inert'))).toEqual([true, true]);
+
+        fixture.componentInstance.shown.set(false);
+        fixture.detectChanges();
+
+        expect(rows.map((row) => row.hasAttribute('inert'))).toEqual([false, false]);
+    });
+
+    it('should leave an inert set by the consumer on the content behind the overlay', () => {
+        const fixture = TestBed.createComponent(OverlayOverInertContent);
+
+        fixture.detectChanges();
+
+        const behind = fixture.nativeElement.querySelector('.behind') as HTMLElement;
+
+        fixture.componentInstance.shown.set(false);
+        fixture.detectChanges();
+
+        expect(behind.hasAttribute('inert')).toBe(true);
+    });
+
+    it('should leave the content behind the overlay alone on the server', () => {
+        TestBed.overrideProvider(Platform, { useValue: { isBrowser: false } });
+
+        const fixture = TestBed.createComponent(OverlayToggled);
+
+        fixture.detectChanges();
+
+        const parent = fixture.nativeElement.querySelector('.loader-overlay-container') as HTMLElement;
+
+        expect(parent.classList).toContain('kbq-loader-overlay_parent');
+        expect(fixture.nativeElement.querySelector('[inert]')).toBeNull();
+    });
+
+    it('should give the focus back to the element the overlay took it from', async () => {
+        const fixture = TestBed.createComponent(OverlayToggled);
+
+        fixture.componentInstance.shown.set(false);
+        fixture.detectChanges();
+
+        const behind = fixture.nativeElement.querySelector('.behind') as HTMLButtonElement;
+        const focusVia = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+
+        TestBed.inject(InputModalityDetector);
+        dispatchKeyboardEvent(behind, 'keydown', ENTER);
+        behind.focus();
+        fixture.componentInstance.shown.set(true);
+        fixture.detectChanges();
+        // jsdom does not implement `inert`, so the focus is dropped the way a browser drops it.
+        behind.blur();
+
+        fixture.componentInstance.shown.set(false);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(document.activeElement).toBe(behind);
+        expect(focusVia).toHaveBeenCalledWith(behind, 'keyboard', { preventScroll: true });
+    });
+
+    it('should leave the focus where the user moved it while the overlay was shown', async () => {
+        const fixture = TestBed.createComponent(OverlayToggled);
+
+        fixture.componentInstance.shown.set(false);
+        fixture.detectChanges();
+
+        const behind = fixture.nativeElement.querySelector('.behind') as HTMLButtonElement;
+        const outside = fixture.nativeElement.querySelector('.outside') as HTMLButtonElement;
+
+        behind.focus();
+        fixture.componentInstance.shown.set(true);
+        fixture.detectChanges();
+        outside.focus();
+
+        fixture.componentInstance.shown.set(false);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(document.activeElement).toBe(outside);
+    });
+
+    it('should give the focus back to an element enabled later in the pass that hides the overlay', async () => {
+        const fixture = TestBed.createComponent(OverlayBeforeDisabledButton);
+
+        fixture.detectChanges();
+
+        const behind = fixture.nativeElement.querySelector('.behind') as HTMLButtonElement;
+
+        behind.focus();
+        fixture.componentInstance.shown.set(true);
+        fixture.detectChanges();
+
+        // jsdom implements neither `inert` nor a `blur()` of a disabled button, so the focus is dropped by
+        // removing the element that holds it.
+        const standIn = document.createElement('button');
+
+        document.body.append(standIn);
+        standIn.focus();
+        standIn.remove();
+
+        expect(document.activeElement).toBe(document.body);
+
+        fixture.componentInstance.shown.set(false);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(document.activeElement).toBe(behind);
+    });
 });
+
+@Component({
+    selector: 'overlay-toggled',
+    imports: [KbqLoaderOverlayModule],
+    template: `
+        <button class="outside" type="button">Outside the overlay</button>
+
+        <div class="loader-overlay-container">
+            <button class="behind" type="button">Behind the overlay</button>
+
+            @if (shown()) {
+                <kbq-loader-overlay>
+                    <div kbq-loader-overlay-caption>
+                        <button class="action" type="button">Cancel</button>
+                    </div>
+                </kbq-loader-overlay>
+            }
+        </div>
+    `
+})
+class OverlayToggled {
+    readonly shown = signal(true);
+}
+
+@Component({
+    selector: 'overlay-over-list',
+    imports: [KbqLoaderOverlayModule],
+    template: `
+        <div class="loader-overlay-container">
+            @for (row of rows(); track row) {
+                <button class="row" type="button">{{ row }}</button>
+            }
+
+            @if (shown()) {
+                <kbq-loader-overlay />
+            }
+        </div>
+    `
+})
+class OverlayOverList {
+    readonly rows = signal(['first']);
+    readonly shown = signal(true);
+}
+
+@Component({
+    selector: 'overlay-over-inert-content',
+    imports: [KbqLoaderOverlayModule],
+    template: `
+        <div class="loader-overlay-container">
+            <div class="behind" inert>Behind the overlay</div>
+
+            @if (shown()) {
+                <kbq-loader-overlay />
+            }
+        </div>
+    `
+})
+class OverlayOverInertContent {
+    readonly shown = signal(true);
+}
+
+@Component({
+    selector: 'overlay-before-disabled-button',
+    imports: [KbqLoaderOverlayModule],
+    template: `
+        <div class="loader-overlay-container">
+            @if (shown()) {
+                <kbq-loader-overlay />
+            }
+
+            <button class="behind" type="button" [disabled]="shown()">Behind the overlay</button>
+        </div>
+    `
+})
+class OverlayBeforeDisabledButton {
+    readonly shown = signal(false);
+}
 
 @Component({
     selector: 'overlay-with-params',

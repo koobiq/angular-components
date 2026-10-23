@@ -1,12 +1,19 @@
+import { FocusMonitor, FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { MutationObserverFactory } from '@angular/cdk/observers';
+import { Platform } from '@angular/cdk/platform';
+import { DOCUMENT } from '@angular/common';
 import {
+    afterNextRender,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     computed,
     contentChild,
     Directive,
+    EnvironmentInjector,
     inject,
     input,
+    NgZone,
     OnDestroy,
     OnInit,
     Renderer2,
@@ -70,12 +77,24 @@ export class KbqLoaderOverlayCaption {}
 export class KbqLoaderOverlay implements OnInit, OnDestroy {
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly renderer = inject(Renderer2);
+    private readonly document = inject(DOCUMENT);
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly inputModalityDetector = inject(InputModalityDetector);
+    private readonly environmentInjector = inject(EnvironmentInjector);
+    private readonly mutationObserverFactory = inject(MutationObserverFactory);
+    private readonly ngZone = inject(NgZone);
+    private readonly isBrowser = inject(Platform).isBrowser;
 
     private readonly externalIndicator = contentChild(KbqLoaderOverlayIndicator);
     private readonly externalText = contentChild(KbqLoaderOverlayText);
     private readonly externalCaption = contentChild(KbqLoaderOverlayCaption);
 
     private parent: HTMLElement | null = null;
+    // Only the siblings this overlay made inert get the attribute back, so an `inert` of the consumer's stays.
+    private readonly inertSiblings = new Set<Element>();
+    private siblingsObserver: MutationObserver | null = null;
+    private previouslyFocused: HTMLElement | null = null;
+    private previousFocusOrigin: FocusOrigin = null;
 
     /** Text shown under the indicator. Ignored when a `[kbq-loader-overlay-text]` is projected. */
     readonly text = input<string>();
@@ -150,12 +169,87 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
 
         if (this.parent) {
             this.renderer.addClass(this.parent, kbqLoaderOverlayParent);
+
+            // Not on the server: there `inert` is serialized into the HTML and outlives an overlay the client does not
+            // hydrate.
+            if (this.isBrowser) {
+                this.saveFocus(this.parent);
+                this.blockSiblings(this.parent);
+            }
         }
     }
 
     ngOnDestroy(): void {
+        this.siblingsObserver?.disconnect();
+
         if (this.parent) {
             this.renderer.removeClass(this.parent, kbqLoaderOverlayParent);
+            this.inertSiblings.forEach((sibling) => this.renderer.removeAttribute(sibling, 'inert'));
+            this.restoreFocus();
         }
+    }
+
+    // Covering the parent only blocks the pointer: `inert` on the content behind the overlay also takes it out of the
+    // tab order, text selection and the accessibility tree. The overlay itself stays interactive, so its text can be
+    // selected and an action placed on it can be used.
+    private blockSiblings(parent: HTMLElement): void {
+        for (const sibling of Array.from(parent.children)) {
+            this.makeInert(sibling);
+        }
+
+        // Content rendered behind the overlay while it is shown, such as the rows of a list, is blocked as well. Outside
+        // the zone, so that every change of that content does not run change detection.
+        this.ngZone.runOutsideAngular(() => {
+            this.siblingsObserver = this.mutationObserverFactory.create((records) => {
+                for (const record of records) {
+                    record.addedNodes.forEach((node) => {
+                        if (node.nodeType === Node.ELEMENT_NODE) this.makeInert(node as Element);
+                    });
+                }
+            });
+            this.siblingsObserver?.observe(parent, { childList: true });
+        });
+    }
+
+    private makeInert(element: Element): void {
+        // A sibling this overlay already blocked can come back after a move, still carrying its `inert`.
+        if (element === this.nativeElement || this.inertSiblings.has(element) || element.hasAttribute('inert')) return;
+
+        this.renderer.setAttribute(element, 'inert', '');
+        this.inertSiblings.add(element);
+    }
+
+    // Remembers the element `inert` is about to take the focus from.
+    private saveFocus(parent: HTMLElement): void {
+        const focused = this.document.activeElement as HTMLElement | null;
+
+        if (focused && parent.contains(focused)) {
+            this.previouslyFocused = focused;
+            // Read now: by the time the overlay goes away, the modality is long gone from the focus origin.
+            this.previousFocusOrigin = this.inputModalityDetector.mostRecentModality;
+        }
+    }
+
+    // Hands the focus back to the element the overlay took it from, unless the user has moved it since.
+    private restoreFocus(): void {
+        const element = this.previouslyFocused;
+
+        // The environment injector is already destroyed when the overlay goes away with the whole application.
+        if (!element || this.environmentInjector.destroyed) return;
+
+        // After the render, not now: the element can still be disabled by a binding that is updated later in the
+        // same pass. The environment injector, not the overlay's, because the overlay's view is already destroyed.
+        afterNextRender(
+            () => {
+                const focused = this.document.activeElement;
+
+                if (!element.isConnected || (focused && focused !== this.document.body)) return;
+
+                // `focusVia` keeps the focus ring of a keyboard user, which a native `focus()` would drop. No scroll:
+                // the user may have scrolled away while waiting.
+                this.focusMonitor.focusVia(element, this.previousFocusOrigin ?? 'program', { preventScroll: true });
+            },
+            { injector: this.environmentInjector }
+        );
     }
 }
