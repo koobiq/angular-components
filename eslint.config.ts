@@ -11,7 +11,7 @@ import rxjs from 'eslint-plugin-rxjs-x';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import { componentsJsDocConfig } from './tools/eslint/jsdoc';
+import { publishedJsDocConfig } from './tools/eslint/jsdoc';
 
 const isCI = !!process.env['CI'];
 
@@ -527,8 +527,8 @@ export default defineConfig(
         }
     },
 
-    // JSDoc of packages/components, which the docs are generated from
-    componentsJsDocConfig,
+    // JSDoc of the published Angular packages, which the docs are generated from or are to be
+    publishedJsDocConfig,
 
     // Override rules for specs
     {
