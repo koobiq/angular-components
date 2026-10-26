@@ -14,7 +14,7 @@ import {
 describe('migration guide versions', () => {
     /** The releases the guide's steps are currently filed at. */
     const STEP_VERSIONS = ['18.5.3', '18.6.0', '18.22.0', '20.0.0', '20.2.0', '21.0.0'];
-    const LATEST_RELEASE = '20.3.0';
+    const LATEST_RELEASE = '20.4.2';
 
     const parse = docsParseVersion;
 
@@ -92,7 +92,7 @@ describe('migration guide versions', () => {
     describe('docsBuildMigrationVersionOptions', () => {
         const options = docsBuildMigrationVersionOptions(STEP_VERSIONS, LATEST_RELEASE);
 
-        it('should offer every gate plus the majors that gate nothing and the latest release, in order', () => {
+        it('should offer every gate plus the lines that gate nothing and the latest release, in order', () => {
             expect(options.map(({ value }) => value)).toEqual([
                 '17',
                 '18.5.3',
@@ -101,14 +101,15 @@ describe('migration guide versions', () => {
                 '19',
                 '20.0.0',
                 '20.2.0',
-                '20.3.0',
+                '20.3',
+                '20.4.2',
                 '21.0.0'
             ]);
         });
 
         // The picker answers "which version am I on", so an option reads as a release, spelled the
-        // way a `package.json` spells it. Only the two majors that carry no step of their own get
-        // an `.x`, because there is no single release to name there.
+        // way a `package.json` spells it. Only the lines that carry no step of their own get an
+        // `.x`, because there is no single release to name there.
         it('should label each option as the release it is', () => {
             expect(options.map(({ label }) => label)).toEqual([
                 '17.x',
@@ -118,7 +119,8 @@ describe('migration guide versions', () => {
                 '19.x',
                 '20.0.0',
                 '20.2.0',
-                '20.3.0',
+                '20.3.x',
+                '20.4.2',
                 '21.0.0'
             ]);
         });
@@ -126,7 +128,32 @@ describe('migration guide versions', () => {
         it('should not drop a gate that repeats a major already listed', () => {
             const gates = docsBuildMigrationVersionOptions(STEP_VERSIONS, null);
 
-            expect(gates.filter(({ value }) => value.startsWith('20'))).toHaveLength(2);
+            expect(gates.filter(({ value }) => value.startsWith('20.')).map(({ value }) => value)).toEqual([
+                '20.0.0',
+                '20.2.0',
+                '20.3',
+                '20.4'
+            ]);
+        });
+
+        // On main the latest release is the major being prepared, which names neither 20.3 nor 20.4,
+        // and their readers are still upgrading from those maintained lines.
+        it('should offer the 20.3 and 20.4 lines when the latest release names neither', () => {
+            const onMain = docsBuildMigrationVersionOptions(STEP_VERSIONS, '21.0.0');
+
+            expect(onMain.filter(({ value }) => value.startsWith('20.')).map(({ label }) => label)).toEqual([
+                '20.0.0',
+                '20.2.0',
+                '20.3.x',
+                '20.4.x'
+            ]);
+        });
+
+        it('should drop a line once a release of it is listed', () => {
+            expect(options.map(({ value }) => value)).not.toContain('20.4');
+            expect(
+                docsBuildMigrationVersionOptions([...STEP_VERSIONS, '20.3.0'], null).map(({ value }) => value)
+            ).not.toContain('20.3');
         });
 
         it('should mark what lies above the latest release as unreleased', () => {
@@ -136,9 +163,7 @@ describe('migration guide versions', () => {
         it('should list the latest release once when a step lands in it', () => {
             const released = docsBuildMigrationVersionOptions(STEP_VERSIONS, '21.0.0');
 
-            expect(released.map(({ value }) => value)).toEqual(
-                options.map(({ value }) => value).filter((value) => value !== LATEST_RELEASE)
-            );
+            expect(released.filter(({ value }) => value === '21.0.0')).toHaveLength(1);
             expect(released.some(({ unreleased }) => unreleased)).toBe(false);
         });
 
@@ -168,7 +193,7 @@ describe('migration guide versions', () => {
         });
 
         it('should not let the destination fall to the start or below it', () => {
-            expect(enabled(docsMigrationToChoices(options, '20.0.0'))).toEqual(['20.2.0', '20.3.0', '21.0.0']);
+            expect(enabled(docsMigrationToChoices(options, '20.0.0'))).toEqual(['20.2.0', '20.3', '20.4.2', '21.0.0']);
         });
 
         // Every release but the lowest: nothing sits below that one to upgrade *from*, so offering
