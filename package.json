@@ -130,7 +130,7 @@
         "merge2": "^1.2.3",
         "moment": "~2.31.0",
         "ng-packagr": "^21.2.7",
-        "path-normalize": "^6.0.7",
+        "path-normalize": "^8.0.0",
         "postcss": "^8.5.28",
         "postcss-discard-comments": "^7.0.8",
         "prettier": "^3.9.10",

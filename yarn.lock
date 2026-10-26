@@ -10365,7 +10365,7 @@ __metadata:
     moment: "npm:~2.31.0"
     ng-packagr: "npm:^21.2.7"
     overlayscrollbars: "npm:2.7.3"
-    path-normalize: "npm:^6.0.7"
+    path-normalize: "npm:^8.0.0"
     postcss: "npm:^8.5.28"
     postcss-discard-comments: "npm:^7.0.8"
     prettier: "npm:^3.9.10"
@@ -12576,10 +12576,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-normalize@npm:^6.0.7":
-  version: 6.0.13
-  resolution: "path-normalize@npm:6.0.13"
-  checksum: 10c0/d2ec6f60b04f246d51931e6b061e16c01d183b2efee6b0a24af13d99e769d9f41bc57a7eb7bf83f955d981159a20c86d2245b244400e6c97ec515043c74818b0
+"path-normalize@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "path-normalize@npm:8.0.0"
+  checksum: 10c0/750cd260cb16d8f1001f5c818dd4e397d3de42bda271821c0398e9686039839bf41a512ce28d5949e016bf08db396eebf95fe9cc31e8eb38cdea7be2deca9924
   languageName: node
   linkType: hard
 
