@@ -3,6 +3,7 @@ import { BlockCheckboxExample } from './block-checkbox/block-checkbox-example';
 import { CheckboxIndeterminateExample } from './checkbox-indeterminate/checkbox-indeterminate-example';
 import { CheckboxMultilineExample } from './checkbox-multiline/checkbox-multiline-example';
 import { CheckboxOverviewExample } from './checkbox-overview/checkbox-overview-example';
+import { CheckboxValidationExample } from './checkbox-validation/checkbox-validation-example';
 import { PseudoCheckboxExample } from './pseudo-checkbox/pseudo-checkbox-example';
 
 export {
@@ -10,6 +11,7 @@ export {
     CheckboxIndeterminateExample,
     CheckboxMultilineExample,
     CheckboxOverviewExample,
+    CheckboxValidationExample,
     PseudoCheckboxExample
 };
 
@@ -18,7 +20,8 @@ const EXAMPLES = [
     CheckboxOverviewExample,
     PseudoCheckboxExample,
     CheckboxMultilineExample,
-    BlockCheckboxExample
+    BlockCheckboxExample,
+    CheckboxValidationExample
 ];
 
 @NgModule({

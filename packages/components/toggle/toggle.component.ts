@@ -1,10 +1,13 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { _IdGenerator, FocusMonitor } from '@angular/cdk/a11y';
 import {
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
+    contentChild,
     DestroyRef,
+    DoCheck,
     effect,
     ElementRef,
     inject,
@@ -19,19 +22,22 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { KBQ_CHECKBOX_CLICK_ACTION } from '@koobiq/components/checkbox';
 import {
+    CanUpdateErrorState,
+    ErrorStateMatcher,
     KBQ_CHECKABLE_CLICK_ACTION,
     kbqAnimationsDisabled,
     KbqCheckable,
     KbqCheckableClickAction,
     KbqCheckedState,
     KbqColorDirective,
+    KbqErrorStateTracker,
     kbqOptionalNumberAttribute,
     TransitionCheckState
 } from '@koobiq/components/core';
-
-let nextUniqueId = 0;
+import { KbqError } from '@koobiq/components/form-field';
 
 /** Position of the label relative to the switch. */
 export type ToggleLabelPositionType = 'left' | 'right';
@@ -49,6 +55,11 @@ export class KbqToggleChange {
  */
 export type KbqToggleClickAction = KbqCheckableClickAction;
 
+/**
+ * A switch for turning an option on or off.
+ *
+ * To show a validation error, put its text in a `kbq-error` inside the toggle bound to a form control.
+ */
 @Component({
     selector: 'kbq-toggle',
     templateUrl: './toggle.component.html',
@@ -62,15 +73,48 @@ export type KbqToggleClickAction = KbqCheckableClickAction;
         '[class.kbq-disabled]': 'disabled || loading()',
         '[class.kbq-toggle_loading]': 'loading()',
         '[class.kbq-active]': 'checked',
-        '[class.kbq-indeterminate]': 'indeterminate'
+        '[class.kbq-indeterminate]': 'indeterminate',
+        '[class.kbq-invalid]': 'errorState()'
     },
     hostDirectives: [KbqCheckable],
     exportAs: 'kbqToggle'
 })
-export class KbqToggleComponent extends KbqColorDirective implements OnChanges, AfterViewInit, OnDestroy {
+export class KbqToggleComponent
+    extends KbqColorDirective
+    implements OnChanges, DoCheck, AfterViewInit, OnDestroy, CanUpdateErrorState
+{
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly checkable = inject(KbqCheckable, { self: true });
     private readonly destroyRef = inject(DestroyRef);
+    private readonly ngControl = inject(NgControl, { optional: true, self: true });
+
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        inject(ErrorStateMatcher),
+        this.ngControl,
+        inject(FormGroupDirective, { optional: true }),
+        inject(NgForm, { optional: true })
+    );
+
+    /** Whether the toggle is in an error state. */
+    readonly errorState = this.errorStateTracker.errorState;
+
+    /** An object used to control when the error state is shown. */
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
+
+    /** Error text projected into the toggle. */
+    private readonly error = contentChild(KbqError, { descendants: false });
+
+    /**
+     * Whether the projected `kbq-error` is shown. Without one, nothing is rendered under the label.
+     * @internal
+     */
+    protected readonly showError = computed(() => this.errorState() && !!this.error());
+
+    /**
+     * Value of `aria-invalid` of the native input: set whenever the toggle is painted as invalid.
+     * @internal
+     */
+    protected readonly ariaInvalid = computed(() => (this.errorState() || this.color() === 'error' ? 'true' : null));
 
     readonly big = input<boolean>(false);
 
@@ -169,7 +213,8 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
         inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true }) ??
         undefined;
 
-    protected readonly uniqueId: string = `kbq-toggle-${++nextUniqueId}`;
+    /** @docs-private */
+    protected readonly uniqueId: string = inject(_IdGenerator).getId('kbq-toggle-');
 
     /** @docs-private */
     readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
@@ -241,6 +286,17 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
         // `writeValue` (ngModel/formControl) runs on `KbqCheckable`, bypassing the `checked`/`indeterminate`
         // setters, so this keeps the switch position in sync for form-driven value changes too.
         effect(() => this.setTransitionCheckState());
+    }
+
+    ngDoCheck(): void {
+        // Re-evaluated on every check: a submit of the parent form notifies nothing a signal could follow.
+        if (this.ngControl) this.updateErrorState();
+    }
+
+    /** Updates the error state based on the error state matcher. */
+    updateErrorState(): void {
+        this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
+        this.errorStateTracker.updateErrorState();
     }
 
     ngAfterViewInit(): void {
@@ -322,6 +378,30 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     /** Id of the element wrapping the projected hint, referenced by the input's `aria-describedby`. */
     protected get hintId(): string {
         return `${this.id || this.uniqueId}-hint`;
+    }
+
+    /**
+     * Id of the element wrapping the projected `kbq-error`.
+     * @internal
+     */
+    protected get errorId(): string {
+        return `${this.id || this.uniqueId}-error`;
+    }
+
+    /**
+     * Id of the label text, which names the native input unless `aria-label` or `aria-labelledby` is given.
+     * @internal
+     */
+    protected get labelId(): string {
+        return `${this.id || this.uniqueId}-label`;
+    }
+
+    /**
+     * The error, while it is shown, and the hint, in the order a form field gives them.
+     * @internal
+     */
+    protected get ariaDescribedBy(): string {
+        return this.showError() ? `${this.errorId} ${this.hintId}` : this.hintId;
     }
 
     /** A native checkbox only reacts to Space, so Enter is forwarded to it manually. */

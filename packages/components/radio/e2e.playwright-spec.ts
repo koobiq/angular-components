@@ -4,16 +4,73 @@ import { e2eEnableDarkTheme } from '../../e2e/utils';
 test.describe('KbqRadioModule', () => {
     test.describe('E2eRadioStateAndStyle', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eRadioStateAndStyle');
-        const getTestTable = (locator: Locator) => locator.getByTestId('e2eRadioTable');
 
         test('states', async ({ page }) => {
             await page.goto('/E2eRadioStateAndStyle');
-            const locator = getComponent(page);
-            const screenshotTarget = getTestTable(locator);
+            const screenshotTarget = getComponent(page).getByTestId('e2eScreenshotTarget');
 
-            await expect(screenshotTarget).toHaveScreenshot('01-light.png');
+            await expect(screenshotTarget).toHaveScreenshot('01-states-light.png');
             await e2eEnableDarkTheme(page);
-            await expect(screenshotTarget).toHaveScreenshot('01-dark.png');
+            await expect(screenshotTarget).toHaveScreenshot('01-states-dark.png');
+        });
+    });
+
+    test.describe('E2eRadioWithLabel', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eRadioWithLabel');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eRadioWithLabel');
+
+            const screenshotTarget = getComponent(page).getByTestId('e2eScreenshotTarget');
+
+            await expect(screenshotTarget).toHaveScreenshot('02-label-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('02-label-dark.png');
+        });
+    });
+
+    test.describe('E2eRadioWithHint', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eRadioWithHint');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eRadioWithHint');
+
+            const screenshotTarget = getComponent(page).getByTestId('e2eScreenshotTarget');
+
+            await expect(screenshotTarget).toHaveScreenshot('03-hint-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('03-hint-dark.png');
+        });
+    });
+
+    test.describe('E2eRadioValidation', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eRadioValidation');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eRadioValidation');
+
+            const screenshotTarget = getComponent(page).getByTestId('e2eScreenshotTarget');
+
+            await expect(screenshotTarget).toHaveScreenshot('04-validation-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('04-validation-dark.png');
+        });
+
+        test('should take the same space in the error state without kbq-error', async ({ page }) => {
+            await page.goto('/E2eRadioValidation');
+
+            const component = getComponent(page);
+            const invalid = component.getByTestId('e2eRadioInvalid');
+
+            await expect(invalid).toHaveClass(/kbq-invalid/);
+
+            const validBox = await component.getByTestId('e2eRadioValid').boundingBox();
+            const invalidBox = await invalid.boundingBox();
+
+            expect({ width: invalidBox?.width, height: invalidBox?.height }).toEqual({
+                width: validBox?.width,
+                height: validBox?.height
+            });
         });
     });
 

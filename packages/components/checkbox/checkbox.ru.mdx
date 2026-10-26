@@ -39,3 +39,11 @@ providers: [
 ### Многострочный
 
 <Example id="checkbox-multiline" />
+
+### Валидация
+
+Чтобы показать ошибку валидации, привяжите checkbox к контролу формы, примените `required` или `Validators.requiredTrue` и поместите текст ошибки в `kbq-error` внутри checkbox.
+
+Чтобы показывать ошибку в другой момент, например только после отправки формы, передайте matcher во входное свойство `errorStateMatcher`. Варианты описаны в [руководстве по валидации](/ru/other/validation).
+
+<Example id="checkbox-validation" />

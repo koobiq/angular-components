@@ -19,6 +19,8 @@ import { DevThemeToggle } from '../theme-toggle';
         <radio-group-example />
         <hr />
         <radio-multiline-example />
+        <hr />
+        <radio-validation-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

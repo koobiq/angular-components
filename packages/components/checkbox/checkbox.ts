@@ -6,6 +6,9 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    contentChild,
+    contentChildren,
+    DoCheck,
     ElementRef,
     inject,
     input,
@@ -17,13 +20,18 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
+    CanUpdateErrorState,
+    ErrorStateMatcher,
     KbqCheckable,
     KbqCheckedState,
     KbqColorDirective,
+    KbqErrorStateTracker,
     kbqOptionalNumberAttribute,
     TransitionCheckState
 } from '@koobiq/components/core';
+import { KbqError, KbqHint } from '@koobiq/components/form-field';
 import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
 
 /** Change event object emitted by KbqCheckbox. */
@@ -40,6 +48,8 @@ export class KbqCheckboxChange {
  * disabled. Note that all additional accessibility attributes are taken care of by the component,
  * so there is no need to provide them yourself. However, if you want to omit a label and still
  * have the checkbox be accessible, you may supply an [aria-label] input.
+ *
+ * To show a validation error, put its text in a `kbq-error` inside the checkbox bound to a form control.
  */
 @Component({
     selector: 'kbq-checkbox',
@@ -58,16 +68,34 @@ export class KbqCheckboxChange {
         '[class.kbq-indeterminate]': 'indeterminate',
         '[class.kbq-checked]': 'checked',
         '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-invalid]': 'errorState()',
         '[class.kbq-checkbox_label-before]': 'labelPosition() == "before"'
     },
     hostDirectives: [KbqCheckable],
     exportAs: 'kbqCheckbox'
 })
-export class KbqCheckbox extends KbqColorDirective implements OnChanges, AfterViewInit, OnDestroy {
+export class KbqCheckbox
+    extends KbqColorDirective
+    implements OnChanges, DoCheck, AfterViewInit, OnDestroy, CanUpdateErrorState
+{
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly checkable = inject(KbqCheckable, { self: true });
+    private readonly ngControl = inject(NgControl, { optional: true, self: true });
+
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        inject(ErrorStateMatcher),
+        this.ngControl,
+        inject(FormGroupDirective, { optional: true }),
+        inject(NgForm, { optional: true })
+    );
 
     private readonly uniqueId = inject(_IdGenerator).getId('kbq-checkbox-');
+
+    /** Whether the checkbox is in an error state. */
+    readonly errorState = this.errorStateTracker.errorState;
+
+    /** An object used to control when the error state is shown. */
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
 
     /** Whether the checkbox uses the big size. */
     readonly big = input(false, { transform: booleanAttribute });
@@ -109,6 +137,45 @@ export class KbqCheckbox extends KbqColorDirective implements OnChanges, AfterVi
      * @docs-private
      */
     protected readonly inputId = computed(() => `${this.id()}-input`);
+
+    /** Error text projected into the checkbox. */
+    private readonly error = contentChild(KbqError, { descendants: false });
+
+    /**
+     * Whether the projected `kbq-error` is shown. Without one, nothing is rendered under the label.
+     * @internal
+     */
+    protected readonly showError = computed(() => this.errorState() && !!this.error());
+
+    /**
+     * Id of the element wrapping the projected `kbq-error`.
+     * @internal
+     */
+    protected readonly errorId = computed(() => `${this.id()}-error`);
+
+    /**
+     * Id of the label text, which alone names the native input.
+     * @internal
+     */
+    protected readonly labelId = computed(() => `${this.id()}-label`);
+
+    /** Hints projected into the checkbox. */
+    private readonly hints = contentChildren(KbqHint, { descendants: false });
+
+    /**
+     * Value of `aria-describedby` of the native input: the error, while it is shown, and the hints.
+     * @internal
+     */
+    protected readonly ariaDescribedBy = computed(
+        () =>
+            [...(this.showError() ? [this.errorId()] : []), ...this.hints().map((hint) => hint.id())].join(' ') || null
+    );
+
+    /**
+     * Value of `aria-invalid` of the native input: set whenever the checkbox is painted as invalid.
+     * @internal
+     */
+    protected readonly ariaInvalid = computed(() => (this.errorState() || this.color() === 'error' ? 'true' : null));
 
     /** Whether the checkbox is required. */
     readonly required = input(false, { transform: booleanAttribute });
@@ -158,6 +225,17 @@ export class KbqCheckbox extends KbqColorDirective implements OnChanges, AfterVi
 
             if (indeterminate !== undefined) this.indeterminate = indeterminate;
         }
+    }
+
+    ngDoCheck(): void {
+        // Re-evaluated on every check: a submit of the parent form notifies nothing a signal could follow.
+        if (this.ngControl) this.updateErrorState();
+    }
+
+    /** Updates the error state based on the error state matcher. */
+    updateErrorState(): void {
+        this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
+        this.errorStateTracker.updateErrorState();
     }
 
     /**

@@ -4,6 +4,8 @@
         "outDir": "../../dist/out-tsc",
         "declaration": true,
         "stripInternal": true,
+        // Published typings must not depend on the Angular cache: see packages/components/tsconfig.lib.json.
+        "incremental": false,
         "inlineSources": true,
         "types": []
     }

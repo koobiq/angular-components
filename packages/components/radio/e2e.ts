@@ -1,123 +1,169 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
-import { KbqHint } from '@koobiq/components/form-field';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ErrorStateMatcher, KbqComponentColors } from '@koobiq/components/core';
+import { KbqError, KbqHint } from '@koobiq/components/form-field';
 import { KbqRadioButton, KbqRadioGroup } from './radio.component';
-
-type RadioStates = {
-    size: Omit<KbqDefaultSizes, 'compact'>;
-    labelPosition: 'before' | 'after';
-    hint?: boolean;
-    disabled?: boolean;
-    color?: KbqComponentColors;
-    hovered?: boolean;
-    focused?: boolean;
-};
 
 @Component({
     selector: 'e2e-radio-state-and-style',
-    imports: [
-        KbqHint,
-        KbqRadioButton,
-        KbqRadioGroup
-    ],
+    imports: [KbqRadioButton],
     template: `
-        <div>
-            <table data-testid="e2eRadioTable">
-                @for (state of states; track $index) {
-                    <tr>
-                        @for (cell of state; track $index) {
-                            <td>
-                                <kbq-radio-group [big]="cell.size === 'big'" [disabled]="cell.disabled">
-                                    @for (option of [0, 1]; track option) {
-                                        <kbq-radio-button
-                                            [class.cdk-keyboard-focused]="cell.focused ?? false"
-                                            [class.kbq-hovered]="cell.hovered ?? false"
-                                            [checked]="$first"
-                                            [value]="$index"
-                                            [labelPosition]="cell.labelPosition"
-                                            [color]="cell.color ?? kbqComponentColors.Empty"
-                                            [disabled]="cell.disabled"
-                                        >
-                                            Option #{{ $index }}
-                                            @if (cell.hint) {
-                                                <kbq-hint>Hint #{{ $index }}</kbq-hint>
-                                            }
-                                        </kbq-radio-button>
-                                    }
-                                </kbq-radio-group>
-                            </td>
+        <div class="e2e-grids" data-testid="e2eScreenshotTarget">
+            @for (color of colors; track color) {
+                <div class="e2e-grid">
+                    @for (type of types; track type) {
+                        @for (state of states; track state) {
+                            <kbq-radio-button
+                                [checked]="type === 'checked'"
+                                [color]="color"
+                                [disabled]="state === 'disabled'"
+                                [class.cdk-keyboard-focused]="state === 'focused'"
+                                [class.kbq-hovered]="state === 'hovered'"
+                            />
                         }
-                    </tr>
-                }
-            </table>
+                    }
+                </div>
+            }
         </div>
     `,
     styles: `
-        :host {
-            td {
-                vertical-align: top;
-                padding: 4px;
-            }
+        .e2e-grids {
+            display: inline-grid;
+            gap: var(--kbq-size-xl);
+            justify-items: start;
+            padding: var(--kbq-size-xs);
+        }
+
+        .e2e-grid {
+            display: inline-grid;
+            grid-template-columns: repeat(4, auto);
+            gap: var(--kbq-size-s);
+            align-items: start;
+            justify-items: start;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-margin-top-l layout-margin-bottom-l layout-column',
         'data-testid': 'e2eRadioStateAndStyle'
     }
 })
 export class E2eRadioStateAndStyle {
-    protected readonly states: RadioStates[][] = [
-        [
-            { size: 'normal', labelPosition: 'after' },
-            { size: 'big', labelPosition: 'after' },
-            { size: 'normal', labelPosition: 'after', color: KbqComponentColors.Error }
-        ],
-        [
-            { size: 'normal', labelPosition: 'after', hovered: true },
-            { size: 'big', labelPosition: 'after', hovered: true },
-            { size: 'normal', labelPosition: 'after', color: KbqComponentColors.Error, hovered: true }
-        ],
-        // The focus ring is keyed off `.cdk-keyboard-focused` and spends 8 tokens on it, so both the
-        // checked and the unchecked variant need a cell.
-        [
-            { size: 'normal', labelPosition: 'after', focused: true },
-            { size: 'big', labelPosition: 'after', focused: true },
-            { size: 'normal', labelPosition: 'after', color: KbqComponentColors.Error, focused: true }
-        ],
-        [
-            { size: 'normal', labelPosition: 'before' },
-            { size: 'big', labelPosition: 'before' },
-            { size: 'normal', labelPosition: 'before', color: KbqComponentColors.Error }
-        ],
-        [
-            { size: 'normal', labelPosition: 'before', hovered: true },
-            { size: 'big', labelPosition: 'before', hovered: true },
-            { size: 'normal', labelPosition: 'before', color: KbqComponentColors.Error, hovered: true }
-        ],
-        [
-            { size: 'normal', hint: true, labelPosition: 'after' },
-            { size: 'big', hint: true, labelPosition: 'after' },
-            { size: 'normal', hint: true, labelPosition: 'after', color: KbqComponentColors.Error }
-        ],
-        [
-            { size: 'normal', hint: true, labelPosition: 'before' },
-            { size: 'big', hint: true, labelPosition: 'before' },
-            { size: 'normal', hint: true, labelPosition: 'before', color: KbqComponentColors.Error }
-        ],
-        [
-            { size: 'normal', hint: true, labelPosition: 'after', disabled: true },
-            { size: 'big', hint: true, labelPosition: 'after', disabled: true },
-            { size: 'normal', hint: true, labelPosition: 'after', color: KbqComponentColors.Error, disabled: true }
-        ],
-        [
-            { size: 'normal', hint: true, labelPosition: 'before', disabled: true },
-            { size: 'big', hint: true, labelPosition: 'before', disabled: true },
-            { size: 'normal', hint: true, labelPosition: 'before', color: KbqComponentColors.Error, disabled: true }
-        ]
-    ];
-    protected readonly kbqComponentColors = KbqComponentColors;
+    // A big button draws the same circle as a normal one, so the states need no size of their own.
+    protected readonly colors = [KbqComponentColors.Empty, KbqComponentColors.Error];
+    protected readonly types = ['unchecked', 'checked'] as const;
+    protected readonly states = ['normal', 'hovered', 'focused', 'disabled'] as const;
+}
+
+@Component({
+    selector: 'e2e-radio-with-label',
+    imports: [KbqRadioButton, KbqRadioGroup],
+    template: `
+        <div class="e2e-grids" data-testid="e2eScreenshotTarget">
+            @for (big of sizes; track big) {
+                <div class="e2e-grid">
+                    @for (state of states; track state) {
+                        @for (labelPosition of labelPositions; track labelPosition) {
+                            <kbq-radio-group
+                                [big]="big"
+                                [disabled]="state === 'disabled'"
+                                [labelPosition]="labelPosition"
+                            >
+                                @for (option of [0, 1]; track option) {
+                                    <kbq-radio-button [checked]="$first" [value]="option">
+                                        Option #{{ option }}
+                                    </kbq-radio-button>
+                                }
+                            </kbq-radio-group>
+                        }
+                    }
+                </div>
+            }
+        </div>
+    `,
+    styles: `
+        .e2e-grids {
+            display: inline-grid;
+            gap: var(--kbq-size-xl);
+            justify-items: start;
+            padding: var(--kbq-size-xs);
+        }
+
+        .e2e-grid {
+            display: inline-grid;
+            grid-template-columns: repeat(2, auto);
+            gap: var(--kbq-size-s);
+            align-items: start;
+            justify-items: start;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eRadioWithLabel'
+    }
+})
+export class E2eRadioWithLabel {
+    // Each size gets a grid of its own: a big button is taller than a normal one, so the two in one row never line up.
+    protected readonly sizes = [false, true] as const;
+    protected readonly states = ['normal', 'disabled'] as const;
+    protected readonly labelPositions = ['after', 'before'] as const;
+}
+
+@Component({
+    selector: 'e2e-radio-with-hint',
+    imports: [KbqRadioButton, KbqRadioGroup, KbqHint],
+    template: `
+        <div class="e2e-grids" data-testid="e2eScreenshotTarget">
+            @for (big of sizes; track big) {
+                <div class="e2e-grid">
+                    @for (state of states; track state) {
+                        @for (labelPosition of labelPositions; track labelPosition) {
+                            <kbq-radio-group
+                                [big]="big"
+                                [color]="state === 'error' ? colors.Error : colors.Empty"
+                                [disabled]="state === 'disabled'"
+                                [labelPosition]="labelPosition"
+                            >
+                                @for (option of [0, 1]; track option) {
+                                    <kbq-radio-button [checked]="$first" [value]="option">
+                                        Option #{{ option }}
+                                        <kbq-hint>Hint #{{ option }}</kbq-hint>
+                                    </kbq-radio-button>
+                                }
+                            </kbq-radio-group>
+                        }
+                    }
+                </div>
+            }
+        </div>
+    `,
+    styles: `
+        .e2e-grids {
+            display: inline-grid;
+            gap: var(--kbq-size-xl);
+            justify-items: start;
+            padding: var(--kbq-size-xs);
+        }
+
+        .e2e-grid {
+            display: inline-grid;
+            grid-template-columns: repeat(2, auto);
+            gap: var(--kbq-size-s);
+            align-items: start;
+            justify-items: start;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eRadioWithHint'
+    }
+})
+export class E2eRadioWithHint {
+    // Each size gets a grid of its own: a big button is taller than a normal one, so the two in one row never line up.
+    protected readonly sizes = [false, true] as const;
+    // The error palette colors the hint too, so it gets a row of its own.
+    protected readonly states = ['normal', 'error', 'disabled'] as const;
+    protected readonly labelPositions = ['after', 'before'] as const;
+    protected readonly colors = KbqComponentColors;
 }
 
 @Component({
@@ -139,4 +185,136 @@ export class E2eRadioStateAndStyle {
 })
 export class E2eRadioHeight {
     readonly big = model(false);
+}
+
+@Component({
+    selector: 'e2e-radio-validation',
+    imports: [
+        KbqRadioButton,
+        KbqRadioGroup,
+        ReactiveFormsModule,
+        KbqHint,
+        KbqError
+    ],
+    template: `
+        <div class="e2e-grids" data-testid="e2eScreenshotTarget">
+            <div class="e2e-grid">
+                @for (type of types; track type) {
+                    @for (state of states; track state) {
+                        <kbq-radio-group
+                            [errorStateMatcher]="errorStateMatcher"
+                            [formControl]="type === 'selected' ? selected : unselected"
+                        >
+                            @for (option of [0, 1]; track option) {
+                                <kbq-radio-button
+                                    [value]="option"
+                                    [class.cdk-keyboard-focused]="state === 'focused'"
+                                    [class.kbq-hovered]="state === 'hovered'"
+                                >
+                                    Option #{{ option }}
+                                </kbq-radio-button>
+                            }
+                        </kbq-radio-group>
+                    }
+                }
+            </div>
+
+            @for (big of sizes; track big) {
+                <div class="e2e-grid e2e-grid_content">
+                    @for (content of contents; track content) {
+                        @for (labelPosition of labelPositions; track labelPosition) {
+                            <kbq-radio-group
+                                [big]="big"
+                                [errorStateMatcher]="errorStateMatcher"
+                                [formControl]="unselected"
+                                [labelPosition]="labelPosition"
+                                [class.e2e-narrow]="content === 'long'"
+                            >
+                                @for (option of [0, 1]; track option) {
+                                    <kbq-radio-button [value]="option">
+                                        @if (content === 'long') {
+                                            Option #{{ option }} that is long enough to wrap onto the next line
+                                        } @else {
+                                            Option #{{ option }}
+                                        }
+                                        @if (content === 'hint') {
+                                            <kbq-hint>Hint #{{ option }}</kbq-hint>
+                                        }
+                                    </kbq-radio-button>
+                                }
+                                <!-- Written before the error, which still comes first. -->
+                                @if (content === 'group-hint') {
+                                    <kbq-hint>Hint of the group</kbq-hint>
+                                }
+                                @if (content === 'long') {
+                                    <kbq-error>Error that is long enough to wrap onto the next line</kbq-error>
+                                } @else if (content !== 'without-error') {
+                                    <kbq-error>Error</kbq-error>
+                                }
+                            </kbq-radio-group>
+                        }
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Without a projected error the group has to take the same space as a valid one. -->
+        <kbq-radio-group aria-label="Valid" data-testid="e2eRadioValid" [formControl]="unselected">
+            <kbq-radio-button [value]="0">Option #0</kbq-radio-button>
+        </kbq-radio-group>
+        <kbq-radio-group
+            aria-label="Invalid"
+            data-testid="e2eRadioInvalid"
+            [errorStateMatcher]="errorStateMatcher"
+            [formControl]="unselected"
+        >
+            <kbq-radio-button [value]="0">Option #0</kbq-radio-button>
+        </kbq-radio-group>
+    `,
+    styles: `
+        :host {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .e2e-grids {
+            display: inline-grid;
+            gap: var(--kbq-size-xl);
+            justify-items: start;
+            padding: var(--kbq-size-xs);
+        }
+
+        .e2e-grid {
+            display: inline-grid;
+            grid-template-columns: repeat(3, auto);
+            gap: var(--kbq-size-s);
+            align-items: start;
+            justify-items: start;
+        }
+
+        .e2e-grid_content {
+            grid-template-columns: repeat(2, auto);
+        }
+
+        .e2e-narrow {
+            max-width: 160px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eRadioValidation'
+    }
+})
+export class E2eRadioValidation {
+    readonly types = ['unselected', 'selected'] as const;
+    readonly states = ['normal', 'hovered', 'focused'] as const;
+    readonly contents = ['error', 'hint', 'group-hint', 'long', 'without-error'] as const;
+    readonly sizes = [false, true] as const;
+    readonly labelPositions = ['after', 'before'] as const;
+
+    // Always in the error state, so the screenshot does not depend on touching or submitting.
+    readonly errorStateMatcher: ErrorStateMatcher = { isErrorState: () => true };
+    readonly unselected = new FormControl<number | null>(null);
+    readonly selected = new FormControl<number | null>(0);
 }

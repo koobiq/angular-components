@@ -605,6 +605,9 @@ export class KbqTreeSelection<T = any>
 
     private destroyed = false;
 
+    /** `treeControl.dataNodes` the options' checkbox states were last recomputed against. */
+    private checkboxSyncedDataNodes: T[] | null = null;
+
     /**
      * The model this tree built for itself. `KbqTreeSelect` overwrites {@link selectionModel} with one it
      * shares with the tree, and the two diverging is how a mode change knows the model is not ours to swap.
@@ -725,6 +728,9 @@ export class KbqTreeSelection<T = any>
         }
 
         this.mode.set(next);
+
+        // While the checkbox is hidden, the options leave its state as it was.
+        if (next === MultipleMode.CHECKBOX) this.scheduleCheckboxSync(true);
 
         if (rebuildNeeded) {
             this.rebuildSelectionModel(!!next);
@@ -1197,10 +1203,13 @@ export class KbqTreeSelection<T = any>
 
         this.changeDetectorRef.detectChanges();
 
+        this.scheduleCheckboxSync(false);
+
         // The "select all" row is rendered ahead of what its state reads: new rows bind their inputs after it and join
         // `renderedOptions` only once bound, and `KbqTreeFlatDataSource` assigns `dataNodes` after it emits. Nothing
-        // else in the tree reads that state, so a tree without the row is done in this one pass. Marked for check,
-        // which reaches the views above too: a template reading `allOptionsSelected` by reference reads the same state.
+        // else in the tree reads that state but the checkbox sync above, so a tree without the row is done in this one
+        // pass. Marked for check, which reaches the views above too: a template reading `allOptionsSelected` by
+        // reference reads the same state.
         if (!this.showSelectAll) return;
 
         const dataNodes = this.treeControl.dataNodes;
@@ -1211,6 +1220,22 @@ export class KbqTreeSelection<T = any>
             },
             { injector: this.injector }
         );
+    }
+
+    /**
+     * Recomputes every option's checkbox state where no selection change follows to do it: after `dataNodes` is
+     * replaced, which moves the descendants a branch counts, and once a hidden checkbox appears. A microtask later, as
+     * a flat data source assigns `dataNodes` only after it emits.
+     */
+    private scheduleCheckboxSync(force: boolean): void {
+        Promise.resolve().then(() => {
+            const dataNodes = this.treeControl?.dataNodes ?? null;
+
+            if (this.destroyed || (!force && dataNodes === this.checkboxSyncedDataNodes)) return;
+
+            this.checkboxSyncedDataNodes = dataNodes;
+            this.unorderedOptions.forEach((option) => option.markForCheck());
+        });
     }
 
     /** @docs-private */

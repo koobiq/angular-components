@@ -12,7 +12,7 @@
     [kbqPopoverOffset]="4"
     [kbqPopoverDefaultPaddings]="false"
     [kbqPopoverPlacement]="placements.BottomLeft"
-    [class]="{ 'kbq-active': popover()?.isOpen }"
+    [class]="{ 'kbq-active': popover().isOpen }"
 >
     <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
     <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!data.value">

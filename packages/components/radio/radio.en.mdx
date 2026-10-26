@@ -24,6 +24,14 @@ Radio buttons allow users to select from a set of mutually exclusive, related op
 
 <Example id="radio-multiline" />
 
+#### Validation
+
+To show a validation error, bind the group to a form control, apply `required` or `Validators.required`, and put the error text in a `kbq-error` inside the group.
+
+To show the error at another moment, pass a matcher to the `errorStateMatcher` input: the example below shows the error only after the form is submitted. The matchers are described in the [Validation guide](/en/other/validation).
+
+<Example id="radio-validation" />
+
 ### Keyboard interaction
 
 The component installs no key handlers of its own. The options are real `<input type="radio">`
@@ -57,7 +65,8 @@ A `kbq-hint` projected into a button is exposed as its description, not as part 
 option is announced by its own text and the caption is left for assistive technology to defer.
 
 `[required]` on the group reaches the `radiogroup` as `aria-required`, and a group colored with the
-error palette reaches it as `aria-invalid`.
+error palette or in the error state reaches it as `aria-invalid`. The error and the hint of the group are announced as its description, together with an `aria-describedby` you set on the
+group yourself.
 
 `focus()` on a button — or on the group, which forwards to the checked option — accepts a
 `FocusOrigin`. Pass `'keyboard'` when you move focus in response to a keyboard action, so the focus

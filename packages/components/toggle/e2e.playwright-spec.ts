@@ -87,6 +87,38 @@ test.describe('KbqToggleModule', () => {
         });
     });
 
+    test.describe('E2eToggleValidation', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eToggleValidation');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eToggleValidation');
+
+            await expect(getScreenshotTarget(getComponent(page))).toHaveScreenshot('05-validation-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(getScreenshotTarget(getComponent(page))).toHaveScreenshot('05-validation-dark.png');
+        });
+
+        test('should take the same space in the error state without kbq-error', async ({ page }) => {
+            await page.goto('/E2eToggleValidation');
+
+            const component = getComponent(page);
+
+            for (const variant of ['WithLabel', 'WithoutLabel']) {
+                const invalid = component.getByTestId(`e2eToggleInvalid${variant}`);
+
+                await expect(invalid).toHaveClass(/kbq-invalid/);
+
+                const validBox = await component.getByTestId(`e2eToggleValid${variant}`).boundingBox();
+                const invalidBox = await invalid.boundingBox();
+
+                expect({ width: invalidBox?.width, height: invalidBox?.height }).toEqual({
+                    width: validBox?.width,
+                    height: validBox?.height
+                });
+            }
+        });
+    });
+
     test.describe('E2eToggleHeight', () => {
         const getComponent = (page: Page): Locator => page.getByTestId('e2eToggleHeight');
 

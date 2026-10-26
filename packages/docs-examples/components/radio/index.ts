@@ -4,15 +4,24 @@ import { RadioGroupExample } from './radio-group/radio-group-example';
 import { RadioMultilineExample } from './radio-multiline/radio-multiline-example';
 import { RadioOverviewExample } from './radio-overview/radio-overview-example';
 import { RadioStyleExample } from './radio-style/radio-style-example';
+import { RadioValidationExample } from './radio-validation/radio-validation-example';
 
-export { RadioContentExample, RadioGroupExample, RadioMultilineExample, RadioOverviewExample, RadioStyleExample };
+export {
+    RadioContentExample,
+    RadioGroupExample,
+    RadioMultilineExample,
+    RadioOverviewExample,
+    RadioStyleExample,
+    RadioValidationExample
+};
 
 const EXAMPLES = [
     RadioOverviewExample,
     RadioStyleExample,
     RadioContentExample,
     RadioGroupExample,
-    RadioMultilineExample
+    RadioMultilineExample,
+    RadioValidationExample
 ];
 
 @NgModule({

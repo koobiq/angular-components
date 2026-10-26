@@ -33,6 +33,7 @@
     --kbq-radio-error-default-outer-circle-border: var(--kbq-line-error);
     --kbq-radio-error-default-outer-circle-background: var(--kbq-background-error-less);
     --kbq-radio-error-default-inner-circle-background: transparent;
+    --kbq-radio-error-default-caption: var(--kbq-foreground-contrast-secondary);
     --kbq-radio-error-states-hover-outer-circle-border: var(--kbq-line-error);
     --kbq-radio-error-states-hover-outer-circle-background: var(--kbq-states-background-error-fade-hover);
     --kbq-radio-error-states-hover-inner-circle-background: transparent;
@@ -59,7 +60,9 @@
     --kbq-radio-error-states-disabled-caption: var(--kbq-states-foreground-disabled);
 }
 
-.kbq-radio-button {
+// The error and the hints under a group line up with the buttons, so they read their sizes too.
+.kbq-radio-button,
+.kbq-radio-group__subscript {
     --kbq-radio-size-normal-outer-circle-border-width: var(--kbq-size-border-width);
     --kbq-radio-size-normal-outer-size: calc(
         var(--kbq-size-l) - var(--kbq-radio-size-normal-outer-circle-border-width) * 2

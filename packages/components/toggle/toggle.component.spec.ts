@@ -1,11 +1,25 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component, DebugElement, effect, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import {
+    FormControl,
+    FormGroup,
+    FormsModule,
+    NgModel,
+    ReactiveFormsModule,
+    UntypedFormControl,
+    Validators
+} from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KBQ_CHECKBOX_CLICK_ACTION } from '@koobiq/components/checkbox';
-import { KBQ_ANIMATIONS_CONFIG, KBQ_CHECKABLE_CLICK_ACTION, KbqCheckedState } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import {
+    dispatchFakeEvent,
+    ErrorStateMatcher,
+    KBQ_ANIMATIONS_CONFIG,
+    KBQ_CHECKABLE_CLICK_ACTION,
+    KbqCheckedState
+} from '@koobiq/components/core';
+import { KbqError, KbqFormFieldModule, KbqHint } from '@koobiq/components/form-field';
 import { KbqToggleClickAction, KbqToggleComponent, KbqToggleModule } from './index';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
@@ -126,7 +140,7 @@ describe('KbqToggle', () => {
             testComponent.toggleId = '';
             fixture.detectChanges();
 
-            expect(toggleInstance.inputId).toMatch(/kbq-toggle-\d+-input/);
+            expect(toggleInstance.inputId).toMatch(/kbq-toggle-\w+-input/);
             expect(inputElement.id).toBe(toggleInstance.inputId);
             expect(toggleNativeElement.id).toBe(toggleInstance.inputId.replace(/-input$/, ''));
         });
@@ -135,7 +149,7 @@ describe('KbqToggle', () => {
             testComponent.toggleId = undefined;
             fixture.detectChanges();
 
-            expect(toggleNativeElement.id).toMatch(/^kbq-toggle-\d+$/);
+            expect(toggleNativeElement.id).toMatch(/^kbq-toggle-\w+$/);
             expect(inputElement.id).toBe(`${toggleNativeElement.id}-input`);
         });
 
@@ -274,6 +288,8 @@ describe('KbqToggle', () => {
 
             fixture.detectChanges();
             expect(inputElement.getAttribute('aria-label')).toBe('Super effective');
+            // `aria-labelledby` would take precedence over the given label.
+            expect(inputElement.hasAttribute('aria-labelledby')).toBe(false);
         });
 
         it('should not set the aria-label attribute if no value is provided', () => {
@@ -300,14 +316,18 @@ describe('KbqToggle', () => {
             expect(inputElement.getAttribute('aria-labelledby')).toBe('some-id');
         });
 
-        it('should not assign aria-labelledby if none is provided', () => {
+        it('should be named by the label text when no aria-labelledby is provided', () => {
             fixture = createComponent(SingleToggle);
             toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
             toggleNativeElement = toggleDebugElement.nativeElement;
             inputElement = <HTMLInputElement>toggleNativeElement.querySelector('input');
 
             fixture.detectChanges();
-            expect(inputElement.getAttribute('aria-labelledby')).toBe(null);
+
+            const label: HTMLElement = toggleNativeElement.querySelector('.kbq-toggle-label')!;
+
+            expect(label.id).toBeTruthy();
+            expect(inputElement.getAttribute('aria-labelledby')).toBe(label.id);
         });
     });
 
@@ -408,8 +428,8 @@ describe('KbqToggle', () => {
                 .queryAll(By.directive(KbqToggleComponent))
                 .map((debugElement) => debugElement.nativeElement.querySelector('input').id);
 
-            expect(firstId).toMatch(/kbq-toggle-\d+-input/);
-            expect(secondId).toMatch(/kbq-toggle-\d+-input/);
+            expect(firstId).toMatch(/kbq-toggle-\w+-input/);
+            expect(secondId).toMatch(/kbq-toggle-\w+-input/);
             expect(firstId).not.toEqual(secondId);
         });
     });
@@ -830,6 +850,135 @@ describe('KbqToggle', () => {
         });
     });
 
+    describe('error state', () => {
+        let fixture: ComponentFixture<ToggleWithErrorState>;
+        let host: HTMLElement;
+        let input: HTMLInputElement;
+
+        const create = (providers: any[] = []): void => {
+            fixture = createComponent(ToggleWithErrorState, providers);
+            fixture.detectChanges();
+
+            host = fixture.debugElement.query(By.directive(KbqToggleComponent)).nativeElement;
+            input = host.querySelector('input')!;
+        };
+
+        const errorElement = (): HTMLElement | null => host.querySelector('.kbq-toggle__error');
+        const hintElement = (): HTMLElement => host.querySelector('.kbq-toggle__hint')!;
+
+        it('should not show an error before the control is touched', () => {
+            create();
+
+            expect(host.classList).not.toContain('kbq-invalid');
+            expect(input.hasAttribute('aria-invalid')).toBe(false);
+            expect(input.getAttribute('aria-describedby')).toBe(hintElement().id);
+            expect(errorElement()).toBeNull();
+        });
+
+        it('should show the error once focus leaves an invalid control, without a forced check', async () => {
+            create();
+
+            TestBed.inject(FocusMonitor).focusVia(input, 'keyboard');
+            input.blur();
+            await fixture.whenStable();
+
+            expect(host.classList).toContain('kbq-invalid');
+            expect(input.getAttribute('aria-invalid')).toBe('true');
+            expect(errorElement()!.textContent).toContain('Two-factor authentication is required');
+            expect(input.getAttribute('aria-describedby')).toBe(`${errorElement()!.id} ${hintElement().id}`);
+        });
+
+        it('should show the error once the parent form is submitted', () => {
+            create();
+
+            dispatchFakeEvent(fixture.nativeElement.querySelector('form'), 'submit');
+            fixture.detectChanges();
+
+            expect(host.classList).toContain('kbq-invalid');
+            expect(errorElement()).not.toBeNull();
+        });
+
+        it('should hide the error once the control becomes valid', () => {
+            create();
+            fixture.componentInstance.form.controls.twoFactor.markAsTouched();
+            fixture.detectChanges();
+
+            expect(host.classList).toContain('kbq-invalid');
+
+            input.click();
+            fixture.detectChanges();
+
+            expect(host.classList).not.toContain('kbq-invalid');
+            expect(errorElement()).toBeNull();
+        });
+
+        it('should render nothing under the label without a projected error', () => {
+            const plainFixture = createComponent(ToggleWithoutErrorMessage);
+
+            plainFixture.componentInstance.control.markAsTouched();
+            plainFixture.detectChanges();
+
+            const toggle: HTMLElement = plainFixture.debugElement.query(By.directive(KbqToggleComponent)).nativeElement;
+            const hint: HTMLElement = toggle.querySelector('.kbq-toggle__hint')!;
+
+            expect(toggle.classList).toContain('kbq-invalid');
+            expect(toggle.querySelector('.kbq-toggle__error')).toBeNull();
+            expect(toggle.querySelector('input')!.getAttribute('aria-describedby')).toBe(hint.id);
+        });
+
+        it('should not show an error while the control is disabled', () => {
+            create();
+            fixture.componentInstance.form.controls.twoFactor.markAsTouched();
+            fixture.componentInstance.form.controls.twoFactor.disable();
+            fixture.detectChanges();
+
+            expect(host.classList).not.toContain('kbq-invalid');
+        });
+
+        it('should show the error between the label and the hint, wherever it is written', () => {
+            create();
+            fixture.componentInstance.form.controls.twoFactor.markAsTouched();
+            fixture.detectChanges();
+
+            const label: HTMLElement = host.querySelector('.kbq-toggle-label')!;
+
+            // The host writes the hint first.
+            expect(label.compareDocumentPosition(errorElement()!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+            expect(
+                errorElement()!.compareDocumentPosition(hintElement()) & Node.DOCUMENT_POSITION_FOLLOWING
+            ).toBeTruthy();
+        });
+
+        it('should decide the error state with the matcher bound to the input', () => {
+            create();
+            fixture.componentInstance.errorStateMatcher = { isErrorState: () => true };
+            fixture.detectChanges();
+
+            expect(host.classList).toContain('kbq-invalid');
+        });
+
+        it('should decide the error state with the provided matcher', () => {
+            create([{ provide: ErrorStateMatcher, useValue: { isErrorState: () => true } }]);
+
+            expect(host.classList).toContain('kbq-invalid');
+        });
+
+        it('should mark a toggle colored as an error invalid without a form control', () => {
+            const colorFixture = createComponent(ToggleWithErrorColor);
+            const colorInput: HTMLInputElement = colorFixture.nativeElement.querySelector('input');
+
+            expect(colorInput.getAttribute('aria-invalid')).toBe('true');
+        });
+
+        it('should have no violations while showing the error', async () => {
+            create();
+            fixture.componentInstance.form.controls.twoFactor.markAsTouched();
+            fixture.detectChanges();
+
+            await expect(fixture.nativeElement).toHaveNoViolations();
+        });
+    });
+
     describe('with animations disabled', () => {
         it('should take the motion off the switch', () => {
             const fixture = createComponent(SingleToggle, [
@@ -1098,6 +1247,41 @@ class ToggleWithoutLabel {
     `
 })
 class ToggleWithHint {}
+
+@Component({
+    imports: [KbqToggleModule],
+    template: `
+        <kbq-toggle color="error">Vibration</kbq-toggle>
+    `
+})
+class ToggleWithErrorColor {}
+
+@Component({
+    imports: [KbqToggleModule, ReactiveFormsModule],
+    template: `
+        <kbq-toggle [formControl]="control">Two-factor authentication</kbq-toggle>
+    `
+})
+class ToggleWithoutErrorMessage {
+    readonly control = new FormControl(false, Validators.requiredTrue);
+}
+
+@Component({
+    imports: [KbqToggleModule, ReactiveFormsModule, KbqHint, KbqError],
+    template: `
+        <form [formGroup]="form">
+            <kbq-toggle formControlName="twoFactor" [errorStateMatcher]="errorStateMatcher">
+                Two-factor authentication
+                <kbq-hint>Asks for a code at sign-in</kbq-hint>
+                <kbq-error>Two-factor authentication is required</kbq-error>
+            </kbq-toggle>
+        </form>
+    `
+})
+class ToggleWithErrorState {
+    readonly form = new FormGroup({ twoFactor: new FormControl(false, Validators.requiredTrue) });
+    errorStateMatcher: ErrorStateMatcher | undefined;
+}
 
 @Component({
     imports: [KbqToggleModule],
