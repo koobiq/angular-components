@@ -104,6 +104,8 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel'> = T
      *
      * Views are reused for nodes the function reports as unchanged, which a data source that rebuilds
      * its node objects on every emission — a flattener among them — otherwise cannot get.
+     *
+     * Defaults to the `trackBy` of the tree control, read when the tree initializes and when the data source changes.
      */
     readonly trackBy = input<TrackByFunction<T>>(undefined!);
 
@@ -621,7 +623,11 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel'> = T
     }
 
     private createDataDiffer(): IterableDiffer<T> {
-        return this.differs.find([]).create(this.trackBy());
+        // `TreeControl` does not declare `trackBy`: only the koobiq controls have it.
+        const controlTrackBy = (this.treeControl as { trackBy?: (dataNode: T) => unknown } | undefined)?.trackBy;
+        const trackBy = this.trackBy() ?? (controlTrackBy && ((_: number, node: T) => controlTrackBy(node)));
+
+        return this.differs.find([]).create(trackBy);
     }
 }
 

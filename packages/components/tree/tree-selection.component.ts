@@ -1204,6 +1204,10 @@ export class KbqTreeSelection<T = any, K = T>
 
         this.changeDetectorRef.detectChanges();
 
+        // The options query lists the options in the order their views were created, not in the order of the rows, so
+        // rows that only moved (reused through `trackBy`) never make it emit.
+        if (changed && this.renderedOptionsOutOfOrder()) this.updateRenderedOptions();
+
         this.scheduleCheckboxSync(false);
 
         // The "select all" row is rendered ahead of what its state reads: new rows bind their inputs after it and join
@@ -1562,6 +1566,19 @@ export class KbqTreeSelection<T = any, K = T>
     /** A tree with nothing rendered leaves the tab order, unless a tab index other than `0` is bound. */
     private updateTabIndex(): void {
         this.tabIndexState.set(this.userTabIndex || (this.renderedOptions.length === 0 ? -1 : 0));
+    }
+
+    /**
+     * Whether the same options as before now stand for the rows in another order. A different count means rows were
+     * added or removed, which the options query reports itself.
+     */
+    private renderedOptionsOutOfOrder(): boolean {
+        const options = this.renderedOptions.toArray();
+        const offset = this.selectAllOption() ? 1 : 0;
+
+        if (options.length - offset !== this.sortedNodes.length) return false;
+
+        return this.sortedNodes.some((node, index) => options[index + offset].data !== node);
     }
 
     private updateRenderedOptions = () => {

@@ -136,12 +136,10 @@ costs a DOM row per item. A tree that shows thousands of rows at once should kee
 collapsed or narrow the data with the search field.
 
 Nodes are tracked by identity by default, so a data source that rebuilds its node objects on every
-emission — a flattener among them — rebuilds every row. Pass a `trackBy` function returning a stable
-key to have the rows re-used across data updates instead.
-
-The tree control tracks the expanded nodes by identity too, so a rebuilt node comes back collapsed.
-Give the control a `trackBy` of its own in the options, the last argument of `FlatTreeControl` and
-`NestedTreeControl`. It takes the node alone and returns the key the node is expanded by:
+emission — a flattener among them — rebuilds every row, and a rebuilt node comes back collapsed.
+Give the tree control a `trackBy` in the options, the last argument of `FlatTreeControl` and
+`NestedTreeControl`. It takes the node alone and returns a stable key: the node is expanded by that key,
+and the tree re-uses the row of the same key across data updates:
 
 ```ts
 treeControl = new FlatTreeControl<FileFlatNode, string>(
@@ -159,3 +157,7 @@ treeControl = new FlatTreeControl<FileFlatNode, string>(
 `expansionModel` then holds the keys rather than the nodes, and a type that names the tree names the key
 type after the node type: `KbqTreeSelection<FileFlatNode, string>`,
 `KbqTreeSelectionChange<KbqTreeOption<FileFlatNode>, FileFlatNode, string>`.
+
+The tree's own `trackBy` input, a `TrackByFunction` of the index and the node, overrides the key the rows
+are re-used by; it does not change the expansion. Without a control `trackBy` it is the only way to
+re-use the rows.

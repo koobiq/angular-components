@@ -1655,6 +1655,46 @@ describe('KbqTreeSelection', () => {
             });
         });
 
+        describe('with a tree control keyed by trackBy and no [trackBy]', () => {
+            it('should reuse the rows of the same keys and keep the keyboard order of the new data', async () => {
+                vi.useFakeTimers();
+                configureKbqTreeTestingModule();
+
+                const fixture = TestBed.createComponent(TreeWithKeyedControl);
+                const component = fixture.componentInstance;
+                const options = (): KbqTreeOption[] =>
+                    fixture.debugElement
+                        .queryAll(By.directive(KbqTreeOption))
+                        .map((debugElement) => debugElement.componentInstance as KbqTreeOption);
+
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(0);
+                fixture.detectChanges();
+
+                const [src, docs] = options();
+                const nodes: TrackedNode[] = [
+                    { id: 2, name: 'docs', level: 0, expandable: false },
+                    { id: 1, name: 'source', level: 0, expandable: false }
+                ];
+
+                component.emit(nodes);
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(0);
+                fixture.detectChanges();
+
+                const rendered = component.tree().renderedOptions.toArray();
+
+                // Same instances: the rows were moved, not rebuilt.
+                expect(options()[0]).toBe(docs);
+                expect(options()[1]).toBe(src);
+                expect(src.getHostElement().textContent?.trim()).toBe('source');
+                expect(rendered[0]).toBe(docs);
+                expect(rendered[1]).toBe(src);
+                expect(rendered[0].data).toBe(nodes[0]);
+                expect(rendered[1].data).toBe(nodes[1]);
+            });
+        });
+
         describe('selection with CTRL + A', () => {
             let fixture: ComponentFixture<KbqTreeAppMultiple>;
             let component: KbqTreeAppMultiple;
@@ -4020,6 +4060,45 @@ class TreeWithTrackedThirdStateCheckbox {
             { id: 1, name: 'branch', level: 0, expandable: true },
             { id: 2, name: 'child', level: 1, expandable: false },
             { id: 3, name: 'sibling', level: 0, expandable: false }
+        ]);
+    }
+
+    emit(nodes: TrackedNode[]): void {
+        this.treeControl.dataNodes = nodes;
+        this.dataSource.next(nodes);
+    }
+}
+
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeWithKeyedControl {
+    readonly tree = viewChild.required<KbqTreeSelection<TrackedNode, number>>(KbqTreeSelection);
+
+    readonly dataSource = new BehaviorSubject<TrackedNode[]>([]);
+
+    readonly treeControl = new FlatTreeControl<TrackedNode, number>(
+        (node) => node.level,
+        (node) => node.expandable,
+        (node) => node.name,
+        (node) => node.name,
+        undefined,
+        undefined,
+        undefined,
+        { trackBy: (node) => node.id }
+    );
+
+    constructor() {
+        this.emit([
+            { id: 1, name: 'src', level: 0, expandable: false },
+            { id: 2, name: 'docs', level: 0, expandable: false }
         ]);
     }
 
