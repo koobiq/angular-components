@@ -10,6 +10,13 @@ import { createChangelogWriterOptions } from './changelog-writer-options';
 const { yellow, bold } = chalk;
 const { prompt } = inquirer;
 
+/**
+ * Header pattern of the conventional-changelog-angular preset, extended with the package that may
+ * precede the scope and with the `!` of a breaking change: the preset accepts no `!`, so such a
+ * commit came out without a type and never reached the changelog.
+ */
+export const COMMIT_HEADER_PATTERN = /^(\w*)(?:\((?:([^/]+)\/)?(.*)\))?!?: (.*)$/;
+
 /** Prompts for a changelog release name and prepends the new changelog. */
 export async function promptAndGenerateChangelog(changelogPath: string, config: IReleaseTaskConfig) {
     const releaseName = await promptChangelogReleaseName();
@@ -44,9 +51,7 @@ export async function buildChangelogStream(
         .commits(
             {},
             {
-                // Expansion of the convention-changelog-angular preset to extract the package
-                // name from the commit message.
-                headerPattern: /^(\w*)(?:\((?:([^/]+)\/)?(.*)\))?: (.*)$/,
+                headerPattern: COMMIT_HEADER_PATTERN,
                 headerCorrespondence: ['type', 'package', 'scope', 'subject']
             }
         )

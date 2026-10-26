@@ -3664,10 +3664,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/icons@npm:^12.3.0":
-  version: 12.3.0
-  resolution: "@koobiq/icons@npm:12.3.0"
-  checksum: 10c0/e687c16137432bf434339a70c76e8baa8e2c78dbeb703eebe8d2a26a3487acb7c375a849bf2b22b388a52e268073beef13da76405ab1eee63fd71bc8bd2043ea
+"@koobiq/icons@npm:^12.4.0":
+  version: 12.4.0
+  resolution: "@koobiq/icons@npm:12.4.0"
+  checksum: 10c0/041be39e6948232e9c0fadb433be4c7a6f8a5c78cd8f5ed0149cab6e1eb5dc29be3ed650aea004ef13c47dbb428b93098a69816acdfde572f533f4fe694a63e2
   languageName: node
   linkType: hard
 
@@ -10770,7 +10770,7 @@ __metadata:
     "@koobiq/date-adapter": "npm:^3.5.1"
     "@koobiq/date-formatter": "npm:^3.5.1"
     "@koobiq/design-tokens": "npm:^4.1.0"
-    "@koobiq/icons": "npm:^12.3.0"
+    "@koobiq/icons": "npm:^12.4.0"
     "@koobiq/luxon-date-adapter": "npm:^3.5.1"
     "@koobiq/moment-date-adapter": "npm:^3.5.1"
     "@maskito/angular": "npm:^5.1.0"
