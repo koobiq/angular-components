@@ -162,6 +162,7 @@
     "resolutions": {
         "@babel/core": "^7.29.7",
         "@hono/node-server": "^2.0.12",
+        "body-parser": "^2.4.0",
         "diff@^4.0.1": "4.0.4",
         "diff@~8.0.2": "8.0.4",
         "js-yaml@^4.1.0": "^4.3.2",
