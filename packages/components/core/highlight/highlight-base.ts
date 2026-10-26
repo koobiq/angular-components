@@ -43,7 +43,6 @@ function findLiteralMatchRanges(value: string, keywords: string[]): Array<[numbe
 }
 
 /**
- * @docs-private
  * `keyword` accepts either a single string or an array of strings — every keyword is
  * highlighted independently, which is what multi-token search queries need.
  *
@@ -51,6 +50,8 @@ function findLiteralMatchRanges(value: string, keywords: string[]): Array<[numbe
  * `foldDiacritics: true` when the keywords were matched with diacritic folding (e.g. via
  * {@link createSearchPredicate} from `@koobiq/components/core`) — otherwise a folded match like
  * `cafe` finding `Café` has nothing in the value for a literal highlighter to mark.
+ *
+ * @docs-private
  */
 export function highlight(
     value: unknown,

@@ -13,6 +13,7 @@ const entryIsFile = (entry?: FileSystemEntry): entry is FileSystemFileEntry => !
 export class KbqDrop {
     /** @docs-private */
     isSafari = inject(Platform).SAFARI;
+
     /**
      * Controls whether drag-and-drop functionality is enabled.
      * When true, all drag events are filtered out and ignored.

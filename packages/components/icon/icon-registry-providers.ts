@@ -43,7 +43,9 @@ export function kbqIconsResolverProvider(resolver: KbqIconResolver): Provider {
  * markup is a `SafeHtml` the application has explicitly vouched for.
  *
  * @example
+ * ```ts
  * kbqIconsDictProvider({ 'chevron-down-s_16': '/assets/icons/chevron-down-s_16.svg' })
+ * ```
  */
 export function kbqIconsDictProvider(dict: Record<string, string>): Provider {
     return kbqIconsResolverProvider((name) => dict[name] ?? null);

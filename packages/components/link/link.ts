@@ -45,6 +45,7 @@ const ACTIVATION_KEYS = ['Enter', ' ', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 export type KbqLinkOptions = {
     /** Size of a link: its typography and the gaps to its icons. */
     size: KbqDefaultSizes;
+
     /**
      * When the text of a link and of a pseudo link is underlined. Unset, a link is always underlined and a pseudo
      * link only on hover.

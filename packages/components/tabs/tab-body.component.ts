@@ -44,6 +44,7 @@ export type KbqTabBodyPositionState = 'left' | 'center' | 'right' | 'left-origin
 
 /**
  * Wrapper for the contents of a tab.
+ *
  * @docs-private
  */
 @Component({
@@ -276,6 +277,7 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
 
 /**
  * The portal host directive for the contents of the tab.
+ *
  * @docs-private
  */
 @Directive({

@@ -27,6 +27,7 @@ export class KbqTreeNodeToggleBaseDirective<T> {
     /**
      * Backing input of `disabled`. Bind through the `disabled` attribute; read the `disabled` getter,
      * which also reports the toggle disabled while a filter is active.
+     *
      * @docs-private
      */
     readonly disabledInput = input(false, { alias: 'disabled', transform: booleanAttribute });

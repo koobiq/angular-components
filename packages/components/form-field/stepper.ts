@@ -54,12 +54,14 @@ const getKbqStepperToggleMissingControlError = (): Error => {
 
 /**
  * Timeout duration when clicking the up/down arrow
+ *
  * @internal
  */
 export const KBQ_STEPPER_INITIAL_TIMEOUT = 300;
 
 /**
  * Interval delay when clicking the up/down arrow
+ *
  * @internal
  */
 export const KBQ_STEPPER_INTERVAL_DELAY = 75;
@@ -115,12 +117,9 @@ export class KbqStepper {
     /**
      * Timing observable simulating long press in native input-number.
      * - Value increases/decreases by step immediately.
-     * - Brief pause (`300ms`)
+     * - Brief pause (`300ms`, {@link KBQ_STEPPER_INITIAL_TIMEOUT})
      * - Numbers start running upward/downward with selected speed
-     * (controlled by interval period)
-     * @see KBQ_STEPPER_INTERVAL_DELAY
-     * @see KBQ_STEPPER_INITIAL_TIMEOUT
-     * @docs-private
+     * (controlled by interval period, {@link KBQ_STEPPER_INTERVAL_DELAY})
      */
     private readonly longPress = timer(KBQ_STEPPER_INITIAL_TIMEOUT).pipe(
         concatMap(() => interval(KBQ_STEPPER_INTERVAL_DELAY)),

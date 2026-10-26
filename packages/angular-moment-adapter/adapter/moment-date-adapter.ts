@@ -67,6 +67,7 @@ export class MomentDateAdapter extends BaseMomentDateAdapter {
 
     /**
      * Sets the locale used for all dates.
+     *
      * @param locale The new locale.
      */
     setLocale = (locale: any) => {

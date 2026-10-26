@@ -41,6 +41,7 @@ export type ToggleType = 'checkbox' | 'radio';
 /**
  * Provider Expression that allows kbq-button-toggle-group to register as a ControlValueAccessor.
  * This allows it to support [(ngModel)].
+ *
  * @docs-private
  */
 export const KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: Provider = {
@@ -169,6 +170,7 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
     /**
      * Event that emits whenever the value of the group changes.
      * Used to facilitate two-way data binding.
+     *
      * @docs-private
      */
     readonly valueChange = output<any>();
@@ -260,12 +262,14 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
     /**
      * Called when the value changes. Needed to properly implement `ControlValueAccessor`.
      * `ngModel` binding is not supported in multiple selection mode.
+     *
      * @docs-private
      */
     controlValueAccessorChangeFn: (value: any) => void = () => {};
 
     /**
      * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     *
      * @docs-private
      */
     onTouched: () => void = () => {};
@@ -303,6 +307,7 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
 
     /**
      * Sets the model value. Implemented as part of ControlValueAccessor.
+     *
      * @param value Value to be set to the model.
      */
     writeValue(value: any) {
@@ -351,6 +356,7 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
 
     /**
      * Syncs a button toggle's selected state with the model value.
+     *
      * @param toggle Toggle to be synced.
      * @param select Whether the toggle should be selected.
      * @param isUserInput Whether the change was a result of a user interaction.
@@ -398,6 +404,7 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
 
     /**
      * Reports the new value of a selected toggle, which changes the value of the group, as an interaction would.
+     *
      * @internal
      */
     followToggleValue(toggle: KbqButtonToggle, previous: unknown): void {
@@ -833,7 +840,6 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
         this.change.emit(new KbqButtonToggleChange(this, this.value));
     }
 
-    // Kept at the DS-2196 review: the button-toggle review step of the migration guide promises it stays.
     /**
      * Marks the button toggle as needing checking for change detection.
      *
@@ -841,6 +847,7 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
      * by its group, so it re-renders on its own and nothing in the library calls this any more.
      */
     markForCheck() {
+        // Kept at the DS-2196 review: the button-toggle review step of the migration guide promises it stays.
         this.changeDetectorRef.markForCheck();
     }
 

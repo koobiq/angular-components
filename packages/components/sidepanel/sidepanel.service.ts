@@ -288,6 +288,7 @@ export class KbqSidepanelService implements OnDestroy {
 
     /**
      * Finds an open sidepanel by its id.
+     *
      * @param id ID to use when looking up the sidepanel.
      */
     getSidepanelById(id: string): KbqSidepanelRef | undefined {
@@ -323,6 +324,7 @@ export class KbqSidepanelService implements OnDestroy {
     /**
      * Creates a custom injector to be used inside the sidepanel. This allows a component loaded inside
      * of a sidepanel to close itself and, optionally, to return a value.
+     *
      * @param config Config object that is used to construct the sidepanel.
      * @param sidepanelRef Reference to the sidepanel.
      * @param sidepanelContainer Sidepanel container element that wraps all of the contents.
@@ -350,6 +352,7 @@ export class KbqSidepanelService implements OnDestroy {
 
     /**
      * Creates a new overlay and places it in the correct location.
+     *
      * @param config The user-specified sidepanel config.
      */
     private createOverlay(config: KbqSidepanelConfig): OverlayRef {
@@ -471,6 +474,7 @@ export class KbqSidepanelService implements OnDestroy {
 
     /**
      * Removes a sidepanel from the array of open sidepanels.
+     *
      * @param sidepanelRef Sidepanel to be removed.
      */
     private removeOpenSidepanel(sidepanelRef: KbqSidepanelRef) {

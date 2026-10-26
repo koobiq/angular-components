@@ -11,6 +11,7 @@ export const KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD = 10;
 /**
  * The select panel will only "fit" inside the viewport if it is positioned at
  * this value or more away from the viewport boundary.
+ *
  * @internal
  */
 export const SELECT_PANEL_VIEWPORT_PADDING = 8;

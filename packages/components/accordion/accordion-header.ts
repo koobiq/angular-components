@@ -25,6 +25,7 @@ export class KbqAccordionHeader {
 
     /**
      * Value of `data-state`.
+     *
      * @internal
      */
     protected readonly dataState = computed(() => this.item.dataState);
@@ -37,6 +38,7 @@ export class KbqAccordionHeader {
      * announced as "Profile Run More" when navigating by heading. Pointing at the trigger yields the
      * announcement the WAI-ARIA APG gets by keeping the button the only element in the heading,
      * which this component cannot do because the header is also the row that lays the actions out.
+     *
      * @docs-private
      */
     protected get labelledBy(): string | null {

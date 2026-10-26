@@ -58,6 +58,7 @@ export const KBQ_DROPZONE_DATA = new InjectionToken<KbqDropzoneData>('KbqDropzon
 
 /**
  * Determines if a mouse event occurred outside the viewport boundaries.
+ *
  * @internal
  */
 export const isOutsideViewport = ({
@@ -111,6 +112,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
 
     /**
      * Initializes drag-and-drop event listeners on the document body.
+     *
      * @param config - Dropzone configuration
      */
     init(config?: KbqDropzoneData): void {
@@ -165,6 +167,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
 
     /**
      * Opens the dropzone overlay.
+     *
      * @param config - Dropzone configuration
      */
     open(config?: KbqDropzoneData): void {
@@ -212,7 +215,10 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
         });
     }
 
-    /** @see https://bugs.webkit.org/show_bug.cgi?id=66547 */
+    /**
+     * Closes the overlay once the drag leaves the page. Safari reports a drag event with no `relatedTarget`
+     * ([WebKit bug 66547](https://bugs.webkit.org/show_bug.cgi?id=66547)), so there the pointer position decides.
+     */
     private onDragLeave(event: DragEvent): void {
         if (!isHtmlElementOrNull(event.currentTarget) || !isHtmlElementOrNull(event.relatedTarget)) return;
 

@@ -129,6 +129,7 @@ export class KbqSearchExpandable
 
     /**
      * Accessible names of the icon-only controls this component renders itself.
+     *
      * @docs-private
      */
     protected readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
@@ -146,6 +147,7 @@ export class KbqSearchExpandable
      * Control backing the expanded input. Owning it — rather than binding the consumer's own control to
      * the input — keeps every write to the consumer's model going through the debounced pipeline below,
      * and keeps a programmatic write from being echoed back as a user edit.
+     *
      * @docs-private
      */
     protected readonly control = new FormControl<string>(defaultValue, { nonNullable: true });
@@ -153,6 +155,7 @@ export class KbqSearchExpandable
     /**
      * Keeps the field's invalid state — and the `aria-invalid` derived from it — following the bound
      * control, which is the only one the consumer's validators run on.
+     *
      * @docs-private
      */
     protected readonly errorStateMatcher: ErrorStateMatcher = new BoundControlErrorStateMatcher(
@@ -376,6 +379,7 @@ export class KbqSearchExpandable
      * This runs from `ngAfterViewChecked` rather than from an `effect()` on the queries, because view
      * effects are flushed *before* view queries are refreshed within a change detection pass — an
      * effect would always move focus one pass late.
+     *
      * @docs-private
      */
     ngAfterViewChecked(): void {
@@ -470,6 +474,7 @@ export class KbqSearchExpandable
     /**
      * Emits the typed value straight away when `isEmitValueByEnterEnabled` is set — the only path that
      * emits in that mode, since the debounced pipeline is filtered out.
+     *
      * @docs-private
      */
     protected onEnter(event: Event): void {
@@ -486,6 +491,7 @@ export class KbqSearchExpandable
     /**
      * Collapses the field on `Escape`. On `keydown` and spent, so that a container closing on the key, such as a
      * modal, stays open.
+     *
      * @internal
      */
     protected onEscape(event: Event): void {

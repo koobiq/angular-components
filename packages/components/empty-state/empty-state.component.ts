@@ -144,6 +144,7 @@ export class KbqEmptyState implements KbqEmptyStateContext {
     readonly errorColor = input<boolean>(false);
     /** Whether the content sits at the top of the host instead of its center. Defaults to `false`. */
     readonly alignTop = input<boolean>(false);
+
     /**
      * Size tier of the placeholder: `compact`, `normal` or `big`. Drives every padding and offset,
      * the maximum width of the title and the text, and their typography. Defaults to `normal`.

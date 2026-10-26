@@ -36,6 +36,7 @@ export type KbqActionsPanelTemplateContext<T = unknown, D = unknown, R = unknown
      * ````
      */
     $implicit?: D | null;
+
     /**
      * Data passed to actions panel.
      *
@@ -46,6 +47,7 @@ export type KbqActionsPanelTemplateContext<T = unknown, D = unknown, R = unknown
      * ````
      */
     data?: D | null;
+
     /**
      * Opened actions panel reference.
      *

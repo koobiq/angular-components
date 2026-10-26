@@ -445,11 +445,12 @@ export class KbqSplitterPanel implements KbqSplitterPanelRef {
     protected readonly index = computed(() => this.splitter.panels().indexOf(this));
 
     /**
-     * @docs-private
      * Whether the panel renders no separator. The last panel has nothing after it to resize against, and a
      * panel that reached the splitter through the element injector without being one of its content children —
      * a wrapper element or another component's template stands between them — has no place in the group at
      * all, so it must not offer a handle whose ARIA values would resolve against an index of `-1`.
+     *
+     * @docs-private
      */
     protected readonly last = computed(() => {
         const index = this.index();
@@ -460,7 +461,7 @@ export class KbqSplitterPanel implements KbqSplitterPanelRef {
     /** @docs-private */
     protected readonly disabled = computed(() => this.splitter.disabled());
 
-    /** @docs-private A separator is oriented across the axis its splitter lays panels out along. */
+    /** A separator is oriented across the axis its splitter lays panels out along. @docs-private */
     protected readonly separatorOrientation = computed(() =>
         this.splitter.orientation() === 'horizontal' ? 'vertical' : 'horizontal'
     );
@@ -486,7 +487,6 @@ export class KbqSplitterPanel implements KbqSplitterPanelRef {
     }
 
     /**
-     * @docs-private
      * Demotes the separator's focus origin to the pointer when a drag starts, so the keyboard-focus frame
      * stays hidden for the whole drag and does not linger afterwards. Keyboard focus keeps the frame.
      *
@@ -494,6 +494,8 @@ export class KbqSplitterPanel implements KbqSplitterPanelRef {
      * it is collapsed to nothing, that half hangs outside the splitter itself, and revealing it would scroll
      * whatever clipping box the splitter sits in — leaving the panels shifted by half a hit area, with a blank
      * strip along the edge that nothing scrolls back.
+     *
+     * @docs-private
      */
     protected handleResizeStart({ width, height }: KbqResizerSizeChangeEvent): void {
         const separator = this.separator();
@@ -623,7 +625,7 @@ export class KbqSplitter implements KbqSplitterGroup {
     /** Boundary a drag is moving right now, or `null` when no drag is in progress. */
     private readonly dragBoundary = signal<number | null>(null);
 
-    /** @docs-private Whether a separator is being dragged right now. */
+    /** Whether a separator is being dragged right now. @docs-private */
     protected readonly dragging = computed(() => this.dragBoundary() !== null);
 
     /** Splitter size along the resize axis, in pixels; `0` until the first measurement. */
@@ -636,7 +638,7 @@ export class KbqSplitter implements KbqSplitterGroup {
     // runtime would leave every computed below it holding the direction the app booted with.
     private readonly rtl = computed(() => this.directionality?.valueSignal() === 'rtl');
 
-    /** @docs-private A disabled splitter reports no direction, which is how `KbqResizer` ignores a drag. */
+    /** A disabled splitter reports no direction, which is how `KbqResizer` ignores a drag. @docs-private */
     readonly resizerDirection = computed<KbqResizerDirection>(() => {
         if (this.disabled()) return [0, 0];
         if (this.orientation() === 'vertical') return [0, 1];
@@ -755,7 +757,6 @@ export class KbqSplitter implements KbqSplitterGroup {
     });
 
     /**
-     * @docs-private
      * Tracks are percentages of the splitter's content box, which is exactly what `containerSize` measures, so
      * `size / total` renders as `size` pixels whatever padding the host puts on the splitter.
      *
@@ -767,6 +768,8 @@ export class KbqSplitter implements KbqSplitterGroup {
      *
      * Equal tracks stand in until the first measurement, which is the only layout that cannot be wrong before
      * the splitter has a size to resolve `%` and `px` against.
+     *
+     * @docs-private
      */
     protected readonly gridTemplate = computed<string | null>(() => {
         const count = this.panels().length;

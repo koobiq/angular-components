@@ -13,6 +13,7 @@ export { KbqDefaultSizes } from './size';
 
 /**
  * A parent whose content changes size once its animation ends, such as a tab group.
+ *
  * @docs-private
  */
 export const KBQ_PARENT_ANIMATION_COMPONENT = new InjectionToken<{ readonly animationDone: OutputRef<void> }>(

@@ -98,11 +98,13 @@ export class KbqMultipleFileUploadComponent
 {
     /**
      * A value responsible for progress spinner type.
-     * Loading logic depends on selected mode */
+     * Loading logic depends on selected mode
+     */
     readonly progressMode = input<ProgressSpinnerMode>('determinate');
     /** Array of file type specifiers */
     readonly accept = input<string[]>();
     readonly size = input<'compact' | 'default'>('default');
+
     /**
      * custom ID for the file input element.
      */
@@ -130,30 +132,32 @@ export class KbqMultipleFileUploadComponent
     }
 
     /**
-     * Determines which kind of items the upload component can accept.
-     * @default 'file'
+     * Determines which kind of items the upload component can accept. Defaults to `'file'`.
      */
     readonly allowed = input<KbqFileUploadAllowedTypeValues>(KbqFileUploadAllowedType.File);
+
     /**
      * Controls whether to display fullscreen dropzone.
      * Provide configuration object to enable, or undefined to disable.
      */
     readonly fullScreenDropZone = input<KbqDropzoneData | boolean>();
+
     /**
      * Controls how newly selected/dropped files are merged into the existing list.
      * `concat` accumulates files across interactions, skipping files that duplicate ones already present.
-     * `replace` discards the previous selection, mirroring native input file multiple behavior.
-     * @default concat
+     * `replace` discards the previous selection, mirroring native input file multiple behavior. Defaults to `'concat'`.
      */
     readonly addStrategy = input<KbqFileUploadAddStrategyValues>(KbqFileUploadAddStrategy.Concat);
 
     /** Emits an event containing an updated file list. */
     readonly filesChange = output<KbqFileItem[]>();
+
     /**
      * Emits an event containing a chunk of files added to the file list.
      * Useful when handling added files, skipping filtering file list.
      */
     readonly filesAdded = output<KbqFileItem[]>();
+
     /**
      * Emits an event containing a tuple of file and file's index when removed from the file list.
      * Useful when handle removed files, skipping filtering file list.
@@ -162,6 +166,7 @@ export class KbqMultipleFileUploadComponent
             KbqFileItem,
             number
         ]>();
+
     /**
      * Emits the files a selection or a drop discarded — with the default `concat` strategy, the ones
      * that duplicate a file already in the list. `accept` is not part of this: it only filters the OS
@@ -228,13 +233,18 @@ export class KbqMultipleFileUploadComponent
         }
     });
 
-    /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
+    /**
+     * cvaOnChange function registered via registerOnChange (ControlValueAccessor).
+     *
      * @docs-private
      */
     cvaOnChange = (_: KbqFileItem[]) => {};
 
-    /** onTouch function registered via registerOnTouch (ControlValueAccessor).
-     * @docs-private */
+    /**
+     * onTouch function registered via registerOnTouch (ControlValueAccessor).
+     *
+     * @docs-private
+     */
     onTouched = () => {};
 
     /** @docs-private */
@@ -255,6 +265,7 @@ export class KbqMultipleFileUploadComponent
     /**
      * Indicates an invalid state based on `errorState`,
      * applying a CSS class in HTML for visual feedback.
+     *
      * @docs-private
      */
     get invalid(): boolean {
@@ -349,8 +360,11 @@ export class KbqMultipleFileUploadComponent
         this.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     }
 
-    /** Implemented as part of ControlValueAccessor.
-     * @docs-private */
+    /**
+     * Implemented as part of ControlValueAccessor.
+     *
+     * @docs-private
+     */
     writeValue(files: FileList | KbqFileItem[] | null): void {
         // Writes the list directly instead of going through the `files` setter: that setter is the
         // view→model half of the CVA, so routing Angular's model→view callback through it would mark
@@ -369,20 +383,29 @@ export class KbqMultipleFileUploadComponent
         this.setFileList(files instanceof FileList || !files ? this.mapToFileItem(files) : files);
     }
 
-    /** Implemented as part of ControlValueAccessor.
-     * @docs-private */
+    /**
+     * Implemented as part of ControlValueAccessor.
+     *
+     * @docs-private
+     */
     registerOnChange(fn: any): void {
         this.cvaOnChange = fn;
     }
 
-    /** Implemented as part of ControlValueAccessor.
-     * @docs-private */
+    /**
+     * Implemented as part of ControlValueAccessor.
+     *
+     * @docs-private
+     */
     registerOnTouched(fn: any): void {
         this.onTouched = fn;
     }
+
     /**
      * Sets the disabled state of the control. Implemented as a part of ControlValueAccessor.
+     *
      * @param isDisabled Whether the control should be disabled.
+     *
      * @docs-private
      */
     setDisabledState(isDisabled: boolean): void {
@@ -458,6 +481,7 @@ export class KbqMultipleFileUploadComponent
      * Marks the control touched once focus leaves the whole uploader, so the default
      * `ErrorStateMatcher` shows a `required` error to a user who tabbed through without attaching
      * anything. Moving between the browse link and a remove control stays inside and does not count.
+     *
      * @docs-private
      */
     protected onFocusOut({ relatedTarget }: FocusEvent): void {

@@ -97,6 +97,7 @@ export class KbqNavbarBrand implements AfterContentInit {
     /**
      * Whether the title has been measured as not fitting into a single line, which switches it to the compact
      * two-line presentation.
+     *
      * @docs-private
      */
     protected readonly longTitleEnabled = signal(false);

@@ -49,6 +49,7 @@ export function getKbqFormFieldMissingControlError(): Error {
 
 /**
  * Injection token used to access the owning `KbqFormField`.
+ *
  * @docs-private
  */
 export const KBQ_FORM_FIELD = new InjectionToken<KbqFormField>('KbqFormField');
@@ -72,6 +73,7 @@ export type KbqFormFieldDefaultOptions = Partial<{
 
 /**
  * Injection token that can be used to configure the default options for all kbq-form-field's.
+ *
  * @docs-private
  */
 export const KBQ_FORM_FIELD_DEFAULT_OPTIONS = new InjectionToken<KbqFormFieldDefaultOptions>(
@@ -168,6 +170,7 @@ export class KbqFormField
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true });
     private readonly customOverlayOrigin = inject(KBQ_CONNECTED_OVERLAY_ORIGIN, { optional: true });
+
     /**
      * @docs-private
      */
@@ -194,30 +197,37 @@ export class KbqFormField
      * @docs-private
      */
     readonly control = contentChild.required(KbqFormFieldControl);
+
     /**
      * @docs-private
      */
     readonly stepper = contentChild(KbqStepper);
+
     /**
      * @docs-private
      */
     readonly cleaner = contentChild(KbqCleaner, { descendants: false });
+
     /**
      * @docs-private
      */
     readonly passwordToggle = contentChild(KbqPasswordToggle);
+
     /**
      * @docs-private
      */
     readonly hint = contentChildren(KbqHint);
+
     /**
      * @docs-private
      */
     readonly suffix = contentChildren(KbqSuffix);
+
     /**
      * @docs-private
      */
     readonly prefix = contentChildren(KbqPrefix);
+
     /**
      * @docs-private
      */

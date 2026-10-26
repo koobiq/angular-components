@@ -27,13 +27,12 @@ export interface KbqUnitSystem {
  */
 export interface KbqSizeUnitsLocaleConfiguration {
     /**
-     * Default unit system to use (e.g., 'SI' or 'IEC').
-     * @see KbqMeasurementSystem
+     * Default unit system to use, one of {@link KbqMeasurementSystem} (e.g., 'SI' or 'IEC').
      */
     defaultUnitSystem: KbqMeasurementSystemType;
     /** Default number of decimal places to display in formatted output: with `2`, "1.23 KB". */
     defaultPrecision: number;
-    /** @see KbqMeasurementSystem */
+    /** Unit systems by {@link KbqMeasurementSystem}. */
     unitSystems: {
         [KbqMeasurementSystem.SI]: KbqUnitSystem;
         [KbqMeasurementSystem.IEC]: KbqUnitSystem;
@@ -55,9 +54,8 @@ export const KBQ_SIZE_UNITS_LOCALE_CONFIGURATION = new InjectionToken<KbqSizeUni
 );
 
 /**
- * Utility provider. Only the units you pass are overridden; the rest keep following the active locale.
- *
- * @see KBQ_SIZE_UNITS_LOCALE_CONFIGURATION
+ * Utility provider of {@link KBQ_SIZE_UNITS_LOCALE_CONFIGURATION}. Only the units you pass are overridden;
+ * the rest keep following the active locale.
  */
 export const kbqSizeUnitsLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqSizeUnitsLocaleConfiguration>

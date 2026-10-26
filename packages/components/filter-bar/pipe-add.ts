@@ -95,6 +95,7 @@ export class KbqPipeAdd {
 
     /**
      * Visually-hidden live-region text announcing a newly-added pipe to assistive tech (WCAG 4.1.3).
+     *
      * @docs-private
      */
     protected readonly announcement = signal('');

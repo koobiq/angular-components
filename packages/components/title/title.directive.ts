@@ -83,7 +83,9 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     /**
      * The hint repeats text the host had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for a
      * fully visible title.
-     * @docs-private */
+     *
+     * @docs-private
+     */
     protected override readonly derivedDisabledWins = true;
 
     /**
@@ -127,7 +129,9 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     /**
      * Measured container element. Resolved as the projected `#kbqTitleContainer`, otherwise the
      * `KBQ_TITLE_TEXT_REF` host's `parentTextElement`, otherwise the host element itself. Never falsy.
-     * @docs-private */
+     *
+     * @docs-private
+     */
     protected get parent(): HTMLElement {
         return (
             this.parentContainer()?.nativeElement ||
@@ -136,8 +140,9 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
         );
     }
 
-    /** Whether the host element contains exactly one child node and that node is a text node.
-     * @docs-private */
+    /**
+     * Whether the host element contains exactly one child node and that node is a text node.
+     */
     private get hasOnlyText(): boolean {
         return (
             this.nativeElement.childNodes.length === 1 && this.nativeElement.childNodes[0].nodeType === Node.TEXT_NODE
@@ -148,7 +153,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      * Effective text elements used for overflow detection. Resolves to the projected `#kbqTitleText` elements,
      * otherwise falls back to the `KbqTitleTextRef` host's `textElement`, otherwise to the host element itself.
      * Always contains at least one element.
-     * @docs-private */
+     */
     private get childElements(): HTMLElement[] {
         const projected = this.childContainer();
 
@@ -159,8 +164,9 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
         return [this.componentInstance?.textElement?.nativeElement ?? this.elementRef.nativeElement];
     }
 
-    /** Resolved tooltip content: the explicit `titleContent` input when provided, otherwise the host text.
-     * @docs-private */
+    /**
+     * Resolved tooltip content: the explicit `titleContent` input when provided, otherwise the host text.
+     */
     private get resolvedContent(): string | TemplateRef<unknown> {
         return this.titleContent() || this.viewValue;
     }
@@ -285,15 +291,21 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
             });
     }
 
-    /** Enables the tooltip only when the content is overflown. Bound to `mouseenter` and keyboard focus.
-     * @docs-private */
+    /**
+     * Enables the tooltip only when the content is overflown. Bound to `mouseenter` and keyboard focus.
+     *
+     * @docs-private
+     */
     protected handleElementEnter() {
         this.content = this.resolvedContent;
         this.setDerivedDisabled(!this.isOverflown);
     }
 
-    /** Always disables (hides) the tooltip. Bound to `mouseleave` and non-keyboard focus changes.
-     * @docs-private */
+    /**
+     * Always disables (hides) the tooltip. Bound to `mouseleave` and non-keyboard focus changes.
+     *
+     * @docs-private
+     */
     protected hideTooltip() {
         this.setDerivedDisabled(true);
     }
@@ -302,7 +314,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      * Whether a single measured text element is clipped by the parent container. Both the single- and the
      * multi-element host go through this method, so a filter-bar pipe or a two-line list option gets the same
      * sub-pixel and ellipsis awareness as a plain text host.
-     * @docs-private */
+     */
     private isElementOverflown(element: HTMLElement | undefined): boolean {
         if (!element) {
             return false;
@@ -331,7 +343,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      * Whether a text element is narrower than its own text. Text elements that share the parent can take width
      * from each other, so one is clipped while its full text would still fit the parent — which the parent
      * comparison above cannot see. An inline element reports a zero `clientWidth` and never clips.
-     * @docs-private */
+     */
     private isClippedInOwnBox(element: HTMLElement): boolean {
         return element.clientWidth > 0 && element.scrollWidth > element.clientWidth;
     }
@@ -344,7 +356,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      *
      * The container is measured while the probe is attached, as it has been since the sub-pixel path was
      * introduced: a shrink-to-fit container stretched by the probe must not be reported as clipping it.
-     * @docs-private */
+     */
     private isTextWiderThanContainer(element: HTMLElement): boolean {
         const wrapper = this.renderer.createElement('span');
 
@@ -367,7 +379,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      * any positive difference counts (even a sub-pixel overflow shows `…`). With `text-overflow: clip` the
      * widths are rounded to whole CSS pixels first — mirroring the integer `offsetWidth`/`scrollWidth` path —
      * so an imperceptible sub-pixel clip is not treated as truncation.
-     * @docs-private */
+     */
     private isWidthOverflown(parentWidth: number, childWidth: number, element: HTMLElement): boolean {
         return this.hasEllipsis(element) ? parentWidth < childWidth : Math.round(parentWidth) < Math.round(childWidth);
     }
@@ -379,13 +391,14 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      * truncation. Both elements are checked because `text-overflow` is not inherited and consumers place it
      * differently: `KbqOption`/`KbqDropdownItem` style the measured text element, whereas `KbqTreeOption`
      * styles the parent container that wraps it.
-     * @docs-private */
+     */
     private hasEllipsis(element: HTMLElement): boolean {
         return this.elementHasEllipsis(element) || this.elementHasEllipsis(this.parent);
     }
 
-    /** Whether the element's computed `text-overflow` renders an ellipsis.
-     * @docs-private */
+    /**
+     * Whether the element's computed `text-overflow` renders an ellipsis.
+     */
     private elementHasEllipsis(element: HTMLElement): boolean {
         return this.window.getComputedStyle(element).textOverflow.includes('ellipsis');
     }

@@ -20,9 +20,8 @@ export const KBQ_SELECT_LOCALE_CONFIGURATION = new InjectionToken<KbqSelectLocal
 );
 
 /**
- * Utility provider. Only the strings you pass are overridden; the rest keep following the active locale.
- *
- * @see KBQ_SELECT_LOCALE_CONFIGURATION
+ * Utility provider of {@link KBQ_SELECT_LOCALE_CONFIGURATION}. Only the strings you pass are overridden;
+ * the rest keep following the active locale.
  */
 export const kbqSelectLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqSelectLocaleConfiguration>

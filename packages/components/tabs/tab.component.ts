@@ -197,6 +197,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     /**
      * Keeps a label template assigned in code, used while the content of the tab has none. A falsy value is
      * ignored.
+     *
      * @docs-private
      */
     protected setTemplateLabelInput(value: KbqTabLabel) {

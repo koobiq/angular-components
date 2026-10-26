@@ -20,6 +20,7 @@ import { KbqMonthView } from './month-view.component';
 
 /**
  * A calendar that is used as part of the datepicker.
+ *
  * @docs-private
  */
 @Component({
@@ -197,6 +198,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
     /**
      * Register an input with this calendar.
+     *
      * @param input The calendar input to register with this calendar.
      */
     registerInput(input): void {

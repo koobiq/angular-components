@@ -124,6 +124,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
     /**
      * Every item the content query matches, including those of a nested accordion.
      * Use `items` instead — this one is the raw, unfiltered query.
+     *
      * @docs-private
      */
     // The generic is explicit because `forwardRef` erases the locator type, which would leave both
@@ -142,6 +143,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
      * injected and therefore always its nearest one, which makes ownership the reliable filter.
      * Without it the key manager would move focus into the nested accordion's headers, `valueChange`
      * would report a nested item's value and state saving would persist it under the outer key.
+     *
      * @docs-private
      */
     readonly items: Signal<readonly KbqAccordionItem[]> = computed(() =>
@@ -151,7 +153,6 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
     /**
      * Persistence of the expanded state, applied as a host directive. `useStateSaving` and
      * `stateSavingKey` are its inputs, forwarded onto the accordion.
-     * @docs-private
      */
     private readonly stateSaving = inject(KbqStateSaving);
 
@@ -185,6 +186,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
     /**
      * The raw controlled `value` input. Must stay `public`: a `protected` input cannot be bound from
      * a consumer template (TS2445 under full AOT template type-checking).
+     *
      * @docs-private
      */
     // `input()` (not `model()`): a `model()` would auto-create a colliding `valueChange` output.
@@ -305,6 +307,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
      * also receives keys bubbling from the section content and from controls placed next to the
      * trigger, and would swallow their Enter/Space and hijack their arrow keys. It would also
      * activate the first item — stealing focus — the first time any key was pressed anywhere inside.
+     *
      * @docs-private
      */
     keydownHandler(event: KeyboardEvent) {
@@ -365,6 +368,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
 
     /**
      * Persists the values of the currently expanded items when `useStateSaving` is enabled.
+     *
      * @docs-private
      */
     saveState(): void {

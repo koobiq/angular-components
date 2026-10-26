@@ -52,6 +52,7 @@ import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
 export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit {
     /** control for search options */
     readonly searchControl = new FormControl<string | null>(null);
+
     /**
      * Options of the pipe template that match the search query. Follows the templates too, so options
      * supplied after initialization render on first open.

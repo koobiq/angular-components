@@ -560,8 +560,8 @@ export class KbqNavbarItem implements AfterContentInit {
         this.ownCollapsed.set(value);
     }
 
-    // todo in future need rename to 'collapsed'
     /** Whether the item is rendered in its collapsed (icon-only) form. */
+    // todo in future need rename to 'collapsed'
     readonly isCollapsed: Signal<boolean> = computed(
         () => this.ownCollapsed() ?? this.rectangleElement.collapsedState()
     );
@@ -595,6 +595,7 @@ export class KbqNavbarItem implements AfterContentInit {
 
     /**
      * Whether the title of a vertical bento item slides in without motion.
+     *
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
@@ -718,6 +719,7 @@ export class KbqNavbarItem implements AfterContentInit {
      * the same task is safe: the browser does not paint mid-task, and the host binding only writes to the DOM when
      * its value changes. Both rely on the item having no CSS transition. A width seen in the real presentation is
      * preferred because a collapsed item does not render its dropdown chevron, so toggling it back undercounts.
+     *
      * @docs-private
      */
     measureWidths(): void {
@@ -752,6 +754,7 @@ export class KbqNavbarItem implements AfterContentInit {
      * Width the item gives back by collapsing: its expanded outer width less its collapsed one, as last recorded by
      * `measureWidths()`. It covers everything the collapse removes or changes — the title, a suffix, the dropdown
      * chevron and the padding and margins that differ between the two presentations.
+     *
      * @docs-private
      */
     getCollapsibleWidth(): number {

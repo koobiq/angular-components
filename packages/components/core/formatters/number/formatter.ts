@@ -30,9 +30,8 @@ export const KBQ_FORMATTERS_LOCALE_CONFIGURATION = new InjectionToken<KbqFormatt
 );
 
 /**
- * Utility provider. Only the rules you pass are overridden; the rest keep following the active locale.
- *
- * @see KBQ_FORMATTERS_LOCALE_CONFIGURATION
+ * Utility provider of {@link KBQ_FORMATTERS_LOCALE_CONFIGURATION}. Only the rules you pass are overridden;
+ * the rest keep following the active locale.
  */
 export const kbqFormattersLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqFormattersLocaleConfiguration>

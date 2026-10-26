@@ -176,8 +176,12 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
     readonly internalFilterChanges = new BehaviorSubject<KbqFilter | null>(null);
     /** internal changes in templates */
     readonly internalTemplatesChanges = new BehaviorSubject<KbqPipeTemplate[] | null>(null);
-    /** Requests that an already-added pipe open its pop-up. See {@link KbqFilterBarHost.openPipe}.
-     * @docs-private */
+
+    /**
+     * Requests that an already-added pipe open its pop-up. See {@link KbqFilterBarHost.openPipe}.
+     *
+     * @docs-private
+     */
     readonly openPipe = new BehaviorSubject<string | number | null>(null);
 
     constructor() {
@@ -299,9 +303,8 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
     }
 
     /**
-     * Restore previously saved filter state.
-     *
-     * @see `saveFilterState` — pipe `value` payloads must be structured-cloneable.
+     * Restore previously saved filter state. As with {@link saveFilterState}, pipe `value` payloads must be
+     * structured-cloneable.
      */
     restoreFilterState(filter?: KbqFilter) {
         const state = filter ?? this.savedFilter;
