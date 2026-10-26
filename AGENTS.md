@@ -35,7 +35,8 @@ packages/
 ├── angular-luxon-adapter/     # Luxon date adapter
 ├── angular-moment-adapter/    # Moment date adapter
 ├── schematics/                # ng-add and ng-update migrations, shipped inside @koobiq/components
-└── cli/                       # Release management CLI (@koobiq/cli)
+├── cli/                       # Release management CLI (@koobiq/cli)
+└── mcp/                       # MCP server (@koobiq/mcp) — serves this repository's API, guides and examples to a coding agent
 apps/docs/                     # Documentation site (koobiq.io): Angular SSR + prerender
 tools/                         # Build, lint, docs and release tooling; tools/public_api_guard holds the API golden files
 docs/guides/                   # Contributor guides (testing, releasing) and the guide pages of the docs site
@@ -78,6 +79,9 @@ yarn run build:angular-luxon-adapter   # Build Luxon date adapter
 yarn run build:angular-moment-adapter  # Build Moment date adapter
 yarn run build:cli                     # Build release management CLI
 yarn run build:schematics              # Build Angular CLI schematics
+yarn run build:mcp                     # Build the MCP server: regenerate index.json/examples.json, compile src → dist, assemble dist/mcp
+yarn run build:mcp:data                # Regenerate the committed guides.json and history.json (run by the release pipeline, not in CI)
+yarn run check-mcp-data                # Gate: packages/mcp/data/guides.json not behind docs/guides (no git needed)
 yarn run styles:build-all              # Compile all SCSS into dist/scss-compiled and the prebuilt themes into dist/components/prebuilt-themes
 yarn run docs                          # Build every package, generate docs content and examples, then serve the docs site
 yarn run docs:build                    # Build docs app for production (prerendered)
@@ -113,7 +117,7 @@ There are two types of test files per component:
 ```bash
 # Unit tests (Vitest)
 yarn run styles:build-all # CI does this before the unit suites; do the same before a full local run
-yarn run unit:all         # Every suite in one Vitest run: the `angular` and `node` projects of vitest.config.mts
+yarn run unit:all         # The `angular` and `node` projects of vitest.config.mts; `unit:mcp` covers the `mcp` one
 yarn run unit:components  # Run component unit tests
 yarn run unit:components-experimental
 yarn run unit:angular-luxon-adapter
@@ -122,6 +126,7 @@ yarn run unit:schematics # Run schematics tests
 yarn run unit:cli
 yarn run unit:koobiq-docs            # Docs app specs
 yarn run unit:tools                  # Specs under tools/
+yarn run unit:mcp                    # Just the MCP server's specs (regenerates its own index first); skips what needs a build when there isn't one
 yarn run check-spec-types            # Type-check the specs, which Vitest compiles unchecked (part of the lint gate)
 npx vitest run "<TEST_PATH_PATTERN>" # Run specific tests (e.g., npx vitest run packages/components/button/button.component.spec.ts)
 npx vitest run "<TEST_PATH_PATTERN>" -t "<test name pattern>"
@@ -181,7 +186,8 @@ Every pull request runs these workflows:
 | Workflow                          | What it runs                                                                                                                                                 |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-spec-types`, `check-tokens-data` |
-| Unit tests                        | `styles:build-all`, then `unit:all` (one Vitest run of the `angular` and `node` projects)                                                                    |
+| Unit tests                        | `styles:build-all`, then `unit:all` (one Vitest run of the `angular` and `node` projects, not `mcp` — that is `mcp.yml`)                                     |
+| MCP                               | `build:mcp` on its own (needs no `@koobiq/components` build), `check-mcp-data` and `unit:mcp`                                                                |
 | E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                                             |
 | API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs` and `check-llms`                             |
 | Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs and `ssr:build`, both fail on a warning   |

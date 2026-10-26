@@ -91,11 +91,7 @@ export default defineConfig({
                     ...shared,
                     name: 'node',
                     environment: 'node',
-                    include: [
-                        'packages/schematics/**/*.spec.ts',
-                        'packages/cli/**/*.spec.ts',
-                        'tools/**/*.spec.ts'
-                    ],
+                    include: ['packages/schematics/**/*.spec.ts', 'packages/cli/**/*.spec.ts', 'tools/**/*.spec.ts'],
                     exclude: [
                         '**/node_modules/**',
                         // A separate npm project with its own Angular and its own runner.
@@ -103,6 +99,19 @@ export default defineConfig({
                         // Needs the document and the matcher of the angular project's setup.
                         'tools/vitest/to-have-no-violations.spec.ts'
                     ],
+                    setupFiles: ['tools/vitest/setup-node.ts']
+                }
+            },
+            {
+                resolve: { alias },
+                test: {
+                    ...shared,
+                    name: 'mcp',
+                    environment: 'node',
+                    // Separate from `node` so `unit:all` (what `units.yml` runs) can select
+                    // `angular`+`node` and skip it; a bare `vitest run` still runs it. mcp.yml
+                    // builds data/index.json itself and runs it for real.
+                    include: ['packages/mcp/**/*.spec.ts'],
                     setupFiles: ['tools/vitest/setup-node.ts']
                 }
             }

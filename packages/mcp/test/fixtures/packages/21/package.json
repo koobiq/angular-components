@@ -1,0 +1,23 @@
+{
+    "name": "@koobiq/components",
+    "version": "21.0.0",
+    "exports": {
+        ".": {
+            "sass": "./_index.scss",
+            "types": "./types/koobiq-components.d.ts",
+            "default": "./fesm2022/koobiq-components.mjs"
+        },
+        "./button": {
+            "types": "./types/koobiq-components-button.d.ts",
+            "default": "./fesm2022/koobiq-components-button.mjs"
+        },
+        "./core": {
+            "types": "./types/koobiq-components-core.d.ts",
+            "default": "./fesm2022/koobiq-components-core.mjs"
+        },
+        "./scrollbar/deprecated": {
+            "types": "./types/koobiq-components-scrollbar-deprecated.d.ts",
+            "default": "./fesm2022/koobiq-components-scrollbar-deprecated.mjs"
+        }
+    }
+}

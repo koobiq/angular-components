@@ -1,0 +1,25 @@
+name: MCP
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  mcp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/workflows/actions/setup-node
+      - run: yarn run build:mcp
+      # guides.json/history.json are committed and only regenerated at release time: this is the
+      # gate that catches a guide or a guarded entry point added on a branch without rerunning
+      # `build:mcp:data`. Needs no git history, just the checkout above.
+      - run: yarn run check-mcp-data
+      # Regenerates its own index.json/examples.json (never committed, see packages/mcp/README.md)
+      # and skips, rather than fails, what needs a @koobiq/components build this job never does.
+      - run: yarn run unit:mcp

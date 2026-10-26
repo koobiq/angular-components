@@ -29,6 +29,7 @@ const config = {
                 'components',
                 'cli',
                 'experimental',
+                'mcp',
                 'schematics',
                 'dev',
                 'e2e',

@@ -17,5 +17,6 @@ jobs:
       - uses: ./.github/workflows/actions/setup-node
       # Build styles which are required for unit tests
       - run: yarn run styles:build-all
-      # One Vitest run for every package: the `angular` and `node` projects of vitest.config.mts.
+      # The angular and node projects of vitest.config.mts, everything except the mcp project,
+      # which builds its own index and runs on its own in mcp.yml.
       - run: yarn run unit:all

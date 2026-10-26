@@ -16,6 +16,8 @@ When documenting a component, there's two things you need to worry about:
 
 - Docs - general documentation for the component.
 - Storybook - interactive use-cases showing how to use the component.
+- A new numbered guide under `docs/guides/` (contributor documentation, like this one) is English
+  only, with no `.ru` counterpart — unlike the MDX guide pages of the docs site.
 
 ### Testing
 

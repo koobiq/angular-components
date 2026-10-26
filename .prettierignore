@@ -37,3 +37,11 @@ apps/docs/src/app/seo-descriptions.ts
 /tools/check-angular/dist
 /tools/check-angular/.angular
 /tools/check-angular/.tarballs
+
+# ignore the MCP server's committed, generated data (packages/mcp/dist/ no longer exists: `tsc`
+# emits straight into the repository's own dist/, already covered by the "dist" rule above)
+/packages/mcp/data/
+
+# excerpts lifted verbatim from published .d.ts files, kept byte-for-byte so the test they back
+# proves something about the real layout rather than about this repository's own style
+/packages/mcp/test/fixtures/packages/**/*.d.ts
