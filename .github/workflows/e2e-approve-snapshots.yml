@@ -15,19 +15,51 @@ permissions:
   contents: read
 
 jobs:
-  approve_snapshots:
+  # The baselines are rendered from the pull request branch as it stands, while e2e.yml compares them on the merge
+  # of that branch into its base. A branch behind its base would commit screenshots of a tree the next run never
+  # renders, and they would fail it, so such a branch is sent to rebase first.
+  check_base:
     if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/approve-snapshots') && contains(fromJSON('["OWNER", "MEMBER"]'), github.event.comment.author_association) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read # for the compare API
+      pull-requests: write # for thollander/actions-comment-pull-request to comment on PRs
+    outputs:
+      head_ref: ${{ steps.comment-branch.outputs.head_ref }}
+      behind_by: ${{ steps.compare.outputs.behind_by }}
+    steps:
+      - uses: xt0rted/pull-request-comment-branch@e8b8daa837e8ea7331c0003c9c316a64c6d8b0b1 # v3.0.0
+        id: comment-branch
+      # The base branch by name rather than the action's base_sha, which is the base as of the last push to the
+      # pull request, not its current tip. Through the environment, since the pull request names its branch.
+      - id: compare
+        run: |
+          behind_by=$(gh api "repos/$REPOSITORY/compare/$BASE_REF...$HEAD_SHA" --jq .behind_by)
+          echo "behind_by=$behind_by" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          BASE_REF: ${{ steps.comment-branch.outputs.base_ref }}
+          HEAD_SHA: ${{ steps.comment-branch.outputs.head_sha }}
+      - uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3.0.1
+        if: ${{ steps.compare.outputs.behind_by != '0' }}
+        with:
+          message: |
+            ⚠️ The branch is ${{ steps.compare.outputs.behind_by }} commit(s) behind `${{ steps.comment-branch.outputs.base_ref }}`. Rebase it, then comment `/approve-snapshots` again: the E2E run compares the screenshots on the merge with `${{ steps.comment-branch.outputs.base_ref }}`, so baselines rendered from the branch as it stands would fail it.
+
+  approve_snapshots:
+    needs: check_base
+    if: ${{ needs.check_base.outputs.behind_by == '0' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
       contents: write # for stefanzweifel/git-auto-commit-action to push changes
       pull-requests: write # for thollander/actions-comment-pull-request to comment on PRs
     steps:
-      - uses: xt0rted/pull-request-comment-branch@e8b8daa837e8ea7331c0003c9c316a64c6d8b0b1 # v3.0.0
-        id: comment-branch
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ steps.comment-branch.outputs.head_ref }}
+          ref: ${{ needs.check_base.outputs.head_ref }}
       - uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3.0.1
         with:
           message: 🔄 [Updating](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) snapshots.

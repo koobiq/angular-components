@@ -191,4 +191,6 @@ ends. It empties both host directories before the run as well, so what is in the
 the last run that produced anything.
 
 Baselines can also be regenerated without a local Docker install by commenting `/approve-snapshots`
-on a pull request.
+on a pull request. The branch has to be up to date with its base: the E2E run compares the
+screenshots on the merge with the base, so the workflow answers a branch that is behind with a
+request to rebase instead of committing baselines of a tree that run never renders.
