@@ -19,11 +19,11 @@ npm install @angular/cdk@^21.2.0
 Затем установите библиотеку и остальные её зависимости:
 
 ```bash
-npm install @koobiq/components overlayscrollbars@2.7.3 @koobiq/icons @koobiq/design-tokens@^3 @koobiq/angular-luxon-adapter @koobiq/luxon-date-adapter @koobiq/date-adapter @koobiq/date-formatter luxon
+npm install @koobiq/components overlayscrollbars@2.7.3 @koobiq/icons @koobiq/design-tokens@^4 @koobiq/angular-luxon-adapter @koobiq/luxon-date-adapter @koobiq/date-adapter @koobiq/date-formatter luxon
 ```
 
 Версия `overlayscrollbars` зафиксирована, а не задана кареткой: скроллбар рассчитан на этот
-конкретный релиз, и ту же версию устанавливает `ng add`. `@koobiq/design-tokens` ограничен 3-й мажорной
+конкретный релиз, и ту же версию устанавливает `ng add`. `@koobiq/design-tokens` ограничен 4-й мажорной
 версией: под неё собрана эта версия библиотеки.
 
 `@koobiq/angular-luxon-adapter` (или `@koobiq/angular-moment-adapter`) нужен только при использовании
@@ -83,6 +83,20 @@ bootstrapApplication(AppComponent, {
   "src/styles.css"
 ]
 ```
+
+Токены code-block, scrollbar и skeleton поставляются отдельными файлами, подключаемыми по желанию.
+При обычном подключении делать ничего не нужно: их значения уже входят в `prebuilt-themes/theme.css`,
+файл собирается вместе с библиотекой. Отдельно эти файлы нужны только если вы собираете стили
+библиотеки сами из SCSS-исходников:
+
+```scss
+@use '@koobiq/design-tokens/web/component-tokens';
+@use '@koobiq/design-tokens/web/component-tokens-light';
+@use '@koobiq/design-tokens/web/component-tokens-dark';
+```
+
+Чтобы поменять значения по умолчанию, подключать файлы не нужно — просто задайте нужные
+CSS-переменные в своих стилях, см. [руководство по темам](/ru/main/theming/overview).
 
 ### Настройка темы
 

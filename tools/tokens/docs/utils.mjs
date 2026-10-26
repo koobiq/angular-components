@@ -1,5 +1,6 @@
-const { NO_HEADER } = require('./config');
-const capitalize = (wordOrWordParts, opts = {}) => {
+import { NO_HEADER } from './config.mjs';
+
+export const capitalize = (wordOrWordParts, opts = {}) => {
     let wordParts;
 
     if (Array.isArray(wordOrWordParts)) {
@@ -13,7 +14,7 @@ const capitalize = (wordOrWordParts, opts = {}) => {
     return wordParts.map((word) => word[0].toUpperCase() + word.substring(1)).join(opts?.outputSeparator || ' ');
 };
 
-const updateObject = (res, key, value) => {
+export const updateObject = (res, key, value) => {
     if (!res[key]) {
         res[key] = [value];
 
@@ -25,13 +26,15 @@ const updateObject = (res, key, value) => {
     return res;
 };
 
-const sortSections = (a, b) => {
+export const sortSections = (a, b) => {
     if (a.type.toLowerCase() === NO_HEADER) return -1;
     if (b.type.toLowerCase() === NO_HEADER) return 1;
 };
 
-module.exports = {
-    capitalize,
-    updateObject,
-    sortSections
-};
+/**
+ * A token's value, whichever key the sources use.
+ *
+ * @koobiq/design-tokens v4 authors its sources in DTCG, so Style Dictionary puts the value on
+ * `$value`; the non-DTCG `value` is kept for a project still on the old shape.
+ */
+export const tokenValue = (token) => ('$value' in token ? token.$value : token.value);

@@ -19,12 +19,12 @@ npm install @angular/cdk@^21.2.0
 Then install the library and the rest of its dependencies:
 
 ```bash
-npm install @koobiq/components overlayscrollbars@2.7.3 @koobiq/icons @koobiq/design-tokens@^3 @koobiq/angular-luxon-adapter @koobiq/luxon-date-adapter @koobiq/date-adapter @koobiq/date-formatter luxon
+npm install @koobiq/components overlayscrollbars@2.7.3 @koobiq/icons @koobiq/design-tokens@^4 @koobiq/angular-luxon-adapter @koobiq/luxon-date-adapter @koobiq/date-adapter @koobiq/date-formatter luxon
 ```
 
 `overlayscrollbars` is pinned to an exact version rather than a range: the scrollbar is built against
 that specific release, and this is the version `ng add` installs too. `@koobiq/design-tokens` is held to
-major version 3, the one this version of the library is built against.
+major version 4, the one this version of the library is built against.
 
 `@koobiq/angular-luxon-adapter` (or `@koobiq/angular-moment-adapter`) is only needed if you use the
 date components — [datepicker](/en/components/datepicker), [timepicker](/en/components/timepicker) or
@@ -83,6 +83,20 @@ After installation, you need to include the library styles. Add the following fi
   "src/styles.css"
 ]
 ```
+
+`@koobiq/design-tokens` ships code-block, scrollbar and skeleton tokens as opt-in files. With the
+default setup you need none of them: their values are already compiled into
+`prebuilt-themes/theme.css`. Load the files yourself only if you build the library styles from SCSS
+sources:
+
+```scss
+@use '@koobiq/design-tokens/web/component-tokens';
+@use '@koobiq/design-tokens/web/component-tokens-light';
+@use '@koobiq/design-tokens/web/component-tokens-dark';
+```
+
+To change the default values, don't load the files — set the CSS variables in your own stylesheet,
+see the [theming guide](/en/main/theming/overview).
 
 ### Setting up theme
 
