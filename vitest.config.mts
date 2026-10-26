@@ -108,10 +108,11 @@ export default defineConfig({
                     ...shared,
                     name: 'mcp',
                     environment: 'node',
-                    // Separate from `node` so `units.yml` can select `angular`+`node` and skip it; a
-                    // bare `vitest run` still runs it. mcp.yml runs it for real, after its own lean
-                    // build:components + build:mcp — not the full build-packages composite action,
-                    // which also builds things no mcp spec reads.
+                    // Separate from `node` so `unit:all` (what `units.yml` runs) can select
+                    // `angular`+`node` and skip it; a bare `vitest run` still runs it. mcp.yml runs
+                    // it for real, against `dist/components` downloaded from build.yml's own build
+                    // plus its own `build:mcp` — never the full build-packages action, which also
+                    // builds things no mcp spec reads.
                     include: ['packages/mcp/**/*.spec.ts'],
                     setupFiles: ['tools/vitest/setup-node.ts']
                 }

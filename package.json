@@ -292,7 +292,7 @@
         "ssr:build": "ng build dev-ssr --configuration production",
         "ssr:start": "yarn run ssr:build && node dist/components-dev/ssr/server/server.mjs",
         "-----UNIT_TESTS-----": "-------------------------------------------------------------------------------------",
-        "unit:all": "vitest run",
+        "unit:all": "vitest run --project angular --project node",
         "unit:components": "vitest run --project angular packages/components/",
         "unit:components-experimental": "vitest run --project angular packages/components-experimental/ --passWithNoTests",
         "unit:angular-moment-adapter": "vitest run --project angular packages/angular-moment-adapter/",

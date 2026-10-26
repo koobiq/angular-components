@@ -19,4 +19,4 @@ jobs:
       - run: yarn run styles:build-all
       # The angular and node projects of vitest.config.mts, everything except the mcp project,
       # which builds and tests the MCP server on its own in mcp.yml.
-      - run: npx vitest run --project angular --project node
+      - run: yarn run unit:all
