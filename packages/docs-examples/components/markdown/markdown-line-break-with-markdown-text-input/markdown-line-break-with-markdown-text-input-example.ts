@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { kbqMarkdownMarkedOptionsProvider, KbqMarkdownModule } from '@koobiq/components/markdown';
+import { KbqMarkdown, kbqMarkdownMarkedOptionsProvider } from '@koobiq/components/markdown';
 
 /**
  * @title Markdown line break
  */
 @Component({
     selector: 'markdown-line-break-with-markdown-text-input-example',
-    imports: [KbqMarkdownModule],
+    imports: [KbqMarkdown],
     // prettier-ignore
     template: `
         <kbq-markdown markdownText="First line\nSecond line" />

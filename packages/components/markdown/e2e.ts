@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { kbqMarkdownMarkedOptionsProvider } from './markdown.component';
-import { KbqMarkdownModule } from './markdown.module';
+import { KbqMarkdown, kbqMarkdownMarkedOptionsProvider } from './markdown.component';
 
 @Component({
     selector: 'e2e-markdown-line-break-with-markdown-text-input',
-    imports: [KbqMarkdownModule],
+    imports: [KbqMarkdown],
     // prettier-ignore
     template: `
         <kbq-markdown markdownText="First line\nSecond line" />
@@ -17,7 +16,7 @@ class MarkdownLineBreakWithMarkdownTextInput {}
 @Component({
     selector: 'e2e-markdown-states',
     imports: [
-        KbqMarkdownModule,
+        KbqMarkdown,
         MarkdownLineBreakWithMarkdownTextInput
     ],
     templateUrl: './e2e.html',
