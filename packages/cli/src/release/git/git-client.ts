@@ -67,9 +67,10 @@ export class GitClient {
         return this.spawnGitProcess(['commit', '-m', message]).status === 0;
     }
 
-    /** Creates a tag for the specified commit reference. */
+    /** Creates a signed tag for HEAD. */
     createTag(tagName: string, message: string): boolean {
-        return this.spawnGitProcess(['tag', '-s', tagName, '-m', message]).status === 0;
+        // The message goes through stdin: release notes outgrow the 32K command line of Windows.
+        return this.spawnGitProcess(['tag', '-s', tagName, '-F', '-'], true, message).status === 0;
     }
 
     /** Checks whether the specified tag exists locally. */
@@ -116,11 +117,17 @@ export class GitClient {
      * Spawns a child process running Git. The "stderr" output is inherited and will be printed
      * in case of errors. This makes it easier to debug failed commands.
      */
-    private spawnGitProcess(args: string[], printStderr = true): SpawnSyncReturns<string> {
-        return spawnSync('git', args, {
+    private spawnGitProcess(args: string[], printStderr = true, input?: string): SpawnSyncReturns<string> {
+        const result = spawnSync('git', args, {
             cwd: this.projectDir,
             stdio: ['pipe', 'pipe', printStderr ? 'inherit' : 'pipe'],
-            encoding: 'utf8'
+            encoding: 'utf8',
+            input
         });
+
+        // Git never started (e.g. ENAMETOOLONG), so there is no stderr to explain the failure.
+        if (result.error && printStderr) console.error(result.error.message);
+
+        return result;
     }
 }
