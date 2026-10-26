@@ -175,4 +175,68 @@ test.describe('KbqActionsPanel', () => {
             expect(Math.abs(panelBox.x + panelBox.width / 2 - viewport.width / 2)).toBeLessThan(2);
         });
     });
+
+    test.describe('E2eActionsPanelDisabledButtons', () => {
+        // Each disabled contrast button must keep the color of its enabled twin and only fade out.
+        const contrastButtons = [
+            ['e2eFilledContrastEnabled', 'e2eFilledContrastDisabled'],
+            ['e2eOutlineEnabled', 'e2eOutlineDisabled'],
+            ['e2eTransparentEnabled', 'e2eTransparentDisabled']
+        ];
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eActionsPanelDisabledButtons');
+            await page.getByTestId('e2eActionsPanelDisabledOpenButton').click();
+            await expect(page.getByTestId('e2eFilledContrastEnabled')).toBeVisible();
+        });
+
+        test('fades disabled contrast buttons and keeps their enabled colors', async ({ page }) => {
+            const disabledOpacity = await page.evaluate(() =>
+                getComputedStyle(document.body).getPropertyValue('--kbq-opacity-disabled').trim()
+            );
+
+            await Promise.all(
+                contrastButtons.map(async ([enabledId, disabledId]) => {
+                    const enabledColor = await page
+                        .getByTestId(enabledId)
+                        .evaluate((element) => getComputedStyle(element).color);
+                    const disabled = page.getByTestId(disabledId);
+
+                    await expect(disabled).toHaveCSS('color', enabledColor);
+                    await expect(disabled).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+                    await expect(disabled).toHaveCSS('opacity', disabledOpacity);
+                })
+            );
+        });
+
+        test('leaves the disabled state of other colors without an extra fade', async ({ page }) => {
+            await expect(page.getByTestId('e2eThemeDisabled')).toHaveCSS('opacity', '1');
+        });
+    });
+
+    test.describe('E2eActionsPanelDisabledOverflow', () => {
+        // The same frame as the overflow example: a 400px container, widened to 650px to reveal the dropdown.
+        test.use({ viewport: { width: 650, height: 240 } });
+
+        test('items overflow and dropdown with a disabled action', async ({ page }) => {
+            await page.goto('/E2eActionsPanelDisabledOverflow');
+            const screenshotTarget = page.getByTestId('e2eScreenshotTarget');
+
+            await page.getByTestId('e2eActionsPanelDisabledOverflowOpenButton').click();
+            await screenshotTarget.evaluate(({ style }) => (style.width = '650px'));
+            // The overflow follows the width through a ResizeObserver: wait until the two actions that no longer fit are hidden.
+            await expect(screenshotTarget.locator('.kbq-overflow-item-hidden')).toHaveCount(2);
+            await page.getByTestId('e2eActionsPanelDisabledOverflowResultButton').click();
+            await expect(page.locator('.kbq-dropdown-item')).toHaveText(['Action 5', 'Action 6']);
+            await expect(page.locator('.kbq-dropdown-item.cdk-focused')).toHaveCount(0);
+
+            const viewport = page.viewportSize()!;
+
+            await page.mouse.move(viewport.width - 1, viewport.height - 1);
+
+            await expect(screenshotTarget).toHaveScreenshot('3-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('3-dark.png');
+        });
+    });
 });
