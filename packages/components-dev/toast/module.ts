@@ -96,7 +96,6 @@ export class DevToastComponent extends KbqToastComponent {
         KbqSidepanelModule,
         KbqScrollbar,
         KbqToolTipModule,
-        DevToastComponent,
         DevDocsExamples
     ],
     templateUrl: './template.html',

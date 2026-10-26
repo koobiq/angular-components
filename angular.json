@@ -99,8 +99,12 @@
                         "scripts": [],
                         "allowedCommonJsDependencies": [
                             "@messageformat/core",
+                            "core-js",
+                            "jspdf",
                             "luxon",
-                            "path-normalize"
+                            "path-normalize",
+                            "raf",
+                            "rgbcolor"
                         ],
                         "namedChunks": true,
                         "browser": "apps/docs/src/main.ts",
@@ -994,6 +998,7 @@
                         "tsConfig": "packages/e2e/tsconfig.app.json",
                         "index": "packages/e2e/index.html",
                         "styles": ["packages/e2e/main.scss"],
+                        "allowedCommonJsDependencies": ["@messageformat/core"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2122,6 +2127,13 @@
                             }
                         ],
                         "styles": ["packages/components-dev/main.scss"],
+                        "allowedCommonJsDependencies": [
+                            "@messageformat/core",
+                            "core-js",
+                            "jspdf",
+                            "raf",
+                            "rgbcolor"
+                        ],
                         "browser": "packages/components-dev/ssr/main.ts",
                         "server": "packages/components-dev/ssr/main.server.ts",
                         "prerender": true,
@@ -2710,9 +2722,6 @@
     },
     "cli": {
         "packageManager": "yarn",
-        "analytics": false,
-        "cache": {
-            "enabled": false
-        }
+        "analytics": false
     }
 }
