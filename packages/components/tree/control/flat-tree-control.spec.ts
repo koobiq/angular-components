@@ -253,6 +253,104 @@ describe('FlatTreeControl', () => {
             });
         });
     });
+
+    describe('with trackBy', () => {
+        let control: FlatTreeControl<FlatNode, string>;
+        let nodes: FlatNode[];
+
+        beforeEach(() => {
+            nodes = buildFlatNodes();
+            control = new FlatTreeControl<FlatNode, string>(
+                (node) => node.level,
+                (node) => node.expandable,
+                (node) => node.name,
+                (node) => node.name,
+                undefined,
+                undefined,
+                undefined,
+                { trackBy: (node) => node.name }
+            );
+            control.dataNodes = nodes;
+        });
+
+        it('should keep a node expanded once the node is rebuilt as a new object', () => {
+            control.expand(byName(nodes, 'documents'));
+
+            control.dataNodes = buildFlatNodes();
+
+            expect(control.isExpanded(byName(control.dataNodes, 'documents'))).toBe(true);
+        });
+
+        it('should collapse a node through an object rebuilt after it was expanded', () => {
+            control.expand(byName(nodes, 'documents'));
+
+            control.collapse(byName(buildFlatNodes(), 'documents'));
+
+            expect(control.expansionModel.selected).toEqual([]);
+        });
+
+        it('should hold the keys rather than the nodes in the expansion model', () => {
+            control.toggle(byName(nodes, 'root'));
+
+            expect(control.expansionModel.selected).toEqual(['root']);
+        });
+
+        it('should expand and collapse all the nodes by key', () => {
+            control.expandAll();
+
+            expect(control.expansionModel.selected).toEqual(nodes.map((node) => node.name));
+
+            control.collapseAll();
+
+            expect(control.expansionModel.selected).toEqual([]);
+        });
+
+        it('should toggle a subtree by key, also once the subtree is rebuilt', () => {
+            control.toggleDescendants(byName(nodes, 'documents'));
+
+            expect(control.expansionModel.selected).toEqual(['documents', 'specs', 'draft', 'readme']);
+
+            control.dataNodes = buildFlatNodes();
+            control.toggleDescendants(byName(control.dataNodes, 'documents'));
+
+            expect(control.expansionModel.selected).toEqual([]);
+        });
+
+        it('should expand the expandable nodes a filter keeps by key', () => {
+            control.filterNodes('draft');
+
+            expect(control.expansionModel.selected).toEqual(['root', 'documents', 'specs']);
+        });
+
+        it('should restore the keys expanded before a filter once the query is dropped', async () => {
+            control.expand(byName(nodes, 'documents'));
+
+            control.filterNodes('draft');
+            await Promise.resolve();
+
+            control.filterNodes('');
+            await Promise.resolve();
+
+            expect(control.expansionModel.selected).toEqual(['documents']);
+        });
+
+        it('should not carry the expansion over to a rebuilt node without trackBy', () => {
+            const plain = new FlatTreeControl<FlatNode>(
+                (node) => node.level,
+                (node) => node.expandable,
+                (node) => node.name,
+                (node) => node.name
+            );
+
+            plain.dataNodes = nodes;
+            plain.expand(byName(nodes, 'documents'));
+
+            plain.dataNodes = buildFlatNodes();
+
+            expect(plain.isExpanded(byName(plain.dataNodes, 'documents'))).toBe(false);
+            expect(plain.expansionModel.selected).toEqual([byName(nodes, 'documents')]);
+        });
+    });
 });
 
 /** Flat node in the depth-first order the flattener produces, with 0-based levels. */

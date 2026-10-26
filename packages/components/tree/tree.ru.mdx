@@ -137,3 +137,25 @@
 По умолчанию узлы отслеживаются по идентичности, поэтому источник данных, который пересоздаёт объекты
 узлов на каждой эмиссии — например, flattener, — пересоздаёт и все строки. Чтобы строки
 переиспользовались между обновлениями данных, передайте функцию `trackBy`, возвращающую стабильный ключ.
+
+Раскрытые узлы контрол дерева тоже отслеживает по идентичности, поэтому пересозданный узел снова
+оказывается закрытым. Передайте контролу собственный `trackBy` в опциях — последнем аргументе
+`FlatTreeControl` и `NestedTreeControl`. Он принимает только узел и возвращает ключ, по которому узел
+раскрывается:
+
+```ts
+treeControl = new FlatTreeControl<FileFlatNode, string>(
+    (node) => node.level,
+    (node) => node.expandable,
+    (node) => node.id,
+    (node) => node.name,
+    undefined,
+    undefined,
+    undefined,
+    { trackBy: (node) => node.id }
+);
+```
+
+Тогда `expansionModel` хранит ключи, а не узлы, а тип, в котором названо дерево, указывает тип ключа после
+типа узла: `KbqTreeSelection<FileFlatNode, string>`,
+`KbqTreeSelectionChange<KbqTreeOption<FileFlatNode>, FileFlatNode, string>`.

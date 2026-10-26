@@ -213,7 +213,7 @@ export class KbqTreeSelect<T = any> extends KbqAbstractSelect implements AfterVi
     // (undocumented)
     toggle(): void;
     // (undocumented)
-    readonly tree: _angular_core.Signal<KbqTreeSelection<T> | undefined>;
+    readonly tree: _angular_core.Signal<KbqTreeSelection<T, T> | undefined>;
     readonly trigger: _angular_core.Signal<ElementRef<any>>;
     triggerFontSize: number;
     // (undocumented)

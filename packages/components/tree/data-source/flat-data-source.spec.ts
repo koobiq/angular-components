@@ -202,6 +202,29 @@ describe('KbqTreeFlatDataSource', () => {
         expect(emissions[emissions.length - 1]).toEqual(['root', 'documents', 'images', 'other']);
     });
 
+    it('should keep the expanded nodes once the data is rebuilt, given a tree control with trackBy', () => {
+        const keyedControl = new FlatTreeControl<FlatNode, string>(
+            getLevel,
+            isExpandable,
+            getValue,
+            getValue,
+            undefined,
+            undefined,
+            undefined,
+            { trackBy: getValue }
+        );
+        const keyedDataSource = new KbqTreeFlatDataSource(keyedControl, flattener);
+        const emissions: string[][] = [];
+
+        keyedDataSource.data = buildData();
+        keyedDataSource.connect(collectionViewer).subscribe((nodes) => emissions.push(names(nodes)));
+        keyedControl.expand(byName(keyedControl.dataNodes, 'root'));
+
+        keyedDataSource.data = buildData();
+
+        expect(emissions[emissions.length - 1]).toEqual(['root', 'documents', 'images', 'other']);
+    });
+
     it('should emit the filter result while a filter is active', async () => {
         const emissions: string[][] = [];
 

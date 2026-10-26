@@ -12,10 +12,10 @@ export interface FlatTreeControlFilter<T> {
  * Default first stage of the filter pipeline: keeps the nodes whose view value matches the query.
  * @docs-private
  */
-export class FilterByViewValue<T> implements FlatTreeControlFilter<T> {
+export class FilterByViewValue<T, K = T> implements FlatTreeControlFilter<T> {
     result: T[];
 
-    constructor(private control: FlatTreeControl<T>) {}
+    constructor(private control: FlatTreeControl<T, K>) {}
 
     handle(value: string | null): T[] {
         const viewValue = value || null;
@@ -39,10 +39,10 @@ export class FilterByViewValue<T> implements FlatTreeControlFilter<T> {
  * matches stay reachable in the rendered hierarchy.
  * @docs-private
  */
-export class FilterParentsForNodes<T> implements FlatTreeControlFilter<T> {
+export class FilterParentsForNodes<T, K = T> implements FlatTreeControlFilter<T> {
     result: T[];
 
-    constructor(private control: FlatTreeControl<T>) {}
+    constructor(private control: FlatTreeControl<T, K>) {}
 
     handle(_, prevFilter: FlatTreeControlFilter<T>): T[] {
         const result: Set<T> = new Set();
@@ -61,12 +61,12 @@ export class FilterParentsForNodes<T> implements FlatTreeControlFilter<T> {
     }
 }
 
-export class FilterByValues<T> implements FlatTreeControlFilter<T> {
+export class FilterByValues<T, K = T> implements FlatTreeControlFilter<T> {
     result: T[];
 
     private values: string[] = [];
 
-    constructor(private control: FlatTreeControl<T>) {}
+    constructor(private control: FlatTreeControl<T, K>) {}
 
     handle(_, prevFilter?: FlatTreeControlFilter<T>): T[] {
         const found = this.control.dataNodes.filter((node) => this.values.includes(this.control.getValue(node)));

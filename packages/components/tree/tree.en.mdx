@@ -138,3 +138,24 @@ collapsed or narrow the data with the search field.
 Nodes are tracked by identity by default, so a data source that rebuilds its node objects on every
 emission — a flattener among them — rebuilds every row. Pass a `trackBy` function returning a stable
 key to have the rows re-used across data updates instead.
+
+The tree control tracks the expanded nodes by identity too, so a rebuilt node comes back collapsed.
+Give the control a `trackBy` of its own in the options, the last argument of `FlatTreeControl` and
+`NestedTreeControl`. It takes the node alone and returns the key the node is expanded by:
+
+```ts
+treeControl = new FlatTreeControl<FileFlatNode, string>(
+    (node) => node.level,
+    (node) => node.expandable,
+    (node) => node.id,
+    (node) => node.name,
+    undefined,
+    undefined,
+    undefined,
+    { trackBy: (node) => node.id }
+);
+```
+
+`expansionModel` then holds the keys rather than the nodes, and a type that names the tree names the key
+type after the node type: `KbqTreeSelection<FileFlatNode, string>`,
+`KbqTreeSelectionChange<KbqTreeOption<FileFlatNode>, FileFlatNode, string>`.

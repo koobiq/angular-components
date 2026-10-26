@@ -4961,6 +4961,46 @@ class TreeStateSaving extends TreeParams {
     stateSavingKey = 'tree-key';
 }
 
+/** A tree control that keys the expansion by node name, so it survives the nodes being rebuilt. */
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection
+            stateSavingKey="keyed-key"
+            useStateSaving
+            [dataSource]="keyedDataSource"
+            [treeControl]="keyedControl"
+        >
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                <kbq-tree-node-toggle />
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeKeyedExpansion extends TreeParams {
+    // Beside the inherited control rather than in its place: that one is typed to hold nodes, this one names.
+    readonly keyedControl = new FlatTreeControl<FileFlatNode, string>(
+        this.getLevel,
+        this.isExpandable,
+        this.getValue,
+        this.getValue,
+        undefined,
+        undefined,
+        undefined,
+        { trackBy: this.getValue }
+    );
+
+    readonly keyedDataSource = new KbqTreeFlatDataSource(this.keyedControl, this.treeFlattener);
+
+    constructor() {
+        super();
+
+        this.keyedDataSource.data = this.treeData;
+    }
+}
+
 /** Models a tree whose data arrives after it has initialized — a lazily loaded one. */
 @Component({
     imports: [KbqTreeModule],
@@ -5336,6 +5376,39 @@ describe('KbqTreeSelection state saving', () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(expandedNames(fixture.componentInstance)).toEqual([]);
+        });
+    });
+
+    describe('with a tree control keyed by trackBy', () => {
+        const expandedKeys = (component: TreeKeyedExpansion): string[] =>
+            [...component.keyedControl.expansionModel.selected].sort();
+
+        it('keeps the expanded rows once the data is rebuilt into new nodes', () => {
+            const fixture = create(TreeKeyedExpansion);
+
+            clickToggle(fixture, 1);
+
+            fixture.componentInstance.keyedDataSource.data = buildFileTree(DATA_OBJECT, 0);
+            fixture.detectChanges();
+
+            // The five roots plus the three children of `Pictures`.
+            expect(getNodes(fixture.nativeElement.querySelector('kbq-tree-selection')).length).toBe(8);
+        });
+
+        it('restores the nodes that were expanded on the previous visit', () => {
+            store.setState('keyed-key', ['Pictures', 'Documents']);
+
+            const fixture = create(TreeKeyedExpansion);
+
+            expect(expandedKeys(fixture.componentInstance)).toEqual(['Documents', 'Pictures']);
+        });
+
+        it('persists the values of the expanded nodes', () => {
+            const fixture = create(TreeKeyedExpansion);
+
+            clickToggle(fixture, 1);
+
+            expect(store.getState('keyed-key')).toEqual(['Pictures']);
         });
     });
 });
