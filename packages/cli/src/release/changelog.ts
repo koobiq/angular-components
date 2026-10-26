@@ -17,6 +17,16 @@ const { prompt } = inquirer;
  */
 export const COMMIT_HEADER_PATTERN = /^(\w*)(?:\((?:([^/]+)\/)?(.*)\))?!?: (.*)$/;
 
+/**
+ * Options for the commit parser, merged over the preset's own. The preset parses only a
+ * `BREAKING CHANGE` footer into a note, so `DEPRECATED` is added for the deprecation notes.
+ */
+export const COMMIT_PARSER_OPTIONS = {
+    headerPattern: COMMIT_HEADER_PATTERN,
+    headerCorrespondence: ['type', 'package', 'scope', 'subject'],
+    noteKeywords: ['BREAKING CHANGE', 'DEPRECATED']
+};
+
 /** Prompts for a changelog release name and prepends the new changelog. */
 export async function promptAndGenerateChangelog(changelogPath: string, config: IReleaseTaskConfig) {
     const releaseName = await promptChangelogReleaseName();
@@ -48,13 +58,7 @@ export async function buildChangelogStream(
         .readPackage(join(config.projectDir, 'package.json'))
         .readRepository()
         .context({ title: releaseName })
-        .commits(
-            {},
-            {
-                headerPattern: COMMIT_HEADER_PATTERN,
-                headerCorrespondence: ['type', 'package', 'scope', 'subject']
-            }
-        )
+        .commits({}, COMMIT_PARSER_OPTIONS)
         .writer(
             createChangelogWriterOptions(angularPreset.writer, config, existingChangelogContent, (commit) =>
                 console.log(yellow(`  ↺   Skipping duplicate: "${bold(commit.header)}"`))
