@@ -583,28 +583,26 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/layout-flex').then((m) => m.LayoutFlexOverviewExample);
         case 'link-application':
             return import('@koobiq/docs-examples/components/link').then((m) => m.LinkApplicationExample);
-        case 'link-caption':
-            return import('@koobiq/docs-examples/components/link').then((m) => m.LinkCaptionExample);
         case 'link-disabled':
             return import('@koobiq/docs-examples/components/link').then((m) => m.LinkDisabledExample);
         case 'link-external':
             return import('@koobiq/docs-examples/components/link').then((m) => m.LinkExternalExample);
-        case 'link-general':
-            return import('@koobiq/docs-examples/components/link').then((m) => m.LinkGeneralExample);
         case 'link-icons':
             return import('@koobiq/docs-examples/components/link').then((m) => m.LinkIconsExample);
+        case 'link-in-text':
+            return import('@koobiq/docs-examples/components/link').then((m) => m.LinkInTextExample);
         case 'link-multi-line':
             return import('@koobiq/docs-examples/components/link').then((m) => m.LinkMultiLineExample);
         case 'link-overview':
             return import('@koobiq/docs-examples/components/link').then((m) => m.LinkOverviewExample);
-        case 'link-prepositions':
-            return import('@koobiq/docs-examples/components/link').then((m) => m.LinkPrepositionsExample);
         case 'link-print':
             return import('@koobiq/docs-examples/components/link').then((m) => m.LinkPrintExample);
         case 'link-pseudo':
             return import('@koobiq/docs-examples/components/link').then((m) => m.LinkPseudoExample);
-        case 'link-target-blank':
-            return import('@koobiq/docs-examples/components/link').then((m) => m.LinkTargetBlankExample);
+        case 'link-size':
+            return import('@koobiq/docs-examples/components/link').then((m) => m.LinkSizeExample);
+        case 'link-underline':
+            return import('@koobiq/docs-examples/components/link').then((m) => m.LinkUnderlineExample);
         case 'link-visited':
             return import('@koobiq/docs-examples/components/link').then((m) => m.LinkVisitedExample);
         case 'link-with-caption':

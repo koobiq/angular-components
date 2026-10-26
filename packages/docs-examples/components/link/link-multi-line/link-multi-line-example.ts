@@ -9,7 +9,7 @@ import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
     selector: 'link-multi-line-example',
     imports: [KbqLink, KbqLinkPrefix, KbqIconModule],
     template: `
-        <p>
+        <p class="example-text">
             I fully agree
             <a kbqLink external href="https://koobiq.io/en/components/link" target="_blank">
                 <i kbqLinkPrefix kbq-icon="kbq-scroll-o_16"></i>
@@ -20,8 +20,14 @@ import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
     styles: `
         :host {
             display: flex;
-            padding: var(--kbq-size-l);
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
+        }
+
+        .example-text {
             width: 200px;
+            margin: 0;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
