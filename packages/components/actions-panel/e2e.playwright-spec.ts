@@ -175,4 +175,42 @@ test.describe('KbqActionsPanel', () => {
             expect(Math.abs(panelBox.x + panelBox.width / 2 - viewport.width / 2)).toBeLessThan(2);
         });
     });
+
+    test.describe('E2eActionsPanelDisabledButtons', () => {
+        // Each disabled contrast button must keep the color of its enabled twin and only fade out.
+        const contrastButtons = [
+            ['e2eFilledContrastEnabled', 'e2eFilledContrastDisabled'],
+            ['e2eOutlineEnabled', 'e2eOutlineDisabled'],
+            ['e2eTransparentEnabled', 'e2eTransparentDisabled']
+        ];
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eActionsPanelDisabledButtons');
+            await page.getByTestId('e2eActionsPanelDisabledOpenButton').click();
+            await expect(page.getByTestId('e2eFilledContrastEnabled')).toBeVisible();
+        });
+
+        test('fades disabled contrast buttons and keeps their enabled colors', async ({ page }) => {
+            const disabledOpacity = await page.evaluate(() =>
+                getComputedStyle(document.body).getPropertyValue('--kbq-opacity-disabled').trim()
+            );
+
+            await Promise.all(
+                contrastButtons.map(async ([enabledId, disabledId]) => {
+                    const enabledColor = await page
+                        .getByTestId(enabledId)
+                        .evaluate((element) => getComputedStyle(element).color);
+                    const disabled = page.getByTestId(disabledId);
+
+                    await expect(disabled).toHaveCSS('color', enabledColor);
+                    await expect(disabled).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+                    await expect(disabled).toHaveCSS('opacity', disabledOpacity);
+                })
+            );
+        });
+
+        test('leaves the disabled state of other colors without an extra fade', async ({ page }) => {
+            await expect(page.getByTestId('e2eThemeDisabled')).toHaveCSS('opacity', '1');
+        });
+    });
 });

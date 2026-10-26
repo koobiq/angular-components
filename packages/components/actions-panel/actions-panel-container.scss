@@ -3,6 +3,15 @@
 
 $easing: cubic-bezier(0.4, 0, 0.2, 1);
 
+// Points the disabled tokens of a button style at its enabled ones, so the disabled state keeps the enabled colors.
+@mixin kbq-actions-panel-disabled-tokens($base) {
+    --kbq-#{$base}-states-disabled-background: var(--kbq-#{$base}-background);
+    --kbq-#{$base}-states-disabled-border: var(--kbq-#{$base}-border);
+    --kbq-#{$base}-states-disabled-foreground: var(--kbq-#{$base}-foreground);
+    --kbq-#{$base}-states-disabled-left-icon: var(--kbq-#{$base}-left-icon);
+    --kbq-#{$base}-states-disabled-right-icon: var(--kbq-#{$base}-right-icon);
+}
+
 .kbq-actions-panel-container {
     background: var(--kbq-actions-panel-background-color);
     color: var(--kbq-actions-panel-text-color);
@@ -46,31 +55,14 @@ $easing: cubic-bezier(0.4, 0, 0.2, 1);
         --kbq-button-filled-contrast-fade-off-background: transparent;
         --kbq-button-filled-contrast-fade-on-background: transparent;
 
-        // The disabled tokens are grey tints made for light surfaces and are almost invisible on this dark panel,
-        // so a disabled button keeps its enabled colors and only fades out.
-        &.kbq-disabled {
-            --kbq-button-filled-contrast-fade-off-states-disabled-background: transparent;
-            --kbq-button-filled-contrast-fade-off-states-disabled-border: transparent;
-            --kbq-button-filled-contrast-fade-off-states-disabled-foreground: var(
-                --kbq-button-filled-contrast-fade-off-foreground
-            );
-            --kbq-button-filled-contrast-fade-off-states-disabled-left-icon: var(
-                --kbq-button-filled-contrast-fade-off-left-icon
-            );
-            --kbq-button-filled-contrast-fade-off-states-disabled-right-icon: var(
-                --kbq-button-filled-contrast-fade-off-right-icon
-            );
-            --kbq-button-filled-contrast-fade-on-states-disabled-background: transparent;
-            --kbq-button-filled-contrast-fade-on-states-disabled-border: transparent;
-            --kbq-button-filled-contrast-fade-on-states-disabled-foreground: var(
-                --kbq-button-filled-contrast-fade-on-foreground
-            );
-            --kbq-button-filled-contrast-fade-on-states-disabled-left-icon: var(
-                --kbq-button-filled-contrast-fade-on-left-icon
-            );
-            --kbq-button-filled-contrast-fade-on-states-disabled-right-icon: var(
-                --kbq-button-filled-contrast-fade-on-right-icon
-            );
+        // The disabled tokens of contrast buttons are grey tints made for light surfaces, and they are almost invisible
+        // on this dark panel. Those buttons keep their enabled colors and only fade out. Other colors keep their states.
+        &.kbq-disabled.kbq-contrast,
+        &.kbq-disabled.kbq-contrast-fade {
+            @include kbq-actions-panel-disabled-tokens(button-filled-contrast-fade-off);
+            @include kbq-actions-panel-disabled-tokens(button-filled-contrast-fade-on);
+            @include kbq-actions-panel-disabled-tokens(button-outline-contrast-fade-on);
+            @include kbq-actions-panel-disabled-tokens(button-transparent-contrast-fade-on);
 
             opacity: var(--kbq-opacity-disabled);
         }

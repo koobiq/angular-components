@@ -113,3 +113,48 @@ export class E2eActionsPanelGlobalOverlayContainer {
         this.actionsPanel.open(this.templateRef());
     }
 }
+
+@Component({
+    selector: 'e2e-actions-panel-disabled-buttons',
+    imports: [KbqButtonModule],
+    template: `
+        <button data-testid="e2eActionsPanelDisabledOpenButton" kbq-button (click)="open()">Open</button>
+
+        <ng-template>
+            <button color="contrast" kbq-button data-testid="e2eFilledContrastEnabled">Filled</button>
+            <button color="contrast" kbq-button data-testid="e2eFilledContrastDisabled" [disabled]="true">
+                Filled
+            </button>
+            <button kbqStyle="outline" kbq-button data-testid="e2eOutlineEnabled">Outline</button>
+            <button kbqStyle="outline" kbq-button data-testid="e2eOutlineDisabled" [disabled]="true">Outline</button>
+            <button kbqStyle="transparent" color="contrast" kbq-button data-testid="e2eTransparentEnabled">
+                Transparent
+            </button>
+            <button
+                kbqStyle="transparent"
+                color="contrast"
+                kbq-button
+                data-testid="e2eTransparentDisabled"
+                [disabled]="true"
+            >
+                Transparent
+            </button>
+            <button kbqStyle="transparent" color="theme" kbq-button data-testid="e2eThemeDisabled" [disabled]="true">
+                Theme
+            </button>
+        </ng-template>
+    `,
+    providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eActionsPanelDisabledButtons'
+    }
+})
+export class E2eActionsPanelDisabledButtons {
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    private readonly templateRef = viewChild.required(TemplateRef);
+
+    protected open(): void {
+        this.actionsPanel.open(this.templateRef());
+    }
+}
