@@ -176,9 +176,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@analogjs/vite-plugin-angular@npm:2.8.1":
-  version: 2.8.1
-  resolution: "@analogjs/vite-plugin-angular@npm:2.8.1"
+"@analogjs/vite-plugin-angular@npm:2.9.0":
+  version: 2.9.0
+  resolution: "@analogjs/vite-plugin-angular@npm:2.9.0"
   dependencies:
     magic-string: "npm:^0.30.21"
     obug: "npm:^2.1.1"
@@ -195,13 +195,13 @@ __metadata:
       optional: true
     vite:
       optional: true
-  checksum: 10c0/354270f02560d85c5933ba30f2b03b66f68d0a0313cc3a03d9b54e8d71033d0f95f68c9c43186c0895b265dfc974f8aad7920751661d88ca0c7d1e5f54cf7013
+  checksum: 10c0/9dae325b4df862e885358d3a0cd3746ab9160cfb2ec8e2b986a028c843e38d84814f558dcb981218c53909ea9760503b5fbba925cc8236cebd333513f268d3ee
   languageName: node
   linkType: hard
 
-"@analogjs/vitest-angular@npm:2.8.1":
-  version: 2.8.1
-  resolution: "@analogjs/vitest-angular@npm:2.8.1"
+"@analogjs/vitest-angular@npm:2.9.0":
+  version: 2.9.0
+  resolution: "@analogjs/vitest-angular@npm:2.9.0"
   peerDependencies:
     "@analogjs/vite-plugin-angular": "*"
     "@angular-devkit/architect": ">=0.1700.0 < 0.2300.0 || >=0.2200.0 < 0.2300.0"
@@ -211,7 +211,7 @@ __metadata:
   peerDependenciesMeta:
     zone.js:
       optional: true
-  checksum: 10c0/2ff9b4a6a12b890c2c2fe57c5fb5c5166ad9c06e4c12126c8cb352ae8226909abcfbe65023d578f1371fba9bdfdc4168e4bed31cc7d34c5f47bf05be39aaf161
+  checksum: 10c0/f4e2ec097ebc92f2ae4f39efefb862129f7c08e506684959ac0ac30c3ef5e7cd1b955235c8d1d02375f0e08db7e8ba9b6763a01b0c8a6f30ab90050907e5a8a6
   languageName: node
   linkType: hard
 
@@ -10259,8 +10259,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "koobiq@workspace:."
   dependencies:
-    "@analogjs/vite-plugin-angular": "npm:2.8.1"
-    "@analogjs/vitest-angular": "npm:2.8.1"
+    "@analogjs/vite-plugin-angular": "npm:2.9.0"
+    "@analogjs/vitest-angular": "npm:2.9.0"
     "@angular-devkit/architect": "npm:0.2102.28"
     "@angular-devkit/architect-cli": "npm:0.2102.28"
     "@angular-devkit/core": "npm:21.2.28"
