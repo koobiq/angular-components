@@ -1,5 +1,5 @@
 {
-    "name": "@koobiq/tokens-docs",
+    "name": "@koobiq-local/tokens-docs",
     "private": true,
     "installConfig": {
         "hoistingLimits": "workspaces"
