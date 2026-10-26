@@ -20,3 +20,6 @@ jobs:
       # gate that catches a guide or a guarded entry point added on a branch without rerunning
       # `build:mcp:data`. Needs no git history, just the checkout above.
       - run: yarn run check-mcp-data
+      # Regenerates its own index.json/examples.json (never committed, see packages/mcp/README.md)
+      # and skips, rather than fails, what needs a @koobiq/components build this job never does.
+      - run: yarn run unit:mcp
