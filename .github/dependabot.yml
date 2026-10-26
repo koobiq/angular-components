@@ -76,6 +76,10 @@ updates:
       # minor and patch updates are automated.
       - dependency-name: '@koobiq/design-tokens'
         update-types: ['version-update:semver-major']
+      # tools/tokens/docs builds the docs token data with its transforms, so a major is upgraded
+      # by hand together with that generator.
+      - dependency-name: '@koobiq/tokens-builder'
+        update-types: ['version-update:semver-major']
     groups:
       # Security fixes arrive as a single pull request rather than one per advisory.
       security:
