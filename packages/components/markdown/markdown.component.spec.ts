@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqMarkdown } from '@koobiq/components/markdown';
 
-const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
-    TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
+const createComponent = <T>(component: Type<T>): ComponentFixture<T> => {
+    TestBed.configureTestingModule({ imports: [component] }).compileComponents();
     const fixture = TestBed.createComponent<T>(component);
 
     fixture.autoDetectChanges();
