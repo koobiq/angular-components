@@ -21,6 +21,12 @@ const COMMIT_LINK_PATTERN = /\s+(?:\(\[[^\]]+\]\([^)]+\)\)|[0-9a-f]{7,40}|undefi
 /** Pull request references that end a subject, linked by the preset or left as is. */
 const PULL_REQUEST_REFERENCES_PATTERN = /(?:\s+\((?:\[#\d+\]\([^)]+\)|#\d+)\))+$/;
 
+/** A header marked as a breaking change with `!`, e.g. `refactor(components)!: remove unused code`. */
+const BREAKING_HEADER_PATTERN = /^\w*(?:\(.*\))?!: /;
+
+/** A ticket reference that older releases linked to a tracker URL, e.g. `[#DS-1234](…)`. */
+const LINKED_TICKET_PATTERN = /\[#([A-Za-z]+-\d+)\]\([^)]*\)/g;
+
 /** Interface that describes a package in the changelog. */
 interface IChangelogPackage {
     commits: any[];
@@ -84,10 +90,10 @@ function renderCommit(context: any, commit: any): string {
 /**
  * Identifies a change by its scope and subject. The SHA and the pull request number are left out:
  * a fix ported to a release branch gets a new SHA, and a new number when it goes through its own
- * pull request.
+ * pull request. A ticket counts as `#DS-1234` whether or not an older release linked it.
  */
 function getChangeKey(entry: string): string {
-    return entry.replace(PULL_REQUEST_REFERENCES_PATTERN, '');
+    return entry.replace(LINKED_TICKET_PATTERN, '#$1').replace(PULL_REQUEST_REFERENCES_PATTERN, '');
 }
 
 /** Collects the change keys of every commit line in an existing changelog. */
@@ -147,12 +153,19 @@ export function createChangelogWriterOptions(
         //    `commit.type === 'docs'` mapping unless the commit also carries a note, so a plain
         //    `docs:` commit would otherwise never form a "Documentation" commit group. That case is
         //    handled here instead of being delegated to the preset.
+        //
+        // 3. The preset knows no `!` in a header. It gets the note a BREAKING CHANGE footer would give,
+        //    which also keeps a type the preset discards otherwise, such as `refactor!:`.
         transform: (commit: any, context: any) => {
             if (commit.type === 'docs' && commit.notes.length === 0) {
                 return { ...commit, type: 'Documentation' };
             }
 
             const notes = commit.notes.map((note: any) => ({ ...note, type: note.title }));
+
+            if (notes.length === 0 && BREAKING_HEADER_PATTERN.test(commit.header ?? '')) {
+                notes.push({ title: CommitNote.BreakingChange, type: CommitNote.BreakingChange, text: commit.subject });
+            }
 
             return presetWriterOptions.transform({ ...commit, notes }, context);
         },
@@ -187,16 +200,9 @@ export function createChangelogWriterOptions(
                         commit.scope = null;
                     }
 
-                    if (typeof commit.subject === 'string' && context.packageData.bugs.url) {
-                        const urlIssue = `${context.packageData.bugs.url}/issue/`;
-
-                        commit.subject = commit.subject.replace(/#([a-zA-Z]+-[0-9]+)/g, (_: any, issue: any) => {
-                            return `[#${issue}](${urlIssue}${issue})`;
-                        });
-                    }
-
                     // Compared once the commit is in its final form, as the changelog holds it: with the
-                    // package scope dropped and the issue references linked.
+                    // package scope dropped. Tickets stay plain `#DS-1234`: the tracker is internal, and
+                    // `bugs.url` is where npm users report bugs, so a link built from it leads nowhere.
                     if (existingChangeKeys.has(getChangeKey(renderCommitEntry(commit)))) {
                         logSkippedDuplicate(commit);
 

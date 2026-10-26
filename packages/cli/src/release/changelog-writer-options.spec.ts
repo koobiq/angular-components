@@ -131,6 +131,28 @@ describe(createChangelogWriterOptions.name, () => {
             expect(transformed).toBeUndefined();
         });
 
+        it('keeps a breaking refactor!: commit, which the preset discards without a note', () => {
+            const { writerOptions } = finalizeChangelog([]);
+            const commit = makeCommit({
+                type: 'refactor',
+                header: 'refactor(components)!: remove unused code',
+                subject: 'remove unused code'
+            });
+
+            const transformed = writerOptions.transform(commit, {});
+
+            expect(transformed.notes).toEqual([
+                { title: 'BREAKING CHANGE', type: 'BREAKING CHANGE', text: 'remove unused code' }
+            ]);
+        });
+
+        it('adds no breaking change note to a header without `!`', () => {
+            const { writerOptions } = finalizeChangelog([]);
+            const commit = makeCommit({ type: 'refactor', header: 'refactor(core): move x', subject: 'move x' });
+
+            expect(writerOptions.transform(commit, {})).toBeUndefined();
+        });
+
         it('preserves the original note title as note.type when delegating to the preset', () => {
             const { writerOptions } = finalizeChangelog([]);
             const commit = makeCommit({
@@ -216,7 +238,7 @@ describe(createChangelogWriterOptions.name, () => {
             );
         });
 
-        it('skips a commit whose issue reference the changelog holds as a link', () => {
+        it('skips a commit whose ticket the changelog holds as plain text', () => {
             const commitGroups = [
                 {
                     title: 'Bug Fixes',
@@ -231,7 +253,27 @@ describe(createChangelogWriterOptions.name, () => {
             ];
 
             const output = renderChangelog(commitGroups, {
-                bugsUrl: issuesUrl,
+                existingChangelogContent: ` * bug fix  **toast:** stop closing other overlays (#DS-5407) ([#2211](${issuesUrl}/2211)) ([67d3977](${commitUrl}/67d3977))`
+            });
+
+            expect(output).not.toContain('stop closing other overlays');
+        });
+
+        it('skips a commit whose ticket an older release linked', () => {
+            const commitGroups = [
+                {
+                    title: 'Bug Fixes',
+                    commits: [
+                        makeCommit({
+                            header: 'fix(toast): stop closing other overlays (#DS-5407) (#2211)',
+                            scope: 'toast',
+                            subject: `stop closing other overlays (#DS-5407) ([#2211](${issuesUrl}/2211))`
+                        })
+                    ]
+                }
+            ];
+
+            const output = renderChangelog(commitGroups, {
                 existingChangelogContent: ` * bug fix  **toast:** stop closing other overlays ([#DS-5407](${issuesUrl}/issue/DS-5407)) ([#2211](${issuesUrl}/2211)) ([67d3977](${commitUrl}/67d3977))`
             });
 
@@ -253,7 +295,6 @@ describe(createChangelogWriterOptions.name, () => {
             ];
 
             const output = renderChangelog(commitGroups, {
-                bugsUrl: issuesUrl,
                 existingChangelogContent: ` * bug fix  **tree:** roll the state up once ([#DS-5779](${issuesUrl}/issue/DS-5779)) ([#2223](${issuesUrl}/2223)) ([a8eb783](${commitUrl}/a8eb783))`
             });
 
@@ -275,7 +316,6 @@ describe(createChangelogWriterOptions.name, () => {
             ];
 
             const output = renderChangelog(commitGroups, {
-                bugsUrl: issuesUrl,
                 existingChangelogContent: ` * docs  **ag-grid:** add an example ([#DS-4572](${issuesUrl}/issue/DS-4572)) (#2087) ([undefined](${commitUrl}/bcfb751))`
             });
 
@@ -319,7 +359,6 @@ describe(createChangelogWriterOptions.name, () => {
             ];
 
             const output = renderChangelog(commitGroups, {
-                bugsUrl: issuesUrl,
                 existingChangelogContent: ` * bug fix  **tabs:** errors following a full review ([#DS-5531](${issuesUrl}/issue/DS-5531)) ([#2160](${issuesUrl}/2160)) ([f68a2da](${commitUrl}/f68a2da))`
             });
 
@@ -342,7 +381,7 @@ describe(createChangelogWriterOptions.name, () => {
         });
     });
 
-    it('rewrites #PROJ-123 issue references in the subject when bugs.url is set', () => {
+    it('leaves a ticket reference as plain text even when bugs.url is set', () => {
         const commitGroups = [
             {
                 title: 'Bug Fixes',
@@ -354,20 +393,7 @@ describe(createChangelogWriterOptions.name, () => {
             bugsUrl: 'https://github.com/koobiq/angular-components/issues'
         });
 
-        expect(output).toContain('[#DS-123](https://github.com/koobiq/angular-components/issues/issue/DS-123)');
-    });
-
-    it('does not rewrite issue references when bugs.url is not set', () => {
-        const commitGroups = [
-            {
-                title: 'Bug Fixes',
-                commits: [makeCommit({ header: 'fix(button): fix #DS-123', scope: 'button', subject: 'fix #DS-123' })]
-            }
-        ];
-
-        const output = renderChangelog(commitGroups);
-
-        expect(output).toContain('fix #DS-123');
+        expect(output).toContain('**button:** fix #DS-123 (');
         expect(output).not.toContain('[#DS-123]');
     });
 
