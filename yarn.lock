@@ -8451,9 +8451,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsdoc@npm:^65.3.0":
-  version: 65.3.12
-  resolution: "eslint-plugin-jsdoc@npm:65.3.12"
+"eslint-plugin-jsdoc@npm:^65.3.15":
+  version: 65.3.15
+  resolution: "eslint-plugin-jsdoc@npm:65.3.15"
   dependencies:
     "@es-joy/jsdoccomment": "npm:~0.98.0"
     "@es-joy/resolve.exports": "npm:1.2.0"
@@ -8476,7 +8476,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/69aeb8039c6d107b4c4e596818abcc1e43f6270896246b80042419fb87d371d71338287ca402d5a5e9886eebdc59e2e90191d4a4b9f4d7e6e50b4521901fcc8e
+  checksum: 10c0/df9fb70219e0615ae9b60efb0c4d8ba5b2123fa3b3f5a147d6c37ee11a903b5018f708ed0f7572d1578848b3c91c671a09bc60b5785601a5adafa540e0882f1f
   languageName: node
   linkType: hard
 
@@ -8576,9 +8576,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^10.12.0":
-  version: 10.12.0
-  resolution: "eslint@npm:10.12.0"
+"eslint@npm:^10.13.0":
+  version: 10.13.0
+  resolution: "eslint@npm:10.13.0"
   dependencies:
     "@eslint-community/eslint-utils": "npm:^4.8.0"
     "@eslint-community/regexpp": "npm:^4.12.2"
@@ -8617,7 +8617,7 @@ __metadata:
       optional: true
   bin:
     eslint: bin/eslint.js
-  checksum: 10c0/1302ce8a7df2f67fe8f4014b2f9449bd38eb86903ba7b841d9a8ca5a5daf8ee15442861ab870e96c0074d5f333b405d7b2f16388981f807db410cc3a02178af9
+  checksum: 10c0/4a28e85de458f13306d30f07df21b58109056bd8bd691b6158952d95e126cf742db2eb09562e3f1c1cc0154ee44dedc789f8ced8d0d8da48e82a689aa9cb1c0d
   languageName: node
   linkType: hard
 
@@ -10336,10 +10336,10 @@ __metadata:
     country-flag-icons: "npm:^1.6.20"
     cspell: "npm:^10.4.0"
     dotenv: "npm:^16.6.1"
-    eslint: "npm:^10.12.0"
+    eslint: "npm:^10.13.0"
     eslint-config-prettier: "npm:^10.1.8"
     eslint-plugin-file-progress: "npm:^4.0.0"
-    eslint-plugin-jsdoc: "npm:^65.3.0"
+    eslint-plugin-jsdoc: "npm:^65.3.15"
     eslint-plugin-playwright: "npm:^2.12.1"
     eslint-plugin-prettier: "npm:^5.5.7"
     eslint-plugin-promise: "npm:^7.3.0"
