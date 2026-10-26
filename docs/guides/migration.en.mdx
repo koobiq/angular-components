@@ -3463,6 +3463,7 @@ It rewrites the moved import paths (`web/new/**` → `web/css/**`), the tokens w
 
 - **The old `--kbq-palette-*` scale.** The 0–100 scale has no direct mapping onto the 1–20 one, so by default the codemod only suggests the nearest `--kbq-plt-*` and prints the ΔE. Two flags turn the suggestion into a rewrite: `--fix-palette` (nearest `--kbq-plt-*`, applied only when ΔE ≤ 3; adjust the threshold with `--palette-delta-e`) and `--palette-to-color` (the literal v3 color inlined as the value). Alpha steps and uses with a fallback are never rewritten — replace those by hand.
 - **Review code blocks and scrollbars.** These are the only two places v4 changes pixels without being asked; the codemod does not touch them because nothing about their custom properties changed, only the values behind them.
+- **`scrollbar/deprecated/scrollbar-tokens.scss` was removed.** Its variables now come from `@koobiq/design-tokens` — drop any deep imports of that file from your own styles.
 
 ### After the migration
 
