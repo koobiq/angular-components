@@ -1,0 +1,28 @@
+name: MCP
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  mcp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/workflows/actions/setup-node
+      # Only what the mcp specs actually read — not components-experimental, the date adapters,
+      # styles, the CLI or schematics, which the full build-packages action also builds for
+      # everyone else's sake. Built once, here, rather than in api.yml too.
+      - run: yarn run build:components
+      - run: yarn run build:mcp
+      # guides.json/history.json are committed and only regenerated at release time: this is the
+      # gate that catches a guide or a guarded entry point added on a branch without rerunning
+      # `build:mcp:data`. Needs no git history, just the checkout above.
+      - run: yarn run check-mcp-data
+      - run: yarn run unit:mcp
+      - run: yarn run unit:mcp:dts
