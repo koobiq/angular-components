@@ -1,4 +1,4 @@
-import { COMMIT_HEADER_PATTERN } from './changelog';
+import { COMMIT_HEADER_PATTERN, COMMIT_PARSER_OPTIONS } from './changelog';
 
 /** Splits a header into the fields `headerCorrespondence` maps the pattern's groups to. */
 function parseHeader(header: string) {
@@ -58,5 +58,25 @@ describe('COMMIT_HEADER_PATTERN', () => {
 
     it('rejects a header without a type', () => {
         expect(parseHeader("Merge branch 'main' into fix/x")).toBeNull();
+    });
+});
+
+describe('COMMIT_PARSER_OPTIONS', () => {
+    async function parseNotes(message: string) {
+        const { CommitParser } = await import('conventional-commits-parser');
+
+        return new CommitParser(COMMIT_PARSER_OPTIONS).parse(message).notes;
+    }
+
+    it('parses a deprecation footer into a note', async () => {
+        expect(await parseNotes('feat(select): add the panel width input\n\nDEPRECATED: use panelWidth')).toEqual([
+            { title: 'DEPRECATED', text: 'use panelWidth' }
+        ]);
+    });
+
+    it('parses a breaking change footer into a note', async () => {
+        expect(await parseNotes('feat(select): remove the input\n\nBREAKING CHANGE: use panelWidth')).toEqual([
+            { title: 'BREAKING CHANGE', text: 'use panelWidth' }
+        ]);
     });
 });

@@ -65,11 +65,28 @@ function renderRepositoryUrl(context: any): string {
     return `${host}${owner}${context.repository}`;
 }
 
+/** Prefixes a text with its bold scope, if any. */
+function renderScoped(scope: string | null | undefined, text: string): string {
+    return scope ? `**${scope}:** ${text}` : text;
+}
+
 /** Renders the optional bold scope and the subject (or the raw header when there is no subject). */
 function renderCommitEntry(commit: any): string {
-    const subject = commit.subject || commit.header;
+    return renderScoped(commit.scope, commit.subject || commit.header);
+}
 
-    return commit.scope ? `**${commit.scope}:** ${subject}` : subject;
+/** Renders the notes of a package group under a heading nested in its section, or nothing without notes. */
+function renderNotes(title: string, notes: any[]): string {
+    if (notes.length === 0) {
+        return '';
+    }
+
+    return `#### ${title}\n\n` + notes.map((note) => ` * ${renderScoped(note.scope, note.text)}\n`).join('') + '\n';
+}
+
+/** Sorts notes by scope, then text; a note without a scope applies to the whole package and goes first. */
+function compareNotes(a: any, b: any): number {
+    return (a.scope || '').localeCompare(b.scope || '') || (a.text || '').localeCompare(b.text || '');
 }
 
 /**
@@ -125,6 +142,8 @@ export function createChangelogWriterOptions(
         // package name. conventional-changelog-writer 9 replaced Handlebars templates with render
         // functions, so the two customised templates now live in this file. The release header is
         // still the one from the angular preset, exactly as `{{> header}}` used to resolve it.
+        // The notes render inside each package group, after its commits, not in the preset's footer,
+        // which would list the notes of every package in one place.
         template: (context: any) =>
             `${presetWriterOptions.headerPartial(context)}\n\n` +
             context.packageGroups
@@ -134,7 +153,9 @@ export function createChangelogWriterOptions(
                         group.commits
                             .map((commit: any) => ` * ${commit.type} ${renderCommit(context, commit)}\n`)
                             .join('') +
-                        '\n'
+                        '\n' +
+                        renderNotes('BREAKING CHANGES', group.breakingChanges) +
+                        renderNotes('DEPRECATIONS', group.deprecations)
                 )
                 .join(''),
 
@@ -216,11 +237,14 @@ export function createChangelogWriterOptions(
                     const packageGroup = packageGroups[packageName];
 
                     // Collect all notes of the commit. Either breaking change or deprecation notes.
+                    // A note keeps the scope of its commit, which the note itself does not carry.
                     commit.notes.forEach((n: any) => {
+                        const note = { ...n, scope: commit.scope };
+
                         if (n.type === CommitNote.Deprecation) {
-                            packageGroup.deprecations.push(n);
+                            packageGroup.deprecations.push(note);
                         } else if (n.type === CommitNote.BreakingChange) {
-                            packageGroup.breakingChanges.push(n);
+                            packageGroup.breakingChanges.push(note);
                         } else {
                             throw Error(`Found commit note that is not known: ${JSON.stringify(n, null, 4)}`);
                         }
@@ -246,8 +270,8 @@ export function createChangelogWriterOptions(
                 return {
                     title: preparePackageName(pkgName),
                     commits: packageGroup.commits.sort(commitSortFunction),
-                    breakingChanges: packageGroup.breakingChanges,
-                    deprecations: packageGroup.deprecations
+                    breakingChanges: packageGroup.breakingChanges.sort(compareNotes),
+                    deprecations: packageGroup.deprecations.sort(compareNotes)
                 };
             });
 

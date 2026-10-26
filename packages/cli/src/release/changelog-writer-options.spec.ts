@@ -500,8 +500,131 @@ describe(createChangelogWriterOptions.name, () => {
             const { context } = finalizeChangelog(commitGroups);
             const koobiqGroup = context.packageGroups.find((group: any) => group.title === 'Koobiq');
 
-            expect(koobiqGroup.breakingChanges).toEqual([{ type: 'BREAKING CHANGE', text: 'old api removed' }]);
-            expect(koobiqGroup.deprecations).toEqual([{ type: 'DEPRECATED', text: 'use new api instead' }]);
+            expect(koobiqGroup.breakingChanges).toEqual([
+                { type: 'BREAKING CHANGE', text: 'old api removed', scope: 'button' }
+            ]);
+            expect(koobiqGroup.deprecations).toEqual([
+                { type: 'DEPRECATED', text: 'use new api instead', scope: 'button' }
+            ]);
+        });
+
+        it('renders the notes of each package group after its commits, unscoped first, then by scope', () => {
+            const commitGroups = [
+                {
+                    title: 'Features',
+                    commits: [
+                        makeCommit({
+                            header: 'feat: zoneless change detection',
+                            subject: 'zoneless change detection',
+                            notes: [{ type: 'BREAKING CHANGE', text: 'zone.js is not loaded' }]
+                        }),
+                        makeCommit({
+                            header: 'feat(tabs): rework api',
+                            scope: 'tabs',
+                            subject: 'rework api',
+                            notes: [{ type: 'BREAKING CHANGE', text: 'old api removed' }]
+                        }),
+                        makeCommit({
+                            header: 'feat(button): add replacement',
+                            scope: 'button',
+                            subject: 'add replacement',
+                            notes: [
+                                { type: 'BREAKING CHANGE', text: 'the default color changed' },
+                                { type: 'DEPRECATED', text: 'use new api instead' }
+                            ]
+                        }),
+                        makeCommit({
+                            header: 'feat(cli): drop a flag',
+                            scope: 'cli',
+                            subject: 'drop a flag',
+                            notes: [{ type: 'BREAKING CHANGE', text: 'the flag is gone' }]
+                        })
+                    ]
+                }
+            ];
+
+            expect(renderChangelog(commitGroups, { linkReferences: false })).toBe(
+                [
+                    '# Test Release (2026-01-01)',
+                    '',
+                    '### Cli',
+                    '',
+                    ' * feature  drop a flag abc1234',
+                    '',
+                    '#### BREAKING CHANGES',
+                    '',
+                    ' * the flag is gone',
+                    '',
+                    '### Koobiq',
+                    '',
+                    ' * feature  **button:** add replacement abc1234',
+                    ' * feature  **tabs:** rework api abc1234',
+                    ' * feature  zoneless change detection abc1234',
+                    '',
+                    '#### BREAKING CHANGES',
+                    '',
+                    ' * zone.js is not loaded',
+                    ' * **button:** the default color changed',
+                    ' * **tabs:** old api removed',
+                    '',
+                    '#### DEPRECATIONS',
+                    '',
+                    ' * **button:** use new api instead',
+                    '',
+                    ''
+                ].join('\n')
+            );
+        });
+
+        it('renders a breaking `!` commit under BREAKING CHANGES of its package group', () => {
+            const { writerOptions } = finalizeChangelog([]);
+            const commit = writerOptions.transform(
+                makeCommit({
+                    type: 'fix',
+                    header: 'fix(tabs)!: rename the input',
+                    scope: 'tabs',
+                    subject: 'rename the input'
+                }),
+                {}
+            );
+
+            const output = renderChangelog([{ title: 'Bug Fixes', commits: [commit] }]);
+
+            expect(output).toContain('### Koobiq\n\n * bug fix  **tabs:** rename the input');
+            expect(output).toContain('#### BREAKING CHANGES\n\n * **tabs:** rename the input\n');
+        });
+
+        it('renders no notes heading for a package group without notes', () => {
+            const commitGroups = [
+                {
+                    title: 'Features',
+                    commits: [makeCommit({ header: 'feat(button): add icon', scope: 'button', subject: 'add icon' })]
+                }
+            ];
+
+            expect(renderChangelog(commitGroups)).not.toContain('####');
+        });
+
+        it('leaves out the notes of a commit skipped as a duplicate', () => {
+            const commitGroups = [
+                {
+                    title: 'Bug Fixes',
+                    commits: [
+                        makeCommit({
+                            header: 'fix(button)!: apply the default color',
+                            scope: 'button',
+                            subject: 'apply the default color',
+                            notes: [{ type: 'BREAKING CHANGE', text: 'apply the default color' }]
+                        })
+                    ]
+                }
+            ];
+
+            const output = renderChangelog(commitGroups, {
+                existingChangelogContent: ' * bug fix  **button:** apply the default color ([d941af7](x))'
+            });
+
+            expect(output).not.toContain('BREAKING CHANGES');
         });
 
         it('throws when a commit note has a type that is neither a breaking change nor a deprecation', () => {
