@@ -1,24 +1,44 @@
 name: MCP
 
 on:
+  # build.yml runs on pull_request only, so a push to main has no run to key off and builds its
+  # own dist/components below instead.
   push:
     branches:
       - main
-  pull_request:
+  workflow_run:
+    workflows: [Build]
+    types: [completed]
 
 permissions:
   contents: read
+  actions: read # to download build.yml's dist-components artifact across workflows
 
 jobs:
   mcp:
+    if: github.event_name == 'push' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # On workflow_run, the default checkout is the branch the workflow file lives on, not
+          # the commit that triggered the Build run.
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
       - uses: ./.github/workflows/actions/setup-node
-      # Only what the mcp specs actually read — not components-experimental, the date adapters,
-      # styles, the CLI or schematics, which the full build-packages action also builds for
-      # everyone else's sake. Built once, here, rather than in api.yml too.
-      - run: yarn run build:components
+      - name: Download dist/components built by the triggering Build run
+        if: github.event_name == 'workflow_run'
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          name: dist-components
+          path: dist/components
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      # Only on a push to main, where there is no Build run to read dist/components from. Not the
+      # full build-packages action, which also builds components-experimental, the date adapters,
+      # styles, the CLI and schematics — nothing here reads any of those.
+      - name: Build @koobiq/components (push to main only)
+        if: github.event_name == 'push'
+        run: yarn run build:components
       - run: yarn run build:mcp
       # guides.json/history.json are committed and only regenerated at release time: this is the
       # gate that catches a guide or a guarded entry point added on a branch without rerunning

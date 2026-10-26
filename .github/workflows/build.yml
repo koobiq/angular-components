@@ -16,6 +16,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/workflows/actions/setup-node
       - uses: ./.github/workflows/actions/build-packages
+      # mcp.yml triggers off this workflow's completion and reads this instead of building
+      # @koobiq/components a second time.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dist-components
+          path: dist/components
+          retention-days: 1
       # Yarn's node-modules linker tolerates peer conflicts that npm rejects, so the built packages
       # have to be resolved with npm to catch an ERESOLVE before it reaches consumers.
       - run: yarn run check-npm-resolution
