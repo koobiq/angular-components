@@ -259,7 +259,7 @@ export class KbqTreeSelectChange<T = any> {
     ],
     exportAs: 'kbqTreeSelect'
 })
-export class KbqTreeSelect<T = any>
+export class KbqTreeSelect<T = any, K = T>
     extends KbqAbstractSelect
     implements
         AfterViewChecked,
@@ -319,7 +319,8 @@ export class KbqTreeSelect<T = any>
      * Deals with the selection logic. The projected `kbq-tree-selection` shares the same instance.
      *
      * `T` is the type of the data nodes, the same as the projected tree's. A template infers it from `[clearPredicate]`
-     * alone, apart from the tree; a query names it: `viewChild.required<KbqTreeSelect<Node>>(KbqTreeSelect)`.
+     * alone, apart from the tree; a query names it: `viewChild.required<KbqTreeSelect<Node>>(KbqTreeSelect)`, and a
+     * select whose tree control has a `trackBy` names the key type too: `KbqTreeSelect<Node, string>`.
      */
     selectionModel: SelectionModel<T>;
 
@@ -405,7 +406,7 @@ export class KbqTreeSelect<T = any>
 
     readonly customTagTemplateRef = contentChild('kbqSelectTagContent', { read: TemplateRef });
 
-    readonly tree = contentChild<KbqTreeSelection<T>>(KbqTreeSelection);
+    readonly tree = contentChild<KbqTreeSelection<T, K>>(KbqTreeSelection);
 
     readonly search = contentChild(KbqSelectSearch);
 
@@ -467,7 +468,7 @@ export class KbqTreeSelect<T = any>
      * Event emitted whenever the tree's `selectAllOptions()` runs — a click on the `selectAll` master
      * checkbox, the Ctrl/Cmd + A shortcut, or a custom `selectAllHandler` that delegates to it.
      */
-    readonly onSelectAll = output<KbqSelectAllEvent<KbqTreeOption<T>, KbqTreeSelect<T>>>();
+    readonly onSelectAll = output<KbqSelectAllEvent<KbqTreeOption<T>, KbqTreeSelect<T, K>>>();
 
     /** Classes to be passed to the select panel. Supports the same syntax as the `[class]` binding. */
     readonly panelClass = input<
@@ -667,8 +668,8 @@ export class KbqTreeSelect<T = any>
 
     /** @docs-private */
     readonly selectAllHandlerInput = input<
-        ((event: KeyboardEvent, select: KbqTreeSelect<T>) => void) | undefined,
-        ((event: KeyboardEvent, select: KbqTreeSelect<T>) => void) | undefined
+        ((event: KeyboardEvent, select: KbqTreeSelect<T, K>) => void) | undefined,
+        ((event: KeyboardEvent, select: KbqTreeSelect<T, K>) => void) | undefined
     >(undefined, {
         alias: 'selectAllHandler',
         transform: kbqSelectAllHandlerTransform
@@ -677,12 +678,12 @@ export class KbqTreeSelect<T = any>
     /**
      * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used.
      */
-    get selectAllHandler(): (event: KeyboardEvent, select: KbqTreeSelect<T>) => void {
+    get selectAllHandler(): (event: KeyboardEvent, select: KbqTreeSelect<T, K>) => void {
         return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
     }
 
     /** Function for handling the combination Ctrl + A (select all). By default, the internal handler is used. */
-    private defaultSelectAllHandler(event: KeyboardEvent, select: KbqTreeSelect<T>): void {
+    private defaultSelectAllHandler(event: KeyboardEvent, select: KbqTreeSelect<T, K>): void {
         const searchInput = isInput(event) ? (event.target as HTMLInputElement) : null;
 
         if (shouldSelectSearchText(searchInput)) {

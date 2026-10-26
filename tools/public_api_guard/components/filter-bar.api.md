@@ -843,7 +843,7 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
     onOpen(): void;
     open(): void;
     readonly searchControl: FormControl<string | null>;
-    readonly select: _angular_core.Signal<KbqTreeSelect<KbqTreeSelectFlatNode>>;
+    readonly select: _angular_core.Signal<KbqTreeSelect<KbqTreeSelectFlatNode, KbqTreeSelectFlatNode>>;
     // (undocumented)
     protected transformer: (node: KbqTreeSelectNode, level: number, parent: KbqTreeSelectFlatNode | null) => KbqTreeSelectFlatNode;
     // (undocumented)
