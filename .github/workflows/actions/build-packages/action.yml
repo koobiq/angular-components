@@ -1,5 +1,5 @@
 name: Build packages
-description: Build all koobiq packages
+description: Build every koobiq package except @koobiq/mcp, which only mcp.yml and publish.yml read
 runs:
   using: composite
   steps:
@@ -24,6 +24,3 @@ runs:
     - name: Build @koobiq/schematics
       shell: bash
       run: yarn run build:schematics
-    - name: Build @koobiq/mcp
-      shell: bash
-      run: yarn run build:mcp

@@ -42,6 +42,11 @@ jobs:
       - name: Build packages
         uses: ./.github/workflows/actions/build-packages
 
+      # Not part of build-packages: no other workflow that uses it reads dist/mcp, so it builds
+      # only here and in mcp.yml's own job, never as a side effect of api.yml/build.yml/docs CI.
+      - name: Build @koobiq/mcp
+        run: yarn run build:mcp
+
       - name: Check npm can resolve the packages
         run: yarn run check-npm-resolution
 
