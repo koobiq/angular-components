@@ -1,5 +1,5 @@
 name: Build packages
-description: Build every koobiq package except @koobiq/mcp, which only mcp.yml and publish.yml read
+description: Build every koobiq package except @koobiq/mcp
 runs:
   using: composite
   steps:
