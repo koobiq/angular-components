@@ -12,6 +12,21 @@ const enum CommitNote {
 /** Internal key under which doc-related commits are grouped, regardless of their package. */
 const DOCS_SECTION_KEY = 'documentation';
 
+/** A rendered commit line, ` * <type>  <entry> <commit link>`; captures the entry with its commit link. */
+const COMMIT_LINE_PATTERN = /^\s*\* [a-z]+(?: [a-z]+)* {2}(.+)$/;
+
+/** The commit link that ends a rendered line: a linked short hash or a bare one. */
+const COMMIT_LINK_PATTERN = /\s+(?:\(\[[^\]]+\]\([^)]+\)\)|[0-9a-f]{7,40}|undefined)$/;
+
+/** Pull request references that end a subject, linked by the preset or left as is. */
+const PULL_REQUEST_REFERENCES_PATTERN = /(?:\s+\((?:\[#\d+\]\([^)]+\)|#\d+)\))+$/;
+
+/** A header marked as a breaking change with `!`, e.g. `refactor(components)!: remove unused code`. */
+const BREAKING_HEADER_PATTERN = /^\w*(?:\(.*\))?!: /;
+
+/** A ticket reference that older releases linked to a tracker URL, e.g. `[#DS-1234](…)`. */
+const LINKED_TICKET_PATTERN = /\[#([A-Za-z]+-\d+)\]\([^)]*\)/g;
+
 /** Interface that describes a package in the changelog. */
 interface IChangelogPackage {
     commits: any[];
@@ -50,22 +65,50 @@ function renderRepositoryUrl(context: any): string {
     return `${host}${owner}${context.repository}`;
 }
 
+/** Renders the optional bold scope and the subject (or the raw header when there is no subject). */
+function renderCommitEntry(commit: any): string {
+    const subject = commit.subject || commit.header;
+
+    return commit.scope ? `**${commit.scope}:** ${subject}` : subject;
+}
+
 /**
  * Renders a single commit entry.
  *
  * Replaces the former commit.hbs. conventional-changelog-writer 9 dropped Handlebars entirely
  * and takes render functions instead, so the template is expressed directly. The output is
- * byte for byte the same: an optional bold scope, the subject (or the raw header when there is
- * no subject), then either a linked short hash or the bare short hash.
+ * byte for byte the same: the entry, then either a linked short hash or the bare short hash.
  */
 function renderCommit(context: any, commit: any): string {
-    const scope = commit.scope ? ` **${commit.scope}:**` : '';
-    const subject = commit.subject || commit.header;
     const link = context.linkReferences
         ? `([${commit.shortHash}](${renderRepositoryUrl(context)}/${context.commit}/${commit.hash}))`
         : commit.shortHash;
 
-    return `${scope} ${subject} ${link}`;
+    return ` ${renderCommitEntry(commit)} ${link}`;
+}
+
+/**
+ * Identifies a change by its scope and subject. The SHA and the pull request number are left out:
+ * a fix ported to a release branch gets a new SHA, and a new number when it goes through its own
+ * pull request. A ticket counts as `#DS-1234` whether or not an older release linked it.
+ */
+function getChangeKey(entry: string): string {
+    return entry.replace(LINKED_TICKET_PATTERN, '#$1').replace(PULL_REQUEST_REFERENCES_PATTERN, '');
+}
+
+/** Collects the change keys of every commit line in an existing changelog. */
+function collectChangeKeys(changelogContent: string): Set<string> {
+    const keys = new Set<string>();
+
+    for (const line of changelogContent.split(/\r?\n/)) {
+        const entry = COMMIT_LINE_PATTERN.exec(line)?.[1];
+
+        if (entry) {
+            keys.add(getChangeKey(entry.replace(COMMIT_LINK_PATTERN, '')));
+        }
+    }
+
+    return keys;
 }
 
 export function createChangelogWriterOptions(
@@ -75,6 +118,7 @@ export function createChangelogWriterOptions(
     logSkippedDuplicate: (commit: any) => void = () => {}
 ) {
     const commitSortFunction = compareCommitsBy(['type', 'scope', 'subject']);
+    const existingChangeKeys = collectChangeKeys(existingChangelogContent);
 
     return {
         // Replaces the former template.hbs and commit.hbs, which rendered the commits grouped by
@@ -109,12 +153,19 @@ export function createChangelogWriterOptions(
         //    `commit.type === 'docs'` mapping unless the commit also carries a note, so a plain
         //    `docs:` commit would otherwise never form a "Documentation" commit group. That case is
         //    handled here instead of being delegated to the preset.
+        //
+        // 3. The preset knows no `!` in a header. It gets the note a BREAKING CHANGE footer would give,
+        //    which also keeps a type the preset discards otherwise, such as `refactor!:`.
         transform: (commit: any, context: any) => {
             if (commit.type === 'docs' && commit.notes.length === 0) {
                 return { ...commit, type: 'Documentation' };
             }
 
             const notes = commit.notes.map((note: any) => ({ ...note, type: note.title }));
+
+            if (notes.length === 0 && BREAKING_HEADER_PATTERN.test(commit.header ?? '')) {
+                notes.push({ title: CommitNote.BreakingChange, type: CommitNote.BreakingChange, text: commit.subject });
+            }
 
             return presetWriterOptions.transform({ ...commit, notes }, context);
         },
@@ -127,14 +178,6 @@ export function createChangelogWriterOptions(
 
             context.commitGroups.forEach((group: any) => {
                 group.commits.forEach((commit: any) => {
-                    // Filter out duplicate commits. Note that we cannot compare the SHA because the commits
-                    // will have a different SHA if they are being cherry-picked into a different branch.
-                    if (existingChangelogContent.includes(commit.subject)) {
-                        logSkippedDuplicate(commit);
-
-                        return;
-                    }
-
                     if (!commit.package && commit.scope) {
                         const matchingPackage = packageNames.find((pkgName: string) => pkgName === commit.scope);
 
@@ -157,6 +200,15 @@ export function createChangelogWriterOptions(
                         commit.scope = null;
                     }
 
+                    // Compared once the commit is in its final form, as the changelog holds it: with the
+                    // package scope dropped. Tickets stay plain `#DS-1234`: the tracker is internal, and
+                    // `bugs.url` is where npm users report bugs, so a link built from it leads nowhere.
+                    if (existingChangeKeys.has(getChangeKey(renderCommitEntry(commit)))) {
+                        logSkippedDuplicate(commit);
+
+                        return;
+                    }
+
                     if (!packageGroups[packageName]) {
                         packageGroups[packageName] = { commits: [], breakingChanges: [], deprecations: [] };
                     }
@@ -173,14 +225,6 @@ export function createChangelogWriterOptions(
                             throw Error(`Found commit note that is not known: ${JSON.stringify(n, null, 4)}`);
                         }
                     });
-
-                    if (typeof commit.subject === 'string' && context.packageData.bugs.url) {
-                        const urlIssue = `${context.packageData.bugs.url}/issue/`;
-
-                        commit.subject = commit.subject.replace(/#([a-zA-Z]+-[0-9]+)/g, (_: any, issue: any) => {
-                            return `[#${issue}](${urlIssue}${issue})`;
-                        });
-                    }
 
                     packageGroup.commits.push({ ...commit, type });
                 });
