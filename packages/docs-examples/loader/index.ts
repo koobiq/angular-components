@@ -189,6 +189,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/checkbox').then((m) => m.CheckboxMultilineExample);
         case 'checkbox-overview':
             return import('@koobiq/docs-examples/components/checkbox').then((m) => m.CheckboxOverviewExample);
+        case 'checkbox-validation':
+            return import('@koobiq/docs-examples/components/checkbox').then((m) => m.CheckboxValidationExample);
         case 'pseudo-checkbox':
             return import('@koobiq/docs-examples/components/checkbox').then((m) => m.PseudoCheckboxExample);
         case 'clamped-list-dotted':
@@ -791,6 +793,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/radio').then((m) => m.RadioOverviewExample);
         case 'radio-style':
             return import('@koobiq/docs-examples/components/radio').then((m) => m.RadioStyleExample);
+        case 'radio-validation':
+            return import('@koobiq/docs-examples/components/radio').then((m) => m.RadioValidationExample);
         case 'resizer-overview':
             return import('@koobiq/docs-examples/components/resizer').then((m) => m.ResizerOverviewExample);
         case 'native-scrollbar':
@@ -1137,6 +1141,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/toggle').then((m) => m.ToggleMultilineExample);
         case 'toggle-overview':
             return import('@koobiq/docs-examples/components/toggle').then((m) => m.ToggleOverviewExample);
+        case 'toggle-validation':
+            return import('@koobiq/docs-examples/components/toggle').then((m) => m.ToggleValidationExample);
         case 'toggle-with-hint':
             return import('@koobiq/docs-examples/components/toggle').then((m) => m.ToggleWithHintExample);
         case 'tooltip-arrow':

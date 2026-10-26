@@ -36,3 +36,11 @@ Possible values: noop, check, check-indeterminate
 ### Multiline
 
 <Example id="checkbox-multiline" />
+
+### Validation
+
+To show a validation error, bind the checkbox to a form control, apply `required` or `Validators.requiredTrue`, and put the error text in a `kbq-error` inside the checkbox.
+
+To show the error at another moment, for example only after the form is submitted, pass a matcher to the `errorStateMatcher` input. The matchers are described in the [Validation guide](/en/other/validation).
+
+<Example id="checkbox-validation" />

@@ -12,6 +12,14 @@
 
 <Example id="toggle-error" />
 
+#### Validation
+
+To show a validation error, bind the toggle to a form control, apply `Validators.requiredTrue`, and put the error text in a `kbq-error` inside the toggle.
+
+To show the error at another moment, pass a matcher to the `errorStateMatcher` input. The matchers are described in the [Validation guide](/en/other/validation).
+
+<Example id="toggle-validation" />
+
 #### Indeterminate state
 
 This state is used to reflect partial selection or uncertainty.

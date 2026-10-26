@@ -15,6 +15,50 @@
     }
 }
 
+// Lines up with the option text, as `.kbq-radio-label-content` indents it.
+.kbq-radio-group__subscript {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kbq-radio-size-normal-vertical-content-padding);
+
+    // Sits as close to the last option as a hint to its label, as in a checkbox: the gap of the group, which spaces
+    // the options apart, would otherwise push the error away from them.
+    margin-top: calc(var(--kbq-radio-size-normal-vertical-content-padding) - var(--kbq-radio-size-normal-vertical-gap));
+
+    padding-left: kbq-sum-series-css-variables(
+        [radio-size-normal-outer-size,
+        radio-size-normal-horizontal-content-padding,
+        calc(var(--kbq-radio-size-normal-outer-circle-border-width) * 2)]
+    );
+}
+
+.kbq-radio-group_label-before .kbq-radio-group__subscript {
+    padding-left: 0;
+    padding-right: kbq-sum-series-css-variables(
+        [radio-size-normal-outer-size,
+        radio-size-normal-horizontal-content-padding,
+        calc(var(--kbq-radio-size-normal-outer-circle-border-width) * 2)]
+    );
+}
+
+.kbq-radio-group_big .kbq-radio-group__subscript {
+    margin-top: calc(var(--kbq-radio-size-big-vertical-content-padding) - var(--kbq-radio-size-big-vertical-gap));
+    padding-left: kbq-sum-series-css-variables(
+        [radio-size-big-outer-size,
+        radio-size-big-horizontal-content-padding,
+        calc(var(--kbq-radio-size-big-outer-circle-border-width) * 2)]
+    );
+}
+
+.kbq-radio-group_big.kbq-radio-group_label-before .kbq-radio-group__subscript {
+    padding-left: 0;
+    padding-right: kbq-sum-series-css-variables(
+        [radio-size-big-outer-size,
+        radio-size-big-horizontal-content-padding,
+        calc(var(--kbq-radio-size-big-outer-circle-border-width) * 2)]
+    );
+}
+
 // Top-level host container.
 .kbq-radio-button {
     // Inline-block rather than inline-flex: the host's own line box keeps the button one line tall

@@ -50,6 +50,43 @@ test.describe('KbqCheckboxModule', () => {
         });
     });
 
+    test.describe('E2eCheckboxValidation', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eCheckboxValidation');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eCheckboxValidation');
+
+            const component = getComponent(page);
+            const screenshotTarget = component.getByTestId('e2eScreenshotTarget');
+
+            // The focus ring is put on the native inputs after the first render.
+            await expect(component.locator('.e2e-focused input.cdk-keyboard-focused')).toHaveCount(3);
+            await expect(screenshotTarget).toHaveScreenshot('03-validation-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('03-validation-dark.png');
+        });
+
+        test('should take the same space in the error state without kbq-error', async ({ page }) => {
+            await page.goto('/E2eCheckboxValidation');
+
+            const component = getComponent(page);
+
+            for (const variant of ['WithLabel', 'WithoutLabel']) {
+                const invalid = component.getByTestId(`e2eCheckboxInvalid${variant}`);
+
+                await expect(invalid).toHaveClass(/kbq-invalid/);
+
+                const validBox = await component.getByTestId(`e2eCheckboxValid${variant}`).boundingBox();
+                const invalidBox = await invalid.boundingBox();
+
+                expect({ width: invalidBox?.width, height: invalidBox?.height }).toEqual({
+                    width: validBox?.width,
+                    height: validBox?.height
+                });
+            }
+        });
+    });
+
     test.describe('E2eCheckboxHeight', () => {
         const getComponent = (page: Page): Locator => page.getByTestId('e2eCheckboxHeight');
         const getBigToggle = (locator: Locator): Locator => locator.getByTestId('e2eBigToggle');
