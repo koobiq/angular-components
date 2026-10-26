@@ -45,6 +45,35 @@ $easing: cubic-bezier(0.4, 0, 0.2, 1);
     .kbq-button-icon {
         --kbq-button-filled-contrast-fade-off-background: transparent;
         --kbq-button-filled-contrast-fade-on-background: transparent;
+
+        // The disabled tokens are grey tints made for light surfaces and are almost invisible on this dark panel,
+        // so a disabled button keeps its enabled colors and only fades out.
+        &.kbq-disabled {
+            --kbq-button-filled-contrast-fade-off-states-disabled-background: transparent;
+            --kbq-button-filled-contrast-fade-off-states-disabled-border: transparent;
+            --kbq-button-filled-contrast-fade-off-states-disabled-foreground: var(
+                --kbq-button-filled-contrast-fade-off-foreground
+            );
+            --kbq-button-filled-contrast-fade-off-states-disabled-left-icon: var(
+                --kbq-button-filled-contrast-fade-off-left-icon
+            );
+            --kbq-button-filled-contrast-fade-off-states-disabled-right-icon: var(
+                --kbq-button-filled-contrast-fade-off-right-icon
+            );
+            --kbq-button-filled-contrast-fade-on-states-disabled-background: transparent;
+            --kbq-button-filled-contrast-fade-on-states-disabled-border: transparent;
+            --kbq-button-filled-contrast-fade-on-states-disabled-foreground: var(
+                --kbq-button-filled-contrast-fade-on-foreground
+            );
+            --kbq-button-filled-contrast-fade-on-states-disabled-left-icon: var(
+                --kbq-button-filled-contrast-fade-on-left-icon
+            );
+            --kbq-button-filled-contrast-fade-on-states-disabled-right-icon: var(
+                --kbq-button-filled-contrast-fade-on-right-icon
+            );
+
+            opacity: var(--kbq-opacity-disabled);
+        }
     }
 }
 
