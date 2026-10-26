@@ -5,8 +5,6 @@ describe(KbqMarkdownService.name, () => {
     let service: KbqMarkdownService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({ providers: [KbqMarkdownService] });
-
         service = TestBed.inject(KbqMarkdownService);
     });
 

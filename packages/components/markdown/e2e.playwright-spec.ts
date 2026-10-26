@@ -1,7 +1,7 @@
 import { expect, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from '../../e2e/utils';
 
-test.describe('KbqMarkdownModule', () => {
+test.describe('KbqMarkdown', () => {
     test.describe('E2eMarkdownStates', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eMarkdownStates');
 

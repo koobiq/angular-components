@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, DebugElement, signal, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqMarkdown, KbqMarkdownModule } from '@koobiq/components/markdown';
+import { KbqMarkdown } from '@koobiq/components/markdown';
 
-const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
-    TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
+const createComponent = <T>(component: Type<T>): ComponentFixture<T> => {
+    TestBed.configureTestingModule({ imports: [component] }).compileComponents();
     const fixture = TestBed.createComponent<T>(component);
 
     fixture.autoDetectChanges();
@@ -28,7 +28,7 @@ const getMarkdownDebugElement = (debugElement: DebugElement): DebugElement => {
 
 @Component({
     selector: 'generate-html-from-markdown-string',
-    imports: [KbqMarkdownModule],
+    imports: [KbqMarkdown],
     template: `
         <kbq-markdown [markdownText]="markdownText" />
     `,
@@ -94,7 +94,7 @@ npm install jquery
 
 @Component({
     selector: 'generate-html-from-markdown-inline-template',
-    imports: [KbqMarkdownModule],
+    imports: [KbqMarkdown],
     // prettier-ignore
     template: `
 <kbq-markdown ngPreserveWhitespaces>
@@ -161,7 +161,7 @@ class GenerateHTMLFromMarkdownInlineTemplate {}
 
 @Component({
     selector: 'markdown-with-changing-text',
-    imports: [KbqMarkdownModule],
+    imports: [KbqMarkdown],
     template: `
         <kbq-markdown [markdownText]="markdownText()" />
     `,
@@ -173,7 +173,7 @@ class MarkdownWithChangingText {
 
 @Component({
     selector: 'markdown-with-text-and-projected-content',
-    imports: [KbqMarkdownModule],
+    imports: [KbqMarkdown],
     // prettier-ignore
     template: `
 <kbq-markdown ngPreserveWhitespaces [markdownText]="markdownText()"># from the projection</kbq-markdown>
@@ -185,6 +185,15 @@ class MarkdownWithTextAndProjectedContent {
 }
 
 describe(KbqMarkdown.name, () => {
+    // The component is standalone, so the service it injects has to be reachable without `KbqMarkdownModule`
+    it('should render when imported on its own, without the module or a provider for the service', async () => {
+        const fixture = createComponent(MarkdownWithChangingText);
+
+        await fixture.whenStable();
+
+        expect(fixture.nativeElement.querySelector('.kbq-markdown__output .kbq-markdown__h1')).not.toBeNull();
+    });
+
     it('should generate html from markdown string', () => {
         const { debugElement } = createComponent(GenerateHTMLFromMarkdownString);
 
@@ -265,7 +274,7 @@ describe(KbqMarkdown.name, () => {
 
 @Component({
     selector: 'markdown-with-changing-projection',
-    imports: [KbqMarkdownModule],
+    imports: [KbqMarkdown],
     // prettier-ignore
     template: `
 <kbq-markdown ngPreserveWhitespaces>{{ projected() }}</kbq-markdown>
@@ -278,7 +287,7 @@ class MarkdownWithChangingProjection {
 
 @Component({
     selector: 'markdown-with-deferred-projection',
-    imports: [KbqMarkdownModule],
+    imports: [KbqMarkdown],
     // prettier-ignore
     template: `
 <kbq-markdown ngPreserveWhitespaces>@if (ready()) {# later}</kbq-markdown>

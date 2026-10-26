@@ -7,7 +7,7 @@ import { CLASS_PREFIX, MARKDOWN_TAGS_TO_CLASS_ALIAS, MARKDOWN_WHOLE_TAGS_TO_CLAS
  *
  * @docs-private
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class KbqMarkdownService {
     /**
      * Converts a given Markdown string into HTML.
