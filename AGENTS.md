@@ -113,7 +113,7 @@ There are two types of test files per component:
 ```bash
 # Unit tests (Vitest)
 yarn run styles:build-all # CI does this before the unit suites; do the same before a full local run
-yarn run unit:all         # The `angular` and `node` projects of vitest.config.mts; `unit:mcp`/`unit:mcp:dts` cover the `mcp` one
+yarn run unit:all         # Every suite in one Vitest run: the `angular` and `node` projects of vitest.config.mts
 yarn run unit:components  # Run component unit tests
 yarn run unit:components-experimental
 yarn run unit:angular-luxon-adapter
@@ -122,8 +122,7 @@ yarn run unit:schematics # Run schematics tests
 yarn run unit:cli
 yarn run unit:koobiq-docs            # Docs app specs
 yarn run unit:tools                  # Specs under tools/
-yarn run unit:mcp                    # MCP server, everything that does not need a built @koobiq/components (regenerates its own index first)
-yarn run unit:mcp:dts                # The MCP specs that need a build: the live reader and the tools built on it, the .d.ts parser check, and the stdio smoke test (dist/mcp)
+yarn run unit:mcp                    # Just the MCP server's specs (regenerates its own index first); skips what needs a build when there isn't one
 yarn run check-spec-types            # Type-check the specs, which Vitest compiles unchecked (part of the lint gate)
 npx vitest run "<TEST_PATH_PATTERN>" # Run specific tests (e.g., npx vitest run packages/components/button/button.component.spec.ts)
 npx vitest run "<TEST_PATH_PATTERN>" -t "<test name pattern>"
@@ -180,16 +179,16 @@ The guard reads the flattened typings ng-packagr writes to `dist/components/type
 
 Every pull request runs these workflows:
 
-| Workflow                          | What it runs                                                                                                                                                                              |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-spec-types`, `check-tokens-data`                              |
-| Unit tests                        | `styles:build-all`, then the `angular` and `node` projects of `vitest.config.mts` (not the `mcp` one — that is `mcp.yml`)                                                                 |
-| MCP                               | `build:components` and `build:mcp` on their own — not the full `build-packages` action, which also builds things no mcp spec reads — then `check-mcp-data`, `unit:mcp` and `unit:mcp:dts` |
-| E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                                                                          |
-| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs` and `check-llms`                                                          |
-| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build`                                                           |
-| Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label                                                                    |
-| License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                                                                                |
+| Workflow                          | What it runs                                                                                                                                                 |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-spec-types`, `check-tokens-data` |
+| Unit tests                        | `styles:build-all`, then `unit:all` (one Vitest run of the `angular` and `node` projects, mcp specs included)                                                |
+| MCP                               | `build:mcp` on its own (needs no `@koobiq/components` build) and `check-mcp-data`                                                                            |
+| E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                                             |
+| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs` and `check-llms`                             |
+| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build`                              |
+| Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label                                       |
+| License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                                                   |
 
 A docs preview is deployed to Firebase for pull requests opened from this repository.
 

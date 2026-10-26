@@ -8,6 +8,48 @@ answer is pinned to the versions that project actually resolved. Component API, 
 read from the installed packages; examples, guides and the API history ship with this package, built
 from a checkout of `koobiq/angular-components`.
 
+## Tools
+
+| Tool                   | Answers                                                                                                                            |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `search`               | one ranked index over entry points, symbols, members, examples, icons, tokens and guides, in English and Russian                   |
+| `get_component`        | inputs under the names a template writes, outputs, selectors, `exportAs`                                                           |
+| `get_example`          | source of one live example from the documentation site                                                                             |
+| `get_icon`             | usable attribute value and markup for an icon                                                                                      |
+| `get_token`            | CSS custom property, value per theme, deprecation status                                                                           |
+| `get_guide`            | installation, theming, localization, validation, schematics, smart search, migration — narrowed in three steps, in either language |
+| `migrate`              | what changed between two versions, which entry points lost API, where the written instructions are                                 |
+| `which_component_when` | which component answers a task, and which neighbour would be the wrong choice — with the reason                                    |
+| `list_components`      | the complete list of documented areas, as ids the other tools accept                                                               |
+
+## Using it on a project
+
+Build it, then install the tarball into the project that should use it:
+
+```bash
+yarn build:mcp          # from the repository root
+cd dist/mcp && npm pack # produces koobiq-mcp-*.tgz
+npm install -D /path/to/koobiq-mcp-*.tgz
+```
+
+Then commit a `.mcp.json` so the whole team gets the same server:
+
+```json
+{
+    "mcpServers": {
+        "koobiq": { "command": "npx", "args": ["-y", "koobiq-mcp"] }
+    }
+}
+```
+
+The server must start inside the project, because that is how it finds the `node_modules` it reads.
+Where a package cannot be found by walking `node_modules` — this repository, which builds
+`@koobiq/components` and never installs it, or Yarn PnP, which has none — point at it directly:
+
+```bash
+KOOBIQ_COMPONENTS_ROOT=/path/to/package # also KOOBIQ_ICONS_ROOT, KOOBIQ_TOKENS_ROOT
+```
+
 ## Where the data comes from
 
 | Answer                                        | Read from                                                      |
@@ -77,48 +119,6 @@ rather than shipping a version per major. `exports.types` in the installed packa
 is read first on every major; a directory scan is the fallback for a layout `exports` does not cover.
 There is no backport line: a project on 18.x gets the same `@koobiq/mcp` as one on 21.x.
 
-## Tools
-
-| Tool                   | Answers                                                                                                                            |
-| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `search`               | one ranked index over entry points, symbols, members, examples, icons, tokens and guides, in English and Russian                   |
-| `get_component`        | inputs under the names a template writes, outputs, selectors, `exportAs`                                                           |
-| `get_example`          | source of one live example from the documentation site                                                                             |
-| `get_icon`             | usable attribute value and markup for an icon                                                                                      |
-| `get_token`            | CSS custom property, value per theme, deprecation status                                                                           |
-| `get_guide`            | installation, theming, localization, validation, schematics, smart search, migration — narrowed in three steps, in either language |
-| `migrate`              | what changed between two versions, which entry points lost API, where the written instructions are                                 |
-| `which_component_when` | which component answers a task, and which neighbour would be the wrong choice — with the reason                                    |
-| `list_components`      | the complete list of documented areas, as ids the other tools accept                                                               |
-
-## Using it on a project
-
-Build it, then install the tarball into the project that should use it:
-
-```bash
-yarn build:mcp          # from the repository root
-cd dist/mcp && npm pack # produces koobiq-mcp-*.tgz
-npm install -D /path/to/koobiq-mcp-*.tgz
-```
-
-Then commit a `.mcp.json` so the whole team gets the same server:
-
-```json
-{
-    "mcpServers": {
-        "koobiq": { "command": "npx", "args": ["-y", "koobiq-mcp"] }
-    }
-}
-```
-
-The server must start inside the project, because that is how it finds the `node_modules` it reads.
-Where a package cannot be found by walking `node_modules` — this repository, which builds
-`@koobiq/components` and never installs it, or Yarn PnP, which has none — point at it directly:
-
-```bash
-KOOBIQ_COMPONENTS_ROOT=/path/to/package # also KOOBIQ_ICONS_ROOT, KOOBIQ_TOKENS_ROOT
-```
-
 ## Development
 
 ```bash
@@ -126,10 +126,11 @@ yarn build:mcp:data  # regenerate the committed guides.json and history.json (ru
 yarn build:mcp:index # regenerate index.json/examples.json alone — what unit:mcp needs, no dist/components
 yarn build:mcp       # build:mcp:index, then compile src → dist and assemble dist/mcp
 yarn check-mcp-data  # gate: guides.json not behind docs/guides — no git needed (history.json needs none: see above)
-yarn unit:mcp        # Vitest, everything that does not need a built @koobiq/components (regenerates its own index first)
-yarn unit:mcp:dts    # the specs that need a build: the .d.ts reader (build:components) and the stdio smoke test (build:mcp)
+yarn unit:mcp        # Vitest over this package's specs (regenerates its own index first)
 yarn mcp:probe       # drive the real server over stdio and price every answer
 ```
 
-See "The four files in `data/`" above for what each command actually regenerates. The live API tests
-(`unit:mcp:dts`) read `dist/components`, so `yarn build:components` has to have run at least once.
+See "The four files in `data/`" above for what each command actually regenerates. A few specs
+(the `.d.ts` reader, the stdio smoke test) read `dist/components`/`dist/mcp` and skip themselves,
+not fail, when neither has been built — run `yarn build:components` and `yarn build:mcp` first to
+exercise them for real.

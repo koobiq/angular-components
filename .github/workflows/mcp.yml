@@ -1,36 +1,22 @@
 name: MCP
 
 on:
-  workflow_run:
-    workflows: [Build]
-    types: [completed]
+  push:
+    branches:
+      - main
+  pull_request:
 
 permissions:
   contents: read
-  actions: read # to download build.yml's dist-components artifact across workflows
 
 jobs:
   mcp:
-    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          # The default checkout on workflow_run is the branch the workflow file lives on, not
-          # the commit that triggered the Build run.
-          ref: ${{ github.event.workflow_run.head_sha }}
       - uses: ./.github/workflows/actions/setup-node
-      - name: Download dist/components built by the triggering Build run
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
-        with:
-          name: dist-components
-          path: dist/components
-          run-id: ${{ github.event.workflow_run.id }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       - run: yarn run build:mcp
       # guides.json/history.json are committed and only regenerated at release time: this is the
       # gate that catches a guide or a guarded entry point added on a branch without rerunning
       # `build:mcp:data`. Needs no git history, just the checkout above.
       - run: yarn run check-mcp-data
-      - run: yarn run unit:mcp
-      - run: yarn run unit:mcp:dts
