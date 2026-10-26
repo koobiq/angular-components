@@ -187,27 +187,159 @@ describe(createChangelogWriterOptions.name, () => {
         expect(output).toContain('**button:** add icon');
     });
 
-    it('skips a commit whose subject already exists in the changelog', () => {
-        const onSkipDuplicate = vi.fn();
-        const commitGroups = [
-            {
-                title: 'Bug Fixes',
-                commits: [
-                    makeCommit({ header: 'fix(button): fix duplicate', scope: 'button', subject: 'fix duplicate' }),
-                    makeCommit({ header: 'fix(button): fix new one', scope: 'button', subject: 'fix new one' })
-                ]
-            }
-        ];
+    describe('duplicates', () => {
+        const issuesUrl = 'https://github.com/koobiq/angular-components/issues';
+        const commitUrl = 'https://github.com/koobiq/angular-components/commit';
 
-        const output = renderChangelog(commitGroups, {
-            existingChangelogContent: '# 1.0.0\n\n * bug fix fix duplicate',
-            onSkipDuplicate
+        it('skips a commit whose scope and subject already exist in the changelog', () => {
+            const onSkipDuplicate = vi.fn();
+            const commitGroups = [
+                {
+                    title: 'Bug Fixes',
+                    commits: [
+                        makeCommit({ header: 'fix(button): fix duplicate', scope: 'button', subject: 'fix duplicate' }),
+                        makeCommit({ header: 'fix(button): fix new one', scope: 'button', subject: 'fix new one' })
+                    ]
+                }
+            ];
+
+            const output = renderChangelog(commitGroups, {
+                existingChangelogContent: `# 1.0.0\n\n### Koobiq\n\n * bug fix  **button:** fix duplicate ([e161ca7](${commitUrl}/e161ca7))\n`,
+                onSkipDuplicate
+            });
+
+            expect(output).not.toContain('fix duplicate');
+            expect(output).toContain('fix new one');
+            expect(onSkipDuplicate).toHaveBeenCalledTimes(1);
+            expect(onSkipDuplicate).toHaveBeenCalledWith(
+                expect.objectContaining({ header: 'fix(button): fix duplicate' })
+            );
         });
 
-        expect(output).not.toContain('fix duplicate');
-        expect(output).toContain('fix new one');
-        expect(onSkipDuplicate).toHaveBeenCalledTimes(1);
-        expect(onSkipDuplicate).toHaveBeenCalledWith(expect.objectContaining({ header: 'fix(button): fix duplicate' }));
+        it('skips a commit whose issue reference the changelog holds as a link', () => {
+            const commitGroups = [
+                {
+                    title: 'Bug Fixes',
+                    commits: [
+                        makeCommit({
+                            header: 'fix(toast): stop closing other overlays (#DS-5407) (#2211)',
+                            scope: 'toast',
+                            subject: `stop closing other overlays (#DS-5407) ([#2211](${issuesUrl}/2211))`
+                        })
+                    ]
+                }
+            ];
+
+            const output = renderChangelog(commitGroups, {
+                bugsUrl: issuesUrl,
+                existingChangelogContent: ` * bug fix  **toast:** stop closing other overlays ([#DS-5407](${issuesUrl}/issue/DS-5407)) ([#2211](${issuesUrl}/2211)) ([67d3977](${commitUrl}/67d3977))`
+            });
+
+            expect(output).not.toContain('stop closing other overlays');
+        });
+
+        it('skips a commit that the changelog holds under the number of its backport pull request', () => {
+            const commitGroups = [
+                {
+                    title: 'Bug Fixes',
+                    commits: [
+                        makeCommit({
+                            header: 'fix(tree): roll the state up once (#DS-5779) (#2221)',
+                            scope: 'tree',
+                            subject: `roll the state up once (#DS-5779) ([#2221](${issuesUrl}/2221))`
+                        })
+                    ]
+                }
+            ];
+
+            const output = renderChangelog(commitGroups, {
+                bugsUrl: issuesUrl,
+                existingChangelogContent: ` * bug fix  **tree:** roll the state up once ([#DS-5779](${issuesUrl}/issue/DS-5779)) ([#2223](${issuesUrl}/2223)) ([a8eb783](${commitUrl}/a8eb783))`
+            });
+
+            expect(output).not.toContain('roll the state up once');
+        });
+
+        it('skips a docs commit whose pull request reference and hash the changelog holds unlinked', () => {
+            const commitGroups = [
+                {
+                    title: 'Documentation',
+                    commits: [
+                        makeCommit({
+                            header: 'docs(ag-grid): add an example (#DS-4572) (#2087)',
+                            scope: 'ag-grid',
+                            subject: 'add an example (#DS-4572) (#2087)'
+                        })
+                    ]
+                }
+            ];
+
+            const output = renderChangelog(commitGroups, {
+                bugsUrl: issuesUrl,
+                existingChangelogContent: ` * docs  **ag-grid:** add an example ([#DS-4572](${issuesUrl}/issue/DS-4572)) (#2087) ([undefined](${commitUrl}/bcfb751))`
+            });
+
+            expect(output).not.toContain('add an example');
+        });
+
+        it('skips a package commit that the changelog holds without its scope, leaving no empty section', () => {
+            const commitGroups = [
+                {
+                    title: 'Bug Fixes',
+                    commits: [
+                        makeCommit({
+                            header: 'fix(cli): generate the metadata (#2152)',
+                            scope: 'cli',
+                            subject: `generate the metadata ([#2152](${issuesUrl}/2152))`
+                        })
+                    ]
+                }
+            ];
+
+            const output = renderChangelog(commitGroups, {
+                existingChangelogContent: `### Cli\n\n * bug fix  generate the metadata ([#2152](${issuesUrl}/2152)) ([e488fdb](${commitUrl}/e488fdb))`
+            });
+
+            expect(output).not.toContain('generate the metadata');
+            expect(output).not.toContain('### Cli');
+        });
+
+        it('keeps a commit whose subject the changelog holds under another scope', () => {
+            const commitGroups = [
+                {
+                    title: 'Bug Fixes',
+                    commits: [
+                        makeCommit({
+                            header: 'fix(time-range): errors following a full review (#DS-5531) (#2158)',
+                            scope: 'time-range',
+                            subject: `errors following a full review (#DS-5531) ([#2158](${issuesUrl}/2158))`
+                        })
+                    ]
+                }
+            ];
+
+            const output = renderChangelog(commitGroups, {
+                bugsUrl: issuesUrl,
+                existingChangelogContent: ` * bug fix  **tabs:** errors following a full review ([#DS-5531](${issuesUrl}/issue/DS-5531)) ([#2160](${issuesUrl}/2160)) ([f68a2da](${commitUrl}/f68a2da))`
+            });
+
+            expect(output).toContain('**time-range:** errors following a full review');
+        });
+
+        it('keeps a commit whose subject is only a part of an existing one', () => {
+            const commitGroups = [
+                {
+                    title: 'Bug Fixes',
+                    commits: [makeCommit({ header: 'fix(select): typo', scope: 'select', subject: 'typo' })]
+                }
+            ];
+
+            const output = renderChangelog(commitGroups, {
+                existingChangelogContent: ` * bug fix  **select:** typo in the hint ([e161ca7](${commitUrl}/e161ca7))`
+            });
+
+            expect(output).toContain('**select:** typo');
+        });
     });
 
     it('rewrites #PROJ-123 issue references in the subject when bugs.url is set', () => {
