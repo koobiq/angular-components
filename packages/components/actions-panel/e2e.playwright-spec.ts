@@ -213,4 +213,30 @@ test.describe('KbqActionsPanel', () => {
             await expect(page.getByTestId('e2eThemeDisabled')).toHaveCSS('opacity', '1');
         });
     });
+
+    test.describe('E2eActionsPanelDisabledOverflow', () => {
+        // The same frame as the overflow example: a 400px container, widened to 650px to reveal the dropdown.
+        test.use({ viewport: { width: 650, height: 240 } });
+
+        test('items overflow and dropdown with a disabled action', async ({ page }) => {
+            await page.goto('/E2eActionsPanelDisabledOverflow');
+            const screenshotTarget = page.getByTestId('e2eScreenshotTarget');
+
+            await page.getByTestId('e2eActionsPanelDisabledOverflowOpenButton').click();
+            await screenshotTarget.evaluate(({ style }) => (style.width = '650px'));
+            // The overflow follows the width through a ResizeObserver: wait until the two actions that no longer fit are hidden.
+            await expect(screenshotTarget.locator('.kbq-overflow-item-hidden')).toHaveCount(2);
+            await page.getByTestId('e2eActionsPanelDisabledOverflowResultButton').click();
+            await expect(page.locator('.kbq-dropdown-item')).toHaveText(['Action 5', 'Action 6']);
+            await expect(page.locator('.kbq-dropdown-item.cdk-focused')).toHaveCount(0);
+
+            const viewport = page.viewportSize()!;
+
+            await page.mouse.move(viewport.width - 1, viewport.height - 1);
+
+            await expect(screenshotTarget).toHaveScreenshot('3-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('3-dark.png');
+        });
+    });
 });

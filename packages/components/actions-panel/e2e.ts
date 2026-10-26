@@ -158,3 +158,85 @@ export class E2eActionsPanelDisabledButtons {
         this.actionsPanel.open(this.templateRef());
     }
 }
+
+@Component({
+    selector: 'e2e-actions-panel-disabled-overflow',
+    imports: [KbqButtonModule, KbqIconModule, KbqOverflowItemsModule, KbqDropdownModule],
+    template: `
+        <button data-testid="e2eActionsPanelDisabledOverflowOpenButton" kbq-button (click)="open()">Open</button>
+
+        <div #overlayContainer data-testid="e2eScreenshotTarget" class="e2e-disabled-overflow-overlay-container"></div>
+
+        <ng-template>
+            <div
+                #kbqOverflowItems="kbqOverflowItems"
+                kbqOverflowItems
+                [additionalResizeObserverTargets]="overlayContainer"
+            >
+                @for (action of actions; track $index) {
+                    <button
+                        color="contrast"
+                        kbq-button
+                        [kbqOverflowItem]="$index"
+                        [disabled]="$index === disabledAction"
+                        [class.layout-margin-left-xxs]="!$first"
+                    >
+                        <i kbq-icon="kbq-user_16"></i>
+                        Action {{ $index }}
+                    </button>
+                }
+
+                @let hiddenItemIDs = kbqOverflowItems.hiddenItemIDs();
+
+                <button
+                    kbqOverflowItemsResult
+                    color="contrast"
+                    kbq-button
+                    aria-label="More"
+                    data-testid="e2eActionsPanelDisabledOverflowResultButton"
+                    [kbqDropdownTriggerFor]="dropdown"
+                >
+                    <i kbq-icon="kbq-ellipsis-vertical_16"></i>
+                </button>
+
+                <kbq-dropdown #dropdown="kbqDropdown">
+                    @for (action of actions; track $index) {
+                        @if (hiddenItemIDs.has($index)) {
+                            <button kbq-dropdown-item>
+                                <i kbq-icon="kbq-user_16"></i>
+                                Action {{ $index }}
+                            </button>
+                        }
+                    }
+                </kbq-dropdown>
+            </div>
+        </ng-template>
+    `,
+    styles: `
+        .e2e-disabled-overflow-overlay-container {
+            border: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
+            display: block;
+            height: 200px;
+            width: 400px;
+            resize: horizontal;
+            overflow: hidden;
+            margin: 0 auto; /* required for test */
+        }
+    `,
+    providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eActionsPanelDisabledOverflow'
+    }
+})
+export class E2eActionsPanelDisabledOverflow {
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    private readonly templateRef = viewChild.required(TemplateRef);
+    private readonly overlayContainer = viewChild.required('overlayContainer', { read: ElementRef });
+    protected readonly actions = Array.from({ length: 7 });
+    protected readonly disabledAction = 2;
+
+    protected open(): void {
+        this.actionsPanel.open(this.templateRef(), { overlayContainer: this.overlayContainer() });
+    }
+}
