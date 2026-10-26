@@ -316,6 +316,23 @@ describe('FlatTreeControl', () => {
             expect(control.expansionModel.selected).toEqual([]);
         });
 
+        it('should find the descendants and parents of a node through an object it was rebuilt from', () => {
+            const stale = byName(nodes, 'documents');
+
+            control.dataNodes = buildFlatNodes();
+
+            expect(control.getDescendants(stale)).toEqual(
+                ['specs', 'draft', 'readme'].map((name) => byName(control.dataNodes, name))
+            );
+            expect(control.getParents(byName(nodes, 'draft'))).toEqual(
+                ['root', 'documents', 'specs'].map((name) => byName(control.dataNodes, name))
+            );
+
+            control.expandDescendants(stale);
+
+            expect(control.expansionModel.selected).toEqual(['documents', 'specs', 'draft', 'readme']);
+        });
+
         it('should expand the expandable nodes a filter keeps by key', () => {
             control.filterNodes('draft');
 

@@ -55,7 +55,7 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
      * with correct levels.
      */
     getDescendants(dataNode: T): T[] {
-        const startIndex = this.dataNodes.indexOf(dataNode);
+        const startIndex = this.indexOfNode(dataNode);
         const results: T[] = [];
 
         // Goes through flattened tree nodes in the `dataNodes` array, and get all descendants.
@@ -97,7 +97,7 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
      * an existing array; a fresh one is used when omitted.
      */
     getParents(node: T, result: T[] = []): T[] {
-        const startIndex = this.dataNodes?.indexOf(node) ?? -1;
+        const startIndex = this.indexOfNode(node);
 
         if (startIndex === -1) {
             return result;
@@ -161,5 +161,20 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
         if (!this.filterValue.value?.length) {
             this.expansionModel.setSelection(...this.expandedItemsBeforeFiltration);
         }
+    }
+
+    /**
+     * Position of the node in `dataNodes`. With `trackBy` a node rebuilt as a new object since is found by its key,
+     * as the expansion methods accept it too.
+     */
+    private indexOfNode(node: T): number {
+        const index = this.dataNodes?.indexOf(node) ?? -1;
+        const { trackBy } = this;
+
+        if (index !== -1 || !trackBy) return index;
+
+        const key = trackBy(node);
+
+        return this.dataNodes.findIndex((candidate) => trackBy(candidate) === key);
     }
 }
