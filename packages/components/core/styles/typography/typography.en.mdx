@@ -18,7 +18,7 @@ Koobiq uses the [Inter](https://github.com/rsms/inter) and [JetBrains Mono](http
 
 #### Where to get the fonts
 
-Use the official builds: Inter from [rsms.me/inter/download](https://rsms.me/inter/download/), JetBrains Mono from the [JetBrains releases](https://github.com/JetBrains/JetBrainsMono/releases). Any other source works as well — the font itself is what matters, not where you downloaded it from.
+Use the official builds: Inter from [rsms.me/inter/download](https://rsms.me/inter/download/), JetBrains Mono from the [JetBrains releases](https://github.com/JetBrains/JetBrainsMono/releases). Any other source works as well — the font itself is what matters, not where you downloaded it from. If you install the font from npm, `inter-ui` (the `web/` folder) and `dist-font-inter` work: their files are byte-identical to the official release. The `*-latin` folders in `inter-ui` are trimmed — they contain neither Cyrillic nor some of the features.
 
 Copy the files into your project and declare them in your global styles. The Inter archive already ships an `inter.css` that declares both the static weights and the variable font:
 
@@ -56,7 +56,7 @@ JetBrains Mono is needed in weights 400, 600, and 700 — they live in the `font
 
 #### Check the font before installing it
 
-Some sources serve a trimmed font. Large CDNs such as Google Fonts, and the packages built from them, split files into subsets by `unicode-range` and drop OpenType features along with the glyphs. The font still loads, but some features and characters silently stop working: the zero from the Koobiq tokens loses its slash, the alternate digits never appear, and characters such as `₽` or the em dash fall back to a system font.
+Some sources serve a trimmed font. The Google Fonts CDN and the packages built from it (Fontsource, for example) serve files split into subsets by `unicode-range`, and the OpenType features are dropped along with the glyphs. The font still loads, but some features and characters silently stop working: the zero from the Koobiq tokens loses its slash, the alternate digits never appear, and characters such as `₽` or the em dash fall back to a system font. The font file itself can still be complete: a family downloaded from fonts.google.com contains every glyph and feature — the trimming happens in the way the CDN serves it.
 
 So before installing the font, check the one your source serves: it has to contain the characters your interface uses and the OpenType features Koobiq enables.
 
