@@ -57,7 +57,7 @@ export async function buildChangelogStream(
         .loadPreset('angular')
         .readPackage(join(config.projectDir, 'package.json'))
         .readRepository()
-        .context({ title: releaseName })
+        .context({ title: releaseName, issue: 'pull' })
         .commits({}, COMMIT_PARSER_OPTIONS)
         .writer(
             createChangelogWriterOptions(angularPreset.writer, config, existingChangelogContent, (commit) =>
