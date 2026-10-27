@@ -33,14 +33,14 @@ const getMigrationInputs = () => {
 };
 
 /**
- * Every util module is an entry of its own. A shared module without one lands in a hashed chunk at the
- * dist root, which copy-meta-to-dist.js does not ship, and the entries importing it fail with MODULE_NOT_FOUND.
+ * Every util module is an entry of its own, so it ships under a stable name rather than inside a hashed chunk.
+ * `.d.ts` and `.spec.ts` files do not match; `testing.ts` holds the spec helpers.
  */
 const getUtilInputs = () => {
     const utilsDir = path.join(__dirname, 'src/utils');
 
     return readdirSync(utilsDir)
-        .filter((file) => file.endsWith('.ts') && !file.endsWith('.spec.ts') && file !== 'testing.ts')
+        .filter((file) => /^[\w-]+\.ts$/.test(file) && file !== 'testing.ts')
         .reduce((res, file) => {
             res[`utils/${path.basename(file, '.ts')}`] = path.join(utilsDir, file);
 
@@ -48,12 +48,35 @@ const getUtilInputs = () => {
         }, {});
 };
 
+const TEST_IMPORT = /^vitest(\/|$)|\/testing$/;
+
+/** Fails the build when shipped code imports test tooling, e.g. a spec helper that became an entry. */
+const rejectTestImports = () => ({
+    name: 'reject-test-imports',
+    generateBundle(_, bundle) {
+        for (const chunk of Object.values(bundle)) {
+            const testImport =
+                chunk.type === 'chunk' &&
+                [...chunk.imports, ...chunk.dynamicImports].find((id) => TEST_IMPORT.test(id));
+
+            if (testImport) {
+                this.error(`${chunk.fileName} imports ${testImport}, which consumers do not have`);
+            }
+        }
+    }
+});
+
 module.exports = [
     {
         output: {
             dir: distDir,
             format: 'cjs',
-            exports: 'named'
+            exports: 'named',
+            // `.cjs` stays CommonJS inside @koobiq/components, which ng-packagr marks `"type": "module"`.
+            entryFileNames: '[name].cjs',
+            // A module shared by several entries without being one goes next to the utils, which
+            // copy-meta-to-dist.js ships as a whole.
+            chunkFileNames: 'utils/[name]-[hash].cjs'
         },
         input: {
             'ng-add/index': path.join(__dirname, 'src/ng-add/index.ts'),
@@ -65,6 +88,7 @@ module.exports = [
             !(dependency.startsWith('./') || dependency.startsWith('../') || dependency.startsWith(__dirname)),
         plugins: [
             clean(),
+            rejectTestImports(),
             replace({
                 preventAssignment: true,
                 'VERSIONS.ANGULAR_CDK': version(pkg.dependencies['@angular/cdk']),
