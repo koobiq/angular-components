@@ -86,7 +86,7 @@ export class NotificationCenterErrorExample {
     protected readonly srcSet = computed(() => {
         const currentTheme = this.currentTheme();
 
-        return `https://koobiq.io/assets/images/${currentTheme}/empty_192.png 1x, https://koobiq.io/assets/images/${currentTheme}/empty_192@2x.png 2x`;
+        return `assets/images/${currentTheme}/empty_192.webp 1x, assets/images/${currentTheme}/empty_192@2x.webp 2x`;
     });
 
     readonly isDesktop = toSignal(
