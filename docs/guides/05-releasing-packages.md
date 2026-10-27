@@ -33,8 +33,7 @@ The current major is released from `main`. Older supported lines are released fr
    in the root `package.json` to npm, notifies Mattermost, and then — in a separate job — creates the
    GitHub release from the tag with auto-generated notes.
 
-    For a `20.*.*` tag, [docs-stable.yml](../../.github/workflows/docs-stable.yml) also deploys the docs
-    and re-runs the Algolia crawler.
+    A tag on this line deploys no docs: v20.koobiq.io is deployed from `20.4.x`.
 
 Nothing has to be done on github.com afterwards. The release body is GitHub's auto-generated pull
 request list, grouped by the categories in [release.yml](../../.github/release.yml); those categories
@@ -95,7 +94,7 @@ built from.
 ## Verifying a change to the release pipeline
 
 Do **not** push a throwaway `*.*.*` tag to `origin` to test it. That runs the real `npm publish` with the
-real token, and a `20.*` tag also triggers a docs deploy and an Algolia crawl.
+real token.
 
 Preview what a release body would look like without writing anything:
 
