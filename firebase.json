@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/firebase/firebase-tools/v15.3.1/schema/firebase-config.json",
     "hosting": [
         {
-            "target": "stable",
+            "target": "v20",
             "public": "dist/releases/koobiq-docs/browser",
             "cleanUrls": true,
             "rewrites": [
