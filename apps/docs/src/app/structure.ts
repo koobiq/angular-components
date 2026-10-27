@@ -376,8 +376,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'autocomplete',
                     hasApi: true,
                     apiId: 'autocomplete',
-                    hasExamples: false,
-                    isUpdated: expiresAt('2026-10-25')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.Badge,
@@ -555,8 +554,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'dropdown',
                     hasApi: true,
                     apiId: 'dropdown',
-                    hasExamples: false,
-                    isUpdated: expiresAt('2026-10-25')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.DynamicTranslation,
@@ -686,8 +684,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: '',
                     hasApi: true,
                     apiId: 'flag',
-                    hasExamples: false,
-                    isNew: expiresAt('2026-10-07')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.FormField,
@@ -830,8 +827,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'popover',
                     hasApi: true,
                     apiId: 'popover',
-                    hasExamples: true,
-                    isUpdated: expiresAt('2026-10-25')
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.ProgressBar,
@@ -891,8 +887,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'scrollbar',
                     hasApi: true,
                     apiId: 'scrollbar',
-                    hasExamples: true,
-                    isNew: expiresAt('2026-10-11')
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.Select,
@@ -964,8 +959,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'splitter',
                     hasApi: true,
                     apiId: 'splitter',
-                    hasExamples: false,
-                    isNew: expiresAt('2026-10-11')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.SplitButton,
@@ -1025,8 +1019,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'tags autocomplete',
                     hasApi: true,
                     apiId: 'tags',
-                    hasExamples: true,
-                    isUpdated: expiresAt('2026-10-25')
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.TagInput,
@@ -1145,8 +1138,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'tooltip',
                     hasApi: true,
                     apiId: 'tooltip',
-                    hasExamples: true,
-                    isUpdated: expiresAt('2026-10-25')
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.TopBar,
@@ -1272,8 +1264,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'input',
                     isGuide: true,
                     hasApi: false,
-                    hasExamples: false,
-                    isNew: expiresAt('2026-09-25')
+                    hasExamples: false
                 }
             ]
         }

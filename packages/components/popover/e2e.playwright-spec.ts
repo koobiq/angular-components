@@ -277,6 +277,8 @@ test.describe('KbqPopoverModule', () => {
         const tooltip = (page: Page) => page.locator('.kbq-tooltip');
         const popover = (page: Page) => page.locator('.kbq-popover');
 
+        // The panel is attached a task before the popover opens, and until then the trigger ignores `Escape`, so the
+        // tests wait for `aria-expanded`, which follows the open state, before pressing it.
         test('should not show the tooltip when the popover is closed with Escape', async ({ page }) => {
             await page.goto('/E2ePopoverWithTooltip');
             const trigger = page.getByTestId('e2ePopoverWithTooltipTrigger');
@@ -286,6 +288,7 @@ test.describe('KbqPopoverModule', () => {
 
             await trigger.click();
             await expect(popover(page)).toBeVisible();
+            await expect(trigger).toHaveAttribute('aria-expanded', 'true');
             await expect(tooltip(page)).toBeHidden();
 
             await page.keyboard.press('Escape');
@@ -304,6 +307,7 @@ test.describe('KbqPopoverModule', () => {
 
             await trigger.click();
             await expect(popover(page)).toBeVisible();
+            await expect(trigger).toHaveAttribute('aria-expanded', 'true');
 
             await page.keyboard.press('Escape');
             await expect(popover(page)).toBeHidden();

@@ -61,8 +61,11 @@ export function KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => 
     return () => overlay.scrollStrategies.reposition();
 }
 
-// Redundant to the root factory of the token; kept so an app can restore the default under its own override (#DS-2196).
-/** @docs-private */
+/**
+ * Redundant to the root factory of the token; kept so an app can restore the default under its own override (#DS-2196).
+ *
+ * @docs-private
+ */
 export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     provide: KBQ_DATEPICKER_SCROLL_STRATEGY,
     deps: [Overlay],
@@ -74,6 +77,7 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
  * KbqCalendar directly as the content so we can control the initial focus. This also gives us a
  * place to put additional features of the popup that are not part of the calendar itself in the
  * future. (e.g. confirmation buttons).
+ *
  * @docs-private
  */
 @Component({
@@ -134,10 +138,10 @@ export class KbqDatepickerContent<D> implements OnDestroy {
     }
 }
 
+/** Component responsible for managing the datepicker popup/dialog. */
 // TODO: We use a component instead of a directive here so the user can use implicit
 // template reference variables (e.g. #d vs #d="kbqDatepicker"). We can change this to a directive
 // if angular adds support for `exportAs: '$implicit'` on directives.
-/** Component responsible for managing the datepicker popup/dialog. */
 @Component({
     selector: 'kbq-datepicker',
     template: '',
@@ -386,6 +390,7 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
 
     /**
      * Register an input with this datepicker.
+     *
      * @param input The datepicker input to register with this datepicker.
      */
     registerInput(input: KbqDatepickerInput<D>): void {

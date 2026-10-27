@@ -22,6 +22,7 @@ const overlayStructuralStylesAttribute = 'data-kbq-overlay-structural-styles';
 
 /**
  * `OverlayContainer` that places the `.cdk-overlay-container` inside a shadow root instead of `document.body`.
+ * Provide it with {@link kbqShadowDomOverlayProvider}.
  *
  * The default CDK `OverlayContainer` always appends its container to `document.body`. When the application is
  * rendered inside a shadow root (e.g. a Module Federation micro-frontend), overlays — toasts, modals, dropdowns,
@@ -43,15 +44,17 @@ const overlayStructuralStylesAttribute = 'data-kbq-overlay-structural-styles';
  * application is still responsible for delivering the **Koobiq component/theme styles** (the `.kbq-light` / `.kbq-dark`
  * tokens and component CSS) into the shadow root, since global `document.head` stylesheets do not cascade across a
  * shadow boundary.
- *
- * @see kbqShadowDomOverlayProvider
  */
 @Injectable()
 export class KbqShadowDomOverlayContainer extends OverlayContainer {
     private readonly host = inject(KBQ_SHADOW_DOM_OVERLAY_HOST, { optional: true });
     private readonly applicationRef = inject(ApplicationRef);
 
-    /** @internal CDK lifecycle hook — overridden to relocate the container into a shadow root. */
+    /**
+     * CDK lifecycle hook — overridden to relocate the container into a shadow root.
+     *
+     * @internal
+     */
     protected override _createContainer(): void {
         // Let CDK create the container (and run its test-environment cleanup). It is appended to `document.body`.
         super._createContainer();

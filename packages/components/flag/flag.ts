@@ -50,10 +50,10 @@ import { KbqFlagShadow, KbqFlagShape } from './flag.types';
 export class KbqFlag {
     /**
      * Shape of the flag. The flag is cropped to it, so `square`/`circle` are best fed a 1:1 source —
-     * a center crop of a rectangular flag can cut off meaningful elements.
-     * @default rectangle
+     * a center crop of a rectangular flag can cut off meaningful elements. Defaults to `'rectangle'`.
      */
     readonly shape = input<KbqFlagShape>('rectangle');
+
     /**
      * Proportions of the flag box, as a CSS `aspect-ratio` value (`4 / 3`, `1.5`). Set it for a source
      * whose proportions differ from the shape — the flag is cropped to the box either way.
@@ -63,13 +63,15 @@ export class KbqFlag {
      * rule can still redefine for a whole group of flags at once.
      */
     readonly aspectRatio = input<string>();
+
     /**
      * Inset hairline that keeps the flag distinct from the background. Its color adapts to the theme.
-     * @default inset
+     * Defaults to `'inset'`.
      */
     readonly shadow = input<KbqFlagShadow>('inset');
     /** Renders a neutral placeholder — use when no flag can be shown (unknown / invalid country code). */
     readonly empty = input(false, { transform: booleanAttribute });
+
     /**
      * Flag markup rendered into a slot of its own, for flags that come from a package as a string.
      * A plain string is sanitized, and Angular's sanitizer drops `<svg>` — pass an SVG through
@@ -78,6 +80,7 @@ export class KbqFlag {
     readonly svg = input<SafeHtml | string>();
     /** Marks the flag as decorative — hidden from screen readers (use when adjacent text is present). */
     readonly decorative = input(false, { transform: booleanAttribute });
+
     /**
      * Accessible name for the flag. Use when the flag carries meaning and has no adjacent text.
      * Without it the flag is hidden from screen readers, so a flag whose only name comes from the
@@ -87,18 +90,21 @@ export class KbqFlag {
 
     /**
      * Value of `role`.
+     *
      * @internal
      */
     protected readonly resolvedRole = computed(() => (this.decorative() ? null : this.label() ? 'img' : null));
 
     /**
      * Value of `aria-label`.
+     *
      * @internal
      */
     protected readonly resolvedAriaLabel = computed(() => (this.decorative() ? null : this.label() || null));
 
     /**
      * Value of `aria-hidden`.
+     *
      * @internal
      */
     protected readonly resolvedAriaHidden = computed(() => (this.decorative() || !this.label() ? 'true' : null));

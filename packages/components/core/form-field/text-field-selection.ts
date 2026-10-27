@@ -72,9 +72,7 @@ export const kbqRevealSelection = (element: HTMLInputElement): void => {
 };
 
 /**
- * Selects the `[start, end]` range of a text field and keeps it visible.
- *
- * @see {@link kbqRevealSelection}
+ * Selects the `[start, end]` range of a text field and keeps it visible with {@link kbqRevealSelection}.
  */
 export const kbqSetSelectionRange = (element: HTMLInputElement, start: number, end: number): void => {
     element.setSelectionRange(start, end);

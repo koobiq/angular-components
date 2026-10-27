@@ -24,6 +24,7 @@ export class KbqDropdownContent implements OnDestroy {
 
     /**
      * Attaches the content with a particular context.
+     *
      * @docs-private
      */
     attach(context: any = {}) {
@@ -49,6 +50,7 @@ export class KbqDropdownContent implements OnDestroy {
 
     /**
      * Detaches the content.
+     *
      * @docs-private
      */
     detach() {

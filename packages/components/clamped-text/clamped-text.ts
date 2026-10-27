@@ -84,24 +84,24 @@ import {
 })
 export class KbqClampedText implements KbqClamped, AfterViewInit {
     /**
-     * Max rows before text is clamped.
-     * @default kbqClampedTextDefaultMaxRows
+     * Max rows before text is clamped. Defaults to `kbqClampedTextDefaultMaxRows`.
      */
     readonly rows = input(kbqClampedTextDefaultMaxRows, { transform: numberAttribute });
+
     /**
      * Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = auto.
      * Writable half of the `[(isCollapsed)]` two-way binding — written when the user operates the
      * toggle, never by the component's own measurement.
      */
     readonly isCollapsed = model<boolean | undefined>(undefined);
+
     /**
-     * Debounce time on resize observer when recalculating toggle and text visibility.
-     * @default 0
+     * Debounce time on resize observer when recalculating toggle and text visibility. Defaults to `0`.
      */
     readonly debounceTime = input(0, { transform: numberAttribute });
+
     /**
-     * Whether collapsing scrolls the component back into view.
-     * @default true
+     * Whether collapsing scrolls the component back into view. Defaults to `true`.
      */
     readonly scrollOnCollapse = input(true, { transform: booleanAttribute });
 
@@ -125,6 +125,7 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
      *
      * Before the first measurement nothing is known about the content, so the requested state is
      * applied as-is: the server and the first paint clamp the text rather than flashing all of it.
+     *
      * @docs-private
      */
     protected readonly collapsedState = computed(() => {
@@ -141,6 +142,7 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
 
     /**
      * Clamped text locale configuration.
+     *
      * @docs-private
      */
     readonly localeConfiguration = kbqInjectClampedTextLocaleConfiguration();

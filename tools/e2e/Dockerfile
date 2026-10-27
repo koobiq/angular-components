@@ -90,6 +90,9 @@ COPY .yarnrc.yml package.json yarn.lock ./
 COPY .yarn/releases/ .yarn/releases/
 COPY .yarn/patches/ .yarn/patches/
 
+# package.json's `workspaces` field points at tools/tokens; `yarn install` reads its manifest.
+COPY tools/tokens/package.json tools/tokens/
+
 # The base image has Yarn 1 classic on PATH from its own `npm install -g yarn`. It cannot read a
 # Berry lockfile, and the container command (`yarn run e2e:components`) shells out to whatever `yarn`
 # resolves to at test time — so replacing it is required, not a convenience.

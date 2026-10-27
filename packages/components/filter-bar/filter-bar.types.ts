@@ -90,6 +90,7 @@ export interface KbqFilterBarHost {
     readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
     /** Internal pipe-template changes. */
     readonly internalTemplatesChanges: BehaviorSubject<KbqPipeTemplate[] | null>;
+
     /**
      * Requests that an already-added pipe open its pop-up. A one-shot command handled synchronously by the
      * pipes that exist when it is dispatched, not retained state — clear it back to `null` after `next`. A
@@ -153,6 +154,7 @@ export interface KbqSelectValue {
     value: unknown;
     /** Optional stable identifier used by the select/multi-select pipe comparators. */
     id?: string | number;
+
     /**
      * Second line under `name` in the dropdown of the `select` / `multiselect` pipes. Ignored where a
      * `valueTemplate` owns the option.
@@ -230,12 +232,14 @@ export interface KbqPipeData<V> extends KbqPipe {
 export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
     values?: unknown[];
     valueTemplate?: TemplateRef<any> | string;
+
     /**
      * Custom equality comparator forwarded to the underlying `kbq-select` of the `select` /
      * `multiselect` pipes. When omitted, the pipe's default id-based comparator (`compareByValue`)
      * is used. Ignored by other pipe types.
      */
     compareWith?: (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined) => boolean;
+
     /**
      * Options whose selection cannot be removed by the user: they are always selected, render as
      * `disabled` with a checked checkbox, and survive both "select all" toggling and clearing the pipe.
@@ -246,6 +250,7 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
      * whole subtree. Ignored by other pipe types.
      */
     lockedValues?: unknown[];
+
     /**
      * Maximum height of the dropdown panel's scrollable list, in pixels, forwarded to the underlying
      * `kbq-select` / `kbq-tree-select` of the `select`, `multiselect`, `tree-select` and `multi-tree-select`
@@ -259,18 +264,21 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
      * than scrolled. Ignored by other pipe types.
      */
     panelMaxHeight?: KbqPanelMaxHeight;
+
     /**
      * Whether option names and captions in the dropdown wrap instead of being truncated to one line.
      * Applies to the `select` and `multiselect` pipes; ignored by the other pipe types. Unrelated to
      * `KbqSelect.multiline`, which lays the trigger's values out in rows.
      */
     multilineOptions?: boolean;
+
     /**
      * Message shown in the dropdown of the `select`, `multiselect`, `tree-select` and `multi-tree-select`
      * pipes when `values` is empty. Defaults to the localized `pipe.noOptions` string. Ignored by other pipe
      * types.
      */
     noOptionsText?: string;
+
     /**
      * Earliest selectable instant for the `date` / `datetime` pipe custom period. Accepts any value the
      * configured `DateAdapter` can deserialize (with the default Luxon adapter: an ISO-8601 string, a
@@ -278,12 +286,14 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
      * other pipe types.
      */
     minDateTime?: unknown;
+
     /**
      * Latest selectable instant for the `date` / `datetime` pipe custom period. See
      * {@link KbqPipeTemplate.minDateTime}. The `date` pipe uses only its day (pinned to the end of day).
      * Ignored by other pipe types.
      */
     maxDateTime?: unknown;
+
     /**
      * Minimum length of the `date` / `datetime` pipe custom period (`end − start`), as a Luxon
      * duration-like object, e.g. `{ days: 1 }` or `{ hours: 2 }`. When the selected period is shorter, the
@@ -295,6 +305,7 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
      * the Moment adapter).
      */
     minInterval?: unknown;
+
     /**
      * Maximum length of the `date` / `datetime` pipe custom period (`end − start`). See
      * {@link KbqPipeTemplate.minInterval}. When the selected period is longer, the editor shows an error and

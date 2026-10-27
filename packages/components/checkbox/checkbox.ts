@@ -143,18 +143,21 @@ export class KbqCheckbox
 
     /**
      * Whether the projected `kbq-error` is shown. Without one, nothing is rendered under the label.
+     *
      * @internal
      */
     protected readonly showError = computed(() => this.errorState() && !!this.error());
 
     /**
      * Id of the element wrapping the projected `kbq-error`.
+     *
      * @internal
      */
     protected readonly errorId = computed(() => `${this.id()}-error`);
 
     /**
      * Id of the label text, which alone names the native input.
+     *
      * @internal
      */
     protected readonly labelId = computed(() => `${this.id()}-label`);
@@ -164,6 +167,7 @@ export class KbqCheckbox
 
     /**
      * Value of `aria-describedby` of the native input: the error, while it is shown, and the hints.
+     *
      * @internal
      */
     protected readonly ariaDescribedBy = computed(
@@ -173,6 +177,7 @@ export class KbqCheckbox
 
     /**
      * Value of `aria-invalid` of the native input: set whenever the checkbox is painted as invalid.
+     *
      * @internal
      */
     protected readonly ariaInvalid = computed(() => (this.errorState() || this.color() === 'error' ? 'true' : null));
@@ -336,7 +341,9 @@ export class KbqCheckbox
      * Toggles checked state if element is not disabled.
      * Do not toggle on (change) event since IE doesn't fire change event when
      *   indeterminate checkbox is clicked.
+     *
      * @param event Input click event
+     *
      * @docs-private
      */
     protected onInputClick(event: Event): void {

@@ -13,6 +13,7 @@ import { KBQ_STATE_STORE } from './state-store';
 export interface KbqStateSavingRef {
     /** How the owner is named in dev-mode warnings — a tag name for a component. */
     readonly name: string;
+
     /**
      * The key the state is persisted under. Empty until the component has read, and for a host no key
      * could be derived from.

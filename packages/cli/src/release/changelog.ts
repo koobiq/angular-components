@@ -10,6 +10,23 @@ import { createChangelogWriterOptions } from './changelog-writer-options';
 const { yellow, bold } = chalk;
 const { prompt } = inquirer;
 
+/**
+ * Header pattern of the conventional-changelog-angular preset, extended with the package that may
+ * precede the scope and with the `!` of a breaking change: the preset accepts no `!`, so such a
+ * commit came out without a type and never reached the changelog.
+ */
+export const COMMIT_HEADER_PATTERN = /^(\w*)(?:\((?:([^/]+)\/)?(.*)\))?!?: (.*)$/;
+
+/**
+ * Options for the commit parser, merged over the preset's own. The preset parses only a
+ * `BREAKING CHANGE` footer into a note, so `DEPRECATED` is added for the deprecation notes.
+ */
+export const COMMIT_PARSER_OPTIONS = {
+    headerPattern: COMMIT_HEADER_PATTERN,
+    headerCorrespondence: ['type', 'package', 'scope', 'subject'],
+    noteKeywords: ['BREAKING CHANGE', 'DEPRECATED']
+};
+
 /** Prompts for a changelog release name and prepends the new changelog. */
 export async function promptAndGenerateChangelog(changelogPath: string, config: IReleaseTaskConfig) {
     const releaseName = await promptChangelogReleaseName();
@@ -41,15 +58,7 @@ export async function buildChangelogStream(
         .readPackage(join(config.projectDir, 'package.json'))
         .readRepository()
         .context({ title: releaseName })
-        .commits(
-            {},
-            {
-                // Expansion of the convention-changelog-angular preset to extract the package
-                // name from the commit message.
-                headerPattern: /^(\w*)(?:\((?:([^/]+)\/)?(.*)\))?: (.*)$/,
-                headerCorrespondence: ['type', 'package', 'scope', 'subject']
-            }
-        )
+        .commits({}, COMMIT_PARSER_OPTIONS)
         .writer(
             createChangelogWriterOptions(angularPreset.writer, config, existingChangelogContent, (commit) =>
                 console.log(yellow(`  ↺   Skipping duplicate: "${bold(commit.header)}"`))

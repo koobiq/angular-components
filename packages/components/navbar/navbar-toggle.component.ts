@@ -32,6 +32,7 @@ import { KbqVerticalNavbar } from './vertical-navbar.component';
  * Every toggle used to bind its own window listener and call `toggle()` unconditionally, so a single keypress
  * collapsed *every* vertical navbar on the page. One shared listener instead picks the toggle whose navbar
  * currently holds focus, and falls back to the first registered one so the shortcut still works from anywhere.
+ *
  * @docs-private
  */
 @Injectable({ providedIn: 'root' })

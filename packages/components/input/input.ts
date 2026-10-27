@@ -91,18 +91,21 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly focused = this.focusedValue.asReadonly();
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly autofilled = kbqInjectAutofilled();
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     controlType: string = this.numberInput ? 'input-number' : 'input';
@@ -112,6 +115,7 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
 
     /**
      * Implemented as part of KbqFormFieldControl. Writable, so that a select search can supply one.
+     *
      * @docs-private
      */
     readonly placeholder = linkedSignal(() => this.placeholderInput());
@@ -137,6 +141,7 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
@@ -146,12 +151,14 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly id = computed(() => this.idInput() || this.uid);
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
@@ -182,6 +189,7 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
     /**
      * Implemented as part of KbqFormFieldControl. Follows what the user types; a value bound with `[value]` or set
      * here is written to the element.
+     *
      * @docs-private
      */
     readonly value: WritableSignal<string>;
@@ -194,6 +202,7 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     readonly empty = this.emptyValue.asReadonly();
@@ -305,6 +314,7 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
 
     /**
      * Implemented as part of KbqFormFieldControl.
+     *
      * @docs-private
      */
     onContainerClick() {
@@ -314,6 +324,7 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
     /**
      * Reads the native value back, since it changes without notice: through the forms API, which writes the
      * element directly, or by the user typing into an input that no form listens to.
+     *
      * @docs-private
      */
     dirtyCheckNativeValue() {

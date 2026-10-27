@@ -102,14 +102,15 @@ export class KbqOverflowItem extends ElementVisibilityManager {
      * Unique identifier for the item.
      */
     readonly id = input.required({ alias: 'kbqOverflowItem' });
+
     /**
      * Defines the order in which the item is processed in the overflow container,
      * without changing its original position in the `QueryList`.
      */
     readonly order = input(null, { transform: numberAttribute });
+
     /**
-     * Element with this attribute will be ignored when hiding and will always remain visible.
-     * @default false
+     * Element with this attribute will be ignored when hiding and will always remain visible. Defaults to `false`.
      */
     readonly alwaysVisible = input(false, { transform: booleanAttribute });
 
@@ -152,28 +153,22 @@ export class KbqOverflowItems {
     private readonly result = contentChild(KbqOverflowItemsResult);
 
     /**
-     * Whether the overflow order should be reversed.
+     * Whether the overflow order should be reversed. Defaults to `false`.
      *
      * @example
-     * ```
+     * ```text
      * [0, 1, hidden, hidden] ---> [hidden, hidden, 2, 3]
      * ```
-     *
-     * @default false
      */
     readonly reverseOverflowOrder = input(false, { transform: booleanAttribute });
 
     /**
-     * Debounce time for recalculating items visibility.
-     *
-     * @default 0
+     * Debounce time for recalculating items visibility. Defaults to `0`.
      */
     readonly debounceTime = input(0, { transform: numberAttribute });
 
     /**
-     * List of additional elements to observe for resize changes.
-     *
-     * @default document.body
+     * List of additional elements to observe for resize changes. Defaults to `document.body`.
      */
     readonly additionalResizeObserverTargets = input<Element | Element[]>(this.document.body);
 
@@ -190,16 +185,12 @@ export class KbqOverflowItems {
     });
 
     /**
-     * Defines the orientation of the overflow items.
-     *
-     * @default 'horizontal'
+     * Defines the orientation of the overflow items. Defaults to `'horizontal'`.
      */
     readonly orientation = input<KbqOrientation>('horizontal');
 
     /**
-     * Defines the wrap of the overflow items.
-     *
-     * @default 'nowrap'
+     * Defines the wrap of the overflow items. Defaults to `'nowrap'`.
      */
     readonly wrap = input<KbqFlexWrap>('nowrap');
 

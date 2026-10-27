@@ -22,8 +22,11 @@ export class KbqFilterReset {
     /** Event that is generated whenever the user reset a filter. */
     readonly onResetFilter = output<KbqFilter | null>();
 
-    /** Default label of the reset button, shown when no content is projected.
-     * @docs-private */
+    /**
+     * Default label of the reset button, shown when no content is projected.
+     *
+     * @docs-private
+     */
     protected readonly buttonName = computed(() => this.filterBar.localeConfiguration().reset.buttonName);
 
     protected resetFilter() {

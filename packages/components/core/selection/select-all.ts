@@ -12,6 +12,7 @@ export interface KbqSelectAllAdapter<T> {
     isSelectable: (item: T) => boolean;
     /** Current selected state of the item. */
     isSelected: (item: T) => boolean;
+
     /**
      * Applies the new selected state to the item. Must be idempotent — a no-op, with no further side
      * effects (no emitted events, no notifications) — when `selected` already matches the item's current
@@ -114,6 +115,7 @@ export function shouldSelectSearchText(input: HTMLInputElement | null | undefine
 /**
  * Transform of a `selectAllHandler` input: takes a function or `undefined`, which leaves the component its own handler,
  * and throws on anything else, so that a wrong binding fails where it is made rather than on the first Ctrl/Cmd + A.
+ *
  * @docs-private
  */
 export function kbqSelectAllHandlerTransform<S>(

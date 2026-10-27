@@ -25,6 +25,10 @@ const THEME_TOKENS_PATTERN = /^node_modules\/@koobiq\/design-tokens\/web\/css-to
  * The style entries documented in the installation guide, in the order they must be loaded.
  * `'auto'` includes both token files, since `KbqThemeService` switches between them at runtime —
  * a static `'light'`/`'dark'` choice only needs its own.
+ *
+ * `@koobiq/design-tokens` ships code-block, scrollbar and skeleton's tokens as opt-in
+ * `component-tokens*.css` files, but `prebuilt-themes/theme.css` already carries their values,
+ * baked in at `@koobiq/components`' own build time — nothing extra to wire here for them.
  */
 export function getKoobiqStyleEntries(theme: KoobiqTheme): string[] {
     const [icons, tokens, prebuiltTheme] = KOOBIQ_STATIC_STYLE_ENTRIES;

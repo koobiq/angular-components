@@ -59,8 +59,11 @@ export class KbqPipeButton {
     /** enables/disables read-only state */
     readonly readonly = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    /** Localized strings of the filter-bar.
-     * @docs-private */
+    /**
+     * Localized strings of the filter-bar.
+     *
+     * @docs-private
+     */
     protected readonly localeConfiguration = computed(() => this.filterBar.localeConfiguration());
 
     constructor() {

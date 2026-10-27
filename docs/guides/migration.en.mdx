@@ -37,6 +37,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **21.0.0**: tabs, sidebar and content-panel remember what the user changed, on by default.
 - **21.0.0**: the filter bar remembers the selected filter and its edits, on by default.
 - **21.0.0**: the tag list cleaner removes the tags itself and leaves the disabled ones in place.
+- **21.0.0**: the move to `@koobiq/design-tokens` 4 — a new palette scale, DTCG sources and opt-in component tokens.
 
 ### Upgrade to 18.5.3
 
@@ -3427,6 +3428,42 @@ removed is printed for every file, because a handler may have done more than cle
 - **A disabled tag no longer renders `kbqTagRemove`.** This one has no schematic: the control is hidden
   and the `Delete` key already refused, so nothing about the removal protocol changed — but a test or a
   stylesheet that expected the icon on a disabled tag needs updating.
+
+### Design tokens v4 (21.0.0)
+
+`@koobiq/components` now requires `@koobiq/design-tokens` 4, which moved its sources to DTCG format, changed several import paths, and replaced the `--kbq-palette-*` scale with `--kbq-plt-*` and `--kbq-semantic-*` on a 1–20 scale instead of 0–100. Component tokens are gone from the package, except for code-block, scrollbars and skeleton, which v4 ships as opt-in files; nothing to do for those three, since `@koobiq/components`' own `prebuilt-themes/theme.css` already bakes their values in. See `@koobiq/design-tokens`'s own `README.md#breaking-changes-in-v4` for the full list.
+
+#### Running the migration
+
+The `design-tokens-v4` schematic runs automatically:
+
+```bash
+ng update @koobiq/components@21
+```
+
+Or manually:
+
+```bash
+ng g @koobiq/components:design-tokens-v4 --project "<your project>"
+```
+
+#### What is fixed automatically
+
+**The `@koobiq/design-tokens` entry in `package.json`** is rewritten to `^4.1.0`, wherever it was declared — `dependencies` or `devDependencies` — and added to `dependencies` when it was declared nowhere (a project can reach the tokens through the library's own peer dependency alone, with npm having installed them and nothing in `package.json` saying so). An install is scheduled afterwards.
+
+#### What you need to fix manually
+
+The rest of the upgrade is in your project's own stylesheets. `@koobiq/design-tokens` ships a codemod for it, so run that instead of rewriting them by hand:
+
+```bash
+npx koobiq-tokens-codemod src
+```
+
+It rewrites the moved import paths (`web/new/**` → `web/css/**`), the tokens with a one-for-one replacement, and the two removed overlay tokens: `var(--kbq-background-overlay-theme)` and `var(--kbq-background-overlay-error)` become `color-mix(in srgb, var(--kbq-background-overlay-base-…) calc(var(--kbq-opacity-overlay) * 100%), transparent)`. The result is not pixel-identical to v3 — look at your overlays after the rewrite.
+
+- **The old `--kbq-palette-*` scale.** The 0–100 scale has no direct mapping onto the 1–20 one, so by default the codemod only suggests the nearest `--kbq-plt-*` and prints the ΔE. Two flags turn the suggestion into a rewrite: `--fix-palette` (nearest `--kbq-plt-*`, applied only when ΔE ≤ 3; adjust the threshold with `--palette-delta-e`) and `--palette-to-color` (the literal v3 color inlined as the value). Alpha steps and uses with a fallback are never rewritten — replace those by hand.
+- **Review code blocks and scrollbars.** These are the only two places v4 changes pixels without being asked; the codemod does not touch them because nothing about their custom properties changed, only the values behind them.
+- **`scrollbar/deprecated/scrollbar-tokens.scss` was removed.** Its variables now come from `@koobiq/design-tokens` — drop any deep imports of that file from your own styles.
 
 ### After the migration
 

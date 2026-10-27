@@ -2,9 +2,9 @@
  * The version model behind the migration guide's range picker.
  *
  * The guide's steps land at a handful of releases — the *gates*, the only versions where the answer
- * to "what do I have to do" changes. They are read from the guide itself. A major that gates
- * nothing (17, 19) still has to be offerable as a starting point, so those are listed here, and so
- * is the latest release, which is what most readers are on.
+ * to "what do I have to do" changes. They are read from the guide itself. A release line that
+ * gates nothing (17, 19, 20.3, 20.4) still has to be offerable as a starting point, so those are
+ * listed here, and so is the latest release, which is what most readers are on.
  */
 
 /** A version, split for comparison. `Infinity` in a part means "the top of what came before it". */
@@ -24,12 +24,16 @@ export type DocsMigrationVersionOption = {
 export type DocsMigrationVersionChoice = DocsMigrationVersionOption & { disabled: boolean };
 
 /**
- * Majors with no step of their own. A reader on 19.8 needs every step above 19, which plain
+ * Release lines with no step of their own. A reader on 19.8 needs every step above 19, which plain
  * comparison already gets right — they are listed only so the picker can offer them. The value
- * sits at the *bottom* of the major: someone who says "19.x" has not said which 19, so a step ever
- * filed inside that major has to be shown rather than assumed already applied.
+ * sits at the *bottom* of the line: someone who says "19.x" has not said which 19, so a step ever
+ * filed inside that line has to be shown rather than assumed already applied.
+ *
+ * 20.3 and 20.4 are minors still maintained on branches of their own, and the latest release
+ * cannot name them: on main it is the major being prepared. A line drops out once a step or the
+ * latest release falls in it, which then names a release of that line.
  */
-const MAJOR_ONLY_GATES = ['17', '19'] as const;
+const LINES_WITHOUT_STEPS = ['17', '19', '20.3', '20.4'] as const;
 
 /** Parses `20.2.0` or `19.x` into comparable parts. */
 export const docsParseVersion = (value: string): DocsVersion =>
@@ -65,8 +69,10 @@ export const docsBuildMigrationVersionOptions = (
     latestRelease: string | null
 ): DocsMigrationVersionOption[] => {
     const latest = latestRelease ? docsParseVersion(latestRelease) : null;
+    const releases = [...stepVersions, ...(latestRelease ? [latestRelease] : [])];
+    const lines = LINES_WITHOUT_STEPS.filter((line) => !releases.some((release) => release.startsWith(`${line}.`)));
 
-    return [...new Set([...MAJOR_ONLY_GATES, ...stepVersions, ...(latestRelease ? [latestRelease] : [])])]
+    return [...new Set([...lines, ...releases])]
         .map((value) => ({ value, version: docsParseVersion(value) }))
         .sort((a, b) => docsCompareVersions(a.version, b.version))
         .map(({ value, version }) => ({
@@ -176,8 +182,7 @@ export const docsMigrationUpdateCommand = (major: number, crossesMajor: boolean)
     ].join(' ');
 
 /**
- * A gate reads as the release it is. The two majors that carry no step of their own keep an `.x`,
- * because there is no single release to name there and any version of that major gives the same
- * answer.
+ * A gate reads as the release it is. A line that carries no step of its own keeps an `.x`, because
+ * there is no single release to name there and any version of that line gives the same answer.
  */
-const gateLabel = (value: string): string => (value.includes('.') ? value : `${value}.x`);
+const gateLabel = (value: string): string => (value.split('.').length < 3 ? `${value}.x` : value);

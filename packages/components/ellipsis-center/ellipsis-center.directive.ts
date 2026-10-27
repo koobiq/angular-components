@@ -78,7 +78,9 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     /**
      * The hint spells out what the split hid, so `kbqTooltipDisabled="false"` cannot conjure one for a name
      * that fits.
-     * @docs-private */
+     *
+     * @docs-private
+     */
     protected override readonly derivedDisabledWins = true;
 
     /**
@@ -99,8 +101,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     readonly charWidth = input(7);
 
     /**
-     * Debounce time (ms) for resize events before recalculating ellipsis position.
-     * @default 50
+     * Debounce time (ms) for resize events before recalculating ellipsis position. Defaults to `50`.
      */
     readonly debounceInterval = input<number, unknown>(50, { transform: numberAttribute });
 
@@ -157,6 +158,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     /**
      * Updates the displayed text with center ellipsis truncation based on container width.
      * Recreates start/end span elements, measures available space, and adjusts text accordingly.
+     *
      * @docs-private
      */
     refresh(): void {

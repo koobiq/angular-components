@@ -91,13 +91,9 @@ let uniqueIdCounter = 0;
 /** State and commands of the notification center: the list itself, its modes, and the removal events. */
 @Injectable({ providedIn: 'root' })
 export class KbqNotificationCenterService {
-    /** @docs-private */
     private readonly adapter: DateAdapter<unknown> = inject(DateAdapter);
-    /** @docs-private */
     private readonly formatter: DateFormatter<unknown> = inject(DateFormatter);
-    /** @docs-private */
     private readonly toastService = inject(KbqToastService);
-    /** @docs-private */
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
 
     /** Parsed `date` per item. Keyed by the item itself, so no consumer-owned object is written to. */
@@ -132,18 +128,21 @@ export class KbqNotificationCenterService {
     readonly loadingMode: Signal<boolean> = this._loadingMode.asReadonly();
     /** @docs-private */
     readonly errorMode: Signal<boolean> = this._errorMode.asReadonly();
+
     /**
      * Whether the bottom "load more" spinner is shown while the next page is being loaded.
      * Note: this is the infinite-scroll indicator and is distinct from `loadingMode`,
      * which renders the full-screen loader instead of the list. Set it with `setLoadingMore()`.
      */
     readonly loadingMore: Signal<boolean> = this._loadingMore.asReadonly();
+
     /**
      * Whether the bottom "load more" error row (with a retry button) is shown.
      * Distinct from `errorMode`, which replaces the whole list with the full-screen error state.
      * Set it with `setLoadMoreErrorMode()`.
      */
     readonly loadMoreErrorMode: Signal<boolean> = this._loadMoreErrorMode.asReadonly();
+
     /**
      * Whether there are more notifications to load. While `true`, scrolling to the bottom
      * emits `onNextPage`; set it to `false` with `setHasMore()` to stop further infinite-scroll requests.
@@ -166,6 +165,7 @@ export class KbqNotificationCenterService {
      * Grouped notifications, always ordered from newest to oldest: day groups are sorted by date
      * descending, and notifications within each day are sorted by date descending. Notifications whose
      * `date` the adapter cannot parse keep their raw value as a group heading and sort last.
+     *
      * @docs-private
      */
     readonly groupedItems: Signal<KbqNotificationsGroup[]> = computed(() => {
@@ -230,6 +230,7 @@ export class KbqNotificationCenterService {
 
     /**
      * Whether there are no notifications, for the center's own view to follow.
+     *
      * @internal
      */
     readonly empty: Signal<boolean> = computed(() => this.originalItems().length === 0);
@@ -255,6 +256,7 @@ export class KbqNotificationCenterService {
     /**
      * Whether a notification is read, for a view to follow: `read` is flipped in place on the consumer's object,
      * so a view handed that object is not told.
+     *
      * @internal
      */
     isRead(item: KbqNotificationItem): boolean {

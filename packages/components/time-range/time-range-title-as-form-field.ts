@@ -69,11 +69,13 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<KbqTimeRa
     readonly controlType = 'select';
     /** @docs-private */
     readonly isNativeLabelSupported = false;
+
     /**
      * Id of the `kbq-form-field` caption naming this control, when it has one.
      *
      * A `<label for>` does not associate with a custom element, so the relationship is expressed the
      * other way around — from the control to the label.
+     *
      * @docs-private
      */
     protected readonly ariaLabelledby = computed(() => this.parentFormField?.labelId() ?? null);
@@ -106,6 +108,7 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<KbqTimeRa
 
     /**
      * The validators and the touched state of the bound control notify nothing a signal could follow.
+     *
      * @docs-private
      */
     ngDoCheck(): void {

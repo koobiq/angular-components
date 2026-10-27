@@ -70,8 +70,7 @@ export interface KbqTagSeparator {
     keyCode?: number;
 
     /**
-     * Contexts this separator applies to.
-     * @default ['input', 'paste']
+     * Contexts this separator applies to. Defaults to `['input', 'paste']`.
      */
     appliesTo?: KbqTagSeparatorContext[];
 }
@@ -102,7 +101,6 @@ export const kbqTagsDefaultOptionsProvider = (options: Partial<KbqTagsDefaultOpt
     useValue: { ...KBQ_TAGS_DEFAULT_OPTIONS_CONFIG, ...options }
 });
 
-// Increasing integer for generating unique ids.
 /**
  * Directive that adds tag-specific behaviors to an input element inside `<kbq-form-field>`.
  * May be placed inside or outside of an `<kbq-tag-list>`.
@@ -127,8 +125,10 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private defaultOptions = inject<KbqTagsDefaultOptions>(KBQ_TAGS_DEFAULT_OPTIONS);
     private trimDirective = inject(KbqTrim, { optional: true, self: true });
+
     /**
      * The autocomplete trigger attached to the input, if any.
+     *
      * @docs-private
      */
     autocompleteTrigger? = inject(KbqAutocompleteTrigger, { optional: true, self: true });
@@ -136,6 +136,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
 
     /**
      * Whether the control is focused.
+     *
      * @docs-private
      */
     readonly focused = this.focusedValue.asReadonly();
@@ -160,6 +161,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
      * The effective set of separators: entries gated by `keyCode` are included only when that
      * code is present in `separatorKeyCodes`; entries without a `keyCode` (no single-keystroke
      * equivalent, e.g. a run of whitespace) are always included.
+     *
      * @docs-private
      */
     readonly separators = computed(() =>
@@ -192,8 +194,8 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
     readonly addOnBlur = input(true, { alias: 'kbqTagInputAddOnBlur', transform: booleanAttribute });
 
     /**
-     * Whether the tagEnd event will be emitted when the text pasted.
-     * @default true
+     * Whether the tagEnd event will be emitted when the text pasted. Defaults to `addOnPaste` of
+     * `KBQ_TAGS_DEFAULT_OPTIONS`, or `true`.
      */
     readonly addOnPaste = input(this.defaultOptions.addOnPaste ?? true, {
         alias: 'kbqTagInputAddOnPaste',
@@ -291,6 +293,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
 
     /**
      * Checks to see if the blur should emit the (tagEnd) event.
+     *
      * @docs-private
      */
     blur(event: FocusEvent): void {
@@ -310,6 +313,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
 
     /**
      * Checks to see if the (tagEnd) event needs to be emitted.
+     *
      * @docs-private
      */
     emitTagEnd(): void {
@@ -319,6 +323,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
 
     /**
      * Whether the current input value duplicates an existing tag.
+     *
      * @docs-private
      */
     get hasDuplicates(): boolean {

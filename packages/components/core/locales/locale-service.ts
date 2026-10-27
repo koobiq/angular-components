@@ -95,9 +95,7 @@ const resolveLocaleDataMap = (input: KbqLocaleDataInput | null): KbqLocaleDataMa
 export const KBQ_LOCALE_SERVICE = new InjectionToken<KbqLocaleService>('KBQ_LOCALE_SERVICE');
 
 /**
- * Attribute name to be used to set the locale in the html element.
- *
- * @default 'lang'
+ * Attribute name to be used to set the locale in the html element. Defaults to `'lang'`.
  *
  * @docs-private
  */
@@ -106,9 +104,8 @@ export const KBQ_LOCALE_SERVICE_LANG_ATTR_NAME = new InjectionToken<string>('KBQ
 });
 
 /**
- * Utility provider to configure the attribute name to be used to set the locale in the html element.
- *
- * @see KBQ_LOCALE_SERVICE_LANG_ATTR_NAME
+ * Utility provider of {@link KBQ_LOCALE_SERVICE_LANG_ATTR_NAME}, the attribute name to be used to set the locale in
+ * the html element.
  *
  * @docs-private
  */
@@ -235,13 +232,11 @@ export class KbqLocaleService {
 }
 
 /**
- * Utility provider for the locale to activate.
+ * Utility provider of {@link KBQ_LOCALE_ID}, the locale to activate.
  *
  * Belongs in the same `providers` array as {@link kbqLocaleServiceProvider}: the id is read once, by the
  * `KbqLocaleService` constructor, out of the injector that created the service. Use `setLocale()` to change
  * the locale afterwards.
- *
- * @see KBQ_LOCALE_ID
  */
 export const kbqLocaleIDProvider = (localeId: KbqLocaleIdLike): Provider => ({
     provide: KBQ_LOCALE_ID,
@@ -249,7 +244,7 @@ export const kbqLocaleIDProvider = (localeId: KbqLocaleIdLike): Provider => ({
 });
 
 /**
- * Utility provider for the locale service. `KBQ_LOCALE_SERVICE` has no factory, so nothing is localized
+ * Utility provider for the locale service. {@link KBQ_LOCALE_SERVICE} has no factory, so nothing is localized
  * until an application provides it.
  *
  * Provides the service next to the token rather than aliasing the class through `useClass`, which builds a
@@ -258,8 +253,6 @@ export const kbqLocaleIDProvider = (localeId: KbqLocaleIdLike): Provider => ({
  *
  * On a component it scopes the locale to that subtree — put {@link kbqLocaleIDProvider} in the same array to
  * pick the locale of that scope.
- *
- * @see KBQ_LOCALE_SERVICE
  */
 export const kbqLocaleServiceProvider = (): Provider => [
     KbqLocaleService,
@@ -269,11 +262,9 @@ export const kbqLocaleServiceProvider = (): Provider => [
 /**
  * Reads the locale service the application provided.
  *
- * Resolves `KBQ_LOCALE_SERVICE`, not the class: the token is what the components read, and an application
+ * Resolves {@link KBQ_LOCALE_SERVICE}, not the class: the token is what the components read, and an application
  * is free to provide something else under it. Pass `{ optional: true }` for code that has to keep working
  * without a locale service — which is how every component of this library reads it.
- *
- * @see KBQ_LOCALE_SERVICE
  */
 export function kbqInjectLocaleService(options?: InjectOptions & { optional?: false }): KbqLocaleService;
 export function kbqInjectLocaleService(options: InjectOptions): KbqLocaleService | null;

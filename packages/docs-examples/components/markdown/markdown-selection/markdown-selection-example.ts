@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqMarkdownModule } from '@koobiq/components/markdown';
+import { KbqMarkdown } from '@koobiq/components/markdown';
 
 /**
  * @title Markdown selection
  */
 @Component({
     selector: 'markdown-selection-example',
-    imports: [KbqMarkdownModule],
+    imports: [KbqMarkdown],
     templateUrl: 'markdown-selection-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

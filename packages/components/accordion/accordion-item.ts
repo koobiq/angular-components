@@ -113,6 +113,7 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
     /**
      * The item's own `value` input. Must stay `public`: a `protected` input cannot be bound from a
      * consumer template (TS2445 under full AOT template type-checking).
+     *
      * @docs-private
      */
     readonly valueInput = input<string>('', { alias: 'value' });
@@ -160,6 +161,7 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
     /**
      * Emits whenever the expanded state of the accordion item changes.
      * Primarily used to facilitate two-way binding.
+     *
      * @docs-private
      */
     readonly expandedChange = output<boolean>();
@@ -291,6 +293,7 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
 
         if (this.expanded) {
             this.opened.emit();
+
             /**
              * In the unique selection dispatcher, the id parameter is the id of the KbqAccordionItem,
              * the name value is the id of the accordion.

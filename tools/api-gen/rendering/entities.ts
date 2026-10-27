@@ -108,9 +108,10 @@ export interface ClassEntry extends DocEntry {
     indexSignatures?: string[];
 }
 
-// From an API doc perspective, class and interfaces are identical.
-
-/** Documentation entity for a TypeScript interface. */
+/**
+ * Documentation entity for a TypeScript interface: from an API doc perspective, classes and interfaces are
+ * identical.
+ */
 export type InterfaceEntry = ClassEntry;
 
 /** Documentation entity for a TypeScript enum. */

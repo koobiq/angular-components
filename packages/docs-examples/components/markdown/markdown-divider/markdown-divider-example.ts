@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqMarkdownModule } from '@koobiq/components/markdown';
+import { KbqMarkdown } from '@koobiq/components/markdown';
 
 /**
  * @title Markdown divider
  */
 @Component({
     selector: 'markdown-divider-example',
-    imports: [KbqMarkdownModule],
+    imports: [KbqMarkdown],
     templateUrl: './markdown-divider-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

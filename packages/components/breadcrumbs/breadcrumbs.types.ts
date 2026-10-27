@@ -10,10 +10,12 @@ export type KbqBreadcrumbsConfiguration = {
      */
     max: number | null;
     size: KbqDefaultSizes;
+
     /**
      * Determines if a negative margin should be applied to the first breadcrumb item.
      */
     firstItemNegativeMargin: boolean;
+
     /**
      * Manages breadcrumb items when space is limited:
      * - `auto`: Adjusts based on space and item count.

@@ -96,6 +96,7 @@ export type KbqTagDragData = KbqTagEvent;
 
 /**
  * Dummy directive to add CSS class to tag avatar.
+ *
  * @docs-private
  */
 @Directive({
@@ -106,6 +107,7 @@ export class KbqTagAvatar {}
 
 /**
  * Dummy directive to add CSS class to tag trailing icon.
+ *
  * @docs-private
  */
 @Directive({
@@ -306,6 +308,7 @@ export class KbqTag
      * Backing input of `editable`. Bind through the `editable` attribute; read `editable`, which falls
      * back to the tag list's `editable` while this is unbound.
      * `undefined` only as the default: the transform never runs on it, so a bound value is always a boolean.
+     *
      * @docs-private
      */
     readonly editableInput = input<boolean | undefined, unknown>(undefined, {
@@ -368,6 +371,7 @@ export class KbqTag
      * reflects `select()`, `deselect()` and user interaction.
      * A change of the binding is applied in `ngOnChanges` through `setSelectedState()`, so it emits
      * `selectionChange` the way the old setter did - the tag list listens to it.
+     *
      * @docs-private
      */
     readonly selectedInput = input(false, { alias: 'selected', transform: booleanAttribute });
@@ -394,6 +398,7 @@ export class KbqTag
     /**
      * Backing input of `selectable`. Bind through the `selectable` attribute; read `selectable`, which is
      * also true while the tag list is selectable.
+     *
      * @docs-private
      */
     readonly selectableInput = input(false, { alias: 'selectable', transform: booleanAttribute });
@@ -404,6 +409,7 @@ export class KbqTag
     /**
      * Backing input of `removable`. Bind through the `removable` attribute; read `removable`, which also
      * requires the tag list to be removable.
+     *
      * @docs-private
      */
     readonly removableInput = input(true, { alias: 'removable', transform: booleanAttribute });
@@ -457,6 +463,7 @@ export class KbqTag
 
     /**
      * Value of the `disabled` attribute.
+     *
      * @internal
      */
     protected readonly disabledAttribute = computed(() => this.disabled || null);
@@ -474,6 +481,7 @@ export class KbqTag
 
     /**
      * Whether the tag moves into place without motion while the list is reordered.
+     *
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
@@ -541,6 +549,7 @@ export class KbqTag
      *
      * @deprecated Use `KbqTagPrefix` and `KbqTagSuffix` to declare the position explicitly.
      * Will be removed in 22.0.0.
+     *
      * @docs-private
      */
     addClassModificatorForIcons(): void {

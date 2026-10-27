@@ -35,6 +35,7 @@ export type KbqPanelMaxWidth = number | null;
 
 /**
  * Anything an overlay panel can be measured against.
+ *
  * @docs-private
  */
 export type KbqPanelWidthOrigin = ElementRef<HTMLElement> | CdkOverlayOrigin | HTMLElement;
@@ -44,6 +45,7 @@ export type KbqPanelWidthOrigin = ElementRef<HTMLElement> | CdkOverlayOrigin | H
  *
  * Both keys are always present so that the result can be passed straight to `OverlayRef.updateSize()`,
  * which shallow-merges into the existing config — an omitted key would leave a stale value applied.
+ *
  * @docs-private
  */
 export interface KbqResolvedPanelWidth {
@@ -56,6 +58,7 @@ export interface KbqResolvedPanelWidth {
  *
  * Uses `getBoundingClientRect()` because `getComputedStyle().width` resolves to the used
  * content-box width regardless of `box-sizing`, so subtracting borders from it double-counts them.
+ *
  * @docs-private
  */
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number {
@@ -71,6 +74,7 @@ export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number {
 
 /**
  * Whether `panelWidth` is an explicit width rather than `'auto'` or content-sized.
+ *
  * @docs-private
  */
 export function isExplicitPanelWidth(panelWidth: KbqPanelWidth | undefined): panelWidth is number | string {
@@ -84,6 +88,7 @@ export function isExplicitPanelWidth(panelWidth: KbqPanelWidth | undefined): pan
  *
  * `panelWidth` selects the sizing policy. The "never narrower than the trigger" rule belongs to the
  * automatic policies (`null` and `'auto'`); an explicit width is taken at face value.
+ *
  * @docs-private
  */
 export function kbqResolvePanelWidth(

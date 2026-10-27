@@ -143,19 +143,15 @@ export class KbqCodeBlock implements AfterViewInit {
     private readonly copyButtonTooltip = viewChild<KbqTooltipTrigger>('copyButtonTooltip');
     private readonly defaultOptions = inject(KBQ_CODE_BLOCK_DEFAULT_OPTIONS, { optional: true });
 
-    /** @docs-private */
     private readonly highlight = viewChild(KbqCodeBlockHighlight);
 
-    /** @docs-private */
     private readonly scrollbarViewport = viewChild.required(KbqScrollbarViewport);
 
     /** Memoized so every waiter shares one `toObservable` effect instead of installing one each. */
     private highlightPending?: Observable<boolean>;
 
-    /** @docs-private */
     private readonly preElementRef = viewChild<ElementRef<HTMLElement>>('codeBlockPre');
 
-    /** @docs-private */
     private readonly codeElementRef = viewChild<ElementRef<HTMLElement>>('codeBlockCode');
 
     /**
@@ -263,8 +259,8 @@ export class KbqCodeBlock implements AfterViewInit {
      */
     readonly filesInput = input<KbqCodeBlockFile[]>([], { alias: 'files' });
 
-    // TODO: mark as `required`.
     /** Files to display. */
+    // TODO: mark as `required`.
     readonly files = linkedSignal(() => this.filesInput());
 
     /**
@@ -372,6 +368,7 @@ export class KbqCodeBlock implements AfterViewInit {
      * @docs-private
      */
     protected readonly componentColor = KbqComponentColors;
+
     /**
      * @docs-private
      */
@@ -386,6 +383,7 @@ export class KbqCodeBlock implements AfterViewInit {
     private readonly domSanitizer = inject(DomSanitizer);
     private readonly document = inject<Document>(DOCUMENT);
     private readonly sharedResizeObserver = inject(SharedResizeObserver);
+
     /**
      * @docs-private
      */
@@ -594,7 +592,6 @@ export class KbqCodeBlock implements AfterViewInit {
         );
     }
 
-    /** @docs-private */
     private measureContentOverflow(): void {
         const maxHeight = this.maxHeight();
         const preElement = this.preElementRef()?.nativeElement;

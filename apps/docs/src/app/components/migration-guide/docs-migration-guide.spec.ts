@@ -16,7 +16,7 @@ import { DocsMigrationProgress } from './docs-migration-progress';
  * upgrade-plan list and three steps at three releases.
  */
 const GUIDE_TEMPLATE = `
-        <section class="docs-migration-framing docs-migration-intro" data-docs-migration-release="20.3.0">
+        <section class="docs-migration-framing docs-migration-intro" data-docs-migration-release="20.4.2">
             <h2 id="how-to-upgrade" class="docs-header-link kbq-markdown__h2" data-docs-migration-title>
                 How to upgrade from Koobiq 17
             </h2>
@@ -332,8 +332,8 @@ describe(DocsMigrationGuide.name, () => {
 
         const unreleased = `21.0.0 ${DOCS_TRANSLATIONS.migrationUnreleased.ru}`;
 
-        expect(await options(0)).toEqual(['17.x', '18.6.0', '19.x', '20.2.0', '20.3.0', unreleased]);
-        expect(await options(1)).toEqual(['17.x', '18.6.0', '19.x', '20.2.0', '20.3.0', unreleased]);
+        expect(await options(0)).toEqual(['17.x', '18.6.0', '19.x', '20.2.0', '20.3.x', '20.4.2', unreleased]);
+        expect(await options(1)).toEqual(['17.x', '18.6.0', '19.x', '20.2.0', '20.3.x', '20.4.2', unreleased]);
     });
 
     // The range has to survive a reload and a shared link, and `replaceUrl` keeps narrowing a

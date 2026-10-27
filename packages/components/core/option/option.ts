@@ -42,6 +42,7 @@ export class KbqOptionSelectionChange<T = KbqOption> {
 /**
  * Describes a parent component that manages a list of options.
  * Contains properties that the options can inherit.
+ *
  * @docs-private
  */
 export interface KbqOptionParentComponent {
@@ -49,6 +50,7 @@ export interface KbqOptionParentComponent {
     multiSelection?: boolean;
     withVirtualScroll?: boolean;
     keyManager?: ActiveDescendantKeyManager<KbqOption>;
+
     /**
      * Handles a Shift+click on `option`, e.g. by selecting the range up to it. Without it, the click selects the
      * option alone.
@@ -268,6 +270,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     /**
      * Value of `aria-disabled`: the same as `disabled`, but a signal of its own, since `kbq-disabled` reads that one.
+     *
      * @internal
      */
     protected readonly ariaDisabled = computed(() => this.disabled);

@@ -101,8 +101,6 @@ function getDocs(
     context: string
 ): Pick<DocsApiEntry, 'deprecated' | 'description' | 'examples'> {
     const deprecated = jsdocTags.find(({ name }) => name === 'deprecated');
-    // A comment may give its text in a `@description` tag rather than open with it.
-    const text = description || jsdocTags.find(({ name }) => name === 'description')?.comment || '';
     const examples = jsdocTags
         .filter(({ name, comment }) => name === 'example' && comment.trim())
         .map(({ comment }) => renderJsDocMarkdown(exampleAsMarkdown(comment), `${context} @example`));
@@ -111,7 +109,7 @@ function getDocs(
         deprecated: deprecated && {
             reason: nonEmpty(renderJsDocMarkdown(deprecated.comment, `${context} @deprecated`))
         },
-        description: nonEmpty(renderJsDocMarkdown(text, context)),
+        description: nonEmpty(renderJsDocMarkdown(description ?? '', context)),
         examples: nonEmpty(examples)
     };
 }

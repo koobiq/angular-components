@@ -74,8 +74,10 @@ export type KbqFileUploadCaptionContext = {
 
 /** @docs-private */
 export abstract class KbqFileUploadBase {
-    /** Tracks whether the component is in an error state based on the control, parent form,
-     * and `errorStateMatcher`, triggering visual updates and state changes if needed. */
+    /**
+     * Tracks whether the component is in an error state based on the control, parent form,
+     * and `errorStateMatcher`, triggering visual updates and state changes if needed.
+     */
     errorState: boolean = false;
 
     /** An object used to control the error state of the component. */
@@ -84,6 +86,7 @@ export abstract class KbqFileUploadBase {
     /**
      * Emits whenever the component state changes and should cause the parent
      * form-field to update. Implemented as part of `KbqFormFieldControl`.
+     *
      * @docs-private
      */
     readonly stateChanges = new Subject<void>();
@@ -180,6 +183,7 @@ export abstract class KbqFileUploadBase {
     /**
      * Pushes one message into the live region. Cleared first: a live region speaks on a content
      * change, so removing two identically named files in a row would otherwise stay silent.
+     *
      * @docs-private
      */
     protected announce(...messages: string[]): void {

@@ -37,6 +37,7 @@ export abstract class KbqPopUp implements OnDestroy {
 
     /**
      * Whether the pop-up appears without motion.
+     *
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
@@ -149,6 +150,7 @@ export abstract class KbqPopUp implements OnDestroy {
      * Hides the popup after a specified delay.
      *
      * The hide timeout triggers the hiding of the popup by updating visibility and emitting relevant events.
+     *
      * @param delay - The delay in milliseconds before hiding the popup.
      */
     hide(delay: number): void {

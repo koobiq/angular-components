@@ -484,6 +484,7 @@ export class KbqButton
      * Applies the color propagated by a surrounding `KbqButtonGroupRoot`, unless the button defines
      * its own. A falsy value — the group's `color` input is unbound — releases the button back to
      * the default color of its style.
+     *
      * @docs-private
      */
     setColorFromGroup(value: KbqButtonColor | null | undefined): void {
@@ -494,6 +495,7 @@ export class KbqButton
     /**
      * Applies the style propagated by a surrounding `KbqButtonGroupRoot`, unless the button defines
      * its own.
+     *
      * @docs-private
      */
     setKbqStyleFromGroup(value: KbqButtonStyleInput): void {
@@ -505,6 +507,7 @@ export class KbqButton
     /**
      * Applies the disabled state propagated by a surrounding `KbqButtonGroupRoot`. It is additive:
      * a button disabled through its own input stays disabled when the group is re-enabled.
+     *
      * @docs-private
      */
     setDisabledFromGroup(value: boolean): void {

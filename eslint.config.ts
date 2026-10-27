@@ -1,37 +1,26 @@
-// @ts-check
+import comments from '@eslint-community/eslint-plugin-eslint-comments/configs';
+import eslint from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
+import vitest from '@vitest/eslint-plugin';
+import angular from 'angular-eslint';
+import progress from 'eslint-plugin-file-progress';
+import playwright from 'eslint-plugin-playwright';
+import prettierRecommended from 'eslint-plugin-prettier/recommended';
+import promise from 'eslint-plugin-promise';
+import rxjs from 'eslint-plugin-rxjs-x';
+import { defineConfig } from 'eslint/config';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
+import { publishedJsDocConfig } from './tools/eslint/jsdoc';
 
-const eslint = require('@eslint/js');
-const tseslint = require('typescript-eslint');
-const angular = require('angular-eslint');
-const globals = require('globals');
-const stylistic = require('@stylistic/eslint-plugin');
-const promise = require('eslint-plugin-promise');
-// eslint-plugin-rxjs-x ships as transpiled ESM (the plugin object lives under `.default`)
-const rxjs = require('eslint-plugin-rxjs-x').default;
-const comments = require('@eslint-community/eslint-plugin-eslint-comments/configs');
-const jsdoc = require('eslint-plugin-jsdoc');
-// eslint-plugin-file-progress ships as ESM since v2 (the plugin object lives under `.default`)
-const progress = require('eslint-plugin-file-progress').default;
-const prettierRecommended = require('eslint-plugin-prettier/recommended');
-// eslint-plugin-playwright types its CommonJS entry as `export default`, while `require` returns the plugin itself
-/** @type {typeof import('eslint-plugin-playwright').default} */
-const playwright = /** @type {any} */ (require('eslint-plugin-playwright'));
-const vitest = require('@vitest/eslint-plugin');
+const isCI = !!process.env['CI'];
 
-const isCI = !!process.env.CI;
-
-/**
- * @param {string} str
- * @returns {string}
- */
-const capitalizeFirst = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+const capitalizeFirst = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
 
 /**
  * @see https://typescript-eslint.io/rules/naming-convention/#options
- *
- * @param {string} prefix
  */
-const makeNamingConventionOptions = (prefix) => {
+const makeNamingConventionOptions = (prefix: string) => {
     return [
         { selector: 'variable', format: ['camelCase', 'UPPER_CASE'], leadingUnderscore: 'allow' },
         {
@@ -93,8 +82,7 @@ const noAngularAnimationsImports = [
  * @see https://eslint.org/docs/latest/rules/no-restricted-globals
  */
 const noRestrictedGlobalsOptionsForSSR = (() => {
-    /** @type {Array<keyof Window>} */
-    const restrictedWindowGlobals = [
+    const restrictedWindowGlobals: Array<keyof Window> = [
         'window',
         'open',
         'close',
@@ -132,7 +120,7 @@ const noRestrictedGlobalsOptionsForSSR = (() => {
     return restrictedOptions;
 })();
 
-module.exports = tseslint.config(
+export default defineConfig(
     // Global ignores (ported from .eslintignore)
     {
         ignores: [
@@ -279,7 +267,7 @@ module.exports = tseslint.config(
             parser: tseslint.parser,
             parserOptions: {
                 project: ['tsconfig.eslint.json'],
-                tsconfigRootDir: __dirname
+                tsconfigRootDir: import.meta.dirname
             }
         },
         rules: {
@@ -542,36 +530,8 @@ module.exports = tseslint.config(
         }
     },
 
-    // JSDoc of packages/components, which the docs site and llms-full.txt are generated from. TypeScript takes
-    // any `@word` that starts a line for a tag and hides the text after it in that tag, so a tag the docs do not
-    // show loses that text without an error anywhere.
-    {
-        files: ['packages/components/**/*.ts'],
-        ignores: ['**/*.spec.ts', '**/*.playwright-spec.ts', '**/e2e.ts'],
-        plugins: {
-            jsdoc
-        },
-        settings: {
-            jsdoc: {
-                mode: 'typescript',
-                tagNamePreference: {
-                    property: {
-                        message: 'The docs do not show `@property`: describe the property in a comment of its own.'
-                    },
-                    todo: { message: 'Write a `// TODO` comment: the docs do not show `@todo`, nor the text after it.' }
-                }
-            }
-        },
-        rules: {
-            // plugin:jsdoc
-            // an unknown tag, a block `@link` among them: only `{@link}` is inline
-            'jsdoc/check-tag-names': [1, { definedTags: ['docs-private'] }],
-            // `/*` with a tag in it: meant as JSDoc, but TypeScript does not read it
-            'jsdoc/no-bad-blocks': 1,
-            // a `@param` naming no parameter documents nothing
-            'jsdoc/check-param-names': [1, { checkDestructured: false, disableMissingParamChecks: true }]
-        }
-    },
+    // JSDoc of the published Angular packages, which the docs are generated from or are to be
+    publishedJsDocConfig,
 
     // Override rules for specs
     {

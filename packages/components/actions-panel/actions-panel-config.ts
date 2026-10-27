@@ -9,9 +9,7 @@ export const KBQ_ACTIONS_PANEL_DEFAULT_CONFIG = new InjectionToken<KbqActionsPan
 );
 
 /**
- * Utility for providing default actions panel config.
- *
- * @see `KBQ_ACTIONS_PANEL_DEFAULT_CONFIG`
+ * Utility for providing default actions panel config through {@link KBQ_ACTIONS_PANEL_DEFAULT_CONFIG}.
  */
 export const kbqActionsPanelDefaultConfigProvider = <D>(config: KbqActionsPanelConfig<D>): Provider => ({
     provide: KBQ_ACTIONS_PANEL_DEFAULT_CONFIG,
@@ -21,9 +19,6 @@ export const kbqActionsPanelDefaultConfigProvider = <D>(config: KbqActionsPanelC
 /**
  * Configuration for opened actions panel.
  * Based on cdk `DialogConfig`.
- *
- * @see `DialogConfig`
- *
  */
 export class KbqActionsPanelConfig<D = unknown> {
     /**
@@ -32,9 +27,7 @@ export class KbqActionsPanelConfig<D = unknown> {
     injector?: Injector;
 
     /**
-     * Data being injected into the child component.
-     *
-     * @see `KBQ_ACTIONS_PANEL_DATA`
+     * Data being injected into the child component with {@link KBQ_ACTIONS_PANEL_DATA}.
      */
     data?: D | null = null;
 
@@ -43,9 +36,8 @@ export class KbqActionsPanelConfig<D = unknown> {
 
     /**
      * Whether the actions panel should be closed of when the user goes backwards/forwards in history.
+     * Defaults to `true`.
      * NOTE! This does not apply to router navigation.
-     *
-     * @default true
      */
     closeOnNavigation?: boolean = true;
 
@@ -86,23 +78,17 @@ export class KbqActionsPanelConfig<D = unknown> {
     maxWidth?: number | string;
 
     /**
-     * Direction of the text in the actions panel.
-     *
-     * @default 'ltr'
+     * Direction of the text in the actions panel. Defaults to `'ltr'`.
      */
     direction?: Direction = 'ltr';
 
     /**
-     * Scroll strategy to be used for the actions panel.
-     *
-     * @default `RepositionScrollStrategy`
+     * Scroll strategy to be used for the actions panel. Defaults to `RepositionScrollStrategy`.
      */
     scrollStrategy?: (overlay: Overlay) => ScrollStrategy = (overlay) => overlay.scrollStrategies.reposition();
 
     /**
-     * Whether the user can use ESC or click on close button to close the actions panel.
-     *
-     * @default false
+     * Whether the user can use ESC or click on close button to close the actions panel. Defaults to `false`.
      */
     disableClose?: boolean = false;
 }

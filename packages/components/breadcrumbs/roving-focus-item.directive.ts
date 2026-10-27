@@ -39,6 +39,7 @@ export class RdxRovingFocusItemDirective implements OnDestroy {
      * does not focus it.
      */
     readonly focusable = input<boolean, unknown>(true, { transform: booleanAttribute });
+
     /**
      * Whether the item is the one focus returns to when the group is re-entered. Defaults to `false`, so
      * that `data-active` discriminates: with every item active the lookup degenerates to the first one.
@@ -70,6 +71,7 @@ export class RdxRovingFocusItemDirective implements OnDestroy {
     /**
      * Lifecycle hook triggered on destruction.
      * Unregisters the element from the parent roving focus group.
+     *
      * @docs-private
      */
     ngOnDestroy() {
@@ -79,6 +81,7 @@ export class RdxRovingFocusItemDirective implements OnDestroy {
     /**
      * Determines the `tabIndex` of the element.
      * Returns `0` if the element is the current tab stop; otherwise, returns `-1`.
+     *
      * @docs-private
      */
     get tabIndex() {
@@ -107,6 +110,7 @@ export class RdxRovingFocusItemDirective implements OnDestroy {
      * Supports navigation based on orientation and direction, and focuses appropriate elements.
      *
      * @param event The `KeyboardEvent` object.
+     *
      * @docs-private
      */
     handleKeydown(event: KeyboardEvent) {

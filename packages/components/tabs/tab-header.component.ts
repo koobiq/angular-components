@@ -26,6 +26,7 @@ const TAB_PADDING = 12;
  * When the tabs list's width exceeds the width of the header container,
  * then arrows will be displayed to allow the user to scroll
  * left and right across the header.
+ *
  * @docs-private
  */
 @Component({

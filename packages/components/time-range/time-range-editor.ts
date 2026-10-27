@@ -149,6 +149,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
      * Caption under the "range" option, spelling out the bounds the border has to stay within. Read from
      * the service rather than from this component's own inputs, so that it can never disagree with what
      * the border validators go on to enforce.
+     *
      * @docs-private
      */
     protected readonly boundsHint = computed(() => {
@@ -313,6 +314,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
      * The editor counts as left only once focus is out of it entirely. Moving between its own fields -
      * the two halves of a border, or from a border to the radio that drives it - is still editing, and
      * a `focusout` fires for each of those moves.
+     *
      * @docs-private
      */
     protected onEditorFocusOut({ currentTarget, relatedTarget }: FocusEvent): void {
@@ -325,6 +327,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
      * Leaving one border reports what is wrong with it. Angular marks a control touched on its own blur,
      * which is a finer grain than the spec asks for - so moving between a border's own date and time
      * takes the touch back off, and the pair is judged only once focus is out of both.
+     *
      * @docs-private
      */
     protected onBorderFocusOut(border: RangeBorder, { currentTarget, relatedTarget }: FocusEvent): void {
@@ -337,6 +340,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     /**
      * Typing puts a border back to its neutral state, the way `validation-on-blur` does for a single
      * field. What is wrong with it is said again when focus leaves it.
+     *
      * @docs-private
      */
     protected onBorderInput(border: RangeBorder): void {
@@ -348,6 +352,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
      * ends, and only when both of them are at fault: a single end out of bounds is already pointed at by
      * the fields painted around it. Silent until the ends have been left, keeping step with that
      * painting.
+     *
      * @docs-private
      */
     protected outOfBoundsMessage(): string {
@@ -364,6 +369,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
      * Once focus leaves the manual range fields, a reversed range is silently swapped back into order -
      * except on the way to "apply", where the swap is left to the emitted value so that the popover does
      * not visibly reorder itself in the same gesture that closes it.
+     *
      * @docs-private
      */
     protected onRangeFocusOut({ currentTarget, relatedTarget }: FocusEvent): void {

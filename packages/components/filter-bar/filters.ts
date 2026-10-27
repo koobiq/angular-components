@@ -116,6 +116,7 @@ export class KbqFilters implements OnInit {
 
     /** Event that is generated whenever the user selects a filter. */
     readonly onSelectFilter = output<KbqFilter>();
+
     /**
      * Event that is generated whenever the user save a filter.
      *
@@ -152,8 +153,11 @@ export class KbqFilters implements OnInit {
         return this.filters().length === 0;
     }
 
-    /** Current focus origin state.
-     * @docs-private */
+    /**
+     * Current focus origin state.
+     *
+     * @docs-private
+     */
     get focusOrigin(): FocusOrigin {
         return this._focusOrigin;
     }
@@ -267,8 +271,10 @@ export class KbqFilters implements OnInit {
         setTimeout(() => this.focusMonitor.focusVia(this.mainButton().elementRef, this.focusOrigin), 0);
     }
 
-    /** Hide the popup and restore focus.
-     * Use this method in the onSave or onChangeFilter events after the data has been successfully saved. */
+    /**
+     * Hide the popup and restore focus.
+     * Use this method in the onSave or onChangeFilter events after the data has been successfully saved.
+     */
     filterSavedSuccessfully() {
         untracked(() => this.savePopover().savedSuccessfully());
 
@@ -330,8 +336,11 @@ export class KbqFilters implements OnInit {
         return this.savePopover().filterSavingErrorText;
     }
 
-    /** header of popover. Depends on the mode
-     * @docs-private */
+    /**
+     * header of popover. Depends on the mode
+     *
+     * @docs-private
+     */
     get popoverHeader(): string {
         return this.savePopover().popoverHeader;
     }

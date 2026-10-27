@@ -49,8 +49,11 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     /** pipe data. Provided from subclass */
     readonly data = inject<KbqPipeData<V>>(KBQ_PIPE_DATA);
 
-    /** KbqFilterBar instance
-     * @docs-private */
+    /**
+     * KbqFilterBar instance
+     *
+     * @docs-private
+     */
     protected readonly filterBar = inject(KBQ_FILTER_BAR_HOST, { optional: true });
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -66,6 +69,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     /**
      * Whether this pipe has been destroyed. Guards deferred (`setTimeout`) work that could otherwise
      * read view queries or mutate `data` after the pipe was removed or the filter switched.
+     *
      * @docs-private
      */
     protected destroyed = false;
@@ -74,6 +78,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected values;
     /** TemplateRef for selecting an option */
     protected valueTemplate?: TemplateRef<any> | string;
+
     /**
      * Optional equality comparator forwarded from the pipe template to the underlying `kbq-select`.
      * Only consumed by the select / multi-select pipe components; when unset they fall back to their
@@ -83,22 +88,26 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         o1: KbqSelectValue | null | undefined,
         o2: KbqSelectValue | null | undefined
     ) => boolean;
+
     /**
      * Values forwarded from the pipe template whose selection the user cannot remove. Only consumed by
      * the multi-select pipe components; other pipe types ignore it.
      */
     protected lockedValues?: unknown[];
+
     /**
      * Maximum height of the dropdown panel's scrollable list, forwarded from the pipe template to the
      * underlying `kbq-select` / `kbq-tree-select`. Only consumed by the select-family pipe components;
      * `undefined` leaves the list at the select-family default of 256px.
      */
     protected panelMaxHeight?: KbqPanelMaxHeight;
+
     /**
      * Whether the dropdown's option names and captions wrap instead of being truncated, forwarded from
      * the pipe template. Only consumed by the select / multi-select pipe components.
      */
     protected multilineOptions?: boolean;
+
     /**
      * Message shown in place of the options when the pipe template has none, forwarded from the pipe
      * template. Only consumed by the select-family pipe components; `undefined` falls back to the localized
@@ -113,8 +122,11 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
      */
     isMac = false;
 
-    /** Data for the pipe.
-     *  @docs-private */
+    /**
+     * Data for the pipe.
+     *
+     * @docs-private
+     */
     $implicit: unknown;
 
     /** Whether the current pipe is empty. Used for apply style modifier */
@@ -140,8 +152,11 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         return this.noOptionsText ?? this.localeConfiguration().pipe.noOptions;
     }
 
-    /** Localized strings of the filter-bar, falling back to the defaults outside a bar.
-     * @docs-private */
+    /**
+     * Localized strings of the filter-bar, falling back to the defaults outside a bar.
+     *
+     * @docs-private
+     */
     readonly localeConfiguration = computed<KbqFilterBarLocaleConfiguration>(
         () => this.filterBar?.localeConfiguration() ?? KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION
     );
@@ -321,8 +336,11 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         }
     }
 
-    // Every pipe opens untracked: called from a consumer's `effect()`, the state read on the way would make the
-    // effect run again on every open and close.
-    /** @docs-private */
+    /**
+     * Every pipe opens untracked: called from a consumer's `effect()`, the state read on the way would make the
+     * effect run again on every open and close.
+     *
+     * @docs-private
+     */
     abstract open(): void;
 }
