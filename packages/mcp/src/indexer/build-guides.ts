@@ -159,20 +159,18 @@ export const buildGuides = (repo: string): Guide[] => {
     const staged = stagedVersion(version);
 
     const take = (id: string, named: 'en' | 'ru' | null, since: string, source: string, unreleased?: true): void => {
-        const lang = named ?? detectLang(source);
-        const key = `${id}\t${lang}`;
-
-        if (guides.has(key)) return;
+        // Only the English text ships: an agent reads it as well as the Russian and answers in the
+        // user's language, and a second copy doubles the size and needs a parity check.
+        if ((named ?? detectLang(source)) !== 'en' || guides.has(id)) return;
 
         const { lede, sections } = parseGuide(source);
         const trimmed = trimMigration(id, sections);
 
         if (trimmed.length === 0 && lede.length === 0) return;
 
-        guides.set(key, {
+        guides.set(id, {
             id,
             title: titleFromId(id),
-            lang,
             since,
             ...(unreleased ? { unreleased } : {}),
             lede,
@@ -216,7 +214,7 @@ export const buildGuides = (repo: string): Guide[] => {
         if (existsSync(full)) take(id, lang, version, readFileSync(full, 'utf-8'), staged ? undefined : true);
     }
 
-    return [...guides.values()].sort((a, b) => a.id.localeCompare(b.id) || a.lang.localeCompare(b.lang));
+    return [...guides.values()].sort((a, b) => a.id.localeCompare(b.id));
 };
 
 const main = (): void => {
@@ -233,14 +231,14 @@ const main = (): void => {
     writeFileSync(outputPath, JSON.stringify(guides) + '\n');
 
     const sections = guides.reduce((total, guide) => total + guide.sections.length, 0);
-    const unreleased = guides.filter((guide) => guide.unreleased).map((guide) => `${guide.id}.${guide.lang}`);
+    const unreleased = guides.filter((guide) => guide.unreleased).map((guide) => guide.id);
     const missed = assertNothingMissed(repo);
 
     process.stdout.write(
         [
             outputPath,
             `  from release  ${latestRelease(repo) ?? 'none — working tree only'}`,
-            `  guides        ${guides.length} (${new Set(guides.map((guide) => guide.id)).size} ids x languages)`,
+            `  guides        ${guides.length}`,
             `  sections      ${sections}`,
             `  size          ${Math.round(Buffer.byteLength(JSON.stringify(guides)) / 1024)} KB`,
             `  built in      ${((Date.now() - started) / 1000).toFixed(1)}s`,

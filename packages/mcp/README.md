@@ -17,7 +17,7 @@ from a checkout of `koobiq/angular-components`.
 | `get_example`          | source of one live example from the documentation site                                                                             |
 | `get_icon`             | usable attribute value and markup for an icon                                                                                      |
 | `get_token`            | CSS custom property, value per theme, deprecation status                                                                           |
-| `get_guide`            | installation, theming, localization, validation, schematics, smart search, migration — narrowed in three steps, in either language |
+| `get_guide`            | installation, theming, localization, validation, schematics, smart search, migration — narrowed in three steps |
 | `migrate`              | what changed between two versions, which entry points lost API, where the written instructions are                                 |
 | `which_component_when` | which component answers a task, and which neighbour would be the wrong choice — with the reason                                    |
 | `list_components`      | the complete list of documented areas, as ids the other tools accept                                                               |

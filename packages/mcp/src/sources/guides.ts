@@ -26,12 +26,7 @@ export const guideCaveat = (guide: Guide, version: string | null): string | null
     return `this text is from ${guide.since} and this project is on ${version} — a different major, so parts of it may not apply`;
 };
 
-/** Prefers the asked-for language, falls back to the other rather than answering nothing. */
-export const pickGuide = (guides: Guide[], id: string, lang: 'en' | 'ru'): Guide | null => {
-    const matching = guides.filter((guide) => guide.id === id);
-
-    return matching.find((guide) => guide.lang === lang) ?? matching[0] ?? null;
-};
+export const pickGuide = (guides: Guide[], id: string): Guide | null => guides.find((guide) => guide.id === id) ?? null;
 
 export const guideIds = (guides: Guide[]): string[] => [...new Set(guides.map((guide) => guide.id))].sort();
 
@@ -77,7 +72,7 @@ export const sectionPath = (guide: Guide, index: number): string => {
 };
 
 export type SectionHit =
-    | { kind: 'found'; section: GuideSection; path: string; viaLang?: 'en' | 'ru' }
+    | { kind: 'found'; section: GuideSection; path: string }
     | { kind: 'ambiguous'; paths: string[] }
     | { kind: 'missing' };
 
@@ -144,36 +139,17 @@ const locate = (guide: Guide, query: string): number[] => {
     return body;
 };
 
-/**
- * Resolves a section address, across languages when it does not resolve in this one.
- *
- * Headings are translated along with the text, so an address taken from `migrate` or from an
- * English listing matches nothing in the Russian guide — four of the thirty-six calls in the first
- * recorded session were spent discovering that one at a time. Both languages are the same document
- * section for section, which is asserted in the tests, so a unique hit in the other language names
- * the section here by position.
- */
-export const findSection = (guides: Guide[], guide: Guide, query: string): SectionHit => {
+/** Resolves a section address within one guide. */
+export const findSection = (guide: Guide, query: string): SectionHit => {
     const here = locate(guide, query);
-    const found = (index: number, viaLang?: 'en' | 'ru'): SectionHit => {
-        const section = guide.sections[index];
 
-        return section
-            ? { kind: 'found', section, path: sectionPath(guide, index), ...(viaLang ? { viaLang } : {}) }
-            : { kind: 'missing' };
-    };
+    if (here.length === 1) {
+        const section = guide.sections[here[0]!];
 
-    if (here.length === 1) return found(here[0]!);
+        return section ? { kind: 'found', section, path: sectionPath(guide, here[0]!) } : { kind: 'missing' };
+    }
+
     if (here.length > 1) return { kind: 'ambiguous', paths: here.map((index) => sectionPath(guide, index)) };
 
-    const other = guides.find((candidate) => candidate.id === guide.id && candidate.lang !== guide.lang);
-
-    // Position only means something while the two texts have the same sections. They do today, and
-    // a test says so; if one language gains a heading, answering from the other would hand back a
-    // neighbouring section while looking exactly like a correct answer.
-    if (!other || other.sections.length !== guide.sections.length) return { kind: 'missing' };
-
-    const there = locate(other, query);
-
-    return there.length === 1 ? found(there[0]!, other.lang) : { kind: 'missing' };
+    return { kind: 'missing' };
 };

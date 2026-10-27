@@ -16,7 +16,7 @@ import { CONSUMER } from './project';
  */
 
 const catalog = loadCatalog(CONSUMER);
-const guide = pickGuide(catalog.guides(), 'which-component-when', 'en');
+const guide = pickGuide(catalog.guides(), 'which-component-when');
 
 /** `[task, the component that must be recommended first]` */
 const ACCEPTANCE: [string, string][] = [
@@ -55,7 +55,6 @@ test('the guide is loaded from the components repository, like every other guide
     // The point of storing it there: one copy of the mapping, in the repository that owns the
     // components it describes. Nothing in the guide pipeline knows this document is special.
     expect(guide, 'which-component-when is not bundled').toBeTruthy();
-    expect(guide!.lang).toBe('en');
     expect(guide!.sections.length > 15, `only ${guide!.sections.length} sections parsed`).toBeTruthy();
 });
 
@@ -140,48 +139,6 @@ test('a rare word outweighs one the guide repeats everywhere', () => {
     expect(weights.get('user')! >= 1, 'a common word still has to count for something').toBeTruthy();
 });
 
-/**
- * `[task, expected, how far down it may be]`
- *
- * Russian is allowed a longer leash on two of these, and the reason is in the guide rather than in
- * the ranking: «показать что идёт загрузка» matches the empty-state row as fairly as the progress
- * one, because both Russian phrasings open with «показать».
- */
-const ACCEPTANCE_RU: [string, string, number][] = [
-    ['выбрать несколько значений из длинного списка', 'select', 1],
-    ['несколько значений из иерархии', 'tree-select', 1],
-    ['переключение между разделами содержимого', 'tabs', 1],
-    ['выбрать диапазон дат', 'datepicker', 1],
-    ['меню действий', 'dropdown', 1],
-    ['настройка применяется сразу', 'toggle', 1],
-    ['сообщение, которое пользователь должен подтвердить', 'modal', 2],
-    ['текст не помещается по ширине', 'title', 2],
-    ['показать что идёт загрузка', 'progress', 3]
-];
-
-for (const [task, expected, within] of ACCEPTANCE_RU) {
-    test(`"${task}" — ${expected} в первых ${within}`, () => {
-        const got = recommendations(task);
-        const at = got.findIndex((line) => line.includes(expected));
-
-        expect(
-            at >= 0 && at < within,
-            `${at < 0 ? `не найден вовсе: ${got.join(' | ')}` : `на #${at + 1}: ${got.slice(0, within + 1).join(' | ')}`}`
-        ).toBeTruthy();
-    });
-}
-
-test('both languages of the guide parse to the same structure', () => {
-    // The parts are found by what they contain, not by their headings: `## Разграничение` is not
-    // `## Disambiguation`, and matching titles failed silently on every Russian question.
-    const ru = pickGuide(catalog.guides(), 'which-component-when', 'ru');
-
-    expect(ru, 'the Russian text is not bundled').toBeTruthy();
-    expect(parseChoices(ru).length).toBe(parseChoices(guide).length);
-    expect(parseKeywords(ru).length).toBe(parseKeywords(guide).length);
-    expect(parseComponentNotes(ru).length).toBe(parseComponentNotes(guide).length);
-});
-
 test('the keyword index is not confused with the component index', () => {
     // Both use `→`. The component index uses it in every second line, so a shape test that only
     // looks for an arrow picks the wrong part — and the keyword routing then runs on component
@@ -193,11 +150,4 @@ test('the keyword index is not confused with the component index', () => {
         'component prose leaked in'
     ).toBeTruthy();
     expect(routes.some((route) => route.words.includes('multiselect'))).toBeTruthy();
-});
-
-test('a Russian task is answered from the Russian text', () => {
-    const output = toolWhichComponent(catalog, { task: 'выбрать несколько значений из списка' });
-
-    expect(output, 'the answer came back in English').toMatch(/\p{Script=Cyrillic}/u);
-    expect(!output.startsWith('The component-choice guide is not bundled')).toBeTruthy();
 });

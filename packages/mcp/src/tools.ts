@@ -484,9 +484,8 @@ export const toolGetToken = (catalog: Catalog, args: { name: string }): string =
  * and `migration` is 200 KB, so returning a whole guide would cost more context than the answer
  * is worth, and most questions are answered by one section.
  */
-export const toolGetGuide = (catalog: Catalog, args: { id?: string; section?: string; lang?: 'en' | 'ru' }): string => {
+export const toolGetGuide = (catalog: Catalog, args: { id?: string; section?: string }): string => {
     const guides = catalog.guides();
-    const lang = args.lang ?? 'en';
     const version = catalog.project.packages.get('@koobiq/components')?.version ?? null;
 
     if (guides.length === 0) {
@@ -495,7 +494,7 @@ export const toolGetGuide = (catalog: Catalog, args: { id?: string; section?: st
 
     if (!args.id) {
         const lines = guideIds(guides).flatMap((id) => {
-            const guide = pickGuide(guides, id, lang);
+            const guide = pickGuide(guides, id);
 
             if (!guide) return [];
 
@@ -510,7 +509,7 @@ export const toolGetGuide = (catalog: Catalog, args: { id?: string; section?: st
         return [...lines, '', `Call again with id to list a guide's sections.`].join('\n');
     }
 
-    const guide = pickGuide(guides, args.id, lang);
+    const guide = pickGuide(guides, args.id);
 
     if (!guide) {
         return [`Unknown guide "${args.id}".`, `Available: ${guideIds(guides).join(', ')}`].join('\n');
@@ -519,10 +518,9 @@ export const toolGetGuide = (catalog: Catalog, args: { id?: string; section?: st
     const caveat = guideCaveat(guide, version);
 
     const provenance = [
-        `Guide: ${guide.title} (${guide.lang})`,
+        `Guide: ${guide.title}`,
         guide.unreleased ? null : `Text as shipped in ${guide.since}`,
-        caveat ? `NOTE: ${caveat}` : null,
-        guide.lang !== lang ? `Only the ${guide.lang} text is indexed for this guide.` : null
+        caveat ? `NOTE: ${caveat}` : null
     ].filter((line): line is string => line !== null);
 
     // Listed as addresses rather than as bare headings: a repeated heading is not an address, and
@@ -542,7 +540,7 @@ export const toolGetGuide = (catalog: Catalog, args: { id?: string; section?: st
         ].join('\n');
     }
 
-    const hit = findSection(guides, guide, args.section);
+    const hit = findSection(guide, args.section);
 
     if (hit.kind === 'ambiguous') {
         return [
@@ -567,9 +565,6 @@ export const toolGetGuide = (catalog: Catalog, args: { id?: string; section?: st
     return [
         ...provenance,
         `Section: ${hit.path}`,
-        // The caller asked in one language and was answered from the other's headings. Worth a
-        // line: it tells them which spelling to use next time, and that the text below is right.
-        hit.viaLang ? `Addressed by its ${hit.viaLang} heading; the ${guide.lang} text is below.` : null,
         '',
         section.body,
         live.length > 0 ? `\nRunnable examples: ${live.join(', ')} — fetch with get_example.` : '',
@@ -589,10 +584,7 @@ export const toolGetGuide = (catalog: Catalog, args: { id?: string; section?: st
  * The default answer is a summary, because the raw diff is not readable: 18.4.0 to 19.0.0 is 2930
  * changes across 61 entry points. Removals lead — they are what stops compiling.
  */
-export const toolMigrate = (
-    catalog: Catalog,
-    args: { from: string; to?: string; component?: string; lang?: 'en' | 'ru' }
-): string => {
+export const toolMigrate = (catalog: Catalog, args: { from: string; to?: string; component?: string }): string => {
     const history = catalog.history();
     const versions = Object.keys(history);
 
@@ -623,7 +615,7 @@ export const toolMigrate = (
             .join('\n');
     }
 
-    const guide = pickGuide(catalog.guides(), 'migration', args.lang ?? 'en');
+    const guide = pickGuide(catalog.guides(), 'migration');
     const { dated, undated } = migrationSections(guide, range);
 
     if (args.component) {
@@ -756,9 +748,8 @@ export const toolMigrate = (
  * So the answer leads with the row from the guide, and the row carries `not` and `why not`. Naming
  * only the right component leaves the wrong one just as plausible as it was.
  */
-export const toolWhichComponent = (catalog: Catalog, args: { task: string; lang?: 'en' | 'ru' }): string => {
-    const lang = args.lang ?? (/\p{Script=Cyrillic}/u.test(args.task) ? 'ru' : 'en');
-    const guide = pickGuide(catalog.guides(), 'which-component-when', lang);
+export const toolWhichComponent = (catalog: Catalog, args: { task: string }): string => {
+    const guide = pickGuide(catalog.guides(), 'which-component-when');
     const choices = parseChoices(guide);
 
     if (choices.length === 0) {

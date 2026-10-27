@@ -119,8 +119,7 @@ const register = (server: McpServer, catalog: Catalog): void => {
                 section: z
                     .string()
                     .optional()
-                    .describe('Section heading, exact or partial; falls back to a keyword from its text'),
-                lang: z.enum(['en', 'ru']).optional().describe('Preferred language, default en')
+                    .describe('Section heading, exact or partial; falls back to a keyword from its text')
             }
         },
         async (args) => text(toolGetGuide(catalog, args))
@@ -134,8 +133,7 @@ const register = (server: McpServer, catalog: Catalog): void => {
             inputSchema: {
                 from: z.string().describe('Version being upgraded from, e.g. "18.4.0"'),
                 to: z.string().optional().describe('Version being upgraded to; defaults to the installed one'),
-                component: z.string().optional().describe('List this entry point\'s changes, e.g. "select"'),
-                lang: z.enum(['en', 'ru']).optional().describe('Language of the migration guide, default en')
+                component: z.string().optional().describe('List this entry point\'s changes, e.g. "select"')
             }
         },
         async (args) => text(toolMigrate(catalog, args))
@@ -145,12 +143,11 @@ const register = (server: McpServer, catalog: Catalog): void => {
         'which_component_when',
         {
             description:
-                'Which Koobiq component answers a task, and which neighbouring component would be the wrong choice — with the reason. Use before get_component when the task is known but the component is not. Answers in the language the task is written in.',
+                'Which Koobiq component answers a task, and which neighbouring component would be the wrong choice — with the reason. Use before get_component when the task is known but the component is not. Describe the task in English: the guide it matches against is English.',
             inputSchema: {
                 task: z
                     .string()
-                    .describe('The job to be done, in plain words, e.g. "pick several values from a long list"'),
-                lang: z.enum(['en', 'ru']).optional().describe('Overrides the language detected from the task')
+                    .describe('The job to be done, in plain words, e.g. "pick several values from a long list"')
             }
         },
         async (args) => text(toolWhichComponent(catalog, args))
