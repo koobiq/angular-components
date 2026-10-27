@@ -879,10 +879,10 @@ export class KbqTreeSelection<T = any, K = T>
 
                 this.syncSelectionModelToDataNodes();
 
-                const selectedValues = this.multiple ? this.getSelectedValues() : [this.getSelectedValues()];
+                const selectedValues = new Set(this.multiple ? this.getSelectedValues() : [this.getSelectedValues()]);
 
                 options.forEach((option) => {
-                    if (selectedValues.includes(option.value)) {
+                    if (selectedValues.has(option.value)) {
                         option.select(false);
                     } else {
                         option.deselect();
@@ -928,6 +928,9 @@ export class KbqTreeSelection<T = any, K = T>
 
     ngOnDestroy(): void {
         super.ngOnDestroy();
+
+        this.optionFocusEvents.complete();
+        this.optionBlurEvents.complete();
 
         this.focusMonitor.stopMonitoring(this.elementRef);
     }

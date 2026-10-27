@@ -3069,6 +3069,19 @@ describe('KbqTreeSelection', () => {
                 expect(tree['optionBlurEvents'].observed).toBe(false);
             });
 
+            it('should complete optionFocusChanges and optionBlurChanges', () => {
+                const tree = component.tree();
+                const focusCompleted = vi.fn();
+                const blurCompleted = vi.fn();
+
+                tree.optionFocusChanges.subscribe({ complete: focusCompleted });
+                tree.optionBlurChanges.subscribe({ complete: blurCompleted });
+                fixture.destroy();
+
+                expect(focusCompleted).toHaveBeenCalledTimes(1);
+                expect(blurCompleted).toHaveBeenCalledTimes(1);
+            });
+
             it('should not restore the tab index after the tree is gone', () => {
                 vi.useFakeTimers();
 
@@ -5695,6 +5708,28 @@ describe('KbqTreeSelection rendering a change of the data', () => {
 
         expect(checks.declaringView).toBe(0);
         expect(checks.rows).toEqual([1, 1, 1, 1, 1]);
+    });
+
+    // Searching the selected values for every row made a render cost rows × selected.
+    it('should read the selected values once for a render of the rows, not once per row', async () => {
+        const { tree, treeControl } = fixture.componentInstance;
+        const selectedValues = tree().getSelectedValues();
+        let reads = 0;
+        const countedValues = new Proxy(selectedValues, {
+            get: (target, key, receiver) => {
+                if (typeof key === 'string' && /^\d+$/.test(key)) reads++;
+
+                return Reflect.get(target, key, receiver);
+            }
+        });
+
+        vi.spyOn(tree(), 'getSelectedValues').mockReturnValue(countedValues);
+
+        treeControl.expand(node('Documents'));
+        await settle();
+
+        expect(getNodes(fixture.nativeElement).length).toBeGreaterThan(5);
+        expect(reads).toBeLessThanOrEqual(selectedValues.length);
     });
 
     it('should hand the rows of data that arrives outside change detection to the keyboard', async () => {
