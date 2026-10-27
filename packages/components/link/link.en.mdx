@@ -1,80 +1,76 @@
-`KbqLink` is a component that connects web pages or acts as a lighter alternative to a button.
+`KbqLink` is a link that takes the user to another page, a document, or an external site.
 
 <Example id="link-overview" />
 
 ### Size
 
-The `size` attribute sets the size of the link, its typography and the gaps to its icons.
+The `size` attribute changes the font size and the gap to the icon.
 
 <Example id="link-size" />
 
-### Underline
-
-The `underline` attribute sets when the link text is underlined. By default a link is always underlined, and a pseudo link only on hover.
-
-<Example id="link-underline" />
-
-### Disabled
-
-The `disabled` attribute makes the link inactive. It keeps its address, but cannot be followed.
-
-<Example id="link-disabled" />
-
-### Visited
-
-The `useVisited` attribute colors visited links. It is useful on collection pages, such as article roundups and reading lists, where the color marks reading progress.
-
-<Example id="link-visited" />
-
 ### Pseudo link
 
-A pseudo link looks like a link, but acts as a button, performing an action without leaving the page. Use it for an action inside text.
+A pseudo link looks like a link, but acts as a button: it performs an action without leaving the page. Use it for an action inside text.
 
 <Example id="link-pseudo" />
 
-### Content
+### Underline
 
-#### Icon
+The text underline is set with the `underline` attribute. A link is always underlined, and a pseudo link only on hover.
 
-Mark an icon before the text with `kbqLinkPrefix` and an icon after the text with `kbqLinkSuffix`. The icon is within the click area, but is not underlined.
+<Example id="link-underline" />
+
+### Disabled state
+
+The `disabled` attribute makes the link inactive. It keeps its address in the code, but cannot be followed.
+
+<Example id="link-disabled" />
+
+### Visited link
+
+The `useVisited` attribute colors visited links. It is useful in a news feed or in articles.
+
+<Example id="link-visited" />
+
+### Icon
+
+Set the icon before the text with `kbqLinkPrefix` and the icon after the text with `kbqLinkSuffix`. The icon is within the click area, but is not underlined.
 
 <Example id="link-icons" />
 
-#### Multi-line link
+### Multi-line link
 
-A long link wraps like plain text, and every line is underlined.
+If the link text is long, it wraps onto several lines.
 
 <Example id="link-multi-line" />
 
-#### Link in text
+### Prepositions and punctuation
 
-Put the preposition that belongs to the link inside it. Put the period that ends the sentence in an element with `kbqLinkSuffix`, so that it takes the link color, but is not underlined.
+The preposition that belongs to the link goes inside it. Punctuation after the link is included in it with the `kbqLinkSuffix` attribute: the text takes the link color, but is not underlined.
 
 <Example id="link-in-text" />
 
-### Destination
+### New tab and external pages
 
-#### New tab and external pages
-
-The `external` attribute adds the icon to a link to an external page or to a link that opens in a new tab. It does not open the page in a separate tab itself, so add the `target="_blank"` attribute for that.
+The `external` attribute adds the icon to a link to an external page or to a link that opens in a new tab. It does not open the page in a separate tab itself — add the `target="_blank"` attribute for that.
 
 <Example id="link-external" />
 
-#### External application
+### Third-party application
 
-When a link opens another application, name the application in the link text. Instead of the icon, the application logo can be shown with `kbqLinkSuffix`.
+When the link opens another application, the link text must contain its name. Instead of the icon, the application logo can be used.
 
 <Example id="link-application" />
 
-### Printing
+### Print version
 
-The `print` attribute adds the link address after its text when the page is printed, without the protocol and `www.`. To print something else, pass the text to the attribute.
+The `print` attribute adds the link address after its text when the page is printed, without the protocol and `www.`.
 
 <Example id="link-print" />
 
 ### Default settings
 
-`kbqLinkOptionsProvider` sets the link defaults for the whole application or for one component. A value set on the link itself takes precedence.
+`kbqLinkOptionsProvider` sets the default link settings for the whole application or for a single component.
 
 ```ts
 bootstrapApplication(AppComponent, {
@@ -82,18 +78,8 @@ bootstrapApplication(AppComponent, {
 });
 ```
 
-### Keyboard
-
-| <div style="min-width: 110px;">Key</div>                                                    | Action              |
-| ------------------------------------------------------------------------------------------- | ------------------- |
-| <span class="docs-hot-key-button">⏎</span>                                                  | Follow the link     |
-| <span class="docs-hot-key-button">Space</span> \ <span class="docs-hot-key-button">⏎</span> | Press a pseudo link |
-
 ### Recommendations
 
 - Open links in the same tab by default.
-- For an action inside text, use a pseudo link. For interactivity outside text, use a [ghost button](/en/components/button), whose click area is larger.
-- For the primary action in a [modal dialog](/en/components/modal), use a [button](/en/components/button).
-- A link should not lead to the page it is on. You click, the page loads, and you are where you started. The exception is a page with refreshable content, where the link duplicates the refresh.
-- A link should work like a link, not only look like one. Use the `<a>` tag, so that the address can be copied and the page opened in a new tab from the context menu.
-- The link text answers "what? where?". A pseudo link is worded like a button.
+- A link should not lead to the page it is on — you click, the page loads, and you are where you started. The exception is a page with refreshable content, where the link duplicates the refresh.
+- A user must be able to copy the address and open it in a new tab.
