@@ -75,7 +75,7 @@ test('a migration heading takes the release from its nearest dated ancestor', ()
         ].join('\n')
     );
 
-    const guide: Guide = { id: 'migration', title: 'Migration', since: '20.3.1', lede: '', sections };
+    const guide: Guide = { id: 'migration', title: 'Migration', lang: 'en', since: '20.3.1', lede: '', sections };
     const { dated, undated } = migrationSections(guide, summarise(history, '20.0.0', '20.3.0'));
 
     expect(dated.map((entry) => entry.heading)).toEqual(['Filter-bar upgrade (20.2.0)']);
@@ -84,7 +84,7 @@ test('a migration heading takes the release from its nearest dated ancestor', ()
 
 test('a heading nobody could date is surfaced rather than dropped', () => {
     const { sections } = parseGuide(['### Upgrade to Angular 20', 'text'].join('\n'));
-    const guide: Guide = { id: 'migration', title: 'Migration', since: '20.3.1', lede: '', sections };
+    const guide: Guide = { id: 'migration', title: 'Migration', lang: 'en', since: '20.3.1', lede: '', sections };
 
     expect(migrationSections(guide, summarise(history, '18.0.0', '20.0.0')).undated).toEqual([
         'Upgrade to Angular 20'

@@ -89,6 +89,7 @@ export type Guide = {
     /** File stem: `theming`, `search-smart`, `validation`. */
     id: string;
     title: string;
+    lang: 'en' | 'ru';
     /** Release this text was read from. */
     since: string;
     /**

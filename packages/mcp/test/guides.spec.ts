@@ -15,6 +15,7 @@ import { CONSUMER } from './project';
 const guide = (over: Partial<Guide> = {}): Guide => ({
     id: 'theming',
     title: 'Theming',
+    lang: 'en',
     since: '20.3.1',
     lede: 'lede',
     sections: [{ heading: 'Setup', depth: 3, body: 'body', examples: [] }],
@@ -173,11 +174,11 @@ test('only the current text is bundled, and it stays small enough to ship', () =
     const guides = loadCatalog(CONSUMER).guides();
     const size = Buffer.byteLength(JSON.stringify(guides)) / 1024;
 
-    // Currently ~170 KB, `migration` being about half of it: it is trimmed to its release-level
+    // Currently ~220 KB, `migration` being about 90 KB of it and the Russian `which-component-when` about 50: it is trimmed to its release-level
     // headings plus the one "Running the migration" step per item (`trimMigration` in
     // `build-guides.ts`). The slack is for a guide growing a paragraph, not for the itemised diff
     // this trim exists to keep out.
-    const limit = 220;
+    const limit = 260;
 
     expect(guides.length >= 7, `only ${guides.length} guides`).toBeTruthy();
     expect(

@@ -181,12 +181,15 @@ export const search = (catalog: Catalog, query: string, options: SearchOptions =
         }
     }
 
+    // Both languages are indexed. The component index carries English headings only, so before
+    // this the only Russian a query could land on was an icon tag — "темизация" found nothing,
+    // which is how the server came to know less about theming than the public llms.txt.
     for (const guide of catalog.guides()) {
         const headings = guide.sections.map((section) => section.heading);
 
         push('guide', score(query_, normalize(guide.id), [...terms(guide.title), ...headings.flatMap(terms)]), {
             ref: guide.id,
-            label: guide.title,
+            label: `${guide.title} (${guide.lang})`,
             detail: `${headings.length} sections · shipped in ${guide.since}`
         });
 
@@ -194,7 +197,7 @@ export const search = (catalog: Catalog, query: string, options: SearchOptions =
             push('guide', score(query_, normalize(section.heading), terms(guide.id)) * 0.95, {
                 ref: `${guide.id}#${section.heading}`,
                 label: `${guide.title} › ${section.heading}`,
-                detail: 'guide section'
+                detail: `guide section (${guide.lang})`
             });
         }
     }

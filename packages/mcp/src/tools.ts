@@ -518,7 +518,7 @@ export const toolGetGuide = (catalog: Catalog, args: { id?: string; section?: st
     const caveat = guideCaveat(guide, version);
 
     const provenance = [
-        `Guide: ${guide.title}`,
+        `Guide: ${guide.title} (${guide.lang})`,
         guide.unreleased ? null : `Text as shipped in ${guide.since}`,
         caveat ? `NOTE: ${caveat}` : null
     ].filter((line): line is string => line !== null);
@@ -748,8 +748,9 @@ export const toolMigrate = (catalog: Catalog, args: { from: string; to?: string;
  * So the answer leads with the row from the guide, and the row carries `not` and `why not`. Naming
  * only the right component leaves the wrong one just as plausible as it was.
  */
-export const toolWhichComponent = (catalog: Catalog, args: { task: string }): string => {
-    const guide = pickGuide(catalog.guides(), 'which-component-when');
+export const toolWhichComponent = (catalog: Catalog, args: { task: string; lang?: 'en' | 'ru' }): string => {
+    const lang = args.lang ?? (/\p{Script=Cyrillic}/u.test(args.task) ? 'ru' : 'en');
+    const guide = pickGuide(catalog.guides(), 'which-component-when', lang);
     const choices = parseChoices(guide);
 
     if (choices.length === 0) {

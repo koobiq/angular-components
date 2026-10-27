@@ -143,11 +143,12 @@ const register = (server: McpServer, catalog: Catalog): void => {
         'which_component_when',
         {
             description:
-                'Which Koobiq component answers a task, and which neighbouring component would be the wrong choice — with the reason. Use before get_component when the task is known but the component is not. Describe the task in English: the guide it matches against is English.',
+                'Which Koobiq component answers a task, and which neighbouring component would be the wrong choice — with the reason. Use before get_component when the task is known but the component is not. Answers in the language the task is written in.',
             inputSchema: {
                 task: z
                     .string()
-                    .describe('The job to be done, in plain words, e.g. "pick several values from a long list"')
+                    .describe('The job to be done, in plain words, e.g. "pick several values from a long list"'),
+                lang: z.enum(['en', 'ru']).optional().describe('Overrides the language detected from the task')
             }
         },
         async (args) => text(toolWhichComponent(catalog, args))

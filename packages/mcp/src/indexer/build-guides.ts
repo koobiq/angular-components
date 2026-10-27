@@ -58,6 +58,8 @@ const WITHHELD: Record<string, string> = {
     'component-health': 'internal quality tracking'
 };
 
+const MATCHED_IN_RUSSIAN = new Set(['which-component-when']);
+
 const INTERNAL = /^\d{2}-/;
 // `.claude/rules/schematics.md` shares its name with the `schematics` guide
 const HIDDEN_DIR = /(^|\/)\.[^/]+\//;
@@ -159,18 +161,24 @@ export const buildGuides = (repo: string): Guide[] => {
     const staged = stagedVersion(version);
 
     const take = (id: string, named: 'en' | 'ru' | null, since: string, source: string, unreleased?: true): void => {
-        // Only the English text ships: an agent reads it as well as the Russian and answers in the
-        // user's language, and a second copy doubles the size and needs a parity check.
-        if ((named ?? detectLang(source)) !== 'en' || guides.has(id)) return;
+        const lang = named ?? detectLang(source);
+        const key = `${id}\t${lang}`;
+
+        // Only the English text ships, except where the Russian text is matched against rather than
+        // read: an agent reads English as well as Russian and answers in the user's language, so a
+        // second copy would only double the size. `which_component_when` matches the words of a task
+        // against the guide's rows, and a Russian task has nothing to hit in the English ones.
+        if ((lang !== 'en' && !MATCHED_IN_RUSSIAN.has(id)) || guides.has(key)) return;
 
         const { lede, sections } = parseGuide(source);
         const trimmed = trimMigration(id, sections);
 
         if (trimmed.length === 0 && lede.length === 0) return;
 
-        guides.set(id, {
+        guides.set(key, {
             id,
             title: titleFromId(id),
+            lang,
             since,
             ...(unreleased ? { unreleased } : {}),
             lede,
@@ -214,7 +222,7 @@ export const buildGuides = (repo: string): Guide[] => {
         if (existsSync(full)) take(id, lang, version, readFileSync(full, 'utf-8'), staged ? undefined : true);
     }
 
-    return [...guides.values()].sort((a, b) => a.id.localeCompare(b.id));
+    return [...guides.values()].sort((a, b) => a.id.localeCompare(b.id) || a.lang.localeCompare(b.lang));
 };
 
 const main = (): void => {
@@ -231,7 +239,7 @@ const main = (): void => {
     writeFileSync(outputPath, JSON.stringify(guides) + '\n');
 
     const sections = guides.reduce((total, guide) => total + guide.sections.length, 0);
-    const unreleased = guides.filter((guide) => guide.unreleased).map((guide) => guide.id);
+    const unreleased = guides.filter((guide) => guide.unreleased).map((guide) => `${guide.id}.${guide.lang}`);
     const missed = assertNothingMissed(repo);
 
     process.stdout.write(

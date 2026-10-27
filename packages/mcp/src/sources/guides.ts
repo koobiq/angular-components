@@ -26,7 +26,12 @@ export const guideCaveat = (guide: Guide, version: string | null): string | null
     return `this text is from ${guide.since} and this project is on ${version} — a different major, so parts of it may not apply`;
 };
 
-export const pickGuide = (guides: Guide[], id: string): Guide | null => guides.find((guide) => guide.id === id) ?? null;
+/** English unless another language is asked for; falls back to what exists rather than answering nothing. */
+export const pickGuide = (guides: Guide[], id: string, lang: 'en' | 'ru' = 'en'): Guide | null => {
+    const matching = guides.filter((guide) => guide.id === id);
+
+    return matching.find((guide) => guide.lang === lang) ?? matching[0] ?? null;
+};
 
 export const guideIds = (guides: Guide[]): string[] => [...new Set(guides.map((guide) => guide.id))].sort();
 
