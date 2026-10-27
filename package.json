@@ -188,7 +188,7 @@
         "build:docs-pages": "ts-node --project ./tools/docs-pages/tsconfig.json ./tools/docs-pages/generate-docs-pages.ts",
         "build:package-docs-content": "ts-node --project ./tools/package-docs-content/tsconfig.json ./tools/package-docs-content/package-docs-content.ts",
         "styles:build-all": "ts-node --project tools/scss-compiler/tsconfig.json tools/scss-compiler/scss-bundle.ts",
-        "build:schematics": "rimraf packages/schematics/dist && rollup --failAfterWarnings -c packages/schematics/rollup.config.js && node ./packages/schematics/scripts/copy-meta-to-dist.js",
+        "build:schematics": "rimraf packages/schematics/dist && rollup --failAfterWarnings -c packages/schematics/rollup.config.js && node ./packages/schematics/scripts/copy-meta-to-dist.js && node ./packages/schematics/scripts/check-dist.js",
         "build:mcp": "yarn run build:mcp:index && tsc -p packages/mcp/tsconfig.json && node packages/mcp/scripts/copy-to-dist.cjs",
         "build:mcp:index": "tsx packages/mcp/src/indexer/build-index.ts",
         "build:mcp:data": "node packages/mcp/scripts/build-data.cjs",

@@ -2,7 +2,7 @@ const typescript = require('@rollup/plugin-typescript');
 const replace = require('@rollup/plugin-replace');
 
 const path = require('path');
-const { promises: fs, statSync } = require('fs');
+const { promises: fs, readdirSync, statSync } = require('fs');
 
 const pkg = require('../../package.json');
 const { getMigrations } = require('./src/utils/migrations');
@@ -32,6 +32,22 @@ const getMigrationInputs = () => {
     }, {});
 };
 
+/**
+ * Every util module is an entry of its own. A shared module without one lands in a hashed chunk at the
+ * dist root, which copy-meta-to-dist.js does not ship, and the entries importing it fail with MODULE_NOT_FOUND.
+ */
+const getUtilInputs = () => {
+    const utilsDir = path.join(__dirname, 'src/utils');
+
+    return readdirSync(utilsDir)
+        .filter((file) => file.endsWith('.ts') && !file.endsWith('.spec.ts') && file !== 'testing.ts')
+        .reduce((res, file) => {
+            res[`utils/${path.basename(file, '.ts')}`] = path.join(utilsDir, file);
+
+            return res;
+        }, {});
+};
+
 module.exports = [
     {
         output: {
@@ -41,13 +57,7 @@ module.exports = [
         },
         input: {
             'ng-add/index': path.join(__dirname, 'src/ng-add/index.ts'),
-            'utils/package-config': path.join(__dirname, 'src/utils/package-config.ts'),
-            'utils/messages': path.join(__dirname, 'src/utils/messages.ts'),
-            'utils/typescript': path.join(__dirname, 'src/utils/typescript.ts'),
-            'utils/ast': path.join(__dirname, 'src/utils/ast.ts'),
-            'utils/angular-parsing': path.join(__dirname, 'src/utils/angular-parsing.ts'),
-            'utils/icon-migration': path.join(__dirname, 'src/utils/icon-migration.ts'),
-            'utils/deprecated-path-migration': path.join(__dirname, 'src/utils/deprecated-path-migration.ts'),
+            ...getUtilInputs(),
             ...getMigrationInputs()
             //'ng-add/setup-project': path.join(__dirname, 'ng-add/setup-project.ts'),
         },

@@ -1,7 +1,10 @@
-const { access, copyFile, mkdir, readdir } = require('fs/promises');
+const { access, copyFile, mkdir, readdir, readFile, writeFile } = require('fs/promises');
 const { resolve, join } = require('path');
 const { getMigrations } = require('../src/utils/migrations');
 const { statSync } = require('fs');
+
+/** Re-includes the schematics manifest: the `.npmignore` that ng-packagr writes drops every nested package.json. */
+const NPMIGNORE_KEEP_MANIFEST = '!schematics/package.json';
 
 /** Files every migration directory has to provide; they ship next to the compiled rule. */
 const MIGRATION_META_FILES = ['schema.json', 'README.md'];
@@ -61,6 +64,16 @@ const init = async () => {
     await copyFileWrapper(resolvePath('../src/ng-add/schema.json'), join(ngAddPath, 'schema.json'));
     await copyFileWrapper(resolvePath('../src/collection.json'), join(schematicsPath, 'collection.json'));
     await copyFileWrapper(resolvePath('../src/migrations.json'), join(schematicsPath, 'migrations.json'));
+    // ng-packagr marks @koobiq/components as `"type": "module"`; without this the CommonJS build fails
+    // to load with "exports is not defined in ES module scope".
+    await copyFileWrapper(resolvePath('../package.json'), join(schematicsPath, 'package.json'));
+
+    const npmignorePath = join(distCLIPath, '.npmignore');
+    const npmignore = await readFile(npmignorePath, 'utf8').catch(() => null);
+
+    if (npmignore !== null && !npmignore.split(/\r?\n/).includes(NPMIGNORE_KEEP_MANIFEST)) {
+        await writeFile(npmignorePath, `${npmignore.trimEnd()}\n${NPMIGNORE_KEEP_MANIFEST}\n`);
+    }
 
     for (const migration of getMigrations()) {
         const migrationPath = join(schematicsPath, 'migrations', migration);
@@ -87,8 +100,8 @@ const init = async () => {
         join(schematicsPath, 'migrations', 'new-icons-pack', 'replacement.json')
     );
 
-    // Copy every compiled util chunk rather than a hand-maintained list, so a new util module
-    // (given a stable rollup input name under `utils/`) is shipped automatically.
+    // Copy every compiled util rather than a hand-maintained list: rollup.config.js gives each
+    // `src/utils` module an entry under `utils/`, so a new one is shipped automatically.
     const distUtilsPath = resolvePath('../dist/utils');
     const utilFiles = statSync(distUtilsPath, { throwIfNoEntry: false }) ? await readdir(distUtilsPath) : [];
 
