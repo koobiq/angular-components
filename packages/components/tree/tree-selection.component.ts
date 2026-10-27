@@ -68,7 +68,7 @@ import {
     UP_ARROW
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
-import { merge, Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { delay } from 'rxjs/operators';
 import { FlatTreeControl } from './control/flat-tree-control';
@@ -336,12 +336,20 @@ export class KbqTreeSelection<T = any, K = T>
         this.autoSelectState.set(coerceBooleanProperty(value));
     }
 
+    // One stream the options report to: merging every option's own stream on each render was linear in the rows,
+    // and missed the rows rendered after a subscription.
+    private readonly optionFocusEvents = new Subject<KbqTreeOptionEvent>();
+
+    private readonly optionBlurEvents = new Subject<KbqTreeOptionEvent>();
+
+    /** Emits when an option of the tree takes focus. */
     get optionFocusChanges(): Observable<KbqTreeOptionEvent> {
-        return merge(...this.renderedOptions.map((option) => option.onFocus));
+        return this.optionFocusEvents.asObservable();
     }
 
+    /** Emits when an option of the tree loses focus. */
     get optionBlurChanges(): Observable<KbqTreeOptionEvent> {
-        return merge(...this.renderedOptions.map((option) => option.onBlur));
+        return this.optionBlurEvents.asObservable();
     }
 
     /**
@@ -569,10 +577,6 @@ export class KbqTreeSelection<T = any, K = T>
     get nodesCount(): number {
         return this.sortedNodes.length;
     }
-
-    private optionFocusSubscription: Subscription | null;
-
-    private optionBlurSubscription: Subscription | null;
 
     private selectionModelSubscription: Subscription | null = null;
 
@@ -865,11 +869,11 @@ export class KbqTreeSelection<T = any, K = T>
 
         this.bindSelectionModel();
 
+        this.listenToOptionsFocus();
+
         this.renderedOptions.changes
             .pipe(delay(0, this.scheduler), takeUntilDestroyed(this.destroyRef))
             .subscribe((options) => {
-                this.resetOptions();
-
                 // Check to see if we need to update our tab index
                 this.updateTabIndex();
 
@@ -924,8 +928,6 @@ export class KbqTreeSelection<T = any, K = T>
 
     ngOnDestroy(): void {
         super.ngOnDestroy();
-
-        this.dropSubscriptions();
 
         this.focusMonitor.stopMonitoring(this.elementRef);
     }
@@ -1105,6 +1107,16 @@ export class KbqTreeSelection<T = any, K = T>
 
             this.emitChangeEvent(option);
         }
+    }
+
+    /** @docs-private */
+    reportOptionFocus(event: KbqTreeOptionEvent): void {
+        this.optionFocusEvents.next(event);
+    }
+
+    /** @docs-private */
+    reportOptionBlur(event: KbqTreeOptionEvent): void {
+        this.optionBlurEvents.next(event);
     }
 
     /** @docs-private */
@@ -1596,12 +1608,21 @@ export class KbqTreeSelection<T = any, K = T>
             orderedOptions.push(selectAllOption);
         }
 
+        // Indexed once rather than searched per node, which was quadratic in the rows. The first option wins in both
+        // maps, as the search did.
+        const optionsByNode = new Map<T, KbqTreeOption<T>>();
+        const optionsByValue = new Map<unknown, KbqTreeOption<T>>();
+
+        this.unorderedOptions.forEach((option) => {
+            if (!optionsByNode.has(option.data)) optionsByNode.set(option.data, option);
+
+            if (!optionsByValue.has(option.value)) optionsByValue.set(option.value, option);
+        });
+
         this.sortedNodes.forEach((node) => {
             // By node first: nodes do not have to carry distinct values, and a value match would hand every node with
             // the same value the first option holding it.
-            const found =
-                this.unorderedOptions.find((option) => option.data === node) ??
-                this.unorderedOptions.find((option) => option.value === this.treeControl.getValue(node));
+            const found = optionsByNode.get(node) ?? optionsByValue.get(this.treeControl.getValue(node));
 
             if (found) {
                 orderedOptions.push(found);
@@ -1626,25 +1647,8 @@ export class KbqTreeSelection<T = any, K = T>
         return array;
     }
 
-    private resetOptions() {
-        this.dropSubscriptions();
-        this.listenToOptionsFocus();
-    }
-
-    private dropSubscriptions() {
-        if (this.optionFocusSubscription) {
-            this.optionFocusSubscription.unsubscribe();
-            this.optionFocusSubscription = null;
-        }
-
-        if (this.optionBlurSubscription) {
-            this.optionBlurSubscription.unsubscribe();
-            this.optionBlurSubscription = null;
-        }
-    }
-
     private listenToOptionsFocus(): void {
-        this.optionFocusSubscription = this.optionFocusChanges.subscribe((event) => {
+        this.optionFocusEvents.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
             const index: number = this.renderedOptions.toArray().indexOf(event.option as KbqTreeOption);
 
             this.renderedOptions.filter((option) => option.hasFocus).forEach((option) => (option.hasFocus = false));
@@ -1659,7 +1663,7 @@ export class KbqTreeSelection<T = any, K = T>
         // set, because `KbqTreeOption.hasFocus` is cleared synchronously but only raised a microtask later, so
         // `hasFocusedOption()` reports nothing focused for the whole move. Only a blur of the option the
         // key manager still points at is the focus actually leaving the options.
-        this.optionBlurSubscription = this.optionBlurChanges.subscribe(({ option }) => {
+        this.optionBlurEvents.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ option }) => {
             if (option === this.keyManager.activeItem && !this.hasFocusedOption() && this.resetFocusedItemOnBlur) {
                 this.keyManager.setActiveItem(-1);
             }

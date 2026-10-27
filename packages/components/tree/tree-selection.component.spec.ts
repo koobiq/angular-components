@@ -3057,22 +3057,16 @@ describe('KbqTreeSelection', () => {
                 expect(treeElement.querySelectorAll('.kbq-tree-option').length).toBe(0);
             });
 
-            it('should drop the per-option focus subscriptions', async () => {
-                vi.useFakeTimers();
-
+            it('should stop listening to the focus of its options', () => {
                 const tree = component.tree();
 
-                tree.onKeyDown(createKeyboardEvent('keydown', DOWN_ARROW));
-                fixture.detectChanges();
-                await vi.runOnlyPendingTimersAsync();
-
-                expect(tree['optionFocusSubscription']).not.toBeNull();
-                expect(tree['optionBlurSubscription']).not.toBeNull();
+                expect(tree['optionFocusEvents'].observed).toBe(true);
+                expect(tree['optionBlurEvents'].observed).toBe(true);
 
                 fixture.destroy();
 
-                expect(tree['optionFocusSubscription']).toBeNull();
-                expect(tree['optionBlurSubscription']).toBeNull();
+                expect(tree['optionFocusEvents'].observed).toBe(false);
+                expect(tree['optionBlurEvents'].observed).toBe(false);
             });
 
             it('should not restore the tab index after the tree is gone', () => {
@@ -5746,5 +5740,105 @@ describe('KbqTreeSelection rendering a change of the data', () => {
         TestBed.tick();
 
         expect(selectAllCheckbox().classList).toContain('kbq-indeterminate');
+    });
+
+    it('should leave every view unchecked when the pointer enters a row of a tree outside a select', () => {
+        const row = getNodeByText(fixture.nativeElement, 'Pictures');
+        const checks = countChecks(() => dispatchFakeEvent(row, 'mouseenter'));
+
+        expect(checks.declaringView).toBe(0);
+        expect(checks.rows).toEqual(checks.rows.map(() => 0));
+    });
+
+    it('should hand the focus of a row the change brings in to the keyboard', async () => {
+        fixture.componentInstance.selectAll = false;
+        await settle();
+
+        const { tree, treeControl } = fixture.componentInstance;
+
+        treeControl.expand(node('Documents'));
+        await settle();
+        dispatchFakeEvent(getNodeByText(fixture.nativeElement, 'angular'), 'focusin');
+
+        expect(tree().keyManager.activeItem!.value).toBe('angular');
+    });
+
+    it('should report through optionFocusChanges the focus of rows rendered after subscribing', async () => {
+        const { tree, treeControl } = fixture.componentInstance;
+        const focused: string[] = [];
+        const subscription = tree().optionFocusChanges.subscribe(({ option }) => focused.push(option.value));
+
+        treeControl.expand(node('Documents'));
+        await settle();
+        getNodeByText(fixture.nativeElement, 'angular').focus();
+        subscription.unsubscribe();
+
+        expect(focused).toEqual(['angular']);
+    });
+});
+
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeWithSharedValues extends TreeParams {
+    readonly tree = viewChild.required<KbqTreeSelection<FileFlatNode>>(KbqTreeSelection);
+
+    constructor() {
+        super();
+
+        // Rows share values (`jpg`, `ts`, `pdf`, `app`): only the node tells such rows apart.
+        this.treeControl = new FlatTreeControl(
+            this.getLevel,
+            this.isExpandable,
+            (node: FileFlatNode) => node.type ?? node.name,
+            this.getValue
+        );
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+        this.dataSource.data = this.treeData;
+    }
+}
+
+describe('KbqTreeSelection keyboard order', () => {
+    let fixture: ComponentFixture<TreeWithSharedValues>;
+
+    const node = (name: string): FileFlatNode =>
+        fixture.componentInstance.treeControl.dataNodes.find((dataNode) => dataNode.name === name)!;
+
+    /** The rows the keyboard moves through, in its order. */
+    const keyboardRows = (): HTMLElement[] =>
+        fixture.componentInstance.tree().renderedOptions.map((option) => option.getHostElement());
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(TreeWithSharedValues);
+        fixture.detectChanges();
+    });
+
+    it('should follow the rows on screen across expanding, collapsing and new data, with values shared by rows', () => {
+        const { dataSource, treeControl } = fixture.componentInstance;
+
+        treeControl.expand(node('Pictures'));
+        treeControl.expand(node('Documents'));
+        TestBed.tick();
+
+        expect(getNodes(fixture.nativeElement).length).toBe(11);
+        expect(keyboardRows()).toEqual(getNodes(fixture.nativeElement));
+
+        treeControl.collapse(node('Pictures'));
+        TestBed.tick();
+
+        expect(getNodes(fixture.nativeElement).length).toBe(8);
+        expect(keyboardRows()).toEqual(getNodes(fixture.nativeElement));
+
+        dataSource.data = buildFileTree(DATA_OBJECT, 0);
+        treeControl.expand(node('Downloads'));
+        TestBed.tick();
+
+        expect(getNodes(fixture.nativeElement).length).toBe(8);
+        expect(keyboardRows()).toEqual(getNodes(fixture.nativeElement));
     });
 });

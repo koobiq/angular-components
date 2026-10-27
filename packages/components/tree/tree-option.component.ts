@@ -19,8 +19,10 @@ import {
     InjectionToken,
     input,
     linkedSignal,
+    NgZone,
     output,
     QueryList,
+    Renderer2,
     signal,
     untracked,
     viewChild,
@@ -73,6 +75,10 @@ export interface KbqTreeOptionParent<T = any> {
     selectionModel: SelectionModel<T>;
     unorderedOptions: QueryList<KbqTreeOption<T>>;
     setSelectedOptionsByClick(option: KbqTreeOption<T>, shiftKey: boolean, ctrlKey: boolean): void;
+    /** Receives the focus of every option: one stream for the tree instead of a subscription per option. */
+    reportOptionFocus(event: KbqTreeOptionEvent): void;
+    /** Receives the blur of every option. */
+    reportOptionBlur(event: KbqTreeOptionEvent): void;
 }
 
 /** Injection token used to provide the parent component to options. */
@@ -133,7 +139,6 @@ const samePredicates = (a: TreeOptionPredicates, b: TreeOptionPredicates): boole
         '[attr.aria-checked]': 'ariaChecked',
         '[attr.aria-selected]': 'ariaSelected',
         '(focusin)': 'focus()',
-        '(mouseenter)': 'onMouseenter()',
         '(blur)': 'blur()',
         '(click)': 'selectViaInteraction($event)',
         '(keydown)': 'onKeydown($event)'
@@ -144,6 +149,8 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
     private changeDetectorRef = inject(ChangeDetectorRef);
     private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly ngZone = inject(NgZone);
+    private readonly renderer = inject(Renderer2);
     // Intersected with the rendering base because `KbqTreeNode` resolves its level and expansion state
     // through it; the option itself only ever touches the `KbqTreeOptionParent` half.
     override tree: KbqTreeOptionParent<T> & KbqTreeBase<T>;
@@ -384,6 +391,14 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
         super();
 
         this.tree = tree;
+
+        // Not a host listener: one would check the views on every row the pointer crosses, and only a tree in a select
+        // reacts to it.
+        const unlisten = this.ngZone.runOutsideAngular(() =>
+            this.renderer.listen(this.elementRef.nativeElement, 'mouseenter', () => this.onMouseenter())
+        );
+
+        this.destroyRef.onDestroy(unlisten);
     }
 
     ngDoCheck(): void {
@@ -506,6 +521,7 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
 
             if (!this.hasFocus) {
                 this.focusEvents.next({ option: this });
+                this.tree.reportOptionFocus({ option: this });
 
                 Promise.resolve().then(() => {
                     this.hasFocus = true;
@@ -537,6 +553,7 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
                 this.hasFocus = false;
 
                 this.blurEvents.next({ option: this });
+                this.tree.reportOptionBlur({ option: this });
             },
             // The environment injector, not the option's: an option removed while focused is blurred as its view is
             // destroyed, and the tree still has to hear about it to move focus.
@@ -638,7 +655,7 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
     protected onMouseenter() {
         if (this.disabled || !this.tree.inSelect) return;
 
-        this.focus('mouse');
+        this.ngZone.run(() => this.focus('mouse'));
     }
 
     /** Recomputes the option's own checkbox state, leaving its ancestors as they are. */
