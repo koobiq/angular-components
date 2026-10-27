@@ -38,16 +38,18 @@ import { startWith } from 'rxjs';
                 <kbq-username>
                     <kbq-username-custom-view>
                         @let fullName = user | kbqUsername;
-                        <span
-                            kbqUsernamePrimary
-                            [innerHTML]="fullName | kbqHighlightBackground: searchControl.value.trim()"
-                        ></span>
+                        <span kbqUsernamePrimary [innerHTML]="fullName | kbqHighlightBackground: keywords()"></span>
 
                         @if (user.login) {
-                            <span
-                                kbqUsernameSecondary
-                                [innerHTML]="user.login | kbqHighlightBackground: searchControl.value.trim()"
-                            ></span>
+                            <span kbqUsernameSecondary>
+                                <span [innerHTML]="user.login | kbqHighlightBackground: keywords()"></span>
+                                @if (user.site) {
+                                    <span
+                                        kbqUsernameSecondaryHint
+                                        [innerHTML]="' (' + user.site + ')' | kbqHighlightBackground: keywords()"
+                                    ></span>
+                                }
+                            </span>
                         }
                     </kbq-username-custom-view>
                 </kbq-username>
@@ -79,21 +81,25 @@ export class UsernameSearchExample {
         { firstName: 'Maxwell', middleName: 'Alan', lastName: 'Root', login: 'mroot', site: 'corp' },
         { firstName: 'Alice', middleName: 'Marie', lastName: 'Stone', login: 'astone' },
         { firstName: 'Robert', lastName: 'Green', login: 'rgreen', site: 'dev' },
-        { firstName: 'Elena', middleName: 'Vera', lastName: 'Fox', login: 'efox' }
+        { firstName: 'Elena', middleName: 'Vera', lastName: 'Fox', login: 'efox' },
+        { firstName: 'Madonna', login: 'madonna', site: 'corp' }
     ];
 
+    // The name, the login and the site are rendered in separate elements, so each word of the query is highlighted on its own.
+    protected readonly keywords = computed(() => (this.searchText() ?? '').split(/\s+/).filter(Boolean));
+
     protected readonly filteredUsers = computed(() => {
-        const query = (this.searchText() ?? '').toLowerCase().trim();
+        const keywords = this.keywords().map((word) => word.toLowerCase());
 
-        if (!query) return this.users;
+        if (!keywords.length) return this.users;
 
-        return this.users.filter((user) =>
-            kbqBuildUsernameText(
+        return this.users.filter((user) => {
+            const text = kbqBuildUsernameText(
                 { name: this.formatUsername(user), login: user.login, site: user.site },
                 { formatSite: (s) => s }
-            )
-                .toLowerCase()
-                .includes(query)
-        );
+            ).toLowerCase();
+
+            return keywords.every((word) => text.includes(word));
+        });
     });
 }

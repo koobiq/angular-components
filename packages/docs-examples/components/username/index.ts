@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { UsernameAsLinkExample } from './username-as-link/username-as-link-example';
+import { UsernameCompactExample } from './username-compact/username-compact-example';
 import { UsernameCustomExample } from './username-custom/username-custom-example';
 import { UsernameFilterBarOptionExample } from './username-filter-bar-option/username-filter-bar-option-example';
 import { UsernameOverviewExample } from './username-overview/username-overview-example';
@@ -8,6 +9,7 @@ import { UsernameSearchExample } from './username-search/username-search-example
 
 export {
     UsernameAsLinkExample,
+    UsernameCompactExample,
     UsernameCustomExample,
     UsernameFilterBarOptionExample,
     UsernameOverviewExample,
@@ -16,6 +18,7 @@ export {
 };
 
 const EXAMPLES = [
+    UsernameCompactExample,
     UsernameCustomExample,
     UsernameOverviewExample,
     UsernamePlaygroundExample,

@@ -12,7 +12,8 @@ const USERS: KbqUserInfo[] = [
     { firstName: 'Maxwell', middleName: 'Alan', lastName: 'Root', login: 'mroot', site: 'corp' },
     { firstName: 'Alice', middleName: 'Marie', lastName: 'Stone', login: 'astone' },
     { firstName: 'Robert', lastName: 'Green', login: 'rgreen', site: 'dev' },
-    { firstName: 'Elena', middleName: 'Vera', lastName: 'Fox', login: 'efox' }
+    { firstName: 'Elena', middleName: 'Vera', lastName: 'Fox', login: 'efox' },
+    { firstName: 'Madonna', login: 'madonna', site: 'corp' }
 ];
 
 /**
@@ -29,18 +30,23 @@ const USERS: KbqUserInfo[] = [
         </kbq-filter-bar>
 
         <ng-template #userOption let-pipe let-option="option">
-            @let searchText = pipe.searchControl.value;
+            @let keywords = splitSearch(pipe.searchControl.value);
 
             <kbq-username>
                 <kbq-username-custom-view>
                     @let fullName = option.value | kbqUsername;
-                    <span kbqUsernamePrimary [innerHTML]="fullName | kbqHighlightBackground: searchText"></span>
+                    <span kbqUsernamePrimary [innerHTML]="fullName | kbqHighlightBackground: keywords"></span>
 
                     @if (option.value?.login) {
-                        <span
-                            kbqUsernameSecondary
-                            [innerHTML]="option.value.login | kbqHighlightBackground: searchText"
-                        ></span>
+                        <span kbqUsernameSecondary>
+                            <span [innerHTML]="option.value.login | kbqHighlightBackground: keywords"></span>
+                            @if (option.value.site) {
+                                <span
+                                    kbqUsernameSecondaryHint
+                                    [innerHTML]="' (' + option.value.site + ')' | kbqHighlightBackground: keywords"
+                                ></span>
+                            }
+                        </span>
                     }
                 </kbq-username-custom-view>
             </kbq-username>
@@ -72,6 +78,11 @@ export class UsernameFilterBarOptionExample implements AfterViewInit {
     };
 
     pipeTemplates: KbqPipeTemplate[] = [];
+
+    // The name, the login and the site are rendered in separate elements, so each word of the query is highlighted on its own.
+    protected splitSearch(text: string | null): string[] {
+        return (text ?? '').split(/\s+/).filter(Boolean);
+    }
 
     ngAfterViewInit(): void {
         this.pipeTemplates = [
