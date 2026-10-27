@@ -2,7 +2,7 @@ Koobiq typography defines the fonts, weights, and text styles used to create a c
 
 ### Installing Fonts
 
-Koobiq uses the [Inter](https://github.com/rsms/inter) and [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) font by default.
+Koobiq uses the [Inter](https://github.com/rsms/inter) and [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) fonts by default.
 
 | Font           | Weight | Style  |
 | -------------- | ------ | ------ |
@@ -16,45 +16,57 @@ Koobiq uses the [Inter](https://github.com/rsms/inter) and [JetBrains Mono](http
 | Inter          | 600    | Normal |
 | Inter          | 700    | Normal |
 
-Add it to your application via [Fontsource](#fontsource), or with the [Google Fonts CDN](#google-fonts-cdn).
+#### Where to get the fonts
 
-#### Fontsource
+Use the official builds: Inter from [rsms.me/inter/download](https://rsms.me/inter/download/), JetBrains Mono from the [JetBrains releases](https://github.com/JetBrains/JetBrainsMono/releases). Any other source works as well — the font itself is what matters, not where you downloaded it from.
 
-Install packages:
-
-```bash
-npm install @fontsource/inter @fontsource/jetbrains-mono
-```
-
-Then you add the following code inside your global styles:
+Copy the files into your project and declare them in your global styles. The Inter archive already ships an `inter.css` that declares both the static weights and the variable font:
 
 ```scss
-// Inter
-@import '@fontsource/inter/400.css';
-@import '@fontsource/inter/500.css';
-@import '@fontsource/inter/600.css';
-@import '@fontsource/inter/700.css';
-@import '@fontsource/inter/400-italic.css';
-@import '@fontsource/inter/500-italic.css';
-
-// JetBrains Mono
-@import '@fontsource/jetbrains-mono/400.css';
-@import '@fontsource/jetbrains-mono/600.css';
-@import '@fontsource/jetbrains-mono/700.css';
+@import 'assets/fonts/inter/inter.css';
 ```
 
-#### Google Fonts CDN
+JetBrains Mono is needed in weights 400, 600, and 700 — they live in the `fonts/webfonts` folder of the JetBrains Mono archive:
 
-Add the following code inside your `<head>` tag:
+```scss
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('assets/fonts/jetbrains-mono/JetBrainsMono-Regular.woff2') format('woff2');
+}
 
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<!-- Inter -->
-<link
-    href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap"
-    rel="stylesheet"
-/>
-<!-- JetBrains Mono -->
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('assets/fonts/jetbrains-mono/JetBrainsMono-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('assets/fonts/jetbrains-mono/JetBrainsMono-Bold.woff2') format('woff2');
+}
+```
+
+#### Check the font before installing it
+
+Some sources serve a trimmed font. Large CDNs such as Google Fonts, and the packages built from them, split files into subsets by `unicode-range` and drop OpenType features along with the glyphs. The font still loads, but some features and characters silently stop working: the zero from the Koobiq tokens loses its slash, the alternate digits never appear, and characters such as `₽` or the em dash fall back to a system font.
+
+So before installing the font, check the one your source serves: it has to contain the characters your interface uses and the OpenType features Koobiq enables.
+
+#### Features from the tokens
+
+Koobiq enables the OpenType features through design tokens — for app text, take the values from the tokens:
+
+```scss
+body {
+    font-family: var(--kbq-typography-text-normal-font-family);
+    font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
+}
 ```

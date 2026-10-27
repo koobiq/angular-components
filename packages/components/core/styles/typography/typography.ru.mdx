@@ -16,45 +16,57 @@ Koobiq по умолчанию использует шрифты [Inter](https:/
 | Inter          | 600      | Обычный |
 | Inter          | 700      | Обычный |
 
-Добавьте их в ваше приложение при помощи [Fontsource](#fontsource) или [Google Fonts CDN](#google-fonts-cdn).
+#### Откуда брать шрифты
 
-#### Fontsource
+Берите официальные сборки: Inter — с [rsms.me/inter/download](https://rsms.me/inter/download/), JetBrains Mono — из [релизов JetBrains](https://github.com/JetBrains/JetBrainsMono/releases). Источник может быть и любым другим: важен сам шрифт, а не то, откуда вы его скачали.
 
-Установите пакеты:
-
-```bash
-npm install @fontsource/inter @fontsource/jetbrains-mono
-```
-
-Затем добавьте следующий код в ваши глобальные стили:
+Скопируйте файлы в проект и объявите их в глобальных стилях. В архиве Inter уже есть готовый `inter.css` — он объявляет и статические начертания, и переменный шрифт:
 
 ```scss
-// Inter
-@import '@fontsource/inter/400.css';
-@import '@fontsource/inter/500.css';
-@import '@fontsource/inter/600.css';
-@import '@fontsource/inter/700.css';
-@import '@fontsource/inter/400-italic.css';
-@import '@fontsource/inter/500-italic.css';
-
-// JetBrains Mono
-@import '@fontsource/jetbrains-mono/400.css';
-@import '@fontsource/jetbrains-mono/600.css';
-@import '@fontsource/jetbrains-mono/700.css';
+@import 'assets/fonts/inter/inter.css';
 ```
 
-#### Google Fonts CDN
+Для JetBrains Mono нужны начертания 400, 600 и 700 — они лежат в папке `fonts/webfonts` архива JetBrains Mono:
 
-Добавьте следующий код в тег `<head>`:
+```scss
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('assets/fonts/jetbrains-mono/JetBrainsMono-Regular.woff2') format('woff2');
+}
 
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<!-- Inter -->
-<link
-    href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap"
-    rel="stylesheet"
-/>
-<!-- JetBrains Mono -->
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('assets/fonts/jetbrains-mono/JetBrainsMono-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('assets/fonts/jetbrains-mono/JetBrainsMono-Bold.woff2') format('woff2');
+}
+```
+
+#### Проверьте шрифт перед подключением
+
+Часть источников отдаёт урезанный шрифт. Крупные CDN — например, Google Fonts — и собранные из них пакеты нарезают файлы на сабсеты по `unicode-range` и вместе с глифами выбрасывают OpenType-фичи. Шрифт при этом подключается, но часть фич и символов молча перестаёт работать: ноль из токенов Koobiq рисуется без черты, альтернативные цифры не появляются, а отдельные символы вроде `₽` или длинного тире подменяются системным шрифтом.
+
+Поэтому перед подключением проверьте шрифт из вашего источника: в нём должны быть символы, которые использует интерфейс, и OpenType-фичи, которые включает Koobiq.
+
+#### Фичи из токенов
+
+OpenType-фичи Koobiq включает через дизайн-токены — для текста приложения достаточно взять значения из них:
+
+```scss
+body {
+    font-family: var(--kbq-typography-text-normal-font-family);
+    font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
+}
 ```
