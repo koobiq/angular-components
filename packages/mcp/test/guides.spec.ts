@@ -190,7 +190,7 @@ test('titles read as prose rather than as file stems', () => {
 });
 
 test('the bundled guides answer the setup question that sent agents to llms.txt', () => {
-    const answer = toolGetGuide(loadCatalog(CONSUMER), { id: 'theming', section: 'prebuilt' });
+    const answer = toolGetGuide(loadCatalog(CONSUMER), { id: 'theming', section: 'setup' });
 
     expect(answer).toMatch(/@koobiq\/components\/prebuilt-themes\/theme\.css/);
     expect(answer).toMatch(/kbq-app-background/);

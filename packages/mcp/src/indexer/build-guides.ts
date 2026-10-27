@@ -59,6 +59,8 @@ const WITHHELD: Record<string, string> = {
 };
 
 const INTERNAL = /^\d{2}-/;
+// `.claude/rules/schematics.md` shares its name with the `schematics` guide
+const HIDDEN_DIR = /(^|\/)\.[^/]+\//;
 const GUIDE_FILE = /(?:^|\/)([a-z0-9-]+?)(?:\.(en|ru))?\.mdx?$/;
 
 /** `lang` is null when the file name does not say; the content decides. */
@@ -68,7 +70,7 @@ const locate = (paths: string[]): Located[] => {
     const found: Located[] = [];
 
     for (const path of paths) {
-        if (INTERNAL.test(basename(path))) continue;
+        if (INTERNAL.test(basename(path)) || HIDDEN_DIR.test(path)) continue;
 
         const match = GUIDE_FILE.exec(path);
         const id = match?.[1];
@@ -204,8 +206,8 @@ export const buildGuides = (repo: string): Guide[] => {
     // until someone remembers to commit. Nothing arbitrary gets in: `locate` only returns ids that
     // `PUBLIC_GUIDES` names, and everything taken here is flagged `unreleased`.
     const onDisk = [
-        ...git(repo, ['ls-files']).split('\n'),
-        ...git(repo, ['ls-files', '--others', '--exclude-standard']).split('\n')
+        ...git(repo, ['ls-files', 'docs/guides']).split('\n'),
+        ...git(repo, ['ls-files', '--others', '--exclude-standard', 'docs/guides']).split('\n')
     ].filter(Boolean);
 
     for (const { id, lang, path } of locate(onDisk)) {
