@@ -30,7 +30,7 @@ export interface KbqClamped {
 export class KbqClampedList<T> implements KbqClamped {
     readonly collapsedVisibleCount: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly contentId: string;
-    readonly duration: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly duration: _angular_core.InputSignalWithTransform<number, string | number | null | undefined>;
     readonly exceededItemCount: _angular_core.Signal<number>;
     readonly hasToggle: _angular_core.Signal<boolean>;
     readonly hiddenThreshold: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -66,7 +66,7 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     protected readonly collapsedState: Signal<boolean>;
     readonly contentId: string;
     readonly debounceTime: _angular_core.InputSignalWithTransform<number, unknown>;
-    readonly duration: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly duration: _angular_core.InputSignalWithTransform<number, string | number | null | undefined>;
     readonly hasToggle: Signal<boolean>;
     readonly isCollapsed: _angular_core.ModelSignal<boolean | undefined>;
     readonly localeConfiguration: Signal<_koobiq_components_core.KbqClampedTextLocaleConfiguration>;

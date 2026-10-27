@@ -109,7 +109,7 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     /**
      * Duration of the expand and collapse animation in milliseconds. Defaults to `100`.
      */
-    readonly duration = input(100, { transform: numberAttribute });
+    readonly duration = input<number, number | string | null | undefined>(100, { transform: numberAttribute });
 
     /** Id of the clamped region, published by the toggle as its `aria-controls`. */
     readonly contentId = inject(_IdGenerator).getId('kbq-clamped-text-content-');

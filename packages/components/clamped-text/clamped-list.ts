@@ -44,7 +44,7 @@ export class KbqClampedList<T> implements KbqClamped {
     /**
      * Duration of the expand and collapse animation in milliseconds. Defaults to `100`.
      */
-    readonly duration = input(100, { transform: numberAttribute });
+    readonly duration = input<number, number | string | null | undefined>(100, { transform: numberAttribute });
 
     /** Id the trigger points its `aria-controls` at. Keeps an id the host already carries. */
     readonly contentId: string = this.nativeElement.id || inject(_IdGenerator).getId('kbq-clamped-list-');
