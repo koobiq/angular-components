@@ -27,6 +27,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
 import { debounce, timer } from 'rxjs';
 import { KbqClampedListTrigger } from './clamped-list';
+import { kbqInjectCollapseAnimation } from './collapse-animation';
 import {
     KbqClamped,
     KbqClampedRoot,
@@ -105,6 +106,11 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
      */
     readonly scrollOnCollapse = input(true, { transform: booleanAttribute });
 
+    /**
+     * Duration of the expand and collapse animation in milliseconds. Defaults to `100`.
+     */
+    readonly duration = input(100, { transform: numberAttribute });
+
     /** Id of the clamped region, published by the toggle as its `aria-controls`. */
     readonly contentId = inject(_IdGenerator).getId('kbq-clamped-text-content-');
 
@@ -139,6 +145,7 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly platform = inject(Platform);
+    private readonly animateCollapse = kbqInjectCollapseAnimation();
 
     /**
      * Clamped text locale configuration.
@@ -169,7 +176,9 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
         // Untracked: called from a consumer's `effect()`, the collapsed state read here would make the effect toggle
         // again on every change it makes.
         untracked(() => {
-            this.isCollapsed.update((state) => !(state ?? true));
+            this.animateCollapse(this.textContainer().nativeElement, this.duration(), () =>
+                this.isCollapsed.update((state) => !(state ?? true))
+            );
 
             if (this.scrollOnCollapse() && this.collapsedState()) {
                 afterNextRender(

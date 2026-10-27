@@ -30,6 +30,7 @@ export interface KbqClamped {
 export class KbqClampedList<T> implements KbqClamped {
     readonly collapsedVisibleCount: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly contentId: string;
+    readonly duration: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly exceededItemCount: _angular_core.Signal<number>;
     readonly hasToggle: _angular_core.Signal<boolean>;
     readonly hiddenThreshold: _angular_core.InputSignalWithTransform<number, unknown>;
@@ -40,7 +41,7 @@ export class KbqClampedList<T> implements KbqClamped {
     toggle(event: Event): void;
     readonly visibleItems: _angular_core.Signal<T[]>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqClampedList<any>, "[kbqClampedList]", ["kbqClampedList"], { "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "items": { "alias": "items"; "required": false; "isSignal": true; }; "collapsedVisibleCount": { "alias": "collapsedVisibleCount"; "required": false; "isSignal": true; }; "hiddenThreshold": { "alias": "hiddenThreshold"; "required": false; "isSignal": true; }; }, { "isCollapsed": "isCollapsedChange"; }, never, never, true, [{ directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqClampedList<any>, "[kbqClampedList]", ["kbqClampedList"], { "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "items": { "alias": "items"; "required": false; "isSignal": true; }; "collapsedVisibleCount": { "alias": "collapsedVisibleCount"; "required": false; "isSignal": true; }; "hiddenThreshold": { "alias": "hiddenThreshold"; "required": false; "isSignal": true; }; "duration": { "alias": "duration"; "required": false; "isSignal": true; }; }, { "isCollapsed": "isCollapsedChange"; }, never, never, true, [{ directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqClampedList<any>, never>;
 }
@@ -65,6 +66,7 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     protected readonly collapsedState: Signal<boolean>;
     readonly contentId: string;
     readonly debounceTime: _angular_core.InputSignalWithTransform<number, unknown>;
+    readonly duration: _angular_core.InputSignalWithTransform<number, unknown>;
     readonly hasToggle: Signal<boolean>;
     readonly isCollapsed: _angular_core.ModelSignal<boolean | undefined>;
     readonly localeConfiguration: Signal<_koobiq_components_core.KbqClampedTextLocaleConfiguration>;
@@ -76,7 +78,7 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     protected readonly textContainer: Signal<ElementRef<HTMLDivElement>>;
     toggle(event: Event): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqClampedText, "kbq-clamped-text", ["kbqClampedText"], { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; "scrollOnCollapse": { "alias": "scrollOnCollapse"; "required": false; "isSignal": true; }; }, { "isCollapsed": "isCollapsedChange"; }, never, ["*"], true, [{ directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqClampedText, "kbq-clamped-text", ["kbqClampedText"], { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; "scrollOnCollapse": { "alias": "scrollOnCollapse"; "required": false; "isSignal": true; }; "duration": { "alias": "duration"; "required": false; "isSignal": true; }; }, { "isCollapsed": "isCollapsedChange"; }, never, ["*"], true, [{ directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqClampedText, never>;
 }
