@@ -146,6 +146,7 @@ export class KbqIconRegistry {
     addSvgIconLiteralInNamespace(namespace: string, name: string, literal: SafeHtml, options?: KbqIconOptions): void;
     addSvgIconSet(url: SafeResourceUrl, options?: KbqIconOptions): void;
     addSvgIconSetInNamespace(namespace: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
+    canResolve(name: string): boolean;
     getNamedSvgIcon(name: string, namespace?: string): Observable<SVGElement>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqIconRegistry, never>;

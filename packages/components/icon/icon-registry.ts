@@ -104,6 +104,22 @@ export class KbqIconRegistry {
     }
 
     /**
+     * Whether {@link getNamedSvgIcon} may find something for the name: inline markup, an icon registered under it, a
+     * resolver, or an icon set in its namespace. `false` means the lookup would only error.
+     *
+     * @docs-private
+     */
+    canResolve(name: string): boolean {
+        if (name.trimStart().startsWith('<') || this.resolvers.length > 0) return true;
+
+        const colonIndex = name.indexOf(':');
+        const namespace = colonIndex === -1 ? '' : name.slice(0, colonIndex);
+        const iconName = colonIndex === -1 ? name : name.slice(colonIndex + 1);
+
+        return this.iconConfigs.has(iconKey(namespace, iconName)) || !!this.iconSetConfigs.get(namespace)?.length;
+    }
+
+    /**
      * Emits a cloned SVGElement for the given name.
      * Accepts "namespace:name" syntax.
      */

@@ -295,6 +295,18 @@ describe('KbqIcon', () => {
             expect(hostOf(fixture).classList).toContain('kbq-plus_16');
         });
 
+        it('should not look up a font icon the registry cannot resolve', () => {
+            register('kbq-minus_16');
+
+            const lookup = vi.spyOn(registry, 'getNamedSvgIcon');
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            expect(lookup).not.toHaveBeenCalled();
+            expect(hostOf(fixture).classList).toContain('kbq-plus_16');
+        });
+
         it('should render an SVG that arrives after the first render', async () => {
             registry.addSvgIcon('kbq-plus_16', sanitizer.bypassSecurityTrustResourceUrl('/icons/plus.svg'));
 

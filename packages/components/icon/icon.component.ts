@@ -241,7 +241,8 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
         this.svgIconSubscription.unsubscribe();
 
-        if (!this.registry || !name) {
+        // Checked first: every font icon goes through here, and a lookup that finds nothing builds an error per icon.
+        if (!this.registry || !name || !this.registry.canResolve(name)) {
             this.renderSvgIcon(null);
 
             return;
