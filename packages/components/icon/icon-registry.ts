@@ -23,6 +23,13 @@ function iconKey(namespace: string, name: string): string {
     return namespace ? `${namespace}:${name}` : name;
 }
 
+/** Splits "namespace:name" at the first colon; a name without one stays in the given namespace. */
+function parseIconName(name: string, namespace = ''): [namespace: string, name: string] {
+    const colonIndex = name.indexOf(':');
+
+    return colonIndex === -1 ? [namespace, name] : [name.slice(0, colonIndex), name.slice(colonIndex + 1)];
+}
+
 function cloneSvg(svg: SVGElement): SVGElement {
     return svg.cloneNode(true) as SVGElement;
 }
@@ -112,9 +119,7 @@ export class KbqIconRegistry {
     canResolve(name: string): boolean {
         if (name.trimStart().startsWith('<') || this.resolvers.length > 0) return true;
 
-        const colonIndex = name.indexOf(':');
-        const namespace = colonIndex === -1 ? '' : name.slice(0, colonIndex);
-        const iconName = colonIndex === -1 ? name : name.slice(colonIndex + 1);
+        const [namespace, iconName] = parseIconName(name);
 
         return this.iconConfigs.has(iconKey(namespace, iconName)) || !!this.iconSetConfigs.get(namespace)?.length;
     }
@@ -124,24 +129,13 @@ export class KbqIconRegistry {
      * Accepts "namespace:name" syntax.
      */
     getNamedSvgIcon(name: string, namespace = ''): Observable<SVGElement> {
-        let resolvedNs = namespace;
-        let resolvedName = name;
-
-        if (resolvedName.trimStart().startsWith('<')) {
+        if (name.trimStart().startsWith('<')) {
             // `defer` so that unparsable markup arrives as an error notification: every failure of this
             // class has to reach the caller through the same channel.
-            return defer(() =>
-                of(this.svgElementFromText(this.sanitizer.sanitize(SecurityContext.HTML, resolvedName) ?? ''))
-            );
+            return defer(() => of(this.svgElementFromText(this.sanitizer.sanitize(SecurityContext.HTML, name) ?? '')));
         }
 
-        const colonIndex = name.indexOf(':');
-
-        if (colonIndex !== -1) {
-            resolvedNs = name.slice(0, colonIndex);
-            resolvedName = name.slice(colonIndex + 1);
-        }
-
+        const [resolvedNs, resolvedName] = parseIconName(name, namespace);
         const key = iconKey(resolvedNs, resolvedName);
 
         const iconConfig = this.iconConfigs.get(key);
