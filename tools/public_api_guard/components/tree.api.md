@@ -250,7 +250,7 @@ export class KbqTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
 // @public
 export class KbqTreeFlattener<T, F> {
     constructor(transformFunction: (node: T, level: number, parent: F | null) => F, getLevel: (node: F) => number, isExpandable: (node: F) => boolean, getChildren: (node: T) => Observable<T[]> | T[] | undefined | null);
-    expandFlattenedNodes<K>(nodes: F[], treeControl: TreeControl<F, K>): F[];
+    expandFlattenedNodes(nodes: F[], treeControl: Pick<TreeControl<F>, 'isExpanded'>): F[];
     flattenChildren(children: T[], level: number, resultNodes: F[], parent: F | null): void;
     flattenNode(node: T, level: number, resultNodes: F[], parent: F | null): F[];
     flattenNodes(structuredData: T[]): F[];

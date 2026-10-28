@@ -101,8 +101,10 @@ export class KbqTreeFlattener<T, F> {
     /**
      * Expand flattened node with current expansion status.
      * The returned list may have different length.
+     *
+     * Reads only `isExpanded` of the tree control, so it takes a control of any key type.
      */
-    expandFlattenedNodes<K>(nodes: F[], treeControl: TreeControl<F, K>): F[] {
+    expandFlattenedNodes(nodes: F[], treeControl: Pick<TreeControl<F>, 'isExpanded'>): F[] {
         const results: F[] = [];
         const currentExpand: boolean[] = [];
 
