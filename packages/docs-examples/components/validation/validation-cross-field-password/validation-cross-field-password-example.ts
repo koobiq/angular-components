@@ -139,7 +139,7 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher(
                     </kbq-form-field>
                 </div>
 
-                <div class="kbq-form__row">
+                <div class="kbq-form__row layout-align-start-start">
                     <button color="contrast" kbq-button type="submit">Change password</button>
                 </div>
             </div>
