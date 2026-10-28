@@ -220,7 +220,7 @@ describe('KbqClampedList', () => {
 
         afterEach(restoreAnimationEnvironment);
 
-        it('should animate block-size of the host between the heights before and after the toggle', async () => {
+        it('should ease the space after the host between the heights before and after the toggle', async () => {
             const animate = mockAnimate();
 
             getTrigger(debugElement).nativeElement.click();
@@ -228,8 +228,8 @@ describe('KbqClampedList', () => {
 
             expect(animate).toHaveBeenCalledTimes(1);
             expect(animate).toHaveBeenCalledWith(
-                { blockSize: ['100px', '170px'], overflow: ['clip', 'clip'] },
-                { duration: 100, easing: 'ease-in-out' }
+                { marginBlockEnd: ['-70px', '0px'], clipPath: ['inset(0 0 70px 0)', 'inset(0 0 0 0)'] },
+                { duration: 100, easing: 'ease-in-out', composite: 'add' }
             );
         });
 
