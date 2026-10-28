@@ -485,7 +485,7 @@ test.describe('docs app', () => {
 
         const placeholderHeight = await placeholder.evaluate((element) => element.getBoundingClientRect().height);
 
-        // Straight there: the article scrolls smoothly, and a smooth scroll would render every block it passes.
+        // Straight there: a smooth scroll would render every block it passes.
         await placeholder.evaluate((element) => element.scrollIntoView({ behavior: 'instant' }));
 
         const block = entry.locator(':scope > kbq-code-block');
@@ -511,6 +511,18 @@ test.describe('docs app', () => {
         await expect(page).toHaveURL(/\/en\/components\/select\/api\?member=KbqSelect-backdropClass$/);
         await expect(page.locator('#KbqSelect-backdropClass')).toHaveClass(/docs-api__member_selected/);
         await expect(page.locator('#KbqSelect-panelClass')).not.toHaveClass(/docs-api__member_selected/);
+    });
+
+    // The browser scrolls a page it opens to its heading before the app does: were that scroll animated, Chrome would
+    // carry on with it after the app's jump to the heading, out of view on a tab this long.
+    test('opens an API tab at the entry a link points at', async ({ page }) => {
+        await page.goto('/en/components/select/api#KbqSelectError');
+        await waitForHydration(page);
+
+        const heading = page.locator('#KbqSelectError');
+        const viewer = (await page.locator('docs-component-viewer').boundingBox())!;
+
+        await expect.poll(async () => Math.abs((await heading.boundingBox())!.y - viewer.y)).toBeLessThanOrEqual(1);
     });
 
     // AG Grid does not support server-side rendering: the prerendered page leaves its examples to the browser.

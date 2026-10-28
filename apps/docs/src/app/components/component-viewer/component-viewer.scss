@@ -66,9 +66,9 @@
     min-width: 0;
     height: 100%;
 
+    // Not `scroll-behavior: smooth`: a page opened at a heading would animate the browser's own scroll to it, and Chrome
+    // carries on with the animation after the anchors jump to the heading, leaving the page past it.
     overflow-y: auto;
-
-    scroll-behavior: smooth;
 }
 
 .docs-component-viewer__article {
