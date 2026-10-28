@@ -53,12 +53,14 @@ const USERS: KbqUserInfo[] = [
         </ng-template>
     `,
     styles: `
-        .kbq-username__secondary {
-            display: inline-flex;
-            gap: var(--kbq-size-xxs);
+        kbq-filter-bar {
+            width: auto;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class UsernameFilterBarOptionExample implements AfterViewInit {
     private readonly formatUsername = kbqInjectUsernameFormatter();

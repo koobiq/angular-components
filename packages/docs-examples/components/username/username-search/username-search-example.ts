@@ -30,52 +30,35 @@ import { startWith } from 'rxjs';
         KbqHighlightModule
     ],
     template: `
-        <kbq-toggle [(ngModel)]="isCompact">Compact trigger</kbq-toggle>
+        <div class="example__content">
+            <kbq-toggle [(ngModel)]="isCompact">Compact trigger</kbq-toggle>
 
-        <kbq-form-field>
-            <kbq-select placeholder="Assignee" [(value)]="selectedUser">
-                <kbq-select-trigger>
-                    @if (selectedUser(); as user) {
-                        <kbq-username [userInfo]="user" [isCompact]="isCompact()" />
-                    }
-                </kbq-select-trigger>
+            <kbq-form-field>
+                <kbq-select placeholder="Assignee" [(value)]="selectedUser">
+                    <kbq-select-trigger>
+                        @if (selectedUser(); as user) {
+                            <kbq-username [userInfo]="user" [isCompact]="isCompact()" />
+                        }
+                    </kbq-select-trigger>
 
-                <kbq-form-field noBorders kbqSelectSearch>
-                    <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                    <input kbqInput type="text" [formControl]="searchControl" />
-                    <kbq-cleaner />
-                </kbq-form-field>
+                    <kbq-form-field noBorders kbqSelectSearch>
+                        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+                        <input kbqInput type="text" [formControl]="searchControl" />
+                        <kbq-cleaner />
+                    </kbq-form-field>
 
-                <div kbq-select-search-empty-result>Nothing found</div>
+                    <div kbq-select-search-empty-result>Nothing found</div>
 
-                @for (user of filteredUsers(); track user) {
-                    <kbq-option [value]="user">
-                        <kbq-username>
-                            <kbq-username-custom-view>
-                                @let fullName = user | kbqUsername;
+                    @for (user of filteredUsers(); track user) {
+                        <kbq-option [value]="user">
+                            <kbq-username>
+                                <kbq-username-custom-view>
+                                    @let fullName = user | kbqUsername;
 
-                                @if (isCompact()) {
-                                    <span kbqUsernamePrimary>
-                                        <span [innerHTML]="fullName | kbqHighlightBackground: keywords() : true"></span>
-                                        @if (user.site) {
+                                    @if (isCompact()) {
+                                        <span kbqUsernamePrimary>
                                             <span
-                                                kbqUsernameSecondaryHint
-                                                [innerHTML]="
-                                                    '(' + user.site + ')' | kbqHighlightBackground: keywords() : true
-                                                "
-                                            ></span>
-                                        }
-                                    </span>
-                                } @else {
-                                    <span
-                                        kbqUsernamePrimary
-                                        [innerHTML]="fullName | kbqHighlightBackground: keywords() : true"
-                                    ></span>
-
-                                    @if (user.login) {
-                                        <span kbqUsernameSecondary>
-                                            <span
-                                                [innerHTML]="user.login | kbqHighlightBackground: keywords() : true"
+                                                [innerHTML]="fullName | kbqHighlightBackground: keywords() : true"
                                             ></span>
                                             @if (user.site) {
                                                 <span
@@ -87,14 +70,36 @@ import { startWith } from 'rxjs';
                                                 ></span>
                                             }
                                         </span>
+                                    } @else {
+                                        <span
+                                            kbqUsernamePrimary
+                                            [innerHTML]="fullName | kbqHighlightBackground: keywords() : true"
+                                        ></span>
+
+                                        @if (user.login) {
+                                            <span kbqUsernameSecondary>
+                                                <span
+                                                    [innerHTML]="user.login | kbqHighlightBackground: keywords() : true"
+                                                ></span>
+                                                @if (user.site) {
+                                                    <span
+                                                        kbqUsernameSecondaryHint
+                                                        [innerHTML]="
+                                                            '(' + user.site + ')'
+                                                                | kbqHighlightBackground: keywords() : true
+                                                        "
+                                                    ></span>
+                                                }
+                                            </span>
+                                        }
                                     }
-                                }
-                            </kbq-username-custom-view>
-                        </kbq-username>
-                    </kbq-option>
-                }
-            </kbq-select>
-        </kbq-form-field>
+                                </kbq-username-custom-view>
+                            </kbq-username>
+                        </kbq-option>
+                    }
+                </kbq-select>
+            </kbq-form-field>
+        </div>
     `,
     styles: `
         kbq-option .kbq-username__primary,
@@ -103,7 +108,10 @@ import { startWith } from 'rxjs';
             gap: var(--kbq-size-xxs);
         }
 
-        .kbq-form-field-type-select {
+        .example__content {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-m);
             width: 320px;
         }
     `,
@@ -112,7 +120,7 @@ import { startWith } from 'rxjs';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-column layout-gap-m layout-padding-m'
+        class: 'layout-align-center-center layout-row layout-margin-5xl'
     }
 })
 export class UsernameSearchExample {
