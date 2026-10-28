@@ -19,7 +19,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <kbq-empty-state class="flex" size="big" style="min-height: 216px">
                 <div kbq-empty-state-icon>
                     <img
-                        src="assets/images/{{ currentTheme() }}/empty_192.webp"
+                        src="https://koobiq.io/assets/images/{{ currentTheme() }}/empty_192.webp"
                         alt="Empty state"
                         height="192"
                         width="192"
@@ -39,7 +39,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <kbq-empty-state class="flex" style="min-height: 216px">
                 <div kbq-empty-state-icon>
                     <img
-                        src="assets/images/{{ currentTheme() }}/empty_192.webp"
+                        src="https://koobiq.io/assets/images/{{ currentTheme() }}/empty_192.webp"
                         alt="Empty state"
                         width="80"
                         height="80"
@@ -68,7 +68,7 @@ export class EmptyStateContentExample {
     protected readonly srcSet = computed(() => {
         const currentTheme = this.currentTheme();
 
-        return `assets/images/${currentTheme}/empty_192.webp 1x, assets/images/${currentTheme}/empty_192@2x.webp 2x`;
+        return `https://koobiq.io/assets/images/${currentTheme}/empty_192.webp 1x, https://koobiq.io/assets/images/${currentTheme}/empty_192@2x.webp 2x`;
     });
 
     buttonText = 'Создать группу';
