@@ -14,6 +14,7 @@ import { TreeSelectAndMarkExample } from './tree-select-and-mark/tree-select-and
 import { TreeSelectionSeparateFromFocusExample } from './tree-selection-separate-from-focus/tree-selection-separate-from-focus-example';
 import { TreeStateSavingExample } from './tree-state-saving/tree-state-saving-example';
 import { TreeToggleOnClickExample } from './tree-toggle-on-click/tree-toggle-on-click-example';
+import { TreeTrackByExample } from './tree-track-by/tree-track-by-example';
 
 export {
     TreeAccessRightsExample,
@@ -30,7 +31,8 @@ export {
     TreeSelectAndMarkExample,
     TreeSelectionSeparateFromFocusExample,
     TreeStateSavingExample,
-    TreeToggleOnClickExample
+    TreeToggleOnClickExample,
+    TreeTrackByExample
 };
 
 const EXAMPLES = [
@@ -48,7 +50,8 @@ const EXAMPLES = [
     TreeSelectAndMarkExample,
     TreeSelectionSeparateFromFocusExample,
     TreeStateSavingExample,
-    TreeToggleOnClickExample
+    TreeToggleOnClickExample,
+    TreeTrackByExample
 ];
 
 @NgModule({

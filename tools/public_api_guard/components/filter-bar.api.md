@@ -634,7 +634,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     get selectedAllEqualsSelectedNothing(): boolean;
     // (undocumented)
     toggleSelectAllNode(emitEvent?: boolean): void;
-    readonly tree: _angular_core.Signal<KbqTreeSelection<KbqTreeSelectFlatNode>>;
+    readonly tree: _angular_core.Signal<KbqTreeSelection<KbqTreeSelectFlatNode, KbqTreeSelectFlatNode>>;
     updateTemplates: (templates: KbqPipeTemplate[] | null) => void;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeMultiTreeSelectComponent, "kbq-pipe-multi-tree-select", never, {}, {}, never, never, true, never>;
@@ -843,7 +843,7 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
     onOpen(): void;
     open(): void;
     readonly searchControl: FormControl<string | null>;
-    readonly select: _angular_core.Signal<KbqTreeSelect<KbqTreeSelectFlatNode>>;
+    readonly select: _angular_core.Signal<KbqTreeSelect<KbqTreeSelectFlatNode, KbqTreeSelectFlatNode>>;
     // (undocumented)
     protected transformer: (node: KbqTreeSelectNode, level: number, parent: KbqTreeSelectFlatNode | null) => KbqTreeSelectFlatNode;
     // (undocumented)
