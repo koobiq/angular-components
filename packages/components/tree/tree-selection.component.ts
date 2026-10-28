@@ -70,7 +70,7 @@ import {
 import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
-import { delay } from 'rxjs/operators';
+import { delay, filter, map } from 'rxjs/operators';
 import { FlatTreeControl } from './control/flat-tree-control';
 import { KbqTreeNodeOutlet } from './outlet';
 import { KbqTreeNodePadding } from './padding.directive';
@@ -336,8 +336,7 @@ export class KbqTreeSelection<T = any, K = T>
         this.autoSelectState.set(coerceBooleanProperty(value));
     }
 
-    // One stream the options report to: merging every option's own stream on each render was linear in the rows,
-    // and missed the rows rendered after a subscription.
+    // Options report here, so a subscriber also hears the rows rendered after it subscribed.
     private readonly optionFocusEvents = new Subject<KbqTreeOptionEvent>();
 
     private readonly optionBlurEvents = new Subject<KbqTreeOptionEvent>();
@@ -871,9 +870,21 @@ export class KbqTreeSelection<T = any, K = T>
 
         this.listenToOptionsFocus();
 
+        // A render and the selection changes of one task each notify: the first sweep reads them all, and the others are
+        // dropped. Each notification keeps its own timer, where `auditTime` would tie the later ones to the first one's.
+        let requestedSweeps = 0;
+        let sweptRequests = 0;
+
         this.renderedOptions.changes
-            .pipe(delay(0, this.scheduler), takeUntilDestroyed(this.destroyRef))
-            .subscribe((options) => {
+            .pipe(
+                map((options) => ({ options, request: ++requestedSweeps })),
+                delay(0, this.scheduler),
+                filter(({ request }) => request > sweptRequests),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(({ options }) => {
+                sweptRequests = requestedSweeps;
+
                 // Check to see if we need to update our tab index
                 this.updateTabIndex();
 
@@ -1611,8 +1622,7 @@ export class KbqTreeSelection<T = any, K = T>
             orderedOptions.push(selectAllOption);
         }
 
-        // Indexed once rather than searched per node, which was quadratic in the rows. The first option wins in both
-        // maps, as the search did.
+        // Indexed once per render, as a search per node is quadratic in the rows. The first option wins in both maps.
         const optionsByNode = new Map<T, KbqTreeOption<T>>();
         const optionsByValue = new Map<unknown, KbqTreeOption<T>>();
 
@@ -1651,7 +1661,8 @@ export class KbqTreeSelection<T = any, K = T>
     }
 
     private listenToOptionsFocus(): void {
-        this.optionFocusEvents.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
+        // Both streams complete with the tree.
+        this.optionFocusEvents.subscribe((event) => {
             const index: number = this.renderedOptions.toArray().indexOf(event.option as KbqTreeOption);
 
             this.renderedOptions.filter((option) => option.hasFocus).forEach((option) => (option.hasFocus = false));
@@ -1666,7 +1677,7 @@ export class KbqTreeSelection<T = any, K = T>
         // set, because `KbqTreeOption.hasFocus` is cleared synchronously but only raised a microtask later, so
         // `hasFocusedOption()` reports nothing focused for the whole move. Only a blur of the option the
         // key manager still points at is the focus actually leaving the options.
-        this.optionBlurEvents.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ option }) => {
+        this.optionBlurEvents.subscribe(({ option }) => {
             if (option === this.keyManager.activeItem && !this.hasFocusedOption() && this.resetFocusedItemOnBlur) {
                 this.keyManager.setActiveItem(-1);
             }

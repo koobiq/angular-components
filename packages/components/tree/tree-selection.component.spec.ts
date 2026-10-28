@@ -9,6 +9,7 @@ import {
     effect,
     EventEmitter,
     InputSignal,
+    NgZone,
     signal,
     Type,
     viewChild,
@@ -2400,6 +2401,59 @@ describe('KbqTreeSelection', () => {
                 expect(getNodes(treeElement).length).toBe(component.treeControl.dataNodes.length);
                 expect(rollUps).not.toHaveBeenCalled();
             });
+
+            it('should not roll the selected rows a render brings in up through their ancestors', async () => {
+                vi.useFakeTimers();
+
+                const { tree, treeControl } = component;
+
+                tree().selectionModel.select(
+                    treeControl.dataNodes.find((node) => node.name === `node-${DEEP_CHAIN_DEPTH}`)!
+                );
+                await settle();
+
+                const rollUps = vi.spyOn(treeControl, 'getParents');
+
+                treeControl.expandAll();
+                await settle();
+
+                expect(rollUps).not.toHaveBeenCalled();
+                expect(optionFor(`node-${DEEP_CHAIN_DEPTH}`).selected).toBe(true);
+                expect(optionFor('node-0').checkboxState).toBe('indeterminate');
+            });
+
+            // A search of the data nodes for each branch a sweep recomputes would make it cost rows × nodes.
+            it('should not search the data nodes for the rows it sweeps', async () => {
+                vi.useFakeTimers();
+
+                component.treeControl.expandAll();
+                await settle();
+
+                const indexOf = vi.spyOn(component.treeControl.dataNodes, 'indexOf');
+
+                dispatchEvent(getNodeByText(treeElement, `node-${DEEP_CHAIN_DEPTH}`), createMouseEvent('click'));
+                await settle();
+
+                expect(indexOf).not.toHaveBeenCalled();
+            });
+
+            it('should sweep the rows once for the selection changes of one task', async () => {
+                vi.useFakeTimers();
+
+                const { tree, treeControl } = component;
+
+                treeControl.expandAll();
+                await settle();
+
+                const sweeps = vi.spyOn(optionFor('node-0'), 'markForCheck');
+
+                ['leaf-1', 'leaf-2', 'leaf-3'].forEach((name) =>
+                    tree().selectionModel.select(treeControl.dataNodes.find((node) => node.name === name)!)
+                );
+                await settle();
+
+                expect(sweeps).toHaveBeenCalledTimes(1);
+            });
         });
 
         describe('disabled options', () => {
@@ -3055,18 +3109,6 @@ describe('KbqTreeSelection', () => {
                 component.dataSource.data = buildFileTree(DEEP_DATA_OBJECT, 0);
 
                 expect(treeElement.querySelectorAll('.kbq-tree-option').length).toBe(0);
-            });
-
-            it('should stop listening to the focus of its options', () => {
-                const tree = component.tree();
-
-                expect(tree['optionFocusEvents'].observed).toBe(true);
-                expect(tree['optionBlurEvents'].observed).toBe(true);
-
-                fixture.destroy();
-
-                expect(tree['optionFocusEvents'].observed).toBe(false);
-                expect(tree['optionBlurEvents'].observed).toBe(false);
             });
 
             it('should complete optionFocusChanges and optionBlurChanges', () => {
@@ -5710,7 +5752,7 @@ describe('KbqTreeSelection rendering a change of the data', () => {
         expect(checks.rows).toEqual([1, 1, 1, 1, 1]);
     });
 
-    // Searching the selected values for every row made a render cost rows × selected.
+    // A search of the selected values per row would make a render cost rows × selected.
     it('should read the selected values once for a render of the rows, not once per row', async () => {
         const { tree, treeControl } = fixture.componentInstance;
         const selectedValues = tree().getSelectedValues();
@@ -5785,14 +5827,32 @@ describe('KbqTreeSelection rendering a change of the data', () => {
         expect(checks.rows).toEqual(checks.rows.map(() => 0));
     });
 
-    it('should hand the focus of a row the change brings in to the keyboard', async () => {
+    it('should leave the zone alone when the pointer enters the row a tree in a select has focused', async () => {
+        const row = getNodeByText(fixture.nativeElement, 'Pictures');
+
+        fixture.componentInstance.tree().inSelect = true;
+        row.focus();
+        await settle();
+
+        const run = vi.spyOn(TestBed.inject(NgZone), 'run');
+
+        dispatchFakeEvent(row, 'mouseenter');
+
+        expect(run).not.toHaveBeenCalled();
+
+        dispatchFakeEvent(getNodeByText(fixture.nativeElement, 'Documents'), 'mouseenter');
+
+        expect(run).toHaveBeenCalled();
+    });
+
+    it('should hand the focus of a row the change brings in to the keyboard before the rows are swept', async () => {
         fixture.componentInstance.selectAll = false;
         await settle();
 
         const { tree, treeControl } = fixture.componentInstance;
 
         treeControl.expand(node('Documents'));
-        await settle();
+        TestBed.tick();
         dispatchFakeEvent(getNodeByText(fixture.nativeElement, 'angular'), 'focusin');
 
         expect(tree().keyManager.activeItem!.value).toBe('angular');

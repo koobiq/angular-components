@@ -546,8 +546,8 @@ export interface KbqTreeOptionParent<T = any> {
     inSelect: boolean;
     multiple: boolean;
     optionShouldHoldFocusOnBlur: boolean;
-    reportOptionBlur(event: KbqTreeOptionEvent): void;
-    reportOptionFocus(event: KbqTreeOptionEvent): void;
+    reportOptionBlur?(event: KbqTreeOptionEvent): void;
+    reportOptionFocus?(event: KbqTreeOptionEvent): void;
     selectAllState: KbqPseudoCheckboxState;
     // (undocumented)
     selectionModel: SelectionModel<T>;

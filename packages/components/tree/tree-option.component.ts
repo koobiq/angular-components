@@ -75,10 +75,10 @@ export interface KbqTreeOptionParent<T = any> {
     selectionModel: SelectionModel<T>;
     unorderedOptions: QueryList<KbqTreeOption<T>>;
     setSelectedOptionsByClick(option: KbqTreeOption<T>, shiftKey: boolean, ctrlKey: boolean): void;
-    /** Receives the focus of every option: one stream for the tree instead of a subscription per option. */
-    reportOptionFocus(event: KbqTreeOptionEvent): void;
-    /** Receives the blur of every option. */
-    reportOptionBlur(event: KbqTreeOptionEvent): void;
+    /** Called when an option takes focus. */
+    reportOptionFocus?(event: KbqTreeOptionEvent): void;
+    /** Called when an option loses focus. */
+    reportOptionBlur?(event: KbqTreeOptionEvent): void;
 }
 
 /** Injection token used to provide the parent component to options. */
@@ -520,8 +520,10 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
             kbqFocusAndReveal(this.elementRef.nativeElement, focusOrigin === 'mouse');
 
             if (!this.hasFocus) {
-                this.focusEvents.next({ option: this });
-                this.tree.reportOptionFocus({ option: this });
+                const event: KbqTreeOptionEvent = { option: this };
+
+                this.focusEvents.next(event);
+                this.tree.reportOptionFocus?.(event);
 
                 Promise.resolve().then(() => {
                     this.hasFocus = true;
@@ -552,8 +554,10 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
 
                 this.hasFocus = false;
 
-                this.blurEvents.next({ option: this });
-                this.tree.reportOptionBlur({ option: this });
+                const event: KbqTreeOptionEvent = { option: this };
+
+                this.blurEvents.next(event);
+                this.tree.reportOptionBlur?.(event);
             },
             // The environment injector, not the option's: an option removed while focused is blurred as its view is
             // destroyed, and the tree still has to hear about it to move focus.
@@ -590,7 +594,8 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
                 this.focus();
             }
 
-            this.updateCheckboxState();
+            // Its own state only: an ancestor's reads the selection model, which this leaves as it is.
+            this.syncCheckboxState();
             this.emitSelectionChangeEvent();
         });
     }
@@ -603,7 +608,8 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
 
             this.selectedState.set(false);
 
-            this.updateCheckboxState();
+            // Its own state only, as in `select`.
+            this.syncCheckboxState();
             this.emitSelectionChangeEvent();
         });
     }
@@ -654,6 +660,9 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
     /** @docs-private */
     protected onMouseenter() {
         if (this.disabled || !this.tree.inSelect) return;
+
+        // Focusing the option it already holds would only run change detection.
+        if (this.hasFocus && _getFocusedElementPierceShadowDom() === this.elementRef.nativeElement) return;
 
         this.ngZone.run(() => this.focus('mouse'));
     }
