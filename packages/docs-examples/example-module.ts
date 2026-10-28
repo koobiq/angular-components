@@ -3593,18 +3593,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "link-application-example.ts",
     "importPath": "components/link"
   },
-  "link-caption": {
-    "packagePath": "components/link/link-caption",
-    "title": "Link caption",
-    "componentName": "LinkCaptionExample",
-    "files": [
-      "link-caption-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "link-caption-example",
-    "primaryFile": "link-caption-example.ts",
-    "importPath": "components/link"
-  },
   "link-disabled": {
     "packagePath": "components/link/link-disabled",
     "title": "Link disabled",
@@ -3629,18 +3617,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "link-external-example.ts",
     "importPath": "components/link"
   },
-  "link-general": {
-    "packagePath": "components/link/link-general",
-    "title": "Link general",
-    "componentName": "LinkGeneralExample",
-    "files": [
-      "link-general-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "link-general-example",
-    "primaryFile": "link-general-example.ts",
-    "importPath": "components/link"
-  },
   "link-icons": {
     "packagePath": "components/link/link-icons",
     "title": "Link icons",
@@ -3651,6 +3627,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "link-icons-example",
     "primaryFile": "link-icons-example.ts",
+    "importPath": "components/link"
+  },
+  "link-in-text": {
+    "packagePath": "components/link/link-in-text",
+    "title": "Link in text",
+    "componentName": "LinkInTextExample",
+    "files": [
+      "link-in-text-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "link-in-text-example",
+    "primaryFile": "link-in-text-example.ts",
     "importPath": "components/link"
   },
   "link-multi-line": {
@@ -3677,18 +3665,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "link-overview-example.ts",
     "importPath": "components/link"
   },
-  "link-prepositions": {
-    "packagePath": "components/link/link-prepositions",
-    "title": "Link preposition",
-    "componentName": "LinkPrepositionsExample",
-    "files": [
-      "link-prepositions-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "link-prepositions-example",
-    "primaryFile": "link-prepositions-example.ts",
-    "importPath": "components/link"
-  },
   "link-print": {
     "packagePath": "components/link/link-print",
     "title": "Link print",
@@ -3713,16 +3689,28 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "link-pseudo-example.ts",
     "importPath": "components/link"
   },
-  "link-target-blank": {
-    "packagePath": "components/link/link-target-blank",
-    "title": "Link target blank",
-    "componentName": "LinkTargetBlankExample",
+  "link-size": {
+    "packagePath": "components/link/link-size",
+    "title": "Link size",
+    "componentName": "LinkSizeExample",
     "files": [
-      "link-target-blank-example.ts"
+      "link-size-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "link-target-blank-example",
-    "primaryFile": "link-target-blank-example.ts",
+    "selector": "link-size-example",
+    "primaryFile": "link-size-example.ts",
+    "importPath": "components/link"
+  },
+  "link-underline": {
+    "packagePath": "components/link/link-underline",
+    "title": "Link underline",
+    "componentName": "LinkUnderlineExample",
+    "files": [
+      "link-underline-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "link-underline-example",
+    "primaryFile": "link-underline-example.ts",
     "importPath": "components/link"
   },
   "link-visited": {
@@ -8287,17 +8275,16 @@ export type LiveExampleId =
   | 'layout-flex-order'
   | 'layout-flex-overview'
   | 'link-application'
-  | 'link-caption'
   | 'link-disabled'
   | 'link-external'
-  | 'link-general'
   | 'link-icons'
+  | 'link-in-text'
   | 'link-multi-line'
   | 'link-overview'
-  | 'link-prepositions'
   | 'link-print'
   | 'link-pseudo'
-  | 'link-target-blank'
+  | 'link-size'
+  | 'link-underline'
   | 'link-visited'
   | 'link-with-caption'
   | 'list-action-button'

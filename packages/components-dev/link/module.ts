@@ -1,19 +1,16 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLink, KbqLinkPrefix, KbqLinkSuffix } from '@koobiq/components/link';
 import {
     LinkApplicationExample,
-    LinkCaptionExample,
     LinkDisabledExample,
     LinkExternalExample,
-    LinkGeneralExample,
     LinkIconsExample,
+    LinkInTextExample,
     LinkMultiLineExample,
     LinkOverviewExample,
-    LinkPrepositionsExample,
     LinkPrintExample,
     LinkPseudoExample,
-    LinkTargetBlankExample,
+    LinkSizeExample,
+    LinkUnderlineExample,
     LinkVisitedExample,
     LinkWithCaptionExample
 } from 'packages/docs-examples/components/link';
@@ -23,48 +20,45 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     imports: [
         LinkApplicationExample,
-        LinkCaptionExample,
         LinkDisabledExample,
         LinkExternalExample,
-        LinkGeneralExample,
         LinkIconsExample,
+        LinkInTextExample,
         LinkMultiLineExample,
         LinkOverviewExample,
-        LinkPrepositionsExample,
         LinkPrintExample,
         LinkPseudoExample,
-        LinkTargetBlankExample,
+        LinkSizeExample,
+        LinkUnderlineExample,
         LinkVisitedExample,
         LinkWithCaptionExample
     ],
     template: `
-        <link-with-caption-example />
+        <link-overview-example />
         <hr />
-        <link-application-example />
+        <link-size-example />
         <hr />
-        <link-caption-example />
+        <link-underline-example />
         <hr />
         <link-disabled-example />
         <hr />
-        <link-external-example />
-        <hr />
-        <link-general-example />
+        <link-visited-example />
         <hr />
         <link-icons-example />
         <hr />
         <link-multi-line-example />
         <hr />
-        <link-overview-example />
+        <link-in-text-example />
         <hr />
-        <link-prepositions-example />
+        <link-external-example />
         <hr />
-        <link-print-example />
+        <link-application-example />
         <hr />
         <link-pseudo-example />
         <hr />
-        <link-target-blank-example />
+        <link-print-example />
         <hr />
-        <link-visited-example />
+        <link-with-caption-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -72,12 +66,10 @@ export class DevDocsExamples {}
 
 @Component({
     selector: 'dev-app',
-    imports: [KbqLink, KbqLinkPrefix, KbqLinkSuffix, KbqIconModule, DevDocsExamples, DevThemeToggle],
+    imports: [DevDocsExamples, DevThemeToggle],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class DevApp {
-    readonly url = 'http://localhost:3003/';
-}
+export class DevApp {}
