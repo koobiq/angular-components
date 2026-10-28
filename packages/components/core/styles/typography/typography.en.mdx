@@ -19,6 +19,8 @@ Both fonts are installed from npm: Inter — [from the inter-ui package](https:/
 npm install inter-ui @fontsource/jetbrains-mono
 ```
 
+From the **inter-ui** package `inter.css` is the file to take: it is full — with Cyrillic, the usual special symbols and the slashed zero. `inter-latin.css` is not used: it has neither Cyrillic nor some of the features.
+
 ```scss
 @import 'inter-ui/inter.css';
 
@@ -26,8 +28,6 @@ npm install inter-ui @fontsource/jetbrains-mono
 @import '@fontsource/jetbrains-mono/600.css';
 @import '@fontsource/jetbrains-mono/700.css';
 ```
-
-The **inter-ui** package also ships `inter-latin.css`, without Cyrillic and without some of the features — it is not used, `inter.css` is the one to take.
 
 #### A CDN and self-hosting
 

@@ -19,6 +19,8 @@ Koobiq по умолчанию использует шрифты [Inter](https:/
 npm install inter-ui @fontsource/jetbrains-mono
 ```
 
+Из пакета **inter-ui** берут `inter.css`: файл полный — с кириллицей, привычными спецсимволами и перечеркнутым нулем. Сборку `inter-latin.css` не используют: в ней нет ни кириллицы, ни части фич.
+
 ```scss
 @import 'inter-ui/inter.css';
 
@@ -26,8 +28,6 @@ npm install inter-ui @fontsource/jetbrains-mono
 @import '@fontsource/jetbrains-mono/600.css';
 @import '@fontsource/jetbrains-mono/700.css';
 ```
-
-В пакете **inter-ui** есть сборка `inter-latin.css` без кириллицы и части фич — ее не используют, нужен `inter.css`.
 
 #### CDN и самохостинг
 
