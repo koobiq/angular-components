@@ -13,7 +13,7 @@ Koobiq по умолчанию использует шрифты [Inter](https:/
 
 #### Пакеты
 
-Оба шрифта ставятся из npm: Inter — [из пакета inter-ui](https://www.npmjs.com/package/inter-ui), JetBrains Mono — [из пакета @fontsource/jetbrains-mono](https://www.npmjs.com/package/@fontsource/jetbrains-mono).
+Оба шрифта устанавливаются из npm: Inter — [из пакета inter-ui](https://www.npmjs.com/package/inter-ui), JetBrains Mono — [из пакета @fontsource/jetbrains-mono](https://www.npmjs.com/package/@fontsource/jetbrains-mono).
 
 ```bash
 npm install inter-ui @fontsource/jetbrains-mono
@@ -56,7 +56,7 @@ JetBrains Mono можно подключить по ссылке с Google Fonts
 <p class="kbq-text-normal">Текст интерфейса</p>
 ```
 
-#### Как изменить шрифты
+#### Изменение шрифтов
 
 Семейства шрифтов заданы глобальными переменными, их переопределение меняет шрифты во всем интерфейсе. Переопределение ставится после подключения токенов, иначе победит значение из токенов.
 
@@ -70,4 +70,4 @@ JetBrains Mono можно подключить по ссылке с Google Fonts
 
 #### Проверка файлов
 
-Перед подключением файл проверяется: в нем должны быть символы, которые использует интерфейс, и OpenType-фичи, которые включает Koobiq. Раздача по **unicode-range** — так работают CDN и собранные из них сабсеты, например Inter в Fontsource — выбрасывает вместе с глифами и фичи.
+Перед подключением файл проверяется: в нем должны быть символы, которые использует интерфейс, и OpenType-фичи, которые включает Koobiq. Раздача по **unicode-range** — так работают CDN и собранные из них сабсеты, например Inter в Fontsource, — выбрасывает вместе с глифами и фичи.
