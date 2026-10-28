@@ -420,7 +420,7 @@ export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirectiv
 }
 
 // @public (undocumented)
-export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterContentInit, DoCheck, KbqTitleTextRef {
+export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements OnInit, AfterContentInit, DoCheck, KbqTitleTextRef {
     constructor();
     // (undocumented)
     readonly actionButton: _angular_core.Signal<KbqOptionActionComponent | undefined>;
@@ -470,6 +470,8 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
     ngAfterContentInit(): void;
     // (undocumented)
     ngDoCheck(): void;
+    // (undocumented)
+    ngOnInit(): void;
     readonly onBlur: Observable<KbqTreeOptionEvent>;
     readonly onFocus: Observable<KbqTreeOptionEvent>;
     // (undocumented)

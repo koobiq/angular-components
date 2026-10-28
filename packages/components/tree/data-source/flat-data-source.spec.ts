@@ -159,6 +159,16 @@ describe('KbqTreeFlatDataSource', () => {
         expect(control.dataNodes).toBe(dataSource.flattenedData.value);
     });
 
+    // A tree renders while the data source emits, and its rows look themselves up in the tree control's nodes.
+    it('should hand the tree control the nodes before it emits them', () => {
+        const handedOver: boolean[] = [];
+
+        dataSource.flattenedData.subscribe((nodes) => handedOver.push(control.dataNodes === nodes));
+        dataSource.data = buildData();
+
+        expect(handedOver.at(-1)).toBe(true);
+    });
+
     it('should flatten the data handed to its constructor and hand it to the tree control', () => {
         const data = buildData();
 
