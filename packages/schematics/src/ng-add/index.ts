@@ -1,5 +1,5 @@
 import { workspaces } from '@angular-devkit/core';
-import { callRule, chain, Rule, SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
+import { chain, Rule, SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { addRootProvider, readWorkspace, writeWorkspace } from '@schematics/angular/utility';
 import { findAppConfig } from '@schematics/angular/utility/standalone/app_config';
@@ -8,7 +8,6 @@ import {
     findProvidersLiteral,
     getMainFilePath
 } from '@schematics/angular/utility/standalone/util';
-import { firstValueFrom } from 'rxjs';
 // `@schematics/angular`'s own bundled copy of the TypeScript compiler, not the `typescript`
 // package — `findAppConfig`/`findProvidersLiteral` return nodes created by this exact instance,
 // and `ts.isCallExpression`/`ts.isIdentifier` key off `SyntaxKind` numeric values, which are not
@@ -18,6 +17,7 @@ import ts from '@schematics/angular/third_party/github.com/Microsoft/TypeScript/
 import { setKoobiqThemeBodyClass } from '../utils/html-config';
 import { logMessage } from '../utils/messages';
 import { addPackageToPackageJson } from '../utils/package-config';
+import { safeRule } from '../utils/safe-rule';
 import { applyKoobiqWorkspaceStyles, KoobiqTheme } from '../utils/workspace-styles';
 import * as messages from './messages';
 import { Schema } from './schema';
@@ -122,22 +122,6 @@ function replaceNode(tree: Tree, providers: ResolvedProviders, node: ts.Node, te
     const end = node.getEnd();
 
     tree.overwrite(providers.filePath, content.slice(0, start) + text + content.slice(end));
-}
-
-/**
- * Runs `rule` against `tree` and swallows any error it throws, logging `fallbackMessage` instead.
- * Only ever used for the case `resolveProviders` has already told us to expect: a bootstrap it
- * couldn't statically analyze, where `addRootProvider` is expected to fail the same way. Any other,
- * genuinely unexpected error is left to propagate instead of being silently turned into a warning.
- */
-function safeRule(rule: Rule, fallbackMessage: string[]): Rule {
-    return async (tree: Tree, context: SchematicContext) => {
-        try {
-            await firstValueFrom(callRule(rule, tree, context));
-        } catch {
-            logMessage(context.logger, fallbackMessage);
-        }
-    };
 }
 
 /** `addRootProvider` rule inserting the `kbqThemeProvider({ ... })` call built by `themeProviderCallText`. */

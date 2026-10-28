@@ -18,7 +18,7 @@ Adding a theme to the page means putting a class on `<body>`. Everything below i
 - Include `css-tokens.css`, `css-tokens-light.css` and `css-tokens-dark.css` — these hold the global values.
 - Include the prebuilt styles in your main stylesheet. Components and overlays (popups, dropdowns) need this to render correctly. It also carries the token values of code-block, scrollbar and skeleton, so no separate files are needed for them:
 
-```sass
+```scss
 @use '@koobiq/components/prebuilt-themes/theme.css';
 ```
 

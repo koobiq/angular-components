@@ -2,10 +2,12 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { kbqCodeBlockHighlightJsConfigProvider } from '@koobiq/components/code-block';
 import { KbqStateSavingService } from '@koobiq/components/core';
 import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
 import { BehaviorSubject, map } from 'rxjs';
 import type { Mock } from 'vitest';
+import { DOCS_HIGHLIGHT_JS_LANGUAGES } from '../../constants/highlight-js';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
 import { DocsLiveExampleViewerComponent } from './docs-live-example-viewer';
@@ -58,7 +60,12 @@ describe(DocsLiveExampleViewerComponent.name, () => {
     const createFixture = async (): Promise<void> => {
         TestBed.configureTestingModule({
             imports: [DocsLiveExampleViewerComponent],
-            providers: [provideDocsLocale(DocsLocale.En), provideHttpClient(), provideHttpClientTesting()]
+            providers: [
+                provideDocsLocale(DocsLocale.En),
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                kbqCodeBlockHighlightJsConfigProvider({ languages: DOCS_HIGHLIGHT_JS_LANGUAGES })
+            ]
         });
 
         fixture = TestBed.createComponent(DocsLiveExampleViewerComponent);
