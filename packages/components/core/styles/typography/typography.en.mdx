@@ -70,4 +70,4 @@ The font families are set by global variables, and overriding them changes the f
 
 #### Checking the files
 
-A font from any source is checked before installing: it has to contain the characters the interface uses and the OpenType features Koobiq enables. Serving by **unicode-range** — which is what CDNs and the subsets built from them do, Inter in Fontsource for example — drops the features along with the glyphs.
+A font from any source is checked before installing: it has to contain the characters the interface uses and the OpenType features Koobiq enables. An individual subset may omit glyphs and OpenType features from the source font, depending on its build configuration. The **unicode-range** descriptor indicates the character range a file may cover; it does not change the file’s contents. For example, Fontsource provides Inter in subsets and uses **unicode-range** to load only the files needed for the characters on the page.
