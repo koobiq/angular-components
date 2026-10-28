@@ -23,6 +23,21 @@ function iconKey(namespace: string, name: string): string {
     return namespace ? `${namespace}:${name}` : name;
 }
 
+/**
+ * Splits "namespace:name" at the first colon; a name without one stays in the given namespace.
+ *
+ * @internal
+ */
+export function parseIconName(name: string, namespace = ''): [namespace: string, name: string] {
+    const colonIndex = name.indexOf(':');
+
+    return colonIndex === -1 ? [namespace, name] : [name.slice(0, colonIndex), name.slice(colonIndex + 1)];
+}
+
+function isSvgMarkup(text: string): boolean {
+    return text.trimStart().startsWith('<');
+}
+
 function cloneSvg(svg: SVGElement): SVGElement {
     return svg.cloneNode(true) as SVGElement;
 }
@@ -108,24 +123,29 @@ export class KbqIconRegistry {
      * Accepts "namespace:name" syntax.
      */
     getNamedSvgIcon(name: string, namespace = ''): Observable<SVGElement> {
-        let resolvedNs = namespace;
-        let resolvedName = name;
+        const icon = this.findSvgIcon(name, namespace);
 
-        if (resolvedName.trimStart().startsWith('<')) {
+        if (icon) return icon;
+
+        const key = iconKey(...parseIconName(name, namespace));
+
+        return throwError(() => Error(`KbqIconRegistry: no icon registered for "${key}".`));
+    }
+
+    /**
+     * `getNamedSvgIcon` without the error for a miss: `null` when nothing registered can resolve the name. Every font
+     * icon is looked up, and an error per miss would cost a stack trace each.
+     *
+     * @internal
+     */
+    findSvgIcon(name: string, namespace = ''): Observable<SVGElement> | null {
+        if (isSvgMarkup(name)) {
             // `defer` so that unparsable markup arrives as an error notification: every failure of this
             // class has to reach the caller through the same channel.
-            return defer(() =>
-                of(this.svgElementFromText(this.sanitizer.sanitize(SecurityContext.HTML, resolvedName) ?? ''))
-            );
+            return defer(() => of(this.svgElementFromText(this.sanitizer.sanitize(SecurityContext.HTML, name) ?? '')));
         }
 
-        const colonIndex = name.indexOf(':');
-
-        if (colonIndex !== -1) {
-            resolvedNs = name.slice(0, colonIndex);
-            resolvedName = name.slice(colonIndex + 1);
-        }
-
+        const [resolvedNs, resolvedName] = parseIconName(name, namespace);
         const key = iconKey(resolvedNs, resolvedName);
 
         const iconConfig = this.iconConfigs.get(key);
@@ -146,7 +166,7 @@ export class KbqIconRegistry {
                 options: undefined
             };
 
-            if (result.trimStart().startsWith('<')) {
+            if (isSvgMarkup(result)) {
                 const sanitized = this.sanitizer.sanitize(SecurityContext.HTML, result) ?? '';
 
                 config.svgText = this.sanitizer.bypassSecurityTrustHtml(sanitized);
@@ -165,7 +185,7 @@ export class KbqIconRegistry {
             return this.loadIconFromSets(resolvedName, sets);
         }
 
-        return throwError(() => Error(`KbqIconRegistry: no icon registered for "${key}".`));
+        return null;
     }
 
     private cacheIcon(namespace: string, name: string, config: KbqSvgIconConfig): this {

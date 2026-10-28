@@ -87,9 +87,9 @@ export const KBQ_SELECTION_TREE_VALUE_ACCESSOR: Provider = {
 /** How long the key manager collects keystrokes before matching them against the option labels. */
 const typeAheadDebounce = 200;
 
-export class KbqTreeSelectAllEvent<T, N = any> {
+export class KbqTreeSelectAllEvent<T, N = any, K = N> {
     constructor(
-        public source: KbqTreeSelection<N>,
+        public source: KbqTreeSelection<N, K>,
         public options: T[]
     ) {}
 }
@@ -102,24 +102,24 @@ export class KbqTreeSelectAllEvent<T, N = any> {
  * @param option - instance of KbqTreeOption
  * @param event - original keyboard event (optional) that triggered the copy
  */
-export class KbqTreeCopyEvent<T, N = any> {
+export class KbqTreeCopyEvent<T, N = any, K = N> {
     constructor(
-        public source: KbqTreeSelection<N>,
+        public source: KbqTreeSelection<N, K>,
         public option: T,
         public event?: KeyboardEvent
     ) {}
 }
 
-export class KbqTreeNavigationChange<T, N = any> {
+export class KbqTreeNavigationChange<T, N = any, K = N> {
     constructor(
-        public source: KbqTreeSelection<N>,
+        public source: KbqTreeSelection<N, K>,
         public option: T
     ) {}
 }
 
-export class KbqTreeSelectionChange<T, N = any> {
+export class KbqTreeSelectionChange<T, N = any, K = N> {
     constructor(
-        public source: KbqTreeSelection<N>,
+        public source: KbqTreeSelection<N, K>,
         public option: T,
         public options?: T[]
     ) {}
@@ -190,8 +190,8 @@ export class KbqTreeSelectionChange<T, N = any> {
     ],
     exportAs: 'kbqTreeSelection'
 })
-export class KbqTreeSelection<T = any>
-    extends KbqTreeBase<T, FlatTreeControl<T>>
+export class KbqTreeSelection<T = any, K = T>
+    extends KbqTreeBase<T, FlatTreeControl<T, K>>
     implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy
 {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -247,7 +247,8 @@ export class KbqTreeSelection<T = any>
      * a subscription taken on the model directly is left behind on the discarded instance.
      *
      * `T` is the type of the data nodes, inferred from `[treeControl]` in a template. A query names it:
-     * `viewChild.required<KbqTreeSelection<Node>>(KbqTreeSelection)`.
+     * `viewChild.required<KbqTreeSelection<Node>>(KbqTreeSelection)`, and a tree whose control has a `trackBy`
+     * names the key type too: `KbqTreeSelection<Node, string>`.
      */
     selectionModel: SelectionModel<T>;
 
@@ -274,21 +275,21 @@ export class KbqTreeSelection<T = any>
         return this.unorderedOptionsList();
     }
 
-    readonly navigationChange = output<KbqTreeNavigationChange<KbqTreeOption<T>, T>>();
+    readonly navigationChange = output<KbqTreeNavigationChange<KbqTreeOption<T>, T, K>>();
 
     /**
      * Emits when the selection changes. A stream rather than an `output()`: `KbqTreeSelect` pipes it with rxjs.
      */
-    readonly selectionChange = new EventEmitter<KbqTreeSelectionChange<KbqTreeOption<T>, T>>();
+    readonly selectionChange = new EventEmitter<KbqTreeSelectionChange<KbqTreeOption<T>, T, K>>();
 
     /** @docs-private */
     readonly selectionChangeOutput = outputFromObservable(this.selectionChange, { alias: 'selectionChange' });
 
     /** Emits after "select all" ran, with the options it could act on. */
-    readonly selectAllChange = output<KbqTreeSelectAllEvent<KbqTreeOption<T>, T>>();
+    readonly selectAllChange = output<KbqTreeSelectAllEvent<KbqTreeOption<T>, T, K>>();
 
     /** @deprecated Use `selectAllChange` instead. Will be removed in 22.0.0. */
-    readonly onSelectAll = output<KbqTreeSelectAllEvent<KbqTreeOption<T>, T>>({ alias: 'onSelectAll' });
+    readonly onSelectAll = output<KbqTreeSelectAllEvent<KbqTreeOption<T>, T, K>>({ alias: 'onSelectAll' });
 
     /**
      * Emits when the active option is copied with Ctrl/Cmd + C. Subscribing replaces the built-in
@@ -296,13 +297,13 @@ export class KbqTreeSelection<T = any>
      * `observed`, which `OutputEmitterRef` does not have. A template listener subscribes to it through
      * the output below.
      */
-    readonly copyChange = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption<T>, T>>();
+    readonly copyChange = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption<T>, T, K>>();
 
     /** @docs-private */
     readonly copyChangeOutput = outputFromObservable(this.copyChange, { alias: 'copyChange' });
 
     /** @deprecated Use `copyChange` instead. Will be removed in 22.0.0. */
-    readonly onCopy = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption<T>, T>>();
+    readonly onCopy = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption<T>, T, K>>();
 
     /** @docs-private */
     readonly onCopyOutput = outputFromObservable(this.onCopy, { alias: 'onCopy' });
@@ -1204,6 +1205,10 @@ export class KbqTreeSelection<T = any>
 
         this.changeDetectorRef.detectChanges();
 
+        // The options query lists the options in the order their views were created, not in the order of the rows, so
+        // rows that only moved (reused through `trackBy`) never make it emit.
+        if (changed && this.renderedOptionsOutOfOrder()) this.updateRenderedOptions();
+
         this.scheduleCheckboxSync(false);
 
         // The "select all" row is rendered ahead of what its state reads: new rows bind their inputs after it and join
@@ -1251,8 +1256,8 @@ export class KbqTreeSelection<T = any>
 
     /** @docs-private */
     readonly selectAllHandlerInput = input<
-        ((event: KeyboardEvent, tree: KbqTreeSelection<T>) => void) | undefined,
-        ((event: KeyboardEvent, tree: KbqTreeSelection<T>) => void) | undefined
+        ((event: KeyboardEvent, tree: KbqTreeSelection<T, K>) => void) | undefined,
+        ((event: KeyboardEvent, tree: KbqTreeSelection<T, K>) => void) | undefined
     >(undefined, {
         alias: 'selectAllHandler',
         transform: kbqSelectAllHandlerTransform
@@ -1262,11 +1267,11 @@ export class KbqTreeSelection<T = any>
      * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used,
      * which toggles the selection of all non-disabled, selectable options.
      */
-    get selectAllHandler(): (event: KeyboardEvent, tree: KbqTreeSelection<T>) => void {
+    get selectAllHandler(): (event: KeyboardEvent, tree: KbqTreeSelection<T, K>) => void {
         return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
     }
 
-    private defaultSelectAllHandler(event: KeyboardEvent, tree: KbqTreeSelection<T>): void {
+    private defaultSelectAllHandler(event: KeyboardEvent, tree: KbqTreeSelection<T, K>): void {
         event.preventDefault();
 
         tree.selectAllOptions();
@@ -1564,6 +1569,19 @@ export class KbqTreeSelection<T = any>
     /** A tree with nothing rendered leaves the tab order, unless a tab index other than `0` is bound. */
     private updateTabIndex(): void {
         this.tabIndexState.set(this.userTabIndex || (this.renderedOptions.length === 0 ? -1 : 0));
+    }
+
+    /**
+     * Whether the same options as before now stand for the rows in another order. A different count means rows were
+     * added or removed, which the options query reports itself.
+     */
+    private renderedOptionsOutOfOrder(): boolean {
+        const options = this.renderedOptions.toArray();
+        const offset = this.selectAllOption() ? 1 : 0;
+
+        if (options.length - offset !== this.sortedNodes.length) return false;
+
+        return this.sortedNodes.some((node, index) => options[index + offset].data !== node);
     }
 
     private updateRenderedOptions = () => {

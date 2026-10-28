@@ -15,9 +15,9 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { KbqColorDirective, KbqComponentColors } from '@koobiq/components/core';
-import { defer, Subscription } from 'rxjs';
+import { defer, of, Subscription } from 'rxjs';
 import { KBQ_ICON_ERROR_STATE_CONTEXT } from './icon-error-state-context';
-import { KbqIconRegistry } from './icon-registry';
+import { KbqIconRegistry, parseIconName } from './icon-registry';
 
 /** Marks an injected `<svg>` with the name it renders, so hydration can recognize and adopt it. */
 const ICON_NAME_ATTRIBUTE = 'data-kbq-icon-name';
@@ -248,10 +248,15 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
         }
 
         const registry = this.registry;
+        // A registry that replaces the lookup, such as a subclass overriding `getNamedSvgIcon` or a test double, is
+        // asked through it: only the library's own lookup can report a miss without building an error.
+        const ownLookup = registry.getNamedSvgIcon === KbqIconRegistry.prototype.getNamedSvgIcon;
 
         // Deferred so that a resolver or a literal that throws falls back to the font class as well, and the
         // next name is resolved again.
-        this.svgIconSubscription = defer(() => registry.getNamedSvgIcon(name)).subscribe({
+        this.svgIconSubscription = defer(
+            () => (ownLookup ? registry.findSvgIcon(name) : registry.getNamedSvgIcon(name)) ?? of(null)
+        ).subscribe({
             next: (svg) => this.renderSvgIcon(svg),
             error: () => this.renderSvgIcon(null)
         });
@@ -309,8 +314,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     }
 
     private parseIconSize(): number | undefined {
-        const iconName = this.iconName;
-        const baseName = iconName?.includes(':') ? iconName.split(':')[1] : iconName;
+        const baseName = this.iconName && parseIconName(this.iconName)[1];
         const size = parseInt(baseName?.split('_').pop() ?? '');
 
         return Number.isNaN(size) ? undefined : size;

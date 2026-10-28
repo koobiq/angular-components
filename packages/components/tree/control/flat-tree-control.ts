@@ -1,6 +1,7 @@
 import { escapeRegExp } from '@koobiq/components/core';
 import { BaseTreeControl } from './base-tree-control';
 import { FilterByViewValue, FilterParentsForNodes, FlatTreeControlFilter } from './flat-tree-control.filters';
+import { KbqTreeControlOptions } from './tree-control';
 
 export function defaultCompareValues(firstValue: string, secondValue: string): boolean {
     return firstValue === secondValue;
@@ -11,8 +12,8 @@ export function defaultCompareViewValues(firstViewValue: string, secondViewValue
 }
 
 /** Flat tree control. Able to expand/collapse a subtree recursively for flattened tree. */
-export class FlatTreeControl<T> extends BaseTreeControl<T> {
-    expandedItemsBeforeFiltration: T[];
+export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
+    expandedItemsBeforeFiltration: K[];
 
     private filters: FlatTreeControlFilter<T>[];
 
@@ -29,11 +30,14 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
         /** compareValues will be used to comparing values. */
         public compareViewValues: (firstViewValue, secondViewValue) => boolean = defaultCompareViewValues,
         /** isDisabled will be used to determine if the node is disabled. */
-        public isDisabled: (dataNode: T) => boolean = () => false
+        public isDisabled: (dataNode: T) => boolean = () => false,
+        /** Further options: the `trackBy` the nodes are expanded by. */
+        options?: KbqTreeControlOptions<T, K>
     ) {
         super();
 
-        this.setFilters(new FilterByViewValue<T>(this), new FilterParentsForNodes<T>(this));
+        this.trackBy = options?.trackBy;
+        this.setFilters(new FilterByViewValue<T, K>(this), new FilterParentsForNodes<T, K>(this));
     }
 
     // TODO: nothing in the library uses it; kept as public API at the DS-2196 review. Document or deprecate it.
@@ -52,7 +56,7 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
      * with correct levels.
      */
     getDescendants(dataNode: T): T[] {
-        const startIndex = this.dataNodes.indexOf(dataNode);
+        const startIndex = this.indexOfNode(dataNode);
         const results: T[] = [];
 
         // Goes through flattened tree nodes in the `dataNodes` array, and get all descendants.
@@ -79,7 +83,7 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
      * data nodes of the tree.
      */
     expandAll(): void {
-        this.expansionModel.select(...this.dataNodes);
+        this.expansionModel.select(...this.dataNodes.map((node) => this.expansionKey(node)));
     }
 
     /**
@@ -94,7 +98,7 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
      * an existing array; a fresh one is used when omitted.
      */
     getParents(node: T, result: T[] = []): T[] {
-        const startIndex = this.dataNodes?.indexOf(node) ?? -1;
+        const startIndex = this.indexOfNode(node);
 
         if (startIndex === -1) {
             return result;
@@ -135,7 +139,9 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
         this.filterModel.select(...result);
 
         // set current expansion state according to filtered tree
-        this.expansionModel.setSelection(...result.filter((node) => this.isExpandable(node)));
+        this.expansionModel.setSelection(
+            ...result.filter((node) => this.isExpandable(node)).map((node) => this.expansionKey(node))
+        );
 
         this.updateFilterValue(value || result);
 
@@ -156,5 +162,23 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
         if (!this.filterValue.value?.length) {
             this.expansionModel.setSelection(...this.expandedItemsBeforeFiltration);
         }
+    }
+
+    /**
+     * Position of the node in `dataNodes`. With `trackBy` a node rebuilt as a new object since is found by its key,
+     * as the expansion methods accept it too.
+     */
+    private indexOfNode(node: T): number {
+        const { dataNodes, trackBy } = this;
+
+        if (!dataNodes) return -1;
+
+        const index = dataNodes.indexOf(node);
+
+        if (index !== -1 || !trackBy) return index;
+
+        const key = trackBy(node);
+
+        return dataNodes.findIndex((candidate) => trackBy(candidate) === key);
     }
 }

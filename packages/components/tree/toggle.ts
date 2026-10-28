@@ -45,7 +45,9 @@ export class KbqTreeNodeToggleBaseDirective<T> {
     }
 
     get iconState(): boolean {
-        return this.tree.treeControl.isExpanded(this.node());
+        // The node `toggle()` acts on when `node` is not bound: an unbound `node` would reach the control's
+        // `trackBy` as `undefined`.
+        return this.tree.treeControl.isExpanded(this.node() ?? this.treeNode.data);
     }
 
     toggle(event: Event): void {
