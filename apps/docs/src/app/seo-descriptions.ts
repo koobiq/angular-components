@@ -336,8 +336,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Tree Select позволяет искать и выбирать одно или несколько значений из иерархических данных с сохранением структуры дерева."
     },
     "typography": {
-        "en": "Where to get the Inter and JetBrains Mono fonts, how the sources differ and how to override the fonts in the interface.",
-        "ru": "Откуда брать шрифты Inter и JetBrains Mono, чем отличаются источники и как переопределить шрифты в интерфейсе."
+        "en": "Connecting fonts, how the sources differ and how to override the typography styles.",
+        "ru": "Подключение шрифтов, чем отличаются источники и как переопределить стили типографики."
     },
     "username": {
         "en": "The pattern is used when the interface refers to an internal user.",
