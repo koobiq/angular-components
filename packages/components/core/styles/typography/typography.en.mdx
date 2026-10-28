@@ -47,7 +47,9 @@ JetBrains Mono can be linked from Google Fonts:
 
 #### Text styles
 
-The ready-made text styles live in the tokens: family, size, line height, letter spacing, weight, text transform and OpenType features are collected in the `--kbq-typography-<style>-*` variables. The styles are applied as classes rather than assembled from individual properties — that way the text matches the components. The prebuilt `prebuilt-themes/theme.css` ships the classes; when the theme is built by hand, `koobiq-typography()` of `@koobiq/components/core/styles/koobiq-theme` emits them.
+Text styles come from the design tokens: family, size, line height, letter spacing, weight, text transform and OpenType features are already collected into ready-made styles — from interface text to headings and display sizes.
+
+In markup they are applied as ready-made classes rather than assembled from individual properties — that way the text matches the components. The prebuilt theme ships the classes; when the theme is built by hand, `koobiq-typography()` adds them.
 
 ```html
 <h2 class="kbq-headline">Heading</h2>
