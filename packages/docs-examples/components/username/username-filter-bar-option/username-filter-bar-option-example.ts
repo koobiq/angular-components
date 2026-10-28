@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, viewChild } from '@angular/core';
-import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
+import { KbqHighlightBackgroundPipe, tokenizeSearchQuery } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import {
     kbqBuildUsernameText,
@@ -30,20 +30,22 @@ const USERS: KbqUserInfo[] = [
         </kbq-filter-bar>
 
         <ng-template #userOption let-pipe let-option="option">
-            @let keywords = splitSearch(pipe.searchControl.value);
+            @let keywords = tokenizeSearchQuery(pipe.searchControl.value ?? '');
 
             <kbq-username>
                 <kbq-username-custom-view>
                     @let fullName = option.value | kbqUsername;
-                    <span kbqUsernamePrimary [innerHTML]="fullName | kbqHighlightBackground: keywords"></span>
+                    <span kbqUsernamePrimary [innerHTML]="fullName | kbqHighlightBackground: keywords : true"></span>
 
                     @if (option.value?.login) {
                         <span kbqUsernameSecondary>
-                            <span [innerHTML]="option.value.login | kbqHighlightBackground: keywords"></span>
+                            <span [innerHTML]="option.value.login | kbqHighlightBackground: keywords : true"></span>
                             @if (option.value.site) {
                                 <span
                                     kbqUsernameSecondaryHint
-                                    [innerHTML]="'(' + option.value.site + ')' | kbqHighlightBackground: keywords"
+                                    [innerHTML]="
+                                        '(' + option.value.site + ')' | kbqHighlightBackground: keywords : true
+                                    "
                                 ></span>
                             }
                         </span>
@@ -87,10 +89,7 @@ export class UsernameFilterBarOptionExample implements AfterViewInit {
 
     pipeTemplates: KbqPipeTemplate[] = [];
 
-    // The name, the login and the site are rendered in separate elements, so each word of the query is highlighted on its own.
-    protected splitSearch(text: string | null): string[] {
-        return (text ?? '').split(/\s+/).filter(Boolean);
-    }
+    protected readonly tokenizeSearchQuery = tokenizeSearchQuery;
 
     ngAfterViewInit(): void {
         this.pipeTemplates = [

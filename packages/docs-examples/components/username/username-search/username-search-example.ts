@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { createSearchPredicate, KbqHighlightModule, tokenizeSearchQuery } from '@koobiq/components/core';
@@ -102,10 +102,8 @@ import { startWith } from 'rxjs';
         </div>
     `,
     styles: `
-        kbq-option .kbq-username__primary,
-        .kbq-username__secondary {
-            display: inline-flex;
-            gap: var(--kbq-size-xxs);
+        .kbq-username__secondary-hint {
+            margin-inline-start: var(--kbq-size-xxs);
         }
 
         .example__content {
@@ -126,7 +124,7 @@ import { startWith } from 'rxjs';
 export class UsernameSearchExample {
     private readonly formatUsername = kbqInjectUsernameFormatter();
 
-    protected readonly isCompact = signal(false);
+    protected readonly isCompact = model(false);
     protected readonly searchControl = new FormControl('', { nonNullable: true });
 
     private readonly searchText = toSignal(this.searchControl.valueChanges.pipe(startWith('')), { initialValue: '' });
