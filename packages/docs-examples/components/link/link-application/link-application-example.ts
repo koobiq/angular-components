@@ -1,5 +1,5 @@
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
 
 /**
@@ -7,35 +7,32 @@ import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
  */
 @Component({
     selector: 'link-application-example',
-    imports: [
-        KbqLink,
-        KbqLinkSuffix,
-        KbqIconModule
-    ],
+    imports: [KbqLink, KbqLinkSuffix, NgOptimizedImage],
     template: `
-        <a href="https://koobiq.io/en/components/link" target="_blank" kbqLink external>
-            The scan report in Deep Inspector
-        </a>
-
-        <a class="example-link-with-svg-icon" href="https://koobiq.io/en/components/link" target="_blank" kbqLink>
-            The scan report in Deep Inspector
+        <a kbqLink href="https://koobiq.io/en/components/link" target="_blank">
+            Scan report in AI Desktop
             <img
                 kbqLinkSuffix
-                kbq-icon=""
-                src="https://koobiq.io/assets/images/favicons/icon.svg"
+                class="example-app-icon"
+                ngSrc="https://koobiq.io/assets/images/favicons/icon.svg"
                 width="16"
-                alt="icon"
+                height="16"
+                alt=""
             />
         </a>
+
+        <a kbqLink external href="https://koobiq.io/en/components/link" target="_blank">Scan report in AI Desktop</a>
     `,
     styles: `
         :host {
-            display: inline-flex;
-            flex-direction: column;
-            gap: var(--kbq-size-s);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--kbq-size-xxl);
+            min-height: 160px;
         }
 
-        .example-link-with-svg-icon img {
+        .example-app-icon {
             vertical-align: text-bottom;
         }
     `,

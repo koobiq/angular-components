@@ -1,50 +1,47 @@
 import { NgModule } from '@angular/core';
 import { LinkApplicationExample } from './link-application/link-application-example';
-import { LinkCaptionExample } from './link-caption/link-caption-example';
 import { LinkDisabledExample } from './link-disabled/link-disabled-example';
 import { LinkExternalExample } from './link-external/link-external-example';
-import { LinkGeneralExample } from './link-general/link-general-example';
 import { LinkIconsExample } from './link-icons/link-icons-example';
+import { LinkInTextExample } from './link-in-text/link-in-text-example';
 import { LinkMultiLineExample } from './link-multi-line/link-multi-line-example';
 import { LinkOverviewExample } from './link-overview/link-overview-example';
-import { LinkPrepositionsExample } from './link-prepositions/link-prepositions-example';
 import { LinkPrintExample } from './link-print/link-print-example';
 import { LinkPseudoExample } from './link-pseudo/link-pseudo-example';
-import { LinkTargetBlankExample } from './link-target-blank/link-target-blank-example';
+import { LinkSizeExample } from './link-size/link-size-example';
+import { LinkUnderlineExample } from './link-underline/link-underline-example';
 import { LinkVisitedExample } from './link-visited/link-visited-example';
 import { LinkWithCaptionExample } from './link-with-caption/link-with-caption-example';
 
 export {
     LinkApplicationExample,
-    LinkCaptionExample,
     LinkDisabledExample,
     LinkExternalExample,
-    LinkGeneralExample,
     LinkIconsExample,
+    LinkInTextExample,
     LinkMultiLineExample,
     LinkOverviewExample,
-    LinkPrepositionsExample,
     LinkPrintExample,
     LinkPseudoExample,
-    LinkTargetBlankExample,
+    LinkSizeExample,
+    LinkUnderlineExample,
     LinkVisitedExample,
     LinkWithCaptionExample
 };
 
 const EXAMPLES = [
     LinkOverviewExample,
-    LinkPseudoExample,
-    LinkGeneralExample,
-    LinkExternalExample,
-    LinkTargetBlankExample,
-    LinkApplicationExample,
-    LinkPrintExample,
-    LinkMultiLineExample,
-    LinkPrepositionsExample,
-    LinkIconsExample,
-    LinkVisitedExample,
+    LinkSizeExample,
+    LinkUnderlineExample,
     LinkDisabledExample,
-    LinkCaptionExample,
+    LinkVisitedExample,
+    LinkIconsExample,
+    LinkMultiLineExample,
+    LinkInTextExample,
+    LinkExternalExample,
+    LinkApplicationExample,
+    LinkPseudoExample,
+    LinkPrintExample,
     LinkWithCaptionExample
 ];
 

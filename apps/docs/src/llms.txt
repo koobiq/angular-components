@@ -64,7 +64,7 @@ Rules for code that uses Koobiq:
 - [Inline edit](https://koobiq.io/en/components/inline-edit.md): Inline editing can replace a traditional form when the user only needs to update a few fields among many available parameters. Entry point: `@koobiq/components/inline-edit`.
 - [Input](https://koobiq.io/en/components/input.md): Input provides text, numeric, and password fields with formatting, validation, masking, and other data-entry behavior. Entry point: `@koobiq/components/input`.
 - [Layout flex](https://koobiq.io/en/components/layout-flex.md): Layout flex provides Koobiq CSS classes for arranging, aligning, and ordering elements in flex containers.
-- [Link](https://koobiq.io/en/components/link.md): A link connects web pages or acts as a lighter alternative to a button. Entry point: `@koobiq/components/link`.
+- [Link](https://koobiq.io/en/components/link.md): `KbqLink` is a component that connects web pages or acts as a lighter alternative to a button. Entry point: `@koobiq/components/link`.
 - [List](https://koobiq.io/en/components/list.md): A list shows a set of related items and lets the user select one or several of them. Entry point: `@koobiq/components/list`.
 - [Markdown](https://koobiq.io/en/components/markdown.md): `KbqMarkdown` - component that allows converting text written in _Markdown_ markup language into _HTML_. Entry point: `@koobiq/components/markdown`.
 - [Modal](https://koobiq.io/en/components/modal.md): A modal dialog opens as a window on top of the page, dims the underlying layer, and blocks all interaction with it. Entry point: `@koobiq/components/modal`.

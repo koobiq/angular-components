@@ -1,4 +1,4 @@
-const { access, copyFile, mkdir, readdir } = require('fs/promises');
+const { access, copyFile, mkdir, readdir, readFile, rm, writeFile } = require('fs/promises');
 const { resolve, join } = require('path');
 const { getMigrations } = require('../src/utils/migrations');
 const { statSync } = require('fs');
@@ -31,6 +31,27 @@ const copyFileWrapper = async (src, dest) => {
     }
 };
 
+/**
+ * Copies collection.json or migrations.json with every factory pointing at its `.cjs` module. The sources
+ * keep the factories extension-less for the specs, which load the `.ts` files, and `require.resolve()`
+ * does not try `.cjs` on its own.
+ */
+const copyCollection = async (name, destDir) => {
+    const src = resolvePath(`../src/${name}`);
+
+    try {
+        const collection = JSON.parse(await readFile(src, 'utf8'));
+
+        for (const schematic of Object.values(collection.schematics)) {
+            schematic.factory = schematic.factory.replace(/^[^#]+/, '$&.cjs');
+        }
+
+        await writeFile(join(destDir, name), `${JSON.stringify(collection, null, 4)}\n`);
+    } catch (error) {
+        failures.push(`Failed to copy ${src}: ${error.message}`);
+    }
+};
+
 /** Copies the meta files of one migration, naming the migration instead of reporting a bare ENOENT path. */
 const copyMigrationMeta = async (migration, migrationPath) => {
     for (const file of MIGRATION_META_FILES) {
@@ -50,6 +71,9 @@ const init = async () => {
     const ngAddPath = join(schematicsPath, 'ng-add');
     const utilsPath = join(schematicsPath, 'utils');
 
+    // Without a clean start a renamed or removed migration would stay in the package.
+    await rm(schematicsPath, { recursive: true, force: true });
+
     // Ensure directories exist
     await ensureDirectoryExistence(distCLIPath);
     await ensureDirectoryExistence(schematicsPath);
@@ -57,10 +81,10 @@ const init = async () => {
     await ensureDirectoryExistence(utilsPath);
 
     // Copy files
-    await copyFileWrapper(resolvePath('../dist/ng-add/index.js'), join(ngAddPath, 'index.js'));
+    await copyFileWrapper(resolvePath('../dist/ng-add/index.cjs'), join(ngAddPath, 'index.cjs'));
     await copyFileWrapper(resolvePath('../src/ng-add/schema.json'), join(ngAddPath, 'schema.json'));
-    await copyFileWrapper(resolvePath('../src/collection.json'), join(schematicsPath, 'collection.json'));
-    await copyFileWrapper(resolvePath('../src/migrations.json'), join(schematicsPath, 'migrations.json'));
+    await copyCollection('collection.json', schematicsPath);
+    await copyCollection('migrations.json', schematicsPath);
 
     for (const migration of getMigrations()) {
         const migrationPath = join(schematicsPath, 'migrations', migration);
@@ -69,12 +93,15 @@ const init = async () => {
 
         await copyMigrationMeta(migration, migrationPath);
 
-        await copyFileWrapper(resolvePath(`../dist/migrations/${migration}/index.js`), join(migrationPath, 'index.js'));
-        const optionalMigrationData = resolvePath(`../dist/migrations/${migration}/data.js`);
+        await copyFileWrapper(
+            resolvePath(`../dist/migrations/${migration}/index.cjs`),
+            join(migrationPath, 'index.cjs')
+        );
+        const optionalMigrationData = resolvePath(`../dist/migrations/${migration}/data.cjs`);
         const fileExists = statSync(optionalMigrationData, { throwIfNoEntry: false });
 
         if (fileExists) {
-            await copyFileWrapper(optionalMigrationData, join(migrationPath, 'data.js'));
+            await copyFileWrapper(optionalMigrationData, join(migrationPath, 'data.cjs'));
         }
     }
 
@@ -87,8 +114,9 @@ const init = async () => {
         join(schematicsPath, 'migrations', 'new-icons-pack', 'replacement.json')
     );
 
-    // Copy every compiled util chunk rather than a hand-maintained list, so a new util module
-    // (given a stable rollup input name under `utils/`) is shipped automatically.
+    // Copy every compiled util rather than a hand-maintained list: rollup.config.js gives each
+    // `src/utils` module an entry under `utils/` and puts the shared chunks there too, so a new one
+    // is shipped automatically.
     const distUtilsPath = resolvePath('../dist/utils');
     const utilFiles = statSync(distUtilsPath, { throwIfNoEntry: false }) ? await readdir(distUtilsPath) : [];
 

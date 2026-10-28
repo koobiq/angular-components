@@ -8,9 +8,15 @@ import { KbqLink } from '@koobiq/components/link';
     selector: 'link-visited-example',
     imports: [KbqLink],
     template: `
-        <div style="padding: 16px">
-            <a href="https://koobiq.io/en/components/link" target="_blank" kbqLink useVisited>Отчет от 19.05.2020</a>
-        </div>
+        <a kbqLink href="https://koobiq.io/en/components/link" target="_blank" useVisited>Scan report</a>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

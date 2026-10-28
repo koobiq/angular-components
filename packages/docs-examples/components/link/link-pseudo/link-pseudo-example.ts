@@ -13,7 +13,9 @@ import { KbqLink } from '@koobiq/components/link';
     styles: `
         :host {
             display: flex;
-            padding: var(--kbq-size-l);
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

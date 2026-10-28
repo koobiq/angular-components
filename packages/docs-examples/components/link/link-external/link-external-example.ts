@@ -8,11 +8,16 @@ import { KbqLink } from '@koobiq/components/link';
     selector: 'link-external-example',
     imports: [KbqLink],
     template: `
-        <div style="padding: 16px">
-            <a href="https://koobiq.io/en/components/link" target="_blank" kbqLink external>
-                Центр технической поддержки
-            </a>
-        </div>
+        <a kbqLink external href="https://www.cvedetails.com/cve/CVE-2019-1020010/" target="_blank">CVE-2019-1020010</a>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--kbq-size-xxl);
+            min-height: 160px;
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
