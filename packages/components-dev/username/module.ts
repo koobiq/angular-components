@@ -8,7 +8,6 @@ import { UsernameExamplesModule } from '../../docs-examples/components/username'
         <username-overview-example />
         <username-playground-example />
         <username-custom-example />
-        <username-compact-example />
         <username-as-link-example />
         <username-search-example />
         <username-filter-bar-option-example />

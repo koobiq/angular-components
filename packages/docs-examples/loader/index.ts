@@ -1253,8 +1253,6 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/tree').then((m) => m.TreeToggleOnClickExample);
         case 'username-as-link':
             return import('@koobiq/docs-examples/components/username').then((m) => m.UsernameAsLinkExample);
-        case 'username-compact':
-            return import('@koobiq/docs-examples/components/username').then((m) => m.UsernameCompactExample);
         case 'username-custom':
             return import('@koobiq/docs-examples/components/username').then((m) => m.UsernameCustomExample);
         case 'username-filter-bar-option':

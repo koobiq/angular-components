@@ -14,8 +14,6 @@ Displaying the username means showing a set of attributes from the internal syst
 
 `isCompact` renders everything as a single line: the name if the profile has one, the login otherwise — never both. Use it where the row has no space for two parts, such as a select trigger.
 
-<Example id="username-compact" />
-
 ### Custom template
 
 If flexible layout is required and the default template doesn’t meet your needs, project a `<kbq-username-custom-view>`; it composes with any `mode` and `type`, so consistency with the design system is maintained.
@@ -37,7 +35,7 @@ The component can be conveniently used inside links. To visually match the link 
 
 To filter a list of users by the displayed name, call `kbqInjectUsernameFormatter()` in an injection context and use the function it returns — it resolves `KBQ_PROFILE_MAPPING` where you call it, so a scoped mapping produces the same string the component renders.
 
-The matched fragment is easy to highlight in a custom template with the `kbqHighlightBackground` pipe.
+The matched fragment is easy to highlight in a custom template with the `kbqHighlightBackground` pipe. The example puts the list in a select with search and renders the selected user in its trigger; the toggle switches the trigger to `isCompact`.
 
 <Example id="username-search" />
 

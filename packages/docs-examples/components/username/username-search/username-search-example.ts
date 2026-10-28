@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { createSearchPredicate, KbqHighlightModule, tokenizeSearchQuery } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
+import { KbqToggleModule } from '@koobiq/components/toggle';
 import {
     kbqBuildUsernameText,
     kbqInjectUsernameFormatter,
@@ -19,44 +20,65 @@ import { startWith } from 'rxjs';
 @Component({
     selector: 'username-search-example',
     imports: [
+        FormsModule,
         ReactiveFormsModule,
-        KbqFormFieldModule,
+        KbqSelectModule,
         KbqInputModule,
-        KbqUsernameModule,
         KbqIconModule,
-        KbqHighlightBackgroundPipe
+        KbqToggleModule,
+        KbqUsernameModule,
+        KbqHighlightModule
     ],
     template: `
+        <kbq-toggle [(ngModel)]="isCompact">Compact trigger</kbq-toggle>
+
         <kbq-form-field>
-            <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-            <input kbqInput type="text" placeholder="Search" autocomplete="off" [formControl]="searchControl" />
-            <kbq-cleaner />
-        </kbq-form-field>
+            <kbq-select placeholder="Assignee" [(value)]="selectedUser">
+                <kbq-select-trigger>
+                    @if (selectedUser(); as user) {
+                        <kbq-username [userInfo]="user" [isCompact]="isCompact()" />
+                    }
+                </kbq-select-trigger>
 
-        <div class="example__users-list">
-            @for (user of filteredUsers(); track user) {
-                <kbq-username>
-                    <kbq-username-custom-view>
-                        @let fullName = user | kbqUsername;
-                        <span kbqUsernamePrimary [innerHTML]="fullName | kbqHighlightBackground: keywords()"></span>
+                <kbq-form-field noBorders kbqSelectSearch>
+                    <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+                    <input kbqInput type="text" [formControl]="searchControl" />
+                    <kbq-cleaner />
+                </kbq-form-field>
 
-                        @if (user.login) {
-                            <span kbqUsernameSecondary>
-                                <span [innerHTML]="user.login | kbqHighlightBackground: keywords()"></span>
-                                @if (user.site) {
-                                    <span
-                                        kbqUsernameSecondaryHint
-                                        [innerHTML]="'(' + user.site + ')' | kbqHighlightBackground: keywords()"
-                                    ></span>
+                <div kbq-select-search-empty-result>Nothing found</div>
+
+                @for (user of filteredUsers(); track user) {
+                    <kbq-option [value]="user">
+                        <kbq-username>
+                            <kbq-username-custom-view>
+                                @let fullName = user | kbqUsername;
+                                <span
+                                    kbqUsernamePrimary
+                                    [innerHTML]="fullName | kbqHighlightBackground: keywords() : true"
+                                ></span>
+
+                                @if (user.login) {
+                                    <span kbqUsernameSecondary>
+                                        <span
+                                            [innerHTML]="user.login | kbqHighlightBackground: keywords() : true"
+                                        ></span>
+                                        @if (user.site) {
+                                            <span
+                                                kbqUsernameSecondaryHint
+                                                [innerHTML]="
+                                                    '(' + user.site + ')' | kbqHighlightBackground: keywords() : true
+                                                "
+                                            ></span>
+                                        }
+                                    </span>
                                 }
-                            </span>
-                        }
-                    </kbq-username-custom-view>
-                </kbq-username>
-            } @empty {
-                <span class="kbq-text-normal kbq-second">Nothing found</span>
-            }
-        </div>
+                            </kbq-username-custom-view>
+                        </kbq-username>
+                    </kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
     `,
     styles: `
         .kbq-username__secondary {
@@ -64,12 +86,13 @@ import { startWith } from 'rxjs';
             gap: var(--kbq-size-xxs);
         }
 
-        .example__users-list {
-            display: flex;
-            flex-direction: column;
-            gap: var(--kbq-size-s);
+        .kbq-form-field-type-select {
+            width: 320px;
         }
     `,
+    providers: [
+        kbqSelectOptionsProvider({ searchMinOptionsThreshold: 0 })
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-column layout-gap-m layout-padding-m'
@@ -78,6 +101,8 @@ import { startWith } from 'rxjs';
 export class UsernameSearchExample {
     private readonly formatUsername = kbqInjectUsernameFormatter();
 
+    protected readonly isCompact = signal(false);
+    protected readonly selectedUser = signal<KbqUserInfo | null>(null);
     protected readonly searchControl = new FormControl('', { nonNullable: true });
 
     private readonly searchText = toSignal(this.searchControl.valueChanges.pipe(startWith('')), { initialValue: '' });
@@ -91,20 +116,18 @@ export class UsernameSearchExample {
     ];
 
     // The name, the login and the site are rendered in separate elements, so each word of the query is highlighted on its own.
-    protected readonly keywords = computed(() => (this.searchText() ?? '').split(/\s+/).filter(Boolean));
+    protected readonly keywords = computed(() => tokenizeSearchQuery(this.searchText()));
 
     protected readonly filteredUsers = computed(() => {
-        const keywords = this.keywords().map((word) => word.toLowerCase());
+        const matches = createSearchPredicate(this.searchText());
 
-        if (!keywords.length) return this.users;
-
-        return this.users.filter((user) => {
-            const text = kbqBuildUsernameText(
-                { name: this.formatUsername(user), login: user.login, site: user.site },
-                { formatSite: (s) => s }
-            ).toLowerCase();
-
-            return keywords.every((word) => text.includes(word));
-        });
+        return this.users.filter((user) =>
+            matches(
+                kbqBuildUsernameText(
+                    { name: this.formatUsername(user), login: user.login, site: user.site },
+                    { formatSite: (s) => s }
+                )
+            )
+        );
     });
 }

@@ -7693,18 +7693,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "username-as-link-example.ts",
     "importPath": "components/username"
   },
-  "username-compact": {
-    "packagePath": "components/username/username-compact",
-    "title": "Username compact",
-    "componentName": "UsernameCompactExample",
-    "files": [
-      "username-compact-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "username-compact-example",
-    "primaryFile": "username-compact-example.ts",
-    "importPath": "components/username"
-  },
   "username-custom": {
     "packagePath": "components/username/username-custom",
     "title": "Username custom",
@@ -8608,7 +8596,6 @@ export type LiveExampleId =
   | 'tree-state-saving'
   | 'tree-toggle-on-click'
   | 'username-as-link'
-  | 'username-compact'
   | 'username-custom'
   | 'username-filter-bar-option'
   | 'username-overview'
