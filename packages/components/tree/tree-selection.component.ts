@@ -68,7 +68,7 @@ import {
     UP_ARROW
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { delay, filter, map } from 'rxjs/operators';
 import { FlatTreeControl } from './control/flat-tree-control';
@@ -507,20 +507,20 @@ export class KbqTreeSelection<T = any, K = T>
             return [];
         }
 
-        const nonSelectableDataNodes = this.renderedOptions
-            .filter((option) => option.disabled || !option.selectable())
-            .map((option) => option.data);
+        const nonSelectableDataNodes = new Set(
+            this.renderedOptions
+                .filter((option) => option.disabled || !option.selectable())
+                .map((option) => option.data)
+        );
 
         const candidates = this.treeControl.filterValue.value?.length
             ? this.renderedOptions.map((option) => option.data)
             : (this.treeControl.dataNodes ?? []);
 
-        // The `includes` check comes first on purpose: the "select all" row is itself a non-selectable
+        // The `has` check comes first on purpose: the "select all" row is itself a non-selectable
         // rendered option with no `data`, and `isDisabled` belongs to the consumer — it must never be
         // handed a node their data source has never seen.
-        return candidates.filter(
-            (node) => !nonSelectableDataNodes.includes(node) && !this.treeControl.isDisabled(node)
-        );
+        return candidates.filter((node) => !nonSelectableDataNodes.has(node) && !this.treeControl.isDisabled(node));
     }
 
     /** Adapter shared by the master checkbox and the Ctrl/Cmd + A handler, so the two cannot drift apart. */
@@ -578,6 +578,10 @@ export class KbqTreeSelection<T = any, K = T>
     }
 
     private selectionModelSubscription: Subscription | null = null;
+
+    // A selection change asks for a sweep here, not through `renderedOptions.changes`: the key manager and an
+    // embedding select listen to that, and no row changed.
+    private readonly selectionSweeps = new Subject<void>();
 
     /** Whether a value report is queued for the end of the current tick. Cleared by `writeValue` to cancel it. */
     private pendingValueReport = false;
@@ -823,7 +827,7 @@ export class KbqTreeSelection<T = any, K = T>
                     this.reportValue();
                 }
 
-                this.renderedOptions.notifyOnChanges();
+                this.selectionSweeps.next();
                 // The "select all" row renders the selection state.
                 this.changeDetectorRef.markForCheck();
             });
@@ -874,7 +878,7 @@ export class KbqTreeSelection<T = any, K = T>
         // for all of them and the rest are dropped. `auditTime` would tie the later ones to the first one's timer.
         let sweeps = 0;
 
-        this.renderedOptions.changes
+        merge(this.renderedOptions.changes, this.selectionSweeps)
             .pipe(
                 map(() => sweeps),
                 delay(0, this.scheduler),
@@ -1167,7 +1171,8 @@ export class KbqTreeSelection<T = any, K = T>
         let fromIndex = this.keyManager.previousActiveItemIndex;
         let toIndex = (this.keyManager.previousActiveItemIndex = this.keyManager.activeItemIndex);
 
-        const selectedOptionState = options[fromIndex]?.selected;
+        // Asked of the model: an option's own state lags it until the next sweep.
+        const selectedOptionState = this.selectionModel.isSelected(options[fromIndex]?.data);
 
         if (toIndex === fromIndex || fromIndex === -1) {
             if (options[toIndex]?.selectable()) {
@@ -1181,16 +1186,25 @@ export class KbqTreeSelection<T = any, K = T>
             [fromIndex, toIndex] = [toIndex, fromIndex];
         }
 
-        options
+        const nodes = options
             .slice(fromIndex, toIndex + 1)
             .filter((item) => !item.disabled && item.selectable())
-            .forEach((renderedOption) => {
-                if (!selectedOptionState && this.noUnselectLast && this.selectionModel.selected.length === 1) {
-                    return;
-                }
+            .map((item) => item.data);
 
-                renderedOption.setSelected(selectedOptionState);
-            });
+        // One write for the range, so the selection changes once rather than once per row.
+        if (selectedOptionState) {
+            this.selectionModel.select(...nodes);
+
+            return;
+        }
+
+        const selected = nodes.filter((node) => this.selectionModel.isSelected(node));
+        // With `noUnselectLast` the last selected node stays, the range giving up its own in order until then.
+        const released = this.noUnselectLast
+            ? Math.max(0, Math.min(selected.length, this.selectionModel.selected.length - 1))
+            : selected.length;
+
+        this.selectionModel.deselect(...selected.slice(0, released));
     }
 
     /** @docs-private */
@@ -1236,10 +1250,10 @@ export class KbqTreeSelection<T = any, K = T>
         this.scheduleCheckboxSync(false);
 
         // The "select all" row is rendered ahead of what its state reads: new rows bind their inputs after it and join
-        // `renderedOptions` only once bound, and `KbqTreeFlatDataSource` assigns `dataNodes` after it emits. Nothing
-        // else in the tree reads that state but the checkbox sync above, so a tree without the row is done in this one
-        // pass. Marked for check, which reaches the views above too: a template reading `allOptionsSelected` by
-        // reference reads the same state.
+        // `renderedOptions` only once bound, and a consumer's data source can assign `dataNodes` after it emits.
+        // Nothing else in the tree reads that state but the checkbox sync above, so a tree without the row is done in
+        // this one pass. Marked for check, which reaches the views above too: a template reading `allOptionsSelected`
+        // by reference reads the same state.
         if (!this.showSelectAll) return;
 
         const dataNodes = this.treeControl.dataNodes;
@@ -1255,7 +1269,7 @@ export class KbqTreeSelection<T = any, K = T>
     /**
      * Recomputes every option's checkbox state where no selection change follows to do it: after `dataNodes` is
      * replaced, which moves the descendants a branch counts, and once a hidden checkbox appears. A microtask later, as
-     * a flat data source assigns `dataNodes` only after it emits.
+     * a consumer's data source can assign `dataNodes` after it emits.
      */
     private scheduleCheckboxSync(force: boolean): void {
         Promise.resolve().then(() => {
@@ -1315,11 +1329,24 @@ export class KbqTreeSelection<T = any, K = T>
             // is active), while the emitted events carry the selectable rendered options.
             const selectableOptions = this.renderedOptions.filter((option) => !option.disabled && option.selectable());
 
+            // A multiple selection takes the nodes in one write, so it changes once rather than once per node. A single
+            // one cannot hold them, and keeps the node-by-node writes it always had.
+            const batched = this.selectionModel.isMultipleSelection();
+            const adapter = this.selectAllAdapter;
+
             // `toggleSelectAll` returns the data nodes whose selection actually flipped — the source of
             // truth, unlike the cached `option.selected` which lags until change detection.
-            const changed = toggleSelectAll(this.selectAllAdapter, {
+            const changed = toggleSelectAll(batched ? { ...adapter, setSelected: () => {} } : adapter, {
                 allowDeselect: allowDeselect ?? (this.selectAll || this.selectAllToggle())
             });
+
+            if (batched && changed.length) {
+                if (this.selectionModel.isSelected(changed[0])) {
+                    this.selectionModel.deselect(...changed);
+                } else {
+                    this.selectionModel.select(...changed);
+                }
+            }
 
             const changedData = new Set(changed);
             const changedOptions = selectableOptions.filter((option) => changedData.has(option.data));

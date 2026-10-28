@@ -2456,6 +2456,65 @@ describe('KbqTreeSelection', () => {
 
                 expect(sweeps).toHaveBeenCalledTimes(1);
             });
+
+            it('should leave renderedOptions.changes to the rendered rows', async () => {
+                vi.useFakeTimers();
+
+                const { tree, treeControl } = component;
+
+                treeControl.expandAll();
+                await settle();
+
+                const rowChanges = vi.fn();
+
+                tree().renderedOptions.changes.subscribe(rowChanges);
+                tree().selectionModel.select(treeControl.hasValue('leaf-1')!);
+                await settle();
+
+                expect(rowChanges).not.toHaveBeenCalled();
+                expect(optionFor('leaf-1').selected).toBe(true);
+            });
+
+            // A write per node would run every listener of the selection once per node.
+            it('should change the selection once to select all', async () => {
+                vi.useFakeTimers();
+
+                const tree = component.tree();
+                const selectionChanges = vi.fn();
+
+                tree.selectionModel.changed.subscribe(selectionChanges);
+                tree.selectAllOptions();
+                await settle();
+
+                expect(selectionChanges).toHaveBeenCalledTimes(1);
+                expect(tree.selectionModel.selected.length).toBe(component.treeControl.dataNodes.length);
+            });
+
+            it('should change the selection once for a range', async () => {
+                vi.useFakeTimers();
+
+                const { tree, treeControl } = component;
+
+                treeControl.expandAll();
+                await settle();
+
+                const rows = getNodes(treeElement);
+                const shiftClick = createMouseEvent('click');
+
+                dispatchEvent(rows[0], createMouseEvent('click'));
+                await settle();
+
+                const selectionChanges = vi.fn();
+
+                tree().selectionModel.changed.subscribe(selectionChanges);
+                Object.defineProperty(shiftClick, 'shiftKey', { get: () => true });
+                tree().keyManager.setActiveItem(6);
+                dispatchEvent(rows[6], shiftClick);
+                await settle();
+
+                expect(selectionChanges).toHaveBeenCalledTimes(1);
+                expect(tree().selectionModel.selected.length).toBe(7);
+            });
         });
 
         describe('disabled options', () => {
@@ -5854,6 +5913,44 @@ describe('KbqTreeSelection rendering a change of the data', () => {
         dispatchFakeEvent(getNodeByText(fixture.nativeElement, 'Documents'), 'mouseenter');
 
         expect(run).toHaveBeenCalled();
+    });
+
+    it('should render a selected row the change brings in as selected, without announcing it', async () => {
+        fixture.componentInstance.selectAll = false;
+        await settle();
+
+        const { tree, treeControl } = fixture.componentInstance;
+
+        treeControl.expand(node('Documents'));
+        TestBed.tick();
+
+        const row = getNodeByText(fixture.nativeElement, 'angular');
+        const announced = vi.fn();
+
+        tree()
+            .renderedOptions.find((option) => option.value === 'angular')!
+            .selectionChange.subscribe(announced);
+
+        expect(row.classList).toContain('kbq-selected');
+        expect(row.getAttribute('aria-selected')).toBe('true');
+
+        await settle();
+
+        expect(announced).not.toHaveBeenCalled();
+    });
+
+    it('should report once the focus the key manager moves', () => {
+        const tree = fixture.componentInstance.tree();
+        const reported = vi.fn();
+        const ownReports = vi.fn();
+
+        tree.optionFocusChanges.subscribe(reported);
+        tree.renderedOptions.get(2)!.onFocus.subscribe(ownReports);
+        tree.keyManager.setFocusOrigin('keyboard');
+        tree.keyManager.setActiveItem(2);
+
+        expect(reported).toHaveBeenCalledTimes(1);
+        expect(ownReports).toHaveBeenCalledTimes(1);
     });
 
     it('should hand the focus of a row the change brings in to the keyboard before the rows are swept', async () => {

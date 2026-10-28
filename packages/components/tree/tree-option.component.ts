@@ -20,6 +20,7 @@ import {
     input,
     linkedSignal,
     NgZone,
+    OnInit,
     output,
     QueryList,
     Renderer2,
@@ -145,7 +146,10 @@ const samePredicates = (a: TreeOptionPredicates, b: TreeOptionPredicates): boole
     },
     exportAs: 'kbqTreeOption'
 })
-export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterContentInit, DoCheck, KbqTitleTextRef {
+export class KbqTreeOption<T = any>
+    extends KbqTreeNode<T>
+    implements OnInit, AfterContentInit, DoCheck, KbqTitleTextRef
+{
     private changeDetectorRef = inject(ChangeDetectorRef);
     private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly destroyRef = inject(DestroyRef);
@@ -325,6 +329,10 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
 
     private readonly focused = signal(false);
 
+    // Raised from reporting a focus until `hasFocus` is: `kbqFocusAndReveal` fires `focusin` synchronously, and its
+    // listener calls back into `focus()` while `hasFocus` is still false.
+    private focusReported = false;
+
     get isExpandable(): boolean {
         if (this.selectAllRow()) {
             return false;
@@ -399,6 +407,12 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
         );
 
         this.destroyRef.onDestroy(unlisten);
+    }
+
+    ngOnInit(): void {
+        // Selected from its first check: the tree's sweep reaches a new row a macrotask later, and a row it marked
+        // would render unselected first and then report a selection nobody made.
+        if (!this.selectAllRow()) this.selectedState.set(!!this.tree.selectionModel?.isSelected(this.data));
     }
 
     ngDoCheck(): void {
@@ -519,16 +533,19 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
             // With the pointer already on this node, revealing it would shift the tree out from under it.
             kbqFocusAndReveal(this.elementRef.nativeElement, focusOrigin === 'mouse');
 
-            if (!this.hasFocus) {
+            if (!this.hasFocus && !this.focusReported) {
                 const event: KbqTreeOptionEvent = { option: this };
 
+                this.focusReported = true;
                 this.focusEvents.next(event);
                 this.tree.reportOptionFocus?.(event);
 
                 Promise.resolve().then(() => {
+                    this.focusReported = false;
                     this.hasFocus = true;
 
-                    this.markForCheck();
+                    // The view only: focus changes no checkbox state.
+                    this.changeDetectorRef.markForCheck();
                 });
             }
         });
