@@ -18,27 +18,27 @@ Koobiq uses the [Inter](https://github.com/rsms/inter) and [JetBrains Mono](http
 
 #### Where to get the fonts
 
-Use the official builds: Inter from [rsms.me/inter/download](https://rsms.me/inter/download/), JetBrains Mono from the [JetBrains releases](https://github.com/JetBrains/JetBrainsMono/releases) or the [@fontsource/jetbrains-mono](https://www.npmjs.com/package/@fontsource/jetbrains-mono) package. Any other source works as well — the font itself is what matters, not where you downloaded it from.
-
-Copy Inter into your project and declare it in your global styles. The archive already ships an `inter.css` that declares both the static weights and the variable font:
-
-```scss
-@import 'assets/fonts/inter/inter.css';
-```
-
-If you need Inter from npm, [inter-ui](https://www.npmjs.com/package/inter-ui) or [dist-font-inter](https://www.npmjs.com/package/dist-font-inter) work: their files match the official release, and the `*-latin` folders in inter-ui are trimmed — they contain neither Cyrillic nor some of the features.
-
-JetBrains Mono is needed in weights 400, 600, and 700 — install it from npm. The mono styles enable no features, so the subsets in the package lose nothing:
+Both fonts are installed from npm: Inter from [inter-ui](https://www.npmjs.com/package/inter-ui), JetBrains Mono from [@fontsource/jetbrains-mono](https://www.npmjs.com/package/@fontsource/jetbrains-mono).
 
 ```bash
-npm install @fontsource/jetbrains-mono
+npm install inter-ui @fontsource/jetbrains-mono
 ```
 
 ```scss
+// Inter: inter.css declares every weight we need and takes the full files from the web/ folder
+@import 'inter-ui/inter.css';
+
+// JetBrains Mono
 @import '@fontsource/jetbrains-mono/400.css';
 @import '@fontsource/jetbrains-mono/600.css';
 @import '@fontsource/jetbrains-mono/700.css';
 ```
+
+In the inter-ui package `inter-latin.css` and the `*-latin` folders sit next to `inter.css` — those are trimmed builds, with neither Cyrillic nor some of the features. Take only `inter.css`.
+
+The mono styles enable no features, so the JetBrains Mono subsets lose nothing.
+
+The official builds — [rsms.me/inter/download](https://rsms.me/inter/download/) and the [JetBrains releases](https://github.com/JetBrains/JetBrainsMono/releases) — work as well: the font itself is what matters, not the source.
 
 #### Check the font before installing it
 

@@ -18,27 +18,27 @@ Koobiq по умолчанию использует шрифты [Inter](https:/
 
 #### Откуда брать шрифты
 
-Берите официальные сборки: Inter — с [rsms.me/inter/download](https://rsms.me/inter/download/), JetBrains Mono — из [релизов JetBrains](https://github.com/JetBrains/JetBrainsMono/releases) или из пакета [@fontsource/jetbrains-mono](https://www.npmjs.com/package/@fontsource/jetbrains-mono). Источник может быть и любым другим: важен сам шрифт, а не то, откуда вы его скачали.
-
-Скопируйте Inter в проект и объявите его в глобальных стилях. В архиве уже есть готовый `inter.css` — он объявляет и статические начертания, и переменный шрифт:
-
-```scss
-@import 'assets/fonts/inter/inter.css';
-```
-
-Если Inter нужен из npm, подойдут [inter-ui](https://www.npmjs.com/package/inter-ui) или [dist-font-inter](https://www.npmjs.com/package/dist-font-inter): файлы в них совпадают с официальным релизом, а папки `*-latin` в inter-ui урезаны — в них нет ни кириллицы, ни части фич.
-
-JetBrains Mono нужен в начертаниях 400, 600 и 700 — поставьте его из npm. Для моноширинного текста токены не включают ни одной фичи, поэтому сабсеты пакета ничего не теряют:
+Оба шрифта ставятся из npm: Inter — из [inter-ui](https://www.npmjs.com/package/inter-ui), JetBrains Mono — из [@fontsource/jetbrains-mono](https://www.npmjs.com/package/@fontsource/jetbrains-mono).
 
 ```bash
-npm install @fontsource/jetbrains-mono
+npm install inter-ui @fontsource/jetbrains-mono
 ```
 
 ```scss
+// Inter: inter.css объявляет все нужные начертания и берёт полные файлы из папки web/
+@import 'inter-ui/inter.css';
+
+// JetBrains Mono
 @import '@fontsource/jetbrains-mono/400.css';
 @import '@fontsource/jetbrains-mono/600.css';
 @import '@fontsource/jetbrains-mono/700.css';
 ```
+
+В пакете inter-ui рядом с `inter.css` лежат `inter-latin.css` и папки `*-latin` — это урезанные сборки, в них нет ни кириллицы, ни части фич. Берите только `inter.css`.
+
+Для моноширинного текста токены не включают ни одной фичи, поэтому сабсеты JetBrains Mono ничего не теряют.
+
+Официальные сборки — [rsms.me/inter/download](https://rsms.me/inter/download/) и [релизы JetBrains](https://github.com/JetBrains/JetBrainsMono/releases) — тоже подходят: важен сам шрифт, а не источник.
 
 #### Проверьте шрифт перед подключением
 
