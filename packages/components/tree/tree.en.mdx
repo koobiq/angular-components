@@ -137,26 +137,15 @@ collapsed or narrow the data with the search field.
 
 Nodes are tracked by identity by default, so a data source that rebuilds its node objects on every
 emission — a flattener among them — rebuilds every row, and a rebuilt node comes back collapsed.
-Give the tree control a `trackBy` in the options, the last argument of `FlatTreeControl` and
-`NestedTreeControl`. It takes the node alone and returns a stable key: the node is expanded by that key,
-and the tree re-uses the row of the same key across data updates:
+Give the tree control a `trackBy` that returns a stable key of a node: the node is then expanded by that
+key, and the tree re-uses the row of the same key across data updates. Set it before anything is
+expanded, as a property or in the options, the last argument of `FlatTreeControl` and
+`NestedTreeControl`:
 
-```ts
-treeControl = new FlatTreeControl<FileFlatNode, string>(
-    (node) => node.level,
-    (node) => node.expandable,
-    (node) => node.id,
-    (node) => node.name,
-    undefined,
-    undefined,
-    undefined,
-    { trackBy: (node) => node.id }
-);
-```
+<Example id="tree-track-by" />
 
-`expansionModel` then holds the keys rather than the nodes, and a type that names the tree names the key
-type after the node type: `KbqTreeSelection<FileFlatNode, string>`,
-`KbqTreeSelectionChange<KbqTreeOption<FileFlatNode>, FileFlatNode, string>`.
+`expansionModel` then holds the keys rather than the nodes, and the types of the tree and its events
+take the key type as one more parameter: `KbqTreeSelection<FileFlatNode, string>`.
 
 The tree's own `trackBy` input, a `TrackByFunction` of the index and the node, overrides the key the rows
 are re-used by; it does not change the expansion. Without a control `trackBy` it is the only way to

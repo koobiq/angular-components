@@ -7693,6 +7693,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-toggle-on-click-example.ts",
     "importPath": "components/tree"
   },
+  "tree-track-by": {
+    "packagePath": "components/tree/tree-track-by",
+    "title": "Tree track by",
+    "componentName": "TreeTrackByExample",
+    "files": [
+      "tree-track-by-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tree-track-by-example",
+    "primaryFile": "tree-track-by-example.ts",
+    "importPath": "components/tree"
+  },
   "username-as-link": {
     "packagePath": "components/username/username-as-link",
     "title": "Username as link",
@@ -8608,6 +8620,7 @@ export type LiveExampleId =
   | 'tree-selection-separate-from-focus'
   | 'tree-state-saving'
   | 'tree-toggle-on-click'
+  | 'tree-track-by'
   | 'username-as-link'
   | 'username-custom'
   | 'username-filter-bar-option'

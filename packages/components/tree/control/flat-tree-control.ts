@@ -31,6 +31,7 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
         public compareViewValues: (firstViewValue, secondViewValue) => boolean = defaultCompareViewValues,
         /** isDisabled will be used to determine if the node is disabled. */
         public isDisabled: (dataNode: T) => boolean = () => false,
+        /** Further options: the `trackBy` the nodes are expanded by. */
         options?: KbqTreeControlOptions<T, K>
     ) {
         super();

@@ -118,7 +118,8 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
     getViewValue: (dataNode: T) => string,
     compareValues?: (firstValue: any, secondValue: any) => boolean,
     compareViewValues?: (firstViewValue: any, secondViewValue: any) => boolean,
-    isDisabled?: (dataNode: T) => boolean, options?: KbqTreeControlOptions<T, K>);
+    isDisabled?: (dataNode: T) => boolean,
+    options?: KbqTreeControlOptions<T, K>);
     compareValues: (firstValue: any, secondValue: any) => boolean;
     compareViewValues: (firstViewValue: any, secondViewValue: any) => boolean;
     expandAll(): void;
@@ -166,7 +167,7 @@ export class KbqTree extends KbqTreeBase<any> {
 }
 
 // @public
-export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel'> = TreeControl<T>> implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit {
+export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 'trackBy'> = TreeControl<T>> implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit {
     constructor();
     protected applyNodeChanges(data: T[] | ReadonlyArray<T>, dataDiffer: IterableDiffer<T>, viewContainer: ViewContainerRef, parentData?: T): boolean;
     // (undocumented)
@@ -735,6 +736,7 @@ export interface TreeControl<T, K = T> {
     isExpanded(dataNode: T): boolean;
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;
+    trackBy?: (dataNode: T) => K;
 }
 
 // (No @packageDocumentation comment for this package)

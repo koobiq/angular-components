@@ -65,11 +65,11 @@ const normalizeTreeState = (parsed: unknown): KbqTreeState | null => {
  * ported by hand.
  *
  * `C` narrows the tree control a concrete tree accepts, and so the type its `treeControl` binding is checked against.
- * The bound leaves out `expansionModel`, the one member typed by the control's key: the model makes a control
- * invariant in that type, so a bound that kept it would admit only controls without a `trackBy`.
+ * The bound leaves out `expansionModel` and `trackBy`, the members typed by the control's key, so that it admits
+ * a control of any key type: the model makes a control invariant in that type.
  */
 @Directive()
-export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel'> = TreeControl<T>>
+export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 'trackBy'> = TreeControl<T>>
     implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit
 {
     protected differs = inject(IterableDiffers);
@@ -91,7 +91,7 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel'> = T
 
     /** {@link treeControl} as state saving reads it: by node value, which only a `FlatTreeControl` has. */
     private get flatTreeControl(): FlatTreeControl<T, unknown> {
-        const treeControl: Omit<TreeControl<T>, 'expansionModel'> = this.treeControl;
+        const treeControl: Omit<TreeControl<T>, 'expansionModel' | 'trackBy'> = this.treeControl;
 
         return treeControl as FlatTreeControl<T, unknown>;
     }
@@ -623,8 +623,8 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel'> = T
     }
 
     private createDataDiffer(): IterableDiffer<T> {
-        // `TreeControl` does not declare `trackBy`: only the koobiq controls have it.
-        const controlTrackBy = (this.treeControl as { trackBy?: (dataNode: T) => unknown } | undefined)?.trackBy;
+        // The bound of `C` leaves `trackBy` out; the key type is the control's own, so it is read as `unknown` here.
+        const controlTrackBy = (this.treeControl as Pick<TreeControl<T, unknown>, 'trackBy'> | undefined)?.trackBy;
         const trackBy = this.trackBy() ?? (controlTrackBy && ((_: number, node: T) => controlTrackBy(node)));
 
         return this.differs.find([]).create(trackBy);

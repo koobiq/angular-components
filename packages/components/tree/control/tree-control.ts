@@ -21,6 +21,9 @@ export interface TreeControl<T, K = T> {
 
     filterModel: SelectionModel<T>;
 
+    /** Gives the key a data node is expanded by. Without it the node object is its own key. */
+    trackBy?: (dataNode: T) => K;
+
     filterValue: BehaviorSubject<T[] | string | null>;
 
     /** Get depth of a given data node, return the level number. This is for flat tree node. */
