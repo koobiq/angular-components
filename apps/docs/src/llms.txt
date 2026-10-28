@@ -19,7 +19,7 @@ Rules for code that uses Koobiq:
 - [Versioning](https://koobiq.io/en/main/versioning.md): Our releases follow the versioning described in the [Semver spec](http://semver.org/).
 - [Theming](https://koobiq.io/en/main/theming.md): A theme in Koobiq is a set of CSS variables.
 - [Localization](https://koobiq.io/en/main/localization.md): Koobiq components render some strings of their own — the filters menu of the filter bar, the tooltips of the code block, the accessible names of every icon-only button, the placeholder of a datepicker, and so on.
-- [Typography](https://koobiq.io/en/main/typography.md): Where to get the Inter and JetBrains Mono fonts, how the sources differ and how to override the fonts in the interface.
+- [Typography](https://koobiq.io/en/main/typography.md): Connecting fonts, how the sources differ and how to override the typography styles.
 - [Design tokens](https://koobiq.io/en/main/design-tokens.md): The global CSS custom properties (`--kbq-*`) of the themes: colors, typography, shadows, border radius and sizes.
 - [Schematics](https://koobiq.io/en/main/schematics.md): As part of the **Koobiq** design system, a set of **schematics** is provided — CLI tools designed to automate library installation, perform migrations, and update components in Angular projects.
 - [Upgrade guide](https://koobiq.io/en/main/migration.md): New versions include improvements but also contain **breaking changes**; they must be applied step by step.
