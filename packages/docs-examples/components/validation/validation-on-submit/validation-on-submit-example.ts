@@ -50,7 +50,13 @@ import { KbqInputModule } from '@koobiq/components/input';
                 </kbq-alert>
             </div>
 
-            <form class="kbq-form-vertical" novalidate [formGroup]="globalErrorForm" (ngSubmit)="submitForm()">
+            <form
+                class="kbq-form-vertical"
+                novalidate
+                [formGroup]="globalErrorForm"
+                (input)="showServerErrors.set(false)"
+                (ngSubmit)="submitForm()"
+            >
                 <div class="kbq-form__fieldset">
                     <div class="kbq-form__row">
                         <kbq-form-field>
