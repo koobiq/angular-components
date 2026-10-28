@@ -58,7 +58,7 @@ The ready-made classes are used in development rather than custom styles assembl
 
 #### How to change the fonts
 
-The font families are set by global variables, and overriding them changes the fonts across the interface. The `--kbq-font-family-*` variables are declared in `css-tokens.css` on `:root`, so the override goes after the tokens are connected — same specificity, so the order decides.
+The font families are set by global variables, and overriding them changes the fonts across the interface. The override goes after the tokens are connected, otherwise the token value wins.
 
 ```scss
 :root {
