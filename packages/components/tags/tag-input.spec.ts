@@ -1066,7 +1066,7 @@ describe('KbqTagInput', () => {
     describe('[addOnPaste]', () => {
         const clipboardEventData = {
             clipboardData: {
-                getData: (_) => 'test test test'
+                getData: (_: string) => 'test test test'
             },
             preventDefault: () => {},
             stopPropagation: () => {}
@@ -1101,7 +1101,7 @@ describe('KbqTagInput', () => {
 
             const clipboardEventData = {
                 clipboardData: {
-                    getData: (_) => '36.185.103.120 16.229.226.236,160.249.196.235;144.132.144.37'
+                    getData: (_: string) => '36.185.103.120 16.229.226.236,160.249.196.235;144.132.144.37'
                 },
                 preventDefault: () => {},
                 stopPropagation: () => {}

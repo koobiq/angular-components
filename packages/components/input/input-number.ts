@@ -307,7 +307,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         KBQ_INPUT_LOCALE_CONFIGURATION
     );
 
-    private valueFromPaste: number | null;
+    private valueFromPaste?: number | null;
 
     /** Pending `onInput` reformats by timer handle: cancelled on destroy, run at once before a step. */
     private readonly pendingReformats = new Map<ReturnType<typeof setTimeout>, (correctCaret: boolean) => void>();

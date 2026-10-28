@@ -104,7 +104,7 @@ export class KbqSingleFileUploadComponent
     readonly inputId = input<string>(`kbq-single-file-upload-${nextSingleFileUploadUniqueId++}`);
 
     /** An object used to control the error state of the component. */
-    errorStateMatcher: ErrorStateMatcher;
+    errorStateMatcher!: ErrorStateMatcher;
 
     /**
      * The selected file, or `null`.

@@ -45,6 +45,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY() {
         'tk-TM': { ...tkTMLocaleData, ...tkTMFormattersData }
     };
 }
+
+type ShippedLocaleId = Exclude<keyof ReturnType<typeof KBQ_DEFAULT_LOCALE_DATA_FACTORY>, 'items'>;
 export const KBQ_LOCALE_DATA = new InjectionToken<KbqLocaleDataInput>('KBQ_LOCALE_DATA', {
     providedIn: 'root',
     factory: KBQ_DEFAULT_LOCALE_DATA_FACTORY
@@ -211,7 +213,9 @@ export class KbqLocaleService {
     getParams<K extends KbqLocaleSection>(section: K): KbqLocaleData[K];
     getParams(section: string): any;
     getParams(section: string) {
-        return this._data()?.[section] ?? SHIPPED_LOCALE_DATA[KBQ_DEFAULT_LOCALE_ID][section];
+        const key = section as KbqLocaleSection;
+
+        return this._data()?.[key] ?? SHIPPED_LOCALE_DATA[KBQ_DEFAULT_LOCALE_ID][key];
     }
 
     /** Reactive counterpart of {@link getParams}: re-emits whenever the locale changes. */
@@ -335,9 +339,10 @@ export function checkAndNormalizeLocalizedNumber(num: string | null | undefined,
     if (num === null || num === undefined) return null;
 
     const locales = KBQ_DEFAULT_LOCALE_DATA_FACTORY();
+    const localeId = locale as ShippedLocaleId | undefined;
 
-    if (locale && locales[locale]) {
-        const config = locales[locale].input.number;
+    if (localeId && locales[localeId]) {
+        const config = locales[localeId].input.number;
         let normalized: number;
 
         if (!/\d/g.test(num)) return +num;
@@ -358,7 +363,7 @@ export function checkAndNormalizeLocalizedNumber(num: string | null | undefined,
     /* if some locale input config satisfies pasted number, try to normalise with selected locale config */
     let numberOutput: number | null = null;
 
-    for (const config of locales.items.map(({ id }) => locales[id].input.number)) {
+    for (const config of locales.items.map(({ id }) => locales[id as ShippedLocaleId].input.number)) {
         const normalized = +normalizeNumber(num, config);
 
         if (!Number.isNaN(normalized)) {

@@ -47,8 +47,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     }
 })
 export class SelectNoVariantsExample {
-    options: string[];
-    noOptions: boolean;
+    options!: string[];
+    noOptions!: boolean;
 
     constructor() {
         this.loadOptions();

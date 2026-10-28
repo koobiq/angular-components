@@ -11,7 +11,7 @@ import { assertNoPlaceholders, IPackageJson, syncComponentsVersion, syncNgVersio
 
 const { green } = chalk;
 
-const isCI = !!process.env.CI;
+const isCI = !!process.env['CI'];
 const packageVersionFilePath = './packages/components/core/version.ts';
 
 export async function packager(options: IPackagerOptions, context: BuilderContext): Promise<BuilderOutput> {
@@ -35,10 +35,11 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
             throw new Error('❌ Build target does not exist in angular.json');
         }
     } catch (err) {
-        context.logger.error(err);
+        // Logged and returned as it was thrown: the logger and `BuilderOutput` are typed for a message only.
+        context.logger.error(err as string);
 
         return {
-            error: err,
+            error: err as string,
             success: false
         };
     }
@@ -51,7 +52,9 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
         context.logger.info('📖 package.json file...');
         const packageJson = await tryJsonParse<IPackageJson>(join(context.workspaceRoot, 'package.json'));
 
-        const projectRoot = angularJson.projects && angularJson.projects[project] && angularJson.projects[project].root;
+        // The CLI's schema types `projects` as `{}`, without the projects in it.
+        const projects: Record<string, { root?: string }> | undefined = angularJson.projects;
+        const projectRoot = projects && projects[project] && projects[project].root;
 
         if (!projectRoot) {
             context.logger.error(
@@ -113,7 +116,7 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
 
         return { success: buildResult.success };
     } catch (error) {
-        context.logger.error(error);
+        context.logger.error(error as string);
     }
 
     return {

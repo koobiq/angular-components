@@ -31,7 +31,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
      * Overrides the tooltip's hoverable default. The overflow hint floats over the neighbouring options of a
      * scrolling list, so a pointer-capturing pane would swallow the click that selects them.
      */
-    readonly ignoreTooltipPointerEvents = input<boolean>(true);
+    override readonly ignoreTooltipPointerEvents = input<boolean>(true);
 
     /**
      * The hint repeats text the option had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for an
@@ -79,7 +79,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
         super();
     }
 
-    ngAfterViewInit() {
+    override ngAfterViewInit() {
         super.ngAfterViewInit();
 
         this.content = this.option.viewValue;
@@ -103,7 +103,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
             .subscribe((origin) => (origin === 'keyboard' ? this.handleElementEnter() : this.handleElementLeave()));
     }
 
-    ngOnDestroy() {
+    override ngOnDestroy() {
         this.resizeSubscription.unsubscribe();
         this.contentObserverSubscription.unsubscribe();
         this.focusMonitorSubscription.unsubscribe();

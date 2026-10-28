@@ -3581,11 +3581,11 @@ class SimpleAutocomplete implements OnDestroy {
     stateCtrl = new UntypedFormControl();
     filteredStates: any[];
     valueSub: Subscription;
-    width: number;
+    width!: number;
     panelWidth: KbqPanelWidth | undefined;
     panelMinWidth: number = KBQ_PANEL_DEFAULT_MIN_WIDTH;
     panelMaxWidth: KbqPanelMaxWidth = null;
-    kbqOptionWidth: number;
+    kbqOptionWidth!: number;
     autocompleteDisabled = false;
     displayWith: ((value: any) => string) | null = this.displayFn;
     openedSpy = vi.fn();
@@ -3665,8 +3665,8 @@ class TestShadowDomAutocomplete implements OnDestroy {
     stateCtrl = new UntypedFormControl();
     filteredStates: any[];
     valueSub: Subscription;
-    width: number;
-    kbqOptionWidth: number;
+    width!: number;
+    kbqOptionWidth!: number;
     autocompleteDisabled = false;
     displayWith: ((value: any) => string) | null = this.displayFn;
     openedSpy = vi.fn();
@@ -3810,7 +3810,7 @@ class AutocompleteWithoutForms {
 })
 class AutocompleteWithNgModel {
     filteredStates: any[];
-    selectedState: string;
+    selectedState!: string;
     states = ['New York', 'Washington', 'Oregon'];
 
     constructor() {
@@ -3843,7 +3843,7 @@ class AutocompleteWithNgModel {
     `
 })
 class AutocompleteWithNumbers {
-    selectedNumber: number;
+    selectedNumber!: number;
     numbers = [0, 1, 2];
 }
 
@@ -3995,7 +3995,7 @@ class AutocompleteRenderedLater {
     `
 })
 class AutocompleteWithSelectEvent {
-    selectedState: string;
+    selectedState!: string;
     states = ['New York', 'Washington', 'Oregon'];
     optionSelected = vi.fn();
 
@@ -4038,7 +4038,7 @@ class PlainAutocompleteInputWithFormControl {
     `
 })
 class AutocompleteWithNumberInputAndNgModel {
-    selectedValue: number;
+    selectedValue!: number;
     values = [1, 2, 3];
 }
 
@@ -4077,7 +4077,7 @@ class AutocompleteWithDifferentOrigin {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
     readonly alternateOrigin = viewChild.required(KbqAutocompleteOrigin);
 
-    selectedValue: string;
+    selectedValue!: string;
     values = ['one', 'two', 'three'];
     connectedTo?: KbqAutocompleteOrigin;
 }
@@ -4093,7 +4093,7 @@ class AutocompleteWithDifferentOrigin {
     `
 })
 class AutocompleteWithNativeAutocompleteAttribute {
-    value: string;
+    value!: string;
 }
 
 @Component({
@@ -4129,7 +4129,7 @@ class AutocompleteWithDisabledItems {
 
     autoActiveFirstOption = false;
 
-    selectedState: string;
+    selectedState!: string;
     states = [
         { code: 'AL', name: 'Alabama', disabled: true },
         { code: 'CA', name: 'California' },
@@ -4170,7 +4170,7 @@ class AutocompleteWithOpenOnFocus {
 
     openOnFocus = false;
 
-    selectedState: string;
+    selectedState!: string;
     states = [
         { code: 'AL', name: 'Alabama' },
         { code: 'CA', name: 'California' },
@@ -4231,7 +4231,7 @@ class AutocompleteWithAutoActiveFirstOption {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
 
     autoActiveFirstOption = true;
-    selectedState: string;
+    selectedState!: string;
     states = [
         { code: 'AL', name: 'Alabama' },
         { code: 'CA', name: 'California' },
@@ -4263,7 +4263,7 @@ class AutocompleteWithChangingClass {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
 
     readonly panelClass = signal<string | string[] | Record<string, boolean> | undefined>('class-one');
-    selectedState: string;
+    selectedState!: string;
     states = [
         { code: 'AL', name: 'Alabama' },
         { code: 'CA', name: 'California' }
@@ -4414,7 +4414,7 @@ class AutocompleteOnTextarea {
     `
 })
 class AutocompleteWithInputType {
-    type: string;
+    type!: string;
 }
 
 @Component({

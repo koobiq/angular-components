@@ -33,7 +33,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     protected readonly isListMode = signal(true);
 
     /** @docs-private */
-    protected formGroup: FormGroup;
+    protected formGroup!: FormGroup;
 
     /** @docs-private */
     protected readonly showStartCalendar = signal(false);
@@ -194,8 +194,8 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
      * (months/years) are respected; unset intervals impose no constraint.
      */
     private validateInterval: ValidatorFn = (group) => {
-        const start = (group as FormGroup).controls.start?.value;
-        const end = (group as FormGroup).controls.end?.value;
+        const start = (group as FormGroup).controls['start']?.value;
+        const end = (group as FormGroup).controls['end']?.value;
 
         if (!this.adapter.isDateInstance(start) || !this.adapter.isDateInstance(end)) return null;
 
@@ -233,8 +233,8 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     get disabled(): boolean {
         return (
             !this.formGroup ||
-            !this.adapter.isDateInstance(this.formGroup.controls.start.value) ||
-            !this.adapter.isDateInstance(this.formGroup.controls.end.value) ||
+            !this.adapter.isDateInstance(this.formGroup.controls['start'].value) ||
+            !this.adapter.isDateInstance(this.formGroup.controls['end'].value) ||
             this.formGroup.invalid
         );
     }
@@ -293,7 +293,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
      * @docs-private
      */
     get startMax(): any {
-        const end = this.formGroup.controls.end.value;
+        const end = this.formGroup.controls['end'].value;
 
         if (this.max && this.adapter.isDateInstance(end)) {
             return this.adapter.compareDateTime(this.max, end) <= 0 ? this.max : end;
@@ -315,8 +315,8 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
      * @docs-private
      */
     protected get isPeriodInverted(): boolean {
-        const start = this.formGroup.controls.start.value;
-        const end = this.formGroup.controls.end.value;
+        const start = this.formGroup.controls['start'].value;
+        const end = this.formGroup.controls['end'].value;
 
         return (
             this.adapter.isDateInstance(start) &&
@@ -416,8 +416,8 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
 
     onApplyPeriod() {
         this.data.value = {
-            start: this.formGroup.controls.start.value.toISO(),
-            end: this.formGroup.controls.end.value.toISO()
+            start: this.formGroup.controls['start'].value.toISO(),
+            end: this.formGroup.controls['end'].value.toISO()
         };
         this.stateChanges.next();
 
@@ -482,11 +482,11 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     }
 
     onSelectStartDate(value: D) {
-        this.formGroup.controls.start.setValue(value);
+        this.formGroup.controls['start'].setValue(value);
     }
 
     onSelectEndDate(value: D) {
-        this.formGroup.controls.end.setValue(value);
+        this.formGroup.controls['end'].setValue(value);
     }
 
     onFocusStartInput() {

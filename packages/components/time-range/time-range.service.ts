@@ -84,7 +84,7 @@ export class KbqTimeRangeService<T> {
 
         this.customTimeRangeTypes
             ?.filter(({ type }) => {
-                return !this.timeRangeConfig[type];
+                return !(this.timeRangeConfig as Record<string, unknown>)[type];
             })
             .forEach((type) => this.add(type));
     }
@@ -94,7 +94,7 @@ export class KbqTimeRangeService<T> {
     });
 
     add({ type, ...customTimeRangeConfig }: KbqCustomTimeRangeType): void {
-        this.timeRangeConfig[type] = customTimeRangeConfig;
+        (this.timeRangeConfig as Record<string, Omit<KbqCustomTimeRangeType, 'type'>>)[type] = customTimeRangeConfig;
     }
 
     /**

@@ -5,20 +5,27 @@ import { KbqOptionModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
+import {
+    FlatTreeControl,
+    KbqTreeFlatDataSource,
+    KbqTreeFlattener,
+    KbqTreeModule,
+    KbqTreeOption,
+    KbqTreeSelectAllEvent
+} from '@koobiq/components/tree';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children!: FileNode[];
+    name!: string;
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name!: string;
     type: any;
-    level: number;
-    expandable: boolean;
+    level!: number;
+    expandable!: boolean;
     parent: any;
 }
 
@@ -191,8 +198,8 @@ export class TreeActionButtonExample {
         return nodeData.expandable;
     }
 
-    onSelectAllChange($event) {
-        console.log('All items selected', $event);
+    onSelectAllChange(event: KbqTreeSelectAllEvent<KbqTreeOption>) {
+        console.log('All items selected', event);
     }
 
     private transformer = (node: FileNode, level: number, parent: any) => {

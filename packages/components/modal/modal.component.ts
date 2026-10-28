@@ -428,9 +428,9 @@ export class KbqModalComponent<T = any, R = any>
         return triggerType === 'ok' ? this.okLoading() : this.cancelLoading();
     }
 
-    private focusedElementBeforeOpen: HTMLElement | null;
+    private focusedElementBeforeOpen?: HTMLElement | null;
 
-    private previouslyFocusedElementOrigin: FocusOrigin;
+    private previouslyFocusedElementOrigin!: FocusOrigin;
 
     private monitoredContainer: ElementRef | null = null;
     private focusMonitorSubscription: Subscription | null = null;
@@ -450,10 +450,10 @@ export class KbqModalComponent<T = any, R = any>
     private handledVisible = false;
 
     // Handle the reference when using kbqContent as Component
-    private contentComponentRef: ComponentRef<T>;
+    private contentComponentRef!: ComponentRef<T>;
     // Current animation state
-    private animationState: AnimationState;
-    private container: HTMLElement | OverlayRef;
+    private animationState?: AnimationState;
+    private container?: HTMLElement | OverlayRef;
 
     /** Element or overlay the dialog is rendered into. Read once, on init. */
     readonly kbqGetContainer = input<HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) | null>(
@@ -470,7 +470,7 @@ export class KbqModalComponent<T = any, R = any>
     ngOnChanges(changes: SimpleChanges) {
         // A `model()` reports a write from inside through `ngOnChanges` as well, and that write has
         // already run the flow, so the guard inside is what keeps it from running twice.
-        if (changes.kbqVisible) this.syncVisibleState(changes.kbqVisible.firstChange);
+        if (changes['kbqVisible']) this.syncVisibleState(changes['kbqVisible'].firstChange);
     }
 
     ngOnInit() {
@@ -758,7 +758,7 @@ export class KbqModalComponent<T = any, R = any>
      */
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     protected getButtonCallableProp(options: IModalButtonOptions<T>, prop: string): {} {
-        const value = options[prop];
+        const value: any = options[prop as keyof IModalButtonOptions<T>];
         const args: any[] = [];
 
         if (this.contentComponentRef) {

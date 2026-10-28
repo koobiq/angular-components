@@ -46,13 +46,13 @@ export class KbqNotificationItemComponent implements OnChanges {
     protected readonly panel = inject(KBQ_NOTIFICATION_CENTER_PANEL);
 
     /** Time of day the notification happened; empty when its `date` could not be parsed. */
-    protected time: string;
+    protected time!: string;
 
     /** Style modifier class of the host, recomputed with `data` instead of allocated on every check. */
     protected styleClass: string = '';
 
     /** Context handed to the consumer's templates. Exposes the item only, never this component. */
-    protected context: { $implicit: KbqNotificationItem };
+    protected context!: { $implicit: KbqNotificationItem };
 
     // `KbqToastService` used to write these defaults into the item handed to `push()`; it now leaves the
     // caller's object untouched, so the row resolves them itself instead of rendering an unstyled,
@@ -87,7 +87,7 @@ export class KbqNotificationItemComponent implements OnChanges {
         this.time = parsed !== null && this.adapter.isValid(parsed) ? this.adapter.format(parsed, 'HH:mm') : '';
     }
 
-    private _data: KbqNotificationItem;
+    private _data!: KbqNotificationItem;
 
     /** @docs-private */
     readonly dataInput = input<KbqNotificationItem | undefined>(undefined, { alias: 'data' });

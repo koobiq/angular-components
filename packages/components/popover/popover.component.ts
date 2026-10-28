@@ -128,18 +128,18 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     /** Debounce shared by the mutation observer and the scroll-shadow container (both expose `debounce`). */
     protected readonly contentObserverDebounce = contentObserverDebounce;
 
-    prefix = 'kbq-popover';
+    override prefix = 'kbq-popover';
 
-    header: string | TemplateRef<any>;
-    footer: string | TemplateRef<any>;
+    override header!: string | TemplateRef<any>;
+    footer!: string | TemplateRef<any>;
 
-    trigger: KbqPopoverTrigger;
+    override trigger!: KbqPopoverTrigger;
 
     isTrapFocus: boolean = false;
     hasCloseButton: boolean = false;
 
     /** Id of the panel element, referenced by the trigger's `aria-controls`. Written by the trigger. */
-    panelId: string;
+    panelId!: string;
 
     /** Accessible name of the panel, used when there is no header to label it. Written by the trigger. */
     ariaLabel: string | undefined;
@@ -202,7 +202,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
         }
     }
 
-    updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
+    override updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
         super.updateClassMap(placement, customClass, { [`${this.prefix}_${size}`]: !!size });
     }
 
@@ -356,10 +356,10 @@ export class KbqPopoverTrigger
      * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
      * If container is specified, the positioning will be relative to it.
      * */
-    stickToWindow: KbqStickToWindowPlacementValues | undefined;
+    override stickToWindow: KbqStickToWindowPlacementValues | undefined;
 
     /** Container for additional positioning, used with `kbqPopoverStickToWindow`. Bound with `kbqPopoverContainer`. */
-    container: HTMLElement | undefined;
+    override container: HTMLElement | undefined;
 
     /** Input (`kbqPopoverContainer`) — sets {@link container}. */
     set popoverContainer(value: HTMLElement | undefined) {
@@ -398,7 +398,7 @@ export class KbqPopoverTrigger
         this.updateData();
     }
 
-    private _header: string | TemplateRef<any>;
+    private _header!: string | TemplateRef<any>;
 
     /** Input (`kbqPopoverContent`) — content of the panel, as a string or a template. */
     get content(): string | TemplateRef<any> {
@@ -422,7 +422,7 @@ export class KbqPopoverTrigger
         this.updateData();
     }
 
-    private _footer: string | TemplateRef<any>;
+    private _footer!: string | TemplateRef<any>;
 
     /** Input (`kbqPopoverDisabled`) — disables the trigger and closes an open popover. */
     get disabled(): boolean {
@@ -639,7 +639,7 @@ export class KbqPopoverTrigger
     }
 
     /** Input (`kbqEnterDelay`) — delay before opening, in milliseconds. Defaults to `0`. */
-    enterDelay: number = 0;
+    override enterDelay: number = 0;
 
     /**
      * Input (`kbqLeaveDelay`) — delay before closing, in milliseconds. Defaults to `0`, and to
@@ -964,7 +964,7 @@ export class KbqPopoverTrigger
         }
     }
 
-    ngOnInit(): void {
+    override ngOnInit(): void {
         super.ngOnInit();
 
         this.scrollable
@@ -983,7 +983,7 @@ export class KbqPopoverTrigger
     }
 
     /** @docs-private */
-    show(delay: number = this.enterDelay): void {
+    override show(delay: number = this.enterDelay): void {
         this.deliberateOpen = !passiveOpenEvents.includes(this.triggerName);
 
         super.show(delay);
@@ -1043,7 +1043,7 @@ export class KbqPopoverTrigger
      * which is the task in which that click's change detection writes a popover input — would drop the
      * close the click had already scheduled.
      */
-    updatePosition(reapplyPosition: boolean = false) {
+    override updatePosition(reapplyPosition: boolean = false) {
         this.overlayRef = this.createOverlay();
 
         const position = (this.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy)

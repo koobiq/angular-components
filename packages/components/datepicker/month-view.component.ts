@@ -67,7 +67,7 @@ export class KbqMonthView<D> implements AfterContentInit, OnChanges {
         this.selectedDate = this.getDateInCurrentMonth(this._selected);
     }
 
-    private _selected: D | null;
+    private _selected!: D | null;
 
     /** @docs-private */
     readonly activeDateInput = input<D | undefined>(undefined, { alias: 'activeDate' });
@@ -100,19 +100,19 @@ export class KbqMonthView<D> implements AfterContentInit, OnChanges {
     readonly kbqCalendarBody = viewChild.required(KbqCalendarBody);
 
     /** Grid of calendar cells representing the dates of the month. */
-    weeks: KbqCalendarCell[][];
+    weeks!: KbqCalendarCell[][];
 
     /** The number of blank cells in the first row before the 1st of the month. */
-    firstWeekOffset: number;
+    firstWeekOffset!: number;
 
     /**
      * The date of the month that the currently selected Date falls on.
      * Null if the currently selected Date is in another month.
      */
-    selectedDate: number | null;
+    selectedDate!: number | null;
 
     /** The date of the month that today falls on. Null if today is in another month. */
-    todayDate: number | null;
+    todayDate!: number | null;
 
     /** The names of the weekdays. */
     weekdays: { long: string; narrow: string }[];

@@ -46,7 +46,7 @@ export class KbqTabLabelWrapper implements OnChanges, AfterViewInit {
         transform: booleanAttribute
     });
 
-    tab: KbqTab;
+    tab!: KbqTab;
 
     get disabled(): boolean {
         return this._disabled;

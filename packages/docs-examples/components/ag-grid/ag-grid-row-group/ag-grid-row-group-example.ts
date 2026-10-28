@@ -68,7 +68,7 @@ const SEVERITIES = ['Low', 'Medium', 'High', 'Critical'];
 })
 export class AgGridRowGroupExample {
     protected readonly groupCols = model(['category', 'severity']);
-    protected readonly rowId = (row: Record<string, unknown>): string => row.id as string;
+    protected readonly rowId = (row: Record<string, unknown>): string => row['id'] as string;
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,

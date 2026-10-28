@@ -480,10 +480,10 @@ export class KbqTimepicker<D>
         }
     }
 
-    onPaste($event) {
-        $event.preventDefault();
+    onPaste(event: ClipboardEvent) {
+        event.preventDefault();
 
-        const value = this.formatUserPaste($event.clipboardData.getData('text'));
+        const value = this.formatUserPaste(event.clipboardData!.getData('text'));
 
         const newTimeObj = this.getDateFromTimeString(value);
 
@@ -626,7 +626,7 @@ export class KbqTimepicker<D>
             /^(\D+)?(?<hours>\d+)?(\D+)?(\D+)?(?<minutes>\d+)?(\D+)?(\D+)?(?<seconds>\d+)?(\D+)?$/
         );
 
-        if (!match?.groups?.hours) {
+        if (!match?.groups?.['hours']) {
             this.setViewValue(value);
 
             return value;
@@ -736,7 +736,7 @@ export class KbqTimepicker<D>
             return;
         }
 
-        let changedTime;
+        let changedTime: D | null = null;
 
         const newEditParams = this.getTimeEditMetrics(this.selectionStart as number);
 

@@ -44,5 +44,5 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerAndTimepickerExample {
-    selectedDateTime: DateTime;
+    selectedDateTime!: DateTime;
 }

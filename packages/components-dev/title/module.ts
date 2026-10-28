@@ -87,7 +87,7 @@ export class DevApp implements OnInit {
     longValue = `${this.defaultValue} and a long text and a long text and a long text and a long text and a long text and a long text`;
     field = this.defaultValue;
     singleSelected: string = '';
-    filteredOptions: Observable<string[]>;
+    filteredOptions!: Observable<string[]>;
 
     formControl = new UntypedFormControl('', Validators.required);
 

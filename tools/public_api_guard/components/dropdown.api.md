@@ -268,7 +268,7 @@ export interface KbqDropdownPanel {
     // (undocumented)
     panelWidth?: Signal<KbqPanelWidth>;
     // (undocumented)
-    parent?: KbqDropdownPanel | undefined;
+    parent?: KbqDropdownPanel;
     // (undocumented)
     resetActiveItem(): void;
     // (undocumented)

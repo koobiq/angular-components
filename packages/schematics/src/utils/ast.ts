@@ -2,14 +2,14 @@
  * this is copy of https://github.com/angular/angular/blob/main/packages/compiler/src/ml_parser/ast.ts
  * since @angular/compiler and @angular-devkit/schematics
  * are not compatible with each other */
-export function visitAll(visitor, nodes): any[] {
+export function visitAll(visitor: any, nodes: any): any[] {
     const result: any[] = [];
 
     const visit = visitor.visit
         ? (ast: Element) => visitor.visit!(ast) || ast.visit(visitor)
         : (ast: Element) => ast.visit(visitor);
 
-    nodes.forEach((ast) => {
+    nodes.forEach((ast: Element) => {
         visit(ast);
     });
 

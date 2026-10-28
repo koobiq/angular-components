@@ -5,17 +5,17 @@ import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule
 import { KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children!: FileNode[];
+    name!: string;
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name!: string;
     type: any;
-    level: number;
-    expandable: boolean;
+    level!: number;
+    expandable!: boolean;
     parent: any;
 }
 
@@ -198,7 +198,7 @@ export class TreeSelectMultipleOverviewExample {
         console.log('selectionChange: ', $event);
     }
 
-    protected onModelChange($event) {
-        console.log('onModelChange: ', $event);
+    protected onModelChange(event: string[]) {
+        console.log('onModelChange: ', event);
     }
 }

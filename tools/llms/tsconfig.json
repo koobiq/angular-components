@@ -5,6 +5,7 @@
         // The emitted format is still CommonJS because the repository's package.json has no
         // "type": "module", and Node loads those packages through require(esm).
         "module": "nodenext",
-        "moduleResolution": "nodenext"
+        "moduleResolution": "nodenext",
+        "types": ["node", "vitest/globals"]
     }
 }

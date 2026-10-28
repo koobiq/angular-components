@@ -106,7 +106,7 @@ export class DocsNameFormComponent {
 })
 export class ValidationOnOpenExample {
     protected readonly modalService = inject(KbqModalService);
-    protected modalRef: KbqModalRef<DocsNameFormComponent>;
+    protected modalRef!: KbqModalRef<DocsNameFormComponent>;
 
     openEmptyForm(footer: TemplateRef<any>): void {
         this.modalRef = this.modalService.create({

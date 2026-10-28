@@ -83,7 +83,7 @@ describe(KbqScrollbarModule.name, () => {
         it('should emit scroll event', () => {
             fixture.detectChanges();
 
-            fixture.nativeElement.querySelectorAll('*').forEach((e) => dispatchFakeEvent(e, 'scroll'));
+            fixture.nativeElement.querySelectorAll('*').forEach((e: Element) => dispatchFakeEvent(e, 'scroll'));
 
             expect(component.scroll).toHaveBeenCalledTimes(1);
         });
@@ -204,8 +204,8 @@ describe(KbqScrollbarModule.name, () => {
     `
 })
 class ScrollEventListener {
-    options: KbqScrollbarOptions;
-    events: KbqScrollbarEvents;
+    options!: KbqScrollbarOptions;
+    events!: KbqScrollbarEvents;
 
     readonly scrollbar = viewChild.required(KbqScrollbar);
 

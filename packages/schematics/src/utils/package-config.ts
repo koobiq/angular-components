@@ -11,7 +11,11 @@ import { visitProjectFiles } from './project-files';
 function sortObjectByKeys(obj: Record<string, string>) {
     return Object.keys(obj)
         .sort()
-        .reduce((result, key) => (result[key] = obj[key]) && result, {});
+        .reduce<Record<string, string>>((result, key) => {
+            result[key] = obj[key];
+
+            return result;
+        }, {});
 }
 
 /**
@@ -75,6 +79,8 @@ export async function setupOptions(
 
         return projectWorkspace as unknown as workspaces.ProjectDefinition;
     }
+
+    return undefined;
 }
 
 export async function getParsingInfo(project: string | undefined, tree: Tree) {

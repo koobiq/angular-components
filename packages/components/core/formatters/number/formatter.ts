@@ -144,10 +144,10 @@ const intervalsConfig = {
 };
 
 class ParsedDigitsInfo {
-    useGrouping: boolean;
-    minimumIntegerDigits: number;
-    minimumFractionDigits: number;
-    maximumFractionDigits: number;
+    useGrouping!: boolean;
+    minimumIntegerDigits!: number;
+    minimumFractionDigits!: number;
+    maximumFractionDigits!: number;
 }
 
 const defaultValueForGroupingInRULocale: number = 10000;
@@ -339,7 +339,7 @@ function isWithin(startRange: number, endRange: number, valueToCheck: number): b
 export class KbqRoundDecimalPipe implements PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true });
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
-    private roundingOptions: RoundDecimalOptions;
+    private roundingOptions!: RoundDecimalOptions;
     private readonly formatters = kbqInjectLocaleConfiguration('formatters', KBQ_FORMATTERS_LOCALE_CONFIGURATION);
 
     constructor() {
@@ -400,8 +400,10 @@ export class KbqRoundDecimalPipe implements PipeTransform {
                       num: Math.trunc(num / ROUNDING_UNITS[unit]),
                       fraction: this.calculateDecimal(num, ROUNDING_UNITS[unit])
                   };
-            Object.keys(parts).forEach((key) => {
-                parts[key] = Intl.NumberFormat.call(this, currentLocale, { useGrouping: false }).format(parts[key]);
+            (Object.keys(parts) as (keyof typeof parts)[]).forEach((key) => {
+                (parts as Record<string, unknown>)[key] = Intl.NumberFormat.call(this, currentLocale, {
+                    useGrouping: false
+                }).format(parts[key]!);
             });
 
             const calculatedValue = parts.fraction

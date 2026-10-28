@@ -2727,7 +2727,7 @@ class DatepickerWithCustomIcon {}
 })
 class DatepickerWithMinAndMaxValidation {
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
-    date: DateTime | null;
+    date!: DateTime | null;
     minDate: DateTime | undefined = DateTime.local(2010, 1, 1);
     maxDate: DateTime = DateTime.local(2020, 1, 1);
 }
@@ -2745,7 +2745,7 @@ class DatepickerWithMinAndMaxValidation {
 })
 class DatepickerWithFilterAndValidation {
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
-    date: DateTime;
+    date!: DateTime;
     filter: ((date: DateTime) => boolean) | undefined = (date: DateTime) => date.get('day') !== 1;
 }
 
@@ -2886,8 +2886,8 @@ class DatepickerOpeningOnFocus {
 class DelayedDatepicker {
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
     readonly datepickerInput = viewChild.required(KbqDatepickerInput);
-    date: DateTime | null;
-    assignedDatepicker: KbqDatepicker<DateTime>;
+    date!: DateTime | null;
+    assignedDatepicker!: KbqDatepicker<DateTime>;
 }
 
 @Component({

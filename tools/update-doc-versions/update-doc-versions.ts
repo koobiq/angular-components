@@ -13,7 +13,7 @@ type Versions = {
 };
 
 function getNPMVersions(): Versions {
-    const versions = {
+    const versions: Versions = {
         next: {
             version: 'Next',
             url: 'https://next.koobiq.io'

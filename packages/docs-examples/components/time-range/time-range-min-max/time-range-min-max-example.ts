@@ -129,7 +129,7 @@ export class TimeRangeMinMaxExample {
     private readonly data = inject(ExampleLocalizedData);
     private readonly localeId = toSignal(inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes || of(''));
 
-    protected readonly text = computed(() => this.data[this.localeId() || 'default'] ?? this.data.default);
+    protected readonly text = computed(() => this.data[this.localeId() || 'default'] ?? this.data['default']);
 
     protected capitalize(text: string): string {
         return text.charAt(0).toUpperCase() + text.slice(1);

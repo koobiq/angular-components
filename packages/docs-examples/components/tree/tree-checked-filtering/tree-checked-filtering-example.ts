@@ -16,17 +16,17 @@ import {
 } from '@koobiq/components/tree';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children!: FileNode[];
+    name!: string;
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name!: string;
     type: any;
-    level: number;
-    expandable: boolean;
+    level!: number;
+    expandable!: boolean;
     parent: any;
 }
 
@@ -112,7 +112,7 @@ abstract class TreeParams {
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
     treeData: FileNode[];
-    tree: KbqTreeSelection;
+    tree!: KbqTreeSelection;
 
     constructor() {
         this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable, this.getValue, this.getViewValue);
@@ -216,11 +216,11 @@ abstract class TreeParams {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeCheckedFilteringExample extends TreeParams {
-    treeControl: FlatTreeControl<FileFlatNode>;
+    override treeControl!: FlatTreeControl<FileFlatNode>;
     filterByValues: FilterByValues<FileFlatNode>;
-    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
+    override treeFlattener!: KbqTreeFlattener<FileNode, FileFlatNode>;
 
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+    override dataSource!: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     modelValue: any = ['docs'];
     filterValue: string = '';
@@ -243,7 +243,7 @@ export class TreeCheckedFilteringExample extends TreeParams {
         );
     }
 
-    onModelValueChange(values) {
+    onModelValueChange(values: string[]) {
         this.filterByValues.setValues(values);
     }
 

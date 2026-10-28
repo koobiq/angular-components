@@ -1591,13 +1591,13 @@ class ButtonTogglesInsideButtonToggleGroup {
 })
 class ButtonToggleGroupWithNgModel {
     groupName = 'group-name';
-    modelValue: string;
+    modelValue!: string;
     options = [
         { label: 'Red', value: 'red' },
         { label: 'Green', value: 'green' },
         { label: 'Blue', value: 'blue' }
     ];
-    lastEvent: KbqButtonToggleChange;
+    lastEvent!: KbqButtonToggleChange;
 }
 
 @Component({
@@ -1653,7 +1653,7 @@ class StandaloneButtonToggle {
     `
 })
 class ButtonToggleGroupWithInitialValue {
-    lastEvent: KbqButtonToggleChange;
+    lastEvent!: KbqButtonToggleChange;
 }
 
 // The group is read by a binding that runs before the one assigning its value.

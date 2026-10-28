@@ -6,6 +6,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import {
     KbqFormsModule,
+    KbqPopUpPlacementValues,
     KbqPopUpSizeValues,
     KbqStickToWindowPlacementValues,
     PopUpPlacements,
@@ -79,7 +80,7 @@ export class DevApp {
     popUpPlacements = PopUpPlacements;
 
     popoverActiveStage: number;
-    selectedOrder: boolean;
+    selectedOrder!: boolean;
     isClosable: boolean = false;
 
     isPopoverVisibleLeft: boolean = false;
@@ -113,7 +114,7 @@ export class DevApp {
     selectedTrigger: string = this.TRIGGERS.CLICK;
     selectedSize: KbqPopUpSizeValues = PopUpSizes.Medium;
     layoutClass: string = 'layout-row layout-align-center-center';
-    stickToWindow: KbqStickToWindowPlacementValues;
+    stickToWindow!: KbqStickToWindowPlacementValues;
     content: string = 'button text';
     userDefinedPlacementPriority: string[] = ['bottom', 'right'];
     multipleSelected: string[] = [];
@@ -143,13 +144,13 @@ export class DevApp {
         this.popoverActiveStage += direction;
     }
 
-    onPopoverVisibleChange($event) {
-        if (!$event) {
+    onPopoverVisibleChange(event: boolean) {
+        if (!event) {
             this.activatedPosition = '';
         }
     }
 
-    onStrategyPlacementChange(event) {
+    onStrategyPlacementChange(event: KbqPopUpPlacementValues) {
         this.activatedPosition = event;
     }
 

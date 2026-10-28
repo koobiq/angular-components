@@ -44,5 +44,5 @@ export class DevExamples {}
 })
 export class DevApp {
     modelResult: any;
-    disabled: boolean;
+    disabled!: boolean;
 }

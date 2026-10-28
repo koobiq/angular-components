@@ -279,7 +279,7 @@ export class KbqTreeSelect<T = any, K = T>
         KbqSiblingPopup
 {
     elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    protected override readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly injector = inject(Injector);
     private readonly renderer = inject(Renderer2);
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
@@ -315,7 +315,7 @@ export class KbqTreeSelect<T = any, K = T>
     readonly hiddenItems = signal(0);
 
     /** The last measured value for the trigger's client bounding rect. */
-    protected triggerRect: DOMRect;
+    protected triggerRect!: DOMRect;
 
     /** The cached font-size of the trigger element. */
     triggerFontSize = 0;
@@ -327,7 +327,7 @@ export class KbqTreeSelect<T = any, K = T>
      * alone, apart from the tree; a query names it: `viewChild.required<KbqTreeSelect<Node>>(KbqTreeSelect)`, and a
      * select whose tree control has a `trackBy` names the key type too: `KbqTreeSelect<Node, string>`.
      */
-    selectionModel: SelectionModel<T>;
+    selectionModel!: SelectionModel<T>;
 
     /** Emits once the panel has rendered (`'showing'`) or has been removed (`'void'`). */
     protected readonly panelDoneAnimatingStream = new Subject<string>();
@@ -368,7 +368,7 @@ export class KbqTreeSelect<T = any, K = T>
         }
     ];
 
-    protected options: QueryList<KbqTreeOption<T>>;
+    protected options!: QueryList<KbqTreeOption<T>>;
 
     /**
      * Trigger - is a clickable field to open select dropdown panel
@@ -879,7 +879,7 @@ export class KbqTreeSelect<T = any, K = T>
         return this.resolvedAriaLabel();
     }
 
-    isEmptySearchResult: boolean;
+    isEmptySearchResult!: boolean;
 
     triggerValues: KbqTreeSelectTriggerValue[] = [];
 
@@ -1261,7 +1261,7 @@ export class KbqTreeSelect<T = any, K = T>
 
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
         // `parseInt` ignores the trailing 'px' and converts this to a number.
-        this.triggerFontSize = parseInt(this.window.getComputedStyle(this.trigger().nativeElement)['font-size']);
+        this.triggerFontSize = parseInt(this.window.getComputedStyle(this.trigger().nativeElement).fontSize);
 
         // It's important that we read this as late as possible, because doing so earlier will
         // return a different element since it's based on queries in the form field which may

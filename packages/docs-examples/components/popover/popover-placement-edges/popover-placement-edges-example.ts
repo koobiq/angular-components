@@ -44,5 +44,5 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
 })
 export class PopoverPlacementEdgesExample {
     placements = PopUpPlacements;
-    activePopover: KbqPopoverTrigger;
+    activePopover!: KbqPopoverTrigger;
 }

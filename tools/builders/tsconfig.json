@@ -1,4 +1,5 @@
 {
+    "extends": "../../tsconfig.strict.json",
     "compilerOptions": {
         "outDir": "../../node_modules/@koobiq/builders",
         "declaration": true,

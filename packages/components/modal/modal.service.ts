@@ -17,8 +17,8 @@ export const KBQ_MODAL_DATA = new InjectionToken<unknown>('KbqModalData');
  */
 export class ModalBuilderForService {
     // Modal ComponentRef, "null" means it has been destroyed
-    private modalRef: ComponentRef<KbqModalComponent> | null;
-    private overlayRef: OverlayRef;
+    private modalRef!: ComponentRef<KbqModalComponent> | null;
+    private overlayRef!: OverlayRef;
     private detachFromOpener?: () => void;
 
     constructor(

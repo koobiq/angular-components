@@ -1267,8 +1267,8 @@ describe('KbqNotificationCenter', () => {
 
             // The panel used to tag the emitted CdkScrollable so the base trigger would skip the close.
             // The tag was never cleared and disabled close-on-scroll for every other pop-up as well.
-            expect(scrollable.kbqPopoverPreventHide).toBeUndefined();
-            expect(scrollable.type).toBeUndefined();
+            expect(scrollable['kbqPopoverPreventHide']).toBeUndefined();
+            expect(scrollable['type']).toBeUndefined();
         });
 
         it('does not throw when a scroll arrives after the panel was destroyed while open', async () => {

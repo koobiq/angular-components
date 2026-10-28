@@ -43,5 +43,5 @@ export class DevDocsExamples {}
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
-    value: string;
+    value!: string;
 }

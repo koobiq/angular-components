@@ -426,7 +426,7 @@ class BasicSelect {
         { value: 'sushi-7', viewValue: 'Sushi' }
     ];
     control = new UntypedFormControl();
-    isRequired: boolean;
+    isRequired!: boolean;
     heightAbove = 0;
     heightBelow = 0;
     tabIndexOverride: number = 0;
@@ -615,8 +615,8 @@ class SelectWithSearch implements OnInit {
     readonly select = viewChild.required(KbqSelect);
 
     searchCtrl: UntypedFormControl = new UntypedFormControl();
-    options$: Observable<string[]>;
-    minOptionsThreshold: number;
+    options$!: Observable<string[]>;
+    minOptionsThreshold!: number;
 
     private options: string[] = OPTIONS;
 
@@ -779,7 +779,7 @@ class ThrowsErrorOnInit implements OnInit {
     `
 })
 class SelectWithErrorSibling {
-    value: string;
+    value!: string;
 }
 
 @Component({
@@ -895,7 +895,7 @@ class MultiSelect {
 
     readonly select = viewChild.required(KbqSelect);
     readonly options = viewChildren(KbqOption);
-    sortComparator: (a: KbqOption, b: KbqOption, options: KbqOption[]) => number;
+    sortComparator!: (a: KbqOption, b: KbqOption, options: KbqOption[]) => number;
 }
 
 @Component({
@@ -981,7 +981,7 @@ class MultiSelectNarrow {
 
     readonly select = viewChild.required(KbqSelect);
     readonly options = viewChildren(KbqOption);
-    sortComparator: (a: KbqOption, b: KbqOption, options: KbqOption[]) => number;
+    sortComparator!: (a: KbqOption, b: KbqOption, options: KbqOption[]) => number;
 }
 
 @Component({
@@ -1016,7 +1016,7 @@ class SelectEarlyAccessSibling {}
 })
 class BasicSelectWithTheming {
     readonly select = viewChild.required(KbqSelect);
-    theme: KbqComponentColors;
+    theme!: KbqComponentColors;
 }
 
 @Component({
@@ -1240,7 +1240,7 @@ class SelectInsideFormGroup {
     formGroup = new UntypedFormGroup({
         food: this.formControl
     });
-    submitResult: string;
+    submitResult!: string;
 
     submitReactive() {
         this.submitResult = this.formGroup.invalid ? 'invalid' : 'valid';
@@ -1264,7 +1264,7 @@ class SelectInsideFormGroup {
     `
 })
 class BasicSelectWithoutForms {
-    selectedFood: string | null;
+    selectedFood!: string | null;
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
@@ -1319,7 +1319,7 @@ class BasicSelectWithoutFormsPreselected {
     `
 })
 class BasicSelectWithoutFormsMultiple {
-    selectedFoods: string[];
+    selectedFoods!: string[];
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
@@ -1448,7 +1448,7 @@ class CustomErrorBehaviorSelect {
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' }
     ];
-    errorStateMatcher: ErrorStateMatcher;
+    errorStateMatcher!: ErrorStateMatcher;
 }
 
 @Component({
@@ -1531,7 +1531,7 @@ class SelectWithoutOptionCentering {
     `
 })
 class SelectWithFormFieldLabel {
-    placeholder: string;
+    placeholder!: string;
 }
 
 @Component({
@@ -1650,7 +1650,7 @@ class CdkVirtualScrollViewportSelect<T = string> {
 
     itemSize = 32;
     control = new UntypedFormControl();
-    isRequired: boolean;
+    isRequired!: boolean;
 
     values: T[] = [];
     style = {};
@@ -1701,15 +1701,15 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
     id: number;
     name: string;
 }> {
-    scrollDispatcher: ScrollDispatcher;
+    override scrollDispatcher: ScrollDispatcher;
 
-    values: any[] = [
+    override values: any[] = [
         { id: 3, name: 'Anapa' },
         { id: 55, name: 'Lyubertsy' },
         { id: 114, name: 'Tomsk' }
     ];
 
-    options: { id: number; name: string }[] = OPTIONS.sort().map((option, index) => {
+    override options: { id: number; name: string }[] = OPTIONS.sort().map((option, index) => {
         return { id: index, name: option, active: true };
     });
 
@@ -1980,7 +1980,7 @@ class NgModelSelect {
         { value: 'pizza-1', viewValue: 'Pizza' },
         { value: 'tacos-2', viewValue: 'Tacos' }
     ];
-    isDisabled: boolean;
+    isDisabled!: boolean;
 
     readonly select = viewChild.required(KbqSelect);
     readonly options = viewChildren(KbqOption);
@@ -2065,7 +2065,7 @@ class BasicSelectNoPlaceholder {}
     changeDetection: ChangeDetectionStrategy.Default
 })
 class SelectWithPanelWidth {
-    panelWidth: KbqPanelWidth;
+    panelWidth!: KbqPanelWidth;
 }
 
 @Component({
@@ -2269,7 +2269,7 @@ class MultiSelectWithTriggerValuesLimit {
         { value: 'eggs-5', viewValue: 'Eggs' }
     ];
     control = new UntypedFormControl();
-    triggerValuesLimit: number;
+    triggerValuesLimit!: number;
 
     readonly select = viewChild.required(KbqSelect);
 }
@@ -6704,7 +6704,7 @@ describe('KbqSelect', () => {
             await vi.advanceTimersByTimeAsync(0);
             await vi.runOnlyPendingTimersAsync();
 
-            HTMLElement.prototype.querySelector = function (selectors: string) {
+            HTMLElement.prototype.querySelector = function (this: HTMLElement, selectors: string) {
                 if (selectors === '.kbq-select__match-hidden-text') return null;
 
                 return originalQuerySelector.call(this, selectors);

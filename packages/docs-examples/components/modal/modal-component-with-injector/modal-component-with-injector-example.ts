@@ -53,7 +53,7 @@ export class ModalComponentWithInjectorExample {
     private readonly modalService = inject(KbqModalService);
     private readonly injector = inject(Injector);
 
-    modalRef: KbqModalRef<CustomModalComponent, 'save' | 'close'>;
+    modalRef!: KbqModalRef<CustomModalComponent, 'save' | 'close'>;
 
     openModal(): void {
         this.modalRef = this.modalService.open({

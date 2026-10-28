@@ -153,23 +153,23 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
         this.hasFocus = this.nativeElement.ownerDocument.activeElement === this.nativeElement;
     }
 
-    onClick($event) {
-        $event.stopPropagation();
+    onClick(event: Event) {
+        event.stopPropagation();
     }
 
-    onKeyDown($event) {
-        if ([SPACE, ENTER].includes($event.keyCode) && this.option.dropdownTrigger) {
+    onKeyDown(event: KeyboardEvent) {
+        if ([SPACE, ENTER].includes(event.keyCode) && this.option.dropdownTrigger) {
             this.option.dropdownTrigger.openedBy = 'keyboard';
-        } else if ($event.shiftKey && $event.keyCode === TAB) {
+        } else if (event.shiftKey && event.keyCode === TAB) {
             this.hasFocus = false;
 
             this.option.focus();
-        } else if ($event.keyCode === TAB) {
+        } else if (event.keyCode === TAB) {
             return;
         }
 
-        $event.preventDefault();
-        $event.stopPropagation();
+        event.preventDefault();
+        event.stopPropagation();
     }
 }
 

@@ -67,7 +67,7 @@ export class AutocompleteSearchSmartExample implements OnInit {
     ];
 
     control = new FormControl('');
-    filteredOptions: Observable<string[]>;
+    filteredOptions!: Observable<string[]>;
     protected searchTokens: string[] = [];
 
     ngOnInit(): void {

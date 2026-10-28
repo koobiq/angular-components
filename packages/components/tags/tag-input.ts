@@ -186,7 +186,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
     readonly tagList = input<KbqTagList | undefined>(undefined, { alias: 'kbqTagInputFor' });
 
     // The last tag list registered with, which an unbound or falsy `tagList` leaves in place.
-    private _tagList: KbqTagList;
+    private _tagList!: KbqTagList;
 
     /**
      * Whether or not the tagEnd event will be emitted when the input is blurred.

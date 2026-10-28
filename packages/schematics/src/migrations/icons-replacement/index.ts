@@ -1,4 +1,4 @@
-import { Path } from '@angular-devkit/core';
+import { Path, logging } from '@angular-devkit/core';
 import { SchematicContext, Tree } from '@angular-devkit/schematics';
 import path from 'path';
 import { logMessage } from '../../utils/messages';
@@ -17,7 +17,17 @@ export const replaceIcons = (contentToBeUpdated: string, replacementData: Replac
     return res;
 };
 
-export const logReplacement = ({ logger, replacementData, contentToBeUpdated, filePath }): void => {
+export const logReplacement = ({
+    logger,
+    replacementData,
+    contentToBeUpdated,
+    filePath
+}: {
+    logger: logging.LoggerApi;
+    replacementData: Replacement[];
+    contentToBeUpdated: string;
+    filePath: string;
+}): void => {
     const foundIcons = replacementData.filter(({ from }) => contentToBeUpdated!.indexOf(from) !== -1);
 
     if (foundIcons.length) {
@@ -37,6 +47,12 @@ export const processIconReplacement = ({
     fix,
     logger,
     replacementData
+}: {
+    fileContent: string;
+    filePath: string;
+    fix: boolean;
+    logger: logging.LoggerApi;
+    replacementData: Replacement[];
 }): TransformTemplateAttributesResult => {
     if (fix) {
         const updatedContent = replaceIcons(fileContent!, replacementData);

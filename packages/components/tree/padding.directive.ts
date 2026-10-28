@@ -28,7 +28,7 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
         this.setLevelInput(value);
     }
 
-    private _level: number;
+    private _level!: number;
 
     /** Indentation added per nesting level. Accepts a bare number (px) or a value with CSS units. */
     readonly indent = input<number | string>(12, { alias: 'kbqTreeNodePaddingIndent' });
@@ -60,7 +60,7 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
         return this.parsedIndent().units;
     }
 
-    withIcon: boolean;
+    withIcon!: boolean;
 
     /**
      * Horizontal room a toggle takes up in a row: its own 16px box plus the option's 8px `gap`. A node

@@ -9,7 +9,10 @@ import { KbqTagInput, KbqTagInputEvent, KbqTagsModule, kbqTagsDefaultOptionsProv
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
+type AutocompleteValue = string | { new: true; value: string } | null;
+
+const autocompleteValueCoercion = (value: AutocompleteValue): string =>
+    (typeof value === 'string' ? value : value?.value) || '';
 
 /**
  * @title Tag autocomplete onpaste off
@@ -48,8 +51,8 @@ export class TagAutocompleteOnpasteOffExample implements AfterViewInit {
     suggestions: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7', 'tag8', 'tag9', 'tag10'];
     selectedTags: string[] = ['tag1'];
 
-    filteredTags: Observable<string[]>;
-    hasDuplicates: boolean;
+    filteredTags!: Observable<string[]>;
+    hasDuplicates!: boolean;
 
     get canCreate(): boolean {
         const cleanedValue: string = (this.control.value || '').trim();

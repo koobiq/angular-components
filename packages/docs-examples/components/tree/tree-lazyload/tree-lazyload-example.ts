@@ -12,12 +12,12 @@ interface INodeResponse {
 }
 
 class LazyLoadFlatNode {
-    id: string;
-    name: string;
-    expandable: boolean;
-    level: number;
-    parent: LazyLoadFlatNode;
-    loading: boolean;
+    id!: string;
+    name!: string;
+    expandable!: boolean;
+    level!: number;
+    parent!: LazyLoadFlatNode;
+    loading!: boolean;
 }
 
 class LazyLoadNode {
@@ -150,7 +150,7 @@ class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
         super(treeControl, treeFlattener, []);
     }
 
-    expansionHandler(change: SelectionChange<F>): F[] {
+    override expansionHandler(change: SelectionChange<F>): F[] {
         if (change && (change as SelectionChange<F>).added && (change as SelectionChange<F>).added.length) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore

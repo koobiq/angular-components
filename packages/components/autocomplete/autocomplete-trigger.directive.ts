@@ -348,20 +348,20 @@ export class KbqAutocompleteTrigger
     /** Whether the overlay is attached. A signal: host bindings read it, and it changes outside any listener. */
     private readonly overlayAttached = signal(false);
 
-    private overlayRef: OverlayRef | null;
+    private overlayRef?: OverlayRef | null;
 
-    private portal: TemplatePortal;
+    private portal?: TemplatePortal;
 
     private scrollStrategy: () => ScrollStrategy;
 
     /** Old value of the native input. Used to work around issues with the `input` event on IE. */
-    private previousValue: string | number | null;
+    private previousValue?: string | number | null;
 
     /** Strategy that is used to position the panel. */
-    private positionStrategy: FlexibleConnectedPositionStrategy;
+    private positionStrategy!: FlexibleConnectedPositionStrategy;
 
     /** The subscription for closing actions (some are bound to document). */
-    private closingActionsSubscription: Subscription;
+    private closingActionsSubscription!: Subscription;
 
     /** Subscription to viewport size changes. */
     private viewportSubscription = Subscription.EMPTY;

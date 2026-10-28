@@ -86,7 +86,7 @@ export class FilterByValues<T, K = T> implements FlatTreeControlFilter<T> {
     // (undocumented)
     getValues(): string[];
     // (undocumented)
-    handle(_: any, prevFilter?: FlatTreeControlFilter<T>): T[];
+    handle(_: string | null, prevFilter?: FlatTreeControlFilter<T>): T[];
     // (undocumented)
     result: T[];
     // (undocumented)
@@ -106,7 +106,7 @@ export class FilterByViewValue<T, K = T> implements FlatTreeControlFilter<T> {
 export class FilterParentsForNodes<T, K = T> implements FlatTreeControlFilter<T> {
     constructor(control: FlatTreeControl<T, K>);
     // (undocumented)
-    handle(_: any, prevFilter: FlatTreeControlFilter<T>): T[];
+    handle(_: string | null, prevFilter: FlatTreeControlFilter<T>): T[];
     // (undocumented)
     result: T[];
 }
@@ -473,7 +473,7 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
     readonly onBlur: Observable<KbqTreeOptionEvent>;
     readonly onFocus: Observable<KbqTreeOptionEvent>;
     // (undocumented)
-    onKeydown($event: any): void;
+    onKeydown(event: KeyboardEvent): void;
     protected onMouseenter(): void;
     // @deprecated (undocumented)
     readonly onSelectionChange: _angular_core.OutputEmitterRef<KbqTreeOptionChange>;
@@ -590,7 +590,7 @@ export class KbqTreeSelection<T = any, K = T> extends KbqTreeBase<T, FlatTreeCon
     protected emitChangeEvent(option: KbqTreeOption<T>): void;
     protected emitNavigationEvent(option: KbqTreeOption<T>): void;
     // (undocumented)
-    focus($event: any): void;
+    focus(event: FocusEvent): void;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     getSelectedValues(): any[];

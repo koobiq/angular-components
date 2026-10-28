@@ -94,7 +94,7 @@ export class DevApp implements OnInit {
         'Челябинск'
     ];
 
-    filteredOptions: Observable<string[]>;
+    filteredOptions!: Observable<string[]>;
 
     formControl = new UntypedFormControl('', Validators.required);
 

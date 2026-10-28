@@ -17,5 +17,5 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchExpandableOverviewExample {
-    search: string;
+    search!: string;
 }

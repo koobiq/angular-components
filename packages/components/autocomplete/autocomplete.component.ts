@@ -129,7 +129,7 @@ export class KbqAutocomplete implements AfterContentChecked, AfterContentInit, K
      *
      * @docs-private
      */
-    keyManager: ActiveDescendantKeyManager<KbqOption>;
+    keyManager!: ActiveDescendantKeyManager<KbqOption>;
 
     /**
      * Whether the autocomplete panel should be visible, depending on option length.

@@ -110,7 +110,7 @@ export class ValidationTagListExample implements OnInit {
     }
 
     reactiveInputOnCreate({ input, value }: KbqTagInputEvent): void {
-        const control = this.reactiveForm.controls.reactiveTypeaheadValue;
+        const control = this.reactiveForm.controls['reactiveTypeaheadValue'];
         const updatedControlValue: string[] = control.value.slice();
 
         if ((value || '').trim()) {

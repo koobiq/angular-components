@@ -211,7 +211,7 @@ export class KbqTreeSelection<T = any, K = T>
 
     renderedOptions = new QueryList<KbqTreeOption<T>>();
 
-    keyManager: FocusKeyManager<KbqTreeOption<T>>;
+    keyManager!: FocusKeyManager<KbqTreeOption<T>>;
 
     /**
      * Accessible name of the tree. Set it whenever the tree has no visible label of its own; a tree
@@ -570,9 +570,9 @@ export class KbqTreeSelection<T = any, K = T>
         return this.sortedNodes.length;
     }
 
-    private optionFocusSubscription: Subscription | null;
+    private optionFocusSubscription?: Subscription | null;
 
-    private optionBlurSubscription: Subscription | null;
+    private optionBlurSubscription?: Subscription | null;
 
     private selectionModelSubscription: Subscription | null = null;
 
@@ -826,7 +826,7 @@ export class KbqTreeSelection<T = any, K = T>
             });
     }
 
-    ngAfterContentInit(): void {
+    override ngAfterContentInit(): void {
         super.ngAfterContentInit();
 
         if (this.platform.isBrowser) {
@@ -867,7 +867,7 @@ export class KbqTreeSelection<T = any, K = T>
 
         this.renderedOptions.changes
             .pipe(delay(0, this.scheduler), takeUntilDestroyed(this.destroyRef))
-            .subscribe((options) => {
+            .subscribe((options: QueryList<KbqTreeOption<T>>) => {
                 this.resetOptions();
 
                 // Check to see if we need to update our tab index
@@ -922,7 +922,7 @@ export class KbqTreeSelection<T = any, K = T>
             });
     }
 
-    ngOnDestroy(): void {
+    override ngOnDestroy(): void {
         super.ngOnDestroy();
 
         this.dropSubscriptions();
@@ -930,8 +930,8 @@ export class KbqTreeSelection<T = any, K = T>
         this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
-    focus($event): void {
-        if (this.renderedOptions.length === 0 || this.isFocusReceivedFromNestedOption($event)) {
+    focus(event: FocusEvent): void {
+        if (this.renderedOptions.length === 0 || this.isFocusReceivedFromNestedOption(event)) {
             return;
         }
 
@@ -1190,7 +1190,7 @@ export class KbqTreeSelection<T = any, K = T>
     }
 
     /** @docs-private */
-    renderNodeChanges(
+    override renderNodeChanges(
         data: T[] | ReadonlyArray<T>,
         dataDiffer: IterableDiffer<T> = this.dataDiffer,
         viewContainer: ViewContainerRef = this.nodeOutlet.viewContainer,

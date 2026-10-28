@@ -110,7 +110,7 @@ describe('KbqLocaleService', () => {
             service.addLocale('custom', { select: { selectAll: 'Everything' } });
 
             expect(service.localeId()).toBe('custom');
-            expect(service.data()).toBe(service.locales.custom);
+            expect(service.data()).toBe(service.locales['custom']);
             expect(service.getParams('select').selectAll).toBe('Everything');
         });
 

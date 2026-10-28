@@ -67,7 +67,7 @@ function normalizeOffsetDash(value: string): string {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimezoneSearchOverviewExample implements OnInit {
-    filteredOptions$: Observable<KbqTimezoneGroup[]>;
+    filteredOptions$!: Observable<KbqTimezoneGroup[]>;
     searchControl: FormControl = new FormControl();
     selected = Intl.DateTimeFormat().resolvedOptions().timeZone;
     priorityCountry?: string;

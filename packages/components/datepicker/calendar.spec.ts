@@ -361,9 +361,9 @@ describe('KbqCalendar', () => {
 class StandardCalendar {
     adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
 
-    selected: DateTime;
-    selectedYear: DateTime;
-    selectedMonth: DateTime;
+    selected!: DateTime;
+    selectedYear!: DateTime;
+    selectedMonth!: DateTime;
     startDate = this.adapter.createDate(2017, 0, 31);
 }
 
@@ -376,7 +376,7 @@ class StandardCalendar {
 class CalendarWithMinMax {
     adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
 
-    startAt: DateTime;
+    startAt!: DateTime;
     minDate: DateTime | undefined = this.adapter.createDate(2016, 0, 1);
     maxDate = this.adapter.createDate(2018, 0, 1);
 }
@@ -390,7 +390,7 @@ class CalendarWithMinMax {
 class CalendarWithDateFilter {
     adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
 
-    selected: DateTime;
+    selected!: DateTime;
     startDate = this.adapter.createDate(2017, 0, 1);
 
     dateFilter = (date: DateTime): boolean => !(this.adapter.getDate(date) % 2) && this.adapter.getMonth(date) !== 10;
@@ -409,8 +409,8 @@ class CalendarWithDateFilter {
 })
 class CalendarWithSelectableMinDate {
     startAt = new Date(2018, 6, 0);
-    selected: Date;
-    minDate: Date;
+    selected!: Date;
+    minDate!: Date;
 
     constructor() {
         this.select(new Date(2018, 6, 10));

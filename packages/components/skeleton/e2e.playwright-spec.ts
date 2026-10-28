@@ -234,10 +234,10 @@ test.describe('KbqSkeleton', () => {
                     hint: '.kbq-form-field__hint'
                 });
 
-                expect.soft(preset.label, layout).toEqual(real.label);
-                expect.soft(preset.control, layout).toEqual(real.control);
+                expect.soft(preset['label'], layout).toEqual(real['label']);
+                expect.soft(preset['control'], layout).toEqual(real['control']);
                 // The hint is a shorter line than its container: only where it starts is compared.
-                expect.soft(preset.hint.slice(0, 2), layout).toEqual(real.hint.slice(0, 2));
+                expect.soft(preset['hint'].slice(0, 2), layout).toEqual(real['hint'].slice(0, 2));
             }
         });
 

@@ -1176,7 +1176,7 @@ class DisabledTabsTestApp {
     `
 })
 class AsyncTabsTestApp implements OnInit {
-    tabs: Observable<any>;
+    tabs!: Observable<any>;
     private tabsItems = [
         { label: 'one', content: 'one' },
         { label: 'two', content: 'two' }

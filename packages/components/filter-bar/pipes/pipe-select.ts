@@ -73,7 +73,7 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     }
 
     /** Whether the current pipe is empty. */
-    get isEmpty(): boolean {
+    override get isEmpty(): boolean {
         return !this.data.value;
     }
 

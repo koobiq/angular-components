@@ -2649,8 +2649,8 @@ class BasicSingleFileUpload {
     elementRef = inject_1(ElementRef);
 
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
-    disabled: boolean;
-    file: KbqFileItem | null;
+    disabled!: boolean;
+    file!: KbqFileItem | null;
     accept: string[] = [];
     readonly fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
 
@@ -2672,7 +2672,7 @@ class ControlValueAccessorSingleFileUpload {
     elementRef = inject_1(ElementRef);
 
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
-    file: KbqFileItem | null;
+    file!: KbqFileItem | null;
     accept: string[] = [];
     control = new FormControl();
 
@@ -2701,8 +2701,8 @@ class BasicMultipleFileUpload {
     cdr = inject_1(ChangeDetectorRef);
 
     readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
-    disabled: boolean;
-    files: KbqFileItem[];
+    disabled!: boolean;
+    files!: KbqFileItem[];
     readonly fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
     readonly addStrategy = signal<KbqFileUploadAddStrategyValues>(KbqFileUploadAddStrategy.Concat);
 
@@ -2729,7 +2729,7 @@ class ControlValueAccessorMultipleFileUpload {
     elementRef = inject_1(ElementRef);
 
     readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
-    files: KbqFileItem[];
+    files!: KbqFileItem[];
     accept: string[] = [];
     control = new FormControl();
 

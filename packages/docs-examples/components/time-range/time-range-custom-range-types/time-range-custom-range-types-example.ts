@@ -107,7 +107,7 @@ export class TimeRangeCustomRangeTypesExample {
     });
 
     private readonly data = inject(ExampleLocalizedData);
-    protected readonly placeholder = computed(() => this.data[this.localeId() || 'default'] ?? this.data.default);
+    protected readonly placeholder = computed(() => this.data[this.localeId() || 'default'] ?? this.data['default']);
 
     protected optionLabel(type: string): string {
         const localeConfig = this.localeConfig();

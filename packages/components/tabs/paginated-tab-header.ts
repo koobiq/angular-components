@@ -237,13 +237,13 @@ export abstract class KbqPaginatedTabHeader
      * The number of tab labels that are displayed on the header. When this changes, the header
      * should re-evaluate the scroll position.
      */
-    private tabLabelCount: number;
+    private tabLabelCount?: number;
 
     /** Used to manage focus between the tabs. */
-    private keyManager: FocusKeyManager<KbqPaginatedTabHeaderItem>;
+    private keyManager!: FocusKeyManager<KbqPaginatedTabHeaderItem>;
 
     /** Cached text content of the header. */
-    private currentTextContent: string;
+    private currentTextContent?: string;
 
     /** Stream that will stop the automated scrolling. */
     private stopScrolling = new Subject<void>();

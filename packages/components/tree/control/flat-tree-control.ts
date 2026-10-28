@@ -13,22 +13,22 @@ export function defaultCompareViewValues(firstViewValue: string, secondViewValue
 
 /** Flat tree control. Able to expand/collapse a subtree recursively for flattened tree. */
 export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
-    expandedItemsBeforeFiltration: K[];
+    expandedItemsBeforeFiltration!: K[];
 
-    private filters: FlatTreeControlFilter<T>[];
+    private filters!: FlatTreeControlFilter<T>[];
 
     /** Construct with flat tree data node functions getLevel, isExpandable, getValue and getViewValue. */
     constructor(
-        public getLevel: (dataNode: T) => number,
-        public isExpandable: (dataNode: T) => boolean,
+        public override getLevel: (dataNode: T) => number,
+        public override isExpandable: (dataNode: T) => boolean,
         /** getValue will be used to determine if the tree contains value or not. Used in method hasValue */
         public getValue: (dataNode: T) => any,
         /** getViewValue will be used for filter nodes. Returned value will be first argument in filterNodesFunction */
         public getViewValue: (dataNode: T) => string,
         /** compareValues will be used to comparing values. */
-        public compareValues: (firstValue, secondValue) => boolean = defaultCompareValues,
+        public compareValues: (firstValue: any, secondValue: any) => boolean = defaultCompareValues,
         /** compareValues will be used to comparing values. */
-        public compareViewValues: (firstViewValue, secondViewValue) => boolean = defaultCompareViewValues,
+        public compareViewValues: (firstViewValue: any, secondViewValue: any) => boolean = defaultCompareViewValues,
         /** isDisabled will be used to determine if the node is disabled. */
         public isDisabled: (dataNode: T) => boolean = () => false,
         /** Further options: the `trackBy` the nodes are expanded by. */

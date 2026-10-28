@@ -51,7 +51,7 @@ export class KbqPipeTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSelectV
     }
 
     /** Whether the current pipe is empty. */
-    get isEmpty(): boolean {
+    override get isEmpty(): boolean {
         return !this.data.value;
     }
 

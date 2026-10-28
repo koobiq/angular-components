@@ -81,7 +81,7 @@ describe('FlatTreeControl', () => {
             const numGrandChildren = 2;
             const nodes = generateData(numNodes, numChildren, numGrandChildren);
 
-            const data = [];
+            const data: TestData[] = [];
 
             flatten(nodes, data);
             treeControl.dataNodes = data;
@@ -108,7 +108,7 @@ describe('FlatTreeControl', () => {
             const numChildren = 4;
             const numGrandChildren = 2;
             const nodes = generateData(numNodes, numChildren, numGrandChildren);
-            const data = [];
+            const data: TestData[] = [];
 
             flatten(nodes, data);
             treeControl.dataNodes = data;
@@ -414,7 +414,7 @@ export class TestData {
     b: string;
     c: string;
     level: number;
-    name: string;
+    name!: string;
     children: TestData[];
 
     constructor(a: string, b: string, c: string, level: number = 1, children: TestData[] = []) {

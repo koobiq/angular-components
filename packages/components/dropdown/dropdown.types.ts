@@ -32,7 +32,7 @@ export interface KbqDropdownPanel {
     overlapTriggerY: WritableSignal<boolean>;
     templateRef: Signal<TemplateRef<any>>;
     closed: OutputEmitterRef<DropdownCloseReason>;
-    parent?: KbqDropdownPanel | undefined;
+    parent?: KbqDropdownPanel;
     panelWidth?: Signal<KbqPanelWidth>;
     panelMinWidth?: Signal<KbqPanelMinWidth>;
     panelMaxWidth?: Signal<KbqPanelMaxWidth>;

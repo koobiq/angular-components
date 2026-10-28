@@ -111,7 +111,7 @@ export class KbqMultipleFileUploadComponent
     readonly inputId = input<string>(`kbq-multiple-file-upload-${nextMultipleFileUploadUniqueId++}`);
 
     /** An object used to control the error state of the component. */
-    errorStateMatcher: ErrorStateMatcher;
+    errorStateMatcher!: ErrorStateMatcher;
 
     /**
      * The selected files.

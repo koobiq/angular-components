@@ -73,9 +73,9 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
     accentColorFilterControl = new FormControl<boolean>(false, { nonNullable: true });
     filteredIcons = new BehaviorSubject<DocsIconItem[]>([]);
 
-    availableSizes: number[];
+    availableSizes!: number[];
 
-    private iconItems: DocsIconItems;
+    private iconItems!: DocsIconItems;
     private queryParamMap: Params = {};
 
     constructor() {
@@ -139,8 +139,8 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
             .subscribe((filteredItems) => this.filteredIcons.next(filteredItems!));
 
         this.activeRoute.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-            if (params.id) {
-                const iconItem = this.iconItems.getItemById(params.id);
+            if (params['id']) {
+                const iconItem = this.iconItems.getItemById(params['id']);
 
                 if (iconItem) {
                     this.openIconPreview(iconItem);
@@ -151,7 +151,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
                 return;
             }
 
-            this.searchControl.setValue(params.s);
+            this.searchControl.setValue(params['s']);
         });
     }
 
@@ -188,7 +188,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
     }
 
     private syncSearchQuery(value: string) {
-        if (value === this.queryParamMap.s) {
+        if (value === this.queryParamMap['s']) {
             return;
         }
 

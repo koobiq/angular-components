@@ -219,16 +219,16 @@ export class InputFormFieldWithLabel {
     providers: [{ provide: KbqFormFieldControl, useExisting: TestNonLabelableControl }]
 })
 export class TestNonLabelableControl extends KbqFormFieldControl<unknown> {
-    readonly value = signal(null).asReadonly();
-    readonly id = signal('TEST_NON_LABELABLE_CONTROL_ID').asReadonly();
-    readonly placeholder = signal('').asReadonly();
-    readonly ngControl = null;
-    readonly focused = signal(false).asReadonly();
-    readonly empty = signal(true).asReadonly();
-    readonly required = signal(false).asReadonly();
-    readonly disabled = signal(false).asReadonly();
-    readonly errorState = signal(false).asReadonly();
-    readonly isNativeLabelSupported = false;
+    override readonly value = signal(null).asReadonly();
+    override readonly id = signal('TEST_NON_LABELABLE_CONTROL_ID').asReadonly();
+    override readonly placeholder = signal('').asReadonly();
+    override readonly ngControl = null;
+    override readonly focused = signal(false).asReadonly();
+    override readonly empty = signal(true).asReadonly();
+    override readonly required = signal(false).asReadonly();
+    override readonly disabled = signal(false).asReadonly();
+    override readonly errorState = signal(false).asReadonly();
+    override readonly isNativeLabelSupported = false;
     onContainerClick(): void {}
     focus(): void {}
 }
@@ -333,7 +333,7 @@ export class PasswordFormField {
     `
 })
 export class InputFormFieldInOverlay {
-    inOverlay: boolean;
+    inOverlay!: boolean;
 }
 
 @Component({

@@ -136,7 +136,7 @@ const getBorderElements = (debugElement: DebugElement): HTMLElement[] => {
 const openOnRange = (fixture: ComponentFixture<unknown>): void => {
     getTriggerNativeElement(fixture.debugElement).click();
     fixture.detectChanges();
-    getEditorForm(fixture.debugElement).controls.type.setValue('range');
+    getEditorForm(fixture.debugElement).controls['type'].setValue('range');
     fixture.detectChanges();
 };
 
@@ -680,7 +680,7 @@ describe('KbqTimeRange', () => {
             const form = getEditorForm(debugElement);
 
             // The preset selected first keeps the range fields disabled, and disabled controls never validate.
-            form.controls.type.setValue('range');
+            form.controls['type'].setValue('range');
             fixture.detectChanges();
             revealBorders(fixture);
 
@@ -934,7 +934,7 @@ describe('KbqTimeRange', () => {
             const dateAdapter = TestBed.inject(DateAdapter);
             const form = getEditorForm(debugElement);
 
-            form.controls.type.setValue('range');
+            form.controls['type'].setValue('range');
             fixture.detectChanges();
             revealBorders(fixture);
 
@@ -1010,7 +1010,7 @@ describe('KbqTimeRange', () => {
             const dateAdapter = TestBed.inject(DateAdapter);
             const form = getEditorForm(debugElement);
 
-            form.controls.type.setValue('range');
+            form.controls['type'].setValue('range');
             fixture.detectChanges();
             revealBorders(fixture);
 

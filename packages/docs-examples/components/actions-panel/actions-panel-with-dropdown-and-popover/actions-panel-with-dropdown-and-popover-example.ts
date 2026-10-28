@@ -77,8 +77,8 @@ export class ActionsPanelWithDropdownAndPopoverExample {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
-    private actionsPanelRef: KbqActionsPanelRef | null;
-    private popoverTriggerRef: KbqPopoverTrigger | null;
+    private actionsPanelRef: KbqActionsPanelRef | null = null;
+    private popoverTriggerRef: KbqPopoverTrigger | null = null;
 
     constructor() {
         afterNextRender(() => this.open());

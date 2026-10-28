@@ -23,7 +23,7 @@ type DocsVersion = {
     exportAs: 'docsVersionPicker'
 })
 export class DocsVersionPickerDirective {
-    selected: DocsVersion;
+    selected!: DocsVersion;
     versions: DocsVersion[] = [];
     isNext: boolean = false;
 

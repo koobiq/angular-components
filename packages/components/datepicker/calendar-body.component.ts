@@ -73,13 +73,13 @@ export class KbqCalendarBody implements OnChanges {
     readonly selectedValueChange = output<number>();
 
     /** The number of blank cells to put at the beginning for the first row. */
-    firstRowOffset: number;
+    firstRowOffset!: number;
 
     /** Padding for the individual date cells. */
-    cellPadding: string;
+    cellPadding!: string;
 
     /** Width of an individual cell. */
-    cellWidth: string;
+    cellWidth!: string;
 
     cellClicked(cell: KbqCalendarCell): void {
         if (cell.enabled) {
@@ -88,16 +88,16 @@ export class KbqCalendarBody implements OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        const columnChanges = changes.numCols;
+        const columnChanges = changes['numCols'];
         const { rows: rowsInput, numCols: numColsInput } = this;
         const rows = rowsInput();
         const numCols = numColsInput();
 
-        if (changes.rows || columnChanges) {
+        if (changes['rows'] || columnChanges) {
             this.firstRowOffset = rows && rows.length && rows[0].length ? numCols - rows[0].length : 0;
         }
 
-        if (changes.cellAspectRatio || columnChanges || !this.cellPadding) {
+        if (changes['cellAspectRatio'] || columnChanges || !this.cellPadding) {
             // todo
             // this.cellPadding = `${this.cellAspectRatio * 50 / numCols}%`;
             this.cellPadding = '0';

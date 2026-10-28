@@ -63,7 +63,7 @@ const provideServerWindow = (): Provider => {
  * an error too, which is intended: the bug shows up at once instead of hiding in the log.
  */
 class SsrErrorHandler extends ErrorHandler {
-    handleError(error: unknown): never {
+    override handleError(error: unknown): never {
         // Preserve default logging behavior, but fail the build.
         console.error(error);
         throw error instanceof Error ? error : new Error(String(error));

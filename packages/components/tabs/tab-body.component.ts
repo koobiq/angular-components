@@ -80,7 +80,7 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     }
 
     /** Tab body position state, rendered as a modifier class of the content. */
-    bodyPosition: KbqTabBodyPositionState;
+    bodyPosition!: KbqTabBodyPositionState;
 
     /** Event emitted when the tab begins to animate towards the center as the active tab. */
     readonly onCentering = output<number>();
@@ -107,7 +107,7 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     readonly content = input<TemplatePortal>(undefined!);
 
     /** Position that will be used when the tab is immediately becoming visible after creation. */
-    origin: number;
+    origin!: number;
 
     /** Duration for the tab's animation. */
     readonly animationDuration = input<string>('0ms');
@@ -120,7 +120,7 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     });
 
     /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
-    private positionIndex: number;
+    private positionIndex!: number;
 
     /** Subscription to the directionality change observable. */
     private readonly dirChangeSubscription = Subscription.EMPTY;
@@ -292,7 +292,7 @@ export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
     private leavingSub = Subscription.EMPTY;
 
     /** Set initial visibility or set up subscription for changing visibility. */
-    ngOnInit(): void {
+    override ngOnInit(): void {
         super.ngOnInit();
 
         this.centeringSub = this.host.beforeCentering
@@ -309,7 +309,7 @@ export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
     }
 
     /** Clean up centering subscription. */
-    ngOnDestroy(): void {
+    override ngOnDestroy(): void {
         super.ngOnDestroy();
 
         this.centeringSub.unsubscribe();

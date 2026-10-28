@@ -8,23 +8,23 @@ import { EXAMPLE_COMPONENTS } from './example-module';
  */
 export class ExampleData {
     /** Description of the example. */
-    description: string;
+    description!: string;
 
     /** List of files that are part of this example. */
-    exampleFiles: string[];
+    exampleFiles!: string[];
 
     /** Files shared with other examples via relative imports, needed to compile the example
      *  (e.g. in StackBlitz) but not shown as a tab of its own in the docs source viewer. */
-    localImportFiles: string[];
+    localImportFiles!: string[];
 
     /** Selector name of the example component. */
-    selectorName: string;
+    selectorName!: string;
 
     /** Name of the file that contains the example component. */
-    indexFilename: string;
+    indexFilename!: string;
 
     /** Name of the example component. */
-    componentName: string;
+    componentName!: string;
 
     /** Whether the catalogue knows the key: every field above is filled only then. */
     isKnown = false;

@@ -164,7 +164,7 @@ export class KbqFilters implements OnInit {
 
     private _focusOrigin: FocusOrigin = null;
 
-    private focusedElementBeforeOpen: KbqButton | null;
+    private focusedElementBeforeOpen?: KbqButton | null;
 
     ngOnInit(): void {
         this.focusMonitor

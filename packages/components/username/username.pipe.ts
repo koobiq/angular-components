@@ -77,8 +77,8 @@ export function kbqFormatUsername<T = unknown>(
         .reduce<string[]>((parts, letter, index) => {
             if (letter === KbqUsernameFormatKey.Dot) return parts;
 
-            const field = mapping[letter];
-            const value = field === undefined ? undefined : profile[field];
+            const field = (mapping as Record<string, PropertyKey | undefined>)[letter];
+            const value = field === undefined ? undefined : (profile as Record<PropertyKey, unknown>)[field];
 
             if (!value) return parts;
 
@@ -112,7 +112,7 @@ export function kbqFormatUsernameCustom<T = unknown>(
     return format
         .split('')
         .map((letter) => {
-            const field = mapping[letter];
+            const field = (mapping as Record<string, PropertyKey | undefined>)[letter];
 
             if (!field) {
                 warnAboutUnmappedKey(letter);
@@ -120,7 +120,7 @@ export function kbqFormatUsernameCustom<T = unknown>(
                 return letter;
             }
 
-            const value = profile[field];
+            const value = (profile as Record<PropertyKey, unknown>)[field];
 
             if (!value) return '';
 

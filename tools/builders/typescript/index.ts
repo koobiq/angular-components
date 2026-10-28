@@ -50,7 +50,8 @@ async function run(options: ITypescriptBuilderOptions, context: BuilderContext):
             context.logger.info(logOutput);
         }
     } catch (error) {
-        context.logger.error(error);
+        // `executeCommand` rejects with the output of the command.
+        context.logger.error(error as string);
 
         return {
             success: false

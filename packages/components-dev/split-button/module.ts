@@ -43,5 +43,5 @@ export class DevDocsExamples {}
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
-    search: string;
+    search!: string;
 }

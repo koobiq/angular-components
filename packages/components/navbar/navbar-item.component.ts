@@ -198,7 +198,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
         return this._tooltip;
     }
 
-    private _tooltip: KbqTooltipTrigger;
+    private _tooltip!: KbqTooltipTrigger;
 
     /** @docs-private */
     readonly onFocus = new Subject<KbqNavbarFocusableItemEvent>();

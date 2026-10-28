@@ -49,10 +49,10 @@ export abstract class KbqPopUp implements OnDestroy {
     /** Whether the pointer is over the pop-up. */
     readonly hovered: Signal<boolean> = this.hoveredState.asReadonly();
 
-    trigger: KbqPopUpTrigger<unknown>;
-    header: string | TemplateRef<unknown>;
-    content: string | TemplateRef<unknown>;
-    context: { $implicit: unknown } | null;
+    trigger!: KbqPopUpTrigger<unknown>;
+    header!: string | TemplateRef<unknown>;
+    content!: string | TemplateRef<unknown>;
+    context!: { $implicit: unknown } | null;
 
     private readonly classMapState = signal({});
 
@@ -65,10 +65,10 @@ export abstract class KbqPopUp implements OnDestroy {
         this.classMapState.set(value);
     }
 
-    arrow: boolean;
-    defaultPaddings: boolean;
+    arrow!: boolean;
+    defaultPaddings!: boolean;
 
-    offset: number | null;
+    offset!: number | null;
 
     private readonly visibilityState = signal(PopUpVisibility.Initial);
 
@@ -83,7 +83,7 @@ export abstract class KbqPopUp implements OnDestroy {
 
     visibleChange = new EventEmitter<boolean>();
 
-    protected prefix: string;
+    protected prefix!: string;
 
     /** Subject for notifying that the tooltip has been hidden from the view */
     protected readonly onHideSubject = new Subject<void>();
@@ -177,7 +177,7 @@ export abstract class KbqPopUp implements OnDestroy {
         return this.visibility === PopUpVisibility.Visible;
     }
 
-    updateClassMap(placement: string, customClass: string, classMap?): void {
+    updateClassMap(placement: string, customClass: string, classMap?: any): void {
         // `customClass` may be a whitespace-separated list of class names; expand it into
         // individual keys so the native `[class]` binding (which doesn't tokenise object keys)
         // applies each class correctly.

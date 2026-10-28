@@ -75,7 +75,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
 
     private readonly debounceTime = 15;
 
-    private scrollSubscription: Subscription;
+    private scrollSubscription!: Subscription;
     private fragmentScrollSubscription: Subscription | undefined;
     private fragmentScrollTimer: ReturnType<typeof setTimeout> | undefined;
 

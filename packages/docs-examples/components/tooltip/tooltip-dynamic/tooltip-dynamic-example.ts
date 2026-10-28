@@ -30,14 +30,14 @@ import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip'
 export class TooltipDynamicExample {
     private readonly injector = inject(Injector);
 
-    private dynamicTooltip: KbqTooltipTrigger;
+    private dynamicTooltip!: KbqTooltipTrigger;
 
-    protected onMouseenter(event) {
+    protected onMouseenter(event: MouseEvent) {
         if (!this.dynamicTooltip) {
             runInInjectionContext(this.injector, () => (this.dynamicTooltip = new KbqTooltipTrigger()));
         }
 
-        this.dynamicTooltip.content = event.currentTarget.innerText;
+        this.dynamicTooltip.content = (event.currentTarget as HTMLElement).innerText;
         this.dynamicTooltip.tooltipPlacement = PopUpPlacements.Top;
         this.dynamicTooltip.showForMouseEvent(event);
     }

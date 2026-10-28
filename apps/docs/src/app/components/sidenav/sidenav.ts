@@ -50,14 +50,14 @@ class TreeNode {
 
 /** Flat node with expandable and level information */
 class TreeFlatNode {
-    id: string;
-    name: Record<DocsLocale, string>;
-    level: number;
-    expandable: boolean;
-    parent: TreeFlatNode | null;
-    type: TreeNodeType;
-    isNew: boolean;
-    isUpdated: boolean;
+    id!: string;
+    name!: Record<DocsLocale, string>;
+    level!: number;
+    expandable!: boolean;
+    parent!: TreeFlatNode | null;
+    type!: TreeNodeType;
+    isNew!: boolean;
+    isUpdated!: boolean;
 }
 
 function buildTree(categories: DocsStructureCategory[]): TreeNode[] {

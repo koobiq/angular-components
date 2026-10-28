@@ -248,7 +248,7 @@ export class KbqListSelection<T = any>
     private clipboard = inject(Clipboard, { optional: true });
     protected readonly focusMonitor = inject(FocusMonitor);
 
-    keyManager: FocusKeyManager<KbqListOption<T>>;
+    keyManager!: FocusKeyManager<KbqListOption<T>>;
 
     private readonly optionsQuery = contentChildren<KbqListOption<T>>(
         forwardRef(() => KbqListOption),
@@ -560,7 +560,7 @@ export class KbqListSelection<T = any>
         return merge(...this.navigableOptions.map((option) => option.onBlur));
     }
 
-    _value: T[] | null;
+    _value!: T[] | null;
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly platform = inject(Platform);
@@ -577,7 +577,7 @@ export class KbqListSelection<T = any>
     /** Gap the indicator currently marks, used as `currentIndex` when the drag is dropped here. */
     private dropIndex: number | null = null;
 
-    private pendingMoveSubscription: Subscription | null;
+    private pendingMoveSubscription?: Subscription | null;
 
     private hasWarnedOnDragContainer = false;
 

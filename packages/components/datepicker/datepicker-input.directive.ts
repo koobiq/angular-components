@@ -92,7 +92,7 @@ class DateDigit {
     maxDays = 31;
     maxMonth = 12;
 
-    parse: (value: string) => number;
+    parse!: (value: string) => number;
 
     constructor(
         public value: DateParts,
@@ -289,6 +289,7 @@ export class KbqDatepickerInputEvent<D> {
 let uniqueComponentIdSuffix = 0;
 
 interface DateTimeObject {
+    [part: string]: number;
     year: number;
     month: number;
     date: number;
@@ -364,10 +365,10 @@ export class KbqDatepickerInput<D>
     /** Whether the input has focus. */
     readonly focused = this.focusedValue.asReadonly();
 
-    datepicker: KbqDatepicker<D>;
-    calendar: KbqCalendar<D>;
+    datepicker!: KbqDatepicker<D>;
+    calendar!: KbqCalendar<D>;
 
-    dateFilter: (date: D | null) => boolean;
+    dateFilter!: (date: D | null) => boolean;
 
     /** Emits when the value changes (either due to user input or programmatic change). */
     valueChange = new EventEmitter<D | null>();
@@ -461,7 +462,7 @@ export class KbqDatepickerInput<D>
         this.validatorOnChange();
     }
 
-    private _min: D | null;
+    private _min!: D | null;
 
     /**
      * The maximum valid date. Drives validation only — including dates typed or pasted into the
@@ -481,7 +482,7 @@ export class KbqDatepickerInput<D>
         this.validatorOnChange();
     }
 
-    private _max: D | null;
+    private _max!: D | null;
 
     /** @docs-private */
     readonly minInput = input<D | null | undefined>(undefined, { alias: 'min' });
@@ -582,13 +583,13 @@ export class KbqDatepickerInput<D>
     /** The combined form control validator for this input. */
     private readonly validator: ValidatorFn | null;
 
-    private separator: string;
+    private separator!: string;
 
     private firstDigit: DateDigit | null = null;
     private secondDigit: DateDigit | null = null;
     private thirdDigit: DateDigit | null = null;
 
-    private separatorPositions: number[];
+    private separatorPositions!: number[];
 
     /** Work the keys left to timers, in the order the timers run. */
     private readonly deferred = new Map<ReturnType<typeof setTimeout>, () => void>();
@@ -937,10 +938,10 @@ export class KbqDatepickerInput<D>
         this.onInput();
     }
 
-    onPaste($event) {
-        $event.preventDefault();
+    onPaste(event: ClipboardEvent): string | undefined {
+        event.preventDefault();
 
-        let rawValue = $event.clipboardData.getData('text');
+        let rawValue = event.clipboardData!.getData('text');
 
         if (rawValue.match(/^\d\D/)) {
             rawValue = `0${rawValue}`;
@@ -954,13 +955,13 @@ export class KbqDatepickerInput<D>
 
         const match: RegExpMatchArray | null = rawValue.match(/^(?<first>\d+)\W(?<second>\d+)\W(?<third>\d+)$/);
 
-        if (!match?.groups?.first || !match?.groups?.second || !match?.groups?.third) {
+        if (!match?.groups?.['first'] || !match?.groups?.['second'] || !match?.groups?.['third']) {
             this.setViewValue(rawValue);
 
             return rawValue;
         }
 
-        const value = [match.groups.first, match.groups.second, match.groups.third].join(this.separator);
+        const value = [match.groups['first'], match.groups['second'], match.groups['third']].join(this.separator);
 
         const newTimeObj = this.getDateFromString(value);
 
@@ -973,6 +974,8 @@ export class KbqDatepickerInput<D>
         this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.dateInputFormat));
 
         this.updateValue(newTimeObj);
+
+        return undefined;
     }
 
     toISO8601(value: D): string {
@@ -1014,7 +1017,7 @@ export class KbqDatepickerInput<D>
         // takes in the six characters ASCII puts between the two alphabets — opening bracket,
         // backslash, closing bracket, caret, underscore and backtick. A format escaping a literal in
         // brackets could therefore have had that bracket counted as part of a placeholder.
-        this.separator = format.match(/[a-zA-Z]+(?<separator>\W|\D)[a-zA-Z]+/)!.groups!.separator;
+        this.separator = format.match(/[a-zA-Z]+(?<separator>\W|\D)[a-zA-Z]+/)!.groups!['separator'];
 
         this.separatorPositions = format
             .split('')
@@ -1161,19 +1164,19 @@ export class KbqDatepickerInput<D>
                 return null;
             }
 
-            const digitViewValue: { date?: number; month?: number; year?: number } = {};
+            const digitViewValue: Record<string, number | undefined> = {};
             const dateDigits = [this.firstDigit, this.secondDigit, this.thirdDigit];
 
             for (const [index, dateDigit] of dateDigits.entries()) {
                 digitViewValue[dateDigit!.fullName] = parseInt(viewDigits[index]);
             }
 
-            if (this.value() && digitViewValue.month && digitViewValue.month <= this.firstDigit!.maxMonth) {
+            if (this.value() && digitViewValue['month'] && digitViewValue['month'] <= this.firstDigit!.maxMonth) {
                 dateDigits.forEach(
                     (digit) =>
                         (digit!.maxDays = this.getLastDayFor(
-                            digitViewValue.year as number,
-                            (digitViewValue.month as number) - 1
+                            digitViewValue['year'] as number,
+                            (digitViewValue['month'] as number) - 1
                         ))
                 );
             }
@@ -1419,7 +1422,7 @@ export class KbqDatepickerInput<D>
             return;
         }
 
-        let changedTime;
+        let changedTime: D | null = null;
 
         const [modifiedTimePart, selectionStart, selectionEnd] = this.getDateEditMetrics(this.selectionStart as number);
 

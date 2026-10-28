@@ -1234,7 +1234,7 @@ class ToggleWithFormControl {
     `
 })
 class ToggleWithoutLabel {
-    label: string;
+    label!: string;
 }
 
 @Component({

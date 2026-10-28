@@ -457,7 +457,7 @@ export class E2eSplitterStates {
                 const separator = splitter.querySelector(
                     ':scope > .kbq-splitter-panel > .kbq-splitter-panel__separator'
                 );
-                const state = splitter.dataset.e2eSeparatorState as SplitterSeparatorState;
+                const state = splitter.dataset['e2eSeparatorState'] as SplitterSeparatorState;
 
                 // Throws rather than dropping the state quietly, which would rewrite the baseline without it.
                 if (!separator) throw new Error(`[e2eSplitterStates] no separator to put into the ${state} state`);

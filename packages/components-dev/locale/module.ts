@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KBQ_LOCALE_SERVICE,
+    KbqLocaleItem,
     KbqLocaleOverridesDirective,
     KbqLocaleService,
     KbqLocaleServiceModule,
@@ -13,6 +14,8 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqSelectModule } from '@koobiq/components/select';
+
+type DevLocaleItem = KbqLocaleItem & { selected: boolean };
 
 @Component({
     selector: 'dev-app',
@@ -36,8 +39,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
 export class DevApp {
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
 
-    selectedLanguage;
-    languages;
+    selectedLanguage!: DevLocaleItem;
+    languages: DevLocaleItem[];
 
     constructor() {
         this.languages = this.localeService.locales.items.map((item) => ({ ...item, selected: false }));
@@ -45,7 +48,7 @@ export class DevApp {
         this.selectLanguage(this.languages[0]);
     }
 
-    selectLanguage(language) {
+    selectLanguage(language: DevLocaleItem) {
         this.languages.forEach((item) => (item.selected = false));
         this.selectedLanguage = language;
         this.selectedLanguage.selected = true;

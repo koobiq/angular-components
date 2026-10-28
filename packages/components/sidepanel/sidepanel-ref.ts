@@ -20,7 +20,7 @@ export class KbqSidepanelRef<T = any, R = any> {
     readonly bodyOverflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
 
     /** Instance of the component making up the content of the sidepanel. */
-    instance: T;
+    instance!: T;
 
     /** Subject for notifying the user that the sidepanel has been closed and dismissed. */
     private readonly afterClosed$ = new Subject<R | undefined>();

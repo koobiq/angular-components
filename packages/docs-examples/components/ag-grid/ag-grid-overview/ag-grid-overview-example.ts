@@ -23,7 +23,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
-    cellValue: string;
+    cellValue!: string;
 
     agInit(params: ICellRendererParams): void {
         this.cellValue = this.getValueToDisplay(params);

@@ -115,7 +115,7 @@ describe('KbqTreeSelection', () => {
                             const originalClipboard = new Clipboard(document);
 
                             return {
-                                copy: (value) => {
+                                copy: (value: string) => {
                                     originalClipboard.copy(value);
                                     clipboardContent = value;
                                 }
@@ -161,7 +161,7 @@ describe('KbqTreeSelection', () => {
                 const treeOption = fixture.debugElement.queryAll(By.directive(KbqTreeNodePadding))[0];
                 const paddingDirective = treeOption.injector.get(KbqTreeNodePadding);
 
-                expect(treeOption.styles.paddingLeft).toBe(paddingDirective.paddingIndent());
+                expect(treeOption.styles['paddingLeft']).toBe(paddingDirective.paddingIndent());
             });
 
             it('should copy selected option - default handler', async () => {
@@ -3425,20 +3425,20 @@ export const DATA_OBJECT = {
 };
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children!: FileNode[];
+    name!: string;
     type: any;
-    isSpecial: boolean;
+    isSpecial!: boolean;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name!: string;
     type: any;
-    level: number;
-    expandable: boolean;
+    level!: number;
+    expandable!: boolean;
     parent: any;
-    isSpecial: boolean;
+    isSpecial!: boolean;
 }
 
 export function buildFileTree(value: any, level: number): FileNode[] {
@@ -3749,7 +3749,7 @@ class KbqTreeAppMultipleCheckbox extends TreeParams {
         );
     }
 
-    onModelValueChange(values) {
+    onModelValueChange(values: string[]) {
         this.modelValue = values;
         this.filterByValues.setValues(values);
     }

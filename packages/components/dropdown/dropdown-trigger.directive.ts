@@ -168,7 +168,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     private readonly injector = inject(Injector);
 
     protected readonly isBrowser = inject(Platform).isBrowser;
-    lastDestroyReason: DropdownCloseReason;
+    lastDestroyReason!: DropdownCloseReason;
 
     /**
      * Element whose width the panel should match. Defaults to the trigger itself.
@@ -281,7 +281,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     private readonly openedState = signal(false);
 
-    private portal: TemplatePortal;
+    private portal?: TemplatePortal;
 
     private overlayRef: OverlayRef | null = null;
 
