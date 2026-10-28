@@ -7,16 +7,17 @@
  * against the project shapes consumers actually have.
  *
  * The fixtures are the installation paths the documentation supports: `ng add`, the manual install
- * line, and an application that already carries the Angular packages.
+ * line, and an application that already carries the Angular packages. Packing also fails when the
+ * tarball leaves out a file of the schematics.
  *
  * Runs on ubuntu in CI. Node >= 20.12 refuses to spawn `npm.cmd` without a shell, so on Windows the
  * calls go through one — hence the quoting in `npm()`.
  */
 
 import { spawnSync } from 'child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, statSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
-import { join } from 'path';
+import { join, sep } from 'path';
 
 interface PackageJson {
     version?: string;
@@ -189,16 +190,36 @@ const workDir = mkdtempSync(join(tmpdir(), 'koobiq-npm-resolution-'));
 
 console.log(`Packing ${packagesToCheck.length} package(s) from dist/...`);
 
+/**
+ * Directories every file of which has to reach the tarball: `ng add` and `ng update` load the schematics
+ * from it, and the `.npmignore` that ng-packagr writes drops files by pattern.
+ */
+const shippedWhole: Record<string, string[]> = { components: ['schematics'] };
+
 const tarballs = packagesToCheck.map((name) => {
-    const packed = npm(['pack', join(distDir, name), '--pack-destination', workDir], projectRoot);
+    const packed = npm(['pack', join(distDir, name), '--pack-destination', workDir, '--json'], projectRoot);
 
     if (packed.status !== 0) {
         console.error(`❌ Could not pack ${name}:\n${packed.output}`);
         process.exit(1);
     }
 
-    // npm prints notices on stderr and the bare filename on stdout.
-    return join(workDir, packed.stdout.trim().split('\n').pop()!);
+    // npm prints notices on stderr and the JSON report on stdout.
+    const [{ filename, files }]: { filename: string; files: { path: string }[] }[] = JSON.parse(packed.stdout);
+    const packedFiles = new Set(files.map(({ path }) => path));
+
+    for (const dir of shippedWhole[name] ?? []) {
+        const left = readdirSync(join(distDir, name, dir), { recursive: true, encoding: 'utf-8' })
+            .map((file) => `${dir}/${file.split(sep).join('/')}`)
+            .filter((file) => statSync(join(distDir, name, file)).isFile() && !packedFiles.has(file));
+
+        if (left.length > 0) {
+            console.error(`❌ npm pack leaves out of ${name}:\n${left.map((file) => `     ${file}`).join('\n')}`);
+            process.exit(1);
+        }
+    }
+
+    return join(workDir, filename);
 });
 
 const failures: string[] = [];
