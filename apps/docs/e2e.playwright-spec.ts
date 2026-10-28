@@ -1,5 +1,6 @@
 import { expect, Page, test } from '@playwright/test';
 import { join } from 'node:path';
+import { docsCompareVersions, docsParseVersion } from './src/app/components/migration-guide/migration-versions';
 import { DocsLocale } from './src/app/constants/locale';
 import { DOCS_SEO_DESCRIPTIONS } from './src/app/seo-descriptions';
 
@@ -615,7 +616,13 @@ test.describe('migration guide filter', () => {
             await expect(page.locator('.docs-migration-guide__prompt')).toBeVisible();
         }
 
-        await page.goto(MIGRATION_URL + '?from=17&to=21.0.0');
+        // Up to the newest step rather than the latest release: a step can be filed at a release still to ship.
+        const versions = await page
+            .locator('.docs-migration-step')
+            .evaluateAll((steps) => steps.map((step) => step.getAttribute('data-docs-migration-version') ?? ''));
+        const [newest] = versions.sort((a, b) => docsCompareVersions(docsParseVersion(b), docsParseVersion(a)));
+
+        await page.goto(`${MIGRATION_URL}?from=17&to=${newest}`);
         await waitForHydration(page);
 
         await expect(visibleSteps(page).first()).toBeVisible();

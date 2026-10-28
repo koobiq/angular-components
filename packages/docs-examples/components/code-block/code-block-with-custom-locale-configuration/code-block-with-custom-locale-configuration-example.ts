@@ -18,7 +18,6 @@ import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
     `,
     providers: [
         kbqCodeBlockHighlightJsConfigProvider({
-            core: () => import('highlight.js/lib/core'),
             languages: {
                 xml: () => import('highlight.js/lib/languages/xml')
             }

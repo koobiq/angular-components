@@ -156,8 +156,11 @@ export class KbqTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
     set data(value: T[]) {
         this._data.set(value);
 
-        this.flattenedData.next(this.treeFlattener.flattenNodes(this.data));
-        this.treeControl.dataNodes = this.flattenedData.value;
+        const flattened = this.treeFlattener.flattenNodes(this.data);
+
+        // Assigned before emitting: the tree renders inside `next`, and its rows look themselves up in `dataNodes`.
+        this.treeControl.dataNodes = flattened;
+        this.flattenedData.next(flattened);
     }
 
     private readonly _data = signal<T[]>([]);

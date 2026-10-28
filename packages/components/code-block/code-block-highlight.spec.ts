@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { HLJSApi } from 'highlight.js';
 import { firstValueFrom } from 'rxjs';
 import {
+    kbqCodeBlockFallbackFileLanguageProvider,
     KbqCodeBlockHighlight,
     KbqCodeBlockHighlightJsConfig,
     kbqCodeBlockHighlightJsConfigProvider
@@ -147,6 +148,41 @@ class ForeignMarkupBlock {
     readonly file = FILE;
 }
 
+const TYPESCRIPT_FILE: KbqCodeBlockFile = { content: 'const value: number = 1;', language: 'typescript' };
+
+@Component({
+    selector: 'test-typescript-scope',
+    imports: [KbqCodeBlockHighlight],
+    template: `
+        <code kbqCodeBlockHighlight [file]="file"></code>
+    `,
+    providers: [
+        kbqCodeBlockHighlightJsConfigProvider({
+            languages: { typescript: () => import('highlight.js/lib/languages/typescript') }
+        })
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TypescriptScope {
+    readonly file = TYPESCRIPT_FILE;
+}
+
+// The scope loads highlight.js before the root block appears, which would find typescript on an instance they shared.
+@Component({
+    imports: [KbqCodeBlockHighlight, TypescriptScope],
+    template: `
+        <test-typescript-scope />
+        @if (showRootBlock()) {
+            <code kbqCodeBlockHighlight [file]="file"></code>
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ScopeThenRootBlock {
+    readonly showRootBlock = signal(false);
+    readonly file = TYPESCRIPT_FILE;
+}
+
 describe(KbqCodeBlockHighlight.name, () => {
     it('should show the plain content until highlight.js has loaded', () => {
         const fixture = createComponent(SingleBlock, [
@@ -183,6 +219,23 @@ describe(KbqCodeBlockHighlight.name, () => {
         } finally {
             addEventListener.mockRestore();
         }
+    });
+
+    it('should load the languages alongside highlight.js', async () => {
+        const core = buildMockCore();
+        const { load, resolve } = deferredCoreLoader(core);
+        const typescript = vi.fn(() => import('highlight.js/lib/languages/typescript'));
+        const fixture = createComponent(SingleBlock, [
+            kbqCodeBlockHighlightJsConfigProvider({ core: load, languages: { typescript } })
+        ]);
+
+        expect(typescript).toHaveBeenCalledTimes(1);
+
+        resolve();
+        await settle(fixture);
+
+        expect(core.registerLanguage).toHaveBeenCalledWith('typescript', expect.any(Function));
+        expect(getCodeElements(fixture)[0].getAttribute('data-language')).toBe('typescript');
     });
 
     it('should apply a configuration provided by a component to the blocks inside it only', async () => {
@@ -338,5 +391,192 @@ describe(KbqCodeBlockHighlight.name, () => {
         } finally {
             warn.mockRestore();
         }
+    });
+
+    // The mocks above know every language; the core knows none, and throws on a language it has not registered.
+    describe('with the highlight.js core', () => {
+        it('should load the core, without languages, when nothing is configured', async () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+            try {
+                const fixture = createComponent(SingleBlock);
+                const [code] = getCodeElements(fixture);
+
+                await settle(fixture);
+
+                expect(warn).toHaveBeenCalledWith(
+                    '[KbqCodeBlock] Unknown file language: "typescript". Fall back to "plaintext".',
+                    FILE
+                );
+                expect(code.getAttribute('data-language')).toBe('plaintext');
+                expect(code.textContent).toBe('one');
+            } finally {
+                warn.mockRestore();
+            }
+        });
+
+        it('should highlight a file without a language as plain text', async () => {
+            const fixture = createComponent(SingleBlock);
+            const [code] = getCodeElements(fixture);
+
+            fixture.componentInstance.file.set({ content: '<b>plain</b>' });
+            fixture.detectChanges();
+            await settle(fixture);
+
+            expect(code.getAttribute('data-language')).toBe('plaintext');
+            expect(code.textContent).toBe('<b>plain</b>');
+            expect(getHighlight(fixture).pending()).toBe(false);
+        });
+
+        it.each(['plaintext', 'text', 'txt'])(
+            'should not warn that plain text named "%s" does not match its language',
+            async (language) => {
+                const fixture = createComponent(SingleBlock);
+                const [code] = getCodeElements(fixture);
+
+                fixture.componentInstance.file.set({ content: 'plain words', language });
+                fixture.detectChanges();
+                await settle(fixture);
+
+                expect(code.getAttribute('data-language')).toBe(language);
+                expect(code.textContent).toBe('plain words');
+            }
+        );
+
+        it('should not warn that an empty file does not match its language', async () => {
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({
+                    languages: { typescript: () => import('highlight.js/lib/languages/typescript') }
+                })
+            ]);
+            const [code] = getCodeElements(fixture);
+
+            fixture.componentInstance.file.set({ content: '', language: 'typescript' });
+            fixture.detectChanges();
+            await settle(fixture);
+
+            expect(code.getAttribute('data-language')).toBe('typescript');
+        });
+
+        it('should warn that a file does not match its language', async () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+            try {
+                const fixture = createComponent(SingleBlock, [
+                    kbqCodeBlockHighlightJsConfigProvider({
+                        languages: { typescript: () => import('highlight.js/lib/languages/typescript') }
+                    })
+                ]);
+                const file: KbqCodeBlockFile = { content: 'plain words', language: 'typescript' };
+
+                fixture.componentInstance.file.set(file);
+                fixture.detectChanges();
+                await settle(fixture);
+
+                expect(warn).toHaveBeenCalledWith(
+                    '[KbqCodeBlock] File content does not match the specified programming language.',
+                    file
+                );
+            } finally {
+                warn.mockRestore();
+            }
+        });
+
+        it('should fall back to plain text when a highlighted block gets a language the core has not registered', async () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+            try {
+                const fixture = createComponent(SingleBlock, [
+                    kbqCodeBlockHighlightJsConfigProvider({
+                        languages: { typescript: () => import('highlight.js/lib/languages/typescript') }
+                    })
+                ]);
+                const [code] = getCodeElements(fixture);
+
+                fixture.componentInstance.file.set({ content: 'const value: number = 1;', language: 'typescript' });
+                fixture.detectChanges();
+                await settle(fixture);
+
+                expect(code.getAttribute('data-language')).toBe('typescript');
+                expect(warn).not.toHaveBeenCalled();
+
+                // highlight.js has loaded by now, so this file is highlighted at once, inside change detection.
+                const yamlFile: KbqCodeBlockFile = { content: 'key: value', language: 'yaml' };
+
+                fixture.componentInstance.file.set(yamlFile);
+                await settle(fixture);
+
+                expect(warn).toHaveBeenCalledWith(
+                    '[KbqCodeBlock] Unknown file language: "yaml". Fall back to "plaintext".',
+                    yamlFile
+                );
+                expect(code.getAttribute('data-language')).toBe('plaintext');
+                expect(code.textContent).toBe('key: value');
+                expect(getHighlight(fixture).pending()).toBe(false);
+            } finally {
+                warn.mockRestore();
+            }
+        });
+
+        it('should fall back to the fallback language when it is registered', async () => {
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({
+                    languages: { javascript: () => import('highlight.js/lib/languages/javascript') }
+                }),
+                kbqCodeBlockFallbackFileLanguageProvider('javascript')
+            ]);
+            const [code] = getCodeElements(fixture);
+
+            fixture.componentInstance.file.set({ content: 'const value = 1;' });
+            fixture.detectChanges();
+            await settle(fixture);
+
+            expect(code.getAttribute('data-language')).toBe('javascript');
+        });
+
+        it('should fall back to plain text when the fallback language is not registered either', async () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+            try {
+                const fixture = createComponent(SingleBlock, [kbqCodeBlockFallbackFileLanguageProvider('markdown')]);
+                const [code] = getCodeElements(fixture);
+
+                fixture.componentInstance.file.set({ content: '# Title' });
+                fixture.detectChanges();
+                await settle(fixture);
+
+                expect(warn).toHaveBeenCalledWith(
+                    '[KbqCodeBlock] Unknown fallback language: "markdown". Fall back to "plaintext".'
+                );
+                expect(code.getAttribute('data-language')).toBe('plaintext');
+                expect(code.textContent).toBe('# Title');
+            } finally {
+                warn.mockRestore();
+            }
+        });
+
+        it('should not share the languages of a configuration with the default one', async () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+            try {
+                const fixture = createComponent(ScopeThenRootBlock);
+
+                await settle(fixture);
+                fixture.componentInstance.showRootBlock.set(true);
+                fixture.detectChanges();
+                await settle(fixture);
+
+                const [scoped, root] = getCodeElements(fixture);
+
+                expect(scoped.getAttribute('data-language')).toBe('typescript');
+                expect(root.getAttribute('data-language')).toBe('plaintext');
+                expect(warn).toHaveBeenCalledWith(
+                    '[KbqCodeBlock] Unknown file language: "typescript". Fall back to "plaintext".',
+                    TYPESCRIPT_FILE
+                );
+            } finally {
+                warn.mockRestore();
+            }
+        });
     });
 });

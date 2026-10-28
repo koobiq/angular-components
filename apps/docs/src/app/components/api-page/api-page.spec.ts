@@ -1,12 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { By, provideClientHydration, withIncrementalHydration } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
+import { kbqCodeBlockHighlightJsConfigProvider } from '@koobiq/components/code-block';
 import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { BehaviorSubject, map } from 'rxjs';
 import type { Mock } from 'vitest';
 import { DocsIntersectionObserverStub } from '../../../testing/intersection-observer.stub';
 import { DOCS_API_MEMBER_PARAM } from '../../constants/api-page';
+import { DOCS_HIGHLIGHT_JS_LANGUAGES } from '../../constants/highlight-js';
 import { DocsLocale } from '../../constants/locale';
 import { DocsClipboardService } from '../../services/clipboard';
 import { DocsLocaleService } from '../../services/locale';
@@ -104,7 +106,8 @@ describe(DocsApiPage.name, () => {
                 provideDocsLocale(DocsLocale.Ru),
                 { provide: DocsClipboardService, useValue: { copyWithToast } },
                 // As the app has it: the code blocks are `@defer` blocks with a `hydrate` trigger.
-                provideClientHydration(withIncrementalHydration())
+                provideClientHydration(withIncrementalHydration()),
+                kbqCodeBlockHighlightJsConfigProvider({ languages: DOCS_HIGHLIGHT_JS_LANGUAGES })
             ]
         });
     });
