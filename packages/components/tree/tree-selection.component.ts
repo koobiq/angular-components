@@ -870,30 +870,28 @@ export class KbqTreeSelection<T = any, K = T>
 
         this.listenToOptionsFocus();
 
-        // A render and the selection changes of one task each notify: the first sweep reads them all, and the others are
-        // dropped. Each notification keeps its own timer, where `auditTime` would tie the later ones to the first one's.
-        let requestedSweeps = 0;
-        let sweptRequests = 0;
+        // A render and the selection changes of one task each notify, each with its own timer: the first to fire sweeps
+        // for all of them and the rest are dropped. `auditTime` would tie the later ones to the first one's timer.
+        let sweeps = 0;
 
         this.renderedOptions.changes
             .pipe(
-                map((options) => ({ options, request: ++requestedSweeps })),
+                map(() => sweeps),
                 delay(0, this.scheduler),
-                filter(({ request }) => request > sweptRequests),
+                filter((sweepsWhenNotified) => sweepsWhenNotified === sweeps),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe(({ options }) => {
-                sweptRequests = requestedSweeps;
+            .subscribe(() => {
+                sweeps++;
 
                 // Check to see if we need to update our tab index
                 this.updateTabIndex();
 
                 this.syncSelectionModelToDataNodes();
 
-                const selectedValues = new Set(this.multiple ? this.getSelectedValues() : [this.getSelectedValues()]);
-
-                options.forEach((option) => {
-                    if (selectedValues.has(option.value)) {
+                this.renderedOptions.forEach((option) => {
+                    // By node rather than by value: rows may share a value.
+                    if (this.selectionModel.isSelected(option.data)) {
                         option.select(false);
                     } else {
                         option.deselect();

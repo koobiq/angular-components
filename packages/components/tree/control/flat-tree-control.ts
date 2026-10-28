@@ -17,9 +17,9 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
 
     private filters: FlatTreeControlFilter<T>[];
 
-    // Positions in `dataNodes`: a tree looks up every rendered row, and `indexOf` would make that rows × nodes.
-    private indexedNodes: T[] | null = null;
-    private nodeIndexes = new Map<T, number>();
+    // Positions in each `dataNodes` array: a tree looks up every rendered row, and `indexOf` would make that
+    // rows × nodes. Keyed weakly by the array, so replacing `dataNodes` releases the old nodes.
+    private readonly nodeIndexes = new WeakMap<T[], Map<T, number>>();
 
     /** Construct with flat tree data node functions getLevel, isExpandable, getValue and getViewValue. */
     constructor(
@@ -177,7 +177,7 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
 
         if (!dataNodes) return -1;
 
-        const cached = this.indexedNodes === dataNodes ? this.nodeIndexes.get(node) : undefined;
+        const cached = this.nodeIndexes.get(dataNodes)?.get(node);
 
         // Checked against the array: `dataNodes` can be mutated in place.
         if (cached !== undefined && dataNodes[cached] === node) return cached;
@@ -193,11 +193,12 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
             return dataNodes.findIndex((candidate) => trackBy(candidate) === key);
         }
 
-        this.indexedNodes = dataNodes;
-        this.nodeIndexes = new Map();
+        const positions = new Map<T, number>();
+
         dataNodes.forEach((dataNode, position) => {
-            if (!this.nodeIndexes.has(dataNode)) this.nodeIndexes.set(dataNode, position);
+            if (!positions.has(dataNode)) positions.set(dataNode, position);
         });
+        this.nodeIndexes.set(dataNodes, positions);
 
         return index;
     }

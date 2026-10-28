@@ -651,8 +651,9 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
     markForCheck() {
         this.changeDetectorRef.markForCheck();
 
-        // Its own state only: after a selection, data or mode change the tree calls this on every option.
-        if (this.showCheckbox) {
+        // Its own state only: after a selection, data or mode change the tree calls this on every option. A projected
+        // checkbox shows the state while the tree's own is hidden.
+        if (this.showCheckbox || this.externalPseudoCheckbox) {
             this.syncCheckboxState();
         }
     }
@@ -672,8 +673,8 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements AfterConte
         if (this.selectAllRow()) return;
 
         if (this.checkboxThirdState() && this.isExpandable) {
-            // One descendant walk, not two: `getDescendants` is a linear scan of the whole data set, and
-            // the roll-up runs this method for every ancestor.
+            // One descendant walk, not two: each walk covers the whole subtree, and the roll-up runs this method for
+            // every ancestor.
             const descendants = this.tree.treeControl.getDescendants(this.data);
             const selectedCount = descendants.filter((child) => this.tree.selectionModel.isSelected(child)).length;
 
