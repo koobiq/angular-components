@@ -88,16 +88,9 @@
         </div>
     </div>
 
-    <div class="kbq-form__row">
-        <button
-            color="contrast"
-            kbq-button
-            type="submit"
-            class="flex-30"
-            [class.kbq-progress]="inProgress()"
-            [disabled]="inProgress()"
-        >
-            Send
+    <div class="kbq-form__row layout-align-start-start">
+        <button color="contrast" kbq-button type="submit" [class.kbq-progress]="inProgress()" [disabled]="inProgress()">
+            Submit
         </button>
     </div>
 </form>

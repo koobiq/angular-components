@@ -66,10 +66,9 @@ import { KbqInputModule } from '@koobiq/components/input';
                         </kbq-form-field>
                     </div>
 
-                    <div class="kbq-form__row">
+                    <div class="kbq-form__row layout-align-start-start">
                         <button
                             #submitButton
-                            class="flex-25"
                             color="contrast"
                             kbq-button
                             type="submit"
@@ -79,7 +78,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                             (keydown.space)="submitOrigin = 'keyboard'"
                             (mouseleave)="submitOrigin = 'mouse'"
                         >
-                            Send
+                            Submit
                         </button>
                     </div>
                 </div>
