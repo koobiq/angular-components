@@ -51,31 +51,19 @@ Or take the weights from the [JetBrains releases](https://github.com/JetBrains/J
 
 #### Text styles
 
-The text styles live in the design tokens: `text-*`, `caps-*`, `display-*`, `italic-*`, `mono-*`, `tabular-*`, `title`, `headline` and `subheading` — 45 styles. Each style is a set of `--kbq-typography-<style>-*` variables: family, size, line height, letter spacing, weight, style, text transform and OpenType features. Koobiq components take their values only from these variables, so editing the tokens changes the whole interface.
-
-The same styles are available as classes: `koobiq-typography()` of `@koobiq/components/core/styles/koobiq-theme` emits them, and the prebuilt `prebuilt-themes/theme.css` already ships them — `.kbq-display-big`, `.kbq-headline`, `.kbq-title`, `.kbq-text-normal`, `.kbq-text-normal-strong`, `.kbq-caps-normal`, `.kbq-mono-normal`, `.kbq-tabular-normal` and the rest.
+The ready-made text styles live in the tokens: family, size, line height, letter spacing, weight, text transform and OpenType features are collected in the `--kbq-typography-<style>-*` variables. Use them as classes rather than assembling your own style from individual properties — that way the text matches the components. The prebuilt `prebuilt-themes/theme.css` ships the classes; when you build the theme yourself, `koobiq-typography()` of `@koobiq/components/core/styles/koobiq-theme` emits them.
 
 ```html
 <h2 class="kbq-headline">Heading</h2>
 <p class="kbq-text-normal">Interface text</p>
-<p class="kbq-text-compact">Caption</p>
-```
-
-A single level can be applied in your own styles with the mixin from `@koobiq/components/core/styles/common/tokens` — the classes are built on it:
-
-```scss
-@use '@koobiq/components/core/styles/common/tokens' as tokens;
-
-.my-caption {
-    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
-}
 ```
 
 #### How to change the fonts
 
-Every style points at three family variables: `--kbq-font-family-base` for text, `--kbq-font-family-accent` for headings and display styles, `--kbq-font-family-mono` for monospaced text. Override them and the whole interface switches to your fonts:
+Override the global family variables:
 
 ```scss
+/* after the tokens are connected */
 :root {
     --kbq-font-family-base: 'MySans', sans-serif;
     --kbq-font-family-accent: 'MyDisplay', 'MySans', sans-serif;
@@ -83,28 +71,6 @@ Every style points at three family variables: `--kbq-font-family-base` for text,
 }
 ```
 
-Declare the override after the tokens are connected, otherwise the token value wins.
-
-A single style is changed with its own variable — the main text, for example:
-
-```scss
-:root {
-    --kbq-typography-text-normal-font-family: 'MySans', sans-serif;
-    --kbq-typography-text-normal-font-feature-settings: 'ss01', 'zero';
-}
-```
-
 #### Check the font before installing it
 
 Before installing the font, check the one your source serves: it has to contain the characters your interface uses and the OpenType features Koobiq enables. Serving by `unicode-range` — which is what CDNs and the subsets built from them do, Inter in Fontsource for example — drops the features along with the glyphs.
-
-#### Features from the tokens
-
-Koobiq enables the OpenType features through design tokens — for app text, take the values from the tokens:
-
-```scss
-body {
-    font-family: var(--kbq-typography-text-normal-font-family);
-    font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
-}
-```

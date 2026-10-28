@@ -51,31 +51,19 @@ JetBrains Mono можно подключить по ссылке с Google Fonts
 
 #### Текстовые стили
 
-Текстовые стили живут в дизайн-токенах: `text-*`, `caps-*`, `display-*`, `italic-*`, `mono-*`, `tabular-*`, `title`, `headline` и `subheading` — 45 стилей. Каждый стиль — это набор переменных `--kbq-typography-<стиль>-*`: семейство, кегль, интерлиньяж, трекинг, вес, начертание, регистр и OpenType-фичи. Компоненты Koobiq берут значения только из этих переменных, поэтому правка токенов меняет вид всего интерфейса.
-
-Те же стили доступны классами — их отдаёт `koobiq-typography()` из `@koobiq/components/core/styles/koobiq-theme`, а готовая тема `prebuilt-themes/theme.css` содержит их сразу — `.kbq-display-big`, `.kbq-headline`, `.kbq-title`, `.kbq-text-normal`, `.kbq-text-normal-strong`, `.kbq-caps-normal`, `.kbq-mono-normal`, `.kbq-tabular-normal` и остальные.
+Готовые текстовые стили лежат в токенах: семейство, кегль, интерлиньяж, трекинг, вес, регистр и OpenType-фичи собраны в переменные `--kbq-typography-<стиль>-*`. Используйте их классами, а не собирайте свой стиль из отдельных свойств — так текст совпадает с компонентами. Готовая тема `prebuilt-themes/theme.css` содержит классы сразу, при сборке темы их отдаёт `koobiq-typography()` из `@koobiq/components/core/styles/koobiq-theme`.
 
 ```html
 <h2 class="kbq-headline">Заголовок</h2>
 <p class="kbq-text-normal">Текст интерфейса</p>
-<p class="kbq-text-compact">Подпись</p>
-```
-
-Отдельный уровень можно применить в своих стилях через `kbq-typography-level-to-styles-css-variables()` из `@koobiq/components/core/styles/common/tokens` — на нём и построены классы:
-
-```scss
-@use '@koobiq/components/core/styles/common/tokens' as tokens;
-
-.my-caption {
-    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
-}
 ```
 
 #### Как изменить шрифты
 
-Все стили ссылаются на три переменные семейств: `--kbq-font-family-base` — текст, `--kbq-font-family-accent` — заголовки и дисплейные стили, `--kbq-font-family-mono` — моноширинный текст. Переопределите их, и интерфейс целиком перейдёт на ваши шрифты:
+Переопределите глобальные переменные семейств:
 
 ```scss
+/* после подключения токенов */
 :root {
     --kbq-font-family-base: 'MySans', sans-serif;
     --kbq-font-family-accent: 'MyDisplay', 'MySans', sans-serif;
@@ -83,28 +71,6 @@ JetBrains Mono можно подключить по ссылке с Google Fonts
 }
 ```
 
-Объявляйте переопределение после подключения токенов — иначе победит значение из токенов.
-
-Один стиль меняется своей переменной, например только основной текст:
-
-```scss
-:root {
-    --kbq-typography-text-normal-font-family: 'MySans', sans-serif;
-    --kbq-typography-text-normal-font-feature-settings: 'ss01', 'zero';
-}
-```
-
 #### Проверьте шрифт перед подключением
 
 Перед подключением проверьте шрифт из вашего источника: в нём должны быть символы, которые использует интерфейс, и OpenType-фичи, которые включает Koobiq. Раздача по `unicode-range` — так работают CDN и собранные из них сабсеты, например Inter в Fontsource — выбрасывает вместе с глифами и фичи.
-
-#### Фичи из токенов
-
-OpenType-фичи Koobiq включает через дизайн-токены — для текста приложения достаточно взять значения из них:
-
-```scss
-body {
-    font-family: var(--kbq-typography-text-normal-font-family);
-    font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
-}
-```
