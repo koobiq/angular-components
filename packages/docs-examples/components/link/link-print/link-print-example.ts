@@ -8,15 +8,15 @@ import { KbqLink } from '@koobiq/components/link';
     selector: 'link-print-example',
     imports: [KbqLink],
     template: `
-        <div style="padding: 16px">
-            <a
-                href="https://www.cvedetails.com/cve/CVE-2019-1020010/"
-                kbqLink
-                [print]="'cvedetails.com/cve/CVE-2019-1020010'"
-            >
-                CVE-2019-1020010
-            </a>
-        </div>
+        <a kbqLink print href="https://www.cvedetails.com/cve/CVE-2019-1020010/" target="_blank">CVE-2019-1020010</a>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

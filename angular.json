@@ -50,8 +50,8 @@
                                 "output": "/assets/SVGIcons"
                             },
                             {
-                                "glob": "**/*",
-                                "input": "node_modules/@koobiq/icons/images",
+                                "glob": "**/*.webp",
+                                "input": "node_modules/@koobiq/visuals",
                                 "output": "/assets/images"
                             },
                             {
@@ -390,8 +390,8 @@
                                 "output": "/assets/svg-icons"
                             },
                             {
-                                "glob": "**/*",
-                                "input": "node_modules/@koobiq/icons/images",
+                                "glob": "**/*.webp",
+                                "input": "node_modules/@koobiq/visuals",
                                 "output": "/assets/images"
                             },
                             {
@@ -1056,8 +1056,8 @@
                         },
                         "assets": [
                             {
-                                "glob": "**/*",
-                                "input": "node_modules/@koobiq/icons/images",
+                                "glob": "**/*.webp",
+                                "input": "node_modules/@koobiq/visuals",
                                 "output": "/assets/images"
                             }
                         ],

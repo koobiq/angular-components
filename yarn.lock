@@ -3700,6 +3700,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@koobiq/visuals@npm:^12.4.0":
+  version: 12.4.0
+  resolution: "@koobiq/visuals@npm:12.4.0"
+  checksum: 10c0/88b5c39f7baf50b1fc2549e68b08c2ed50dc95344c0e8765f3ed2c801dde34f2ea170cbea17806c51797a2263038fddae8941a1322fb09d02d76e9fa6e627dc8
+  languageName: node
+  linkType: hard
+
 "@listr2/prompt-adapter-inquirer@npm:3.0.5":
   version: 3.0.5
   resolution: "@listr2/prompt-adapter-inquirer@npm:3.0.5"
@@ -10760,6 +10767,7 @@ __metadata:
     "@koobiq/icons": "npm:^12.4.0"
     "@koobiq/luxon-date-adapter": "npm:^3.5.1"
     "@koobiq/moment-date-adapter": "npm:^3.5.1"
+    "@koobiq/visuals": "npm:^12.4.0"
     "@maskito/angular": "npm:^5.1.0"
     "@maskito/core": "npm:^5.1.0"
     "@maskito/kit": "npm:^5.6.0"

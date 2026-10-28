@@ -58,7 +58,11 @@ const WITHHELD: Record<string, string> = {
     'component-health': 'internal quality tracking'
 };
 
+const MATCHED_IN_RUSSIAN = new Set(['which-component-when']);
+
 const INTERNAL = /^\d{2}-/;
+// `.claude/rules/schematics.md` shares its name with the `schematics` guide
+const HIDDEN_DIR = /(^|\/)\.[^/]+\//;
 const GUIDE_FILE = /(?:^|\/)([a-z0-9-]+?)(?:\.(en|ru))?\.mdx?$/;
 
 /** `lang` is null when the file name does not say; the content decides. */
@@ -68,7 +72,7 @@ const locate = (paths: string[]): Located[] => {
     const found: Located[] = [];
 
     for (const path of paths) {
-        if (INTERNAL.test(basename(path))) continue;
+        if (INTERNAL.test(basename(path)) || HIDDEN_DIR.test(path)) continue;
 
         const match = GUIDE_FILE.exec(path);
         const id = match?.[1];
@@ -160,7 +164,11 @@ export const buildGuides = (repo: string): Guide[] => {
         const lang = named ?? detectLang(source);
         const key = `${id}\t${lang}`;
 
-        if (guides.has(key)) return;
+        // Only the English text ships, except where the Russian text is matched against rather than
+        // read: an agent reads English as well as Russian and answers in the user's language, so a
+        // second copy would only double the size. `which_component_when` matches the words of a task
+        // against the guide's rows, and a Russian task has nothing to hit in the English ones.
+        if ((lang !== 'en' && !MATCHED_IN_RUSSIAN.has(id)) || guides.has(key)) return;
 
         const { lede, sections } = parseGuide(source);
         const trimmed = trimMigration(id, sections);
@@ -204,8 +212,8 @@ export const buildGuides = (repo: string): Guide[] => {
     // until someone remembers to commit. Nothing arbitrary gets in: `locate` only returns ids that
     // `PUBLIC_GUIDES` names, and everything taken here is flagged `unreleased`.
     const onDisk = [
-        ...git(repo, ['ls-files']).split('\n'),
-        ...git(repo, ['ls-files', '--others', '--exclude-standard']).split('\n')
+        ...git(repo, ['ls-files', 'docs/guides']).split('\n'),
+        ...git(repo, ['ls-files', '--others', '--exclude-standard', 'docs/guides']).split('\n')
     ].filter(Boolean);
 
     for (const { id, lang, path } of locate(onDisk)) {
@@ -238,7 +246,7 @@ const main = (): void => {
         [
             outputPath,
             `  from release  ${latestRelease(repo) ?? 'none — working tree only'}`,
-            `  guides        ${guides.length} (${new Set(guides.map((guide) => guide.id)).size} ids x languages)`,
+            `  guides        ${guides.length}`,
             `  sections      ${sections}`,
             `  size          ${Math.round(Buffer.byteLength(JSON.stringify(guides)) / 1024)} KB`,
             `  built in      ${((Date.now() - started) / 1000).toFixed(1)}s`,

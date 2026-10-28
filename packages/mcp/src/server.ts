@@ -119,8 +119,7 @@ const register = (server: McpServer, catalog: Catalog): void => {
                 section: z
                     .string()
                     .optional()
-                    .describe('Section heading, exact or partial; falls back to a keyword from its text'),
-                lang: z.enum(['en', 'ru']).optional().describe('Preferred language, default en')
+                    .describe('Section heading, exact or partial; falls back to a keyword from its text')
             }
         },
         async (args) => text(toolGetGuide(catalog, args))
@@ -134,8 +133,7 @@ const register = (server: McpServer, catalog: Catalog): void => {
             inputSchema: {
                 from: z.string().describe('Version being upgraded from, e.g. "18.4.0"'),
                 to: z.string().optional().describe('Version being upgraded to; defaults to the installed one'),
-                component: z.string().optional().describe('List this entry point\'s changes, e.g. "select"'),
-                lang: z.enum(['en', 'ru']).optional().describe('Language of the migration guide, default en')
+                component: z.string().optional().describe('List this entry point\'s changes, e.g. "select"')
             }
         },
         async (args) => text(toolMigrate(catalog, args))
