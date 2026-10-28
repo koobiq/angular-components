@@ -20,7 +20,7 @@
     />
     <div class="kbq-toggle-bar-container">
         <div class="kbq-toggle-bar" [class.kbq-progress]="loading()">
-            <div class="kbq-toggle__circle" [@switch]="currentCheckState"></div>
+            <div class="kbq-toggle__circle" [@switch]="currentCheckState" [@.disabled]="!animationsEnabled"></div>
             <div class="kbq-toggle__thumb"></div>
         </div>
     </div>

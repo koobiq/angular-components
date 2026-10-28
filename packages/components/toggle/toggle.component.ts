@@ -190,6 +190,14 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     /** @docs-private */
     protected currentCheckState: TransitionCheckState = TransitionCheckState.Init;
 
+    /**
+     * Whether position changes animate. Off until the macrotask after creation, so that a value written in the same
+     * tick (ngModel writes its value asynchronously) is applied without the animation.
+     *
+     * @docs-private
+     */
+    protected animationsEnabled = false;
+
     /** Defines the behavior when a user clicks on the toggle. */
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
@@ -205,6 +213,8 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         // `writeValue` (ngModel/formControl) now runs on `KbqCheckable`, bypassing the `checked`/`indeterminate`
         // setters below, so this keeps the `[@switch]` animation state in sync for form-driven value changes too.
         effect(() => this.setTransitionCheckState());
+
+        setTimeout(() => (this.animationsEnabled = true));
     }
 
     ngAfterViewInit(): void {
