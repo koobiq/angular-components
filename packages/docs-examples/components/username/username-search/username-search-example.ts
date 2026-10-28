@@ -44,7 +44,7 @@ import { startWith } from 'rxjs';
                             <span kbqUsernameSecondary>
                                 <span [innerHTML]="user.login | kbqHighlightBackground: keywords()"></span>
                                 @if (user.site) {
-                                    &nbsp;
+                                    {{ ' ' }}
                                     <span
                                         kbqUsernameSecondaryHint
                                         [innerHTML]="'(' + user.site + ')' | kbqHighlightBackground: keywords()"
