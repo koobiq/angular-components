@@ -29,11 +29,11 @@ npm install inter-ui @fontsource/jetbrains-mono
 @import '@fontsource/jetbrains-mono/700.css';
 ```
 
-In the inter-ui package `inter-latin.css` and the `*-latin` folders sit next to `inter.css` — those are trimmed builds, with neither Cyrillic nor some of the features. Take only `inter.css`.
+In the inter-ui package `inter-latin.css` and the `*-latin` folders sit next to `inter.css` — those are trimmed builds, with neither Cyrillic nor some of the features. Only `inter.css` is suitable.
 
 #### A CDN and self-hosting
 
-Google Fonts does not work for Inter: it serves the font trimmed — without some of the usual symbols and without the features the Koobiq tokens declare, so the zero, for one, is drawn without its slash. Inter comes as files: [rsms.me/inter/download](https://rsms.me/inter/download/), where the archive ships a ready `inter.css`.
+Google Fonts does not work for Inter: it serves the font trimmed — without some of the usual symbols and without the features the Koobiq tokens declare, so, for example, the slashed zero does not appear. Inter comes as files: [rsms.me/inter/download](https://rsms.me/inter/download/), where the archive ships a ready `inter.css`.
 
 ```scss
 @import 'assets/fonts/inter/inter.css';
@@ -49,7 +49,7 @@ JetBrains Mono can be linked from Google Fonts:
 
 #### Text styles
 
-The ready-made text styles live in the tokens: family, size, line height, letter spacing, weight, text transform and OpenType features are collected in the `--kbq-typography-<style>-*` variables. Use them as classes rather than assembling your own style from individual properties — that way the text matches the components. The prebuilt `prebuilt-themes/theme.css` ships the classes; when you build the theme yourself, `koobiq-typography()` of `@koobiq/components/core/styles/koobiq-theme` emits them.
+The ready-made text styles live in the tokens: family, size, line height, letter spacing, weight, text transform and OpenType features are collected in the `--kbq-typography-<style>-*` variables. The styles are applied as classes rather than assembled from individual properties — that way the text matches the components. The prebuilt `prebuilt-themes/theme.css` ships the classes; when the theme is built by hand, `koobiq-typography()` of `@koobiq/components/core/styles/koobiq-theme` emits them.
 
 ```html
 <h2 class="kbq-headline">Heading</h2>
@@ -58,7 +58,7 @@ The ready-made text styles live in the tokens: family, size, line height, letter
 
 #### How to change the fonts
 
-Override the global family variables:
+The fonts are changed by overriding the global family variables:
 
 ```scss
 /* after the tokens are connected */
@@ -69,6 +69,6 @@ Override the global family variables:
 }
 ```
 
-#### Check the font before installing it
+#### Checking the font before installing it
 
-Before installing the font, check the one your source serves: it has to contain the characters your interface uses and the OpenType features Koobiq enables. Serving by `unicode-range` — which is what CDNs and the subsets built from them do, Inter in Fontsource for example — drops the features along with the glyphs.
+A font from any source is checked before installing: it has to contain the characters the interface uses and the OpenType features Koobiq enables. Serving by `unicode-range` — which is what CDNs and the subsets built from them do, Inter in Fontsource for example — drops the features along with the glyphs.
