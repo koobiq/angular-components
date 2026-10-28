@@ -41,9 +41,10 @@ const USERS: KbqUserInfo[] = [
                         <span kbqUsernameSecondary>
                             <span [innerHTML]="option.value.login | kbqHighlightBackground: keywords"></span>
                             @if (option.value.site) {
+                                &nbsp;
                                 <span
                                     kbqUsernameSecondaryHint
-                                    [innerHTML]="' (' + option.value.site + ')' | kbqHighlightBackground: keywords"
+                                    [innerHTML]="'(' + option.value.site + ')' | kbqHighlightBackground: keywords"
                                 ></span>
                             }
                         </span>
