@@ -1,4 +1,4 @@
-<form novalidate class="kbq-form-vertical" [formGroup]="form" (ngSubmit)="submitForm()">
+<form novalidate class="kbq-form-vertical" [formGroup]="form" (input)="hideErrorOnceFilled()" (ngSubmit)="submitForm()">
     @if (showError()) {
         <kbq-alert
             alertColor="error"
