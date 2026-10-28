@@ -333,6 +333,12 @@ describe('FlatTreeControl', () => {
             expect(control.expansionModel.selected).toEqual(['documents', 'specs', 'draft', 'readme']);
         });
 
+        it('should find no parents of a node before the data nodes are set', () => {
+            control.dataNodes = undefined!;
+
+            expect(control.getParents(byName(nodes, 'draft'))).toEqual([]);
+        });
+
         it('should expand the expandable nodes a filter keeps by key', () => {
             control.filterNodes('draft');
 

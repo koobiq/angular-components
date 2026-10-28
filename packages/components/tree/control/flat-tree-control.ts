@@ -169,13 +169,16 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
      * as the expansion methods accept it too.
      */
     private indexOfNode(node: T): number {
-        const index = this.dataNodes?.indexOf(node) ?? -1;
-        const { trackBy } = this;
+        const { dataNodes, trackBy } = this;
+
+        if (!dataNodes) return -1;
+
+        const index = dataNodes.indexOf(node);
 
         if (index !== -1 || !trackBy) return index;
 
         const key = trackBy(node);
 
-        return this.dataNodes.findIndex((candidate) => trackBy(candidate) === key);
+        return dataNodes.findIndex((candidate) => trackBy(candidate) === key);
     }
 }

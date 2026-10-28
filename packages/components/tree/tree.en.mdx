@@ -144,8 +144,9 @@ expanded, as a property or in the options, the last argument of `FlatTreeControl
 
 <Example id="tree-track-by" />
 
-`expansionModel` then holds the keys rather than the nodes, and the types of the tree and its events
-take the key type as one more parameter: `KbqTreeSelection<FileFlatNode, string>`.
+`expansionModel` then holds the keys rather than the nodes, and the types of the tree, its events and
+its data source take the key type as one more parameter: `KbqTreeSelection<FileFlatNode, string>`,
+`KbqTreeFlatDataSource<FileNode, FileFlatNode, string>`.
 
 The tree's own `trackBy` input, a `TrackByFunction` of the index and the node, overrides the key the rows
 are re-used by; it does not change the expansion. Without a control `trackBy` it is the only way to
