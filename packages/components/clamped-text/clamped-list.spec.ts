@@ -9,11 +9,14 @@ const AXE_TIMEOUT = 15000;
 
 /** jsdom has no Web Animations API, so `animate` is supplied for the specs that observe the animation. */
 const mockAnimate = () => {
-    const animate = vi.fn(() => ({ cancel: vi.fn() }) as unknown as Animation);
+    let resolveFinished!: () => void;
+    const finished = new Promise<void>((resolve) => (resolveFinished = resolve));
+    const cancel = vi.fn();
+    const animate = vi.fn(() => ({ cancel, finished }) as unknown as Animation);
 
     Object.defineProperty(HTMLElement.prototype, 'animate', { value: animate, configurable: true, writable: true });
 
-    return animate;
+    return { animate, cancel, resolveFinished };
 };
 
 const mockReducedMotion = () => {
@@ -221,7 +224,7 @@ describe('KbqClampedList', () => {
         afterEach(restoreAnimationEnvironment);
 
         it('should animate block-size of the host between the heights before and after the toggle', async () => {
-            const animate = mockAnimate();
+            const { animate } = mockAnimate();
 
             getTrigger(debugElement).nativeElement.click();
             await fixture.whenStable();
@@ -236,7 +239,7 @@ describe('KbqClampedList', () => {
         });
 
         it('should respect the duration', async () => {
-            const animate = mockAnimate();
+            const { animate } = mockAnimate();
 
             fixture.componentInstance.duration.set(250);
             fixture.detectChanges();
@@ -248,7 +251,7 @@ describe('KbqClampedList', () => {
         });
 
         it('should not animate when the height does not change', async () => {
-            const animate = mockAnimate();
+            const { animate } = mockAnimate();
 
             vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({ height: 100 } as DOMRect);
 
@@ -259,7 +262,7 @@ describe('KbqClampedList', () => {
         });
 
         it('should not animate when the user prefers reduced motion', async () => {
-            const animate = mockAnimate();
+            const { animate } = mockAnimate();
 
             mockReducedMotion();
 
@@ -271,12 +274,25 @@ describe('KbqClampedList', () => {
         });
 
         it('should not animate when the items change without a toggle', async () => {
-            const animate = mockAnimate();
+            const { animate } = mockAnimate();
 
             fixture.componentInstance.items.set(Array.from({ length: 30 }, (_, i) => `Item ${i + 1}`));
             await fixture.whenStable();
 
             expect(animate).not.toHaveBeenCalled();
+        });
+
+        it.each([NaN, -1])('should not animate with the invalid duration %s', async (duration) => {
+            const { animate } = mockAnimate();
+
+            fixture.componentInstance.duration.set(duration);
+            fixture.detectChanges();
+
+            getTrigger(debugElement).nativeElement.click();
+            await fixture.whenStable();
+
+            expect(animate).not.toHaveBeenCalled();
+            expect(getItems(debugElement).length).toBe(fixture.componentInstance.items().length);
         });
     });
 });

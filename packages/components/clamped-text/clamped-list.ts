@@ -42,7 +42,9 @@ export class KbqClampedList<T> implements KbqClamped {
     readonly hiddenThreshold = input(6, { transform: numberAttribute });
 
     /**
-     * Duration of the expand and collapse animation in milliseconds. Defaults to `100`.
+     * Duration of the expand and collapse animation in milliseconds.
+     * Only state changes made through the disclosure toggle animate: programmatic writes of
+     * `isCollapsed` and changes of `items` switch instantly. Defaults to `100`.
      */
     readonly duration = input<number, number | string | null | undefined>(100, { transform: numberAttribute });
 
