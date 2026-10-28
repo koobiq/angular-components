@@ -19,7 +19,7 @@ Both fonts are installed from npm: Inter — [from the inter-ui package](https:/
 npm install inter-ui @fontsource/jetbrains-mono
 ```
 
-The **inter-ui** package ships `inter.css` — a full file with Cyrillic, the usual special symbols and the slashed zero. `inter-latin.css` is not used: it has neither Cyrillic nor some of the features.
+The **inter-ui** package ships `inter.css`, which has the full font feature set — Cyrillic, popular special symbols and the slashed zero. `inter-latin.css` is not used: it has neither Cyrillic nor some of the features.
 
 ```scss
 @import 'inter-ui/inter.css';
@@ -31,7 +31,7 @@ The **inter-ui** package ships `inter.css` — a full file with Cyrillic, the us
 
 #### A CDN and self-hosting
 
-Google Fonts does not work for Inter: it serves the font trimmed — without some of the usual symbols and without the features the Koobiq tokens declare, so, for example, the slashed zero does not appear. Inter comes [as files from rsms.me](https://rsms.me/inter/download/), where the archive ships a ready-made stylesheet.
+Google Fonts does not work for Inter: it serves the font trimmed — without some of the popular symbols and without the features the Koobiq tokens declare, so, for example, the slashed zero does not appear. Inter comes [as files from rsms.me](https://rsms.me/inter/download/), where the archive ships a ready-made stylesheet.
 
 ```scss
 @import 'assets/fonts/inter/inter.css';
