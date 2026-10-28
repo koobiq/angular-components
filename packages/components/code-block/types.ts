@@ -18,7 +18,7 @@ export type KbqCodeBlockFile = {
     filename?: string;
 
     /**
-     * File language, requires for correct syntax highlighting. It has to be registered in `languages` of
+     * File language, required for correct syntax highlighting. It has to be registered in `languages` of
      * `KbqCodeBlockHighlightJsConfig`, unless the full bundle of highlight.js is loaded. If not provided or not
      * registered, will be set to `KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE`, or to `plaintext` if that is not registered
      * either.
