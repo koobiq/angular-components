@@ -546,6 +546,8 @@ export interface KbqTreeOptionParent<T = any> {
     inSelect: boolean;
     multiple: boolean;
     optionShouldHoldFocusOnBlur: boolean;
+    reportOptionBlur?(event: KbqTreeOptionEvent): void;
+    reportOptionFocus?(event: KbqTreeOptionEvent): void;
     selectAllState: KbqPseudoCheckboxState;
     // (undocumented)
     selectionModel: SelectionModel<T>;
@@ -628,9 +630,7 @@ export class KbqTreeSelection<T = any, K = T> extends KbqTreeBase<T, FlatTreeCon
     // @deprecated (undocumented)
     readonly onSelectAll: _angular_core.OutputEmitterRef<KbqTreeSelectAllEvent<KbqTreeOption<T>, T, K>>;
     onTouched: () => void;
-    // (undocumented)
     get optionBlurChanges(): Observable<KbqTreeOptionEvent>;
-    // (undocumented)
     get optionFocusChanges(): Observable<KbqTreeOptionEvent>;
     // (undocumented)
     optionShouldHoldFocusOnBlur: boolean;
@@ -642,6 +642,8 @@ export class KbqTreeSelection<T = any, K = T> extends KbqTreeBase<T, FlatTreeCon
     // (undocumented)
     renderedOptions: QueryList<KbqTreeOption<T>>;
     renderNodeChanges(data: T[] | ReadonlyArray<T>, dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
+    reportOptionBlur(event: KbqTreeOptionEvent): void;
+    reportOptionFocus(event: KbqTreeOptionEvent): void;
     // (undocumented)
     resetFocusedItemOnBlur: boolean;
     protected get resolvedAriaLabel(): string | null;

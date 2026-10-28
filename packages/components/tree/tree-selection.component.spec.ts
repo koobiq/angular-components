@@ -9,6 +9,7 @@ import {
     effect,
     EventEmitter,
     InputSignal,
+    NgZone,
     signal,
     Type,
     viewChild,
@@ -34,6 +35,7 @@ import {
     KbqMultipleInput,
     KbqOptionActionComponent,
     KbqOptionModule,
+    KbqPseudoCheckbox,
     KbqStateSavingService,
     KbqStateStore,
     LEFT_ARROW,
@@ -2287,6 +2289,35 @@ describe('KbqTreeSelection', () => {
             });
         });
 
+        describe('tri-state checkbox projected while the tree hides its own', () => {
+            it('should keep the projected checkbox of an ancestor in step with the selection', async () => {
+                vi.useFakeTimers();
+                configureKbqTreeTestingModule();
+
+                const fixture = TestBed.createComponent(TreeWithProjectedThirdStateCheckbox);
+                const { tree, treeControl } = fixture.componentInstance;
+                const settle = async () => {
+                    fixture.detectChanges();
+                    await vi.advanceTimersByTimeAsync(0);
+                    fixture.detectChanges();
+                };
+
+                await settle();
+                treeControl.expand(treeControl.hasValue('Pictures')!);
+                await settle();
+
+                tree().selectionModel.select(treeControl.hasValue('Sun')!);
+                await settle();
+
+                const pictures = getNodeByText(fixture.nativeElement, 'Pictures');
+
+                expect(tree().renderedOptions.find((option) => option.value === 'Pictures')!.checkboxState).toBe(
+                    'indeterminate'
+                );
+                expect(pictures.querySelector('kbq-pseudo-checkbox')!.classList).toContain('kbq-indeterminate');
+            });
+        });
+
         describe('tri-state checkbox over replaced data', () => {
             let fixture: ComponentFixture<TreeWithTrackedThirdStateCheckbox>;
             let component: TreeWithTrackedThirdStateCheckbox;
@@ -2389,16 +2420,41 @@ describe('KbqTreeSelection', () => {
                 expect(root.checkboxState).toBe('indeterminate');
             });
 
-            it('should not roll every newly rendered row up through its ancestors', async () => {
+            it('should roll no rendered row up through its ancestors, selected ones included', async () => {
                 vi.useFakeTimers();
 
-                const rollUps = vi.spyOn(component.treeControl, 'getParents');
+                const { tree, treeControl } = component;
 
-                component.treeControl.expandAll();
+                tree().selectionModel.select(treeControl.hasValue(`node-${DEEP_CHAIN_DEPTH}`)!);
                 await settle();
 
-                expect(getNodes(treeElement).length).toBe(component.treeControl.dataNodes.length);
+                const rollUps = vi.spyOn(treeControl, 'getParents');
+
+                treeControl.expandAll();
+                await settle();
+
+                expect(getNodes(treeElement).length).toBe(treeControl.dataNodes.length);
                 expect(rollUps).not.toHaveBeenCalled();
+                expect(optionFor(`node-${DEEP_CHAIN_DEPTH}`).selected).toBe(true);
+                expect(optionFor('node-0').checkboxState).toBe('indeterminate');
+            });
+
+            it('should sweep the rows once for the selection changes of one task', async () => {
+                vi.useFakeTimers();
+
+                const { tree, treeControl } = component;
+
+                treeControl.expandAll();
+                await settle();
+
+                const sweeps = vi.spyOn(optionFor('node-0'), 'markForCheck');
+
+                ['leaf-1', 'leaf-2', 'leaf-3'].forEach((name) =>
+                    tree().selectionModel.select(treeControl.hasValue(name)!)
+                );
+                await settle();
+
+                expect(sweeps).toHaveBeenCalledTimes(1);
             });
         });
 
@@ -3057,22 +3113,17 @@ describe('KbqTreeSelection', () => {
                 expect(treeElement.querySelectorAll('.kbq-tree-option').length).toBe(0);
             });
 
-            it('should drop the per-option focus subscriptions', async () => {
-                vi.useFakeTimers();
-
+            it('should complete optionFocusChanges and optionBlurChanges', () => {
                 const tree = component.tree();
+                const focusCompleted = vi.fn();
+                const blurCompleted = vi.fn();
 
-                tree.onKeyDown(createKeyboardEvent('keydown', DOWN_ARROW));
-                fixture.detectChanges();
-                await vi.runOnlyPendingTimersAsync();
-
-                expect(tree['optionFocusSubscription']).not.toBeNull();
-                expect(tree['optionBlurSubscription']).not.toBeNull();
-
+                tree.optionFocusChanges.subscribe({ complete: focusCompleted });
+                tree.optionBlurChanges.subscribe({ complete: blurCompleted });
                 fixture.destroy();
 
-                expect(tree['optionFocusSubscription']).toBeNull();
-                expect(tree['optionBlurSubscription']).toBeNull();
+                expect(focusCompleted).toHaveBeenCalledTimes(1);
+                expect(blurCompleted).toHaveBeenCalledTimes(1);
             });
 
             it('should not restore the tab index after the tree is gone', () => {
@@ -3926,6 +3977,37 @@ class KbqTreeAppDeepData extends TreeParams {
     `
 })
 class TreeWithThirdStateCheckbox extends TreeParams {
+    readonly tree = viewChild.required(KbqTreeSelection);
+}
+
+@Component({
+    imports: [KbqTreeModule, KbqPseudoCheckbox],
+    template: `
+        <kbq-tree-selection multiple="keyboard" [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                #option="kbqTreeOption"
+                kbqTreeNodePadding
+                [checkboxThirdState]="true"
+            >
+                <kbq-pseudo-checkbox [state]="option.checkboxState" />
+                {{ node.name }}
+            </kbq-tree-option>
+
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                #option="kbqTreeOption"
+                kbqTreeNodePadding
+                [checkboxThirdState]="true"
+            >
+                <kbq-pseudo-checkbox [state]="option.checkboxState" />
+                <kbq-tree-node-toggle />
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeWithProjectedThirdStateCheckbox extends TreeParams {
     readonly tree = viewChild.required(KbqTreeSelection);
 }
 
@@ -5746,5 +5828,150 @@ describe('KbqTreeSelection rendering a change of the data', () => {
         TestBed.tick();
 
         expect(selectAllCheckbox().classList).toContain('kbq-indeterminate');
+    });
+
+    it('should leave every view unchecked when the pointer enters a row of a tree outside a select', () => {
+        const row = getNodeByText(fixture.nativeElement, 'Pictures');
+        const checks = countChecks(() => dispatchFakeEvent(row, 'mouseenter'));
+
+        expect(checks.declaringView).toBe(0);
+        expect(checks.rows).toEqual(checks.rows.map(() => 0));
+    });
+
+    it('should leave the zone alone when the pointer enters the row a tree in a select has focused', async () => {
+        const row = getNodeByText(fixture.nativeElement, 'Pictures');
+
+        fixture.componentInstance.tree().inSelect = true;
+        row.focus();
+        await settle();
+
+        const run = vi.spyOn(TestBed.inject(NgZone), 'run');
+
+        dispatchFakeEvent(row, 'mouseenter');
+
+        expect(run).not.toHaveBeenCalled();
+
+        dispatchFakeEvent(getNodeByText(fixture.nativeElement, 'Documents'), 'mouseenter');
+
+        expect(run).toHaveBeenCalled();
+    });
+
+    it('should hand the focus of a row the change brings in to the keyboard before the rows are swept', async () => {
+        fixture.componentInstance.selectAll = false;
+        await settle();
+
+        const { tree, treeControl } = fixture.componentInstance;
+
+        treeControl.expand(node('Documents'));
+        TestBed.tick();
+        dispatchFakeEvent(getNodeByText(fixture.nativeElement, 'angular'), 'focusin');
+
+        expect(tree().keyManager.activeItem!.value).toBe('angular');
+    });
+
+    it('should report through optionFocusChanges the focus of rows rendered after subscribing', async () => {
+        const { tree, treeControl } = fixture.componentInstance;
+        const focused: string[] = [];
+        const subscription = tree().optionFocusChanges.subscribe(({ option }) => focused.push(option.value));
+
+        treeControl.expand(node('Documents'));
+        await settle();
+        getNodeByText(fixture.nativeElement, 'angular').focus();
+        subscription.unsubscribe();
+
+        expect(focused).toEqual(['angular']);
+    });
+});
+
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeWithSharedValues extends TreeParams {
+    readonly tree = viewChild.required<KbqTreeSelection<FileFlatNode>>(KbqTreeSelection);
+
+    constructor() {
+        super();
+
+        // Rows share values (`jpg`, `ts`, `pdf`, `app`): only the node tells such rows apart.
+        this.treeControl.getValue = (node: FileFlatNode) => node.type ?? node.name;
+    }
+}
+
+describe('KbqTreeSelection with rows that share a value', () => {
+    let fixture: ComponentFixture<TreeWithSharedValues>;
+
+    const settle = async (): Promise<void> => {
+        fixture.detectChanges();
+        await new Promise((resolve) => setTimeout(resolve));
+        await fixture.whenStable();
+    };
+
+    const folder = (name: string): FileFlatNode => fixture.componentInstance.treeControl.hasValue(name)!;
+
+    /** The rows the keyboard moves through, in its order. */
+    const keyboardRows = (): HTMLElement[] =>
+        fixture.componentInstance.tree().renderedOptions.map((option) => option.getHostElement());
+
+    const selectedRows = (): string[] =>
+        getNodes(fixture.nativeElement)
+            .filter((row) => row.classList.contains('kbq-selected'))
+            .map((row) => row.textContent!.trim());
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(TreeWithSharedValues);
+        fixture.detectChanges();
+    });
+
+    it('should mark only the selected node among the rows that share its value', async () => {
+        const { tree, treeControl } = fixture.componentInstance;
+
+        treeControl.expand(folder('Pictures'));
+        treeControl.expand(folder('Documents'));
+        await settle();
+
+        dispatchFakeEvent(getNodeByText(fixture.nativeElement, 'Woods'), 'click');
+        await settle();
+
+        expect(tree().selectionModel.selected.map(({ name }) => name)).toEqual(['Woods']);
+        expect(selectedRows()).toEqual(['Woods']);
+    });
+
+    it('should mark no row while nothing is selected, rows without a value included', async () => {
+        fixture = TestBed.createComponent(TreeWithSharedValues);
+        // Folders carry no value.
+        fixture.componentInstance.treeControl.getValue = (node: FileFlatNode) => node.type;
+        await settle();
+
+        expect(getNodes(fixture.nativeElement).length).toBeGreaterThan(0);
+        expect(selectedRows()).toEqual([]);
+    });
+
+    it('should follow the rows on screen across expanding, collapsing and new data, with values shared by rows', () => {
+        const { dataSource, treeControl } = fixture.componentInstance;
+
+        treeControl.expand(folder('Pictures'));
+        treeControl.expand(folder('Documents'));
+        TestBed.tick();
+
+        expect(getNodes(fixture.nativeElement).length).toBe(11);
+        expect(keyboardRows()).toEqual(getNodes(fixture.nativeElement));
+
+        treeControl.collapse(folder('Pictures'));
+        TestBed.tick();
+
+        expect(getNodes(fixture.nativeElement).length).toBe(8);
+        expect(keyboardRows()).toEqual(getNodes(fixture.nativeElement));
+
+        dataSource.data = buildFileTree(DATA_OBJECT, 0);
+        treeControl.expand(folder('Downloads'));
+        TestBed.tick();
+
+        expect(getNodes(fixture.nativeElement).length).toBe(8);
+        expect(keyboardRows()).toEqual(getNodes(fixture.nativeElement));
     });
 });
