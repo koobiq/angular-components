@@ -72,6 +72,18 @@ Then register it with the agent, for Claude Code in `.mcp.json` at the root of t
 
 The server starts inside the project and reads its `node_modules`, so its answers follow the versions you have installed. It works alongside the skills.
 
+| Tool                   | What it answers                                                                               |
+| ---------------------- | --------------------------------------------------------------------------------------------- |
+| `search`               | Finds entry points, symbols, examples, icons and design tokens by words in English or Russian |
+| `get_component`        | The API of an entry point: inputs, outputs, selectors and `exportAs`                          |
+| `get_example`          | The source of an example from the documentation                                               |
+| `get_icon`             | The name and markup of an icon                                                                |
+| `get_token`            | The CSS variable of a design token and its value in each theme                                |
+| `get_guide`            | A guide or a section of it: installation, theming, localization, migration and others         |
+| `migrate`              | What changed between two versions and which entry points lost API                             |
+| `which_component_when` | Which component fits a task and which neighbor does not, with the reason                      |
+| `list_components`      | Every entry point of `@koobiq/components`, as ids the other tools accept                      |
+
 ### Documentation for LLMs
 
 Every page of this documentation is also available as Markdown, short enough for an agent that reads the web to read whole:

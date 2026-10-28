@@ -54,8 +54,8 @@ interface Part {
 }
 
 /**
- * The `##` part with the most lines of the given shape: the provenance table at the top of the guide has table rows
- * too, but fewer than the clusters, and a line of the component index may carry a `→` as a keyword line does.
+ * The `##` part with the most lines of the given shape: a line of the component index may carry a `→` as a keyword
+ * line does.
  */
 const findPart = (parts: Part[], shape: RegExp, name: string, path: string): Part => {
     const [best] = parts
