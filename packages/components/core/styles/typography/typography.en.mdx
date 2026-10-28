@@ -51,7 +51,7 @@ Or take the weights from the [JetBrains releases](https://github.com/JetBrains/J
 
 #### Check the font before installing it
 
-Before installing the font, check the one your source serves: it has to contain the characters your interface uses and the OpenType features Koobiq enables. Serving by `unicode-range` — which is what CDNs and the subsets built from them do, Inter in Fontsource for example — drops the features along with the glyphs: the zero from the Koobiq tokens loses its slash, the alternate digits never appear, and `₽` and the em dash fall back to a system font. The font file itself can still be complete: a family downloaded from fonts.google.com contains every glyph and feature — the trimming happens in the way it is served.
+Before installing the font, check the one your source serves: it has to contain the characters your interface uses and the OpenType features Koobiq enables. Serving by `unicode-range` — which is what CDNs and the subsets built from them do, Inter in Fontsource for example — drops the features along with the glyphs.
 
 #### Features from the tokens
 
