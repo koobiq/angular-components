@@ -11,7 +11,10 @@ import { KbqUserInfo, KbqUsername } from '@koobiq/components/username';
     template: `
         <a kbqLink><kbq-username [userInfo]="userInfo" [type]="'inherit'" /></a>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class UsernameAsLinkExample {
     userInfo: KbqUserInfo = {
