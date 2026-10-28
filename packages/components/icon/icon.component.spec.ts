@@ -1,9 +1,10 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, Signal, signal, SimpleChange } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injectable, Signal, signal, SimpleChange } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By, DomSanitizer } from '@angular/platform-browser';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { Observable, of } from 'rxjs';
 import { KbqIconButton } from './icon-button.component';
 import { KBQ_ICON_ERROR_STATE_CONTEXT } from './icon-error-state-context';
 import { KbqIconRegistry } from './icon-registry';
@@ -13,6 +14,10 @@ import { KbqIcon } from './icon.component';
 const svgOf = (path: string) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="${path}"/></svg>`;
 
 const ICON_SVG = svgOf('M0 0h16v16H0z');
+
+const SPRITE_SVG = `<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="check_16" viewBox="0 0 16 16"><path d="M1 8l4 4 8-8"/></symbol>
+</svg>`;
 
 @Component({
     imports: [KbqIcon],
@@ -295,16 +300,46 @@ describe('KbqIcon', () => {
             expect(hostOf(fixture).classList).toContain('kbq-plus_16');
         });
 
-        it('should not look up a font icon the registry cannot resolve', () => {
+        // A miss through `getNamedSvgIcon` builds an error, with its stack trace, for every font icon on the page.
+        it('should not build an error for a font icon the registry cannot resolve', () => {
             register('kbq-minus_16');
 
-            const lookup = vi.spyOn(registry, 'getNamedSvgIcon');
+            // On the prototype: an own property would read as a replaced lookup and be asked instead.
+            const lookup = vi.spyOn(KbqIconRegistry.prototype, 'getNamedSvgIcon');
+
+            onTestFinished(() => lookup.mockRestore());
+
             const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
 
             expect(lookup).not.toHaveBeenCalled();
             expect(hostOf(fixture).classList).toContain('kbq-plus_16');
+        });
+
+        it('should still look up a name of a namespace with an icon set', async () => {
+            registry.addSvgIconSetInNamespace('sprite', sanitizer.bypassSecurityTrustResourceUrl('/sprite.svg'));
+
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.componentInstance.name.set('sprite:check_16');
+            fixture.detectChanges();
+
+            TestBed.inject(HttpTestingController).expectOne('/sprite.svg').flush(SPRITE_SVG);
+            await fixture.whenStable();
+
+            expect(hostOf(fixture).querySelector('svg')?.getAttribute('width')).toBe('16');
+        });
+
+        it('should size an svg whose name has a colon after the namespace', () => {
+            registry.addSvgIconLiteralInNamespace('brand', 'logo:dark_24', sanitizer.bypassSecurityTrustHtml(ICON_SVG));
+
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.componentInstance.name.set('brand:logo:dark_24');
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).querySelector('svg')?.getAttribute('width')).toBe('24');
         });
 
         it('should render an SVG that arrives after the first render', async () => {
@@ -509,6 +544,47 @@ describe('KbqIcon', () => {
         fixture.detectChanges();
 
         expect(hostOf(fixture).querySelector('svg')).not.toBeNull();
+    });
+
+    // The registry is public: an application may replace its lookup, and its specs may provide a double of it.
+    describe('replaced registry lookup', () => {
+        const svgElement = (): SVGElement => {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+            svg.setAttribute('viewBox', '0 0 16 16');
+
+            return svg;
+        };
+
+        it('should ask a registry subclass that overrides getNamedSvgIcon', () => {
+            @Injectable()
+            class AppIconRegistry extends KbqIconRegistry {
+                override getNamedSvgIcon(name: string): Observable<SVGElement> {
+                    return name === 'kbq-plus_16' ? of(svgElement()) : super.getNamedSvgIcon(name);
+                }
+            }
+
+            TestBed.configureTestingModule({ providers: [{ provide: KbqIconRegistry, useClass: AppIconRegistry }] });
+
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).querySelector('svg')).not.toBeNull();
+            expect(hostOf(fixture).classList).not.toContain('kbq-plus_16');
+        });
+
+        it('should ask a test double that only has getNamedSvgIcon', () => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: KbqIconRegistry, useValue: { getNamedSvgIcon: () => of(svgElement()) } }]
+            });
+
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).querySelector('svg')).not.toBeNull();
+        });
     });
 
     // The color class of an error icon is `kbq-error` too; the `kbq-error` class binding must not take it away.

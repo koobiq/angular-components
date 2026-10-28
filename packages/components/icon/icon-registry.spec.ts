@@ -5,7 +5,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { firstValueFrom } from 'rxjs';
 import type { MockInstance } from 'vitest';
 import { KbqIconRegistry } from './icon-registry';
-import { kbqIconsResolverProvider } from './icon-registry-providers';
+import { kbqIconsDictProvider, kbqIconsProvider } from './icon-registry-providers';
 
 const ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M0 0h16v16H0z"/></svg>';
 const SPRITE_SVG = `<svg xmlns="http://www.w3.org/2000/svg">
@@ -170,30 +170,28 @@ describe('KbqIconRegistry', () => {
         });
     });
 
-    describe('canResolve', () => {
-        it('is false on an empty registry', () => {
-            expect(registry.canResolve('check')).toBe(false);
+    describe('findSvgIcon', () => {
+        it('is null on an empty registry', () => {
+            expect(registry.findSvgIcon('check')).toBeNull();
         });
 
-        it('is true only for the names registered', () => {
+        it('finds only the names registered', () => {
             registry.addSvgIconLiteral('check', sanitizer.bypassSecurityTrustHtml(ICON_SVG));
             registry.addSvgIconLiteralInNamespace('brand', 'logo', sanitizer.bypassSecurityTrustHtml(ICON_SVG));
 
-            expect(registry.canResolve('check')).toBe(true);
-            expect(registry.canResolve('brand:logo')).toBe(true);
-            expect(registry.canResolve('close')).toBe(false);
-            expect(registry.canResolve('logo')).toBe(false);
+            expect(registry.findSvgIcon('check')).not.toBeNull();
+            expect(registry.findSvgIcon('brand:logo')).not.toBeNull();
+            expect(registry.findSvgIcon('logo', 'brand')).not.toBeNull();
+            expect(registry.findSvgIcon('close')).toBeNull();
+            expect(registry.findSvgIcon('logo')).toBeNull();
         });
 
-        it('is true for any name of a namespace with an icon set', () => {
+        it('leaves any name of a namespace with an icon set to the set', () => {
             registry.addSvgIconSetInNamespace('sprite', sanitizer.bypassSecurityTrustResourceUrl('/sprite.svg'));
 
-            expect(registry.canResolve('sprite:anything')).toBe(true);
-            expect(registry.canResolve('anything')).toBe(false);
-        });
-
-        it('is true for inline SVG markup', () => {
-            expect(registry.canResolve(ICON_SVG)).toBe(true);
+            expect(registry.findSvgIcon('sprite:anything')).not.toBeNull();
+            expect(registry.findSvgIcon('anything', 'sprite')).not.toBeNull();
+            expect(registry.findSvgIcon('anything')).toBeNull();
         });
     });
 
@@ -293,10 +291,19 @@ describe('KbqIconRegistry', () => {
     });
 });
 
-describe('KbqIconRegistry with a resolver', () => {
-    it('can resolve any name', () => {
-        TestBed.configureTestingModule({ providers: [kbqIconsResolverProvider(() => null)] });
+describe('KbqIconRegistry configured through providers', () => {
+    it('finds only the names a resolver answers for', () => {
+        TestBed.configureTestingModule({ providers: [kbqIconsDictProvider({ check: '/check.svg' })] });
 
-        expect(TestBed.inject(KbqIconRegistry).canResolve('anything')).toBe(true);
+        const registry = TestBed.inject(KbqIconRegistry);
+
+        expect(registry.findSvgIcon('check')).not.toBeNull();
+        expect(registry.findSvgIcon('close')).toBeNull();
+    });
+
+    it('leaves any bare name to a sprite configured without a namespace', () => {
+        TestBed.configureTestingModule({ providers: [kbqIconsProvider({ spriteUrl: '/sprite.svg' })] });
+
+        expect(TestBed.inject(KbqIconRegistry).findSvgIcon('anything')).not.toBeNull();
     });
 });
