@@ -1184,7 +1184,8 @@ const structure: DocsStructure = makeStructure({
                     path: 'packages/components/username',
                     hasApi: true,
                     apiId: 'username',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-11-11')
                 }
             ].sort((a, b) => a.name.en.localeCompare(b.name.en))
         }
