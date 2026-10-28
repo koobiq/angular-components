@@ -47,8 +47,6 @@ JetBrains Mono can be linked from Google Fonts:
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
 ```
 
-Or take the weights from the [JetBrains releases](https://github.com/JetBrains/JetBrainsMono/releases) — they live in `fonts/webfonts` — and declare them in your global styles.
-
 #### Text styles
 
 The ready-made text styles live in the tokens: family, size, line height, letter spacing, weight, text transform and OpenType features are collected in the `--kbq-typography-<style>-*` variables. Use them as classes rather than assembling your own style from individual properties — that way the text matches the components. The prebuilt `prebuilt-themes/theme.css` ships the classes; when you build the theme yourself, `koobiq-typography()` of `@koobiq/components/core/styles/koobiq-theme` emits them.

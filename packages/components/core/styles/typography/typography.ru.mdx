@@ -47,8 +47,6 @@ JetBrains Mono можно подключить по ссылке с Google Fonts
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
 ```
 
-Или возьмите начертания из [релизов JetBrains](https://github.com/JetBrains/JetBrainsMono/releases) — они лежат в `fonts/webfonts` — и объявите их в глобальных стилях.
-
 #### Текстовые стили
 
 Готовые текстовые стили лежат в токенах: семейство, кегль, интерлиньяж, трекинг, вес, регистр и OpenType-фичи собраны в переменные `--kbq-typography-<стиль>-*`. Используйте их классами, а не собирайте свой стиль из отдельных свойств — так текст совпадает с компонентами. Готовая тема `prebuilt-themes/theme.css` содержит классы сразу, при сборке темы их отдаёт `koobiq-typography()` из `@koobiq/components/core/styles/koobiq-theme`.
