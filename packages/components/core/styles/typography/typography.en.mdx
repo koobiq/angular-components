@@ -1,6 +1,6 @@
 Koobiq typography defines the fonts, weights, and text styles used to create a consistent visual hierarchy in interfaces.
 
-### Installing Fonts
+### Connecting Fonts
 
 Koobiq uses the [Inter](https://github.com/rsms/inter) and [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) fonts by default.
 
@@ -48,6 +48,51 @@ JetBrains Mono can be linked from Google Fonts:
 ```
 
 Or take the weights from the [JetBrains releases](https://github.com/JetBrains/JetBrainsMono/releases) — they live in `fonts/webfonts` — and declare them in your global styles.
+
+#### Text styles
+
+The text styles live in the design tokens: `text-*`, `caps-*`, `display-*`, `italic-*`, `mono-*`, `tabular-*`, `title`, `headline` and `subheading` — 45 styles. Each style is a set of `--kbq-typography-<style>-*` variables: family, size, line height, letter spacing, weight, style, text transform and OpenType features. Koobiq components take their values only from these variables, so editing the tokens changes the whole interface.
+
+The same styles are available as classes: `koobiq-typography()` of `@koobiq/components/core/styles/koobiq-theme` emits them, and the prebuilt `prebuilt-themes/theme.css` already ships them — `.kbq-display-big`, `.kbq-headline`, `.kbq-title`, `.kbq-text-normal`, `.kbq-text-normal-strong`, `.kbq-caps-normal`, `.kbq-mono-normal`, `.kbq-tabular-normal` and the rest.
+
+```html
+<h2 class="kbq-headline">Heading</h2>
+<p class="kbq-text-normal">Interface text</p>
+<p class="kbq-text-compact">Caption</p>
+```
+
+A single level can be applied in your own styles with the mixin from `@koobiq/components/core/styles/common/tokens` — the classes are built on it:
+
+```scss
+@use '@koobiq/components/core/styles/common/tokens' as tokens;
+
+.my-caption {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+}
+```
+
+#### How to change the fonts
+
+Every style points at three family variables: `--kbq-font-family-base` for text, `--kbq-font-family-accent` for headings and display styles, `--kbq-font-family-mono` for monospaced text. Override them and the whole interface switches to your fonts:
+
+```scss
+:root {
+    --kbq-font-family-base: 'MySans', sans-serif;
+    --kbq-font-family-accent: 'MyDisplay', 'MySans', sans-serif;
+    --kbq-font-family-mono: 'MyMono', monospace;
+}
+```
+
+Declare the override after the tokens are connected, otherwise the token value wins.
+
+A single style is changed with its own variable — the main text, for example:
+
+```scss
+:root {
+    --kbq-typography-text-normal-font-family: 'MySans', sans-serif;
+    --kbq-typography-text-normal-font-feature-settings: 'ss01', 'zero';
+}
+```
 
 #### Check the font before installing it
 

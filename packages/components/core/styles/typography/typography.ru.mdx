@@ -1,6 +1,6 @@
 Типографика Koobiq определяет шрифты, начертания и текстовые стили для создания единообразной визуальной иерархии в интерфейсах.
 
-### Добавление шрифтов
+### Подключение шрифтов
 
 Koobiq по умолчанию использует шрифты [Inter](https://github.com/rsms/inter) и [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono).
 
@@ -48,6 +48,51 @@ JetBrains Mono можно подключить по ссылке с Google Fonts
 ```
 
 Или возьмите начертания из [релизов JetBrains](https://github.com/JetBrains/JetBrainsMono/releases) — они лежат в `fonts/webfonts` — и объявите их в глобальных стилях.
+
+#### Текстовые стили
+
+Текстовые стили живут в дизайн-токенах: `text-*`, `caps-*`, `display-*`, `italic-*`, `mono-*`, `tabular-*`, `title`, `headline` и `subheading` — 45 стилей. Каждый стиль — это набор переменных `--kbq-typography-<стиль>-*`: семейство, кегль, интерлиньяж, трекинг, вес, начертание, регистр и OpenType-фичи. Компоненты Koobiq берут значения только из этих переменных, поэтому правка токенов меняет вид всего интерфейса.
+
+Те же стили доступны классами — их отдаёт `koobiq-typography()` из `@koobiq/components/core/styles/koobiq-theme`, а готовая тема `prebuilt-themes/theme.css` содержит их сразу — `.kbq-display-big`, `.kbq-headline`, `.kbq-title`, `.kbq-text-normal`, `.kbq-text-normal-strong`, `.kbq-caps-normal`, `.kbq-mono-normal`, `.kbq-tabular-normal` и остальные.
+
+```html
+<h2 class="kbq-headline">Заголовок</h2>
+<p class="kbq-text-normal">Текст интерфейса</p>
+<p class="kbq-text-compact">Подпись</p>
+```
+
+Отдельный уровень можно применить в своих стилях через `kbq-typography-level-to-styles-css-variables()` из `@koobiq/components/core/styles/common/tokens` — на нём и построены классы:
+
+```scss
+@use '@koobiq/components/core/styles/common/tokens' as tokens;
+
+.my-caption {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+}
+```
+
+#### Как изменить шрифты
+
+Все стили ссылаются на три переменные семейств: `--kbq-font-family-base` — текст, `--kbq-font-family-accent` — заголовки и дисплейные стили, `--kbq-font-family-mono` — моноширинный текст. Переопределите их, и интерфейс целиком перейдёт на ваши шрифты:
+
+```scss
+:root {
+    --kbq-font-family-base: 'MySans', sans-serif;
+    --kbq-font-family-accent: 'MyDisplay', 'MySans', sans-serif;
+    --kbq-font-family-mono: 'MyMono', monospace;
+}
+```
+
+Объявляйте переопределение после подключения токенов — иначе победит значение из токенов.
+
+Один стиль меняется своей переменной, например только основной текст:
+
+```scss
+:root {
+    --kbq-typography-text-normal-font-family: 'MySans', sans-serif;
+    --kbq-typography-text-normal-font-feature-settings: 'ss01', 'zero';
+}
+```
 
 #### Проверьте шрифт перед подключением
 
