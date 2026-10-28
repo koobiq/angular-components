@@ -31,7 +31,7 @@ import { startWith } from 'rxjs';
     ],
     template: `
         <div class="example__content">
-            <kbq-toggle [(ngModel)]="isCompact">Compact trigger</kbq-toggle>
+            <kbq-toggle [(ngModel)]="isCompact">Compact</kbq-toggle>
 
             <kbq-form-field>
                 <kbq-select placeholder="Assignee" [(value)]="selectedUser">
@@ -127,7 +127,6 @@ export class UsernameSearchExample {
     private readonly formatUsername = kbqInjectUsernameFormatter();
 
     protected readonly isCompact = signal(false);
-    protected readonly selectedUser = signal<KbqUserInfo | null>(null);
     protected readonly searchControl = new FormControl('', { nonNullable: true });
 
     private readonly searchText = toSignal(this.searchControl.valueChanges.pipe(startWith('')), { initialValue: '' });
@@ -139,6 +138,8 @@ export class UsernameSearchExample {
         { firstName: 'Elena', middleName: 'Vera', lastName: 'Fox', login: 'efox' },
         { firstName: 'Madonna', login: 'madonna', site: 'corp' }
     ];
+
+    protected readonly selectedUser = signal<KbqUserInfo | null>(this.users[0]);
 
     // The name, the login and the site are rendered in separate elements, so each word of the query is highlighted on its own.
     protected readonly keywords = computed(() => tokenizeSearchQuery(this.searchText()));
