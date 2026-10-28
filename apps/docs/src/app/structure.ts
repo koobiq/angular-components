@@ -482,7 +482,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'code-block',
                     hasApi: true,
                     apiId: 'code-block',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-10')
                 },
                 {
                     id: DocsStructureItemId.ContentPanel,

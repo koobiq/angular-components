@@ -23,7 +23,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     `,
     providers: [
         kbqCodeBlockHighlightJsConfigProvider({
-            core: () => import('highlight.js/lib/core'),
             languages: {
                 json: () => import('highlight.js/lib/languages/json')
             }

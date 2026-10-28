@@ -48,6 +48,7 @@ module.exports = [
             'utils/angular-parsing': path.join(__dirname, 'src/utils/angular-parsing.ts'),
             'utils/icon-migration': path.join(__dirname, 'src/utils/icon-migration.ts'),
             'utils/deprecated-path-migration': path.join(__dirname, 'src/utils/deprecated-path-migration.ts'),
+            'utils/safe-rule': path.join(__dirname, 'src/utils/safe-rule.ts'),
             ...getMigrationInputs()
             //'ng-add/setup-project': path.join(__dirname, 'ng-add/setup-project.ts'),
         },

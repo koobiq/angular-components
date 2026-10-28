@@ -2,13 +2,27 @@ import { DOCUMENT } from '@angular/common';
 import { inject, Injectable, isDevMode } from '@angular/core';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import type { HLJSApi } from 'highlight.js';
+import plaintext from 'highlight.js/lib/languages/plaintext';
 import type { KbqCodeBlockHighlightJsConfig } from './code-block-highlight';
 import { highlightJSLineNumbersPlugin } from './highlightjs-line-numbers';
 
-const defaultHljsLoader = (): Promise<{ default: HLJSApi }> => import('highlight.js');
+// The core and not the full bundle: a bundler emits a chunk for every `import()` it finds, called or not, so the
+// full bundle has to be imported by the application that asks for it. An instance of its own, as the module is one
+// object for the whole process, the full bundle included: the languages one configuration registers on it would reach
+// every other, and every later server render.
+const defaultHljsLoader = async (): Promise<{ default: HLJSApi }> => ({
+    default: (await import('highlight.js/lib/core')).default.newInstance()
+});
 
 // The key of the default configuration: `config ?? {}` would make a new key on every call.
 const DEFAULT_CONFIG: KbqCodeBlockHighlightJsConfig = {};
+
+/**
+ * Language the loader registers on every instance, the fallback of a file the code block cannot highlight otherwise.
+ *
+ * @internal
+ */
+export const PLAIN_TEXT_LANGUAGE = 'plaintext';
 
 /**
  * Options of the line numbers table.
@@ -83,18 +97,19 @@ export class KbqCodeBlockHighlightJsLoader {
         return html ? this.lineNumbersPlugin().lineNumbersValue(html, options) : html;
     }
 
-    private async importInstance({ core, languages }: KbqCodeBlockHighlightJsConfig): Promise<HLJSApi> {
-        const { default: instance } = await (core ?? defaultHljsLoader)();
+    private async importInstance({ core, languages = {} }: KbqCodeBlockHighlightJsConfig): Promise<HLJSApi> {
+        const entries = Object.entries(languages);
+        // The languages do not need the core to load, so they load alongside it.
+        const [{ default: instance }, loaded] = await Promise.all([
+            (core ?? defaultHljsLoader)(),
+            Promise.all(entries.map(([, loader]) => loader()))
+        ]);
 
-        if (languages) {
-            await Promise.all(
-                Object.entries(languages).map(async ([name, loader]) => {
-                    const { default: language } = await loader();
+        entries.forEach(([name], index) => instance.registerLanguage(name, loaded[index].default));
 
-                    instance.registerLanguage(name, language);
-                })
-            );
-        }
+        // The directive falls back to plain text, and highlight.js throws on a language it has not registered, as the
+        // core has none.
+        if (!instance.getLanguage(PLAIN_TEXT_LANGUAGE)) instance.registerLanguage(PLAIN_TEXT_LANGUAGE, plaintext);
 
         return instance;
     }
