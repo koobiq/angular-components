@@ -1,11 +1,21 @@
 import { createExampleResolver, resolveSiteUrl } from './sources';
 
 describe(resolveSiteUrl.name, () => {
-    it('leads a link to an item, in any locale, to its Markdown, which holds every tab of it in English', () => {
+    it('leads a link to an item, in any locale, to its Markdown in English', () => {
         expect(resolveSiteUrl('/en/components/select/overview#search')).toBe(
             'https://koobiq.io/en/components/select.md#search'
         );
         expect(resolveSiteUrl('/ru/main/design-tokens/colors')).toBe('https://koobiq.io/en/main/design-tokens.md');
+    });
+
+    it('leads a link to the API tab to the API of the entry point, which the Markdown of the item only links', () => {
+        expect(resolveSiteUrl('/en/components/tag/api')).toBe('https://koobiq.io/api/tags.md');
+    });
+
+    it('reads a link written with the address of koobiq.io as a link within the site', () => {
+        expect(resolveSiteUrl('https://koobiq.io/en/main/theming/overview')).toBe(
+            'https://koobiq.io/en/main/theming.md'
+        );
     });
 
     it('reads a link without the leading slash from the root of the site, as its base href does', () => {

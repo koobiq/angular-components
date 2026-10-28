@@ -12,10 +12,21 @@ const parser = unified().use(remarkParse).use(remarkGfm);
 /** Every page the site renders, the way a link names it: `/en/components/alert/api`. */
 const SITE_PAGES = new Set(docsGetPagePaths().map(({ path }) => path));
 
-const findLinkProblem = (url: string, served: ReadonlySet<string>): string | null => {
+/** Checks a relative link of a document that has files of its own next to it, such as a skill; `null` when it is fine. */
+export type RelativeLinkCheck = (url: string) => string | null;
+
+const findLinkProblem = (
+    url: string,
+    served: ReadonlySet<string>,
+    checkRelativeLink?: RelativeLinkCheck
+): string | null => {
     if (url.startsWith('#')) return null;
 
-    if (!/^(https?|mailto):/.test(url)) return `a relative link, which leads nowhere outside the site: ${url}`;
+    if (!/^(https?|mailto):/.test(url)) {
+        return checkRelativeLink
+            ? checkRelativeLink(url)
+            : `a relative link, which leads nowhere outside the site: ${url}`;
+    }
 
     if (!url.startsWith(`${LLMS_SITE_ORIGIN}/`)) return null;
 
@@ -33,9 +44,14 @@ const findLinkProblem = (url: string, served: ReadonlySet<string>): string | nul
 /**
  * What a reader of the Markdown would stumble over outside the site: raw HTML, which only the site renders, a leftover
  * of MDX, a title missing from the top or repeated, a heading that skips a level, a link that leads nowhere. `served`
- * holds the paths of the files the site serves under its root, which links to Markdown are checked against.
+ * holds the paths of the files the site serves under its root, which links to Markdown are checked against. A relative
+ * link is a problem, unless `checkRelativeLink` says where it leads.
  */
-export const findMarkdownProblems = (text: string, served: ReadonlySet<string>): string[] => {
+export const findMarkdownProblems = (
+    text: string,
+    served: ReadonlySet<string>,
+    checkRelativeLink?: RelativeLinkCheck
+): string[] => {
     const root = parser.parse(text) as Root;
     const problems: string[] = [];
     let titles = 0;
@@ -65,7 +81,7 @@ export const findMarkdownProblems = (text: string, served: ReadonlySet<string>):
                 break;
             case 'link':
             case 'definition': {
-                const problem = findLinkProblem(node.url, served);
+                const problem = findLinkProblem(node.url, served, checkRelativeLink);
 
                 if (problem) problems.push(problem);
                 break;

@@ -25,3 +25,5 @@ jobs:
       - run: yarn run check-api-docs
       # Reads the manifest docs:api-gen has just written, like check-api-docs.
       - run: yarn run check-llms
+      # The skills read the files check-llms has just checked: every link of a skill has to lead to one of them.
+      - run: yarn run check-skills

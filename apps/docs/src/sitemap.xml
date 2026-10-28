@@ -7,6 +7,9 @@
 		<loc>https://koobiq.io/en/main/installation/overview</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/main/ai-agents/overview</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/main/versioning/overview</loc>
 	</url>
 	<url>
@@ -599,6 +602,9 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/main/installation/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/ai-agents/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/main/versioning/overview</loc>

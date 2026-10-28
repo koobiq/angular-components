@@ -4,11 +4,13 @@ import {
     DocsStructureItemId,
     DocsStructureItemTab
 } from '../../apps/docs/src/app/structure';
+import { COMPONENT_GUIDE_FILE } from './component-guide';
 import { pageSummary } from './page-markdown';
 import {
     createExampleResolver,
     getMarkdownUrl,
     getPageSource,
+    getSiteUrl,
     LLMS_SITE_ORIGIN,
     LlmsPageSources,
     readRepoFile,
@@ -84,7 +86,8 @@ const renderItemLink = (item: DocsStructureItem, sources: LlmsPageSources): stri
 export const renderLlmsTxt = (categories: LlmsCategory[], sources: LlmsPageSources, header: LlmsHeader): string => [
         `# ${TITLE}`,
         `> ${SUMMARY}`,
-        `${renderPackage(header)} Every link below leads to one item of the documentation as Markdown, in English, in the order of its tabs: the overview with the full source of its examples, the API, the extra examples. Without \`.md\`, the address opens the page itself.`,
+        `${renderPackage(header)} Every link below leads to one item of the documentation as Markdown, in English: the text of its overview and examples tabs, which links every example, the API of its entry point and the variables of its component, each a file of its own. Without \`.md\`, the address opens the page itself.`,
+        `To pick the component for a task, start from [Which component when](${getSiteUrl(COMPONENT_GUIDE_FILE)}): it maps the words of a request to the component and names the neighbor it is confused with.`,
         header.rules,
         ...categories.map(({ category, items }) =>
             [`## ${category.name.en}`, items.map((item) => renderItemLink(item, sources)).join('\n')].join('\n\n')

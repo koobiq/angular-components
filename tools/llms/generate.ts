@@ -1,17 +1,27 @@
 /**
- * Generates the documentation for agents, in English: the Markdown of every structure item, under every locale, and
- * `llms-full.txt` into `dist/docs-llms`, which the documentation site serves from its root, and the committed index
- * `llms.txt`.
+ * Generates the documentation for agents, in English, into `dist/docs-llms`, which the documentation site serves from
+ * its root: the Markdown of every structure item under every locale, the files it links — every example, the API of
+ * every entry point, the variables of every component, the sections of a page too long for one file — the component
+ * guide, `llms-full.txt`, and the committed index `llms.txt`. Every link leads to the site of `KOOBIQ_DOCS_ORIGIN`.
  * Needs the manifest `yarn run docs:api-gen` writes.
  */
 import { mkdirSync, rmSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { format, resolveConfig } from 'prettier';
 import { DocsLocale } from '../../apps/docs/src/app/constants/locale';
-import { docsGetCategories, DocsStructureItem } from '../../apps/docs/src/app/structure';
+import { docsGetCategories, docsGetItems, DocsStructureItem } from '../../apps/docs/src/app/structure';
+import { COMPONENT_GUIDE_PATH, parseComponentGuide, renderComponentGuide } from './component-guide';
 import { renderItemMarkdown } from './item-markdown';
+import { renderItemPage, SiteFilesContext } from './item-page';
 import { LLMS_FULL_TXT, LlmsCategory, LlmsHeader, renderLlmsFullTxt, renderLlmsTxt } from './llms-txt';
-import { collectPageSources, getIconsVersion, getMarkdownPath, readRepoFile } from './sources';
+import {
+    collectPageSources,
+    getIconsVersion,
+    getMarkdownPath,
+    getMarkdownUrl,
+    getSiteUrl,
+    readRepoFile
+} from './sources';
 
 /** Committed, so that a change to the index shows in review; `check-llms` fails when it is out of date. */
 export const LLMS_TXT_PATH = 'apps/docs/src/llms.txt';
@@ -23,7 +33,7 @@ const RULES_PATH = 'docs/llms/rules.md';
 const TIME_LABEL = 'llms';
 
 export interface LlmsOutput {
-    /** Files the site serves, by their path under its root: the Markdown of every item and `llms-full.txt`. */
+    /** Files the site serves, by their path under its root: every Markdown file besides `llms.txt`. */
     files: Map<string, string>;
     /** The index, formatted the way the repository formats it. */
     llmsTxt: string;
@@ -45,28 +55,38 @@ export const generateLlms = async (): Promise<LlmsOutput> => {
     const categories: LlmsCategory[] = [];
     const fullItems: string[] = [];
     const apiListedBy = new Map<string, DocsStructureItem>();
+    const context: SiteFilesContext = { sources, files: new Map(), exampleItems: new Map() };
 
     for (const category of docsGetCategories()) {
-        const items: DocsStructureItem[] = [];
+        const categoryItems: DocsStructureItem[] = [];
 
         for (const item of category.items) {
-            const markdown = renderItemMarkdown(item, sources, { depth: 1 });
+            const markdown = renderItemPage(item, context);
 
             // The same English text next to the pages of every locale: each links the Markdown at its own address.
             for (const locale of Object.values(DocsLocale)) {
                 if (markdown) files.set(getMarkdownPath(item, locale), `${markdown}\n`);
             }
 
-            const fullItem = renderItemMarkdown(item, sources, { depth: 2, apiListedBy });
+            // llms.txt lists the items whose Markdown the site serves.
+            if (markdown) categoryItems.push(item);
 
-            if (fullItem) {
-                items.push(item);
-                fullItems.push(fullItem);
-            }
+            const fullItem = renderItemMarkdown(item, sources, apiListedBy);
+
+            if (fullItem) fullItems.push(fullItem);
         }
 
-        categories.push({ category, items });
+        categories.push({ category, items: categoryItems });
     }
+
+    const itemUrls = new Map<string, string>(docsGetItems().map((item) => [item.id, getMarkdownUrl(item)]));
+    const guide = renderComponentGuide(
+        parseComponentGuide(readRepoFile(COMPONENT_GUIDE_PATH)),
+        (id) => itemUrls.get(id),
+        getSiteUrl
+    );
+
+    for (const [path, text] of [...context.files, ...guide]) files.set(path, `${text}\n`);
 
     files.set(LLMS_FULL_TXT, renderLlmsFullTxt(fullItems, header));
 

@@ -38,14 +38,28 @@ const getLocalizedContentPaths = (): string[] => {
 export const docsHasMarkdown = ({ id }: Pick<DocsStructureItem, 'id'>): boolean => id !== DocsStructureItemId.Icons;
 
 /**
- * Path of the Markdown of a structure item — every tab of it in one file, for agents — next to its pages in a locale:
- * `/ru/components/button.md`. `tools/llms` writes the same English text under every locale, so that a page links the
- * Markdown at its own address: a model reads English just as well and answers in the language it is asked in.
+ * Path of the Markdown of a structure item for agents — the text of its tabs, linking its examples, the API of its entry
+ * point and its tokens — next to its pages in a locale: `/ru/components/button.md`. `tools/llms` writes the same English
+ * text under every locale, so that a page links the Markdown at its own address: a model reads English just as well and
+ * answers in the language it is asked in.
  */
 export const docsGetMarkdownPath = (
     { categoryId, id }: Pick<DocsStructureItem, 'categoryId' | 'id'>,
     locale: string
 ): string => `/${locale}/${categoryId}/${id}.md`;
+
+/** Path of the API of an entry point for agents, which the items of the entry point share: `/api/button.md`. */
+export const docsGetApiMarkdownPath = (apiId: string): string => `/api/${apiId}.md`;
+
+/** The Markdown of a page of an item: the API of its entry point for the API tab, the Markdown of the item otherwise. */
+export const docsGetPageMarkdownPath = (
+    item: Pick<DocsStructureItem, 'categoryId' | 'id' | 'apiId'>,
+    tab: string | undefined,
+    locale: string
+): string =>
+    tab === DocsStructureItemTab.Api && item.apiId
+        ? docsGetApiMarkdownPath(item.apiId)
+        : docsGetMarkdownPath(item, locale);
 
 /** Returns every application page that should be prerendered and whether it belongs in the sitemap. */
 export const docsGetPagePaths = (): DocsPagePath[] => {

@@ -322,6 +322,7 @@
         "check-api-docs": "ts-node --project tools/check-api-docs/tsconfig.json tools/check-api-docs",
         "approve-api-docs": "ts-node --project tools/check-api-docs/tsconfig.json tools/check-api-docs --approve",
         "check-llms": "ts-node --project tools/llms/tsconfig.json tools/llms/check.ts",
+        "check-skills": "ts-node --project tools/skills/tsconfig.json tools/skills/check.ts",
         "check-typings": "ts-node --project tools/check-typings/tsconfig.json tools/check-typings",
         "-----LINTERS-----": "----------------------------------------------------------------------------------------",
         "check-peer-deps": "ts-node --project tools/check-peer-deps/tsconfig.json tools/check-peer-deps",
