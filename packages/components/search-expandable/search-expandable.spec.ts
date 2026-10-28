@@ -315,9 +315,7 @@ describe('KbqSearchExpandable', () => {
 
         it('should update the collapsed button when the control is disabled and enabled again', () => {
             const control = formFixture.componentInstance.searchControl;
-            const button: HTMLButtonElement = debugElement.query(
-                By.css('.kbq-search-expandable__button')
-            ).nativeElement;
+            const button: HTMLButtonElement = debugElement.query(By.directive(KbqButton)).nativeElement;
 
             control.disable();
             formFixture.detectChanges();
