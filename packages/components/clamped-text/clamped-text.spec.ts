@@ -415,24 +415,23 @@ describe('KbqClampedText', () => {
 
             afterEach(restoreAnimationEnvironment);
 
-            it('should ease the space after the content and reveal it from the top on expand', async () => {
+            it('should animate block-size from the old height to the new one on expand', async () => {
                 const animate = mockAnimate();
                 const fixture = await createMeasuredComponent(ClampedTextTest);
 
                 requireToggle(fixture).click();
                 await fixture.whenStable();
-
-                expect(animate).toHaveBeenCalledTimes(1);
                 expect(animate).toHaveBeenCalledWith(
                     {
-                        marginBlockEnd: ['-200px', '0px'],
-                        clipPath: ['inset(0 0 200px 0)', 'inset(0 0 0 0)']
+                        blockSize: [`${COLLAPSED_HEIGHT}px`, `${EXPANDED_HEIGHT}px`],
+                        overflow: ['clip', 'clip'],
+                        alignContent: ['flex-start', 'flex-start']
                     },
-                    { duration: 100, easing: 'ease-in-out', composite: 'add' }
+                    { duration: 100, easing: 'ease-in-out' }
                 );
             });
 
-            it('should ease the space after the content on collapse', async () => {
+            it('should animate block-size back on collapse', async () => {
                 const animate = mockAnimate();
                 const fixture = await createMeasuredComponent(ClampedTextTest);
 
@@ -442,8 +441,12 @@ describe('KbqClampedText', () => {
                 await fixture.whenStable();
 
                 expect(animate).toHaveBeenLastCalledWith(
-                    { marginBlockEnd: ['200px', '0px'] },
-                    { duration: 100, easing: 'ease-in-out', composite: 'add' }
+                    {
+                        blockSize: [`${EXPANDED_HEIGHT}px`, `${COLLAPSED_HEIGHT}px`],
+                        overflow: ['clip', 'clip'],
+                        alignContent: ['flex-start', 'flex-start']
+                    },
+                    { duration: 100, easing: 'ease-in-out' }
                 );
             });
 
