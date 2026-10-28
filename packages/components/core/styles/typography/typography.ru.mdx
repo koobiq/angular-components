@@ -33,7 +33,7 @@ npm install inter-ui @fontsource/jetbrains-mono
 
 #### CDN и самохостинг
 
-Google Fonts для Inter не подходит: CDN отдаёт шрифт нарезанным по `unicode-range`, вместе с глифами из файла пропадают фичи — ноль из токенов Koobiq рисуется без черты, альтернативные цифры не появляются. Поэтому Inter берут файлами: [rsms.me/inter/download](https://rsms.me/inter/download/), в архиве готовый `inter.css`.
+Google Fonts для Inter не подходит: он отдаёт шрифт обрезанным — без части привычных символов и без фич, объявленных в токенах Koobiq, поэтому ноль, например, рисуется без черты. Inter берут файлами: [rsms.me/inter/download](https://rsms.me/inter/download/), в архиве готовый `inter.css`.
 
 ```scss
 @import 'assets/fonts/inter/inter.css';

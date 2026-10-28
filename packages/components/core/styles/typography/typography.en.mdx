@@ -33,7 +33,7 @@ In the inter-ui package `inter-latin.css` and the `*-latin` folders sit next to 
 
 #### A CDN and self-hosting
 
-The Google Fonts CDN does not work for Inter: it serves the font split by `unicode-range`, and the features are dropped along with the glyphs — the zero from the Koobiq tokens loses its slash, the alternate digits never appear. So Inter comes as files: [rsms.me/inter/download](https://rsms.me/inter/download/), where the archive ships a ready `inter.css`.
+Google Fonts does not work for Inter: it serves the font trimmed — without some of the usual symbols and without the features the Koobiq tokens declare, so the zero, for one, is drawn without its slash. Inter comes as files: [rsms.me/inter/download](https://rsms.me/inter/download/), where the archive ships a ready `inter.css`.
 
 ```scss
 @import 'assets/fonts/inter/inter.css';
