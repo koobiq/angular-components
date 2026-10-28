@@ -97,7 +97,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                 <div class="kbq-form__row">
                     <div class="kbq-form__label flex-20"></div>
                     <div class="kbq-form__control">
-                        <button color="contrast" kbq-button type="submit">Send</button>
+                        <button color="contrast" kbq-button type="submit">Submit</button>
                     </div>
                 </div>
             </div>

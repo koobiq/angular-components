@@ -74,10 +74,9 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
                         </kbq-form-field>
                     </div>
 
-                    <div class="kbq-form__row">
+                    <div class="kbq-form__row layout-align-start-start">
                         <button
                             #submitButton
-                            class="flex-25"
                             color="contrast"
                             kbq-button
                             type="submit"
@@ -87,7 +86,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
                             (keydown.space)="submitOrigin = 'keyboard'"
                             (mouseleave)="submitOrigin = 'mouse'"
                         >
-                            Send
+                            Submit
                         </button>
                     </div>
                 </div>

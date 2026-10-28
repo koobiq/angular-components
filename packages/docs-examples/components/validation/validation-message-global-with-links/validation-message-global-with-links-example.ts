@@ -81,10 +81,20 @@ export class ValidationMessageGlobalWithLinksExample {
     }
 
     checkForm() {
-        this.showError.set(
-            [this.form.controls.series, this.form.controls.number, this.form.controls.lastName].every(
-                (control) => !control.value
-            )
-        );
+        this.showError.set(!this.isAnyRequiredFieldFilled());
+    }
+
+    // Bound to the form's bubbling input rather than to valueChanges: by then onInput has already stripped
+    // the non-digits that Series and Number hold for a moment.
+    hideErrorOnceFilled(): void {
+        if (this.isAnyRequiredFieldFilled()) {
+            this.showError.set(false);
+        }
+    }
+
+    private isAnyRequiredFieldFilled(): boolean {
+        const { series, number, lastName } = this.form.controls;
+
+        return [series, number, lastName].some((control) => control.value);
     }
 }
