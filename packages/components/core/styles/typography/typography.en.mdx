@@ -31,7 +31,7 @@ The **inter-ui** package ships `inter.css` — a full file with Cyrillic, the us
 
 #### A CDN and self-hosting
 
-Google Fonts does not work for Inter: it serves the font trimmed — without some of the usual symbols and without the features the Koobiq tokens declare, so, for example, the slashed zero does not appear. Inter comes as files: [rsms.me/inter/download](https://rsms.me/inter/download/), where the archive ships a ready-made stylesheet.
+Google Fonts does not work for Inter: it serves the font trimmed — without some of the usual symbols and without the features the Koobiq tokens declare, so, for example, the slashed zero does not appear. Inter comes [as files from rsms.me](https://rsms.me/inter/download/), where the archive ships a ready-made stylesheet.
 
 ```scss
 @import 'assets/fonts/inter/inter.css';
@@ -49,7 +49,7 @@ JetBrains Mono can be linked from Google Fonts:
 
 A ready-made class uses the separate design token variables: font family, size, line height, letter spacing, weight, text transform and OpenType features. Every class is listed [in the design tokens](/en/main/design-tokens/typography).
 
-The ready-made classes are used in development rather than custom styles assembled from individual variables: the design token variables are there for partial customization. The classes come with the [theme](/en/main/theming/overview), and when it is built from SCSS mixins, `koobiq-typography()` adds them.
+The ready-made classes are used in development rather than custom styles assembled from individual variables: the design token variables are there for partial customization. The classes come [with the theme](/en/main/theming/overview), and when it is built from SCSS mixins, `koobiq-typography()` adds them.
 
 ```html
 <h2 class="kbq-headline">Heading</h2>
