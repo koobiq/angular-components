@@ -44,7 +44,6 @@ import { startWith } from 'rxjs';
                             <span kbqUsernameSecondary>
                                 <span [innerHTML]="user.login | kbqHighlightBackground: keywords()"></span>
                                 @if (user.site) {
-                                    {{ ' ' }}
                                     <span
                                         kbqUsernameSecondaryHint
                                         [innerHTML]="'(' + user.site + ')' | kbqHighlightBackground: keywords()"
@@ -60,6 +59,11 @@ import { startWith } from 'rxjs';
         </div>
     `,
     styles: `
+        .kbq-username__secondary {
+            display: inline-flex;
+            gap: var(--kbq-size-xxs);
+        }
+
         .example__users-list {
             display: flex;
             flex-direction: column;

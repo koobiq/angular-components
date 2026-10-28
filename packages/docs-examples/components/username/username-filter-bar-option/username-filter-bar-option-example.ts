@@ -41,7 +41,6 @@ const USERS: KbqUserInfo[] = [
                         <span kbqUsernameSecondary>
                             <span [innerHTML]="option.value.login | kbqHighlightBackground: keywords"></span>
                             @if (option.value.site) {
-                                {{ ' ' }}
                                 <span
                                     kbqUsernameSecondaryHint
                                     [innerHTML]="'(' + option.value.site + ')' | kbqHighlightBackground: keywords"
@@ -52,6 +51,12 @@ const USERS: KbqUserInfo[] = [
                 </kbq-username-custom-view>
             </kbq-username>
         </ng-template>
+    `,
+    styles: `
+        .kbq-username__secondary {
+            display: inline-flex;
+            gap: var(--kbq-size-xxs);
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
