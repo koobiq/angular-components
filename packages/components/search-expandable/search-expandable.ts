@@ -133,7 +133,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
 
         this._disabled ? this.stopFocusMonitor() : this.runFocusMonitor();
 
-        // `setDisabledState` reaches the setter from the forms API, outside any binding of this OnPush view.
+        // Only an input binding marks this OnPush view; `setDisabledState` and writes from code do not.
         this.changeDetectorRef.markForCheck();
     }
 
