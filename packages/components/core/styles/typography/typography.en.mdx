@@ -18,40 +18,26 @@ Koobiq uses the [Inter](https://github.com/rsms/inter) and [JetBrains Mono](http
 
 #### Where to get the fonts
 
-Use the official builds: Inter from [rsms.me/inter/download](https://rsms.me/inter/download/), JetBrains Mono from the [JetBrains releases](https://github.com/JetBrains/JetBrainsMono/releases). Any other source works as well — the font itself is what matters, not where you downloaded it from. If you prefer installing the fonts from npm, [inter-ui](https://www.npmjs.com/package/inter-ui) or [dist-font-inter](https://www.npmjs.com/package/dist-font-inter) work for Inter, and [@fontsource/jetbrains-mono](https://www.npmjs.com/package/@fontsource/jetbrains-mono) for JetBrains Mono: the mono styles enable no features, so its subsets lose nothing Koobiq uses. The `*-latin` folders in inter-ui are trimmed: they contain neither Cyrillic nor some of the features.
+Use the official builds: Inter from [rsms.me/inter/download](https://rsms.me/inter/download/), JetBrains Mono from the [JetBrains releases](https://github.com/JetBrains/JetBrainsMono/releases) or the [@fontsource/jetbrains-mono](https://www.npmjs.com/package/@fontsource/jetbrains-mono) package. Any other source works as well — the font itself is what matters, not where you downloaded it from.
 
-Copy the files into your project and declare them in your global styles. The Inter archive already ships an `inter.css` that declares both the static weights and the variable font:
+Copy Inter into your project and declare it in your global styles. The archive already ships an `inter.css` that declares both the static weights and the variable font:
 
 ```scss
 @import 'assets/fonts/inter/inter.css';
 ```
 
-JetBrains Mono is needed in weights 400, 600, and 700 — they live in the `fonts/webfonts` folder of the JetBrains Mono archive:
+If you need Inter from npm, [inter-ui](https://www.npmjs.com/package/inter-ui) or [dist-font-inter](https://www.npmjs.com/package/dist-font-inter) work: their files match the official release, and the `*-latin` folders in inter-ui are trimmed — they contain neither Cyrillic nor some of the features.
+
+JetBrains Mono is needed in weights 400, 600, and 700 — install it from npm. The mono styles enable no features, so the subsets in the package lose nothing:
+
+```bash
+npm install @fontsource/jetbrains-mono
+```
 
 ```scss
-@font-face {
-    font-family: 'JetBrains Mono';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url('assets/fonts/jetbrains-mono/JetBrainsMono-Regular.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'JetBrains Mono';
-    font-style: normal;
-    font-weight: 600;
-    font-display: swap;
-    src: url('assets/fonts/jetbrains-mono/JetBrainsMono-SemiBold.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'JetBrains Mono';
-    font-style: normal;
-    font-weight: 700;
-    font-display: swap;
-    src: url('assets/fonts/jetbrains-mono/JetBrainsMono-Bold.woff2') format('woff2');
-}
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/600.css';
+@import '@fontsource/jetbrains-mono/700.css';
 ```
 
 #### Check the font before installing it

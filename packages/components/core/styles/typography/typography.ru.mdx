@@ -18,40 +18,26 @@ Koobiq по умолчанию использует шрифты [Inter](https:/
 
 #### Откуда брать шрифты
 
-Берите официальные сборки: Inter — с [rsms.me/inter/download](https://rsms.me/inter/download/), JetBrains Mono — из [релизов JetBrains](https://github.com/JetBrains/JetBrainsMono/releases). Источник может быть и любым другим: важен сам шрифт, а не то, откуда вы его скачали. Если удобнее ставить шрифты из npm, подойдут [inter-ui](https://www.npmjs.com/package/inter-ui) или [dist-font-inter](https://www.npmjs.com/package/dist-font-inter) для Inter и [@fontsource/jetbrains-mono](https://www.npmjs.com/package/@fontsource/jetbrains-mono) для JetBrains Mono: стили моноширинного текста не включают ни одной фичи, поэтому сабсеты этого пакета ничего не теряют. Папки `*-latin` в inter-ui урезаны: в них нет ни кириллицы, ни части фич.
+Берите официальные сборки: Inter — с [rsms.me/inter/download](https://rsms.me/inter/download/), JetBrains Mono — из [релизов JetBrains](https://github.com/JetBrains/JetBrainsMono/releases) или из пакета [@fontsource/jetbrains-mono](https://www.npmjs.com/package/@fontsource/jetbrains-mono). Источник может быть и любым другим: важен сам шрифт, а не то, откуда вы его скачали.
 
-Скопируйте файлы в проект и объявите их в глобальных стилях. В архиве Inter уже есть готовый `inter.css` — он объявляет и статические начертания, и переменный шрифт:
+Скопируйте Inter в проект и объявите его в глобальных стилях. В архиве уже есть готовый `inter.css` — он объявляет и статические начертания, и переменный шрифт:
 
 ```scss
 @import 'assets/fonts/inter/inter.css';
 ```
 
-Для JetBrains Mono нужны начертания 400, 600 и 700 — они лежат в папке `fonts/webfonts` архива JetBrains Mono:
+Если Inter нужен из npm, подойдут [inter-ui](https://www.npmjs.com/package/inter-ui) или [dist-font-inter](https://www.npmjs.com/package/dist-font-inter): файлы в них совпадают с официальным релизом, а папки `*-latin` в inter-ui урезаны — в них нет ни кириллицы, ни части фич.
+
+JetBrains Mono нужен в начертаниях 400, 600 и 700 — поставьте его из npm. Для моноширинного текста токены не включают ни одной фичи, поэтому сабсеты пакета ничего не теряют:
+
+```bash
+npm install @fontsource/jetbrains-mono
+```
 
 ```scss
-@font-face {
-    font-family: 'JetBrains Mono';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url('assets/fonts/jetbrains-mono/JetBrainsMono-Regular.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'JetBrains Mono';
-    font-style: normal;
-    font-weight: 600;
-    font-display: swap;
-    src: url('assets/fonts/jetbrains-mono/JetBrainsMono-SemiBold.woff2') format('woff2');
-}
-
-@font-face {
-    font-family: 'JetBrains Mono';
-    font-style: normal;
-    font-weight: 700;
-    font-display: swap;
-    src: url('assets/fonts/jetbrains-mono/JetBrainsMono-Bold.woff2') format('woff2');
-}
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/600.css';
+@import '@fontsource/jetbrains-mono/700.css';
 ```
 
 #### Проверьте шрифт перед подключением
