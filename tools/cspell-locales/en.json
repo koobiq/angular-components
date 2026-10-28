@@ -76,6 +76,7 @@
         "unmigrated",
         "unminified",
         "unparseable",
+        "webfonts",
         "xmark",
         "yarnrc"
     ]

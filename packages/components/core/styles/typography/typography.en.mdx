@@ -9,7 +9,9 @@ Koobiq uses the [Inter](https://github.com/rsms/inter) and [JetBrains Mono](http
 | Inter          | 400, 500, 600, 700; italic — 400 and 600 |
 | JetBrains Mono | 400, 600, 700                            |
 
-#### Where to get the fonts
+Fonts come from npm packages or are wired up by hand — from files and a CDN link. The packages are preferable: they serve the full files.
+
+#### Packages
 
 Both fonts are installed from npm: Inter from [inter-ui](https://www.npmjs.com/package/inter-ui), JetBrains Mono from [@fontsource/jetbrains-mono](https://www.npmjs.com/package/@fontsource/jetbrains-mono).
 
@@ -29,13 +31,27 @@ npm install inter-ui @fontsource/jetbrains-mono
 
 In the inter-ui package `inter-latin.css` and the `*-latin` folders sit next to `inter.css` — those are trimmed builds, with neither Cyrillic nor some of the features. Take only `inter.css`.
 
-The official builds — [rsms.me/inter/download](https://rsms.me/inter/download/) and the [JetBrains releases](https://github.com/JetBrains/JetBrainsMono/releases) — work as well: the font itself is what matters, not the source.
+#### A CDN or your own files
+
+The Google Fonts CDN does not work for Inter: it serves the font split by `unicode-range`, and the features are dropped along with the glyphs — the zero from the Koobiq tokens loses its slash, the alternate digits never appear. So Inter comes as files: [rsms.me/inter/download](https://rsms.me/inter/download/), where the archive ships a ready `inter.css`.
+
+```scss
+@import 'assets/fonts/inter/inter.css';
+```
+
+JetBrains Mono can be linked from Google Fonts:
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+```
+
+Or take the weights from the [JetBrains releases](https://github.com/JetBrains/JetBrainsMono/releases) — they live in `fonts/webfonts` — and declare them in your global styles.
 
 #### Check the font before installing it
 
-Some sources serve a trimmed font. The Google Fonts CDN and the packages built from it (Fontsource, for example) serve files split into subsets by `unicode-range`, and the OpenType features are dropped along with the glyphs. The font still loads, but some features and characters silently stop working: the zero from the Koobiq tokens loses its slash, the alternate digits never appear, and characters such as `₽` or the em dash fall back to a system font. The font file itself can still be complete: a family downloaded from fonts.google.com contains every glyph and feature — the trimming happens in the way the CDN serves it.
-
-So before installing the font, check the one your source serves: it has to contain the characters your interface uses and the OpenType features Koobiq enables.
+Before installing the font, check the one your source serves: it has to contain the characters your interface uses and the OpenType features Koobiq enables. Serving by `unicode-range` — which is what CDNs and the subsets built from them do, Inter in Fontsource for example — drops the features along with the glyphs: the zero from the Koobiq tokens loses its slash, the alternate digits never appear, and `₽` and the em dash fall back to a system font. The font file itself can still be complete: a family downloaded from fonts.google.com contains every glyph and feature — the trimming happens in the way it is served.
 
 #### Features from the tokens
 

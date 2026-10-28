@@ -9,7 +9,9 @@ Koobiq по умолчанию использует шрифты [Inter](https:/
 | Inter          | 400, 500, 600, 700; курсив — 400 и 600 |
 | JetBrains Mono | 400, 600, 700                          |
 
-#### Откуда брать шрифты
+Шрифты подключают из npm-пакетов или вручную — файлами и ссылкой с CDN. Пакеты предпочтительнее: они отдают полные файлы.
+
+#### Пакеты
 
 Оба шрифта ставятся из npm: Inter — из [inter-ui](https://www.npmjs.com/package/inter-ui), JetBrains Mono — из [@fontsource/jetbrains-mono](https://www.npmjs.com/package/@fontsource/jetbrains-mono).
 
@@ -29,13 +31,27 @@ npm install inter-ui @fontsource/jetbrains-mono
 
 В пакете inter-ui рядом с `inter.css` лежат `inter-latin.css` и папки `*-latin` — это урезанные сборки, в них нет ни кириллицы, ни части фич. Берите только `inter.css`.
 
-Официальные сборки — [rsms.me/inter/download](https://rsms.me/inter/download/) и [релизы JetBrains](https://github.com/JetBrains/JetBrainsMono/releases) — тоже подходят: важен сам шрифт, а не источник.
+#### CDN или свои файлы
+
+Google Fonts для Inter не подходит: CDN отдаёт шрифт нарезанным по `unicode-range`, вместе с глифами из файла пропадают фичи — ноль из токенов Koobiq рисуется без черты, альтернативные цифры не появляются. Поэтому Inter берут файлами: [rsms.me/inter/download](https://rsms.me/inter/download/), в архиве готовый `inter.css`.
+
+```scss
+@import 'assets/fonts/inter/inter.css';
+```
+
+JetBrains Mono можно подключить по ссылке с Google Fonts:
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+```
+
+Или возьмите начертания из [релизов JetBrains](https://github.com/JetBrains/JetBrainsMono/releases) — они лежат в `fonts/webfonts` — и объявите их в глобальных стилях.
 
 #### Проверьте шрифт перед подключением
 
-Часть источников отдаёт урезанный шрифт. CDN-раздача Google Fonts и собранные из неё пакеты (например, Fontsource) отдают шрифт нарезанным на сабсеты по `unicode-range`: вместе с глифами из файла пропадают OpenType-фичи. Шрифт при этом подключается, но часть фич и символов молча перестаёт работать: ноль из токенов Koobiq рисуется без черты, альтернативные цифры не появляются, а отдельные символы вроде `₽` или длинного тире подменяются системным шрифтом. Сам файл шрифта при этом может быть полным: например, семейство, скачанное с fonts.google.com, содержит все глифы и фичи — урезает его именно раздача по частям.
-
-Поэтому перед подключением проверьте шрифт из вашего источника: в нём должны быть символы, которые использует интерфейс, и OpenType-фичи, которые включает Koobiq.
+Перед подключением проверьте шрифт из вашего источника: в нём должны быть символы, которые использует интерфейс, и OpenType-фичи, которые включает Koobiq. Раздача по `unicode-range` — так работают CDN и собранные из них сабсеты, например Inter в Fontsource — выбрасывает вместе с глифами и фичи: ноль из токенов Koobiq рисуется без черты, альтернативные цифры не появляются, а `₽` и длинное тире подменяются системным шрифтом. Сам файл шрифта при этом может быть полным: семейство, скачанное с fonts.google.com, содержит все глифы и фичи — урезает его именно раздача по частям.
 
 #### Фичи из токенов
 
