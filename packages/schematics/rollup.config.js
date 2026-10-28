@@ -2,7 +2,7 @@ const typescript = require('@rollup/plugin-typescript');
 const replace = require('@rollup/plugin-replace');
 
 const path = require('path');
-const { promises: fs, statSync } = require('fs');
+const { promises: fs, readdirSync, statSync } = require('fs');
 
 const pkg = require('../../package.json');
 const { getMigrations } = require('./src/utils/migrations');
@@ -32,22 +32,55 @@ const getMigrationInputs = () => {
     }, {});
 };
 
+/**
+ * Every util module is an entry of its own, so it ships under a stable name rather than inside a hashed chunk.
+ * `.d.ts` and `.spec.ts` files do not match; `testing.ts` holds the spec helpers.
+ */
+const getUtilInputs = () => {
+    const utilsDir = path.join(__dirname, 'src/utils');
+
+    return readdirSync(utilsDir)
+        .filter((file) => /^[\w-]+\.ts$/.test(file) && file !== 'testing.ts')
+        .reduce((res, file) => {
+            res[`utils/${path.basename(file, '.ts')}`] = path.join(utilsDir, file);
+
+            return res;
+        }, {});
+};
+
+const TEST_IMPORT = /^vitest(\/|$)|\/testing$/;
+
+/** Fails the build when shipped code imports test tooling, e.g. a spec helper that became an entry. */
+const rejectTestImports = () => ({
+    name: 'reject-test-imports',
+    generateBundle(_, bundle) {
+        for (const chunk of Object.values(bundle)) {
+            const testImport =
+                chunk.type === 'chunk' &&
+                [...chunk.imports, ...chunk.dynamicImports].find((id) => TEST_IMPORT.test(id));
+
+            if (testImport) {
+                this.error(`${chunk.fileName} imports ${testImport}, which consumers do not have`);
+            }
+        }
+    }
+});
+
 module.exports = [
     {
         output: {
             dir: distDir,
             format: 'cjs',
-            exports: 'named'
+            exports: 'named',
+            // `.cjs` stays CommonJS inside @koobiq/components, which ng-packagr marks `"type": "module"`.
+            entryFileNames: '[name].cjs',
+            // A module shared by several entries without being one goes next to the utils, which
+            // copy-meta-to-dist.js ships as a whole.
+            chunkFileNames: 'utils/[name]-[hash].cjs'
         },
         input: {
             'ng-add/index': path.join(__dirname, 'src/ng-add/index.ts'),
-            'utils/package-config': path.join(__dirname, 'src/utils/package-config.ts'),
-            'utils/messages': path.join(__dirname, 'src/utils/messages.ts'),
-            'utils/typescript': path.join(__dirname, 'src/utils/typescript.ts'),
-            'utils/ast': path.join(__dirname, 'src/utils/ast.ts'),
-            'utils/angular-parsing': path.join(__dirname, 'src/utils/angular-parsing.ts'),
-            'utils/icon-migration': path.join(__dirname, 'src/utils/icon-migration.ts'),
-            'utils/deprecated-path-migration': path.join(__dirname, 'src/utils/deprecated-path-migration.ts'),
+            ...getUtilInputs(),
             ...getMigrationInputs()
             //'ng-add/setup-project': path.join(__dirname, 'ng-add/setup-project.ts'),
         },
@@ -55,6 +88,7 @@ module.exports = [
             !(dependency.startsWith('./') || dependency.startsWith('../') || dependency.startsWith(__dirname)),
         plugins: [
             clean(),
+            rejectTestImports(),
             replace({
                 preventAssignment: true,
                 'VERSIONS.ANGULAR_CDK': version(pkg.dependencies['@angular/cdk']),
