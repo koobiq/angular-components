@@ -53,16 +53,10 @@ import { startWith } from 'rxjs';
                         <kbq-username>
                             <kbq-username-custom-view>
                                 @let fullName = user | kbqUsername;
-                                <span
-                                    kbqUsernamePrimary
-                                    [innerHTML]="fullName | kbqHighlightBackground: keywords() : true"
-                                ></span>
 
-                                @if (user.login) {
-                                    <span kbqUsernameSecondary>
-                                        <span
-                                            [innerHTML]="user.login | kbqHighlightBackground: keywords() : true"
-                                        ></span>
+                                @if (isCompact()) {
+                                    <span kbqUsernamePrimary>
+                                        <span [innerHTML]="fullName | kbqHighlightBackground: keywords() : true"></span>
                                         @if (user.site) {
                                             <span
                                                 kbqUsernameSecondaryHint
@@ -72,6 +66,28 @@ import { startWith } from 'rxjs';
                                             ></span>
                                         }
                                     </span>
+                                } @else {
+                                    <span
+                                        kbqUsernamePrimary
+                                        [innerHTML]="fullName | kbqHighlightBackground: keywords() : true"
+                                    ></span>
+
+                                    @if (user.login) {
+                                        <span kbqUsernameSecondary>
+                                            <span
+                                                [innerHTML]="user.login | kbqHighlightBackground: keywords() : true"
+                                            ></span>
+                                            @if (user.site) {
+                                                <span
+                                                    kbqUsernameSecondaryHint
+                                                    [innerHTML]="
+                                                        '(' + user.site + ')'
+                                                            | kbqHighlightBackground: keywords() : true
+                                                    "
+                                                ></span>
+                                            }
+                                        </span>
+                                    }
                                 }
                             </kbq-username-custom-view>
                         </kbq-username>
@@ -81,6 +97,7 @@ import { startWith } from 'rxjs';
         </kbq-form-field>
     `,
     styles: `
+        kbq-option .kbq-username__primary,
         .kbq-username__secondary {
             display: inline-flex;
             gap: var(--kbq-size-xxs);
