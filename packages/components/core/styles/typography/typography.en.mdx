@@ -49,7 +49,7 @@ JetBrains Mono can be linked from Google Fonts:
 
 A ready-made class uses the separate design token variables: font family, size, line height, letter spacing, weight, text transform and OpenType features. Every class is listed [in the design tokens](/en/main/design-tokens/typography).
 
-Development mostly uses the ready-made classes rather than custom styles assembled from individual variables: the design token variables are there for partial customization. The classes come with the theme, and when the theme is built from mixins, the `koobiq-typography()` SCSS mixin adds them.
+Development mostly uses the ready-made classes rather than custom styles assembled from individual variables: the design token variables are there for partial customization. The classes come with the [theme](/en/main/theming/overview), and when the theme is built from mixins, the `koobiq-typography()` SCSS mixin adds them.
 
 ```html
 <h2 class="kbq-headline">Heading</h2>
@@ -58,10 +58,9 @@ Development mostly uses the ready-made classes rather than custom styles assembl
 
 #### How to change the fonts
 
-The fonts are changed by overriding the global family variables:
+The font families are set by global variables, and overriding them changes the fonts across the interface. The `--kbq-font-family-*` variables are declared in `css-tokens.css` on `:root`, so the override goes after the tokens are connected — same specificity, so the order decides.
 
 ```scss
-/* after css-tokens: the selector is the same :root, so the order decides */
 :root {
     --kbq-font-family-base: 'MySans', sans-serif;
     --kbq-font-family-accent: 'MyDisplay', 'MySans', sans-serif;
