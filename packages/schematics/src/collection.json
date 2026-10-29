@@ -448,6 +448,11 @@
             "description": "Moves the project to @koobiq/design-tokens 4, which @koobiq/components now requires: v4 removed the component tokens, and the three sets it still ships — code-block, scrollbar and skeleton — are already carried by `@koobiq/components`' own `prebuilt-themes/theme.css`. The entry is rewritten wherever the project declared it and added to `dependencies` when it declared it nowhere, since a project can reach the tokens through the library's peer dependency alone. Warns about the two steps left by hand: running `npx koobiq-tokens-codemod src` over the project's own styles and templates for the moved import paths and the renamed tokens, and looking at the code blocks and scrollbars — the only two places v4 changes pixels without being asked.",
             "factory": "./migrations/design-tokens-v4/index",
             "schema": "./migrations/design-tokens-v4/schema.json"
+        },
+        "code-block-highlight-js-core": {
+            "description": "Keeps the full highlight.js bundle where the code block loaded it by default. A configuration without `core` used to load the full bundle, every language of it, about 1 MB, and loads the core now, which has no languages but plain text: the library held `import('highlight.js')`, so every application bundled the full one, configured or not. Adds `kbqCodeBlockHighlightJsConfigProvider({ core: () => import('highlight.js') })` to the root providers of an application that imports @koobiq/components/code-block and has no highlight.js configuration there, and `core: () => import('highlight.js')` to every configuration written as an object literal without `core` - the argument of kbqCodeBlockHighlightJsConfigProvider and the useValue of a KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG provider. Reports a configuration it cannot read (a variable, a spread, a factory), root providers it cannot read (a bootstrap it cannot analyze, providers that are not an array literal), a library that renders code blocks, whose applications need the configuration, and a project that also provides a configuration outside its root providers, which the added provider overrides where the root providers get it through a function.",
+            "factory": "./migrations/code-block-highlight-js-core/index",
+            "schema": "./migrations/code-block-highlight-js-core/schema.json"
         }
     }
 }

@@ -17,6 +17,10 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
 
     private filters: FlatTreeControlFilter<T>[];
 
+    // Positions in each `dataNodes` array: a tree looks up every rendered row, and `indexOf` would make that
+    // rows × nodes. Keyed weakly by the array, so replacing `dataNodes` releases the old nodes.
+    private readonly nodeIndexes = new WeakMap<T[], Map<T, number>>();
+
     /** Construct with flat tree data node functions getLevel, isExpandable, getValue and getViewValue. */
     constructor(
         public getLevel: (dataNode: T) => number,
@@ -165,20 +169,37 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
     }
 
     /**
-     * Position of the node in `dataNodes`. With `trackBy` a node rebuilt as a new object since is found by its key,
-     * as the expansion methods accept it too.
+     * Position of the node in `dataNodes`, constant-time while the index matches the array. With `trackBy` a node
+     * rebuilt as a new object since is found by its key, as the expansion methods accept it too.
      */
     private indexOfNode(node: T): number {
         const { dataNodes, trackBy } = this;
 
         if (!dataNodes) return -1;
 
+        const cached = this.nodeIndexes.get(dataNodes)?.get(node);
+
+        // Checked against the array: `dataNodes` can be mutated in place.
+        if (cached !== undefined && dataNodes[cached] === node) return cached;
+
         const index = dataNodes.indexOf(node);
 
-        if (index !== -1 || !trackBy) return index;
+        // A node that is not there leaves the index as it is.
+        if (index === -1) {
+            if (!trackBy) return index;
 
-        const key = trackBy(node);
+            const key = trackBy(node);
 
-        return dataNodes.findIndex((candidate) => trackBy(candidate) === key);
+            return dataNodes.findIndex((candidate) => trackBy(candidate) === key);
+        }
+
+        const positions = new Map<T, number>();
+
+        dataNodes.forEach((dataNode, position) => {
+            if (!positions.has(dataNode)) positions.set(dataNode, position);
+        });
+        this.nodeIndexes.set(dataNodes, positions);
+
+        return index;
     }
 }

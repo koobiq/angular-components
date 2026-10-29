@@ -1,7 +1,21 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
-import { KbqCodeBlock, KbqCodeBlockFile, kbqCodeBlockLocaleConfigurationProvider } from '@koobiq/components/code-block';
+import {
+    KbqCodeBlock,
+    KbqCodeBlockFile,
+    kbqCodeBlockHighlightJsConfigProvider,
+    kbqCodeBlockLocaleConfigurationProvider
+} from '@koobiq/components/code-block';
 import { enUSLocaleData } from '@koobiq/components/core';
 import { kbqScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
+
+// The languages of the files below; plain text, the fallback of a file without one, comes with the code block.
+const HIGHLIGHT_JS_CONFIG = kbqCodeBlockHighlightJsConfigProvider({
+    languages: {
+        typescript: () => import('highlight.js/lib/languages/typescript'),
+        css: () => import('highlight.js/lib/languages/css'),
+        bash: () => import('highlight.js/lib/languages/bash')
+    }
+});
 
 const singleLineFile: KbqCodeBlockFile = {
     language: 'bash',
@@ -75,7 +89,7 @@ const cssFile: KbqCodeBlockFile = {
             padding: var(--kbq-size-xs);
         }
     `,
-    providers: [kbqCodeBlockLocaleConfigurationProvider(enUSLocaleData.codeBlock)],
+    providers: [kbqCodeBlockLocaleConfigurationProvider(enUSLocaleData.codeBlock), HIGHLIGHT_JS_CONFIG],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eCodeBlockNoTabs'
@@ -113,7 +127,7 @@ export class E2eCodeBlockNoTabs {
             padding: var(--kbq-size-xs);
         }
     `,
-    providers: [kbqCodeBlockLocaleConfigurationProvider(enUSLocaleData.codeBlock)],
+    providers: [kbqCodeBlockLocaleConfigurationProvider(enUSLocaleData.codeBlock), HIGHLIGHT_JS_CONFIG],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eCodeBlockTabs'
@@ -145,7 +159,7 @@ export class E2eCodeBlockTabs {
             padding: var(--kbq-size-xs);
         }
     `,
-    providers: [kbqCodeBlockLocaleConfigurationProvider(enUSLocaleData.codeBlock)],
+    providers: [kbqCodeBlockLocaleConfigurationProvider(enUSLocaleData.codeBlock), HIGHLIGHT_JS_CONFIG],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eCodeBlockLineNumbers'
@@ -170,7 +184,7 @@ export class E2eCodeBlockLineNumbers {
             padding: var(--kbq-size-xs);
         }
     `,
-    providers: [kbqCodeBlockLocaleConfigurationProvider(enUSLocaleData.codeBlock)],
+    providers: [kbqCodeBlockLocaleConfigurationProvider(enUSLocaleData.codeBlock), HIGHLIGHT_JS_CONFIG],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eCodeBlockSoftWrap'
@@ -205,7 +219,7 @@ export class E2eCodeBlockSoftWrap {
             padding: var(--kbq-size-xs);
         }
     `,
-    providers: [kbqCodeBlockLocaleConfigurationProvider(enUSLocaleData.codeBlock)],
+    providers: [kbqCodeBlockLocaleConfigurationProvider(enUSLocaleData.codeBlock), HIGHLIGHT_JS_CONFIG],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eCodeBlockViewAll'
@@ -245,7 +259,8 @@ export class E2eCodeBlockViewAll {
     providers: [
         kbqCodeBlockLocaleConfigurationProvider(enUSLocaleData.codeBlock),
         // A hover track is hidden in the shot; this one shows where the scrollbar sits.
-        kbqScrollbarOptionsProvider({ mode: 'always' })
+        kbqScrollbarOptionsProvider({ mode: 'always' }),
+        HIGHLIGHT_JS_CONFIG
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -292,7 +307,8 @@ export class E2eCodeBlockScroll {
         kbqCodeBlockLocaleConfigurationProvider(enUSLocaleData.codeBlock),
         // The reveal lasts hideDelay and nothing brings it back, so the default second would make this
         // a race against page load rather than a test of the behaviour.
-        kbqScrollbarOptionsProvider({ hideDelay: 5000 })
+        kbqScrollbarOptionsProvider({ hideDelay: 5000 }),
+        HIGHLIGHT_JS_CONFIG
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

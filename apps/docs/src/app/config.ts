@@ -4,6 +4,7 @@ import { ApplicationConfig, importProvidersFrom, provideZonelessChangeDetection 
 import { provideClientHydration, withIncrementalHydration } from '@angular/platform-browser';
 import { provideRouter, TitleStrategy, withNavigationErrorHandler } from '@angular/router';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { kbqCodeBlockHighlightJsConfigProvider } from '@koobiq/components/code-block';
 import {
     KbqFormattersModule,
     kbqLocaleServiceLangAttrNameProvider,
@@ -13,6 +14,7 @@ import {
 import { kbqIconsResolverProvider } from '@koobiq/components/icon';
 import { DOCS_COMPILED_PAGES } from '@koobiq/docs-pages';
 import { DOCS_COMPILED_API_PAGES } from '@koobiq/docs-pages-api';
+import { DOCS_HIGHLIGHT_JS_LANGUAGES } from './constants/highlight-js';
 import { DOCS_ROUTES } from './routes';
 import { docsProvideAnalytics } from './services/analytics';
 import { docsReloadOnChunkLoadError } from './services/chunk-load-error';
@@ -29,6 +31,7 @@ export const appConfig: ApplicationConfig = {
         kbqThemeProvider({ storageKey: 'docs_theme' }),
         docsProvidePreferences(),
         kbqIconsResolverProvider((name) => `/assets/SVGIcons/${name.replace(/^kbq-/, '')}.svg`),
+        kbqCodeBlockHighlightJsConfigProvider({ languages: DOCS_HIGHLIGHT_JS_LANGUAGES }),
         provideZonelessChangeDetection(),
         // `KbqNotificationCenterService` is `providedIn: 'root'` and injects `DateAdapter` and
         // `DateFormatter`, so both have to reach the root injector — an example importing these modules

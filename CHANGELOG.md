@@ -1,3 +1,28 @@
+## 21.0.1 (2026-10-28)
+
+### Mcp
+
+ * bug fix  read guides only from docs/guides, ship them in English only ([#2254](https://github.com/koobiq/angular-components/issues/2254)) ([30432f9](https://github.com/koobiq/angular-components/commit/30432f9791df61fc01495bf5c838cc50acaf66dc))
+
+### Koobiq
+
+ * bug fix  **code-block:** load the highlight.js core by default instead of the full bundle (#DS-5776) ([#2263](https://github.com/koobiq/angular-components/issues/2263)) ([788270c](https://github.com/koobiq/angular-components/commit/788270c85758dd6197d5c3b6a1791af789a73030))
+ * bug fix  **schematics:** ship shared util chunks and load the build as CommonJS (#DS-5799) ([#2262](https://github.com/koobiq/angular-components/issues/2262)) ([9c00c31](https://github.com/koobiq/angular-components/commit/9c00c314f8844671ea3bc5d7556c9df2e107f643))
+ * bug fix  **tree:** render selected rows at once and write a selection range in one change (#DS-5796) ([#2266](https://github.com/koobiq/angular-components/issues/2266)) ([7cabcf5](https://github.com/koobiq/angular-components/commit/7cabcf524e23ac75540836ee58a2fda7d41a707d))
+ * feature  **tree:** add trackBy to tree controls to keep the expansion of rebuilt nodes (#DS-5785) ([#2253](https://github.com/koobiq/angular-components/issues/2253)) ([74b90ba](https://github.com/koobiq/angular-components/commit/74b90ba9dd869599c4f24fb5ad9fc3a4b7c83904))
+ * performance  **icon:** skip the registry lookup for names nothing can resolve (#DS-5798) ([#2256](https://github.com/koobiq/angular-components/issues/2256)) ([74a8089](https://github.com/koobiq/angular-components/commit/74a8089a1825b37e3c0d7322a5d0c6d3f64478af))
+ * performance  **tree:** keep tree-selection linear in the number of rows (#DS-5796) ([#2255](https://github.com/koobiq/angular-components/issues/2255)) ([ee9618a](https://github.com/koobiq/angular-components/commit/ee9618a795ddf47cbf3fe861bfe9acbdfb9c9772))
+
+#### BREAKING CHANGES
+
+ * **code-block:** load the highlight.js core by default instead of the full bundle (#DS-5776) ([#2263](https://github.com/koobiq/angular-components/issues/2263))
+
+### Documentation
+
+ * bug fix  serve empty state illustrations from @koobiq/visuals (#DS-5783) ([#2258](https://github.com/koobiq/angular-components/issues/2258)) ([31faa24](https://github.com/koobiq/angular-components/commit/31faa24de45d8abd92538029b58ade8d6ac21cb4))
+ * docs  **link:** rewrite the overview page and the examples after the Figma spec (#DS-3539) (#2238) ([undefined](https://github.com/koobiq/angular-components/commit/38e12f374ed82d239334208204edebc20851879c))
+ * docs  **username:** rework the docs examples: site, highlight, no last name, compact (#DS-5717) (#2261) ([undefined](https://github.com/koobiq/angular-components/commit/d7a957ba3927b2898a7d62efd8999503c5965e2a))
+
 # 21.0.0 (2026-10-27)
 
 ### Components

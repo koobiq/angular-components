@@ -16,14 +16,32 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
 import type { HLJSApi, LanguageFn } from 'highlight.js';
-import { KbqCodeBlockHighlightJsLoader, KbqCodeBlockLineNumbersOptions } from './code-block-highlight-js-loader';
+import {
+    KbqCodeBlockHighlightJsLoader,
+    KbqCodeBlockLineNumbersOptions,
+    PLAIN_TEXT_LANGUAGE
+} from './code-block-highlight-js-loader';
 import { KbqCodeBlockFile } from './types';
 
-/** `highlight.js` configuration */
+/**
+ * Configuration of highlight.js, which highlights the code of a code block: how to load it and which languages to
+ * register. Without a configuration, the code block loads the highlight.js core, which has no languages, and shows the
+ * code as plain text. Provide it with `kbqCodeBlockHighlightJsConfigProvider`.
+ */
 export type KbqCodeBlockHighlightJsConfig = Partial<{
-    /** Lazy loader for highlight.js core (no bundled languages). When omitted, the full bundle is loaded. */
+    /**
+     * Lazy loader for the highlight.js instance. The core has no languages: register the ones the files use in
+     * `languages`, or load all of them with `() => import('highlight.js')`, the full bundle of about 1 MB.
+     * Defaults to `() => import('highlight.js/lib/core')`.
+     */
     core: () => Promise<{ default: HLJSApi }>;
-    /** Map of language name to lazy loader for that language's LanguageFn. */
+
+    /**
+     * Map of language name to lazy loader for that language's LanguageFn. A language of highlight.js loads from
+     * `highlight.js/lib/languages/<name>`, where `<name>` is the name of its file in
+     * [src/languages](https://github.com/highlightjs/highlight.js/tree/11-stable/src/languages). Plain text needs no
+     * entry: the code block registers it as the fallback language.
+     */
     languages: Record<string, () => Promise<{ default: LanguageFn }>>;
 }>;
 
@@ -41,7 +59,6 @@ export const KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG = new InjectionToken<KbqCodeBloc
  * ```ts
  * providers: [
  *   kbqCodeBlockHighlightJsConfigProvider({
- *     core: () => import('highlight.js/lib/core'),
  *     languages: {
  *       typescript: () => import('highlight.js/lib/languages/typescript'),
  *       css: () => import('highlight.js/lib/languages/css'),
@@ -57,13 +74,15 @@ export const kbqCodeBlockHighlightJsConfigProvider = (options: KbqCodeBlockHighl
 });
 
 /**
- * Fallback language for code block if language is not supported/specified.
+ * Fallback language for code block if language is not supported/specified. It has to be registered in `languages` of
+ * `KbqCodeBlockHighlightJsConfig`, unless it is plain text or the full bundle of highlight.js is loaded, or the code
+ * block falls back to `plaintext`.
  *
- * See the [list of supported languages](https://highlightjs.readthedocs.io/en/stable/supported-languages.html).
+ * See the [list of supported languages](https://github.com/highlightjs/highlight.js/blob/11-stable/SUPPORTED_LANGUAGES.md).
  */
 export const KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE = new InjectionToken<string>(
     'KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE',
-    { factory: () => 'plaintext' }
+    { factory: () => PLAIN_TEXT_LANGUAGE }
 );
 
 /** Utility provider for `KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE`. */
@@ -180,15 +199,17 @@ export class KbqCodeBlockHighlight {
         const isKnownLanguage = !!language && !!hljs.getLanguage(language);
 
         if (!language || !isKnownLanguage) {
+            const fallbackLanguage = this.fallbackLanguage(hljs);
+
             // A file without a language is plain text by design; only a language the core lacks is a mistake.
             if (language) {
                 this.warn(
-                    `[KbqCodeBlock] Unknown file language: "${language}". Fall back to "${this.fallbackFileLanguage}".`,
+                    `[KbqCodeBlock] Unknown file language: "${language}". Fall back to "${fallbackLanguage}".`,
                     file
                 );
             }
 
-            language = this.fallbackFileLanguage;
+            language = fallbackLanguage;
         }
 
         const {
@@ -202,8 +223,11 @@ export class KbqCodeBlockHighlight {
             this.warn('[KbqCodeBlock] File content contains illegal characters.', file);
         }
 
-        // Plain text has no syntax to score, so its relevance is always 0 — even for the fallback itself.
-        if (relevance === 0 && isKnownLanguage && highlightedLanguage !== 'plaintext') {
+        // Plain text and an empty file have no syntax to score, so their relevance is always 0. Plain text is compared by
+        // definition: highlight.js returns the name the file gives, which may be an alias such as `text`.
+        const isPlainText = hljs.getLanguage(language) === hljs.getLanguage(PLAIN_TEXT_LANGUAGE);
+
+        if (relevance === 0 && isKnownLanguage && !isPlainText && file.content.trim()) {
             this.warn('[KbqCodeBlock] File content does not match the specified programming language.', file);
         }
 
@@ -215,6 +239,17 @@ export class KbqCodeBlockHighlight {
         this.renderer.setAttribute(this.nativeElement, HIGHLIGHTED_MARKUP_ATTRIBUTE, '');
 
         this._pending.set(false);
+    }
+
+    /** The fallback language, or plain text, which the loader registers on every instance, if it is unknown too. */
+    private fallbackLanguage(hljs: HLJSApi): string {
+        if (hljs.getLanguage(this.fallbackFileLanguage)) return this.fallbackFileLanguage;
+
+        this.warn(
+            `[KbqCodeBlock] Unknown fallback language: "${this.fallbackFileLanguage}". Fall back to "${PLAIN_TEXT_LANGUAGE}".`
+        );
+
+        return PLAIN_TEXT_LANGUAGE;
     }
 
     private warn(...messages: unknown[]): void {

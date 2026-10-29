@@ -36,8 +36,17 @@ class MockSharedResizeObserver {
     }
 }
 
+// The languages of the files below: the default core has none.
+const HIGHLIGHT_JS_LANGUAGES = kbqCodeBlockHighlightJsConfigProvider({
+    languages: {
+        html: () => import('highlight.js/lib/languages/xml'),
+        typescript: () => import('highlight.js/lib/languages/typescript'),
+        css: () => import('highlight.js/lib/languages/css')
+    }
+});
+
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
-    TestBed.configureTestingModule({ imports: [component], providers });
+    TestBed.configureTestingModule({ imports: [component], providers: [HIGHLIGHT_JS_LANGUAGES, ...providers] });
     const fixture = TestBed.createComponent<T>(component);
 
     fixture.autoDetectChanges();
@@ -796,7 +805,7 @@ describe(KbqCodeBlock.name, () => {
         const addEventListenerSpy = vi.spyOn(HTMLElement.prototype, 'addEventListener');
 
         try {
-            TestBed.configureTestingModule({ imports: [BaseCodeBlock] });
+            TestBed.configureTestingModule({ imports: [BaseCodeBlock], providers: [HIGHLIGHT_JS_LANGUAGES] });
             const fixture = TestBed.createComponent(BaseCodeBlock);
 
             fixture.componentInstance.hideTabs = true;
@@ -819,7 +828,7 @@ describe(KbqCodeBlock.name, () => {
     it('should start tracking hover when alwaysShowActionbar is disabled', async () => {
         vi.useFakeTimers();
 
-        TestBed.configureTestingModule({ imports: [BaseCodeBlock] });
+        TestBed.configureTestingModule({ imports: [BaseCodeBlock], providers: [HIGHLIGHT_JS_LANGUAGES] });
         const fixture = TestBed.createComponent(BaseCodeBlock);
 
         fixture.componentInstance.hideTabs = true;

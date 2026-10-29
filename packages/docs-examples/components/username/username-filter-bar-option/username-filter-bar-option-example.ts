@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, viewChild } from '@angular/core';
-import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
+import { KbqHighlightBackgroundPipe, tokenizeSearchQuery } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import {
     kbqBuildUsernameText,
@@ -12,7 +12,8 @@ const USERS: KbqUserInfo[] = [
     { firstName: 'Maxwell', middleName: 'Alan', lastName: 'Root', login: 'mroot', site: 'corp' },
     { firstName: 'Alice', middleName: 'Marie', lastName: 'Stone', login: 'astone' },
     { firstName: 'Robert', lastName: 'Green', login: 'rgreen', site: 'dev' },
-    { firstName: 'Elena', middleName: 'Vera', lastName: 'Fox', login: 'efox' }
+    { firstName: 'Elena', middleName: 'Vera', lastName: 'Fox', login: 'efox' },
+    { firstName: 'Madonna', login: 'madonna', site: 'corp' }
 ];
 
 /**
@@ -29,24 +30,39 @@ const USERS: KbqUserInfo[] = [
         </kbq-filter-bar>
 
         <ng-template #userOption let-pipe let-option="option">
-            @let searchText = pipe.searchControl.value;
+            @let keywords = tokenizeSearchQuery(pipe.searchControl.value ?? '');
 
             <kbq-username>
                 <kbq-username-custom-view>
                     @let fullName = option.value | kbqUsername;
-                    <span kbqUsernamePrimary [innerHTML]="fullName | kbqHighlightBackground: searchText"></span>
+                    <span kbqUsernamePrimary [innerHTML]="fullName | kbqHighlightBackground: keywords : true"></span>
 
                     @if (option.value?.login) {
-                        <span
-                            kbqUsernameSecondary
-                            [innerHTML]="option.value.login | kbqHighlightBackground: searchText"
-                        ></span>
+                        <span kbqUsernameSecondary>
+                            <span [innerHTML]="option.value.login | kbqHighlightBackground: keywords : true"></span>
+                            @if (option.value.site) {
+                                <span
+                                    kbqUsernameSecondaryHint
+                                    [innerHTML]="
+                                        '(' + option.value.site + ')' | kbqHighlightBackground: keywords : true
+                                    "
+                                ></span>
+                            }
+                        </span>
                     }
                 </kbq-username-custom-view>
             </kbq-username>
         </ng-template>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styles: `
+        kbq-filter-bar {
+            width: auto;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class UsernameFilterBarOptionExample implements AfterViewInit {
     private readonly formatUsername = kbqInjectUsernameFormatter();
@@ -72,6 +88,8 @@ export class UsernameFilterBarOptionExample implements AfterViewInit {
     };
 
     pipeTemplates: KbqPipeTemplate[] = [];
+
+    protected readonly tokenizeSearchQuery = tokenizeSearchQuery;
 
     ngAfterViewInit(): void {
         this.pipeTemplates = [

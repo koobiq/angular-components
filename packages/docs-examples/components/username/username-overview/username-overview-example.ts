@@ -10,7 +10,10 @@ import { KbqUserInfo, KbqUsername } from '@koobiq/components/username';
     template: `
         <kbq-username [userInfo]="userInfo" />
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class UsernameOverviewExample {
     userInfo: KbqUserInfo = {

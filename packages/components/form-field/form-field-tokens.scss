@@ -60,6 +60,7 @@
     --kbq-form-field-states-disabled-text: var(--kbq-states-foreground-disabled);
     --kbq-form-field-hint-text: var(--kbq-foreground-contrast-secondary);
     --kbq-form-field-label-color: var(--kbq-foreground-contrast-secondary);
+    --kbq-form-field-label-required-marker-color: var(--kbq-foreground-error);
 }
 
 :where(.kbq-dark) {
