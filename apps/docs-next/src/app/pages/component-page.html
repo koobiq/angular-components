@@ -1,0 +1,61 @@
+@let item = component();
+
+<docs-next-page-layout [wide]="tab() === 'api'" [withActions]="available()" [withToc]="available() && tab() !== 'api'">
+    @if (state.notice(); as notice) {
+        <docs-next-notice [text]="notice" />
+    }
+
+    @if (!item) {
+        <h1 class="docs-next-h1">{{ state.t('notFound') }}</h1>
+    } @else if (!available()) {
+        <docs-next-stub [title]="item.title" [text]="stubText()" />
+    } @else {
+        <div #page>
+            <header class="docs-next-page__header">
+                <div class="docs-next-page__title-row">
+                    <h1 class="docs-next-h1">{{ item.title }}</h1>
+                    @if (!state.isMobile()) {
+                        <docs-next-page-actions [source]="page" />
+                    }
+                </div>
+                @if (article().lead; as lead) {
+                    <p class="docs-next-lead" [innerHTML]="lead"></p>
+                }
+
+                <nav kbqTabNavBar class="docs-next-page__tabs">
+                    @for (tab of tabs; track tab) {
+                        <a
+                            kbqTabLink
+                            routerLinkActive="kbq-selected"
+                            [routerLink]="state.link('components', item.id, tab)"
+                        >
+                            {{ tabTitle(tab) }}
+                        </a>
+                    }
+                </nav>
+            </header>
+
+            @switch (tab()) {
+                @case ('content') {
+                    <div class="kbq-markdown docs-next-prose">
+                        <h2 class="kbq-markdown__h2" id="do-and-dont">{{ state.t('content') }}</h2>
+                        <p class="kbq-markdown__p">{{ state.t('contentPlaceholder') }}</p>
+                    </div>
+                }
+                @case ('api') {
+                    <docs-next-api-preview [component]="item" />
+                }
+                @default {
+                    @if (sharedText()) {
+                        <docs-next-notice [text]="state.t('reactArticleNote')" />
+                    }
+                    @if (loaded()) {
+                        <docs-next-content-blocks [blocks]="article().blocks" />
+                    } @else {
+                        <p class="docs-next-page__loading">{{ state.t('loading') }}</p>
+                    }
+                }
+            }
+        </div>
+    }
+</docs-next-page-layout>

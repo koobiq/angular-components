@@ -1,0 +1,93 @@
+@use '../../../../../packages/components/core/styles/common/tokens';
+
+:host {
+    display: block;
+    margin-right: var(--kbq-size-xs);
+}
+
+// Figma: Search Button, 148 × 32 with a fade border.
+.docs-next-search__button {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-xs);
+    width: 148px;
+    height: 32px;
+    box-sizing: border-box;
+    padding: 0 var(--kbq-size-m);
+    border: 1px solid var(--kbq-line-contrast-fade);
+    border-radius: var(--kbq-size-s);
+    background: var(--kbq-background-bg);
+    color: var(--kbq-foreground-contrast-tertiary);
+    cursor: pointer;
+    outline: none;
+
+    &:hover {
+        border-color: var(--kbq-line-contrast-less);
+        color: var(--kbq-foreground-contrast-secondary);
+    }
+
+    &:focus-visible {
+        border-color: var(--kbq-states-line-focus-theme);
+        box-shadow: 0 0 0 1px var(--kbq-states-line-focus-theme);
+    }
+}
+
+.docs-next-search__label {
+    flex: 1;
+    text-align: left;
+}
+
+.docs-next-search__hotkey {
+    font: inherit;
+    color: var(--kbq-foreground-contrast-tertiary);
+}
+
+.docs-next-search__dialog {
+    width: min(640px, calc(100vw - 32px));
+    margin-top: 12vh;
+    padding: 0;
+    border: 1px solid var(--kbq-line-contrast-less);
+    border-radius: var(--kbq-size-m);
+    background: var(--kbq-background-card);
+    color: var(--kbq-foreground-contrast);
+    box-shadow: var(--kbq-shadow-popup);
+
+    &::backdrop {
+        background: var(--kbq-background-overlay-inverse);
+        opacity: 0.4;
+    }
+}
+
+.docs-next-search__field {
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-s);
+    padding: var(--kbq-size-m) var(--kbq-size-l);
+    border-bottom: 1px solid var(--kbq-line-contrast-less);
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.docs-next-search__input {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--kbq-foreground-contrast);
+    outline: none;
+
+    &::placeholder {
+        color: var(--kbq-foreground-contrast-tertiary);
+    }
+}
+
+.docs-next-search__empty {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+    margin: 0;
+    padding: var(--kbq-size-xxl) var(--kbq-size-l);
+    color: var(--kbq-foreground-contrast-secondary);
+    text-align: center;
+}

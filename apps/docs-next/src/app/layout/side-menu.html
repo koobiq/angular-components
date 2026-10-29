@@ -1,0 +1,35 @@
+<kbq-scrollbar kbqScrollbarMode="hover">
+    <div class="docs-next-side-menu__content">
+        @for (group of groups(); track $index) {
+            @if (group.divided && !$first) {
+                <hr class="docs-next-side-menu__divider" />
+            }
+            @if (group.title) {
+                <div class="docs-next-side-menu__header">{{ group.title }}</div>
+            }
+            <ul class="docs-next-side-menu__list">
+                @for (item of group.items; track item.id) {
+                    <li>
+                        <a
+                            class="docs-next-side-menu__item"
+                            [attr.aria-current]="item.id === current() ? 'page' : null"
+                            [class.docs-next-side-menu__item_nested]="item.nested"
+                            [class.docs-next-side-menu__item_selected]="item.id === current()"
+                            [class.docs-next-side-menu__item_unavailable]="item.unavailable"
+                            [routerLink]="item.url"
+                        >
+                            <span class="docs-next-side-menu__title">{{ item.title }}</span>
+                            @if (item.isNew) {
+                                <kbq-badge badgeColor="fade-theme" compact outline>{{ state.t('isNew') }}</kbq-badge>
+                            } @else if (item.isUpdated) {
+                                <kbq-badge badgeColor="fade-success" compact outline>
+                                    {{ state.t('isUpdated') }}
+                                </kbq-badge>
+                            }
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</kbq-scrollbar>

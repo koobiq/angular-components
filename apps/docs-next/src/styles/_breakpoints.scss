@@ -1,0 +1,7 @@
+// Below 720px the site switches to its phone layout (spec/navigation/mobile.md); `DOCS_NEXT_MOBILE_QUERY` in
+// `app/data/site.ts` is the same query for the code.
+@mixin docs-next-mobile() {
+    @media (max-width: 719.98px) {
+        @content;
+    }
+}

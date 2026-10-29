@@ -1,0 +1,173 @@
+<docs-next-sheet placement="end" [label]="state.t('menu')" (opened)="onOpened()">
+    <div class="docs-next-menu__top">
+        <a
+            kbq-icon-button="kbq-telegram_16"
+            class="docs-next-menu__icon-button"
+            color="contrast"
+            href="https://t.me/koobiq_io"
+            rel="noopener noreferrer"
+            size="compact"
+            target="_blank"
+            aria-label="Telegram"
+        ></a>
+        <a
+            kbq-icon-button="kbq-github_16"
+            class="docs-next-menu__icon-button"
+            color="contrast"
+            rel="noopener noreferrer"
+            size="compact"
+            target="_blank"
+            aria-label="GitHub"
+            [href]="state.githubUrl()"
+        ></a>
+        <button
+            kbq-icon-button="kbq-xmark_16"
+            class="docs-next-menu__icon-button docs-next-menu__close"
+            color="contrast"
+            size="compact"
+            type="button"
+            [attr.aria-label]="state.t('close')"
+            (click)="close()"
+        ></button>
+    </div>
+
+    <nav
+        #scroller
+        class="docs-next-menu__scroll"
+        data-sheet-scroll
+        [attr.aria-label]="state.t('mainMenu')"
+        (scroll)="updateStuck()"
+    >
+        @if (navVariant.variant() === 'levels') {
+            @if (levelSection(); as section) {
+                <button class="docs-next-menu__back" type="button" (click)="levelSection.set(null)">
+                    <i kbq-icon="kbq-chevron-left_16"></i>
+                    <span>{{ section.title[state.locale()] }}</span>
+                </button>
+                <ng-container
+                    [ngTemplateOutlet]="pages"
+                    [ngTemplateOutletContext]="{ $implicit: section, tree: false }"
+                />
+            } @else {
+                <ul class="docs-next-menu__list">
+                    @for (section of sections; track section.id) {
+                        <li>
+                            @if (hasPages(section)) {
+                                <button
+                                    class="docs-next-menu__item docs-next-menu__item_section"
+                                    type="button"
+                                    [class.docs-next-menu__item_current-section]="section.id === state.section()"
+                                    (click)="levelSection.set(section)"
+                                >
+                                    <span class="docs-next-menu__title">{{ section.title[state.locale()] }}</span>
+                                    <i class="docs-next-menu__chevron" kbq-icon="kbq-chevron-right_16"></i>
+                                </button>
+                            } @else {
+                                <a
+                                    class="docs-next-menu__item"
+                                    [attr.aria-current]="section.id === state.section() ? 'page' : null"
+                                    [class.docs-next-menu__item_current-section]="section.id === state.section()"
+                                    [routerLink]="state.link(section.id)"
+                                    (click)="close()"
+                                >
+                                    <span class="docs-next-menu__title">{{ section.title[state.locale()] }}</span>
+                                </a>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+        } @else {
+            @for (section of sections; track section.id) {
+                @if (hasPages(section)) {
+                    @let isExpanded = expanded().has(section.id);
+                    <section class="docs-next-menu__accordion">
+                        <button
+                            class="docs-next-menu__item docs-next-menu__item_section docs-next-menu__accordion-header"
+                            type="button"
+                            [class.docs-next-menu__accordion-header_stuck]="section.id === stuckSection()"
+                            [attr.aria-expanded]="isExpanded"
+                            [attr.data-section]="section.id"
+                            (click)="toggle(section.id)"
+                        >
+                            <span class="docs-next-menu__title">{{ section.title[state.locale()] }}</span>
+                            <i
+                                class="docs-next-menu__chevron"
+                                kbq-icon=""
+                                [class]="isExpanded ? 'kbq-chevron-up_16' : 'kbq-chevron-down_16'"
+                            ></i>
+                        </button>
+                        @if (isExpanded) {
+                            <ng-container
+                                [ngTemplateOutlet]="pages"
+                                [ngTemplateOutletContext]="{ $implicit: section, tree: true }"
+                            />
+                        }
+                    </section>
+                } @else {
+                    <a
+                        class="docs-next-menu__item docs-next-menu__item_section"
+                        [attr.aria-current]="section.id === state.section() ? 'page' : null"
+                        [routerLink]="state.link(section.id)"
+                        (click)="close()"
+                    >
+                        <span class="docs-next-menu__title">{{ section.title[state.locale()] }}</span>
+                    </a>
+                }
+            }
+        }
+
+        <div class="docs-next-menu__variant" role="group" [attr.aria-label]="state.t('menuVariant')">
+            <span class="docs-next-menu__variant-label">{{ state.t('menuVariant') }}</span>
+            <button
+                class="docs-next-menu__variant-option"
+                type="button"
+                [attr.aria-pressed]="navVariant.variant() === 'levels'"
+                (click)="navVariant.set('levels')"
+            >
+                {{ state.t('menuLevels') }}
+            </button>
+            <button
+                class="docs-next-menu__variant-option"
+                type="button"
+                [attr.aria-pressed]="navVariant.variant() === 'accordion'"
+                (click)="navVariant.set('accordion')"
+            >
+                {{ state.t('menuAccordion') }}
+            </button>
+        </div>
+    </nav>
+
+    <docs-next-menu-footer />
+</docs-next-sheet>
+
+<ng-template #pages let-section let-tree="tree">
+    @for (group of menus().get(section.id) ?? []; track $index) {
+        @if (group.title) {
+            <div class="docs-next-menu__group" [class.docs-next-menu__group_tree]="tree">{{ group.title }}</div>
+        } @else if (group.divided && !$first) {
+            <hr class="docs-next-menu__divider" />
+        }
+        <ul class="docs-next-menu__list" [class.docs-next-menu__list_tree]="tree">
+            @for (item of group.items; track item.id) {
+                <li>
+                    <a
+                        class="docs-next-menu__item"
+                        [attr.aria-current]="item.id === current() ? 'page' : null"
+                        [class.docs-next-menu__item_nested]="item.nested"
+                        [class.docs-next-menu__item_unavailable]="item.unavailable"
+                        [routerLink]="item.url"
+                        (click)="close()"
+                    >
+                        <span class="docs-next-menu__title">{{ item.title }}</span>
+                        @if (item.isNew) {
+                            <kbq-badge badgeColor="fade-theme" compact outline>{{ state.t('isNew') }}</kbq-badge>
+                        } @else if (item.isUpdated) {
+                            <kbq-badge badgeColor="fade-success" compact outline>{{ state.t('isUpdated') }}</kbq-badge>
+                        }
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+</ng-template>

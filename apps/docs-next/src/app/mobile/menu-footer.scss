@@ -1,0 +1,30 @@
+@use '../../styles/menu-button';
+
+// Figma: Drawer Bottom Bar (66:34654), 4px from the sides, with a line above it.
+:host {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: space-between;
+    height: 48px;
+    padding: 0 var(--kbq-size-xxs);
+    border-top: 1px solid var(--kbq-line-contrast-less);
+}
+
+// Figma: Theme Switcher Mobile Segmented (66:34744), 40 × 48 items.
+.docs-next-menu-footer__themes {
+    display: flex;
+}
+
+.docs-next-menu-footer__theme.kbq-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 48px;
+    padding: 0;
+}
+
+.docs-next-menu-footer__locale {
+    @include menu-button.docs-next-menu-button;
+}

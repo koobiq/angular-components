@@ -1,0 +1,60 @@
+@if (items().length) {
+    <div class="docs-next-toc__header">
+        @if (!compact()) {
+            <span class="docs-next-toc__title">{{ state.t('onThisPage') }}</span>
+        }
+        <button
+            kbq-button
+            class="kbq-button-icon docs-next-toc__toggle"
+            color="contrast"
+            kbqStyle="transparent"
+            [attr.aria-expanded]="!compact()"
+            [attr.aria-label]="compact() ? state.t('tocExpanded') : state.t('tocCompact')"
+            (click)="toggleCompact()"
+        >
+            <i kbq-icon="" [class]="compact() ? 'kbq-list-expand_16' : 'kbq-list-collapse_16'"></i>
+        </button>
+    </div>
+
+    @if (compact()) {
+        <div class="docs-next-toc__rail">
+            @for (item of items(); track item.id) {
+                <a
+                    class="docs-next-toc__bar"
+                    tabindex="-1"
+                    [class.docs-next-toc__bar_active]="item.id === activeId()"
+                    [class.docs-next-toc__bar_nested]="item.level > 0"
+                    [href]="`#${item.id}`"
+                    (click)="scrollTo($event, item.id)"
+                >
+                    <span class="docs-next-toc__bar-line"></span>
+                </a>
+            }
+            <!-- Opens on hover over the rail and does not shift the article. -->
+            <div class="docs-next-toc__popup">
+                <ng-container [ngTemplateOutlet]="list" />
+            </div>
+        </div>
+    } @else {
+        <ng-container [ngTemplateOutlet]="list" />
+    }
+}
+
+<ng-template #list>
+    <ul class="docs-next-toc__list">
+        @for (item of items(); track item.id) {
+            <li>
+                <a
+                    class="docs-next-toc__item"
+                    [attr.aria-current]="item.id === activeId() ? 'location' : null"
+                    [class.docs-next-toc__item_active]="item.id === activeId()"
+                    [class.docs-next-toc__item_nested]="item.level > 0"
+                    [href]="`#${item.id}`"
+                    (click)="scrollTo($event, item.id)"
+                >
+                    {{ item.title }}
+                </a>
+            </li>
+        }
+    </ul>
+</ng-template>
