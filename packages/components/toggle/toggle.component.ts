@@ -76,10 +76,6 @@ export type KbqToggleClickAction = KbqCheckableClickAction;
             state(TransitionCheckState.Indeterminate, style({ left: '10px', visibility: 'hidden' })),
             state(TransitionCheckState.Checked, style({ left: 'calc(100% - 11px)' })),
             transition(
-                `${TransitionCheckState.Init} => ${TransitionCheckState.Checked}`,
-                animate(KbqAnimationDurations.Entering)
-            ),
-            transition(
                 `${TransitionCheckState.Checked} <=> ${TransitionCheckState.Unchecked}`,
                 animate(KbqAnimationDurations.Rapid)
             ),
@@ -190,14 +186,6 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     /** @docs-private */
     protected currentCheckState: TransitionCheckState = TransitionCheckState.Init;
 
-    /**
-     * Whether position changes animate. Off until the macrotask after creation, so that a value written in the same
-     * tick (ngModel writes its value asynchronously) is applied without the animation.
-     *
-     * @docs-private
-     */
-    protected animationsEnabled = false;
-
     /** Defines the behavior when a user clicks on the toggle. */
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
@@ -213,8 +201,6 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         // `writeValue` (ngModel/formControl) now runs on `KbqCheckable`, bypassing the `checked`/`indeterminate`
         // setters below, so this keeps the `[@switch]` animation state in sync for form-driven value changes too.
         effect(() => this.setTransitionCheckState());
-
-        setTimeout(() => (this.animationsEnabled = true));
     }
 
     ngAfterViewInit(): void {
@@ -255,6 +241,12 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         const { shouldToggle, shouldClearIndeterminate } = this.checkable.resolveClick(this.clickAction);
 
         if (shouldToggle) {
+            // A first click starts from the unchecked position, so that it animates.
+            if (this.currentCheckState === TransitionCheckState.Init) {
+                this.transitionCheckState(TransitionCheckState.Unchecked);
+                this.changeDetectorRef.detectChanges();
+            }
+
             // When user manually click on the toggle, `indeterminate` is set to false.
             if (shouldClearIndeterminate) {
                 Promise.resolve().then(() => {
@@ -316,8 +308,11 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     private setTransitionCheckState() {
         if (this.indeterminate) {
             this.transitionCheckState(TransitionCheckState.Indeterminate);
-        } else {
-            this.transitionCheckState(this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
+        } else if (this.checked) {
+            this.transitionCheckState(TransitionCheckState.Checked);
+        } else if (this.currentCheckState !== TransitionCheckState.Init) {
+            // `Init` draws the unchecked position already, so it stays until a value or a click arrives.
+            this.transitionCheckState(TransitionCheckState.Unchecked);
         }
     }
 
