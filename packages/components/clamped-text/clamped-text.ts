@@ -2,7 +2,6 @@ import { _IdGenerator } from '@angular/cdk/a11y';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import {
-    afterNextRender,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -11,7 +10,6 @@ import {
     DestroyRef,
     ElementRef,
     inject,
-    Injector,
     input,
     model,
     numberAttribute,
@@ -27,6 +25,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
 import { debounce, timer } from 'rxjs';
 import { KbqClampedListTrigger } from './clamped-list';
+import { kbqInjectCollapseAnimation } from './collapse-animation';
 import {
     KbqClamped,
     KbqClampedRoot,
@@ -105,6 +104,13 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
      */
     readonly scrollOnCollapse = input(true, { transform: booleanAttribute });
 
+    /**
+     * Duration of the expand and collapse animation in milliseconds.
+     * Only state changes made through the disclosure toggle animate: programmatic writes of
+     * `isCollapsed` and re-measurements switch instantly. Defaults to `100`.
+     */
+    readonly duration = input<number, number | string | null | undefined>(100, { transform: numberAttribute });
+
     /** Id of the clamped region, published by the toggle as its `aria-controls`. */
     readonly contentId = inject(_IdGenerator).getId('kbq-clamped-text-content-');
 
@@ -135,10 +141,10 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
     });
 
     private readonly destroyRef = inject(DestroyRef);
-    private readonly injector = inject(Injector);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly platform = inject(Platform);
+    private readonly animateCollapse = kbqInjectCollapseAnimation();
 
     /**
      * Clamped text locale configuration.
@@ -169,12 +175,13 @@ export class KbqClampedText implements KbqClamped, AfterViewInit {
         // Untracked: called from a consumer's `effect()`, the collapsed state read here would make the effect toggle
         // again on every change it makes.
         untracked(() => {
-            this.isCollapsed.update((state) => !(state ?? true));
+            const settled = this.animateCollapse(this.textContainer().nativeElement, this.duration(), () =>
+                this.isCollapsed.update((state) => !(state ?? true))
+            );
 
             if (this.scrollOnCollapse() && this.collapsedState()) {
-                afterNextRender(
-                    () => this.elementRef.nativeElement.scrollIntoView({ block: 'nearest', inline: 'nearest' }),
-                    { injector: this.injector }
+                settled.then(() =>
+                    this.elementRef.nativeElement.scrollIntoView({ block: 'nearest', inline: 'nearest' })
                 );
             }
         });
