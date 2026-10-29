@@ -124,6 +124,25 @@ export function isFloat(value: string): boolean {
     return /^-?\d+\.\d+$/.test(value);
 }
 
+/** Whether `value` is past `Number.MAX_SAFE_INTEGER` in magnitude, once its fraction is dropped. */
+function isPastSafeInteger(value: number): boolean {
+    return Math.trunc(Math.abs(value)) > Number.MAX_SAFE_INTEGER;
+}
+
+/** The caret position after the `digits`-th digit of `text`, or the start of `text` for no digits. */
+function caretAfterDigits(text: string, digits: number): number {
+    let position = 0;
+    let count = 0;
+
+    while (count < digits && position < text.length) {
+        if (/\d/.test(text[position])) count++;
+
+        position++;
+    }
+
+    return position;
+}
+
 /**
  * Number of digits after the decimal point. Exponent-aware, so `1e-7` reports `7` rather than the
  * `0` that reading `'1e-7'.split('.')` would give.
@@ -234,7 +253,12 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     /** @docs-private */
     readonly valueInput = input<number | null | undefined>(undefined, { alias: 'value' });
 
-    /** The numeric value of the field, bound with `[value]` or written by a form control. */
+    /**
+     * The numeric value of the field, bound with `[value]` or written by a form control. The field refuses
+     * a keystroke or a paste that takes its integer past `Number.MAX_SAFE_INTEGER`, the largest exact integer.
+     * A fraction of a value around `1e14` or more may be rounded, because the text is rebuilt from the model
+     * after a step, a write or a locale change.
+     */
     get value(): number | null {
         return this.valueState() ?? null;
     }
@@ -302,12 +326,25 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         return this.localeConfiguration().number;
     }
 
+    /** `min`, but never past `Number.MAX_SAFE_INTEGER` in magnitude: steps stop where exact integers end. */
+    private get stepMin(): number {
+        return Math.max(this.min(), -Number.MAX_SAFE_INTEGER);
+    }
+
+    /** `max`, but never past `Number.MAX_SAFE_INTEGER`. */
+    private get stepMax(): number {
+        return Math.min(this.max(), Number.MAX_SAFE_INTEGER);
+    }
+
     private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'input',
         KBQ_INPUT_LOCALE_CONFIGURATION
     );
 
     private valueFromPaste: number | null;
+
+    /** The text last written to the field: a keystroke that takes the integer past the limit restores it. */
+    private lastValidText = '';
 
     /** Pending `onInput` reformats by timer handle: cancelled on destroy, run at once before a step. */
     private readonly pendingReformats = new Map<ReturnType<typeof setTimeout>, (correctCaret: boolean) => void>();
@@ -472,6 +509,12 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
                 /*this.viewValue is raw and should be reformatted to localized number */
                 formattedValue = this.formatViewValue();
 
+                if (this.exceedsSafeInteger(formattedValue)) {
+                    this.restoreViewValue(previousSelectionStart);
+
+                    return;
+                }
+
                 if (correctCaret && this.withThousandSeparator()) {
                     this.correctCaretForSeparator(currentValueLength, previousSelectionStart);
                 }
@@ -494,7 +537,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             this.localeService?.localeId()
         );
 
-        if (this.valueFromPaste === null || isNaN(this.valueFromPaste)) {
+        if (this.valueFromPaste === null || isNaN(this.valueFromPaste) || isPastSafeInteger(this.valueFromPaste)) {
             event.preventDefault();
         } else if (this.integer() && isFloat(this.valueFromPaste.toString())) {
             event.preventDefault();
@@ -510,7 +553,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         this.nativeElement.focus();
         this.commitPendingReformats();
 
-        const res = Math.max(Math.min(add(this.value || 0, step), this.max()), this.min());
+        const res = Math.max(Math.min(add(this.value || 0, step), this.stepMax), this.stepMin);
 
         this.setViewValue(this.formatNumber(res));
 
@@ -523,7 +566,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         this.nativeElement.focus();
         this.commitPendingReformats();
 
-        const res = Math.min(Math.max(add(this.value || 0, -step), this.min()), this.max());
+        const res = Math.min(Math.max(add(this.value || 0, -step), this.stepMin), this.stepMax);
 
         this.setViewValue(this.formatNumber(res));
 
@@ -591,11 +634,33 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         const cursorPosition = this.nativeElement.selectionStart;
 
         this.renderer.setProperty(this.nativeElement, 'value', value);
+        this.lastValidText = value ?? '';
 
         if (savePosition) {
             this.renderer.setProperty(this.nativeElement, 'selectionStart', cursorPosition);
             this.renderer.setProperty(this.nativeElement, 'selectionEnd', cursorPosition);
         }
+    }
+
+    /** Whether the integer part of a formatted `text` is past `Number.MAX_SAFE_INTEGER`. */
+    private exceedsSafeInteger(text: string | null): boolean {
+        const [integerPart] = normalizeNumber(text, this.config).split(KBQ_DEFAULT_PRECISION_SEPARATOR);
+
+        return isPastSafeInteger(Number(integerPart));
+    }
+
+    /**
+     * Writes back the last valid text after a keystroke took the integer past the limit, with the caret after the
+     * digits it had before that keystroke.
+     */
+    private restoreViewValue(previousSelectionStart: number): void {
+        const typedBefore = this.viewValue.slice(0, Math.max(0, previousSelectionStart - 1));
+        const digitsBefore = typedBefore.replace(/\D/g, '').length;
+        const caret = caretAfterDigits(this.lastValidText, digitsBefore);
+
+        this.setViewValue(this.lastValidText);
+        this.renderer.setProperty(this.nativeElement, 'selectionStart', caret);
+        this.renderer.setProperty(this.nativeElement, 'selectionEnd', caret);
     }
 
     /** Writes a value from outside the field: reformats it and reports the change. */
@@ -657,15 +722,19 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             .split(separator)
             .map((valuePart) => normalizeNumber(valuePart, this.config));
 
-        return this.createLocalizedNumberFromParts(+intPart, fractionPart);
+        const integer = +intPart;
+
+        // A lone sign before the decimal separator (`-,5`) is no number yet: clear the field, do not print NaN.
+        if (!Number.isFinite(integer)) return null;
+
+        return this.createLocalizedNumberFromParts(integer, fractionPart);
     }
 
     private formatNumber(value: number | null | undefined): string | null {
-        if (value === null || value === undefined) return null;
+        if (value === null || value === undefined || !Number.isFinite(value)) return null;
 
-        const [intPart, fractionPart] = value.toString().split(KBQ_DEFAULT_PRECISION_SEPARATOR);
-
-        return this.createLocalizedNumberFromParts(+intPart, fractionPart);
+        // The whole value is formatted: `toString()` writes `1.5e-7` with an exponent that `split` would tear apart.
+        return this.createLocalizedNumberFromParts(value === 0 ? 0 : value);
     }
 
     private createLocalizedNumberFromParts(intPart: number, fractionPart?: string): string {

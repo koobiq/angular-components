@@ -2506,6 +2506,114 @@ describe('KbqNumberInput', () => {
         });
     });
 
+    describe('integer limit', () => {
+        let fixture: ComponentFixture<NumberInputWithMask>;
+        let inputElement: HTMLInputElement;
+        let numberInput: KbqNumberInput;
+
+        /** Joins digit groups with the locale's group separator, which is not a plain space. */
+        const grouped = (...groups: string[]): string => groups.join(defaultLocaleGroupSep);
+
+        /** Writes `text` into the field with the caret at `caret`, the way a keystroke reaches `onInput`. */
+        const type = async (text: string, caret = text.length) => {
+            inputElement.value = text;
+            inputElement.setSelectionRange(caret, caret);
+            dispatchFakeEvent(inputElement, 'input');
+            await vi.runOnlyPendingTimersAsync();
+        };
+
+        beforeEach(() => {
+            fixture = createComponent(NumberInputWithMask);
+            fixture.componentInstance.localeService.setLocale('ru-RU');
+            fixture.componentInstance.max = Infinity;
+            fixture.componentInstance.min = -Infinity;
+            fixture.detectChanges();
+            inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+            numberInput = fixture.debugElement.query(By.directive(KbqNumberInput)).injector.get(KbqNumberInput);
+        });
+
+        it('should refuse a keystroke that takes the integer past Number.MAX_SAFE_INTEGER', async () => {
+            vi.useFakeTimers();
+
+            await type('9007199254740991');
+            const text = inputElement.value;
+
+            await type(`${text}2`);
+
+            expect(inputElement.value).toBe(text);
+            expect(numberInput.value).toBe(Number.MAX_SAFE_INTEGER);
+        });
+
+        it('should keep the caret after the same digits when it refuses a keystroke', async () => {
+            vi.useFakeTimers();
+
+            await type('9007199254740991');
+            const text = inputElement.value;
+
+            await type(`${text.slice(0, 1)}9${text.slice(1)}`, 2);
+
+            expect(inputElement.value).toBe(text);
+            expect(inputElement.selectionStart).toBe(1);
+        });
+
+        it('should refuse a paste that takes the integer past Number.MAX_SAFE_INTEGER', async () => {
+            vi.useFakeTimers();
+
+            await type('9007199254740991');
+            const text = inputElement.value;
+
+            const paste = new Event('paste', { cancelable: true });
+
+            Object.defineProperty(paste, 'clipboardData', { value: { getData: () => '9007199254740992' } });
+            inputElement.dispatchEvent(paste);
+
+            expect(paste.defaultPrevented).toBe(true);
+            expect(inputElement.value).toBe(text);
+        });
+
+        it('should clamp steps to Number.MAX_SAFE_INTEGER', async () => {
+            vi.useFakeTimers();
+
+            await type('9007199254740990');
+
+            numberInput.stepUp(5);
+            fixture.detectChanges();
+
+            expect(inputElement.value).toBe(grouped('9', '007', '199', '254', '740', '991'));
+            expect(numberInput.value).toBe(Number.MAX_SAFE_INTEGER);
+
+            numberInput.stepUp(1);
+
+            expect(numberInput.value).toBe(Number.MAX_SAFE_INTEGER);
+        });
+
+        it('should render a tiny value without an exponent', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.value = 1.5e-7;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('0,00000015');
+        });
+
+        it('should clear a lone sign before the decimal separator instead of printing NaN', async () => {
+            vi.useFakeTimers();
+
+            await type('-,5');
+
+            expect(inputElement.value).toBe('');
+        });
+
+        it('should keep the sign typed before a zero', async () => {
+            vi.useFakeTimers();
+
+            await type('-0,5');
+
+            expect(inputElement.value).toBe('-0,5');
+        });
+    });
+
     describe('teardown', () => {
         it('should not update the model from a keystroke pending at destroy time', async () => {
             vi.useFakeTimers();

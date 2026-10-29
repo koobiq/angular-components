@@ -12,6 +12,8 @@ In cases where the thousands separator is a thin space, the input field includes
 
 Number formatting depends on your chosen locale. This means the same number may look different depending on your regional settings.
 
+The field refuses input that takes the integer part past `Number.MAX_SAFE_INTEGER`: the typed character does not appear. For values around 10¹⁴ and above, the fraction may be rounded, because the value is stored as a `number`: the field shows the typed text, but after a step, a value write, or a locale change it rebuilds the text from the value.
+
 <Example id="input-number-overview" />
 
 #### Numeric input API
