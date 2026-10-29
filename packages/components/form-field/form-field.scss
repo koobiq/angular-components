@@ -45,6 +45,15 @@
         box-sizing: border-box;
         display: flex;
         margin-bottom: var(--kbq-form-field-label-margin-bottom);
+
+        // Drawn inside `kbq-label`, so that it follows the last word of a label that wraps.
+        &.kbq-form-field__label_required .kbq-label::after {
+            margin-left: var(--kbq-size-3xs);
+            // The marker only repeats the `required` state of the control, so it is kept out of the accessible name of
+            // the control. The plain `content` is the fallback for browsers without the alternative text syntax.
+            content: '*';
+            content: '*' / '';
+        }
     }
 
     // We should override suffix spacing for select type, because it has custom suffix

@@ -481,6 +481,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/form-field').then((m) => m.FormFieldWithErrorExample);
         case 'form-field-with-hint':
             return import('@koobiq/docs-examples/components/form-field').then((m) => m.FormFieldWithHintExample);
+        case 'form-field-with-label':
+            return import('@koobiq/docs-examples/components/form-field').then((m) => m.FormFieldWithLabelExample);
         case 'form-field-with-prefix-and-suffix':
             return import('@koobiq/docs-examples/components/form-field').then((m) => m.FormFieldWithPrefixAndSuffixExample);
         case 'form-field-without-borders':
