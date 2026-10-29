@@ -8,7 +8,7 @@ export interface Schema {
      */
     stylesExt: string;
     /**
-     * Name of the project where Koobiq library should be installed
+     * Name of the project, or a folder to migrate (e.g. `./libs`). Without it the whole workspace is migrated
      */
     project?: string;
 }

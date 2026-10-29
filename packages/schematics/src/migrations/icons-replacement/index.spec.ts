@@ -94,4 +94,29 @@ describe(SCHEMATIC_NAME, () => {
 
         expect((await firstLogEntry).message).toBeTruthy();
     });
+
+    it('accepts a folder as the `project` option, skips node_modules and reports the built-in data', async () => {
+        const messages: string[] = [];
+        const project = projects.get(projects.keys().next().value!)!;
+        const { templatePath } = getProjectContentPaths(project, appTree);
+        const { from, to } = iconReplacementData[0];
+        const html = `<i kbq-icon="${from}"></i>`;
+        const vendored = '/node_modules/some-lib/icon.html';
+
+        appTree.overwrite(templatePath, html);
+        appTree.create(vendored, html);
+        runner.logger.subscribe(({ message }) => messages.push(message));
+
+        const tree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: `./${project.root}`, fix: true, allowed: ['.html'] } satisfies Schema,
+            appTree
+        );
+
+        expect(tree.readText(templatePath)).toBe(`<i kbq-icon="${to}"></i>`);
+        expect(tree.readText(vendored)).toBe(html);
+        expect(messages).toContain(
+            `Icon mapping: the built-in one, ${iconReplacementData.length} entries (--replacement-data-path overrides it).`
+        );
+    });
 });

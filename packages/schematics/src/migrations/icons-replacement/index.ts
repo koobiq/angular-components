@@ -1,8 +1,9 @@
 import { Path } from '@angular-devkit/core';
-import { SchematicContext, Tree } from '@angular-devkit/schematics';
+import { SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
 import path from 'path';
 import { logMessage } from '../../utils/messages';
-import { setupOptions } from '../../utils/package-config';
+import { resolveTargetDir } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import { Replacement, TransformTemplateAttributesResult } from '../../utils/typescript';
 import { iconReplacementData } from './data';
 import { Schema } from './schema';
@@ -56,9 +57,12 @@ export const processIconReplacement = ({
 
 export const resolveReplacementData = (projectRootPath: string, tree: Tree, customReplacementDataPath?: string) => {
     if (customReplacementDataPath) {
-        const replacementData = tree.get(`${projectRootPath}/${customReplacementDataPath}`);
+        const filePath = `${projectRootPath}/${customReplacementDataPath}`;
+        const replacementData = tree.get(filePath);
 
-        if (!replacementData) return iconReplacementData;
+        if (!replacementData) {
+            throw new SchematicsException(`Unable to find the replacement data at '${filePath}'`);
+        }
 
         return JSON.parse(replacementData.content.toString()) as Replacement[];
     }
@@ -71,13 +75,19 @@ export default function migrate(options: Schema) {
         const { logger } = context;
         const { project, allowed, fix, replacementDataPath } = options;
 
-        const projectDefinition = await setupOptions(project, tree);
+        const targetDir = await resolveTargetDir(project, tree);
 
-        const replacementData = resolveReplacementData(projectDefinition!.root, tree, replacementDataPath);
+        const replacementData = resolveReplacementData(targetDir.path, tree, replacementDataPath);
 
-        tree.getDir(projectDefinition!.root).visit((filePath: Path, entry) => {
+        logger.info(
+            replacementDataPath
+                ? `Icon mapping: ${replacementData.length} entries from '${replacementDataPath}'.`
+                : `Icon mapping: the built-in one, ${replacementData.length} entries (--replacement-data-path overrides it).`
+        );
+
+        visitProjectFiles(targetDir, (filePath: Path, entry) => {
             if (allowed.length === 0 || allowed.some((ext) => filePath.endsWith(ext))) {
-                const initialContent = entry?.content.toString();
+                const initialContent = entry.content.toString();
 
                 if (!initialContent) return;
 

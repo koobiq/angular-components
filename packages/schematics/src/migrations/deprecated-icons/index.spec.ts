@@ -160,7 +160,7 @@ class TestApp {
             tree.overwrite(p.ts, ts || '');
         };
 
-        it('drops the sole "pt-icons" token from a class list', async () => {
+        it('renames the sole "pt-icons" token of a class list to "kbq"', async () => {
             const html = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="${DEPRECATED_SCOPE}"></i>`;
 
             overwriteProjectData({ html, project: currentProject, tree: appTree });
@@ -168,10 +168,10 @@ class TestApp {
             const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
             const [migratedHtml] = getProjectContent(tree, currentProject);
 
-            expect(migratedHtml).toBe(`<i kbq-icon="kbq-${replaceWith}" class=""></i>`);
+            expect(migratedHtml).toBe(`<i kbq-icon="kbq-${replaceWith}" class="kbq"></i>`);
         });
 
-        it('drops "pt-icons" from the start of a multi-class list', async () => {
+        it('renames "pt-icons" at the start of a multi-class list', async () => {
             const html = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="${DEPRECATED_SCOPE} layout-column"></i>`;
 
             overwriteProjectData({ html, project: currentProject, tree: appTree });
@@ -179,10 +179,10 @@ class TestApp {
             const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
             const [migratedHtml] = getProjectContent(tree, currentProject);
 
-            expect(migratedHtml).toBe(`<i kbq-icon="kbq-${replaceWith}" class="layout-column"></i>`);
+            expect(migratedHtml).toBe(`<i kbq-icon="kbq-${replaceWith}" class="kbq layout-column"></i>`);
         });
 
-        it('drops "pt-icons" from the end of a multi-class list', async () => {
+        it('renames "pt-icons" at the end of a multi-class list', async () => {
             const html = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="layout-column ${DEPRECATED_SCOPE}"></i>`;
 
             overwriteProjectData({ html, project: currentProject, tree: appTree });
@@ -190,7 +190,18 @@ class TestApp {
             const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
             const [migratedHtml] = getProjectContent(tree, currentProject);
 
-            expect(migratedHtml).toBe(`<i kbq-icon="kbq-${replaceWith}" class="layout-column"></i>`);
+            expect(migratedHtml).toBe(`<i kbq-icon="kbq-${replaceWith}" class="layout-column kbq"></i>`);
+        });
+
+        it('keeps the font class on a plain icon element', async () => {
+            const html = `<i class="${DEPRECATED_SCOPE} ${DEPRECATED_SCOPE}-comment_16 layout-margin-right-s"></i>`;
+
+            overwriteProjectData({ html, project: currentProject, tree: appTree });
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
+            const [migratedHtml] = getProjectContent(tree, currentProject);
+
+            expect(migratedHtml).toBe('<i class="kbq kbq-message_16 layout-margin-right-s"></i>');
         });
 
         it('leaves an unrelated class untouched even when adjacent to a migrated icon', async () => {
@@ -220,7 +231,7 @@ class TestApp {
             currentProject = projects.get(currentProjectKey)!;
         });
 
-        it('strips the scope word and renames the icon suffix in a space-joined string literal', async () => {
+        it('renames the scope word and the icon suffix in a space-joined string literal', async () => {
             const { replace, replaceWith } = firstIcon;
             const p = projectPaths(currentProject, appTree);
 
@@ -237,7 +248,7 @@ class TestApp {
 
             const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
 
-            expect(tree.read(p.ts)?.toString()).toContain(`return '${replaceWith}';`);
+            expect(tree.read(p.ts)?.toString()).toContain(`return 'kbq ${replaceWith}';`);
         });
 
         it('leaves an unrelated string literal untouched even when it contains the scope word', async () => {
@@ -493,11 +504,11 @@ class TestApp {}`
             const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
             const ts = tree.read(p.ts)?.toString() || '';
 
-            expect(ts).toContain("class: ''");
+            expect(ts).toContain("class: 'kbq'");
             expect(ts).toContain(`class.kbq-${replaceWith}`);
         });
 
-        it('drops a bare-scope `[class.X]` host binding, since it has nothing to rename to', async () => {
+        it('renames a bare-scope `[class.X]` host binding to `[class.kbq]`', async () => {
             const p = projectPaths(currentProject, appTree);
 
             appTree.overwrite(
@@ -514,8 +525,7 @@ class TestApp {}`
             const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
             const ts = tree.read(p.ts)?.toString() || '';
 
-            expect(ts).toContain("class: ''");
-            expect(ts).not.toContain(`class.${DEPRECATED_SCOPE}`);
+            expect(ts).toContain("class: 'kbq', '[class.kbq]': 'true'");
         });
 
         it('migrates a selector inside an inline `styles` array, boundary-safe', async () => {
@@ -538,6 +548,34 @@ class TestApp {}`
 
             expect(ts).toContain(`.kbq-${replaceWith} { width: 16px; }`);
             expect(ts).toContain(`.my-widget-${DEPRECATED_SCOPE}-preview { color: red; }`);
+        });
+    });
+
+    describe('folder as the `project` option', () => {
+        it('migrates the folder and neither touches nor reports node_modules', async () => {
+            const messages: string[] = [];
+
+            runner = new SchematicTestRunner('schematics', collectionPath);
+            appTree = await createTestApp(runner, { style: 'scss' });
+
+            const project = (await getWorkspace(appTree)).projects.values().next().value!;
+            const p = projectPaths(project as unknown as workspaces.ProjectDefinition, appTree);
+            const html = `<i class="${DEPRECATED_SCOPE} ${DEPRECATED_SCOPE}-${firstIcon.replace}"></i>`;
+
+            appTree.overwrite(p.html, html);
+            appTree.create('/node_modules/some-lib/icon.html', html);
+            appTree.create('/node_modules/some-lib/styles.scss', '');
+            runner.logger.subscribe(({ message }) => messages.push(message));
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { project: `./${project.root}`, fix: true, stylesExt: 'scss' },
+                appTree
+            );
+
+            expect(tree.readText(p.html)).toBe(`<i class="kbq kbq-${firstIcon.replaceWith}"></i>`);
+            expect(tree.readText('/node_modules/some-lib/icon.html')).toBe(html);
+            expect(messages.some((message) => message.includes('node_modules'))).toBe(false);
         });
     });
 });

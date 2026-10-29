@@ -8,7 +8,7 @@ export interface Schema {
      */
     stylesExt: string;
     /**
-     * Name of the project where Koobiq library should be installed
+     * Name of the project, or a folder to migrate (e.g. `./libs`). Without it the whole workspace is migrated
      */
     project?: string;
     /**
@@ -16,11 +16,11 @@ export interface Schema {
      */
     updatePrefix?: boolean;
     /**
-     * path to custom data. When providing this property, use `migration.json` file as a default
+     * JSON file with the icon mapping, relative to the workspace root. Without it the built-in mapping is used
      */
     customDataPath?: string;
     /**
-     * path to custom attributes replacement. When providing this property, use `replacement.json` file as a default.
+     * JSON file with the scope pair, relative to the workspace root. Without it the scope is `mc` -> `kbq`
      */
     customIconReplacementPath?: string;
 }

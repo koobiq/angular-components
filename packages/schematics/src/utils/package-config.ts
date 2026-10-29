@@ -1,5 +1,5 @@
 import { workspaces } from '@angular-devkit/core';
-import { SchematicsException, Tree } from '@angular-devkit/schematics';
+import { DirEntry, SchematicsException, Tree } from '@angular-devkit/schematics';
 import { readWorkspace } from '@schematics/angular/utility';
 import * as messages from './messages';
 import { visitProjectFiles } from './project-files';
@@ -75,6 +75,41 @@ export async function setupOptions(
 
         return projectWorkspace as unknown as workspaces.ProjectDefinition;
     }
+}
+
+/**
+ * Resolves the `project` option to the directory a migration should walk: the root of the workspace
+ * project with that name or, when no project has it, the folder at that path (`./libs`, `libs/`).
+ * Without `project` the whole tree is walked, which is what `ng update` does.
+ */
+export async function resolveTargetDir(project: string | undefined, tree: Tree): Promise<DirEntry> {
+    if (!project) {
+        return tree.root;
+    }
+
+    let projectRoot: string | undefined;
+
+    try {
+        projectRoot = (await readWorkspace(tree)).projects.get(project)?.root;
+    } catch {
+        // No angular.json: the option can still name a folder.
+    }
+
+    if (projectRoot !== undefined) {
+        return tree.getDir(projectRoot || '/');
+    }
+
+    const folder = project
+        .replace(/\\/g, '/')
+        .replace(/^(\.\/)+/, '')
+        .replace(/\/+$/, '');
+    const dir = tree.getDir(folder || '/');
+
+    if (dir.subfiles.length || dir.subdirs.length) {
+        return dir;
+    }
+
+    throw new SchematicsException(messages.noProjectOrDirectory(project));
 }
 
 export async function getParsingInfo(project: string | undefined, tree: Tree) {

@@ -6,6 +6,14 @@ This schematic provides migration for new icons naming attribute. It includes:
 
 [Params](schema.ts)
 
+`--project` takes a project name or a folder such as `./libs`; without it the whole workspace is migrated.
+`node_modules` and `dist` are always skipped. The built-in mapping applies unless `--replacement-data-path`
+points at a JSON file of your own, relative to the project root or the folder; a missing file stops the run:
+
+```json
+[{ "from": "kbq-bolt-circle_16", "to": "kbq-circle-bolt_16" }]
+```
+
 #### Usage for Angular Cli:
 
 Apply for project and log file path and icon name should be replaced

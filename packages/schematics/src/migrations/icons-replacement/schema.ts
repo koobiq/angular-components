@@ -9,12 +9,12 @@ export interface Schema {
      */
     allowed: string[];
     /**
-     * Name of the project where Koobiq library should be installed
+     * Name of the project, or a folder to migrate (e.g. `./libs`). Without it the whole workspace is migrated
      */
     project: string;
     /**
-     * Custom replacement data path. Will be used as relative to `project.root`.
-     * Default replacement data will be used instead
+     * Custom replacement data path, relative to the project root or the folder.
+     * Without it the built-in mapping is used
      * @see https://github.com/koobiq/icons/pull/68
      */
     replacementDataPath?: string;

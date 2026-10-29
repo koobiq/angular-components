@@ -22,12 +22,18 @@ word/selector-boundary-safe regex rather than real selector parsing — this cor
 directly preceded by `.`, like a real class selector), but a genuine selector spelled out inside a comment is
 still indistinguishable from one that isn't and can still be rewritten.
 
-Two intentional behavior changes from earlier versions of this schematic:
+The bare `pt-icons` class is renamed to `kbq`, the base class of the icon font, rather than removed, so an icon
+written with classes alone keeps its styles:
 
-- `class="pt-icons"` (the sole class) now becomes `class=""` rather than removing the `class` attribute
-  entirely.
-- A bare string literal like `'pt-icons word-wrap_16'` now also renames the icon suffix (e.g. to
-  `'wrap-text_16'`), instead of only stripping the scope word.
+```html
+<!-- before -->
+<i class="pt-icons pt-icons-comment_16 layout-margin-right-s"></i>
+<!-- after -->
+<i class="kbq kbq-message_16 layout-margin-right-s"></i>
+```
+
+The same goes for a `[class.pt-icons]` binding, which becomes `[class.kbq]`, and for a string literal:
+`'pt-icons word-wrap_16'` becomes `'kbq wrap-text_16'`.
 
 `fix: false` (the default) never mutates any file — it only reports what it found.
 
@@ -37,7 +43,11 @@ Usage for Angular Cli:
 
 ```shell
 ng g @koobiq/components:deprecated-icons --fix=true --project "<your project>"
+ng g @koobiq/components:deprecated-icons --fix=true --project ./libs
 ```
+
+`--project` takes a project name or a folder; without it the whole workspace is migrated. `node_modules` and
+`dist` are always skipped.
 
 Usage for Nx:
 

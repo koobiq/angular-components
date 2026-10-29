@@ -6,7 +6,7 @@
     "properties": {
         "project": {
             "type": "string",
-            "description": "Name of the project",
+            "description": "Name of the project, or a folder to migrate (e.g. ./libs). Without it the whole workspace is migrated",
             "$default": {
                 "$source": "projectName"
             }
@@ -26,7 +26,7 @@
         },
         "replacementDataPath": {
             "type": "string",
-            "description": "Custom replacement data path. Will be used as relative to `project.root`"
+            "description": "JSON file with the icon mapping, an array of { \"from\": \"kbq-<old>\", \"to\": \"kbq-<new>\" }, relative to the project root or the folder. Without it the built-in mapping is used"
         }
     }
 }
