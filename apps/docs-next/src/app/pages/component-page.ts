@@ -4,7 +4,7 @@ import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { of } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
-import { DOCS_NEXT_COMPONENTS, docsNextComponentGithubUrl } from '../data/components';
+import { DOCS_NEXT_COMPONENT_TABS, DOCS_NEXT_COMPONENTS, docsNextComponentGithubUrl } from '../data/components';
 import { docsNextFrameworkTitle } from '../data/site';
 import { DocsNextContent } from '../services/content';
 import { DocsNextSiteState } from '../services/site-state';
@@ -16,7 +16,7 @@ import { DocsNextPageLayout } from '../ui/page-layout';
 import { docsNextPlaceholderArticle, docsNextSplitLead } from '../ui/placeholder';
 import { DocsNextStub } from '../ui/stub';
 
-const TABS = ['overview', 'content', 'api', 'examples'] as const;
+const TABS = DOCS_NEXT_COMPONENT_TABS;
 
 /**
  * Page of a component: title, description, the subsections "Overview", "Content", "API" and "Examples" in one row

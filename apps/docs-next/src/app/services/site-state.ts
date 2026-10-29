@@ -28,18 +28,21 @@ const STORAGE_KEYS = {
     articleExpanded: 'docs-next-article-expanded'
 };
 
-/** Reads a stored choice; storage may be unavailable, for instance in a private window. */
-const readStored = (storage: Storage, key: string): string | null => {
+/**
+ * Reads a stored choice. The storage may be unavailable, for instance in a private window, or the browser may block
+ * it, which throws on the property access itself, so the window is passed and the storage read inside the guard.
+ */
+const readStored = (win: Window, key: string): string | null => {
     try {
-        return storage.getItem(key);
+        return win.localStorage.getItem(key);
     } catch {
         return null;
     }
 };
 
-const writeStored = (storage: Storage, key: string, value: string): void => {
+const writeStored = (win: Window, key: string, value: string): void => {
     try {
-        storage.setItem(key, value);
+        win.localStorage.setItem(key, value);
     } catch {
         // The choice just won't outlive the visit.
     }
@@ -64,7 +67,6 @@ export class DocsNextSiteState {
     private readonly router = inject(Router);
     private readonly document = inject(DOCUMENT);
     private readonly window = inject(KBQ_WINDOW);
-    private readonly storage = this.window.localStorage;
     private readonly mobileQuery = this.window.matchMedia?.(DOCS_NEXT_MOBILE_QUERY);
 
     private readonly url = toSignal(
@@ -77,9 +79,9 @@ export class DocsNextSiteState {
 
     private readonly path = computed(() => parsePath(this.url()));
 
-    readonly locale = computed<DocsNextLocale>(() => this.path()?.locale ?? docsNextStoredLocale(this.storage));
+    readonly locale = computed<DocsNextLocale>(() => this.path()?.locale ?? docsNextStoredLocale(this.window));
     readonly framework = computed<DocsNextFramework>(
-        () => this.path()?.framework ?? docsNextStoredFramework(this.storage)
+        () => this.path()?.framework ?? docsNextStoredFramework(this.window)
     );
     /** Section, page and subsection of the open page. */
     readonly rest = computed(() => this.path()?.rest ?? []);
@@ -87,13 +89,13 @@ export class DocsNextSiteState {
 
     /** Versions to pick from; `?versions=N` in the address the site opens with tries a list of another length. */
     readonly versions = signal<readonly DocsNextVersion[]>(DOCS_NEXT_VERSIONS);
-    readonly version = signal(readStored(this.storage, STORAGE_KEYS.version) ?? '20');
+    readonly version = signal(readStored(this.window, STORAGE_KEYS.version) ?? '20');
     readonly versionTitle = computed(
         () => this.versions().find(({ id }) => id === this.version())?.title ?? this.version()
     );
 
     /** Whether articles drop their line length and take the whole width next to the contents. */
-    readonly articleExpanded = signal(readStored(this.storage, STORAGE_KEYS.articleExpanded) === 'true');
+    readonly articleExpanded = signal(readStored(this.window, STORAGE_KEYS.articleExpanded) === 'true');
 
     /** Whether the phone layout is on. */
     readonly isMobile = signal(this.mobileQuery?.matches ?? false);
@@ -111,13 +113,13 @@ export class DocsNextSiteState {
 
     constructor() {
         effect(() => {
-            writeStored(this.storage, STORAGE_KEYS.locale, this.locale());
-            writeStored(this.storage, STORAGE_KEYS.framework, this.framework());
+            writeStored(this.window, STORAGE_KEYS.locale, this.locale());
+            writeStored(this.window, STORAGE_KEYS.framework, this.framework());
             this.document.documentElement.lang = this.locale();
         });
 
-        effect(() => writeStored(this.storage, STORAGE_KEYS.version, this.version()));
-        effect(() => writeStored(this.storage, STORAGE_KEYS.articleExpanded, String(this.articleExpanded())));
+        effect(() => writeStored(this.window, STORAGE_KEYS.version, this.version()));
+        effect(() => writeStored(this.window, STORAGE_KEYS.articleExpanded, String(this.articleExpanded())));
 
         const count = Number(new URLSearchParams(this.window.location.search).get('versions'));
 
@@ -153,7 +155,7 @@ export class DocsNextSiteState {
      * section, with a notice.
      */
     frameworkTarget(framework: DocsNextFramework): { url: string; notice: string | null } {
-        const [sectionId, pageId, ...tail] = this.rest();
+        const [sectionId, pageId] = this.rest();
         const base = ['', this.locale(), framework];
         const section = sectionId ? docsNextGetSection(sectionId) : undefined;
         const page = section && pageId ? docsNextGetSectionPages(section).find(({ id }) => id === pageId) : undefined;
@@ -169,7 +171,8 @@ export class DocsNextSiteState {
             section: section.title[this.locale()]
         });
 
-        return { url: [...base, section.id, first?.id ?? '', ...(first ? [] : tail)].join('/'), notice };
+        // Without a page in the framework the section opens on its redirect to the home page of the framework.
+        return { url: [...base, section.id, ...(first ? [first.id] : [])].join('/'), notice };
     }
 
     /** Shows the notice once the navigation it explains ends. */
@@ -183,16 +186,16 @@ export class DocsNextSiteState {
     );
 }
 
-/** Called in an injection context unless a storage is passed. */
-export const docsNextStoredLocale = (storage = inject(KBQ_WINDOW).localStorage): DocsNextLocale => {
-    const stored = readStored(storage, STORAGE_KEYS.locale);
+/** Called in an injection context unless a window is passed. */
+export const docsNextStoredLocale = (win = inject(KBQ_WINDOW)): DocsNextLocale => {
+    const stored = readStored(win, STORAGE_KEYS.locale);
 
     return docsNextIsLocale(stored) ? stored : 'ru';
 };
 
 /** Angular is the default framework of a first visit (spec/context/framework.md). */
-export const docsNextStoredFramework = (storage = inject(KBQ_WINDOW).localStorage): DocsNextFramework => {
-    const stored = readStored(storage, STORAGE_KEYS.framework);
+export const docsNextStoredFramework = (win = inject(KBQ_WINDOW)): DocsNextFramework => {
+    const stored = readStored(win, STORAGE_KEYS.framework);
 
     return docsNextIsFramework(stored) ? stored : 'angular';
 };

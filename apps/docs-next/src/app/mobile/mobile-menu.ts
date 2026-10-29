@@ -42,7 +42,7 @@ const hasPages = (section: DocsNextSection): boolean => section.id !== 'icons';
 export class DocsNextMobileMenu {
     protected readonly state = inject(DocsNextSiteState);
     protected readonly navVariant = inject(DocsNextNavVariantState);
-    private readonly storage = inject(KBQ_WINDOW).localStorage;
+    private readonly window = inject(KBQ_WINDOW);
 
     protected readonly sheet = viewChild.required(DocsNextSheet);
     private readonly scroller = viewChild.required<ElementRef<HTMLElement>>('scroller');
@@ -129,7 +129,7 @@ export class DocsNextMobileMenu {
         setTimeout(() => this.updateStuck());
 
         try {
-            this.storage.setItem(EXPANDED_STORAGE_KEY, JSON.stringify([...next]));
+            this.window.localStorage.setItem(EXPANDED_STORAGE_KEY, JSON.stringify([...next]));
         } catch {
             // Not remembered then.
         }
@@ -140,7 +140,7 @@ export class DocsNextMobileMenu {
         const all = new Set(DOCS_NEXT_SECTIONS.filter(hasPages).map(({ id }) => id));
 
         try {
-            const stored = this.storage.getItem(EXPANDED_STORAGE_KEY);
+            const stored = this.window.localStorage.getItem(EXPANDED_STORAGE_KEY);
 
             return stored === null ? all : new Set(JSON.parse(stored));
         } catch {

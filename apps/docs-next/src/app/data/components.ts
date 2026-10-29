@@ -40,6 +40,9 @@ export const docsNextComponentGithubUrl = (
     );
 };
 
+/** Tabs of a component page, in the order of the tab row. */
+export const DOCS_NEXT_COMPONENT_TABS = ['overview', 'content', 'api', 'examples'] as const;
+
 export const DOCS_NEXT_COMPONENTS: readonly DocsNextComponent[] = [
     { id: 'accordion', title: 'Accordion', angular: 'accordion', react: 'Accordion' },
     { id: 'actions-panel', title: 'Actions panel', angular: 'actions-panel', react: 'ActionsPanel' },

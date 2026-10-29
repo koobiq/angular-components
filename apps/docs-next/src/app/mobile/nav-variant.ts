@@ -13,7 +13,7 @@ const isVariant = (value: unknown): value is DocsNextNavVariant => value === 'le
 /** Layout of the phone menu: set by `?nav=levels|accordion` in the address or the switch in the menu, remembered. */
 @Injectable({ providedIn: 'root' })
 export class DocsNextNavVariantState {
-    private readonly storage = inject(KBQ_WINDOW).localStorage;
+    private readonly window = inject(KBQ_WINDOW);
 
     readonly variant = signal<DocsNextNavVariant>(this.read());
 
@@ -31,7 +31,7 @@ export class DocsNextNavVariantState {
         this.variant.set(variant);
 
         try {
-            this.storage.setItem(STORAGE_KEY, variant);
+            this.window.localStorage.setItem(STORAGE_KEY, variant);
         } catch {
             // Not remembered then.
         }
@@ -45,7 +45,7 @@ export class DocsNextNavVariantState {
 
     private read(): DocsNextNavVariant {
         try {
-            const stored = this.storage.getItem(STORAGE_KEY);
+            const stored = this.window.localStorage.getItem(STORAGE_KEY);
 
             return isVariant(stored) ? stored : 'levels';
         } catch {

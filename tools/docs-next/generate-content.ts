@@ -9,7 +9,7 @@ import { basename, join } from 'path';
 import { DOCS_NEXT_COMPONENTS } from '../../apps/docs-next/src/app/data/components';
 import { DOCS_NEXT_GUIDE_SOURCES } from '../../apps/docs-next/src/app/data/sections';
 import { EXAMPLE_COMPONENTS, LiveExample } from '../../packages/docs-examples/example-module';
-import { CompiledBlock, compilePage } from '../docs-pages/compile-page';
+import { CompiledBlock, compilePage, renderCodeBlockElement } from '../docs-pages/compile-page';
 
 const OUTPUT_DIR = join('dist', 'docs-next-content');
 const LOCALES = ['ru', 'en'];
@@ -24,6 +24,24 @@ const readExampleFiles = (example: LiveExample): { name: string; content: string
         name,
         content: readFileSync(join('packages', 'docs-examples', example.packagePath, name), 'utf8')
     }));
+
+const escapeHtml = (text: string): string =>
+    text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+/**
+ * Code nested in a block of HTML, such as a note, stays in that HTML: the compiled page binds it by index, which the
+ * prototype cannot do. It is shown there as plain preformatted text instead, without the highlighting of a code block.
+ */
+const withPlainCode = (template: string, codeBlocks: { content: string; language: string }[]): string =>
+    codeBlocks.reduce(
+        (html, { content, language }, index) =>
+            html.replace(
+                renderCodeBlockElement(index),
+                () =>
+                    `<pre class="kbq-markdown__pre"><code class="kbq-markdown__code language-${escapeHtml(language)}">${escapeHtml(content)}</code></pre>`
+            ),
+        template
+    );
 
 const compileBlocks = (path: string): ContentBlock[] => {
     let topLevel: CompiledBlock[] = [];
@@ -40,11 +58,10 @@ const compileBlocks = (path: string): ContentBlock[] => {
     });
 
     const blocks: ContentBlock[] = [];
-    let codeIndex = 0;
 
     for (const { node, template } of topLevel) {
         if (node.type === 'code') {
-            blocks.push({ kind: 'code', ...codeBlocks[codeIndex++] });
+            blocks.push({ kind: 'code', content: node.value, language: node.lang ?? 'plaintext' });
         } else if (node.type === 'mdxJsxFlowElement' && node.name === 'Example') {
             const id = String(
                 node.attributes.find((attribute) => 'name' in attribute && attribute.name === 'id')?.value
@@ -53,12 +70,13 @@ const compileBlocks = (path: string): ContentBlock[] => {
 
             blocks.push({ kind: 'example', id, title: example.title, files: readExampleFiles(example) });
         } else if (template) {
+            const html = withPlainCode(template, codeBlocks);
             const last = blocks.at(-1);
 
             if (last?.kind === 'html') {
-                last.html += template;
+                last.html += html;
             } else {
-                blocks.push({ kind: 'html', html: template });
+                blocks.push({ kind: 'html', html });
             }
         }
     }

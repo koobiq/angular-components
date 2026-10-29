@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, Location } from '@angular/common';
 import { inject, Injectable, signal } from '@angular/core';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 
@@ -17,6 +17,7 @@ export interface DocsNextOutlineItem {
 export class DocsNextPageOutline {
     private readonly document = inject(DOCUMENT);
     private readonly window = inject(KBQ_WINDOW);
+    private readonly location = inject(Location);
 
     readonly items = signal<DocsNextOutlineItem[]>([]);
     readonly activeId = signal<string | null>(null);
@@ -75,9 +76,8 @@ export class DocsNextPageOutline {
     }
 
     private replaceHash(id: string): void {
-        const { history, location } = this.window;
-
-        history.replaceState(history.state, '', `${location.pathname}#${id}`);
+        // `path()` keeps the query of the address, which `pathname` would drop; the router's own state comes along too.
+        this.location.replaceState(`${this.location.path()}#${id}`, '', this.location.getState());
     }
 
     private collect(): void {

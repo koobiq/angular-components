@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, signal } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_WINDOW } from '@koobiq/components/core';
@@ -138,12 +138,27 @@ export class DocsNextPageActions {
     readonly githubUrl = input<string>();
 
     protected readonly copied = signal(false);
+    private resetTimer?: ReturnType<typeof setTimeout>;
 
-    protected copy(): void {
-        this.window.navigator.clipboard?.writeText(this.source().innerText).then(() => {
-            this.copied.set(true);
-            setTimeout(() => this.copied.set(false), 2000);
-        });
+    constructor() {
+        inject(DestroyRef).onDestroy(() => clearTimeout(this.resetTimer));
+    }
+
+    protected async copy(): Promise<void> {
+        const clipboard = this.window.navigator.clipboard;
+
+        if (!clipboard) return;
+
+        try {
+            await clipboard.writeText(this.source().innerText);
+        } catch {
+            // The browser refused the clipboard, so there is nothing to confirm.
+            return;
+        }
+
+        this.copied.set(true);
+        clearTimeout(this.resetTimer);
+        this.resetTimer = setTimeout(() => this.copied.set(false), 2000);
     }
 
     /** The address of the page and a short request, as shadcn passes them. */

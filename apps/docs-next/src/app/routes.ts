@@ -1,9 +1,14 @@
 import { Routes, UrlSegment } from '@angular/router';
+import { DOCS_NEXT_COMPONENT_TABS } from './data/components';
 import { docsNextIsFramework, docsNextIsLocale } from './data/site';
 import { docsNextStoredFramework, docsNextStoredLocale } from './services/site-state';
 
 const isSiteContext = (segments: UrlSegment[]): boolean =>
     docsNextIsLocale(segments[0]?.path) && docsNextIsFramework(segments[1]?.path);
+
+/** Only the tabs of a component page match; any other tab redirects to the overview below. */
+const canMatchComponentTab = (segments: UrlSegment[]): boolean =>
+    DOCS_NEXT_COMPONENT_TABS.some((tab) => tab === segments[2]?.path);
 
 export const DOCS_NEXT_ROUTES: Routes = [
     {
@@ -25,8 +30,10 @@ export const DOCS_NEXT_ROUTES: Routes = [
             { path: 'components/:id', redirectTo: 'components/:id/overview' },
             {
                 path: 'components/:id/:tab',
+                canMatch: [(_route: unknown, segments: UrlSegment[]) => canMatchComponentTab(segments)],
                 loadComponent: () => import('./pages/component-page').then((m) => m.DocsNextComponentPage)
             },
+            { path: 'components/:id/:tab', redirectTo: 'components/:id/overview' },
             { path: 'icons', loadComponent: () => import('./pages/icons').then((m) => m.DocsNextIconsPage) },
             {
                 path: ':section',
