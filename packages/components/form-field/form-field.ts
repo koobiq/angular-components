@@ -23,12 +23,13 @@ import {
     OnDestroy,
     Provider,
     Signal,
+    signal,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, NgControl, Validators } from '@angular/forms';
 import { KBQ_CONNECTED_OVERLAY_ORIGIN, KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
 import { kbqIconErrorStateContextFactoryProvider } from '@koobiq/components/icon';
 import { KbqCleaner, kbqCleanerFactoryProvider } from './cleaner';
@@ -69,6 +70,8 @@ export type KbqFormFieldDefaultOptions = Partial<{
     labelClass: string | string[] | Set<string>;
     /** Additional CSS classes applied to the content wrapper element. */
     contentClass: string | string[] | Set<string>;
+    /** Whether the label of a required control ends with the `*` marker. */
+    showRequiredMarker: boolean;
 }>;
 
 /**
@@ -192,6 +195,12 @@ export class KbqFormField
     readonly contentClass = input(this.defaultOptions?.contentClass);
 
     /**
+     * Whether the label of a required control ends with the `*` marker. A control is required by its `required`
+     * state or by `Validators.required` on its form control.
+     */
+    readonly showRequiredMarker = input(!!this.defaultOptions?.showRequiredMarker, { transform: booleanAttribute });
+
+    /**
      * The form field control.
      *
      * @docs-private
@@ -273,6 +282,21 @@ export class KbqFormField
      * @docs-private
      */
     protected readonly hasLabel = computed(() => !!this.label());
+
+    /**
+     * Whether the bound form control has `Validators.required`. Re-read on every content check: the validators of a
+     * control notify nothing a signal could follow.
+     */
+    private readonly requiredByValidator = signal(false);
+
+    /**
+     * Whether the label ends with the required marker.
+     *
+     * @docs-private
+     */
+    protected readonly hasRequiredMarker = computed(
+        () => !!this.showRequiredMarker() && (this.control().required() || this.requiredByValidator())
+    );
 
     /**
      * Id of the rendered label, or `null` when the form field has no label.
@@ -392,6 +416,7 @@ export class KbqFormField
     ngAfterContentChecked(): void {
         this.validateControlChild();
         this.updateDescribedByIds();
+        this.requiredByValidator.set(!!this.control().ngControl?.control?.hasValidator(Validators.required));
     }
 
     ngAfterViewInit(): void {

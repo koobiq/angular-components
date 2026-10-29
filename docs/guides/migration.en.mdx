@@ -38,6 +38,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **21.0.0**: the filter bar remembers the selected filter and its edits, on by default.
 - **21.0.0**: the tag list cleaner removes the tags itself and leaves the disabled ones in place.
 - **21.0.0**: the move to `@koobiq/design-tokens` 4 — a new palette scale, DTCG sources and opt-in component tokens.
+- **21.1.0**: the code block loads the highlight.js core instead of the full bundle by default.
 
 ### Upgrade to 18.5.3
 
@@ -3464,6 +3465,49 @@ It rewrites the moved import paths (`web/new/**` → `web/css/**`), the tokens w
 - **The old `--kbq-palette-*` scale.** The 0–100 scale has no direct mapping onto the 1–20 one, so by default the codemod only suggests the nearest `--kbq-plt-*` and prints the ΔE. Two flags turn the suggestion into a rewrite: `--fix-palette` (nearest `--kbq-plt-*`, applied only when ΔE ≤ 3; adjust the threshold with `--palette-delta-e`) and `--palette-to-color` (the literal v3 color inlined as the value). Alpha steps and uses with a fallback are never rewritten — replace those by hand.
 - **Review code blocks and scrollbars.** These are the only two places v4 changes pixels without being asked; the codemod does not touch them because nothing about their custom properties changed, only the values behind them.
 - **`scrollbar/deprecated/scrollbar-tokens.scss` was removed.** Its variables now come from `@koobiq/design-tokens` — drop any deep imports of that file from your own styles.
+
+### highlight.js core by default (21.1.0)
+
+{/* migration-step-components(code-block) */}
+
+Without `core` in its configuration, the code block now loads the highlight.js core, `highlight.js/lib/core`, rather than the full bundle with every language, about 1 MB. The library used to hold `import('highlight.js')`, and a bundler emits a chunk for every `import()` it finds, so every application built that chunk, even one whose configuration loaded the core and a few languages.
+
+**The core highlights no language but plain text.** A file whose language is not registered is shown as plain text, with a warning in development mode. Plain text itself needs no entry: the code block registers it, so a file without a language no longer throws `Unknown language: "plaintext"` under a configuration of the core.
+
+Register the languages the files use:
+
+```typescript
+providers: [
+    kbqCodeBlockHighlightJsConfigProvider({
+        languages: {
+            typescript: () => import('highlight.js/lib/languages/typescript'),
+            html: () => import('highlight.js/lib/languages/xml')
+        }
+    })
+];
+```
+
+Or keep every language with the full bundle: `kbqCodeBlockHighlightJsConfigProvider({ core: () => import('highlight.js') })`.
+
+#### Running the migration
+
+`code-block-highlight-js-core` is registered for 21.1.0, so an `ng update` to that version runs it:
+
+```bash
+ng g @koobiq/components:code-block-highlight-js-core --project "<your project>"
+```
+
+#### What is fixed automatically
+
+The migration keeps the full bundle where the code block loaded it. An application that renders code blocks and has no configuration in its root providers gets `kbqCodeBlockHighlightJsConfigProvider({ core: () => import('highlight.js') })` there, and a configuration written as an object literal without `core` gets `core: () => import('highlight.js')`. Replace either with the languages of your files to drop the 1 MB.
+
+#### What you need to fix manually
+
+- **A configuration the migration cannot read**: a variable, a spread or a factory. It is reported; add `core` to it if it has none.
+- **Root providers the migration cannot read**: a bootstrap it cannot analyze, or `providers` that are not an array literal. No root provider is added; the migration reports the project.
+- **A configuration the root providers get through a function.** The added root provider overrides it: remove the added one. The migration reports a project that provides a configuration outside its root providers.
+- **A library that renders code blocks.** The applications that use it provide the configuration.
+- **Specs** get none of the application's providers: add the configuration to the `TestBed` of a spec that checks highlighted markup.
 
 ### After the migration
 

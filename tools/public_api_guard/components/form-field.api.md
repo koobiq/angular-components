@@ -38,6 +38,7 @@ export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
     horizontal: boolean;
     labelClass: string | string[] | Set<string>;
     contentClass: string | string[] | Set<string>;
+    showRequiredMarker: boolean;
 }>>;
 
 // @public
@@ -123,6 +124,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     readonly hasPasswordToggle: Signal<boolean>;
     readonly hasPrefix: Signal<boolean>;
     protected readonly hasReactivePasswordHint: Signal<boolean>;
+    protected readonly hasRequiredMarker: Signal<boolean>;
     readonly hasStepper: Signal<boolean>;
     readonly hasSuffix: Signal<boolean>;
     readonly hint: Signal<readonly KbqHint[]>;
@@ -146,12 +148,13 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     readonly prefix: Signal<readonly KbqPrefix[]>;
     runFocusMonitor: () => void;
     shouldForward(prop: keyof NgControl): boolean;
+    readonly showRequiredMarker: i0.InputSignalWithTransform<boolean, unknown>;
     readonly stepper: Signal<KbqStepper | undefined>;
     stopFocusMonitor(): void;
     readonly suffix: Signal<readonly KbqSuffix[]>;
     protected validateControlChild(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; "isSignal": true; }; "inOverlay": { "alias": "inOverlay"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "labelClass": { "alias": "labelClass"; "required": false; "isSignal": true; }; "contentClass": { "alias": "contentClass"; "required": false; "isSignal": true; }; }, { "inOverlay": "inOverlayChange"; }, ["control", "stepper", "cleaner", "passwordToggle", "hint", "suffix", "prefix", "controlElementRef", "reactivePasswordHint", "error", "label"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle, kbq-stepper, [kbqSuffix]", "kbq-error", "kbq-hint, kbq-reactive-password-hint"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; "isSignal": true; }; "inOverlay": { "alias": "inOverlay"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "labelClass": { "alias": "labelClass"; "required": false; "isSignal": true; }; "contentClass": { "alias": "contentClass"; "required": false; "isSignal": true; }; "showRequiredMarker": { "alias": "showRequiredMarker"; "required": false; "isSignal": true; }; }, { "inOverlay": "inOverlayChange"; }, ["control", "stepper", "cleaner", "passwordToggle", "hint", "suffix", "prefix", "controlElementRef", "reactivePasswordHint", "error", "label"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle, kbq-stepper, [kbqSuffix]", "kbq-error", "kbq-hint, kbq-reactive-password-hint"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormField, never>;
 }
@@ -183,6 +186,7 @@ export type KbqFormFieldDefaultOptions = Partial<{
     horizontal: boolean;
     labelClass: string | string[] | Set<string>;
     contentClass: string | string[] | Set<string>;
+    showRequiredMarker: boolean;
 }>;
 
 // @public

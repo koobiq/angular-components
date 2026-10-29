@@ -192,6 +192,48 @@ describe('FlatTreeControl', () => {
             });
         });
 
+        describe('position of a node', () => {
+            const names = (found: FlatNode[]): string[] => found.map((node) => node.name);
+
+            it('should search dataNodes once for any number of lookups', () => {
+                const indexOf = vi.spyOn(nodes, 'indexOf');
+
+                nodes.forEach((node) => {
+                    control.getDescendants(node);
+                    control.getParents(node);
+                });
+
+                expect(indexOf).toHaveBeenCalledTimes(1);
+            });
+
+            it('should follow dataNodes changed in place', () => {
+                const notes: FlatNode = { name: 'notes', level: 2, expandable: false };
+
+                expect(names(control.getDescendants(byName(nodes, 'documents')))).toEqual(['specs', 'draft', 'readme']);
+
+                nodes.splice(1, 0, { name: 'archive', level: 1, expandable: false });
+                nodes.splice(3, 0, notes);
+
+                expect(names(control.getDescendants(byName(nodes, 'documents')))).toEqual([
+                    'notes',
+                    'specs',
+                    'draft',
+                    'readme'
+                ]);
+                expect(names(control.getParents(notes))).toEqual(['root', 'documents']);
+                expect(names(control.getParents(byName(nodes, 'draft')))).toEqual(['root', 'documents', 'specs']);
+            });
+
+            it('should follow a replaced dataNodes array', () => {
+                expect(names(control.getDescendants(byName(nodes, 'documents')))).toEqual(['specs', 'draft', 'readme']);
+
+                control.dataNodes = nodes.filter((node) => node.name !== 'specs' && node.name !== 'draft');
+
+                expect(names(control.getDescendants(byName(nodes, 'documents')))).toEqual(['readme']);
+                expect(control.getParents(byName(nodes, 'draft'))).toEqual([]);
+            });
+        });
+
         describe('hasValue', () => {
             it('should find the node carrying the value', () => {
                 expect(control.hasValue('specs')).toBe(byName(nodes, 'specs'));

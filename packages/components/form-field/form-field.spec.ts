@@ -213,6 +213,35 @@ export class InputFormFieldWithLabel {
     readonly id = 'UNIQUE_TEST_ID';
 }
 
+@Component({
+    selector: 'form-field-with-required-marker',
+    imports: [ReactiveFormsModule, KbqInputModule],
+    template: `
+        <kbq-form-field [showRequiredMarker]="showRequiredMarker()">
+            <kbq-label>Label</kbq-label>
+            <input kbqInput [required]="required()" [formControl]="formControl" />
+        </kbq-form-field>
+    `
+})
+export class FormFieldWithRequiredMarker {
+    readonly showRequiredMarker = signal(false);
+    readonly required = signal(true);
+    readonly formControl = new FormControl('');
+}
+
+/** Binds no `showRequiredMarker`, so that the field takes it from `KBQ_FORM_FIELD_DEFAULT_OPTIONS`. */
+@Component({
+    selector: 'form-field-with-required-control',
+    imports: [KbqInputModule],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Label</kbq-label>
+            <input kbqInput required />
+        </kbq-form-field>
+    `
+})
+export class FormFieldWithRequiredControl {}
+
 /** Minimal control that reports itself as not labelable, the way `kbq-select` does. */
 @Directive({
     selector: '[testNonLabelableControl]',
@@ -225,7 +254,7 @@ export class TestNonLabelableControl extends KbqFormFieldControl<unknown> {
     override readonly ngControl = null;
     override readonly focused = signal(false).asReadonly();
     override readonly empty = signal(true).asReadonly();
-    override readonly required = signal(false).asReadonly();
+    override readonly required = signal(false);
     override readonly disabled = signal(false).asReadonly();
     override readonly errorState = signal(false).asReadonly();
     override readonly isNativeLabelSupported = false;
@@ -237,13 +266,16 @@ export class TestNonLabelableControl extends KbqFormFieldControl<unknown> {
     selector: 'non-labelable-form-field',
     imports: [KbqFormField, KbqLabel, TestNonLabelableControl],
     template: `
-        <kbq-form-field>
+        <kbq-form-field [showRequiredMarker]="showRequiredMarker">
             <kbq-label>Label</kbq-label>
             <span testNonLabelableControl>Control</span>
         </kbq-form-field>
     `
 })
-export class NonLabelableFormField {}
+export class NonLabelableFormField {
+    showRequiredMarker = false;
+    readonly control = viewChild.required(TestNonLabelableControl);
+}
 
 class CustomErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(control: AbstractControl | null, _form: FormGroupDirective | NgForm | null): boolean {
@@ -1028,6 +1060,104 @@ describe(KbqFormField.name, () => {
 
         expect(getLabelNativeElement(debugElement).classList.contains('test-label')).toBeTruthy();
         expect(getContentNativeElement(debugElement).classList.contains('test-content')).toBeTruthy();
+    });
+
+    describe('required marker', () => {
+        // The marker itself is CSS generated content, which jsdom does not render: the class is the hook it hangs on.
+        const hasMarker = (debugElement: DebugElement): boolean => {
+            return getLabelNativeElement(debugElement).classList.contains('kbq-form-field__label_required');
+        };
+
+        it('should be hidden by default', () => {
+            const { debugElement } = createComponent(FormFieldWithRequiredControl);
+
+            expect(hasMarker(debugElement)).toBe(false);
+        });
+
+        it('should mark the label of a required control by attribute', () => {
+            const fixture = createComponent(FormFieldWithRequiredMarker);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.showRequiredMarker.set(true);
+            fixture.detectChanges();
+
+            expect(hasMarker(debugElement)).toBe(true);
+        });
+
+        it('should be hidden when the control is not required', () => {
+            const fixture = createComponent(FormFieldWithRequiredMarker);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.showRequiredMarker.set(true);
+            componentInstance.required.set(false);
+            fixture.detectChanges();
+
+            expect(hasMarker(debugElement)).toBe(false);
+        });
+
+        it('should follow Validators.required of the form control', () => {
+            const fixture = createComponent(FormFieldWithRequiredMarker);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.showRequiredMarker.set(true);
+            componentInstance.required.set(false);
+            fixture.detectChanges();
+            expect(hasMarker(debugElement)).toBe(false);
+
+            componentInstance.formControl.addValidators(Validators.required);
+            componentInstance.formControl.updateValueAndValidity();
+            fixture.detectChanges();
+            expect(hasMarker(debugElement)).toBe(true);
+
+            componentInstance.formControl.removeValidators(Validators.required);
+            componentInstance.formControl.updateValueAndValidity();
+            fixture.detectChanges();
+            expect(hasMarker(debugElement)).toBe(false);
+        });
+
+        it('should mark the caption of a non-labelable control', () => {
+            const fixture = createComponent(NonLabelableFormField);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.showRequiredMarker = true;
+            componentInstance.control().required.set(true);
+            fixture.detectChanges();
+
+            // The caption is a `<span>` here, rendered by the other branch of the template.
+            const caption: HTMLElement = debugElement.query(By.css('.kbq-form-field__label')).nativeElement;
+
+            expect(caption.tagName).toBe('SPAN');
+            expect(caption.classList.contains('kbq-form-field__label_required')).toBe(true);
+        });
+
+        it('should be shown by KBQ_FORM_FIELD_DEFAULT_OPTIONS', () => {
+            const { debugElement } = createComponent(FormFieldWithRequiredControl, [
+                kbqFormFieldDefaultOptionsProvider({ showRequiredMarker: true })
+            ]);
+
+            expect(hasMarker(debugElement)).toBe(true);
+        });
+
+        it('should let the attribute override KBQ_FORM_FIELD_DEFAULT_OPTIONS', () => {
+            const fixture = createComponent(FormFieldWithRequiredMarker, [
+                kbqFormFieldDefaultOptionsProvider({ showRequiredMarker: true })
+            ]);
+            const { debugElement, componentInstance } = fixture;
+
+            componentInstance.showRequiredMarker.set(false);
+            fixture.detectChanges();
+
+            expect(hasMarker(debugElement)).toBe(false);
+        });
+
+        it('should have no accessibility violations', async () => {
+            const fixture = createComponent(FormFieldWithRequiredMarker);
+
+            fixture.componentInstance.showRequiredMarker.set(true);
+            fixture.detectChanges();
+
+            await expect(fixture.nativeElement).toHaveNoViolations();
+        });
     });
 
     describe('accessibility', () => {

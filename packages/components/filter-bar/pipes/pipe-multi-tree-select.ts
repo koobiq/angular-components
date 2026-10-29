@@ -222,16 +222,18 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
         if (this.noOptions) return;
 
         if (this.select().search()?.ngControl?.value) {
-            // `KbqTreeOption.setSelected()` does not consult `disabled`, so the locked options are filtered
-            // out here rather than relying on the tree's own guards.
-            const renderedOptions = this.tree().renderedOptions.filter(
-                (option) => option.value !== kbqTreeSelectAllValue && !option.disabled
-            );
+            // The model does not consult `disabled`, so the locked options are filtered out here rather than
+            // relying on the tree's own guards.
+            const visibleNodes = this.tree()
+                .renderedOptions.filter((option) => option.value !== kbqTreeSelectAllValue && !option.disabled)
+                .map((option) => option.data);
+            // Same model the tree owns, written once rather than once per row.
+            const { selectionModel } = this.select();
 
             if (this.allVisibleOptionsSelected) {
-                renderedOptions.forEach((option) => option.setSelected(false));
+                selectionModel.deselect(...visibleNodes);
             } else {
-                renderedOptions.forEach((option) => option.setSelected(true));
+                selectionModel.select(...visibleNodes);
             }
         } else {
             // Same model the tree owns — see the note in `enforceLockedNodes`.

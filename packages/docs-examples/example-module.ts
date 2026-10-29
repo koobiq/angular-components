@@ -2862,7 +2862,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "form-field-overview": {
     "packagePath": "components/form-field/form-field-overview",
-    "title": "Form field with kbq-label",
+    "title": "Form field",
     "componentName": "FormFieldOverviewExample",
     "files": [
       "form-field-overview-example.ts"
@@ -2942,6 +2942,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "form-field-with-hint-example",
     "primaryFile": "form-field-with-hint-example.ts",
+    "importPath": "components/form-field"
+  },
+  "form-field-with-label": {
+    "packagePath": "components/form-field/form-field-with-label",
+    "title": "Form field with kbq-label",
+    "componentName": "FormFieldWithLabelExample",
+    "files": [
+      "form-field-with-label-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "form-field-with-label-example",
+    "primaryFile": "form-field-with-label-example.ts",
     "importPath": "components/form-field"
   },
   "form-field-with-prefix-and-suffix": {
@@ -8222,6 +8234,7 @@ export type LiveExampleId =
   | 'form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider'
   | 'form-field-with-error'
   | 'form-field-with-hint'
+  | 'form-field-with-label'
   | 'form-field-with-prefix-and-suffix'
   | 'form-field-without-borders'
   | 'form-fieldset-invalid'

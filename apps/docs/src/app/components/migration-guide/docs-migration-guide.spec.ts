@@ -3,8 +3,10 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router, provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
+import { kbqCodeBlockHighlightJsConfigProvider } from '@koobiq/components/code-block';
 import { KbqStateSavingService } from '@koobiq/components/core';
 import { BehaviorSubject, map } from 'rxjs';
+import { DOCS_HIGHLIGHT_JS_LANGUAGES } from '../../constants/highlight-js';
 import { DocsLocale } from '../../constants/locale';
 import { DOCS_TRANSLATIONS } from '../../services/i18n';
 import { DocsLocaleService } from '../../services/locale';
@@ -164,7 +166,8 @@ describe(DocsMigrationGuide.name, () => {
                     { path: 'elsewhere', children: [] }
                 ]),
                 provideLocationMocks(),
-                provideDocsLocale()
+                provideDocsLocale(),
+                kbqCodeBlockHighlightJsConfigProvider({ languages: DOCS_HIGHLIGHT_JS_LANGUAGES })
             ]
         });
 

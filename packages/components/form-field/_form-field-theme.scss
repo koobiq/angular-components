@@ -138,6 +138,10 @@
 
         .kbq-form-field__label {
             color: var(--kbq-form-field-label-color);
+
+            &.kbq-form-field__label_required .kbq-label::after {
+                color: var(--kbq-form-field-label-required-marker-color);
+            }
         }
 
         // Autofill says "the browser filled this in" and nothing more, so it contributes a tint and

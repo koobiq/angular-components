@@ -7,7 +7,7 @@ import {
     KbqOptionModule,
     ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
-import { KbqFormField } from '@koobiq/components/form-field';
+import { KbqFormField, kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
@@ -30,38 +30,38 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         <form class="kbq-form-horizontal" novalidate [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label flex-20">Name</label>
-                    <kbq-form-field class="kbq-form__control flex-80">
-                        <input formControlName="firstName" kbqInput [required]="true" />
+                    <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
+                        <kbq-label>Name</kbq-label>
+                        <input formControlName="firstName" kbqInput />
 
                         <kbq-error>Required</kbq-error>
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label flex-20">Last name</label>
-                    <kbq-form-field class="kbq-form__control flex-80">
+                    <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
+                        <kbq-label>Last name</kbq-label>
                         <input formControlName="lastName" kbqInput />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label flex-20">Patronymic</label>
-                    <kbq-form-field class="kbq-form__control flex-80">
+                    <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
+                        <kbq-label>Patronymic</kbq-label>
                         <input formControlName="thirdName" kbqInput placeholder="Optional" />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label flex-20">Email</label>
-                    <kbq-form-field class="kbq-form__control flex-80">
+                    <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
+                        <kbq-label>Email</kbq-label>
                         <input formControlName="email" kbqInput type="email" />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label flex-20">Request reason</label>
-                    <kbq-form-field class="kbq-form__control flex-80">
+                    <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
+                        <kbq-label>Request reason</kbq-label>
                         <kbq-select formControlName="reason">
                             @for (option of docsReasons; track option.value) {
                                 <kbq-option [value]="option.value">
@@ -73,9 +73,9 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                 </div>
 
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label flex-20">Estimation</label>
-                    <kbq-form-field class="kbq-form__control flex-80">
-                        <kbq-select formControlName="estimation" [required]="true">
+                    <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
+                        <kbq-label>Estimation</kbq-label>
+                        <kbq-select formControlName="estimation">
                             @for (option of estimation; track option.value) {
                                 <kbq-option [value]="option.value">
                                     {{ option.label }}
@@ -88,15 +88,15 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                 </div>
 
                 <div class="kbq-form__row layout-margin-bottom-xxl">
-                    <label class="kbq-form__label flex-20">Comment</label>
-                    <kbq-form-field class="kbq-form__control flex-80">
+                    <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
+                        <kbq-label>Comment</kbq-label>
                         <textarea formControlName="comment" kbqTextarea></textarea>
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
-                    <div class="kbq-form__label flex-20"></div>
-                    <div class="kbq-form__control">
+                    <div class="flex-25"></div>
+                    <div class="flex-75">
                         <button color="contrast" kbq-button type="submit">Send</button>
                     </div>
                 </div>
@@ -104,13 +104,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         </form>
     `,
     styles: `
-        :host {
-            label:has(+ .kbq-form-field input:required, + .kbq-form-field .kbq-select[required])::after {
-                content: ' *';
-                color: var(--kbq-foreground-error);
-            }
-        }
-
         .kbq-form__row:has(> .kbq-form-field-type-select) {
             --kbq-forms-size-vertical-row-margin-bottom: var(--kbq-size-xl);
         }
@@ -121,7 +114,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         }
     `,
     providers: [
-        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher),
+        kbqFormFieldDefaultOptionsProvider({ showRequiredMarker: true })
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

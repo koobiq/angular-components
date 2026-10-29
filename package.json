@@ -1,6 +1,6 @@
 {
     "name": "koobiq",
-    "version": "21.0.0",
+    "version": "21.0.1",
     "description": "Components for Angular",
     "private": true,
     "workspaces": [
@@ -55,17 +55,17 @@
     "devDependencies": {
         "@analogjs/vite-plugin-angular": "2.9.0",
         "@analogjs/vitest-angular": "2.9.0",
-        "@angular-devkit/architect": "0.2102.28",
-        "@angular-devkit/architect-cli": "0.2102.28",
-        "@angular-devkit/core": "21.2.28",
-        "@angular-devkit/schematics": "21.2.28",
-        "@angular/build": "patch:@angular/build@npm%3A21.2.28#~/.yarn/patches/@angular-build-npm-21.2.28-7e2946d9a8.patch",
-        "@angular/cli": "21.2.28",
+        "@angular-devkit/architect": "0.2102.29",
+        "@angular-devkit/architect-cli": "0.2102.29",
+        "@angular-devkit/core": "21.2.29",
+        "@angular-devkit/schematics": "21.2.29",
+        "@angular/build": "patch:@angular/build@npm%3A21.2.29#~/.yarn/patches/@angular-build-npm-21.2.29-a5ca6a8c6e.patch",
+        "@angular/cli": "21.2.29",
         "@angular/compiler-cli": "21.2.25",
         "@angular/platform-browser-dynamic": "21.2.25",
         "@angular/platform-server": "21.2.25",
         "@angular/router": "21.2.25",
-        "@angular/ssr": "21.2.28",
+        "@angular/ssr": "21.2.29",
         "@commitlint/cli": "^21.2.4",
         "@commitlint/config-conventional": "^21.2.4",
         "@cspell/dict-ru_ru": "^2.3.4",
@@ -85,7 +85,7 @@
         "@rollup/plugin-replace": "^6.0.3",
         "@rollup/plugin-typescript": "^12.3.0",
         "@rushstack/node-core-library": "5.24.2",
-        "@schematics/angular": "21.2.28",
+        "@schematics/angular": "21.2.29",
         "@stackblitz/sdk": "^1.11.1",
         "@stylistic/eslint-plugin": "^5.10.0",
         "@types/express": "^5.0.6",
@@ -171,7 +171,7 @@
         "js-yaml@^4.1.0": "^4.3.2",
         "nanoid": "^3.3.17",
         "postcss": "^8.5.28",
-        "serialize-javascript": "^7.0.7"
+        "serialize-javascript": "^7.1.3"
     },
     "scripts": {
         "prepare": "husky",

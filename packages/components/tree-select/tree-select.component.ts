@@ -823,14 +823,29 @@ export class KbqTreeSelect<T = any, K = T>
      * The tree answers for any node; the option is asked only for its own `[disabled]` input, and a
      * node inside a collapsed branch has no option to ask.
      */
-    private isNodeDisabled(node: T): boolean {
+    private isNodeDisabled(node: T, optionsByNode?: Map<T, KbqTreeOption<T>>): boolean {
         const tree = this.tree();
 
         if (!tree) return false;
 
         if (tree.disabled || tree.treeControl.isDisabled(node)) return true;
 
-        return tree.renderedOptions.find((option) => option.data === node)?.disabled ?? false;
+        const option = optionsByNode
+            ? optionsByNode.get(node)
+            : tree.renderedOptions.find((option) => option.data === node);
+
+        return option?.disabled ?? false;
+    }
+
+    /** The rendered option of each node, for asking `isNodeDisabled` about every selected node at once. */
+    private renderedOptionsByNode(): Map<T, KbqTreeOption<T>> {
+        const optionsByNode = new Map<T, KbqTreeOption<T>>();
+
+        this.tree()?.renderedOptions.forEach((option) => {
+            if (!optionsByNode.has(option.data)) optionsByNode.set(option.data, option);
+        });
+
+        return optionsByNode;
     }
 
     /**
@@ -1844,21 +1859,25 @@ export class KbqTreeSelect<T = any, K = T>
     private hasStaleTriggerValues(): boolean {
         const selected = this.selectionModel.selected;
 
-        return (
-            this.triggerValues.length === selected.length &&
-            selected.some((node, index) => this.triggerValues[index].disabled !== this.isNodeDisabled(node))
+        if (this.triggerValues.length !== selected.length) return false;
+
+        const optionsByNode = this.renderedOptionsByNode();
+
+        return selected.some(
+            (node, index) => this.triggerValues[index].disabled !== this.isNodeDisabled(node, optionsByNode)
         );
     }
 
     private refreshTriggerValues(): void {
         const treeControl = this.tree()!.treeControl;
+        const optionsByNode = this.renderedOptionsByNode();
 
         this.triggerValues = this.selectionModel.selected.map((node) => ({
             value: treeControl.getValue(node),
             viewValue: treeControl.getViewValue(node),
             // `treeControl` alone would miss a node disabled through the option's own input and give it
             // a remove icon — one-by-one removal of exactly what the cleaner keeps.
-            disabled: this.isNodeDisabled(node)
+            disabled: this.isNodeDisabled(node, optionsByNode)
         }));
 
         this.changeDetectorRef.detectChanges();
