@@ -39,7 +39,7 @@ npm install inter-ui @fontsource/jetbrains-mono
 
 Inter скачивается [с rsms.me](https://rsms.me/inter/download/): в папке `web` архива лежат файлы и готовый `inter.css`. Папка копируется в проект, например в `src/fonts/inter`.
 
-JetBrains Mono скачивается [из релиза шрифта](https://github.com/JetBrains/JetBrainsMono/releases/latest): в папке `fonts/webfonts` архива есть файлы, но нет файла стилей. Рядом с ними вручную пишется `jetbrains-mono.css` — по правилу `@font-face` на начертание, с именем семейства из токенов:
+JetBrains Mono скачивается [из релиза шрифта](https://github.com/JetBrains/JetBrainsMono/releases/latest): в папке `fonts/webfonts` архива есть файлы, но нет файла стилей. Папка копируется в проект, например в `src/fonts/jetbrains-mono`, а рядом с файлами вручную пишется `jetbrains-mono.css` — по правилу `@font-face` на начертание, с именем семейства из токенов:
 
 ```css
 @font-face {

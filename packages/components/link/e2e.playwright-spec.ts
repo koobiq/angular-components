@@ -58,7 +58,8 @@ const measureTrailingIcon = (item: Locator): Promise<TrailingIconLayout[]> =>
  * Counts the pixel rows between every two adjacent lines of each wrapped link where the pointer would leave
  * the link: a pair is checked in the middle of the span both lines cover, so that a row can only hit the
  * gap between them. Not the span all lines cover: the first line starts after the text before the link and
- * the last one ends early, and how the words wrap decides whether those two overlap at all.
+ * the last one ends early, and how the words wrap decides whether those two overlap at all. Two lines that
+ * share no span have no gap between them to cross, so the pair is skipped.
  */
 const countRowsOffTheLink = (target: Locator): Promise<number[]> =>
     target.evaluate((root) =>
@@ -68,7 +69,12 @@ const countRowsOffTheLink = (target: Locator): Promise<number[]> =>
 
             for (let i = 1; i < lines.length; i++) {
                 const [upper, lower] = [lines[i - 1], lines[i]];
-                const x = (Math.max(upper.left, lower.left) + Math.min(upper.right, lower.right)) / 2;
+                const left = Math.max(upper.left, lower.left);
+                const right = Math.min(upper.right, lower.right);
+
+                if (left >= right) continue;
+
+                const x = (left + right) / 2;
 
                 for (let y = Math.ceil(upper.top); y < lower.bottom; y++) {
                     const hit = document.elementFromPoint(x, y);
@@ -120,7 +126,8 @@ test.describe('KbqLink', () => {
             const rows = await countRowsOffTheLink(getScreenshotTarget(getComponent(page)));
 
             expect(rows.length).toBeGreaterThan(0);
-            expect(rows.every((off) => off === 0)).toBe(true);
+            // Compared as a whole, so that a failure names the link and how many rows it lost.
+            expect(rows).toEqual(rows.map(() => 0));
         });
     });
 

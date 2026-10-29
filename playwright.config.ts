@@ -107,7 +107,7 @@ export default defineConfig({
             use: {
                 ...devices['Desktop Chrome HiDPI'],
                 viewport,
-                launchOptions: { args: e2eChromiumArgs }
+                launchOptions: { args: [...e2eChromiumArgs] }
             }
         }
     ],

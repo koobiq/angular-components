@@ -61,6 +61,7 @@ describe(DocsStackblitzWriter.name, () => {
     afterEach(() => {
         httpMock.verify();
         delete EXAMPLE_COMPONENTS[EXAMPLE_ID];
+        vi.restoreAllMocks();
     });
 
     it('pins every dependency to a range that accepts the version the repository installs', async () => {

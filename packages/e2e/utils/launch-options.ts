@@ -9,4 +9,4 @@
  * into its own `args`. A spec that selects WebKit resets `launchOptions` instead: WebKit refuses a
  * Chromium switch with "Cannot parse arguments: Unknown option".
  */
-export const e2eChromiumArgs = ['--font-render-hinting=none'];
+export const e2eChromiumArgs: readonly string[] = ['--font-render-hinting=none'];
