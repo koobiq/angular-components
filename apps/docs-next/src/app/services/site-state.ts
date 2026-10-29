@@ -21,7 +21,12 @@ import {
     docsNextVersionsOfCount
 } from '../data/site';
 
-const STORAGE_KEYS = { locale: 'docs-next-locale', framework: 'docs-next-framework', version: 'docs-next-version' };
+const STORAGE_KEYS = {
+    locale: 'docs-next-locale',
+    framework: 'docs-next-framework',
+    version: 'docs-next-version',
+    articleExpanded: 'docs-next-article-expanded'
+};
 
 /** Reads a stored choice; storage may be unavailable, for instance in a private window. */
 const readStored = (storage: Storage, key: string): string | null => {
@@ -87,6 +92,9 @@ export class DocsNextSiteState {
         () => this.versions().find(({ id }) => id === this.version())?.title ?? this.version()
     );
 
+    /** Whether articles drop their line length and take the whole width next to the contents. */
+    readonly articleExpanded = signal(readStored(this.storage, STORAGE_KEYS.articleExpanded) === 'true');
+
     /** Whether the phone layout is on. */
     readonly isMobile = signal(this.mobileQuery?.matches ?? false);
 
@@ -109,6 +117,7 @@ export class DocsNextSiteState {
         });
 
         effect(() => writeStored(this.storage, STORAGE_KEYS.version, this.version()));
+        effect(() => writeStored(this.storage, STORAGE_KEYS.articleExpanded, String(this.articleExpanded())));
 
         const count = Number(new URLSearchParams(this.window.location.search).get('versions'));
 

@@ -1,28 +1,4 @@
 @use '../../../../../packages/components/core/styles/common/tokens';
-@use '../../styles/breakpoints';
-
-.docs-next-page__header {
-    margin-bottom: var(--kbq-size-xxl);
-
-    @include breakpoints.docs-next-mobile {
-        margin-bottom: var(--kbq-size-l);
-    }
-}
-
-.docs-next-page__title-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--kbq-size-l);
-}
-
-.docs-next-page__tabs {
-    margin-top: var(--kbq-size-xl);
-
-    @include breakpoints.docs-next-mobile {
-        margin-top: var(--kbq-size-l);
-    }
-}
 
 .docs-next-page__loading {
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);

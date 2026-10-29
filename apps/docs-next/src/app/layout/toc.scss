@@ -1,6 +1,7 @@
 @use '../../../../../packages/components/core/styles/common/tokens';
 
-// Figma: Scrollspy, 240 wide, items 28 high, nested ones 16px further right.
+// Figma: Scrollspy, 240 wide, starting 8px lower than the article so the first item is level with its title. Items
+// are 32 high, as in the side menu, and nested ones 16px further right.
 :host {
     position: sticky;
     top: var(--docs-next-header-height);
@@ -8,26 +9,8 @@
     box-sizing: border-box;
     width: var(--docs-next-toc-width);
     max-height: calc(100vh - var(--docs-next-header-height));
-    padding: var(--kbq-size-xl) var(--kbq-size-xl) var(--kbq-size-xl) 0;
+    padding: 48px var(--kbq-size-xxl) var(--kbq-size-xl) 0;
     overflow-y: auto;
-}
-
-:host(.docs-next-toc_compact) {
-    width: 56px;
-    overflow: visible;
-}
-
-.docs-next-toc__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: var(--kbq-size-xxs);
-}
-
-.docs-next-toc__title {
-    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
-
-    color: var(--kbq-foreground-contrast);
 }
 
 .docs-next-toc__list {
@@ -41,7 +24,7 @@
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
     display: block;
-    padding: var(--kbq-size-xxs) 0;
+    padding: 6px 0;
     color: var(--kbq-foreground-contrast-secondary);
     text-decoration: none;
     outline: none;
@@ -61,64 +44,5 @@
 
     &.docs-next-toc__item_active {
         color: var(--kbq-foreground-contrast);
-    }
-}
-
-.docs-next-toc__rail {
-    position: relative;
-    padding: var(--kbq-size-xs) 0;
-}
-
-.docs-next-toc__bar {
-    display: flex;
-    align-items: center;
-    height: 8px;
-}
-
-.docs-next-toc__bar-line {
-    display: block;
-    width: 24px;
-    height: 2px;
-    border-radius: 1px;
-    background: var(--kbq-line-contrast-fade);
-
-    .docs-next-toc__bar_nested & {
-        width: 16px;
-        margin-left: 8px;
-    }
-
-    .docs-next-toc__bar_active & {
-        background: var(--kbq-foreground-contrast);
-    }
-}
-
-.docs-next-toc__popup {
-    position: absolute;
-    top: 0;
-    right: calc(100% - 32px);
-    z-index: 1;
-    width: 240px;
-    max-height: 60vh;
-    box-sizing: border-box;
-    padding: var(--kbq-size-s) var(--kbq-size-m);
-    overflow-y: auto;
-    border: 1px solid var(--kbq-line-contrast-less);
-    border-radius: var(--kbq-size-m);
-    background: var(--kbq-background-card);
-    box-shadow: var(--kbq-shadow-popup);
-    visibility: hidden;
-    opacity: 0;
-    transition:
-        opacity 150ms ease-out,
-        visibility 150ms;
-
-    .docs-next-toc__rail:hover &,
-    .docs-next-toc__rail:focus-within & {
-        visibility: visible;
-        opacity: 1;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        transition: none;
     }
 }

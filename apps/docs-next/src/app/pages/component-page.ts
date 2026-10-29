@@ -4,23 +4,23 @@ import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { of } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
-import { DOCS_NEXT_COMPONENTS } from '../data/components';
+import { DOCS_NEXT_COMPONENTS, docsNextComponentGithubUrl } from '../data/components';
 import { docsNextFrameworkTitle } from '../data/site';
 import { DocsNextContent } from '../services/content';
 import { DocsNextSiteState } from '../services/site-state';
 import { DocsNextApiPreview } from '../ui/api-preview';
 import { DocsNextContentBlocks } from '../ui/content-blocks';
 import { DocsNextNotice } from '../ui/notice';
-import { DocsNextPageActions } from '../ui/page-actions';
+import { DocsNextPageHeader } from '../ui/page-header';
 import { DocsNextPageLayout } from '../ui/page-layout';
 import { docsNextPlaceholderArticle, docsNextSplitLead } from '../ui/placeholder';
 import { DocsNextStub } from '../ui/stub';
 
-const TABS = ['overview', 'content', 'api'] as const;
+const TABS = ['overview', 'content', 'api', 'examples'] as const;
 
 /**
- * Page of a component: title, description, the subsections "Overview", "Content" and "API" in one row, and the page
- * actions (spec/components/component-page.md). A component missing in the selected framework shows the "coming
+ * Page of a component: title, description, the subsections "Overview", "Content", "API" and "Examples" in one row
+ * with the page actions (spec/components/component-page.md). A component missing in the selected framework shows the "coming
  * soon" stub on the same address.
  */
 @Component({
@@ -32,7 +32,7 @@ const TABS = ['overview', 'content', 'api'] as const;
         DocsNextApiPreview,
         DocsNextContentBlocks,
         DocsNextNotice,
-        DocsNextPageActions,
+        DocsNextPageHeader,
         DocsNextPageLayout,
         DocsNextStub
     ],
@@ -51,6 +51,11 @@ export class DocsNextComponentPage {
         DOCS_NEXT_COMPONENTS.find(({ id }) => id === this.params().get('id'))
     );
     protected readonly available = computed(() => !!this.component()?.[this.state.framework()]);
+    protected readonly githubUrl = computed(() => {
+        const component = this.component();
+
+        return component && docsNextComponentGithubUrl(component, this.state.framework());
+    });
     /** The framework the component exists for, named on the stub. */
     protected readonly otherFramework = computed(() =>
         docsNextFrameworkTitle(this.state.framework() === 'angular' ? 'react' : 'angular')

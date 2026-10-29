@@ -8,14 +8,14 @@ import { DocsNextContent } from '../services/content';
 import { DocsNextSiteState } from '../services/site-state';
 import { DocsNextContentBlocks } from '../ui/content-blocks';
 import { DocsNextNotice } from '../ui/notice';
-import { DocsNextPageActions } from '../ui/page-actions';
+import { DocsNextPageHeader } from '../ui/page-header';
 import { DocsNextPageLayout } from '../ui/page-layout';
 import { docsNextPlaceholderArticle, docsNextSplitLead } from '../ui/placeholder';
 
 /** A text page of a section: Development, Design, Patterns, Templates. */
 @Component({
     selector: 'docs-next-article-page',
-    imports: [DocsNextContentBlocks, DocsNextNotice, DocsNextPageActions, DocsNextPageLayout],
+    imports: [DocsNextContentBlocks, DocsNextNotice, DocsNextPageHeader, DocsNextPageLayout],
     template: `
         <docs-next-page-layout [wide]="sectionId() === 'templates'">
             @if (state.notice(); as notice) {
@@ -24,17 +24,11 @@ import { docsNextPlaceholderArticle, docsNextSplitLead } from '../ui/placeholder
 
             @if (page(); as page) {
                 <div #source>
-                    <header class="docs-next-page__header">
-                        <div class="docs-next-page__title-row">
-                            <h1 class="docs-next-h1">{{ page.title[state.locale()] }}</h1>
-                            @if (!state.isMobile()) {
-                                <docs-next-page-actions [source]="source" />
-                            }
-                        </div>
-                        @if (article().lead; as lead) {
-                            <p class="docs-next-lead" [innerHTML]="lead"></p>
-                        }
-                    </header>
+                    <docs-next-page-header
+                        [lead]="article().lead"
+                        [source]="source"
+                        [title]="page.title[state.locale()]"
+                    />
 
                     @if (onlyFor(); as framework) {
                         <docs-next-notice [text]="state.t('onlyFor', { framework })" />

@@ -14,7 +14,7 @@ import { DocsNextTocSheet } from './toc-sheet';
     selector: 'docs-next-page-bar',
     imports: [KbqIconModule, KbqLinkModule, DocsNextPageActions, DocsNextTocSheet],
     template: `
-        <docs-next-page-actions [source]="source()" />
+        <docs-next-page-actions [githubUrl]="githubUrl()" [source]="source()" />
 
         @if (withToc() && outline.items().length) {
             <button kbqLink pseudo class="docs-next-page-bar__toc" type="button" (click)="tocSheet().open()">
@@ -55,6 +55,7 @@ export class DocsNextPageBar {
     /** Element whose text "Copy" copies. */
     readonly source = input.required<HTMLElement>();
     readonly withToc = input(true);
+    readonly githubUrl = input<string>();
 
     protected readonly tocSheet = viewChild.required(DocsNextTocSheet);
 }

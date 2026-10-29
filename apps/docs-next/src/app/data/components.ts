@@ -10,6 +10,36 @@ export interface DocsNextComponent {
     react?: string;
 }
 
+/** Docs pages of the current site that live in the directory of another entry point. */
+const ANGULAR_SOURCE_DIRS: Record<string, string> = {
+    'button-group': 'button',
+    'clamped-list': 'clamped-text',
+    'icon-button': 'icon',
+    'icon-item': 'icon',
+    tag: 'tags',
+    'tag-autocomplete': 'tags',
+    'tag-input': 'tags',
+    'tag-list': 'tags'
+};
+
+/** Source directory of a component on GitHub, for the framework it exists for. */
+export const docsNextComponentGithubUrl = (
+    component: DocsNextComponent,
+    framework: 'angular' | 'react'
+): string | undefined => {
+    if (framework === 'angular') {
+        return (
+            component.angular &&
+            `https://github.com/koobiq/angular-components/tree/main/packages/components/${ANGULAR_SOURCE_DIRS[component.angular] ?? component.angular}`
+        );
+    }
+
+    return (
+        component.react &&
+        `https://github.com/koobiq/react-components/tree/main/packages/components/src/components/${component.react}`
+    );
+};
+
 export const DOCS_NEXT_COMPONENTS: readonly DocsNextComponent[] = [
     { id: 'accordion', title: 'Accordion', angular: 'accordion', react: 'Accordion' },
     { id: 'actions-panel', title: 'Actions panel', angular: 'actions-panel', react: 'ActionsPanel' },

@@ -1,6 +1,7 @@
 @use '../../../../../packages/components/core/styles/common/tokens';
 
-// Figma: Aside, 240 wide, list items 32 high with a 12px inset.
+// Figma: Aside, 240 wide, list items 32 high with a 12px inset. The list starts 48px under the header, so its first
+// item is level with the title of the article.
 :host {
     display: flex;
     height: 100%;
@@ -9,7 +10,7 @@
 .docs-next-side-menu__content {
     box-sizing: border-box;
     // The right inset is the width of the scrollbar track, so the bar sits beside the items, not over them.
-    padding: var(--kbq-size-xl) var(--kbq-scrollbar-track-size) var(--kbq-size-xxl) var(--kbq-size-s);
+    padding: 48px var(--kbq-scrollbar-track-size) var(--kbq-size-xxl) var(--kbq-size-s);
 }
 
 .docs-next-side-menu__list {

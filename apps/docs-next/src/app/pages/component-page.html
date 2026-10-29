@@ -1,6 +1,11 @@
 @let item = component();
 
-<docs-next-page-layout [wide]="tab() === 'api'" [withActions]="available()" [withToc]="available() && tab() !== 'api'">
+<docs-next-page-layout
+    [githubUrl]="githubUrl()"
+    [wide]="tab() === 'api'"
+    [withActions]="available()"
+    [withToc]="available() && tab() !== 'api'"
+>
     @if (state.notice(); as notice) {
         <docs-next-notice [text]="notice" />
     }
@@ -11,18 +16,13 @@
         <docs-next-stub [title]="item.title" [text]="stubText()" />
     } @else {
         <div #page>
-            <header class="docs-next-page__header">
-                <div class="docs-next-page__title-row">
-                    <h1 class="docs-next-h1">{{ item.title }}</h1>
-                    @if (!state.isMobile()) {
-                        <docs-next-page-actions [source]="page" />
-                    }
-                </div>
-                @if (article().lead; as lead) {
-                    <p class="docs-next-lead" [innerHTML]="lead"></p>
-                }
-
-                <nav kbqTabNavBar class="docs-next-page__tabs">
+            <docs-next-page-header
+                [githubUrl]="githubUrl()"
+                [lead]="article().lead"
+                [source]="page"
+                [title]="item.title"
+            >
+                <nav kbqTabNavBar>
                     @for (tab of tabs; track tab) {
                         <a
                             kbqTabLink
@@ -33,13 +33,18 @@
                         </a>
                     }
                 </nav>
-            </header>
+            </docs-next-page-header>
 
             @switch (tab()) {
                 @case ('content') {
                     <div class="kbq-markdown docs-next-prose">
                         <h2 class="kbq-markdown__h2" id="do-and-dont">{{ state.t('content') }}</h2>
                         <p class="kbq-markdown__p">{{ state.t('contentPlaceholder') }}</p>
+                    </div>
+                }
+                @case ('examples') {
+                    <div class="kbq-markdown docs-next-prose">
+                        <p class="kbq-markdown__p">{{ state.t('examplesPlaceholder') }}</p>
                     </div>
                 }
                 @case ('api') {

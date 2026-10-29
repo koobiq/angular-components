@@ -119,18 +119,20 @@ export const DOCS_NEXT_I18N = {
     sectionMenu: { ru: 'Меню раздела', en: 'Section menu' },
     toMainPage: { ru: 'На главную', en: 'Home' },
     onThisPage: { ru: 'На этой странице', en: 'On this page' },
-    tocExpanded: { ru: 'Развернуть оглавление', en: 'Expand the contents' },
-    tocCompact: { ru: 'Свернуть оглавление', en: 'Collapse the contents' },
+    expandArticle: { ru: 'Развернуть статью', en: 'Expand the article' },
     allComponents: { ru: 'Все компоненты', en: 'All components' },
     isNew: { ru: 'Новое', en: 'New' },
     isUpdated: { ru: 'Обновлено', en: 'Updated' },
     overview: { ru: 'Обзор', en: 'Overview' },
     content: { ru: 'Контент', en: 'Content' },
     api: { ru: 'API', en: 'API' },
+    examples: { ru: 'Примеры', en: 'Examples' },
     copyPage: { ru: 'Скопировать', en: 'Copy' },
     copied: { ru: 'Скопировано', en: 'Copied' },
     pageActions: { ru: 'Другие действия со страницей', en: 'More page actions' },
     viewMarkdown: { ru: 'Посмотреть как Markdown', en: 'View as Markdown' },
+    addToCursor: { ru: 'Добавить в Cursor', en: 'Add to Cursor' },
+    addToVsCode: { ru: 'Добавить в VS Code', en: 'Add to VS Code' },
     openInClaude: { ru: 'Открыть в Claude', en: 'Open in Claude' },
     openInChatGpt: { ru: 'Открыть в ChatGPT', en: 'Open in ChatGPT' },
     codeOnGithub: { ru: 'Код на GitHub', en: 'Code on GitHub' },
@@ -171,6 +173,10 @@ export const DOCS_NEXT_I18N = {
     contentPlaceholder: {
         ru: 'Правила текста для компонента в формате «делать / не делать». Раздел новый, тексты появятся позже.',
         en: 'Text guidelines for the component as do’s and don’ts. The section is new, the texts come later.'
+    },
+    examplesPlaceholder: {
+        ru: 'Примеры пока показаны во вкладке «Обзор». Отдельную вкладку наполним на следующих этапах.',
+        en: 'For now the examples are in the Overview tab. This tab gets its content in a later stage.'
     },
     apiPlaceholder: {
         ru: 'API переносится с текущего сайта как есть. В прототипе — пример оформления таблицы.',
