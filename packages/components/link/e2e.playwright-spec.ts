@@ -55,22 +55,26 @@ const measureTrailingIcon = (item: Locator): Promise<TrailingIconLayout[]> =>
     });
 
 /**
- * Counts the pixel rows between the first and the last line of every wrapped link where the pointer would
- * leave the link: a row is checked inside the narrowest line, so that it can only hit the gap between lines.
+ * Counts the pixel rows between every two adjacent lines of each wrapped link where the pointer would leave
+ * the link: a pair is checked in the middle of the span both lines cover, so that a row can only hit the
+ * gap between them. Not the span all lines cover: the first line starts after the text before the link and
+ * the last one ends early, and how the words wrap decides whether those two overlap at all.
  */
 const countRowsOffTheLink = (target: Locator): Promise<number[]> =>
     target.evaluate((root) =>
         Array.from(root.querySelectorAll<HTMLElement>('.kbq-link'), (link) => {
             const lines = Array.from(link.querySelector('.kbq-link__text')!.getClientRects());
-            const left = Math.max(...lines.map((line) => line.left));
-            const right = Math.min(...lines.map((line) => line.right));
-            const x = (left + right) / 2;
             let off = 0;
 
-            for (let y = Math.ceil(lines[0].top); y < lines[lines.length - 1].bottom; y++) {
-                const hit = document.elementFromPoint(x, y);
+            for (let i = 1; i < lines.length; i++) {
+                const [upper, lower] = [lines[i - 1], lines[i]];
+                const x = (Math.max(upper.left, lower.left) + Math.min(upper.right, lower.right)) / 2;
 
-                if (!hit || !link.contains(hit)) off++;
+                for (let y = Math.ceil(upper.top); y < lower.bottom; y++) {
+                    const hit = document.elementFromPoint(x, y);
+
+                    if (!hit || !link.contains(hit)) off++;
+                }
             }
 
             return off;

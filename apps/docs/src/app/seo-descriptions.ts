@@ -336,8 +336,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Tree Select позволяет искать и выбирать одно или несколько значений из иерархических данных с сохранением структуры дерева."
     },
     "typography": {
-        "en": "Connecting fonts, how the sources differ and how to override the typography styles.",
-        "ru": "Подключение шрифтов, чем отличаются источники и как переопределить стили типографики."
+        "en": "Connecting fonts, which sources fit, the text classes and replacing the fonts.",
+        "ru": "Подключение шрифтов, какие источники подходят, текстовые классы и замена шрифтов."
     },
     "username": {
         "en": "The pattern is used when the interface refers to an internal user.",

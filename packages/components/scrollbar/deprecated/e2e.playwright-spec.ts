@@ -1,7 +1,8 @@
 import { expect, Locator, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from '../../../e2e/utils';
 
-test.use({ browserName: 'webkit' });
+// `launchOptions` drops the project's Chromium switches, which WebKit refuses (see `e2eChromiumArgs`).
+test.use({ browserName: 'webkit', launchOptions: {} });
 
 test.describe('KbqScrollbar (deprecated)', () => {
     test.describe('E2eDeprecatedScrollbarStateAndStyle', () => {

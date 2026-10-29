@@ -253,7 +253,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'typography',
                     hasApi: false,
                     hasExamples: false,
-                    isUpdated: expiresAt('2026-11-10')
+                    isUpdated: expiresAt('2026-11-12')
                 },
                 {
                     id: DocsStructureItemId.DesignTokens,

@@ -2,7 +2,12 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { EXAMPLE_COMPONENTS, ExampleData, LiveExample } from '@koobiq/docs-examples';
-import { DOCS_TEMPLATE_FILES, DocsStackblitzWriter } from './stackblitz-writer';
+import StackBlitzSDK from '@stackblitz/sdk';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { satisfies } from 'semver';
+import { docsKoobiqVersion } from '../../version';
+import { DOCS_STACKBLITZ_OPTIONAL_DEPENDENCIES, DOCS_TEMPLATE_FILES, DocsStackblitzWriter } from './stackblitz-writer';
 
 const EXAMPLE_ID = 'basic-button-example';
 const EXAMPLE_PACKAGE_PATH = 'components/button/basic-button-overview';
@@ -18,6 +23,10 @@ const exampleData = {
 
 /** Number of HTTP requests one project build issues: the shared template files plus the example's own. */
 const EXPECTED_REQUEST_COUNT = DOCS_TEMPLATE_FILES.length + exampleData.exampleFiles.length;
+
+/** The version the repository installs, which the examples are built and tested with. */
+const installedVersion = (name: string): string =>
+    JSON.parse(readFileSync(join(__dirname, '../../../../../../node_modules', name, 'package.json'), 'utf8')).version;
 
 describe(DocsStackblitzWriter.name, () => {
     let writer: DocsStackblitzWriter;
@@ -52,6 +61,30 @@ describe(DocsStackblitzWriter.name, () => {
     afterEach(() => {
         httpMock.verify();
         delete EXAMPLE_COMPONENTS[EXAMPLE_ID];
+    });
+
+    it('pins every dependency to a range that accepts the version the repository installs', async () => {
+        const openProject = vi.spyOn(StackBlitzSDK, 'openProject').mockImplementation(() => undefined);
+        const project = writer.createStackBlitzForExample(EXAMPLE_ID, exampleData);
+
+        flushPendingFiles();
+        (await project)();
+
+        const { dependencies, devDependencies } = JSON.parse(openProject.mock.calls[0][0].files['package.json']);
+        // The basic example imports none of the optional dependencies, so they are added by hand.
+        const ranges: Record<string, string> = Object.assign(
+            {},
+            dependencies,
+            devDependencies,
+            ...Object.values(DOCS_STACKBLITZ_OPTIONAL_DEPENDENCIES)
+        );
+        const behind = Object.entries(ranges)
+            // The packages of this repository follow the docs build and are not installed from npm.
+            .filter(([, range]) => range !== `^${docsKoobiqVersion}`)
+            .map(([name, range]) => ({ name, range, installed: installedVersion(name) }))
+            .filter(({ range, installed }) => !satisfies(installed, range));
+
+        expect(behind).toEqual([]);
     });
 
     it('fetches the example sources from its directory, which is not always named after the id', async () => {

@@ -57,6 +57,6 @@ export function ssrSuggestion(): string[] {
 export function fontsSuggestion(): string[] {
     return [
         'Koobiq recommends the Inter and JetBrains Mono fonts.',
-        'See https://koobiq.io/en/main/typography for installation options (Fontsource or Google Fonts CDN).'
+        'See https://koobiq.io/en/main/typography for installation options (npm packages or self-hosted files).'
     ];
 }
