@@ -377,4 +377,16 @@ describe('the group of a page in the search', () => {
 
         expect(group(harness)).toBe('Components');
     });
+
+    it('follows the reader between the API and the examples', async () => {
+        const harness = await open('/components/alert/api');
+
+        await harness.navigateByUrl('/components/alert/examples');
+
+        expect(group(harness)).toBe('Examples');
+
+        await harness.navigateByUrl('/components/alert/api');
+
+        expect(group(harness)).toBe('API');
+    });
 });
