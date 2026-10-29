@@ -120,6 +120,20 @@ test.describe('KbqFormFieldModule', () => {
         }
     });
 
+    test.describe('E2eFormFieldRequiredMarker', () => {
+        test('ends the label of a required control with the marker', async ({ page }) => {
+            await page.goto('/E2eFormFieldRequiredMarker');
+            const target = page.getByTestId('e2eFormFieldRequiredMarker').getByTestId('e2eScreenshotTarget');
+
+            // One by the `required` attribute, one by `Validators.required`.
+            await expect(target.locator('.kbq-form-field__label_required')).toHaveCount(2);
+            await expect(target).toHaveScreenshot('06-required-marker-light.png');
+
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('06-required-marker-dark.png');
+        });
+    });
+
     /**
      * Browser autofill (#DS-4096).
      *

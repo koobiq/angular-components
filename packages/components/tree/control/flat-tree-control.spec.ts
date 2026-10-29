@@ -192,6 +192,48 @@ describe('FlatTreeControl', () => {
             });
         });
 
+        describe('position of a node', () => {
+            const names = (found: FlatNode[]): string[] => found.map((node) => node.name);
+
+            it('should search dataNodes once for any number of lookups', () => {
+                const indexOf = vi.spyOn(nodes, 'indexOf');
+
+                nodes.forEach((node) => {
+                    control.getDescendants(node);
+                    control.getParents(node);
+                });
+
+                expect(indexOf).toHaveBeenCalledTimes(1);
+            });
+
+            it('should follow dataNodes changed in place', () => {
+                const notes: FlatNode = { name: 'notes', level: 2, expandable: false };
+
+                expect(names(control.getDescendants(byName(nodes, 'documents')))).toEqual(['specs', 'draft', 'readme']);
+
+                nodes.splice(1, 0, { name: 'archive', level: 1, expandable: false });
+                nodes.splice(3, 0, notes);
+
+                expect(names(control.getDescendants(byName(nodes, 'documents')))).toEqual([
+                    'notes',
+                    'specs',
+                    'draft',
+                    'readme'
+                ]);
+                expect(names(control.getParents(notes))).toEqual(['root', 'documents']);
+                expect(names(control.getParents(byName(nodes, 'draft')))).toEqual(['root', 'documents', 'specs']);
+            });
+
+            it('should follow a replaced dataNodes array', () => {
+                expect(names(control.getDescendants(byName(nodes, 'documents')))).toEqual(['specs', 'draft', 'readme']);
+
+                control.dataNodes = nodes.filter((node) => node.name !== 'specs' && node.name !== 'draft');
+
+                expect(names(control.getDescendants(byName(nodes, 'documents')))).toEqual(['readme']);
+                expect(control.getParents(byName(nodes, 'draft'))).toEqual([]);
+            });
+        });
+
         describe('hasValue', () => {
             it('should find the node carrying the value', () => {
                 expect(control.hasValue('specs')).toBe(byName(nodes, 'specs'));
@@ -251,6 +293,127 @@ describe('FlatTreeControl', () => {
 
                 expect(control.expansionModel.selected.map((node) => node.name)).toEqual(['images']);
             });
+        });
+    });
+
+    describe('with trackBy', () => {
+        let control: FlatTreeControl<FlatNode, string>;
+        let nodes: FlatNode[];
+
+        beforeEach(() => {
+            nodes = buildFlatNodes();
+            control = new FlatTreeControl<FlatNode, string>(
+                (node) => node.level,
+                (node) => node.expandable,
+                (node) => node.name,
+                (node) => node.name,
+                undefined,
+                undefined,
+                undefined,
+                { trackBy: (node) => node.name }
+            );
+            control.dataNodes = nodes;
+        });
+
+        it('should keep a node expanded once the node is rebuilt as a new object', () => {
+            control.expand(byName(nodes, 'documents'));
+
+            control.dataNodes = buildFlatNodes();
+
+            expect(control.isExpanded(byName(control.dataNodes, 'documents'))).toBe(true);
+        });
+
+        it('should collapse a node through an object rebuilt after it was expanded', () => {
+            control.expand(byName(nodes, 'documents'));
+
+            control.collapse(byName(buildFlatNodes(), 'documents'));
+
+            expect(control.expansionModel.selected).toEqual([]);
+        });
+
+        it('should hold the keys rather than the nodes in the expansion model', () => {
+            control.toggle(byName(nodes, 'root'));
+
+            expect(control.expansionModel.selected).toEqual(['root']);
+        });
+
+        it('should expand and collapse all the nodes by key', () => {
+            control.expandAll();
+
+            expect(control.expansionModel.selected).toEqual(nodes.map((node) => node.name));
+
+            control.collapseAll();
+
+            expect(control.expansionModel.selected).toEqual([]);
+        });
+
+        it('should toggle a subtree by key, also once the subtree is rebuilt', () => {
+            control.toggleDescendants(byName(nodes, 'documents'));
+
+            expect(control.expansionModel.selected).toEqual(['documents', 'specs', 'draft', 'readme']);
+
+            control.dataNodes = buildFlatNodes();
+            control.toggleDescendants(byName(control.dataNodes, 'documents'));
+
+            expect(control.expansionModel.selected).toEqual([]);
+        });
+
+        it('should find the descendants and parents of a node through an object it was rebuilt from', () => {
+            const stale = byName(nodes, 'documents');
+
+            control.dataNodes = buildFlatNodes();
+
+            expect(control.getDescendants(stale)).toEqual(
+                ['specs', 'draft', 'readme'].map((name) => byName(control.dataNodes, name))
+            );
+            expect(control.getParents(byName(nodes, 'draft'))).toEqual(
+                ['root', 'documents', 'specs'].map((name) => byName(control.dataNodes, name))
+            );
+
+            control.expandDescendants(stale);
+
+            expect(control.expansionModel.selected).toEqual(['documents', 'specs', 'draft', 'readme']);
+        });
+
+        it('should find no parents of a node before the data nodes are set', () => {
+            control.dataNodes = undefined!;
+
+            expect(control.getParents(byName(nodes, 'draft'))).toEqual([]);
+        });
+
+        it('should expand the expandable nodes a filter keeps by key', () => {
+            control.filterNodes('draft');
+
+            expect(control.expansionModel.selected).toEqual(['root', 'documents', 'specs']);
+        });
+
+        it('should restore the keys expanded before a filter once the query is dropped', async () => {
+            control.expand(byName(nodes, 'documents'));
+
+            control.filterNodes('draft');
+            await Promise.resolve();
+
+            control.filterNodes('');
+            await Promise.resolve();
+
+            expect(control.expansionModel.selected).toEqual(['documents']);
+        });
+
+        it('should not carry the expansion over to a rebuilt node without trackBy', () => {
+            const plain = new FlatTreeControl<FlatNode>(
+                (node) => node.level,
+                (node) => node.expandable,
+                (node) => node.name,
+                (node) => node.name
+            );
+
+            plain.dataNodes = nodes;
+            plain.expand(byName(nodes, 'documents'));
+
+            plain.dataNodes = buildFlatNodes();
+
+            expect(plain.isExpanded(byName(plain.dataNodes, 'documents'))).toBe(false);
+            expect(plain.expansionModel.selected).toEqual([byName(nodes, 'documents')]);
         });
     });
 });

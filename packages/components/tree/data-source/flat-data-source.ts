@@ -101,8 +101,10 @@ export class KbqTreeFlattener<T, F> {
     /**
      * Expand flattened node with current expansion status.
      * The returned list may have different length.
+     *
+     * Reads only `isExpanded` of the tree control, so it takes a control of any key type.
      */
-    expandFlattenedNodes(nodes: F[], treeControl: TreeControl<F>): F[] {
+    expandFlattenedNodes(nodes: F[], treeControl: Pick<TreeControl<F>, 'isExpanded'>): F[] {
         const results: F[] = [];
         const currentExpand: boolean[] = [];
 
@@ -140,7 +142,7 @@ enum KbqTreeDataSourceChangeTypes {
  * The nested tree nodes of type `T` are flattened through `KbqTreeFlattener`, and converted
  * to type `F` for `KbqTree` to consume.
  */
-export class KbqTreeFlatDataSource<T, F> extends DataSource<F> {
+export class KbqTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
     flattenedData = new BehaviorSubject<F[]>([]);
 
     expandedData = new BehaviorSubject<F[]>([]);
@@ -154,14 +156,17 @@ export class KbqTreeFlatDataSource<T, F> extends DataSource<F> {
     set data(value: T[]) {
         this._data.set(value);
 
-        this.flattenedData.next(this.treeFlattener.flattenNodes(this.data));
-        this.treeControl.dataNodes = this.flattenedData.value;
+        const flattened = this.treeFlattener.flattenNodes(this.data);
+
+        // Assigned before emitting: the tree renders inside `next`, and its rows look themselves up in `dataNodes`.
+        this.treeControl.dataNodes = flattened;
+        this.flattenedData.next(flattened);
     }
 
     private readonly _data = signal<T[]>([]);
 
     constructor(
-        private treeControl: FlatTreeControl<F>,
+        private treeControl: FlatTreeControl<F, K>,
         private treeFlattener: KbqTreeFlattener<T, F>,
         initialData: T[] = []
     ) {
@@ -204,7 +209,7 @@ export class KbqTreeFlatDataSource<T, F> extends DataSource<F> {
         return this.filteredData.value;
     }
 
-    expansionHandler(_change: SelectionChange<F>): F[] {
+    expansionHandler(_change: SelectionChange<K>): F[] {
         const expandedNodes = this.treeFlattener.expandFlattenedNodes(this.flattenedData.value, this.treeControl);
 
         this.expandedData.next(expandedNodes);

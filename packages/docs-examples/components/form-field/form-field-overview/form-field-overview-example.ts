@@ -1,14 +1,18 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqInputModule } from '@koobiq/components/input';
+import { KbqFormField, KbqHint, KbqLabel, KbqSuffix } from '@koobiq/components/form-field';
+import { KbqIcon } from '@koobiq/components/icon';
+import { KbqInput } from '@koobiq/components/input';
 
-/** @title Form field with kbq-label */
+/** @title Form field */
 @Component({
     selector: 'form-field-overview-example',
-    imports: [KbqInputModule],
+    imports: [KbqFormField, KbqLabel, KbqInput, KbqSuffix, KbqIcon, KbqHint],
     template: `
         <kbq-form-field>
-            <kbq-label>Label</kbq-label>
-            <input kbqInput placeholder="Click on the label for auto focus" />
+            <kbq-label>Email</kbq-label>
+            <input kbqInput placeholder="name@example.com" />
+            <i kbqSuffix kbq-icon="kbq-envelope_16"></i>
+            <kbq-hint>Used to sign in and to receive notifications</kbq-hint>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

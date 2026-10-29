@@ -27,6 +27,7 @@ import {
     FormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample,
     FormFieldWithErrorExample,
     FormFieldWithHintExample,
+    FormFieldWithLabelExample,
     FormFieldWithoutBordersExample,
     FormFieldWithPrefixAndSuffixExample
 } from 'packages/docs-examples/components/form-field';
@@ -43,6 +44,7 @@ import { DevFileFlatNode, DevFileNode } from '../tree/module';
         FormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample,
         FormFieldWithErrorExample,
         FormFieldWithHintExample,
+        FormFieldWithLabelExample,
         FormFieldOverviewExample,
         FormFieldWithoutBordersExample,
         FormFieldWithPrefixAndSuffixExample,
@@ -55,6 +57,8 @@ import { DevFileFlatNode, DevFileNode } from '../tree/module';
         <form-field-horizontal-example />
         <hr />
         <form-field-overview-example />
+        <hr />
+        <form-field-with-label-example />
         <hr />
         <form-field-with-hint-example />
         <hr />

@@ -483,7 +483,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'code-block',
                     hasApi: true,
                     apiId: 'code-block',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-10')
                 },
                 {
                     id: DocsStructureItemId.ContentPanel,
@@ -697,7 +698,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'form-field',
                     hasApi: true,
                     apiId: 'form-field',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-11-09')
                 },
                 {
                     id: DocsStructureItemId.Highlight,
@@ -1162,7 +1164,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'tree',
                     hasApi: true,
                     apiId: 'tree',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-11')
                 },
                 {
                     id: DocsStructureItemId.TreeSelect,
@@ -1185,7 +1188,8 @@ const structure: DocsStructure = makeStructure({
                     path: 'packages/components/username',
                     hasApi: true,
                     apiId: 'username',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-11-11')
                 }
             ].sort((a, b) => a.name.en.localeCompare(b.name.en))
         }

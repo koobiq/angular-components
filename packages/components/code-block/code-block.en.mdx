@@ -15,12 +15,11 @@ npm install highlight.js@^11
 
 ### Configuring highlight.js
 
-By default, the component loads the full `highlight.js` bundle with all languages (~1 MB). To reduce bundle size, use `kbqCodeBlockHighlightJsConfigProvider` and specify only the languages you need:
+By default, the component loads the `highlight.js` core, which has no languages, and shows the code as plain text. Register the languages of your files with `kbqCodeBlockHighlightJsConfigProvider`:
 
 ```typescript
 providers: [
     kbqCodeBlockHighlightJsConfigProvider({
-        core: () => import('highlight.js/lib/core'),
         languages: {
             typescript: () => import('highlight.js/lib/languages/typescript'),
             css: () => import('highlight.js/lib/languages/css'),
@@ -30,7 +29,17 @@ providers: [
 ];
 ```
 
-Languages are loaded lazily on first use. Note that the `html` language is an alias of `xml` in `highlight.js`, so register `xml` to enable HTML syntax highlighting.
+Languages are loaded lazily on first use. Plain text needs no entry: the component falls back to it for a file whose language is not specified or not registered. Note that the `html` language is an alias of `xml` in `highlight.js`, so register `xml` to enable HTML syntax highlighting.
+
+To highlight any language, load the full bundle with all of them (~1 MB):
+
+```typescript
+providers: [
+    kbqCodeBlockHighlightJsConfigProvider({
+        core: () => import('highlight.js')
+    })
+];
+```
 
 ### Line numbers
 

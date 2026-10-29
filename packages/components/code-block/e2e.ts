@@ -8,8 +8,17 @@ import {
     viewChild,
     viewChildren
 } from '@angular/core';
-import { KbqCodeBlock, KbqCodeBlockFile } from '@koobiq/components/code-block';
+import { KbqCodeBlock, KbqCodeBlockFile, kbqCodeBlockHighlightJsConfigProvider } from '@koobiq/components/code-block';
 import { kbqScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
+
+// The languages of the files below; plain text, the fallback of a file without one, comes with the code block.
+const HIGHLIGHT_JS_CONFIG = kbqCodeBlockHighlightJsConfigProvider({
+    languages: {
+        typescript: () => import('highlight.js/lib/languages/typescript'),
+        css: () => import('highlight.js/lib/languages/css'),
+        bash: () => import('highlight.js/lib/languages/bash')
+    }
+});
 
 @Component({
     selector: 'e2e-code-block-states',
@@ -97,6 +106,7 @@ import { kbqScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
             gap: var(--kbq-size-s);
         }
     `,
+    providers: [HIGHLIGHT_JS_CONFIG],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eCodeBlockStates'
@@ -166,7 +176,8 @@ export class E2eCodeBlockStates {
     providers: [
         // The reveal lasts hideDelay and nothing brings it back, so the default second would make this
         // a race against page load rather than a test of the behaviour.
-        kbqScrollbarOptionsProvider({ hideDelay: 5000 })
+        kbqScrollbarOptionsProvider({ hideDelay: 5000 }),
+        HIGHLIGHT_JS_CONFIG
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

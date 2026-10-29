@@ -1,19 +1,28 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { BehaviorSubject, Observable } from 'rxjs';
 
+/** Options of `FlatTreeControl` and `NestedTreeControl`. */
+export interface KbqTreeControlOptions<T, K> {
+    /** Initial value of the control's `trackBy`. */
+    trackBy?: (dataNode: T) => K;
+}
+
 /**
  * Tree control interface. User can implement TreeControl to expand/collapse dataNodes in the tree.
  * The Tree will use this TreeControl to expand/collapse a node.
  * User can also use it outside the `<kbq-tree>` to control the expansion status of the tree.
  */
-export interface TreeControl<T> {
+export interface TreeControl<T, K = T> {
     /** The saved tree nodes data for `expandAll` action. */
     dataNodes: T[];
 
-    /** The expansion model */
-    expansionModel: SelectionModel<T>;
+    /** The expansion model: the keys of the expanded data nodes, which are the nodes themselves by default. */
+    expansionModel: SelectionModel<K>;
 
     filterModel: SelectionModel<T>;
+
+    /** Gives the key a data node is expanded by. Without it the node object is its own key. */
+    trackBy?: (dataNode: T) => K;
 
     filterValue: BehaviorSubject<T[] | string | null>;
 

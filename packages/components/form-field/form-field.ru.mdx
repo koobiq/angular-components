@@ -1,6 +1,8 @@
 `<kbq-form-field>` - это компонент, который используется для создания форм и полей ввода с поддержкой стилизации и дополнительных
 функций.
 
+<Example id="form-field-overview" />
+
 Следующие компоненты предназначены для использования внутри `<kbq-form-field>`:
 
 - [Autocomplete](/ru/components/autocomplete)
@@ -15,7 +17,11 @@
 
 ### Лейбл
 
-<Example id="form-field-overview" />
+`<kbq-label>` задает название поля. Атрибут `showRequiredMarker` добавляет
+в конец лейбла обязательного поля маркер `*`: поле обязательно, если у него есть атрибут `required` или валидатор
+`Validators.required`. По умолчанию маркер скрыт, включить его для всех полей можно в [глобальных настройках](#глобальные-настройки).
+
+<Example id="form-field-with-label" />
 
 ### Горизонтальная форма
 
@@ -99,15 +105,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
 <Example id="form-field-without-borders" />
 
-Для всех полей, при помощи `KBQ_FORM_FIELD_DEFAULT_OPTIONS` токена:
-
-```ts
-import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-field';
-
-@NgModule({
-    providers: [kbqFormFieldDefaultOptionsProvider({ noBorders: true })]
-})
-```
+Для всех полей - в [глобальных настройках](#глобальные-настройки).
 
 ### Автозаполнение
 
@@ -161,3 +159,16 @@ const filledByBrowser = this.input().autofilled();
 #### Error: kbq-stepper should use with kbqNumberInput
 
 Эта ошибка возникает, когда `<kbq-stepper>` не может найти поле `<input kbqNumberInput />` или его импорт `KbqInputModule`.
+
+### Глобальные настройки
+
+Функция `kbqFormFieldDefaultOptionsProvider` задает параметры по умолчанию для всех полей приложения или конкретного инжектора.
+
+```ts
+import { ApplicationConfig } from '@angular/core';
+import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-field';
+
+export const appConfig: ApplicationConfig = {
+    providers: [kbqFormFieldDefaultOptionsProvider({ showRequiredMarker: true, noBorders: true })]
+};
+```

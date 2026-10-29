@@ -24,7 +24,6 @@ import {
     `,
     providers: [
         kbqCodeBlockHighlightJsConfigProvider({
-            core: () => import('highlight.js/lib/core'),
             languages: {
                 html: () => import('highlight.js/lib/languages/xml'),
                 typescript: () => import('highlight.js/lib/languages/typescript'),

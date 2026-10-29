@@ -15,8 +15,10 @@ import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
     `,
     styles: `
         :host {
-            display: inline-block;
-            padding: var(--kbq-size-l);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
         }
 
         .example-link-caption {
