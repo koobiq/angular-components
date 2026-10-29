@@ -219,7 +219,7 @@ export class AutocompleteOverviewExample implements OnInit {
     ];
 
     control = new FormControl('');
-    filteredOptions: Observable<string[]>;
+    filteredOptions!: Observable<string[]>;
 
     ngOnInit(): void {
         this.filteredOptions = this.control.valueChanges.pipe(

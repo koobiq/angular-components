@@ -21,7 +21,7 @@ const createFSFile = (name: string, type = '') => {
         fullPath: name,
         isDirectory: false,
         isFile: true,
-        file: (successCb) => successCb(file)
+        file: (successCb: FileCallback) => successCb(file as File)
     };
 };
 
@@ -101,7 +101,7 @@ describe('FileDropDirective', () => {
                 isDirectory: true,
                 isFile: false,
                 createReader: () => ({
-                    readEntries: (successCb) => successCb(fakeFiles)
+                    readEntries: (successCb: (entries: typeof fakeFiles) => void) => successCb(fakeFiles)
                 })
             })
         };
@@ -130,7 +130,7 @@ describe('FileDropDirective', () => {
     template: '<div style="width: 200px; height: 200px;" kbqFileDrop (filesDropped)="onDrop($event)"></div>'
 })
 class SimpleDNDComponent {
-    files: FileList | KbqFile[];
+    files!: FileList | KbqFile[];
 
     onDrop = vi.fn().mockImplementation((event: FileList | KbqFile[]) => {
         this.files = event;

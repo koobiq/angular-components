@@ -54,7 +54,7 @@ export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
 
-    private savedTransition: string;
+    private savedTransition!: string;
     private readonly afterRenderRef?: AfterRenderRef;
     private animationTimerId?: ReturnType<typeof setTimeout>;
 

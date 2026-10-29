@@ -330,7 +330,7 @@ export class AgGridAndActionsPanelExample {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly container = viewChild.required(ExampleGrid, { read: ElementRef });
     private readonly grid = viewChild.required(ExampleGrid);
-    private actionsPanelRef!: KbqActionsPanelRef<ExampleActionsPanel> | null;
+    private actionsPanelRef: KbqActionsPanelRef<ExampleActionsPanel> | null = null;
     private readonly data = signal<ExampleTableItem[]>([]);
     private readonly destroyRef = inject(DestroyRef);
     protected readonly panelOpened = signal(false);

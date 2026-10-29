@@ -91,7 +91,7 @@ Libraries are built by the custom `@koobiq/builders:packager` builder around ng-
 
 The docs app resolves `@koobiq/*` from `dist/` (see `apps/docs/tsconfig.app.json`), so rebuild the libraries before `docs:build`, and again after changing a component you want to see on the site. `yarn run docs` runs the whole chain in the right order.
 
-`docs:build`, `ssr:build` and the dev-e2e build behind `serve:e2e` fail on any builder warning (`tools/build-strict.mjs`). Fix the cause, or silence an expected warning where it comes from: `allowedCommonJsDependencies` in `angular.json` for the package the warning names, the budgets, `stylePreprocessorOptions.sass.silenceDeprecations`. Angular's extended diagnostics are errors (`extendedDiagnostics.defaultCategory` in the root `tsconfig.json`); a tsconfig that declares its own `extendedDiagnostics` repeats it.
+`docs:build`, `ssr:build` and the dev-e2e build behind `serve:e2e` fail on any builder warning (`tools/build-strict.mjs`). Fix the cause, or silence an expected warning where it comes from: `allowedCommonJsDependencies` in `angular.json` for the package the warning names, the budgets, `stylePreprocessorOptions.sass.silenceDeprecations`. Angular's extended diagnostics are errors (`extendedDiagnostics.defaultCategory` in `tsconfig.angular.json`); a tsconfig that declares its own `extendedDiagnostics` repeats it.
 
 The Angular CLI cache (`.angular/cache`) is on locally and off in CI; `yarn run clean` empties it. Every published library sets `"incremental": false` in its `tsconfig.lib.json`, or its typings would depend on the cache.
 
@@ -256,7 +256,10 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 ### TypeScript Best Practices
 
-- `strictNullChecks` and `strictFunctionTypes` are on but `noImplicitAny` is off, so a parameter without a type annotation silently becomes `any`: annotate parameters, and rely on inference where the type is obvious
+- `tsconfig.strict.json` holds the type-checking strictness: `strict`, `noImplicitReturns`, `noImplicitOverride`, `noFallthroughCasesInSwitch`, `noPropertyAccessFromIndexSignature`, `noUncheckedSideEffectImports` and no unused locals, parameters, unreachable code or labels. The root `tsconfig.json`, and every project that extends it, gets it through `tsconfig.angular.json`, the strictness of the Angular compiler. A Node tool that ts-node has to type-check when it runs extends `tsconfig.strict.json` directly, since ts-node inherits the root's `transpileOnly` along `extends`: `tools/api-extractor`, `tools/api-gen`, `tools/docs-pages`, `tools/llms` and the scripts directly under `tools/` use the root config and run unchecked, and `packages/cli` and `packages/mcp` set their own options. Rely on inference where the type is obvious
+- `!` on a field promises that it is assigned before any read: use it only when a lifecycle hook, an input setter or the first step of the method that reads it assigns it, since anywhere else it hides a read of `undefined` that fails at runtime
+- A private field that may stay unset is optional (`?:`), so that the compiler makes every read of it handle `undefined`
+- A public or protected member keeps its declared type, a field that may stay unset included (it takes `!`): `?:`, `| undefined` or a narrower type there changes the published typings, which `check-api` shows. A parameter that was implicitly `any` is typed with what it receives
 - Avoid `any`, and use `unknown` for a value of uncertain type — but not in published declarations: `check-public-api-any` counts both and fails when a package's count grows, so give new public members concrete or generic types
 - Prefer `readonly` where appropriate (e.g., signals, injections)
 - Use `protected` for template bindings

@@ -51,10 +51,10 @@ export class KbqCalendarHeader<D> implements AfterContentInit, OnChanges {
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
     monthNames: MonthName[];
-    selectedMonth: number;
+    selectedMonth!: number;
 
     years: number[] = [];
-    selectedYear: number;
+    selectedYear!: number;
 
     get activeDate(): D {
         return this._activeDate;
@@ -67,7 +67,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit, OnChanges {
         this.updateSelectionOptions();
     }
 
-    private _activeDate: D;
+    private _activeDate!: D;
 
     get maxDate(): D | null {
         return this._maxDate;

@@ -40,7 +40,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
 export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
     private readonly themeService = inject(KbqThemeService);
 
-    protected structureCategories: DocsStructureCategory[];
+    protected structureCategories!: DocsStructureCategory[];
     readonly currentTheme = computed(() => this.themeService.colorScheme());
 
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);

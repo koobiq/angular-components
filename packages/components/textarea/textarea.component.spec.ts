@@ -159,7 +159,7 @@ class KbqFormFieldWithNgModelInForm {
 })
 class KbqTextareaForBehaviors {
     value: string = 'test\ntest\ntest';
-    placeholder: string;
+    placeholder!: string;
     disabled: boolean = false;
 }
 

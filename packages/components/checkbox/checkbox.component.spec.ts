@@ -1355,7 +1355,7 @@ class CheckboxWithNameAttribute {}
     `
 })
 class CheckboxWithChangeEvent {
-    lastEvent: KbqCheckboxChange;
+    lastEvent!: KbqCheckboxChange;
 }
 
 /** Test component with reactive forms */
@@ -1415,7 +1415,7 @@ class CheckboxWithoutErrorMessage {
     `
 })
 class CheckboxWithoutLabel {
-    label: string;
+    label!: string;
 }
 
 /** Checkbox whose click behavior is driven by the `clickAction` input rather than the injected token. */

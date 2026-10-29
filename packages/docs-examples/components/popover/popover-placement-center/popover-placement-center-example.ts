@@ -36,5 +36,5 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
 })
 export class PopoverPlacementCenterExample {
     placements = PopUpPlacements;
-    activePopover: KbqPopoverTrigger;
+    activePopover!: KbqPopoverTrigger;
 }

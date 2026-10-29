@@ -1135,7 +1135,7 @@ class TestSearchExpandable {
     openedState: boolean = false;
     disabled: boolean = false;
     tabIndex: number | null | undefined = 0;
-    search: string;
+    search!: string;
 }
 
 @Component({
@@ -1147,7 +1147,7 @@ class TestSearchExpandable {
     `
 })
 class TestSearchExpandableExternalToggle {
-    search: string;
+    search!: string;
 }
 
 @Component({
@@ -1173,7 +1173,7 @@ class TestSearchExpandableWithFormControl {
 class TestSearchExpandableWithPlaceholder {
     openedState: boolean = false;
     placeholder: string | undefined = 'Custom search...';
-    search: string;
+    search!: string;
 }
 
 @Component({
@@ -1186,7 +1186,7 @@ class TestSearchExpandableWithPlaceholder {
 class TestSearchExpandableWithTooltip {
     openedState: boolean = false;
     tooltipText: string | undefined = 'Custom tooltip';
-    search: string;
+    search!: string;
 }
 
 @Component({
@@ -1203,7 +1203,7 @@ class TestSearchExpandableWithTooltip {
     ]
 })
 class TestSearchExpandableWithConfiguration {
-    search: string;
+    search!: string;
 }
 
 @Component({
@@ -1259,8 +1259,8 @@ class TestSearchExpandableWithValidatedFormControl {
     `
 })
 class TestSearchExpandablePair {
-    first: string;
-    second: string;
+    first!: string;
+    second!: string;
 }
 
 @Component({
@@ -1271,5 +1271,5 @@ class TestSearchExpandablePair {
     `
 })
 class TestSearchExpandableInModal {
-    search: string;
+    search!: string;
 }

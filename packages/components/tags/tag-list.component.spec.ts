@@ -3085,8 +3085,8 @@ class BasicTagList {
         { value: 'sushi-7', viewValue: 'Sushi' }
     ];
     control = new UntypedFormControl();
-    isRequired: boolean;
-    tabIndexOverride: number;
+    isRequired!: boolean;
+    tabIndexOverride!: number;
     selectable: boolean = true;
 
     readonly formField = viewChild.required(KbqFormField);
@@ -3135,7 +3135,7 @@ class InputTagList {
 
     separatorKeyCodes = [ENTER, SPACE];
     addOnBlur: boolean = true;
-    isRequired: boolean;
+    isRequired!: boolean;
 
     readonly tagList = viewChild.required(KbqTagList);
     readonly tags = viewChildren(KbqTag);

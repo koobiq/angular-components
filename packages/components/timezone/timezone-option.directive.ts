@@ -39,7 +39,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
      * Overrides the tooltip's hoverable default. The overflow hint floats over the neighbouring options of a
      * scrolling list, so a pointer-capturing pane would swallow the click that selects them.
      */
-    readonly ignoreTooltipPointerEvents = input<boolean>(true);
+    override readonly ignoreTooltipPointerEvents = input<boolean>(true);
 
     /**
      * The hint shows rows the option had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for an
@@ -54,7 +54,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
         this.tooltipPlacement = PopUpPlacements.Right;
     }
 
-    ngAfterViewInit(): void {
+    override ngAfterViewInit(): void {
         if (!this.platform.isBrowser) return;
 
         super.ngAfterViewInit();
@@ -82,7 +82,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
             .subscribe((origin) => (origin === 'keyboard' ? this.handleElementEnter() : this.handleElementLeave()));
     }
 
-    ngOnDestroy(): void {
+    override ngOnDestroy(): void {
         this.resizeSubscription.unsubscribe();
         this.contentObserverSubscription.unsubscribe();
         this.focusMonitorSubscription.unsubscribe();

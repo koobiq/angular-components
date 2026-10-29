@@ -17,7 +17,7 @@ import {
     `
 })
 class OptionWithDisable {
-    disabled: boolean;
+    disabled!: boolean;
 }
 
 @Component({

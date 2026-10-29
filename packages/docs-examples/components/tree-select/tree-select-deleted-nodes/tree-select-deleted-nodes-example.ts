@@ -15,20 +15,20 @@ import {
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 
 export class FileNode {
-    id: string;
-    children: FileNode[];
-    name: string;
+    id!: string;
+    children!: FileNode[];
+    name!: string;
     type: any;
 }
 
 /** Flat node with expandable and level information. */
 export class FileFlatNode {
-    id: string;
-    name: string;
+    id!: string;
+    name!: string;
     type: any;
-    level: number;
-    expandable: boolean;
-    parent: FileFlatNode | null;
+    level!: number;
+    expandable!: boolean;
+    parent!: FileFlatNode | null;
 }
 
 /**

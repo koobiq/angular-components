@@ -61,7 +61,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
         this.setTemplateLabelInput(value);
     }
 
-    private _templateLabel: KbqTabLabel;
+    private _templateLabel!: KbqTabLabel;
 
     /**
      * Template provided in the tab content that will be used if present, used to enable lazy-loading

@@ -412,7 +412,7 @@ export class KbqTagList
     userTabIndex: number | null = null;
 
     /** @docs-private */
-    keyManager: FocusKeyManager<KbqTag>;
+    keyManager!: FocusKeyManager<KbqTag>;
 
     /** An object used to control when error messages are shown. */
     readonly errorStateMatcher = input<ErrorStateMatcher>();
@@ -446,7 +446,7 @@ export class KbqTagList
     readonly errorState = this.errorStateTracker.errorState;
 
     /** The tag input to add more tags */
-    private tagInput: KbqTagTextControl;
+    private tagInput?: KbqTagTextControl;
 
     /**
      * The same control as `tagInput`, kept in a signal so `autofilled` can track it reactively —

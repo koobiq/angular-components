@@ -214,7 +214,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     parent: KbqDropdownPanel | undefined;
 
     /** Layout direction of the dropdown. */
-    direction: Direction;
+    direction!: Direction;
 
     /** Class to be added to the backdrop element. */
     readonly backdropClass = input<string>(this.defaultOptions.backdropClass);
@@ -304,7 +304,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      */
     closingChain = false;
 
-    private keyManager: ListKeyManager<KbqDropdownItem>;
+    private keyManager!: ListKeyManager<KbqDropdownItem>;
 
     private activeDescendantKeyManager?: ActiveDescendantKeyManager<KbqDropdownItem>;
     private focusKeyManager?: FocusKeyManager<KbqDropdownItem>;

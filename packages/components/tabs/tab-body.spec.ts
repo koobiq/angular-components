@@ -226,9 +226,9 @@ describe('KbqTabBody', () => {
 class SimpleTabBodyApp implements AfterContentInit {
     private viewContainerRef = inject(ViewContainerRef);
 
-    content: TemplatePortal;
-    position: number;
-    origin: number | null;
+    content!: TemplatePortal;
+    position!: number;
+    origin!: number | null;
 
     readonly tabBody = viewChild.required(KbqTabBody);
     readonly template = viewChild.required(TemplateRef);

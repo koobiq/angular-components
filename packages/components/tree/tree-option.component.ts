@@ -526,7 +526,7 @@ export class KbqTreeOption<T = any>
         });
     }
 
-    focus(focusOrigin?: FocusOrigin) {
+    override focus(focusOrigin?: FocusOrigin) {
         untracked(() => {
             if (focusOrigin === 'program' || this.disabled || this.actionButton()?.hasFocus) return;
 
@@ -631,8 +631,8 @@ export class KbqTreeOption<T = any>
         });
     }
 
-    onKeydown($event) {
-        kbqFocusOptionActionOnTab($event, this.actionButton());
+    onKeydown(event: KeyboardEvent) {
+        kbqFocusOptionActionOnTab(event, this.actionButton());
     }
 
     selectViaInteraction($event?: KeyboardEvent | MouseEvent): void {

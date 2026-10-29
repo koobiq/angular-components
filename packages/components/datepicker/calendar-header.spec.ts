@@ -93,8 +93,8 @@ describe('KbqCalendarHeader', () => {
 class StandardCalendar {
     adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
 
-    selected: DateTime;
-    selectedYear: DateTime;
-    selectedMonth: DateTime;
+    selected!: DateTime;
+    selectedYear!: DateTime;
+    selectedMonth!: DateTime;
     startDate = this.adapter.createDate(2017, 0, 31);
 }

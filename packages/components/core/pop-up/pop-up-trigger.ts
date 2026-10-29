@@ -191,7 +191,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      *
      * @docs-private
      */
-    protected externalNativeElement: HTMLElement;
+    protected externalNativeElement!: HTMLElement;
 
     /** Whether the pop-up overlay is currently open. */
     get isOpen(): boolean {
@@ -240,14 +240,14 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      *
      * @docs-private
      */
-    triggerName: string;
+    triggerName!: string;
 
     /**
      * Reference to the created overlay, or `null` when no overlay exists.
      *
      * @docs-private
      */
-    overlayRef: OverlayRef | null;
+    overlayRef!: OverlayRef | null;
 
     /**
      * Placement used to keep the pop-up stuck within the window bounds.
@@ -352,28 +352,28 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      *
      * @docs-private
      */
-    protected _content: string | TemplateRef<unknown>;
+    protected _content!: string | TemplateRef<unknown>;
 
     /**
      * Backing field for the subclass `disabled` input.
      *
      * @docs-private
      */
-    protected _disabled: boolean;
+    protected _disabled!: boolean;
 
     /**
      * Backing field for the subclass `customClass` input.
      *
      * @docs-private
      */
-    protected _customClass: string;
+    protected _customClass!: string;
 
     /**
      * Component portal attached to the overlay to render the pop-up.
      *
      * @docs-private
      */
-    protected portal: ComponentPortal<T>;
+    protected portal!: ComponentPortal<T>;
 
     /**
      * Currently attached pop-up component instance, or `null` when closed.
@@ -394,7 +394,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      *
      * @docs-private
      */
-    protected closingActionsSubscription: Subscription;
+    protected closingActionsSubscription!: Subscription;
     /** Handle of the queued `reapplyLastPosition` task, so repeated input updates schedule it only once. */
     private repositionTimeoutId: ReturnType<typeof setTimeout> | undefined;
     /** Handle of the deferred show scheduled by the `keydown` trigger. */
@@ -425,7 +425,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      *
      * @docs-private
      */
-    protected strategy: FlexibleConnectedPositionStrategy;
+    protected strategy!: FlexibleConnectedPositionStrategy;
 
     /**
      * What the pop-up is positioned against, or `null` while it follows the host element.
@@ -526,7 +526,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      *
      * @docs-private
      */
-    updatePlacementPriority(value) {
+    updatePlacementPriority(value: string | string[] | null | undefined) {
         if (value && value.length > 0) {
             this.placementPriority = value;
         } else {
@@ -628,7 +628,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
 
         this.instance.visibleChange
             .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-            .subscribe((value) => {
+            .subscribe((value: boolean) => {
                 this.visible = value;
                 this.visibleChange.emit(value);
                 this.isOpen = value;
@@ -1034,7 +1034,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      *
      * @docs-private
      */
-    protected getPrioritizedPositions() {
+    protected getPrioritizedPositions(): ConnectionPositionPair[] {
         if (this.placementPriority) {
             return this.getPriorityPlacementStrategy(this.placementPriority);
         }

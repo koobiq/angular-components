@@ -70,7 +70,7 @@ import { KbqSplitButton } from '@koobiq/components/split-button';
 export class ModalTemplateExample {
     private readonly modalService = inject(KbqModalService);
 
-    modalRef: KbqModalRef;
+    modalRef!: KbqModalRef;
     sizes = ModalSize;
 
     createModal(

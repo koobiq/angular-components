@@ -151,19 +151,19 @@ export class DevApp implements OnInit {
         return `${hiddenItemsText} ${hiddenItems}`;
     }
 
-    openedChange($event) {
-        console.log('openedChange: ', $event);
+    openedChange(event: boolean) {
+        console.log('openedChange: ', event);
     }
 
-    opened($event) {
-        console.log('opened: ', $event);
+    opened(event: void) {
+        console.log('opened: ', event);
     }
 
-    closed($event) {
-        console.log('closed: ', $event);
+    closed(event: void) {
+        console.log('closed: ', event);
     }
 
-    private toggleParents(parent) {
+    private toggleParents(parent: DevFileFlatNode | null) {
         if (!parent) {
             return;
         }

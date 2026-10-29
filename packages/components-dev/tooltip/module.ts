@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqComponentColors, KbqFormsModule, PopUpPlacements } from '@koobiq/components/core';
+import { KbqComponentColors, KbqFormsModule, KbqPopUpPlacementValues, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -92,7 +92,7 @@ export class DevApp {
     popUpPlacements = PopUpPlacements;
 
     tooltipActiveStage: number;
-    selectedOrder: boolean;
+    selectedOrder!: boolean;
 
     isPopoverVisibleLeft: boolean = false;
 
@@ -145,13 +145,13 @@ export class DevApp {
         this.tooltipActiveStage += direction;
     }
 
-    onTooltipVisibleChange($event) {
-        if (!$event) {
+    onTooltipVisibleChange(event: boolean) {
+        if (!event) {
             this.activatedPosition = '';
         }
     }
 
-    onPlacementChange(event) {
+    onPlacementChange(event: KbqPopUpPlacementValues) {
         this.activatedPosition = event;
     }
 
@@ -171,14 +171,12 @@ export class DevApp {
         return this.activatedPosition === value && this.selectedPlacement !== this.activatedPosition;
     }
 
-    getOrder(forElement: string) {
+    getOrder(forElement: 'config' | 'result') {
         if (forElement === 'config') {
             return this.selectedOrder ? { order: 2 } : { order: 1 };
         }
 
-        if (forElement === 'result') {
-            return this.selectedOrder ? { order: 1 } : { order: 2 };
-        }
+        return this.selectedOrder ? { order: 1 } : { order: 2 };
     }
 
     get isFallbackActivated(): boolean {

@@ -84,9 +84,9 @@ const RESIZE_DEBOUNCE_INTERVAL = 100;
 /** A simple change event emitted on focus or selection changes. */
 export class KbqTabChangeEvent {
     /** Index of the currently-selected tab. */
-    index: number;
+    index!: number;
     /** Reference to the currently-selected tab. */
-    tab: KbqTab;
+    tab!: KbqTab;
 }
 
 /** Possible positions for the tab header. */

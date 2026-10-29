@@ -93,7 +93,7 @@ export class DevModalCustomComponent {
 
     componentColors = KbqComponentColors;
 
-    data = inject<{ title?: string; subtitle?: string; myData?: string }>(KBQ_MODAL_DATA, { optional: true })!;
+    data = inject<{ title?: string; subtitle?: string; myData?: string }>(KBQ_MODAL_DATA, { optional: true });
     constructor() {
         console.log('data: ', this.data);
     }
@@ -169,7 +169,7 @@ export class DevApp {
     componentColors = KbqComponentColors;
 
     isVisible = false;
-    tplModal: KbqModalRef;
+    tplModal!: KbqModalRef;
     htmlModalVisible = false;
 
     isLoading = false;
@@ -232,7 +232,7 @@ export class DevApp {
     }
 
     createModalWithLongTitle() {
-        const ref = this.modalService.create({
+        const ref: KbqModalRef<DevModalLongCustomComponent> = this.modalService.create({
             kbqTitle: 'Modal Title Modal Title Modal Title Modal Title Modal Title Modal Title',
             kbqContent: DevModalLongCustomComponent,
             kbqOkText: 'Yes',
@@ -314,7 +314,7 @@ export class DevApp {
     openAndCloseAll() {
         let pos = 0;
 
-        ['create', 'delete', 'success'].forEach((method) =>
+        (['create', 'delete', 'success'] as const).forEach((method) =>
             this.modalService[method]({
                 kbqOkText: 'Confirm',
                 kbqCancelText: 'Cancel',

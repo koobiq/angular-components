@@ -1781,7 +1781,7 @@ class KbqButtonWrappedIconAndTextTestApp {}
 })
 class ButtonDropdownTrigger {
     readonly trigger = viewChild.required('triggerEl', { read: ElementRef });
-    backdropClass: string;
+    backdropClass!: string;
 }
 
 @Component({

@@ -168,7 +168,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     private containerInstance?: KbqToastContainerComponent;
     private overlayRef?: OverlayRef;
     private portal?: ComponentPortal<KbqToastContainerComponent>;
-    private timerSubscription: Subscription;
+    private timerSubscription!: Subscription;
     private currentPosition?: KbqToastPosition;
 
     /** Toasts taken off the stack that still play their exit animation in the container. */

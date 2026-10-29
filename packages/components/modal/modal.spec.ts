@@ -245,7 +245,9 @@ describe('KbqModal', () => {
             modalService.afterAllClose.subscribe(spy);
 
             fixture.componentInstance.nonServiceModalVisible = true; // Show non-service modal
-            modalMethods.forEach((method) => modalService[method]({ kbqWrapClassName: uniqueId(method) })); // Service modals
+            modalMethods.forEach((method) =>
+                modalService[method as 'create' | 'delete' | 'success']({ kbqWrapClassName: uniqueId(method) })
+            ); // Service modals
 
             fixture.detectChanges();
             await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);

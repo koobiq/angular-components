@@ -91,7 +91,7 @@ export class DevApp {
         this._collapsedNavbarWidth = value;
     }
 
-    componentModal: KbqModalRef;
+    componentModal!: KbqModalRef;
 
     private _collapsedNavbarWidth: number = 1280;
 

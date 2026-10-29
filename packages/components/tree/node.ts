@@ -6,7 +6,7 @@ export class KbqTreeNodeOutletContext<T> {
     $implicit: T;
 
     /** Depth of the node. */
-    level: number;
+    level!: number;
 
     /** Index location of the node. */
     index?: number;
@@ -40,7 +40,7 @@ export class KbqTreeNodeDef<T> {
      * For every node, there must be at least one when function that passes or an undefined to
      * default.
      */
-    when: (index: number, nodeData: T) => boolean;
+    when!: (index: number, nodeData: T) => boolean;
 
     /** @docs-private */
 }

@@ -195,7 +195,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
     }
 
     /** @docs-private */
-    onDrop(event: DragEvent): void {
+    override onDrop(event: DragEvent): void {
         super.onDrop(event);
         this.close();
     }
@@ -310,7 +310,7 @@ export class KbqLocalDropzone extends KbqDrop {
     }
 
     /** @docs-private */
-    onDrop(event: DragEvent) {
+    override onDrop(event: DragEvent) {
         super.onDrop(event);
         this.close();
     }

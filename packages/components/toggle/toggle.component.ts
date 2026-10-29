@@ -45,9 +45,9 @@ export type ToggleLabelPositionType = 'left' | 'right';
 /** Change event object emitted by `KbqToggleComponent`. */
 export class KbqToggleChange {
     /** The source toggle of the event. */
-    source: KbqToggleComponent;
+    source!: KbqToggleComponent;
     /** The new `checked` value of the toggle. */
-    checked: boolean;
+    checked!: boolean;
 }
 
 /**

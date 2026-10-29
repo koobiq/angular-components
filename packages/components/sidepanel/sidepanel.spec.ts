@@ -759,7 +759,7 @@ describe('KbqSidepanelService', () => {
         });
 
         afterEach(() => {
-            delete (document.documentElement as unknown as Record<string, unknown>).scrollHeight;
+            delete (document.documentElement as unknown as Record<string, unknown>)['scrollHeight'];
             document.documentElement.classList.remove('cdk-global-scrollblock');
             // These tests leave their overlays attached, so `BlockScrollStrategy.disable()` never runs and
             // the offsets it wrote on `<html>` would follow the suite into the next test.
@@ -1504,8 +1504,8 @@ class SimpleSidepanelExample {
     `
 })
 class ComponentWithTemplateForSidepanel {
-    localValue: string;
-    sidepanelRef: KbqSidepanelRef;
+    localValue!: string;
+    sidepanelRef!: KbqSidepanelRef;
 
     readonly templateRef = viewChild.required(TemplateRef);
 

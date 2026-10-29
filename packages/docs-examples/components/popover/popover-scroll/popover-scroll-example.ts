@@ -62,5 +62,5 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverScrollExample {
-    activePopover: KbqPopoverTrigger;
+    activePopover!: KbqPopoverTrigger;
 }

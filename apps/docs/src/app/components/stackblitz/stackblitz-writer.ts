@@ -21,7 +21,7 @@ const TEMPLATE_PATH = 'assets/stackblitz/';
  * dependencies that should be added to the generated StackBlitz `package.json`.
  * These are only included when the example actually uses them.
  */
-const OPTIONAL_PACKAGE_JSON_DEPENDENCIES = {
+const OPTIONAL_PACKAGE_JSON_DEPENDENCIES: Record<string, Record<string, string>> = {
     'country-flag-icons': {
         'country-flag-icons': '^1'
     },
@@ -55,13 +55,13 @@ const OPTIONAL_PACKAGE_JSON_DEPENDENCIES = {
     '@koobiq/components/scrollbar/deprecated': {
         overlayscrollbars: '2.7.3'
     }
-} as const;
+};
 
-const OPTIONAL_ANGULAR_JSON_STYLES = {
+const OPTIONAL_ANGULAR_JSON_STYLES: Partial<Record<string, string[]>> = {
     '@koobiq/ag-grid-angular-theme': [
         'node_modules/@koobiq/ag-grid-angular-theme/theme.scss'
     ]
-} as const;
+};
 
 export const DOCS_TEMPLATE_FILES = [
     'angular.json',

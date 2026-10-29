@@ -15,16 +15,16 @@ import { EMPTY } from 'rxjs';
 import { KbqTreeSelectModule } from './tree-select.module';
 
 class FileNode {
-    children: FileNode[];
-    name: string;
+    children!: FileNode[];
+    name!: string;
     type: any;
 }
 
 class FileFlatNode {
-    name: string;
+    name!: string;
     type: any;
-    level: number;
-    expandable: boolean;
+    level!: number;
+    expandable!: boolean;
     parent: any;
 }
 
@@ -596,7 +596,7 @@ export class E2eTreeSelectFormControlDisabled extends BaseTreeSelectStates {
     }
 })
 export class E2eTreeSelectPropertyDisabled extends BaseTreeSelectStates {
-    readonly isDisabled = signal(true);
+    override readonly isDisabled = signal(true);
 }
 
 @Component({

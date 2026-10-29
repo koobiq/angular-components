@@ -1,0 +1,17 @@
+{
+    // The strictness of the Angular compiler, which every Angular project of the repository gets through the root
+    // tsconfig. Kept apart from tsconfig.strict.json, which the Node tools under tools/ extend too.
+    // tools/check-angular and the StackBlitz template stand for consumer projects and keep their own options.
+    // It extends tsconfig.strict.json so that the root tsconfig extends a single file: ts-node, which runs the scripts
+    // under tools/, takes `extends` as one path only.
+    "extends": "./tsconfig.strict.json",
+    "angularCompilerOptions": {
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "strictTemplates": true,
+        "strictStandalone": true,
+        "extendedDiagnostics": {
+            "defaultCategory": "error"
+        }
+    }
+}

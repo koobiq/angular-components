@@ -2347,7 +2347,7 @@ class AccordionVariants {
     `
 })
 class AccordionDefaultValue {
-    defaultValue: string;
+    defaultValue!: string;
 }
 
 @Component({
@@ -2371,7 +2371,7 @@ class AccordionDefaultValue {
     `
 })
 class AccordionValue {
-    value: string;
+    value!: string;
 }
 
 @Component({
@@ -2444,7 +2444,7 @@ class AccordionExpandedAttribute {
     `
 })
 class AccordionDisabled {
-    disabled: boolean;
+    disabled!: boolean;
 }
 
 @Component({
@@ -2468,7 +2468,7 @@ class AccordionDisabled {
     `
 })
 class AccordionDisabledItem {
-    disabledItem: boolean;
+    disabledItem!: boolean;
 }
 
 @Component({
@@ -2492,7 +2492,7 @@ class AccordionDisabledItem {
     `
 })
 class AccordionType {
-    type: KbqAccordionType;
+    type!: KbqAccordionType;
 }
 
 @Component({
@@ -2637,7 +2637,7 @@ class AccordionDisabledOverride {
     `
 })
 class AccordionExactValue {
-    value: string;
+    value!: string;
 }
 
 @Component({
@@ -2661,7 +2661,7 @@ class AccordionExactValue {
     `
 })
 class AccordionValueMultiple {
-    value: string[];
+    value!: string[];
 }
 
 @Component({

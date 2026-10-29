@@ -24,6 +24,7 @@ import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { DateTime } from 'luxon';
 import { ValidationExamplesModule } from '../../docs-examples/components/validation';
 import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from '../tree/module';
 
@@ -103,8 +104,8 @@ export class DevApp {
 
     value = '';
 
-    date;
-    time;
+    date?: DateTime | null;
+    time?: DateTime | null;
 
     reactiveForm: UntypedFormGroup;
     reactiveFormControl: UntypedFormGroup;

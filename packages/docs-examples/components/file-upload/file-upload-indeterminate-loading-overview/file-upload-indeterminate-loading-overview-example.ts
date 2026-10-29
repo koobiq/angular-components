@@ -39,7 +39,7 @@ import { take } from 'rxjs/operators';
     }
 })
 export class FileUploadIndeterminateLoadingOverviewExample {
-    isLoading: boolean;
+    isLoading!: boolean;
 
     onFileChange(file: KbqFileItem | null) {
         if (!file) {

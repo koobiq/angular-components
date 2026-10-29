@@ -883,7 +883,7 @@ export class DevApp implements AfterViewInit {
             ]
         }
     ];
-    pipeTemplates: KbqPipeTemplate[];
+    pipeTemplates!: KbqPipeTemplate[];
     defaultFilter: KbqFilter | null = this.filters[2];
     activeFilter: KbqFilter | null = this.defaultFilter;
 
@@ -1153,7 +1153,7 @@ export class DevApp implements AfterViewInit {
         // filterBar.filters.filterSavedUnsuccessfully({ nameAlreadyExists: true, text: 'custom error text' });
     }
 
-    onChangeFilter({ filter, filterBar }) {
+    onChangeFilter({ filter, filterBar }: KbqSaveFilterEvent) {
         console.log('filter to save: ', filter);
 
         this.filters.splice(

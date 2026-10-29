@@ -94,7 +94,7 @@ describe('KbqListSelection without forms', () => {
                             const originalClipboard = new Clipboard(document);
 
                             return {
-                                copy: (value) => {
+                                copy: (value: string) => {
                                     originalClipboard.copy(value);
                                     clipboardContent = value;
                                 }
@@ -2808,7 +2808,7 @@ class SelectionListWithBoundTabindex {
     `
 })
 class SelectionListWithTabindexInDisabledState {
-    tabIndex: number;
+    tabIndex!: number;
     disabled: boolean | undefined;
 }
 

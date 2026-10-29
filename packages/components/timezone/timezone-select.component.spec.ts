@@ -209,12 +209,12 @@ class TimezoneSelectWithPanelWidth {
 })
 class TimezoneSelectWithSearch implements OnInit {
     readonly select = viewChild.required(KbqTimezoneSelect);
-    minOptionsThreshold: number;
+    minOptionsThreshold!: number;
 
     selected = 'Europe/city17';
 
     searchCtrl: FormControl = new FormControl();
-    options$: Observable<KbqTimezoneGroup[]>;
+    options$!: Observable<KbqTimezoneGroup[]>;
 
     ngOnInit(): void {
         this.options$ = merge(

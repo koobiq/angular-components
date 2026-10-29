@@ -116,7 +116,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
     private readonly injector = inject(Injector);
 
     /** @docs-private */
-    protected keyManager: FocusKeyManager<KbqAccordionItem>;
+    protected keyManager!: FocusKeyManager<KbqAccordionItem>;
 
     /** Emits every time `openAll()` or `closeAll()` is called. @docs-private */
     readonly openCloseAllActions = new Subject<boolean>();

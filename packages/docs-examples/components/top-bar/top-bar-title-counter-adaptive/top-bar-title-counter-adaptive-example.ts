@@ -216,6 +216,6 @@ export class TopBarTitleCounterAdaptiveExample {
     protected readonly text = computed(() => {
         const localeId = this.localeId();
 
-        return (localeId && this.data[localeId]) || this.data.default;
+        return (localeId && this.data[localeId]) || this.data['default'];
     });
 }

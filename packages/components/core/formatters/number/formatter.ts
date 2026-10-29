@@ -144,10 +144,10 @@ const intervalsConfig = {
 };
 
 class ParsedDigitsInfo {
-    useGrouping: boolean;
-    minimumIntegerDigits: number;
-    minimumFractionDigits: number;
-    maximumFractionDigits: number;
+    useGrouping!: boolean;
+    minimumIntegerDigits!: number;
+    minimumFractionDigits!: number;
+    maximumFractionDigits!: number;
 }
 
 const defaultValueForGroupingInRULocale: number = 10000;
@@ -339,7 +339,7 @@ function isWithin(startRange: number, endRange: number, valueToCheck: number): b
 export class KbqRoundDecimalPipe implements PipeTransform {
     private id = inject(KBQ_LOCALE_ID, { optional: true });
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
-    private roundingOptions: RoundDecimalOptions;
+    private roundingOptions!: RoundDecimalOptions;
     private readonly formatters = kbqInjectLocaleConfiguration('formatters', KBQ_FORMATTERS_LOCALE_CONFIGURATION);
 
     constructor() {
@@ -394,19 +394,18 @@ export class KbqRoundDecimalPipe implements PipeTransform {
                 });
             }
 
-            parts = parts.num
-                ? parts
+            const { num: integer, fraction } = parts.num
+                ? { num: parts.num, fraction: parts.fraction }
                 : {
                       num: Math.trunc(num / ROUNDING_UNITS[unit]),
                       fraction: this.calculateDecimal(num, ROUNDING_UNITS[unit])
                   };
-            Object.keys(parts).forEach((key) => {
-                parts[key] = Intl.NumberFormat.call(this, currentLocale, { useGrouping: false }).format(parts[key]);
-            });
-
-            const calculatedValue = parts.fraction
-                ? `${parts.num}${this.roundingOptions.groupSeparator}${parts.fraction}`
-                : `${parts.num}`;
+            const formatter = new Intl.NumberFormat(currentLocale, { useGrouping: false });
+            // A fraction of 0 is shown too (`2.0K`), so its presence is tested, not its truthiness.
+            const calculatedValue =
+                fraction === undefined
+                    ? formatter.format(integer)
+                    : `${formatter.format(integer)}${this.roundingOptions.groupSeparator}${formatter.format(fraction)}`;
 
             return `${calculatedValue}${this.roundingOptions.separator}${this.roundingOptions[unit]}`;
         } catch (error: any) {

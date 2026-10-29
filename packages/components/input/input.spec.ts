@@ -91,7 +91,7 @@ class InputWithMonospace {
 })
 class InputForBehaviors {
     value: string = 'test';
-    placeholder: string;
+    placeholder!: string;
     disabled: boolean = false;
 }
 
@@ -109,7 +109,7 @@ class InputForBehaviors {
     `
 })
 class FormFieldWithCleaner {
-    value: string;
+    value!: string;
 }
 
 @Component({

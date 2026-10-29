@@ -233,17 +233,17 @@ const TREE_DATA_RESET = {
 };
 
 class FileNode {
-    children: FileNode[];
-    name: string;
+    children!: FileNode[];
+    name!: string;
     type: any;
     value: any;
 }
 
 class FileFlatNode {
-    name: string;
+    name!: string;
     type: any;
-    level: number;
-    expandable: boolean;
+    level!: number;
+    expandable!: boolean;
     value: any;
     parent: any;
 }
@@ -606,7 +606,7 @@ class ManySelects {
 })
 class SelectWithSearch implements OnInit {
     control = new UntypedFormControl();
-    searchMinOptionsThreshold: number;
+    searchMinOptionsThreshold!: number;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -997,7 +997,7 @@ class ThrowsErrorOnInit implements OnInit {
     `
 })
 class SelectWithErrorSibling {
-    value: string;
+    value!: string;
 }
 
 @Component({
@@ -1216,7 +1216,7 @@ class SelectEarlyAccessSibling {}
 })
 class BasicSelectWithTheming {
     readonly select = viewChild.required(KbqTreeSelect);
-    theme: KbqComponentColors;
+    theme!: KbqComponentColors;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -1339,7 +1339,7 @@ class SelectInsideFormGroup {
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
 
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-    submitResult: string;
+    submitResult!: string;
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -1382,7 +1382,7 @@ class SelectInsideFormGroup {
     `
 })
 class BasicSelectWithoutForms {
-    selectedFood: string | null;
+    selectedFood!: string | null;
 
     readonly select = viewChild.required(KbqTreeSelect);
 
@@ -1475,7 +1475,7 @@ class BasicSelectWithoutFormsPreselected {
     `
 })
 class BasicSelectWithoutFormsMultiple {
-    selectedFoods: string[];
+    selectedFoods!: string[];
 
     readonly select = viewChild.required(KbqTreeSelect);
 
@@ -1622,7 +1622,7 @@ class SelectWithCustomMatcher {
     `
 })
 class NgModelCompareWithFlatTreeControl {
-    selectedModel: { name: string; type: string };
+    selectedModel!: { name: string; type: string };
 
     readonly select = viewChild.required(KbqTreeSelect);
     readonly options = viewChildren(KbqTreeOption);
@@ -1681,7 +1681,7 @@ class CustomErrorBehaviorSelect {
 
     control = new UntypedFormControl();
 
-    errorStateMatcher: ErrorStateMatcher;
+    errorStateMatcher!: ErrorStateMatcher;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -1986,7 +1986,7 @@ class NgIfTreeSelect {
     changeDetection: ChangeDetectionStrategy.Default
 })
 class TreeSelectWithPanelWidth {
-    panelWidth: KbqPanelWidth;
+    panelWidth!: KbqPanelWidth;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -2053,7 +2053,7 @@ class TreeSelectWithPanelMaxHeight {
     changeDetection: ChangeDetectionStrategy.Default
 })
 class TreeSelectWithSearchAndPanelWidth {
-    panelWidth: KbqPanelWidth;
+    panelWidth!: KbqPanelWidth;
     searchControl: UntypedFormControl = new UntypedFormControl();
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);

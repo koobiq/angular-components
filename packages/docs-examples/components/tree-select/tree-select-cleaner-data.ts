@@ -1,16 +1,16 @@
 /** Keeps the tree plumbing out of the cleaner example, which is about the reset control. */
 
 export class Node {
-    name: string;
-    children: Node[];
+    name!: string;
+    children!: Node[];
 }
 
 /** Flat node with expandable and level information. */
 export class FlatNode {
-    name: string;
-    level: number;
-    expandable: boolean;
-    parent: FlatNode | null;
+    name!: string;
+    level!: number;
+    expandable!: boolean;
+    parent!: FlatNode | null;
 }
 
 /** A shallow service tree: every node the examples disable sits at the top level, where it is rendered. */

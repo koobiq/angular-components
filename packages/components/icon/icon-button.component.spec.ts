@@ -245,7 +245,7 @@ describe('KbqIconButton', () => {
 })
 class TestApp {
     isDisabled: boolean = false;
-    color: KbqComponentColors;
+    color!: KbqComponentColors;
 
     onClick() {}
 }

@@ -176,6 +176,14 @@ describe('KbqSplitter', () => {
             expect(plain.style.width).toBe('');
             expect(plain.style.maxWidth).toBe('');
         });
+
+        it('should read the min-width of an area in a horizontal splitter', () => {
+            const fixture = createTestComponent(KbqSplitterGhost);
+
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.areaB().getMinSize()).toBe(50);
+        });
     });
 
     describe('direction', () => {

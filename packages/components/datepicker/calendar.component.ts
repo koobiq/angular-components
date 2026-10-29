@@ -54,7 +54,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
             deserializedValue !== null ? this.adapter.clampDate(deserializedValue, this.minDate, this.maxDate) : null;
     }
 
-    private _startAt: D | null;
+    private _startAt!: D | null;
 
     /** The currently selected date. */
     get selected(): D | null {
@@ -65,7 +65,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         this._selected = this.adapter.deserialize(value);
     }
 
-    private _selected: D | null;
+    private _selected!: D | null;
 
     /** The minimum selectable date. */
     get minDate(): D | null {
@@ -78,7 +78,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         this.startAt = this._startAt;
     }
 
-    private _minDate: D | null;
+    private _minDate!: D | null;
 
     /** The maximum selectable date. */
     get maxDate(): D | null {
@@ -91,7 +91,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         this.startAt = this._startAt;
     }
 
-    private _maxDate: D | null;
+    private _maxDate!: D | null;
 
     /** @docs-private */
     readonly startAtInput = input<D | null | undefined>(undefined, { alias: 'startAt' });
@@ -119,7 +119,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         this.stateChanges.next();
     }
 
-    private _activeDate: D;
+    private _activeDate!: D;
 
     /** Function used to filter which dates are selectable. */
     readonly dateFilter = input<(date: D) => boolean>(undefined!);
@@ -154,7 +154,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     stateChanges = new Subject<void>();
 
     /** The input element this datepicker is associated with. */
-    datepickerInput;
+    datepickerInput: any;
 
     /** Subscription to value changes in the associated input element. */
     private inputSubscription = Subscription.EMPTY;
@@ -201,7 +201,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
      *
      * @param input The calendar input to register with this calendar.
      */
-    registerInput(input): void {
+    registerInput(input: any): void {
         if (this.datepickerInput) {
             throw Error('A KbqDatepicker can only be associated with a single input.');
         }

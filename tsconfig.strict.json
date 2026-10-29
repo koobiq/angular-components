@@ -1,0 +1,20 @@
+{
+    // The type-checking strictness of the repository. The root tsconfig gets it through tsconfig.angular.json; a Node
+    // tool under tools/ that ts-node type-checks extends this file directly, since ts-node inherits the root's
+    // `transpileOnly` along `extends`.
+    "compilerOptions": {
+        "strict": true,
+        "noImplicitReturns": true,
+        "noImplicitOverride": true,
+        "noFallthroughCasesInSwitch": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noUncheckedSideEffectImports": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
+        // Off, so that `?: T` also accepts `undefined`, which callers pass for "not set": under the flag every such
+        // member has to be typed `?: T | undefined`.
+        "exactOptionalPropertyTypes": false
+    }
+}

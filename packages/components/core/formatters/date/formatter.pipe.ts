@@ -192,7 +192,7 @@ export class AbsoluteDateFormatterPipe<D> extends BaseFormatterPipe<D> implement
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class AbsoluteDateFormatterImpurePipe<D> extends AbsoluteDateFormatterPipe<D> {
-    transform(value: D | string | null | undefined, currYear?: boolean): string {
+    override transform(value: D | string | null | undefined, currYear?: boolean): string {
         return super.transform(value, currYear);
     }
 }
@@ -222,7 +222,7 @@ export class AbsoluteDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imple
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class AbsoluteDateTimeFormatterImpurePipe<D> extends AbsoluteDateTimeFormatterPipe<D> {
-    transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
+    override transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -252,7 +252,7 @@ export class AbsoluteDateShortFormatterPipe<D> extends BaseFormatterPipe<D> impl
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class AbsoluteDateShortFormatterImpurePipe<D> extends AbsoluteDateShortFormatterPipe<D> {
-    transform(value: D | string | null | undefined, currYear?: boolean): string {
+    override transform(value: D | string | null | undefined, currYear?: boolean): string {
         return super.transform(value, currYear);
     }
 }
@@ -282,7 +282,7 @@ export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class AbsoluteShortDateTimeFormatterImpurePipe<D> extends AbsoluteShortDateTimeFormatterPipe<D> {
-    transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
+    override transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -312,7 +312,7 @@ export class RelativeDateFormatterPipe<D> extends BaseFormatterPipe<D> implement
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RelativeDateFormatterImpurePipe<D> extends RelativeDateFormatterPipe<D> {
-    transform(value: D | string | null | undefined): string {
+    override transform(value: D | string | null | undefined): string {
         return super.transform(value);
     }
 }
@@ -342,7 +342,7 @@ export class RelativeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imple
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RelativeDateTimeFormatterImpurePipe<D> extends RelativeDateTimeFormatterPipe<D> {
-    transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
+    override transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -372,7 +372,7 @@ export class RelativeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> impl
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RelativeShortDateFormatterImpurePipe<D> extends RelativeShortDateFormatterPipe<D> {
-    transform(value: D | string | null | undefined): string {
+    override transform(value: D | string | null | undefined): string {
         return super.transform(value);
     }
 }
@@ -402,7 +402,7 @@ export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RelativeShortDateTimeFormatterImpurePipe<D> extends RelativeShortDateTimeFormatterPipe<D> {
-    transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
+    override transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -434,7 +434,7 @@ export class RangeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements P
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RangeDateFormatterImpurePipe<D> extends RangeDateFormatterPipe<D> {
-    transform(value: D[] | string[] | null | undefined): string {
+    override transform(value: D[] | string[] | null | undefined): string {
         return super.transform(value);
     }
 }
@@ -466,7 +466,7 @@ export class RangeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> impleme
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RangeShortDateFormatterImpurePipe<D> extends RangeShortDateFormatterPipe<D> {
-    transform(value: D[] | string[] | null | undefined): string {
+    override transform(value: D[] | string[] | null | undefined): string {
         return super.transform(value);
     }
 }
@@ -498,7 +498,7 @@ export class RangeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implemen
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RangeDateTimeFormatterImpurePipe<D> extends RangeDateTimeFormatterPipe<D> {
-    transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
+    override transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -531,7 +531,7 @@ export class RangeMiddleDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> im
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RangeMiddleDateTimeFormatterImpurePipe<D> extends RangeMiddleDateTimeFormatterPipe<D> {
-    transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
+    override transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -563,7 +563,7 @@ export class RangeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> imp
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class RangeShortDateTimeFormatterImpurePipe<D> extends RangeShortDateTimeFormatterPipe<D> {
-    transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
+    override transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -595,7 +595,7 @@ export class DurationShortestFormatterPipe<D> extends BaseFormatterPipe<D> imple
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class DurationShortestFormatterImpurePipe<D> extends DurationShortestFormatterPipe<D> {
-    transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
+    override transform(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string {
         return super.transform(value, options);
     }
 }
@@ -627,7 +627,7 @@ export class DurationLongFormatterPipe<D> extends BaseFormatterPipe<D> implement
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class DurationLongFormatterImpurePipe<D> extends DurationLongFormatterPipe<D> {
-    transform(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string {
+    override transform(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string {
         return super.transform(value, units, fraction);
     }
 }
@@ -659,7 +659,7 @@ export class DurationShortFormatterPipe<D> extends BaseFormatterPipe<D> implemen
 })
 // eslint-disable-next-line @angular-eslint/use-pipe-transform-interface
 export class DurationShortFormatterImpurePipe<D> extends DurationShortFormatterPipe<D> {
-    transform(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string {
+    override transform(value: D[] | string[] | null | undefined, units?: DurationUnit[], fraction?: boolean): string {
         return super.transform(value, units, fraction);
     }
 }

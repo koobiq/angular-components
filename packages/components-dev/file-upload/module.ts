@@ -216,7 +216,7 @@ export class DevApp {
     validation: FileValidatorFn[] = [maxFileExceededFiveMbs];
     hintMessage = hintMessage;
 
-    file: KbqFileItem | null;
+    file!: KbqFileItem | null;
     files: KbqFileItem[] = [];
     filesForDefaultValidation: KbqFileItem[] = [];
 

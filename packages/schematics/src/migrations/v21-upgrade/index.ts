@@ -15,10 +15,10 @@ import { Schema } from './schema';
 function rewriteStyleEntry(entry: JsonValue, replacements: readonly CompiledReplacement[]): JsonValue {
     if (typeof entry === 'string') return applyReplacements(entry, replacements).content;
 
-    if (entry && typeof entry === 'object' && !Array.isArray(entry) && typeof entry.input === 'string') {
-        const input = applyReplacements(entry.input, replacements).content;
+    if (entry && typeof entry === 'object' && !Array.isArray(entry) && typeof entry['input'] === 'string') {
+        const input = applyReplacements(entry['input'], replacements).content;
 
-        return input === entry.input ? entry : { ...entry, input };
+        return input === entry['input'] ? entry : { ...entry, input };
     }
 
     return entry;
@@ -80,7 +80,7 @@ async function migrateWorkspaceStyles(
 
         for (const target of definition.targets.values()) {
             for (const options of [target.options, ...Object.values(target.configurations ?? {})]) {
-                const styles = options?.styles;
+                const styles = options?.['styles'];
 
                 if (!options || !Array.isArray(styles)) continue;
 
@@ -88,7 +88,7 @@ async function migrateWorkspaceStyles(
 
                 if (!migrated) continue;
 
-                options.styles = migrated;
+                options['styles'] = migrated;
                 changed = true;
             }
         }

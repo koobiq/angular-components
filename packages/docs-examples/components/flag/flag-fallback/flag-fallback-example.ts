@@ -4,6 +4,9 @@ import { KbqFlag, KbqFlagShadow } from '@koobiq/components/flag';
 import { hasFlag } from 'country-flag-icons';
 import * as flags3x2 from 'country-flag-icons/string/3x2';
 
+// The codes are plain strings, real or not, so the flags are looked up by string.
+const flags: Record<string, string> = flags3x2;
+
 type FallbackCountry = { code: string; name: string; custom?: string; shadow?: KbqFlagShadow };
 
 /**
@@ -53,6 +56,6 @@ export class FlagFallbackExample {
         ] satisfies FallbackCountry[]
     ).map((country) => ({
         ...country,
-        svg: hasFlag(country.code) ? this.sanitizer.bypassSecurityTrustHtml(flags3x2[country.code]) : null
+        svg: hasFlag(country.code) ? this.sanitizer.bypassSecurityTrustHtml(flags[country.code]) : null
     }));
 }

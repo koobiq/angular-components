@@ -79,7 +79,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     /** Whether the current pipe is empty. */
-    get isEmpty(): boolean {
+    override get isEmpty(): boolean {
         return this.multiSelect.isEmpty(super.isEmpty);
     }
 
@@ -214,7 +214,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     /** @docs-private */
-    onClear() {
+    override onClear() {
         this.data.value = this.multiSelect.clearedValue();
 
         this.multiSelect.updateInternalSelected();

@@ -307,7 +307,7 @@ export class E2eFilterBarStates implements AfterViewInit {
 
     readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
 
-    pipeTemplates: KbqPipeTemplate[];
+    pipeTemplates!: KbqPipeTemplate[];
 
     dateTime = this.adapter.createDateTime(2025, 11, 12, 10, 10, 10, 10);
 

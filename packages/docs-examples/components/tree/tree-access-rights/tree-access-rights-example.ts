@@ -10,17 +10,17 @@ import {
 import { Subscription } from 'rxjs';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children!: FileNode[];
+    name!: string;
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name!: string;
     type: any;
-    level: number;
-    expandable: boolean;
+    level!: number;
+    expandable!: boolean;
     parent: any;
 }
 
@@ -217,11 +217,6 @@ abstract class TreeParams {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeAccessRightsExample extends TreeParams implements AfterViewInit, OnDestroy {
-    treeControl: FlatTreeControl<FileFlatNode>;
-    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     modelValue: any = [];
     filteredModel: any = [];
 
@@ -234,7 +229,7 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
     }
 
     ngAfterViewInit(): void {
-        const handleSingleOption = (items, cb) => {
+        const handleSingleOption = (items: FileFlatNode[], cb: (item: FileFlatNode) => void) => {
             // Process only when a single item is selected
             if (items.length === 1) {
                 const singleOrParent: any = items[0];
@@ -302,8 +297,8 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
         this.selectionChangeSubscription.unsubscribe();
     }
 
-    onModelChange($event) {
-        this.modelValue = $event;
+    onModelChange(event: string[]) {
+        this.modelValue = event;
         this.filteredModel = this.tree()
             .selectionModel.selected.filter((option: any) => !option.disabled)
             .map((node: any) => this.treeControl.getValue(node));

@@ -145,7 +145,7 @@ let nextTooltipUniqueId = 0;
 export class KbqTooltipComponent extends KbqPopUp {
     private readonly delayTracker = inject(KbqTooltipDelayTracker);
 
-    prefix = 'kbq-tooltip';
+    override prefix = 'kbq-tooltip';
 
     /**
      * Id rendered on the tooltip element; the trigger points its `aria-describedby` at it.
@@ -164,7 +164,7 @@ export class KbqTooltipComponent extends KbqPopUp {
         return this.tooltipElement()!;
     }
 
-    show(delay: number) {
+    override show(delay: number) {
         if (!this.content) {
             return;
         }
@@ -191,7 +191,11 @@ export class KbqTooltipComponent extends KbqPopUp {
         applyPopupMargins(this.renderer, this.elementRef.nativeElement, this.prefix, margin);
     }
 
-    updateClassMap(placement: string, customClass: string, { modifier }: { modifier: KbqEnumValues<TooltipModifier> }) {
+    override updateClassMap(
+        placement: string,
+        customClass: string,
+        { modifier }: { modifier: KbqEnumValues<TooltipModifier> }
+    ) {
         const classMap = {
             [`${this.prefix}_${modifier}`]: true
         };
@@ -364,7 +368,7 @@ export class KbqTooltipTrigger
      * Setting hideWithTimeout to true will delay tooltip hiding and will not hide when the mouse moves from trigger
      * to tooltip.
      */
-    hideWithTimeout: boolean = false;
+    override hideWithTimeout: boolean = false;
 
     /** Input (`kbqVisible`) that programmatically shows or hides the tooltip; reflects the current `visible` state. */
     get tooltipVisible(): boolean {
@@ -457,9 +461,9 @@ export class KbqTooltipTrigger
     private derivedDisabled: boolean | undefined;
 
     /** Input (`kbqEnterDelay`) — delay in milliseconds before the tooltip is shown. Defaults to `400`. */
-    enterDelay = defaultEnterDelay;
+    override enterDelay = defaultEnterDelay;
     /** Input (`kbqLeaveDelay`) — delay in milliseconds before the tooltip is hidden. Defaults to `0`. */
-    leaveDelay = 0;
+    override leaveDelay = 0;
 
     /** Input (`kbqTrigger`) with the comma-separated trigger events. An empty value resets to hover + focus and rebinds listeners. */
     get trigger(): string {
@@ -570,7 +574,7 @@ export class KbqTooltipTrigger
      * Header text or template, rendered above the tooltip content. Only meaningful with
      * `kbqTooltipModifier="extended"`. Replaces the removed `KbqExtendedTooltipTrigger.header`.
      */
-    header: string | TemplateRef<unknown>;
+    header!: string | TemplateRef<unknown>;
 
     /**
      * Hands each bound input to its member, and pushes a later change of `modifier`, `header`, `arrow` or
@@ -903,7 +907,7 @@ export class KbqTooltipTrigger
     }
 
     /** Stops focus monitoring on the host element and runs the base-class teardown. */
-    ngOnDestroy() {
+    override ngOnDestroy() {
         this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
 
         super.ngOnDestroy();
@@ -953,7 +957,7 @@ export class KbqTooltipTrigger
      * anchor or on a focus trigger that did not originate from the keyboard, and applies cursor-relative
      * positioning when `relativeToPointer` is enabled.
      */
-    show(delay: number = this.enterDelay) {
+    override show(delay: number = this.enterDelay) {
         if (this.mutedBySiblingPopup) {
             const pointerReturned =
                 this.triggerName === 'mouseenter' && this.pointerLeftWhileMuted && !this.siblingPopupAttached;
@@ -1003,7 +1007,7 @@ export class KbqTooltipTrigger
      * backdrop steals the hover from the trigger while the pointer stands still, and that `mouseleave` must
      * not be mistaken for the user leaving.
      */
-    hide(delay: number = this.leaveDelay) {
+    override hide(delay: number = this.leaveDelay) {
         if (RELEASE_TRIGGERS.includes(this.triggerName) && !this.siblingPopupAttached) {
             this.mutedBySiblingPopup = false;
         }
@@ -1170,7 +1174,7 @@ export class KbqTooltipTrigger
      *
      * @docs-private
      */
-    createOverlay(): OverlayRef {
+    override createOverlay(): OverlayRef {
         if (this.overlayRef) {
             return this.overlayRef;
         }
@@ -1342,7 +1346,7 @@ export class KbqTooltipTrigger
     }
 
     /** @docs-private */
-    protected getAnchorSize(): { width: number; height: number } {
+    protected override getAnchorSize(): { width: number; height: number } {
         return this.relativeToCaret ? this.caretOrigin : super.getAnchorSize();
     }
 

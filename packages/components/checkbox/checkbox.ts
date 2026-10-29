@@ -37,9 +37,9 @@ import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-co
 /** Change event object emitted by KbqCheckbox. */
 export class KbqCheckboxChange {
     /** The source KbqCheckbox of the event. */
-    source: KbqCheckbox;
+    source!: KbqCheckbox;
     /** The new `checked` value of the checkbox. */
-    checked: boolean;
+    checked!: boolean;
 }
 
 /**

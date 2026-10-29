@@ -15,26 +15,31 @@ import {
     FilterByViewValue,
     FilterParentsForNodes,
     FlatTreeControl,
+    KbqTreeCopyEvent,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
-    KbqTreeModule
+    KbqTreeModule,
+    KbqTreeNavigationChange,
+    KbqTreeOption,
+    KbqTreeSelectAllEvent,
+    KbqTreeSelectionChange
 } from '@koobiq/components/tree';
 import { Subject, debounceTime } from 'rxjs';
 import { TreeExamplesModule } from '../../docs-examples/components/tree';
 import { DEV_TREE_DATA } from './mock';
 
 export class DevFileNode {
-    children: DevFileNode[];
-    name: string;
+    children!: DevFileNode[];
+    name!: string;
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class DevFileFlatNode {
-    name: string;
+    name!: string;
     type: any;
-    level: number;
-    expandable: boolean;
+    level!: number;
+    expandable!: boolean;
     parent: any;
 }
 
@@ -214,11 +219,11 @@ export class DevApp {
         this.filterValueChanged.pipe(debounceTime(300)).subscribe((value) => this.treeControl.filterNodes(value));
     }
 
-    onModelValueChange(values) {
+    onModelValueChange(values: string[]) {
         this.filterByValues.setValues(values);
     }
 
-    onFilterChange(value): void {
+    onFilterChange(value: string): void {
         this.filterValueChanged.next(value);
     }
 
@@ -226,20 +231,20 @@ export class DevApp {
         return nodeData.expandable;
     }
 
-    onSelectAll($event) {
-        console.log('onSelectAll', $event);
+    onSelectAll(event: KbqTreeSelectAllEvent<KbqTreeOption>) {
+        console.log('onSelectAll', event);
     }
 
-    onCopy($event) {
-        console.log('onCopy', $event);
+    onCopy(event: KbqTreeCopyEvent<KbqTreeOption>) {
+        console.log('onCopy', event);
     }
 
-    onNavigationChange($event) {
-        console.log('onNavigationChange', $event);
+    onNavigationChange(event: KbqTreeNavigationChange<KbqTreeOption>) {
+        console.log('onNavigationChange', event);
     }
 
-    onSelectionChange($event) {
-        console.log('onSelectionChange', $event);
+    onSelectionChange(event: KbqTreeSelectionChange<KbqTreeOption>) {
+        console.log('onSelectionChange', event);
     }
 
     switchToDataSource(dataSourceType: 'small' | 'big') {

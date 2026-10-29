@@ -79,6 +79,20 @@ const noAngularAnimationsImports = [
 ];
 
 /**
+ * `exactOptionalPropertyTypes` is off, so an optional member or parameter already accepts `undefined`. Every
+ * `no-restricted-syntax` below spreads these entries: a later config replaces the options of the rule as a whole.
+ *
+ * @see https://eslint.org/docs/latest/rules/no-restricted-syntax
+ */
+const noRedundantUndefined = [
+    '[optional=true] > TSTypeAnnotation.typeAnnotation > TSUnionType.typeAnnotation > TSUndefinedKeyword',
+    'TSMappedType[optional=true] > TSUnionType.typeAnnotation > TSUndefinedKeyword'
+].map((selector) => ({
+    selector,
+    message: '`?` already allows `undefined`: drop `| undefined` from the type.'
+}));
+
+/**
  * @see https://eslint.org/docs/latest/rules/no-restricted-globals
  */
 const noRestrictedGlobalsOptionsForSSR = (() => {
@@ -272,6 +286,7 @@ export default defineConfig(
         },
         rules: {
             'no-restricted-imports': [2, { patterns: noAngularAnimationsImports }],
+            'no-restricted-syntax': [2, ...noRedundantUndefined],
 
             // plugin:@typescript-eslint
             '@typescript-eslint/no-explicit-any': 0,
@@ -490,7 +505,8 @@ export default defineConfig(
                     message:
                         'NgZone never emits this without zone.js: run the work in afterNextRender, or notify change ' +
                         'detection with a signal or markForCheck().'
-                }
+                },
+                ...noRedundantUndefined
             ]
         }
     },
@@ -646,7 +662,8 @@ export default defineConfig(
                     message:
                         'A value read once can predate the render the last action causes: assert on the locator, ' +
                         'which retries, or use expect.poll().'
-                }))
+                })),
+                ...noRedundantUndefined
             ]
         }
     },

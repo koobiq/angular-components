@@ -26,7 +26,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     }
 })
 export class DevToastComponent extends KbqToastComponent {
-    readonly data: KbqToastData;
+    override readonly data: KbqToastData;
     readonly service: KbqToastService;
 
     constructor() {

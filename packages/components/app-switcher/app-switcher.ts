@@ -304,10 +304,10 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     filteredSites: KbqAppSwitcherSite[] = [];
 
     /** @docs-private */
-    prefix = 'kbq-app-switcher';
+    override prefix = 'kbq-app-switcher';
 
     /** @docs-private */
-    trigger: KbqAppSwitcherTrigger;
+    override trigger!: KbqAppSwitcherTrigger;
 
     /** @docs-private */
     readonly input = viewChild(KbqInput);
@@ -331,7 +331,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     }
 
     /** Roving-focus manager over the inline menu items (flat app rows and other-site rows). */
-    protected keyManager: FocusKeyManager<KbqDropdownItem>;
+    protected keyManager!: FocusKeyManager<KbqDropdownItem>;
 
     private readonly menuItems = new QueryList<KbqDropdownItem>();
 
@@ -421,14 +421,14 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     }
 
     /** Releases the internal roving-focus menu QueryList. */
-    ngOnDestroy(): void {
+    override ngOnDestroy(): void {
         this.menuItems.destroy();
 
         super.ngOnDestroy();
     }
 
     /** @docs-private */
-    updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
+    override updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
         super.updateClassMap(placement, customClass, { [`${this.prefix}_${size}`]: !!size });
     }
 
@@ -666,11 +666,11 @@ export class KbqAppSwitcherTrigger
     /** @docs-private */
     arrow: boolean = false;
     /** @docs-private */
-    customClass: string;
+    customClass!: string;
     private hasBackdrop: boolean = false;
     private size: KbqPopUpSizeValues = PopUpSizes.Medium;
     /** @docs-private */
-    content: string | TemplateRef<any>;
+    content!: string | TemplateRef<any>;
 
     /** Whether search is used or not */
     get withSearch(): boolean {
@@ -708,7 +708,7 @@ export class KbqAppSwitcherTrigger
     readonly selectedApp = model<KbqAppSwitcherApp | undefined>(undefined);
 
     /** Placement of popUp */
-    placement: KbqPopUpPlacementValues = defaultPlacement;
+    override placement: KbqPopUpPlacementValues = defaultPlacement;
 
     /** Class that will be used in the background */
     backdropClass: string = defaultBackdropClass;
@@ -914,7 +914,7 @@ export class KbqAppSwitcherTrigger
         }
     }
 
-    ngOnInit(): void {
+    override ngOnInit(): void {
         super.ngOnInit();
 
         this.scrollable

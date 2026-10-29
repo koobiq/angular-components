@@ -94,9 +94,9 @@ const ngAddInstalls = [
     `@koobiq/date-adapter@${caret(rootPackageJson.dependencies!['@koobiq/date-adapter'])}`,
     `@koobiq/icons@${caret(rootPackageJson.dependencies!['@koobiq/icons'])}`,
     `@koobiq/design-tokens@${caret(rootPackageJson.devDependencies!['@koobiq/design-tokens'])}`,
-    `luxon@${caret(rootPackageJson.devDependencies!.luxon)}`,
+    `luxon@${caret(rootPackageJson.devDependencies!['luxon'])}`,
     // Pinned rather than widened: the schematic injects the root pin verbatim for this one.
-    `overlayscrollbars@${rootPackageJson.dependencies!.overlayscrollbars}`
+    `overlayscrollbars@${rootPackageJson.dependencies!['overlayscrollbars']}`
 ];
 
 /**
@@ -110,7 +110,7 @@ const ngAddInstalls = [
 const documentedInstalls = [
     `@angular/cdk@${ngNewRange(cdkVersion)}`,
     // The guide pins this one, because the scrollbar relies on a specific build of it.
-    `overlayscrollbars@${rootPackageJson.dependencies!.overlayscrollbars}`,
+    `overlayscrollbars@${rootPackageJson.dependencies!['overlayscrollbars']}`,
     '@koobiq/icons',
     // The guide holds this one to the major the peer range allows; bare, it takes whatever major is `latest`.
     `@koobiq/design-tokens@${caret(rootPackageJson.devDependencies!['@koobiq/design-tokens'])}`,

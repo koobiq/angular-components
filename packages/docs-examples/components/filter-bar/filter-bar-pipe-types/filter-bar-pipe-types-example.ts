@@ -5,6 +5,7 @@ import {
     kbqBuildTree,
     KbqFilter,
     KbqFilterBarModule,
+    KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
@@ -148,8 +149,8 @@ export class FilterBarPipeTypesExample {
         this.activeFilter = this.getDefaultFilter();
     }
 
-    onChangePipe($event) {
-        console.log('onChangePipe: ', $event);
+    onChangePipe(event: KbqPipe) {
+        console.log('onChangePipe: ', event);
     }
 
     getDefaultFilter(): KbqFilter {

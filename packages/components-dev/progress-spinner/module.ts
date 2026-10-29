@@ -37,7 +37,7 @@ export class DevApp implements OnDestroy {
 
     mode: ProgressSpinnerMode = 'determinate';
     percent: number = 0;
-    intervalId: number;
+    intervalId!: number;
 
     constructor() {
         setInterval(() => (this.percent = (this.percent + STEP) % (MAX_PERCENT + STEP)), INTERVAL);

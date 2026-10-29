@@ -1,9 +1,9 @@
 /**
  * Ratchet on the amount of `any` / `unknown` in the published type surface.
  *
- * The library compiles with `noImplicitAny` off and lints with `@typescript-eslint/no-explicit-any`
- * disabled, so nothing stops an untyped member from reaching consumers — `KbqLocaleService` shipped
- * `getParams(componentName: string): any` for years that way. This tool does not forbid `any`; it fixes
+ * `noImplicitAny` rejects only an implicit `any`, and the lint has `@typescript-eslint/no-explicit-any`
+ * disabled, so nothing stops an explicit `any` or `unknown` from reaching consumers — `KbqLocaleService`
+ * shipped `getParams(componentName: string): any` for years. This tool does not forbid `any`; it fixes
  * the current amount per package and fails when it grows, so that the ongoing cleanup cannot be silently
  * undone by the next feature.
  *

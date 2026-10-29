@@ -1114,7 +1114,7 @@ class RadiosInsideRadioGroup {
     groupName: string = 'test-name';
     groupValue: string | null = null;
     groupColor: string = '';
-    color: KbqComponentColors;
+    color!: KbqComponentColors;
 }
 
 @Component({

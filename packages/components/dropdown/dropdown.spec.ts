@@ -4436,7 +4436,7 @@ class SimpleDropdown {
     readonly items = viewChildren(KbqDropdownItem);
     extraItems: string[] = [];
     closeCallback = vi.fn((name: string | undefined) => name);
-    backdropClass: string;
+    backdropClass!: string;
     hasBackdrop = true;
 }
 
@@ -4825,12 +4825,12 @@ class OverlapDropdown implements TestableDropdown {
     exportAs: 'appCustomDropdown'
 })
 class CustomDropdownPanel implements KbqDropdownPanel {
-    direction: Direction;
+    direction!: Direction;
     readonly xPosition = signal<KbqDropdownPositionX>('after');
     readonly yPosition = signal<KbqDropdownPositionY>('below');
     readonly overlapTriggerX = signal(true);
     readonly overlapTriggerY = signal(true);
-    parent: KbqDropdownPanel;
+    parent!: KbqDropdownPanel;
     readonly items = signal<readonly KbqDropdownItem[]>([]);
 
     readonly templateRef = viewChild.required(TemplateRef);

@@ -21,7 +21,7 @@ import { switchMap, timer } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastHideOverviewExample {
-    progress: boolean;
+    progress!: boolean;
 
     readonly toastService = inject(KbqToastService);
 

@@ -73,7 +73,7 @@ export class KbqAccordionContentDirective implements OnInit, DoCheck, AfterViewI
     /** @docs-private */
     protected readonly hidden = signal<boolean>(true);
 
-    private savedTransition: string;
+    private savedTransition!: string;
 
     /** Whether the first browser render has happened; until then a toggle only sets the initial state. */
     private rendered = false;

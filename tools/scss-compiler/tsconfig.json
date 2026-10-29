@@ -1,6 +1,6 @@
 {
+    "extends": "../../tsconfig.strict.json",
     "compilerOptions": {
-        "strict": true,
         "target": "es2020",
         "module": "NodeNext",
         "esModuleInterop": true,

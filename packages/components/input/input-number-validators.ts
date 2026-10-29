@@ -34,8 +34,8 @@ export class KbqMinValidator implements Validator, OnChanges {
     /** Lower bound installed as `Validators.min`. A non-numeric bound reads back as `NaN`. */
     readonly min = input<number, NumberInput>(undefined!, { transform: bound });
 
-    private validator: ValidatorFn;
-    private onChange: () => void;
+    private validator!: ValidatorFn;
+    private onChange?: () => void;
 
     /** `min()` unless it is `NaN`, which has no DOM representation. */
     protected readonly coercedMin = computed(() => (Number.isNaN(this.min()) ? null : this.min()));
@@ -87,8 +87,8 @@ export class KbqMaxValidator implements Validator, OnChanges {
     /** Upper bound installed as `Validators.max`. A non-numeric bound reads back as `NaN`. */
     readonly max = input<number, NumberInput>(undefined!, { transform: bound });
 
-    private validator: ValidatorFn;
-    private onChange: () => void;
+    private validator!: ValidatorFn;
+    private onChange?: () => void;
 
     /** `max()` unless it is `NaN`, which has no DOM representation. */
     protected readonly coercedMax = computed(() => (Number.isNaN(this.max()) ? null : this.max()));

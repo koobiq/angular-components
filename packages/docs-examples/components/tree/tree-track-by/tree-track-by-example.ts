@@ -5,17 +5,17 @@ import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule
 type FileTree = { [name: string]: FileTree | string };
 
 class FileNode {
-    name: string;
+    name!: string;
     type?: string;
     children?: FileNode[];
 }
 
 class FileFlatNode {
-    id: string;
-    name: string;
+    id!: string;
+    name!: string;
     type?: string;
-    level: number;
-    expandable: boolean;
+    level!: number;
+    expandable!: boolean;
 }
 
 function buildFileTree(value: FileTree): FileNode[] {

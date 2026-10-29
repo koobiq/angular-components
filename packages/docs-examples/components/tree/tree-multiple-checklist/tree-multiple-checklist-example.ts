@@ -5,17 +5,17 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 
 export class FileNode {
-    children: FileNode[];
-    name: string;
+    children!: FileNode[];
+    name!: string;
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name: string;
+    name!: string;
     type: any;
-    level: number;
-    expandable: boolean;
+    level!: number;
+    expandable!: boolean;
     parent: any;
 }
 
@@ -170,8 +170,8 @@ export class TreeMultipleChecklistExample {
         this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
     }
 
-    onOptionClick($event, node: FileFlatNode): void {
-        $event.preventDefault();
+    onOptionClick(event: MouseEvent, node: FileFlatNode): void {
+        event.preventDefault();
         this.fileSelectionToggle(node);
     }
 

@@ -179,7 +179,7 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
     readonly change = output<KbqButtonToggleChange>();
 
     private readonly _disabled = signal(false);
-    private selectionModel: SelectionModel<KbqButtonToggle>;
+    private selectionModel!: SelectionModel<KbqButtonToggle>;
 
     /**
      * Selection of `selectionModel`, mirrored into a signal. It is what makes a toggle's `checked`

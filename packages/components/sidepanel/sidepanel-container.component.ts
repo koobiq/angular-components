@@ -79,7 +79,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     private readonly _withIndent = signal(inject(KBQ_SIDEPANEL_WITH_INDENT));
 
     /** ID for the container DOM element. */
-    id: string;
+    id!: string;
 
     /**
      * Id of the element naming the sidepanel. Comes from the config, or from `kbq-sidepanel-header`.
@@ -148,7 +148,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     protected readonly indentClickEmitter = new Subject<MouseEvent>();
 
     /** Whether the component has been destroyed. */
-    private destroyed: boolean;
+    private destroyed?: boolean;
 
     ngOnDestroy(): void {
         this.destroyed = true;

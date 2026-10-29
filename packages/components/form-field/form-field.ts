@@ -177,7 +177,7 @@ export class KbqFormField
     /**
      * @docs-private
      */
-    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    override readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     /** Disables form field borders and shadows. */
     readonly noBorders = input(this.defaultOptions?.noBorders, { transform: booleanAttribute });
@@ -366,7 +366,7 @@ export class KbqFormField
         return this._focusOrigin;
     }
 
-    private _focusOrigin: FocusOrigin;
+    private _focusOrigin!: FocusOrigin;
 
     /**
      * @docs-private

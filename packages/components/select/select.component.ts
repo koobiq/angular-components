@@ -358,13 +358,13 @@ export class KbqSelect
     private readonly visibleTriggerItems = signal<number | null>(null);
 
     /** The last measured value for the trigger's client bounding rect. */
-    protected triggerRect: DOMRect;
+    protected triggerRect!: DOMRect;
 
     /** The cached font-size of the trigger element in pixels. */
     triggerFontSize = 0;
 
     /** Deals with the selection logic. Manages selected options and their states. */
-    selectionModel: SelectionModel<KbqOptionBase>;
+    selectionModel!: SelectionModel<KbqOptionBase>;
 
     /** Previously selected options before the current selection was made. */
     previousSelectionModelSelected: KbqOptionBase[] = [];
@@ -380,7 +380,7 @@ export class KbqSelect
     private readonly selectedOptionCopies = new WeakMap<KbqOptionBase, KbqVirtualOption>();
 
     /** Manages keyboard events for options in the panel. */
-    keyManager: ActiveDescendantKeyManager<KbqOption>;
+    keyManager!: ActiveDescendantKeyManager<KbqOption>;
 
     /** The value of the select panel's transform-origin property. */
     transformOrigin: string = 'top';
@@ -948,7 +948,7 @@ export class KbqSelect
     }
 
     /** Whether virtual scrolling is enabled for the options panel. */
-    withVirtualScroll: boolean;
+    withVirtualScroll!: boolean;
 
     protected get scrollbarMode(): KbqScrollbarMode {
         return this.withVirtualScroll ? 'native' : this.scrollbarOptions.mode;
@@ -1213,10 +1213,10 @@ export class KbqSelect
     /** Origin element for the overlay panel positioning. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
 
-    private openPanelTimeout: ReturnType<typeof setTimeout>;
+    private openPanelTimeout?: ReturnType<typeof setTimeout>;
 
     /** Pending re-highlight scheduled by a search keystroke. */
-    private highlightOptionTimeout: ReturnType<typeof setTimeout>;
+    private highlightOptionTimeout?: ReturnType<typeof setTimeout>;
 
     /** Accessible names of the controls the select renders itself. */
     private readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
@@ -1557,7 +1557,7 @@ export class KbqSelect
 
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
         // `parseInt` ignores the trailing 'px' and converts this to a number.
-        this.triggerFontSize = parseInt(this.window.getComputedStyle(trigger.nativeElement)['font-size']);
+        this.triggerFontSize = parseInt(this.window.getComputedStyle(trigger.nativeElement).fontSize);
 
         // It's important that we read this as late as possible, because doing so earlier will
         // return a different element since it's based on queries in the form field which may

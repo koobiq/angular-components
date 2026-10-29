@@ -22,6 +22,6 @@ import { KbqSearchExpandableModule } from './search-expandable.module';
     }
 })
 export class E2eSearchExpandableStates {
-    search: string;
-    searchOpened: string;
+    search!: string;
+    searchOpened!: string;
 }
