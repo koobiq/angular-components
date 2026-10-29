@@ -24,7 +24,7 @@ export const DOCS_NEXT_ARTICLE_WIDTH = new InjectionToken<{ readonly canExpand: 
 
 /**
  * Column of an article with the table of contents to its right (Figma: Main, node 17:4929). Text pages keep about
- * 80 characters a line; wide ones, such as API tables, take the room (spec/text-width.md). "Expand" in the header
+ * 80 characters a line; wide ones, such as the icons, take the room (spec/text-width.md). "Expand" in the header
  * of the article lifts the limit, and the article takes the whole width next to the contents; the button is there only
  * when the room is wider than the limit.
  *

@@ -11,8 +11,8 @@ const pascal = (value: string): string =>
 
 /**
  * Look of the API subsection (spec/components/api.md): the import, then a table of "Name" and "Description" per
- * class, on a wide layout without a table of contents. The rows are samples: the real data comes from api-gen for
- * Angular and react-docgen-typescript for React in stage 4.
+ * class, in the article column with the table of contents to its right. The rows are samples: the real data comes
+ * from api-gen for Angular and react-docgen-typescript for React in stage 4.
  */
 @Component({
     selector: 'docs-next-api-preview',

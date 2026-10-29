@@ -1,11 +1,6 @@
 @let item = component();
 
-<docs-next-page-layout
-    [githubUrl]="githubUrl()"
-    [wide]="tab() === 'api'"
-    [withActions]="available()"
-    [withToc]="available() && tab() !== 'api'"
->
+<docs-next-page-layout [githubUrl]="githubUrl()" [withActions]="available()" [withToc]="available()">
     @if (state.notice(); as notice) {
         <docs-next-notice [text]="notice" />
     }
