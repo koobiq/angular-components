@@ -310,7 +310,8 @@ describe('the group of a page in the search', () => {
                         component: DocsComponentViewerComponent,
                         children: [
                             { path: 'overview', component: DocsCompiledPage },
-                            { path: 'api', component: DocsComponentApiPageComponent, data: { page: ALERT_API } }
+                            { path: 'api', component: DocsComponentApiPageComponent, data: { page: ALERT_API } },
+                            { path: 'examples', component: DocsCompiledPage }
                         ]
                     }
                 ]),
@@ -354,6 +355,23 @@ describe('the group of a page in the search', () => {
         const harness = await open('/components/alert/api');
 
         expect(group(harness)).toBe('API');
+
+        await harness.navigateByUrl('/components/alert/overview');
+
+        expect(group(harness)).toBe('Components');
+    });
+
+    // The overview and the examples render the same page component, so the records of the examples would otherwise
+    // repeat the group and the title of the overview in the results.
+    it.each([
+        [DocsLocale.En, 'Examples'],
+        [DocsLocale.Ru, 'Примеры']
+    ])('is the examples on the examples tab in the language of the page (%s)', async (locale, examples) => {
+        expect(group(await open('/components/alert/examples', locale))).toBe(examples);
+    });
+
+    it('is the category again once the reader leaves the examples for the overview', async () => {
+        const harness = await open('/components/alert/examples');
 
         await harness.navigateByUrl('/components/alert/overview');
 
