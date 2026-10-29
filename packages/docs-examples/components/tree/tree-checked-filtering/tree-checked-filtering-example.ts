@@ -216,11 +216,7 @@ abstract class TreeParams {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeCheckedFilteringExample extends TreeParams {
-    override treeControl!: FlatTreeControl<FileFlatNode>;
     filterByValues: FilterByValues<FileFlatNode>;
-    override treeFlattener!: KbqTreeFlattener<FileNode, FileFlatNode>;
-
-    override dataSource!: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     modelValue: any = ['docs'];
     filterValue: string = '';

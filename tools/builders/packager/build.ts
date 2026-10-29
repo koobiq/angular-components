@@ -1,5 +1,4 @@
 import { BuilderContext, BuilderOutput, Target } from '@angular-devkit/architect';
-import { Schema } from '@angular/cli/lib/config/workspace-schema';
 // chalk 5+ is an ES module: the colour helpers are properties of the default export, not
 // named exports.
 import chalk from 'chalk';
@@ -45,16 +44,11 @@ export async function packager(options: IPackagerOptions, context: BuilderContex
     }
 
     try {
-        context.logger.info('📖 angular.json file...');
-        const angularJson = await tryJsonParse<Schema>(join(context.workspaceRoot, 'angular.json'));
-
         // get the package json
         context.logger.info('📖 package.json file...');
         const packageJson = await tryJsonParse<IPackageJson>(join(context.workspaceRoot, 'package.json'));
 
-        // The CLI's schema types `projects` as `{}`, without the projects in it.
-        const projects: Record<string, { root?: string }> | undefined = angularJson.projects;
-        const projectRoot = projects && projects[project] && projects[project].root;
+        const { root: projectRoot } = await context.getProjectMetadata(project);
 
         if (!projectRoot) {
             context.logger.error(

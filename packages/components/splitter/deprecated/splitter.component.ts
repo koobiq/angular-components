@@ -44,7 +44,7 @@ const enum StyleProperty {
     Height = 'height',
     MaxWidth = 'max-width',
     MinHeight = 'min-height',
-    MinWidth = 'minWidth',
+    MinWidth = 'min-width',
     OffsetHeight = 'offsetHeight',
     OffsetWidth = 'offsetWidth',
     Order = 'order',

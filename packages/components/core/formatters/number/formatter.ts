@@ -394,21 +394,18 @@ export class KbqRoundDecimalPipe implements PipeTransform {
                 });
             }
 
-            parts = parts.num
-                ? parts
+            const { num: integer, fraction } = parts.num
+                ? { num: parts.num, fraction: parts.fraction }
                 : {
                       num: Math.trunc(num / ROUNDING_UNITS[unit]),
                       fraction: this.calculateDecimal(num, ROUNDING_UNITS[unit])
                   };
-            (Object.keys(parts) as (keyof typeof parts)[]).forEach((key) => {
-                (parts as Record<string, unknown>)[key] = Intl.NumberFormat.call(this, currentLocale, {
-                    useGrouping: false
-                }).format(parts[key]!);
-            });
-
-            const calculatedValue = parts.fraction
-                ? `${parts.num}${this.roundingOptions.groupSeparator}${parts.fraction}`
-                : `${parts.num}`;
+            const formatter = new Intl.NumberFormat(currentLocale, { useGrouping: false });
+            // A fraction of 0 is shown too (`2.0K`), so its presence is tested, not its truthiness.
+            const calculatedValue =
+                fraction === undefined
+                    ? formatter.format(integer)
+                    : `${formatter.format(integer)}${this.roundingOptions.groupSeparator}${formatter.format(fraction)}`;
 
             return `${calculatedValue}${this.roundingOptions.separator}${this.roundingOptions[unit]}`;
         } catch (error: any) {

@@ -34,9 +34,12 @@
 !tools/tokens/package.json
 
 # Workspace and TypeScript configuration: the image builds `dev-e2e` out of angular.json, and
-# playwright.config.ts compiles the specs against tsconfig.playwright-spec.json.
+# playwright.config.ts compiles the specs against tsconfig.playwright-spec.json. tsconfig.json extends
+# tsconfig.angular.json, which extends tsconfig.strict.json, as does tools/builders/tsconfig.json.
 !angular.json
 !tsconfig.json
+!tsconfig.angular.json
+!tsconfig.strict.json
 !tsconfig.playwright-spec.json
 !playwright.config.ts
 

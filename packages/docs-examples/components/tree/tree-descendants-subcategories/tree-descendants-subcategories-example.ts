@@ -189,11 +189,6 @@ abstract class TreeParams {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeDescendantsSubcategoriesExample extends TreeParams {
-    override treeControl!: FlatTreeControl<FileFlatNode>;
-    override treeFlattener!: KbqTreeFlattener<FileNode, FileFlatNode>;
-
-    override dataSource!: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     modelValue: any = ['docs'];
 
     readonly tree = viewChild.required(KbqTreeSelection);

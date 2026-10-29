@@ -116,28 +116,15 @@ class DateDigit {
         return this.value === DateParts.day;
     }
 
-    get isMonth(): boolean {
-        return this.value === DateParts.month;
-    }
-
-    get isYear(): boolean {
-        return this.value === DateParts.year;
-    }
-
-    get fullName(): string {
-        if (this.isDay) {
-            return 'date';
+    get fullName(): 'date' | 'month' | 'year' {
+        switch (this.value) {
+            case DateParts.day:
+                return 'date';
+            case DateParts.month:
+                return 'month';
+            case DateParts.year:
+                return 'year';
         }
-
-        if (this.isMonth) {
-            return 'month';
-        }
-
-        if (this.isYear) {
-            return 'year';
-        }
-
-        return '';
     }
 
     private parseDay(value: string): number {
@@ -289,7 +276,6 @@ export class KbqDatepickerInputEvent<D> {
 let uniqueComponentIdSuffix = 0;
 
 interface DateTimeObject {
-    [part: string]: number;
     year: number;
     month: number;
     date: number;
@@ -938,7 +924,7 @@ export class KbqDatepickerInput<D>
         this.onInput();
     }
 
-    onPaste(event: ClipboardEvent): string | undefined {
+    onPaste(event: ClipboardEvent): void {
         event.preventDefault();
 
         let rawValue = event.clipboardData!.getData('text');
@@ -958,7 +944,7 @@ export class KbqDatepickerInput<D>
         if (!match?.groups?.['first'] || !match?.groups?.['second'] || !match?.groups?.['third']) {
             this.setViewValue(rawValue);
 
-            return rawValue;
+            return;
         }
 
         const value = [match.groups['first'], match.groups['second'], match.groups['third']].join(this.separator);
@@ -968,14 +954,12 @@ export class KbqDatepickerInput<D>
         if (!newTimeObj) {
             this.setViewValue(value);
 
-            return value;
+            return;
         }
 
         this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.dateInputFormat));
 
         this.updateValue(newTimeObj);
-
-        return undefined;
     }
 
     toISO8601(value: D): string {
@@ -1164,19 +1148,19 @@ export class KbqDatepickerInput<D>
                 return null;
             }
 
-            const digitViewValue: Record<string, number | undefined> = {};
+            const digitViewValue: { date?: number; month?: number; year?: number } = {};
             const dateDigits = [this.firstDigit, this.secondDigit, this.thirdDigit];
 
             for (const [index, dateDigit] of dateDigits.entries()) {
                 digitViewValue[dateDigit!.fullName] = parseInt(viewDigits[index]);
             }
 
-            if (this.value() && digitViewValue['month'] && digitViewValue['month'] <= this.firstDigit!.maxMonth) {
+            if (this.value() && digitViewValue.month && digitViewValue.month <= this.firstDigit!.maxMonth) {
                 dateDigits.forEach(
                     (digit) =>
                         (digit!.maxDays = this.getLastDayFor(
-                            digitViewValue['year'] as number,
-                            (digitViewValue['month'] as number) - 1
+                            digitViewValue.year as number,
+                            (digitViewValue.month as number) - 1
                         ))
                 );
             }

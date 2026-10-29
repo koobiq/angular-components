@@ -11,7 +11,7 @@ export const replaceIcons = (contentToBeUpdated: string, replacementData: Replac
     let res = contentToBeUpdated;
 
     for (const { from, to } of replacementData) {
-        res = res!.replace(new RegExp(from, 'g'), to);
+        res = res.replace(new RegExp(from, 'g'), to);
     }
 
     return res;
@@ -28,7 +28,7 @@ export const logReplacement = ({
     contentToBeUpdated: string;
     filePath: string;
 }): void => {
-    const foundIcons = replacementData.filter(({ from }) => contentToBeUpdated!.indexOf(from) !== -1);
+    const foundIcons = replacementData.filter(({ from }) => contentToBeUpdated.indexOf(from) !== -1);
 
     if (foundIcons.length) {
         const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
@@ -55,7 +55,7 @@ export const processIconReplacement = ({
     replacementData: Replacement[];
 }): TransformTemplateAttributesResult => {
     if (fix) {
-        const updatedContent = replaceIcons(fileContent!, replacementData);
+        const updatedContent = replaceIcons(fileContent, replacementData);
 
         return { fileContent: updatedContent, changed: updatedContent !== fileContent, errors: [] };
     } else {

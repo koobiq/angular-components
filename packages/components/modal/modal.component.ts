@@ -450,7 +450,7 @@ export class KbqModalComponent<T = any, R = any>
     private handledVisible = false;
 
     // Handle the reference when using kbqContent as Component
-    private contentComponentRef!: ComponentRef<T>;
+    private contentComponentRef?: ComponentRef<T>;
     // Current animation state
     private animationState?: AnimationState;
     private container?: HTMLElement | OverlayRef;
@@ -587,12 +587,13 @@ export class KbqModalComponent<T = any, R = any>
         return this;
     }
 
+    // Both return `undefined` for text and template content, which their published return types do not show.
     getContentComponentRef(): ComponentRef<T> {
-        return this.contentComponentRef;
+        return this.contentComponentRef!;
     }
 
     getContentComponent(): T {
-        return this.contentComponentRef && this.contentComponentRef.instance;
+        return this.contentComponentRef?.instance as T;
     }
 
     getElement(): HTMLElement {

@@ -108,7 +108,9 @@ RUN set -eux; \
     test "4" = "$(yarn --version | cut -d . -f 1)"; \
     yarn --version
 
-# package.json's postinstall compiles these into node_modules/@koobiq/builders.
+# package.json's postinstall compiles these into node_modules/@koobiq/builders; their tsconfig extends
+# tsconfig.strict.json.
+COPY tsconfig.strict.json ./
 COPY tools/builders/ tools/builders/
 COPY tools/e2e/assert-browsers.js tools/e2e/
 

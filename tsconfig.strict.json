@@ -1,7 +1,7 @@
 {
-    // The type-checking strictness of the repository, shared by the root tsconfig and the Node tools under tools/.
-    // The tools do not extend the root tsconfig: it is set up for the browser library and turns the type check of
-    // ts-node off.
+    // The type-checking strictness of the repository. The root tsconfig gets it through tsconfig.angular.json; a Node
+    // tool under tools/ that ts-node type-checks extends this file directly, since ts-node inherits the root's
+    // `transpileOnly` along `extends`.
     "compilerOptions": {
         "strict": true,
         "noImplicitReturns": true,

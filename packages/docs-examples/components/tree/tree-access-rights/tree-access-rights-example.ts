@@ -217,11 +217,6 @@ abstract class TreeParams {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeAccessRightsExample extends TreeParams implements AfterViewInit, OnDestroy {
-    override treeControl!: FlatTreeControl<FileFlatNode>;
-    override treeFlattener!: KbqTreeFlattener<FileNode, FileFlatNode>;
-
-    override dataSource!: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     modelValue: any = [];
     filteredModel: any = [];
 

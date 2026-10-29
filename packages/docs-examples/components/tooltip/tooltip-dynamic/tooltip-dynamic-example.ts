@@ -30,11 +30,11 @@ import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip'
 export class TooltipDynamicExample {
     private readonly injector = inject(Injector);
 
-    private dynamicTooltip!: KbqTooltipTrigger;
+    private dynamicTooltip?: KbqTooltipTrigger;
 
     protected onMouseenter(event: MouseEvent) {
         if (!this.dynamicTooltip) {
-            runInInjectionContext(this.injector, () => (this.dynamicTooltip = new KbqTooltipTrigger()));
+            this.dynamicTooltip = runInInjectionContext(this.injector, () => new KbqTooltipTrigger());
         }
 
         this.dynamicTooltip.content = (event.currentTarget as HTMLElement).innerText;
@@ -43,6 +43,6 @@ export class TooltipDynamicExample {
     }
 
     protected onMouseleave() {
-        this.dynamicTooltip.hide();
+        this.dynamicTooltip?.hide();
     }
 }
