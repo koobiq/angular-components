@@ -41,11 +41,23 @@
         }
     }
 
+    // The expanded "view all" button lies over the end of the code, so the code makes room for the button and the
+    // spacing under it below its own bottom padding.
     &:has(.kbq-code-block__view-all) {
         .kbq-code-block__main {
             .kbq-code-block__code {
-                padding-bottom: var(--kbq-size-3xl) !important;
+                padding-bottom: calc(
+                    var(--kbq-code-block-size-with-header-content-padding-bottom) + var(--kbq-size-3xl) +
+                        var(--kbq-code-block-size-collapse-expanded-padding-bottom)
+                ) !important;
             }
+        }
+
+        &.kbq-code-block_hide-tabs .kbq-code-block__main .kbq-code-block__code {
+            padding-bottom: calc(
+                var(--kbq-code-block-size-no-header-content-padding-vertical) + var(--kbq-size-3xl) +
+                    var(--kbq-code-block-size-collapse-expanded-padding-bottom)
+            ) !important;
         }
     }
 
@@ -138,6 +150,10 @@
     }
 
     &.kbq-code-block_hide-tabs {
+        // The actionbar reaches the right edge, over the top of the vertical scrollbar track. Isolated by the block
+        // rather than by the scrollport, the track's z-index keeps the track above the actionbar and inside the block.
+        isolation: isolate;
+
         .kbq-code-block__header {
             padding: 0;
         }
@@ -147,17 +163,14 @@
             position: absolute;
             top: 0;
             right: 0;
-            margin: var(--kbq-size-s) var(--kbq-size-s) var(--kbq-size-s) 0;
-
-            .kbq-code-block__actionbar__button-stack {
-                border-width: 1px;
-                border-style: solid;
-                @include kbq-squircle(calc(var(--kbq-size-border-radius) + 1px));
-            }
+            padding: var(--kbq-size-s) var(--kbq-size-m) var(--kbq-size-s)
+                calc(var(--kbq-code-block-size-actionbar-fade-gradient-width) + var(--kbq-size-m));
+            @include kbq-squircle(var(--kbq-code-block-size-container-border-radius), border-top-right-radius);
         }
 
         .kbq-code-block__main {
             position: relative;
+            isolation: auto;
 
             .kbq-code-block__code {
                 padding: var(--kbq-code-block-size-no-header-content-padding-vertical)

@@ -14,13 +14,12 @@
         background: var(--kbq-#{$base}-header-background);
     }
 
-    &.kbq-code-block_hide-tabs {
-        .kbq-code-block__actionbar {
-            .kbq-code-block__actionbar__button-stack {
-                border-color: var(--kbq-#{$base}-actionbar-border-color);
-                background: var(--kbq-#{$base}-actionbar-background);
-            }
-        }
+    &.kbq-code-block_hide-tabs .kbq-code-block__actionbar {
+        background: linear-gradient(
+            90deg,
+            transparent,
+            var(--kbq-#{$base}-actionbar-background) var(--kbq-code-block-size-actionbar-fade-gradient-width)
+        );
     }
 
     .kbq-code-block__view-all {
