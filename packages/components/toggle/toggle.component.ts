@@ -57,10 +57,6 @@ export class KbqToggleChange {
             state(TransitionCheckState.Indeterminate, style({ left: '10px', visibility: 'hidden' })),
             state(TransitionCheckState.Checked, style({ left: 'calc(100% - 11px)' })),
             transition(
-                `${TransitionCheckState.Init} => ${TransitionCheckState.Checked}`,
-                animate(KbqAnimationDurations.Entering)
-            ),
-            transition(
                 `${TransitionCheckState.Checked} <=> ${TransitionCheckState.Unchecked}`,
                 animate(KbqAnimationDurations.Rapid)
             ),
@@ -230,6 +226,12 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
                     this._indeterminate = false;
                     this.indeterminateChange.emit(this._indeterminate);
                 });
+            }
+
+            // A first click starts from the unchecked position, so that it animates.
+            if (this.currentCheckState === TransitionCheckState.Init) {
+                this.transitionCheckState(TransitionCheckState.Unchecked);
+                this.changeDetectorRef.detectChanges();
             }
 
             this._checked = !this.checked;
