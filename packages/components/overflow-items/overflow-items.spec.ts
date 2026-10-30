@@ -157,6 +157,56 @@ class TestOverflowItemsDebounce {
     readonly resultWidth = 50;
 }
 
+@Component({
+    selector: 'overflow-items-measured-test',
+    imports: [KbqOverflowItemsModule],
+    template: `
+        <div kbqOverflowItems [style.border]="border()" [style.width.px]="layoutWidth()" [style.column-gap.px]="gap()">
+            @if (label()) {
+                <div class="test-label">label</div>
+            }
+            @for (item of items; track item) {
+                <div
+                    [kbqOverflowItem]="item"
+                    [style.margin-left.px]="4"
+                    [style.display]="item === displayNone() ? 'none' : null"
+                >
+                    {{ item }}
+                </div>
+            }
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestOverflowItemsMeasured {
+    readonly items = Array.from({ length: 5 }, (_, i) => `Item${i}`);
+    readonly border = signal('');
+    readonly layoutWidth = signal<number | null>(null);
+    readonly gap = signal<number | null>(null);
+    readonly label = signal(false);
+    readonly displayNone = signal<string | null>(null);
+}
+
+@Component({
+    selector: 'overflow-items-inputs-test',
+    imports: [KbqOverflowItemsModule],
+    template: `
+        <div kbqOverflowItems [wrap]="wrap()">
+            <div kbqOverflowItem="item" [order]="order()" [alwaysVisible]="alwaysVisible()">item</div>
+            @if (result()) {
+                <div kbqOverflowItemsResult>result</div>
+            }
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestOverflowItemsInputs {
+    readonly order = signal(1);
+    readonly alwaysVisible = signal(false);
+    readonly result = signal(false);
+    readonly wrap = signal<KbqFlexWrap>('nowrap');
+}
+
 const getOverflowItemsDirective = (debugElement: DebugElement): KbqOverflowItems => {
     return debugElement.query(By.directive(KbqOverflowItems)).injector.get(KbqOverflowItems);
 };
@@ -419,6 +469,198 @@ describe('KbqOverflowItems', () => {
 
             expect(hiddenIds.size).toBe(0);
             expect(changesSpy).toHaveBeenCalledWith(hiddenIds);
+        });
+    });
+
+    describe('measurement', () => {
+        const ITEM_WIDTH = 100.5;
+        // Five items with a 4px left margin each.
+        const ITEMS_SIZE = 5 * (ITEM_WIDTH + 4);
+        // 4px laid out at 110% zoom: snapped to 1/64 of a device pixel, while `getComputedStyle` still reports 4px.
+        const LAID_OUT_MARGIN = 3.9915;
+
+        const LABEL_WIDTH = 50;
+
+        const rect = (width: number) => ({ width }) as DOMRect;
+
+        const setup = async (
+            containerWidth: number,
+            {
+                devicePixelRatio = 1,
+                itemWidth = ITEM_WIDTH,
+                configure
+            }: {
+                devicePixelRatio?: number;
+                itemWidth?: number;
+                configure?: (host: TestOverflowItemsMeasured) => void;
+            } = {}
+        ) => {
+            vi.useFakeTimers();
+            vi.spyOn(window, 'devicePixelRatio', 'get').mockReturnValue(devicePixelRatio);
+
+            const rectSpy = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+                this: HTMLElement
+            ) {
+                if (!this.isConnected || this.style.display === 'none') return rect(0);
+
+                if (this.classList.contains('kbq-overflow-items')) return rect(containerWidth);
+
+                if (this.classList.contains('test-label')) return rect(LABEL_WIDTH);
+
+                return rect(this.classList.contains('kbq-overflow-item') ? itemWidth : 0);
+            });
+
+            const fixture = createComponent(TestOverflowItemsMeasured, [
+                { provide: SharedResizeObserver, useValue: { observe: () => EMPTY } }
+            ]);
+            const changesSpy = vi.fn();
+
+            getOverflowItemsDirective(fixture.debugElement).changes.subscribe(changesSpy);
+            configure?.(fixture.componentInstance);
+            fixture.detectChanges();
+            rectSpy.mockClear();
+            await vi.advanceTimersByTimeAsync(0);
+
+            const containerMeasurements = (rectSpy.mock.contexts as HTMLElement[]).filter((element) =>
+                element.classList.contains('kbq-overflow-items')
+            ).length;
+
+            return { changesSpy, containerMeasurements };
+        };
+
+        afterEach(() => vi.restoreAllMocks());
+
+        it('should keep every item when the computed margins drift from the layout', async () => {
+            const { changesSpy } = await setup(5 * (ITEM_WIDTH + LAID_OUT_MARGIN), { devicePixelRatio: 1.1 });
+
+            expect(changesSpy).toHaveBeenLastCalledWith(new Set());
+        });
+
+        it.each([
+            { devicePixelRatio: 1.1, overflow: 0.4 },
+            { devicePixelRatio: 2, overflow: 0.4 }
+        ])(
+            'should keep every item when they overflow by $overflow device pixels at devicePixelRatio $devicePixelRatio',
+            async ({ devicePixelRatio, overflow }) => {
+                const { changesSpy } = await setup(ITEMS_SIZE - overflow / devicePixelRatio, { devicePixelRatio });
+
+                expect(changesSpy).toHaveBeenLastCalledWith(new Set());
+            }
+        );
+
+        it.each([
+            { devicePixelRatio: 1.1, overflow: 0.6 },
+            { devicePixelRatio: 2, overflow: 0.5 }
+        ])(
+            'should hide the last item when the items overflow by $overflow device pixels at devicePixelRatio $devicePixelRatio',
+            async ({ devicePixelRatio, overflow }) => {
+                const { changesSpy } = await setup(ITEMS_SIZE - overflow / devicePixelRatio, { devicePixelRatio });
+
+                expect(changesSpy).toHaveBeenLastCalledWith(new Set(['Item4']));
+            }
+        );
+
+        it('should measure at devicePixelRatio 1 when the window reports none', async () => {
+            const { changesSpy } = await setup(ITEMS_SIZE - 1, { devicePixelRatio: 0 });
+
+            expect(changesSpy).toHaveBeenLastCalledWith(new Set(['Item4']));
+        });
+
+        it('should not count the container borders as free space', async () => {
+            const { changesSpy } = await setup(ITEMS_SIZE + 1, {
+                configure: (host) => host.border.set('1px solid')
+            });
+
+            expect(changesSpy).toHaveBeenLastCalledWith(new Set(['Item4']));
+        });
+
+        it('should keep every item of a container scaled down by a transform or CSS zoom', async () => {
+            // Rects shrink to 0.8 while the computed margins stay at 4px: every item fits at 0.8 of its layout size.
+            const { changesSpy } = await setup(0.8 * ITEMS_SIZE, {
+                itemWidth: 0.8 * ITEM_WIDTH,
+                configure: (host) => host.layoutWidth.set(ITEMS_SIZE)
+            });
+
+            expect(changesSpy).toHaveBeenLastCalledWith(new Set());
+        });
+
+        it('should not count an item that is not displayed', async () => {
+            const { changesSpy } = await setup(4 * (ITEM_WIDTH + 4), {
+                configure: (host) => host.displayNone.set('Item2')
+            });
+
+            expect(changesSpy).toHaveBeenLastCalledWith(new Set());
+        });
+
+        it('should count the gaps between the children', async () => {
+            const { changesSpy } = await setup(ITEMS_SIZE + 4 * 8 - 1, { configure: (host) => host.gap.set(8) });
+
+            expect(changesSpy).toHaveBeenLastCalledWith(new Set(['Item4']));
+        });
+
+        it('should count the children of the container that are not items', async () => {
+            const { changesSpy } = await setup(ITEMS_SIZE + LABEL_WIDTH - 1, {
+                configure: (host) => host.label.set(true)
+            });
+
+            expect(changesSpy).toHaveBeenLastCalledWith(new Set(['Item4']));
+        });
+
+        it('should hide every item in excess after measuring the container twice', async () => {
+            const { changesSpy, containerMeasurements } = await setup(2 * (ITEM_WIDTH + 4));
+
+            expect(changesSpy).toHaveBeenLastCalledWith(new Set(['Item2', 'Item3', 'Item4']));
+            expect(containerMeasurements).toBe(2);
+        });
+    });
+
+    describe('recalculation triggers', () => {
+        it.each<[string, (host: TestOverflowItemsInputs) => void]>([
+            ['the result appears', (host) => host.result.set(true)],
+            ['alwaysVisible changes', (host) => host.alwaysVisible.set(true)],
+            ['order changes', (host) => host.order.set(2)],
+            ['wrap changes', (host) => host.wrap.set('wrap')]
+        ])('should recalculate when %s', async (_change, apply) => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(TestOverflowItemsInputs, [
+                { provide: SharedResizeObserver, useValue: { observe: () => EMPTY } }
+            ]);
+            const spy = vi.spyOn(getOverflowItemsDirective(fixture.debugElement) as any, 'getHiddenItems');
+
+            await vi.advanceTimersByTimeAsync(0);
+            spy.mockClear();
+
+            apply(fixture.componentInstance);
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(spy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should recalculate when a web font loads', async () => {
+            vi.useFakeTimers();
+
+            const fonts = new EventTarget();
+
+            Object.defineProperty(document, 'fonts', { value: fonts, configurable: true });
+
+            try {
+                const fixture = createComponent(TestOverflowItemsInputs, [
+                    { provide: SharedResizeObserver, useValue: { observe: () => EMPTY } }
+                ]);
+                const spy = vi.spyOn(getOverflowItemsDirective(fixture.debugElement) as any, 'getHiddenItems');
+
+                await vi.advanceTimersByTimeAsync(0);
+                spy.mockClear();
+
+                fonts.dispatchEvent(new Event('loadingdone'));
+                await vi.advanceTimersByTimeAsync(0);
+
+                expect(spy).toHaveBeenCalledTimes(1);
+            } finally {
+                delete (document as { fonts?: unknown }).fonts;
+            }
         });
     });
 
