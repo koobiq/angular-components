@@ -125,8 +125,6 @@ test.describe('KbqBreadcrumbs inside a form', () => {
     });
 });
 
-// A trail of one item renders `.kbq-breadcrumbs__list`, a longer one `KbqOverflowItems`: switching
-// between them must not move the trail, or the page title under it jumps on navigation.
 test.describe('KbqBreadcrumbs item count', () => {
     const geometry = async (trail: Locator) => {
         const host = (await trail.boundingBox())!;
