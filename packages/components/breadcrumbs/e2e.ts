@@ -219,3 +219,41 @@ export class E2eBreadcrumbsInForm {
         this.submitCount++;
     }
 }
+
+@Component({
+    selector: 'e2e-breadcrumbs-item-count',
+    imports: [
+        KbqBreadcrumbsModule,
+        RouterLink
+    ],
+    template: `
+        @for (firstItemNegativeMargin of [true, false]; track $index) {
+            @for (count of [1, 3]; track count) {
+                <nav
+                    kbq-breadcrumbs
+                    [attr.data-testid]="testId(firstItemNegativeMargin, count)"
+                    [firstItemNegativeMargin]="firstItemNegativeMargin"
+                >
+                    @for (breadcrumb of items.slice(0, count); track breadcrumb) {
+                        <kbq-breadcrumb-item [text]="breadcrumb" [routerLink]="breadcrumb" />
+                    }
+                </nav>
+            }
+        }
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: var(--kbq-size-s);
+            width: 400px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class E2eBreadcrumbsItemCount {
+    readonly items = Array.from({ length: 3 }, (_, i) => `Item #${i}`);
+
+    protected testId(firstItemNegativeMargin: boolean, count: number): string {
+        return `e2eBreadcrumbs-${firstItemNegativeMargin}-${count}`;
+    }
+}
