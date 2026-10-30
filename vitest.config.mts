@@ -82,6 +82,9 @@ export default defineConfig({
                         'tools/vitest/fail-on-console.spec.ts',
                         'tools/vitest/to-have-no-violations.spec.ts'
                     ],
+                    // The theme's ES build imports `./index` without an extension, which Node cannot resolve, so
+                    // Vite has to bundle it instead of leaving it to Node.
+                    server: { deps: { inline: ['@koobiq/ag-grid-angular-theme'] } },
                     setupFiles: ['tools/vitest/setup-angular.ts']
                 }
             },

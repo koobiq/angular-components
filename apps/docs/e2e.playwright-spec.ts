@@ -562,7 +562,7 @@ test.describe('prerendered pages compiled from MDX', () => {
             'docs-live-example-viewer[example="ag-grid-overview"] .docs-live-example__example'
         );
 
-        await expect(example.locator('kbq-skeleton')).toBeVisible();
+        await expect(example.locator('kbq-ag-grid-loading-overlay')).toBeVisible();
         await expect(example).toHaveAttribute('aria-busy', 'true');
         await expect(example.locator('ag-grid-angular')).toHaveCount(0);
     });
