@@ -336,8 +336,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Tree Select позволяет искать и выбирать одно или несколько значений из иерархических данных с сохранением структуры дерева."
     },
     "typography": {
-        "en": "Koobiq typography defines the fonts, weights, and text styles used to create a consistent visual hierarchy in interfaces.",
-        "ru": "Типографика Koobiq определяет шрифты, начертания и текстовые стили для создания единообразной визуальной иерархии в интерфейсах."
+        "en": "Connecting fonts, which sources fit, the text classes and replacing the fonts.",
+        "ru": "Подключение шрифтов, какие источники подходят, текстовые классы и замена шрифтов."
     },
     "username": {
         "en": "The pattern is used when the interface refers to an internal user.",

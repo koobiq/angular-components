@@ -1,5 +1,6 @@
 import { expect, Locator, Page, test } from '@playwright/test';
 import {
+    e2eChromiumArgs,
     e2eClearForcedAutofill,
     e2eEnableDarkTheme,
     e2eForceAutofill,
@@ -25,7 +26,7 @@ const AUTOFILL_SUPPRESSION_DURATION = 600_000_000;
  * Top-level because a launch option cannot be scoped to a describe. The other shots in this file
  * are of pages that stop repainting before the capture, so they come out the same either way.
  */
-test.use({ launchOptions: { args: ['--disable-partial-raster'] } });
+test.use({ launchOptions: { args: [...e2eChromiumArgs, '--disable-partial-raster'] } });
 
 test.describe('KbqFormFieldModule', () => {
     test.describe('E2eFormFieldAddons', () => {
