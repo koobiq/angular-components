@@ -69,6 +69,31 @@ const createMeasuredComponent = async <T>(component: Type<T>): Promise<Component
     return fixture;
 };
 
+/** jsdom has no Web Animations API, so `animate` is supplied for the specs that observe the animation. */
+const mockAnimate = () => {
+    let resolveFinished!: () => void;
+    const finished = new Promise<void>((resolve) => (resolveFinished = resolve));
+    const cancel = vi.fn();
+    const animate = vi.fn(() => ({ cancel, finished }) as unknown as Animation);
+
+    Object.defineProperty(HTMLElement.prototype, 'animate', { value: animate, configurable: true, writable: true });
+
+    return { animate, cancel, resolveFinished };
+};
+
+const mockReducedMotion = () => {
+    Object.defineProperty(window, 'matchMedia', {
+        value: () => ({ matches: true }),
+        configurable: true,
+        writable: true
+    });
+};
+
+const restoreAnimationEnvironment = () => {
+    delete (HTMLElement.prototype as { animate?: unknown }).animate;
+    delete (window as { matchMedia?: unknown }).matchMedia;
+};
+
 const getContent = (fixture: ComponentFixture<unknown>): HTMLElement =>
     fixture.nativeElement.querySelector('.kbq-clamped-text__content');
 
@@ -95,6 +120,7 @@ const isCollapsed = (fixture: ComponentFixture<unknown>): boolean =>
             <kbq-clamped-text
                 [rows]="rows()"
                 [scrollOnCollapse]="scrollOnCollapse()"
+                [duration]="duration()"
                 [isCollapsed]="isCollapsed()"
                 (isCollapsedChange)="onCollapseChanged($event)"
             >
@@ -110,6 +136,7 @@ class ClampedTextTest {
     readonly isCollapsed = signal<boolean | undefined>(undefined);
     readonly rows = signal(5);
     readonly scrollOnCollapse = signal(true);
+    readonly duration = signal(100);
 
     onCollapseChanged(collapsed: boolean | undefined): void {
         this.isCollapsed.set(collapsed);
@@ -370,6 +397,154 @@ describe('KbqClampedText', () => {
                 await collapseThroughToggle(fixture);
 
                 expect(scrollIntoView).not.toHaveBeenCalled();
+            });
+        });
+
+        describe('animation', () => {
+            const COLLAPSED_HEIGHT = 100;
+            const EXPANDED_HEIGHT = 300;
+
+            beforeEach(() => {
+                vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+                    this: HTMLElement
+                ) {
+                    const height = this.classList.contains('kbq-clamped-text__content_collapsed')
+                        ? COLLAPSED_HEIGHT
+                        : EXPANDED_HEIGHT;
+
+                    return { height } as DOMRect;
+                });
+            });
+
+            afterEach(restoreAnimationEnvironment);
+
+            it('should animate block-size from the old height to the new one on expand', async () => {
+                const { animate } = mockAnimate();
+                const fixture = await createMeasuredComponent(ClampedTextTest);
+
+                requireToggle(fixture).click();
+                await fixture.whenStable();
+                expect(animate).toHaveBeenCalledWith(
+                    {
+                        blockSize: [`${COLLAPSED_HEIGHT}px`, `${EXPANDED_HEIGHT}px`],
+                        overflow: ['clip', 'clip'],
+                        alignContent: ['flex-start', 'flex-start']
+                    },
+                    { duration: 100, easing: 'ease-in-out' }
+                );
+            });
+
+            it('should animate block-size back on collapse', async () => {
+                const { animate } = mockAnimate();
+                const fixture = await createMeasuredComponent(ClampedTextTest);
+
+                requireToggle(fixture).click();
+                await fixture.whenStable();
+                requireToggle(fixture).click();
+                await fixture.whenStable();
+
+                expect(animate).toHaveBeenLastCalledWith(
+                    {
+                        blockSize: [`${EXPANDED_HEIGHT}px`, `${COLLAPSED_HEIGHT}px`],
+                        overflow: ['clip', 'clip'],
+                        alignContent: ['flex-start', 'flex-start']
+                    },
+                    { duration: 100, easing: 'ease-in-out' }
+                );
+            });
+
+            it('should respect the duration', async () => {
+                const { animate } = mockAnimate();
+                const fixture = await createMeasuredComponent(ClampedTextTest);
+
+                fixture.componentInstance.duration.set(250);
+                await fixture.whenStable();
+
+                requireToggle(fixture).click();
+                await fixture.whenStable();
+
+                expect(animate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ duration: 250 }));
+            });
+
+            it('should not animate when the height does not change', async () => {
+                const { animate } = mockAnimate();
+                const fixture = await createMeasuredComponent(ClampedTextTest);
+
+                vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({ height: 100 } as DOMRect);
+
+                requireToggle(fixture).click();
+                await fixture.whenStable();
+
+                expect(animate).not.toHaveBeenCalled();
+            });
+
+            it('should not animate when the user prefers reduced motion', async () => {
+                const { animate } = mockAnimate();
+
+                mockReducedMotion();
+
+                const fixture = await createMeasuredComponent(ClampedTextTest);
+
+                requireToggle(fixture).click();
+                await fixture.whenStable();
+
+                expect(animate).not.toHaveBeenCalled();
+                expect(isCollapsed(fixture)).toBe(false);
+            });
+
+            it('should not animate when the content is measured again', async () => {
+                const { animate } = mockAnimate();
+                const fixture = await createMeasuredComponent(ClampedTextTest);
+
+                await measure(fixture);
+
+                expect(animate).not.toHaveBeenCalled();
+            });
+
+            it.each([NaN, -1])('should not animate with the invalid duration %s', async (duration) => {
+                const { animate } = mockAnimate();
+                const fixture = await createMeasuredComponent(ClampedTextTest);
+
+                fixture.componentInstance.duration.set(duration);
+                await fixture.whenStable();
+
+                requireToggle(fixture).click();
+                await fixture.whenStable();
+
+                expect(animate).not.toHaveBeenCalled();
+                expect(isCollapsed(fixture)).toBe(false);
+            });
+
+            it('should cancel a running animation when the component is destroyed', async () => {
+                const { cancel } = mockAnimate();
+                const fixture = await createMeasuredComponent(ClampedTextTest);
+
+                requireToggle(fixture).click();
+                await fixture.whenStable();
+
+                expect(cancel).not.toHaveBeenCalled();
+
+                fixture.destroy();
+
+                expect(cancel).toHaveBeenCalled();
+            });
+
+            it('should scroll into view once the collapse animation finishes', async () => {
+                const { resolveFinished } = mockAnimate();
+                const fixture = await createMeasuredComponent(ClampedTextTest);
+                const scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView').mockImplementation(() => {});
+
+                requireToggle(fixture).click();
+                await fixture.whenStable();
+                requireToggle(fixture).click();
+                await fixture.whenStable();
+
+                expect(scrollIntoView).not.toHaveBeenCalled();
+
+                resolveFinished();
+                await new Promise((resolve) => setTimeout(resolve));
+
+                expect(scrollIntoView).toHaveBeenCalledWith({ block: 'nearest', inline: 'nearest' });
             });
         });
     });

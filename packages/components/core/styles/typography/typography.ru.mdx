@@ -1,60 +1,91 @@
-Типографика Koobiq определяет шрифты, начертания и текстовые стили для создания единообразной визуальной иерархии в интерфейсах.
+Подключение шрифтов, какие источники подходят, текстовые классы и замена шрифтов.
 
-### Добавление шрифтов
+### Подключение шрифтов
 
 Koobiq по умолчанию использует шрифты [Inter](https://github.com/rsms/inter) и [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono).
 
-| Шрифт          | Жирность | Стиль   |
-| -------------- | -------- | ------- |
-| JetBrains Mono | 400      | Обычный |
-| JetBrains Mono | 600      | Обычный |
-| JetBrains Mono | 700      | Обычный |
-| Inter          | 400      | Обычный |
-| Inter          | 400      | Курсив  |
-| Inter          | 500      | Обычный |
-| Inter          | 500      | Курсив  |
-| Inter          | 600      | Обычный |
-| Inter          | 700      | Обычный |
+| Шрифт          | Начертания                             |
+| -------------- | -------------------------------------- |
+| Inter          | 400, 500, 600, 700; курсив — 400 и 600 |
+| JetBrains Mono | 400, 600, 700                          |
 
-Добавьте их в ваше приложение при помощи [Fontsource](#fontsource) или [Google Fonts CDN](#google-fonts-cdn).
+Шрифты подключаются из npm-пакетов или файлами, которые размещает само приложение. Google Fonts не подходит: он отдает шрифты без части символов, а Inter еще и без OpenType-фич, которые включают токены, — например, не отображается перечеркнутый ноль.
 
-#### Fontsource
+#### Пакеты
 
-Установите пакеты:
+Оба шрифта устанавливаются из npm: [inter-ui](https://www.npmjs.com/package/inter-ui) и [@fontsource/jetbrains-mono](https://www.npmjs.com/package/@fontsource/jetbrains-mono).
 
 ```bash
-npm install @fontsource/inter @fontsource/jetbrains-mono
+npm install inter-ui @fontsource/jetbrains-mono
 ```
 
-Затем добавьте следующий код в ваши глобальные стили:
+Из пакета **inter-ui** подходит `inter.css`: в нем шрифт целиком — кириллица, спецсимволы и OpenType-фичи. В `inter-latin.css` нет ни кириллицы, ни части символов, а `inter-variable.css` объявляет семейство `InterVariable`, которого нет в токенах.
 
-```scss
-// Inter
-@import '@fontsource/inter/400.css';
-@import '@fontsource/inter/500.css';
-@import '@fontsource/inter/600.css';
-@import '@fontsource/inter/700.css';
-@import '@fontsource/inter/400-italic.css';
-@import '@fontsource/inter/500-italic.css';
+**@fontsource/jetbrains-mono** собран из файлов Google Fonts, в нем нет псевдографики и стрелок (`├ ─ →`): браузер берет их из следующего шрифта `--kbq-font-family-mono`. Если интерфейс их показывает, JetBrains Mono подключается файлами.
 
-// JetBrains Mono
-@import '@fontsource/jetbrains-mono/400.css';
-@import '@fontsource/jetbrains-mono/600.css';
-@import '@fontsource/jetbrains-mono/700.css';
+Файлы стилей добавляются в массив `styles` файла `angular.json`:
+
+```json
+"styles": [
+  "node_modules/inter-ui/inter.css",
+  "node_modules/@fontsource/jetbrains-mono/400.css",
+  "node_modules/@fontsource/jetbrains-mono/600.css",
+  "node_modules/@fontsource/jetbrains-mono/700.css",
+  "src/styles.css"
+]
 ```
 
-#### Google Fonts CDN
+#### Собственный хостинг
 
-Добавьте следующий код в тег `<head>`:
+Inter скачивается [с rsms.me](https://rsms.me/inter/download/): в папке `web` архива лежат файлы и готовый `inter.css`. Папка копируется в проект, например в `src/fonts/inter`.
+
+JetBrains Mono скачивается [из релиза шрифта](https://github.com/JetBrains/JetBrainsMono/releases/latest): в папке `fonts/webfonts` архива есть файлы, но нет файла стилей. Папка копируется в проект, например в `src/fonts/jetbrains-mono`, а рядом с файлами вручную пишется `jetbrains-mono.css` — по правилу `@font-face` на начертание, с именем семейства из токенов:
+
+```css
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('JetBrainsMono-Regular.woff2') format('woff2');
+}
+```
+
+Для 600 и 700 берутся `JetBrainsMono-SemiBold.woff2` и `JetBrainsMono-Bold.woff2`. Оба файла стилей добавляются в `styles`:
+
+```json
+"styles": [
+  "src/fonts/inter/inter.css",
+  "src/fonts/jetbrains-mono/jetbrains-mono.css",
+  "src/styles.css"
+]
+```
+
+#### Проверка файлов
+
+Inter и JetBrains Mono из любого другого источника — пакета, сборки или CDN — проверяются перед подключением: файлы должны содержать символы, которые показывает интерфейс, а Inter еще и OpenType-фичи из токенов: `calt`, `case`, `kern`, `liga`, `ss01`, `ss04`, `tnum` и `zero`. Сабсеты могут терять и то и другое — это зависит от их сборки. Дескриптор **unicode-range** лишь говорит браузеру, для каких символов запрашивать файл, а не какие символы в нем есть.
+
+### Текстовые стили
+
+Текст оформляется готовыми классами, например `kbq-headline` и `kbq-text-normal`; все классы перечислены [в дизайн-токенах](/ru/main/design-tokens/typography). Класс задает семейство, кегль, интерлиньяж, трекинг, вес, курсив, регистр и OpenType-фичи из переменных своего уровня, например `--kbq-typography-text-normal-font-size`. Переменные нужны, чтобы поправить отдельное свойство, а не чтобы собирать собственный текстовый стиль.
+
+Классы приходят [с готовой темой](/ru/main/theming/overview), а тема, собранная из SCSS-миксинов, добавляет их через `koobiq-typography()`.
 
 ```html
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<!-- Inter -->
-<link
-    href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap"
-    rel="stylesheet"
-/>
-<!-- JetBrains Mono -->
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+<h2 class="kbq-headline">Заголовок</h2>
+<p class="kbq-text-normal">Текст интерфейса</p>
 ```
+
+### Изменение шрифтов
+
+Семейства заданы тремя глобальными переменными: `--kbq-font-family-base` — текст интерфейса, `--kbq-font-family-accent` — заголовки и display-стили, `--kbq-font-family-mono` — код. Их переопределение меняет шрифты во всем интерфейсе. Переопределение объявляется после файлов токенов — например, в `src/styles.css`, который идет после них в `styles`, — иначе применяются значения токенов.
+
+```css
+:root {
+    --kbq-font-family-base: 'MySans', sans-serif;
+    --kbq-font-family-accent: 'MyDisplay', 'MySans', sans-serif;
+    --kbq-font-family-mono: 'MyMono', monospace;
+}
+```
+
+OpenType-фичи текстовых стилей остаются включенными и с другим шрифтом. `ss01` и `ss04` — стилистические наборы Inter, в другом шрифте они включают другие глифы, поэтому их проверяют или переопределяют и переменные `--kbq-typography-*-font-feature-settings`.
