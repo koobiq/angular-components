@@ -23,7 +23,7 @@ Koobiq follows the major version of Angular: Angular 21 takes `@koobiq/component
 3. **Act on what `ng add` prints**: each warning names a step it could not take and the guide that covers it.
 4. **Check the wiring** against the guide and fix only what is missing: the styles and their order in `angular.json`, the classes of `<body>`, the providers of the application.
 5. **Set the locale**: until the application provides one, the components render their own labels, such as placeholders and the names of icon buttons, in Russian. Provide the language of the application as the guide shows; ask the user when neither the request nor the project makes it clear.
-6. **Add the fonts** as `<site>/en/main/typography.md` shows: Fontsource when the application must not load fonts from a CDN.
+6. **Add the fonts** as `<site>/en/main/typography.md` shows.
 7. **Add only what the task needs**: the date adapter for the date components, `marked` for markdown, `highlight.js` for code blocks; the guide lists them.
 8. **Check that it works**: render the component the guide ends with, then run `ng build`. Where the build cannot run, as in some sandboxes, compile the templates with `npx ngc -p tsconfig.app.json --noEmit` instead.
 9. **Offer the MCP server** when the agent supports MCP: `<site>/en/main/ai-agents.md` shows how to add `@koobiq/mcp` to the project. Add it only if the user agrees.
