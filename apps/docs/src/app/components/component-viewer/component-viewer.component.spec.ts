@@ -370,8 +370,12 @@ describe('the group of a page in the search', () => {
         expect(group(await open('/components/alert/examples', locale))).toBe(examples);
     });
 
-    it('is the category again once the reader leaves the examples for the overview', async () => {
-        const harness = await open('/components/alert/examples');
+    it('is the examples once the reader comes from the overview, and the category again once they go back', async () => {
+        const harness = await open('/components/alert/overview');
+
+        await harness.navigateByUrl('/components/alert/examples');
+
+        expect(group(harness)).toBe('Examples');
 
         await harness.navigateByUrl('/components/alert/overview');
 
