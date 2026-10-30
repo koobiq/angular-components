@@ -160,7 +160,7 @@ class TestApp {
             tree.overwrite(p.ts, ts || '');
         };
 
-        it('renames the sole "pt-icons" token of a class list to "kbq"', async () => {
+        it('drops the sole "pt-icons" token from the class list of a kbq-icon element', async () => {
             const html = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="${DEPRECATED_SCOPE}"></i>`;
 
             overwriteProjectData({ html, project: currentProject, tree: appTree });
@@ -168,10 +168,10 @@ class TestApp {
             const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
             const [migratedHtml] = getProjectContent(tree, currentProject);
 
-            expect(migratedHtml).toBe(`<i kbq-icon="kbq-${replaceWith}" class="kbq"></i>`);
+            expect(migratedHtml).toBe(`<i kbq-icon="kbq-${replaceWith}" class=""></i>`);
         });
 
-        it('renames "pt-icons" at the start of a multi-class list', async () => {
+        it('drops "pt-icons" from the start of a multi-class list of a kbq-icon element', async () => {
             const html = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="${DEPRECATED_SCOPE} layout-column"></i>`;
 
             overwriteProjectData({ html, project: currentProject, tree: appTree });
@@ -179,10 +179,10 @@ class TestApp {
             const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
             const [migratedHtml] = getProjectContent(tree, currentProject);
 
-            expect(migratedHtml).toBe(`<i kbq-icon="kbq-${replaceWith}" class="kbq layout-column"></i>`);
+            expect(migratedHtml).toBe(`<i kbq-icon="kbq-${replaceWith}" class="layout-column"></i>`);
         });
 
-        it('renames "pt-icons" at the end of a multi-class list', async () => {
+        it('drops "pt-icons" from the end of a multi-class list of a kbq-icon element', async () => {
             const html = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="layout-column ${DEPRECATED_SCOPE}"></i>`;
 
             overwriteProjectData({ html, project: currentProject, tree: appTree });
@@ -190,10 +190,44 @@ class TestApp {
             const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
             const [migratedHtml] = getProjectContent(tree, currentProject);
 
-            expect(migratedHtml).toBe(`<i kbq-icon="kbq-${replaceWith}" class="layout-column kbq"></i>`);
+            expect(migratedHtml).toBe(`<i kbq-icon="kbq-${replaceWith}" class="layout-column"></i>`);
         });
 
-        it('keeps the font class on a plain icon element', async () => {
+        it.each([
+            ['kbq-icon', `kbq-icon="${DEPRECATED_SCOPE}-comment_16"`, 'kbq-icon="kbq-message_16"'],
+            ['kbq-icon-button', `kbq-icon-button="${DEPRECATED_SCOPE}-comment_16"`, 'kbq-icon-button="kbq-message_16"'],
+            ['kbq-icon-item', `kbq-icon-item="${DEPRECATED_SCOPE}-comment_16"`, 'kbq-icon-item="kbq-message_16"'],
+            ['a bound kbq-icon', `[kbq-icon]="'${DEPRECATED_SCOPE}-comment_16'"`, `[kbq-icon]="'kbq-message_16'"`],
+            ['a dynamic kbq-icon', '[kbq-icon]="icon"', '[kbq-icon]="icon"'],
+            ['a valueless kbq-icon', 'kbq-icon', 'kbq-icon']
+        ])('drops "pt-icons" from the class list of an element with %s', async (_, attr, migratedAttr) => {
+            const html = `<i ${attr} class="${DEPRECATED_SCOPE} ${DEPRECATED_SCOPE}-comment_16 layout-column"></i>`;
+
+            overwriteProjectData({ html, project: currentProject, tree: appTree });
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
+            const [migratedHtml] = getProjectContent(tree, currentProject);
+
+            expect(migratedHtml).toBe(`<i ${migratedAttr} class="kbq-message_16 layout-column"></i>`);
+        });
+
+        it('drops a `[class.pt-icons]` binding of a kbq-icon element and renames it elsewhere', async () => {
+            const html = [
+                `<i kbq-icon="${DEPRECATED_SCOPE}-comment_16" [class.${DEPRECATED_SCOPE}]="on"></i>`,
+                `<i class="${DEPRECATED_SCOPE}-comment_16" [class.${DEPRECATED_SCOPE}]="on"></i>`
+            ].join('\n');
+
+            overwriteProjectData({ html, project: currentProject, tree: appTree });
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
+            const [migratedHtml] = getProjectContent(tree, currentProject);
+
+            expect(migratedHtml).toBe(
+                ['<i kbq-icon="kbq-message_16" ></i>', '<i class="kbq-message_16" [class.kbq]="on"></i>'].join('\n')
+            );
+        });
+
+        it('renames "pt-icons" to "kbq" on an element without an icon directive', async () => {
             const html = `<i class="${DEPRECATED_SCOPE} ${DEPRECATED_SCOPE}-comment_16 layout-margin-right-s"></i>`;
 
             overwriteProjectData({ html, project: currentProject, tree: appTree });
