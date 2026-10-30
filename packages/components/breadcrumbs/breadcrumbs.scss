@@ -17,6 +17,13 @@
     .kbq-overflow-items {
         // add space not to cut focus outline
         padding: 1px;
+        margin: -1px;
+    }
+
+    .kbq-breadcrumbs__list {
+        display: flex;
+        align-items: center;
+        gap: var(--kbq-breadcrumbs-gap);
     }
 
     .kbq-breadcrumb-item__container {
@@ -25,13 +32,21 @@
     }
 
     &.kbq-breadcrumbs_first-item-negative-margin {
-        .kbq-overflow-items {
+        .kbq-breadcrumbs__list {
             margin-left: var(--kbq-breadcrumb-item-negative-margin);
+        }
+
+        .kbq-overflow-items {
+            margin-left: calc(var(--kbq-breadcrumb-item-negative-margin) - 1px);
         }
     }
 
     &.kbq-breadcrumbs_wrap {
         flex-wrap: wrap;
+
+        .kbq-breadcrumbs__list {
+            flex-wrap: wrap;
+        }
     }
 
     &.kbq-breadcrumbs_compact {
