@@ -888,7 +888,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'scrollbar',
                     hasApi: true,
                     apiId: 'scrollbar',
-                    hasExamples: true
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.Select,

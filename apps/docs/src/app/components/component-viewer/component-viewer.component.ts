@@ -75,7 +75,7 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
     // Stays `null` for an unknown id: the redirect to /404 is async, so the template renders at
     // least once with nothing resolved and has to tolerate it.
     protected structureItem: DocsStructureItem | null = null;
-    private readonly isApiTab = signal(false);
+    private readonly activeTab = signal<string | undefined>(undefined);
     private structureCategory: DocsStructureCategory | null = null;
 
     private readonly activatedRoute = inject(ActivatedRoute);
@@ -120,15 +120,24 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
         if (this.structureItem) this.pagePrefetch.prefetch(this.structureItem.id, tab, this.locale());
     }
 
-    protected onTabActivate(tab: object): void {
-        this.isApiTab.set(tab instanceof DocsComponentApiPageComponent);
+    // Overview and Examples render the same component, so the tab is told by the path of the route.
+    protected onTabActivate(): void {
+        this.activeTab.set(this.activatedRoute.firstChild?.routeConfig?.path);
     }
 
-    /** The group of the page in the search results: the category of the item, or the API on its API tab. */
+    /**
+     * The group of the page in the search results: the API or the examples on those tabs, so that they do not
+     * read as the overview of the item, and the category of the item on the overview.
+     */
     protected searchGroup(): string | null {
-        if (this.isApiTab()) return 'API';
-
-        return this.structureCategory?.name[this.locale()] ?? null;
+        switch (this.activeTab()) {
+            case DocsStructureItemTab.Api:
+                return this.t('apiTab');
+            case DocsStructureItemTab.Examples:
+                return this.t('examplesTab');
+            default:
+                return this.structureCategory?.name[this.locale()] ?? null;
+        }
     }
 
     /** Link to the item's source directory on GitHub, or `null` when the item has no known path. */

@@ -127,7 +127,6 @@
 /en/components/resizer/api
 /en/components/scrollbar/overview
 /en/components/scrollbar/api
-/en/components/scrollbar/examples
 /en/components/search-expandable/overview
 /en/components/search-expandable/api
 /en/components/select/overview
@@ -325,7 +324,6 @@
 /ru/components/resizer/api
 /ru/components/scrollbar/overview
 /ru/components/scrollbar/api
-/ru/components/scrollbar/examples
 /ru/components/search-expandable/overview
 /ru/components/search-expandable/api
 /ru/components/select/overview
