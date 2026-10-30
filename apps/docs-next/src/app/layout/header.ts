@@ -8,10 +8,11 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { DOCS_NEXT_SECTIONS } from '../data/sections';
 import {
     DOCS_NEXT_FRAMEWORKS,
-    DOCS_NEXT_VERSION_GROUPS,
     DocsNextFramework,
+    docsNextFrameworkTitle,
     DocsNextI18nKey,
-    DocsNextLocale
+    DocsNextLocale,
+    docsNextVersionShortTitle
 } from '../data/site';
 import { DocsNextSiteState } from '../services/site-state';
 import { DocsNextLogo } from './logo';
@@ -25,6 +26,8 @@ const THEME_OPTIONS: { mode: KbqThemeMode; title: DocsNextI18nKey; icon: string 
 
 /**
  * One row, left to right: logo, version, framework, sections, search, language, theme (spec/navigation/header.md).
+ * The version and the framework are always in sight; on a tablet the framework links fold into one dropdown
+ * (Figma: Navbar, 91:43170).
  */
 @Component({
     selector: 'docs-next-header',
@@ -48,14 +51,8 @@ export class DocsNextHeader {
 
     protected readonly sections = DOCS_NEXT_SECTIONS;
     protected readonly frameworks = DOCS_NEXT_FRAMEWORKS;
-    protected readonly versionGroups = computed(() =>
-        (['next', 'current', 'previous'] as const)
-            .map((group) => ({
-                title: DOCS_NEXT_VERSION_GROUPS[group],
-                versions: this.state.versions().filter((version) => version.group === group)
-            }))
-            .filter(({ versions }) => versions.length)
-    );
+    protected readonly frameworkTitle = docsNextFrameworkTitle;
+    protected readonly shortTitle = docsNextVersionShortTitle;
     protected readonly locales: { id: DocsNextLocale; title: string }[] = [
         { id: 'ru', title: 'Русский' },
         { id: 'en', title: 'English' }

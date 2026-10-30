@@ -18,6 +18,7 @@ import {
     docsNextIsLocale,
     DocsNextLocale,
     DocsNextVersion,
+    docsNextVersionShortTitle,
     docsNextVersionsOfCount
 } from '../data/site';
 
@@ -90,8 +91,11 @@ export class DocsNextSiteState {
     /** Versions to pick from; `?versions=N` in the address the site opens with tries a list of another length. */
     readonly versions = signal<readonly DocsNextVersion[]>(DOCS_NEXT_VERSIONS);
     readonly version = signal(readStored(this.window, STORAGE_KEYS.version) ?? '20');
-    readonly versionTitle = computed(
-        () => this.versions().find(({ id }) => id === this.version())?.title ?? this.version()
+    /** Title of the chosen version in the header: Next goes without its number. */
+    readonly versionTitle = computed(() =>
+        this.version() === 'next'
+            ? docsNextVersionShortTitle(this.version())
+            : (this.versions().find(({ id }) => id === this.version())?.title ?? this.version())
     );
 
     /** Whether articles drop their line length and take the whole width next to the contents. */

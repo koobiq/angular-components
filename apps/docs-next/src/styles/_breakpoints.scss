@@ -5,3 +5,10 @@
         @content;
     }
 }
+
+// From 720px to 1024px the desktop header is short of room (Figma: Navbar, 91:43170).
+@mixin docs-next-tablet() {
+    @media (min-width: 720px) and (max-width: 1024px) {
+        @content;
+    }
+}

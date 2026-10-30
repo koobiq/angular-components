@@ -29,6 +29,9 @@
 
 .docs-next-mobile-header__context {
     @include menu-button.docs-next-menu-button;
+
+    // Tabular figures keep the width of the version, and the row next to it, steady when it changes.
+    font-variant-numeric: tabular-nums;
 }
 
 .docs-next-mobile-header__button.kbq-icon-button {

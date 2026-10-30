@@ -31,6 +31,8 @@ export interface DocsNextVersion {
     id: string;
     title: string;
     group: 'next' | 'current' | 'previous';
+    /** Long-term support, marked LTS in the version menu. */
+    lts?: boolean;
 }
 
 /** Versions from the newest to the oldest (spec/context/version.md). The current one is the default. */
@@ -85,12 +87,6 @@ export const docsNextVersionRows = (count: number, perRow: number): number[] => 
     ];
 };
 
-export const DOCS_NEXT_VERSION_GROUPS: Record<DocsNextVersion['group'], DocsNextText> = {
-    next: { ru: 'Next', en: 'Next' },
-    current: { ru: 'Актуальная', en: 'Current' },
-    previous: { ru: 'Прошлые', en: 'Previous' }
-};
-
 /** Interface strings of the site. */
 export const DOCS_NEXT_I18N = {
     search: { ru: 'Поиск', en: 'Search' },
@@ -111,6 +107,7 @@ export const DOCS_NEXT_I18N = {
     menu: { ru: 'Меню', en: 'Menu' },
     close: { ru: 'Закрыть', en: 'Close' },
     back: { ru: 'Назад', en: 'Back' },
+    versionActive: { ru: 'Актуальная', en: 'Active' },
     versionAndFramework: { ru: 'Версия и фреймворк', en: 'Version and framework' },
     menuVariant: { ru: 'Вид меню', en: 'Menu layout' },
     menuLevels: { ru: 'Уровни', en: 'Levels' },

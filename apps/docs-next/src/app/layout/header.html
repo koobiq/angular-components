@@ -26,6 +26,18 @@
             </a>
         }
     </nav>
+
+    <button
+        kbq-button
+        class="docs-next-header__framework-button"
+        color="contrast"
+        kbqStyle="transparent"
+        [attr.aria-label]="`${state.t('framework')} ${frameworkTitle(state.framework())}`"
+        [kbqDropdownTriggerFor]="frameworkDropdown"
+    >
+        {{ frameworkTitle(state.framework()) }}
+        <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+    </button>
 </div>
 
 <nav
@@ -86,17 +98,38 @@
 </div>
 
 <kbq-dropdown #versionDropdown="kbqDropdown">
-    @for (group of versionGroups(); track group.title.en) {
-        <div kbqDropdownGroupHeader>{{ group.title[state.locale()] }}</div>
-        @for (version of group.versions; track version.id) {
-            <button
-                kbq-dropdown-item
-                [class.kbq-selected]="version.id === state.version()"
-                (click)="state.version.set(version.id)"
-            >
-                {{ version.title }}
-            </button>
-        }
+    @for (version of state.versions(); track version.id) {
+        <button
+            kbq-dropdown-item
+            [class.kbq-selected]="version.id === state.version()"
+            (click)="state.version.set(version.id)"
+        >
+            @if (version.group === 'next') {
+                {{ shortTitle(version.id) }}
+            } @else {
+                <span class="docs-next-header__version-row">
+                    <span class="docs-next-header__version-number">{{ version.title }}</span>
+                    @if (version.group === 'current') {
+                        <span class="docs-next-header__version-note">{{ state.t('versionActive') }}</span>
+                    } @else if (version.lts) {
+                        <span class="docs-next-header__version-note docs-next-header__version-note_caps">LTS</span>
+                    }
+                </span>
+            }
+        </button>
+    }
+</kbq-dropdown>
+
+<kbq-dropdown #frameworkDropdown="kbqDropdown">
+    @for (framework of frameworks; track framework.id) {
+        <a
+            kbq-dropdown-item
+            [class.kbq-selected]="framework.id === state.framework()"
+            [routerLink]="frameworkUrl(framework.id)"
+            (click)="onFrameworkClick(framework.id)"
+        >
+            {{ framework.title }}
+        </a>
     }
 </kbq-dropdown>
 

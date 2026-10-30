@@ -1,4 +1,5 @@
 @use '../../../../../packages/components/core/styles/common/tokens';
+@use '../../styles/breakpoints';
 
 :host {
     position: sticky;
@@ -30,8 +31,29 @@
 }
 
 .docs-next-header__version,
-.docs-next-header__framework {
+.docs-next-header__framework,
+.docs-next-header__framework-button {
     user-select: none;
+}
+
+// Tabular figures keep the width of the version, and the row next to it, steady when it changes.
+.docs-next-header__version {
+    font-variant-numeric: tabular-nums;
+}
+
+// Only one of the two framework switches is shown, so a screen reader meets one as well.
+.docs-next-header__framework-button {
+    display: none;
+}
+
+@include breakpoints.docs-next-tablet {
+    .docs-next-header__frameworks {
+        display: none;
+    }
+
+    .docs-next-header__framework-button {
+        display: inline-flex;
+    }
 }
 
 .docs-next-header__framework,
@@ -95,4 +117,25 @@
 
 .docs-next-header__end {
     gap: var(--kbq-size-xxs);
+}
+
+// Figma: Select Single Dropdown — versions (92:45036). Numbers in tabular figures, so the list reads as a column; the
+// current version and an LTS one carry a note on the right.
+.docs-next-header__version-row {
+    display: flex;
+}
+
+.docs-next-header__version-number {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, tabular-normal);
+
+    flex: 1;
+}
+
+.docs-next-header__version-note {
+    padding-left: var(--kbq-size-s);
+    color: var(--kbq-foreground-contrast-secondary);
+
+    &.docs-next-header__version-note_caps {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, caps-normal);
+    }
 }

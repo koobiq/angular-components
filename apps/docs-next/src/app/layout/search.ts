@@ -12,9 +12,11 @@ import { DocsNextSiteState } from '../services/site-state';
     template: `
         @if (withButton()) {
             <button class="docs-next-search__button" type="button" (click)="open()">
-                <i kbq-icon="kbq-magnifying-glass_16"></i>
-                <span class="docs-next-search__label">{{ state.t('search') }}</span>
-                <kbd class="docs-next-search__hotkey">⌘K</kbd>
+                <span class="docs-next-search__inner">
+                    <i kbq-icon="kbq-magnifying-glass_16" color="contrast-fade"></i>
+                    <span class="docs-next-search__label">{{ state.t('search') }}</span>
+                    <kbd class="docs-next-search__hotkey">⌘K</kbd>
+                </span>
             </button>
         }
 
