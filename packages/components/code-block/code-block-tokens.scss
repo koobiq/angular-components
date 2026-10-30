@@ -21,24 +21,28 @@
     --kbq-code-block-filled-header-background: transparent;
     --kbq-code-block-filled-actionbar-background: var(--kbq-background-card);
     --kbq-code-block-filled-actionbar-border-color: var(--kbq-line-contrast-less);
+    // The translucent container background cannot hide the code under the actionbar plate and the collapse fade:
+    // `bg-tertiary` is how the container looks over the page background.
+    --kbq-code-block-filled-actionbar-plate-background: var(--kbq-background-bg-tertiary);
     --kbq-code-block-filled-collapse-expanded-background: transparent;
     --kbq-code-block-filled-collapse-collapsed-background: linear-gradient(
         180deg,
         transparent,
-        var(--kbq-background-bg-secondary) 100%
+        var(--kbq-background-bg-tertiary) 100%
     );
-    --kbq-code-block-filled-collapse-button-expand-background: var(--kbq-background-bg-secondary);
+    --kbq-code-block-filled-collapse-button-expand-background: var(--kbq-background-bg-tertiary);
     --kbq-code-block-outline-container-background: var(--kbq-background-card);
     --kbq-code-block-outline-container-border-color: var(--kbq-divider-color, var(--kbq-line-contrast-less));
     --kbq-code-block-outline-header-background: var(--kbq-background-card);
     --kbq-code-block-outline-actionbar-background: var(--kbq-background-card);
     --kbq-code-block-outline-actionbar-border-color: var(--kbq-line-contrast-less);
+    --kbq-code-block-outline-actionbar-plate-background: var(--kbq-code-block-outline-container-background);
     --kbq-code-block-outline-collapse-expanded-background: transparent;
     --kbq-code-block-outline-collapse-collapsed-background: linear-gradient(
         180deg,
         transparent,
-        var(--kbq-background-bg) 100%
+        var(--kbq-code-block-outline-container-background) 100%
     );
-    --kbq-code-block-outline-collapse-button-expand-background: var(--kbq-background-card);
+    --kbq-code-block-outline-collapse-button-expand-background: var(--kbq-background-bg);
     --kbq-code-block-tab-size: 4;
 }

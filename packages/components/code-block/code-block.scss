@@ -1,5 +1,5 @@
 @use './code-block-theme' as theme;
-@use '../core/styles/common/squircle' as *;
+@use '../core/styles/common/squircle';
 
 .kbq-code-block {
     display: flex;
@@ -8,7 +8,7 @@
 
     border-width: var(--kbq-code-block-size-container-border-width);
     border-style: solid;
-    @include kbq-squircle(var(--kbq-code-block-size-container-border-radius));
+    @include squircle.kbq-squircle(var(--kbq-code-block-size-container-border-radius));
 
     box-sizing: border-box;
 
@@ -41,10 +41,14 @@
         }
     }
 
+    // The expanded "view all" button lies over the end of the code, so the code makes room for the button and the
+    // spacing under it.
     &:has(.kbq-code-block__view-all) {
         .kbq-code-block__main {
             .kbq-code-block__code {
-                padding-bottom: var(--kbq-size-3xl) !important;
+                padding-bottom: calc(
+                    var(--kbq-size-3xl) + var(--kbq-code-block-size-collapse-expanded-padding-bottom)
+                ) !important;
             }
         }
     }
@@ -53,7 +57,7 @@
         flex-grow: 1;
         flex-direction: column;
 
-        @include kbq-squircle(var(--kbq-code-block-size-container-border-radius));
+        @include squircle.kbq-squircle(var(--kbq-code-block-size-container-border-radius));
 
         &.cdk-keyboard-focused {
             outline-style: solid;
@@ -138,6 +142,10 @@
     }
 
     &.kbq-code-block_hide-tabs {
+        // The actionbar reaches the right edge, over the top of the vertical scrollbar track. Isolated by the block
+        // rather than by the scrollport, the track's z-index keeps the track above the actionbar and inside the block.
+        isolation: isolate;
+
         .kbq-code-block__header {
             padding: 0;
         }
@@ -147,17 +155,19 @@
             position: absolute;
             top: 0;
             right: 0;
-            margin: var(--kbq-size-s) var(--kbq-size-s) var(--kbq-size-s) 0;
+            padding: var(--kbq-size-s) var(--kbq-size-s) 0 0;
+            @include squircle.kbq-squircle(var(--kbq-code-block-size-container-border-radius), border-top-right-radius);
 
             .kbq-code-block__actionbar__button-stack {
                 border-width: 1px;
                 border-style: solid;
-                @include kbq-squircle(calc(var(--kbq-size-border-radius) + 1px));
+                @include squircle.kbq-squircle(calc(var(--kbq-size-border-radius) + 1px));
             }
         }
 
         .kbq-code-block__main {
             position: relative;
+            isolation: auto;
 
             .kbq-code-block__code {
                 padding: var(--kbq-code-block-size-no-header-content-padding-vertical)
@@ -174,11 +184,11 @@
         $radius: var(--kbq-code-block-size-container-border-radius);
 
         .kbq-code-block__header {
-            @include kbq-squircle($radius $radius 0 0);
+            @include squircle.kbq-squircle($radius $radius 0 0);
         }
 
         .kbq-code-block__main {
-            @include kbq-squircle(0 0 $radius $radius);
+            @include squircle.kbq-squircle(0 0 $radius $radius);
         }
     }
 
@@ -200,10 +210,10 @@
         position: absolute;
         bottom: calc(var(--kbq-code-block-size-container-border-width) * -1);
 
-        @include kbq-squircle(var(--kbq-code-block-size-container-border-radius));
+        @include squircle.kbq-squircle(var(--kbq-code-block-size-container-border-radius));
 
         .kbq-code-block__view-all__wrapper {
-            @include kbq-squircle(var(--kbq-size-border-radius));
+            @include squircle.kbq-squircle(var(--kbq-size-border-radius));
         }
 
         &.kbq-code-block__view-all_collapsed {

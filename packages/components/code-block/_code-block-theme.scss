@@ -16,6 +16,8 @@
 
     &.kbq-code-block_hide-tabs {
         .kbq-code-block__actionbar {
+            background: var(--kbq-#{$base}-actionbar-plate-background);
+
             .kbq-code-block__actionbar__button-stack {
                 border-color: var(--kbq-#{$base}-actionbar-border-color);
                 background: var(--kbq-#{$base}-actionbar-background);
@@ -24,17 +26,16 @@
     }
 
     .kbq-code-block__view-all {
-        .kbq-code-block__view-all__wrapper {
-            background: var(--kbq-#{$base}-collapse-button-expand-background);
-            opacity: 90%;
-        }
-
         &.kbq-code-block__view-all_expanded {
             background: var(--kbq-#{$base}-collapse-expanded-background);
         }
 
         &.kbq-code-block__view-all_collapsed {
             background: var(--kbq-#{$base}-collapse-collapsed-background);
+
+            .kbq-code-block__view-all__wrapper {
+                background: color-mix(in srgb, var(--kbq-#{$base}-collapse-button-expand-background) 90%, transparent);
+            }
         }
     }
 }
