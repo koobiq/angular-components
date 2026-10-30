@@ -2532,43 +2532,85 @@ describe('KbqNumberInput', () => {
             numberInput = fixture.debugElement.query(By.directive(KbqNumberInput)).injector.get(KbqNumberInput);
         });
 
-        it('should refuse a keystroke that takes the integer past Number.MAX_SAFE_INTEGER', async () => {
+        it('should keep a typed integer past Number.MAX_SAFE_INTEGER until blur, then clamp it', async () => {
             vi.useFakeTimers();
 
             await type('9007199254740991');
-            const text = inputElement.value;
+            await type('9007199254740993');
 
-            await type(`${text}2`);
+            expect(inputElement.value).toBe('9007199254740993');
+            expect(numberInput.value).toBe(Number.MAX_SAFE_INTEGER);
 
-            expect(inputElement.value).toBe(text);
+            dispatchFakeEvent(inputElement, 'blur');
+
+            expect(inputElement.value).toBe(grouped('9', '007', '199', '254', '740', '991'));
             expect(numberInput.value).toBe(Number.MAX_SAFE_INTEGER);
         });
 
-        it('should keep the caret after the same digits when it refuses a keystroke', async () => {
+        it('should clamp a fraction past the limit on blur', async () => {
             vi.useFakeTimers();
 
-            await type('9007199254740991');
-            const text = inputElement.value;
+            await type('9007199254740991,7');
 
-            await type(`${text.slice(0, 1)}9${text.slice(1)}`, 2);
+            expect(inputElement.value).toBe('9007199254740991,7');
+            expect(numberInput.value).toBeNull();
 
-            expect(inputElement.value).toBe(text);
-            expect(inputElement.selectionStart).toBe(1);
+            dispatchFakeEvent(inputElement, 'blur');
+
+            expect(inputElement.value).toBe(grouped('9', '007', '199', '254', '740', '991'));
+            expect(numberInput.value).toBe(Number.MAX_SAFE_INTEGER);
         });
 
-        it('should refuse a paste that takes the integer past Number.MAX_SAFE_INTEGER', async () => {
+        it('should clamp a 310-digit input on blur instead of clearing the field', async () => {
             vi.useFakeTimers();
 
             await type('9007199254740991');
-            const text = inputElement.value;
+            await type('1'.repeat(310));
+
+            expect(inputElement.value).toBe('1'.repeat(310));
+
+            dispatchFakeEvent(inputElement, 'blur');
+
+            expect(inputElement.value).toBe(grouped('9', '007', '199', '254', '740', '991'));
+            expect(numberInput.value).toBe(Number.MAX_SAFE_INTEGER);
+        });
+
+        it('should not move a value set past the limit down on ArrowUp', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.value = Number.MAX_SAFE_INTEGER + 1;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            numberInput.stepUp(1);
+            fixture.detectChanges();
+
+            expect(numberInput.value).toBe(Number.MAX_SAFE_INTEGER + 1);
+        });
+
+        it('should accept a paste past the limit and clamp it on blur', async () => {
+            vi.useFakeTimers();
 
             const paste = new Event('paste', { cancelable: true });
 
             Object.defineProperty(paste, 'clipboardData', { value: { getData: () => '9007199254740992' } });
             inputElement.dispatchEvent(paste);
 
-            expect(paste.defaultPrevented).toBe(true);
-            expect(inputElement.value).toBe(text);
+            expect(paste.defaultPrevented).toBe(false);
+
+            const input = new Event('input');
+
+            Object.defineProperty(input, 'inputType', { value: 'insertFromPaste' });
+            inputElement.value = '9007199254740992';
+            inputElement.dispatchEvent(input);
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(inputElement.value).toBe('9007199254740992');
+
+            dispatchFakeEvent(inputElement, 'blur');
+
+            expect(inputElement.value).toBe(grouped('9', '007', '199', '254', '740', '991'));
+            expect(numberInput.value).toBe(Number.MAX_SAFE_INTEGER);
         });
 
         it('should clamp steps to Number.MAX_SAFE_INTEGER', async () => {

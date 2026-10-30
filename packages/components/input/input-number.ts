@@ -124,23 +124,9 @@ export function isFloat(value: string): boolean {
     return /^-?\d+\.\d+$/.test(value);
 }
 
-/** Whether `value` is past `Number.MAX_SAFE_INTEGER` in magnitude, once its fraction is dropped. */
+/** Whether `value` is past `Number.MAX_SAFE_INTEGER` in magnitude. */
 function isPastSafeInteger(value: number): boolean {
-    return Math.trunc(Math.abs(value)) > Number.MAX_SAFE_INTEGER;
-}
-
-/** The caret position after the `digits`-th digit of `text`, or the start of `text` for no digits. */
-function caretAfterDigits(text: string, digits: number): number {
-    let position = 0;
-    let count = 0;
-
-    while (count < digits && position < text.length) {
-        if (/\d/.test(text[position])) count++;
-
-        position++;
-    }
-
-    return position;
+    return Math.abs(value) > Number.MAX_SAFE_INTEGER;
 }
 
 /**
@@ -254,10 +240,10 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     readonly valueInput = input<number | null | undefined>(undefined, { alias: 'value' });
 
     /**
-     * The numeric value of the field, bound with `[value]` or written by a form control. The field refuses
-     * a keystroke or a paste that takes its integer past `Number.MAX_SAFE_INTEGER`, the largest exact integer.
-     * A fraction of a value around `1e14` or more may be rounded, because the text is rebuilt from the model
-     * after a step, a write or a locale change.
+     * The numeric value of the field, bound with `[value]` or written by a form control. An integer typed past
+     * `Number.MAX_SAFE_INTEGER`, the largest exact integer, is clamped to it when the field loses focus, and the
+     * value does not change until then. A fraction of a value around `1e14` or more may be rounded, because the
+     * text is rebuilt from the model after a step, a write or a locale change.
      */
     get value(): number | null {
         return this.valueState() ?? null;
@@ -343,9 +329,6 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
     private valueFromPaste: number | null;
 
-    /** The text last written to the field: a keystroke that takes the integer past the limit restores it. */
-    private lastValidText = '';
-
     /** Pending `onInput` reformats by timer handle: cancelled on destroy, run at once before a step. */
     private readonly pendingReformats = new Map<ReturnType<typeof setTimeout>, (correctCaret: boolean) => void>();
 
@@ -425,7 +408,10 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             this.stateChanges.next();
         }
 
-        if (!isFocused) this.onTouched();
+        if (!isFocused) {
+            this.clampToSafeRange();
+            this.onTouched();
+        }
     }
 
     /**
@@ -500,6 +486,9 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         const reformat = (correctCaret: boolean) => {
             this.pendingReformats.delete(handle);
 
+            // Past the limit the text stays as typed: the field clamps it when it loses focus.
+            if (this.isBeyondSafeRange(this.viewValue)) return;
+
             const fromPaste = event.inputType === 'insertFromPaste';
             let formattedValue: string | null;
 
@@ -508,12 +497,6 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             } else {
                 /*this.viewValue is raw and should be reformatted to localized number */
                 formattedValue = this.formatViewValue();
-
-                if (this.exceedsSafeInteger(formattedValue)) {
-                    this.restoreViewValue(previousSelectionStart);
-
-                    return;
-                }
 
                 if (correctCaret && this.withThousandSeparator()) {
                     this.correctCaretForSeparator(currentValueLength, previousSelectionStart);
@@ -537,7 +520,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             this.localeService?.localeId()
         );
 
-        if (this.valueFromPaste === null || isNaN(this.valueFromPaste) || isPastSafeInteger(this.valueFromPaste)) {
+        if (this.valueFromPaste === null || isNaN(this.valueFromPaste)) {
             event.preventDefault();
         } else if (this.integer() && isFloat(this.valueFromPaste.toString())) {
             event.preventDefault();
@@ -553,6 +536,11 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         this.nativeElement.focus();
         this.commitPendingReformats();
 
+        // A value set past the limit from outside is not moved down by a step up.
+        if (this.value !== null && this.value > Number.MAX_SAFE_INTEGER) return;
+
+        this.clampToSafeRange();
+
         const res = Math.max(Math.min(add(this.value || 0, step), this.stepMax), this.stepMin);
 
         this.setViewValue(this.formatNumber(res));
@@ -565,6 +553,11 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     stepDown(step: number) {
         this.nativeElement.focus();
         this.commitPendingReformats();
+
+        // A value set below the limit from outside is not moved up by a step down.
+        if (this.value !== null && this.value < -Number.MAX_SAFE_INTEGER) return;
+
+        this.clampToSafeRange();
 
         const res = Math.min(Math.max(add(this.value || 0, -step), this.stepMin), this.stepMax);
 
@@ -634,7 +627,6 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         const cursorPosition = this.nativeElement.selectionStart;
 
         this.renderer.setProperty(this.nativeElement, 'value', value);
-        this.lastValidText = value ?? '';
 
         if (savePosition) {
             this.renderer.setProperty(this.nativeElement, 'selectionStart', cursorPosition);
@@ -642,25 +634,27 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         }
     }
 
-    /** Whether the integer part of a formatted `text` is past `Number.MAX_SAFE_INTEGER`. */
-    private exceedsSafeInteger(text: string | null): boolean {
-        const [integerPart] = normalizeNumber(text, this.config).split(KBQ_DEFAULT_PRECISION_SEPARATOR);
-
-        return isPastSafeInteger(Number(integerPart));
+    /**
+     * Whether the text is a number past `Number.MAX_SAFE_INTEGER`. Such text stays as typed until the field loses
+     * focus.
+     */
+    private isBeyondSafeRange(text: string): boolean {
+        return isPastSafeInteger(Number(normalizeNumber(text, this.config)));
     }
 
     /**
-     * Writes back the last valid text after a keystroke took the integer past the limit, with the caret after the
-     * digits it had before that keystroke.
+     * Clamps a typed value past `Number.MAX_SAFE_INTEGER` to the limit. Runs when the field loses focus and before
+     * a step.
      */
-    private restoreViewValue(previousSelectionStart: number): void {
-        const typedBefore = this.viewValue.slice(0, Math.max(0, previousSelectionStart - 1));
-        const digitsBefore = typedBefore.replace(/\D/g, '').length;
-        const caret = caretAfterDigits(this.lastValidText, digitsBefore);
+    private clampToSafeRange(): void {
+        const typed = Number(normalizeNumber(this.viewValue, this.config));
 
-        this.setViewValue(this.lastValidText);
-        this.renderer.setProperty(this.nativeElement, 'selectionStart', caret);
-        this.renderer.setProperty(this.nativeElement, 'selectionEnd', caret);
+        if (!isPastSafeInteger(typed)) return;
+
+        const formatted = this.formatNumber(Math.sign(typed) * Number.MAX_SAFE_INTEGER);
+
+        this.setViewValue(formatted);
+        this.viewToModelUpdate(formatted);
     }
 
     /** Writes a value from outside the field: reformats it and reports the change. */
