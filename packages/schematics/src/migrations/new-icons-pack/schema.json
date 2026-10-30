@@ -6,7 +6,7 @@
     "properties": {
         "project": {
             "type": "string",
-            "description": "Name of the project",
+            "description": "Name of the project, or a folder to migrate (e.g. ./libs). Without it the whole workspace is migrated",
             "$default": {
                 "$source": "projectName"
             }
@@ -28,11 +28,11 @@
         },
         "customDataPath": {
             "type": "string",
-            "description": "Use this option to specify styles extension preferred in your project"
+            "description": "JSON file with the icon mapping, an array of { \"replace\": \"kbq-<old>\", \"replaceWith\": \"kbq-<new>\" }, relative to the workspace root. Without it the built-in mapping is used"
         },
         "customIconReplacementPath": {
             "type": "string",
-            "description": "Use this option to specify styles extension preferred in your project"
+            "description": "JSON file with the scope pair, [{ \"replace\": \"mc\", \"replaceWith\": \"kbq\" }], relative to the workspace root. Without it the scope is mc -> kbq"
         }
     }
 }

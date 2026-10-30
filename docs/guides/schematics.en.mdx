@@ -36,7 +36,9 @@ ng generate @koobiq/components:css-selectors
 
 #### deprecated-icons
 
-Removes or replaces icons marked as deprecated.
+Moves icons off the deprecated `pt-icons` font to `kbq` and renames the deprecated icons.
+
+**When to use:** while the project still has `pt-icons` classes (`class="pt-icons pt-icons-<name>"`).
 
 ```bash
 ng generate @koobiq/components:deprecated-icons
@@ -67,6 +69,30 @@ ng generate @koobiq/components:loader-overlay-size-attr
 Replaces icon names with new ones.
 
 **When to use:** after updating the [`@koobiq/icons`](https://github.com/koobiq/icons) library version to `11.0.0` and higher.
+
+```bash
+ng generate @koobiq/components:icons-replacement
+```
+
+#### Icon migrations: which ones and in what order
+
+The three icon schematics are not run by `ng update`; run the ones that match the project yourself, in this order: `icons-replacement` renames the names the other two produce, so it goes last.
+
+| Order | Schematic           | Run it when the project has                                                          |
+| ----- | ------------------- | ------------------------------------------------------------------------------------ |
+| 1     | `new-icons-pack`    | `@koobiq/icons` below `8.0.2`: the `mc` prefix (`mc-<name>`, `kbq-icon="mc-<name>"`) |
+| 2     | `deprecated-icons`  | `pt-icons` classes (`class="pt-icons pt-icons-<name>"`)                              |
+| 3     | `icons-replacement` | `@koobiq/icons` below `11.0.0`                                                       |
+
+Each of them only reports what it finds until it is run with `--fix=true`, and each logs which icon mapping it uses. Common options:
+
+- `--project` — a project name or a folder such as `./libs`; without it the whole workspace is migrated. `node_modules` and `dist` are always skipped.
+- `--custom-data-path` (`new-icons-pack`, `icons-replacement`) — a JSON file with your own icon mapping, resolved from the workspace root: `[{ "replace": "kbq-add-to-list_16", "replaceWith": "kbq-file-plus-o_16" }]`. Without it the built-in mapping is used.
+
+```bash
+ng generate @koobiq/components:new-icons-pack --project ./libs
+ng generate @koobiq/components:new-icons-pack --project ./libs --fix=true
+```
 
 ---
 

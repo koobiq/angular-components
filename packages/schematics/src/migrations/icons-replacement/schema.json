@@ -6,7 +6,7 @@
     "properties": {
         "project": {
             "type": "string",
-            "description": "Name of the project",
+            "description": "Name of the project, or a folder to migrate (e.g. ./libs). Without it the whole workspace is migrated",
             "$default": {
                 "$source": "projectName"
             }
@@ -18,15 +18,24 @@
         },
         "allowed": {
             "type": "array",
-            "default": [".html", ".ts", ".scss"],
+            "default": [
+                ".html",
+                ".ts",
+                ".scss"
+            ],
             "items": {
                 "type": "string"
             },
             "description": "Allowed file extensions to check"
         },
+        "customDataPath": {
+            "type": "string",
+            "description": "JSON file with an icon mapping that replaces the built-in one, an array of { \"replace\": \"<old>\", \"replaceWith\": \"<new>\" }, resolved from the workspace root"
+        },
         "replacementDataPath": {
             "type": "string",
-            "description": "Custom replacement data path. Will be used as relative to `project.root`"
+            "description": "Deprecated, use customDataPath. Resolved from the project root or the folder first",
+            "x-deprecated": "Use --custom-data-path, resolved from the workspace root."
         }
     }
 }
