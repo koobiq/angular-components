@@ -841,6 +841,26 @@ test.describe('documentation for agents', () => {
         }
     });
 
+    test('serves the files the Markdown of an item links: its examples, its API, its tokens and the component guide', async ({
+        request
+    }) => {
+        const item = await (await request.get('/en/components/select.md')).text();
+        const paths = Array.from(
+            item.matchAll(/https:\/\/koobiq\.io(\/(?:examples|api|tokens)\/[^\s)]+\.md)/g),
+            ([, path]) => path
+        );
+
+        expect(paths).toEqual(expect.arrayContaining(['/api/select.md', '/tokens/select.md']));
+        expect(paths.some((path) => path.startsWith('/examples/'))).toBe(true);
+
+        for (const path of [...paths, '/which-component-when.md']) {
+            const response = await request.get(path);
+
+            expect(response.status(), path).toBe(200);
+            expect(response.headers()['content-type'], path).toContain('text/markdown');
+        }
+    });
+
     test('serves every item in one file as well', async ({ request }) => {
         const full = await request.get('/llms-full.txt');
 
@@ -859,7 +879,7 @@ test.describe('documentation for agents', () => {
     test('points every page of an item at the English Markdown at its own address, on the host that serves it', async ({
         page
     }) => {
-        await page.goto('/ru/components/alert/api');
+        await page.goto('/ru/components/alert/overview');
         await waitForHydration(page);
 
         await expect(page.locator('link[rel="alternate"][type="text/markdown"]')).toHaveAttribute(
@@ -867,6 +887,15 @@ test.describe('documentation for agents', () => {
             '/ru/components/alert.md'
         );
         await expect(page.locator('link[rel="describedby"]')).toHaveAttribute('href', '/llms.txt');
+
+        await page.goto('/ru/components/alert/api');
+        await waitForHydration(page);
+
+        // The API tab leads to the API of the entry point, which the Markdown of the item only links.
+        await expect(page.locator('link[rel="alternate"][type="text/markdown"]')).toHaveAttribute(
+            'href',
+            '/api/alert.md'
+        );
 
         const markdown = await page.request.get('/ru/components/alert.md');
 

@@ -1,6 +1,7 @@
 /
 /en
 /en/main/installation/overview
+/en/main/ai-agents/overview
 /en/main/versioning/overview
 /en/main/theming/overview
 /en/main/localization/overview
@@ -199,6 +200,7 @@
 /en/other/search-smart/overview
 /ru
 /ru/main/installation/overview
+/ru/main/ai-agents/overview
 /ru/main/versioning/overview
 /ru/main/theming/overview
 /ru/main/localization/overview

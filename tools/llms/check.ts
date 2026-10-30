@@ -1,29 +1,48 @@
 /**
  * Checks the documentation for agents without writing it: the committed `llms.txt` is what the generator writes now,
- * every item of the documentation has its Markdown under every locale, and every file the site serves is plain Markdown
- * an agent can read without the site (see `findMarkdownProblems`). Needs the manifest `yarn run docs:api-gen` writes.
+ * every item of the documentation has its Markdown under every locale, every file the site serves is plain Markdown an
+ * agent can read without the site (see `findMarkdownProblems`) and short enough to read whole, and the component guide
+ * has a line for every component. Needs the manifest `yarn run docs:api-gen` writes.
  */
 import { readFileSync } from 'fs';
 import { DocsLocale } from '../../apps/docs/src/app/constants/locale';
 import { docsHasMarkdown } from '../../apps/docs/src/app/page-paths';
-import { docsGetItems } from '../../apps/docs/src/app/structure';
+import { docsGetItems, docsGetItemsByCategoryId, DocsStructureCategoryId } from '../../apps/docs/src/app/structure';
+import {
+    COMPONENT_GUIDE_PATH,
+    COMPONENT_GUIDE_RU_PATH,
+    findGuideProblems,
+    parseComponentGuide
+} from './component-guide';
 import { generateLlms, LLMS_TXT_PATH } from './generate';
 import { LLMS_FULL_TXT, LLMS_TXT } from './llms-txt';
 import { findMarkdownProblems } from './markdown-problems';
-import { getMarkdownPath } from './sources';
+import { MAX_FILE_LENGTH } from './site-files';
+import { getMarkdownPath, KOOBIQ_SITE_ORIGIN, LLMS_SITE_ORIGIN, readRepoFile } from './sources';
 
 /** The llms.txt of a site passes under 50,000 characters in the Agent-Friendly Docs Spec: agents read it whole. */
 const MAX_INDEX_LENGTH = 50_000;
 
-/** Claude Code's WebFetch cuts a page at 100,000 characters: a larger one is read in part. */
-const LARGE_FILE_LENGTH = 100_000;
-
 const checkLlms = async (): Promise<void> => {
+    // The committed llms.txt links koobiq.io: built for another site, it would differ on every link.
+    if (LLMS_SITE_ORIGIN !== KOOBIQ_SITE_ORIGIN) {
+        throw new Error(`the committed ${LLMS_TXT} links ${KOOBIQ_SITE_ORIGIN}: run without KOOBIQ_DOCS_ORIGIN`);
+    }
+
     const { files, llmsTxt } = await generateLlms();
     const served = new Set(files.keys());
     const errors: string[] = [];
-    // Worth knowing, not worth failing for.
-    const largeFiles: string[] = [];
+
+    // The MCP server reads both languages of the guide and expects the same components in each.
+    for (const path of [COMPONENT_GUIDE_PATH, COMPONENT_GUIDE_RU_PATH]) {
+        errors.push(
+            ...findGuideProblems(
+                parseComponentGuide(readRepoFile(path), path),
+                docsGetItemsByCategoryId(DocsStructureCategoryId.Components),
+                new Set(docsGetItems().map(({ id }) => id))
+            ).map((problem) => `${path}: ${problem}`)
+        );
+    }
 
     // A checkout with Windows line endings holds the same index.
     if (readFileSync(LLMS_TXT_PATH, 'utf-8').replace(/\r\n/g, '\n') !== llmsTxt) {
@@ -60,7 +79,12 @@ const checkLlms = async (): Promise<void> => {
     for (const [path, text] of [[LLMS_TXT, llmsTxt], ...files].filter(([path]) => !copies.has(path))) {
         errors.push(...findMarkdownProblems(text, served).map((problem) => `${path}: ${problem}`));
 
-        if (path !== LLMS_TXT && path !== LLMS_FULL_TXT && text.length > LARGE_FILE_LENGTH) largeFiles.push(path);
+        // llms-full.txt is for the tools that index it, not for reading; the newline a file ends with does not count.
+        const length = text.trimEnd().length;
+
+        if (path !== LLMS_TXT && path !== LLMS_FULL_TXT && length > MAX_FILE_LENGTH) {
+            errors.push(`${path}: ${length} characters, over the ${MAX_FILE_LENGTH} an agent reads at once`);
+        }
     }
 
     const sizes = [...files].map(([path, text]) => ({ path, size: Buffer.byteLength(text) }));
@@ -72,12 +96,6 @@ const checkLlms = async (): Promise<void> => {
         .map(({ path, size }) => `${path} ${Math.round(size / 1024)} KB`);
 
     console.info(`${files.size} files, ${Math.round(total / 1024)} KB; largest: ${largest.join(', ')}`);
-
-    if (largeFiles.length) {
-        console.warn(
-            `⚠️ ${largeFiles.length} files are longer than the ${LARGE_FILE_LENGTH} characters WebFetch reads: ${largeFiles.join(', ')}`
-        );
-    }
 
     if (errors.length) {
         for (const error of errors) console.error(`❌ ${error}`);

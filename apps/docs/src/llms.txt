@@ -2,12 +2,14 @@
 
 > Koobiq is an open-source design system for designers and developers, focused on designing products related to **information security**.
 
-`@koobiq/components` 21.x for Angular 21. Every link below leads to one item of the documentation as Markdown, in English, in the order of its tabs: the overview with the full source of its examples, the API, the extra examples. Without `.md`, the address opens the page itself.
+`@koobiq/components` 21.x for Angular 21. Every link below leads to one item of the documentation as Markdown, in English: the text of its overview and examples tabs, which links every example, the API of its entry point and the variables of its component, each a file of its own. Without `.md`, the address opens the page itself.
+
+To pick the component for a task, start from [Which component when](https://koobiq.io/which-component-when.md): it maps the words of a request to the component and names the neighbor it is confused with.
 
 Rules for code that uses Koobiq:
 
 - Import from the secondary entry points only, for example `import { KbqButtonModule } from '@koobiq/components/button'`: the root of the package exports nothing. Shared providers, tokens and utilities come from `@koobiq/components/core`.
-- Start from the closest example of an item instead of guessing its inputs. The API section of the item lists every input and output; where the text of a page disagrees with it, the API section is right.
+- Start from the closest example of an item instead of guessing its inputs. The API of its entry point lists every input and output; where the text of a page disagrees with it, the API is right.
 - Put text controls, such as `input[kbqInput]`, `textarea[kbqTextarea]` and `kbq-select`, inside `<kbq-form-field>`; their hints and errors go inside it too.
 - Style with the `--kbq-*` design tokens and the `kbq-*` typography classes; never hard-code colors, sizes or fonts.
 - Icons come from `@koobiq/icons` through `<i kbq-icon="kbq-..."></i>`; an icon-only button needs an accessible label.
@@ -16,6 +18,7 @@ Rules for code that uses Koobiq:
 ## Main
 
 - [Installation](https://koobiq.io/en/main/installation.md): This guide describes how to set up an Angular project to use `@koobiq/components`.
+- [AI agents](https://koobiq.io/en/main/ai-agents.md): AI coding agents, such as Claude Code, Codex, Cursor or GitHub Copilot, build better UI with Koobiq when they read its documentation instead of guessing.
 - [Versioning](https://koobiq.io/en/main/versioning.md): Our releases follow the versioning described in the [Semver spec](http://semver.org/).
 - [Theming](https://koobiq.io/en/main/theming.md): A theme in Koobiq is a set of CSS variables.
 - [Localization](https://koobiq.io/en/main/localization.md): Koobiq components render some strings of their own — the filters menu of the filter bar, the tooltips of the code block, the accessible names of every icon-only button, the placeholder of a datepicker, and so on.

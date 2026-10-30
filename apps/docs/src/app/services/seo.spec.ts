@@ -35,6 +35,10 @@ describe(docsResolveSeo.name, () => {
         expect(seo.markdownUrl).toBe('/ru/components/select.md');
     });
 
+    it('points the API tab at the Markdown of the API of its entry point', () => {
+        expect(docsResolveSeo('/ru/components/tag-input/api', DocsLocale.Ru).markdownUrl).toBe('/api/tags.md');
+    });
+
     it('uses the main illustration when an item has no preview', () => {
         const seo = docsResolveSeo('/en/components/button-group/api', DocsLocale.En);
 

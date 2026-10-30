@@ -35,6 +35,7 @@ packages/
 ├── angular-luxon-adapter/     # Luxon date adapter
 ├── angular-moment-adapter/    # Moment date adapter
 ├── schematics/                # ng-add and ng-update migrations, shipped inside @koobiq/components
+├── skills/                    # Agent Skills for consuming projects: hand-written instructions that read the docs for agents
 ├── cli/                       # Release management CLI (@koobiq/cli)
 └── mcp/                       # MCP server (@koobiq/mcp) — serves this repository's API, guides and examples to a coding agent
 apps/docs/                     # Documentation site (koobiq.io): Angular SSR + prerender
@@ -66,7 +67,7 @@ packages/components/<component-name>/
 
 Cross-entry-point imports go through the `@koobiq/components/<name>` alias mapped in the root `tsconfig.json`, never through relative paths into another component's directory. A nested entry point such as `scrollbar/deprecated` carries its own `ng-package.json` and alias.
 
-A new component touches more than its directory: the alias in `tsconfig.json`, the API guard list in `tools/api-extractor/config.json`, a `dev-<name>` project in `angular.json` plus a `dev:<name>` script in `package.json`, an `export *` of its `e2e.ts` in `packages/e2e/scenarios.ts`, the docs navigation in `apps/docs/src/app/structure.ts`, and an examples folder under `packages/docs-examples/components/<name>/`. The commit scope needs nothing: the enum is built from the directory names.
+A new component touches more than its directory: the alias in `tsconfig.json`, the API guard list in `tools/api-extractor/config.json`, a `dev-<name>` project in `angular.json` plus a `dev:<name>` script in `package.json`, an `export *` of its `e2e.ts` in `packages/e2e/scenarios.ts`, the docs navigation in `apps/docs/src/app/structure.ts`, a line in the component index of `docs/guides/which-component-when.{en,ru}.md`, and an examples folder under `packages/docs-examples/components/<name>/`. The commit scope needs nothing: the enum is built from the directory names.
 
 ## Common Commands
 
@@ -174,6 +175,7 @@ yarn run check-api-docs                  # Ratchet on public members with no des
 yarn run approve-api-docs                # Record the new counts after adding descriptions — the ratchet fails in both directions
 yarn run docs:generate-llms              # Regenerate the committed apps/docs/src/llms.txt and the Markdown for agents in dist/docs-llms
 yarn run check-llms                      # Fail on a stale llms.txt or on Markdown for agents that is incomplete or not plain Markdown (CI)
+yarn run check-skills                    # Fail on a skill the Agent Skills specification rejects or a link of it to a file the site does not serve for agents (CI)
 yarn run check-typings                   # Type-check the typings of every published package in dist/ with skipLibCheck off (CI)
 ```
 
@@ -189,7 +191,7 @@ Every pull request runs these workflows:
 | Unit tests                        | `styles:build-all`, then `unit:all` (one Vitest run of the `angular` and `node` projects, not `mcp` — that is `mcp.yml`)                                     |
 | MCP                               | `build:mcp` on its own (needs no `@koobiq/components` build), `check-mcp-data` and `unit:mcp`                                                                |
 | E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                                             |
-| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs` and `check-llms`                             |
+| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs`, `check-llms` and `check-skills`             |
 | Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs and `ssr:build`, both fail on a warning   |
 | Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label                                       |
 | License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                                                   |

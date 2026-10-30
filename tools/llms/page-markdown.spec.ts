@@ -1,4 +1,4 @@
-import { LlmsExample, pageSummary, pageToMarkdown } from './page-markdown';
+import { exampleFilesToMarkdown, LlmsExample, pageSummary, pageToMarkdown } from './page-markdown';
 
 const EXAMPLES: Record<string, LlmsExample> = {
     'alert-overview': {
@@ -41,6 +41,20 @@ describe(pageToMarkdown.name, () => {
                 '<kbq-alert>Text</kbq-alert>',
                 '```'
             ].join('\n')
+        );
+    });
+
+    it('links an example to where its code lives, when told where', () => {
+        expect(
+            pageToMarkdown('Intro.\n\n<Example id="alert-overview" />', {
+                path: 'alert.en.mdx',
+                headingDepth: 2,
+                resolveExample,
+                resolveUrl,
+                linkExample: ({ id }) => `https://koobiq.io/examples/${id}.md`
+            })
+        ).toBe(
+            'Intro.\n\n[**Example: Alert overview** (`alert-overview`)](https://koobiq.io/examples/alert-overview.md)'
         );
     });
 
@@ -111,5 +125,21 @@ describe(pageSummary.name, () => {
 
     it('returns null for a page without an introduction', () => {
         expect(summarize('### Size\n\nText.')).toBeNull();
+    });
+});
+
+describe(exampleFilesToMarkdown.name, () => {
+    it('writes every file of an example as a block of code named after it', () => {
+        expect(exampleFilesToMarkdown(EXAMPLES['alert-overview'].files)).toBe(
+            [
+                '```ts alert-overview-example.ts',
+                "@Component({ templateUrl: 'alert-overview-example.html' })",
+                '```',
+                '',
+                '```html alert-overview-example.html',
+                '<kbq-alert>Text</kbq-alert>',
+                '```'
+            ].join('\n')
+        );
     });
 });

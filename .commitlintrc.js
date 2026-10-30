@@ -31,6 +31,7 @@ const config = {
                 'experimental',
                 'mcp',
                 'schematics',
+                'skills',
                 'dev',
                 'e2e',
                 'examples',

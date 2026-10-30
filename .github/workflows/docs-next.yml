@@ -14,6 +14,9 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     if: ${{ github.repository_owner == 'koobiq' }}
+    env:
+      # The links of the documentation for agents lead to the site it is deployed to (tools/llms).
+      KOOBIQ_DOCS_ORIGIN: https://next.koobiq.io
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

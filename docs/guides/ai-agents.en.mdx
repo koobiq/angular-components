@@ -1,0 +1,115 @@
+AI coding agents, such as Claude Code, Codex, Cursor or GitHub Copilot, build better UI with Koobiq when they read its documentation instead of guessing. Agent Skills teach them how to work with Koobiq and where to read, the MCP server answers from the packages your project has installed, and every page of this documentation is also Markdown they can read. The skills hold no copy of the documentation: they read the site of the version your project uses, so they stay current without updates. Where the site disagrees with the typings of the version you have installed, the typings are right.
+
+### Agent Skills
+
+A skill is a folder of instructions in the open [Agent Skills](https://agentskills.io) format. An agent reads the short description of every skill it has and loads a skill when a task matches it. Koobiq has three skills, for Koobiq 21 and later:
+
+| Skill                    | Use it for                                                                                                                                      | Example request                                                                           |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `koobiq-angular-setup`   | Adding Koobiq to an Angular project: `ng add`, then the styles, theme, locale and fonts it needs                                                | "Add Koobiq to this project"                                                              |
+| `koobiq-angular`         | Building UI with `@koobiq/components`: the component for a task, its imports, inputs and examples, forms, theming with design tokens, and icons | "Add a form to create a user: a name, a role from a list, a switch to send an invitation" |
+| `koobiq-angular-upgrade` | Upgrading a project to a new version of Koobiq: `ng update`, then the warnings and the manual steps it leaves                                   | "Upgrade Koobiq to the latest version and fix what breaks"                                |
+
+`koobiq-angular` does not pick a component by its name. It finds the task in [which component when](/which-component-when.md), which names the component to use, the neighbor it is often confused with, and why, then reads the page of the component, the example closest to the task and the API of its entry point.
+
+#### How the skills read the documentation
+
+A skill reads the version of `@koobiq/components` in your project, then the site of that version: `koobiq.io` for the latest major version, `v<major>.koobiq.io` for an older one. It downloads the files it needs with `curl` where it can run commands, because a fetch tool that summarizes pages may rewrite the code in them. When the site cannot be reached, the skill says so and works from the typings in `node_modules`.
+
+#### Installing
+
+The [skills CLI](https://github.com/vercel-labs/skills) installs the skills into the folders of the agents you choose, such as `.claude/skills` or `.agents/skills`:
+
+```bash
+npx skills add koobiq/angular-components/packages/skills
+```
+
+Add `--skill koobiq-angular` to install only one of them. The [GitHub CLI](https://cli.github.com) installs them as well:
+
+```bash
+gh skill install koobiq/angular-components angular/koobiq-angular
+```
+
+The skills change only when the way of reading the documentation does; `npx skills update` or `gh skill update` brings them up to date. Whatever release they come from, they read the site of the version your project uses; to install the skills of a given release, add its tag: `npx skills add koobiq/angular-components/packages/skills#<version>` or `gh skill install koobiq/angular-components angular/koobiq-angular@<version>`.
+
+#### Network access
+
+The skills need to reach `koobiq.io` and its subdomains. In Claude Code, allow them in `.claude/settings.json`:
+
+```json
+{
+    "permissions": {
+        "allow": ["WebFetch(domain:koobiq.io)", "WebFetch(domain:*.koobiq.io)"]
+    }
+}
+```
+
+With the sandbox on, these rules also let commands such as `curl` reach the site; without it, Claude Code asks before each `curl` the skills run unless you allow it. Codex cloud and the Copilot coding agent block the internet by default: add `koobiq.io` and the `v<major>.koobiq.io` you use to the allowlist of the Codex environment or of the agent firewall.
+
+#### Using the skills
+
+An agent loads a skill on its own when the request matches the description of the skill. To make sure it does, name the skill in the request: "Use the koobiq-angular skill to add a filter bar to the table".
+
+The skills are instructions only: they run no scripts of their own and read nothing but the Koobiq site. Install them from `koobiq/angular-components`, and review what an agent changes as you would review the code of a colleague.
+
+### MCP server
+
+The MCP server `@koobiq/mcp` answers an agent from the packages your project has installed: the API of a component, icons, design tokens, examples, guides, and which component fits a task. Install it in the project:
+
+```bash
+npm install -D @koobiq/mcp
+```
+
+Then register it with the agent, for Claude Code in `.mcp.json` at the root of the project:
+
+```json
+{
+    "mcpServers": {
+        "koobiq": { "command": "npx", "args": ["koobiq-mcp"] }
+    }
+}
+```
+
+The server starts inside the project and reads its `node_modules`, so its answers follow the versions you have installed. It works alongside the skills.
+
+| Tool                   | What it answers                                                                               |
+| ---------------------- | --------------------------------------------------------------------------------------------- |
+| `search`               | Finds entry points, symbols, examples, icons and design tokens by words in English or Russian |
+| `get_component`        | The API of an entry point: inputs, outputs, selectors and `exportAs`                          |
+| `get_example`          | The source of an example from the documentation                                               |
+| `get_icon`             | The name and markup of an icon                                                                |
+| `get_token`            | The CSS variable of a design token and its value in each theme                                |
+| `get_guide`            | A guide or a section of it: installation, theming, localization, migration and others         |
+| `migrate`              | What changed between two versions and which entry points lost API                             |
+| `which_component_when` | Which component fits a task and which neighbor does not, with the reason                      |
+| `list_components`      | Every entry point of `@koobiq/components`, as ids the other tools accept                      |
+
+### Documentation for LLMs
+
+Every page of this documentation is also available as Markdown, short enough for an agent that reads the web to read whole:
+
+| File                                                                                       | What it holds                                                                                                        |
+| ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| [llms.txt](/llms.txt)                                                                      | The index: the rules for code that uses Koobiq, and a link to the Markdown of every page with what the page is about |
+| [which-component-when.md](/which-component-when.md)                                        | The words of a request mapped to the component that does the task and the neighbor it is confused with               |
+| The address of a page with `.md` at the end, such as [select.md](/en/components/select.md) | The text of the page, with a link to every example, to the API of its entry point and to the tokens of its component |
+| `/examples/<id>.md`, such as [select-multiple.md](/examples/select-multiple.md)            | One example with every file of it                                                                                    |
+| `/api/<entry-point>.md`, such as [api/select.md](/api/select.md)                           | The API of an entry point, as its API tab shows it                                                                   |
+| [llms-full.txt](/llms-full.txt)                                                            | All the pages with their examples and API in one file of about 4 MB: for tools that index it, not for a chat         |
+
+Give an agent the address of `llms.txt` and let it open the files it needs. The links in every file lead to the same site, so the files of `next.koobiq.io` link those of `next.koobiq.io`. The Markdown is in English under every language of the site: a model reads it just as well and answers in the language you ask in.
+
+### Instructions for the project
+
+Agents, Claude Code included, read the instructions of a project from `AGENTS.md` at its root; a project that also has a `CLAUDE.md` includes it there with an `@AGENTS.md` line. A few lines there make an agent use Koobiq even when a request does not mention it:
+
+```markdown
+## UI
+
+This project uses the Koobiq design system, `@koobiq/components`.
+
+- Build UI with the `koobiq-angular` skill; upgrade Koobiq with the `koobiq-angular-upgrade` skill.
+- Without the skills, read https://koobiq.io/llms.txt and the Markdown of a component before writing code with it.
+- Import from the secondary entry points only, such as `@koobiq/components/button`.
+- Style with the `--kbq-*` design tokens; never hard-code colors, sizes or fonts.
+```
