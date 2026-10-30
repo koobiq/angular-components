@@ -650,7 +650,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'input',
                     hasApi: true,
                     apiId: 'input',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-13')
                 },
                 {
                     id: DocsStructureItemId.FileUpload,

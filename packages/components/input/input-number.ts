@@ -124,6 +124,10 @@ export function isFloat(value: string): boolean {
     return /^-?\d+\.\d+$/.test(value);
 }
 
+function isPastSafeInteger(value: number): boolean {
+    return Math.abs(value) > Number.MAX_SAFE_INTEGER;
+}
+
 /**
  * Number of digits after the decimal point. Exponent-aware, so `1e-7` reports `7` rather than the
  * `0` that reading `'1e-7'.split('.')` would give.
@@ -302,6 +306,14 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         return this.localeConfiguration().number;
     }
 
+    private get stepMin(): number {
+        return Math.max(this.min(), -Number.MAX_SAFE_INTEGER);
+    }
+
+    private get stepMax(): number {
+        return Math.min(this.max(), Number.MAX_SAFE_INTEGER);
+    }
+
     private readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'input',
         KBQ_INPUT_LOCALE_CONFIGURATION
@@ -388,7 +400,10 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             this.stateChanges.next();
         }
 
-        if (!isFocused) this.onTouched();
+        if (!isFocused) {
+            this.clampToSafeRange();
+            this.onTouched();
+        }
     }
 
     /**
@@ -463,6 +478,9 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         const reformat = (correctCaret: boolean) => {
             this.pendingReformats.delete(handle);
 
+            // Past the limit the text stays as typed: the field clamps it when it loses focus.
+            if (this.isBeyondSafeRange(this.viewValue)) return;
+
             const fromPaste = event.inputType === 'insertFromPaste';
             let formattedValue: string | null;
 
@@ -510,7 +528,12 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         this.nativeElement.focus();
         this.commitPendingReformats();
 
-        const res = Math.max(Math.min(add(this.value || 0, step), this.max()), this.min());
+        // A value set past the limit from outside is not moved down by a step up.
+        if (this.value !== null && this.value > Number.MAX_SAFE_INTEGER) return;
+
+        this.clampToSafeRange();
+
+        const res = Math.max(Math.min(add(this.value || 0, step), this.stepMax), this.stepMin);
 
         this.setViewValue(this.formatNumber(res));
 
@@ -523,7 +546,12 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         this.nativeElement.focus();
         this.commitPendingReformats();
 
-        const res = Math.min(Math.max(add(this.value || 0, -step), this.min()), this.max());
+        // A value set below the limit from outside is not moved up by a step down.
+        if (this.value !== null && this.value < -Number.MAX_SAFE_INTEGER) return;
+
+        this.clampToSafeRange();
+
+        const res = Math.min(Math.max(add(this.value || 0, -step), this.stepMin), this.stepMax);
 
         this.setViewValue(this.formatNumber(res));
 
@@ -598,6 +626,21 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         }
     }
 
+    private isBeyondSafeRange(text: string): boolean {
+        return isPastSafeInteger(Number(normalizeNumber(text, this.config)));
+    }
+
+    private clampToSafeRange(): void {
+        const typed = Number(normalizeNumber(this.viewValue, this.config));
+
+        if (!isPastSafeInteger(typed)) return;
+
+        const formatted = this.formatNumber(Math.sign(typed) * Number.MAX_SAFE_INTEGER);
+
+        this.setViewValue(formatted);
+        this.viewToModelUpdate(formatted);
+    }
+
     /** Writes a value from outside the field: reformats it and reports the change. */
     private setValue(value: number | null): void {
         const oldValue = this.valueState();
@@ -657,15 +700,19 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             .split(separator)
             .map((valuePart) => normalizeNumber(valuePart, this.config));
 
-        return this.createLocalizedNumberFromParts(+intPart, fractionPart);
+        const integer = +intPart;
+
+        // A lone sign before the decimal separator (`-,5`) is no number yet: clear the field, do not print NaN.
+        if (!Number.isFinite(integer)) return null;
+
+        return this.createLocalizedNumberFromParts(integer, fractionPart);
     }
 
     private formatNumber(value: number | null | undefined): string | null {
-        if (value === null || value === undefined) return null;
+        if (value === null || value === undefined || !Number.isFinite(value)) return null;
 
-        const [intPart, fractionPart] = value.toString().split(KBQ_DEFAULT_PRECISION_SEPARATOR);
-
-        return this.createLocalizedNumberFromParts(+intPart, fractionPart);
+        // The whole value is formatted: `toString()` writes `1.5e-7` with an exponent that `split` would tear apart.
+        return this.createLocalizedNumberFromParts(value === 0 ? 0 : value);
     }
 
     private createLocalizedNumberFromParts(intPart: number, fractionPart?: string): string {
