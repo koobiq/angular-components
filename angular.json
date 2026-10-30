@@ -141,6 +141,48 @@
                 }
             }
         },
+        "koobiq-docs-next": {
+            "projectType": "application",
+            "root": "apps/docs-next",
+            "sourceRoot": "apps/docs-next/src",
+            "prefix": "docs-next",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/docs-next"
+                        },
+                        "index": "apps/docs-next/src/index.html",
+                        "browser": "apps/docs-next/src/main.ts",
+                        "tsConfig": "apps/docs-next/tsconfig.app.json",
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "apps/docs-next/src/assets",
+                                "output": "/assets"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "dist/docs-next-content",
+                                "output": "/content"
+                            }
+                        ],
+                        "styles": ["apps/docs-next/src/main.scss"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular/build:dev-server",
+                    "options": {
+                        "buildTarget": "koobiq-docs-next:build"
+                    }
+                }
+            }
+        },
         "components": {
             "projectType": "library",
             "root": "packages/components",

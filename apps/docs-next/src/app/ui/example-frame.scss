@@ -1,0 +1,99 @@
+@use '../../../../../packages/components/core/styles/common/tokens';
+@use '../../styles/breakpoints';
+
+:host {
+    display: block;
+    margin: var(--kbq-size-s) 0 var(--kbq-size-xl);
+}
+
+.docs-next-example {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--kbq-line-contrast-less);
+    border-radius: var(--kbq-size-m);
+    background: var(--kbq-background-bg);
+}
+
+// Default placement: 32px around the example, at least 160 high (spec/examples/placement.md).
+.docs-next-example__body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 160px;
+    box-sizing: border-box;
+    padding: var(--kbq-size-xxl);
+}
+
+.docs-next-example__slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--kbq-size-xxs);
+    width: 100%;
+    max-width: 320px;
+    padding: var(--kbq-size-l);
+    border: 1px dashed var(--kbq-line-contrast-fade);
+    border-radius: var(--kbq-size-s);
+    text-align: center;
+}
+
+.docs-next-example__name {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+
+    color: var(--kbq-foreground-contrast);
+}
+
+.docs-next-example__hint {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.docs-next-example__footer {
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-l);
+    padding: var(--kbq-size-s) var(--kbq-size-xl);
+    border-top: 1px solid var(--kbq-line-contrast-less);
+}
+
+// A pseudo link on a native button, which brings its own frame and fill.
+.docs-next-example__code-toggle {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.docs-next-example__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-3xs);
+    margin-left: auto;
+
+    [kbqLink] {
+        margin-left: var(--kbq-size-xs);
+    }
+}
+
+.docs-next-example__code {
+    border-top: 1px solid var(--kbq-line-contrast-less);
+}
+
+// On a phone the example keeps 16px around it (spec/examples/placement.md) and the footer holds icon buttons only.
+@include breakpoints.docs-next-mobile {
+    .docs-next-example__body {
+        padding: var(--kbq-size-l);
+    }
+
+    .docs-next-example__footer {
+        gap: var(--kbq-size-xs);
+        padding: var(--kbq-size-xxs) var(--kbq-size-xs);
+    }
+
+    .docs-next-example__actions [kbqLink] {
+        margin-left: 0;
+    }
+}

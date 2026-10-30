@@ -1,0 +1,132 @@
+/**
+ * Components of both libraries. Taken from the navigation prototype of the unified docs spec
+ * (docs-spec/prototype-nav-codex-sol61-high/catalog.js): `angular` is the entry point directory in
+ * packages/components, `react` the component name in @koobiq/react-components.
+ */
+export interface DocsNextComponent {
+    id: string;
+    title: string;
+    angular?: string;
+    react?: string;
+}
+
+/** Docs pages of the current site that live in the directory of another entry point. */
+const ANGULAR_SOURCE_DIRS: Record<string, string> = {
+    'button-group': 'button',
+    'clamped-list': 'clamped-text',
+    'icon-button': 'icon',
+    'icon-item': 'icon',
+    tag: 'tags',
+    'tag-autocomplete': 'tags',
+    'tag-input': 'tags',
+    'tag-list': 'tags'
+};
+
+/** Source directory of a component on GitHub, for the framework it exists for. */
+export const docsNextComponentGithubUrl = (
+    component: DocsNextComponent,
+    framework: 'angular' | 'react'
+): string | undefined => {
+    if (framework === 'angular') {
+        return (
+            component.angular &&
+            `https://github.com/koobiq/angular-components/tree/main/packages/components/${ANGULAR_SOURCE_DIRS[component.angular] ?? component.angular}`
+        );
+    }
+
+    return (
+        component.react &&
+        `https://github.com/koobiq/react-components/tree/main/packages/components/src/components/${component.react}`
+    );
+};
+
+/** Tabs of a component page, in the order of the tab row. */
+export const DOCS_NEXT_COMPONENT_TABS = ['overview', 'content', 'api', 'examples'] as const;
+
+export const DOCS_NEXT_COMPONENTS: readonly DocsNextComponent[] = [
+    { id: 'accordion', title: 'Accordion', angular: 'accordion', react: 'Accordion' },
+    { id: 'actions-panel', title: 'Actions panel', angular: 'actions-panel', react: 'ActionsPanel' },
+    { id: 'alert', title: 'Alert', angular: 'alert', react: 'Alert' },
+    { id: 'animated-icon', title: 'Animated icon', react: 'AnimatedIcon' },
+    { id: 'app-switcher', title: 'App switcher', angular: 'app-switcher' },
+    { id: 'autocomplete', title: 'Autocomplete', angular: 'autocomplete', react: 'Autocomplete' },
+    { id: 'backdrop', title: 'Backdrop', react: 'Backdrop' },
+    { id: 'badge', title: 'Badge', angular: 'badge', react: 'Badge' },
+    { id: 'breadcrumbs', title: 'Breadcrumbs', angular: 'breadcrumbs', react: 'Breadcrumbs' },
+    { id: 'button', title: 'Button', angular: 'button', react: 'Button' },
+    { id: 'button-group', title: 'Button group', angular: 'button-group', react: 'ButtonGroup' },
+    { id: 'button-toggle', title: 'Button toggle', angular: 'button-toggle', react: 'ButtonToggleGroup' },
+    { id: 'calendar', title: 'Calendar', react: 'Calendar' },
+    { id: 'checkbox', title: 'Checkbox', angular: 'checkbox', react: 'Checkbox' },
+    { id: 'checkbox-group', title: 'Checkbox group', react: 'CheckboxGroup' },
+    { id: 'clamped-list', title: 'Clamped list', angular: 'clamped-list', react: 'ClampedList' },
+    { id: 'clamped-text', title: 'Clamped text', angular: 'clamped-text', react: 'ClampedText' },
+    { id: 'code-block', title: 'Code block', angular: 'code-block', react: 'CodeBlock' },
+    { id: 'container', title: 'Container', react: 'Container' },
+    { id: 'content-panel', title: 'Content panel', angular: 'content-panel', react: 'ContentPanel' },
+    { id: 'date-input', title: 'Date input', react: 'DateInput' },
+    { id: 'datepicker', title: 'Datepicker', angular: 'datepicker', react: 'DatePicker' },
+    { id: 'description-list', title: 'Description list', angular: 'dl', react: 'DescriptionList' },
+    { id: 'dialog', title: 'Dialog', react: 'Dialog' },
+    { id: 'divider', title: 'Divider', angular: 'divider', react: 'Divider' },
+    { id: 'dropdown', title: 'Dropdown', angular: 'dropdown', react: 'DropdownMenu' },
+    { id: 'ellipsis-center', title: 'Ellipsis center', angular: 'ellipsis-center' },
+    { id: 'empty-state', title: 'Empty state', angular: 'empty-state', react: 'EmptyState' },
+    { id: 'file-trigger', title: 'File trigger', react: 'FileTrigger' },
+    { id: 'file-upload', title: 'File upload', angular: 'file-upload', react: 'FileUpload' },
+    { id: 'filter-bar', title: 'Filter bar', angular: 'filter-bar' },
+    { id: 'flag', title: 'Flag', angular: 'flag', react: 'Flag' },
+    { id: 'flex-box', title: 'Flex box', react: 'FlexBox' },
+    { id: 'form', title: 'Form', react: 'Form' },
+    { id: 'form-field', title: 'Form field', angular: 'form-field', react: 'FormField' },
+    { id: 'grid', title: 'Grid', react: 'Grid' },
+    { id: 'highlight', title: 'Highlight', react: 'Highlight' },
+    { id: 'icon', title: 'Icon', angular: 'icon' },
+    { id: 'icon-button', title: 'Icon button', angular: 'icon-button', react: 'IconButton' },
+    { id: 'icon-item', title: 'Icon item', angular: 'icon-item', react: 'IconItem' },
+    { id: 'inline-edit', title: 'Inline edit', angular: 'inline-edit' },
+    { id: 'input', title: 'Input', angular: 'input', react: 'Input' },
+    { id: 'input-number', title: 'Input number', react: 'InputNumber' },
+    { id: 'link', title: 'Link', angular: 'link', react: 'Link' },
+    { id: 'list', title: 'List', angular: 'list', react: 'List' },
+    { id: 'loader-overlay', title: 'Loader overlay', angular: 'loader-overlay' },
+    { id: 'markdown', title: 'Markdown', angular: 'markdown', react: 'Markdown' },
+    { id: 'menu', title: 'Menu', react: 'Menu' },
+    { id: 'modal', title: 'Modal', angular: 'modal', react: 'Modal' },
+    { id: 'navbar', title: 'Navbar', angular: 'navbar', react: 'Navbar' },
+    { id: 'notification-center', title: 'Notification center', angular: 'notification-center' },
+    { id: 'overflow-items', title: 'Overflow items', angular: 'overflow-items' },
+    { id: 'popover', title: 'Popover', angular: 'popover', react: 'Popover' },
+    { id: 'progress-bar', title: 'Progress bar', angular: 'progress-bar', react: 'ProgressBar' },
+    { id: 'progress-spinner', title: 'Progress spinner', angular: 'progress-spinner', react: 'ProgressSpinner' },
+    { id: 'radio', title: 'Radio', angular: 'radio', react: 'RadioGroup' },
+    { id: 'resizer', title: 'Resizer', angular: 'resizer', react: 'Resizable' },
+    { id: 'scrollbar', title: 'Scrollbar', angular: 'scrollbar' },
+    { id: 'search-expandable', title: 'Search expandable', angular: 'search-expandable' },
+    { id: 'search-input', title: 'Search input', react: 'SearchInput' },
+    { id: 'select', title: 'Select', angular: 'select', react: 'Select' },
+    { id: 'sidebar', title: 'Sidebar', angular: 'sidebar', react: 'Sidebar' },
+    { id: 'sidepanel', title: 'Sidepanel', angular: 'sidepanel', react: 'SidePanel' },
+    { id: 'skeleton', title: 'Skeleton', angular: 'skeleton', react: 'SkeletonBlock' },
+    { id: 'split-button', title: 'Split button', angular: 'split-button', react: 'SplitButton' },
+    { id: 'splitter', title: 'Splitter', angular: 'splitter' },
+    { id: 'table', title: 'Table', angular: 'table', react: 'Table' },
+    { id: 'tabs', title: 'Tabs', angular: 'tabs', react: 'Tabs' },
+    { id: 'tag', title: 'Tag', angular: 'tag', react: 'Tag' },
+    { id: 'tag-autocomplete', title: 'Tag autocomplete', angular: 'tag-autocomplete', react: 'TagAutocomplete' },
+    { id: 'tag-input', title: 'Tag input', angular: 'tag-input', react: 'TagInput' },
+    { id: 'tag-list', title: 'Tag list', angular: 'tag-list', react: 'TagList' },
+    { id: 'textarea', title: 'Textarea', angular: 'textarea', react: 'Textarea' },
+    { id: 'time-range', title: 'Time range', angular: 'time-range', react: 'TimeRange' },
+    { id: 'timepicker', title: 'Timepicker', angular: 'timepicker', react: 'TimePicker' },
+    { id: 'timezone', title: 'Timezone', angular: 'timezone' },
+    { id: 'title', title: 'Title', angular: 'title' },
+    { id: 'toast', title: 'Toast', angular: 'toast', react: 'ToastProvider' },
+    { id: 'toggle', title: 'Toggle', angular: 'toggle', react: 'Toggle' },
+    { id: 'tooltip', title: 'Tooltip', angular: 'tooltip', react: 'Tooltip' },
+    { id: 'top-bar', title: 'Top bar', angular: 'top-bar', react: 'TopBar' },
+    { id: 'tree', title: 'Tree', angular: 'tree', react: 'Tree' },
+    { id: 'tree-select', title: 'Tree select', angular: 'tree-select', react: 'TreeSelect' },
+    { id: 'typography', title: 'Typography', react: 'Typography' },
+    { id: 'username', title: 'Username', angular: 'username', react: 'Username' }
+];

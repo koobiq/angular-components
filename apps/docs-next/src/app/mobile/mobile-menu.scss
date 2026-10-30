@@ -1,0 +1,234 @@
+@use '../../../../../packages/components/core/styles/common/tokens';
+
+// The dialog lives in the top layer, so the host takes no room in the row it is placed in.
+:host {
+    display: contents;
+}
+
+// Figma: Drawer Top bar (66:33908): Icon Button - Mobile (73:35841), 38 × 48, 4px from the sides.
+.docs-next-menu__top {
+    display: flex;
+    flex: none;
+    align-items: center;
+    height: 48px;
+    padding: 0 var(--kbq-size-xxs);
+    border-bottom: 1px solid var(--kbq-line-contrast-less);
+}
+
+.docs-next-menu__icon-button.kbq-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 48px;
+    padding: 0;
+}
+
+.docs-next-menu__close.kbq-icon-button {
+    margin-left: auto;
+}
+
+// Figma: List starts 8px down and ends with a 48px List End Space.
+.docs-next-menu__scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--kbq-size-s) 0 var(--kbq-size-5xl);
+
+    // The back row sticks right under the top bar; the gap goes after it instead.
+    &:has(> .docs-next-menu__back) {
+        padding-top: 0;
+    }
+}
+
+.docs-next-menu__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+// Figma: Tree List Item - Mobile, 48 high. The selected page sits on a fill 4px inside the island.
+.docs-next-menu__item {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-s);
+    width: 100%;
+    min-height: 48px;
+    box-sizing: border-box;
+    padding: var(--kbq-size-m) var(--kbq-size-l);
+    border: none;
+    background: none;
+    color: var(--kbq-foreground-contrast);
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+    isolation: isolate;
+
+    &::before {
+        position: absolute;
+        inset: 0 var(--kbq-size-xxs);
+        z-index: -1;
+        border-radius: var(--kbq-size-s);
+        content: '';
+    }
+
+    &:focus-visible::before {
+        box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+    }
+
+    &:active::before,
+    &[aria-current='page']::before {
+        background: var(--kbq-states-background-transparent-hover);
+    }
+
+    &.docs-next-menu__item_unavailable {
+        color: var(--kbq-foreground-contrast-secondary);
+    }
+
+    &.docs-next-menu__item_nested {
+        padding-left: calc(var(--kbq-size-l) + var(--kbq-size-l));
+    }
+}
+
+.docs-next-menu__item_section {
+    padding-right: var(--kbq-size-xxs);
+}
+
+.docs-next-menu__item_current-section,
+.docs-next-menu__accordion-header {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
+}
+
+.docs-next-menu__title {
+    flex: 1;
+    min-width: 0;
+}
+
+.docs-next-menu__chevron {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+// Figma: Back List Item (65:18949), sticky over the list of the section.
+.docs-next-menu__back {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
+
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-s);
+    width: 100%;
+    height: 48px;
+    padding: 0 var(--kbq-size-l);
+    border: none;
+    border-bottom: 1px solid var(--kbq-line-contrast-less);
+    background: var(--kbq-background-bg);
+    color: var(--kbq-foreground-contrast);
+    cursor: pointer;
+    outline: none;
+
+    &:focus-visible {
+        box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+    }
+
+    & + * {
+        margin-top: var(--kbq-size-s);
+    }
+}
+
+// The header of an expanded section stays on top while its pages scroll by (Figma: Nav Drawer #2 - onScroll). The
+// list starts 8px down, which a sticky offset counts from, so the header lifts by as much to touch the top bar.
+.docs-next-menu__accordion-header[aria-expanded='true'] {
+    position: sticky;
+    top: calc(-1 * var(--kbq-size-s));
+    z-index: 1;
+    background: var(--kbq-background-bg);
+
+    // The line shows only while the header is stuck over the list; a shadow, so the list does not move under it.
+    &.docs-next-menu__accordion-header_stuck {
+        box-shadow: 0 1px 0 var(--kbq-line-contrast-less);
+    }
+}
+
+// Pages of an accordion hang on a line, as in the tree of the mockup (Figma: Indent, 1px line and 16px after it).
+.docs-next-menu__list_tree .docs-next-menu__item {
+    padding-left: calc(var(--kbq-size-l) + 1px + var(--kbq-size-l));
+
+    &::after {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: var(--kbq-size-l);
+        width: 1px;
+        background: var(--kbq-line-contrast-less);
+        content: '';
+    }
+
+    &.docs-next-menu__item_nested {
+        padding-left: calc(var(--kbq-size-l) + 1px + var(--kbq-size-l) * 2);
+    }
+}
+
+.docs-next-menu__group {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, caps-compact-strong);
+
+    padding: var(--kbq-size-l) var(--kbq-size-l) var(--kbq-size-xs);
+    color: var(--kbq-foreground-contrast-secondary);
+
+    &.docs-next-menu__group_tree {
+        padding-left: calc(var(--kbq-size-l) + 1px + var(--kbq-size-l));
+    }
+}
+
+.docs-next-menu__divider {
+    height: 1px;
+    margin: var(--kbq-size-s) var(--kbq-size-l);
+    border: none;
+    background: var(--kbq-line-contrast-less);
+}
+
+// A service switch to compare the two layouts of the mockup; not part of the design.
+.docs-next-menu__variant {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kbq-size-xs);
+    margin: var(--kbq-size-xl) var(--kbq-size-l) 0;
+    padding-top: var(--kbq-size-l);
+    border-top: 1px dashed var(--kbq-line-contrast-fade);
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.docs-next-menu__variant-label {
+    margin-right: var(--kbq-size-xxs);
+}
+
+.docs-next-menu__variant-option {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+
+    padding: var(--kbq-size-xxs) var(--kbq-size-s);
+    border: 1px solid var(--kbq-line-contrast-fade);
+    border-radius: var(--kbq-size-xs);
+    background: none;
+    color: var(--kbq-foreground-contrast);
+    cursor: pointer;
+
+    &[aria-pressed='true'] {
+        border-color: transparent;
+        // theme-fade leaves the theme text short of AA, as in the version sheet.
+        background: var(--kbq-background-theme-less);
+        color: var(--kbq-foreground-theme);
+    }
+}

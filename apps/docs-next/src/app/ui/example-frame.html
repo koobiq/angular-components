@@ -1,0 +1,96 @@
+<figure class="docs-next-example" [attr.aria-label]="exampleTitle()">
+    <div class="docs-next-example__body">
+        <div class="docs-next-example__slot">
+            <span class="docs-next-example__name">{{ exampleTitle() }}</span>
+            <span class="docs-next-example__hint">{{ state.t('examplePlaceholder') }}</span>
+        </div>
+    </div>
+
+    <div class="docs-next-example__footer">
+        @if (files().length) {
+            @if (state.isMobile()) {
+                <button
+                    kbq-button
+                    class="kbq-button-icon"
+                    color="theme"
+                    kbqStyle="transparent"
+                    [attr.aria-expanded]="codeVisible()"
+                    [attr.aria-label]="codeVisible() ? state.t('hideCode') : state.t('showCode')"
+                    [kbqTooltip]="codeVisible() ? state.t('hideCode') : state.t('showCode')"
+                    (click)="codeVisible.set(!codeVisible())"
+                >
+                    <i kbq-icon="kbq-code_16"></i>
+                </button>
+            } @else {
+                <button
+                    kbqLink
+                    pseudo
+                    class="docs-next-example__code-toggle"
+                    type="button"
+                    [attr.aria-expanded]="codeVisible()"
+                    (click)="codeVisible.set(!codeVisible())"
+                >
+                    {{ codeVisible() ? state.t('hideCode') : state.t('showCode') }}
+                </button>
+            }
+        }
+
+        <div class="docs-next-example__actions">
+            <button
+                kbq-button
+                class="kbq-button-icon"
+                color="theme"
+                kbqStyle="transparent"
+                disabled
+                [attr.aria-label]="state.t('reload')"
+                [kbqTooltip]="state.t('reload')"
+            >
+                <i kbq-icon="kbq-arrow-rotate-right_16"></i>
+            </button>
+            <button
+                kbq-button
+                class="kbq-button-icon"
+                color="theme"
+                kbqStyle="transparent"
+                disabled
+                [attr.aria-label]="state.t('expand')"
+                [kbqTooltip]="state.t('expand')"
+            >
+                <i kbq-icon="kbq-arrows-expand-diagonal_16"></i>
+            </button>
+            <button
+                kbq-button
+                class="kbq-button-icon"
+                color="theme"
+                kbqStyle="transparent"
+                disabled
+                [attr.aria-label]="state.t('openInNewTab')"
+                [kbqTooltip]="state.t('openInNewTab')"
+            >
+                <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
+            </button>
+            @if (state.isMobile()) {
+                <a
+                    kbq-button
+                    class="kbq-button-icon"
+                    color="theme"
+                    href="https://stackblitz.com"
+                    kbqStyle="transparent"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    aria-label="StackBlitz"
+                >
+                    <img alt="" height="16" src="assets/images/stackblitz.svg" width="11" />
+                </a>
+            } @else {
+                <a kbqLink external size="big" href="https://stackblitz.com" rel="noopener noreferrer" target="_blank">
+                    StackBlitz
+                </a>
+            }
+        </div>
+    </div>
+
+    @if (codeVisible()) {
+        <kbq-code-block class="docs-next-example__code" noBorder [files]="codeFiles()" />
+    }
+</figure>

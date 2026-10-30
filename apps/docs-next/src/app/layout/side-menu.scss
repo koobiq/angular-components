@@ -1,0 +1,79 @@
+@use '../../../../../packages/components/core/styles/common/tokens';
+
+// Figma: Aside, 240 wide, list items 32 high with a 12px inset. The list starts 48px under the header, so its first
+// item is level with the title of the article.
+:host {
+    display: flex;
+    height: 100%;
+}
+
+.docs-next-side-menu__content {
+    box-sizing: border-box;
+    // The right inset is the width of the scrollbar track, so the bar sits beside the items, not over them.
+    padding: 48px var(--kbq-scrollbar-track-size) var(--kbq-size-xxl) var(--kbq-size-s);
+}
+
+.docs-next-side-menu__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.docs-next-side-menu__header {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, caps-compact-strong);
+
+    padding: var(--kbq-size-s) var(--kbq-size-m);
+    margin-top: var(--kbq-size-s);
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+.docs-next-side-menu__divider {
+    height: 1px;
+    margin: var(--kbq-size-s) var(--kbq-size-m);
+    border: none;
+    background: var(--kbq-line-contrast-less);
+}
+
+.docs-next-side-menu__item {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-xs);
+    min-height: 32px;
+    box-sizing: border-box;
+    padding: var(--kbq-size-xs) var(--kbq-size-m);
+    border-radius: var(--kbq-size-s);
+    color: var(--kbq-foreground-contrast);
+    text-decoration: none;
+    outline: none;
+
+    &:hover {
+        background: var(--kbq-states-background-transparent-hover);
+    }
+
+    &:focus-visible {
+        box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+    }
+
+    &.docs-next-side-menu__item_selected {
+        background: var(--kbq-background-theme-less);
+    }
+
+    // Still a link for the mouse, the keyboard and a screen reader; secondary text keeps the AA contrast.
+    &.docs-next-side-menu__item_unavailable {
+        color: var(--kbq-foreground-contrast-secondary);
+    }
+
+    &.docs-next-side-menu__item_nested {
+        padding-left: calc(var(--kbq-size-m) + var(--kbq-size-l));
+    }
+}
+
+.docs-next-side-menu__title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

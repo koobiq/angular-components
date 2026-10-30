@@ -369,7 +369,7 @@ export default defineConfig(
     // Re-enable the template accessibility guardrail for the docs app (disabled repo-wide above).
     // The docs site MUST pass AXE / WCAG AA per AGENTS.md, so these are treated as errors here.
     {
-        files: ['apps/docs/**/*.html'],
+        files: ['apps/docs/**/*.html', 'apps/docs-next/**/*.html'],
         rules: {
             '@angular-eslint/template/no-autofocus': 2,
             '@angular-eslint/template/elements-content': 2,
@@ -379,9 +379,9 @@ export default defineConfig(
         }
     },
 
-    // Override rules for apps/docs
+    // Override rules for apps/docs and apps/docs-next
     {
-        files: ['apps/docs/**/*.ts'],
+        files: ['apps/docs/**/*.ts', 'apps/docs-next/**/*.ts'],
         rules: {
             // plugin:eslint
             'no-console': [1, { allow: ['warn', 'error'] }],
@@ -505,7 +505,8 @@ export default defineConfig(
             'packages/docs-examples/**/*.ts',
             'packages/components-dev/**/*.ts',
             'packages/e2e/**/*.ts',
-            'apps/docs/**/*.ts'
+            'apps/docs/**/*.ts',
+            'apps/docs-next/**/*.ts'
         ],
         ignores: ['**/*.playwright-spec.ts', 'packages/components/**/deprecated/**'],
         rules: {

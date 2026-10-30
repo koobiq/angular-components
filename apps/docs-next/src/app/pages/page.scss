@@ -1,0 +1,7 @@
+@use '../../../../../packages/components/core/styles/common/tokens';
+
+.docs-next-page__loading {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+
+    color: var(--kbq-foreground-contrast-secondary);
+}

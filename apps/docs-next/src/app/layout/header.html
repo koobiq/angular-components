@@ -1,0 +1,169 @@
+<div class="docs-next-header__start">
+    <docs-next-logo class="docs-next-header__logo" />
+
+    <button
+        kbq-button
+        class="docs-next-header__version"
+        color="contrast"
+        kbqStyle="transparent"
+        [attr.aria-label]="`${state.t('version')} ${state.versionTitle()}`"
+        [kbqDropdownTriggerFor]="versionDropdown"
+    >
+        {{ state.versionTitle() }}
+        <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+    </button>
+
+    <nav class="docs-next-header__frameworks" [attr.aria-label]="state.t('framework')">
+        @for (framework of frameworks; track framework.id) {
+            <a
+                class="docs-next-header__framework"
+                [attr.aria-current]="framework.id === state.framework() ? 'true' : null"
+                [class.docs-next-header__framework_selected]="framework.id === state.framework()"
+                [routerLink]="frameworkUrl(framework.id)"
+                (click)="onFrameworkClick(framework.id)"
+            >
+                {{ framework.title }}
+            </a>
+        }
+    </nav>
+
+    <button
+        kbq-button
+        class="docs-next-header__framework-button"
+        color="contrast"
+        kbqStyle="transparent"
+        [attr.aria-label]="`${state.t('framework')} ${frameworkTitle(state.framework())}`"
+        [kbqDropdownTriggerFor]="frameworkDropdown"
+    >
+        {{ frameworkTitle(state.framework()) }}
+        <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+    </button>
+</div>
+
+<nav
+    #overflow="kbqOverflowItems"
+    kbqOverflowItems
+    class="docs-next-header__sections"
+    [attr.aria-label]="state.t('mainMenu')"
+>
+    @for (section of sections; track section.id) {
+        <a
+            class="docs-next-header__section"
+            [attr.aria-current]="section.id === state.section() ? 'page' : null"
+            [class.docs-next-header__section_selected]="section.id === state.section()"
+            [kbqOverflowItem]="section.id"
+            [routerLink]="state.link(section.id)"
+        >
+            {{ section.title[state.locale()] }}
+        </a>
+    }
+    <button
+        kbq-button
+        kbqOverflowItemsResult
+        class="docs-next-header__more"
+        color="contrast"
+        kbqStyle="transparent"
+        [class.docs-next-header__more_selected]="isSectionHidden(overflow.hiddenItemIDs())"
+        [kbqDropdownTriggerFor]="moreDropdown"
+    >
+        {{ state.t('more') }}
+        <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
+    </button>
+</nav>
+
+<div class="docs-next-header__end">
+    <docs-next-search />
+
+    <button
+        kbq-button
+        class="kbq-button-icon"
+        color="contrast"
+        kbqStyle="transparent"
+        [attr.aria-label]="state.t('language')"
+        [kbqDropdownTriggerFor]="localeDropdown"
+    >
+        <i kbq-icon="kbq-globe_16"></i>
+    </button>
+
+    <button
+        kbq-button
+        class="kbq-button-icon"
+        color="contrast"
+        kbqStyle="transparent"
+        [attr.aria-label]="state.t('theme')"
+        [kbqDropdownTriggerFor]="themeDropdown"
+    >
+        <i kbq-icon="" [class]="themeIcon()"></i>
+    </button>
+</div>
+
+<kbq-dropdown #versionDropdown="kbqDropdown">
+    @for (version of state.versions(); track version.id) {
+        <button
+            kbq-dropdown-item
+            [class.kbq-selected]="version.id === state.version()"
+            (click)="state.version.set(version.id)"
+        >
+            @if (version.group === 'next') {
+                {{ shortTitle(version.id) }}
+            } @else {
+                <span class="docs-next-header__version-row">
+                    <span class="docs-next-header__version-number">{{ version.title }}</span>
+                    @if (version.group === 'current') {
+                        <span class="docs-next-header__version-note">{{ state.t('versionActive') }}</span>
+                    } @else if (version.lts) {
+                        <span class="docs-next-header__version-note docs-next-header__version-note_caps">LTS</span>
+                    }
+                </span>
+            }
+        </button>
+    }
+</kbq-dropdown>
+
+<kbq-dropdown #frameworkDropdown="kbqDropdown">
+    @for (framework of frameworks; track framework.id) {
+        <a
+            kbq-dropdown-item
+            [class.kbq-selected]="framework.id === state.framework()"
+            [routerLink]="frameworkUrl(framework.id)"
+            (click)="onFrameworkClick(framework.id)"
+        >
+            {{ framework.title }}
+        </a>
+    }
+</kbq-dropdown>
+
+<kbq-dropdown #localeDropdown="kbqDropdown">
+    @for (locale of locales; track locale.id) {
+        <a
+            kbq-dropdown-item
+            [class.kbq-selected]="locale.id === state.locale()"
+            [routerLink]="state.localeUrl(locale.id)"
+        >
+            {{ locale.title }}
+        </a>
+    }
+</kbq-dropdown>
+
+<kbq-dropdown #themeDropdown="kbqDropdown">
+    @for (option of themeOptions; track option.mode) {
+        <button kbq-dropdown-item [class.kbq-selected]="option.mode === themeMode()" (click)="setTheme(option.mode)">
+            <i kbq-icon="" [class]="option.icon"></i>
+            {{ state.t(option.title) }}
+        </button>
+    }
+</kbq-dropdown>
+
+<kbq-dropdown #moreDropdown="kbqDropdown">
+    @for (section of sections; track section.id) {
+        @if (overflow.hiddenItemIDs().has(section.id)) {
+            <a
+                kbq-dropdown-item
+                [class.kbq-selected]="section.id === state.section()"
+                [routerLink]="state.link(section.id)"
+            >
+                {{ section.title[state.locale()] }}
+            </a>
+        }
+    }
+</kbq-dropdown>

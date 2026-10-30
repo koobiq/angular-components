@@ -1,0 +1,99 @@
+@use '../../../../../packages/components/core/styles/common/tokens';
+
+// The dialog lives in the top layer, so the host takes no room in the row it is placed in.
+:host {
+    display: contents;
+}
+
+// Figma: Topbar (66:33904), title in the middle and the close button on the right.
+.docs-next-toc-sheet__top {
+    position: relative;
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    border-bottom: 1px solid var(--kbq-line-contrast-less);
+}
+
+.docs-next-toc-sheet__title {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
+
+    margin: 0;
+}
+
+.docs-next-toc-sheet__close.kbq-icon-button {
+    position: absolute;
+    right: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+}
+
+.docs-next-toc-sheet__scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    // Figma: List starts 8px down and ends with a 48px List End Space.
+    padding: var(--kbq-size-s) 0 var(--kbq-size-5xl);
+}
+
+// Figma: Tree List Item - Mobile, 48 high; the open section on a fill 4px inside the sheet.
+.docs-next-toc-sheet__item {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    box-sizing: border-box;
+    padding: var(--kbq-size-m) var(--kbq-size-l);
+    color: var(--kbq-foreground-contrast);
+    text-decoration: none;
+    outline: none;
+    isolation: isolate;
+
+    &::before {
+        position: absolute;
+        inset: 0 var(--kbq-size-xxs);
+        z-index: -1;
+        border-radius: var(--kbq-size-s);
+        content: '';
+    }
+
+    &:focus-visible::before {
+        box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+    }
+
+    &[aria-current='location']::before,
+    &:active::before {
+        background: var(--kbq-states-background-transparent-hover);
+    }
+}
+
+// The heading of a branch sticks on top while its children scroll by (Figma: Sticky Node).
+.docs-next-toc-sheet__item_sticky {
+    position: sticky;
+    top: calc(-1 * var(--kbq-size-s));
+    z-index: 1;
+    background: var(--kbq-background-bg);
+}
+
+// Children hang on a line, as in the tree of the mockup.
+.docs-next-toc-sheet__item_child {
+    padding-left: calc(var(--kbq-size-l) + 1px + var(--kbq-size-l));
+
+    &::after {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: var(--kbq-size-l);
+        width: 1px;
+        background: var(--kbq-line-contrast-less);
+        content: '';
+    }
+}

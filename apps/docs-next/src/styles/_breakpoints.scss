@@ -1,0 +1,14 @@
+// Below 720px the site switches to its phone layout (spec/navigation/mobile.md); `DOCS_NEXT_MOBILE_QUERY` in
+// `app/data/site.ts` is the same query for the code.
+@mixin docs-next-mobile() {
+    @media (max-width: 719.98px) {
+        @content;
+    }
+}
+
+// From 720px to 1024px the desktop header is short of room (Figma: Navbar, 91:43170).
+@mixin docs-next-tablet() {
+    @media (min-width: 720px) and (max-width: 1024px) {
+        @content;
+    }
+}
