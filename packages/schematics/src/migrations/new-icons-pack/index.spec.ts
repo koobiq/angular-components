@@ -704,6 +704,25 @@ class TestApp {}`
             );
         });
 
+        it('accepts a custom data file of from/to pairs, with a warning', async () => {
+            const p = projectPaths(currentProject, appTree);
+
+            appTree.create(
+                '/icons/legacy.json',
+                JSON.stringify([{ from: `kbq-${secondIcon.replace}`, to: `kbq-${secondIcon.replaceWith}` }])
+            );
+            appTree.overwrite(p.html, `<i kbq-icon="mc-${secondIcon.replace}"></i>`);
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, customDataPath: 'icons/legacy.json' },
+                appTree
+            );
+
+            expect(tree.read(p.html)!.toString()).toBe(`<i kbq-icon="kbq-${secondIcon.replaceWith}"></i>`);
+            expect(messages.some((message) => message.includes('deprecated { "from", "to" } pairs'))).toBe(true);
+        });
+
         it('fails on a custom data file that does not exist', async () => {
             await expect(
                 runner.runSchematic(SCHEMATIC_NAME, { fix: true, customDataPath: 'missing.json' }, appTree)

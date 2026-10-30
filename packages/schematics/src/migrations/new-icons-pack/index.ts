@@ -1,9 +1,9 @@
 import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
-import fs from 'fs';
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import * as path from 'path';
 
 import { migrateTemplateWithTransform } from '../../utils/angular-parsing';
+import { IconPair, readCustomIconMapping, readCustomJson } from '../../utils/custom-data';
 import {
     buildIconTokenMap,
     buildIconTokenPatterns,
@@ -18,24 +18,6 @@ import { resolveTargetDir } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
 import { newIconsPackData, ReplaceData, scope } from './data';
 import { Schema } from './schema';
-
-/**
- * Reads a custom data file: a path relative to the workspace root first, as every other path in the
- * schematics is, then an absolute path or one relative to the current directory.
- */
-function readJsonFile<T>(tree: Tree, filePath: string): T {
-    if (tree.exists(filePath)) {
-        return JSON.parse(tree.readText(filePath)) as T;
-    }
-
-    const absolutePath = path.resolve(filePath);
-
-    if (!fs.existsSync(absolutePath)) {
-        throw new SchematicsException(`Unable to find '${filePath}' in the workspace or at '${absolutePath}'`);
-    }
-
-    return JSON.parse(fs.readFileSync(absolutePath, 'utf-8')) as T;
-}
 
 // A bare word: no leading/trailing hyphen, no empty hyphen-separated segment (rejects e.g. `mc-`,
 // which is otherwise the most natural — and wrong, per the new engine's key-building — way to
@@ -107,9 +89,11 @@ export default function newIconsPack(options: Schema): Rule {
         const { project, fix, stylesExt, updatePrefix = true, customDataPath, customIconReplacementPath } = options;
         const { logger } = context;
 
-        const resolvedData = customDataPath ? readJsonFile<ReplaceData[]>(tree, customDataPath) : newIconsPackData;
+        const resolvedData: IconPair[] = customDataPath
+            ? readCustomIconMapping(tree, customDataPath, logger)
+            : newIconsPackData.map(({ replace, replaceWith }) => ({ from: replace, to: replaceWith }));
         const resolvedScope = customIconReplacementPath
-            ? resolveScope(readJsonFile<ReplaceData[]>(tree, customIconReplacementPath), scope, logger)
+            ? resolveScope(readCustomJson(tree, customIconReplacementPath) as ReplaceData[], scope, logger)
             : scope;
 
         logger.info(
@@ -134,9 +118,9 @@ export default function newIconsPack(options: Schema): Rule {
             // ('kbq-'), regardless of the scope this run is migrating *to* — falls back to
             // stripping the target scope for a custom data file that doesn't follow that
             // convention.
-            icons: resolvedData.map(({ replace, replaceWith }) => ({
-                from: stripScopePrefix(replace, [CANONICAL_ICON_DATA_SCOPE, resolvedScope.to, resolvedScope.from]),
-                to: stripScopePrefix(replaceWith, [CANONICAL_ICON_DATA_SCOPE, resolvedScope.to])
+            icons: resolvedData.map(({ from, to }) => ({
+                from: stripScopePrefix(from, [CANONICAL_ICON_DATA_SCOPE, resolvedScope.to, resolvedScope.from]),
+                to: stripScopePrefix(to, [CANONICAL_ICON_DATA_SCOPE, resolvedScope.to])
             })),
             // Only the attribute-value path (`kbq-icon="mc-<anything>"`) rescopes suffixes that
             // aren't a known icon name; class lists/bindings/strings/styles stay exact-token-only.

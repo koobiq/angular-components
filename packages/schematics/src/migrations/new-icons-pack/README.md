@@ -42,6 +42,9 @@ mapping or a scope of your own, not for passing the shipped files back in.
 [{ "replace": "kbq-add-to-list_16", "replaceWith": "kbq-file-plus-o_16" }]
 ```
 
+The same option and shape are read by `icons-replacement`. A file of `{ "from", "to" }` pairs, the shape
+`icons-replacement` used to read, is still accepted with a warning.
+
 `--custom-icon-replacement-path` takes the scope pair, bare words with no hyphen:
 
 ```json

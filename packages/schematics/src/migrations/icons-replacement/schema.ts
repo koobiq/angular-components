@@ -13,9 +13,13 @@ export interface Schema {
      */
     project: string;
     /**
-     * Custom replacement data path, relative to the project root or the folder.
-     * Without it the built-in mapping is used
-     * @see https://github.com/koobiq/icons/pull/68
+     * JSON file with an icon mapping that replaces the built-in one, an array of
+     * `{ "replace": "<old>", "replaceWith": "<new>" }`. Resolved from the workspace root.
+     */
+    customDataPath?: string;
+    /**
+     * @deprecated Use `customDataPath`. Resolved from the project root or the folder first, then as
+     * `customDataPath` is.
      */
     replacementDataPath?: string;
 }

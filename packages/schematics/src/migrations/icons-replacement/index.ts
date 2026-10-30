@@ -1,6 +1,7 @@
 import { Path } from '@angular-devkit/core';
-import { SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
+import { SchematicContext, Tree } from '@angular-devkit/schematics';
 import path from 'path';
+import { readCustomIconMapping } from '../../utils/custom-data';
 import { logMessage } from '../../utils/messages';
 import { resolveTargetDir } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
@@ -55,34 +56,29 @@ export const processIconReplacement = ({
     }
 };
 
-export const resolveReplacementData = (projectRootPath: string, tree: Tree, customReplacementDataPath?: string) => {
-    if (customReplacementDataPath) {
-        const filePath = `${projectRootPath}/${customReplacementDataPath}`;
-        const replacementData = tree.get(filePath);
-
-        if (!replacementData) {
-            throw new SchematicsException(`Unable to find the replacement data at '${filePath}'`);
-        }
-
-        return JSON.parse(replacementData.content.toString()) as Replacement[];
-    }
-
-    return iconReplacementData;
-};
-
 export default function migrate(options: Schema) {
     return async (tree: Tree, context: SchematicContext) => {
         const { logger } = context;
-        const { project, allowed, fix, replacementDataPath } = options;
+        const { project, allowed, fix, customDataPath, replacementDataPath } = options;
 
         const targetDir = await resolveTargetDir(project, tree);
 
-        const replacementData = resolveReplacementData(targetDir.path, tree, replacementDataPath);
+        // The CLI itself reports the deprecated option (`x-deprecated` in schema.json), but not that it loses.
+        if (replacementDataPath && customDataPath) {
+            logger.warn('--replacement-data-path is deprecated and ignored next to --custom-data-path.');
+        }
+
+        const dataPath = customDataPath ?? replacementDataPath;
+        // The deprecated option was resolved from the project root or the folder, so it still looks there first.
+        const bases = customDataPath ? undefined : [targetDir.path, '/'];
+        const replacementData: Replacement[] = dataPath
+            ? readCustomIconMapping(tree, dataPath, logger, bases)
+            : iconReplacementData;
 
         logger.info(
-            replacementDataPath
-                ? `Icon mapping: ${replacementData.length} entries from '${replacementDataPath}'.`
-                : `Icon mapping: the built-in one, ${replacementData.length} entries (--replacement-data-path overrides it).`
+            dataPath
+                ? `Icon mapping: ${replacementData.length} entries from '${dataPath}'.`
+                : `Icon mapping: the built-in one, ${replacementData.length} entries (--custom-data-path overrides it).`
         );
 
         visitProjectFiles(targetDir, (filePath: Path, entry) => {

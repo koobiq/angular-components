@@ -116,7 +116,60 @@ describe(SCHEMATIC_NAME, () => {
         expect(tree.readText(templatePath)).toBe(`<i kbq-icon="${to}"></i>`);
         expect(tree.readText(vendored)).toBe(html);
         expect(messages).toContain(
-            `Icon mapping: the built-in one, ${iconReplacementData.length} entries (--replacement-data-path overrides it).`
+            `Icon mapping: the built-in one, ${iconReplacementData.length} entries (--custom-data-path overrides it).`
         );
+    });
+
+    describe('custom data', () => {
+        let messages: string[];
+        let project: workspaces.ProjectDefinition;
+        let templatePath: string;
+
+        beforeEach(() => {
+            messages = [];
+            runner.logger.subscribe(({ message }) => messages.push(message));
+            project = projects.get(projects.keys().next().value!)!;
+            templatePath = getProjectContentPaths(project, appTree).templatePath;
+            appTree.overwrite(templatePath, '<i kbq-icon="kbq-old_16"></i>');
+        });
+
+        const run = (options: Partial<Schema>) =>
+            runner.runSchematic(
+                SCHEMATIC_NAME,
+                { project: projects.keys().next().value!, fix: true, allowed: ['.html'], ...options },
+                appTree
+            );
+
+        it('reads replace/replaceWith pairs from --custom-data-path, relative to the workspace root', async () => {
+            appTree.create('/icons.json', JSON.stringify([{ replace: 'kbq-old_16', replaceWith: 'kbq-new_16' }]));
+
+            const tree = await run({ customDataPath: 'icons.json' });
+
+            expect(tree.readText(templatePath)).toBe('<i kbq-icon="kbq-new_16"></i>');
+            expect(messages).toContain("Icon mapping: 1 entries from 'icons.json'.");
+            expect(messages.some((message) => message.includes('deprecated'))).toBe(false);
+        });
+
+        it('still reads a from/to file through the deprecated --replacement-data-path, relative to the project', async () => {
+            appTree.create(`/${project.root}/icons.json`, JSON.stringify([{ from: 'old_16', to: 'new_16' }]));
+
+            const tree = await run({ replacementDataPath: 'icons.json' });
+
+            expect(tree.readText(templatePath)).toBe('<i kbq-icon="kbq-new_16"></i>');
+            expect(messages.some((message) => message.includes('deprecated { "from", "to" } pairs'))).toBe(true);
+        });
+
+        it('prefers --custom-data-path over the deprecated option', async () => {
+            appTree.create('/icons.json', JSON.stringify([{ replace: 'kbq-old_16', replaceWith: 'kbq-new_16' }]));
+
+            const tree = await run({ customDataPath: 'icons.json', replacementDataPath: 'missing.json' });
+
+            expect(tree.readText(templatePath)).toBe('<i kbq-icon="kbq-new_16"></i>');
+            expect(messages).toContain('--replacement-data-path is deprecated and ignored next to --custom-data-path.');
+        });
+
+        it('fails on a custom data file that does not exist', async () => {
+            await expect(run({ customDataPath: 'missing.json' })).rejects.toThrow("Unable to find 'missing.json'");
+        });
     });
 });

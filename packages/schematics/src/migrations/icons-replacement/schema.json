@@ -18,15 +18,24 @@
         },
         "allowed": {
             "type": "array",
-            "default": [".html", ".ts", ".scss"],
+            "default": [
+                ".html",
+                ".ts",
+                ".scss"
+            ],
             "items": {
                 "type": "string"
             },
             "description": "Allowed file extensions to check"
         },
+        "customDataPath": {
+            "type": "string",
+            "description": "JSON file with an icon mapping that replaces the built-in one, an array of { \"replace\": \"<old>\", \"replaceWith\": \"<new>\" }, resolved from the workspace root"
+        },
         "replacementDataPath": {
             "type": "string",
-            "description": "JSON file with the icon mapping, an array of { \"from\": \"kbq-<old>\", \"to\": \"kbq-<new>\" }, relative to the project root or the folder. Without it the built-in mapping is used"
+            "description": "Deprecated, use customDataPath. Resolved from the project root or the folder first",
+            "x-deprecated": "Use --custom-data-path, resolved from the workspace root."
         }
     }
 }
