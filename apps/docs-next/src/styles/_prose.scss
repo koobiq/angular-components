@@ -41,14 +41,12 @@
         width: 100%;
     }
 
-    // Inline code only: a contrast-less fill with 2px on each side, no vertical padding, and 4px corners. The markdown
-    // squircle would scale 4px to 7.4px, so the corners are round here. Blocks (`pre`) keep the markdown tokens.
+    // Inline code only: a contrast-less fill with 2px on each side and no vertical padding. The corners take the badge
+    // radius (`--kbq-size-xxs`) through the markdown squircle mixin. Blocks (`pre`) keep the markdown tokens.
     .kbq-markdown__code:not(.kbq-markdown__pre > .kbq-markdown__code) {
         --kbq-markdown-code-background: var(--kbq-background-contrast-less);
         --kbq-markdown-code-size-inline-padding: 0 2px;
-
-        border-radius: 4px;
-        corner-shape: round;
+        --kbq-markdown-code-size-border-radius: var(--kbq-size-xxs);
     }
 
     // Inline code inside a link sits on the theme fill.
