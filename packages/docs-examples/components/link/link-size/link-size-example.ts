@@ -17,24 +17,17 @@ import { KbqLink } from '@koobiq/components/link';
             <kbq-button-toggle value="big">Big</kbq-button-toggle>
         </kbq-button-toggle-group>
 
-        <div class="example-stage">
+        <div class="example-stage layout-row layout-align-center-center">
             <a kbqLink href="https://koobiq.io/en/components/link" target="_blank" [size]="size()">Scan report</a>
         </div>
     `,
     styles: `
-        :host {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
         .example-stage {
-            display: flex;
-            align-items: center;
             min-height: 160px;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { class: 'layout-column layout-align-center-center' }
 })
 export class LinkSizeExample {
     readonly size = model<KbqDefaultSizes>('normal');

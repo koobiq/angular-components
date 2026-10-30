@@ -160,8 +160,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Layout flex — набор CSS-классов Koobiq для компоновки, выравнивания и упорядочивания элементов во flex-контейнерах."
     },
     "link": {
-        "en": "KbqLink is a component that connects web pages or acts as a lighter alternative to a button.",
-        "ru": "KbqLink — компонент, который связывает веб-страницы или выступает как более легкий аналог кнопки."
+        "en": "KbqLink is a link that takes the user to another page, a document, or an external site.",
+        "ru": "KbqLink — ссылка, которая ведет пользователя к другой странице, документу или внешнему сайту."
     },
     "list": {
         "en": "A list shows a set of related items and lets the user select one or several of them. To pick a single value from a closed set inside a form use Select, and for hierarchical data use Tree.",
