@@ -17,6 +17,7 @@
     .kbq-overflow-items {
         // add space not to cut focus outline
         padding: 1px;
+        margin: -1px;
     }
 
     // `display: contents` would keep the list's items as the host's direct flex children, but it also
@@ -40,9 +41,12 @@
     // flex algorithm hands it, so the trail stops being squeezed and `KbqOverflowItems` — which
     // measures its own box — concludes that every item fits and collapses nothing.
     &.kbq-breadcrumbs_first-item-negative-margin {
-        .kbq-overflow-items,
         .kbq-breadcrumbs__list {
             margin-left: var(--kbq-breadcrumb-item-negative-margin);
+        }
+
+        .kbq-overflow-items {
+            margin-left: calc(var(--kbq-breadcrumb-item-negative-margin) - 1px);
         }
     }
 

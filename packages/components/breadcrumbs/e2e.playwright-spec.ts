@@ -124,3 +124,29 @@ test.describe('KbqBreadcrumbs inside a form', () => {
         await expect(page).toHaveURL(/\/E2eBreadcrumbsInForm$/);
     });
 });
+
+test.describe('KbqBreadcrumbs item count', () => {
+    const geometry = async (trail: Locator) => {
+        const host = (await trail.boundingBox())!;
+        const firstItem = (await trail.locator('.kbq-breadcrumb-item').first().boundingBox())!;
+
+        return { height: host.height, firstItemLeft: firstItem.x - host.x, firstItemTop: firstItem.y - host.y };
+    };
+
+    for (const firstItemNegativeMargin of [true, false]) {
+        test(`should keep the trail in place, firstItemNegativeMargin: ${firstItemNegativeMargin}`, async ({
+            page
+        }) => {
+            await page.goto('/E2eBreadcrumbsItemCount');
+
+            const single = page.getByTestId(`e2eBreadcrumbs-${firstItemNegativeMargin}-1`);
+            const several = page.getByTestId(`e2eBreadcrumbs-${firstItemNegativeMargin}-3`);
+
+            await expect(several.locator('.kbq-overflow-items')).toBeVisible();
+
+            const expected = await geometry(single);
+
+            await expect.poll(() => geometry(several)).toEqual(expected);
+        });
+    }
+});
