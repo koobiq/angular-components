@@ -729,7 +729,6 @@ class TestApp {}`
             ).rejects.toThrow("Unable to find 'missing.json'");
         });
 
-        // The fragments of the legacy replacement.json, covered by the built-in mc -> kbq scope.
         it.each([
             [
                 `<i class="mc mc-icon mc-${firstIcon.replace}"></i>`,

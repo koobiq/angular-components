@@ -75,7 +75,7 @@ describe('readCustomIconMapping', () => {
     it.each([
         ['an object', '{ "replace": "a", "replaceWith": "b" }'],
         ['an entry of neither shape', '[{ "replace": "a" }]']
-    ])('throws on %s', (_, content) => {
+    ])('throws on %s', (_: string, content: string) => {
         const tree = new HostTree();
 
         tree.create('/data.json', content);

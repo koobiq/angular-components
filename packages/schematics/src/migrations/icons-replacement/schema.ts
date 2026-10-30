@@ -9,17 +9,14 @@ export interface Schema {
      */
     allowed: string[];
     /**
-     * Name of the project, or a folder to migrate (e.g. `./libs`). Without it the whole workspace is migrated
+     * Name of the project where Koobiq library should be installed
      */
     project: string;
-    /**
-     * JSON file with an icon mapping that replaces the built-in one, an array of
-     * `{ "replace": "<old>", "replaceWith": "<new>" }`. Resolved from the workspace root.
-     */
     customDataPath?: string;
     /**
-     * @deprecated Use `customDataPath`. Resolved from the project root or the folder first, then as
-     * `customDataPath` is.
+     * Custom replacement data path. Will be used as relative to `project.root`.
+     * Default replacement data will be used instead
+     * @see https://github.com/koobiq/icons/pull/68
      */
     replacementDataPath?: string;
 }

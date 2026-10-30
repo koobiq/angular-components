@@ -23,9 +23,6 @@ const iconsFontImportRule = "@use '@koobiq/icons/fonts/kbq-icons';";
 const migrationData: IconMigrationData = {
     valueAttrs: ['kbq-icon', 'kbq-icon-item', 'kbq-icon-button'],
     scope,
-    // The bare `pt-icons` class becomes `kbq`, the base class of the icon font, so a plain
-    // `<i class="pt-icons pt-icons-<name>">` keeps its styles without the `kbq-icon` directive. An
-    // element with the directive gets `kbq` from it, so there the class is dropped.
     scopeClassInList: 'rename',
     scopeClassOnIconHost: 'remove',
     icons: iconsMapping.map(({ replace, replaceWith }) => ({ from: replace, to: replaceWith })),

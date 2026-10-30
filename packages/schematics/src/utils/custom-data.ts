@@ -3,16 +3,10 @@ import { SchematicsException, Tree } from '@angular-devkit/schematics';
 import fs from 'fs';
 import * as path from 'path';
 
-/** One pair of an icon mapping, before and after: `{ from: 'kbq-add-to-list_16', to: 'kbq-file-plus-o_16' }`. */
 export type IconPair = { from: string; to: string };
 
 const MAPPING_EXAMPLE = '[{ "replace": "kbq-add-to-list_16", "replaceWith": "kbq-file-plus-o_16" }]';
 
-/**
- * Reads a custom data file. The path is tried against each of `bases` in turn (the workspace root by
- * default), then as an absolute path or one relative to the current directory; a file found nowhere
- * stops the run.
- */
 export function readCustomJson(tree: Tree, filePath: string, bases: string[] = ['/']): unknown {
     for (const base of bases) {
         const candidate = path.posix.join(base, filePath);
@@ -31,10 +25,6 @@ export function readCustomJson(tree: Tree, filePath: string, bases: string[] = [
     return JSON.parse(fs.readFileSync(absolutePath, 'utf-8'));
 }
 
-/**
- * Reads the icon mapping of `--custom-data-path`: an array of `replace`/`replaceWith` pairs. The
- * `from`/`to` pairs that `icons-replacement` used to read are still accepted, with a warning.
- */
 export function readCustomIconMapping(
     tree: Tree,
     filePath: string,

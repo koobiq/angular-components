@@ -77,23 +77,15 @@ export async function setupOptions(
     }
 }
 
-/**
- * Resolves the `project` option to the directory a migration should walk: the root of the workspace
- * project with that name or, when no project has it, the folder at that path (`./libs`, `libs/`).
- * Without `project` the whole tree is walked, which is what `ng update` does.
- */
 export async function resolveTargetDir(project: string | undefined, tree: Tree): Promise<DirEntry> {
     if (!project) {
         return tree.root;
     }
 
-    let projectRoot: string | undefined;
-
-    try {
-        projectRoot = (await readWorkspace(tree)).projects.get(project)?.root;
-    } catch {
-        // No angular.json: the option can still name a folder.
-    }
+    const projectRoot = await readWorkspace(tree).then(
+        (workspace) => workspace.projects.get(project)?.root,
+        () => undefined
+    );
 
     if (projectRoot !== undefined) {
         return tree.getDir(projectRoot || '/');

@@ -63,13 +63,11 @@ export default function migrate(options: Schema) {
 
         const targetDir = await resolveTargetDir(project, tree);
 
-        // The CLI itself reports the deprecated option (`x-deprecated` in schema.json), but not that it loses.
         if (replacementDataPath && customDataPath) {
             logger.warn('--replacement-data-path is deprecated and ignored next to --custom-data-path.');
         }
 
         const dataPath = customDataPath ?? replacementDataPath;
-        // The deprecated option was resolved from the project root or the folder, so it still looks there first.
         const bases = customDataPath ? undefined : [targetDir.path, '/'];
         const replacementData: Replacement[] = dataPath
             ? readCustomIconMapping(tree, dataPath, logger, bases)

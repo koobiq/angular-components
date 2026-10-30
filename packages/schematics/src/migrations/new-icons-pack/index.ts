@@ -110,7 +110,6 @@ export default function newIconsPack(options: Schema): Rule {
         const targetDir = await resolveTargetDir(project, tree);
 
         const migrationData: IconMigrationData = {
-            // The `mc-*` attributes stay as they are: only the icon names in their values are migrated.
             valueAttrs: ['kbq-icon', 'kbq-icon-item', 'kbq-icon-button', 'mc-icon', 'mc-icon-item', 'mc-icon-button'],
             scope: resolvedScope,
             scopeClassInList: 'rename',

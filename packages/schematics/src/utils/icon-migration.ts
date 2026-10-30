@@ -30,8 +30,6 @@ export interface IconMigrationData {
     scope: { from: string; to: string };
     /** How the bare scope token behaves inside a class list: dropped, or renamed in place. */
     scopeClassInList: 'remove' | 'rename';
-    /** Overrides `scopeClassInList` on an element that carries one of `valueAttrs`, whose icon
-     *  directive adds the base font class itself. */
     scopeClassOnIconHost?: 'remove' | 'rename';
     /** Exact deprecated-suffix -> new-suffix pairs (unprefixed). */
     icons: TokenReplacement[];
