@@ -56,7 +56,13 @@ body {
     margin: 0;
 }
 
-// The page stays put under an open sheet or menu of the phone layout.
-html:has(dialog[open]) {
+// An open modal dialog keeps its scroll gestures: the page under it stays put and the root scrollbar stays too. Locking
+// `html` would remove the scrollbar and shift the layout, so the containment is on the dialog and its backdrop.
+dialog:modal {
+    overscroll-behavior: contain;
+}
+
+dialog::backdrop {
     overflow: hidden;
+    overscroll-behavior: contain;
 }
