@@ -209,8 +209,6 @@ describe(KbqBreadcrumbs.name, () => {
         });
     });
 
-    // A trail of one item renders `.kbq-breadcrumbs__list`, a longer one `KbqOverflowItems`: switching
-    // between them must not move the trail, or the page title under it jumps on navigation.
     describe('item count', () => {
         const geometry = (trail: HTMLElement) => {
             const host = trail.getBoundingClientRect();
