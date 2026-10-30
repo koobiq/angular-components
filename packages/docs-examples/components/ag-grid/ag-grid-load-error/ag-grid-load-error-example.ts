@@ -338,6 +338,7 @@ export class AgGridLoadErrorExample {
 
         if (cached) {
             params.successCallback(cached, this.lastRowOf(params.endRow));
+
             return;
         }
 
@@ -348,6 +349,7 @@ export class AgGridLoadErrorExample {
                 this.failingPageAlreadyFailed = true;
                 params.failCallback();
                 this.loadError().fail(params.startRow);
+
                 return;
             }
 
