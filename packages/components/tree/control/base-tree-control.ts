@@ -3,11 +3,19 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { TreeControl } from './tree-control';
 
 /** Base tree control. It has basic toggle/expand/collapse operations on a single data node. */
-export abstract class BaseTreeControl<T> implements TreeControl<T> {
+export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
     dataNodes: T[];
 
-    /** A selection model with multi-selection to track expansion status. */
-    expansionModel: SelectionModel<T> = new SelectionModel<T>(true);
+    /** A selection model with multi-selection to track expansion status: it holds the key of every expanded node. */
+    expansionModel: SelectionModel<K> = new SelectionModel<K>(true);
+
+    /**
+     * Gives the key a data node is expanded by. Without it the node object is its own key, so a node
+     * rebuilt as a new object — as a flattener does whenever its data changes — comes back collapsed.
+     *
+     * Set it before anything is expanded: keys stored under another function no longer match.
+     */
+    trackBy?: (dataNode: T) => K;
 
     filterModel: SelectionModel<T> = new SelectionModel<T>(true);
 
@@ -37,7 +45,7 @@ export abstract class BaseTreeControl<T> implements TreeControl<T> {
             return;
         }
 
-        this.expansionModel.toggle(dataNode);
+        this.expansionModel.toggle(this.expansionKey(dataNode));
     }
 
     /** Expands one single data node. */
@@ -46,7 +54,7 @@ export abstract class BaseTreeControl<T> implements TreeControl<T> {
             return;
         }
 
-        this.expansionModel.select(dataNode);
+        this.expansionModel.select(this.expansionKey(dataNode));
     }
 
     /** Collapses one single data node. */
@@ -55,17 +63,17 @@ export abstract class BaseTreeControl<T> implements TreeControl<T> {
             return;
         }
 
-        this.expansionModel.deselect(dataNode);
+        this.expansionModel.deselect(this.expansionKey(dataNode));
     }
 
     /** Whether a given data node is expanded or not. Returns true if the data node is expanded. */
     isExpanded(dataNode: T): boolean {
-        return this.expansionModel.isSelected(dataNode);
+        return this.expansionModel.isSelected(this.expansionKey(dataNode));
     }
 
     /** Toggles a subtree rooted at `node` recursively. */
     toggleDescendants(dataNode: T): void {
-        if (this.expansionModel.isSelected(dataNode)) {
+        if (this.isExpanded(dataNode)) {
             this.collapseDescendants(dataNode);
         } else {
             this.expandDescendants(dataNode);
@@ -82,7 +90,7 @@ export abstract class BaseTreeControl<T> implements TreeControl<T> {
         const toBeProcessed = [dataNode];
 
         toBeProcessed.push(...this.getDescendants(dataNode));
-        this.expansionModel.select(...toBeProcessed);
+        this.expansionModel.select(...toBeProcessed.map((node) => this.expansionKey(node)));
     }
 
     /** Collapses a subtree rooted at given data node recursively. */
@@ -90,6 +98,11 @@ export abstract class BaseTreeControl<T> implements TreeControl<T> {
         const toBeProcessed = [dataNode];
 
         toBeProcessed.push(...this.getDescendants(dataNode));
-        this.expansionModel.deselect(...toBeProcessed);
+        this.expansionModel.deselect(...toBeProcessed.map((node) => this.expansionKey(node)));
+    }
+
+    /** The key `expansionModel` holds for a data node. */
+    protected expansionKey(dataNode: T): K {
+        return this.trackBy ? this.trackBy(dataNode) : (dataNode as unknown as K);
     }
 }

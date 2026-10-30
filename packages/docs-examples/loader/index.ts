@@ -481,6 +481,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/form-field').then((m) => m.FormFieldWithErrorExample);
         case 'form-field-with-hint':
             return import('@koobiq/docs-examples/components/form-field').then((m) => m.FormFieldWithHintExample);
+        case 'form-field-with-label':
+            return import('@koobiq/docs-examples/components/form-field').then((m) => m.FormFieldWithLabelExample);
         case 'form-field-with-prefix-and-suffix':
             return import('@koobiq/docs-examples/components/form-field').then((m) => m.FormFieldWithPrefixAndSuffixExample);
         case 'form-field-without-borders':
@@ -1251,6 +1253,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/tree').then((m) => m.TreeStateSavingExample);
         case 'tree-toggle-on-click':
             return import('@koobiq/docs-examples/components/tree').then((m) => m.TreeToggleOnClickExample);
+        case 'tree-track-by':
+            return import('@koobiq/docs-examples/components/tree').then((m) => m.TreeTrackByExample);
         case 'username-as-link':
             return import('@koobiq/docs-examples/components/username').then((m) => m.UsernameAsLinkExample);
         case 'username-custom':

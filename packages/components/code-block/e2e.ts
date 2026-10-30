@@ -8,8 +8,17 @@ import {
     viewChild,
     viewChildren
 } from '@angular/core';
-import { KbqCodeBlock, KbqCodeBlockFile } from '@koobiq/components/code-block';
+import { KbqCodeBlock, KbqCodeBlockFile, kbqCodeBlockHighlightJsConfigProvider } from '@koobiq/components/code-block';
 import { kbqScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
+
+// The languages of the files below; plain text, the fallback of a file without one, comes with the code block.
+const HIGHLIGHT_JS_CONFIG = kbqCodeBlockHighlightJsConfigProvider({
+    languages: {
+        typescript: () => import('highlight.js/lib/languages/typescript'),
+        css: () => import('highlight.js/lib/languages/css'),
+        bash: () => import('highlight.js/lib/languages/bash')
+    }
+});
 
 @Component({
     selector: 'e2e-code-block-states',
@@ -97,6 +106,7 @@ import { kbqScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
             gap: var(--kbq-size-s);
         }
     `,
+    providers: [HIGHLIGHT_JS_CONFIG],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eCodeBlockStates'
@@ -111,7 +121,7 @@ export class E2eCodeBlockStates {
         // For testing KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE
         // language: 'html',
         filename: 'index.html',
-        content: `<!DOCTYPE html>\n<html lang="en">\n\t<head>\n\t\t<title>Koobiq</title>\n\t\t<meta charset="UTF-8" />\n\t\t<base href="/">\n\t\t<link href="https://fonts.googleapis.com" rel="preconnect" />\n\t\t<link crossorigin href="https://fonts.gstatic.com" rel="preconnect" />\n\t\t<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />\n\t</head>\n\t<body>\n\t\t<app-root>Loading...</app-root>\n\t</body>\n</html>`
+        content: `<!DOCTYPE html>\n<html lang="en">\n\t<head>\n\t\t<title>Koobiq</title>\n\t\t<meta charset="UTF-8" />\n\t\t<base href="/">\n\t\t<meta name="viewport" content="width=device-width, initial-scale=1" />\n\t\t<link rel="icon" type="image/x-icon" href="favicon.ico" />\n\t\t<meta name="description" content="Koobiq is an open-source design system with Angular components, design tokens, icons and guidelines for building interfaces" />\n\t</head>\n\t<body>\n\t\t<app-root>Loading...</app-root>\n\t</body>\n</html>`
     };
     protected readonly typescriptFile: KbqCodeBlockFile = {
         language: 'typescript',
@@ -166,7 +176,8 @@ export class E2eCodeBlockStates {
     providers: [
         // The reveal lasts hideDelay and nothing brings it back, so the default second would make this
         // a race against page load rather than a test of the behaviour.
-        kbqScrollbarOptionsProvider({ hideDelay: 5000 })
+        kbqScrollbarOptionsProvider({ hideDelay: 5000 }),
+        HIGHLIGHT_JS_CONFIG
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

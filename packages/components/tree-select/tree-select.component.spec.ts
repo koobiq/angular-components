@@ -9,6 +9,7 @@ import {
     InputSignalWithTransform,
     OnInit,
     Provider,
+    Signal,
     Type,
     effect,
     signal,
@@ -5879,7 +5880,8 @@ describe('KbqTreeSelect', () => {
         });
 
         // The types are checked by `check-spec-types`: a query that names the data node gets the model typed by it,
-        // the tree's included, one that does not keeps `any`.
+        // the tree's included, one that does not keeps `any`. One that names the key of the tree control gets the tree
+        // typed by it too.
         it('should share a selection model typed by the data node with the tree', () => {
             const select = fixture.componentInstance.select();
             const tree = select.tree()!;
@@ -5892,6 +5894,12 @@ describe('KbqTreeSelect', () => {
             expectTypeOf(select.selectionModel).toEqualTypeOf<SelectionModel<FileFlatNode>>();
             expectTypeOf(select.selected).toEqualTypeOf<FileFlatNode | FileFlatNode[]>();
             expectTypeOf(tree.selectionModel).toEqualTypeOf<SelectionModel<FileFlatNode>>();
+            expectTypeOf<KbqTreeSelect<FileFlatNode>['tree']>().toEqualTypeOf<
+                Signal<KbqTreeSelection<FileFlatNode, FileFlatNode> | undefined>
+            >();
+            expectTypeOf<KbqTreeSelect<FileFlatNode, string>['tree']>().toEqualTypeOf<
+                Signal<KbqTreeSelection<FileFlatNode, string> | undefined>
+            >();
             expect(tree.selectionModel).toBe(select.selectionModel);
             expect(select.selectionModel.selected.map(({ name }) => name).sort()).toEqual(['Downloads', 'rootNode_1']);
         });

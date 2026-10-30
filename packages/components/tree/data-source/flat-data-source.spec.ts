@@ -2,6 +2,7 @@ import { CollectionViewer } from '@angular/cdk/collections';
 import { computed } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { FlatTreeControl } from '../control/flat-tree-control';
+import { TreeControl } from '../control/tree-control';
 import { KbqTreeFlatDataSource, KbqTreeFlattener } from './flat-data-source';
 
 interface Node {
@@ -122,6 +123,19 @@ describe('KbqTreeFlattener', () => {
 
             expect(names(flattener.expandFlattenedNodes(flat, control))).toEqual(['root', 'other']);
         });
+
+        it('should stay overridable with the control typed as a TreeControl of the node', () => {
+            // An override written before `trackBy`: `check-spec-types` rejects it once the parameter is typed by the key.
+            class SubclassedFlattener extends KbqTreeFlattener<Node, FlatNode> {
+                override expandFlattenedNodes(nodes: FlatNode[], treeControl: TreeControl<FlatNode>): FlatNode[] {
+                    return super.expandFlattenedNodes(nodes, treeControl).filter((node) => node.name !== 'other');
+                }
+            }
+
+            const subclassed = new SubclassedFlattener(transformer, getLevel, isExpandable, (node) => node.children);
+
+            expect(names(subclassed.expandFlattenedNodes(flat, control))).toEqual(['root']);
+        });
     });
 });
 
@@ -143,6 +157,16 @@ describe('KbqTreeFlatDataSource', () => {
 
         expect(names(dataSource.flattenedData.value)).toEqual(['root', 'documents', 'draft', 'images', 'other']);
         expect(control.dataNodes).toBe(dataSource.flattenedData.value);
+    });
+
+    // A tree renders while the data source emits, and its rows look themselves up in the tree control's nodes.
+    it('should hand the tree control the nodes before it emits them', () => {
+        const handedOver: boolean[] = [];
+
+        dataSource.flattenedData.subscribe((nodes) => handedOver.push(control.dataNodes === nodes));
+        dataSource.data = buildData();
+
+        expect(handedOver.at(-1)).toBe(true);
     });
 
     it('should flatten the data handed to its constructor and hand it to the tree control', () => {
@@ -198,6 +222,29 @@ describe('KbqTreeFlatDataSource', () => {
         dataSource.connect(collectionViewer).subscribe((nodes) => emissions.push(names(nodes)));
 
         control.expand(byName(control.dataNodes, 'root'));
+
+        expect(emissions[emissions.length - 1]).toEqual(['root', 'documents', 'images', 'other']);
+    });
+
+    it('should keep the expanded nodes once the data is rebuilt, given a tree control with trackBy', () => {
+        const keyedControl = new FlatTreeControl<FlatNode, string>(
+            getLevel,
+            isExpandable,
+            getValue,
+            getValue,
+            undefined,
+            undefined,
+            undefined,
+            { trackBy: getValue }
+        );
+        const keyedDataSource = new KbqTreeFlatDataSource(keyedControl, flattener);
+        const emissions: string[][] = [];
+
+        keyedDataSource.data = buildData();
+        keyedDataSource.connect(collectionViewer).subscribe((nodes) => emissions.push(names(nodes)));
+        keyedControl.expand(byName(keyedControl.dataNodes, 'root'));
+
+        keyedDataSource.data = buildData();
 
         expect(emissions[emissions.length - 1]).toEqual(['root', 'documents', 'images', 'other']);
     });

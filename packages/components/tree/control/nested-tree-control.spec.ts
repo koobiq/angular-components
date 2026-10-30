@@ -84,6 +84,30 @@ describe('CdkNestedTreeControl', () => {
             expect(treeControl.expansionModel.selected.length).toBe(totalNumber);
         });
     });
+
+    describe('with trackBy', () => {
+        let keyedControl: NestedTreeControl<TestData, string>;
+
+        beforeEach(() => {
+            keyedControl = new NestedTreeControl<TestData, string>(getChildren, { trackBy: (node) => node.a });
+        });
+
+        it('should keep a node expanded once the node is rebuilt as a new object', () => {
+            keyedControl.expand(generateData(1, 1)[0]);
+
+            expect(keyedControl.isExpanded(generateData(1, 1)[0])).toBe(true);
+        });
+
+        it('should expand all the nodes by key', () => {
+            keyedControl.dataNodes = generateData(2, 2, 1);
+
+            keyedControl.expandAll();
+
+            expect([...keyedControl.expansionModel.selected].sort()).toEqual(
+                Array.from({ length: 10 }, (_, index) => `a_${index}`)
+            );
+        });
+    });
 });
 
 export class TestData {

@@ -1,9 +1,14 @@
+import { globSync } from 'glob';
 import { basename } from 'path';
 import { DocsLocale } from '../../apps/docs/src/app/constants/locale';
 import { docsGetItems, DocsStructureItemTab } from '../../apps/docs/src/app/structure';
 
 /** MDX pages of the documentation site. */
 export const DOCS_PAGE_SOURCES = ['packages/components/**/*.mdx', 'docs/guides/**/*.mdx', 'docs/data-grid/**/*.mdx'];
+
+/** Paths of the files of `DOCS_PAGE_SOURCES`, sorted. */
+export const findPageSources = (): string[] =>
+    DOCS_PAGE_SOURCES.flatMap((pattern) => globSync(pattern, { windowsPathsNoEscape: true, posix: true })).sort();
 
 /** Overview pages among `DOCS_PAGE_SOURCES`, whose introduction becomes the SEO description. */
 export const DOCS_PAGE_OVERVIEW_SOURCES = [

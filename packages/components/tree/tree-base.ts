@@ -65,9 +65,11 @@ const normalizeTreeState = (parsed: unknown): KbqTreeState | null => {
  * ported by hand.
  *
  * `C` narrows the tree control a concrete tree accepts, and so the type its `treeControl` binding is checked against.
+ * The bound leaves out `expansionModel` and `trackBy`, the members typed by the control's key, so that it admits
+ * a control of any key type: the model makes a control invariant in that type.
  */
 @Directive()
-export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>>
+export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 'trackBy'> = TreeControl<T>>
     implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit
 {
     protected differs = inject(IterableDiffers);
@@ -88,10 +90,10 @@ export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>>
     }
 
     /** {@link treeControl} as state saving reads it: by node value, which only a `FlatTreeControl` has. */
-    private get flatTreeControl(): FlatTreeControl<T> {
-        const treeControl: TreeControl<T> = this.treeControl;
+    private get flatTreeControl(): FlatTreeControl<T, unknown> {
+        const treeControl: Omit<TreeControl<T>, 'expansionModel' | 'trackBy'> = this.treeControl;
 
-        return treeControl as FlatTreeControl<T>;
+        return treeControl as FlatTreeControl<T, unknown>;
     }
 
     /**
@@ -102,6 +104,8 @@ export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>>
      *
      * Views are reused for nodes the function reports as unchanged, which a data source that rebuilds
      * its node objects on every emission — a flattener among them — otherwise cannot get.
+     *
+     * Defaults to the `trackBy` of the tree control, read when the tree initializes and when the data source changes.
      */
     readonly trackBy = input<TrackByFunction<T>>(undefined!);
 
@@ -507,7 +511,10 @@ export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>>
         // Straight at the model rather than through `expand()`, which is a no-op while a filter is
         // active — restoring must not depend on what the user happens to be searching for.
         if (found.length) {
-            this.stateSaving!.applying(() => treeControl.expansionModel.select(...found));
+            const { trackBy } = treeControl;
+            const keys = trackBy ? found.map((node) => trackBy(node)) : found;
+
+            this.stateSaving!.applying(() => treeControl.expansionModel.select(...keys));
         }
     }
 
@@ -517,7 +524,12 @@ export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>>
         const expanded: string[] = [];
         let skipped = false;
 
-        for (const node of treeControl.expansionModel.selected) {
+        // With `trackBy` the model holds keys, which have no value: only the current nodes map back to them.
+        const expandedNodes = treeControl.trackBy
+            ? (treeControl.dataNodes ?? []).filter((node) => treeControl.isExpanded(node))
+            : (treeControl.expansionModel.selected as T[]);
+
+        for (const node of expandedNodes) {
             const value = treeControl.getValue(node);
 
             if (typeof value === 'string') {
@@ -613,7 +625,11 @@ export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>>
     }
 
     private createDataDiffer(): IterableDiffer<T> {
-        return this.differs.find([]).create(this.trackBy());
+        // The bound of `C` leaves `trackBy` out; the key type is the control's own, so it is read as `unknown` here.
+        const controlTrackBy = (this.treeControl as Pick<TreeControl<T, unknown>, 'trackBy'> | undefined)?.trackBy;
+        const trackBy = this.trackBy() ?? (controlTrackBy && ((_: number, node: T) => controlTrackBy(node)));
+
+        return this.differs.find([]).create(trackBy);
     }
 }
 

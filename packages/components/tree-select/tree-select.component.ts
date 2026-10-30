@@ -264,7 +264,7 @@ export class KbqTreeSelectChange<T = any> {
     ],
     exportAs: 'kbqTreeSelect'
 })
-export class KbqTreeSelect<T = any>
+export class KbqTreeSelect<T = any, K = T>
     extends KbqAbstractSelect
     implements
         AfterViewChecked,
@@ -324,7 +324,8 @@ export class KbqTreeSelect<T = any>
      * Deals with the selection logic. The projected `kbq-tree-selection` shares the same instance.
      *
      * `T` is the type of the data nodes, the same as the projected tree's. A template infers it from `[clearPredicate]`
-     * alone, apart from the tree; a query names it: `viewChild.required<KbqTreeSelect<Node>>(KbqTreeSelect)`.
+     * alone, apart from the tree; a query names it: `viewChild.required<KbqTreeSelect<Node>>(KbqTreeSelect)`, and a
+     * select whose tree control has a `trackBy` names the key type too: `KbqTreeSelect<Node, string>`.
      */
     selectionModel: SelectionModel<T>;
 
@@ -411,7 +412,7 @@ export class KbqTreeSelect<T = any>
 
     readonly customTagTemplateRef = contentChild('kbqSelectTagContent', { read: TemplateRef });
 
-    readonly tree = contentChild<KbqTreeSelection<T>>(KbqTreeSelection);
+    readonly tree = contentChild<KbqTreeSelection<T, K>>(KbqTreeSelection);
 
     readonly search = contentChild(KbqSelectSearch);
 
@@ -473,7 +474,7 @@ export class KbqTreeSelect<T = any>
      * Event emitted whenever the tree's `selectAllOptions()` runs — a click on the `selectAll` master
      * checkbox, the Ctrl/Cmd + A shortcut, or a custom `selectAllHandler` that delegates to it.
      */
-    readonly onSelectAll = output<KbqSelectAllEvent<KbqTreeOption<T>, KbqTreeSelect<T>>>();
+    readonly onSelectAll = output<KbqSelectAllEvent<KbqTreeOption<T>, KbqTreeSelect<T, K>>>();
 
     /** Classes to be passed to the select panel. Supports the same syntax as the `[class]` binding. */
     readonly panelClass = input<
@@ -674,8 +675,8 @@ export class KbqTreeSelect<T = any>
 
     /** @docs-private */
     readonly selectAllHandlerInput = input<
-        ((event: KeyboardEvent, select: KbqTreeSelect<T>) => void) | undefined,
-        ((event: KeyboardEvent, select: KbqTreeSelect<T>) => void) | undefined
+        ((event: KeyboardEvent, select: KbqTreeSelect<T, K>) => void) | undefined,
+        ((event: KeyboardEvent, select: KbqTreeSelect<T, K>) => void) | undefined
     >(undefined, {
         alias: 'selectAllHandler',
         transform: kbqSelectAllHandlerTransform
@@ -684,12 +685,12 @@ export class KbqTreeSelect<T = any>
     /**
      * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used.
      */
-    get selectAllHandler(): (event: KeyboardEvent, select: KbqTreeSelect<T>) => void {
+    get selectAllHandler(): (event: KeyboardEvent, select: KbqTreeSelect<T, K>) => void {
         return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
     }
 
     /** Function for handling the combination Ctrl + A (select all). By default, the internal handler is used. */
-    private defaultSelectAllHandler(event: KeyboardEvent, select: KbqTreeSelect<T>): void {
+    private defaultSelectAllHandler(event: KeyboardEvent, select: KbqTreeSelect<T, K>): void {
         const searchInput = isInput(event) ? (event.target as HTMLInputElement) : null;
 
         if (shouldSelectSearchText(searchInput)) {
@@ -822,14 +823,29 @@ export class KbqTreeSelect<T = any>
      * The tree answers for any node; the option is asked only for its own `[disabled]` input, and a
      * node inside a collapsed branch has no option to ask.
      */
-    private isNodeDisabled(node: T): boolean {
+    private isNodeDisabled(node: T, optionsByNode?: Map<T, KbqTreeOption<T>>): boolean {
         const tree = this.tree();
 
         if (!tree) return false;
 
         if (tree.disabled || tree.treeControl.isDisabled(node)) return true;
 
-        return tree.renderedOptions.find((option) => option.data === node)?.disabled ?? false;
+        const option = optionsByNode
+            ? optionsByNode.get(node)
+            : tree.renderedOptions.find((option) => option.data === node);
+
+        return option?.disabled ?? false;
+    }
+
+    /** The rendered option of each node, for asking `isNodeDisabled` about every selected node at once. */
+    private renderedOptionsByNode(): Map<T, KbqTreeOption<T>> {
+        const optionsByNode = new Map<T, KbqTreeOption<T>>();
+
+        this.tree()?.renderedOptions.forEach((option) => {
+            if (!optionsByNode.has(option.data)) optionsByNode.set(option.data, option);
+        });
+
+        return optionsByNode;
     }
 
     /**
@@ -1843,21 +1859,25 @@ export class KbqTreeSelect<T = any>
     private hasStaleTriggerValues(): boolean {
         const selected = this.selectionModel.selected;
 
-        return (
-            this.triggerValues.length === selected.length &&
-            selected.some((node, index) => this.triggerValues[index].disabled !== this.isNodeDisabled(node))
+        if (this.triggerValues.length !== selected.length) return false;
+
+        const optionsByNode = this.renderedOptionsByNode();
+
+        return selected.some(
+            (node, index) => this.triggerValues[index].disabled !== this.isNodeDisabled(node, optionsByNode)
         );
     }
 
     private refreshTriggerValues(): void {
         const treeControl = this.tree()!.treeControl;
+        const optionsByNode = this.renderedOptionsByNode();
 
         this.triggerValues = this.selectionModel.selected.map((node) => ({
             value: treeControl.getValue(node),
             viewValue: treeControl.getViewValue(node),
             // `treeControl` alone would miss a node disabled through the option's own input and give it
             // a remove icon — one-by-one removal of exactly what the cleaner keeps.
-            disabled: this.isNodeDisabled(node)
+            disabled: this.isNodeDisabled(node, optionsByNode)
         }));
 
         this.changeDetectorRef.detectChanges();

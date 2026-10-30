@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal, ViewEncapsulation } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -390,4 +390,29 @@ export class E2eFormFieldAutofill {
     protected controlTestId(control: AutofillControl, { name }: AutofillState): string {
         return `control_${control}_${name}`;
     }
+}
+
+@Component({
+    selector: 'e2e-form-field-required-marker',
+    imports: [KbqInputModule, ReactiveFormsModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget" style="display: flex; flex-direction: column; gap: 16px; width: 240px">
+            <kbq-form-field showRequiredMarker>
+                <kbq-label>Name</kbq-label>
+                <input kbqInput required />
+            </kbq-form-field>
+
+            <kbq-form-field showRequiredMarker>
+                <kbq-label>A long label that wraps onto the next line</kbq-label>
+                <input kbqInput [formControl]="control" />
+            </kbq-form-field>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFormFieldRequiredMarker'
+    }
+})
+export class E2eFormFieldRequiredMarker {
+    readonly control = new FormControl('', Validators.required);
 }

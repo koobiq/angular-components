@@ -24,7 +24,6 @@ import {
     `,
     providers: [
         kbqCodeBlockHighlightJsConfigProvider({
-            core: () => import('highlight.js/lib/core'),
             languages: {
                 html: () => import('highlight.js/lib/languages/xml'),
                 typescript: () => import('highlight.js/lib/languages/typescript'),
@@ -41,7 +40,7 @@ export class CodeBlockWithTabsAndShadowExample implements AfterViewInit {
         {
             language: 'html',
             filename: 'index.html',
-            content: `<!DOCTYPE html>\n<html lang="en">\n\t<head>\n\t\t<title>Koobiq</title>\n\t\t<meta charset="UTF-8" />\n\t\t<base href="/">\n\t\t<link href="https://fonts.googleapis.com" rel="preconnect" />\n\t\t<link crossorigin href="https://fonts.gstatic.com" rel="preconnect" />\n\t\t<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />\n\t</head>\n\t<body>\n\t\t<app-root>Loading...</app-root>\n\t</body>\n</html>`
+            content: `<!DOCTYPE html>\n<html lang="en">\n\t<head>\n\t\t<title>Koobiq</title>\n\t\t<meta charset="UTF-8" />\n\t\t<base href="/">\n\t\t<meta name="viewport" content="width=device-width, initial-scale=1" />\n\t\t<link rel="icon" type="image/x-icon" href="favicon.ico" />\n\t\t<meta name="description" content="Koobiq is an open-source design system with Angular components, design tokens, icons and guidelines for building interfaces" />\n\t</head>\n\t<body>\n\t\t<app-root>Loading...</app-root>\n\t</body>\n</html>`
         },
         {
             language: 'typescript',

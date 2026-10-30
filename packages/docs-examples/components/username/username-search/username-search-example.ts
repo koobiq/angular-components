@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { createSearchPredicate, KbqHighlightModule, tokenizeSearchQuery } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
+import { KbqToggleModule } from '@koobiq/components/toggle';
 import {
     kbqBuildUsernameText,
     kbqInjectUsernameFormatter,
@@ -19,58 +20,111 @@ import { startWith } from 'rxjs';
 @Component({
     selector: 'username-search-example',
     imports: [
+        FormsModule,
         ReactiveFormsModule,
-        KbqFormFieldModule,
+        KbqSelectModule,
         KbqInputModule,
-        KbqUsernameModule,
         KbqIconModule,
-        KbqHighlightBackgroundPipe
+        KbqToggleModule,
+        KbqUsernameModule,
+        KbqHighlightModule
     ],
     template: `
-        <kbq-form-field>
-            <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-            <input kbqInput type="text" placeholder="Search" autocomplete="off" [formControl]="searchControl" />
-            <kbq-cleaner />
-        </kbq-form-field>
+        <div class="example__content">
+            <kbq-toggle [(ngModel)]="isCompact">Compact</kbq-toggle>
 
-        <div class="example__users-list">
-            @for (user of filteredUsers(); track user) {
-                <kbq-username>
-                    <kbq-username-custom-view>
-                        @let fullName = user | kbqUsername;
-                        <span
-                            kbqUsernamePrimary
-                            [innerHTML]="fullName | kbqHighlightBackground: searchControl.value.trim()"
-                        ></span>
-
-                        @if (user.login) {
-                            <span
-                                kbqUsernameSecondary
-                                [innerHTML]="user.login | kbqHighlightBackground: searchControl.value.trim()"
-                            ></span>
+            <kbq-form-field>
+                <kbq-select placeholder="Assignee" [(value)]="selectedUser">
+                    <kbq-select-trigger>
+                        @if (selectedUser(); as user) {
+                            <kbq-username [userInfo]="user" [isCompact]="isCompact()" />
                         }
-                    </kbq-username-custom-view>
-                </kbq-username>
-            } @empty {
-                <span class="kbq-text-normal kbq-second">Nothing found</span>
-            }
+                    </kbq-select-trigger>
+
+                    <kbq-form-field noBorders kbqSelectSearch>
+                        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+                        <input kbqInput type="text" [formControl]="searchControl" />
+                        <kbq-cleaner />
+                    </kbq-form-field>
+
+                    <div kbq-select-search-empty-result>Nothing found</div>
+
+                    @for (user of filteredUsers(); track user) {
+                        <kbq-option [value]="user">
+                            <kbq-username>
+                                <kbq-username-custom-view>
+                                    @let fullName = user | kbqUsername;
+
+                                    @if (isCompact()) {
+                                        <span kbqUsernamePrimary>
+                                            <span
+                                                [innerHTML]="fullName | kbqHighlightBackground: keywords() : true"
+                                            ></span>
+                                            @if (user.site) {
+                                                <span
+                                                    kbqUsernameSecondaryHint
+                                                    [innerHTML]="
+                                                        '(' + user.site + ')'
+                                                            | kbqHighlightBackground: keywords() : true
+                                                    "
+                                                ></span>
+                                            }
+                                        </span>
+                                    } @else {
+                                        <span
+                                            kbqUsernamePrimary
+                                            [innerHTML]="fullName | kbqHighlightBackground: keywords() : true"
+                                        ></span>
+
+                                        @if (user.login) {
+                                            <span kbqUsernameSecondary>
+                                                <span
+                                                    [innerHTML]="user.login | kbqHighlightBackground: keywords() : true"
+                                                ></span>
+                                                @if (user.site) {
+                                                    <span
+                                                        kbqUsernameSecondaryHint
+                                                        [innerHTML]="
+                                                            '(' + user.site + ')'
+                                                                | kbqHighlightBackground: keywords() : true
+                                                        "
+                                                    ></span>
+                                                }
+                                            </span>
+                                        }
+                                    }
+                                </kbq-username-custom-view>
+                            </kbq-username>
+                        </kbq-option>
+                    }
+                </kbq-select>
+            </kbq-form-field>
         </div>
     `,
     styles: `
-        .example__users-list {
+        .kbq-username__secondary-hint {
+            margin-inline-start: var(--kbq-size-xxs);
+        }
+
+        .example__content {
             display: flex;
             flex-direction: column;
-            gap: var(--kbq-size-s);
+            gap: var(--kbq-size-m);
+            width: 320px;
         }
     `,
+    providers: [
+        kbqSelectOptionsProvider({ searchMinOptionsThreshold: 0 })
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-column layout-gap-m layout-padding-m'
+        class: 'layout-align-center-center layout-row layout-margin-5xl'
     }
 })
 export class UsernameSearchExample {
     private readonly formatUsername = kbqInjectUsernameFormatter();
 
+    protected readonly isCompact = model(false);
     protected readonly searchControl = new FormControl('', { nonNullable: true });
 
     private readonly searchText = toSignal(this.searchControl.valueChanges.pipe(startWith('')), { initialValue: '' });
@@ -79,21 +133,25 @@ export class UsernameSearchExample {
         { firstName: 'Maxwell', middleName: 'Alan', lastName: 'Root', login: 'mroot', site: 'corp' },
         { firstName: 'Alice', middleName: 'Marie', lastName: 'Stone', login: 'astone' },
         { firstName: 'Robert', lastName: 'Green', login: 'rgreen', site: 'dev' },
-        { firstName: 'Elena', middleName: 'Vera', lastName: 'Fox', login: 'efox' }
+        { firstName: 'Elena', middleName: 'Vera', lastName: 'Fox', login: 'efox' },
+        { firstName: 'Madonna', login: 'madonna', site: 'corp' }
     ];
 
-    protected readonly filteredUsers = computed(() => {
-        const query = (this.searchText() ?? '').toLowerCase().trim();
+    protected readonly selectedUser = signal<KbqUserInfo | null>(this.users[0]);
 
-        if (!query) return this.users;
+    // The name, the login and the site are rendered in separate elements, so each word of the query is highlighted on its own.
+    protected readonly keywords = computed(() => tokenizeSearchQuery(this.searchText()));
+
+    protected readonly filteredUsers = computed(() => {
+        const matches = createSearchPredicate(this.searchText());
 
         return this.users.filter((user) =>
-            kbqBuildUsernameText(
-                { name: this.formatUsername(user), login: user.login, site: user.site },
-                { formatSite: (s) => s }
+            matches(
+                kbqBuildUsernameText(
+                    { name: this.formatUsername(user), login: user.login, site: user.site },
+                    { formatSite: (s) => s }
+                )
             )
-                .toLowerCase()
-                .includes(query)
         );
     });
 }

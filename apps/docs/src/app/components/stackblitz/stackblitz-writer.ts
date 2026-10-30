@@ -21,7 +21,7 @@ const TEMPLATE_PATH = 'assets/stackblitz/';
  * dependencies that should be added to the generated StackBlitz `package.json`.
  * These are only included when the example actually uses them.
  */
-const OPTIONAL_PACKAGE_JSON_DEPENDENCIES = {
+export const DOCS_STACKBLITZ_OPTIONAL_DEPENDENCIES = {
     'country-flag-icons': {
         'country-flag-icons': '^1'
     },
@@ -217,7 +217,7 @@ export class DocsStackblitzWriter {
             .filter(([path]) => path.endsWith('.ts'))
             .map(([, content]) => content);
 
-        return Object.keys(OPTIONAL_PACKAGE_JSON_DEPENDENCIES).filter((pattern) =>
+        return Object.keys(DOCS_STACKBLITZ_OPTIONAL_DEPENDENCIES).filter((pattern) =>
             tsContents.some((content) => content.includes(pattern))
         );
     }
@@ -237,13 +237,15 @@ export class DocsStackblitzWriter {
             '@angular/platform-browser': ngVersion,
             '@angular/platform-browser-dynamic': ngVersion,
             '@angular/router': ngVersion,
+            '@fontsource/jetbrains-mono': '^5.3.0',
             '@koobiq/angular-luxon-adapter': koobiqVersion,
             '@koobiq/components': koobiqVersion,
             '@koobiq/date-formatter': '^3.4.0',
             '@koobiq/date-adapter': '^3.4.0',
-            '@koobiq/design-tokens': '3.14.0',
-            '@koobiq/icons': '^11.2.0',
+            '@koobiq/design-tokens': '^4.1.0',
+            '@koobiq/icons': '^12.4.0',
             '@messageformat/core': '^3.4.0',
+            'inter-ui': '^4.1.1',
             luxon: '^3.7.2',
             rxjs: '^7.8.2',
             tslib: '^2.8.1'
@@ -258,7 +260,7 @@ export class DocsStackblitzWriter {
         };
 
         for (const pattern of patterns) {
-            Object.assign(dependencies, OPTIONAL_PACKAGE_JSON_DEPENDENCIES[pattern]);
+            Object.assign(dependencies, DOCS_STACKBLITZ_OPTIONAL_DEPENDENCIES[pattern]);
         }
 
         return {

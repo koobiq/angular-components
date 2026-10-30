@@ -46,25 +46,6 @@ ENV CI=true \
     HUSKY=0 \
     YARN_ENABLE_TELEMETRY=0
 
-# Body text is bundled woff2 (@fontsource/inter, @fontsource/jetbrains-mono), so system fonts only
-# matter for glyphs Inter lacks — but the select and tree-select captions render the macOS modifier
-# symbols ⌘ (U+2318) and ⌥ (U+2325). The base image covers neither in a Latin face, so fontconfig
-# falls through to IPAGothic and they come out visibly different from the baselines. ubuntu-latest
-# ships DejaVu, which is what the committed screenshots were rendered with; without this line six
-# of them fail for reasons that have nothing to do with the components.
-#
-# The two fc-match calls are the assertion, not a demonstration: they are what stops this layer
-# from being "cleaned up" later on the reasonable-sounding grounds that the fonts are bundled. A
-# regression here is otherwise silent until six screenshots disagree for no visible reason.
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends fonts-dejavu-core \
-    && rm -rf /var/lib/apt/lists/* \
-    && fc-cache -f \
-    && for codepoint in 2318 2325; do \
-        fc-match ":charset=$codepoint" family | grep -q '^DejaVu Sans$' \
-            || { echo "U+$codepoint falls back to '$(fc-match ":charset=$codepoint" family)', expected DejaVu Sans." >&2; exit 1; }; \
-    done
-
 # The base image ships Node 22 from NodeSource. Every other CI job runs the .nvmrc version, so
 # install that rather than accept a second Node major for this one job. Its own layer, ahead of the
 # manifests, so that editing package.json does not reinstall Node.

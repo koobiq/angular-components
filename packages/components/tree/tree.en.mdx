@@ -136,5 +136,18 @@ costs a DOM row per item. A tree that shows thousands of rows at once should kee
 collapsed or narrow the data with the search field.
 
 Nodes are tracked by identity by default, so a data source that rebuilds its node objects on every
-emission — a flattener among them — rebuilds every row. Pass a `trackBy` function returning a stable
-key to have the rows re-used across data updates instead.
+emission — a flattener among them — rebuilds every row, and a rebuilt node comes back collapsed.
+Give the tree control a `trackBy` that returns a stable key of a node: the node is then expanded by that
+key, and the tree re-uses the row of the same key across data updates. Set it before anything is
+expanded, as a property or in the options, the last argument of `FlatTreeControl` and
+`NestedTreeControl`:
+
+<Example id="tree-track-by" />
+
+`expansionModel` then holds the keys rather than the nodes, and the types of the tree, its events and
+its data source take the key type as one more parameter: `KbqTreeSelection<FileFlatNode, string>`,
+`KbqTreeFlatDataSource<FileNode, FileFlatNode, string>`.
+
+The tree's own `trackBy` input, a `TrackByFunction` of the index and the node, overrides the key the rows
+are re-used by; it does not change the expansion. Without a control `trackBy` it is the only way to
+re-use the rows.
