@@ -1,60 +1,91 @@
-Koobiq typography defines the fonts, weights, and text styles used to create a consistent visual hierarchy in interfaces.
+Connecting fonts, which sources fit, the text classes and replacing the fonts.
 
-### Installing Fonts
+### Connecting fonts
 
-Koobiq uses the [Inter](https://github.com/rsms/inter) and [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) font by default.
+Koobiq uses the [Inter](https://github.com/rsms/inter) and [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) fonts by default.
 
-| Font           | Weight | Style  |
-| -------------- | ------ | ------ |
-| JetBrains Mono | 400    | Normal |
-| JetBrains Mono | 600    | Normal |
-| JetBrains Mono | 700    | Normal |
-| Inter          | 400    | Normal |
-| Inter          | 400    | Italic |
-| Inter          | 500    | Normal |
-| Inter          | 500    | Italic |
-| Inter          | 600    | Normal |
-| Inter          | 700    | Normal |
+| Font           | Weights                                  |
+| -------------- | ---------------------------------------- |
+| Inter          | 400, 500, 600, 700; italic — 400 and 600 |
+| JetBrains Mono | 400, 600, 700                            |
 
-Add it to your application via [Fontsource](#fontsource), or with the [Google Fonts CDN](#google-fonts-cdn).
+Fonts come from npm packages or from files the application hosts itself. Google Fonts does not fit: it serves the fonts without some of the symbols, and Inter also without the OpenType features the tokens enable — the slashed zero, for example, does not appear.
 
-#### Fontsource
+#### Packages
 
-Install packages:
+Both fonts are installed from npm: [inter-ui](https://www.npmjs.com/package/inter-ui) and [@fontsource/jetbrains-mono](https://www.npmjs.com/package/@fontsource/jetbrains-mono).
 
 ```bash
-npm install @fontsource/inter @fontsource/jetbrains-mono
+npm install inter-ui @fontsource/jetbrains-mono
 ```
 
-Then you add the following code inside your global styles:
+From **inter-ui**, `inter.css` is the one that fits: it has the whole font — Cyrillic, the special symbols and the OpenType features. `inter-latin.css` has neither Cyrillic nor some of the symbols, and `inter-variable.css` declares the `InterVariable` family, which the tokens do not name.
 
-```scss
-// Inter
-@import '@fontsource/inter/400.css';
-@import '@fontsource/inter/500.css';
-@import '@fontsource/inter/600.css';
-@import '@fontsource/inter/700.css';
-@import '@fontsource/inter/400-italic.css';
-@import '@fontsource/inter/500-italic.css';
+**@fontsource/jetbrains-mono** is built from the Google Fonts files and has no box-drawing characters or arrows (`├ ─ →`): the browser takes them from the next font of `--kbq-font-family-mono`. If the interface shows them, JetBrains Mono is self-hosted.
 
-// JetBrains Mono
-@import '@fontsource/jetbrains-mono/400.css';
-@import '@fontsource/jetbrains-mono/600.css';
-@import '@fontsource/jetbrains-mono/700.css';
+The stylesheets go to the `styles` array of `angular.json`:
+
+```json
+"styles": [
+  "node_modules/inter-ui/inter.css",
+  "node_modules/@fontsource/jetbrains-mono/400.css",
+  "node_modules/@fontsource/jetbrains-mono/600.css",
+  "node_modules/@fontsource/jetbrains-mono/700.css",
+  "src/styles.css"
+]
 ```
 
-#### Google Fonts CDN
+#### Self-hosting
 
-Add the following code inside your `<head>` tag:
+Inter is downloaded [from rsms.me](https://rsms.me/inter/download/): the `web` folder of the archive holds the files and a ready-made `inter.css`. The folder is copied into the project, for example to `src/fonts/inter`.
+
+JetBrains Mono is downloaded [from the font release](https://github.com/JetBrains/JetBrainsMono/releases/latest): the `fonts/webfonts` folder of the archive has the files but no stylesheet. The folder is copied into the project, for example to `src/fonts/jetbrains-mono`, and `jetbrains-mono.css` next to the files is written by hand — one `@font-face` rule per weight, with the family name the tokens use:
+
+```css
+@font-face {
+    font-family: 'JetBrains Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('JetBrainsMono-Regular.woff2') format('woff2');
+}
+```
+
+The 600 and 700 weights take `JetBrainsMono-SemiBold.woff2` and `JetBrainsMono-Bold.woff2`. Both stylesheets go to `styles`:
+
+```json
+"styles": [
+  "src/fonts/inter/inter.css",
+  "src/fonts/jetbrains-mono/jetbrains-mono.css",
+  "src/styles.css"
+]
+```
+
+#### Checking the files
+
+Inter and JetBrains Mono from any other source — a package, a build or a CDN — are checked before connecting: the files must contain the characters the interface shows, and Inter also the OpenType features the tokens enable: `calt`, `case`, `kern`, `liga`, `ss01`, `ss04`, `tnum` and `zero`. A subset may lack both, depending on how it was built. The **unicode-range** descriptor only tells the browser which characters to request the file for, not which characters the file contains.
+
+### Text styles
+
+Text is styled with the ready-made classes, such as `kbq-headline` and `kbq-text-normal`; every class is listed [in the design tokens](/en/main/design-tokens/typography). A class sets the family, size, line height, letter spacing, weight, italic, text transform and OpenType features from the variables of its level, such as `--kbq-typography-text-normal-font-size`. The variables are for adjusting a single property, not for assembling a text style of your own.
+
+The classes come [with the prebuilt theme](/en/main/theming/overview); a theme built from the SCSS mixins adds them with `koobiq-typography()`.
 
 ```html
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<!-- Inter -->
-<link
-    href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap"
-    rel="stylesheet"
-/>
-<!-- JetBrains Mono -->
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+<h2 class="kbq-headline">Heading</h2>
+<p class="kbq-text-normal">Interface text</p>
 ```
+
+### Changing the fonts
+
+The families are set by three global variables: `--kbq-font-family-base` for interface text, `--kbq-font-family-accent` for headings and display styles, `--kbq-font-family-mono` for code. Overriding them changes the fonts across the interface. The override is declared after the token stylesheets — for example in `src/styles.css`, which comes after them in `styles` — otherwise the token values apply.
+
+```css
+:root {
+    --kbq-font-family-base: 'MySans', sans-serif;
+    --kbq-font-family-accent: 'MyDisplay', 'MySans', sans-serif;
+    --kbq-font-family-mono: 'MyMono', monospace;
+}
+```
+
+The OpenType features of the text styles stay on with another font. `ss01` and `ss04` are Inter's stylistic sets and switch on other glyphs in another font, so they are checked, or the `--kbq-typography-*-font-feature-settings` variables are overridden as well.
