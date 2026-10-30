@@ -14,6 +14,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Params, RouterLink } from '@angular/router';
 import { KbqBadge } from '@koobiq/components/badge';
 import { KbqCodeBlock, KbqCodeBlockFile } from '@koobiq/components/code-block';
+import { kbqAnimationsDisabled } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -161,6 +162,7 @@ export class DocsApiType {
 
     private readonly locale = inject(DOCS_API_LOCALE);
     private readonly document = inject(DOCUMENT);
+    private readonly scrollBehavior: ScrollBehavior = kbqAnimationsDisabled() ? 'instant' : 'smooth';
 
     /** The path of another API tab, in the locale of the interface. */
     protected getTabPath(page: string): string {
@@ -172,7 +174,7 @@ export class DocsApiType {
      * click that opens the link in a new tab or window leaves this one where it is.
      */
     protected scrollToSection(id: string, event: MouseEvent): void {
-        if (!opensElsewhere(event)) this.document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        if (!opensElsewhere(event)) this.document.getElementById(id)?.scrollIntoView({ behavior: this.scrollBehavior });
     }
 }
 

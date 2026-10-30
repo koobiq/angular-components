@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { By, provideClientHydration, withIncrementalHydration } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
 import { kbqCodeBlockHighlightJsConfigProvider } from '@koobiq/components/code-block';
+import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { BehaviorSubject, map } from 'rxjs';
 import type { Mock } from 'vitest';
@@ -484,6 +485,7 @@ describe(DocsApiPage.name, () => {
             page.querySelector<HTMLElement>('.docs-api__term-type a')!.click();
 
             expect(scrollIntoView.mock.contexts).toEqual([page.querySelector('#KbqActionsPanel')]);
+            expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
 
             // Opened in a new tab, the link leaves this one where it is.
             page.querySelector('.docs-api__term-type a')!.dispatchEvent(
@@ -491,6 +493,26 @@ describe(DocsApiPage.name, () => {
             );
 
             expect(scrollIntoView).toHaveBeenCalledTimes(1);
+        } finally {
+            delete (Element.prototype as Partial<Element>).scrollIntoView;
+        }
+    });
+
+    // As for a reader who asked for less motion.
+    it('jumps to the section a link on this tab points at with animations disabled', () => {
+        const scrollIntoView = vi.fn();
+
+        Object.defineProperty(Element.prototype, 'scrollIntoView', { value: scrollIntoView, configurable: true });
+        TestBed.configureTestingModule({
+            providers: [{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }]
+        });
+
+        try {
+            render(withMemberType([{ text: 'KbqActionsPanel', link: {} }]))
+                .querySelector<HTMLElement>('.docs-api__term-type a')!
+                .click();
+
+            expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'instant' });
         } finally {
             delete (Element.prototype as Partial<Element>).scrollIntoView;
         }

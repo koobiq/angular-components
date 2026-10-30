@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { kbqAnimationsDisabled } from '@koobiq/components/core';
 import { BehaviorSubject, fromEvent, Observable, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
@@ -23,6 +24,8 @@ export class DocsDocStates {
     }
 
     private _navbarMenu = new BehaviorSubject<DocsNavbarState>(DocsNavbarState.Closed);
+
+    private readonly scrollBehavior: ScrollBehavior = kbqAnimationsDisabled() ? 'instant' : 'smooth';
 
     /**
      * Only the most recently registered scroll container is tracked. `register*` is a
@@ -50,7 +53,7 @@ export class DocsDocStates {
     }
 
     scrollUp() {
-        this.currentHeaderScrollContainer?.scroll(0, 0);
+        this.currentHeaderScrollContainer?.scroll({ top: 0, behavior: this.scrollBehavior });
     }
 
     registerHeader(element: HTMLElement) {
