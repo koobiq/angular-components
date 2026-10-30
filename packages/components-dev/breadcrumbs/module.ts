@@ -16,7 +16,6 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { BreadcrumbsExamplesModule } from '../../docs-examples/components/breadcrumbs';
 import { DevThemeToggle } from '../theme-toggle';
 
-/** Reproduces DS-5724: the page title must not move when the number of breadcrumbs changes. */
 @Component({
     selector: 'dev-breadcrumbs-item-count',
     imports: [

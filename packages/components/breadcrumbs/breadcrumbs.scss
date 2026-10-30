@@ -15,9 +15,7 @@
     }
 
     .kbq-overflow-items {
-        // Room for the focus outline, which the `overflow: hidden` of `KbqOverflowItems` would cut.
-        // The margin takes it back, so the wrapper is as big as `.kbq-breadcrumbs__list` and the
-        // trail does not move when the number of items switches the template branch.
+        // add space not to cut focus outline
         padding: 1px;
         margin: -1px;
     }
@@ -33,9 +31,6 @@
         align-items: center;
     }
 
-    // On both wrappers rather than on the host: a negative margin on a flex item is subtracted from
-    // the space the flex algorithm hands it, so `KbqOverflowItems`, which measures its own box, would
-    // conclude that every item fits. The overflow wrapper keeps the extra `-1px` of its own margin.
     &.kbq-breadcrumbs_first-item-negative-margin {
         .kbq-breadcrumbs__list {
             margin-left: var(--kbq-breadcrumb-item-negative-margin);
