@@ -2514,7 +2514,6 @@ describe('KbqNumberInput', () => {
         /** Joins digit groups with the locale's group separator, which is not a plain space. */
         const grouped = (...groups: string[]): string => groups.join(defaultLocaleGroupSep);
 
-        /** Writes `text` into the field with the caret at `caret`, the way a keystroke reaches `onInput`. */
         const type = async (text: string, caret = text.length) => {
             inputElement.value = text;
             inputElement.setSelectionRange(caret, caret);

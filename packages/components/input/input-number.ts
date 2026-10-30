@@ -124,7 +124,6 @@ export function isFloat(value: string): boolean {
     return /^-?\d+\.\d+$/.test(value);
 }
 
-/** Whether `value` is past `Number.MAX_SAFE_INTEGER` in magnitude. */
 function isPastSafeInteger(value: number): boolean {
     return Math.abs(value) > Number.MAX_SAFE_INTEGER;
 }
@@ -239,12 +238,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     /** @docs-private */
     readonly valueInput = input<number | null | undefined>(undefined, { alias: 'value' });
 
-    /**
-     * The numeric value of the field, bound with `[value]` or written by a form control. An integer typed past
-     * `Number.MAX_SAFE_INTEGER`, the largest exact integer, is clamped to it when the field loses focus, and the
-     * value does not change until then. A fraction of a value around `1e14` or more may be rounded, because the
-     * text is rebuilt from the model after a step, a write or a locale change.
-     */
+    /** The numeric value of the field, bound with `[value]` or written by a form control. */
     get value(): number | null {
         return this.valueState() ?? null;
     }
@@ -312,12 +306,10 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         return this.localeConfiguration().number;
     }
 
-    /** `min`, but never past `Number.MAX_SAFE_INTEGER` in magnitude: steps stop where exact integers end. */
     private get stepMin(): number {
         return Math.max(this.min(), -Number.MAX_SAFE_INTEGER);
     }
 
-    /** `max`, but never past `Number.MAX_SAFE_INTEGER`. */
     private get stepMax(): number {
         return Math.min(this.max(), Number.MAX_SAFE_INTEGER);
     }
@@ -634,18 +626,10 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         }
     }
 
-    /**
-     * Whether the text is a number past `Number.MAX_SAFE_INTEGER`. Such text stays as typed until the field loses
-     * focus.
-     */
     private isBeyondSafeRange(text: string): boolean {
         return isPastSafeInteger(Number(normalizeNumber(text, this.config)));
     }
 
-    /**
-     * Clamps a typed value past `Number.MAX_SAFE_INTEGER` to the limit. Runs when the field loses focus and before
-     * a step.
-     */
     private clampToSafeRange(): void {
         const typed = Number(normalizeNumber(this.viewValue, this.config));
 
