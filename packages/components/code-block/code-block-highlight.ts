@@ -259,6 +259,7 @@ export class KbqCodeBlockHighlight {
         const lines: string[] = [];
         const openSpans: string[] = [];
         let line = '';
+        let lineHasText = false;
 
         // highlight.js emits spans and escaped text. A tag of another kind, which a plugin of highlight.js may add,
         // passes through as it is.
@@ -266,6 +267,7 @@ export class KbqCodeBlockHighlight {
             if (lineBreak) {
                 lines.push(`${line}${'</span>'.repeat(openSpans.length)}\n`);
                 line = openSpans.join('');
+                lineHasText = false;
 
                 continue;
             }
@@ -274,13 +276,15 @@ export class KbqCodeBlockHighlight {
                 openSpans.pop();
             } else if (token.startsWith('<span')) {
                 openSpans.push(token);
+            } else if (!token.startsWith('<')) {
+                lineHasText = true;
             }
 
             line += token;
         }
 
         // A line break at the end of the file starts no line, though the spans it crosses close after it.
-        if (line.replace(/<[^>]*>/g, '')) lines.push(line);
+        if (lineHasText) lines.push(line);
 
         return lines.map((content) => `<span class="kbq-code-block__line">${content}</span>`).join('');
     }
