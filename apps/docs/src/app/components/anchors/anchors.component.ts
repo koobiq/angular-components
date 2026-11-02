@@ -1,4 +1,3 @@
-import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { DOCUMENT } from '@angular/common';
 import {
     ChangeDetectionStrategy,
@@ -13,10 +12,10 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
-import { PopUpPlacements } from '@koobiq/components/core';
+import { kbqAnimationsDisabled, PopUpPlacements } from '@koobiq/components/core';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { filter, fromEvent, Subscription, timer } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
+import { filter, fromEvent, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { DOCS_API_WITHOUT_MEMBER } from '../../constants/api-page';
 import { DOCS_MARKDOWN_HEADING_CLASSES } from '../live-example/markdown-content';
 
@@ -76,7 +75,6 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     private readonly debounceTime = 15;
 
     private scrollSubscription: Subscription;
-    private fragmentScrollSubscription: Subscription | undefined;
     private fragmentScrollTimer: ReturnType<typeof setTimeout> | undefined;
 
     // The scroll container lives outside this component's view, so it can be absent (e.g. on a page
@@ -99,7 +97,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     }
 
     private readonly destroyRef = inject(DestroyRef);
-    private readonly resizeObserver = inject(SharedResizeObserver);
+    private readonly scrollBehavior: ScrollBehavior = kbqAnimationsDisabled() ? 'instant' : 'smooth';
 
     constructor() {
         const router = this.router;
@@ -129,7 +127,6 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
 
     ngOnDestroy() {
         this.scrollSubscription?.unsubscribe();
-        this.fragmentScrollSubscription?.unsubscribe();
         clearTimeout(this.fragmentScrollTimer);
     }
 
@@ -172,39 +169,17 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     }
 
     protected scrollIntoView(anchor: KbqDocsAnchor) {
-        anchor.element.scrollIntoView({ behavior: 'smooth' });
+        anchor.element.scrollIntoView({ behavior: this.scrollBehavior });
     }
 
     /**
-     * Scrolls the element to the top of the page at once, and keeps it there for a while as the content above it
-     * grows: lazily loaded examples and code blocks rendered again in the browser push it down.
+     * Scrolls the element to the top of the page at once. Content above it that renders later and changes its height
+     * is left to scroll anchoring, which keeps what is in view in place.
      */
     scrollToElement(target: HTMLElement): void {
         clearTimeout(this.fragmentScrollTimer);
-        this.fragmentScrollSubscription?.unsubscribe();
 
-        this.fragmentScrollTimer = setTimeout(() => {
-            target.scrollIntoView({ behavior: 'instant' });
-
-            const container = this.scrollContainer;
-
-            if (!container) {
-                return;
-            }
-
-            // Guard against layout shifts caused by lazily-loaded example components:
-            // re-scroll to target whenever the scroll container grows, for up to 2s.
-            this.fragmentScrollSubscription = this.resizeObserver
-                .observe(container)
-                .pipe(takeUntilDestroyed(this.destroyRef), takeUntil(timer(2000)))
-                .subscribe(() => {
-                    const distanceFromTop = target.getBoundingClientRect().top - container.getBoundingClientRect().top;
-
-                    if (distanceFromTop > 10) {
-                        target.scrollIntoView({ behavior: 'instant' });
-                    }
-                });
-        });
+        this.fragmentScrollTimer = setTimeout(() => target.scrollIntoView({ behavior: 'instant' }));
     }
 
     private updateActiveAnchor() {

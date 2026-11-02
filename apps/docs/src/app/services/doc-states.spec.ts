@@ -1,3 +1,5 @@
+import { TestBed } from '@angular/core/testing';
+import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 import { DocsDocStates } from './doc-states';
 
 /**
@@ -18,7 +20,7 @@ describe(DocsDocStates.name, () => {
 
     beforeEach(() => {
         vi.useFakeTimers();
-        service = new DocsDocStates();
+        service = TestBed.inject(DocsDocStates);
     });
 
     afterEach(() => {
@@ -27,6 +29,35 @@ describe(DocsDocStates.name, () => {
 
     it('should not throw when scrollUp is called before any container is registered', () => {
         expect(() => service.scrollUp()).not.toThrow();
+    });
+
+    describe('scrollUp', () => {
+        const scrollUp = (): ReturnType<typeof vi.fn> => {
+            const container = createScrollable();
+            const scroll = vi.fn();
+
+            // jsdom lays nothing out, and has no scrolling to offer.
+            Object.defineProperty(container, 'scroll', { value: scroll });
+            service.currentHeaderScrollContainer = container;
+            service.scrollUp();
+
+            return scroll;
+        };
+
+        it('should scroll the header container smoothly to its top', () => {
+            expect(scrollUp()).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
+        });
+
+        // As for a reader who asked for less motion.
+        it('should scroll the header container to its top at once with animations disabled', () => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                providers: [{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }]
+            });
+            service = TestBed.inject(DocsDocStates);
+
+            expect(scrollUp()).toHaveBeenCalledWith({ top: 0, behavior: 'instant' });
+        });
     });
 
     it('should not throw when checkHeaderOverflow runs before registration', () => {
