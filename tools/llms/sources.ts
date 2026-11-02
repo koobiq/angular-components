@@ -2,7 +2,12 @@ import { existsSync, readFileSync } from 'fs';
 import { globSync } from 'glob';
 import { join, posix } from 'path';
 import { DocsLocale } from '../../apps/docs/src/app/constants/locale';
-import { docsGetMarkdownPath, docsHasMarkdown } from '../../apps/docs/src/app/page-paths';
+import {
+    docsGetApiMarkdownPath,
+    docsGetMarkdownPath,
+    docsGetPageMarkdownPath,
+    docsHasMarkdown
+} from '../../apps/docs/src/app/page-paths';
 import {
     docsGetItemById,
     DocsStructureCategoryId,
@@ -14,9 +19,30 @@ import {
 import { EXAMPLE_COMPONENTS } from '../../packages/docs-examples/example-module';
 import { DocEntry } from '../api-gen/rendering/entities';
 import { DOCS_PAGE_SOURCES, parsePageSource } from '../docs-pages/sources';
-import { LlmsExample } from './page-markdown';
+import { LlmsExample, LlmsExampleFile } from './page-markdown';
 
-export const LLMS_SITE_ORIGIN = 'https://koobiq.io';
+/** The site of the latest major version, which the committed `llms.txt` and the skills link. */
+export const KOOBIQ_SITE_ORIGIN = 'https://koobiq.io';
+
+/**
+ * The address of the site the documentation for agents is built for: every link in it leads to the same site, so an
+ * agent that reads the Markdown of `next.koobiq.io` or of `v21.koobiq.io` stays on that version. The workflow that
+ * deploys a site to another address sets `KOOBIQ_DOCS_ORIGIN`.
+ */
+export const LLMS_SITE_ORIGIN = (process.env.KOOBIQ_DOCS_ORIGIN || KOOBIQ_SITE_ORIGIN).replace(/\/+$/, '');
+
+/** The address of a file of the documentation for agents, by its path under the root of the site. */
+export const getSiteUrl = (path: string): string => `${LLMS_SITE_ORIGIN}/${path}`;
+
+/** An example in a file of its own, apart from the pages that show it: `examples/alert-overview.md`. */
+export const getExamplePath = (id: string): string => `examples/${id}.md`;
+
+/** The API of an entry point, which every item of the entry point links: `api/button.md`, or a group of it. */
+export const getApiPath = (apiId: string, group?: string): string =>
+    group ? `api/${apiId}/${group}.md` : docsGetApiMarkdownPath(apiId).slice(1);
+
+/** The variables of a component, from its tokens file: `tokens/button.md`. */
+export const getTokensPath = (id: string): string => `tokens/${id}.md`;
 
 /** Where `tools/api-gen` writes the manifest of every entry point. */
 const API_MANIFEST_DIR = join('dist', 'docs-content', 'api-manifest');
@@ -51,6 +77,14 @@ export const getMarkdownPath = (item: DocsStructureItem, locale: DocsLocale): st
 export const getMarkdownUrl = (item: DocsStructureItem): string =>
     `${LLMS_SITE_ORIGIN}${docsGetMarkdownPath(item, DocsLocale.En)}`;
 
+/** Where the sections of a page too long for one file go, next to its English Markdown: `en/main/migration`. */
+export const getSectionsPath = (item: DocsStructureItem): string =>
+    getMarkdownPath(item, DocsLocale.En).replace(/\.md$/, '');
+
+/** A section of a page in a file of its own: `en/main/migration/upgrade-plan.md`. */
+export const getSectionPath = (item: DocsStructureItem, slugs: string[]): string =>
+    `${getSectionsPath(item)}/${slugs.join('/')}.md`;
+
 /** The page of an item a person opens first. */
 export const getPageUrl = ({ categoryId, id }: DocsStructureItem): string => {
     const tab = id === DocsStructureItemId.DesignTokens ? DocsStructureTokensTab.Colors : DocsStructureItemTab.Overview;
@@ -63,25 +97,56 @@ const isAbsoluteUrl = (url: string): boolean => /^[a-z][a-z\d+.-]*:/i.test(url) 
 
 /**
  * Resolves a link of a page for a reader outside the site. A link to another item, in any locale, leads to its
- * Markdown, which holds every tab of the item; any other link within the site gets the origin of the site.
+ * Markdown, or to the API of its entry point for the API tab; any other link within the site gets the origin of the
+ * site. A link a page writes with the address of koobiq.io counts as a link within the site, so that the Markdown of
+ * `next.koobiq.io` or `v21.koobiq.io` keeps to its own version.
  */
 export const resolveSiteUrl = (url: string): string => {
-    if (isAbsoluteUrl(url) || url.startsWith('#')) return url;
+    const local = url.startsWith(`${KOOBIQ_SITE_ORIGIN}/`) ? url.slice(KOOBIQ_SITE_ORIGIN.length) : url;
+
+    if (isAbsoluteUrl(local) || local.startsWith('#')) return local;
 
     // The base href of the site is `/`, so a link without the leading slash leads from its root as well.
-    const [path, hash] = (url.startsWith('/') ? url : `/${url}`).split('#');
-    const [locale, categoryId, id] = path.split('?')[0].split('/').filter(Boolean);
+    const [path, hash] = (local.startsWith('/') ? local : `/${local}`).split('#');
+    const [locale, categoryId, id, tab] = path.split('?')[0].split('/').filter(Boolean);
     const item =
         Object.values<string>(DocsLocale).includes(locale) &&
         docsGetItemById(id as DocsStructureItemId, categoryId as DocsStructureCategoryId);
+    const target = item && docsHasMarkdown(item) ? docsGetPageMarkdownPath(item, tab, DocsLocale.En) : path;
 
-    if (item && docsHasMarkdown(item)) return `${getMarkdownUrl(item)}${hash ? `#${hash}` : ''}`;
-
-    return `${LLMS_SITE_ORIGIN}${path}${hash ? `#${hash}` : ''}`;
+    return `${LLMS_SITE_ORIGIN}${target}${hash ? `#${hash}` : ''}`;
 };
 
 /** A JSDoc holding nothing but the title the catalogue shows, which the caption of the example already carries. */
 const TITLE_ONLY_JSDOC = /^\/\*\*\s*\n\s*\*\s*@title[^\n]*\n\s*\*\/\n/m;
+
+/** A file an example imports from outside its directory, by its path in the repository. */
+export interface LlmsSharedExampleFile extends LlmsExampleFile {
+    path: string;
+}
+
+/**
+ * An example with its own files, and apart from them the files it imports from outside its directory, such as the
+ * data the examples of the filter bar share.
+ */
+export const readExample = (id: string): { example: LlmsExample; sharedFiles: LlmsSharedExampleFile[] } => {
+    const example = EXAMPLE_COMPONENTS[id];
+
+    if (!example) throw new Error(`Unknown example "${id}"`);
+
+    const directory = posix.join('packages/docs-examples', example.packagePath);
+    const files = example.files.map((name) => ({
+        name,
+        content: readRepoFile(posix.join(directory, name)).replace(TITLE_ONLY_JSDOC, '')
+    }));
+    const sharedFiles = example.localImportFiles.map((name) => {
+        const path = posix.join(directory, name);
+
+        return { name, path, content: readRepoFile(path) };
+    });
+
+    return { example: { id, title: example.title, files }, sharedFiles };
+};
 
 /**
  * Returns the examples of one document with their files. A file several examples import, such as the shared data of
@@ -91,24 +156,16 @@ export const createExampleResolver = (): ((id: string) => LlmsExample) => {
     const emittedSharedFiles = new Set<string>();
 
     return (id: string): LlmsExample => {
-        const example = EXAMPLE_COMPONENTS[id];
+        const { example, sharedFiles } = readExample(id);
+        const newSharedFiles = sharedFiles
+            .filter(({ path }) => !emittedSharedFiles.has(path))
+            .map(({ name, path, content }): LlmsExampleFile => {
+                emittedSharedFiles.add(path);
 
-        if (!example) throw new Error(`Unknown example "${id}"`);
-
-        const directory = posix.join('packages/docs-examples', example.packagePath);
-        const files = example.files.map((name) => ({
-            name,
-            content: readRepoFile(posix.join(directory, name)).replace(TITLE_ONLY_JSDOC, '')
-        }));
-        const sharedFiles = example.localImportFiles
-            .filter((name) => !emittedSharedFiles.has(posix.join(directory, name)))
-            .map((name) => {
-                emittedSharedFiles.add(posix.join(directory, name));
-
-                return { name, content: readRepoFile(posix.join(directory, name)) };
+                return { name, content };
             });
 
-        return { id, title: example.title, files: [...files, ...sharedFiles] };
+        return { ...example, files: [...example.files, ...newSharedFiles] };
     };
 };
 
