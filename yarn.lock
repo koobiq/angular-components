@@ -3697,10 +3697,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/icons@npm:^12.4.0":
-  version: 12.4.0
-  resolution: "@koobiq/icons@npm:12.4.0"
-  checksum: 10c0/041be39e6948232e9c0fadb433be4c7a6f8a5c78cd8f5ed0149cab6e1eb5dc29be3ed650aea004ef13c47dbb428b93098a69816acdfde572f533f4fe694a63e2
+"@koobiq/icons@npm:^12.5.0":
+  version: 12.5.0
+  resolution: "@koobiq/icons@npm:12.5.0"
+  checksum: 10c0/beba19dc8381ec6e7eecf60e13e5f0db27eae6df872408967696953f4dd7caa6e4c9654d6ebe24670a74cd4f35e6a9a433ecc7fe30041d3b6adf088acb27e7ab
   languageName: node
   linkType: hard
 
@@ -3733,10 +3733,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/visuals@npm:^12.4.0":
-  version: 12.4.0
-  resolution: "@koobiq/visuals@npm:12.4.0"
-  checksum: 10c0/88b5c39f7baf50b1fc2549e68b08c2ed50dc95344c0e8765f3ed2c801dde34f2ea170cbea17806c51797a2263038fddae8941a1322fb09d02d76e9fa6e627dc8
+"@koobiq/visuals@npm:^12.5.0":
+  version: 12.5.0
+  resolution: "@koobiq/visuals@npm:12.5.0"
+  checksum: 10c0/2faacd32d34496df4bdce574e6b65972dd004d0d593f5eda4d703be8d000d3d5eba3060c3e60fc0abec5d9984a7b0196cbe77dfae870badc111f409fd074de7d
   languageName: node
   linkType: hard
 
@@ -10801,10 +10801,10 @@ __metadata:
     "@koobiq/date-adapter": "npm:^3.5.1"
     "@koobiq/date-formatter": "npm:^3.5.1"
     "@koobiq/design-tokens": "npm:^4.1.0"
-    "@koobiq/icons": "npm:^12.4.0"
+    "@koobiq/icons": "npm:^12.5.0"
     "@koobiq/luxon-date-adapter": "npm:^3.5.1"
     "@koobiq/moment-date-adapter": "npm:^3.5.1"
-    "@koobiq/visuals": "npm:^12.4.0"
+    "@koobiq/visuals": "npm:^12.5.0"
     "@maskito/angular": "npm:^5.1.0"
     "@maskito/core": "npm:^5.1.0"
     "@maskito/kit": "npm:^5.6.0"
