@@ -354,12 +354,12 @@ export class DevApp implements OnInit {
         return `${hiddenItemsText} ${hiddenItems}`;
     }
 
-    opened(event: void) {
-        console.log('opened: ', event);
+    opened() {
+        console.log('opened');
     }
 
-    closed(event: void) {
-        console.log('closed: ', event);
+    closed() {
+        console.log('closed');
     }
 
     private getFilteredOptions(value: string | { new: true; value: string } | null): string[] {

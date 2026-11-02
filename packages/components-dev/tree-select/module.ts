@@ -155,12 +155,12 @@ export class DevApp implements OnInit {
         console.log('openedChange: ', event);
     }
 
-    opened(event: void) {
-        console.log('opened: ', event);
+    opened() {
+        console.log('opened');
     }
 
-    closed(event: void) {
-        console.log('closed: ', event);
+    closed() {
+        console.log('closed');
     }
 
     private toggleParents(parent: DevFileFlatNode | null) {
