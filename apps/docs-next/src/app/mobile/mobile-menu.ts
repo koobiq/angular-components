@@ -1,5 +1,15 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, signal, viewChild } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    ElementRef,
+    inject,
+    Injector,
+    signal,
+    viewChild
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KBQ_WINDOW } from '@koobiq/components/core';
@@ -43,6 +53,7 @@ export class DocsNextMobileMenu {
     protected readonly state = inject(DocsNextSiteState);
     protected readonly navVariant = inject(DocsNextNavVariantState);
     private readonly window = inject(KBQ_WINDOW);
+    private readonly injector = inject(Injector);
 
     protected readonly sheet = viewChild.required(DocsNextSheet);
     private readonly scroller = viewChild.required<ElementRef<HTMLElement>>('scroller');
@@ -65,11 +76,11 @@ export class DocsNextMobileMenu {
             )
     );
 
-    /** Section the "levels" layout shows, or `null` for the list of sections. */
+    /** Section the "levels" layout shows; it stays while the pane slides away, so the content does not vanish first. */
     protected readonly levelSection = signal<DocsNextSection | null>(null);
 
-    /** Section the second pane holds; it stays while the pane slides away, so the content does not vanish first. */
-    protected readonly shownSection = signal<DocsNextSection | null>(null);
+    /** Whether the "levels" layout is inside the section rather than on the list of sections. */
+    protected readonly deep = signal(false);
 
     /** The slide is off while the menu opens, so the level of the open page appears in place. */
     protected readonly animated = signal(false);
@@ -93,30 +104,53 @@ export class DocsNextMobileMenu {
         const level = section && hasPages(section) ? section : null;
 
         this.animated.set(false);
-        this.shownSection.set(level);
-        this.levelSection.set(level);
+        this.deep.set(!!level);
+
+        if (level) this.levelSection.set(level);
 
         // Brings the open page into view once the list has rendered.
         setTimeout(() => {
-            this.scroller().nativeElement.querySelector('[aria-current="page"]')?.scrollIntoView({ block: 'center' });
+            this.centerCurrentPage();
             this.updateStuck();
         });
     }
 
     protected drillIn(section: DocsNextSection): void {
         this.animated.set(true);
-        this.shownSection.set(section);
 
         const pane = this.sectionScroll()?.nativeElement;
 
         if (pane) pane.scrollTop = 0;
 
         this.levelSection.set(section);
+        this.deep.set(true);
+        this.focusAfterRender('.docs-next-menu__back');
     }
 
     protected drillOut(): void {
         this.animated.set(true);
-        this.levelSection.set(null);
+        this.deep.set(false);
+        this.focusAfterRender(`.docs-next-menu__pane [data-section="${this.levelSection()?.id}"]`);
+    }
+
+    /** The pane left behind turns inert, which would drop the focus; it moves to the other level once that has rendered. */
+    private focusAfterRender(selector: string): void {
+        afterNextRender(
+            () => this.scroller().nativeElement.querySelector<HTMLElement>(selector)?.focus({ preventScroll: true }),
+            { injector: this.injector }
+        );
+    }
+
+    /** Scrolls the list holding the open page, not the nav: scrollIntoView would also move the clipped track sideways. */
+    private centerCurrentPage(): void {
+        const item = this.scroller().nativeElement.querySelector<HTMLElement>('[aria-current="page"]');
+        const list = item?.closest<HTMLElement>('[data-sheet-scroll]');
+
+        if (!item || !list) return;
+
+        const offset = item.getBoundingClientRect().top - list.getBoundingClientRect().top;
+
+        list.scrollTop += offset - (list.clientHeight - item.offsetHeight) / 2;
     }
 
     /** A header is stuck when it sits at the top of the list while its own pages pass under it. */

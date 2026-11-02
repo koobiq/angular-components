@@ -43,9 +43,9 @@
             <div
                 class="docs-next-menu__track"
                 [class.docs-next-menu__track_animated]="animated()"
-                [class.docs-next-menu__track_deep]="levelSection()"
+                [class.docs-next-menu__track_deep]="deep()"
             >
-                <div class="docs-next-menu__pane" data-sheet-scroll [attr.inert]="levelSection() ? '' : null">
+                <div class="docs-next-menu__pane" data-sheet-scroll [attr.inert]="deep() ? '' : null">
                     <ul class="docs-next-menu__list">
                         @for (section of sections; track section.id) {
                             <li>
@@ -54,6 +54,7 @@
                                         class="docs-next-menu__item docs-next-menu__item_section"
                                         type="button"
                                         [class.docs-next-menu__item_current-section]="section.id === state.section()"
+                                        [attr.data-section]="section.id"
                                         (click)="drillIn(section)"
                                     >
                                         <span class="docs-next-menu__title">{{ section.title[state.locale()] }}</span>
@@ -73,12 +74,10 @@
                             </li>
                         }
                     </ul>
+                    <ng-container [ngTemplateOutlet]="variantSwitch" />
                 </div>
-                <div
-                    class="docs-next-menu__pane docs-next-menu__pane_section"
-                    [attr.inert]="levelSection() ? null : ''"
-                >
-                    @if (shownSection(); as section) {
+                <div class="docs-next-menu__pane docs-next-menu__pane_section" [attr.inert]="deep() ? null : ''">
+                    @if (levelSection(); as section) {
                         <button class="docs-next-menu__back" type="button" (click)="drillOut()">
                             <i kbq-icon="kbq-chevron-left_16"></i>
                             <span>{{ section.title[state.locale()] }}</span>
@@ -132,25 +131,9 @@
             }
         }
 
-        <div class="docs-next-menu__variant" role="group" [attr.aria-label]="state.t('menuVariant')">
-            <span class="docs-next-menu__variant-label">{{ state.t('menuVariant') }}</span>
-            <button
-                class="docs-next-menu__variant-option"
-                type="button"
-                [attr.aria-pressed]="navVariant.variant() === 'levels'"
-                (click)="navVariant.set('levels')"
-            >
-                {{ state.t('menuLevels') }}
-            </button>
-            <button
-                class="docs-next-menu__variant-option"
-                type="button"
-                [attr.aria-pressed]="navVariant.variant() === 'accordion'"
-                (click)="navVariant.set('accordion')"
-            >
-                {{ state.t('menuAccordion') }}
-            </button>
-        </div>
+        @if (navVariant.variant() === 'accordion') {
+            <ng-container [ngTemplateOutlet]="variantSwitch" />
+        }
     </nav>
 
     <docs-next-menu-footer />
@@ -185,4 +168,26 @@
             }
         </ul>
     }
+</ng-template>
+
+<ng-template #variantSwitch>
+    <div class="docs-next-menu__variant" role="group" [attr.aria-label]="state.t('menuVariant')">
+        <span class="docs-next-menu__variant-label">{{ state.t('menuVariant') }}</span>
+        <button
+            class="docs-next-menu__variant-option"
+            type="button"
+            [attr.aria-pressed]="navVariant.variant() === 'levels'"
+            (click)="navVariant.set('levels')"
+        >
+            {{ state.t('menuLevels') }}
+        </button>
+        <button
+            class="docs-next-menu__variant-option"
+            type="button"
+            [attr.aria-pressed]="navVariant.variant() === 'accordion'"
+            (click)="navVariant.set('accordion')"
+        >
+            {{ state.t('menuAccordion') }}
+        </button>
+    </div>
 </ng-template>
