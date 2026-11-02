@@ -46,7 +46,7 @@ export class DocsNextMobileMenu {
 
     protected readonly sheet = viewChild.required(DocsNextSheet);
     private readonly scroller = viewChild.required<ElementRef<HTMLElement>>('scroller');
-    private readonly sectionPane = viewChild<ElementRef<HTMLElement>>('sectionPane');
+    private readonly sectionScroll = viewChild<ElementRef<HTMLElement>>('sectionScroll');
 
     protected readonly sections = DOCS_NEXT_SECTIONS;
     protected readonly hasPages = hasPages;
@@ -107,7 +107,7 @@ export class DocsNextMobileMenu {
         this.animated.set(true);
         this.shownSection.set(section);
 
-        const pane = this.sectionPane()?.nativeElement;
+        const pane = this.sectionScroll()?.nativeElement;
 
         if (pane) pane.scrollTop = 0;
 

@@ -89,11 +89,14 @@
     }
 }
 
+// The back row stands above the scrolling pages instead of sticking over them, so an overscroll bounce cannot move it.
 .docs-next-menu__pane_section {
     position: relative;
     z-index: 1;
-    // The back row sticks to the top of the pane; the gap goes after it instead.
-    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0;
     background: var(--kbq-background-bg);
     // Covers the edge of the list it slides over.
     box-shadow: -8px 0 16px -8px var(--kbq-background-overlay);
@@ -196,14 +199,12 @@
     color: var(--kbq-foreground-contrast-secondary);
 }
 
-// Figma: Back List Item (65:18949), sticky over the list of the section.
+// Figma: Back List Item (65:18949), above the list of the section.
 .docs-next-menu__back {
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
 
-    position: sticky;
-    top: 0;
-    z-index: 1;
     display: flex;
+    flex: none;
     align-items: center;
     gap: var(--kbq-size-s);
     width: 100%;
@@ -219,10 +220,14 @@
     &:focus-visible {
         box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
     }
+}
 
-    & + * {
-        margin-top: var(--kbq-size-s);
-    }
+.docs-next-menu__pane-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--kbq-size-s) 0 var(--kbq-size-5xl);
 }
 
 // The header of an expanded section stays on top while its pages scroll by (Figma: Nav Drawer #2 - onScroll). The

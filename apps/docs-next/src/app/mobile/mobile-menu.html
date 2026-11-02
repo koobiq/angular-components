@@ -75,9 +75,7 @@
                     </ul>
                 </div>
                 <div
-                    #sectionPane
                     class="docs-next-menu__pane docs-next-menu__pane_section"
-                    data-sheet-scroll
                     [attr.inert]="levelSection() ? null : ''"
                 >
                     @if (shownSection(); as section) {
@@ -85,10 +83,12 @@
                             <i kbq-icon="kbq-chevron-left_16"></i>
                             <span>{{ section.title[state.locale()] }}</span>
                         </button>
-                        <ng-container
-                            [ngTemplateOutlet]="pages"
-                            [ngTemplateOutletContext]="{ $implicit: section, tree: false }"
-                        />
+                        <div #sectionScroll class="docs-next-menu__pane-scroll" data-sheet-scroll>
+                            <ng-container
+                                [ngTemplateOutlet]="pages"
+                                [ngTemplateOutletContext]="{ $implicit: section, tree: false }"
+                            />
+                        </div>
                     }
                 </div>
             </div>
