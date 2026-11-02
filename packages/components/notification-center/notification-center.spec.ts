@@ -1259,7 +1259,7 @@ describe('KbqNotificationCenter', () => {
             openOuterCenter();
             await vi.runOnlyPendingTimersAsync();
 
-            const scrollable = getOuterScrollable() as unknown as Record<string, unknown>;
+            const scrollable = getOuterScrollable();
 
             dispatchFakeEvent(outerFixture.componentInstance.outer().nativeElement, 'scroll');
             await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
@@ -1267,8 +1267,8 @@ describe('KbqNotificationCenter', () => {
 
             // The panel used to tag the emitted CdkScrollable so the base trigger would skip the close.
             // The tag was never cleared and disabled close-on-scroll for every other pop-up as well.
-            expect(scrollable['kbqPopoverPreventHide']).toBeUndefined();
-            expect(scrollable['type']).toBeUndefined();
+            expect(scrollable).not.toHaveProperty('kbqPopoverPreventHide');
+            expect(scrollable).not.toHaveProperty('type');
         });
 
         it('does not throw when a scroll arrives after the panel was destroyed while open', async () => {
