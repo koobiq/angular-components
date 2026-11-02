@@ -57,10 +57,6 @@
         }
     }
 
-    &.docs-next-sheet_grown {
-        max-height: calc(100dvh - 2 * var(--kbq-size-s));
-    }
-
     // The menu slides in from the right and leaves a strip of the page visible (Figma: Drawer, x = 64).
     // On a wider phone it stays 320 at most: a menu gains nothing from more width.
     &.docs-next-sheet_end {

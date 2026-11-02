@@ -14,6 +14,7 @@ import {
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { DocsNextToc } from '../layout/toc';
 import { DocsNextPageBar } from '../mobile/page-bar';
+import { DocsNextTocSheet } from '../mobile/toc-sheet';
 import { DocsNextPageOutline } from '../services/page-outline';
 import { DocsNextSiteState } from '../services/site-state';
 
@@ -28,27 +29,26 @@ export const DOCS_NEXT_ARTICLE_WIDTH = new InjectionToken<{ readonly canExpand: 
  * of the article lifts the limit, and the article takes the whole width next to the contents; the button is there only
  * when the room is wider than the limit.
  *
- * On a phone the contents move into the "On this page" sheet of the row over the article (Figma: Article, 66:32982).
+ * On a phone the contents move into the "On this page" island floating at the bottom of the screen (Figma: 122:35907).
  */
 @Component({
     selector: 'docs-next-page-layout',
-    imports: [DocsNextToc, DocsNextPageBar],
+    imports: [DocsNextToc, DocsNextPageBar, DocsNextTocSheet],
     template: `
         @if (state.isMobile() && withActions()) {
-            <docs-next-page-bar
-                class="docs-next-page-layout__bar"
-                [githubUrl]="githubUrl()"
-                [source]="article"
-                [withToc]="withToc()"
-            />
+            <docs-next-page-bar class="docs-next-page-layout__bar" [githubUrl]="githubUrl()" [source]="article" />
         }
         <article #article class="docs-next-page-layout__article">
             <div class="docs-next-page-layout__column">
                 <ng-content />
             </div>
         </article>
-        @if (withToc() && !state.isMobile()) {
-            <docs-next-toc class="docs-next-page-layout__toc" />
+        @if (withToc()) {
+            @if (state.isMobile()) {
+                <docs-next-toc-sheet />
+            } @else {
+                <docs-next-toc class="docs-next-page-layout__toc" />
+            }
         }
     `,
     styles: `
@@ -86,12 +86,18 @@ export const DOCS_NEXT_ARTICLE_WIDTH = new InjectionToken<{ readonly canExpand: 
             .docs-next-page-layout__article {
                 padding: var(--kbq-size-xxl) var(--kbq-size-l) var(--kbq-size-5xl);
             }
+
+            /* The "On this page" island floats over the end of the article (48 high, 24px from the bottom). */
+            :host(.docs-next-page-layout_with-toc) .docs-next-page-layout__article {
+                padding-bottom: 96px;
+            }
         }
     `,
     providers: [{ provide: DOCS_NEXT_ARTICLE_WIDTH, useExisting: DocsNextPageLayout }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '[class.docs-next-page-layout_wide]': 'wide()',
+        '[class.docs-next-page-layout_with-toc]': 'withToc()',
         '[class.docs-next-page-layout_expanded]': 'state.articleExpanded() && !state.isMobile()'
     }
 })

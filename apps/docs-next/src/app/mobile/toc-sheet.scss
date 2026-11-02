@@ -1,57 +1,100 @@
 @use '../../../../../packages/components/core/styles/common/tokens';
 
-// The dialog lives in the top layer, so the host takes no room in the row it is placed in.
+$easing: cubic-bezier(0.32, 0.72, 0, 1);
+$duration: 500ms;
+$bar-height: 48px;
+// Figma: Buttom Sheet (122:35244), 144px from the top of the screen and 8px from its edges.
+$open-top-gap: 144px;
+$open-gap: var(--kbq-size-s);
+
 :host {
     display: contents;
 }
 
-// Figma: Topbar (66:33904), title in the middle and the close button on the right.
-.docs-next-toc-sheet__top {
-    position: relative;
-    display: flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
-    height: 48px;
-    border-bottom: 1px solid var(--kbq-line-contrast-less);
+.docs-next-toc-sheet__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    overflow: hidden;
+    overscroll-behavior: contain;
+    background: var(--kbq-background-overlay);
+    opacity: 0;
+    pointer-events: none;
+    touch-action: none;
+    transition: opacity 300ms ease-out;
+
+    :host(.docs-next-toc-sheet_open) & {
+        opacity: 1;
+        pointer-events: auto;
+    }
 }
 
-.docs-next-toc-sheet__title {
-    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
+// Figma: Frame 129 (122:35034) when collapsed. The island itself grows into the panel: its box changes, the row at the
+// bottom stays where it is and the list is uncovered above it.
+.docs-next-toc-sheet {
+    position: fixed;
+    bottom: calc(var(--kbq-size-xxl) + env(safe-area-inset-bottom));
+    left: 50%;
+    z-index: 21;
+    width: calc(100vw - 2 * var(--kbq-size-5xl));
+    height: $bar-height;
+    overflow: hidden;
+    border-radius: var(--kbq-size-s);
+    background: var(--kbq-background-card);
+    box-shadow: var(--kbq-shadow-overlay);
+    translate: -50% 0;
+    transition:
+        width $duration $easing,
+        height $duration $easing,
+        bottom $duration $easing,
+        border-radius $duration $easing,
+        background-color $duration $easing;
 
-    margin: 0;
+    :host(.docs-next-toc-sheet_open) & {
+        bottom: calc(#{$open-gap} + env(safe-area-inset-bottom));
+        width: calc(100vw - 2 * #{$open-gap});
+        border-radius: var(--kbq-size-m);
+        background: var(--kbq-background-bg);
+    }
 }
 
-.docs-next-toc-sheet__close.kbq-icon-button {
+// Sized to the open panel from the start and anchored over the row, so nothing in it moves while the island grows.
+.docs-next-toc-sheet__list {
     position: absolute;
-    right: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    padding: 0;
-}
-
-.docs-next-toc-sheet__scroll {
-    flex: 1;
-    min-height: 0;
+    bottom: $bar-height;
+    left: 50%;
+    box-sizing: border-box;
+    width: calc(100vw - 2 * #{$open-gap});
+    max-height: calc(100dvh - #{$open-top-gap} - #{$open-gap} - #{$bar-height});
     overflow-y: auto;
     overscroll-behavior: contain;
-    // Figma: List starts 8px down and ends with a 48px List End Space.
+    // Figma: Tree List starts 8px down and ends with a 48px List End Space.
     padding: var(--kbq-size-s) 0 var(--kbq-size-5xl);
+    opacity: 0;
+    scrollbar-width: none;
+    translate: -50% var(--kbq-size-s);
+    transition:
+        opacity 150ms ease-out,
+        translate 150ms ease-out;
+
+    :host(.docs-next-toc-sheet_open) & {
+        opacity: 1;
+        translate: -50% 0;
+        transition:
+            opacity 300ms ease-out 100ms,
+            translate 300ms ease-out 100ms;
+    }
 }
 
-// Figma: Tree List Item - Mobile, 48 high; the open section on a fill 4px inside the sheet.
+// Figma: Tree List Item - Mobile, 48 high; the open section on a fill 4px inside the panel.
 .docs-next-toc-sheet__item {
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
 
     position: relative;
     display: flex;
-    align-items: center;
-    min-height: 48px;
+    min-height: $bar-height;
     box-sizing: border-box;
-    padding: var(--kbq-size-m) var(--kbq-size-l);
+    padding: 0 var(--kbq-size-l);
     color: var(--kbq-foreground-contrast);
     text-decoration: none;
     outline: none;
@@ -69,31 +112,150 @@
         box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
     }
 
-    &[aria-current='location']::before,
+    &[aria-current='location']::before {
+        background: var(--kbq-background-contrast-less);
+    }
+
     &:active::before {
-        background: var(--kbq-states-background-transparent-hover);
+        background: var(--kbq-states-background-transparent-active);
     }
 }
 
-// The heading of a branch sticks on top while its children scroll by (Figma: Sticky Node).
-.docs-next-toc-sheet__item_sticky {
-    position: sticky;
-    top: calc(-1 * var(--kbq-size-s));
-    z-index: 1;
-    background: var(--kbq-background-bg);
+.docs-next-toc-sheet__item-text {
+    flex: 1;
+    min-width: 0;
+    padding: var(--kbq-size-m) 0;
 }
 
-// Children hang on a line, as in the tree of the mockup.
-.docs-next-toc-sheet__item_child {
-    padding-left: calc(var(--kbq-size-l) + 1px + var(--kbq-size-l));
+// Figma: Indent, a 1px line and 16px to the text.
+.docs-next-toc-sheet__item_nested::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--kbq-size-l);
+    width: 1px;
+    background: var(--kbq-line-contrast-less);
+    content: '';
+}
 
-    &::after {
+.docs-next-toc-sheet__item_nested .docs-next-toc-sheet__item-text {
+    padding-left: calc(1px + var(--kbq-size-l));
+}
+
+// Figma: Content and Right Group (122:35035) when collapsed, Drawer Bottom Bar (122:35950) when open.
+.docs-next-toc-sheet__bar {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    height: $bar-height;
+    padding: 0 var(--kbq-size-xxs);
+    transition: padding $duration $easing;
+
+    // The top border of the open panel.
+    &::before {
         position: absolute;
         top: 0;
-        bottom: 0;
-        left: var(--kbq-size-l);
-        width: 1px;
+        right: 0;
+        left: 0;
+        height: 1px;
         background: var(--kbq-line-contrast-less);
+        opacity: 0;
         content: '';
+        transition: opacity 200ms ease-out;
+    }
+
+    :host(.docs-next-toc-sheet_open) & {
+        padding: 0 var(--kbq-size-s);
+
+        &::before {
+            opacity: 1;
+        }
+    }
+}
+
+// One button over the whole row: the island is a single target.
+.docs-next-toc-sheet__toggle {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    padding: 0;
+    border: none;
+    border-radius: inherit;
+    background: none;
+    cursor: pointer;
+    outline: none;
+
+    &:focus-visible {
+        box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+    }
+}
+
+// Figma: Icon Button - Mobile, 38 wide around a 16px icon.
+.docs-next-toc-sheet__progress,
+.docs-next-toc-sheet__chevron {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    pointer-events: none;
+}
+
+// Figma: Progress 16px, a 2px ring on a track; it starts at the top and goes clockwise.
+.docs-next-toc-sheet__progress svg {
+    rotate: -90deg;
+    fill: none;
+    stroke-width: 2;
+}
+
+.docs-next-toc-sheet__progress-track {
+    stroke: var(--kbq-line-contrast-less);
+}
+
+.docs-next-toc-sheet__progress-value {
+    stroke: var(--kbq-foreground-contrast);
+    stroke-linecap: round;
+    transition: stroke-dasharray 150ms ease-out;
+}
+
+.docs-next-toc-sheet__title {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-medium);
+
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--kbq-foreground-contrast);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: opacity 200ms ease-out 100ms;
+
+    :host(.docs-next-toc-sheet_open) & {
+        opacity: 0;
+        transition-delay: 0s;
+    }
+}
+
+.docs-next-toc-sheet__chevron {
+    color: var(--kbq-icon-contrast);
+    transition: rotate $duration $easing;
+
+    :host(.docs-next-toc-sheet_open) & {
+        rotate: 180deg;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .docs-next-toc-sheet,
+    .docs-next-toc-sheet__bar,
+    .docs-next-toc-sheet__chevron {
+        transition: none;
+    }
+
+    .docs-next-toc-sheet__list {
+        translate: -50% 0;
     }
 }

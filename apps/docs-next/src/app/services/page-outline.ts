@@ -21,10 +21,15 @@ export class DocsNextPageOutline {
 
     readonly items = signal<DocsNextOutlineItem[]>([]);
     readonly activeId = signal<string | null>(null);
+    /** How far the page is read, in percent. */
+    readonly progress = signal(0);
 
     private container: HTMLElement | null = null;
     private readonly observer = new MutationObserver(() => this.collect());
-    private readonly onScroll = (): void => this.updateActive();
+    private readonly onScroll = (): void => {
+        this.updateActive();
+        this.updateProgress();
+    };
 
     /** Follows the headings of an article until the returned function is called. */
     observe(container: HTMLElement): () => void {
@@ -41,6 +46,7 @@ export class DocsNextPageOutline {
             this.container = null;
             this.items.set([]);
             this.activeId.set(null);
+            this.progress.set(0);
         };
     }
 
@@ -75,6 +81,12 @@ export class DocsNextPageOutline {
         }
     }
 
+    private updateProgress(): void {
+        const scrollable = this.document.documentElement.scrollHeight - this.window.innerHeight;
+
+        this.progress.set(scrollable > 0 ? Math.min(100, Math.max(0, (this.window.scrollY / scrollable) * 100)) : 100);
+    }
+
     private replaceHash(id: string): void {
         // `path()` keeps the query of the address, which `pathname` would drop; the router's own state comes along too.
         this.location.replaceState(`${this.location.path()}#${id}`, '', this.location.getState());
@@ -82,6 +94,9 @@ export class DocsNextPageOutline {
 
     private collect(): void {
         if (!this.container) return;
+
+        // The article arrives after it is observed, and its length changes the share already read.
+        this.updateProgress();
 
         const headings = Array.from(this.container.querySelectorAll<HTMLElement>('h2[id], h3[id], h4[id]'));
         const depths = [...new Set(headings.map((heading) => Number(heading.tagName[1])))].sort().slice(0, 2);

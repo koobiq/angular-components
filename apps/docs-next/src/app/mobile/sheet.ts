@@ -18,9 +18,6 @@ const SWIPE_CLOSE_DISTANCE = 80;
  * Modal panel of the phone layout on a native `<dialog>`: a sheet at the bottom or the menu "island" on the right
  * (Figma: New Docs, section 65:18869). It closes on Escape, on a tap on the backdrop and on a swipe towards its edge —
  * down for the sheet, right for the menu. The page under it does not scroll while it is open.
- *
- * A bottom sheet with `growOnScroll` starts at the height of its content and grows to the top of the screen once its
- * list is scrolled.
  */
 @Component({
     selector: 'docs-next-sheet',
@@ -31,7 +28,6 @@ const SWIPE_CLOSE_DISTANCE = 80;
             closedby="none"
             [attr.aria-label]="label()"
             [class.docs-next-sheet_end]="placement() === 'end'"
-            [class.docs-next-sheet_grown]="grown()"
             [style.transform]="dragOffset() ? dragTransform() : null"
             (close)="onClosed()"
         >
@@ -45,14 +41,12 @@ export class DocsNextSheet {
     /** `bottom` for a sheet, `end` for the menu sliding in from the right. */
     readonly placement = input<'bottom' | 'end'>('bottom');
     readonly label = input.required<string>();
-    readonly growOnScroll = input(false);
 
     readonly opened = output<void>();
     readonly closed = output<void>();
 
     private readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
 
-    protected readonly grown = signal(false);
     protected readonly dragOffset = signal(0);
 
     private dragStart: { x: number; y: number } | null = null;
@@ -69,23 +63,21 @@ export class DocsNextSheet {
                 ['pointermove', (event) => this.onPointerMove(event as PointerEvent)],
                 ['pointerup', () => this.onPointerUp()],
                 ['pointercancel', () => this.resetDrag()],
-                ['keydown', (event) => this.onKeydown(event as KeyboardEvent)],
-                ['scroll', (event) => this.onScroll(event)]
+                ['keydown', (event) => this.onKeydown(event as KeyboardEvent)]
             ];
 
-            // Listened here rather than in the template: a click on the backdrop lands on the dialog itself, and a
-            // scroll of the list inside is caught on the way.
+            // Listened here rather than in the template: a click on the backdrop lands on the dialog itself.
             const onKeydownCapture = (event: Event) => this.onKeydownCapture(event as KeyboardEvent);
 
             for (const [type, listener] of listeners) {
-                dialog.addEventListener(type, listener, { capture: type === 'scroll', passive: type === 'scroll' });
+                dialog.addEventListener(type, listener);
             }
 
             dialog.addEventListener('keydown', onKeydownCapture, { capture: true });
 
             destroyRef.onDestroy(() => {
                 for (const [type, listener] of listeners) {
-                    dialog.removeEventListener(type, listener, { capture: type === 'scroll' });
+                    dialog.removeEventListener(type, listener);
                 }
 
                 dialog.removeEventListener('keydown', onKeydownCapture, { capture: true });
@@ -94,7 +86,6 @@ export class DocsNextSheet {
     }
 
     open(): void {
-        this.grown.set(false);
         this.dialog().nativeElement.showModal();
         this.opened.emit();
     }
@@ -139,10 +130,6 @@ export class DocsNextSheet {
         if (event.key === 'Escape' && !this.escapeInDropdown) this.close();
 
         this.escapeInDropdown = false;
-    }
-
-    private onScroll(event: Event): void {
-        if (this.growOnScroll() && (event.target as HTMLElement).scrollTop > 0) this.grown.set(true);
     }
 
     private onPointerDown(event: PointerEvent): void {
