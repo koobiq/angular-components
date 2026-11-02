@@ -208,6 +208,35 @@ describe(KbqBreadcrumbs.name, () => {
             expect(customBreadcrumbs.length).toBe(componentInstance.items.length);
         });
     });
+
+    describe('item count', () => {
+        const geometry = (trail: HTMLElement) => {
+            const host = trail.getBoundingClientRect();
+            const firstItem = trail.querySelector('.kbq-breadcrumb-item')!.getBoundingClientRect();
+
+            return {
+                height: host.height,
+                firstItemLeft: firstItem.left - host.left,
+                firstItemTop: firstItem.top - host.top
+            };
+        };
+
+        [true, false].forEach((firstItemNegativeMargin) => {
+            it(`should keep the trail in place, firstItemNegativeMargin: ${firstItemNegativeMargin}`, () => {
+                const fixture = createComponent(BreadcrumbsItemCount, [provideRouter([])]);
+
+                fixture.componentInstance.firstItemNegativeMargin = firstItemNegativeMargin;
+                fixture.detectChanges();
+
+                const [single, several] = fixture.debugElement
+                    .queryAll(By.directive(KbqBreadcrumbs))
+                    .map(({ nativeElement }) => nativeElement);
+
+                expect(several.querySelector('.kbq-overflow-items')).not.toBeNull();
+                expect(geometry(several)).toEqual(geometry(single));
+            });
+        });
+    });
 });
 
 @Component({
@@ -314,4 +343,26 @@ class TestDropdownBreadcrumbs extends SimpleBreadcrumbs {
         { text: 'Data', disabled: true },
         { text: 'Access Control', disabled: true }
     ];
+}
+
+@Component({
+    template: `
+        @for (count of [1, 3]; track count) {
+            <kbq-breadcrumbs [firstItemNegativeMargin]="firstItemNegativeMargin">
+                @for (item of items.slice(0, count); track item) {
+                    <kbq-breadcrumb-item [text]="item" />
+                }
+            </kbq-breadcrumbs>
+        }
+    `,
+    styles: ':host { display: block; width: 400px; }',
+    standalone: true,
+    imports: [
+        KbqBreadcrumbs,
+        KbqBreadcrumbItem
+    ]
+})
+class BreadcrumbsItemCount {
+    firstItemNegativeMargin = true;
+    items = ['Home', 'Library', 'Data'];
 }
