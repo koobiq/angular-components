@@ -1,25 +1,101 @@
-import { expect, Page, test } from '@playwright/test';
+import { expect, Locator, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash, e2eWaitForSettledScrollbars } from 'packages/e2e/utils';
 
 test.describe('KbqCodeBlockModule', () => {
-    test.describe('E2eCodeBlockStates', () => {
-        const getComponent = (page: Page) => page.getByTestId('e2eCodeBlockStates');
+    const getScreenshotTarget = (page: Page, testId: string) =>
+        page.getByTestId(testId).getByTestId('e2eScreenshotTarget');
 
-        test('states', async ({ page }) => {
-            await page.goto('/E2eCodeBlockStates');
+    // highlight.js arrives through a dynamic import and its line-numbers plugin then rebuilds every block into a
+    // table of rows, line numbers shown or not, which changes its height. A block that does not overflow reveals no
+    // track to wait for, so gate on the tables rather than on anything the shot itself can cause to be true.
+    const expectHighlighted = (target: Locator, blocks: number) =>
+        expect(target.locator('.hljs-ln')).toHaveCount(blocks);
 
-            // highlight.js arrives through a dynamic import and its line-numbers plugin then rebuilds
-            // every `lineNumbers` block into numbered rows, which grows the fixture from 1616px to
-            // 1770px — at deviceScaleFactor 2 exactly the 3232-against-3540 image CI reported. Gate on
-            // the rebuilt rows rather than on anything the shot itself can cause to be true.
-            await expect(getComponent(page).locator('.hljs-ln-line, .hljs-ln-numbers').first()).toBeAttached();
+    test.describe('E2eCodeBlockNoTabs', () => {
+        test('actionbar over the code', async ({ page }) => {
+            await page.goto('/E2eCodeBlockNoTabs');
 
+            const target = getScreenshotTarget(page, 'e2eCodeBlockNoTabs');
+
+            // Once highlighted, every block whose code overflows reveals its track for `hideDelay`. One track
+            // per block here and in the tests below.
+            await e2eWaitForSettledScrollbars(target, 12);
+
+            await expect(target).toHaveScreenshot('01-no-tabs-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('01-no-tabs-dark.png');
+        });
+    });
+
+    test.describe('E2eCodeBlockTabs', () => {
+        test('header', async ({ page }) => {
+            await page.goto('/E2eCodeBlockTabs');
+
+            const target = getScreenshotTarget(page, 'e2eCodeBlockTabs');
+
+            await e2eWaitForSettledScrollbars(target, 9);
+
+            await expect(target).toHaveScreenshot('02-tabs-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('02-tabs-dark.png');
+        });
+    });
+
+    test.describe('E2eCodeBlockLineNumbers', () => {
+        test('numbered rows', async ({ page }) => {
+            await page.goto('/E2eCodeBlockLineNumbers');
+
+            const target = getScreenshotTarget(page, 'e2eCodeBlockLineNumbers');
+
+            await expectHighlighted(target, 2);
+            await e2eWaitForSettledScrollbars(target, 2);
+
+            await expect(target).toHaveScreenshot('03-line-numbers-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('03-line-numbers-dark.png');
+        });
+    });
+
+    test.describe('E2eCodeBlockSoftWrap', () => {
+        test('wrapped lines', async ({ page }) => {
+            await page.goto('/E2eCodeBlockSoftWrap');
+
+            const target = getScreenshotTarget(page, 'e2eCodeBlockSoftWrap');
+
+            await expectHighlighted(target, 1);
+            await e2eWaitForSettledScrollbars(target, 1);
+
+            await expect(target).toHaveScreenshot('04-soft-wrap-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('04-soft-wrap-dark.png');
+        });
+    });
+
+    test.describe('E2eCodeBlockViewAll', () => {
+        test('collapsed and expanded', async ({ page }) => {
+            await page.goto('/E2eCodeBlockViewAll');
+
+            const target = getScreenshotTarget(page, 'e2eCodeBlockViewAll');
+
+            await e2eWaitForSettledScrollbars(target, 7);
+
+            await expect(target).toHaveScreenshot('05-view-all-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('05-view-all-dark.png');
+        });
+    });
+
+    test.describe('E2eCodeBlockScroll', () => {
+        test('scrolled content and the scrollbar', async ({ page }) => {
+            await page.goto('/E2eCodeBlockScroll');
+
+            const target = getScreenshotTarget(page, 'e2eCodeBlockScroll');
             const scrolledCodeArea = page.getByTestId('e2eCodeBlockWithTabs').locator('.kbq-code-block__main');
 
-            // Then re-scroll to the end. `KbqCodeBlock.scrollTo` defers until highlighting reports
-            // itself done, but the range keeps growing past that as the plugin restructures, so the
-            // component's own scroll rests one pixel short in roughly one run in thirty and nothing
-            // corrects it. One CSS pixel shifts the whole code area, which at threshold: 0 fails.
+            // The scenario scrolls to the end itself, and the test scrolls once more. `KbqCodeBlock.scrollTo`
+            // defers until highlighting reports itself done, but the range can still grow past that, so the
+            // component's own scroll may rest one pixel short and nothing corrects it. One CSS pixel shifts the
+            // whole code area, which at threshold: 0 fails.
             //
             // The remainder is compared with a tolerance, not to zero: `scrollHeight` and
             // `clientHeight` are CSSOM integers while `scrollTop` is a double, so at the true bottom
@@ -36,13 +112,11 @@ test.describe('KbqCodeBlockModule', () => {
                 )
                 .toBeLessThanOrEqual(1);
 
-            // The scroll above reveals every hover-mode track for `hideDelay`. One code block per
-            // fixture row, each with a single track.
-            await e2eWaitForSettledScrollbars(getComponent(page), 14);
+            await e2eWaitForSettledScrollbars(target, 3);
 
-            await expect(getComponent(page)).toHaveScreenshot('01-light.png');
+            await expect(target).toHaveScreenshot('06-scroll-light.png');
             await e2eEnableDarkTheme(page);
-            await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
+            await expect(target).toHaveScreenshot('06-scroll-dark.png');
         });
     });
 
