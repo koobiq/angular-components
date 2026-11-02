@@ -1,6 +1,6 @@
-import { OverlayRef, ScrollDispatcher, ScrollStrategy } from '@angular/cdk/overlay';
+import type { OverlayRef, ScrollDispatcher, ScrollStrategy } from '@angular/cdk/overlay';
 import { isDevMode } from '@angular/core';
-import { Subscription } from 'rxjs';
+import type { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { isScrollFromInsideOverlay } from './scroll-strategy-utils';
 

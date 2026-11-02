@@ -1,5 +1,5 @@
 import { escapeRegExp, kbqResolveTimezoneOffset } from '@koobiq/components/core';
-import { KbqTimezoneGroup, KbqTimezonesByCountry, KbqTimezoneZone } from './timezone.models';
+import type { KbqTimezoneGroup, KbqTimezonesByCountry, KbqTimezoneZone } from './timezone.models';
 
 const minusUnicode = 0x2212; // Minus Sign U+2212
 

@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, VERSION } from '@angular/core';
-import { EXAMPLE_COMPONENTS, ExampleData } from '@koobiq/docs-examples';
-import StackBlitzSDK, { Project, ProjectFiles } from '@stackblitz/sdk';
+import StackBlitzSDK, { type Project, type ProjectFiles } from '@stackblitz/sdk';
 import { firstValueFrom } from 'rxjs';
+import { EXAMPLE_COMPONENTS, type ExampleData } from '@koobiq/docs-examples';
 import { docsKoobiqVersion } from '../../version';
 import { docsNormalizePath } from './normalize-path';
 

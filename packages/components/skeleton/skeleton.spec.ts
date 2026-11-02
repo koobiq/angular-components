@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KBQ_ANIMATIONS_CONFIG, KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqSkeleton } from './skeleton';

@@ -1,13 +1,13 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
+    type ElementRef,
     inject,
     Injector,
-    OnDestroy,
+    type OnDestroy,
     signal,
     viewChild,
     viewChildren

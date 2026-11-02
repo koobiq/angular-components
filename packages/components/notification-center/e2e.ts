@@ -3,7 +3,7 @@ import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqFormattersModule } from '@koobiq/components/core';
 import { KbqToastStyle } from '@koobiq/components/toast';
 import { KbqNotificationCenterModule } from './notification-center.module';
-import { KbqNotificationCenterService, KbqNotificationItem } from './notification-center.service';
+import { KbqNotificationCenterService, type KbqNotificationItem } from './notification-center.service';
 
 /** Fresh copies of the demo list, so a fixture that mutates an item cannot affect the next one. */
 const createE2eNotificationItems = (): KbqNotificationItem[] => [

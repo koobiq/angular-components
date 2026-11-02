@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     effect,
@@ -11,19 +11,17 @@ import {
     signal,
     viewChild
 } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, type UrlSegment } from '@angular/router';
+import { map } from 'rxjs';
 import { KBQ_WINDOW, KbqThemeService } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { DocsLocaleState } from '../../services/locale';
 import { DocsStructureTokensTab } from '../../structure';
+import { DocsAnchorsComponent } from '../anchors/anchors.component';
 import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
 import { DocsComponentViewerWrapperComponent } from '../component-viewer/component-viewer-wrapper';
-
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, UrlSegment } from '@angular/router';
-import { map } from 'rxjs';
-
-import { DocsAnchorsComponent } from '../anchors/anchors.component';
 import { docsData as borderRadius } from './data/border-radius';
 import { docsData as colors } from './data/colors';
 import { docsData as palette } from './data/palette';

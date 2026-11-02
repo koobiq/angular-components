@@ -1,5 +1,5 @@
 import { Dialog } from '@angular/cdk/dialog';
-import { OverlayContainer, ScrollStrategy } from '@angular/cdk/overlay';
+import { OverlayContainer, type ScrollStrategy } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { SpyLocation } from '@angular/common/testing';
 import {
@@ -9,14 +9,15 @@ import {
     ElementRef,
     inject,
     Injectable,
-    Provider,
+    ɵZONELESS_ENABLED,
+    type Provider,
     signal,
     TemplateRef,
-    Type,
-    viewChild,
-    ɵZONELESS_ENABLED
+    type Type,
+    viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { lastValueFrom } from 'rxjs';
 import {
     createKeyboardEvent,
     enUSLocaleData,
@@ -26,9 +27,8 @@ import {
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { lastValueFrom } from 'rxjs';
 import { KBQ_ACTIONS_PANEL_DATA, KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR, KbqActionsPanel } from './actions-panel';
-import { KbqActionsPanelConfig, kbqActionsPanelDefaultConfigProvider } from './actions-panel-config';
+import { type KbqActionsPanelConfig, kbqActionsPanelDefaultConfigProvider } from './actions-panel-config';
 import { KbqActionsPanelRef } from './actions-panel-ref';
 import { KBQ_ACTIONS_PANEL_SCOPED_OVERLAY_CONTAINER_SELECTOR } from './actions-panel-scoped-overlay-container';
 import { KbqActionsPanelModule } from './module';

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
     kbqBuildTree,
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBarModule,
-    KbqPipeTemplate,
+    type KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
 

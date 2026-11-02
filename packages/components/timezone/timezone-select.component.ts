@@ -8,17 +8,17 @@ import {
     effect,
     inject,
     InjectionToken,
-    Provider,
+    type Provider,
     ViewEncapsulation
 } from '@angular/core';
 import {
     KBQ_OPTION_PARENT_COMPONENT,
-    KbqDeepPartial,
+    type KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
     KbqSelectSearch,
     kbqSiblingPopupProvider,
-    KbqTimezoneLocaleConfiguration,
+    type KbqTimezoneLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { kbqCleanerFactoryProvider, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';

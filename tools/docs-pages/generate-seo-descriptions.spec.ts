@@ -1,5 +1,5 @@
 import { DOCS_SEO_DESCRIPTIONS } from '../../apps/docs/src/app/seo-descriptions';
-import { collectSeoDescriptions, DocsSeoDescriptions } from './generate-seo-descriptions';
+import { collectSeoDescriptions, type DocsSeoDescriptions } from './generate-seo-descriptions';
 import { DOCS_PAGE_OVERVIEW_SOURCES } from './sources';
 
 // Compiles every overview page: 2-6 s on its own, past 10 s on a busy machine.

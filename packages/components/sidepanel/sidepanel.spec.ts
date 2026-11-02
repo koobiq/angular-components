@@ -2,30 +2,30 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    effect,
+    inject as injectCore,
     InjectionToken,
     Injector,
     NgModule,
-    TemplateRef,
-    effect,
-    inject as injectCore,
     signal,
+    TemplateRef,
     viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
+    dispatchKeyboardEvent,
     ESCAPE,
     KBQ_STATE_STORE,
     KbqStateSavingService,
-    KbqStateStore,
-    dispatchKeyboardEvent
+    type KbqStateStore
 } from '@koobiq/components/core';
-import { KbqDropdownItem, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqDropdownItem, KbqDropdownModule, type KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import {
     KBQ_SIDEPANEL_DATA,
-    KbqSidepanelConfig,
+    type KbqSidepanelConfig,
     KbqSidepanelModule,
     KbqSidepanelPosition,
     KbqSidepanelRef,

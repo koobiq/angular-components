@@ -1,8 +1,8 @@
-import { Component, ElementRef, inject, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, type ElementRef, inject, type Provider, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { KbqCheckable, KbqCheckableClickAction, TransitionCheckState } from './checkable';
+import { KbqCheckable, type KbqCheckableClickAction, TransitionCheckState } from './checkable';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({

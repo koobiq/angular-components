@@ -3,10 +3,10 @@ import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
 import {
-    AfterContentChecked,
-    AfterContentInit,
+    type AfterContentChecked,
+    type AfterContentInit,
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -14,23 +14,25 @@ import {
     contentChildren,
     DestroyRef,
     Directive,
-    ElementRef,
+    type ElementRef,
     forwardRef,
     inject,
     InjectionToken,
     input,
     isDevMode,
-    OnChanges,
-    OnDestroy,
+    type OnChanges,
+    type OnDestroy,
     output,
-    QueryList,
+    type QueryList,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { merge, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import {
     KBQ_PARENT_ANIMATION_COMPONENT,
     kbqOptionalNumberAttribute,
@@ -38,12 +40,10 @@ import {
     KbqStateSaving
 } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { merge, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { KbqTab } from './tab.component';
 import { KbqTabBody } from './tab-body.component';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
-import { KbqTab } from './tab.component';
 
 @Directive({
     selector:

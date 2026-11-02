@@ -1,4 +1,4 @@
-import { Directive, TemplateRef, inject, input } from '@angular/core';
+import { Directive, inject, input, TemplateRef } from '@angular/core';
 
 /** Context provided to the tree node component. */
 export class KbqTreeNodeOutletContext<T> {

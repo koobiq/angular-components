@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, linkedSignal, Provider } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, linkedSignal, type Provider } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import {
@@ -8,7 +8,7 @@ import {
     kbqLocaleIDProvider,
     kbqLocaleServiceProvider
 } from '@koobiq/components/core';
-import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import { type KbqFilter, KbqFilterBarModule, type KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { injectLocalizedPeriods } from '../localized-data';
 

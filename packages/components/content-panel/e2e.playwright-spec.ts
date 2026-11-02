@@ -1,4 +1,4 @@
-import { expect, Locator, Page, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme, e2eHasOverflowShadow, e2eWaitForSettledScrollbars } from '../../e2e/utils';
 
 test.describe('KbqContentPanelModule', () => {

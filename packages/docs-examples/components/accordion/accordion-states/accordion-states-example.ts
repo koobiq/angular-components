@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqAccordionModule, KbqAccordionVariant } from '@koobiq/components/accordion';
+import { KbqAccordionModule, type KbqAccordionVariant } from '@koobiq/components/accordion';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 
 /**

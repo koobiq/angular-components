@@ -10,7 +10,7 @@ import {
 import { ptBRLocaleData } from './pt-BR';
 import { ruRULocaleData } from './ru-RU';
 import { tkTMLocaleData } from './tk-TM';
-import { KbqPopoverConfirmLocaleConfiguration } from './types';
+import type { KbqPopoverConfirmLocaleConfiguration } from './types';
 
 // The section is read through the shared `kbqInjectLocaleConfiguration`, whose behaviour is covered once in
 // `a11y.spec.ts`. What is left to pin here is that the confirmation popover is wired to that helper with its

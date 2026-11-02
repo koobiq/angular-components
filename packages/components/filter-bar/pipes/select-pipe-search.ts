@@ -1,5 +1,5 @@
 import { createSearchPredicate } from '@koobiq/components/core';
-import { KbqSelectValue } from '../filter-bar.types';
+import type { KbqSelectValue } from '../filter-bar.types';
 
 /**
  * Search over the options of `kbq-pipe-select` / `kbq-pipe-multi-select`: matches the name, and the

@@ -1,4 +1,4 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, OnDestroy, signal } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, type OnDestroy, signal } from '@angular/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 
 const DELAY: number = 300;

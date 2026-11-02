@@ -1,11 +1,11 @@
-﻿import { OverlayRef } from '@angular/cdk/overlay';
+﻿import type { OverlayRef } from '@angular/cdk/overlay';
 import { signal, untracked } from '@angular/core';
-import { ESCAPE, isHtmlElement, KbqOverflowShadowState } from '@koobiq/components/core';
-import { merge, Observable, Subject } from 'rxjs';
+import { merge, type Observable, Subject } from 'rxjs';
 import { filter, take, tap } from 'rxjs/operators';
+import { ESCAPE, isHtmlElement, type KbqOverflowShadowState } from '@koobiq/components/core';
 import { KbqSidepanelAnimationState } from './sidepanel-animations';
-import { KbqSidepanelConfig } from './sidepanel-config';
-import { KbqSidepanelContainerComponent } from './sidepanel-container.component';
+import type { KbqSidepanelConfig } from './sidepanel-config';
+import type { KbqSidepanelContainerComponent } from './sidepanel-container.component';
 
 // Counter for unique sidepanel ids.
 let uniqueId = 0;

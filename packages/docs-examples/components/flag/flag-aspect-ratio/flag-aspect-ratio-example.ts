@@ -1,12 +1,12 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
+import { countries } from 'country-flag-icons';
+import * as flags3x2 from 'country-flag-icons/string/3x2';
 import { KbqFlag } from '@koobiq/components/flag';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { countries } from 'country-flag-icons';
-import * as flags3x2 from 'country-flag-icons/string/3x2';
 
 const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
 

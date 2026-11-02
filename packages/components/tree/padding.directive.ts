@@ -1,6 +1,6 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { AfterViewInit, computed, Directive, effect, ElementRef, inject, input, Renderer2 } from '@angular/core';
+import { type AfterViewInit, computed, Directive, effect, ElementRef, inject, input, Renderer2 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
 import { KbqTreeOption } from './tree-option.component';

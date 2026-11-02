@@ -1,4 +1,4 @@
-import { FlatTreeControl } from './flat-tree-control';
+import type { FlatTreeControl } from './flat-tree-control';
 
 export const kbqTreeSelectAllValue = 'selectAll';
 

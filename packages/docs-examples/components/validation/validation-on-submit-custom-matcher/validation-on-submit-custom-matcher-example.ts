@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal, viewChildren } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { timer } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     kbqErrorStateMatcherProvider,
@@ -8,7 +9,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { timer } from 'rxjs';
 
 /**
  * @title Validation on submit with custom matcher

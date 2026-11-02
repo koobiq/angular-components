@@ -1,6 +1,8 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { merge, type Observable, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { createSearchPredicate, kbqInjectLocaleConfiguration, tokenizeSearchQuery } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -10,14 +12,12 @@ import {
     getZonesGroupedByCountry,
     KBQ_TIMEZONE_LOCALE_CONFIGURATION,
     kbqResolveHostCountry,
-    KbqTimezoneGroup,
+    type KbqTimezoneGroup,
     KbqTimezoneModule,
-    KbqTimezoneZone,
+    type KbqTimezoneZone,
     offsetFormatter,
     resolveZoneOffset
 } from '@koobiq/components/timezone';
-import { merge, Observable, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { timezones } from '../timezone-data';
 
 /** `offsetFormatter` renders the sign with U+2212 (minus sign), which a normal keyboard can't type. */

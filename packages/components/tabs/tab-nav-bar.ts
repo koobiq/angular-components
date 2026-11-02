@@ -3,8 +3,8 @@ import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import { Platform } from '@angular/cdk/platform';
 import {
-    AfterContentInit,
-    AfterViewInit,
+    type AfterContentInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -14,19 +14,19 @@ import {
     forwardRef,
     inject,
     input,
-    OnChanges,
-    OnDestroy,
-    QueryList,
+    type OnChanges,
+    type OnDestroy,
+    type QueryList,
     Renderer2,
-    SimpleChanges,
+    type SimpleChanges,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { startWith } from 'rxjs/operators';
 import { isUndefined, kbqOptionalNumberAttribute, kbqQueryListFrom } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { startWith } from 'rxjs/operators';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
 
 // Increasing integer for generating unique ids for tab nav components.

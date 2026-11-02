@@ -1,15 +1,15 @@
 import { _CdkPrivateStyleLoader } from '@angular/cdk/private';
 import {
+    afterRenderEffect,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     Directive,
-    Injectable,
-    NgZone,
-    ViewEncapsulation,
-    afterRenderEffect,
-    booleanAttribute,
     inject,
-    input
+    Injectable,
+    input,
+    NgZone,
+    ViewEncapsulation
 } from '@angular/core';
 import { KBQ_WINDOW, kbqAnimationsDisabled, kbqInjectNativeElement } from '@koobiq/components/core';
 

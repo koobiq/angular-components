@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
@@ -6,24 +6,24 @@ import {
     DestroyRef,
     Directive,
     ElementRef,
-    Injector,
-    OnDestroy,
-    Signal,
-    TemplateRef,
-    ViewEncapsulation,
     inject,
-    signal
+    Injector,
+    type OnDestroy,
+    type Signal,
+    signal,
+    TemplateRef,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter, take } from 'rxjs/operators';
 import {
-    KbqReadStateDirective,
     kbqAfterAnimations,
     kbqAnimationsDisabled,
-    kbqInjectA11yLocaleConfiguration
+    kbqInjectA11yLocaleConfiguration,
+    KbqReadStateDirective
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { filter, take } from 'rxjs/operators';
 import { KBQ_TOAST_STACK, KbqToastData, KbqToastStyle } from './toast.type';
 
 @Directive({

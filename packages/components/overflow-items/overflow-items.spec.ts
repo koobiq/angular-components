@@ -2,18 +2,18 @@ import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import {
     ChangeDetectionStrategy,
     Component,
-    DebugElement,
+    type DebugElement,
     effect,
-    Provider,
+    type Provider,
     signal,
-    Type,
+    type Type,
     viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqFlexWrap, KbqOrientation } from '@koobiq/components/core';
 import { EMPTY, Subject } from 'rxjs';
 import type { Mock } from 'vitest';
+import type { KbqFlexWrap, KbqOrientation } from '@koobiq/components/core';
 import { KbqOverflowItemsModule } from './module';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from './overflow-items';
 

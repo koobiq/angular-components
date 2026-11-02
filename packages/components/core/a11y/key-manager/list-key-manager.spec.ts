@@ -1,4 +1,4 @@
-import { FocusOrigin, ListKeyManagerModifierKey } from '@angular/cdk/a11y';
+import type { FocusOrigin, ListKeyManagerModifierKey } from '@angular/cdk/a11y';
 import { DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, TAB, UP_ARROW } from '@angular/cdk/keycodes';
 import { QueryList } from '@angular/core';
 import { take } from 'rxjs/operators';

@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, ViewEncaps
 import { KBQ_TITLE_TEXT_REF } from '@koobiq/components/core';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqAppSwitcherApp } from './app-switcher';
+import type { KbqAppSwitcherApp } from './app-switcher';
 import { KbqAppSwitcherIconSanitizer } from './app-switcher-icon-sanitizer';
 
 /** @docs-private */

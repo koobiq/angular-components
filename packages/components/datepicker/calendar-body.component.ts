@@ -1,11 +1,11 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    OnChanges,
-    SimpleChanges,
-    ViewEncapsulation,
     input,
-    output
+    type OnChanges,
+    output,
+    type SimpleChanges,
+    ViewEncapsulation
 } from '@angular/core';
 
 /**

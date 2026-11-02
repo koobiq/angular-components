@@ -2,9 +2,9 @@ import { Location } from '@angular/common';
 import { Directive, inject, Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { PRIMARY_OUTLET, Router } from '@angular/router';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, map, type Observable } from 'rxjs';
 import { DOCS_DEFAULT_LOCALE, DOCS_SUPPORTED_LOCALES, DocsLocale } from '../constants/locale';
-import { docsTranslate, DocsTranslationKey } from './i18n';
+import { docsTranslate, type DocsTranslationKey } from './i18n';
 
 export const docsIsRuLocale = (locale: DocsLocale): boolean => locale === DocsLocale.Ru;
 

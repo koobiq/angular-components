@@ -1,6 +1,6 @@
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
@@ -10,14 +10,14 @@ import {
     Injector,
     input,
     NgZone,
-    OnDestroy,
+    type OnDestroy,
     Output,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KBQ_OVERFLOW_SHADOW_SOURCE, KbqOverflowShadowSource } from '@koobiq/components/core';
+import { KBQ_OVERFLOW_SHADOW_SOURCE, type KbqOverflowShadowSource } from '@koobiq/components/core';
 import { KbqScrollbarDirective } from './scrollbar.directive';
-import {
+import type {
     KbqScrollbarEventListenerArgs,
     KbqScrollbarEvents,
     KbqScrollbarOptions,

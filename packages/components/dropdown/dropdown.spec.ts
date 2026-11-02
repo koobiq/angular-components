@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Direction, Directionality } from '@angular/cdk/bidi';
+import { type Direction, Directionality } from '@angular/cdk/bidi';
 import {
     FlexibleConnectedPositionStrategy,
     Overlay,
@@ -10,37 +10,26 @@ import { ScrollDispatcher } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
-    Provider,
-    Signal,
-    TemplateRef,
-    Type,
     effect,
+    ElementRef,
     input,
     output,
+    type Provider,
+    type Signal,
     signal,
+    TemplateRef,
+    type Type,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
+import type { MockInstance } from 'vitest';
 import {
     A,
     B,
-    DOWN_ARROW,
-    END,
-    ENTER,
-    ESCAPE,
-    HOME,
-    KbqOverlayLayer,
-    KbqOverlayOrigin,
-    KbqPanelWidth,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    SPACE,
-    TAB,
-    UP_ARROW,
     createKeyboardEvent,
     createMouseEvent,
     defaultOffsetY,
@@ -48,9 +37,22 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
-    patchElementFocus
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
+    HOME,
+    KbqOverlayLayer,
+    type KbqOverlayOrigin,
+    type KbqPanelWidth,
+    LEFT_ARROW,
+    patchElementFocus,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW
 } from '@koobiq/components/core';
-import { KbqFormField, KbqFormFieldModule, kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-field';
+import { KbqFormField, kbqFormFieldDefaultOptionsProvider, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleDirective } from '@koobiq/components/title';
@@ -59,18 +61,16 @@ import {
     KbqToolTipModule,
     KbqTooltipTrigger
 } from '@koobiq/components/tooltip';
-import { Subject } from 'rxjs';
-import type { MockInstance } from 'vitest';
 import {
     KBQ_DROPDOWN_DEFAULT_OPTIONS,
     KBQ_DROPDOWN_SCROLL_STRATEGY,
     KbqDropdown,
-    KbqDropdownContent,
+    type KbqDropdownContent,
     KbqDropdownItem,
     KbqDropdownModule,
-    KbqDropdownPanel,
-    KbqDropdownPositionX,
-    KbqDropdownPositionY,
+    type KbqDropdownPanel,
+    type KbqDropdownPositionX,
+    type KbqDropdownPositionY,
     KbqDropdownSearch,
     KbqDropdownTrigger,
     NESTED_HOVER_SWITCH_DELAY

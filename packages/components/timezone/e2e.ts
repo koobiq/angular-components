@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
-import { AbstractControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
-import { ErrorStateMatcher, KbqOptgroup, KbqSelectFooter, KbqSelectSearch } from '@koobiq/components/core';
+import { type AbstractControl, type FormGroupDirective, FormsModule, type NgForm } from '@angular/forms';
+import { type ErrorStateMatcher, KbqOptgroup, KbqSelectFooter, KbqSelectSearch } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
     getZonesGroupedByCountry,
-    KbqTimezoneGroup,
+    type KbqTimezoneGroup,
     KbqTimezoneModule,
-    KbqTimezoneZone
+    type KbqTimezoneZone
 } from '@koobiq/components/timezone';
 
 // prettier-ignore

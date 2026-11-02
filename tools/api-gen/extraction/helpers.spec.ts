@@ -2,15 +2,15 @@ import { mkdtempSync, rmSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import {
-    ClassEntry,
-    DocEntry,
+    type ClassEntry,
+    type DocEntry,
     EntryType,
-    FunctionWithOverloads,
+    type FunctionWithOverloads,
     MemberTags,
     MemberType,
-    PropertyEntry
+    type PropertyEntry
 } from '../rendering/entities';
-import { ClassEntryMetadata } from '../types';
+import type { ClassEntryMetadata } from '../types';
 import { readSourceFile, updateEntries } from './helpers';
 
 /** A directive entry carrying the given inputs, as Angular's extractor reports one. */

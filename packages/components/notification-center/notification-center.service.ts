@@ -1,9 +1,18 @@
-import { computed, inject, Injectable, Signal, signal, TemplateRef, untracked, WritableSignal } from '@angular/core';
+import {
+    computed,
+    inject,
+    Injectable,
+    type Signal,
+    signal,
+    type TemplateRef,
+    untracked,
+    type WritableSignal
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
-import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { BehaviorSubject, merge, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, merge, type Observable, Subject } from 'rxjs';
 import { map, skip } from 'rxjs/operators';
+import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
+import { KbqToastService, type KbqToastStyle } from '@koobiq/components/toast';
 
 /** A single notification rendered by the notification center. */
 export interface KbqNotificationItem {

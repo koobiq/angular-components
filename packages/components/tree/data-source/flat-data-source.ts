@@ -1,9 +1,9 @@
-import { CollectionViewer, DataSource, SelectionChange } from '@angular/cdk/collections';
+import { type CollectionViewer, DataSource, type SelectionChange } from '@angular/cdk/collections';
 import { signal } from '@angular/core';
-import { BehaviorSubject, Observable, merge } from 'rxjs';
+import { BehaviorSubject, merge, type Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { FlatTreeControl } from '../control/flat-tree-control';
-import { TreeControl } from '../control/tree-control';
+import type { FlatTreeControl } from '../control/flat-tree-control';
+import type { TreeControl } from '../control/tree-control';
 
 /**
  * Tree flattener to convert a normal type of node to node with children & level information.

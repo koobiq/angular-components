@@ -1,12 +1,12 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { ChangeDetectionStrategy, Component, Directive, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Observable, Subject } from 'rxjs';
+import { ChangeDetectionStrategy, Component, Directive, type Provider, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { type Observable, Subject } from 'rxjs';
 import {
     KBQ_OVERFLOW_SHADOW_SOURCE,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
-    KbqOverflowShadowSource,
+    type KbqOverflowShadowSource,
     KbqOverflowShadowTop
 } from './overflow-shadow';
 

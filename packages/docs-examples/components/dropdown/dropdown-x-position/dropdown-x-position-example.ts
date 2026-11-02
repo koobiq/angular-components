@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqDropdownModule, KbqDropdownPositionX } from '@koobiq/components/dropdown';
+import { KbqDropdownModule, type KbqDropdownPositionX } from '@koobiq/components/dropdown';
 
 /**
  * @title Dropdown xPosition

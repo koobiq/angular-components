@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { kbqInjectNativeElement } from '../utils';
 import { KBQ_STATE_SAVING_KEY_RESOLVER } from './state-saving-key';
-import { KbqStateSavingRef, KbqStateSavingService } from './state-saving-service';
+import { type KbqStateSavingRef, KbqStateSavingService } from './state-saving-service';
 import { KBQ_STATE_STORE } from './state-store';
 
 /**

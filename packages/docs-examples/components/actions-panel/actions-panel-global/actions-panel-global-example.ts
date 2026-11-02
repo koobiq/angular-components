@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
-import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
+import { KbqActionsPanel, type KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
 
 /**

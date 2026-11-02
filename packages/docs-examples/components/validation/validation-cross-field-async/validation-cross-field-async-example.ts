@@ -1,21 +1,21 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
-    AbstractControl,
+    type AbstractControl,
     type AsyncValidatorFn,
     FormControl,
     FormGroup,
     ReactiveFormsModule,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
+import { map, type Observable, of, timer } from 'rxjs';
 import {
     kbqErrorStateMatcherProvider,
     KbqFormsModule,
     ShowOnCrossFieldErrorStateMatcher
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { map, Observable, of, timer } from 'rxjs';
 
 /**
  * Payload the cross-field validator publishes, so that the `ErrorStateMatcher` can tell which controls a

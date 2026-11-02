@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
-    AbstractControl,
+    type AbstractControl,
     FormControl,
     FormGroup,
-    FormGroupDirective,
-    NgForm,
+    type FormGroupDirective,
+    type NgForm,
     ReactiveFormsModule,
     Validators
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { ErrorStateMatcher, kbqErrorStateMatcherProvider } from '@koobiq/components/core';
+import { type ErrorStateMatcher, kbqErrorStateMatcherProvider } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /**

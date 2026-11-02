@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { KbqFlagModule, KbqFlagShape } from '@koobiq/components/flag';
+import { KbqFlagModule, type KbqFlagShape } from '@koobiq/components/flag';
 
 // A minimal inline SVG (Norway-like) is enough to exercise shape/shadow decoration without
 // depending on a flag data package in the e2e app. Its 11:8 ratio matches none of the shapes, so

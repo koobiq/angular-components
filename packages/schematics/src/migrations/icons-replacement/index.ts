@@ -1,11 +1,11 @@
-import { Path } from '@angular-devkit/core';
-import { SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { SchematicContext, Tree } from '@angular-devkit/schematics';
 import path from 'path';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
-import { Replacement, TransformTemplateAttributesResult } from '../../utils/typescript';
+import type { Replacement, TransformTemplateAttributesResult } from '../../utils/typescript';
 import { iconReplacementData } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 export const replaceIcons = (contentToBeUpdated: string, replacementData: Replacement[]) => {
     let res = contentToBeUpdated;

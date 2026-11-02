@@ -17,14 +17,14 @@ import {
     untracked
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { debounce, merge, skip, switchMap, timer } from 'rxjs';
 import {
     KBQ_WINDOW,
-    KbqFlexDirection,
-    KbqFlexWrap,
+    type KbqFlexDirection,
+    type KbqFlexWrap,
     kbqInjectNativeElement,
-    KbqOrientation
+    type KbqOrientation
 } from '@koobiq/components/core';
-import { debounce, merge, skip, switchMap, timer } from 'rxjs';
 
 /**
  * Manages the visibility of the element.

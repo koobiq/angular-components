@@ -1,5 +1,13 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewEncapsulation, inject, viewChild } from '@angular/core';
+import {
+    type AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    viewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import type { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqDatepicker, KbqDatepickerModule } from '@koobiq/components/datepicker';
@@ -8,7 +16,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { DateTime } from 'luxon';
 import { DatepickerExamplesModule } from '../../docs-examples/components/datepicker';
 import { DevLocaleSelector } from '../locale-selector';
 import { DevThemeToggle } from '../theme-toggle';

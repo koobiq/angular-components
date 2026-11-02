@@ -1,4 +1,4 @@
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { listItemPattern } from './list-item-pattern';
 import { logMessage } from './messages';
 import { setupOptions } from './package-config';

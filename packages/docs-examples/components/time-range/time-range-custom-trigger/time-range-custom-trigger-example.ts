@@ -6,7 +6,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { KbqFormField, KbqSuffix } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from '@koobiq/components/time-range';
+import { KbqTimeRange, type KbqTimeRangeRange, KbqTimeRangeTitleAsControl } from '@koobiq/components/time-range';
 
 /**
  * @title Time range custom trigger

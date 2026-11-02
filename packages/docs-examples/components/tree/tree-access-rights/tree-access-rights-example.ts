@@ -1,5 +1,6 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, viewChild } from '@angular/core';
+import { type AfterViewInit, ChangeDetectionStrategy, Component, type OnDestroy, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
@@ -7,7 +8,6 @@ import {
     KbqTreeModule,
     KbqTreeSelection
 } from '@koobiq/components/tree';
-import { Subscription } from 'rxjs';
 
 export class FileNode {
     children: FileNode[];

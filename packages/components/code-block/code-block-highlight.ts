@@ -8,20 +8,20 @@ import {
     isDevMode,
     numberAttribute,
     PendingTasks,
-    Provider,
+    type Provider,
     Renderer2,
     SecurityContext,
     signal
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { kbqInjectNativeElement } from '@koobiq/components/core';
 import type { HLJSApi, LanguageFn } from 'highlight.js';
+import { kbqInjectNativeElement } from '@koobiq/components/core';
 import {
     KbqCodeBlockHighlightJsLoader,
-    KbqCodeBlockLineNumbersOptions,
+    type KbqCodeBlockLineNumbersOptions,
     PLAIN_TEXT_LANGUAGE
 } from './code-block-highlight-js-loader';
-import { KbqCodeBlockFile } from './types';
+import type { KbqCodeBlockFile } from './types';
 
 /**
  * Configuration of highlight.js, which highlights the code of a code block: how to load it and which languages to

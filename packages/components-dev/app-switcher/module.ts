@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { KbqAppSwitcherModule, KbqAppSwitcherSite } from '@koobiq/components/app-switcher';
+import { KbqAppSwitcherModule, type KbqAppSwitcherSite } from '@koobiq/components/app-switcher';
 import { AppSwitcherExamplesModule } from '../../docs-examples/components/app-switcher';
 import { DevThemeToggle } from '../theme-toggle';
 

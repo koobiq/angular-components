@@ -8,7 +8,11 @@ import {
     viewChild,
     viewChildren
 } from '@angular/core';
-import { KbqCodeBlock, KbqCodeBlockFile, kbqCodeBlockHighlightJsConfigProvider } from '@koobiq/components/code-block';
+import {
+    KbqCodeBlock,
+    type KbqCodeBlockFile,
+    kbqCodeBlockHighlightJsConfigProvider
+} from '@koobiq/components/code-block';
 import { kbqScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
 
 // The languages of the files below; plain text, the fallback of a file without one, comes with the code block.

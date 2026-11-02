@@ -1,7 +1,7 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { visitAll, Visitor } from './ast';
+import { visitAll, type Visitor } from './ast';
 import { logMessage } from './messages';
 import { setupOptions } from './package-config';
 import { visitProjectFiles } from './project-files';

@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, model, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagEditChange, KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { type KbqTagEditChange, type KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 const TAG = 'Editable tag with validation';
 

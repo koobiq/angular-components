@@ -1,4 +1,4 @@
-import { CDPSession, Locator, Page } from '@playwright/test';
+import type { CDPSession, Locator, Page } from '@playwright/test';
 
 /**
  * The pseudo-class name `CSS.forcePseudoState` understands.

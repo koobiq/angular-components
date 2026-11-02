@@ -1,10 +1,10 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { NgTemplateOutlet } from '@angular/common';
 import {
-    AfterContentChecked,
-    AfterContentInit,
-    AfterViewInit,
+    type AfterContentChecked,
+    type AfterContentInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -20,9 +20,9 @@ import {
     InjectionToken,
     input,
     model,
-    OnDestroy,
-    Provider,
-    Signal,
+    type OnDestroy,
+    type Provider,
+    type Signal,
     signal,
     untracked,
     viewChild,
@@ -37,9 +37,12 @@ import { KbqError } from './error';
 import { KbqFormFieldControl, kbqSetDescribedByIds } from './form-field-control';
 import { KbqHint } from './hint';
 import { KbqLabel } from './label';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqReactivePasswordHint } from './reactive-password-hint';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 

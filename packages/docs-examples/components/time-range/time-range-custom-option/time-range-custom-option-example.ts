@@ -2,6 +2,7 @@ import { TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -9,10 +10,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import {
     KBQ_CUSTOM_TIME_RANGE_TYPES,
     KBQ_DEFAULT_TIME_RANGE_TYPES,
-    KbqCustomTimeRangeType,
+    type KbqCustomTimeRangeType,
     KbqTimeRangeModule
 } from '@koobiq/components/time-range';
-import { of } from 'rxjs';
 
 const ExampleLocalizedData = new InjectionToken<Record<string | 'default', string>>('ExampleLocalizedData', {
     factory: () => ({

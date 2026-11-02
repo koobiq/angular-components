@@ -1,8 +1,8 @@
 ﻿import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
-    OnInit,
+    type OnInit,
     untracked,
     viewChild,
     ViewEncapsulation

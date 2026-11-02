@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, type OnDestroy, type TemplateRef, viewChild } from '@angular/core';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
-import { KbqSidepanelPosition, KbqSidepanelSize } from './sidepanel-config';
 import { KbqSidepanelModule } from './sidepanel.module';
 import { KbqSidepanelService } from './sidepanel.service';
+import { KbqSidepanelPosition, KbqSidepanelSize } from './sidepanel-config';
 
 type SidepanelState = {
     size?: KbqSidepanelSize;

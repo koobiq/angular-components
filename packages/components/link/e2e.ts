@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqDefaultSizes } from '@koobiq/components/core';
+import type { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLink, KbqLinkPrefix, KbqLinkSuffix, KbqLinkUnderline } from '@koobiq/components/link';
+import { KbqLink, KbqLinkPrefix, KbqLinkSuffix, type KbqLinkUnderline } from '@koobiq/components/link';
 
 const states = [
     { name: 'default', class: '', disabled: false },

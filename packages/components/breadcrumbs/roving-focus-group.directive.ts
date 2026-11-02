@@ -1,4 +1,4 @@
-import { Direction, Directionality } from '@angular/cdk/bidi';
+import { type Direction, Directionality } from '@angular/cdk/bidi';
 import {
     booleanAttribute,
     computed,
@@ -6,12 +6,12 @@ import {
     ElementRef,
     inject,
     input,
-    OnChanges,
+    type OnChanges,
     output,
     signal,
-    SimpleChanges
+    type SimpleChanges
 } from '@angular/core';
-import { ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, KbqRovingFocusOrientation } from './utils';
+import { ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, type KbqRovingFocusOrientation } from './utils';
 
 /**
  * Moves the focus between the items of `KbqBreadcrumbs` with the arrow keys, keeping one of them in the tab

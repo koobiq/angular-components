@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, model } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import type { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
-import { DateTime } from 'luxon';
 
 @Component({
     selector: 'e2e-timepicker-states',

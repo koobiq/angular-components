@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
-import { KbqLink } from '@koobiq/components/link';
-import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
+import { AgGridModule, type ICellRendererAngularComp } from 'ag-grid-angular';
 import {
     AllCommunityModule,
-    ColDef,
-    FirstDataRenderedEvent,
-    ICellRendererParams,
+    type ColDef,
+    type FirstDataRenderedEvent,
+    type ICellRendererParams,
     ModuleRegistry,
-    RowSelectionOptions,
-    SelectionColumnDef
+    type RowSelectionOptions,
+    type SelectionColumnDef
 } from 'ag-grid-community';
+import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
+import { KbqLink } from '@koobiq/components/link';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

@@ -1,14 +1,14 @@
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    InjectionToken,
-    Provider,
-    ViewEncapsulation,
-    booleanAttribute,
     computed,
     inject,
+    InjectionToken,
     input,
-    numberAttribute
+    numberAttribute,
+    type Provider,
+    ViewEncapsulation
 } from '@angular/core';
 import { KbqSkeleton } from './skeleton';
 

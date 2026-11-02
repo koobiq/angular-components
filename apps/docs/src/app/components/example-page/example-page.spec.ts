@@ -3,10 +3,10 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { KbqSidepanelService } from '@koobiq/components/sidepanel';
-import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
-import * as docsExamplesLoader from '@koobiq/docs-examples/loader';
 import type { MockInstance } from 'vitest';
+import { KbqSidepanelService } from '@koobiq/components/sidepanel';
+import { EXAMPLE_COMPONENTS, type LiveExample } from '@koobiq/docs-examples';
+import * as docsExamplesLoader from '@koobiq/docs-examples/loader';
 import { DocsExamplePage } from './example-page';
 import { DOCS_EXAMPLE_PAGE_ROUTES } from './example-page.routes';
 

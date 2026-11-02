@@ -1,11 +1,11 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { EXAMPLE_COMPONENTS, ExampleData, LiveExample } from '@koobiq/docs-examples';
 import StackBlitzSDK from '@stackblitz/sdk';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { satisfies } from 'semver';
+import { EXAMPLE_COMPONENTS, type ExampleData, type LiveExample } from '@koobiq/docs-examples';
 import { docsKoobiqVersion } from '../../version';
 import { DOCS_STACKBLITZ_OPTIONAL_DEPENDENCIES, DOCS_TEMPLATE_FILES, DocsStackblitzWriter } from './stackblitz-writer';
 

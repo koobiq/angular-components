@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
 import {
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBarModule,
-    KbqPipeTemplate,
+    type KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSelectValue
+    type KbqSelectValue
 } from '@koobiq/components/filter-bar';
 import { injectLocalizedText } from '../localized-data';
 

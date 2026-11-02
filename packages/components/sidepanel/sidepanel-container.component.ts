@@ -1,27 +1,27 @@
 import { CdkTrapFocus, ConfigurableFocusTrapFactory, FocusTrapFactory } from '@angular/cdk/a11y';
-import { BasePortalOutlet, CdkPortalOutlet, ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
+import { BasePortalOutlet, CdkPortalOutlet, type ComponentPortal, type TemplatePortal } from '@angular/cdk/portal';
 import {
     afterNextRender,
-    AfterRenderRef,
+    type AfterRenderRef,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentRef,
+    type ComponentRef,
     computed,
     ElementRef,
-    EmbeddedViewRef,
+    type EmbeddedViewRef,
     inject,
     InjectionToken,
     Injector,
-    OnDestroy,
+    type OnDestroy,
     signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { type Observable, Subject } from 'rxjs';
 import { kbqAfterAnimations, kbqAnimationsDisabled } from '@koobiq/components/core';
-import { Observable, Subject } from 'rxjs';
 import {
-    KbqSidepanelAnimationEvent,
+    type KbqSidepanelAnimationEvent,
     KbqSidepanelAnimationState,
     kbqSidepanelTransformAnimation
 } from './sidepanel-animations';

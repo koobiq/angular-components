@@ -1,7 +1,7 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { KbqNativeScrollbar, KbqScrollbar, KbqScrollbarMode, KbqScrollbarViewport } from './scrollbar';
+import { KbqNativeScrollbar, KbqScrollbar, type KbqScrollbarMode, KbqScrollbarViewport } from './scrollbar';
 
 @Component({
     selector: 'e2e-scrollbar-state-and-style',

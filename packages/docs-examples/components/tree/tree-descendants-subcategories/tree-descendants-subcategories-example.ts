@@ -6,9 +6,9 @@ import {
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
-    KbqTreeOption,
+    type KbqTreeOption,
     KbqTreeSelection,
-    KbqTreeSelectionChange
+    type KbqTreeSelectionChange
 } from '@koobiq/components/tree';
 
 export class FileNode {

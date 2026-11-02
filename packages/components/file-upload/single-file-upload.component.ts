@@ -1,33 +1,35 @@
-import { CdkMonitorFocus, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { CdkMonitorFocus, FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     computed,
     contentChildren,
-    DoCheck,
+    type DoCheck,
     effect,
-    ElementRef,
+    type ElementRef,
     inject,
     Injector,
     input,
-    OnChanges,
+    type OnChanges,
     output,
     PLATFORM_ID,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormControlStatus } from '@angular/forms';
+import type { ControlValueAccessor, FormControlStatus } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 import {
-    ErrorStateMatcher,
+    type ErrorStateMatcher,
     KbqDataSizePipe,
-    KbqFileUploadLocaleConfiguration,
+    type KbqFileUploadLocaleConfiguration,
     KbqLocaleOverridesDirective,
     ruRULocaleData
 } from '@koobiq/components/core';
@@ -35,17 +37,15 @@ import { KbqEllipsisCenterDirective } from '@koobiq/components/ellipsis-center';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
-import { KbqProgressSpinner, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { BehaviorSubject } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
-import { KbqDropzoneData, KbqFullScreenDropzoneService } from './dropzone';
+import { KbqProgressSpinner, type ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
+import { type KbqDropzoneData, KbqFullScreenDropzoneService } from './dropzone';
 import {
-    KbqFile,
-    KbqFileItem,
+    type KbqFile,
+    type KbqFileItem,
     KbqFileUploadAllowedType,
-    KbqFileUploadAllowedTypeValues,
+    type KbqFileUploadAllowedTypeValues,
     KbqFileUploadBase,
-    KbqFileUploadCaptionContext
+    type KbqFileUploadCaptionContext
 } from './file-upload';
 import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext } from './primitives';
 

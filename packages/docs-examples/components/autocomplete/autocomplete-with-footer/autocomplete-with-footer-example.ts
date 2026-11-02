@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 
 /**
  * @title Autocomplete with footer

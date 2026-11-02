@@ -1,6 +1,6 @@
 import { DestroyRef, inject, Injectable, Injector } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
+import { type RouterStateSnapshot, TitleStrategy } from '@angular/router';
 import { skip } from 'rxjs';
 import { DocsLocaleService } from './locale';
 import { DocsSeoService } from './seo';

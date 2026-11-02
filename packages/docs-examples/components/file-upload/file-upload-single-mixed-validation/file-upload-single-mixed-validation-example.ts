@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { FileValidators, KbqFileTypeSpecifier, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
-import { KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
+import { FileValidators, type KbqFileTypeSpecifier, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
+import { type KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 

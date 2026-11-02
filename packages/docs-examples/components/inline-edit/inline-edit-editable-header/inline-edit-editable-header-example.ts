@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type ElementRef, signal, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqTextareaModule } from '@koobiq/components/textarea';

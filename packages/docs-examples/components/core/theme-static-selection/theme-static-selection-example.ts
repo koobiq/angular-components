@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, type OnDestroy } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqThemeConfig, KbqThemeSelector, KbqThemeService } from '@koobiq/components/core';
+import { type KbqThemeConfig, KbqThemeSelector, KbqThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 

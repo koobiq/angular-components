@@ -1,4 +1,4 @@
-import normalize from 'path-normalize';
+import { normalize } from 'path-normalize';
 
 /**
  * Normalizes the given path by:

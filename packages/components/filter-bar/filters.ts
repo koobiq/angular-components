@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -8,16 +8,17 @@ import {
     forwardRef,
     inject,
     input,
-    OnInit,
+    type OnInit,
     output,
-    Signal,
+    type Signal,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
+import { filter } from 'rxjs/operators';
+import { type KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule, PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
@@ -26,16 +27,16 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { filter } from 'rxjs/operators';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqFilterBar } from './filter-bar';
-import { KbqFilterBarButton } from './filter-bar-button';
 import {
     KBQ_FILTERS,
-    KbqFilter,
-    KbqSaveFilterError,
-    KbqSaveFilterEvent,
+    type KbqFilter,
+    type KbqSaveFilterError,
+    type KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from './filter-bar.types';
+import { KbqFilterBarButton } from './filter-bar-button';
 import { KbqFilterSavePopover } from './filter-save-popover';
 
 @Component({

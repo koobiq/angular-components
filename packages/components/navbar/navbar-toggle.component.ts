@@ -8,7 +8,7 @@ import {
     inject,
     Injectable,
     NgZone,
-    OnDestroy,
+    type OnDestroy,
     untracked,
     ViewEncapsulation
 } from '@angular/core';

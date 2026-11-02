@@ -1,6 +1,6 @@
-import { workspaces } from '@angular-devkit/core';
-import { Tree } from '@angular-devkit/schematics';
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import type { workspaces } from '@angular-devkit/core';
+import type { Tree } from '@angular-devkit/schematics';
+import { SchematicTestRunner, type UnitTestTree } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as fs from 'fs';
 import * as os from 'os';

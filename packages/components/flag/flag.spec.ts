@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, inject, signal, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By, DomSanitizer } from '@angular/platform-browser';
 import { KbqFlag } from './flag';
 

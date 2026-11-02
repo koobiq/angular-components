@@ -6,8 +6,8 @@ import { docsGetMarkdownPath, docsHasMarkdown } from '../page-paths';
 import { DOCS_SEO_DESCRIPTIONS } from '../seo-descriptions';
 import {
     docsGetItemById,
-    DocsStructureCategoryId,
-    DocsStructureItem,
+    type DocsStructureCategoryId,
+    type DocsStructureItem,
     DocsStructureItemId,
     DocsStructureItemTab,
     DocsStructureTokensTab

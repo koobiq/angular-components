@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { RouterLink, RouterOutlet, Routes } from '@angular/router';
+import { RouterLink, RouterOutlet, type Routes } from '@angular/router';
 import { BreadcrumbsExamplesModule } from '../../docs-examples/components/breadcrumbs';
 import { DevThemeToggle } from '../theme-toggle';
 

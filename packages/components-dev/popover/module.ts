@@ -1,13 +1,13 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChildren, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import {
     KbqFormsModule,
-    KbqPopUpSizeValues,
-    KbqStickToWindowPlacementValues,
+    type KbqPopUpSizeValues,
+    type KbqStickToWindowPlacementValues,
     PopUpPlacements,
     PopUpSizes
 } from '@koobiq/components/core';

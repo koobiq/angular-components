@@ -2,7 +2,7 @@ import { KeyValuePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
+    type ElementRef,
     forwardRef,
     input,
     viewChild,
@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { KBQ_TITLE_TEXT_REF, KbqHighlightBackgroundPipe, KbqOption } from '@koobiq/components/core';
 import { CitiesByFilterPipe } from './cities-by-filter.pipe';
-import { KbqTimezoneZone } from './timezone.models';
+import type { KbqTimezoneZone } from './timezone.models';
 import { filterCitiesBySearchString, offsetFormatter, resolveZoneOffset } from './timezone.utils';
 import { UtcOffsetPipe } from './utc-offset.pipe';
 

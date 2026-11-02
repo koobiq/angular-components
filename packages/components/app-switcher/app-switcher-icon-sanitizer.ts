@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 
 /**
  * SVG elements allowed inside `KbqAppSwitcherApp.icon`/`KbqAppSwitcherSite.icon`.

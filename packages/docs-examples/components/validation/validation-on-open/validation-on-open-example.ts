@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, type TemplateRef, viewChildren } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { take } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     kbqErrorStateMatcherProvider,
@@ -9,7 +10,6 @@ import {
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KBQ_MODAL_DATA, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
-import { take } from 'rxjs';
 
 type DocsFormData = {
     firstName: string;

@@ -1,11 +1,11 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type ElementRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounceTime, fromEvent } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqCaretRect, kbqCreateCaretOrigin, kbqGetSelectionRect } from '@koobiq/components/core';
+import { type KbqCaretRect, kbqCreateCaretOrigin, kbqGetSelectionRect } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
-import { debounceTime, fromEvent } from 'rxjs';
 
 /** `Node.TEXT_NODE`, spelled out so that the example never reads a DOM global. */
 const TEXT_NODE = 3;

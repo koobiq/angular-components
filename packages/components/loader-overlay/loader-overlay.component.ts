@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { FocusMonitor, type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
 import { MutationObserverFactory } from '@angular/cdk/observers';
 import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
@@ -14,13 +14,13 @@ import {
     inject,
     input,
     NgZone,
-    OnDestroy,
-    OnInit,
+    type OnDestroy,
+    type OnInit,
     Renderer2,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqDefaultSizes, kbqInjectNativeElement } from '@koobiq/components/core';
-import { KbqProgressSpinner, ProgressSpinnerSize } from '@koobiq/components/progress-spinner';
+import { type KbqDefaultSizes, kbqInjectNativeElement } from '@koobiq/components/core';
+import { KbqProgressSpinner, type ProgressSpinnerSize } from '@koobiq/components/progress-spinner';
 
 const kbqLoaderOverlayParent = 'kbq-loader-overlay_parent';
 

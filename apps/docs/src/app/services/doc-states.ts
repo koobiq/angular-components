@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, fromEvent, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, fromEvent, type Observable, type Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 export enum DocsNavbarState {

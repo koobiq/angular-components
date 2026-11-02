@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import type { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KbqRelativeShortDatePipe } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
-import { DateTime } from 'luxon';
 
 /**
  * @title Table with sticky header

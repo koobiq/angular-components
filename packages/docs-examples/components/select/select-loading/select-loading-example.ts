@@ -2,6 +2,8 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BehaviorSubject, catchError, type Observable, of, race, switchMap, throwError, timer } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqHighlightBackgroundPipe, KbqVirtualOption } from '@koobiq/components/core';
@@ -12,8 +14,6 @@ import {
     KbqSelectModule,
     minimumTimeToDisplayLoading
 } from '@koobiq/components/select';
-import { BehaviorSubject, catchError, Observable, of, race, switchMap, throwError, timer } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 
 type Option = {
     id: number;

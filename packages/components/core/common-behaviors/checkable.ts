@@ -1,6 +1,15 @@
-import { computed, Directive, forwardRef, InjectionToken, model, Provider, signal, untracked } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { KbqCheckedState } from './checkbox';
+import {
+    computed,
+    Directive,
+    forwardRef,
+    InjectionToken,
+    model,
+    type Provider,
+    signal,
+    untracked
+} from '@angular/core';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import type { KbqCheckedState } from './checkbox';
 
 /**
  * Provider Expression that allows `KbqCheckable` to register as a `ControlValueAccessor`, so any host

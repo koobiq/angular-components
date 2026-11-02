@@ -1,4 +1,4 @@
-import { InjectionToken, Signal } from '@angular/core';
+import { InjectionToken, type Signal } from '@angular/core';
 
 /** The part of `kbq-empty-state` its projected slots follow. */
 export interface KbqEmptyStateContext {

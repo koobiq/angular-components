@@ -2,13 +2,13 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import type { DateTime } from 'luxon';
+import { of } from 'rxjs';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTimeRangeModule, KbqTimeRangeRange } from '@koobiq/components/time-range';
-import { DateTime } from 'luxon';
-import { of } from 'rxjs';
+import { KbqTimeRangeModule, type KbqTimeRangeRange } from '@koobiq/components/time-range';
 
 type ExampleText = {
     placeholder: string;

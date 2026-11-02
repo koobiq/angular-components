@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
-    KbqAppSwitcherApp,
+    type KbqAppSwitcherApp,
     KbqAppSwitcherComponent,
     KbqAppSwitcherModule,
-    KbqAppSwitcherSite
+    type KbqAppSwitcherSite
 } from '@koobiq/components/app-switcher';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';

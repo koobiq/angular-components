@@ -4,7 +4,7 @@ import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
     FlatTreeControl,
-    FlatTreeControlFilter,
+    type FlatTreeControlFilter,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule

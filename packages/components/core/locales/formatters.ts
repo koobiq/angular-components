@@ -1,4 +1,4 @@
-import { KbqLocaleFormattersData } from './types';
+import type { KbqLocaleFormattersData } from './types';
 
 export const enUSFormattersData = {
     formatters: {

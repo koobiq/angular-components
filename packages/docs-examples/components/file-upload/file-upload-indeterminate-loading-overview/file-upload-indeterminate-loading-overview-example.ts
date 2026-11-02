@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { timer } from 'rxjs';
+import { take } from 'rxjs/operators';
 import {
-    KbqFileItem,
+    type KbqFileItem,
     KbqMultipleFileUploadComponent,
     KbqSingleFileUploadComponent
 } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { timer } from 'rxjs';
-import { take } from 'rxjs/operators';
 
 /**
  * @title File-upload indeterminate loading

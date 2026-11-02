@@ -1,12 +1,12 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { kbqCodeBlockHighlightJsConfigProvider } from '@koobiq/components/code-block';
-import { KbqStateSavingService } from '@koobiq/components/core';
-import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject, map } from 'rxjs';
 import type { Mock } from 'vitest';
+import { kbqCodeBlockHighlightJsConfigProvider } from '@koobiq/components/code-block';
+import { KbqStateSavingService } from '@koobiq/components/core';
+import { EXAMPLE_COMPONENTS, type LiveExample } from '@koobiq/docs-examples';
 import { DOCS_HIGHLIGHT_JS_LANGUAGES } from '../../constants/highlight-js';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';

@@ -1,4 +1,4 @@
-import { FocusOrigin } from '@angular/cdk/a11y';
+import type { FocusOrigin } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {
     Component,
@@ -10,12 +10,12 @@ import {
     Injectable,
     Injector,
     NgModule,
-    Provider,
+    type Provider,
     signal,
-    Type,
+    type Type,
     viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed, inject as testingInject } from '@angular/core/testing';
+import { type ComponentFixture, inject as testingInject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -33,12 +33,12 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqModalControlService } from './modal-control.service';
-import { KbqModalRef } from './modal-ref.class';
 import { KbqModalComponent } from './modal.component';
 import { KbqModalModule } from './modal.module';
 import { KbqModalService } from './modal.service';
-import { IModalOptionsForService, MODAL_ANIMATE_DURATION, ModalSize } from './modal.type';
+import { type IModalOptionsForService, MODAL_ANIMATE_DURATION, ModalSize } from './modal.type';
+import { KbqModalControlService } from './modal-control.service';
+import type { KbqModalRef } from './modal-ref.class';
 
 const ANIMATION_DURATION = MODAL_ANIMATE_DURATION * 2;
 

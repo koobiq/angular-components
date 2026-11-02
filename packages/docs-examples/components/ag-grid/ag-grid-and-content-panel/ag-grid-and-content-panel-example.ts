@@ -1,5 +1,17 @@
 import { ENTER } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, inject, model, output, signal } from '@angular/core';
+import { AgGridModule } from 'ag-grid-angular';
+import {
+    AllCommunityModule,
+    type CellClickedEvent,
+    type CellFocusedEvent,
+    type CellKeyDownEvent,
+    type ColDef,
+    type FirstDataRenderedEvent,
+    type FullWidthCellKeyDownEvent,
+    ModuleRegistry,
+    type RowSelectionOptions
+} from 'ag-grid-community';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
@@ -8,18 +20,6 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
-import { AgGridModule } from 'ag-grid-angular';
-import {
-    AllCommunityModule,
-    CellClickedEvent,
-    CellFocusedEvent,
-    CellKeyDownEvent,
-    ColDef,
-    FirstDataRenderedEvent,
-    FullWidthCellKeyDownEvent,
-    ModuleRegistry,
-    RowSelectionOptions
-} from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

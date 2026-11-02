@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import type { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE, KbqFormattersModule } from '@koobiq/components/core';
-import { DateTime } from 'luxon';
 
 /**
  * @title date-formatter-typical-use

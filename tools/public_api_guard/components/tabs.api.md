@@ -171,7 +171,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     get templateLabel(): KbqTabLabel;
     set templateLabel(value: KbqTabLabel);
     readonly textLabel: _angular_core.InputSignal<string>;
-    readonly tooltipPlacement: _angular_core.InputSignal<"left" | "right" | "top" | "topLeft" | "topRight" | "rightTop" | "rightBottom" | "leftTop" | "leftBottom" | "bottom" | "bottomLeft" | "bottomRight">;
+    readonly tooltipPlacement: _angular_core.InputSignal<"left" | "top" | "topLeft" | "topRight" | "right" | "rightTop" | "rightBottom" | "leftTop" | "leftBottom" | "bottom" | "bottomLeft" | "bottomRight">;
     // (undocumented)
     get tooltipTitle(): string;
     set tooltipTitle(value: string);

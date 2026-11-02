@@ -1,22 +1,21 @@
-import { Path } from '@angular-devkit/core';
-import { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import fs from 'fs';
 import * as path from 'path';
-
 import { migrateTemplateWithTransform } from '../../utils/angular-parsing';
 import {
     buildIconTokenMap,
     buildIconTokenPatterns,
     createIconTemplateTransform,
-    IconMigrationData,
+    type IconMigrationData,
     migrateIconsInTsFiles,
     replaceKnownIconTokens,
-    TokenReplacement
+    type TokenReplacement
 } from '../../utils/icon-migration';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
-import { newIconsPackData, ReplaceData, scope } from './data';
-import { Schema } from './schema';
+import { newIconsPackData, type ReplaceData, scope } from './data';
+import type { Schema } from './schema';
 
 function readJsonFile<T>(filePath: string): T {
     const absolutePath = path.resolve(filePath);

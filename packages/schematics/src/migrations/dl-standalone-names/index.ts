@@ -1,12 +1,12 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
 import { dedupeImportSpecifiers, ensureImport, removeImport } from '../../utils/replacement-driver';
 import { DL_MODULE, DL_PACKAGE, keptModuleMessage, MODULE_COMPONENTS, RENAMES, SUMMARY } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const LABEL = '[dl-standalone-names]';
 const TS_EXT = '.ts';

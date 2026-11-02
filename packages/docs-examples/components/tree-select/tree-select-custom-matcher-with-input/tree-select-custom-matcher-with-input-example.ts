@@ -2,15 +2,15 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInput, KbqInputModule } from '@koobiq/components/input';
+import { type KbqInput, KbqInputModule } from '@koobiq/components/input';
 import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
-    KbqTreeOption
+    type KbqTreeOption
 } from '@koobiq/components/tree';
-import { KbqTreeSelect, KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { type KbqTreeSelect, type KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
 
 export class FileNode {
     children: FileNode[];

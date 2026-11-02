@@ -10,21 +10,22 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-    AbstractControl,
+    type AbstractControl,
     FormArray,
     FormControl,
     FormGroup,
     FormsModule,
     ReactiveFormsModule,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
+import { interval, takeWhile, timer } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { FileValidators, KbqLocaleServiceModule, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import {
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
-    KbqFileItem,
+    type KbqFileItem,
     kbqFileUploadLocaleConfigurationProvider,
     KbqFileUploadModule
 } from '@koobiq/components/file-upload';
@@ -32,7 +33,6 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqRadioModule } from '@koobiq/components/radio';
-import { interval, takeWhile, timer } from 'rxjs';
 import { E2eFileUploadDropzone, E2eFileUploadStateAndStyle } from '../../components/file-upload/e2e';
 import { FileUploadExamplesModule } from '../../docs-examples/components/file-upload';
 import { DevLocaleSelector } from '../locale-selector';

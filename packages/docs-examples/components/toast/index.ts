@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-
 import { ToastActionsOverviewExample } from './toast-actions-overview/toast-actions-overview-example';
 import { ToastHideOverviewExample } from './toast-hide-overview/toast-hide-overview-example';
 import { ToastLinkOverviewExample } from './toast-link-overview/toast-link-overview-example';

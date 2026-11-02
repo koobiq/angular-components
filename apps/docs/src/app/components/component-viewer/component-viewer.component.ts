@@ -6,13 +6,14 @@ import {
     ElementRef,
     inject,
     signal,
-    Type,
+    type Type,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet, UrlSegment } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet, type UrlSegment } from '@angular/router';
+import { map } from 'rxjs/operators';
 import { KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
@@ -20,15 +21,14 @@ import { KbqModalService } from '@koobiq/components/modal';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { map } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
 import {
     docsGetCategoryById,
     docsGetItemById,
-    DocsStructureCategory,
-    DocsStructureCategoryId,
-    DocsStructureItem,
-    DocsStructureItemId,
+    type DocsStructureCategory,
+    type DocsStructureCategoryId,
+    type DocsStructureItem,
+    type DocsStructureItemId,
     DocsStructureItemTab
 } from 'src/app/structure';
 import { DOCS_API_MEMBER_PARAM } from '../../constants/api-page';
@@ -36,7 +36,7 @@ import { DocsDocStates } from '../../services/doc-states';
 import { DocsPagePrefetch } from '../../services/page-resolver';
 import { docsDevVersionPlaceholder, docsKoobiqVersion } from '../../version';
 import { DocsApiPage } from '../api-page/api-page';
-import { DocsApiEntryPoint } from '../api-page/api-page.types';
+import type { DocsApiEntryPoint } from '../api-page/api-page.types';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 import { DocsComponentViewerWrapperComponent } from './component-viewer-wrapper';
 

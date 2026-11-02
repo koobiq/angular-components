@@ -1,15 +1,15 @@
-import { CdkTrapFocus, FocusMonitor, FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { CdkTrapFocus, FocusMonitor, type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ComponentRef,
+    type ComponentRef,
     computed,
     createComponent,
     ElementRef,
@@ -21,12 +21,12 @@ import {
     isDevMode,
     linkedSignal,
     model,
-    OnChanges,
-    OnDestroy,
-    OnInit,
+    type OnChanges,
+    type OnDestroy,
+    type OnInit,
     Renderer2,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     TemplateRef,
     Type,
     untracked,
@@ -36,7 +36,9 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
-import { KbqButtonColor, KbqButtonModule } from '@koobiq/components/button';
+import type { Observable, Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { type KbqButtonColor, KbqButtonModule } from '@koobiq/components/button';
 import {
     ENTER,
     ESCAPE,
@@ -46,29 +48,27 @@ import {
     KbqLocaleOverridesDirective,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
-    KbqOverflowShadowState,
+    type KbqOverflowShadowState,
     KbqOverflowShadowTop
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { Observable, Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { CssUnitPipe } from './css-unit.pipe';
-import { KbqModalControlService } from './modal-control.service';
-import { KbqModalRef } from './modal-ref.class';
 import {
-    IModalButtonOptions,
+    type IModalButtonOptions,
     KBQ_MODAL,
     KBQ_MODAL_OPTIONS,
-    KbqModal,
-    KbqModalAutoFocus,
+    type KbqModal,
+    type KbqModalAutoFocus,
     MODAL_ANIMATE_DURATION,
-    ModalOptions,
+    type ModalOptions,
     ModalSize,
-    ModalType,
-    OnClickCallback
+    type ModalType,
+    type OnClickCallback
 } from './modal.type';
+import { KbqModalControlService } from './modal-control.service';
+import { KbqModalRef } from './modal-ref.class';
 
 /** Phase of the open/close animation the dialog is in, or `null` between phases. */
 export type AnimationState = 'enter' | 'leave' | null;

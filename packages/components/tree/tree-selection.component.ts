@@ -4,9 +4,9 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Platform } from '@angular/cdk/platform';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -18,20 +18,23 @@ import {
     inject,
     Injector,
     input,
-    IterableDiffer,
+    type IterableDiffer,
     linkedSignal,
-    OnDestroy,
+    type OnDestroy,
     output,
-    Provider,
+    type Provider,
     QueryList,
     signal,
     untracked,
     viewChild,
-    ViewContainerRef,
+    type ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { merge, type Observable, Subject, type Subscription } from 'rxjs';
+import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
+import { delay, filter, map } from 'rxjs/operators';
 import {
     DOWN_ARROW,
     END,
@@ -48,12 +51,12 @@ import {
     kbqGetElementHeight,
     kbqLeaveTabOrderOnTabOut,
     KbqLocaleOverridesDirective,
-    KbqMultipleInput,
+    type KbqMultipleInput,
     kbqOptionalNumberAttribute,
     KbqPseudoCheckbox,
-    KbqPseudoCheckboxState,
+    type KbqPseudoCheckboxState,
     kbqQueryListFrom,
-    KbqSelectAllAdapter,
+    type KbqSelectAllAdapter,
     kbqSelectAllHandlerTransform,
     KbqStateSaving,
     LEFT_ARROW,
@@ -68,15 +71,12 @@ import {
     UP_ARROW
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
-import { merge, Observable, Subject, Subscription } from 'rxjs';
-import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
-import { delay, filter, map } from 'rxjs/operators';
-import { FlatTreeControl } from './control/flat-tree-control';
+import type { FlatTreeControl } from './control/flat-tree-control';
 import { KbqTreeNodeOutlet } from './outlet';
 import { KbqTreeNodePadding } from './padding.directive';
 import { KbqTreeBase } from './tree-base';
 import { getKbqTreeSelectionOwnedMultipleError } from './tree-errors';
-import { KBQ_TREE_OPTION_PARENT_COMPONENT, KbqTreeOption, KbqTreeOptionEvent } from './tree-option.component';
+import { KBQ_TREE_OPTION_PARENT_COMPONENT, KbqTreeOption, type KbqTreeOptionEvent } from './tree-option.component';
 
 export const KBQ_SELECTION_TREE_VALUE_ACCESSOR: Provider = {
     provide: NG_VALUE_ACCESSOR,

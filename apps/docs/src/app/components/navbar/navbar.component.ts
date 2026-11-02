@@ -1,14 +1,14 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { map, type Observable } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqThemeMode, KbqThemeNames, KbqThemeService } from '@koobiq/components/core';
+import { type KbqThemeMode, KbqThemeNames, KbqThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { map, Observable } from 'rxjs';
-import { DocsLocale } from 'src/app/constants/locale';
+import type { DocsLocale } from 'src/app/constants/locale';
 import { DOCS_TRANSLATIONS } from 'src/app/services/i18n';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsDocStates, DocsNavbarState } from '../../services/doc-states';

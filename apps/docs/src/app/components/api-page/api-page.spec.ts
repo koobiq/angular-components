@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { By, provideClientHydration, withIncrementalHydration } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
-import { kbqCodeBlockHighlightJsConfigProvider } from '@koobiq/components/code-block';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { BehaviorSubject, map } from 'rxjs';
 import type { Mock } from 'vitest';
+import { kbqCodeBlockHighlightJsConfigProvider } from '@koobiq/components/code-block';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { DocsIntersectionObserverStub } from '../../../testing/intersection-observer.stub';
 import { DOCS_API_MEMBER_PARAM } from '../../constants/api-page';
 import { DOCS_HIGHLIGHT_JS_LANGUAGES } from '../../constants/highlight-js';
@@ -12,7 +12,7 @@ import { DocsLocale } from '../../constants/locale';
 import { DocsClipboardService } from '../../services/clipboard';
 import { DocsLocaleService } from '../../services/locale';
 import { DocsApiPage } from './api-page';
-import { DocsApiBlock, DocsApiEntryPoint, DocsApiTypePart } from './api-page.types';
+import type { DocsApiBlock, DocsApiEntryPoint, DocsApiTypePart } from './api-page.types';
 
 const provideDocsLocale = (locale: DocsLocale) => {
     const changes = new BehaviorSubject<DocsLocale>(locale);

@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     KBQ_ANIMATIONS_CONFIG,
     KBQ_LOCALE_SERVICE,
     KbqComponentColors,
-    KbqLocaleService,
+    type KbqLocaleService,
     KbqLocaleServiceModule,
     ruRULocaleData
 } from '@koobiq/components/core';
-import { KbqProgressBarModule, ProgressBarMode } from './index';
+import { KbqProgressBarModule, type ProgressBarMode } from './index';
 
 const DEFAULT_ARIA_LABEL = ruRULocaleData.a11y.progressBar;
 

@@ -1,6 +1,6 @@
-import { Component, DebugElement, Directive, Type, forwardRef } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { Component, type DebugElement, Directive, forwardRef, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqInputModule, KbqInputPassword } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';

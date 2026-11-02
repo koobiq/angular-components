@@ -1,4 +1,4 @@
-import { KbqHighlightBackgroundPipe, kbqHighlightBackgroundMark } from './highlight-background.pipe';
+import { kbqHighlightBackgroundMark, KbqHighlightBackgroundPipe } from './highlight-background.pipe';
 
 describe(KbqHighlightBackgroundPipe.name, () => {
     const pipe = new KbqHighlightBackgroundPipe();

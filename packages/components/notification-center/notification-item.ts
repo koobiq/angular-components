@@ -4,19 +4,19 @@ import {
     Component,
     inject,
     input,
-    OnChanges,
-    SimpleChanges,
+    type OnChanges,
+    type SimpleChanges,
     TemplateRef,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs/operators';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter, KbqReadStateDirective } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqToastStyle } from '@koobiq/components/toast';
-import { filter } from 'rxjs/operators';
-import { KbqNotificationCenterService, KbqNotificationItem } from './notification-center.service';
+import { KbqNotificationCenterService, type KbqNotificationItem } from './notification-center.service';
 import { KBQ_NOTIFICATION_CENTER_PANEL } from './notification-center.tokens';
 
 /** @docs-private */

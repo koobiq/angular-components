@@ -1,4 +1,13 @@
-import { Directive, ElementRef, inject, input, linkedSignal, Signal, signal, WritableSignal } from '@angular/core';
+import {
+    Directive,
+    ElementRef,
+    inject,
+    input,
+    linkedSignal,
+    type Signal,
+    signal,
+    type WritableSignal
+} from '@angular/core';
 
 export enum KbqComponentColors {
     Theme = 'theme',

@@ -1,4 +1,4 @@
-import { spawnSync, SpawnSyncReturns } from 'child_process';
+import { spawnSync, type SpawnSyncReturns } from 'child_process';
 
 /**
  * Class that can be used to execute Git commands within a given project directory.

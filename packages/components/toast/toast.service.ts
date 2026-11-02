@@ -1,44 +1,45 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { GlobalPositionStrategy, Overlay, OverlayContainer, OverlayRef } from '@angular/cdk/overlay';
+import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
+import { type GlobalPositionStrategy, Overlay, OverlayContainer, type OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
-    ComponentRef,
-    EmbeddedViewRef,
+    type ComponentRef,
+    type EmbeddedViewRef,
+    inject,
     Injectable,
     InjectionToken,
     Injector,
     NgZone,
-    OnDestroy,
-    Signal,
-    TemplateRef,
-    Type,
-    inject,
+    type OnDestroy,
+    type Signal,
     signal,
+    type TemplateRef,
+    type Type,
     untracked
 } from '@angular/core';
 import {
     BehaviorSubject,
-    EMPTY,
-    Observable,
-    Subscription,
     distinctUntilChanged,
+    EMPTY,
     filter,
     map,
+    Observable,
     share,
+    type Subscription,
     switchMap,
     timer
 } from 'rxjs';
-import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastComponent } from './toast.component';
 import {
     KBQ_TOAST_CONFIG,
     KBQ_TOAST_STACK,
-    KbqToastData,
+    type KbqToastData,
     KbqToastPosition,
-    KbqToastStack,
-    KbqToastTemplateContext
+    type KbqToastStack,
+    type KbqToastTemplateContext
 } from './toast.type';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
+import { KbqToastContainerComponent } from './toast-container.component';
 
 export const KBQ_TOAST_FACTORY = new InjectionToken('KBQ_TOAST_FACTORY', {
     factory: () => KbqToastComponent

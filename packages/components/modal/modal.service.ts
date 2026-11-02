@@ -1,11 +1,11 @@
-import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayConfig, type OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { ComponentRef, DestroyRef, inject, Injectable, InjectionToken, Injector, isDevMode } from '@angular/core';
-import { Observable } from 'rxjs';
-import { KbqModalControlService } from './modal-control.service';
-import { KbqModalRef } from './modal-ref.class';
+import { type ComponentRef, DestroyRef, inject, Injectable, InjectionToken, Injector, isDevMode } from '@angular/core';
+import type { Observable } from 'rxjs';
 import { KbqModalComponent } from './modal.component';
-import { ConfirmType, IModalOptionsForService, KBQ_MODAL_OPTIONS, ModalOptions } from './modal.type';
+import { type ConfirmType, type IModalOptionsForService, KBQ_MODAL_OPTIONS, type ModalOptions } from './modal.type';
+import { KbqModalControlService } from './modal-control.service';
+import type { KbqModalRef } from './modal-ref.class';
 
 /** Injection token that can be used to access the data that was passed in to a modal. */
 export const KBQ_MODAL_DATA = new InjectionToken<unknown>('KbqModalData');

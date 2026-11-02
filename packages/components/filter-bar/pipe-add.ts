@@ -10,12 +10,12 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqOption, KbqOptionModule } from '@koobiq/components/core';
+import { type KbqOption, KbqOptionModule } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { KBQ_FILTER_BAR_HOST, KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
+import { KBQ_FILTER_BAR_HOST, type KbqFilter, type KbqPipe, type KbqPipeTemplate } from './filter-bar.types';
 import { getId } from './pipes/base-pipe';
 
 @Component({

@@ -5,16 +5,16 @@ import { DocsLocale } from '../../apps/docs/src/app/constants/locale';
 import { docsGetMarkdownPath, docsHasMarkdown } from '../../apps/docs/src/app/page-paths';
 import {
     docsGetItemById,
-    DocsStructureCategoryId,
-    DocsStructureItem,
+    type DocsStructureCategoryId,
+    type DocsStructureItem,
     DocsStructureItemId,
     DocsStructureItemTab,
     DocsStructureTokensTab
 } from '../../apps/docs/src/app/structure';
 import { EXAMPLE_COMPONENTS } from '../../packages/docs-examples/example-module';
-import { DocEntry } from '../api-gen/rendering/entities';
+import type { DocEntry } from '../api-gen/rendering/entities';
 import { DOCS_PAGE_SOURCES, parsePageSource } from '../docs-pages/sources';
-import { LlmsExample } from './page-markdown';
+import type { LlmsExample } from './page-markdown';
 
 export const LLMS_SITE_ORIGIN = 'https://koobiq.io';
 

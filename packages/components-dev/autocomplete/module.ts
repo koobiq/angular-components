@@ -1,7 +1,9 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
-import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import type { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { KbqAutocompleteModule, type KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -9,11 +11,9 @@ import {
     AutocompleteOverviewExample,
     AutocompleteSearchSmartExample,
     AutocompleteTextareaExample,
-    AutocompleteTriggersExample
+    AutocompleteTriggersExample,
+    AutocompleteWithFooterExample
 } from 'packages/docs-examples/components/autocomplete';
-import { AutocompleteWithFooterExample } from 'packages/docs-examples/components/autocomplete/autocomplete-with-footer/autocomplete-with-footer-example';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({

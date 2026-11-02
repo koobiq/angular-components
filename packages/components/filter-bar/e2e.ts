@@ -1,10 +1,17 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
+import {
+    type AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    type TemplateRef,
+    viewChild
+} from '@angular/core';
+import type { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-import { DateTime } from 'luxon';
 import { KbqFilterBarModule } from './filter-bar.module';
-import { kbqBuildTree, KbqFilter, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from './filter-bar.types';
+import { kbqBuildTree, type KbqFilter, type KbqPipe, type KbqPipeTemplate, KbqPipeTypes } from './filter-bar.types';
 
 const DEV_DATA_OBJECT = {
     'No roles': 'value 0',

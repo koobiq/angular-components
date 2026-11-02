@@ -1,8 +1,8 @@
-import { InjectionToken, Provider, Signal } from '@angular/core';
+import { InjectionToken, type Provider, type Signal } from '@angular/core';
 import {
-    KbqDeepPartial,
-    KbqNotificationCenterLocaleConfiguration,
+    type KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
+    type KbqNotificationCenterLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
 

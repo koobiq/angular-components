@@ -1,15 +1,15 @@
-import { Direction, Directionality } from '@angular/cdk/bidi';
+import { type Direction, Directionality } from '@angular/cdk/bidi';
 import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     Component,
+    inject,
     MAX_ANIMATION_TIMEOUT,
     TemplateRef,
-    ViewContainerRef,
-    inject,
-    viewChild
+    viewChild,
+    ViewContainerRef
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { KbqTabBody, KbqTabBodyPortal } from './tab-body.component';
 import { KbqTabsModule } from './tabs.module';

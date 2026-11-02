@@ -1,18 +1,18 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { merge, type Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqPseudoCheckbox, KbqPseudoCheckboxState, PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
+import { KbqPseudoCheckbox, type KbqPseudoCheckboxState, PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqEmptyState } from '@koobiq/components/empty-state';
 import { KbqTrim } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
-import { KbqListModule, KbqListSelectionChange } from '@koobiq/components/list';
+import { KbqListModule, type KbqListSelectionChange } from '@koobiq/components/list';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { KbqUsernameModule } from '@koobiq/components/username';
-import { merge, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 interface ExampleUser {
     lastName: string;

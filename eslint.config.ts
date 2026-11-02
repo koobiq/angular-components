@@ -1,16 +1,17 @@
-import comments from '@eslint-community/eslint-plugin-eslint-comments/configs';
 import eslint from '@eslint/js';
+import comments from '@eslint-community/eslint-plugin-eslint-comments/configs';
 import stylistic from '@stylistic/eslint-plugin';
 import vitest from '@vitest/eslint-plugin';
 import angular from 'angular-eslint';
+import { defineConfig } from 'eslint/config';
 import progress from 'eslint-plugin-file-progress';
 import playwright from 'eslint-plugin-playwright';
 import prettierRecommended from 'eslint-plugin-prettier/recommended';
 import promise from 'eslint-plugin-promise';
 import rxjs from 'eslint-plugin-rxjs-x';
-import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import { importsConfig } from './tools/eslint/imports';
 import { publishedJsDocConfig } from './tools/eslint/jsdoc';
 
 const isCI = !!process.env['CI'];
@@ -252,6 +253,9 @@ export default defineConfig(
         }
     },
 
+    // Order of imports and exports, and cycles between modules
+    importsConfig,
+
     // Rules for TypeScript files
     {
         files: ['**/*.{ts,cts,mts}'],
@@ -279,7 +283,8 @@ export default defineConfig(
             '@typescript-eslint/no-unused-vars': [
                 1,
                 {
-                    argsIgnorePattern: '^_'
+                    argsIgnorePattern: '^_',
+                    enableAutofixRemoval: { imports: true }
                 }
             ],
             '@typescript-eslint/no-duplicate-enum-values': 0,

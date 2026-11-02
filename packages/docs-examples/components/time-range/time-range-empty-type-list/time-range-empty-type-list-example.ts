@@ -4,7 +4,7 @@ import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
-import { KbqTimeRange, KbqTimeRangeType } from '@koobiq/components/time-range';
+import { KbqTimeRange, type KbqTimeRangeType } from '@koobiq/components/time-range';
 
 /**
  * @title Time range empty type list

@@ -19,7 +19,7 @@ import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef } from '@koobiq/components/
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DocsClipboardService } from 'src/app/services/clipboard';
-import { DocsIconItem } from 'src/app/services/icon-items';
+import type { DocsIconItem } from 'src/app/services/icon-items';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsCodeSnippetDirective } from '../../code-snippet/code-snippet';
 

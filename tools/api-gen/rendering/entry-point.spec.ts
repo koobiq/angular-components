@@ -1,5 +1,13 @@
-import { ClassEntry, DocEntry, EntryType, MemberEntry, MemberTags, MemberType, PropertyEntry } from './entities';
-import { ApiEntryPage, getApiEntryPoint, linkType } from './entry-point';
+import {
+    type ClassEntry,
+    type DocEntry,
+    EntryType,
+    type MemberEntry,
+    MemberTags,
+    MemberType,
+    type PropertyEntry
+} from './entities';
+import { type ApiEntryPage, getApiEntryPoint, linkType } from './entry-point';
 
 const entry = (patch: Partial<DocEntry> & Record<string, unknown>): DocEntry =>
     ({ name: '', entryType: EntryType.Constant, description: '', rawComment: '', jsdocTags: [], ...patch }) as DocEntry;

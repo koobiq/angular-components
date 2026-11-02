@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLink } from '@koobiq/components/link';
-import { KbqUserInfo, KbqUsername } from '@koobiq/components/username';
+import { type KbqUserInfo, KbqUsername } from '@koobiq/components/username';
 
 /**
  * @title Username as link

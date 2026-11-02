@@ -1,5 +1,5 @@
-import checker from 'license-checker';
 import * as path from 'node:path';
+import checker from 'license-checker';
 import spdxSatisfies from 'spdx-satisfies';
 
 type License = string;

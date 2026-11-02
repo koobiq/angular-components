@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, LOCALE_ID, signal } from '@angular/core';
-import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { DateTime } from 'luxon';
 import { KbqLuxonDateModule, LuxonDateAdapter, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     AbsoluteDateFormatterPipe,
@@ -48,8 +49,7 @@ import {
     RelativeShortDateFormatterPipe,
     RelativeShortDateTimeFormatterPipe
 } from '@koobiq/components/core';
-import { DurationUnit } from '@koobiq/date-adapter';
-import { DateTime } from 'luxon';
+import type { DurationUnit } from '@koobiq/date-adapter';
 
 /**
  * Runs a change detection cycle on an OnPush host that nothing else marked dirty, so that impure pipes

@@ -1,21 +1,20 @@
-import { Path } from '@angular-devkit/core';
-import { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import * as path from 'path';
-
 import { migrateTemplateWithTransform } from '../../utils/angular-parsing';
 import {
     buildIconTokenMap,
     buildIconTokenPatterns,
     createIconTemplateTransform,
-    IconMigrationData,
+    type IconMigrationData,
     migrateIconsInTsFiles,
     replaceKnownIconTokens,
-    TokenReplacement
+    type TokenReplacement
 } from '../../utils/icon-migration';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { iconsMapping, scope } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const iconsFontImportRule = "@use '@koobiq/icons/fonts/kbq-icons';";
 

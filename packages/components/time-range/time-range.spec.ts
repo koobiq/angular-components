@@ -2,15 +2,15 @@ import { TitleCasePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    DebugElement,
+    type DebugElement,
     effect,
     inject,
-    Provider,
+    type Provider,
     signal,
-    Type
+    type Type
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, type FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
@@ -34,11 +34,11 @@ import {
     KbqTimeRange,
     kbqTimeRangeLocaleConfigurationProvider
 } from './time-range';
+import { KbqTimeRangeModule } from './time-range.module';
 import { KbqTimeRangeEditor } from './time-range-editor';
 import { KbqTimeRangeTitle } from './time-range-title';
 import { KbqTimeRangeTitleAsControl } from './time-range-title-as-form-field';
-import { KbqTimeRangeModule } from './time-range.module';
-import { KbqCustomTimeRangeType, KbqTimeRangeRange, KbqTimeRangeType } from './types';
+import type { KbqCustomTimeRangeType, KbqTimeRangeRange, KbqTimeRangeType } from './types';
 
 /** An axe pass over an overlay is far slower than the 2s default this repo runs specs with. */
 const axeTimeout = 15000;

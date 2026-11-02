@@ -1,7 +1,7 @@
-import { OverlayContainer, OverlayRef } from '@angular/cdk/overlay';
+import { OverlayContainer, type OverlayRef } from '@angular/cdk/overlay';
 import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
-import { Directive, inject, Injectable, InjectionToken, OnDestroy } from '@angular/core';
+import { Directive, inject, Injectable, InjectionToken, type OnDestroy } from '@angular/core';
 import { kbqInjectNativeElement } from '../utils';
 
 const overlayLayerClass = 'kbq-overlay-layer';

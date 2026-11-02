@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
-    AbstractControl,
+    type AbstractControl,
     FormControl,
     FormGroup,
     ReactiveFormsModule,
-    ValidationErrors,
+    type ValidationErrors,
     type ValidatorFn
 } from '@angular/forms';
+import type { DateTime } from 'luxon';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     DateAdapter,
@@ -16,7 +17,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { DateTime } from 'luxon';
 
 /**
  * Payload the cross-field validator publishes, so that the `ErrorStateMatcher` can tell which controls a

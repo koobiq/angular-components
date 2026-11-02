@@ -1,9 +1,16 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { timer } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqButtonColor, KbqButtonModule, KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
+import {
+    type KbqButtonColor,
+    KbqButtonModule,
+    type KbqButtonStyleInput,
+    KbqButtonStyles
+} from '@koobiq/components/button';
 import { KbqComponentColors, KbqFormattersModule, KbqThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
@@ -12,13 +19,11 @@ import { KbqNavbarModule } from '@koobiq/components/navbar';
 import {
     KbqNotificationCenterModule,
     KbqNotificationCenterService,
-    KbqNotificationItem
+    type KbqNotificationItem
 } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { timer } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { ExampleText, injectExampleText } from '../localized-data';
+import { type ExampleText, injectExampleText } from '../localized-data';
 
 /** Items per loaded page. */
 const PAGE_SIZE = 20;

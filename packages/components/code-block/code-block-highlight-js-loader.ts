@@ -1,8 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import { inject, Injectable, isDevMode } from '@angular/core';
-import { KBQ_WINDOW } from '@koobiq/components/core';
 import type { HLJSApi } from 'highlight.js';
 import plaintext from 'highlight.js/lib/languages/plaintext';
+import { KBQ_WINDOW } from '@koobiq/components/core';
 import type { KbqCodeBlockHighlightJsConfig } from './code-block-highlight';
 import { highlightJSLineNumbersPlugin } from './highlightjs-line-numbers';
 

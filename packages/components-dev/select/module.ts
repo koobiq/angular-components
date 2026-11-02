@@ -1,16 +1,18 @@
-import { ListRange } from '@angular/cdk/collections';
+import type { ListRange } from '@angular/cdk/collections';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 // import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
     inject,
-    OnInit,
+    type OnInit,
     signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
+import { merge, type Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
@@ -20,11 +22,9 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqSelectChange, KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
+import { type KbqSelectChange, KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { SelectExamplesModule } from 'packages/docs-examples/components/select';
-import { merge, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { DevThemeToggle } from '../theme-toggle';
 import { DEV_OPTIONS } from './mock';
 

@@ -2,15 +2,15 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     CdkScrollable,
-    ConnectedOverlayPositionChange,
-    ConnectionPositionPair,
-    FlexibleConnectedPositionStrategy,
-    FlexibleConnectedPositionStrategyOrigin,
+    type ConnectedOverlayPositionChange,
+    type ConnectionPositionPair,
+    type FlexibleConnectedPositionStrategy,
+    type FlexibleConnectedPositionStrategyOrigin,
     Overlay,
-    OverlayConfig,
-    OverlayRef,
+    type OverlayConfig,
+    type OverlayRef,
     ScrollDispatcher,
-    ScrollStrategy
+    type ScrollStrategy
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ViewportRuler } from '@angular/cdk/scrolling';
@@ -18,23 +18,23 @@ import {
     DestroyRef,
     Directive,
     ElementRef,
-    EventEmitter,
+    type EventEmitter,
     inject,
     NgZone,
-    OnDestroy,
-    OnInit,
-    Signal,
+    type OnDestroy,
+    type OnInit,
+    type Signal,
     signal,
-    TemplateRef,
-    Type,
+    type TemplateRef,
+    type Type,
     untracked,
     ViewContainerRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable, Subscription } from 'rxjs';
-import { distinctUntilChanged, delay as rxDelay } from 'rxjs/operators';
+import type { Observable, Subscription } from 'rxjs';
+import { delay as rxDelay, distinctUntilChanged } from 'rxjs/operators';
 import { ENTER, ESCAPE, SPACE } from '../keycodes';
-import { kbqGetOverlayOriginSize, KbqOverlayOrigin, kbqResolveOverlayOrigin } from '../overlay/overlay-origin';
+import { kbqGetOverlayOriginSize, type KbqOverlayOrigin, kbqResolveOverlayOrigin } from '../overlay/overlay-origin';
 import {
     EXTENDED_OVERLAY_POSITIONS,
     POSITION_MAP,
@@ -43,13 +43,13 @@ import {
 } from '../overlay/overlay-position-map';
 import {
     ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT,
-    KbqPopUpPlacementValues,
-    KbqSiblingPopup,
-    KbqStickToWindowPlacementValues,
+    type KbqPopUpPlacementValues,
+    type KbqSiblingPopup,
+    type KbqStickToWindowPlacementValues,
     PopUpPlacements,
     PopUpTriggers
 } from './constants';
-import { KbqPopUp } from './pop-up';
+import type { KbqPopUp } from './pop-up';
 
 type KbqPopupTriggerOffset = Pick<ConnectionPositionPair, 'offsetX' | 'offsetY'>;
 

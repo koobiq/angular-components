@@ -1,60 +1,60 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    DebugElement,
-    Type,
+    type DebugElement,
     effect,
     inject,
     signal,
+    type Type,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import {
-    AsyncValidatorFn,
+    type AsyncValidatorFn,
     FormControl,
-    FormControlStatus,
+    type FormControlStatus,
     FormGroup,
     FormsModule,
-    NgModel,
+    type NgModel,
     ReactiveFormsModule,
     UntypedFormControl,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { DateTime } from 'luxon';
+import { map, type Observable, timer } from 'rxjs';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
-    DOWN_ARROW,
-    DateAdapter,
-    ErrorStateMatcher,
-    KBQ_LOCALE_SERVICE,
-    LEFT_ARROW,
-    ONE,
-    SPACE,
-    ShowOnControlDirtyErrorStateMatcher,
-    ShowOnFormSubmitErrorStateMatcher,
-    TWO,
-    UP_ARROW,
     createKeyboardEvent,
+    DateAdapter,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
+    DOWN_ARROW,
+    ErrorStateMatcher,
+    KBQ_LOCALE_SERVICE,
     kbqErrorStateMatcherProvider,
+    LEFT_ARROW,
+    ONE,
+    ShowOnControlDirtyErrorStateMatcher,
+    ShowOnFormSubmitErrorStateMatcher,
+    SPACE,
+    TWO,
+    UP_ARROW,
     validationTooltipHideDelay
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { DateTime } from 'luxon';
-import { Observable, map, timer } from 'rxjs';
 import {
     DEFAULT_TIME_FORMAT,
     KbqTimepicker,
     KbqTimepickerModule,
     TIMEFORMAT_PLACEHOLDERS,
-    TimeFormatToLocaleKeys,
-    TimeFormats
+    TimeFormats,
+    TimeFormatToLocaleKeys
 } from './index';
 
 const createStandaloneComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {

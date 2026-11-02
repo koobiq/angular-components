@@ -1,4 +1,4 @@
-import { KbqHighlightPipe, kbqHighlightMark } from './highlight.pipe';
+import { kbqHighlightMark, KbqHighlightPipe } from './highlight.pipe';
 
 describe(KbqHighlightPipe.name, () => {
     const pipe = new KbqHighlightPipe();

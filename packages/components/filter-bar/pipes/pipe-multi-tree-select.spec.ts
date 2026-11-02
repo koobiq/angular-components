@@ -1,22 +1,22 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectorRef, Component, type DebugElement, inject } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KBQ_LOCALE_SERVICE, KbqFilterBarLocaleConfiguration } from '@koobiq/components/core';
+import { BehaviorSubject } from 'rxjs';
+import { KBQ_LOCALE_SERVICE, type KbqFilterBarLocaleConfiguration } from '@koobiq/components/core';
 import {
     KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
     kbqBuildTree,
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
-    KbqPipe,
-    KbqPipeTemplate,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes,
-    KbqTreeSelectNode
+    type KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
 import { kbqTreeSelectAllValue } from '@koobiq/components/tree';
-import { BehaviorSubject } from 'rxjs';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeMultiTreeSelectComponent } from './pipe-multi-tree-select';
 import { registerNoOptionsTests } from './pipe-no-options.spec-helper';

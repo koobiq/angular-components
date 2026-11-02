@@ -1,4 +1,4 @@
-import { LlmsExample, pageSummary, pageToMarkdown } from './page-markdown';
+import { type LlmsExample, pageSummary, pageToMarkdown } from './page-markdown';
 
 const EXAMPLES: Record<string, LlmsExample> = {
     'alert-overview': {

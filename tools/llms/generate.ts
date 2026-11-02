@@ -8,9 +8,9 @@ import { mkdirSync, rmSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { format, resolveConfig } from 'prettier';
 import { DocsLocale } from '../../apps/docs/src/app/constants/locale';
-import { docsGetCategories, DocsStructureItem } from '../../apps/docs/src/app/structure';
+import { docsGetCategories, type DocsStructureItem } from '../../apps/docs/src/app/structure';
 import { renderItemMarkdown } from './item-markdown';
-import { LLMS_FULL_TXT, LlmsCategory, LlmsHeader, renderLlmsFullTxt, renderLlmsTxt } from './llms-txt';
+import { LLMS_FULL_TXT, type LlmsCategory, type LlmsHeader, renderLlmsFullTxt, renderLlmsTxt } from './llms-txt';
 import { collectPageSources, getIconsVersion, getMarkdownPath, readRepoFile } from './sources';
 
 /** Committed, so that a change to the index shows in review; `check-llms` fails when it is out of date. */

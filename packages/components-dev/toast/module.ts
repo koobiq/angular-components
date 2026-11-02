@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, ViewEncapsulation, inject, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    type TemplateRef,
+    viewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -13,7 +20,7 @@ import {
     KbqToastData,
     KbqToastModule,
     KbqToastService,
-    KbqToastStyle
+    type KbqToastStyle
 } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { ToastExamplesModule } from '../../docs-examples/components/toast';

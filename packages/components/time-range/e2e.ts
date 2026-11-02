@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import type { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KbqFormattersModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { DateTime } from 'luxon';
 import { KbqTimeRangeModule } from './time-range.module';
-import { KbqTimeRangeRange } from './types';
+import type { KbqTimeRangeRange } from './types';
 
 /**
  * Trigger states plus the editor behind them. Every value is pinned: the preset titles are relative

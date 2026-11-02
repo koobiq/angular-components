@@ -3,8 +3,8 @@ import {
     ChangeDetectionStrategy,
     Component,
     inject,
-    OnDestroy,
-    OnInit,
+    type OnDestroy,
+    type OnInit,
     signal,
     ViewEncapsulation
 } from '@angular/core';

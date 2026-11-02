@@ -3,7 +3,7 @@ import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KBQ_TITLE_TEXT_REF } from '@koobiq/components/core';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqAppSwitcherSite } from './app-switcher';
+import type { KbqAppSwitcherSite } from './app-switcher';
 
 /** @docs-private */
 @Component({

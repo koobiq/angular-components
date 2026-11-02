@@ -1,4 +1,4 @@
-import { Direction } from '@angular/cdk/bidi';
+import type { Direction } from '@angular/cdk/bidi';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 
 /** Axis a roving-focus group navigates along. */

@@ -1,5 +1,5 @@
-import { workspaces } from '@angular-devkit/core';
-import { SchematicsException, Tree } from '@angular-devkit/schematics';
+import type { workspaces } from '@angular-devkit/core';
+import { SchematicsException, type Tree } from '@angular-devkit/schematics';
 import { readWorkspace } from '@schematics/angular/utility';
 import * as messages from './messages';
 import { visitProjectFiles } from './project-files';

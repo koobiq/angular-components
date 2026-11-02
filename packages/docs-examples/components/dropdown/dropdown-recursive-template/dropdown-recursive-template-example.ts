@@ -2,12 +2,12 @@ import {
     ChangeDetectionStrategy,
     Component,
     Directive,
-    Injector,
-    OnInit,
-    TemplateRef,
-    ViewContainerRef,
     inject,
-    input
+    Injector,
+    input,
+    type OnInit,
+    type TemplateRef,
+    ViewContainerRef
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_DROPDOWN_PANEL, KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';

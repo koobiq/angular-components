@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type OnDestroy, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
+import { KbqProgressSpinnerModule, type ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import {
     ProgressSpinnerIndeterminateExample,
     ProgressSpinnerOverviewExample

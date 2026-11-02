@@ -1,4 +1,4 @@
-import { KbqMultipleFileUploadLocaleConfiguration } from '@koobiq/components/core';
+import type { KbqMultipleFileUploadLocaleConfiguration } from '@koobiq/components/core';
 
 export const esLAFileUploadLocaleData: KbqMultipleFileUploadLocaleConfiguration = {
     captionText: 'Arrastre aquí o {{ browseLink }}',

@@ -1,39 +1,39 @@
-﻿import { Component, DebugElement, Provider, Type, inject, viewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
+﻿import { Component, type DebugElement, inject, type Provider, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import {
-    AbstractControl,
-    FormGroupDirective,
+    type AbstractControl,
+    type FormGroupDirective,
     FormsModule,
-    NgForm,
+    type NgForm,
     ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
-    UntypedFormGroup,
+    type UntypedFormGroup,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import type { Mock } from 'vitest';
 import {
     COMMA,
+    createKeyboardEvent,
     DASH,
+    dispatchEvent,
+    dispatchFakeEvent,
+    dispatchKeyboardEvent,
     DOWN_ARROW,
-    ErrorStateMatcher,
+    type ErrorStateMatcher,
     FF_MINUS,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqLocaleServiceModule,
     NUMPAD_MINUS,
-    UP_ARROW,
-    createKeyboardEvent,
-    dispatchEvent,
-    dispatchFakeEvent,
-    dispatchKeyboardEvent,
     ruRUFormattersData,
-    typeInElement
+    typeInElement,
+    UP_ARROW
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
-import { BIG_STEP, KbqInput, KbqInputModule, KbqNumberInput, SMALL_STEP, add, getPrecision } from './index';
+import { add, BIG_STEP, getPrecision, KbqInput, KbqInputModule, KbqNumberInput, SMALL_STEP } from './index';
 
-import type { Mock } from 'vitest';
 const defaultLocaleGroupSep = ruRUFormattersData.input.number.viewGroupSeparator;
 
 // The stepper's long-press timings, which are internal to the form-field entry point.

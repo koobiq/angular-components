@@ -1,4 +1,4 @@
-﻿import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
+﻿import { coerceNumberProperty, type NumberInput } from '@angular/cdk/coercion';
 import {
     booleanAttribute,
     computed,
@@ -11,13 +11,14 @@ import {
     InjectionToken,
     input,
     NgZone,
-    OnDestroy,
-    Provider,
+    type OnDestroy,
+    type Provider,
     Renderer2,
     signal,
     untracked
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Subject } from 'rxjs';
 import {
     BACKSPACE,
     checkAndNormalizeLocalizedNumber,
@@ -38,12 +39,12 @@ import {
     KBQ_DEFAULT_LOCALE_ID,
     KBQ_DEFAULT_PRECISION_SEPARATOR,
     KBQ_LOCALE_SERVICE,
-    KbqDeepPartial,
-    KbqInputLocaleConfiguration,
-    KbqInputNumberLocaleConfiguration,
+    type KbqDeepPartial,
+    type KbqInputLocaleConfiguration,
+    type KbqInputNumberLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
-    KbqLocaleService,
+    type KbqLocaleService,
     LEFT_ARROW,
     normalizeNumber,
     NUMPAD_MINUS,
@@ -55,7 +56,6 @@ import {
     X,
     Z
 } from '@koobiq/components/core';
-import { Subject } from 'rxjs';
 
 /**
  * @deprecated Use {@link KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION}, which carries the whole `input`

@@ -1,13 +1,13 @@
-import { Overlay, OverlayRef, ScrollStrategy } from '@angular/cdk/overlay';
+import { Overlay, type OverlayRef, type ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
     ElementRef,
     inject,
-    TemplateRef,
+    type TemplateRef,
     viewChild,
     ViewContainerRef
 } from '@angular/core';
@@ -15,11 +15,11 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
-import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastComponent } from './toast.component';
 import { KbqToastModule } from './toast.module';
 import { KBQ_TOAST_FACTORY, KbqToastService } from './toast.service';
 import { KbqToastStyle } from './toast.type';
+import type { KbqToastContainerComponent } from './toast-container.component';
 
 @Component({
     selector: 'e2e-toast-states',

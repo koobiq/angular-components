@@ -1,7 +1,6 @@
-import { Pipe, PipeTransform } from '@angular/core';
-
-import { highlight } from './highlight-base';
+import { Pipe, type PipeTransform } from '@angular/core';
 import { kbqHighlightMark } from './highlight.pipe';
+import { highlight } from './highlight-base';
 
 /** Wraps the matches of a search in a bold `<mark class="kbq-highlight">`. */
 @Pipe({ name: 'kbqHighlightBold' })

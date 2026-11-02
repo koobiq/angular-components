@@ -2,12 +2,12 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { ESCAPE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import {
-    CdkScrollable,
+    type CdkScrollable,
     Overlay,
     OverlayContainer,
     OverlayRef,
     ScrollDispatcher,
-    ScrollStrategy
+    type ScrollStrategy
 } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import {
@@ -15,29 +15,29 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    NgZone,
-    TemplateRef,
-    ValueProvider,
     inject,
+    NgZone,
+    type TemplateRef,
+    type ValueProvider,
     viewChild
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { NEVER, Subject, type Subscription } from 'rxjs';
+import type { Mock, MockInstance } from 'vitest';
 import { dispatchKeyboardEvent, dispatchMouseEvent, kbqShadowDomOverlayProvider } from '@koobiq/components/core';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { NEVER, Subject, Subscription } from 'rxjs';
-import type { Mock, MockInstance } from 'vitest';
-import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastComponent } from './toast.component';
 import { KbqToastModule } from './toast.module';
 import { KBQ_TOAST_FACTORY, KbqToastService } from './toast.service';
 import {
-    KbqToastConfig,
-    KbqToastData,
-    KbqToastPosition,
-    KbqToastStyle,
     defaultToastConfig,
-    kbqToastConfigurationProvider
+    type KbqToastConfig,
+    kbqToastConfigurationProvider,
+    type KbqToastData,
+    KbqToastPosition,
+    KbqToastStyle
 } from './toast.type';
+import { KbqToastContainerComponent } from './toast-container.component';
 
 /** Mirrors `CHECK_INTERVAL` in the service: the countdown is driven by a heartbeat of that period. */
 const CHECK_INTERVAL = 500;

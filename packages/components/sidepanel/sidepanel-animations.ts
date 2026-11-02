@@ -1,4 +1,4 @@
-import { KbqSidepanelPosition } from './sidepanel-config';
+import type { KbqSidepanelPosition } from './sidepanel-config';
 
 /** @internal */
 export enum KbqSidepanelAnimationState {

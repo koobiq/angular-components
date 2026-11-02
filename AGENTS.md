@@ -158,7 +158,7 @@ yarn run check-tokens-data                                             # Verify 
 yarn run eslint:fix && yarn run stylelint:fix && yarn run prettier:fix # Auto-fix all
 ```
 
-CI runs ESLint and stylelint with `--max-warnings=0`, so a warning fails the build. Formatting is prettier with 120 columns, 4-space indent, single quotes and no trailing commas, plus the `organize-imports`, `multiline-arrays` and `sh` plugins — let it order imports and break arrays rather than fighting it. The `sh` plugin formats shell scripts, the Dockerfile, husky hooks, ignore files and the shell snippets in Markdown. Quote placeholders in those snippets (`--project "<your project>"`): unquoted, `<` and `>` are redirects, and the plugin either rewrites the command or silently skips the block.
+CI runs ESLint and stylelint with `--max-warnings=0`, so a warning fails the build. Formatting is prettier with 120 columns, 4-space indent, single quotes and no trailing commas, plus the `multiline-arrays` and `sh` plugins — let it break arrays rather than fighting it. Imports are up to ESLint (`tools/eslint/imports.ts`): `--fix` sorts imports into one block (`node:`, `@angular/*`, the other packages, `@koobiq/*`, relative paths) and re-exports, adds `type` to an import used as a type only, and removes the unused imports, and `import-x/no-cycle` fails on a cycle between modules. The `sh` plugin formats shell scripts, the Dockerfile, husky hooks, ignore files and the shell snippets in Markdown. Quote placeholders in those snippets (`--project "<your project>"`): unquoted, `<` and `>` are redirects, and the plugin either rewrites the command or silently skips the block.
 
 ### API Management
 
