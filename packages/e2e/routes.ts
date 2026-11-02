@@ -15,6 +15,7 @@ import {
 import { E2eBadgeAsyncIcon, E2eBadgeStyles } from '../components/badge/e2e';
 import {
     E2eBreadcrumbsInForm,
+    E2eBreadcrumbsItemCount,
     E2eBreadcrumbsOverflowMax,
     E2eBreadcrumbsStateAndStyle
 } from '../components/breadcrumbs/e2e';
@@ -187,6 +188,7 @@ const components = [
     E2eBreadcrumbsStateAndStyle,
     E2eBreadcrumbsOverflowMax,
     E2eBreadcrumbsInForm,
+    E2eBreadcrumbsItemCount,
     E2eEmptyStateStateAndStyle,
     E2eCodeBlockStates,
     E2eDlStates,

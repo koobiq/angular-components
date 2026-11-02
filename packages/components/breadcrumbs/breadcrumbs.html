@@ -1,13 +1,15 @@
 @let allItems = items();
 @if (allItems.length < minVisibleItems || wrapMode() !== 'auto') {
-    @for (item of allItems; track item) {
-        <div class="kbq-breadcrumb-item__container">
-            <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: $last }" />
-            @if (!$last) {
-                <ng-container [ngTemplateOutlet]="separatorTemplate" />
-            }
-        </div>
-    }
+    <div class="kbq-breadcrumbs__list">
+        @for (item of allItems; track item) {
+            <div class="kbq-breadcrumb-item__container">
+                <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: $last }" />
+                @if (!$last) {
+                    <ng-container [ngTemplateOutlet]="separatorTemplate" />
+                }
+            </div>
+        }
+    </div>
 } @else {
     <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems reverseOverflowOrder class="layout-align-start-center">
         <div class="kbq-breadcrumb-item__container" [kbqOverflowItem]="0" [order]="allItems.length">
