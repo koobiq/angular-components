@@ -1243,9 +1243,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "code-block-header-pinned-example.ts",
     "importPath": "components/code-block"
   },
+  "code-block-line-numbers": {
+    "packagePath": "components/code-block/code-block-line-numbers",
+    "title": "Code-block with lineNumbers attribute",
+    "componentName": "CodeBlockLineNumbersExample",
+    "files": [
+      "code-block-line-numbers-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "code-block-line-numbers-example",
+    "primaryFile": "code-block-line-numbers-example.ts",
+    "importPath": "components/code-block"
+  },
   "code-block-overview": {
     "packagePath": "components/code-block/code-block-overview",
-    "title": "Code-block with lineNumbers attribute",
+    "title": "Code-block overview",
     "componentName": "CodeBlockOverviewExample",
     "files": [
       "code-block-overview-example.ts"
@@ -8096,6 +8108,7 @@ export type LiveExampleId =
   | 'clamped-text-external-state'
   | 'clamped-text-overview'
   | 'code-block-header-pinned'
+  | 'code-block-line-numbers'
   | 'code-block-overview'
   | 'code-block-with-custom-locale-configuration'
   | 'code-block-with-filled'

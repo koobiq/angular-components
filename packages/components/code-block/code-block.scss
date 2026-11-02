@@ -71,6 +71,8 @@
         }
 
         .kbq-code-block__code {
+            --kbq-code-block-line-numbers-gap: var(--kbq-code-block-size-with-header-content-content-gap-horizontal);
+
             tab-size: var(--kbq-code-block-tab-size);
             padding: var(--kbq-code-block-size-with-header-content-padding-top)
                 var(--kbq-code-block-size-with-header-content-padding-horizontal)
@@ -87,28 +89,40 @@
             display: block;
         }
 
-        .hljs-ln-numbers {
-            padding-right: var(--kbq-code-block-size-with-header-content-content-gap-horizontal);
-            vertical-align: baseline;
-            text-align: right;
-        }
-
-        .hljs-ln {
-            border-collapse: unset;
-
-            /* stylelint-disable-next-line selector-class-pattern */
-            .hljs {
-                padding: 0;
-            }
-        }
-
-        .hljs-ln-n:before {
-            white-space: nowrap;
+        .kbq-code-block__line {
+            display: block;
         }
     }
 
-    &.kbq-code-block_hide-line-numbers .hljs-ln-line.hljs-ln-numbers {
-        display: none;
+    // The numbers come from a counter, so they are neither selected nor copied with the code. A line is indented by
+    // the column of numbers and its first line outdented back, so that a wrapped line goes on under the code rather
+    // than under its number.
+    &:not(.kbq-code-block_hide-line-numbers) .kbq-code-block__code_line-numbers {
+        --kbq-code-block-line-numbers-width: calc(var(--kbq-code-block-line-numbers-digits) * 1ch);
+        --kbq-code-block-line-numbers-indent: calc(
+            var(--kbq-code-block-line-numbers-width) + var(--kbq-code-block-line-numbers-gap)
+        );
+
+        counter-reset: kbq-code-block-line var(--kbq-code-block-line-numbers-start);
+
+        .kbq-code-block__line {
+            counter-increment: kbq-code-block-line;
+            padding-inline-start: var(--kbq-code-block-line-numbers-indent);
+            text-indent: calc(var(--kbq-code-block-line-numbers-indent) * -1);
+
+            &::before {
+                // The empty alternative text keeps the numbers from assistive technology.
+                content: counter(kbq-code-block-line) / '';
+                display: inline-block;
+                width: var(--kbq-code-block-line-numbers-width);
+                margin-inline-end: var(--kbq-code-block-line-numbers-gap);
+                text-align: end;
+                // Otherwise the number would take the outdent of its line.
+                text-indent: 0;
+                // Soft wrap would otherwise break a number that its column fits only to a fraction of a pixel.
+                white-space: nowrap;
+            }
+        }
     }
 
     &.kbq-code-block_soft-wrap {
@@ -170,12 +184,10 @@
             isolation: auto;
 
             .kbq-code-block__code {
+                --kbq-code-block-line-numbers-gap: var(--kbq-code-block-size-no-header-content-content-gap-horizontal);
+
                 padding: var(--kbq-code-block-size-no-header-content-padding-vertical)
                     var(--kbq-code-block-size-no-header-content-padding-horizontal);
-            }
-
-            .hljs-ln-numbers {
-                padding-right: var(--kbq-code-block-size-no-header-content-content-gap-horizontal);
             }
         }
     }

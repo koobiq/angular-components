@@ -292,15 +292,34 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_hide-line-numbers']).toBeFalsy();
     });
 
+    it('should use lineNumbers from default options', () => {
+        const { debugElement } = createComponent(CodeBlockWithDefaultOptions, [
+            kbqCodeBlockDefaultOptionsProvider({ lineNumbers: true })
+        ]);
+        const codeBlock = geCodeBlockDebugElement(debugElement);
+
+        expect(codeBlock.componentInstance.lineNumbers()).toBe(true);
+        expect(codeBlock.classes['kbq-code-block_hide-line-numbers']).toBeFalsy();
+    });
+
+    it('should override lineNumbers from default options with input', () => {
+        const { debugElement } = createComponent(BaseCodeBlock, [
+            kbqCodeBlockDefaultOptionsProvider({ lineNumbers: true })
+        ]);
+
+        expect(geCodeBlockDebugElement(debugElement).classes['kbq-code-block_hide-line-numbers']).toBeTruthy();
+    });
+
     // Highlighting flashes the scrollbar of the code content, which starts a hide timer (1s by default, against a
     // 2s test timeout); `fixture.whenStable()` waits for pending tasks rather than timers, so it settles first.
-    it('should apply lineNumbers plugin', async () => {
+    it('should wrap every line of the highlighted code, keeping the text of the file', async () => {
         const fixture = createComponent(BaseCodeBlock);
-        const codeBlock = geCodeBlockDebugElement(fixture.debugElement);
+        const code: HTMLElement = geCodeBlockHighlightDebugElement(fixture.debugElement).nativeElement;
 
         await fixture.whenStable();
 
-        expect(codeBlock.nativeElement.querySelector('.hljs-ln')).toBeInstanceOf(HTMLTableElement);
+        expect(code.querySelectorAll(':scope > .kbq-code-block__line')).toHaveLength(11);
+        expect(code.textContent).toBe(fixture.componentInstance.files[0].content);
     });
 
     it('should fill the code block', () => {

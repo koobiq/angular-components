@@ -21,6 +21,7 @@ import { TemplateRef } from '@angular/core';
 // @public
 export const KBQ_CODE_BLOCK_DEFAULT_OPTIONS: InjectionToken<Partial<{
     alwaysShowActionbar: boolean;
+    lineNumbers: boolean;
 }>>;
 
 // @public
@@ -98,6 +99,7 @@ export class KbqCodeBlock implements AfterViewInit {
 // @public
 export type KbqCodeBlockDefaultOptions = Partial<{
     alwaysShowActionbar: boolean;
+    lineNumbers: boolean;
 }>;
 
 // @public
@@ -121,6 +123,8 @@ export type KbqCodeBlockFile = {
 export class KbqCodeBlockHighlight {
     constructor();
     readonly file: _angular_core.InputSignal<KbqCodeBlockFile>;
+    protected readonly lineCount: _angular_core.Signal<number>;
+    protected readonly lineNumberDigits: _angular_core.Signal<number>;
     readonly pending: _angular_core.Signal<boolean>;
     readonly singleLine: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly startFrom: _angular_core.InputSignalWithTransform<number, unknown>;

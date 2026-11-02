@@ -205,6 +205,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/clamped-text').then((m) => m.ClampedTextOverviewExample);
         case 'code-block-header-pinned':
             return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockHeaderPinnedExample);
+        case 'code-block-line-numbers':
+            return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockLineNumbersExample);
         case 'code-block-overview':
             return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockOverviewExample);
         case 'code-block-with-custom-locale-configuration':

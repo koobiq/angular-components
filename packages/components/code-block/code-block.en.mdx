@@ -1,5 +1,7 @@
 `<kbq-code-block>` is a component that displays reformatted text content with syntax highlighting.
 
+<Example id="code-block-overview" />
+
 <div class="kbq-callout kbq-callout_theme">
 <div class="kbq-callout__header">Note</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
@@ -43,9 +45,9 @@ providers: [
 
 ### Line numbers
 
-Numbering lines is useful for referencing a specific location in the document. Line numbers are disabled by default and can be enabled using the `lineNumbers` attribute.
+Numbering lines is useful for referencing a specific location in the document. Line numbers are disabled by default and can be enabled using the `lineNumbers` attribute, or for all code blocks in the [default settings](#default-settings).
 
-<Example id="code-block-overview" />
+<Example id="code-block-line-numbers" />
 
 ### Header with title
 
@@ -105,11 +107,7 @@ The `alwaysShowActionbar` attribute keeps the panel visible regardless of tabs o
 <kbq-code-block [files]="files" canCopy alwaysShowActionbar />
 ```
 
-To enable the option for all code blocks within an injector scope, use the provider:
-
-```typescript
-providers: [kbqCodeBlockDefaultOptionsProvider({ alwaysShowActionbar: true })];
-```
+To enable the option for all code blocks, use the [default settings](#default-settings).
 
 #### Changing wrap mode
 
@@ -142,3 +140,13 @@ The user can copy the document text; this option is enabled by default and can b
 The address is taken from the `link` field. The link opens in a new tab.
 
 <Example id="code-block-with-link" />
+
+### Default settings
+
+`kbqCodeBlockDefaultOptionsProvider` sets the default code block settings for the whole application or for a single component.
+
+```ts
+bootstrapApplication(AppComponent, {
+    providers: [kbqCodeBlockDefaultOptionsProvider({ lineNumbers: true, alwaysShowActionbar: true })]
+});
+```

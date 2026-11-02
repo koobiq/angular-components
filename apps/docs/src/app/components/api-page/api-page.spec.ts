@@ -213,8 +213,7 @@ describe(DocsApiPage.name, () => {
     });
 
     // Until a block comes into view, its placeholder stands in: laid out by the block's classes, so that the page is as
-    // tall before the block renders as after. The lines of a file of several lines are the rows of a table, as the
-    // line numbers plugin lays them out; a file of one line, or of one line and a line break, stays text.
+    // tall before the block renders as after.
     it('holds the place of each code block with its code, laid out like the block, until it comes into view', async () => {
         const fixture = createFixture();
 
@@ -229,7 +228,7 @@ describe(DocsApiPage.name, () => {
         ]);
         expect(placeholders.map(({ textContent }) => textContent)).toEqual([
             '<kbq-alert alertColor="error" />',
-            "@Component({ selector: 'kbq-alert' })class KbqAlert {}",
+            "@Component({ selector: 'kbq-alert' })\nclass KbqAlert {}",
             'const KBQ_ALERT: string;'
         ]);
         expect(placeholders.map(({ classList }) => Array.from(classList).filter((name) => name.includes('_')))).toEqual(
@@ -244,14 +243,6 @@ describe(DocsApiPage.name, () => {
                 ['kbq-code-block_hide-tabs', 'kbq-code-block_hide-line-numbers', 'kbq-code-block_outline']
             ]
         );
-        expect(placeholders.map((placeholder) => getTexts(placeholder, '.hljs-ln-code'))).toEqual([
-            [],
-            ["@Component({ selector: 'kbq-alert' })", 'class KbqAlert {}'],
-            []
-        ]);
-        expect(
-            getPlaceholders(render(withSignature('class KbqActionsPanel {}\n')))[0].querySelector('table')
-        ).toBeNull();
     });
 
     it('renders a code block once it comes into view, and leaves the others to come', async () => {
@@ -443,8 +434,6 @@ describe(DocsApiPage.name, () => {
             }
         ]
     });
-
-    const withSignature = (signature: string): DocsApiEntryPoint => withEntry(signature);
 
     const withMemberType = (type: DocsApiTypePart[]): DocsApiEntryPoint => withEntry('class KbqActionsPanel {}', type);
 
