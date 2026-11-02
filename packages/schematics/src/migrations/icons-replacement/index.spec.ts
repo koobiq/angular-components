@@ -120,6 +120,22 @@ describe(SCHEMATIC_NAME, () => {
         );
     });
 
+    it('migrates the whole workspace without a project', async () => {
+        const project = projects.get(projects.keys().next().value!)!;
+        const { templatePath } = getProjectContentPaths(project, appTree);
+        const { from, to } = iconReplacementData[0];
+
+        appTree.overwrite(templatePath, `<i kbq-icon="${from}"></i>`);
+
+        const tree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { fix: true, allowed: ['.html'] } satisfies Schema,
+            appTree
+        );
+
+        expect(tree.readText(templatePath)).toBe(`<i kbq-icon="${to}"></i>`);
+    });
+
     describe('custom data', () => {
         let messages: string[];
         let project: workspaces.ProjectDefinition;

@@ -8,10 +8,7 @@ export interface Schema {
      * If provided empty array, will be applied to all files.
      */
     allowed: string[];
-    /**
-     * Name of the project where Koobiq library should be installed
-     */
-    project: string;
+    project?: string;
     customDataPath?: string;
     /**
      * Custom replacement data path. Will be used as relative to `project.root`.

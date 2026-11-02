@@ -23,6 +23,14 @@ describe('readCustomJson', () => {
         expect(readCustomJson(tree, 'icons/data.json')).toEqual([1]);
     });
 
+    it('reads a path written with backslashes', () => {
+        const tree = new HostTree();
+
+        tree.create('/icons/data.json', '[1]');
+
+        expect(readCustomJson(tree, 'icons\\data.json')).toEqual([1]);
+    });
+
     it('tries the bases in order', () => {
         const tree = new HostTree();
 
