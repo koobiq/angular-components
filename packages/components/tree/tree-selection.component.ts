@@ -948,7 +948,7 @@ export class KbqTreeSelection<T = any, K = T>
         this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
-    focus(event: FocusEvent): void {
+    focus(event?: FocusEvent | null): void {
         if (this.renderedOptions.length === 0 || this.isFocusReceivedFromNestedOption(event)) {
             return;
         }
@@ -1732,7 +1732,7 @@ export class KbqTreeSelection<T = any, K = T>
         return !(this.noUnselectLast && this.selectionModel.selected.length === 1 && option.selected);
     }
 
-    private isFocusReceivedFromNestedOption($event: FocusEvent) {
+    private isFocusReceivedFromNestedOption($event?: FocusEvent | null) {
         if (!$event || !$event.relatedTarget) {
             return false;
         }

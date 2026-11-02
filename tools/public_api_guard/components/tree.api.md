@@ -594,7 +594,7 @@ export class KbqTreeSelection<T = any, K = T> extends KbqTreeBase<T, FlatTreeCon
     protected emitChangeEvent(option: KbqTreeOption<T>): void;
     protected emitNavigationEvent(option: KbqTreeOption<T>): void;
     // (undocumented)
-    focus(event: FocusEvent): void;
+    focus(event?: FocusEvent | null): void;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     getSelectedValues(): any[];
