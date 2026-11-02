@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqDdComponent, KbqDlComponent, KbqDlModule, KbqDtComponent } from './index';
+
+const getDlElement = ({ nativeElement }: ComponentFixture<unknown>): HTMLElement => nativeElement;
 
 describe('KbqDl', () => {
     beforeEach(() => {
@@ -21,6 +23,66 @@ describe('KbqDl', () => {
         expect(dtDebugElement.nativeElement.classList.contains('kbq-dt')).toBe(true);
         expect(ddDebugElement.nativeElement.classList.contains('kbq-dd')).toBe(true);
     });
+
+    it('should choose the vertical layout during the first change detection when the host is at the breakpoint', () => {
+        const fixture = TestBed.createComponent(KbqDlComponent);
+
+        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
+            configurable: true,
+            value: () => [{ width: 400 } as DOMRect]
+        });
+        fixture.autoDetectChanges();
+
+        expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
+    });
+
+    it('should keep the horizontal layout during the first change detection when the host is wider than the breakpoint', () => {
+        const fixture = TestBed.createComponent(KbqDlComponent);
+
+        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
+            configurable: true,
+            value: () => [{ width: 401 } as DOMRect]
+        });
+        fixture.autoDetectChanges();
+
+        expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
+    });
+
+    it('should keep the consumer-set vertical input over the measured width', () => {
+        const fixture = TestBed.createComponent(KbqDlComponent);
+
+        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
+            configurable: true,
+            value: () => [{ width: 400 } as DOMRect]
+        });
+        fixture.componentRef.setInput('vertical', false);
+        fixture.autoDetectChanges();
+
+        expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
+    });
+
+    it('should re-evaluate the layout on window resize, debounced', fakeAsync(() => {
+        TestBed.configureTestingModule({ imports: [KbqDlComponent] });
+        const fixture = TestBed.createComponent(KbqDlComponent);
+        let width = 500;
+
+        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
+            configurable: true,
+            value: () => [{ width } as DOMRect]
+        });
+        fixture.autoDetectChanges();
+        expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
+
+        width = 400;
+        window.dispatchEvent(new Event('resize'));
+        tick(99);
+        fixture.detectChanges();
+        expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
+
+        tick(1);
+        fixture.detectChanges();
+        expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
+    }));
 });
 
 @Component({

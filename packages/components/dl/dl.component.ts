@@ -10,7 +10,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { debounceTime, startWith } from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
     selector: 'kbq-dl',
@@ -43,8 +43,10 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
             return;
         }
 
+        this.updateState();
+
         this.resizeSubscription = this.resizeStream
-            .pipe(startWith(null), debounceTime(this.resizeDebounceInterval))
+            .pipe(debounceTime(this.resizeDebounceInterval))
             .subscribe(this.updateState);
     }
 
@@ -54,9 +56,10 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
 
     private readonly updateState = (): void => {
         const domRect = this.elementRef.nativeElement.getClientRects()[0];
-        const width = domRect?.width || 0;
 
-        this.vertical = width <= this.minWidth;
+        if (!domRect) return;
+
+        this.vertical = domRect.width <= this.minWidth;
 
         this.changeDetectorRef.markForCheck();
     };
