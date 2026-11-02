@@ -596,4 +596,169 @@ class TestApp {}`
             );
         });
     });
+
+    describe('DS-5638', () => {
+        let messages: string[];
+        let currentProject: workspaces.ProjectDefinition;
+
+        beforeEach(() => {
+            messages = [];
+            runner.logger.subscribe(({ message }) => messages.push(message));
+            currentProject = projects.get(projects.keys().next().value!)!;
+        });
+
+        it('migrates the value of an mc-icon attribute, leaving the attribute names alone', async () => {
+            const p = projectPaths(currentProject, appTree);
+
+            appTree.overwrite(
+                p.html,
+                `<i mcPrefix mc-icon="mc-search_16"></i>\n<i mc-icon-item="mc-${firstIcon.replace}"></i>`
+            );
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { fix: true }, appTree);
+
+            expect(tree.read(p.html)!.toString()).toBe(
+                `<i mcPrefix mc-icon="kbq-magnifying-glass_16"></i>\n<i mc-icon-item="kbq-${firstIcon.replaceWith}"></i>`
+            );
+        });
+
+        it('accepts a folder as the `project` option and skips node_modules', async () => {
+            const p = projectPaths(currentProject, appTree);
+            const vendored = '/node_modules/some-lib/icon.html';
+            const html = `<i kbq-icon="mc-${firstIcon.replace}"></i>`;
+
+            appTree.overwrite(p.html, html);
+            appTree.create(vendored, html);
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, project: `./${currentProject.root}` },
+                appTree
+            );
+
+            expect(tree.read(p.html)!.toString()).toBe(`<i kbq-icon="kbq-${firstIcon.replaceWith}"></i>`);
+            expect(tree.read(vendored)!.toString()).toBe(html);
+        });
+
+        it('fails on a `project` that is neither a project nor a folder', async () => {
+            await expect(
+                runner.runSchematic(SCHEMATIC_NAME, { fix: true, project: './missing' }, appTree)
+            ).rejects.toThrow("'./missing' is neither a project of the workspace nor a folder of it");
+        });
+
+        it('reports that it runs on the built-in data', async () => {
+            await runner.runSchematic(SCHEMATIC_NAME, { fix: false }, appTree);
+
+            expect(messages).toContain(
+                `Icon mapping: the built-in one, ${newIconsPackData.length} entries (--custom-data-path overrides it).\n` +
+                    'Scope: mc -> kbq, the built-in one (--custom-icon-replacement-path overrides it).'
+            );
+        });
+
+        it('ships a migration.json that matches the built-in mapping', () => {
+            const unscoped = (entries: { replace: string; replaceWith: string }[]) =>
+                new Set(
+                    entries.map(({ replace, replaceWith }) =>
+                        [replace, replaceWith].map((name) => name.replace(/^(mc|kbq)-/, '')).join(' -> ')
+                    )
+                );
+            const shipped = JSON.parse(fs.readFileSync(path.join(__dirname, 'migration.json'), 'utf-8'));
+
+            expect(unscoped(shipped)).toEqual(unscoped(newIconsPackData));
+        });
+
+        it('accepts the shipped replacement.json without a warning', async () => {
+            const p = projectPaths(currentProject, appTree);
+
+            appTree.overwrite(p.html, `<i kbq-icon="mc-${firstIcon.replace}"></i>`);
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, customIconReplacementPath: path.join(__dirname, 'replacement.json') },
+                appTree
+            );
+
+            expect(tree.read(p.html)!.toString()).toBe(`<i kbq-icon="kbq-${firstIcon.replaceWith}"></i>`);
+            expect(messages.some((message) => message.includes('legacy fragment format'))).toBe(false);
+        });
+
+        it('reads a custom data file relative to the workspace root', async () => {
+            const p = projectPaths(currentProject, appTree);
+
+            appTree.create(
+                '/icons/migration.json',
+                JSON.stringify([{ replace: `kbq-${secondIcon.replace}`, replaceWith: `kbq-${secondIcon.replaceWith}` }])
+            );
+            appTree.overwrite(p.html, `<i kbq-icon="mc-${secondIcon.replace}"></i>`);
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, customDataPath: 'icons/migration.json' },
+                appTree
+            );
+
+            expect(tree.read(p.html)!.toString()).toBe(`<i kbq-icon="kbq-${secondIcon.replaceWith}"></i>`);
+            expect(messages).toContain(
+                "Icon mapping: 1 entries from 'icons/migration.json'.\n" +
+                    'Scope: mc -> kbq, the built-in one (--custom-icon-replacement-path overrides it).'
+            );
+        });
+
+        it('accepts a custom data file of from/to pairs, with a warning', async () => {
+            const p = projectPaths(currentProject, appTree);
+
+            appTree.create(
+                '/icons/legacy.json',
+                JSON.stringify([{ from: `kbq-${secondIcon.replace}`, to: `kbq-${secondIcon.replaceWith}` }])
+            );
+            appTree.overwrite(p.html, `<i kbq-icon="mc-${secondIcon.replace}"></i>`);
+
+            const tree = await runner.runSchematic(
+                SCHEMATIC_NAME,
+                { fix: true, customDataPath: 'icons/legacy.json' },
+                appTree
+            );
+
+            expect(tree.read(p.html)!.toString()).toBe(`<i kbq-icon="kbq-${secondIcon.replaceWith}"></i>`);
+            expect(messages.some((message) => message.includes('deprecated { "from", "to" } pairs'))).toBe(true);
+        });
+
+        it('fails on a custom data file that does not exist', async () => {
+            await expect(
+                runner.runSchematic(SCHEMATIC_NAME, { fix: true, customDataPath: 'missing.json' }, appTree)
+            ).rejects.toThrow("Unable to find 'missing.json'");
+        });
+
+        it.each([
+            [
+                `<i class="mc mc-icon mc-${firstIcon.replace}"></i>`,
+                `<i class="kbq mc-icon kbq-${firstIcon.replaceWith}"></i>`
+            ],
+            [`<i class="mc mc-${firstIcon.replace}"></i>`, `<i class="kbq kbq-${firstIcon.replaceWith}"></i>`],
+            [`<i class="icon mc mc-${firstIcon.replace}"></i>`, `<i class="icon kbq kbq-${firstIcon.replaceWith}"></i>`]
+        ])('migrates the legacy fragment in %s on the built-in data', async (html, expected) => {
+            const p = projectPaths(currentProject, appTree);
+
+            appTree.overwrite(p.html, html);
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { fix: true }, appTree);
+
+            expect(tree.read(p.html)!.toString()).toBe(expected);
+        });
+
+        it("migrates the legacy class: 'mc mc-icon' fragment of an inline host on the built-in data", async () => {
+            const p = projectPaths(currentProject, appTree);
+
+            appTree.overwrite(
+                p.ts,
+                `
+@Component({ selector: 'test-app', template: '', host: { class: 'mc mc-icon mc-${firstIcon.replace}' } })
+class TestApp {}`
+            );
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { fix: true }, appTree);
+
+            expect(tree.read(p.ts)!.toString()).toContain(`class: 'kbq mc-icon kbq-${firstIcon.replaceWith}'`);
+        });
+    });
 });

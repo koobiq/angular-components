@@ -1,5 +1,5 @@
 import { Path } from '@angular-devkit/core';
-import { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import * as path from 'path';
 
 import { migrateTemplateWithTransform } from '../../utils/angular-parsing';
@@ -13,7 +13,8 @@ import {
     TokenReplacement
 } from '../../utils/icon-migration';
 import { logMessage } from '../../utils/messages';
-import { setupOptions } from '../../utils/package-config';
+import { resolveTargetDir } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import { iconsMapping, scope } from './data';
 import { Schema } from './schema';
 
@@ -22,34 +23,22 @@ const iconsFontImportRule = "@use '@koobiq/icons/fonts/kbq-icons';";
 const migrationData: IconMigrationData = {
     valueAttrs: ['kbq-icon', 'kbq-icon-item', 'kbq-icon-button'],
     scope,
-    scopeClassInList: 'remove',
+    scopeClassInList: 'rename',
+    scopeClassOnIconHost: 'remove',
     icons: iconsMapping.map(({ replace, replaceWith }) => ({ from: replace, to: replaceWith })),
     rescopeUnknownValues: true
 };
 
 export default function deprecatedIcons(options: Schema): Rule {
-    let targetDir: Tree | DirEntry;
-
     return async (tree: Tree, context: SchematicContext) => {
         const { project, fix, stylesExt } = options;
-
-        try {
-            const projectDefinition = await setupOptions(project, tree);
-
-            targetDir = projectDefinition ? tree.getDir(projectDefinition.root) : tree;
-        } catch {
-            targetDir = tree;
-        }
+        const targetDir = await resolveTargetDir(project, tree);
 
         const { logger } = context;
         const tokenMap = buildIconTokenMap(migrationData);
-        // Unlike a `class` list (where the bare scope token is simply dropped, e.g.
-        // `class="pt-icons"` -> `class=""`), a stylesheet selector renames the scope class itself
-        // (e.g. `.pt-icons` -> `.kbq`) rather than removing it.
-        const styleTokenMap = new Map(tokenMap).set(migrationData.scope.from, migrationData.scope.to);
         // Precompiled once and reused across every .ts/style file below, instead of rebuilding
         // every regex per file.
-        const stylePatterns = buildIconTokenPatterns(styleTokenMap, migrationData.scope.from);
+        const stylePatterns = buildIconTokenPatterns(tokenMap, migrationData.scope.from);
 
         const onFound = (filePath: string, found: TokenReplacement[]) => {
             const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
@@ -66,12 +55,7 @@ export default function deprecatedIcons(options: Schema): Rule {
         const tsPaths: string[] = [];
         const stylePaths: string[] = [];
 
-        // if project property not provided, skip files in node_modules & dist
-        targetDir.visit((filePath: Path) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) {
-                return;
-            }
-
+        visitProjectFiles(targetDir, (filePath: Path) => {
             if (filePath.endsWith('.html')) {
                 templatePaths.push(filePath);
             } else if (
@@ -124,8 +108,8 @@ export default function deprecatedIcons(options: Schema): Rule {
         }
 
         // check if icon styles from new scope should be included in styles file
-        targetDir.visit((filePath: Path, entry) => {
-            if (filePath.endsWith(stylesExt) && !entry?.content.toString()?.includes(iconsFontImportRule)) {
+        visitProjectFiles(targetDir, (filePath: Path, entry) => {
+            if (filePath.endsWith(stylesExt) && !entry.content.toString()?.includes(iconsFontImportRule)) {
                 const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
 
                 logMessage(logger, [

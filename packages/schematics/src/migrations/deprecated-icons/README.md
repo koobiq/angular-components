@@ -22,12 +22,24 @@ word/selector-boundary-safe regex rather than real selector parsing — this cor
 directly preceded by `.`, like a real class selector), but a genuine selector spelled out inside a comment is
 still indistinguishable from one that isn't and can still be rewritten.
 
-Two intentional behavior changes from earlier versions of this schematic:
+On an element without an icon directive, the bare `pt-icons` class is renamed to `kbq`, the base class of the
+icon font, so an icon written with classes alone keeps its styles. On an element with `kbq-icon`,
+`kbq-icon-button` or `kbq-icon-item` (plain, bound or valueless) the class is dropped, since the directive adds
+`kbq` itself:
 
-- `class="pt-icons"` (the sole class) now becomes `class=""` rather than removing the `class` attribute
-  entirely.
-- A bare string literal like `'pt-icons word-wrap_16'` now also renames the icon suffix (e.g. to
-  `'wrap-text_16'`), instead of only stripping the scope word.
+```html
+<!-- before -->
+<i class="pt-icons pt-icons-comment_16 layout-margin-right-s"></i>
+<i kbq-icon="pt-icons-comment_16" class="pt-icons layout-margin-right-s"></i>
+<!-- after -->
+<i class="kbq kbq-message_16 layout-margin-right-s"></i>
+<i kbq-icon="kbq-message_16" class="layout-margin-right-s"></i>
+```
+
+A `[class.pt-icons]` binding follows the same rule: dropped on an icon directive's element, `[class.kbq]`
+elsewhere. Outside templates, where there is no element to look at, the class is renamed: a component's
+`host` class, a string literal (`'pt-icons word-wrap_16'` becomes `'kbq wrap-text_16'`) and a stylesheet
+selector.
 
 `fix: false` (the default) never mutates any file — it only reports what it found.
 
@@ -37,7 +49,11 @@ Usage for Angular Cli:
 
 ```shell
 ng g @koobiq/components:deprecated-icons --fix=true --project "<your project>"
+ng g @koobiq/components:deprecated-icons --fix=true --project ./libs
 ```
+
+`--project` takes a project name or a folder; without it the whole workspace is migrated. `node_modules` and
+`dist` are always skipped.
 
 Usage for Nx:
 

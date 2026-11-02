@@ -6,6 +6,20 @@ This schematic provides migration for new icons naming attribute. It includes:
 
 [Params](schema.ts)
 
+`--project` takes a project name or a folder such as `./libs`; without it the whole workspace is migrated.
+`node_modules` and `dist` are always skipped.
+
+The built-in mapping applies unless `--custom-data-path` points at a JSON file of your own, resolved from the
+workspace root (then as an absolute path); a missing file stops the run. The shape is the one `new-icons-pack`
+reads; a name matches anywhere it occurs, so it can be written with or without the `kbq-` prefix:
+
+```json
+[{ "replace": "bolt-circle_16", "replaceWith": "circle-bolt_16" }]
+```
+
+`--replacement-data-path` is the deprecated name of the option: it still works, resolved from the project root
+or the folder first, and so do files of `{ "from", "to" }` pairs; both print a warning.
+
 #### Usage for Angular Cli:
 
 Apply for project and log file path and icon name should be replaced
@@ -17,7 +31,7 @@ ng g @koobiq/components:icons-replacement --project "<your project>"
 - with custom icon replacement mapping:
 
 ```shell
-ng g @koobiq/components:icons-replacement --project "<your project>" --replacement-data-path "<path-as-json>"
+ng g @koobiq/components:icons-replacement --project "<your project>" --custom-data-path "<path-as-json>"
 ```
 
 Apply for project and replace icon name.
@@ -35,7 +49,7 @@ nx g @koobiq/components:icons-replacement --project "<your project>"
 - with custom icon replacement mapping:
 
 ```shell
-nx g @koobiq/components:icons-replacement --project "<your project>" --replacement-data-path "<path-as-json>"
+nx g @koobiq/components:icons-replacement --project "<your project>" --custom-data-path "<path-as-json>"
 ```
 
 ### Run locally
