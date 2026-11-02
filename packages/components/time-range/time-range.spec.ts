@@ -76,8 +76,17 @@ const getEditorControl = (debugElement: DebugElement): FormControl => {
     ).rangeEditorControl;
 };
 
-const getEditorForm = (debugElement: DebugElement): FormGroup => {
-    return (getEditorInstance(debugElement) as unknown as { form: FormGroup }).form;
+/** The editor's protected form, which declares these controls. */
+type EditorForm = FormGroup<{
+    type: FormControl<KbqTimeRangeType>;
+    fromTime: FormControl<unknown>;
+    fromDate: FormControl<unknown>;
+    toTime: FormControl<unknown>;
+    toDate: FormControl<unknown>;
+}>;
+
+const getEditorForm = (debugElement: DebugElement): EditorForm => {
+    return (getEditorInstance(debugElement) as unknown as { form: EditorForm }).form;
 };
 
 const getRangeElement = (debugElement: DebugElement): HTMLElement => {
@@ -136,7 +145,7 @@ const getBorderElements = (debugElement: DebugElement): HTMLElement[] => {
 const openOnRange = (fixture: ComponentFixture<unknown>): void => {
     getTriggerNativeElement(fixture.debugElement).click();
     fixture.detectChanges();
-    getEditorForm(fixture.debugElement).controls['type'].setValue('range');
+    getEditorForm(fixture.debugElement).controls.type.setValue('range');
     fixture.detectChanges();
 };
 
@@ -680,7 +689,7 @@ describe('KbqTimeRange', () => {
             const form = getEditorForm(debugElement);
 
             // The preset selected first keeps the range fields disabled, and disabled controls never validate.
-            form.controls['type'].setValue('range');
+            form.controls.type.setValue('range');
             fixture.detectChanges();
             revealBorders(fixture);
 
@@ -934,7 +943,7 @@ describe('KbqTimeRange', () => {
             const dateAdapter = TestBed.inject(DateAdapter);
             const form = getEditorForm(debugElement);
 
-            form.controls['type'].setValue('range');
+            form.controls.type.setValue('range');
             fixture.detectChanges();
             revealBorders(fixture);
 
@@ -1010,7 +1019,7 @@ describe('KbqTimeRange', () => {
             const dateAdapter = TestBed.inject(DateAdapter);
             const form = getEditorForm(debugElement);
 
-            form.controls['type'].setValue('range');
+            form.controls.type.setValue('range');
             fixture.detectChanges();
             revealBorders(fixture);
 
@@ -1234,10 +1243,10 @@ describe('KbqTimeRange', () => {
 
             const form = getEditorForm(debugElement);
 
-            expect(form.controls['type'].enabled).toBe(true);
+            expect(form.controls.type.enabled).toBe(true);
             // `lastHour` is selected, so the from/to pair must stay disabled after a blanket enable().
-            expect(form.controls['fromDate'].disabled).toBe(true);
-            expect(form.controls['toDate'].disabled).toBe(true);
+            expect(form.controls.fromDate.disabled).toBe(true);
+            expect(form.controls.toDate.disabled).toBe(true);
         });
 
         it('should not mark the editor touched while focus moves between its own fields', async () => {

@@ -96,9 +96,9 @@
             </kbq-tag-list>
         </kbq-form-field>
 
-        @if (reactiveForm.controls['reactiveTypeaheadValue'].errors) {
+        @if (reactiveForm.controls.reactiveTypeaheadValue.errors) {
             <div class="kbq-form-field_error">
-                @if (reactiveForm.controls['reactiveTypeaheadValue'].hasError('required')) {
+                @if (reactiveForm.controls.reactiveTypeaheadValue.hasError('required')) {
                     <div>error</div>
                 }
             </div>
@@ -109,9 +109,9 @@
 
         <button kbq-button>Submit</button>
 
-        @if (reactiveForm.controls['reactiveInputValue'].errors) {
+        @if (reactiveForm.controls.reactiveInputValue.errors) {
             <div>
-                @if (reactiveForm.controls['reactiveInputValue'].hasError('required')) {
+                @if (reactiveForm.controls.reactiveInputValue.hasError('required')) {
                     <div>required error</div>
                 }
             </div>
@@ -368,9 +368,9 @@
 
         <button kbq-button>Submit</button>
 
-        @if (formWithCustomValidator.controls['login'].errors) {
+        @if (formWithCustomValidator.controls.login.errors) {
             <div class="kbq-form-field_error">
-                @if (formWithCustomValidator.controls['login'].hasError('required')) {
+                @if (formWithCustomValidator.controls.login.hasError('required')) {
                     <div>error</div>
                 }
             </div>

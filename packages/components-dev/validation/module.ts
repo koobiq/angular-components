@@ -1,6 +1,8 @@
 ﻿import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
 import {
     AbstractControl,
+    FormControl,
+    FormGroup,
     FormsModule,
     NgForm,
     ReactiveFormsModule,
@@ -107,15 +109,25 @@ export class DevApp {
     date?: DateTime | null;
     time?: DateTime | null;
 
-    reactiveForm: UntypedFormGroup;
+    reactiveForm = new FormGroup({
+        time: new FormControl<DateTime | null>(null, Validators.required),
+        date: new FormControl<DateTime | null>(null, Validators.required),
+        reactiveInputValue: new FormControl('', [
+            Validators.required,
+            Validators.pattern('[a-zA-Z]*')
+        ]),
+        reactiveSelectValue: new FormControl('', [Validators.required]),
+        reactiveTreeSelectValue: new FormControl('', [Validators.required]),
+        reactiveTypeaheadValue: new FormControl<string[]>([], Validators.required)
+    });
     reactiveFormControl: UntypedFormGroup;
 
-    formWithCustomValidator = new UntypedFormGroup({
-        login: new UntypedFormControl('', [
+    formWithCustomValidator = new FormGroup({
+        login: new FormControl('', [
             Validators.required,
             ldapLoginValidator(/^[a-zA-Z0-9_\-.+]+@[a-zA-Z0-9_\-.]+$/)
         ]),
-        password: new UntypedFormControl('', Validators.required)
+        password: new FormControl('', Validators.required)
     });
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -145,18 +157,6 @@ export class DevApp {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
         this.dataSource.data = devBuildFileTree(DEV_DATA_OBJECT, 0);
-
-        this.reactiveForm = this.formBuilder.group({
-            time: new UntypedFormControl(null, Validators.required),
-            date: new UntypedFormControl(null, Validators.required),
-            reactiveInputValue: new UntypedFormControl('', [
-                Validators.required,
-                Validators.pattern('[a-zA-Z]*')
-            ]),
-            reactiveSelectValue: new UntypedFormControl('', [Validators.required]),
-            reactiveTreeSelectValue: new UntypedFormControl('', [Validators.required]),
-            reactiveTypeaheadValue: new UntypedFormControl([], Validators.required)
-        });
 
         this.reactiveForm.valueChanges.subscribe((value) => {
             console.log('reactiveForm valueChanges: ', value);
@@ -201,7 +201,7 @@ export class DevApp {
         console.log(event);
         const input = event.input;
         const value = event.value;
-        const control = this.reactiveForm.controls['reactiveTypeaheadValue'];
+        const control = this.reactiveForm.controls.reactiveTypeaheadValue;
 
         if ((value || '').trim()) {
             this.reactiveTypeaheadItems.push(value.trim());
@@ -229,7 +229,7 @@ export class DevApp {
     reactiveInputOnRemoveTag(tag: string): void {
         const index = this.reactiveTypeaheadItems.indexOf(tag);
 
-        const control = this.reactiveForm.controls['reactiveTypeaheadValue'];
+        const control = this.reactiveForm.controls.reactiveTypeaheadValue;
 
         if (index >= 0) {
             this.reactiveTypeaheadItems.splice(index, 1);
@@ -240,7 +240,7 @@ export class DevApp {
     reactiveFormControlInputOnRemoveTag(tag: string): void {
         const index = this.reactiveFormControlTypeaheadItems.indexOf(tag);
 
-        const control = this.reactiveForm.controls['reactiveTypeaheadValue'];
+        const control = this.reactiveForm.controls.reactiveTypeaheadValue;
 
         if (index >= 0) {
             this.reactiveFormControlTypeaheadItems.splice(index, 1);
