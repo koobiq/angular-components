@@ -3,6 +3,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
+    model,
     signal,
     viewChild,
     ViewEncapsulation
@@ -72,8 +73,8 @@ import { DevThemeToggle } from '../theme-toggle';
 export class DevBreadcrumbsItemCount {
     protected readonly items = ['Home', 'Products', 'Laptops', 'Ultrabooks', 'Model X', 'Specifications'];
     protected readonly count = signal(1);
-    protected readonly firstItemNegativeMargin = signal(true);
-    protected readonly wrapMode = signal<KbqBreadcrumbsWrapMode>('auto');
+    readonly firstItemNegativeMargin = model(true);
+    readonly wrapMode = model<KbqBreadcrumbsWrapMode>('auto');
     protected readonly firstItemLeft = signal(0);
     protected readonly titleTop = signal(0);
 
