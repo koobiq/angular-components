@@ -34,49 +34,64 @@
     <nav
         #scroller
         class="docs-next-menu__scroll"
-        data-sheet-scroll
+        [class.docs-next-menu__scroll_levels]="navVariant.variant() === 'levels'"
+        [attr.data-sheet-scroll]="navVariant.variant() === 'levels' ? null : ''"
         [attr.aria-label]="state.t('mainMenu')"
         (scroll)="updateStuck()"
     >
         @if (navVariant.variant() === 'levels') {
-            @if (levelSection(); as section) {
-                <button class="docs-next-menu__back" type="button" (click)="levelSection.set(null)">
-                    <i kbq-icon="kbq-chevron-left_16"></i>
-                    <span>{{ section.title[state.locale()] }}</span>
-                </button>
-                <ng-container
-                    [ngTemplateOutlet]="pages"
-                    [ngTemplateOutletContext]="{ $implicit: section, tree: false }"
-                />
-            } @else {
-                <ul class="docs-next-menu__list">
-                    @for (section of sections; track section.id) {
-                        <li>
-                            @if (hasPages(section)) {
-                                <button
-                                    class="docs-next-menu__item docs-next-menu__item_section"
-                                    type="button"
-                                    [class.docs-next-menu__item_current-section]="section.id === state.section()"
-                                    (click)="levelSection.set(section)"
-                                >
-                                    <span class="docs-next-menu__title">{{ section.title[state.locale()] }}</span>
-                                    <i class="docs-next-menu__chevron" kbq-icon="kbq-chevron-right_16"></i>
-                                </button>
-                            } @else {
-                                <a
-                                    class="docs-next-menu__item"
-                                    [attr.aria-current]="section.id === state.section() ? 'page' : null"
-                                    [class.docs-next-menu__item_current-section]="section.id === state.section()"
-                                    [routerLink]="state.link(section.id)"
-                                    (click)="close()"
-                                >
-                                    <span class="docs-next-menu__title">{{ section.title[state.locale()] }}</span>
-                                </a>
-                            }
-                        </li>
+            <div
+                class="docs-next-menu__track"
+                [class.docs-next-menu__track_animated]="animated()"
+                [class.docs-next-menu__track_deep]="levelSection()"
+            >
+                <div class="docs-next-menu__pane" data-sheet-scroll [attr.inert]="levelSection() ? '' : null">
+                    <ul class="docs-next-menu__list">
+                        @for (section of sections; track section.id) {
+                            <li>
+                                @if (hasPages(section)) {
+                                    <button
+                                        class="docs-next-menu__item docs-next-menu__item_section"
+                                        type="button"
+                                        [class.docs-next-menu__item_current-section]="section.id === state.section()"
+                                        (click)="drillIn(section)"
+                                    >
+                                        <span class="docs-next-menu__title">{{ section.title[state.locale()] }}</span>
+                                        <i class="docs-next-menu__chevron" kbq-icon="kbq-chevron-right_16"></i>
+                                    </button>
+                                } @else {
+                                    <a
+                                        class="docs-next-menu__item"
+                                        [attr.aria-current]="section.id === state.section() ? 'page' : null"
+                                        [class.docs-next-menu__item_current-section]="section.id === state.section()"
+                                        [routerLink]="state.link(section.id)"
+                                        (click)="close()"
+                                    >
+                                        <span class="docs-next-menu__title">{{ section.title[state.locale()] }}</span>
+                                    </a>
+                                }
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div
+                    #sectionPane
+                    class="docs-next-menu__pane docs-next-menu__pane_section"
+                    data-sheet-scroll
+                    [attr.inert]="levelSection() ? null : ''"
+                >
+                    @if (shownSection(); as section) {
+                        <button class="docs-next-menu__back" type="button" (click)="drillOut()">
+                            <i kbq-icon="kbq-chevron-left_16"></i>
+                            <span>{{ section.title[state.locale()] }}</span>
+                        </button>
+                        <ng-container
+                            [ngTemplateOutlet]="pages"
+                            [ngTemplateOutletContext]="{ $implicit: section, tree: false }"
+                        />
                     }
-                </ul>
-            }
+                </div>
+            </div>
         } @else {
             @for (section of sections; track section.id) {
                 @if (hasPages(section)) {

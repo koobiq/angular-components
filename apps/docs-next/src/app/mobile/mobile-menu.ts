@@ -46,6 +46,7 @@ export class DocsNextMobileMenu {
 
     protected readonly sheet = viewChild.required(DocsNextSheet);
     private readonly scroller = viewChild.required<ElementRef<HTMLElement>>('scroller');
+    private readonly sectionPane = viewChild<ElementRef<HTMLElement>>('sectionPane');
 
     protected readonly sections = DOCS_NEXT_SECTIONS;
     protected readonly hasPages = hasPages;
@@ -67,6 +68,12 @@ export class DocsNextMobileMenu {
     /** Section the "levels" layout shows, or `null` for the list of sections. */
     protected readonly levelSection = signal<DocsNextSection | null>(null);
 
+    /** Section the second pane holds; it stays while the pane slides away, so the content does not vanish first. */
+    protected readonly shownSection = signal<DocsNextSection | null>(null);
+
+    /** The slide is off while the menu opens, so the level of the open page appears in place. */
+    protected readonly animated = signal(false);
+
     protected readonly expanded = signal<ReadonlySet<string>>(this.readExpanded());
 
     /** Section whose accordion header is stuck over the list right now. */
@@ -83,13 +90,33 @@ export class DocsNextMobileMenu {
     protected onOpened(): void {
         const section = DOCS_NEXT_SECTIONS.find(({ id }) => id === this.state.section());
 
-        this.levelSection.set(section && hasPages(section) ? section : null);
+        const level = section && hasPages(section) ? section : null;
+
+        this.animated.set(false);
+        this.shownSection.set(level);
+        this.levelSection.set(level);
 
         // Brings the open page into view once the list has rendered.
         setTimeout(() => {
             this.scroller().nativeElement.querySelector('[aria-current="page"]')?.scrollIntoView({ block: 'center' });
             this.updateStuck();
         });
+    }
+
+    protected drillIn(section: DocsNextSection): void {
+        this.animated.set(true);
+        this.shownSection.set(section);
+
+        const pane = this.sectionPane()?.nativeElement;
+
+        if (pane) pane.scrollTop = 0;
+
+        this.levelSection.set(section);
+    }
+
+    protected drillOut(): void {
+        this.animated.set(true);
+        this.levelSection.set(null);
     }
 
     /** A header is stuck when it sits at the top of the list while its own pages pass under it. */
