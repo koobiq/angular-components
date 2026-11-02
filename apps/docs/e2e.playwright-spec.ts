@@ -807,6 +807,16 @@ test.describe('search index', () => {
                 await expect(byAttribute(page, record.content).first()).not.toBeEmpty();
             });
 
+            // It renders the same page component as the overview, so only the route tells the two apart.
+            test('reads an examples tab as a group of its own', async ({ page }) => {
+                await open(page, '/en/components/select/examples');
+
+                await expect(byAttribute(page, record.lvl0)).toHaveAttribute(record.lvl0, 'Examples');
+                await expect(byAttribute(page, record.lvl1)).toHaveText('Select');
+                await expect(byAttribute(page, record.lvl2).first()).not.toBeEmpty();
+                await expect(byAttribute(page, record.content).first()).not.toBeEmpty();
+            });
+
             test('reads the icons page', async ({ page }) => {
                 await open(page, '/en/main/icons');
 
