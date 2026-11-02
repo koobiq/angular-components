@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { DOCS_DEFAULT_LOCALE, DOCS_SUPPORTED_LOCALES, DocsLocale } from '../constants/locale';
-import { docsGetMarkdownPath, docsHasMarkdown } from '../page-paths';
+import { docsGetPageMarkdownPath, docsHasMarkdown } from '../page-paths';
 import { DOCS_SEO_DESCRIPTIONS } from '../seo-descriptions';
 import {
     docsGetItemById,
@@ -185,7 +185,7 @@ export const docsResolveSeo = (
             ...resolveItemSeo(item, tab, locale),
             canonicalUrl,
             alternates,
-            markdownUrl: docsHasMarkdown(item) ? docsGetMarkdownPath(item, locale) : null,
+            markdownUrl: docsHasMarkdown(item) ? docsGetPageMarkdownPath(item, tab, locale) : null,
             locale
         };
     }

@@ -28,6 +28,11 @@ export interface PageToMarkdownOptions {
     resolveExample: (id: string) => LlmsExample;
     /** Where a link of the page leads when read outside the site: a site-relative link needs an origin. */
     resolveUrl: (url: string) => string;
+    /**
+     * Where the code of an example lives, when it is not inlined: the example then becomes its caption linked there.
+     * The documentation for agents keeps every example in a file of its own, for an agent to read the one it needs.
+     */
+    linkExample?: (example: LlmsExample) => string;
 }
 
 const PHRASING_TYPES = new Set([
@@ -57,23 +62,29 @@ const getAttribute = (node: MdxJsxFlowElement | MdxJsxTextElement, name: string)
     return typeof attribute?.value === 'string' ? attribute.value : undefined;
 };
 
-/** The example as a caption followed by one fenced block per file, the file name in the info string. */
-const exampleToNodes = ({ id, title, files }: LlmsExample): RootContent[] => [
-    {
-        type: 'paragraph',
-        children: [
-            { type: 'strong', children: [{ type: 'text', value: `Example: ${title}` }] },
-            { type: 'text', value: ' (' },
-            { type: 'inlineCode', value: id },
-            { type: 'text', value: ')' }
-        ]
-    },
-    ...files.map(({ name, content }): Code => ({
+const exampleCaption = ({ id, title }: LlmsExample): PhrasingContent[] => [
+    { type: 'strong', children: [{ type: 'text', value: `Example: ${title}` }] },
+    { type: 'text', value: ' (' },
+    { type: 'inlineCode', value: id },
+    { type: 'text', value: ')' }
+];
+
+const exampleFilesToNodes = (files: LlmsExampleFile[]): RootContent[] =>
+    files.map(({ name, content }): Code => ({
         type: 'code',
         lang: name.split('.').pop() ?? null,
         meta: name,
         value: content.trimEnd()
-    }))
+    }));
+
+/** The example as a caption followed by one fenced block per file, the file name in the info string. */
+const exampleToNodes = (example: LlmsExample): RootContent[] => [
+    { type: 'paragraph', children: exampleCaption(example) },
+    ...exampleFilesToNodes(example.files)
+];
+
+const linkedExampleToNodes = (example: LlmsExample, url: string): RootContent[] => [
+    { type: 'paragraph', children: [{ type: 'link', url, children: exampleCaption(example) }] }
 ];
 
 /** Consecutive phrasing nodes left at block level by an unwrapped HTML element become one paragraph. */
@@ -99,10 +110,16 @@ const wrapPhrasing = (nodes: Nodes[]): Nodes[] => {
 };
 
 /**
- * Walks a parsed page: live examples become their source code, MDX comments and images disappear, the few HTML
- * elements a page may use become Markdown or their content, and links leave the site's relative form.
+ * Walks a parsed page: live examples become their source code, or a link to it with `linkExample`, MDX comments and
+ * images disappear, the few HTML elements a page may use become Markdown or their content, and links leave the site's
+ * relative form.
  */
-const createTransformer = ({ path, resolveExample, resolveUrl }: Omit<PageToMarkdownOptions, 'headingDepth'>) => {
+const createTransformer = ({
+    path,
+    resolveExample,
+    resolveUrl,
+    linkExample
+}: Omit<PageToMarkdownOptions, 'headingDepth'>) => {
     const transformChildren = (children: Nodes[], flow: boolean): Nodes[] => {
         const result = children.flatMap(transformNode);
 
@@ -130,7 +147,9 @@ const createTransformer = ({ path, resolveExample, resolveUrl }: Omit<PageToMark
 
                 const example = resolveExample(id);
 
-                return flow ? exampleToNodes(example) : [{ type: 'text', value: `(example: ${example.title})` }];
+                if (!flow) return [{ type: 'text', value: `(example: ${example.title})` }];
+
+                return linkExample ? linkedExampleToNodes(example, linkExample(example)) : exampleToNodes(example);
             }
 
             case 'br':
@@ -214,6 +233,10 @@ const setHeadingDepth = (root: Root, depth: number): void => {
 };
 
 const stringify = (root: Root): string => String(stringifier.stringify(root)).trim();
+
+/** The files of an example as fenced blocks, the file name in the info string, for a document of its own. */
+export const exampleFilesToMarkdown = (files: LlmsExampleFile[]): string =>
+    stringify({ type: 'root', children: exampleFilesToNodes(files) });
 
 /** Turns an MDX page of the documentation site into plain Markdown an agent can read without the site. */
 export const pageToMarkdown = (source: string, options: PageToMarkdownOptions): string => {

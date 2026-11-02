@@ -1,8 +1,8 @@
 import type { Path } from '@angular-devkit/core';
-import type { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import fs from 'fs';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import * as path from 'path';
 import { migrateTemplateWithTransform } from '../../utils/angular-parsing';
+import { type IconPair, readCustomIconMapping, readCustomJson } from '../../utils/custom-data';
 import {
     buildIconTokenMap,
     buildIconTokenPatterns,
@@ -13,16 +13,10 @@ import {
     type TokenReplacement
 } from '../../utils/icon-migration';
 import { logMessage } from '../../utils/messages';
-import { setupOptions } from '../../utils/package-config';
+import { resolveTargetDir } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import { newIconsPackData, type ReplaceData, scope } from './data';
 import type { Schema } from './schema';
-
-function readJsonFile<T>(filePath: string): T {
-    const absolutePath = path.resolve(filePath);
-    const fileContents = fs.readFileSync(absolutePath, 'utf-8');
-
-    return JSON.parse(fileContents) as T;
-}
 
 // A bare word: no leading/trailing hyphen, no empty hyphen-separated segment (rejects e.g. `mc-`,
 // which is otherwise the most natural — and wrong, per the new engine's key-building — way to
@@ -90,36 +84,41 @@ function resolveScope(
 }
 
 export default function newIconsPack(options: Schema): Rule {
-    let targetDir: Tree | DirEntry;
-
     return async (tree: Tree, context: SchematicContext) => {
         const { project, fix, stylesExt, updatePrefix = true, customDataPath, customIconReplacementPath } = options;
         const { logger } = context;
 
-        const resolvedData = customDataPath ? readJsonFile<ReplaceData[]>(customDataPath) : newIconsPackData;
+        const resolvedData: IconPair[] = customDataPath
+            ? readCustomIconMapping(tree, customDataPath, logger)
+            : newIconsPackData.map(({ replace, replaceWith }) => ({ from: replace, to: replaceWith }));
         const resolvedScope = customIconReplacementPath
-            ? resolveScope(readJsonFile<ReplaceData[]>(customIconReplacementPath), scope, logger)
+            ? resolveScope(readCustomJson(tree, customIconReplacementPath) as ReplaceData[], scope, logger)
             : scope;
 
-        try {
-            const projectDefinition = await setupOptions(project, tree);
+        logger.info(
+            [
+                customDataPath
+                    ? `Icon mapping: ${resolvedData.length} entries from '${customDataPath}'.`
+                    : `Icon mapping: the built-in one, ${resolvedData.length} entries (--custom-data-path overrides it).`,
+                customIconReplacementPath
+                    ? `Scope: ${resolvedScope.from} -> ${resolvedScope.to}, from '${customIconReplacementPath}'.`
+                    : `Scope: ${resolvedScope.from} -> ${resolvedScope.to}, the built-in one (--custom-icon-replacement-path overrides it).`
+            ].join('\n')
+        );
 
-            targetDir = projectDefinition ? tree.getDir(projectDefinition.root) : tree;
-        } catch {
-            targetDir = tree;
-        }
+        const targetDir = await resolveTargetDir(project, tree);
 
         const migrationData: IconMigrationData = {
-            valueAttrs: ['kbq-icon', 'kbq-icon-item', 'kbq-icon-button'],
+            valueAttrs: ['kbq-icon', 'kbq-icon-item', 'kbq-icon-button', 'mc-icon', 'mc-icon-item', 'mc-icon-button'],
             scope: resolvedScope,
             scopeClassInList: 'rename',
             // `replace`/`replaceWith` are always authored under `CANONICAL_ICON_DATA_SCOPE`
             // ('kbq-'), regardless of the scope this run is migrating *to* — falls back to
             // stripping the target scope for a custom data file that doesn't follow that
             // convention.
-            icons: resolvedData.map(({ replace, replaceWith }) => ({
-                from: stripScopePrefix(replace, [CANONICAL_ICON_DATA_SCOPE, resolvedScope.to, resolvedScope.from]),
-                to: stripScopePrefix(replaceWith, [CANONICAL_ICON_DATA_SCOPE, resolvedScope.to])
+            icons: resolvedData.map(({ from, to }) => ({
+                from: stripScopePrefix(from, [CANONICAL_ICON_DATA_SCOPE, resolvedScope.to, resolvedScope.from]),
+                to: stripScopePrefix(to, [CANONICAL_ICON_DATA_SCOPE, resolvedScope.to])
             })),
             // Only the attribute-value path (`kbq-icon="mc-<anything>"`) rescopes suffixes that
             // aren't a known icon name; class lists/bindings/strings/styles stay exact-token-only.
@@ -159,12 +158,7 @@ export default function newIconsPack(options: Schema): Rule {
         const markdownPaths: string[] = [];
 
         // Update templates & components
-        targetDir.visit((filePath: Path) => {
-            // if project property not provided, skip files in node_modules & dist
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) {
-                return;
-            }
-
+        visitProjectFiles(targetDir, (filePath: Path) => {
             if (filePath.endsWith('.html')) {
                 templatePaths.push(filePath);
             } else if (
@@ -217,13 +211,7 @@ export default function newIconsPack(options: Schema): Rule {
 
         // update styles — icon-name renames always apply; `updatePrefix` only adds the bare
         // scope-word rename (see `styleAndMarkdownTokenMap` above).
-        targetDir.visit((filePath: Path) => {
-            // if project property not provided, styles in node_modules are still skipped, same as
-            // every other file type above
-            if (filePath.includes('node_modules')) {
-                return;
-            }
-
+        visitProjectFiles(targetDir, (filePath: Path) => {
             if (!filePath.endsWith(stylesExt)) {
                 return;
             }

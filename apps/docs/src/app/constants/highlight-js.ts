@@ -9,6 +9,7 @@ export const DOCS_HIGHLIGHT_JS_LANGUAGES: Record<string, () => Promise<{ default
     css: () => import('highlight.js/lib/languages/css'),
     javascript: () => import('highlight.js/lib/languages/javascript'),
     json: () => import('highlight.js/lib/languages/json'),
+    markdown: () => import('highlight.js/lib/languages/markdown'),
     scss: () => import('highlight.js/lib/languages/scss'),
     typescript: () => import('highlight.js/lib/languages/typescript'),
     // Also `html`.

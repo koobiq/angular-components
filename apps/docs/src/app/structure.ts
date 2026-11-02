@@ -4,6 +4,7 @@ import type { DocsLocale } from './constants/locale';
 export enum DocsStructureItemId {
     // Main
     Installation = 'installation',
+    AiAgents = 'ai-agents',
     Versioning = 'versioning',
     Theming = 'theming',
     Localization = 'localization',
@@ -209,7 +210,20 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'install',
                     isGuide: true,
                     hasApi: false,
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-11-11')
+                },
+                {
+                    id: DocsStructureItemId.AiAgents,
+                    name: {
+                        ru: 'ИИ-агенты',
+                        en: 'AI agents'
+                    },
+                    svgPreview: '',
+                    isGuide: true,
+                    hasApi: false,
+                    hasExamples: false,
+                    isNew: expiresAt('2026-12-31')
                 },
                 {
                     id: DocsStructureItemId.Versioning,
@@ -650,7 +664,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'input',
                     hasApi: true,
                     apiId: 'input',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-13')
                 },
                 {
                     id: DocsStructureItemId.FileUpload,
@@ -889,7 +904,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'scrollbar',
                     hasApi: true,
                     apiId: 'scrollbar',
-                    hasExamples: true
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.Select,

@@ -486,7 +486,7 @@ test.describe('docs app', () => {
 
         const placeholderHeight = await placeholder.evaluate((element) => element.getBoundingClientRect().height);
 
-        // Straight there: the article scrolls smoothly, and a smooth scroll would render every block it passes.
+        // Straight there: a smooth scroll would render every block it passes.
         await placeholder.evaluate((element) => element.scrollIntoView({ behavior: 'instant' }));
 
         const block = entry.locator(':scope > kbq-code-block');
@@ -512,6 +512,18 @@ test.describe('docs app', () => {
         await expect(page).toHaveURL(/\/en\/components\/select\/api\?member=KbqSelect-backdropClass$/);
         await expect(page.locator('#KbqSelect-backdropClass')).toHaveClass(/docs-api__member_selected/);
         await expect(page.locator('#KbqSelect-panelClass')).not.toHaveClass(/docs-api__member_selected/);
+    });
+
+    // The browser scrolls a page it opens to its heading before the app does: were that scroll animated, Chrome would
+    // carry on with it after the app's jump to the heading, out of view on a tab this long.
+    test('opens an API tab at the entry a link points at', async ({ page }) => {
+        await page.goto('/en/components/select/api#KbqSelectError');
+        await waitForHydration(page);
+
+        const heading = page.locator('#KbqSelectError');
+        const viewer = (await page.locator('docs-component-viewer').boundingBox())!;
+
+        await expect.poll(async () => Math.abs((await heading.boundingBox())!.y - viewer.y)).toBeLessThanOrEqual(1);
     });
 
     // AG Grid does not support server-side rendering: the prerendered page leaves its examples to the browser.
@@ -807,6 +819,16 @@ test.describe('search index', () => {
                 await expect(byAttribute(page, record.content).first()).not.toBeEmpty();
             });
 
+            // It renders the same page component as the overview, so only the route tells the two apart.
+            test('reads an examples tab as a group of its own', async ({ page }) => {
+                await open(page, '/en/components/select/examples');
+
+                await expect(byAttribute(page, record.lvl0)).toHaveAttribute(record.lvl0, 'Examples');
+                await expect(byAttribute(page, record.lvl1)).toHaveText('Select');
+                await expect(byAttribute(page, record.lvl2).first()).not.toBeEmpty();
+                await expect(byAttribute(page, record.content).first()).not.toBeEmpty();
+            });
+
             test('reads the icons page', async ({ page }) => {
                 await open(page, '/en/main/icons');
 
@@ -841,6 +863,26 @@ test.describe('documentation for agents', () => {
         }
     });
 
+    test('serves the files the Markdown of an item links: its examples, its API, its tokens and the component guide', async ({
+        request
+    }) => {
+        const item = await (await request.get('/en/components/select.md')).text();
+        const paths = Array.from(
+            item.matchAll(/https:\/\/koobiq\.io(\/(?:examples|api|tokens)\/[^\s)]+\.md)/g),
+            ([, path]) => path
+        );
+
+        expect(paths).toEqual(expect.arrayContaining(['/api/select.md', '/tokens/select.md']));
+        expect(paths.some((path) => path.startsWith('/examples/'))).toBe(true);
+
+        for (const path of [...paths, '/which-component-when.md']) {
+            const response = await request.get(path);
+
+            expect(response.status(), path).toBe(200);
+            expect(response.headers()['content-type'], path).toContain('text/markdown');
+        }
+    });
+
     test('serves every item in one file as well', async ({ request }) => {
         const full = await request.get('/llms-full.txt');
 
@@ -859,7 +901,7 @@ test.describe('documentation for agents', () => {
     test('points every page of an item at the English Markdown at its own address, on the host that serves it', async ({
         page
     }) => {
-        await page.goto('/ru/components/alert/api');
+        await page.goto('/ru/components/alert/overview');
         await waitForHydration(page);
 
         await expect(page.locator('link[rel="alternate"][type="text/markdown"]')).toHaveAttribute(
@@ -867,6 +909,15 @@ test.describe('documentation for agents', () => {
             '/ru/components/alert.md'
         );
         await expect(page.locator('link[rel="describedby"]')).toHaveAttribute('href', '/llms.txt');
+
+        await page.goto('/ru/components/alert/api');
+        await waitForHydration(page);
+
+        // The API tab leads to the API of the entry point, which the Markdown of the item only links.
+        await expect(page.locator('link[rel="alternate"][type="text/markdown"]')).toHaveAttribute(
+            'href',
+            '/api/alert.md'
+        );
 
         const markdown = await page.request.get('/ru/components/alert.md');
 

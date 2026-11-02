@@ -1,18 +1,6 @@
 [
     {
-        "replace": "class=\"mc mc-icon",
-        "replaceWith": "class=\"kbq mc-icon"
-    },
-    {
-        "replace": "class=\"mc ",
-        "replaceWith": "class=\"kbq "
-    },
-    {
-        "replace": "class: 'mc mc-icon",
-        "replaceWith": "class: 'kbq mc-icon"
-    },
-    {
-        "replace": " mc ",
-        "replaceWith": " kbq "
+        "replace": "mc",
+        "replaceWith": "kbq"
     }
 ]

@@ -50,7 +50,13 @@ import { KbqInputModule } from '@koobiq/components/input';
                 </kbq-alert>
             </div>
 
-            <form class="kbq-form-vertical" novalidate [formGroup]="globalErrorForm" (ngSubmit)="submitForm()">
+            <form
+                class="kbq-form-vertical"
+                novalidate
+                [formGroup]="globalErrorForm"
+                (input)="showServerErrors.set(false)"
+                (ngSubmit)="submitForm()"
+            >
                 <div class="kbq-form__fieldset">
                     <div class="kbq-form__row">
                         <kbq-form-field>
@@ -66,10 +72,9 @@ import { KbqInputModule } from '@koobiq/components/input';
                         </kbq-form-field>
                     </div>
 
-                    <div class="kbq-form__row">
+                    <div class="kbq-form__row layout-align-start-start">
                         <button
                             #submitButton
-                            class="flex-25"
                             color="contrast"
                             kbq-button
                             type="submit"
@@ -79,7 +84,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                             (keydown.space)="submitOrigin = 'keyboard'"
                             (mouseleave)="submitOrigin = 'mouse'"
                         >
-                            Send
+                            Submit
                         </button>
                     </div>
                 </div>

@@ -60,4 +60,12 @@ describe(findMarkdownProblems.name, () => {
             'a link to a page the site does not have: https://koobiq.io/en/main/theming/api'
         ]);
     });
+
+    it('checks a relative link with the given check, instead of reporting it', () => {
+        const checkRelativeLink = (url: string): string | null => (url === 'select.md' ? null : `nothing at ${url}`);
+
+        expect(
+            findMarkdownProblems('# Card\n\nSee [select](select.md) and [tree](tree.md).', SERVED, checkRelativeLink)
+        ).toEqual(['nothing at tree.md']);
+    });
 });
