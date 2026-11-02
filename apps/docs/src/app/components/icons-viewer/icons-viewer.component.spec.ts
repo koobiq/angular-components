@@ -2,8 +2,9 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideLocationMocks } from '@angular/common/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, provideRouter, Router } from '@angular/router';
-import { BehaviorSubject, map, of } from 'rxjs';
+import { ActivatedRoute, convertToParamMap, ParamMap, provideRouter, Router } from '@angular/router';
+import { KbqModalRef, KbqModalService } from '@koobiq/components/modal';
+import { BehaviorSubject, map, NEVER } from 'rxjs';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
 import { DocsIconsViewerComponent } from './icons-viewer.component';
@@ -34,6 +35,7 @@ const provideDocsLocale = (locale: DocsLocale) => {
 describe(DocsIconsViewerComponent.name, () => {
     let fixture: ComponentFixture<DocsIconsViewerComponent>;
     let httpMock: HttpTestingController;
+    let queryParamMap: BehaviorSubject<ParamMap>;
 
     const cells = (): HTMLElement[] =>
         Array.from(fixture.nativeElement.querySelectorAll('.docs-icons-viewer__table-cell'));
@@ -49,6 +51,8 @@ describe(DocsIconsViewerComponent.name, () => {
     beforeEach(() => {
         vi.useFakeTimers();
 
+        queryParamMap = new BehaviorSubject(convertToParamMap({}));
+
         TestBed.configureTestingModule({
             imports: [DocsIconsViewerComponent],
             providers: [
@@ -57,7 +61,7 @@ describe(DocsIconsViewerComponent.name, () => {
                 provideHttpClientTesting(),
                 provideRouter([]),
                 provideLocationMocks(),
-                { provide: ActivatedRoute, useValue: { queryParamMap: of({ params: {} }), queryParams: of({}) } }
+                { provide: ActivatedRoute, useValue: { queryParamMap } }
             ]
         });
 
@@ -118,6 +122,30 @@ describe(DocsIconsViewerComponent.name, () => {
         expect(navigate).toHaveBeenCalledWith(
             [],
             expect.objectContaining({ queryParams: { s: 'copy' }, replaceUrl: true })
+        );
+    });
+
+    it('fills the search from the URL without writing it back', async () => {
+        const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+
+        await renderIcons();
+        queryParamMap.next(convertToParamMap({ s: 'copy' }));
+        await vi.advanceTimersByTimeAsync(SEARCH_DEBOUNCE_TIME);
+
+        expect(fixture.componentInstance.searchControl.value).toBe('copy');
+        expect(navigate).not.toHaveBeenCalled();
+    });
+
+    it('opens the preview of the icon whose id is in the URL', async () => {
+        const open = vi
+            .spyOn(TestBed.inject(KbqModalService), 'open')
+            .mockReturnValue({ afterClose: NEVER } as unknown as KbqModalRef);
+
+        await renderIcons();
+        queryParamMap.next(convertToParamMap({ id: 'north-east_24' }));
+
+        expect(open).toHaveBeenCalledWith(
+            expect.objectContaining({ data: { iconItem: expect.objectContaining({ id: 'north-east_24' }) } })
         );
     });
 });
