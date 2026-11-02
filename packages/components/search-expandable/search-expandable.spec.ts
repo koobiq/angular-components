@@ -313,6 +313,21 @@ describe('KbqSearchExpandable', () => {
             expect(debugElement.query(By.directive(KbqInput)).nativeElement.hasAttribute('disabled')).toBe(true);
         });
 
+        it('should update the collapsed button when the control is disabled and enabled again', () => {
+            const control = formFixture.componentInstance.searchControl;
+            const button: HTMLButtonElement = debugElement.query(By.directive(KbqButton)).nativeElement;
+
+            control.disable();
+            formFixture.detectChanges();
+
+            expect(button.disabled).toBe(true);
+
+            control.enable();
+            formFixture.detectChanges();
+
+            expect(button.disabled).toBe(false);
+        });
+
         it('should update value via formControl', fakeAsync(() => {
             formFixture.componentInstance.openedState = true;
             formFixture.detectChanges();

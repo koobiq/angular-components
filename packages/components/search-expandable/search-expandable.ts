@@ -139,6 +139,9 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         } else {
             this.runFocusMonitor();
         }
+
+        // Only an input binding marks this OnPush view; `setDisabledState` and writes from code do not.
+        this.changeDetectorRef.markForCheck();
     }
 
     private _disabled: boolean = false;
