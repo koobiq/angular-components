@@ -87,8 +87,8 @@ StyleDictionary.registerFormat({
         const {
             outputReferences,
             component,
-            lightThemeSelector = ':where(.kbq-light, .theme-light, .kbq-theme-light)',
-            darkThemeSelector = ':where(.kbq-dark, .theme-dark, .kbq-theme-dark)'
+            lightThemeSelector = ':where(.kbq-light)',
+            darkThemeSelector = ':where(.kbq-dark)'
         } = options;
 
         const allTokens = applyCustomTransformations(dictionary);
