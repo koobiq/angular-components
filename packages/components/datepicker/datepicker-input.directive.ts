@@ -939,15 +939,15 @@ export class KbqDatepickerInput<D>
             this.incorrectInput.emit();
         }
 
-        const match: RegExpMatchArray | null = rawValue.match(/^(?<first>\d+)\W(?<second>\d+)\W(?<third>\d+)$/);
+        const { first, second, third } = rawValue.match(/^(?<first>\d+)\W(?<second>\d+)\W(?<third>\d+)$/)?.groups ?? {};
 
-        if (!match?.groups?.['first'] || !match?.groups?.['second'] || !match?.groups?.['third']) {
+        if (!first || !second || !third) {
             this.setViewValue(rawValue);
 
             return;
         }
 
-        const value = [match.groups['first'], match.groups['second'], match.groups['third']].join(this.separator);
+        const value = [first, second, third].join(this.separator);
 
         const newTimeObj = this.getDateFromString(value);
 
