@@ -6,7 +6,7 @@
     "properties": {
         "project": {
             "type": "string",
-            "description": "Name of the project",
+            "description": "Name of the project, or a folder to migrate (e.g. ./libs). Without it the whole workspace is migrated",
             "$default": {
                 "$source": "projectName"
             }

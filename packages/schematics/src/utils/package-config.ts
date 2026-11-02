@@ -1,5 +1,5 @@
 import { workspaces } from '@angular-devkit/core';
-import { SchematicsException, Tree } from '@angular-devkit/schematics';
+import { DirEntry, SchematicsException, Tree } from '@angular-devkit/schematics';
 import { readWorkspace } from '@schematics/angular/utility';
 import * as messages from './messages';
 import { visitProjectFiles } from './project-files';
@@ -75,6 +75,33 @@ export async function setupOptions(
 
         return projectWorkspace as unknown as workspaces.ProjectDefinition;
     }
+}
+
+export async function resolveTargetDir(project: string | undefined, tree: Tree): Promise<DirEntry> {
+    if (!project) {
+        return tree.root;
+    }
+
+    const projectRoot = await readWorkspace(tree).then(
+        (workspace) => workspace.projects.get(project)?.root,
+        () => undefined
+    );
+
+    if (projectRoot !== undefined) {
+        return tree.getDir(projectRoot || '/');
+    }
+
+    const folder = project
+        .replace(/\\/g, '/')
+        .replace(/^(\.\/)+/, '')
+        .replace(/\/+$/, '');
+    const dir = tree.getDir(folder || '/');
+
+    if (dir.subfiles.length || dir.subdirs.length) {
+        return dir;
+    }
+
+    throw new SchematicsException(messages.noProjectOrDirectory(project));
 }
 
 export async function getParsingInfo(project: string | undefined, tree: Tree) {

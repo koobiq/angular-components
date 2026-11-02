@@ -33,7 +33,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                     </kbq-form-field>
                 </div>
 
-                <div class="kbq-form__row">
+                <div class="kbq-form__row layout-align-start-start">
                     <button color="contrast" kbq-button type="submit">Submit</button>
                 </div>
             </div>

@@ -3,7 +3,9 @@
 This schematic provides migration for update icons pack. It includes:
 
 - Change prefixes from `mc` to `kbq` for TS, HTML, and styles
-- Update icon names for updated/removed icons according to [mapping](data.ts)
+- Update icon names for updated/removed icons according to [mapping](data.ts), in the values of `kbq-icon`,
+  `kbq-icon-item`, `kbq-icon-button` and of their `mc-*` counterparts (`mc-icon="mc-search_16"` →
+  `mc-icon="kbq-magnifying-glass_16"`; the attribute names themselves are left alone)
 - Fix icons package prefix in styles
 - Optionally use custom migration and replacement data
 
@@ -27,16 +29,32 @@ and can still be rewritten.
 regardless of `updatePrefix`; the option only gates the _bare_ scope-word rename (`mc` → `kbq`) there. In
 templates/TS, icon-attribute values are always matched regardless of `updatePrefix`.
 
-#### `--custom-icon-replacement-path`
+#### Data
 
-The expected file shape changed. It's still a JSON array of `{ "replace": ..., "replaceWith": ... }` objects,
-but each entry is now interpreted as a bare scope-word pair (e.g. `{ "replace": "mc", "replaceWith": "kbq" }`,
-with no leading/trailing hyphen) rather than a whole-file regex fragment like `kbq-icon="mc-` — the AST-based
-matcher no longer needs per-context fragments. A file still written in the old fragment style, or a malformed
-one, is detected and ignored with a warning (falling back to the default `mc` → `kbq` scope) rather than being
-silently misapplied or crashing. [`replacement.json`](replacement.json) is kept in its old fragment shape for
-backward compatibility with anyone already pointing at it — **don't** pass it via `--custom-icon-replacement-path`
-as-is (see the fallback warning above); copy it into your own file and rewrite it in the new shape instead.
+Everything the migration needs is built in: the icon-name mapping ([`data.ts`](data.ts)) and the `mc` → `kbq`
+scope. Run it without the custom-data options — the log says which data it runs on. The options are for a
+mapping or a scope of your own, not for passing the shipped files back in.
+
+`--custom-data-path` takes the icon-name mapping, an array of `replace`/`replaceWith` pairs written with the
+`kbq-` prefix (the `mc-` form of each name is matched as well):
+
+```json
+[{ "replace": "kbq-add-to-list_16", "replaceWith": "kbq-file-plus-o_16" }]
+```
+
+The same option and shape are read by `icons-replacement`. A file of `{ "from", "to" }` pairs, the shape
+`icons-replacement` used to read, is still accepted with a warning.
+
+`--custom-icon-replacement-path` takes the scope pair, bare words with no hyphen:
+
+```json
+[{ "replace": "mc", "replaceWith": "kbq" }]
+```
+
+[`migration.json`](migration.json) and [`replacement.json`](replacement.json) hold the built-in data in these
+shapes, so they can be copied as a starting point. A path is resolved from the workspace root first, then as an
+absolute path or one relative to the current directory; a missing file stops the run. A scope file still
+written in the old fragment shape (`kbq-icon="mc-`) is ignored with a warning, and the built-in scope applies.
 
 ---
 
@@ -48,20 +66,17 @@ The schematic supports the following options:
   Applies fixes automatically without prompting.
 
 - **`--project`** (`string`)
-  Target Angular/Nx project name.
+  Target Angular/Nx project name, or a folder such as `./libs`. Without it the whole workspace is migrated;
+  `node_modules` and `dist` are always skipped.
 
 - **`--update-prefix`** (`boolean`)
   Whether to change icon prefixes during migration.
 
 - **`--custom-data-path`** (`string`)
-  Path to a custom migration data file.
-  When provided, use `migration.json` file as a default.
-  Use this option if you want to override the default icon mapping data.
+  JSON file with an icon-name mapping that replaces the built-in one (see [Data](#data)).
 
 - **`--custom-icon-replacement-path`** (`string`)
-  Path to a custom icon attributes replacement file.
-  When provided, use `replacement.json` file as a default.
-  Use this option to customize how icon attributes are replaced during migration.
+  JSON file with a scope pair that replaces the built-in `mc` → `kbq` (see [Data](#data)).
 
 The schema definition can be found in [`schema.ts`](schema.ts).
 
@@ -71,21 +86,18 @@ The schema definition can be found in [`schema.ts`](schema.ts).
 
 ```shell
 ng g @koobiq/components:new-icons-pack --fix=true --project "<your project>"
+ng g @koobiq/components:new-icons-pack --fix=true --project ./libs
 ```
 
 #### Angular CLI with custom data
 
 ```shell
 ng g @koobiq/components:new-icons-pack \
-    --custom-data-path migration.json \
-    --custom-icon-replacement-path my-replacement.json \
+    --custom-data-path my-icons.json \
+    --custom-icon-replacement-path my-scope.json \
     --fix=true \
     --project "<your-project>"
 ```
-
-`migration.json` is the shipped icon-name mapping and can be used as-is. `my-replacement.json` is a file you
-write yourself, in the new bare scope-word-pair shape described above — **not** the shipped
-[`replacement.json`](replacement.json), which is still in the legacy shape.
 
 #### Nx
 
@@ -97,8 +109,8 @@ nx g @koobiq/components:new-icons-pack --fix=true --project "<your project>"
 
 ```shell
 nx g @koobiq/components:new-icons-pack \
-    --custom-data-path migration.json \
-    --custom-icon-replacement-path my-replacement.json \
+    --custom-data-path my-icons.json \
+    --custom-icon-replacement-path my-scope.json \
     --fix=true \
     --project "<your-project>"
 ```
