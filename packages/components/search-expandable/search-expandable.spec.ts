@@ -451,6 +451,116 @@ describe('KbqSearchExpandable', () => {
         });
     });
 
+    describe('suffix action', () => {
+        let local: ComponentFixture<TestSearchExpandableWithFormControl>;
+        let component: KbqSearchExpandable;
+
+        beforeEach(() => {
+            local = TestBed.createComponent(TestSearchExpandableWithFormControl);
+            local.componentInstance.openedState = true;
+            local.detectChanges();
+
+            debugElement = local.debugElement.query(By.directive(KbqSearchExpandable));
+            component = debugElement.componentInstance;
+        });
+
+        it('should clear a non-empty value without collapsing or emitting an open-state change', () => {
+            const isOpenedChange = vi.fn();
+            const inputElement: HTMLInputElement = debugElement.query(By.css('input')).nativeElement;
+            const suffix: HTMLButtonElement = debugElement.query(
+                By.css('.kbq-icon-button.kbq-icon.kbq-suffix')
+            ).nativeElement;
+
+            component.isOpenedChange.subscribe(isOpenedChange);
+            typeIntoInput(local, debugElement, 'typed');
+            suffix.focus();
+            suffix.click();
+
+            expect(document.activeElement).toBe(inputElement);
+
+            local.detectChanges();
+
+            expect(document.activeElement).toBe(inputElement);
+            expect(component.isOpened).toBe(true);
+            expect(component.value()).toBe(defaultValue);
+            expect(local.componentInstance.searchControl.value).toBe(defaultValue);
+            expect(debugElement.query(By.css('input'))).not.toBeNull();
+            expect(isOpenedChange).not.toHaveBeenCalled();
+        });
+
+        it('should collapse and focus the button when the suffix is clicked after clearing', () => {
+            typeIntoInput(local, debugElement, 'typed');
+            debugElement.query(By.css('.kbq-icon-button.kbq-icon.kbq-suffix')).nativeElement.click();
+            local.detectChanges();
+
+            expect(component.isOpened).toBe(true);
+
+            debugElement.query(By.css('.kbq-icon-button.kbq-icon.kbq-suffix')).nativeElement.click();
+            local.detectChanges();
+
+            const button = debugElement.query(By.css('.kbq-search-expandable__button'));
+
+            expect(component.isOpened).toBe(false);
+            expect(debugElement.query(By.css('input'))).toBeNull();
+            expect(document.activeElement).toBe(button.nativeElement);
+        });
+
+        it('should cancel the pending debounced value when clearing', async () => {
+            vi.useFakeTimers();
+
+            typeIntoInput(local, debugElement, 'typed');
+            debugElement.query(By.css('.kbq-icon-button.kbq-icon.kbq-suffix')).nativeElement.click();
+            local.detectChanges();
+
+            expect(component.isOpened).toBe(true);
+            expect(component.value()).toBe(defaultValue);
+            expect(local.componentInstance.searchControl.value).toBe(defaultValue);
+
+            await vi.advanceTimersByTimeAsync(defaultEmitValueTimeout + 1);
+            local.detectChanges();
+
+            expect(component.isOpened).toBe(true);
+            expect(component.value()).toBe(defaultValue);
+            expect(local.componentInstance.searchControl.value).toBe(defaultValue);
+        });
+
+        it('should clear the bound control immediately when emission by Enter is enabled', () => {
+            const enterFixture = TestBed.createComponent(TestSearchExpandableWithEmitByEnter);
+
+            enterFixture.detectChanges();
+
+            const enterDebugElement = enterFixture.debugElement.query(By.directive(KbqSearchExpandable));
+            const enterComponent = enterDebugElement.componentInstance as KbqSearchExpandable;
+
+            typeIntoInput(enterFixture, enterDebugElement, 'typed');
+            pressEnter(enterDebugElement);
+
+            expect(enterFixture.componentInstance.searchControl.value).toBe('typed');
+
+            enterDebugElement.query(By.css('.kbq-icon-button.kbq-icon.kbq-suffix')).nativeElement.click();
+
+            expect(enterFixture.componentInstance.searchControl.value).toBe(defaultValue);
+            expect(enterComponent.isOpened).toBe(true);
+        });
+
+        it('should name the suffix clear for a non-empty value and close for an empty value', () => {
+            const suffix: HTMLButtonElement = debugElement.query(
+                By.css('.kbq-icon-button.kbq-icon.kbq-suffix')
+            ).nativeElement;
+
+            expect(suffix.getAttribute('aria-label')).toBe(ruRULocaleData.a11y.close);
+
+            typeIntoInput(local, debugElement, 'typed');
+
+            expect(suffix.getAttribute('aria-label')).toBe(ruRULocaleData.a11y.clear);
+
+            component.value.set(defaultValue);
+            local.detectChanges();
+
+            expect(suffix.getAttribute('aria-label')).toBe(ruRULocaleData.a11y.close);
+        });
+    });
+
     describe('validation', () => {
         let local: ComponentFixture<TestSearchExpandableWithValidatedFormControl>;
         let formField: HTMLElement;

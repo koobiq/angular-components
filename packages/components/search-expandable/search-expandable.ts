@@ -501,6 +501,16 @@ export class KbqSearchExpandable
         this.toggle();
     }
 
+    /** @internal */
+    protected onSuffixClick(): void {
+        if (this.value()) {
+            this.resetValue();
+            this.input()?.focus();
+        } else {
+            this.toggle();
+        }
+    }
+
     private setOpened(open: boolean): void {
         if (this.disabled || this.isOpened === open) return;
 
@@ -509,20 +519,24 @@ export class KbqSearchExpandable
         if (!open) {
             // Never let a stale suppress-flag survive a close.
             this.suppressInputFocus = false;
-            // An emission scheduled by the keystrokes that preceded the close would put the discarded
-            // query back into the bound control right after the reset.
-            this.cancelPendingEmit.next();
-            // `emitEvent: false`: the reset reaches the consumer through the forced emit below, so
-            // routing it through the debounce as well would only schedule a redundant no-op emission.
-            this.control.setValue(defaultValue, { emitEvent: false });
-            this.value.set(defaultValue);
-            // Force the emit — closing must always synchronize the bound control to the reset
-            // value, rather than relying on the debounce to eventually settle (it can be raced
-            // by a value pushed just before close, silently leaving the control at a stale value).
-            this.emitValue(defaultValue, true);
+            this.resetValue();
         }
 
         this.isOpenedChange.emit(this.isOpened);
+    }
+
+    private resetValue(): void {
+        // An emission scheduled by the keystrokes that preceded the reset would put the discarded
+        // query back into the bound control right after it.
+        this.cancelPendingEmit.next();
+        // `emitEvent: false`: the reset reaches the consumer through the forced emit below, so
+        // routing it through the debounce as well would only schedule a redundant no-op emission.
+        this.control.setValue(defaultValue, { emitEvent: false });
+        this.value.set(defaultValue);
+        // Force the emit — resetting must always synchronize the bound control to the empty value,
+        // rather than relying on the debounce to eventually settle (it can be raced by a value pushed
+        // just before the reset, silently leaving the control at a stale value).
+        this.emitValue(defaultValue, true);
     }
 
     /** Moves focus back onto the collapsed button, keeping its tooltip from opening on the way. */

@@ -36,9 +36,9 @@
             type="button"
             kbqSuffix
             kbq-icon-button="kbq-circle-xmark_16"
-            [attr.aria-label]="a11yLocaleConfiguration().close"
+            [attr.aria-label]="value() ? a11yLocaleConfiguration().clear : a11yLocaleConfiguration().close"
             [disabled]="disabled"
-            (click)="toggle()"
+            (click)="onSuffixClick()"
         ></button>
     </kbq-form-field>
 }
