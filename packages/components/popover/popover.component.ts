@@ -130,16 +130,16 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
 
     override prefix = 'kbq-popover';
 
-    override header!: string | TemplateRef<any>;
-    footer!: string | TemplateRef<any>;
+    override header: string | TemplateRef<any>;
+    footer: string | TemplateRef<any>;
 
-    override trigger!: KbqPopoverTrigger;
+    override trigger: KbqPopoverTrigger;
 
     isTrapFocus: boolean = false;
     hasCloseButton: boolean = false;
 
     /** Id of the panel element, referenced by the trigger's `aria-controls`. Written by the trigger. */
-    panelId!: string;
+    panelId: string;
 
     /** Accessible name of the panel, used when there is no header to label it. Written by the trigger. */
     ariaLabel: string | undefined;
@@ -398,7 +398,7 @@ export class KbqPopoverTrigger
         this.updateData();
     }
 
-    private _header!: string | TemplateRef<any>;
+    private _header: string | TemplateRef<any>;
 
     /** Input (`kbqPopoverContent`) — content of the panel, as a string or a template. */
     get content(): string | TemplateRef<any> {
@@ -422,7 +422,7 @@ export class KbqPopoverTrigger
         this.updateData();
     }
 
-    private _footer!: string | TemplateRef<any>;
+    private _footer: string | TemplateRef<any>;
 
     /** Input (`kbqPopoverDisabled`) — disables the trigger and closes an open popover. */
     get disabled(): boolean {

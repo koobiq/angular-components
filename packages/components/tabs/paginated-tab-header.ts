@@ -240,7 +240,7 @@ export abstract class KbqPaginatedTabHeader
     private tabLabelCount?: number;
 
     /** Used to manage focus between the tabs. */
-    private keyManager!: FocusKeyManager<KbqPaginatedTabHeaderItem>;
+    private keyManager: FocusKeyManager<KbqPaginatedTabHeaderItem>;
 
     /** Cached text content of the header. */
     private currentTextContent?: string;

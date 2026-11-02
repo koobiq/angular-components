@@ -177,7 +177,7 @@ export class KbqGutterGhostDirective {
 
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
-    @Input() visible!: boolean;
+    @Input() visible: boolean;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -282,7 +282,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     readonly gutters = viewChildren(KbqGutterDirective);
     readonly ghost = viewChild.required(KbqGutterGhostDirective);
 
-    @ContentChildren(forwardRef(() => KbqSplitterAreaDirective)) areaRefs!: QueryList<KbqSplitterAreaDirective>;
+    @ContentChildren(forwardRef(() => KbqSplitterAreaDirective)) areaRefs: QueryList<KbqSplitterAreaDirective>;
 
     get isDragging(): boolean {
         return this._isDragging;
@@ -318,7 +318,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
         this._direction = direction;
     }
 
-    private _direction!: Direction;
+    private _direction: Direction;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.

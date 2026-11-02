@@ -1504,8 +1504,8 @@ class SimpleSidepanelExample {
     `
 })
 class ComponentWithTemplateForSidepanel {
-    localValue!: string;
-    sidepanelRef!: KbqSidepanelRef;
+    localValue: string;
+    sidepanelRef: KbqSidepanelRef;
 
     readonly templateRef = viewChild.required(TemplateRef);
 

@@ -883,7 +883,7 @@ export class DevApp implements AfterViewInit {
             ]
         }
     ];
-    pipeTemplates!: KbqPipeTemplate[];
+    pipeTemplates: KbqPipeTemplate[];
     defaultFilter: KbqFilter | null = this.filters[2];
     activeFilter: KbqFilter | null = this.defaultFilter;
 

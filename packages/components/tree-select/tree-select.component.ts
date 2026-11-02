@@ -315,7 +315,7 @@ export class KbqTreeSelect<T = any, K = T>
     readonly hiddenItems = signal(0);
 
     /** The last measured value for the trigger's client bounding rect. */
-    protected triggerRect!: DOMRect;
+    protected triggerRect: DOMRect;
 
     /** The cached font-size of the trigger element. */
     triggerFontSize = 0;
@@ -327,7 +327,7 @@ export class KbqTreeSelect<T = any, K = T>
      * alone, apart from the tree; a query names it: `viewChild.required<KbqTreeSelect<Node>>(KbqTreeSelect)`, and a
      * select whose tree control has a `trackBy` names the key type too: `KbqTreeSelect<Node, string>`.
      */
-    selectionModel!: SelectionModel<T>;
+    selectionModel: SelectionModel<T>;
 
     /** Emits once the panel has rendered (`'showing'`) or has been removed (`'void'`). */
     protected readonly panelDoneAnimatingStream = new Subject<string>();
@@ -368,7 +368,7 @@ export class KbqTreeSelect<T = any, K = T>
         }
     ];
 
-    protected options!: QueryList<KbqTreeOption<T>>;
+    protected options: QueryList<KbqTreeOption<T>>;
 
     /**
      * Trigger - is a clickable field to open select dropdown panel
@@ -894,7 +894,7 @@ export class KbqTreeSelect<T = any, K = T>
         return this.resolvedAriaLabel();
     }
 
-    isEmptySearchResult!: boolean;
+    isEmptySearchResult: boolean;
 
     triggerValues: KbqTreeSelectTriggerValue[] = [];
 

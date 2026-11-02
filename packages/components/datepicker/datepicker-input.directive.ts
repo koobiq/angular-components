@@ -92,7 +92,7 @@ class DateDigit {
     maxDays = 31;
     maxMonth = 12;
 
-    parse!: (value: string) => number;
+    parse: (value: string) => number;
 
     constructor(
         public value: DateParts,
@@ -351,10 +351,10 @@ export class KbqDatepickerInput<D>
     /** Whether the input has focus. */
     readonly focused = this.focusedValue.asReadonly();
 
-    datepicker!: KbqDatepicker<D>;
-    calendar!: KbqCalendar<D>;
+    datepicker: KbqDatepicker<D>;
+    calendar: KbqCalendar<D>;
 
-    dateFilter!: (date: D | null) => boolean;
+    dateFilter: (date: D | null) => boolean;
 
     /** Emits when the value changes (either due to user input or programmatic change). */
     valueChange = new EventEmitter<D | null>();
@@ -448,7 +448,7 @@ export class KbqDatepickerInput<D>
         this.validatorOnChange();
     }
 
-    private _min!: D | null;
+    private _min: D | null;
 
     /**
      * The maximum valid date. Drives validation only — including dates typed or pasted into the
@@ -468,7 +468,7 @@ export class KbqDatepickerInput<D>
         this.validatorOnChange();
     }
 
-    private _max!: D | null;
+    private _max: D | null;
 
     /** @docs-private */
     readonly minInput = input<D | null | undefined>(undefined, { alias: 'min' });
@@ -569,13 +569,13 @@ export class KbqDatepickerInput<D>
     /** The combined form control validator for this input. */
     private readonly validator: ValidatorFn | null;
 
-    private separator!: string;
+    private separator: string;
 
     private firstDigit: DateDigit | null = null;
     private secondDigit: DateDigit | null = null;
     private thirdDigit: DateDigit | null = null;
 
-    private separatorPositions!: number[];
+    private separatorPositions: number[];
 
     /** Work the keys left to timers, in the order the timers run. */
     private readonly deferred = new Map<ReturnType<typeof setTimeout>, () => void>();

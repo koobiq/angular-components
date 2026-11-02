@@ -204,8 +204,8 @@ describe(KbqScrollbarModule.name, () => {
     `
 })
 class ScrollEventListener {
-    options!: KbqScrollbarOptions;
-    events!: KbqScrollbarEvents;
+    options: KbqScrollbarOptions;
+    events: KbqScrollbarEvents;
 
     readonly scrollbar = viewChild.required(KbqScrollbar);
 

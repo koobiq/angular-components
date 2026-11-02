@@ -574,7 +574,7 @@ export class KbqTooltipTrigger
      * Header text or template, rendered above the tooltip content. Only meaningful with
      * `kbqTooltipModifier="extended"`. Replaces the removed `KbqExtendedTooltipTrigger.header`.
      */
-    header!: string | TemplateRef<unknown>;
+    header: string | TemplateRef<unknown>;
 
     /**
      * Hands each bound input to its member, and pushes a later change of `modifier`, `header`, `arrow` or

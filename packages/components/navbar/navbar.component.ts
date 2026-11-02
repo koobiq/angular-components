@@ -70,7 +70,7 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
     }
 
     /** @docs-private */
-    keyManager!: FocusKeyManager<KbqNavbarFocusableItem>;
+    keyManager: FocusKeyManager<KbqNavbarFocusableItem>;
 
     /**
      * Tab index of the navbar host. The navbar owns the single tab stop of the whole widget and moves focus

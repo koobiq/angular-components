@@ -130,7 +130,7 @@ describe('FileDropDirective', () => {
     template: '<div style="width: 200px; height: 200px;" kbqFileDrop (filesDropped)="onDrop($event)"></div>'
 })
 class SimpleDNDComponent {
-    files!: FileList | KbqFile[];
+    files: FileList | KbqFile[];
 
     onDrop = vi.fn().mockImplementation((event: FileList | KbqFile[]) => {
         this.files = event;

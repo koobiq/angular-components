@@ -39,7 +39,7 @@ type DevLocaleItem = KbqLocaleItem & { selected: boolean };
 export class DevApp {
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
 
-    selectedLanguage!: DevLocaleItem;
+    selectedLanguage: DevLocaleItem;
     languages: DevLocaleItem[];
 
     constructor() {

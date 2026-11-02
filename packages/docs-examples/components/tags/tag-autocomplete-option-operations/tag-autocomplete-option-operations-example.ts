@@ -103,7 +103,7 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
 
     control = new FormControl();
 
-    filteredTags!: Observable<string[]>;
+    filteredTags: Observable<string[]>;
     hasDuplicates: boolean = false;
 
     readonly kbqOptionTagName = 'KBQ-OPTION';

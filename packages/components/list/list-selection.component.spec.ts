@@ -2808,7 +2808,7 @@ class SelectionListWithBoundTabindex {
     `
 })
 class SelectionListWithTabindexInDisabledState {
-    tabIndex!: number;
+    tabIndex: number;
     disabled: boolean | undefined;
 }
 

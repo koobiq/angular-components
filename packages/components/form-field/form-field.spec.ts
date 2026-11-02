@@ -365,7 +365,7 @@ export class PasswordFormField {
     `
 })
 export class InputFormFieldInOverlay {
-    inOverlay!: boolean;
+    inOverlay: boolean;
 }
 
 @Component({

@@ -80,7 +80,7 @@ export class DevApp {
     popUpPlacements = PopUpPlacements;
 
     popoverActiveStage: number;
-    selectedOrder!: boolean;
+    selectedOrder: boolean;
     isClosable: boolean = false;
 
     isPopoverVisibleLeft: boolean = false;
@@ -114,7 +114,7 @@ export class DevApp {
     selectedTrigger: string = this.TRIGGERS.CLICK;
     selectedSize: KbqPopUpSizeValues = PopUpSizes.Medium;
     layoutClass: string = 'layout-row layout-align-center-center';
-    stickToWindow!: KbqStickToWindowPlacementValues;
+    stickToWindow: KbqStickToWindowPlacementValues;
     content: string = 'button text';
     userDefinedPlacementPriority: string[] = ['bottom', 'right'];
     multipleSelected: string[] = [];

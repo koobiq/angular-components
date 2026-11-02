@@ -33,7 +33,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     protected readonly isListMode = signal(true);
 
     /** @docs-private */
-    protected formGroup!: FormGroup<{ start: FormControl<D | null>; end: FormControl<D | null> }>;
+    protected formGroup: FormGroup<{ start: FormControl<D | null>; end: FormControl<D | null> }>;
 
     /** @docs-private */
     protected readonly showStartCalendar = signal(false);

@@ -73,13 +73,13 @@ export class KbqCalendarBody implements OnChanges {
     readonly selectedValueChange = output<number>();
 
     /** The number of blank cells to put at the beginning for the first row. */
-    firstRowOffset!: number;
+    firstRowOffset: number;
 
     /** Padding for the individual date cells. */
-    cellPadding!: string;
+    cellPadding: string;
 
     /** Width of an individual cell. */
-    cellWidth!: string;
+    cellWidth: string;
 
     cellClicked(cell: KbqCalendarCell): void {
         if (cell.enabled) {

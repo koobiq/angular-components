@@ -456,7 +456,7 @@ export class TestData {
     b: string;
     c: string;
     level: number;
-    name!: string;
+    name: string;
     children: TestData[];
 
     constructor(a: string, b: string, c: string, level: number = 1, children: TestData[] = []) {

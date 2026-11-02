@@ -211,10 +211,10 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      *
      * @docs-private
      */
-    protected panelId!: string;
+    protected panelId: string;
 
     /** @docs-private */
-    protected popoverMode!: boolean;
+    protected popoverMode: boolean;
 
     /**
      * Distance in pixels from the bottom of the list at which the next page is requested.
@@ -257,7 +257,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     /** @docs-private */
     override prefix = 'kbq-notification-center';
     /** @docs-private */
-    override trigger!: KbqNotificationCenterTrigger;
+    override trigger: KbqNotificationCenterTrigger;
     /** @docs-private */
     isTrapFocus: boolean = false;
 
@@ -289,7 +289,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         }
     }
 
-    private _popoverHeight!: string;
+    private _popoverHeight: string;
 
     constructor() {
         super();
@@ -608,9 +608,9 @@ export class KbqNotificationCenterTrigger
     arrow: boolean = false;
 
     /** @docs-private */
-    customClass!: string;
+    customClass: string;
     /** @docs-private */
-    content!: string | TemplateRef<unknown>;
+    content: string | TemplateRef<unknown>;
 
     /** Number of unread notifications, formatted for the trigger badge. */
     get unreadItemsCounter(): Signal<string> {
@@ -683,7 +683,7 @@ export class KbqNotificationCenterTrigger
         }
     }
 
-    private _popoverHeight!: string;
+    private _popoverHeight: string;
 
     /** Whether the trigger is disabled. */
     get disabled(): boolean {

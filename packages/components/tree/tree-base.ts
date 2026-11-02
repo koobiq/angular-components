@@ -130,7 +130,7 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
     viewChange = new BehaviorSubject<{ start: number; end: number }>({ start: 0, end: Number.MAX_VALUE });
 
     /** Differ used to find the changes in the data provided by the data source. */
-    protected dataDiffer!: IterableDiffer<T>;
+    protected dataDiffer: IterableDiffer<T>;
 
     /** Stores the node definition that does not have a when predicate. */
     private defaultNodeDef?: KbqTreeNodeDef<T> | null;
@@ -675,7 +675,7 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
         this._data = value;
     }
 
-    private _data!: T;
+    private _data: T;
 
     get isExpanded(): boolean {
         return this.tree.treeControl.isExpanded(this.data);

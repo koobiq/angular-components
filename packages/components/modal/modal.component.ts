@@ -430,7 +430,7 @@ export class KbqModalComponent<T = any, R = any>
 
     private focusedElementBeforeOpen?: HTMLElement | null;
 
-    private previouslyFocusedElementOrigin!: FocusOrigin;
+    private previouslyFocusedElementOrigin: FocusOrigin;
 
     private monitoredContainer: ElementRef | null = null;
     private focusMonitorSubscription: Subscription | null = null;

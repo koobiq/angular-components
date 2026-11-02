@@ -13,9 +13,9 @@ export function defaultCompareViewValues(firstViewValue: string, secondViewValue
 
 /** Flat tree control. Able to expand/collapse a subtree recursively for flattened tree. */
 export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
-    expandedItemsBeforeFiltration!: K[];
+    expandedItemsBeforeFiltration: K[];
 
-    private filters!: FlatTreeControlFilter<T>[];
+    private filters: FlatTreeControlFilter<T>[];
 
     // Positions in each `dataNodes` array: a tree looks up every rendered row, and `indexOf` would make that
     // rows × nodes. Keyed weakly by the array, so replacing `dataNodes` releases the old nodes.

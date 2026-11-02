@@ -358,10 +358,10 @@ export class KbqAutocompleteTrigger
     private previousValue?: string | number | null;
 
     /** Strategy that is used to position the panel. */
-    private positionStrategy!: FlexibleConnectedPositionStrategy;
+    private positionStrategy: FlexibleConnectedPositionStrategy;
 
     /** The subscription for closing actions (some are bound to document). */
-    private closingActionsSubscription!: Subscription;
+    private closingActionsSubscription: Subscription;
 
     /** Subscription to viewport size changes. */
     private viewportSubscription = Subscription.EMPTY;

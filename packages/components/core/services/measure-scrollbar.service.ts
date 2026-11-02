@@ -21,7 +21,7 @@ export class KbqMeasureScrollbarService {
         return this._scrollBarWidth;
     }
 
-    private _scrollBarWidth!: number;
+    private _scrollBarWidth: number;
     private scrollbarMeasure = {
         position: 'absolute',
         top: '-9999px',

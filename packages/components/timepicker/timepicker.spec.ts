@@ -110,11 +110,11 @@ class TestApp {
 
     readonly ngModel = viewChild.required<NgModel>('ngModel');
 
-    timeFormat!: TimeFormats;
-    minTime!: DateTime;
-    maxTime!: DateTime;
+    timeFormat: TimeFormats;
+    minTime: DateTime;
+    maxTime: DateTime;
     timeValue: DateTime;
-    isDisabled!: boolean;
+    isDisabled: boolean;
 
     constructor() {
         const adapter = this.adapter;
@@ -798,7 +798,7 @@ describe(KbqTimepicker.name, () => {
     })
     class TimePickerWithNullFormControlValue {
         formControl: UntypedFormControl = new UntypedFormControl();
-        timeFormat!: string;
+        timeFormat: string;
     }
 
     describe('with null formControl value', () => {
@@ -891,7 +891,7 @@ describe(KbqTimepicker.name, () => {
         `
     })
     class TimePickerWithNullModelValue {
-        timeFormat!: string;
+        timeFormat: string;
         model: any = null;
     }
 
@@ -972,7 +972,7 @@ describe(KbqTimepicker.name, () => {
         `
     })
     class TimepickerWithLocaleChange {
-        timeFormat!: TimeFormats;
+        timeFormat: TimeFormats;
         model: any = null;
 
         readonly localeService = inject(KBQ_LOCALE_SERVICE);

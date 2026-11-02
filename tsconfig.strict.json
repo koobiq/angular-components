@@ -4,6 +4,8 @@
     // `transpileOnly` along `extends`.
     "compilerOptions": {
         "strict": true,
+        // TODO(DS-5813): turn it on together with `noUncheckedIndexedAccess`.
+        "strictPropertyInitialization": false,
         "noImplicitReturns": true,
         "noImplicitOverride": true,
         "noFallthroughCasesInSwitch": true,

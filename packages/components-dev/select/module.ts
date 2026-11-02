@@ -300,10 +300,10 @@ export class DevApp implements OnInit {
     multiSelectSelectFormControl = new UntypedFormControl([], Validators.pattern(/^w/));
 
     searchCtrl: UntypedFormControl = new UntypedFormControl();
-    filteredOptions!: Observable<string[]>;
+    filteredOptions: Observable<string[]>;
 
     multipleSearchCtrl: UntypedFormControl = new UntypedFormControl();
-    filteredMultipleOptions!: Observable<string[]>;
+    filteredMultipleOptions: Observable<string[]>;
 
     optionCounter = 0;
 

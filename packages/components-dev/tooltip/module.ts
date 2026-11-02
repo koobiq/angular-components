@@ -92,7 +92,7 @@ export class DevApp {
     popUpPlacements = PopUpPlacements;
 
     tooltipActiveStage: number;
-    selectedOrder!: boolean;
+    selectedOrder: boolean;
 
     isPopoverVisibleLeft: boolean = false;
 

@@ -366,7 +366,7 @@ export class KbqFormField
         return this._focusOrigin;
     }
 
-    private _focusOrigin!: FocusOrigin;
+    private _focusOrigin: FocusOrigin;
 
     /**
      * @docs-private

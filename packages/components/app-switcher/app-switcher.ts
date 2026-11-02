@@ -307,7 +307,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     override prefix = 'kbq-app-switcher';
 
     /** @docs-private */
-    override trigger!: KbqAppSwitcherTrigger;
+    override trigger: KbqAppSwitcherTrigger;
 
     /** @docs-private */
     readonly input = viewChild(KbqInput);
@@ -331,7 +331,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     }
 
     /** Roving-focus manager over the inline menu items (flat app rows and other-site rows). */
-    protected keyManager!: FocusKeyManager<KbqDropdownItem>;
+    protected keyManager: FocusKeyManager<KbqDropdownItem>;
 
     private readonly menuItems = new QueryList<KbqDropdownItem>();
 
@@ -666,11 +666,11 @@ export class KbqAppSwitcherTrigger
     /** @docs-private */
     arrow: boolean = false;
     /** @docs-private */
-    customClass!: string;
+    customClass: string;
     private hasBackdrop: boolean = false;
     private size: KbqPopUpSizeValues = PopUpSizes.Medium;
     /** @docs-private */
-    content!: string | TemplateRef<any>;
+    content: string | TemplateRef<any>;
 
     /** Whether search is used or not */
     get withSearch(): boolean {

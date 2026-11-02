@@ -107,7 +107,7 @@ export class KbqDatepickerContent<D> implements OnDestroy {
     readonly animationDone = new Subject<void>();
 
     /** Reference to the datepicker that created the overlay. */
-    datepicker!: KbqDatepicker<D>;
+    datepicker: KbqDatepicker<D>;
 
     /** Current state of the animation. */
     get animationState(): 'enter' | 'void' {
@@ -307,10 +307,10 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     id: string = `kbq-datepicker-${datepickerUid++}`;
 
     /** A reference to the overlay when the calendar is opened as a popup. */
-    popupRef!: OverlayRef | null;
+    popupRef: OverlayRef | null;
 
     /** The input element this datepicker is associated with. */
-    datepickerInput!: KbqDatepickerInput<D>;
+    datepickerInput: KbqDatepickerInput<D>;
 
     private scrollStrategy: () => ScrollStrategy;
 

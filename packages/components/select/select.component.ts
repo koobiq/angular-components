@@ -358,13 +358,13 @@ export class KbqSelect
     private readonly visibleTriggerItems = signal<number | null>(null);
 
     /** The last measured value for the trigger's client bounding rect. */
-    protected triggerRect!: DOMRect;
+    protected triggerRect: DOMRect;
 
     /** The cached font-size of the trigger element in pixels. */
     triggerFontSize = 0;
 
     /** Deals with the selection logic. Manages selected options and their states. */
-    selectionModel!: SelectionModel<KbqOptionBase>;
+    selectionModel: SelectionModel<KbqOptionBase>;
 
     /** Previously selected options before the current selection was made. */
     previousSelectionModelSelected: KbqOptionBase[] = [];
@@ -380,7 +380,7 @@ export class KbqSelect
     private readonly selectedOptionCopies = new WeakMap<KbqOptionBase, KbqVirtualOption>();
 
     /** Manages keyboard events for options in the panel. */
-    keyManager!: ActiveDescendantKeyManager<KbqOption>;
+    keyManager: ActiveDescendantKeyManager<KbqOption>;
 
     /** The value of the select panel's transform-origin property. */
     transformOrigin: string = 'top';
@@ -948,7 +948,7 @@ export class KbqSelect
     }
 
     /** Whether virtual scrolling is enabled for the options panel. */
-    withVirtualScroll!: boolean;
+    withVirtualScroll: boolean;
 
     protected get scrollbarMode(): KbqScrollbarMode {
         return this.withVirtualScroll ? 'native' : this.scrollbarOptions.mode;

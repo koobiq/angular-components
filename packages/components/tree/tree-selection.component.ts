@@ -211,7 +211,7 @@ export class KbqTreeSelection<T = any, K = T>
 
     renderedOptions = new QueryList<KbqTreeOption<T>>();
 
-    keyManager!: FocusKeyManager<KbqTreeOption<T>>;
+    keyManager: FocusKeyManager<KbqTreeOption<T>>;
 
     /**
      * Accessible name of the tree. Set it whenever the tree has no visible label of its own; a tree

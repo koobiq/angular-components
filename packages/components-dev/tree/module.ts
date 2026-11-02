@@ -29,17 +29,17 @@ import { TreeExamplesModule } from '../../docs-examples/components/tree';
 import { DEV_TREE_DATA } from './mock';
 
 export class DevFileNode {
-    children!: DevFileNode[];
-    name!: string;
+    children: DevFileNode[];
+    name: string;
     type: any;
 }
 
 /** Flat node with expandable and level information */
 export class DevFileFlatNode {
-    name!: string;
+    name: string;
     type: any;
-    level!: number;
-    expandable!: boolean;
+    level: number;
+    expandable: boolean;
     parent: any;
 }
 

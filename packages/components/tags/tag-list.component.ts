@@ -412,7 +412,7 @@ export class KbqTagList
     userTabIndex: number | null = null;
 
     /** @docs-private */
-    keyManager!: FocusKeyManager<KbqTag>;
+    keyManager: FocusKeyManager<KbqTag>;
 
     /** An object used to control when error messages are shown. */
     readonly errorStateMatcher = input<ErrorStateMatcher>();

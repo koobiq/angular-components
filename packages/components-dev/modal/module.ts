@@ -169,7 +169,7 @@ export class DevApp {
     componentColors = KbqComponentColors;
 
     isVisible = false;
-    tplModal!: KbqModalRef;
+    tplModal: KbqModalRef;
     htmlModalVisible = false;
 
     isLoading = false;

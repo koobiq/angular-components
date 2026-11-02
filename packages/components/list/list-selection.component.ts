@@ -248,7 +248,7 @@ export class KbqListSelection<T = any>
     private clipboard = inject(Clipboard, { optional: true });
     protected readonly focusMonitor = inject(FocusMonitor);
 
-    keyManager!: FocusKeyManager<KbqListOption<T>>;
+    keyManager: FocusKeyManager<KbqListOption<T>>;
 
     private readonly optionsQuery = contentChildren<KbqListOption<T>>(
         forwardRef(() => KbqListOption),
@@ -560,7 +560,7 @@ export class KbqListSelection<T = any>
         return merge(...this.navigableOptions.map((option) => option.onBlur));
     }
 
-    _value!: T[] | null;
+    _value: T[] | null;
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly platform = inject(Platform);

@@ -3548,20 +3548,20 @@ export const DATA_OBJECT = {
 };
 
 export class FileNode {
-    children!: FileNode[];
-    name!: string;
+    children: FileNode[];
+    name: string;
     type: any;
-    isSpecial!: boolean;
+    isSpecial: boolean;
 }
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-    name!: string;
+    name: string;
     type: any;
-    level!: number;
-    expandable!: boolean;
+    level: number;
+    expandable: boolean;
     parent: any;
-    isSpecial!: boolean;
+    isSpecial: boolean;
 }
 
 export function buildFileTree(value: any, level: number): FileNode[] {
