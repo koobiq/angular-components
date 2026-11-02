@@ -844,7 +844,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'popover',
                     hasApi: true,
                     apiId: 'popover',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-16')
                 },
                 {
                     id: DocsStructureItemId.ProgressBar,

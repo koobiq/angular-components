@@ -148,6 +148,7 @@ $z-index-above-content: 2;
     width: $arrow-size;
     height: $arrow-size;
 
+    translate: var(--kbq-popover-arrow-shift-x, 0px) var(--kbq-popover-arrow-shift-y, 0px);
     transform: rotate(45deg);
 }
 

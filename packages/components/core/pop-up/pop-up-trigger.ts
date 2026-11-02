@@ -1,4 +1,4 @@
-﻿import { Directionality } from '@angular/cdk/bidi';
+import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     CdkScrollable,
@@ -861,6 +861,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         this.instance.setStickPosition();
 
         this.instance.detectChanges();
+        this.instance.updateArrowPosition();
     };
 
     /**
@@ -1073,9 +1074,9 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         ];
     }
 
-    /** Remembers the last mouse event on `mouseenter`, used for cursor-relative positioning. */
+    /** Remembers the last mouse event used for cursor-relative positioning. */
     private saveMouseEvent(event: MouseEvent) {
-        if (this.triggerName === 'mouseenter') {
+        if (this.triggerName === 'mouseenter' || this.triggerName === 'click') {
             this.mouseEvent = event;
         }
     }

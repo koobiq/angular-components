@@ -4715,6 +4715,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "popover-placement-edges-example.ts",
     "importPath": "components/popover"
   },
+  "popover-relative-to-pointer": {
+    "packagePath": "components/popover/popover-relative-to-pointer",
+    "title": "Popover at the click point",
+    "componentName": "PopoverRelativeToPointerExample",
+    "files": [
+      "popover-relative-to-pointer-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "popover-relative-to-pointer-example",
+    "primaryFile": "popover-relative-to-pointer-example.ts",
+    "importPath": "components/popover"
+  },
   "popover-scroll": {
     "packagePath": "components/popover/popover-scroll",
     "title": "popover-scroll",
@@ -8375,6 +8387,7 @@ export type LiveExampleId =
   | 'popover-paddings'
   | 'popover-placement-center'
   | 'popover-placement-edges'
+  | 'popover-relative-to-pointer'
   | 'popover-scroll'
   | 'popover-scrolling-and-layering-page'
   | 'popover-scrolling-and-layering'

@@ -3909,6 +3909,7 @@ export abstract class KbqPopUp implements OnDestroy {
     show(delay: number): void;
     // (undocumented)
     trigger: KbqPopUpTrigger<unknown>;
+    updateArrowPosition(): void;
     // (undocumented)
     updateClassMap(placement: string, customClass: string, classMap?: any): void;
     get visibility(): PopUpVisibility;

@@ -318,4 +318,160 @@ test.describe('KbqPopoverModule', () => {
             await expect(tooltip(page)).toBeVisible();
         });
     });
+
+    test.describe('relative to pointer', () => {
+        test.use({ viewport: { width: 800, height: 600 } });
+
+        const panel = (page: Page) => page.locator('.kbq-popover');
+
+        async function clickAt(trigger: Locator, position: { x: number; y: number }) {
+            await trigger.evaluate((element) => {
+                element.addEventListener(
+                    'click',
+                    (event) => {
+                        const mouseEvent = event as MouseEvent;
+
+                        element.setAttribute('data-click-x', `${mouseEvent.clientX}`);
+                        element.setAttribute('data-click-y', `${mouseEvent.clientY}`);
+                    },
+                    { once: true }
+                );
+            });
+            await trigger.click({ position });
+
+            return trigger.evaluate((element) => ({
+                x: Number(element.getAttribute('data-click-x')),
+                y: Number(element.getAttribute('data-click-y'))
+            }));
+        }
+
+        async function expectArrowAtPoint(page: Page, point: { x: number; y: number }, placement: 'bottom' | 'right') {
+            await expect
+                .poll(async () => {
+                    const geometry = await panel(page).evaluate((element, side) => {
+                        const arrow = element.querySelector<HTMLElement>('.kbq-popover__arrow')!;
+                        const panelRect = element.getBoundingClientRect();
+                        const arrowRect = arrow.getBoundingClientRect();
+                        const center =
+                            side === 'bottom'
+                                ? (arrowRect.left + arrowRect.right) / 2
+                                : (arrowRect.top + arrowRect.bottom) / 2;
+                        const min = side === 'bottom' ? panelRect.left + 30 : panelRect.top + 30;
+                        const max = side === 'bottom' ? panelRect.right - 30 : panelRect.bottom - 30;
+
+                        return { center, min, max };
+                    }, placement);
+                    const coordinate = placement === 'bottom' ? point.x : point.y;
+                    const expected = Math.min(Math.max(coordinate, geometry.min), geometry.max);
+
+                    return Math.abs(geometry.center - expected);
+                })
+                .toBeLessThanOrEqual(1);
+
+            await expect
+                .poll(async () => {
+                    const tip = await panel(page).evaluate((element, side) => {
+                        const rect = element.querySelector<HTMLElement>('.kbq-popover__arrow')!.getBoundingClientRect();
+
+                        return side === 'bottom' ? rect.top : rect.left;
+                    }, placement);
+
+                    return Math.abs(tip - (placement === 'bottom' ? point.y : point.x));
+                })
+                .toBeLessThanOrEqual(1);
+        }
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2ePopoverRelativeToPointer');
+        });
+
+        test('moves the panel and arrow between clicks near opposite viewport edges', async ({ page }) => {
+            await pinTrigger(page, 'e2ePointerBottomOrigin', { top: 160, left: 50 });
+
+            const trigger = page.getByTestId('e2ePopoverPointerTrigger');
+
+            const firstPoint = await clickAt(trigger, { x: 10, y: 20 });
+
+            await expect(panel(page)).toBeVisible();
+            await expectArrowAtPoint(page, firstPoint, 'bottom');
+
+            const firstShift = await panel(page).evaluate(
+                (element) => parseFloat(element.style.getPropertyValue('--kbq-popover-arrow-shift-x')) || 0
+            );
+
+            const secondPoint = await clickAt(trigger, { x: 690, y: 20 });
+
+            await expectArrowAtPoint(page, secondPoint, 'bottom');
+
+            const secondShift = await panel(page).evaluate(
+                (element) => parseFloat(element.style.getPropertyValue('--kbq-popover-arrow-shift-x')) || 0
+            );
+
+            expect(secondPoint.x).toBeGreaterThan(700);
+            expect(firstShift).toBeLessThan(0);
+            expect(secondShift).toBeGreaterThan(0);
+            await expect(panel(page)).toBeVisible();
+        });
+
+        test('renders the pointer-aligned arrow in light and dark themes', async ({ page }) => {
+            await pinTrigger(page, 'e2ePointerBottomOrigin', { top: 160, left: 50 });
+
+            const trigger = page.getByTestId('e2ePopoverPointerTrigger');
+            const point = await clickAt(trigger, { x: 10, y: 20 });
+
+            await expect(panel(page)).toBeVisible();
+            await expectArrowAtPoint(page, point, 'bottom');
+            await page.mouse.move(799, 599);
+
+            const target = page.getByTestId('e2eScreenshotTarget');
+
+            await expect(target).toHaveScreenshot('03-relative-to-pointer-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('03-relative-to-pointer-dark.png');
+        });
+
+        test('keeps keyboard opening on the trigger', async ({ page }) => {
+            const trigger = page.getByTestId('e2ePopoverPointerTrigger');
+
+            await trigger.focus();
+            await page.keyboard.press('Enter');
+            await expect(panel(page)).toBeVisible();
+
+            await expect
+                .poll(() =>
+                    panel(page).evaluate((element) => element.style.getPropertyValue('--kbq-popover-arrow-shift-x'))
+                )
+                .toBe('');
+            await expect
+                .poll(() =>
+                    panel(page).evaluate((element) => element.style.getPropertyValue('--kbq-popover-arrow-shift-y'))
+                )
+                .toBe('');
+        });
+
+        test('keeps the arrow on the clicked point after scrolling', async ({ page }) => {
+            await page.evaluate(() => (document.body.style.height = '1200px'));
+
+            const trigger = page.getByTestId('e2ePopoverPointerTrigger');
+
+            const point = await clickAt(trigger, { x: 10, y: 20 });
+
+            await expect(panel(page)).toBeVisible();
+            await expectArrowAtPoint(page, point, 'bottom');
+
+            await page.evaluate(() => window.scrollTo(0, 100));
+            await expectArrowAtPoint(page, { x: point.x, y: point.y - 100 }, 'bottom');
+        });
+
+        test('clamps the vertical arrow at the viewport edge', async ({ page }) => {
+            await pinTrigger(page, 'e2ePointerRightOrigin', { top: 0, left: 50 });
+
+            const trigger = page.getByTestId('e2ePopoverPointerRightTrigger');
+
+            const point = await clickAt(trigger, { x: 20, y: 8 });
+
+            await expect(panel(page)).toBeVisible();
+            await expectArrowAtPoint(page, point, 'right');
+        });
+    });
 });
