@@ -173,14 +173,14 @@ class AppComponent {
 
 #### Theme selectors
 
-Available selectors for the dark and light themes:
+Selectors for the dark and light themes:
 
-| Theme | Selectors                                  |
-| ----- | ------------------------------------------ |
-| Dark  | .kbq-dark, .theme-dark, .kbq-theme-dark    |
-| Light | .kbq-light, .theme-light, .kbq-theme-light |
+| Theme | Selector   |
+| ----- | ---------- |
+| Dark  | .kbq-dark  |
+| Light | .kbq-light |
 
-We recommend using the selectors defined in `ThemeService` (`kbq-dark` for dark and `kbq-light` for light).
+`ThemeService` puts these classes on `<body>`. The design system variables are declared only under them, so a different class doesn't switch the theme.
 
 #### Switching based on the OS theme
 
