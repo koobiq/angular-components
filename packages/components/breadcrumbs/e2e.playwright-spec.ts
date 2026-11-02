@@ -130,7 +130,11 @@ test.describe('KbqBreadcrumbs item count', () => {
         const host = (await trail.boundingBox())!;
         const firstItem = (await trail.locator('.kbq-breadcrumb-item').first().boundingBox())!;
 
-        return { height: host.height, firstItemLeft: firstItem.x - host.x, firstItemTop: firstItem.y - host.y };
+        return {
+            height: Math.round(host.height),
+            firstItemLeft: Math.round(firstItem.x - host.x),
+            firstItemTop: Math.round(firstItem.y - host.y)
+        };
     };
 
     for (const firstItemNegativeMargin of [true, false]) {
