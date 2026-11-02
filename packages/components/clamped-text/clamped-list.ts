@@ -1,6 +1,7 @@
 import { _IdGenerator } from '@angular/cdk/a11y';
 import { computed, Directive, inject, input, model, numberAttribute } from '@angular/core';
 import { kbqInjectNativeElement, KbqLocaleOverridesDirective } from '@koobiq/components/core';
+import { kbqInjectCollapseAnimation } from './collapse-animation';
 import { KbqClamped, KbqClampedRoot, kbqInjectClampedTextLocaleConfiguration } from './constants';
 
 /**
@@ -23,6 +24,7 @@ import { KbqClamped, KbqClampedRoot, kbqInjectClampedTextLocaleConfiguration } f
 })
 export class KbqClampedList<T> implements KbqClamped {
     private readonly nativeElement = kbqInjectNativeElement();
+    private readonly animateCollapse = kbqInjectCollapseAnimation();
 
     /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = expanded. */
     readonly isCollapsed = model<boolean>(true);
@@ -38,6 +40,13 @@ export class KbqClampedList<T> implements KbqClamped {
      * Minimum number of hidden items required to show the toggle trigger. Defaults to `6`.
      */
     readonly hiddenThreshold = input(6, { transform: numberAttribute });
+
+    /**
+     * Duration of the expand and collapse animation in milliseconds.
+     * Only state changes made through the disclosure toggle animate: programmatic writes of
+     * `isCollapsed` and changes of `items` switch instantly. Defaults to `100`.
+     */
+    readonly duration = input<number, number | string | null | undefined>(100, { transform: numberAttribute });
 
     /** Id the trigger points its `aria-controls` at. Keeps an id the host already carries. */
     readonly contentId: string = this.nativeElement.id || inject(_IdGenerator).getId('kbq-clamped-list-');
@@ -61,7 +70,7 @@ export class KbqClampedList<T> implements KbqClamped {
     /** Toggles the collapsed state of the list. Stops event propagation. */
     toggle(event: Event) {
         event.stopPropagation();
-        this.isCollapsed.update((state) => !state);
+        this.animateCollapse(this.nativeElement, this.duration(), () => this.isCollapsed.update((state) => !state));
     }
 }
 

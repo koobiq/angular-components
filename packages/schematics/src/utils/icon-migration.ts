@@ -30,6 +30,7 @@ export interface IconMigrationData {
     scope: { from: string; to: string };
     /** How the bare scope token behaves inside a class list: dropped, or renamed in place. */
     scopeClassInList: 'remove' | 'rename';
+    scopeClassOnIconHost?: 'remove' | 'rename';
     /** Exact deprecated-suffix -> new-suffix pairs (unprefixed). */
     icons: TokenReplacement[];
     /** Only for the valueAttrs code path: rescope `<scope>-<anything>` even when the suffix isn't
@@ -271,6 +272,10 @@ export function createIconTemplateTransform(
 
         const edits: PendingEdit[] = [];
         const allFound: TokenReplacement[] = [];
+        const iconHostTokenMap =
+            data.scopeClassOnIconHost === undefined || data.scopeClassOnIconHost === data.scopeClassInList
+                ? tokenMap
+                : new Map(tokenMap).set(data.scope.from, data.scopeClassOnIconHost === 'remove' ? null : data.scope.to);
 
         const resolveValueToken = (token: string): string | null | undefined => {
             if (tokenMap.has(token)) {
@@ -289,6 +294,10 @@ export function createIconTemplateTransform(
         };
 
         for (const el of visitor.elementsToMigrate) {
+            const classTokenMap = el.attrs.some((attr) => data.valueAttrs.includes(getSimpleAttributeName(attr.name)))
+                ? iconHostTokenMap
+                : tokenMap;
+
             for (const attr of el.attrs) {
                 if (!attr.valueSpan) {
                     continue;
@@ -330,7 +339,7 @@ export function createIconTemplateTransform(
 
                 if (simpleName === 'class' && !attr.name.startsWith('[')) {
                     const found: TokenReplacement[] = [];
-                    const newValue = replaceTokenList(attr.value, exactTokenLookup(tokenMap, found));
+                    const newValue = replaceTokenList(attr.value, exactTokenLookup(classTokenMap, found));
 
                     if (newValue !== undefined) {
                         edits.push({
@@ -346,8 +355,8 @@ export function createIconTemplateTransform(
 
                 const bindingToken = getClassBindingToken(simpleName);
 
-                if (bindingToken !== undefined && tokenMap.has(bindingToken)) {
-                    const replacement = tokenMap.get(bindingToken);
+                if (bindingToken !== undefined && classTokenMap.has(bindingToken)) {
+                    const replacement = classTokenMap.get(bindingToken);
 
                     if (replacement) {
                         const newSimpleName = simpleName.replace(

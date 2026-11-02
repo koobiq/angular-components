@@ -55,7 +55,8 @@ const WITHHELD: Record<string, string> = {
     'directory-structure': 'repository layout, only meaningful to contributors',
     'theming-deprecated': 'superseded by theming; shipping it would offer dead advice',
     customization: 'folded into theming at 19.0.0',
-    'component-health': 'internal quality tracking'
+    'component-health': 'internal quality tracking',
+    'ai-agents': 'tells a person how to connect an agent; an agent already reading this has nothing to act on'
 };
 
 const MATCHED_IN_RUSSIAN = new Set(['which-component-when']);

@@ -1,14 +1,10 @@
-# which_component_when data source
-
-Not a page of koobiq.io. This file is the data the `which_component_when` tool of the Koobiq MCP server parses; it
-is `.md` rather than `.mdx` on purpose, so the docs site build skips it — see [Provenance](#provenance).
+# Which component when
 
 Maps a **task** to a Koobiq component, and names the neighboring component it is confused with.
 
-Written for the `which_component_when` tool of the Koobiq MCP server. An agent without this mapping picks the
-component whose name looks like a word in the request — the frequent failure is not "found nothing" but "found the
-neighbor": `autocomplete` for a multi-select, `toast` for a message that must be acknowledged, `tabs` for a form
-control.
+An agent without this mapping picks the component whose name looks like a word in the request — the frequent failure
+is not "found nothing" but "found the neighbor": `autocomplete` for a multi-select, `toast` for a message that must
+be acknowledged, `tabs` for a form control. Where the file lives and who reads it: see [Provenance](#provenance).
 
 ## How to read it
 
@@ -21,28 +17,17 @@ agent cannot reconstruct from component names.
 
 ## Provenance
 
-The component docs carry the usage prose for roughly a third of the library:
+The clusters, the "why not" and the line of every component were written for this guide from the docs, the public
+API and the component code. Keep them here rather than scattering them back into the MDX pages: the comparisons
+cross component boundaries, and a page about one component is the wrong place to say which other component wins.
 
-| Source                                                | What it actually holds                                                                                                                                                            |
-| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `packages/components/*/<id>.en.mdx` — intro paragraph | Present for every component. One sentence, says _what_ it is; _when_ only by implication                                                                                          |
-| `### When to use`                                     | 7 components: `tree`, `modal`, `sidepanel`, `timepicker`, `loader-overlay`, `link`, `dynamic-translation`                                                                         |
-| `### Recommendations` / `### Guidelines`              | 15 components: `accordion`, `badge`, `button-group`, `inline-edit`, `list`, `popover`, `radio`, `select`, `skeleton`, `split-button`, `tabs`, `tag`, `title`, `toggle`, `tooltip` |
-| `modal.en.mdx` → `### Related components`             | The richest comparison text in the repo: modal against popover, sidepanel, inline forms, accordion, toast, a new page, undo                                                       |
-| Cross-links in prose                                  | Scattered "use X instead": `list` → `select`/`tree`, `title` → `tooltip`/`popover`, `tag` → `badge`, `tabs` → `navbar`                                                            |
-| `*.ru.mdx`                                            | A faithful mirror of the English pages — same sections, same count. No extra guidance to mine                                                                                     |
-| `packages/docs-examples/**` `@title`                  | 623 titles, but they name features ("Select multiple"), not tasks. Usable as keywords only                                                                                        |
-| `apps/docs/src/llms.txt`, `llms-full.txt`             | A link index and the same MDX text. No formulations of their own                                                                                                                  |
-
-Everything else below — the clusters, the "why not", the per-component lines for the ~50 components that document
-only what they are — was written for this guide from the docs, the public API and the component code. Keep it here
-rather than scattering it back into the MDX pages: the comparisons cross component boundaries, and a page about one
-component is the wrong place to say which other component wins.
-
-The MCP server reads this file as an ordinary guide — `build-guides.ts` picks it up from `docs/guides` along with
-the rest, in both languages — but it never becomes a page of koobiq.io: `tools/docs-pages/sources.ts` globs only
-`docs/guides/**/*.mdx`, and the `.md` extension here is deliberate, not an oversight. This file is the single
-source of truth — the server holds no copy of the mapping.
+This file is the data the `which_component_when` tool of the Koobiq MCP server parses. The server reads it as an
+ordinary guide — `build-guides.ts` picks it up from `docs/guides` along with the rest, in both languages — but it
+never becomes an HTML page of koobiq.io: `tools/docs-pages/sources.ts` globs only `docs/guides/**/*.mdx`, and the
+`.md` extension here is deliberate, not an oversight. `tools/llms` reads it by the same shapes and serves it to
+agents as `/which-component-when.md` with a file per cluster, and `check-llms` fails on a component without its line
+in the component index of either language. This file is the single source of truth — the server holds no copy of the
+mapping.
 
 ## Disambiguation
 
@@ -239,7 +224,6 @@ One line each: when to reach for it. `→` names the neighbor to prefer in the c
 - `kbq-title` — the same tooltip, but only when the element's text is actually truncated.
 - `sidepanel` — a window sliding from the edge over the page, modal or non-modal; non-modal panels stack with an offset. For a lot of data in a tall layout.
 - `content-panel` — a panel that slides in and shifts the adjacent content, typically a quick preview of a table row.
-- `dropdown` — see Choosing values.
 
 ### Layout and structure
 
@@ -266,6 +250,7 @@ One line each: when to reach for it. `→` names the neighbor to prefer in the c
 ### Data display
 
 - `table` — a plain HTML table with Koobiq styling, sticky header and border options; no sorting, no column resizing. → AG Grid for either.
+- `ag-grid` — tabular data in columns with sorting, filtering, column resizing or reordering, row selection or virtual scrolling.
 - `dl` — term and description pairs, adaptive, horizontal or vertical, optionally with resizable columns.
 - `username` — the attributes that identify an internal system user.
 - `flag` — a country flag, shaped and cropped from the image you project or pass as `svg`.
@@ -283,10 +268,10 @@ One line each: when to reach for it. `→` names the neighbor to prefer in the c
 
 - `core` — the shared entry point: behaviors, a11y, keycodes, locales, overlay helpers, selection models, theming, formatters, validators and the test helpers.
 - `DateFormatter` — dates and times in the corporate format, following the active locale.
-- Number and file-size formatters — numbers and byte sizes in the conventions of the current locale.
+- `number-formatter` / `filesize-formatter` — numbers and byte sizes in the conventions of the current locale.
 - `ErrorStateMatcher` — the policy that decides _when_ a control shows the errors it already has.
-- Forms layout utilities — arranging fields, labels, hints and messages in horizontal, vertical or grouped layouts.
-- Typography and theming — the font scale and the token-driven themes; see the theming guide.
+- `forms` — layout utilities arranging fields, labels, hints and messages in horizontal, vertical or grouped layouts.
+- `typography` / `theming` — the font scale and the token-driven themes.
 
 ## Keyword index
 
@@ -299,7 +284,7 @@ Words a request is likely to use → the cluster that settles it.
 - error, warning, success, acknowledge, confirm, "are you sure", notify, missed message, history of messages → Tell the user something
 - empty, no data, no results, nothing found, failed to load → Tell the user something
 - dialog, window, drawer, panel, preview, blocks the page, stacking → An extra layer over the page
-- hint, hover, truncated, ellipsis, three dots, "show more", collapse, fit the width → Text that does not fit and Tell the user something
+- hint, hover, truncated, ellipsis, three dots, "show more", collapse, fit the width → Text that does not fit
 - table, grid, sort, resize columns, key-value, attributes, filters, highlight matches → Tabular and structured data
 - menu, main navigation, toolbar, breadcrumbs, tabs, sections, switch view, another app → Navigation
 - edit in place, pencil, save immediately, form, date, time, period, timezone, upload → Editing existing data

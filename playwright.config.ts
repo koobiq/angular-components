@@ -1,4 +1,5 @@
 import { defineConfig, devices, ViewportSize } from '@playwright/test';
+import { e2eChromiumArgs } from './packages/e2e/utils/launch-options';
 
 const isCI = !!process.env.CI;
 const viewport: ViewportSize = {
@@ -105,7 +106,8 @@ export default defineConfig({
             name: 'Chrome',
             use: {
                 ...devices['Desktop Chrome HiDPI'],
-                viewport
+                viewport,
+                launchOptions: { args: [...e2eChromiumArgs] }
             }
         }
     ],

@@ -32,6 +32,10 @@
                         "browser": "src/main.ts",
                         "tsConfig": "tsconfig.json",
                         "styles": [
+                            "node_modules/inter-ui/inter.css",
+                            "node_modules/@fontsource/jetbrains-mono/400.css",
+                            "node_modules/@fontsource/jetbrains-mono/600.css",
+                            "node_modules/@fontsource/jetbrains-mono/700.css",
                             "node_modules/@koobiq/icons/fonts/kbq-icons.css",
                             "node_modules/@koobiq/design-tokens/web/css-tokens.css",
                             "node_modules/@koobiq/design-tokens/web/css-tokens-light.css",

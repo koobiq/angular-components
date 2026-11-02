@@ -38,16 +38,15 @@ import { timer } from 'rxjs';
                     </kbq-form-field>
                 </div>
 
-                <div class="kbq-form__row">
+                <div class="kbq-form__row layout-align-start-start">
                     <button
-                        class="flex-25"
                         color="contrast"
                         kbq-button
                         type="submit"
                         [class.kbq-progress]="inProgress()"
                         [disabled]="inProgress()"
                     >
-                        Send
+                        Submit
                     </button>
                 </div>
             </div>

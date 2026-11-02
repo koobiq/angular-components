@@ -37,7 +37,8 @@ export interface E2eWebkitPanelScrollingConfig {
 export function e2eDescribeWebkitPanelScrolling(config: E2eWebkitPanelScrollingConfig): void {
     const { name, route, open, port: portSelector, item, activeItem } = config;
 
-    test.use({ browserName: 'webkit' });
+    // `launchOptions` drops the project's Chromium switches, which WebKit refuses (see `e2eChromiumArgs`).
+    test.use({ browserName: 'webkit', launchOptions: {} });
 
     test.describe(`${name} panel scrolling`, () => {
         const getPort = (page: Page): Locator => page.locator(portSelector);

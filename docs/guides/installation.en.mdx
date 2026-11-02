@@ -9,6 +9,10 @@ Angular packages at the version your application is already on:
 ng add @koobiq/components
 ```
 
+`ng add` also adds the styles to `angular.json`, the theme classes to `index.html` and the theme provider to the
+application. `--theme` picks `light`, `dark` or `auto`, the default, which follows the system color scheme. The
+locale and the fonts are yours to set, as described below.
+
 Manual installation. First install `@angular/cdk` at the version your `package.json` already has for
 `@angular/core`:
 
@@ -30,7 +34,8 @@ major version 4, the one this version of the library is built against.
 date components — [datepicker](/en/components/datepicker), [timepicker](/en/components/timepicker) or
 [filter-bar](/en/components/filter-bar). Either one is a wrapper around a base adapter that has to be
 installed next to it — `@koobiq/luxon-date-adapter` or `@koobiq/moment-date-adapter`. npm adds that
-base package on its own, Yarn and pnpm do not, so install it explicitly. Install `marked` if you use
+base package on its own, Yarn and pnpm do not, so install it explicitly. The adapter is provided next to the
+locale, see below. Install `marked` if you use
 [markdown](/en/components/markdown), `highlight.js` if you use
 [code-block](/en/components/code-block), and `@angular/router` if you use
 [breadcrumbs](/en/components/breadcrumbs).
@@ -100,19 +105,51 @@ see the [theming guide](/en/main/theming/overview).
 
 ### Setting up theme
 
-Add the theme class to the `<body>` element in your `index.html` file:
+Add the theme classes to the `<body>` element in your `index.html` file: `kbq-app-background` paints the page
+background and text, `kbq-light` picks the theme.
 
 ```html
-<body class="kbq-light">
+<body class="kbq-app-background kbq-light">
     <app-root></app-root>
 </body>
 ```
 
-For more information about theme setup and switching, see the [theming](/en/main/theming) section.
+For the dark theme, or to switch themes, also add `css-tokens-dark.css` to the styles; see the
+[theming](/en/main/theming) section.
+
+### Setting the locale
+
+The components render some strings of their own: placeholders, tooltips, the accessible names of icon buttons.
+Until the application provides a locale, they use the `ru-RU` strings, and switching the locale at runtime does
+nothing. Provide the locale of your application:
+
+```typescript
+import { kbqLocaleIDProvider, kbqLocaleServiceProvider } from '@koobiq/components/core';
+
+bootstrapApplication(AppComponent, {
+    providers: [kbqLocaleIDProvider('en-US'), kbqLocaleServiceProvider()]
+});
+```
+
+With the date components, provide the date adapter in the same `providers`: one locale service then serves the
+components and the adapter, and a locale switched at runtime reaches both.
+
+```typescript
+import { importProvidersFrom } from '@angular/core';
+import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+
+bootstrapApplication(AppComponent, {
+    providers: [kbqLocaleIDProvider('en-US'), kbqLocaleServiceProvider(), importProvidersFrom(KbqLuxonDateModule)]
+});
+```
+
+The library ships `en-US`, `es-LA`, `pt-BR`, `ru-RU` and `tk-TM`. To switch the locale at runtime or override
+the strings, see the [localization](/en/main/localization) section.
 
 ### Setting up typography
 
-For proper component rendering, it is recommended to include the [Inter](https://github.com/rsms/inter) font.
+For proper component rendering, it is recommended to include the [Inter](https://github.com/rsms/inter) and
+[JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) fonts.
 
 For more information, see the [typography](/en/main/typography) section.
 

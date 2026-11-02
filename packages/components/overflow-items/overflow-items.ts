@@ -24,7 +24,16 @@ import {
     kbqInjectNativeElement,
     KbqOrientation
 } from '@koobiq/components/core';
-import { debounce, merge, skip, switchMap, timer } from 'rxjs';
+import { debounce, EMPTY, fromEvent, merge, switchMap, timer } from 'rxjs';
+
+/**
+ * Overflow, in device pixels, from which an item is hidden. At a fractional `devicePixelRatio` (browser zoom, display
+ * scaling) the summed sizes drift from the layout by a fraction of a device pixel: computed margins, paddings and gaps
+ * are not snapped to the layout grid of 1/64 device pixel, and `DOMRect` is single-precision. A container sized by its
+ * content would read as overflown after every hidden item and lose them all. Half a device pixel absorbs the drift of 32
+ * such lengths, while a larger overflow can already cost the item a device pixel when it is painted.
+ */
+const MIN_OVERFLOW_IN_DEVICE_PIXELS = 0.5;
 
 /**
  * Manages the visibility of the element.
@@ -173,7 +182,8 @@ export class KbqOverflowItems {
     readonly additionalResizeObserverTargets = input<Element | Element[]>(this.document.body);
 
     /**
-     * Emits when the set of hidden items changes.
+     * Emits the set of hidden items after every recalculation, also when it has not changed: a recalculation shows every
+     * item before it hides the overflown ones again, so a consumer that hides items itself re-applies that here.
      */
     readonly changes = output<ReadonlySet<unknown>>();
 
@@ -194,46 +204,43 @@ export class KbqOverflowItems {
      */
     readonly wrap = input<KbqFlexWrap>('nowrap');
 
+    /** The main axis of each orientation, as the `DOMRect` and `CSSStyleDeclaration` members to read. */
     private readonly orientationConfig: Record<
         KbqOrientation,
         {
-            containerSize: (element: HTMLElement) => number;
-            paddingStart: (computedStyle: CSSStyleDeclaration) => number;
-            paddingEnd: (computedStyle: CSSStyleDeclaration) => number;
-            itemSize: (element: HTMLElement) => number;
+            size: 'width' | 'height';
+            marginStart: 'marginLeft' | 'marginTop';
+            marginEnd: 'marginRight' | 'marginBottom';
+            paddingStart: 'paddingLeft' | 'paddingTop';
+            paddingEnd: 'paddingRight' | 'paddingBottom';
+            borderStart: 'borderLeftWidth' | 'borderTopWidth';
+            borderEnd: 'borderRightWidth' | 'borderBottomWidth';
+            gap: 'columnGap' | 'rowGap';
             isCrossAxisExceeded: (element: HTMLElement) => boolean;
             flexDirection: KbqFlexDirection;
         }
     > = {
         horizontal: {
-            containerSize: (element) => element.getBoundingClientRect().width,
-            paddingStart: ({ paddingLeft }) => parseFloat(paddingLeft) || 0,
-            paddingEnd: ({ paddingRight }) => parseFloat(paddingRight) || 0,
-            itemSize: (element) => {
-                const { marginRight, marginLeft } = this.window.getComputedStyle(element);
-
-                return (
-                    element.getBoundingClientRect().width +
-                    (parseFloat(marginLeft) || 0) +
-                    (parseFloat(marginRight) || 0)
-                );
-            },
+            size: 'width',
+            marginStart: 'marginLeft',
+            marginEnd: 'marginRight',
+            paddingStart: 'paddingLeft',
+            paddingEnd: 'paddingRight',
+            borderStart: 'borderLeftWidth',
+            borderEnd: 'borderRightWidth',
+            gap: 'columnGap',
             isCrossAxisExceeded: ({ clientHeight, scrollHeight }) => scrollHeight > clientHeight,
             flexDirection: 'row'
         },
         vertical: {
-            containerSize: (element) => element.getBoundingClientRect().height,
-            paddingStart: ({ paddingTop }) => parseFloat(paddingTop) || 0,
-            paddingEnd: ({ paddingBottom }) => parseFloat(paddingBottom) || 0,
-            itemSize: (element) => {
-                const { marginTop, marginBottom } = this.window.getComputedStyle(element);
-
-                return (
-                    element.getBoundingClientRect().height +
-                    (parseFloat(marginTop) || 0) +
-                    (parseFloat(marginBottom) || 0)
-                );
-            },
+            size: 'height',
+            marginStart: 'marginTop',
+            marginEnd: 'marginBottom',
+            paddingStart: 'paddingTop',
+            paddingEnd: 'paddingBottom',
+            borderStart: 'borderTopWidth',
+            borderEnd: 'borderBottomWidth',
+            gap: 'rowGap',
             isCrossAxisExceeded: ({ clientWidth, scrollWidth }) => scrollWidth > clientWidth,
             flexDirection: 'column'
         }
@@ -258,12 +265,19 @@ export class KbqOverflowItems {
             )
         );
 
-        merge(
-            toObservable(this.items),
-            toObservable(this.reverseOverflowOrder).pipe(skip(1)),
-            toObservable(this.orientation).pipe(skip(1)),
-            resizeObservers
-        )
+        // What the hidden set depends on besides the geometry.
+        const inputs = computed(() => [
+            this.items().map((item) => [item.order(), item.alwaysVisible()]),
+            this.result(),
+            this.reverseOverflowOrder(),
+            this.orientation(),
+            this.wrap()
+        ]);
+
+        // A web font that loads lays the items out again without resizing a container of fixed size.
+        const fontsLoaded = this.document.fonts ? fromEvent(this.document.fonts, 'loadingdone') : EMPTY;
+
+        merge(toObservable(inputs), resizeObservers, fontsLoaded)
             .pipe(
                 // Read per emission: the constructor that builds this runs before the input is set.
                 debounce(() => timer(this.debounceTime())),
@@ -307,14 +321,29 @@ export class KbqOverflowItems {
         result?.hide();
         items.forEach((item) => item.show());
 
-        while (this.hasOverflown(container, items, result, orientation)) {
-            const itemToHide = reverseOverflowOrder
-                ? items.find(({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible())
-                : items.findLast(({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible());
+        const hideable = (reverseOverflowOrder ? items : [...items].reverse()).filter(
+            ({ alwaysVisible }) => !alwaysVisible()
+        );
+        const threshold = MIN_OVERFLOW_IN_DEVICE_PIXELS / (this.window.devicePixelRatio || 1);
+        let hiddenCount = 0;
 
-            if (!itemToHide) break;
+        if (this.wrap() !== 'wrap') {
+            // Hides in one go what the first measurement already shows to be too much, sparing the loop below a layout
+            // per item. With every item visible the items are at their smallest and the container at its largest, and
+            // the result is not counted yet, so this never hides more than the loop would.
+            const { overflow, sizes } = this.measure(container, orientation);
+            let excess = overflow;
 
-            itemToHide.hide();
+            while (hiddenCount < hideable.length && excess >= threshold) {
+                excess -= sizes.get(hideable[hiddenCount].element) ?? 0;
+                hideable[hiddenCount++].hide();
+            }
+
+            if (hiddenCount) result?.show();
+        }
+
+        while (hiddenCount < hideable.length && this.hasOverflown(container, orientation, threshold)) {
+            hideable[hiddenCount++].hide();
             result?.show();
         }
 
@@ -343,21 +372,64 @@ export class KbqOverflowItems {
             .subscribe((wrap) => this.renderer.setStyle(this.element, 'flex-wrap', wrap));
     }
 
-    private hasOverflown(
-        container: HTMLElement,
-        items: ReadonlyArray<KbqOverflowItem>,
-        result: KbqOverflowItemsResult | undefined,
-        orientation: KbqOrientation
-    ): boolean {
+    private hasOverflown(container: HTMLElement, orientation: KbqOrientation, threshold: number): boolean {
         if (this.wrap() === 'wrap') return this.orientationConfig[orientation].isCrossAxisExceeded(container);
 
-        const { containerSize, paddingStart, paddingEnd, itemSize } = this.orientationConfig[orientation];
-        const computedStyle = this.window.getComputedStyle(container);
-        const containerSizeWithoutPaddings =
-            containerSize(container) - paddingStart(computedStyle) - paddingEnd(computedStyle);
-        const itemsSize = items.reduce((size, item) => size + (item.hidden() ? 0 : itemSize(item.element)), 0);
-        const resultSize = !result || result.hidden() ? 0 : itemSize(result.element);
+        return this.measure(container, orientation).overflow >= threshold;
+    }
 
-        return itemsSize + resultSize > containerSizeWithoutPaddings;
+    /**
+     * Measures how far the children of the container that take part in its layout exceed its content box along the
+     * main axis, and the space each of them takes, its margins and one gap included.
+     */
+    private measure(
+        container: HTMLElement,
+        orientation: KbqOrientation
+    ): { overflow: number; sizes: ReadonlyMap<Element, number> } {
+        const axis = this.orientationConfig[orientation];
+        const style = this.window.getComputedStyle(container);
+        const size = container.getBoundingClientRect()[axis.size];
+        const edges =
+            this.px(style[axis.borderStart]) +
+            this.px(style[axis.paddingStart]) +
+            this.px(style[axis.paddingEnd]) +
+            this.px(style[axis.borderEnd]);
+        // Rects are measured after transforms and CSS `zoom`, computed lengths before them.
+        const layoutSize = parseFloat(style[axis.size]);
+        const scale = layoutSize > 0 ? size / (layoutSize + (style.boxSizing === 'border-box' ? 0 : edges)) : 1;
+        const gap = this.px(style[axis.gap]) * scale;
+        const sizes = new Map<Element, number>();
+        // Gaps lie between the children, one fewer than there are.
+        let used = -gap;
+
+        for (const { element, style: childStyle } of this.getLaidOutChildren(container)) {
+            const margins = this.px(childStyle[axis.marginStart]) + this.px(childStyle[axis.marginEnd]);
+            const childSize = element.getBoundingClientRect()[axis.size] + margins * scale + gap;
+
+            sizes.set(element, childSize);
+            used += childSize;
+        }
+
+        return { overflow: used - (size - edges * scale), sizes };
+    }
+
+    /**
+     * Children of the element that take part in its flex layout: neither `display: none` nor taken out of flow, as
+     * hidden items are, with the children of a `display: contents` child in its place.
+     */
+    private getLaidOutChildren(element: Element): Array<{ element: Element; style: CSSStyleDeclaration }> {
+        return Array.from(element.children).flatMap((child) => {
+            const style = this.window.getComputedStyle(child);
+
+            if (style.display === 'contents') return this.getLaidOutChildren(child);
+
+            if (style.display === 'none' || style.position === 'absolute' || style.position === 'fixed') return [];
+
+            return [{ element: child, style }];
+        });
+    }
+
+    private px(value: string): number {
+        return parseFloat(value) || 0;
     }
 }

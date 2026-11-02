@@ -9,6 +9,10 @@ Angular-пакеты будут установлены той версии, на
 ng add @koobiq/components
 ```
 
+`ng add` также добавляет стили в `angular.json`, классы темы в `index.html` и провайдер темы в приложение.
+`--theme` выбирает `light`, `dark` или `auto` — по умолчанию, тема следует цветовой схеме системы. Локаль и шрифты
+настраиваются отдельно, как описано ниже.
+
 Ручная установка. Сначала установите `@angular/cdk` той версии, которая уже стоит в `package.json`
 для `@angular/core`:
 
@@ -31,7 +35,7 @@ npm install @koobiq/components overlayscrollbars@2.7.3 @koobiq/icons @koobiq/des
 [timepicker](/ru/components/timepicker) или [filter-bar](/ru/components/filter-bar). Каждый из них —
 обёртка над базовым адаптером, который нужно установить рядом: `@koobiq/luxon-date-adapter` или
 `@koobiq/moment-date-adapter`. npm добавляет базовый пакет сам, Yarn и pnpm — нет, поэтому указывайте
-его явно. Установите `marked`, если используете [markdown](/ru/components/markdown), `highlight.js`,
+его явно. Адаптер подключается рядом с локалью, см. ниже. Установите `marked`, если используете [markdown](/ru/components/markdown), `highlight.js`,
 если используете [code-block](/ru/components/code-block), и `@angular/router`, если используете
 [breadcrumbs](/ru/components/breadcrumbs).
 
@@ -100,19 +104,51 @@ CSS-переменные в своих стилях, см. [руководств
 
 ### Настройка темы
 
-Добавьте класс темы к элементу `<body>` в файле `index.html`:
+Добавьте классы темы к элементу `<body>` в файле `index.html`: `kbq-app-background` задаёт фон и цвет текста
+страницы, `kbq-light` выбирает тему.
 
 ```html
-<body class="kbq-light">
+<body class="kbq-app-background kbq-light">
     <app-root></app-root>
 </body>
 ```
 
-Подробнее о настройке и переключении темы читайте в разделе [темизация](/ru/main/theming).
+Для тёмной темы или переключения тем добавьте в стили и `css-tokens-dark.css`; подробнее читайте в разделе
+[темизация](/ru/main/theming).
+
+### Настройка локали
+
+Часть строк компоненты выводят сами: плейсхолдеры, подсказки, доступные имена кнопок-иконок. Пока приложение не
+задало локаль, они берут строки `ru-RU`, а переключение локали во время работы ничего не меняет. Задайте локаль
+приложения:
+
+```typescript
+import { kbqLocaleIDProvider, kbqLocaleServiceProvider } from '@koobiq/components/core';
+
+bootstrapApplication(AppComponent, {
+    providers: [kbqLocaleIDProvider('ru-RU'), kbqLocaleServiceProvider()]
+});
+```
+
+Если в приложении есть компоненты для работы с датами, подключите адаптер дат в тех же `providers`: тогда один
+сервис локали обслуживает и компоненты, и адаптер, и локаль, переключённая во время работы, доходит до обоих.
+
+```typescript
+import { importProvidersFrom } from '@angular/core';
+import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+
+bootstrapApplication(AppComponent, {
+    providers: [kbqLocaleIDProvider('ru-RU'), kbqLocaleServiceProvider(), importProvidersFrom(KbqLuxonDateModule)]
+});
+```
+
+Библиотека поставляет `en-US`, `es-LA`, `pt-BR`, `ru-RU` и `tk-TM`. Как переключать локаль во время работы и
+переопределять строки, читайте в разделе [локализация](/ru/main/localization).
 
 ### Настройка типографики
 
-Для корректного отображения компонентов рекомендуется подключить шрифт [Inter](https://github.com/rsms/inter).
+Для корректного отображения компонентов рекомендуется подключить шрифты [Inter](https://github.com/rsms/inter) и
+[JetBrains Mono](https://github.com/JetBrains/JetBrainsMono).
 
 Подробнее читайте в разделе [типографика](/ru/main/typography).
 

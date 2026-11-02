@@ -94,6 +94,10 @@
                             "includePaths": ["dist", "apps/docs/src"]
                         },
                         "styles": [
+                            "node_modules/inter-ui/inter.css",
+                            "node_modules/@fontsource/jetbrains-mono/400.css",
+                            "node_modules/@fontsource/jetbrains-mono/600.css",
+                            "node_modules/@fontsource/jetbrains-mono/700.css",
                             "apps/docs/src/main.scss"
                         ],
                         "scripts": [],
@@ -997,7 +1001,13 @@
                         ],
                         "tsConfig": "packages/e2e/tsconfig.app.json",
                         "index": "packages/e2e/index.html",
-                        "styles": ["packages/e2e/main.scss"],
+                        "styles": [
+                            "node_modules/inter-ui/inter.css",
+                            "node_modules/@fontsource/jetbrains-mono/400.css",
+                            "node_modules/@fontsource/jetbrains-mono/600.css",
+                            "node_modules/@fontsource/jetbrains-mono/700.css",
+                            "packages/e2e/main.scss"
+                        ],
                         "allowedCommonJsDependencies": ["@messageformat/core"],
                         "extractLicenses": false,
                         "sourceMap": true,

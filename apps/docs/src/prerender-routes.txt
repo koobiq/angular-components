@@ -1,6 +1,7 @@
 /
 /en
 /en/main/installation/overview
+/en/main/ai-agents/overview
 /en/main/versioning/overview
 /en/main/theming/overview
 /en/main/localization/overview
@@ -127,7 +128,6 @@
 /en/components/resizer/api
 /en/components/scrollbar/overview
 /en/components/scrollbar/api
-/en/components/scrollbar/examples
 /en/components/search-expandable/overview
 /en/components/search-expandable/api
 /en/components/select/overview
@@ -199,6 +199,7 @@
 /en/other/search-smart/overview
 /ru
 /ru/main/installation/overview
+/ru/main/ai-agents/overview
 /ru/main/versioning/overview
 /ru/main/theming/overview
 /ru/main/localization/overview
@@ -325,7 +326,6 @@
 /ru/components/resizer/api
 /ru/components/scrollbar/overview
 /ru/components/scrollbar/api
-/ru/components/scrollbar/examples
 /ru/components/search-expandable/overview
 /ru/components/search-expandable/api
 /ru/components/select/overview

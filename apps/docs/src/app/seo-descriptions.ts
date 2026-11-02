@@ -15,6 +15,10 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "en": "AG Grid is designed for working with large tables. The component supports sorting, virtual scrolling, resizing, and reordering of columns. It is based on the library ag-grid-angular.",
         "ru": "AG grid предназначен для работы с большими таблицами. Компонент поддерживает сортировку, виртуальную прокрутку, изменение ширины и порядка колонок. Основан на библиотеке ag-grid-angular."
     },
+    "ai-agents": {
+        "en": "AI coding agents, such as Claude Code, Codex, Cursor or GitHub Copilot, build better UI with Koobiq when they read its documentation instead of guessing. Agent Skills teach them how to work with…",
+        "ru": "ИИ-агенты для разработки, такие как Claude Code, Codex, Cursor или GitHub Copilot, лучше строят интерфейсы на Koobiq, когда читают его документацию, а не угадывают. Навыки (Agent Skills) учат их…"
+    },
     "alert": {
         "en": "Shows important information on a page. Can contain a hint, signal a status change, or indicate a problem.",
         "ru": "Показывает важную информацию на странице. Может содержать подсказку, сигнализировать об изменении статуса или наличии проблемы."
@@ -160,8 +164,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Layout flex — набор CSS-классов Koobiq для компоновки, выравнивания и упорядочивания элементов во flex-контейнерах."
     },
     "link": {
-        "en": "KbqLink is a component that connects web pages or acts as a lighter alternative to a button.",
-        "ru": "KbqLink — компонент, который связывает веб-страницы или выступает как более легкий аналог кнопки."
+        "en": "KbqLink is a link that takes the user to another page, a document, or an external site.",
+        "ru": "KbqLink — ссылка, которая ведет пользователя к другой странице, документу или внешнему сайту."
     },
     "list": {
         "en": "A list shows a set of related items and lets the user select one or several of them. To pick a single value from a closed set inside a form use Select, and for hierarchical data use Tree.",
@@ -336,8 +340,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Tree Select позволяет искать и выбирать одно или несколько значений из иерархических данных с сохранением структуры дерева."
     },
     "typography": {
-        "en": "Koobiq typography defines the fonts, weights, and text styles used to create a consistent visual hierarchy in interfaces.",
-        "ru": "Типографика Koobiq определяет шрифты, начертания и текстовые стили для создания единообразной визуальной иерархии в интерфейсах."
+        "en": "Connecting fonts, which sources fit, the text classes and replacing the fonts.",
+        "ru": "Подключение шрифтов, какие источники подходят, текстовые классы и замена шрифтов."
     },
     "username": {
         "en": "The pattern is used when the interface refers to an internal user.",

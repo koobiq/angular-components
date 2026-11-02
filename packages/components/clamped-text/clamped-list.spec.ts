@@ -7,6 +7,31 @@ import { KbqClampedList, KbqClampedListTrigger } from './clamped-list';
 
 const AXE_TIMEOUT = 15000;
 
+/** jsdom has no Web Animations API, so `animate` is supplied for the specs that observe the animation. */
+const mockAnimate = () => {
+    let resolveFinished!: () => void;
+    const finished = new Promise<void>((resolve) => (resolveFinished = resolve));
+    const cancel = vi.fn();
+    const animate = vi.fn(() => ({ cancel, finished }) as unknown as Animation);
+
+    Object.defineProperty(HTMLElement.prototype, 'animate', { value: animate, configurable: true, writable: true });
+
+    return { animate, cancel, resolveFinished };
+};
+
+const mockReducedMotion = () => {
+    Object.defineProperty(window, 'matchMedia', {
+        value: () => ({ matches: true }),
+        configurable: true,
+        writable: true
+    });
+};
+
+const restoreAnimationEnvironment = () => {
+    delete (HTMLElement.prototype as { animate?: unknown }).animate;
+    delete (window as { matchMedia?: unknown }).matchMedia;
+};
+
 function getItems(debugElement: DebugElement) {
     return debugElement.queryAll(By.css('.item'));
 }
@@ -31,6 +56,7 @@ function getHost(debugElement: DebugElement): HTMLElement {
             [items]="items()"
             [collapsedVisibleCount]="collapsedVisibleCount()"
             [hiddenThreshold]="hiddenThreshold()"
+            [duration]="duration()"
         >
             @for (item of clampedList.visibleItems(); track item) {
                 <span class="item">{{ item }}</span>
@@ -52,6 +78,7 @@ class TestHostComponent {
     readonly items = signal(Array.from({ length: 17 }, (_, i) => `Item ${i + 1}`));
     readonly collapsedVisibleCount = signal(10);
     readonly hiddenThreshold = signal(6);
+    readonly duration = signal(100);
 }
 
 describe('KbqClampedList', () => {
@@ -183,5 +210,89 @@ describe('KbqClampedList', () => {
             },
             AXE_TIMEOUT
         );
+    });
+
+    describe('animation', () => {
+        const ITEM_HEIGHT = 10;
+
+        beforeEach(() => {
+            vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+                return { height: this.querySelectorAll('.item').length * ITEM_HEIGHT } as DOMRect;
+            });
+        });
+
+        afterEach(restoreAnimationEnvironment);
+
+        it('should animate block-size of the host between the heights before and after the toggle', async () => {
+            const { animate } = mockAnimate();
+
+            getTrigger(debugElement).nativeElement.click();
+            await fixture.whenStable();
+            expect(animate).toHaveBeenCalledWith(
+                {
+                    blockSize: ['100px', '170px'],
+                    overflow: ['clip', 'clip'],
+                    alignContent: ['flex-start', 'flex-start']
+                },
+                { duration: 100, easing: 'ease-in-out' }
+            );
+        });
+
+        it('should respect the duration', async () => {
+            const { animate } = mockAnimate();
+
+            fixture.componentInstance.duration.set(250);
+            fixture.detectChanges();
+
+            getTrigger(debugElement).nativeElement.click();
+            await fixture.whenStable();
+
+            expect(animate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ duration: 250 }));
+        });
+
+        it('should not animate when the height does not change', async () => {
+            const { animate } = mockAnimate();
+
+            vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({ height: 100 } as DOMRect);
+
+            getTrigger(debugElement).nativeElement.click();
+            await fixture.whenStable();
+
+            expect(animate).not.toHaveBeenCalled();
+        });
+
+        it('should not animate when the user prefers reduced motion', async () => {
+            const { animate } = mockAnimate();
+
+            mockReducedMotion();
+
+            getTrigger(debugElement).nativeElement.click();
+            await fixture.whenStable();
+
+            expect(animate).not.toHaveBeenCalled();
+            expect(getItems(debugElement).length).toBe(fixture.componentInstance.items().length);
+        });
+
+        it('should not animate when the items change without a toggle', async () => {
+            const { animate } = mockAnimate();
+
+            fixture.componentInstance.items.set(Array.from({ length: 30 }, (_, i) => `Item ${i + 1}`));
+            await fixture.whenStable();
+
+            expect(animate).not.toHaveBeenCalled();
+        });
+
+        it.each([NaN, -1])('should not animate with the invalid duration %s', async (duration) => {
+            const { animate } = mockAnimate();
+
+            fixture.componentInstance.duration.set(duration);
+            fixture.detectChanges();
+
+            getTrigger(debugElement).nativeElement.click();
+            await fixture.whenStable();
+
+            expect(animate).not.toHaveBeenCalled();
+            expect(getItems(debugElement).length).toBe(fixture.componentInstance.items().length);
+        });
     });
 });

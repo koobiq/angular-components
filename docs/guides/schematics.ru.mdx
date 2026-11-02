@@ -36,10 +36,12 @@ ng generate @koobiq/components:css-selectors
 
 #### deprecated-icons
 
-Удаляет или заменяет иконки, помеченные как устаревшие.
+Переводит иконки с устаревшего шрифта `pt-icons` на `kbq` и переименовывает устаревшие иконки.
+
+**Когда использовать:** пока в проекте остаются классы `pt-icons` (`class="pt-icons pt-icons-<name>"`).
 
 ```bash
-ng generate @koobiq/components:css-selectors
+ng generate @koobiq/components:deprecated-icons
 ```
 
 #### empty-state-size-attr
@@ -67,6 +69,30 @@ ng generate @koobiq/components:loader-overlay-size-attr
 Заменяет названия иконок на новые
 
 **Когда использовать:** после обновления версии библиотеки [`@koobiq/icons`](https://github.com/koobiq/icons) до версии `11.0.0` и выше.
+
+```bash
+ng generate @koobiq/components:icons-replacement
+```
+
+#### Миграции иконок: какие и в каком порядке
+
+`ng update` не запускает иконочные схематики: запустите подходящие проекту сами, в этом порядке. `icons-replacement` переименовывает имена, которые выдают два других, поэтому он идёт последним.
+
+| Порядок | Схематик            | Запускать, если в проекте есть                                                   |
+| ------- | ------------------- | -------------------------------------------------------------------------------- |
+| 1       | `new-icons-pack`    | `@koobiq/icons` ниже `8.0.2`: префикс `mc` (`mc-<name>`, `kbq-icon="mc-<name>"`) |
+| 2       | `deprecated-icons`  | классы `pt-icons` (`class="pt-icons pt-icons-<name>"`)                           |
+| 3       | `icons-replacement` | `@koobiq/icons` ниже `11.0.0`                                                    |
+
+Без `--fix=true` каждый из них только сообщает о найденном, и каждый пишет в лог, на каком наборе соответствий иконок работает. Общие параметры:
+
+- `--project` — имя проекта или папка, например `./libs`; без него мигрируется весь workspace. `node_modules` и `dist` пропускаются всегда.
+- `--custom-data-path` (`new-icons-pack`, `icons-replacement`) — JSON-файл со своим набором соответствий, путь от корня workspace: `[{ "replace": "kbq-add-to-list_16", "replaceWith": "kbq-file-plus-o_16" }]`. Без него используется встроенный.
+
+```bash
+ng generate @koobiq/components:new-icons-pack --project ./libs
+ng generate @koobiq/components:new-icons-pack --project ./libs --fix=true
+```
 
 ### Как запустить схематик
 

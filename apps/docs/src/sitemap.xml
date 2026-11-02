@@ -7,6 +7,9 @@
 		<loc>https://koobiq.io/en/main/installation/overview</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/main/ai-agents/overview</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/main/versioning/overview</loc>
 	</url>
 	<url>
@@ -385,9 +388,6 @@
 		<loc>https://koobiq.io/en/components/scrollbar/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/components/scrollbar/examples</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/components/search-expandable/overview</loc>
 	</url>
 	<url>
@@ -599,6 +599,9 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/main/installation/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/ai-agents/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/main/versioning/overview</loc>
@@ -977,9 +980,6 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/scrollbar/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/scrollbar/examples</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/search-expandable/overview</loc>

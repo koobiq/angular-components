@@ -63,6 +63,7 @@
         "refreshable",
         "Repobeats",
         "Resizer",
+        "rsms",
         "scrollbars",
         "sidepanel",
         "sidepanels",
@@ -75,6 +76,7 @@
         "unmigrated",
         "unminified",
         "unparseable",
+        "webfonts",
         "xmark",
         "yarnrc"
     ]

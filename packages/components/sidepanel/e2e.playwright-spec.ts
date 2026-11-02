@@ -9,8 +9,9 @@ import {
 
 // The committed baselines are WebKit renderings: WebKit is the browser whose compositing of the panel's
 // `transform` slide over the dim backdrop this suite was pinned to, and `scrollbar/deprecated` does the
-// same. Regenerate them with `yarn run e2e:docker:update-snapshots`.
-test.use({ browserName: 'webkit' });
+// same. Regenerate them with `yarn run e2e:docker:update-snapshots`. `launchOptions` drops the project's
+// Chromium switches, which WebKit refuses (see `e2eChromiumArgs`).
+test.use({ browserName: 'webkit', launchOptions: {} });
 
 test.describe('KbqSidepanel', () => {
     test.describe('E2eSidepanelStateAndStyle', () => {
