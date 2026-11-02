@@ -22,6 +22,9 @@ const BAR_HEIGHT = 48;
  * "On this page" on a phone (Figma: New Docs, 122:35907): an island floating at the bottom of the screen with the
  * heading the reader is at and how far the page is read. A tap grows the island itself into a panel with the
  * headings of the article; a tap on a heading shrinks it back and goes there.
+ *
+ * The panel is laid out at its open size all the time, and the island is a clip of it, so the morph animates only
+ * `clip-path`, `transform` and `opacity`.
  */
 @Component({
     selector: 'docs-next-toc-sheet',
@@ -35,53 +38,57 @@ const BAR_HEIGHT = 48;
             [attr.aria-modal]="open() ? true : null"
             [attr.role]="open() ? 'dialog' : null"
             [cdkTrapFocus]="open()"
-            [style.height.px]="open() ? openHeight() : null"
+            [style.height.px]="openHeight() || null"
         >
-            <nav
-                #list
-                class="docs-next-toc-sheet__list"
-                id="docs-next-toc-sheet-list"
-                [attr.aria-label]="state.t('onThisPage')"
-                [inert]="!open()"
-            >
-                @for (item of outline.items(); track item.id) {
-                    <a
-                        class="docs-next-toc-sheet__item"
-                        [attr.aria-current]="item.id === outline.activeId() ? 'location' : null"
-                        [class.docs-next-toc-sheet__item_nested]="item.level > 0"
-                        [href]="'#' + item.id"
-                        (click)="go($event, item.id)"
-                    >
-                        <span class="docs-next-toc-sheet__item-text">{{ item.title }}</span>
-                    </a>
-                }
-            </nav>
+            <div class="docs-next-toc-sheet__shadow"></div>
 
-            <div class="docs-next-toc-sheet__bar">
-                <button
-                    #toggle
-                    aria-controls="docs-next-toc-sheet-list"
-                    class="docs-next-toc-sheet__toggle"
-                    type="button"
-                    [attr.aria-expanded]="open()"
-                    [attr.aria-label]="open() ? state.t('close') : state.t('onThisPage') + ': ' + activeTitle()"
-                    (click)="open() ? close() : show()"
-                ></button>
-                <span class="docs-next-toc-sheet__progress">
-                    <svg aria-hidden="true" height="16" viewBox="0 0 16 16" width="16">
-                        <circle class="docs-next-toc-sheet__progress-track" cx="8" cy="8" r="7" />
-                        <circle
-                            class="docs-next-toc-sheet__progress-value"
-                            cx="8"
-                            cy="8"
-                            pathLength="100"
-                            r="7"
-                            [attr.stroke-dasharray]="outline.progress() + ' 100'"
-                        />
-                    </svg>
-                </span>
-                <span class="docs-next-toc-sheet__title" aria-hidden="true">{{ activeTitle() }}</span>
-                <i class="docs-next-toc-sheet__chevron" kbq-icon="kbq-chevron-up_16"></i>
+            <div class="docs-next-toc-sheet__surface">
+                <nav
+                    #list
+                    class="docs-next-toc-sheet__list"
+                    id="docs-next-toc-sheet-list"
+                    [attr.aria-label]="state.t('onThisPage')"
+                    [inert]="!open()"
+                >
+                    @for (item of outline.items(); track item.id) {
+                        <a
+                            class="docs-next-toc-sheet__item"
+                            [attr.aria-current]="item.id === outline.activeId() ? 'location' : null"
+                            [class.docs-next-toc-sheet__item_nested]="item.level > 0"
+                            [href]="'#' + item.id"
+                            (click)="go($event, item.id)"
+                        >
+                            <span class="docs-next-toc-sheet__item-text">{{ item.title }}</span>
+                        </a>
+                    }
+                </nav>
+
+                <div class="docs-next-toc-sheet__bar">
+                    <button
+                        #toggle
+                        aria-controls="docs-next-toc-sheet-list"
+                        class="docs-next-toc-sheet__toggle"
+                        type="button"
+                        [attr.aria-expanded]="open()"
+                        [attr.aria-label]="open() ? state.t('close') : state.t('onThisPage') + ': ' + activeTitle()"
+                        (click)="open() ? close() : show()"
+                    ></button>
+                    <span class="docs-next-toc-sheet__progress">
+                        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" width="16">
+                            <circle class="docs-next-toc-sheet__progress-track" cx="8" cy="8" r="7" />
+                            <circle
+                                class="docs-next-toc-sheet__progress-value"
+                                cx="8"
+                                cy="8"
+                                pathLength="100"
+                                r="7"
+                                [attr.stroke-dasharray]="outline.progress() + ' 100'"
+                            />
+                        </svg>
+                    </span>
+                    <span class="docs-next-toc-sheet__title" aria-hidden="true">{{ activeTitle() }}</span>
+                    <i class="docs-next-toc-sheet__chevron" kbq-icon="kbq-chevron-up_16"></i>
+                </div>
             </div>
         </div>
     `,

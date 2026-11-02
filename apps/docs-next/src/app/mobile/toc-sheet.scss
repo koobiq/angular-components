@@ -1,11 +1,19 @@
 @use '../../../../../packages/components/core/styles/common/tokens';
 
+// The panel opens slower than it closes: opening is the reader's choice, closing answers a tap or Escape.
 $easing: cubic-bezier(0.32, 0.72, 0, 1);
-$duration: 500ms;
+$open-duration: 500ms;
+$close-duration: 300ms;
+$fade-easing: cubic-bezier(0.23, 1, 0.32, 1);
 $bar-height: 48px;
 // Figma: Buttom Sheet (122:35244), 144px from the top of the screen and 8px from its edges.
 $open-top-gap: 144px;
 $open-gap: var(--kbq-size-s);
+// Figma: Frame 129 (122:35034), 48px from the sides and 24px from the bottom: the island is the open panel minus these.
+$island-side-inset: calc(var(--kbq-size-5xl) - #{$open-gap});
+$island-bottom-inset: calc(var(--kbq-size-xxl) - #{$open-gap});
+// Shift of the progress ring and the chevron between the island and the open bar (Figma: 4px and 8px from the edges).
+$icon-shift: calc(#{$island-side-inset} + var(--kbq-size-xxs) - #{$open-gap});
 
 :host {
     display: contents;
@@ -21,7 +29,7 @@ $open-gap: var(--kbq-size-s);
     opacity: 0;
     pointer-events: none;
     touch-action: none;
-    transition: opacity 300ms ease-out;
+    transition: opacity 200ms $fade-easing;
 
     :host(.docs-next-toc-sheet_open) & {
         opacity: 1;
@@ -29,42 +37,60 @@ $open-gap: var(--kbq-size-s);
     }
 }
 
-// Figma: Frame 129 (122:35034) when collapsed. The island itself grows into the panel: its box changes, the row at the
-// bottom stays where it is and the list is uncovered above it.
+// Laid out at the size of the open panel; the island is a clip of it. Its height follows the list once it is measured.
 .docs-next-toc-sheet {
     position: fixed;
-    bottom: calc(var(--kbq-size-xxl) + env(safe-area-inset-bottom));
-    left: 50%;
+    right: $open-gap;
+    bottom: calc(#{$open-gap} + env(safe-area-inset-bottom));
+    left: $open-gap;
     z-index: 21;
-    width: calc(100vw - 2 * var(--kbq-size-5xl));
+    height: calc(#{$bar-height} + #{$island-bottom-inset});
+    pointer-events: none;
+}
+
+// The shadow of the island; it is outside the clip and fades out as the island grows over the backdrop.
+.docs-next-toc-sheet__shadow {
+    position: absolute;
+    right: $island-side-inset;
+    bottom: $island-bottom-inset;
+    left: $island-side-inset;
     height: $bar-height;
-    overflow: hidden;
     border-radius: var(--kbq-size-s);
-    background: var(--kbq-background-card);
     box-shadow: var(--kbq-shadow-overlay);
-    translate: -50% 0;
-    transition:
-        width $duration $easing,
-        height $duration $easing,
-        bottom $duration $easing,
-        border-radius $duration $easing,
-        background-color $duration $easing;
+    transition: opacity 200ms $fade-easing 100ms;
 
     :host(.docs-next-toc-sheet_open) & {
-        bottom: calc(#{$open-gap} + env(safe-area-inset-bottom));
-        width: calc(100vw - 2 * #{$open-gap});
-        border-radius: var(--kbq-size-m);
-        background: var(--kbq-background-bg);
+        opacity: 0;
+        transition-delay: 0s;
     }
 }
 
-// Sized to the open panel from the start and anchored over the row, so nothing in it moves while the island grows.
+// The clip changes from the island (8px corners) to the whole panel (12px corners). A clip also limits where the
+// panel takes taps, so the hidden part of it does not cover the page.
+.docs-next-toc-sheet__surface {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: var(--kbq-background-bg);
+    clip-path: inset(
+        calc(100% - #{$bar-height} - #{$island-bottom-inset}) $island-side-inset $island-bottom-inset round
+            var(--kbq-size-s)
+    );
+    pointer-events: auto;
+    transition: clip-path $close-duration $easing;
+
+    :host(.docs-next-toc-sheet_open) & {
+        clip-path: inset(0 round var(--kbq-size-m));
+        transition-duration: $open-duration;
+    }
+}
+
 .docs-next-toc-sheet__list {
     position: absolute;
+    right: 0;
     bottom: $bar-height;
-    left: 50%;
+    left: 0;
     box-sizing: border-box;
-    width: calc(100vw - 2 * #{$open-gap});
     max-height: calc(100dvh - #{$open-top-gap} - #{$open-gap} - #{$bar-height});
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -72,17 +98,17 @@ $open-gap: var(--kbq-size-s);
     padding: var(--kbq-size-s) 0 var(--kbq-size-5xl);
     opacity: 0;
     scrollbar-width: none;
-    translate: -50% var(--kbq-size-s);
+    translate: 0 var(--kbq-size-s);
     transition:
-        opacity 150ms ease-out,
-        translate 150ms ease-out;
+        opacity 150ms $fade-easing,
+        translate 150ms $fade-easing;
 
     :host(.docs-next-toc-sheet_open) & {
         opacity: 1;
-        translate: -50% 0;
+        translate: 0 0;
         transition:
-            opacity 300ms ease-out 100ms,
-            translate 300ms ease-out 100ms;
+            opacity 200ms $fade-easing 60ms,
+            translate 200ms $fade-easing 60ms;
     }
 }
 
@@ -142,7 +168,8 @@ $open-gap: var(--kbq-size-s);
     padding-left: calc(1px + var(--kbq-size-l));
 }
 
-// Figma: Content and Right Group (122:35035) when collapsed, Drawer Bottom Bar (122:35950) when open.
+// Figma: Content and Right Group (122:35035) when collapsed, Drawer Bottom Bar (122:35950) when open. The row is laid
+// out for the island and moves with transforms: up by the bottom inset, its icons out to the edges of the panel.
 .docs-next-toc-sheet__bar {
     position: absolute;
     right: 0;
@@ -151,8 +178,20 @@ $open-gap: var(--kbq-size-s);
     display: flex;
     align-items: center;
     height: $bar-height;
-    padding: 0 var(--kbq-size-xxs);
-    transition: padding $duration $easing;
+    padding: 0 calc(#{$island-side-inset} + var(--kbq-size-xxs));
+    translate: 0 calc(-1 * #{$island-bottom-inset});
+    isolation: isolate;
+    transition: translate $close-duration $easing;
+
+    // The island is a card; the open panel is on the page background.
+    &::after {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: var(--kbq-background-card);
+        content: '';
+        transition: opacity 200ms $fade-easing;
+    }
 
     // The top border of the open panel.
     &::before {
@@ -164,11 +203,16 @@ $open-gap: var(--kbq-size-s);
         background: var(--kbq-line-contrast-less);
         opacity: 0;
         content: '';
-        transition: opacity 200ms ease-out;
+        transition: opacity 200ms $fade-easing;
     }
 
     :host(.docs-next-toc-sheet_open) & {
-        padding: 0 var(--kbq-size-s);
+        translate: 0 0;
+        transition-duration: $open-duration;
+
+        &::after {
+            opacity: 0;
+        }
 
         &::before {
             opacity: 1;
@@ -176,20 +220,25 @@ $open-gap: var(--kbq-size-s);
     }
 }
 
-// One button over the whole row: the island is a single target.
+// One button over the island: the island is a single target. Open, it spans the whole bar.
 .docs-next-toc-sheet__toggle {
     position: absolute;
-    inset: 0;
+    inset: 0 $island-side-inset;
     z-index: 1;
     padding: 0;
     border: none;
-    border-radius: inherit;
+    border-radius: var(--kbq-size-s);
     background: none;
     cursor: pointer;
     outline: none;
 
     &:focus-visible {
         box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+    }
+
+    :host(.docs-next-toc-sheet_open) & {
+        inset: 0;
+        border-radius: 0 0 var(--kbq-size-m) var(--kbq-size-m);
     }
 }
 
@@ -202,6 +251,17 @@ $open-gap: var(--kbq-size-s);
     justify-content: center;
     width: 38px;
     pointer-events: none;
+    transition:
+        translate $close-duration $easing,
+        rotate $close-duration $easing;
+
+    :host(.docs-next-toc-sheet_open) & {
+        transition-duration: $open-duration;
+    }
+}
+
+:host(.docs-next-toc-sheet_open) .docs-next-toc-sheet__progress {
+    translate: calc(-1 * #{$icon-shift}) 0;
 }
 
 // Figma: Progress 16px, a 2px ring on a track; it starts at the top and goes clockwise.
@@ -218,7 +278,6 @@ $open-gap: var(--kbq-size-s);
 .docs-next-toc-sheet__progress-value {
     stroke: var(--kbq-foreground-contrast);
     stroke-linecap: round;
-    transition: stroke-dasharray 150ms ease-out;
 }
 
 .docs-next-toc-sheet__title {
@@ -231,7 +290,7 @@ $open-gap: var(--kbq-size-s);
     text-overflow: ellipsis;
     white-space: nowrap;
     pointer-events: none;
-    transition: opacity 200ms ease-out 100ms;
+    transition: opacity 200ms $fade-easing 100ms;
 
     :host(.docs-next-toc-sheet_open) & {
         opacity: 0;
@@ -241,21 +300,24 @@ $open-gap: var(--kbq-size-s);
 
 .docs-next-toc-sheet__chevron {
     color: var(--kbq-icon-contrast);
-    transition: rotate $duration $easing;
 
     :host(.docs-next-toc-sheet_open) & {
+        translate: $icon-shift 0;
         rotate: 180deg;
     }
 }
 
+// No movement: the panel and the island swap in place, and the fades stay.
 @media (prefers-reduced-motion: reduce) {
-    .docs-next-toc-sheet,
+    .docs-next-toc-sheet__surface,
     .docs-next-toc-sheet__bar,
+    .docs-next-toc-sheet__progress,
     .docs-next-toc-sheet__chevron {
         transition: none;
     }
 
-    .docs-next-toc-sheet__list {
-        translate: -50% 0;
+    .docs-next-toc-sheet__list,
+    :host(.docs-next-toc-sheet_open) .docs-next-toc-sheet__list {
+        translate: 0 0;
     }
 }
