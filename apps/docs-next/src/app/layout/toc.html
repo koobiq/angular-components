@@ -7,7 +7,7 @@
                     [attr.aria-current]="item.id === activeId() ? 'location' : null"
                     [class.docs-next-toc__item_active]="item.id === activeId()"
                     [class.docs-next-toc__item_nested]="item.level > 0"
-                    [href]="`#${item.id}`"
+                    [href]="item.href"
                     (click)="scrollTo($event, item.id)"
                 >
                     {{ item.title }}

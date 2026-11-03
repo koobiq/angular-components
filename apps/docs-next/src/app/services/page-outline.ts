@@ -1,12 +1,20 @@
 import { DOCUMENT, Location } from '@angular/common';
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router } from '@angular/router';
 import { KBQ_WINDOW } from '@koobiq/components/core';
+import { filter } from 'rxjs/operators';
 
 export interface DocsNextOutlineItem {
     id: string;
     title: string;
     /** 0 for the top level of the article, 1 for the one below. */
     level: number;
+}
+
+export interface DocsNextOutlineLink extends DocsNextOutlineItem {
+    /** Address of the heading on the open page. */
+    href: string;
 }
 
 /**
@@ -20,9 +28,22 @@ export class DocsNextPageOutline {
     private readonly location = inject(Location);
 
     readonly items = signal<DocsNextOutlineItem[]>([]);
+    /** The items with their addresses, which follow the address of the page: a bare `#id` would resolve to the site root. */
+    readonly links = computed<DocsNextOutlineLink[]>(() => {
+        this.url();
+
+        return this.items().map((item) => ({
+            ...item,
+            href: this.location.prepareExternalUrl(this.pathWithHash(item.id))
+        }));
+    });
     readonly activeId = signal<string | null>(null);
     /** How far the page is read, in percent. */
     readonly progress = signal(0);
+
+    private readonly url = toSignal(inject(Router).events.pipe(filter((event) => event instanceof NavigationEnd)), {
+        initialValue: null
+    });
 
     private container: HTMLElement | null = null;
     private readonly observer = new MutationObserver(() => this.collect());
@@ -88,8 +109,12 @@ export class DocsNextPageOutline {
     }
 
     private replaceHash(id: string): void {
-        // `path()` keeps the query of the address, which `pathname` would drop; the router's own state comes along too.
-        this.location.replaceState(`${this.location.path()}#${id}`, '', this.location.getState());
+        this.location.replaceState(this.pathWithHash(id), '', this.location.getState());
+    }
+
+    // `path()` keeps the query of the address, which `pathname` would drop.
+    private pathWithHash(id: string): string {
+        return `${this.location.path()}#${encodeURIComponent(id)}`;
     }
 
     private collect(): void {

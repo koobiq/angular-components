@@ -13,6 +13,7 @@ import {
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DocsNextPageOutline } from '../services/page-outline';
+import { docsNextIsPlainClick } from '../services/plain-click';
 import { DocsNextSiteState } from '../services/site-state';
 
 /** Height of the row at the bottom of the island, in both states. */
@@ -50,17 +51,21 @@ const BAR_HEIGHT = 48;
                     [attr.aria-label]="state.t('onThisPage')"
                     [inert]="!open()"
                 >
-                    @for (item of outline.items(); track item.id) {
-                        <a
-                            class="docs-next-toc-sheet__item"
-                            [attr.aria-current]="item.id === outline.activeId() ? 'location' : null"
-                            [class.docs-next-toc-sheet__item_nested]="item.level > 0"
-                            [href]="'#' + item.id"
-                            (click)="go($event, item.id)"
-                        >
-                            <span class="docs-next-toc-sheet__item-text">{{ item.title }}</span>
-                        </a>
-                    }
+                    <ul class="docs-next-toc-sheet__items">
+                        @for (item of outline.links(); track item.id) {
+                            <li>
+                                <a
+                                    class="docs-next-toc-sheet__item"
+                                    [attr.aria-current]="item.id === outline.activeId() ? 'location' : null"
+                                    [class.docs-next-toc-sheet__item_nested]="item.level > 0"
+                                    [href]="item.href"
+                                    (click)="go($event, item.id)"
+                                >
+                                    <span class="docs-next-toc-sheet__item-text">{{ item.title }}</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
                 </nav>
 
                 <div class="docs-next-toc-sheet__bar">
@@ -152,7 +157,9 @@ export class DocsNextTocSheet {
         if ((event.target as HTMLElement).classList.contains('docs-next-toc-sheet__backdrop')) this.close();
     }
 
-    protected go(event: Event, id: string): void {
+    protected go(event: MouseEvent, id: string): void {
+        if (!docsNextIsPlainClick(event)) return;
+
         event.preventDefault();
         this.close();
         this.outline.scrollTo(id);

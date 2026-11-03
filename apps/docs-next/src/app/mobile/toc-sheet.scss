@@ -112,6 +112,12 @@ $icon-shift: calc(#{$island-side-inset} + var(--kbq-size-xxs) - #{$open-gap});
     }
 }
 
+.docs-next-toc-sheet__items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
 // Figma: Tree List Item - Mobile, 48 high; the open section on a fill 4px inside the panel.
 .docs-next-toc-sheet__item {
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);

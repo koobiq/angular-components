@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DocsNextPageOutline } from '../services/page-outline';
+import { docsNextIsPlainClick } from '../services/plain-click';
 import { DocsNextSiteState } from '../services/site-state';
 
 /**
@@ -23,10 +24,12 @@ export class DocsNextToc {
     protected readonly state = inject(DocsNextSiteState);
     private readonly outline = inject(DocsNextPageOutline);
 
-    protected readonly items = this.outline.items;
+    protected readonly items = this.outline.links;
     protected readonly activeId = this.outline.activeId;
 
-    protected scrollTo(event: Event, id: string): void {
+    protected scrollTo(event: MouseEvent, id: string): void {
+        if (!docsNextIsPlainClick(event)) return;
+
         event.preventDefault();
         this.outline.scrollTo(id);
     }
