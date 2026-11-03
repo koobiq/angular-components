@@ -1,3 +1,16 @@
+## 19.8.9 (2026-11-03)
+
+### Koobiq
+
+ * bug fix  allow @koobiq/icons 12 in peerDependencies ([#DS-5810](https://github.com/koobiq/angular-components/issues/issue/DS-5810)) ([#2295](https://github.com/koobiq/angular-components/issues/2295)) ([c0551cc](https://github.com/koobiq/angular-components/commit/c0551cc80525cef5d1284ba4416118b154af12fc))
+ * bug fix  **breadcrumbs:** keep the trail in place when the number of items changes ([#DS-5724](https://github.com/koobiq/angular-components/issues/issue/DS-5724)) ([#2280](https://github.com/koobiq/angular-components/issues/2280)) ([b0d0cd7](https://github.com/koobiq/angular-components/commit/b0d0cd76a910bbea5b69a9bcd54d8dd28de3cbeb))
+ * bug fix  **dl:** decide the initial layout before the first paint ([#DS-5473](https://github.com/koobiq/angular-components/issues/issue/DS-5473)) ([#2303](https://github.com/koobiq/angular-components/issues/2303)) ([b0ee4fa](https://github.com/koobiq/angular-components/commit/b0ee4faba88d875489abf101a1be914eb6f8d4cf))
+ * bug fix  **docs:** list only kbq-light and kbq-dark as theme selectors ([#DS-5773](https://github.com/koobiq/angular-components/issues/issue/DS-5773)) ([#2284](https://github.com/koobiq/angular-components/issues/2284)) ([5d0fa08](https://github.com/koobiq/angular-components/commit/5d0fa0898ed9d9e485283fa4ebbabc50e2b9c333))
+ * bug fix  **overflow-items:** keep items that fit at browser zoom and display scaling ([#DS-5130](https://github.com/koobiq/angular-components/issues/issue/DS-5130)) ([#2294](https://github.com/koobiq/angular-components/issues/2294)) ([9830104](https://github.com/koobiq/angular-components/commit/983010402cbb2c5fe214828d9dc5917b1d86660d))
+ * bug fix  **search-expandable:** re-render the button after the bound control is enabled or disabled ([#DS-5725](https://github.com/koobiq/angular-components/issues/issue/DS-5725)) ([#2298](https://github.com/koobiq/angular-components/issues/2298)) ([c878afd](https://github.com/koobiq/angular-components/commit/c878afd4186f278dc875bfe086f63dd6bd487c84))
+ * bug fix  **toggle:** keep the initial position of a switch without a value ([#DS-5702](https://github.com/koobiq/angular-components/issues/issue/DS-5702)) ([#2273](https://github.com/koobiq/angular-components/issues/2273)) ([c3bef0f](https://github.com/koobiq/angular-components/commit/c3bef0f67d23439ce7d070931e2445a28769c42a))
+ * bug fix  **tree:** roll the checkbox state up through each ancestor once ([#DS-5779](https://github.com/koobiq/angular-components/issues/issue/DS-5779)) ([#2222](https://github.com/koobiq/angular-components/issues/2222)) ([1e74993](https://github.com/koobiq/angular-components/commit/1e74993380dab5f21d511183399059d9395234cc))
+
 ## 19.8.8 (2026-10-23)
 
 ### Koobiq
