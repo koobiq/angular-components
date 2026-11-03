@@ -203,6 +203,7 @@
         "docs:generate-llms": "ts-node --project tools/llms/tsconfig.json tools/llms/generate.ts",
         "docs:generate-prerender-routes": "ts-node tools/generate-prerender-routes.ts",
         "docs:build": "yarn run build:docs-content && node tools/build-strict.mjs koobiq-docs:build:production",
+        "docs:update-stackblitz-lock": "node tools/update-stackblitz-lock.mjs",
         "docs:update-versions": "ts-node --project tools/update-doc-versions/tsconfig.json tools/update-doc-versions/update-doc-versions.ts",
         "docs:prune-is-new-badges": "ts-node tools/prune-is-new-badges",
         "docs:api-gen": "ts-node --project tools/api-gen/tsconfig.json tools/api-gen/generate-api-docs.ts",
