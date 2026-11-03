@@ -37,10 +37,12 @@ export interface DocsNextVersion {
 
 /** Versions from the newest to the oldest (spec/context/version.md). The current one is the default. */
 export const DOCS_NEXT_VERSIONS: readonly DocsNextVersion[] = [
-    { id: 'next', title: '21.0.0-next', group: 'next' },
-    { id: '20', title: '20.4.1', group: 'current' },
+    { id: 'next', title: '22.0.0-next', group: 'next' },
+    { id: '21', title: '21.0.1', group: 'current' },
+    { id: '20', title: '20.4.1', group: 'previous' },
     { id: '19', title: '19.7.3', group: 'previous' },
-    { id: '18', title: '18.30.2', group: 'previous' }
+    { id: '18', title: '18.30.2', group: 'previous', lts: true },
+    { id: '17', title: '17.9.0', group: 'previous' }
 ];
 
 /**

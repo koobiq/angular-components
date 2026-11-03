@@ -90,7 +90,7 @@ export class DocsNextSiteState {
 
     /** Versions to pick from; `?versions=N` in the address the site opens with tries a list of another length. */
     readonly versions = signal<readonly DocsNextVersion[]>(DOCS_NEXT_VERSIONS);
-    readonly version = signal(readStored(this.window, STORAGE_KEYS.version) ?? '20');
+    readonly version = signal(readStored(this.window, STORAGE_KEYS.version) ?? '21');
     /** Title of the chosen version in the header: Next goes without its number. */
     readonly versionTitle = computed(() =>
         this.version() === 'next'
