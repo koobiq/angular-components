@@ -4,6 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { filter } from 'rxjs/operators';
+import { DocsNextHeadingHighlight } from './heading-highlight';
 
 export interface DocsNextOutlineItem {
     id: string;
@@ -26,6 +27,7 @@ export class DocsNextPageOutline {
     private readonly document = inject(DOCUMENT);
     private readonly window = inject(KBQ_WINDOW);
     private readonly location = inject(Location);
+    private readonly highlight = inject(DocsNextHeadingHighlight);
 
     readonly items = signal<DocsNextOutlineItem[]>([]);
     /** The items with their addresses, which follow the address of the page: a bare `#id` would resolve to the site root. */
@@ -34,7 +36,7 @@ export class DocsNextPageOutline {
 
         return this.items().map((item) => ({
             ...item,
-            href: this.location.prepareExternalUrl(this.pathWithHash(item.id))
+            href: this.hrefFor(item.id)
         }));
     });
     readonly activeId = signal<string | null>(null);
@@ -75,6 +77,7 @@ export class DocsNextPageOutline {
         this.document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         this.replaceHash(id);
         this.activeId.set(id);
+        this.highlight.highlightAfterScroll(id);
     }
 
     private updateActive(): void {
@@ -98,7 +101,7 @@ export class DocsNextPageOutline {
             this.activeId.set(active);
 
             // The address names the open section, so a link can be shared to that place (spec, item 34).
-            if (active && this.window.scrollY > 0) this.replaceHash(active);
+            if (active && this.window.scrollY > 0 && !this.highlight.isSettling()) this.replaceHash(active);
         }
     }
 
@@ -108,7 +111,12 @@ export class DocsNextPageOutline {
         this.progress.set(scrollable > 0 ? Math.min(100, Math.max(0, (this.window.scrollY / scrollable) * 100)) : 100);
     }
 
-    private replaceHash(id: string): void {
+    /** Address of a heading on the open page; a bare `#id` would resolve against `<base href>` to the site root. */
+    hrefFor(id: string): string {
+        return this.location.prepareExternalUrl(this.pathWithHash(id));
+    }
+
+    replaceHash(id: string): void {
         this.location.replaceState(this.pathWithHash(id), '', this.location.getState());
     }
 

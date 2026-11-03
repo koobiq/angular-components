@@ -77,6 +77,8 @@ interface RenderContext {
     inParagraph: boolean;
     /** Whether the node ends up inside `<a>`, where the browser would not keep another link. */
     inLink: boolean;
+    /** Whether the node is a part of a heading, where `{isNew}` and `{isUpdated}` mark it with a badge. */
+    inHeading?: boolean;
 }
 
 const parser = unified().use(remarkParse).use(remarkGfm).use(remarkMdx);
@@ -175,6 +177,12 @@ const getVisibleText = (node: Nodes): string => {
  */
 const getHeadingId = (heading: Heading): string =>
     getVisibleText(heading).trim().toLowerCase().replace(/\s/g, '-').replace(/[{}]/g, '');
+
+/**
+ * Badges an author can put on a heading as `{isNew}` or `{isUpdated}`, the names the menu uses (`{new}` would not parse:
+ * it is a reserved word). The site draws the label in the reader's language.
+ */
+const HEADING_BADGES: Record<string, string> = { isNew: 'new', isUpdated: 'updated' };
 
 /** Heading levels that get an id and appear in the table of contents. */
 const LINKED_HEADING_DEPTHS = [2, 3, 4, 5];
@@ -425,13 +433,13 @@ export function compilePage(
                 if (headingDepth) {
                     const nestedTag = `h${headingDepth}`;
 
-                    return `<${nestedTag} class="${CLASS_PREFIX}__${nestedTag}"${renderSearchAttribute(nestedTag)}>${renderChildren(node, { ...context, inParagraph: true })}</${nestedTag}>`;
+                    return `<${nestedTag} class="${CLASS_PREFIX}__${nestedTag}"${renderSearchAttribute(nestedTag)}>${renderChildren(node, { ...context, inParagraph: true, inHeading: true })}</${nestedTag}>`;
                 }
 
                 const tag = `h${node.depth}`;
                 const id = LINKED_HEADING_DEPTHS.includes(node.depth) ? ` id="${escapeText(takeHeadingId(node))}"` : '';
 
-                return `<${tag}${id} class="docs-header-link ${CLASS_PREFIX}__${tag}"${renderSearchAttribute(tag)}>${renderChildren(node, { ...context, inParagraph: true })}</${tag}>`;
+                return `<${tag}${id} class="docs-header-link ${CLASS_PREFIX}__${tag}"${renderSearchAttribute(tag)}>${renderChildren(node, { ...context, inParagraph: true, inHeading: true })}</${tag}>`;
             }
             case 'text':
                 return renderText(node.value);
@@ -497,11 +505,16 @@ export function compilePage(
                     ? fail(node, `<${node.name}> has to stand on a line of its own`)
                     : renderElement(node, context);
             case 'mdxFlowExpression':
-            case 'mdxTextExpression':
+            case 'mdxTextExpression': {
+                const badge = context.inHeading ? HEADING_BADGES[node.value.trim()] : undefined;
+
+                if (badge) return `<span class="docs-header-badge" data-badge="${badge}"></span>`;
+
                 // `{/* cspell:ignore … */}` and the like are for the tools, not for the reader.
                 return isComment(node.value)
                     ? ''
                     : fail(node, 'imports, exports and {expressions} are not supported: pages compile to Angular');
+            }
             case 'mdxjsEsm':
                 return fail(node, 'imports, exports and {expressions} are not supported: pages compile to Angular');
             default:
