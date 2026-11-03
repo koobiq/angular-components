@@ -1,4 +1,4 @@
-﻿import { FocusTrap } from '@angular/cdk/a11y';
+import { FocusTrap } from '@angular/cdk/a11y';
 import { coerceElement } from '@angular/cdk/coercion';
 import {
     ConnectedOverlayPositionChange,
@@ -1706,6 +1706,275 @@ describe('KbqPopover', () => {
         });
     });
 
+    describe('kbqRelativeToPointer', () => {
+        let pointerFixture: ComponentFixture<PopoverRelativeToPointer>;
+        let pointerInstance: PopoverRelativeToPointer;
+        let triggerElement: HTMLElement;
+        let hostLeft: number;
+        let hostTop: number;
+
+        const resolvedOrigin = () =>
+            pointerInstance.popoverTrigger()['getResolvedOrigin']() as {
+                x: number;
+                y: number;
+                width: number;
+                height: number;
+            };
+
+        const click = async (clientX: number, clientY: number, detail = 1) => {
+            triggerElement.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX, clientY, detail }));
+            await runDueTimers();
+            pointerFixture.detectChanges();
+        };
+
+        beforeEach(() => {
+            vi.useFakeTimers();
+            pointerFixture = createComponent(PopoverRelativeToPointer);
+            pointerInstance = pointerFixture.componentInstance;
+            triggerElement = pointerInstance.trigger().nativeElement;
+            hostLeft = 10;
+            hostTop = 20;
+            triggerElement.getBoundingClientRect = () =>
+                ({
+                    x: hostLeft,
+                    y: hostTop,
+                    left: hostLeft,
+                    top: hostTop,
+                    right: hostLeft + 200,
+                    bottom: hostTop + 40,
+                    width: 200,
+                    height: 40,
+                    toJSON: () => ({})
+                }) as DOMRect;
+            readOverlayContainer();
+        });
+
+        afterEach(() => overlayContainer.ngOnDestroy());
+
+        it('should anchor to the click and follow the host when it moves', async () => {
+            await click(80, 60);
+
+            const origin = resolvedOrigin();
+
+            expect(origin).toMatchObject({ x: 80, y: 60, width: 0, height: 0 });
+
+            hostLeft = 30;
+            hostTop = 50;
+            await Promise.resolve();
+
+            expect(origin).toMatchObject({ x: 100, y: 90, width: 0, height: 0 });
+        });
+
+        it('should ignore a synthetic click with detail zero', async () => {
+            await click(80, 60, 0);
+
+            expect(resolvedOrigin()).toBe(triggerElement);
+        });
+
+        it.each([ENTER, SPACE])('should keep keyboard opening on the host for key code %s', async (keyCode) => {
+            dispatchKeyboardEvent(triggerElement, 'keydown', keyCode);
+            await runDueTimers();
+            pointerFixture.detectChanges();
+
+            expect(resolvedOrigin()).toBe(triggerElement);
+        });
+
+        it('should not reuse the previous click for a programmatic open', async () => {
+            await click(80, 60);
+            pointerInstance.popoverTrigger().hide(0);
+            await settleClose(pointerFixture);
+
+            pointerInstance.popoverTrigger().show();
+            await runDueTimers();
+            pointerFixture.detectChanges();
+
+            expect(resolvedOrigin()).toBe(triggerElement);
+        });
+
+        it('should keep hover opening on the host', async () => {
+            pointerInstance.triggers = 'hover';
+            pointerFixture.detectChanges();
+
+            dispatchMouseEvent(triggerElement, 'mouseenter', 80, 60);
+            await runDueTimers();
+            pointerFixture.detectChanges();
+
+            expect(resolvedOrigin()).toBe(triggerElement);
+        });
+
+        it('should prefer an explicitly configured origin', async () => {
+            pointerInstance.origin = { x: 200, y: 160, width: 0, height: 0 };
+            pointerFixture.detectChanges();
+
+            await click(80, 60);
+
+            expect(resolvedOrigin()).toBe(pointerInstance.origin);
+        });
+
+        it('should move an open popover to a second real click without closing it', async () => {
+            await click(80, 60);
+
+            const overlayRef = pointerInstance.popoverTrigger().overlayRef!;
+            const updatePosition = vi.spyOn(overlayRef, 'updatePosition');
+            const strategy = overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy;
+            const withLockedPosition = vi.spyOn(strategy, 'withLockedPosition');
+            const component = pointerInstance.popoverTrigger()['instance'] as KbqPopoverComponent;
+            const updateArrowPosition = vi.spyOn(component, 'updateArrowPosition');
+
+            await click(120, 90);
+
+            expect(pointerInstance.popoverTrigger().getPointerPoint()).toEqual({ x: 120, y: 90 });
+            expect(updatePosition).toHaveBeenCalled();
+            expect(withLockedPosition.mock.calls).toEqual([[false], [true]]);
+            expect(updateArrowPosition).toHaveBeenCalled();
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
+        });
+
+        it('should cancel a pending hide when a real click moves an attached popover', async () => {
+            await click(80, 60);
+
+            pointerInstance.popoverTrigger().hide(100);
+
+            await click(120, 90);
+            await vi.advanceTimersByTimeAsync(101);
+            pointerFixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
+            expect(pointerInstance.popoverTrigger().getPointerPoint()).toEqual({ x: 120, y: 90 });
+        });
+
+        it('should write the horizontal arrow shift after a position change', async () => {
+            await click(340, 220);
+
+            const panel = positionPanel({
+                originX: 'center',
+                originY: 'top',
+                overlayX: 'center',
+                overlayY: 'bottom'
+            });
+
+            expect(panel.style.getPropertyValue('--kbq-popover-arrow-shift-x')).toBe('90px');
+            expect(panel.style.getPropertyValue('--kbq-popover-arrow-shift-y')).toBe('0px');
+        });
+
+        it('should write the vertical arrow shift after a position change', async () => {
+            await click(340, 220);
+
+            const panel = positionPanel({
+                originX: 'end',
+                originY: 'center',
+                overlayX: 'start',
+                overlayY: 'center'
+            });
+
+            expect(panel.style.getPropertyValue('--kbq-popover-arrow-shift-x')).toBe('0px');
+            expect(panel.style.getPropertyValue('--kbq-popover-arrow-shift-y')).toBe('40px');
+        });
+
+        it('should not write unchanged arrow shifts again', async () => {
+            await click(340, 220);
+
+            const connectionPair: ConnectionPositionPair = {
+                originX: 'center',
+                originY: 'top',
+                overlayX: 'center',
+                overlayY: 'bottom'
+            };
+
+            positionPanel(connectionPair);
+
+            const component = pointerInstance.popoverTrigger()['instance'] as KbqPopoverComponent;
+            const setStyle = vi.spyOn(component['renderer'], 'setStyle');
+
+            positionPanel(connectionPair);
+
+            expect(setStyle).not.toHaveBeenCalled();
+        });
+
+        it('should recalculate the arrow after the entrance geometry is replaced by the visible panel', async () => {
+            await click(340, 220);
+
+            const panel = positionPanel({
+                originX: 'end',
+                originY: 'center',
+                overlayX: 'start',
+                overlayY: 'center'
+            });
+
+            expect(panel.style.getPropertyValue('--kbq-popover-arrow-shift-y')).toBe('40px');
+
+            panel.getBoundingClientRect = () =>
+                ({
+                    left: 79,
+                    top: 0,
+                    right: 279,
+                    bottom: 72,
+                    width: 200,
+                    height: 72,
+                    x: 79,
+                    y: 0,
+                    toJSON: () => ({})
+                }) as DOMRect;
+
+            const component = pointerInstance.popoverTrigger()['instance'] as KbqPopoverComponent;
+
+            component.visibleChange.emit(true);
+
+            expect(panel.style.getPropertyValue('--kbq-popover-arrow-shift-x')).toBe('0px');
+            expect(panel.style.getPropertyValue('--kbq-popover-arrow-shift-y')).toBe('6px');
+        });
+
+        it.each(['origin', 'arrow', 'stick-to-window'])('should clear stale arrow shifts for %s', async (mode) => {
+            await click(340, 220);
+
+            const connectionPair: ConnectionPositionPair = {
+                originX: 'center',
+                originY: 'top',
+                overlayX: 'center',
+                overlayY: 'bottom'
+            };
+            const panel = positionPanel(connectionPair);
+
+            expect(panel.style.getPropertyValue('--kbq-popover-arrow-shift-x')).toBe('90px');
+
+            if (mode === 'origin') {
+                pointerInstance.origin = { x: 200, y: 160, width: 0, height: 0 };
+                pointerFixture.detectChanges();
+            } else if (mode === 'arrow') {
+                pointerInstance.popoverTrigger().arrow = false;
+                pointerInstance.popoverTrigger().updateData();
+            } else {
+                pointerInstance.popoverTrigger().stickToWindow = 'top';
+                pointerInstance.popoverTrigger().updateData();
+            }
+
+            positionPanel(connectionPair);
+
+            expect(panel.style.getPropertyValue('--kbq-popover-arrow-shift-x')).toBe('');
+            expect(panel.style.getPropertyValue('--kbq-popover-arrow-shift-y')).toBe('');
+        });
+
+        function positionPanel(connectionPair: ConnectionPositionPair): HTMLElement {
+            const panel = overlayContainerElement.querySelector<HTMLElement>('.kbq-popover')!;
+
+            panel.getBoundingClientRect = () =>
+                ({
+                    left: 100,
+                    top: 100,
+                    right: 400,
+                    bottom: 260,
+                    width: 300,
+                    height: 160,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                }) as DOMRect;
+            pointerInstance.popoverTrigger().onPositionChange({ connectionPair } as ConnectedOverlayPositionChange);
+
+            return panel;
+        }
+    });
+
     describe('origin', () => {
         let originFixture: ComponentFixture<PopoverOrigin>;
         let originInstance: PopoverOrigin;
@@ -2653,6 +2922,30 @@ class PopoverFallbacks {
 })
 class PopoverWithTooltip {
     readonly trigger = viewChild.required<ElementRef>('trigger');
+}
+
+@Component({
+    selector: 'popover-relative-to-pointer',
+    imports: [KbqPopoverModule],
+    template: `
+        <button
+            #trigger
+            kbqPopover
+            kbqRelativeToPointer
+            kbqPopoverContent="Pointer content"
+            [kbqTrigger]="triggers"
+            [kbqPopoverOrigin]="origin"
+        >
+            Trigger
+        </button>
+    `
+})
+class PopoverRelativeToPointer {
+    origin: KbqOverlayOrigin | null = null;
+    triggers = 'click, keydown';
+
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
 }
 
 @Component({

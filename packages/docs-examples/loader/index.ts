@@ -417,6 +417,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarLockedOptionsExample);
         case 'filter-bar-master-checkbox':
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarMasterCheckboxExample);
+        case 'filter-bar-multi-tree-select-value-template':
+            return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarMultiTreeSelectValueTemplateExample);
         case 'filter-bar-no-options':
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarNoOptionsExample);
         case 'filter-bar-not-specified':
@@ -763,6 +765,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverPlacementCenterExample);
         case 'popover-placement-edges':
             return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverPlacementEdgesExample);
+        case 'popover-relative-to-pointer':
+            return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverRelativeToPointerExample);
         case 'popover-scroll':
             return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverScrollExample);
         case 'popover-scrolling-and-layering-page':

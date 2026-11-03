@@ -210,6 +210,9 @@ export abstract class KbqPopUp implements OnDestroy {
         this.changeDetectorRef.detectChanges();
     }
 
+    /** Updates arrow geometry after the connected overlay applies a position. @docs-private */
+    updateArrowPosition(): void {}
+
     /**
      * Called once the pop-up has animated in. Only the entrance animates: `hide()` emits `onHideSubject`
      * synchronously and `KbqPopUpTrigger` detaches the overlay in the same call stack.

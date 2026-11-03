@@ -320,3 +320,80 @@ export class E2ePopoverScrollbarNoOverflow {}
 export class E2ePopoverCloseOnScroll {
     protected readonly content = Array.from({ length: 80 }, (_, i) => `Scrollable popover line ${i}`).join(' ');
 }
+
+@Component({
+    selector: 'e2e-popover-relative-to-pointer',
+    imports: [KbqPopoverModule, KbqButton, KbqButtonCssStyler],
+    template: `
+        <div data-testid="e2eScreenshotTarget" class="e2e-relative-to-pointer">
+            <div data-testid="e2ePointerBottomOrigin" class="e2e-pointer-bottom-origin">
+                <button
+                    data-testid="e2ePopoverPointerTrigger"
+                    kbq-button
+                    kbqPopover
+                    kbqRelativeToPointer
+                    kbqPopoverPlacement="bottom"
+                    kbqPopoverSize="small"
+                    kbqPopoverContent="Popover anchored to the exact click point."
+                    class="e2e-pointer-trigger"
+                    [kbqPopoverPlacementPriority]="['bottom']"
+                >
+                    Click different places in this long trigger
+                </button>
+            </div>
+
+            <div data-testid="e2ePointerRightOrigin" class="e2e-pointer-right-origin">
+                <button
+                    data-testid="e2ePopoverPointerRightTrigger"
+                    kbq-button
+                    kbqPopover
+                    kbqRelativeToPointer
+                    kbqPopoverPlacement="right"
+                    kbqPopoverSize="small"
+                    kbqPopoverContent="Popover anchored beside the exact click point."
+                    class="e2e-pointer-trigger"
+                    [kbqPopoverPlacementPriority]="['right']"
+                >
+                    Right placement
+                </button>
+            </div>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .e2e-relative-to-pointer {
+            position: relative;
+            width: 760px;
+            height: 240px;
+        }
+
+        .e2e-pointer-bottom-origin,
+        .e2e-pointer-right-origin {
+            position: absolute;
+            left: 50px;
+            display: inline-block;
+        }
+
+        .e2e-pointer-bottom-origin {
+            top: 160px;
+        }
+
+        .e2e-pointer-right-origin {
+            top: 260px;
+        }
+
+        .e2e-pointer-trigger {
+            width: 700px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2ePopoverRelativeToPointer'
+    }
+})
+export class E2ePopoverRelativeToPointer {}

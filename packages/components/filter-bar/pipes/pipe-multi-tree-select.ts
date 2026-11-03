@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -18,6 +19,16 @@ import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
 import { KbqTreeSelectPipeBase } from './tree-select-pipe-base';
 
+/** Context available to a custom `multi-tree-select` value template. */
+export interface KbqMultiTreeSelectValueTemplateContext<T extends KbqTreeSelectNode = KbqTreeSelectNode> {
+    /** Pipe component instance, matching the implicit context of the flat select pipes. */
+    $implicit: KbqPipeMultiTreeSelectComponent;
+    /** Original node, including consumer-defined fields omitted from the flattened tree model. */
+    option: T;
+    /** Current search query. Defaults to `null`. */
+    search: string | null;
+}
+
 @Component({
     selector: 'kbq-pipe-multi-tree-select',
     imports: [
@@ -35,7 +46,8 @@ import { KbqTreeSelectPipeBase } from './tree-select-pipe-base';
         FormsModule,
         KbqBadgeModule,
         KbqPseudoCheckboxModule,
-        KbqSelectNoOptions
+        KbqSelectNoOptions,
+        NgTemplateOutlet
     ],
     templateUrl: 'pipe-multi-tree-select.html',
     styleUrls: ['base-pipe.scss', 'pipe-multi-tree-select.scss'],
@@ -179,6 +191,11 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
 
     isNodeSelectAll(_: number, nodeData: KbqTreeSelectFlatNode) {
         return nodeData.value === kbqTreeSelectAllValue;
+    }
+
+    /** @docs-private */
+    protected getValueTemplateContext(node: KbqTreeSelectFlatNode): KbqMultiTreeSelectValueTemplateContext {
+        return { $implicit: this, option: this.getSourceNode(node), search: this.searchControl.value };
     }
 
     onSelect({ value: option }) {
