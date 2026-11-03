@@ -6,7 +6,11 @@
     [multiple]="true"
     [class]="{ 'kbq-active': select.panelOpen }"
     [ngModel]="selected"
-    [panelClass]="'kbq-pipe-multi-tree-select__panel'"
+    [panelClass]="
+        isTemplateRef(valueTemplate)
+            ? 'kbq-pipe-multi-tree-select__panel kbq-pipe-multi-tree-select__panel_custom-value'
+            : 'kbq-pipe-multi-tree-select__panel'
+    "
     [panelMaxHeight]="panelMaxHeight"
     [searchMinOptionsThreshold]="noOptions ? 1 : undefined"
     [selectAllHandler]="selectAllHandler"
@@ -76,16 +80,30 @@
         </kbq-tree-option>
 
         <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
-            <span
-                [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
-            ></span>
+            @if (isTemplateRef(valueTemplate)) {
+                <ng-container
+                    [ngTemplateOutlet]="$any(valueTemplate)"
+                    [ngTemplateOutletContext]="getValueTemplateContext(node)"
+                />
+            } @else {
+                <span
+                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+                ></span>
+            }
         </kbq-tree-option>
 
         <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
             <kbq-tree-node-toggle [node]="node" />
-            <span
-                [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
-            ></span>
+            @if (isTemplateRef(valueTemplate)) {
+                <ng-container
+                    [ngTemplateOutlet]="$any(valueTemplate)"
+                    [ngTemplateOutletContext]="getValueTemplateContext(node)"
+                />
+            } @else {
+                <span
+                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+                ></span>
+            }
         </kbq-tree-option>
     </kbq-tree-selection>
 </kbq-tree-select>

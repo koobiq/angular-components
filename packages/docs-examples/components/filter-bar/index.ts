@@ -7,6 +7,7 @@ import { FilterBarInactiveFilterExample } from './filter-bar-inactive-filter/fil
 import { FilterBarLocalizationExample } from './filter-bar-localization/filter-bar-localization-example';
 import { FilterBarLockedOptionsExample } from './filter-bar-locked-options/filter-bar-locked-options-example';
 import { FilterBarMasterCheckboxExample } from './filter-bar-master-checkbox/filter-bar-master-checkbox-example';
+import { FilterBarMultiTreeSelectValueTemplateExample } from './filter-bar-multi-tree-select-value-template/filter-bar-multi-tree-select-value-template-example';
 import { FilterBarNoOptionsExample } from './filter-bar-no-options/filter-bar-no-options-example';
 import { FilterBarNotSpecifiedExample } from './filter-bar-not-specified/filter-bar-not-specified-example';
 import { FilterBarOptionCaptionExample } from './filter-bar-option-caption/filter-bar-option-caption-example';
@@ -32,6 +33,7 @@ export {
     FilterBarLocalizationExample,
     FilterBarLockedOptionsExample,
     FilterBarMasterCheckboxExample,
+    FilterBarMultiTreeSelectValueTemplateExample,
     FilterBarNoOptionsExample,
     FilterBarNotSpecifiedExample,
     FilterBarOptionCaptionExample,
@@ -64,6 +66,7 @@ const EXAMPLES = [
     FilterBarReadonlyPipeExample,
     FilterBarReadonlyPipesExample,
     FilterBarMasterCheckboxExample,
+    FilterBarMultiTreeSelectValueTemplateExample,
     FilterBarNotSpecifiedExample,
     FilterBarLockedOptionsExample,
     FilterBarInactiveFilterExample,

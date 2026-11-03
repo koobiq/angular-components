@@ -470,6 +470,63 @@ test.describe('KbqFilterBarModule', () => {
         });
     });
 
+    test.describe('E2eFilterBarMultiTreeSelectValueTemplate', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eFilterBarMultiTreeSelectValueTemplate');
+        const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
+
+        test('custom node values', async ({ page }) => {
+            await page.goto('/E2eFilterBarMultiTreeSelectValueTemplate');
+
+            const component = getComponent(page);
+
+            await component.locator('.kbq-pipe__multi-tree-select .kbq-select__trigger').click();
+
+            const panel = page.locator('.kbq-pipe-multi-tree-select__panel_custom-value');
+            const options = panel.locator('.kbq-tree-option');
+            const longOption = options.filter({ hasText: 'Операционная система' });
+
+            await expect(panel).toBeVisible();
+            await expect(panel.locator('.e2e-filter-bar-multi-tree-select-value-template__icon')).toHaveCount(2);
+            await expect(panel.locator('kbq-tree-node-toggle')).toHaveCount(2);
+            await expect(panel.locator('kbq-pseudo-checkbox').first()).toBeVisible();
+            await expect(
+                panel.locator('.e2e-filter-bar-multi-tree-select-value-template__count').filter({ hasText: /^0$/ })
+            ).toBeVisible();
+            await expect(longOption).toBeVisible();
+
+            const longOptionBox = (await longOption.boundingBox())!;
+            const longOptionWidth = await longOption.locator('.kbq-option-text').evaluate((element) => ({
+                client: element.clientWidth,
+                scroll: element.scrollWidth
+            }));
+
+            expect(longOptionBox.height).toBeGreaterThan(32);
+            expect(longOptionWidth.scroll).toBeLessThanOrEqual(longOptionWidth.client + 1);
+
+            const viewport = page.viewportSize()!;
+
+            await page.mouse.move(viewport.width - 1, viewport.height - 1);
+
+            const screenshotTarget = getScreenshotTarget(component);
+
+            await expect(screenshotTarget).toHaveScreenshot('08-custom-tree-value-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('08-custom-tree-value-dark.png');
+
+            const search = panel.locator('input');
+
+            await search.fill('несовместима');
+            await expect(longOption).toBeVisible();
+            await expect(longOption.locator('mark')).toHaveText('несовместима');
+            await expect(options.filter({ hasText: '4.3.0.269' })).toBeHidden();
+
+            await search.fill('');
+            await options.filter({ hasText: '4.3.0.269' }).click();
+            await page.keyboard.press('Escape');
+            await expect(component.locator('.kbq-pipe__value')).toHaveText('4.3.0.269');
+        });
+    });
+
     test.describe('E2eFilterBarDateWithoutValues', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eFilterBarDateWithoutValues');
         const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');

@@ -689,7 +689,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'filter-bar',
                     hasApi: true,
                     apiId: 'filter-bar',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-17')
                 },
                 {
                     id: DocsStructureItemId.Flag,
