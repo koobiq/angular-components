@@ -183,6 +183,13 @@ export interface KbqPipe {
     search?: boolean;
     selectAll?: boolean;
 
+    /**
+     * Tree-based pipes only (`tree-select`, `multi-tree-select`): whether the panel opens with every
+     * branch expanded. When `false`, all branches start collapsed except the ancestors of the selected
+     * node(s). Default is `true`.
+     */
+    defaultExpanded?: boolean;
+
     openOnAdd?: boolean;
     openOnReset?: boolean;
 

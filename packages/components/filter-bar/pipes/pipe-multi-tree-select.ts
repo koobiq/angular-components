@@ -194,6 +194,11 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     }
 
     /** @docs-private */
+    protected getSelectedValues(): unknown[] {
+        return this.multiSelect.selected ?? [];
+    }
+
+    /** @docs-private */
     protected getValueTemplateContext(node: KbqTreeSelectFlatNode): KbqMultiTreeSelectValueTemplateContext {
         return { $implicit: this, option: this.getSourceNode(node), search: this.searchControl.value };
     }
