@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 
-// Every state scenario lays its cells out in one row, so each screenshot shows a single state.
 const statesStyles = `
     :host {
         display: inline-grid;
