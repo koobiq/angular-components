@@ -1,15 +1,26 @@
-import { ChangeDetectionStrategy, Component, computed, inject, model, signal, Signal, viewChild } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    signal,
+    Signal,
+    viewChild,
+    WritableSignal
+} from '@angular/core';
 import {
     KBQ_AG_GRID_LOAD_ERROR_LABELS_EN,
     KBQ_AG_GRID_LOAD_ERROR_LABELS_RU,
+    KBQ_AG_GRID_SETTINGS_MENU_LABELS_EN,
     KbqAgGridLoadError,
+    KbqAgGridSettingsMenuItem,
+    KbqAgGridSettingsMenuItems,
+    kbqAgGridSettingsMenuLabelsProvider,
     KbqAgGridSkeletonCellRenderer,
     KbqAgGridSkeletonSelectionCellComponent,
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqLocaleService } from '@koobiq/components/core';
-import { KbqToggleModule } from '@koobiq/components/toggle';
 import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -21,6 +32,7 @@ import {
     IsFullWidthRowParams,
     ModuleRegistry,
     RowSelectionOptions,
+    RowStyle,
     SelectionColumnDef
 } from 'ag-grid-community';
 
@@ -28,6 +40,8 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 const PAGE_SIZE = 20;
 const FAILING_PAGE_START_ROW = PAGE_SIZE * 3;
+const PINNED_LEFT = ['ag-Grid-SelectionColumn', 'column0'];
+const PINNED_RIGHT = ['column4'];
 
 const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
     column0: 'Text ' + index,
@@ -76,7 +90,7 @@ export class AgGridLoadErrorExampleLoadingText implements ICellRendererAngularCo
  */
 @Component({
     selector: 'ag-grid-load-error-example',
-    imports: [AgGridModule, KbqAgGridThemeModule, KbqToggleModule, FormsModule],
+    imports: [AgGridModule, KbqAgGridThemeModule],
     templateUrl: 'ag-grid-load-error-example.html',
     styles: `
         :host {
@@ -90,10 +104,13 @@ export class AgGridLoadErrorExampleLoadingText implements ICellRendererAngularCo
             width: 100%;
         }
     `,
+    providers: [kbqAgGridSettingsMenuLabelsProvider(KBQ_AG_GRID_SETTINGS_MENU_LABELS_EN)],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridLoadErrorExample {
-    readonly textInsteadOfSkeleton = model(false);
+    private readonly textInsteadOfSkeleton = signal(false);
+    private readonly pinnedColumns = signal(true);
+    private readonly rowDividers = signal(false);
 
     private readonly loadError = viewChild.required(KbqAgGridLoadError);
     private readonly localeService = inject(KbqLocaleService);
@@ -101,7 +118,6 @@ export class AgGridLoadErrorExample {
 
     private failingPageAlreadyFailed = false;
 
-    protected api?: GridApi;
     protected readonly pageSize = PAGE_SIZE;
     protected readonly initialRowCount = 7;
     protected readonly loadingTextRenderer = AgGridLoadErrorExampleLoadingText;
@@ -115,6 +131,30 @@ export class AgGridLoadErrorExample {
     );
 
     protected readonly loadingTextParams = { label: this.loadingLabel };
+
+    protected readonly rowStyle = computed<RowStyle>(() =>
+        this.rowDividers()
+            ? {
+                  borderBottom: 'var(--kbq-size-border-width) solid var(--kbq-line-contrast-less)',
+                  borderRadius: '0'
+              }
+            : { borderBottom: '', borderRadius: '' }
+    );
+
+    protected readonly settingsMenuItems: KbqAgGridSettingsMenuItems = [
+        this.createSwitchItem('pinned-columns', 'Pinned columns', 'kbq-pin_16', this.pinnedColumns, (api, pinned) => {
+            api.setColumnsPinned(PINNED_LEFT, pinned ? 'left' : null);
+            api.setColumnsPinned(PINNED_RIGHT, pinned ? 'right' : null);
+        }),
+        this.createSwitchItem('row-dividers', 'Row dividers', 'kbq-bars-horizontal_16', this.rowDividers),
+        this.createSwitchItem(
+            'text-instead-of-skeleton',
+            'Text instead of skeleton',
+            'kbq-arrow-rotate-right_16',
+            this.textInsteadOfSkeleton,
+            (api) => api.redrawRows()
+        )
+    ];
 
     protected readonly isFullWidthRow = ({ rowNode }: IsFullWidthRowParams): boolean =>
         this.textInsteadOfSkeleton() && rowNode.data === undefined;
@@ -148,6 +188,32 @@ export class AgGridLoadErrorExample {
     protected readonly datasource: IDatasource = {
         getRows: (params: IGetRowsParams) => this.getRows(params)
     };
+
+    private createSwitchItem(
+        id: string,
+        label: string,
+        icon: string,
+        state: WritableSignal<boolean>,
+        onChange?: (api: GridApi, value: boolean) => void
+    ): KbqAgGridSettingsMenuItem {
+        return {
+            id,
+            label,
+            icon,
+            mode: 'single',
+            value: computed(() => (state() ? 'On' : 'Off')),
+            items: [true, false].map((value) => ({
+                id: `${id}-${value ? 'on' : 'off'}`,
+                label: value ? 'On' : 'Off',
+                checked: computed(() => state() === value),
+                keepOpen: true,
+                action: (api: GridApi) => {
+                    state.set(value);
+                    onChange?.(api, value);
+                }
+            }))
+        };
+    }
 
     private getRows(params: IGetRowsParams): void {
         const { startRow, endRow, successCallback, failCallback } = params;

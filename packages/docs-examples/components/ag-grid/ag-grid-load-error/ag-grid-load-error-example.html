@@ -2,7 +2,9 @@
     kbqAgGridTheme
     kbqAgGridThemeDisableCellFocusStyles
     kbqAgGridLoadError
+    kbqAgGridSettingsMenu
     rowModelType="infinite"
+    [kbqAgGridSettingsMenuItems]="settingsMenuItems"
     [kbqAgGridLoadErrorLabels]="labels()"
     [columnDefs]="columnDefs"
     [defaultColDef]="defaultColDef"
@@ -12,11 +14,7 @@
     [isFullWidthRow]="isFullWidthRow"
     [fullWidthCellRenderer]="loadingTextRenderer"
     [fullWidthCellRendererParams]="loadingTextParams"
+    [rowStyle]="rowStyle()"
     [cacheBlockSize]="pageSize"
     [infiniteInitialRowCount]="initialRowCount"
-    (gridReady)="api = $event.api"
 />
-
-<kbq-toggle [(ngModel)]="textInsteadOfSkeleton" (ngModelChange)="api?.redrawRows()">
-    Text instead of skeleton
-</kbq-toggle>
