@@ -136,12 +136,6 @@
         transition-delay: 0s;
     }
 
-    // The fill widens the heading by its padding, which would carry the link with it; the link stays where it was.
-    .docs-next-heading_target .docs-next-heading-link,
-    .docs-next-prose :is(h2, h3, h4, h5)[id]:target .docs-next-heading-link {
-        right: calc(100% - var(--kbq-size-s));
-    }
-
     // Shown for the keyboard even when the pointer is somewhere else.
     .docs-next-heading-link:focus-visible {
         opacity: 1;
@@ -177,11 +171,19 @@
 
 .docs-next-heading_target,
 .docs-next-prose :is(h2, h3, h4, h5)[id]:target {
-    // The fill reaches 8px past the text on each side without moving it.
-    margin-inline: calc(-1 * var(--kbq-size-s));
-    padding-inline: var(--kbq-size-s);
-    border-radius: var(--kbq-size-s);
-    animation: docs-next-heading-target 2s var(--docs-next-ease-out);
+    // The fill is a layer behind the heading that reaches past its box, so it takes no room: the text stays where it is,
+    // and so do the margins around it.
+    isolation: isolate;
+
+    &::before {
+        position: absolute;
+        inset: calc(-1 * var(--kbq-size-xs)) calc(-1 * var(--kbq-size-s));
+        z-index: -1;
+        border-radius: var(--kbq-size-s);
+        content: '';
+        pointer-events: none;
+        animation: docs-next-heading-target 2s var(--docs-next-ease-out);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
