@@ -5,7 +5,8 @@
     display: contents;
 }
 
-// Figma: Drawer Top bar (66:33908): Icon Button - Mobile (73:35841), 38 × 48, 4px from the sides.
+// Figma: Drawer Top bar (66:33908): 48px of buttons and a 1px line, 4px from the sides. Icon Button - Mobile (69:35144)
+// is 40 × 48: a 16px icon with 12px around it.
 .docs-next-menu__top {
     display: flex;
     flex: none;
@@ -19,9 +20,25 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 38px;
+    width: 40px;
     height: 48px;
     padding: 0;
+
+    // Figma: Icon Button - Mobile, State=Focus (126:24728): the Focus Ring - Inner replaces the library's frame around
+    // the whole button. It is 2px, 4px in from the top and bottom, and sits inside the 40px width.
+    &.cdk-keyboard-focused {
+        position: relative;
+        box-shadow: none;
+
+        &::after {
+            position: absolute;
+            inset: var(--kbq-size-xxs) 0;
+            border-radius: var(--kbq-size-s);
+            box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+            content: '';
+            pointer-events: none;
+        }
+    }
 }
 
 .docs-next-menu__close.kbq-icon-button {
