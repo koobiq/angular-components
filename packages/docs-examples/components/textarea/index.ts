@@ -4,13 +4,15 @@ import { TextareaDisabledExample } from './textarea-disabled/textarea-disabled-e
 import { TextareaErrorStateExample } from './textarea-error-state/textarea-error-state-example';
 import { TextareaMaxRowsExample } from './textarea-max-rows/textarea-max-rows-example';
 import { TextareaOverviewExample } from './textarea-overview/textarea-overview-example';
+import { TextareaReadonlyExample } from './textarea-readonly/textarea-readonly-example';
 
 export {
     TextareaCanGrowExample,
     TextareaDisabledExample,
     TextareaErrorStateExample,
     TextareaMaxRowsExample,
-    TextareaOverviewExample
+    TextareaOverviewExample,
+    TextareaReadonlyExample
 };
 
 const EXAMPLES = [
@@ -18,7 +20,8 @@ const EXAMPLES = [
     TextareaDisabledExample,
     TextareaErrorStateExample,
     TextareaCanGrowExample,
-    TextareaMaxRowsExample
+    TextareaMaxRowsExample,
+    TextareaReadonlyExample
 ];
 
 @NgModule({

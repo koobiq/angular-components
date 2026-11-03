@@ -58,15 +58,25 @@ const MAX_ROW_LIMIT_REACHED = 'kbq-textarea_max-row-limit-reached';
 test.describe('KbqTextareaModule', () => {
     test.use({ permissions: ['clipboard-read', 'clipboard-write'] });
 
-    test.describe('E2eTextareaStates', () => {
-        const getComponent = (page: Page): Locator => page.getByTestId('e2eTextareaStates');
+    test.describe('states', () => {
+        const states = [
+            { name: '01-default', scenario: 'E2eTextareaDefault', testId: 'e2eTextareaDefault' },
+            { name: '02-validation', scenario: 'E2eTextareaValidation', testId: 'e2eTextareaValidation' },
+            { name: '03-disabled', scenario: 'E2eTextareaDisabled', testId: 'e2eTextareaDisabled' },
+            { name: '04-readonly', scenario: 'E2eTextareaReadonly', testId: 'e2eTextareaReadonly' },
+            { name: '05-height', scenario: 'E2eTextareaHeight', testId: 'e2eTextareaHeight' }
+        ];
 
-        test('states', async ({ page }) => {
-            await page.goto('/E2eTextareaStates');
-            await expect(getComponent(page)).toHaveScreenshot('01-light.png');
-            await e2eEnableDarkTheme(page);
-            await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
-        });
+        for (const { name, scenario, testId } of states) {
+            test(name, async ({ page }) => {
+                await page.goto(`/${scenario}`);
+                const component = page.getByTestId(testId);
+
+                await expect(component).toHaveScreenshot(`${name}-light.png`);
+                await e2eEnableDarkTheme(page);
+                await expect(component).toHaveScreenshot(`${name}-dark.png`);
+            });
+        }
     });
 
     test.describe('E2eTextareaGrowBehavior', () => {

@@ -36,6 +36,14 @@ export abstract class KbqFormFieldControl<T> {
     readonly errorState: Signal<boolean>;
 
     /**
+     * Whether the control is read-only: its value can be focused, selected and copied, but not changed.
+     *
+     * Implement it only on a control that has a read-only state. `KbqFormField` then hides the cleaner and adds
+     * the `kbq-form-field_readonly` class.
+     */
+    readonly readonly?: Signal<boolean>;
+
+    /**
      * Whether the control's value was filled in by the browser.
      *
      * Implement it only where autofill is reachable: on a control that is itself a text input or a

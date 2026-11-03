@@ -11,7 +11,13 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/components/core';
+import {
+    ESCAPE,
+    createMouseEvent,
+    dispatchEvent,
+    dispatchFakeEvent,
+    dispatchKeyboardEvent
+} from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTabGroup, KbqTabsModule } from '@koobiq/components/tabs';
 import { Observable, map, timer } from 'rxjs';
@@ -153,7 +159,13 @@ class KbqFormFieldWithNgModelInForm {
     ],
     template: `
         <kbq-form-field>
-            <textarea kbqTextarea [placeholder]="placeholder" [disabled]="disabled" [(ngModel)]="value"></textarea>
+            <textarea
+                kbqTextarea
+                [placeholder]="placeholder"
+                [disabled]="disabled"
+                [readonly]="readonly"
+                [(ngModel)]="value"
+            ></textarea>
         </kbq-form-field>
     `
 })
@@ -161,6 +173,21 @@ class KbqTextareaForBehaviors {
     value: string = 'test\ntest\ntest';
     placeholder: string;
     disabled: boolean = false;
+    readonly: boolean = false;
+}
+
+@Component({
+    imports: [KbqTextareaModule, FormsModule],
+    template: `
+        <kbq-form-field>
+            <textarea kbqTextarea [readonly]="readonly" [(ngModel)]="value"></textarea>
+            <kbq-cleaner />
+        </kbq-form-field>
+    `
+})
+class TextareaWithCleaner {
+    value: string = 'test';
+    readonly: boolean = false;
 }
 
 @Component({
@@ -350,6 +377,71 @@ describe('KbqTextarea', () => {
             fixture.detectChanges();
 
             expect(textareaElement.getAttribute('placeholder')).toBe('');
+        });
+
+        it('should change "readonly" state', async () => {
+            const fixture = createComponent(KbqTextareaForBehaviors);
+            const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
+            const textareaElement = getTextareaElement(fixture);
+
+            await fixture.whenStable();
+
+            expect(formFieldElement.classList.contains('kbq-form-field_readonly')).toBe(false);
+            expect(textareaElement.readOnly).toBe(false);
+
+            fixture.componentInstance.readonly = true;
+            fixture.detectChanges();
+
+            expect(formFieldElement.classList.contains('kbq-form-field_readonly')).toBe(true);
+            expect(textareaElement.readOnly).toBe(true);
+        });
+
+        it('should hide the placeholder while readonly', async () => {
+            const fixture = createComponent(KbqTextareaForBehaviors);
+            const textareaElement = getTextareaElement(fixture);
+
+            fixture.componentInstance.placeholder = 'placeholder';
+            fixture.componentInstance.readonly = true;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(textareaElement.getAttribute('placeholder')).toBe(null);
+
+            fixture.componentInstance.readonly = false;
+            fixture.detectChanges();
+
+            expect(textareaElement.getAttribute('placeholder')).toBe('placeholder');
+        });
+
+        it('should hide the cleaner while readonly', async () => {
+            const fixture = createComponent(TextareaWithCleaner);
+
+            // `ngModel` writes the value after the first render, and nothing renders it on its own.
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('kbq-cleaner'))).not.toBeNull();
+
+            fixture.componentInstance.readonly = true;
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('kbq-cleaner'))).toBeNull();
+        });
+
+        it('should not clear a readonly value on Escape', async () => {
+            const fixture = createComponent(TextareaWithCleaner);
+            const textareaElement = getTextareaElement(fixture);
+
+            await fixture.whenStable();
+            fixture.componentInstance.readonly = true;
+            fixture.detectChanges();
+
+            dispatchFakeEvent(textareaElement, 'focus');
+            dispatchKeyboardEvent(textareaElement, 'keydown', ESCAPE);
+            await fixture.whenStable();
+
+            expect(textareaElement.value).toBe('test');
+            expect(fixture.componentInstance.value).toBe('test');
         });
 
         it('should settle with a custom accessor that builds a new value on every read', async () => {

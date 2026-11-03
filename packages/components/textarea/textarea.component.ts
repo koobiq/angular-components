@@ -47,9 +47,10 @@ const isObject = (value: unknown): value is object => typeof value === 'object' 
         '[class.kbq-textarea-resizable]': '!growing()',
         '[class.kbq-textarea_max-row-limit-reached]': 'maxRowLimitReached()',
         '[attr.id]': 'id()',
-        '[attr.placeholder]': 'placeholder()',
+        '[attr.placeholder]': 'readonly() ? null : placeholder()',
         '[attr.aria-invalid]': 'errorState()',
         '[disabled]': 'disabled()',
+        '[readonly]': 'readonly()',
         '[required]': 'required()',
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)',
@@ -132,6 +133,12 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
      * @docs-private
      */
     readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
+
+    /**
+     * Whether the textarea is read-only: its value can be selected and copied, but not changed. A read-only
+     * textarea shows no placeholder. Defaults to `false`.
+     */
+    readonly readonly = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
     /** @docs-private */
     readonly idInput = input<string | undefined>(undefined, { alias: 'id' });

@@ -146,6 +146,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     onContainerClick(event: MouseEvent): void;
     readonly passwordToggle: Signal<KbqPasswordToggle | undefined>;
     readonly prefix: Signal<readonly KbqPrefix[]>;
+    readonly readonly: Signal<boolean>;
     runFocusMonitor: () => void;
     shouldForward(prop: keyof NgControl): boolean;
     readonly showRequiredMarker: i0.InputSignalWithTransform<boolean, unknown>;
@@ -174,6 +175,7 @@ export abstract class KbqFormFieldControl<T> {
     abstract onContainerClick(event: MouseEvent): void;
     open?: () => void;
     readonly placeholder: Signal<string | null | undefined>;
+    readonly readonly?: Signal<boolean>;
     readonly required: Signal<boolean>;
     setDescribedByIds?: (ids: string[]) => void;
     readonly value: Signal<T | null>;

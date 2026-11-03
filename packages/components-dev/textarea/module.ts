@@ -6,7 +6,8 @@ import {
     TextareaDisabledExample,
     TextareaErrorStateExample,
     TextareaMaxRowsExample,
-    TextareaOverviewExample
+    TextareaOverviewExample,
+    TextareaReadonlyExample
 } from 'packages/docs-examples/components/textarea';
 import { DevThemeToggle } from '../theme-toggle';
 
@@ -17,7 +18,8 @@ import { DevThemeToggle } from '../theme-toggle';
         TextareaDisabledExample,
         TextareaErrorStateExample,
         TextareaCanGrowExample,
-        TextareaMaxRowsExample
+        TextareaMaxRowsExample,
+        TextareaReadonlyExample
     ],
     template: `
         <textarea-overview-example />
@@ -29,6 +31,8 @@ import { DevThemeToggle } from '../theme-toggle';
         <textarea-can-grow-example />
         <hr />
         <textarea-max-rows-example />
+        <hr />
+        <textarea-readonly-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
