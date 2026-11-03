@@ -1,9 +1,12 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- a copy of a third-party script, see the note below
+// @ts-nocheck
+
 /**
  * The highlight.js line numbers plugin, kept apart from the code that calls it until code blocks number their lines
  * on their own.
  *
- * This function is not intended for editing.
- * Changes may lead to unpredictable behavior.
+ * A copy of the plugin's source: do not edit, type or reformat its body. Kept as it is, it stays comparable with the
+ * original and can be replaced by a newer release, which is also why `@ts-nocheck` keeps it out of type checking.
  * Source code: https://github.com/wcoder/highlightjs-line-numbers.js/blob/v2.9.0/src/highlightjs-line-numbers.js
  *
  * @internal

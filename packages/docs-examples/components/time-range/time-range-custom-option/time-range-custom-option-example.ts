@@ -120,5 +120,5 @@ export class TimeRangeCustomOptionExample {
     private readonly data = inject(ExampleLocalizedData);
     private readonly localeId = toSignal(inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes || of(''));
 
-    protected readonly placeholder = computed(() => this.data[this.localeId() || 'default'] ?? this.data.default);
+    protected readonly placeholder = computed(() => this.data[this.localeId() || 'default'] ?? this.data['default']);
 }

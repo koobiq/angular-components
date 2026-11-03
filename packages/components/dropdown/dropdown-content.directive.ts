@@ -19,8 +19,8 @@ export class KbqDropdownContent implements OnDestroy {
 
     /** Emits when the dropdown content has been attached. */
     attached = new Subject<void>();
-    private portal: TemplatePortal;
-    private outlet: DomPortalOutlet;
+    private portal?: TemplatePortal;
+    private outlet?: DomPortalOutlet;
 
     /**
      * Attaches the content with a particular context.

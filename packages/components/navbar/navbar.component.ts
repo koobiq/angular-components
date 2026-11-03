@@ -338,7 +338,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     /** @docs-private */
-    ngAfterContentInit(): void {
+    override ngAfterContentInit(): void {
         super.ngAfterContentInit();
 
         this.keyManager.withVerticalOrientation(false).withHorizontalOrientation('ltr');

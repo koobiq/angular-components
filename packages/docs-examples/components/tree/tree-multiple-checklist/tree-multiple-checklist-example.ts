@@ -170,8 +170,8 @@ export class TreeMultipleChecklistExample {
         this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
     }
 
-    onOptionClick($event, node: FileFlatNode): void {
-        $event.preventDefault();
+    onOptionClick(event: MouseEvent, node: FileFlatNode): void {
+        event.preventDefault();
         this.fileSelectionToggle(node);
     }
 

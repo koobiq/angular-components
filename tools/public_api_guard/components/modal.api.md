@@ -298,7 +298,7 @@ export abstract class KbqModalRef<C = any, R = unknown> {
     abstract getContentComponent(): C;
     abstract getElement(): HTMLElement;
     abstract getInstance(): KbqModalComponent;
-    abstract markForCheck(): any;
+    abstract markForCheck(): void;
     // (undocumented)
     abstract open(): void;
     abstract triggerCancel(): void;

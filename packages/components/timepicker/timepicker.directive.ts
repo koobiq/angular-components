@@ -480,10 +480,10 @@ export class KbqTimepicker<D>
         }
     }
 
-    onPaste($event) {
-        $event.preventDefault();
+    onPaste(event: ClipboardEvent) {
+        event.preventDefault();
 
-        const value = this.formatUserPaste($event.clipboardData.getData('text'));
+        const value = this.formatUserPaste(event.clipboardData!.getData('text'));
 
         const newTimeObj = this.getDateFromTimeString(value);
 
@@ -622,21 +622,17 @@ export class KbqTimepicker<D>
             return value;
         }
 
-        const match: RegExpMatchArray | null = value.match(
-            /^(\D+)?(?<hours>\d+)?(\D+)?(\D+)?(?<minutes>\d+)?(\D+)?(\D+)?(?<seconds>\d+)?(\D+)?$/
-        );
+        const { hours, minutes, seconds } =
+            value.match(/^(\D+)?(?<hours>\d+)?(\D+)?(\D+)?(?<minutes>\d+)?(\D+)?(\D+)?(?<seconds>\d+)?(\D+)?$/)
+                ?.groups ?? {};
 
-        if (!match?.groups?.hours) {
+        if (!hours) {
             this.setViewValue(value);
 
             return value;
         }
 
-        return this.replaceNumbers(
-            Object.values(match.groups)
-                .map((group) => (group || '').padStart(2, '0'))
-                .join(':')
-        );
+        return this.replaceNumbers([hours, minutes, seconds].map((group) => (group || '').padStart(2, '0')).join(':'));
     }
 
     private formatUserInput(value: string): string {
@@ -736,7 +732,7 @@ export class KbqTimepicker<D>
             return;
         }
 
-        let changedTime;
+        let changedTime: D | null = null;
 
         const newEditParams = this.getTimeEditMetrics(this.selectionStart as number);
 

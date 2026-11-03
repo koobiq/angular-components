@@ -255,9 +255,9 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     }
 
     /** @docs-private */
-    prefix = 'kbq-notification-center';
+    override prefix = 'kbq-notification-center';
     /** @docs-private */
-    trigger: KbqNotificationCenterTrigger;
+    override trigger: KbqNotificationCenterTrigger;
     /** @docs-private */
     isTrapFocus: boolean = false;
 
@@ -550,7 +550,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     }
 
     /** @docs-private */
-    updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
+    override updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
         super.updateClassMap(placement, customClass, { [`${this.prefix}_${size}`]: !!size });
     }
 
@@ -618,7 +618,7 @@ export class KbqNotificationCenterTrigger
     }
 
     /** Placement of popUp */
-    placement: KbqPopUpPlacementValues = defaultPlacement;
+    override placement: KbqPopUpPlacementValues = defaultPlacement;
 
     /** Class that will be used in the background */
     readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
@@ -702,10 +702,10 @@ export class KbqNotificationCenterTrigger
      * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
      * If container is specified, the positioning will be relative to it.
      * */
-    stickToWindow: KbqStickToWindowPlacementValues | undefined;
+    override stickToWindow: KbqStickToWindowPlacementValues | undefined;
 
     /** Container for additional positioning, used with stickToWindow */
-    container: HTMLElement | undefined;
+    override container: HTMLElement | undefined;
 
     /** @docs-private */
     get hasClickTrigger(): boolean {
@@ -843,7 +843,7 @@ export class KbqNotificationCenterTrigger
      *
      * @docs-private
      */
-    updatePosition(reapplyPosition: boolean = false) {
+    override updatePosition(reapplyPosition: boolean = false) {
         this.overlayRef = this.createOverlay();
 
         const position = (this.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy)

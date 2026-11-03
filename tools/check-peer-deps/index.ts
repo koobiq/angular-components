@@ -83,10 +83,10 @@ const schematicInjectedRanges: Record<string, string> = {
     '@koobiq/date-adapter': caret(rootPackageJson.dependencies!['@koobiq/date-adapter']),
     '@koobiq/icons': caret(rootPackageJson.dependencies!['@koobiq/icons']),
     '@koobiq/design-tokens': caret(rootPackageJson.devDependencies!['@koobiq/design-tokens']),
-    luxon: caret(rootPackageJson.devDependencies!.luxon),
+    luxon: caret(rootPackageJson.devDependencies!['luxon']),
     // No caret: the scrollbar relies on a specific `overlayscrollbars` build, so the schematic
     // injects the root pin verbatim. See packages/schematics/rollup.config.js.
-    overlayscrollbars: rootPackageJson.dependencies!.overlayscrollbars
+    overlayscrollbars: rootPackageJson.dependencies!['overlayscrollbars']
 };
 
 for (const pkg of publishedPackages) {

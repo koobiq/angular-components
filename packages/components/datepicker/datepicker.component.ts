@@ -192,7 +192,7 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
                 : null;
     }
 
-    private _startAt: D | null;
+    private _startAt?: D | null;
 
     /** Whether the datepicker pop-up should be disabled. */
     get disabled(): boolean {
@@ -317,10 +317,10 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     private validSelected: D | null = null;
 
     /** A portal containing the calendar for this datepicker. */
-    private calendarPortal: ComponentPortal<KbqDatepickerContent<D>>;
+    private calendarPortal?: ComponentPortal<KbqDatepickerContent<D>>;
 
     /** Reference to the component instantiated in popup mode. */
-    private popupComponentRef: ComponentRef<KbqDatepickerContent<D>> | null;
+    private popupComponentRef?: ComponentRef<KbqDatepickerContent<D>> | null;
 
     /** The element that was focused before the datepicker was opened. */
     private focusedElementBeforeOpen: HTMLElement | null = null;

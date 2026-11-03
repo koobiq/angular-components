@@ -269,7 +269,7 @@ export class ListIntermediateStateExample {
         }
     }
 
-    private getFilteredUsers(value): ExampleUser[] {
+    private getFilteredUsers(value: string): ExampleUser[] {
         const searchFilter = value.toLowerCase();
 
         return searchFilter ? this.users.filter((user) => this.userHasText(user, searchFilter)) : this.users;

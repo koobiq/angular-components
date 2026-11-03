@@ -9,7 +9,10 @@ import { KbqTagInput, KbqTagInputEvent, KbqTagsModule, kbqTagsDefaultOptionsProv
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
+type AutocompleteValue = string | { new: true; value: string } | null;
+
+const autocompleteValueCoercion = (value: AutocompleteValue): string =>
+    (typeof value === 'string' ? value : value?.value) || '';
 
 /**
  * @title Tag autocomplete onpaste off

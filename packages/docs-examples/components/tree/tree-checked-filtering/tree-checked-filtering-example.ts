@@ -216,11 +216,7 @@ abstract class TreeParams {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeCheckedFilteringExample extends TreeParams {
-    treeControl: FlatTreeControl<FileFlatNode>;
     filterByValues: FilterByValues<FileFlatNode>;
-    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     modelValue: any = ['docs'];
     filterValue: string = '';
@@ -243,7 +239,7 @@ export class TreeCheckedFilteringExample extends TreeParams {
         );
     }
 
-    onModelValueChange(values) {
+    onModelValueChange(values: string[]) {
         this.filterByValues.setValues(values);
     }
 

@@ -156,7 +156,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     }
 
     /** @docs-private */
-    ngAfterContentInit(): void {
+    override ngAfterContentInit(): void {
         super.ngAfterContentInit();
 
         this.keyManager.withVerticalOrientation(true);

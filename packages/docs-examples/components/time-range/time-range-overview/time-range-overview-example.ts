@@ -39,7 +39,7 @@ export class TimeRangeOverviewExample {
     private readonly data = inject(ExampleLocalizedData);
     private readonly localeId = toSignal(inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes || of(''));
 
-    protected readonly caption = computed(() => this.data[this.localeId() || 'default'] ?? this.data.default);
+    protected readonly caption = computed(() => this.data[this.localeId() || 'default'] ?? this.data['default']);
 
     protected readonly control = new FormControl<KbqTimeRangeRange>(
         {

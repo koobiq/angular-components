@@ -88,16 +88,16 @@ export class KbqCalendarBody implements OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        const columnChanges = changes.numCols;
+        const columnChanges = changes['numCols'];
         const { rows: rowsInput, numCols: numColsInput } = this;
         const rows = rowsInput();
         const numCols = numColsInput();
 
-        if (changes.rows || columnChanges) {
+        if (changes['rows'] || columnChanges) {
             this.firstRowOffset = rows && rows.length && rows[0].length ? numCols - rows[0].length : 0;
         }
 
-        if (changes.cellAspectRatio || columnChanges || !this.cellPadding) {
+        if (changes['cellAspectRatio'] || columnChanges || !this.cellPadding) {
             // todo
             // this.cellPadding = `${this.cellAspectRatio * 50 / numCols}%`;
             this.cellPadding = '0';

@@ -26,10 +26,12 @@ import * as flags1x1 from 'country-flag-icons/string/1x1';
 })
 export class FlagSquareExample {
     private readonly sanitizer = inject(DomSanitizer);
-    protected readonly countries = [
-        { code: 'EU', name: 'European Union' },
-        { code: 'NO', name: 'Norway' },
-        { code: 'KR', name: 'South Korea' },
-        { code: 'RU', name: 'Russia' }
-    ].map((country) => ({ ...country, svg: this.sanitizer.bypassSecurityTrustHtml(flags1x1[country.code]) }));
+    protected readonly countries = (
+        [
+            { code: 'EU', name: 'European Union' },
+            { code: 'NO', name: 'Norway' },
+            { code: 'KR', name: 'South Korea' },
+            { code: 'RU', name: 'Russia' }
+        ] as const
+    ).map((country) => ({ ...country, svg: this.sanitizer.bypassSecurityTrustHtml(flags1x1[country.code]) }));
 }

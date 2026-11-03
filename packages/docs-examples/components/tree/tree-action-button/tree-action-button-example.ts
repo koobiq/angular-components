@@ -5,7 +5,14 @@ import { KbqOptionModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
+import {
+    FlatTreeControl,
+    KbqTreeFlatDataSource,
+    KbqTreeFlattener,
+    KbqTreeModule,
+    KbqTreeOption,
+    KbqTreeSelectAllEvent
+} from '@koobiq/components/tree';
 
 export class FileNode {
     children: FileNode[];
@@ -191,8 +198,8 @@ export class TreeActionButtonExample {
         return nodeData.expandable;
     }
 
-    onSelectAllChange($event) {
-        console.log('All items selected', $event);
+    onSelectAllChange(event: KbqTreeSelectAllEvent<KbqTreeOption>) {
+        console.log('All items selected', event);
     }
 
     private transformer = (node: FileNode, level: number, parent: any) => {

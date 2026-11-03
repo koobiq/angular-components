@@ -221,9 +221,9 @@ export class DocsMigrationGuide extends DocsLocaleState {
         super();
 
         this.route.queryParams.pipe(takeUntilDestroyed()).subscribe((params: Params) => {
-            const requestedFrom = readParam(params.from);
-            const requestedTo = readParam(params.to);
-            const requestedComponents = readListParam(params.components);
+            const requestedFrom = readParam(params['from']);
+            const requestedTo = readParam(params['to']);
+            const requestedComponents = readListParam(params['components']);
             const from = this.knownValue(requestedFrom);
             const to = docsMigrationNormalizeTo(from, this.knownValue(requestedTo));
             const components = this.knownComponents(requestedComponents);

@@ -337,7 +337,7 @@ export class DevApp implements OnInit {
 
     compareWithById = (o1: any, o2: any): boolean => o1 && o2 && o1.id === o2.id;
 
-    openedChange(opened) {
+    openedChange(opened: boolean) {
         console.log('openedChange: ', opened);
 
         if (!opened) {
@@ -354,16 +354,16 @@ export class DevApp implements OnInit {
         return `${hiddenItemsText} ${hiddenItems}`;
     }
 
-    opened($event) {
-        console.log('opened: ', $event);
+    opened() {
+        console.log('opened');
     }
 
-    closed($event) {
-        console.log('closed: ', $event);
+    closed() {
+        console.log('closed');
     }
 
-    private getFilteredOptions(value): string[] {
-        const searchFilter = value && value.new ? value.value : value;
+    private getFilteredOptions(value: string | { new: true; value: string } | null): string[] {
+        const searchFilter = typeof value === 'string' ? value : value?.value;
 
         return searchFilter
             ? this.options.filter((option) => option.toLowerCase().includes(searchFilter.toLowerCase()))

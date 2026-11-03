@@ -53,7 +53,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     private letterKeyStream = new Subject<string>();
     private typeaheadSubscription = Subscription.EMPTY;
     private vertical = true;
-    private horizontal: 'ltr' | 'rtl' | null;
+    private horizontal?: 'ltr' | 'rtl' | null;
 
     private scrollSize: number = 0;
 

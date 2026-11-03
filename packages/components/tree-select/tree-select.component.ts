@@ -279,7 +279,7 @@ export class KbqTreeSelect<T = any, K = T>
         KbqSiblingPopup
 {
     elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    protected override readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly injector = inject(Injector);
     private readonly renderer = inject(Renderer2);
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
@@ -1276,7 +1276,7 @@ export class KbqTreeSelect<T = any, K = T>
 
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
         // `parseInt` ignores the trailing 'px' and converts this to a number.
-        this.triggerFontSize = parseInt(this.window.getComputedStyle(this.trigger().nativeElement)['font-size']);
+        this.triggerFontSize = parseInt(this.window.getComputedStyle(this.trigger().nativeElement).fontSize);
 
         // It's important that we read this as late as possible, because doing so earlier will
         // return a different element since it's based on queries in the form field which may

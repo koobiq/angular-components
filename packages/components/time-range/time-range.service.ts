@@ -50,7 +50,9 @@ export class KbqTimeRangeService<T> {
     /** Upper bound of the owning component, read the way `minDate` reads the lower one. */
     readonly maxDate = computed(() => this.boundsSource().max() ?? null);
 
-    readonly timeRangeConfig: Record<KbqTimeRangeType, Omit<KbqCustomTimeRangeType, 'type'>> = {
+    // The built-in types, plus the custom ones `add()` registers under any name.
+    readonly timeRangeConfig: Record<KbqTimeRangeType, Omit<KbqCustomTimeRangeType, 'type'>> &
+        Record<string, Omit<KbqCustomTimeRangeType, 'type'>> = {
         lastMinute: { units: { minutes: -1 }, translationType: 'minutes' },
         last5Minutes: { units: { minutes: -5 }, translationType: 'minutes' },
         last15Minutes: { units: { minutes: -15 }, translationType: 'minutes' },

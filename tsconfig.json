@@ -1,4 +1,5 @@
 {
+    "extends": "./tsconfig.angular.json",
     "compileOnSave": false,
     "compilerOptions": {
         "baseUrl": ".",
@@ -11,12 +12,8 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "importHelpers": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
         "skipLibCheck": true,
         "sourceMap": true,
-        "strictNullChecks": true,
-        "strictFunctionTypes": true,
         "stripInternal": false,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
@@ -110,14 +107,6 @@
             "types": ["node"],
             "module": "nodenext",
             "moduleResolution": "nodenext"
-        }
-    },
-    "angularCompilerOptions": {
-        "strictInjectionParameters": true,
-        "strictInputAccessModifiers": true,
-        "strictTemplates": true,
-        "extendedDiagnostics": {
-            "defaultCategory": "error"
         }
     }
 }

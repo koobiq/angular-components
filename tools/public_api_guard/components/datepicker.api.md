@@ -99,7 +99,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
-    registerInput(input: any): void;
+    registerInput(input: KbqDatepickerInput<D>): void;
     get selected(): D | null;
     set selected(value: D | null);
     readonly selectedChange: _angular_core.OutputEmitterRef<D>;
@@ -363,7 +363,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     // (undocumented)
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
-    onPaste($event: any): any;
+    onPaste(event: ClipboardEvent): void;
     onTouched: () => void;
     // (undocumented)
     parseOnBlur: () => any;

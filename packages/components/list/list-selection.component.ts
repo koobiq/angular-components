@@ -577,7 +577,7 @@ export class KbqListSelection<T = any>
     /** Gap the indicator currently marks, used as `currentIndex` when the drag is dropped here. */
     private dropIndex: number | null = null;
 
-    private pendingMoveSubscription: Subscription | null;
+    private pendingMoveSubscription?: Subscription | null;
 
     private hasWarnedOnDragContainer = false;
 

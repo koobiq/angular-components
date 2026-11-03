@@ -35,7 +35,7 @@ export class KbqMinValidator implements Validator, OnChanges {
     readonly min = input<number, NumberInput>(undefined!, { transform: bound });
 
     private validator: ValidatorFn;
-    private onChange: () => void;
+    private onChange?: () => void;
 
     /** `min()` unless it is `NaN`, which has no DOM representation. */
     protected readonly coercedMin = computed(() => (Number.isNaN(this.min()) ? null : this.min()));
@@ -88,7 +88,7 @@ export class KbqMaxValidator implements Validator, OnChanges {
     readonly max = input<number, NumberInput>(undefined!, { transform: bound });
 
     private validator: ValidatorFn;
-    private onChange: () => void;
+    private onChange?: () => void;
 
     /** `max()` unless it is `NaN`, which has no DOM representation. */
     protected readonly coercedMax = computed(() => (Number.isNaN(this.max()) ? null : this.max()));

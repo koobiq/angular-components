@@ -833,7 +833,7 @@ export class KbqTreeSelection<T = any, K = T>
             });
     }
 
-    ngAfterContentInit(): void {
+    override ngAfterContentInit(): void {
         super.ngAfterContentInit();
 
         if (this.platform.isBrowser) {
@@ -939,7 +939,7 @@ export class KbqTreeSelection<T = any, K = T>
             });
     }
 
-    ngOnDestroy(): void {
+    override ngOnDestroy(): void {
         super.ngOnDestroy();
 
         this.optionFocusEvents.complete();
@@ -948,8 +948,8 @@ export class KbqTreeSelection<T = any, K = T>
         this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
-    focus($event): void {
-        if (this.renderedOptions.length === 0 || this.isFocusReceivedFromNestedOption($event)) {
+    focus(event?: Event | null): void {
+        if (this.renderedOptions.length === 0 || this.isFocusReceivedFromNestedOption(event)) {
             return;
         }
 
@@ -1228,7 +1228,7 @@ export class KbqTreeSelection<T = any, K = T>
     }
 
     /** @docs-private */
-    renderNodeChanges(
+    override renderNodeChanges(
         data: T[] | ReadonlyArray<T>,
         dataDiffer: IterableDiffer<T> = this.dataDiffer,
         viewContainer: ViewContainerRef = this.nodeOutlet.viewContainer,
@@ -1732,11 +1732,14 @@ export class KbqTreeSelection<T = any, K = T>
         return !(this.noUnselectLast && this.selectionModel.selected.length === 1 && option.selected);
     }
 
-    private isFocusReceivedFromNestedOption($event: FocusEvent) {
-        if (!$event || !$event.relatedTarget) {
+    private isFocusReceivedFromNestedOption($event?: Event | null) {
+        // `focus()` is public, so it can be handed a keyboard or any other event, which has no `relatedTarget`.
+        const relatedTarget = ($event as FocusEvent | null | undefined)?.relatedTarget;
+
+        if (!relatedTarget) {
             return false;
         }
 
-        return ($event.relatedTarget as HTMLElement).classList.contains('kbq-tree-option');
+        return (relatedTarget as HTMLElement).classList.contains('kbq-tree-option');
     }
 }

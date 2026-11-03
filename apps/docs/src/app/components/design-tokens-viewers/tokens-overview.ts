@@ -31,6 +31,9 @@ import { docsData as sematic } from './data/semantic';
 import { docsData as shadows } from './data/shadows';
 import { docsData as sizes } from './data/sizes';
 
+// Typography has a page of its own.
+type DocsTokensTab = Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>;
+
 interface DocsTokensSectionInfo {
     type: string;
     tokens: { token: string; value: string }[];
@@ -111,12 +114,9 @@ export class DocsTokensTable extends DocsLocaleState {
     // Accepts both a top-level `DocsTokensInfo` and a nested `DocsTokensSectionInfo`; only `.tokens`
     // is read (guarded), and `DocsTokensSectionInfo` is assignable to `DocsTokensInfo`.
     readonly section = input<DocsTokensInfo>();
-    readonly tab = input.required<DocsStructureTokensTab>();
+    readonly tab = input.required<DocsTokensTab>();
 
-    readonly mapTabToType: Record<
-        Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>,
-        'dimensions' | 'sizes' | 'shadows'
-    > = {
+    readonly mapTabToType: Record<DocsTokensTab, 'dimensions' | 'sizes' | 'shadows'> = {
         [DocsStructureTokensTab.Colors]: 'dimensions',
         [DocsStructureTokensTab.BorderRadius]: 'dimensions',
         [DocsStructureTokensTab.Palette]: 'dimensions',
@@ -125,10 +125,7 @@ export class DocsTokensTable extends DocsLocaleState {
         [DocsStructureTokensTab.Shadows]: 'shadows'
     };
 
-    readonly mapTabToCssProp: Record<
-        Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>,
-        'border-radius' | 'background-color' | 'box-shadow' | 'width'
-    > = {
+    readonly mapTabToCssProp: Record<DocsTokensTab, 'border-radius' | 'background-color' | 'box-shadow' | 'width'> = {
         [DocsStructureTokensTab.Colors]: 'background-color',
         [DocsStructureTokensTab.BorderRadius]: 'border-radius',
         [DocsStructureTokensTab.Palette]: 'background-color',
@@ -210,16 +207,13 @@ export class DocsTokensOverview extends DocsLocaleState implements AfterViewInit
     protected readonly tokensInfo = signal<DocsTokensInfo[]>([]);
     protected readonly activatedTab = toSignal(
         this.activatedRoute.url.pipe(
-            map(([{ path: id }]: UrlSegment[]) => <DocsStructureTokensTab>id),
+            map(([{ path: id }]: UrlSegment[]) => <DocsTokensTab>id),
             takeUntilDestroyed()
         ),
         { initialValue: DocsStructureTokensTab.Colors }
     );
 
-    protected tokenDataMap: Record<
-        Exclude<DocsStructureTokensTab, DocsStructureTokensTab.Typography>,
-        DocsTokensInfoRaw[]
-    > = {
+    protected tokenDataMap: Record<DocsTokensTab, DocsTokensInfoRaw[]> = {
         [DocsStructureTokensTab.Colors]: colors,
         [DocsStructureTokensTab.Shadows]: shadows,
         [DocsStructureTokensTab.BorderRadius]: borderRadius,

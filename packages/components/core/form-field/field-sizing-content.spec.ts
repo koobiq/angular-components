@@ -42,6 +42,6 @@ describe(KbqFieldSizingContent.name, () => {
         const fixture = createComponent(TestFieldSizingContent);
         const input = getInputNativeElement(fixture);
 
-        expect(input.style['fieldSizing']).toBe('content');
+        expect((input.style as CSSStyleDeclaration & { fieldSizing: string }).fieldSizing).toBe('content');
     });
 });

@@ -72,14 +72,14 @@ export function getIndexHtmlPath(
     project: workspaces.ProjectDefinition,
     buildTarget: workspaces.TargetDefinition | undefined
 ): string {
-    const indexOption = buildTarget?.options?.index;
+    const indexOption = buildTarget?.options?.['index'];
 
     if (typeof indexOption === 'string') {
         return indexOption;
     }
 
     if (indexOption && typeof indexOption === 'object' && !Array.isArray(indexOption)) {
-        const input = (indexOption as Record<string, JsonValue>).input;
+        const input = (indexOption as Record<string, JsonValue>)['input'];
 
         if (typeof input === 'string') {
             return input;
@@ -139,9 +139,9 @@ export function applyKoobiqWorkspaceStyles(
 
         if (buildTarget) {
             const options = buildTarget.options ?? (buildTarget.options = {});
-            const existingStyles = Array.isArray(options.styles) ? (options.styles as JsonValue[]) : [];
+            const existingStyles = Array.isArray(options['styles']) ? (options['styles'] as JsonValue[]) : [];
 
-            options.styles = mergeKoobiqStyles(existingStyles, theme);
+            options['styles'] = mergeKoobiqStyles(existingStyles, theme);
             stylesWired = true;
         }
 

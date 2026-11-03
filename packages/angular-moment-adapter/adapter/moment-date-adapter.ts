@@ -41,7 +41,7 @@ export function KBQ_MOMENT_DATE_ADAPTER_OPTIONS_FACTORY(): IKbqMomentDateAdapter
 
 @Injectable()
 export class MomentDateAdapter extends BaseMomentDateAdapter {
-    protected readonly options?: IKbqMomentDateAdapterOptions;
+    protected override readonly options?: IKbqMomentDateAdapterOptions;
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly timezoneService = inject(KbqDateTimezoneService);
 
@@ -70,7 +70,7 @@ export class MomentDateAdapter extends BaseMomentDateAdapter {
      *
      * @param locale The new locale.
      */
-    setLocale = (locale: any) => {
+    override setLocale = (locale: any) => {
         super.setLocale(locale);
         this._localeChanges.next();
     };

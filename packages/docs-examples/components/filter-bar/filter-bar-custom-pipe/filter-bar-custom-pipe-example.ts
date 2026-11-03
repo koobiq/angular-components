@@ -98,11 +98,11 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
 
     readonly popover = viewChild.required(KbqPopoverTrigger);
 
-    get isEmpty(): boolean {
+    override get isEmpty(): boolean {
         return this.data.value === null || this.data.value === undefined;
     }
 
-    get showRemoveButton(): boolean {
+    override get showRemoveButton(): boolean {
         return this.data.removable || (this.data.cleanable && !this.isEmpty);
     }
 
@@ -116,7 +116,7 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
         this.control.setValue(this.data.value);
     }
 
-    ngAfterViewInit() {
+    override ngAfterViewInit() {
         super.ngAfterViewInit();
 
         this.popover()

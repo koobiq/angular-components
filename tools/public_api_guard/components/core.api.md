@@ -3668,9 +3668,9 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    onClick($event: any): void;
+    onClick(event: Event): void;
     // (undocumented)
-    onKeyDown($event: any): void;
+    onKeyDown(event: KeyboardEvent): void;
     protected get resolvedAriaLabel(): string;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, ["[kbq-icon]"], true, [{ directive: typeof KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
@@ -4006,7 +4006,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     abstract updateData(): void;
     updateOrigin(origin: KbqOverlayOrigin | null): void;
     updatePlacement(value: KbqPopUpPlacementValues): void;
-    updatePlacementPriority(value: any): void;
+    updatePlacementPriority(value: string | string[] | null | undefined): void;
     updatePosition(reapplyPosition?: boolean): void;
     updateVisible(externalValue: boolean): void;
     protected readonly viewportRuler: ViewportRuler;

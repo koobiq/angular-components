@@ -1,6 +1,8 @@
 {
+    "extends": "../../tsconfig.strict.json",
     "compilerOptions": {
-        "strict": true,
+        // tsconfig.strict.json leaves it off until DS-5813, and this project already passes it.
+        "strictPropertyInitialization": true,
         "target": "es2020",
         "module": "commonjs",
         "esModuleInterop": true,

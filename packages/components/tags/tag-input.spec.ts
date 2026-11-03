@@ -20,6 +20,7 @@ import {
     KbqAutocompleteTrigger
 } from '@koobiq/components/autocomplete';
 import {
+    BACKSPACE,
     COMMA,
     createKeyboardEvent,
     dispatchFakeEvent,
@@ -1066,7 +1067,7 @@ describe('KbqTagInput', () => {
     describe('[addOnPaste]', () => {
         const clipboardEventData = {
             clipboardData: {
-                getData: (_) => 'test test test'
+                getData: (_: string) => 'test test test'
             },
             preventDefault: () => {},
             stopPropagation: () => {}
@@ -1101,7 +1102,7 @@ describe('KbqTagInput', () => {
 
             const clipboardEventData = {
                 clipboardData: {
-                    getData: (_) => '36.185.103.120 16.229.226.236,160.249.196.235;144.132.144.37'
+                    getData: (_: string) => '36.185.103.120 16.229.226.236,160.249.196.235;144.132.144.37'
                 },
                 preventDefault: () => {},
                 stopPropagation: () => {}
@@ -1287,6 +1288,20 @@ describe('KbqTagInput', () => {
 
             // The list reports the registered input's id as its own, so this is the registration landing.
             expect(host.tagListInstance().id()).toBe(directive.id());
+        });
+
+        it('should handle focus, keys and blur before a tag list is registered', () => {
+            const fixture = createComponent(TestTagInputLateTagList);
+
+            fixture.detectChanges();
+
+            const input: HTMLInputElement = fixture.debugElement.query(By.directive(KbqTagInput)).nativeElement;
+
+            expect(() => {
+                dispatchFakeEvent(input, 'focus');
+                dispatchKeyboardEvent(input, 'keydown', BACKSPACE);
+                dispatchFakeEvent(input, 'blur');
+            }).not.toThrow();
         });
     });
 });

@@ -211,7 +211,7 @@ describe('KbqPasswordInput', () => {
         fixture.detectChanges();
         await vi.advanceTimersByTimeAsync(1000);
 
-        expect(kbqPasswordToggle.styles.visibility).toEqual('hidden');
+        expect(kbqPasswordToggle.styles['visibility']).toEqual('hidden');
         expect(kbqPasswordToggle.classes['cdk-visually-hidden']).toBe(true);
         expect(kbqPasswordToggle.attributes['aria-hidden']).toBe('true');
 
@@ -220,7 +220,7 @@ describe('KbqPasswordInput', () => {
         fixture.detectChanges();
         await vi.advanceTimersByTimeAsync(1000);
 
-        expect(kbqPasswordToggle.styles.visibility).toEqual('visible');
+        expect(kbqPasswordToggle.styles['visibility']).toEqual('visible');
         expect(kbqPasswordToggle.classes['cdk-visually-hidden']).toBeFalsy();
         expect(kbqPasswordToggle.attributes['aria-hidden']).toBe('false');
     });

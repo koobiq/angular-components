@@ -193,7 +193,7 @@ export class TreeSelectCustomMatcherWithInputExample {
         console.log('input.focus();: ');
     }
 
-    handleKeydown(event, treeSelect: KbqTreeSelect) {
+    handleKeydown(event: KeyboardEvent, treeSelect: KbqTreeSelect) {
         console.log('handleKeydown: ', event);
 
         if (!treeSelect.disabled()) {

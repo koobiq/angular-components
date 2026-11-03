@@ -148,7 +148,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     protected readonly indentClickEmitter = new Subject<MouseEvent>();
 
     /** Whether the component has been destroyed. */
-    private destroyed: boolean;
+    private destroyed?: boolean;
 
     ngOnDestroy(): void {
         this.destroyed = true;

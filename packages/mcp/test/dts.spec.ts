@@ -216,9 +216,9 @@ describe.skipIf(!componentsAvailable())('the live .d.ts reader, and the resoluti
         // The bundled index would answer confidently here, and would be describing a different release.
         // The override has to come off for this: it is process-wide, and `project.ts` sets it so that
         // the other tests can read the repository's own build.
-        const override = process.env.KOOBIQ_COMPONENTS_ROOT;
+        const override = process.env['KOOBIQ_COMPONENTS_ROOT'];
 
-        delete process.env.KOOBIQ_COMPONENTS_ROOT;
+        delete process.env['KOOBIQ_COMPONENTS_ROOT'];
 
         try {
             const output = toolGetComponent(loadCatalog(join(import.meta.dirname, '..')), { id: 'button' });
@@ -226,7 +226,7 @@ describe.skipIf(!componentsAvailable())('the live .d.ts reader, and the resoluti
             expect(output).toMatch(/not installed in this project/);
             expect(!/\[input\]/.test(output), 'it answered from the index anyway').toBeTruthy();
         } finally {
-            if (override) process.env.KOOBIQ_COMPONENTS_ROOT = override;
+            if (override) process.env['KOOBIQ_COMPONENTS_ROOT'] = override;
         }
     });
 });

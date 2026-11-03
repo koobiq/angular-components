@@ -3,6 +3,7 @@ import {
     kbqBuildTree,
     KbqFilter,
     KbqFilterBarModule,
+    KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
@@ -107,11 +108,11 @@ export class FilterBarMasterCheckboxExample {
         }
     ];
 
-    onFilterChange($event) {
-        console.log('onFilterChange: ', $event);
+    onFilterChange(event: KbqFilter | null) {
+        console.log('onFilterChange: ', event);
     }
 
-    onChangePipe($event) {
-        console.log('onChangePipe: ', $event);
+    onChangePipe(event: KbqPipe) {
+        console.log('onChangePipe: ', event);
     }
 }

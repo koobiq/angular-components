@@ -74,7 +74,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
 
     private readonly debounceTime = 15;
 
-    private scrollSubscription: Subscription;
+    private scrollSubscription?: Subscription;
     private fragmentScrollTimer: ReturnType<typeof setTimeout> | undefined;
 
     // The scroll container lives outside this component's view, so it can be absent (e.g. on a page

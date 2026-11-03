@@ -26,9 +26,11 @@ import * as flags1x1 from 'country-flag-icons/string/1x1';
 })
 export class FlagCircleExample {
     private readonly sanitizer = inject(DomSanitizer);
-    protected readonly countries = [
-        { code: 'AO', name: 'Angola' },
-        { code: 'MY', name: 'Malaysia' },
-        { code: 'UY', name: 'Uruguay' }
-    ].map((country) => ({ ...country, svg: this.sanitizer.bypassSecurityTrustHtml(flags1x1[country.code]) }));
+    protected readonly countries = (
+        [
+            { code: 'AO', name: 'Angola' },
+            { code: 'MY', name: 'Malaysia' },
+            { code: 'UY', name: 'Uruguay' }
+        ] as const
+    ).map((country) => ({ ...country, svg: this.sanitizer.bypassSecurityTrustHtml(flags1x1[country.code]) }));
 }

@@ -458,7 +458,10 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     get formattedValue(): string;
     // (undocumented)
     protected readonly formatter: DateFormatter<any>;
-    protected formGroup: FormGroup;
+    protected formGroup: FormGroup<{
+        start: FormControl<D | null>;
+        end: FormControl<D | null>;
+    }>;
     protected readonly fromLabelId: string;
     protected abstract getDefaultEnd(): D;
     protected abstract getDefaultStart(): D;

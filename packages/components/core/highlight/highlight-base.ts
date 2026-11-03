@@ -16,7 +16,7 @@ export function escapeRegExp(value: string): string {
 function escapeHtml(value: string): string {
     if (!HTML_SPECIAL_CHARS.test(value)) return value;
 
-    return value.replace(HTML_SPECIAL_CHARS_GLOBAL, (chr) => HTML_ESCAPES[chr] ?? chr);
+    return value.replace(HTML_SPECIAL_CHARS_GLOBAL, (chr) => HTML_ESCAPES[chr as keyof typeof HTML_ESCAPES] ?? chr);
 }
 
 function normalizeKeywords(keyword: unknown): string[] {

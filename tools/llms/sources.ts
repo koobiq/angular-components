@@ -29,7 +29,7 @@ export const KOOBIQ_SITE_ORIGIN = 'https://koobiq.io';
  * agent that reads the Markdown of `next.koobiq.io` or of `v21.koobiq.io` stays on that version. The workflow that
  * deploys a site to another address sets `KOOBIQ_DOCS_ORIGIN`.
  */
-export const LLMS_SITE_ORIGIN = (process.env.KOOBIQ_DOCS_ORIGIN || KOOBIQ_SITE_ORIGIN).replace(/\/+$/, '');
+export const LLMS_SITE_ORIGIN = (process.env['KOOBIQ_DOCS_ORIGIN'] || KOOBIQ_SITE_ORIGIN).replace(/\/+$/, '');
 
 /** The address of a file of the documentation for agents, by its path under the root of the site. */
 export const getSiteUrl = (path: string): string => `${LLMS_SITE_ORIGIN}/${path}`;

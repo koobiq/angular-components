@@ -109,7 +109,7 @@ export const kbqTimezoneLocaleConfigurationProvider = (
     exportAs: 'kbqTimezoneSelect'
 })
 export class KbqTimezoneSelect extends KbqSelect {
-    readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
+    override readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
 
     /** Strings currently rendered by the select. */
     readonly timezoneLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(

@@ -292,7 +292,7 @@ export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
     private leavingSub = Subscription.EMPTY;
 
     /** Set initial visibility or set up subscription for changing visibility. */
-    ngOnInit(): void {
+    override ngOnInit(): void {
         super.ngOnInit();
 
         this.centeringSub = this.host.beforeCentering
@@ -309,7 +309,7 @@ export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
     }
 
     /** Clean up centering subscription. */
-    ngOnDestroy(): void {
+    override ngOnDestroy(): void {
         super.ngOnDestroy();
 
         this.centeringSub.unsubscribe();

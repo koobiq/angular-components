@@ -198,7 +198,7 @@ export class TreeSelectMultipleOverviewExample {
         console.log('selectionChange: ', $event);
     }
 
-    protected onModelChange($event) {
-        console.log('onModelChange: ', $event);
+    protected onModelChange(event: string[]) {
+        console.log('onModelChange: ', event);
     }
 }

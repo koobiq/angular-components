@@ -92,7 +92,7 @@ describe('host directive inputs', () => {
 describe('reading hostDirectives from source', () => {
     it('reads the directive and the inputs it forwards', () => {
         expect(
-            readSourceFile('packages/components/accordion/accordion.ts').classes.KbqAccordion.hostDirectives
+            readSourceFile('packages/components/accordion/accordion.ts').classes['KbqAccordion'].hostDirectives
         ).toEqual([
             { name: 'KbqStateSaving', inputs: { useStateSaving: 'useStateSaving', stateSavingKey: 'stateSavingKey' } }
         ]);
@@ -100,19 +100,20 @@ describe('reading hostDirectives from source', () => {
 
     it('reads a directive applied without forwarding anything', () => {
         expect(
-            readSourceFile('packages/components/toggle/toggle.component.ts').classes.KbqToggleComponent.hostDirectives
+            readSourceFile('packages/components/toggle/toggle.component.ts').classes['KbqToggleComponent']
+                .hostDirectives
         ).toEqual([{ name: 'KbqCheckable', inputs: {} }]);
     });
 
     it('reports none for a component that applies no host directive', () => {
         expect(
-            readSourceFile('packages/components/accordion/accordion-item.ts').classes.KbqAccordionItem.hostDirectives
+            readSourceFile('packages/components/accordion/accordion-item.ts').classes['KbqAccordionItem'].hostDirectives
         ).toEqual([]);
     });
 
     it('reads the outputs it forwards', () => {
         expect(
-            readSourceFile('packages/components/navbar/navbar-item.component.ts').classes.KbqNavbarItem
+            readSourceFile('packages/components/navbar/navbar-item.component.ts').classes['KbqNavbarItem']
                 .hostDirectives[0].outputs
         ).toEqual({ kbqVisibleChange: 'kbqVisibleChange', kbqPlacementChange: 'kbqPlacementChange' });
     });
@@ -150,7 +151,7 @@ describe('reading members from source', () => {
 
     // The default is the initializer argument as written, an expression as well as a literal.
     it('reads the initializer API and the default of a signal input', () => {
-        expect(KbqDl.members.verticalBreakpoint).toEqual({
+        expect(KbqDl.members['verticalBreakpoint']).toEqual({
             signalApi: 'input',
             defaultValue: 'this.options.verticalBreakpoint',
             binding: { input: 'verticalBreakpoint', required: false }
@@ -158,7 +159,7 @@ describe('reading members from source', () => {
     });
 
     it('reads the type argument as the declared type', () => {
-        expect(KbqDl.members.verticalAlign).toEqual({
+        expect(KbqDl.members['verticalAlign']).toEqual({
             signalApi: 'input',
             declaredType: 'KbqDlAlign',
             defaultValue: 'this.options.verticalAlign',
@@ -168,7 +169,7 @@ describe('reading members from source', () => {
 
     // `undefined` is what an input without a default gets, so it is not shown as one.
     it('reads no default when the source passes undefined', () => {
-        expect(KbqDl.members.resizerAriaLabel).toEqual({
+        expect(KbqDl.members['resizerAriaLabel']).toEqual({
             signalApi: 'input',
             declaredType: 'string | undefined',
             binding: { input: 'resizerAriaLabel', required: false }
@@ -176,7 +177,7 @@ describe('reading members from source', () => {
     });
 
     it('reads an output with its payload type', () => {
-        expect(KbqDl.members.dtWidthChange).toEqual({
+        expect(KbqDl.members['dtWidthChange']).toEqual({
             signalApi: 'output',
             declaredType: 'number | null',
             binding: { output: 'dtWidthChange' }
@@ -186,8 +187,9 @@ describe('reading members from source', () => {
     // A default is written in full, however long: a placeholder would leave a reader guessing.
     it('reads a default spanning lines in full, indented from the line it starts on', () => {
         expect(
-            readSourceFile('packages/components/dropdown/dropdown.component.ts').classes.KbqDropdown.members
-                .panelMinWidth.defaultValue
+            readSourceFile('packages/components/dropdown/dropdown.component.ts').classes['KbqDropdown'].members[
+                'panelMinWidth'
+            ].defaultValue
         ).toBe(
             [
                 'this.defaultOptions.panelMinWidth === undefined',
@@ -198,10 +200,11 @@ describe('reading members from source', () => {
     });
 
     it('reads the names a signal input and a model bind under, their aliases included', () => {
-        const { members } = readSourceFile('packages/components/dropdown/dropdown-trigger.directive.ts').classes
-            .KbqDropdownTrigger;
+        const { members } = readSourceFile('packages/components/dropdown/dropdown-trigger.directive.ts').classes[
+            'KbqDropdownTrigger'
+        ];
 
-        expect([members.dropdown.binding, members.restoreFocus.binding]).toEqual([
+        expect([members['dropdown'].binding, members['restoreFocus'].binding]).toEqual([
             { input: 'kbqDropdownTriggerFor', required: false },
             {
                 input: 'kbqDropdownTriggerRestoreFocus',
@@ -228,10 +231,10 @@ describe('reading members from source', () => {
         );
 
         try {
-            const { members } = readSourceFile(file).classes.Decorated;
+            const { members } = readSourceFile(file).classes['Decorated'];
 
-            expect(members.relativeToPointer.binding).toEqual({ input: 'kbqRelativeToPointer', required: false });
-            expect(members.headerPosition).toEqual({
+            expect(members['relativeToPointer'].binding).toEqual({ input: 'kbqRelativeToPointer', required: false });
+            expect(members['headerPosition']).toEqual({
                 declaredType: 'Position',
                 defaultValue: "'above'",
                 binding: { input: 'headerPosition', required: false }
@@ -244,13 +247,15 @@ describe('reading members from source', () => {
     // Angular's extractor reports none: without these, the interface would read as empty.
     it('reads the index signatures of an interface', () => {
         expect(
-            readSourceFile('packages/components/timezone/timezone.models.ts').classes.KbqTimezonesByCountry
+            readSourceFile('packages/components/timezone/timezone.models.ts').classes['KbqTimezonesByCountry']
                 .indexSignatures
         ).toEqual(['[countryCode: string]: KbqTimezoneZone[];']);
     });
 
     it('reads the bases a class extends', () => {
-        expect(readSourceFile('packages/components/button/button-group.ts').classes.KbqButtonGroupRoot.bases).toEqual([
+        expect(
+            readSourceFile('packages/components/button/button-group.ts').classes['KbqButtonGroupRoot'].bases
+        ).toEqual([
             'KbqColorDirective'
         ]);
     });
@@ -258,12 +263,12 @@ describe('reading members from source', () => {
     // The inherited members come from `KbqPipe`, whose source gives their declared types, not from `Omit`.
     it('reads the type a utility type narrows as the base', () => {
         expect(
-            readSourceFile('packages/components/filter-bar/filter-bar.types.ts').classes.KbqPipeTemplate.bases
+            readSourceFile('packages/components/filter-bar/filter-bar.types.ts').classes['KbqPipeTemplate'].bases
         ).toEqual(['KbqPipe']);
     });
 
     it('reads a base no utility type wraps as written', () => {
-        expect(readSourceFile('packages/components/file-upload/file-upload.ts').classes.KbqFile.bases).toEqual([
+        expect(readSourceFile('packages/components/file-upload/file-upload.ts').classes['KbqFile'].bases).toEqual([
             'File'
         ]);
     });
@@ -649,7 +654,9 @@ describe('member source metadata', () => {
 describe('reading exported constants and functions from source', () => {
     it('writes an arrow function constant with the types its source annotates', () => {
         expect(
-            readSourceFile('packages/components/input/input-number.ts').declarations.kbqInputLocaleConfigurationProvider
+            readSourceFile('packages/components/input/input-number.ts').declarations[
+                'kbqInputLocaleConfigurationProvider'
+            ]
         ).toEqual({
             declaredType: '(configuration: KbqDeepPartial<KbqInputLocaleConfiguration>) => Provider',
             declaredFunctionType: {
@@ -662,14 +669,15 @@ describe('reading exported constants and functions from source', () => {
 
     it('writes a token with the type argument it is created with', () => {
         expect(
-            readSourceFile('packages/components/code-block/code-block-highlight.ts').declarations
-                .KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG
+            readSourceFile('packages/components/code-block/code-block-highlight.ts').declarations[
+                'KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG'
+            ]
         ).toEqual({ declaredType: 'InjectionToken<KbqCodeBlockHighlightJsConfig>' });
     });
 
     it('reads each overload of a function, and its implementation apart', () => {
         expect(
-            readSourceFile('packages/components/core/locales/locale-service.ts').declarations.kbqInjectLocaleService
+            readSourceFile('packages/components/core/locales/locale-service.ts').declarations['kbqInjectLocaleService']
         ).toEqual({
             callable: {
                 overloads: [
@@ -749,8 +757,9 @@ describe('reading exported constants and functions from source', () => {
 
 describe('reading object literal types from source', () => {
     it('reads the fields of a type alias naming an object literal, as the members of an interface', () => {
-        const { members } = readSourceFile('packages/components/breadcrumbs/breadcrumbs.types.ts').declarations
-            .KbqBreadcrumbsConfiguration;
+        const { members } = readSourceFile('packages/components/breadcrumbs/breadcrumbs.types.ts').declarations[
+            'KbqBreadcrumbsConfiguration'
+        ];
 
         expect(
             members?.map(({ name, type, memberType, memberTags }) => ({ name, type, memberType, memberTags }))
@@ -769,8 +778,9 @@ describe('reading object literal types from source', () => {
     });
 
     it('marks an optional field', () => {
-        const { members } = readSourceFile('packages/components/actions-panel/actions-panel.ts').declarations
-            .KbqActionsPanelTemplateContext;
+        const { members } = readSourceFile('packages/components/actions-panel/actions-panel.ts').declarations[
+            'KbqActionsPanelTemplateContext'
+        ];
 
         expect(members?.map(({ name, memberTags }) => [name, memberTags])).toEqual([
             ['$implicit', [MemberTags.Optional]],
@@ -780,7 +790,7 @@ describe('reading object literal types from source', () => {
     });
 
     it('reads the fields nested in a field, and the type of that field without their comments', () => {
-        const { indent } = readSourceFile('packages/components/toast/toast.type.ts').classes.KbqToastConfig.members;
+        const { indent } = readSourceFile('packages/components/toast/toast.type.ts').classes['KbqToastConfig'].members;
 
         expect(indent.declaredType).toBe('{ vertical: number; horizontal: number; }');
         expect(indent.members?.map(({ name, type, description }) => ({ name, type, description }))).toEqual([
@@ -814,7 +824,7 @@ describe('reading object literal types from source', () => {
         );
 
         try {
-            const { members } = readSourceFile(file).declarations.KbqConfig;
+            const { members } = readSourceFile(file).declarations['KbqConfig'];
 
             expect(members?.map(({ name, members: fields }) => [name, fields?.map(({ name }) => name)])).toEqual([
                 ['size', undefined],
@@ -826,8 +836,9 @@ describe('reading object literal types from source', () => {
     });
 
     it('leaves a literal with more than named fields in it to the text of its type', () => {
-        const { unitSystems } = readSourceFile('packages/components/core/formatters/filesize/config.ts').classes
-            .KbqSizeUnitsLocaleConfiguration.members;
+        const { unitSystems } = readSourceFile('packages/components/core/formatters/filesize/config.ts').classes[
+            'KbqSizeUnitsLocaleConfiguration'
+        ].members;
 
         expect(unitSystems).toEqual({
             declaredType: '{ [KbqMeasurementSystem.SI]: KbqUnitSystem; [KbqMeasurementSystem.IEC]: KbqUnitSystem; }'
@@ -861,8 +872,9 @@ describe('reading object literal types from source', () => {
     });
 
     it('reads the fields of an object literal a utility type wraps, the optionality it decides with them', () => {
-        const { members, literal } = readSourceFile('packages/components/select/select.component.ts').declarations
-            .KbqSelectOptions;
+        const { members, literal } = readSourceFile('packages/components/select/select.component.ts').declarations[
+            'KbqSelectOptions'
+        ];
 
         expect(literal).toEqual({ before: 'Partial<', after: '>' });
         expect(
@@ -875,8 +887,9 @@ describe('reading object literal types from source', () => {
     });
 
     it('reads the fields of the object literal of an intersection, and the types beside it as written', () => {
-        const { members, literal } = readSourceFile('packages/components/core/locales/types.ts').declarations
-            .KbqInputNumberLocaleConfiguration;
+        const { members, literal } = readSourceFile('packages/components/core/locales/types.ts').declarations[
+            'KbqInputNumberLocaleConfiguration'
+        ];
 
         expect(literal).toEqual({ before: '', after: ' & KbqNumberFormatOptions' });
         expect(members?.map(({ name }) => name)).toEqual([

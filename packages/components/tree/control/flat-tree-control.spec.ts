@@ -81,7 +81,7 @@ describe('FlatTreeControl', () => {
             const numGrandChildren = 2;
             const nodes = generateData(numNodes, numChildren, numGrandChildren);
 
-            const data = [];
+            const data: TestData[] = [];
 
             flatten(nodes, data);
             treeControl.dataNodes = data;
@@ -108,7 +108,7 @@ describe('FlatTreeControl', () => {
             const numChildren = 4;
             const numGrandChildren = 2;
             const nodes = generateData(numNodes, numChildren, numGrandChildren);
-            const data = [];
+            const data: TestData[] = [];
 
             flatten(nodes, data);
             treeControl.dataNodes = data;

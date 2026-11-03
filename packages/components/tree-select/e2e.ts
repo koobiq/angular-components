@@ -596,7 +596,7 @@ export class E2eTreeSelectFormControlDisabled extends BaseTreeSelectStates {
     }
 })
 export class E2eTreeSelectPropertyDisabled extends BaseTreeSelectStates {
-    readonly isDisabled = signal(true);
+    override readonly isDisabled = signal(true);
 }
 
 @Component({

@@ -37,7 +37,7 @@ export function KBQ_LUXON_DATE_ADAPTER_OPTIONS_FACTORY(): KbqLuxonDateAdapterOpt
 
 @Injectable()
 export class LuxonDateAdapter extends BaseLuxonDateAdapter {
-    protected readonly options?: LuxonDateAdapterOptions;
+    protected override readonly options?: LuxonDateAdapterOptions;
     private localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly timezoneService = inject(KbqDateTimezoneService);
 
@@ -65,7 +65,7 @@ export class LuxonDateAdapter extends BaseLuxonDateAdapter {
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.setLocale);
     }
 
-    setLocale = (locale: string): void => {
+    override setLocale = (locale: string): void => {
         super.setLocale(locale);
 
         // try to find locale using angular core utilities

@@ -95,7 +95,7 @@ export class KbqFileDropDirective extends KbqDrop {
     }
 
     /** @docs-private */
-    onDrop(event: DragEvent): void {
+    override onDrop(event: DragEvent): void {
         super.onDrop(event);
         this.dragover.set(false);
     }

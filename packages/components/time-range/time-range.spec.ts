@@ -76,8 +76,9 @@ const getEditorControl = (debugElement: DebugElement): FormControl => {
     ).rangeEditorControl;
 };
 
-const getEditorForm = (debugElement: DebugElement): FormGroup => {
-    return (getEditorInstance(debugElement) as unknown as { form: FormGroup }).form;
+/** The editor's protected form. */
+const getEditorForm = (debugElement: DebugElement): KbqTimeRangeEditor<unknown>['form'] => {
+    return getEditorInstance(debugElement)['form'];
 };
 
 const getRangeElement = (debugElement: DebugElement): HTMLElement => {
@@ -1234,10 +1235,10 @@ describe('KbqTimeRange', () => {
 
             const form = getEditorForm(debugElement);
 
-            expect(form.controls['type'].enabled).toBe(true);
+            expect(form.controls.type.enabled).toBe(true);
             // `lastHour` is selected, so the from/to pair must stay disabled after a blanket enable().
-            expect(form.controls['fromDate'].disabled).toBe(true);
-            expect(form.controls['toDate'].disabled).toBe(true);
+            expect(form.controls.fromDate.disabled).toBe(true);
+            expect(form.controls.toDate.disabled).toBe(true);
         });
 
         it('should not mark the editor touched while focus moves between its own fields', async () => {

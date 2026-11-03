@@ -175,7 +175,7 @@ export class TreeSelectChildSelectionOverviewExample {
         this.toggleParents($event.value.data.parent);
     }
 
-    private toggleParents(parent) {
+    private toggleParents(parent: FileFlatNode | null) {
         if (!parent) {
             return;
         }

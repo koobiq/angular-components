@@ -186,7 +186,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
     readonly tagList = input<KbqTagList | undefined>(undefined, { alias: 'kbqTagInputFor' });
 
     // The last tag list registered with, which an unbound or falsy `tagList` leaves in place.
-    private _tagList: KbqTagList;
+    private _tagList?: KbqTagList;
 
     /**
      * Whether or not the tagEnd event will be emitted when the input is blurred.
@@ -204,7 +204,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
 
     /** Whether the input is disabled. */
     get disabled(): boolean {
-        return this._disabled() || (this._tagList && this._tagList.disabled());
+        return this._disabled() || !!this._tagList?.disabled();
     }
 
     set disabled(value: boolean) {
@@ -265,7 +265,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
                 event.preventDefault();
             }
 
-            this._tagList.keydown(event);
+            this._tagList?.keydown(event);
 
             // The tag list ignores Escape, and an autocomplete panel, which hears the key on `body`, or a dialog
             // around the field still has to get it.
@@ -300,7 +300,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
         this.focusedValue.set(false);
 
         // Blur the tag list if it is not focused
-        if (!this._tagList.focused()) {
+        if (this._tagList && !this._tagList.focused()) {
             this._tagList.blur();
         }
 
@@ -367,7 +367,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
     /** @docs-private */
     onFocus(): void {
         this.focusedValue.set(true);
-        this._tagList.unselectAll();
+        this._tagList?.unselectAll();
     }
 
     /** Focuses the input. */
@@ -420,7 +420,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
     }
 
     private tagValues(): Set<string> {
-        return new Set(this._tagList.tags.map(({ value }) => value));
+        return new Set(this._tagList?.tags.map(({ value }) => value));
     }
 
     private trimValue(value: string): string {
