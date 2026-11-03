@@ -214,6 +214,66 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
         createFixture: () => TestBed.createComponent(TestComponent)
     });
 
+    describe('onOpen', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        describe('with defaultExpanded: false', () => {
+            it('should not expand all nodes on open', () => {
+                fixture.componentInstance.activeFilter = createFilter([
+                    createPipe({ name: 'test', value: null, defaultExpanded: false })
+                ]);
+                fixture.detectChanges();
+
+                const component = getPipeComponent();
+                const expandAllSpy = vi.spyOn(component.treeControl, 'expandAll');
+
+                component.onOpen();
+
+                expect(expandAllSpy).not.toHaveBeenCalled();
+                expect(component.treeControl.expansionModel.selected).toEqual([]);
+            });
+
+            it('should expand the ancestors of the selected leaves', () => {
+                // 'value 2' is the 'Operator' leaf under the 'Management and Configuration' branch.
+                fixture.componentInstance.activeFilter = createFilter([
+                    createPipe({ name: 'test', value: ['value 2'], defaultExpanded: false })
+                ]);
+                fixture.detectChanges();
+
+                const component = getPipeComponent();
+
+                component.onOpen();
+
+                const expanded = component.treeControl.expansionModel.selected;
+
+                expect(expanded.length).toBeGreaterThan(0);
+                expect(expanded.every((node) => node.expandable)).toBe(true);
+
+                const otherBranch = component.treeControl.dataNodes.find(
+                    (node) => node.level === 0 && node.name === 'Knowledge Base'
+                );
+
+                expect(component.treeControl.isExpanded(otherBranch!)).toBe(false);
+            });
+
+            it('should not expand anything when only the select-all node is in the model', () => {
+                fixture.componentInstance.activeFilter = createFilter([
+                    createPipe({ name: 'test', value: null, selectAll: true, defaultExpanded: false })
+                ]);
+                fixture.detectChanges();
+
+                const component = getPipeComponent();
+
+                component.onOpen();
+
+                expect(component.treeControl.expansionModel.selected).toEqual([]);
+            });
+        });
+    });
+
     describe('isEmpty', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);
