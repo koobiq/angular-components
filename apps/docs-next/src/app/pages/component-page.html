@@ -16,8 +16,9 @@
                 [lead]="article().lead"
                 [source]="page"
                 [title]="item.title"
+                [withTabs]="true"
             >
-                <nav kbqTabNavBar>
+                <nav kbqTabNavBar class="docs-next-page-tabs" underlined>
                     @for (tab of tabs; track tab) {
                         <a
                             kbqTabLink

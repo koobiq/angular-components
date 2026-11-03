@@ -27,11 +27,22 @@ const MCP_SERVER = { command: 'npx', args: ['-y', '@koobiq/mcp'] };
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         } @else {
+            <button
+                kbq-button
+                class="docs-next-page-actions__copy"
+                color="contrast"
+                kbqStyle="transparent"
+                (click)="copy()"
+            >
+                <i kbq-icon="" kbqButtonPrefix [class]="copied() ? 'kbq-check_16' : 'kbq-square-multiple-o_16'"></i>
+                {{ copied() ? state.t('copied') : state.t('copyPage') }}
+            </button>
             @if (githubUrl(); as url) {
                 <a
                     kbq-button
-                    class="kbq-button-icon"
-                    color="contrast-fade"
+                    class="kbq-button-icon docs-next-page-actions__github"
+                    color="contrast"
+                    kbqStyle="transparent"
                     rel="noopener noreferrer"
                     target="_blank"
                     [attr.aria-label]="state.t('codeOnGithub')"
@@ -40,21 +51,16 @@ const MCP_SERVER = { command: 'npx', args: ['-y', '@koobiq/mcp'] };
                     <i kbq-icon="kbq-github_16"></i>
                 </a>
             }
-            <div class="docs-next-page-actions__group">
-                <button kbq-button class="docs-next-page-actions__copy" color="contrast-fade" (click)="copy()">
-                    <i kbq-icon="" kbqButtonPrefix [class]="copied() ? 'kbq-check_16' : 'kbq-square-multiple-o_16'"></i>
-                    {{ copied() ? state.t('copied') : state.t('copyPage') }}
-                </button>
-                <button
-                    kbq-button
-                    class="kbq-button-icon docs-next-page-actions__more"
-                    color="contrast-fade"
-                    [attr.aria-label]="state.t('pageActions')"
-                    [kbqDropdownTriggerFor]="menu"
-                >
-                    <i kbq-icon="kbq-chevron-down-s_16"></i>
-                </button>
-            </div>
+            <button
+                kbq-button
+                class="kbq-button-icon docs-next-page-actions__more"
+                color="contrast"
+                kbqStyle="transparent"
+                [attr.aria-label]="state.t('pageActions')"
+                [kbqDropdownTriggerFor]="menu"
+            >
+                <i kbq-icon="kbq-ellipsis-vertical_16"></i>
+            </button>
         }
 
         <kbq-dropdown #menu="kbqDropdown" xPosition="before">
@@ -96,27 +102,48 @@ const MCP_SERVER = { command: 'npx', args: ['-y', '@koobiq/mcp'] };
             cursor: pointer;
         }
 
+        /* Figma: Actions (126:24337), 2px apart. Beside the tabs the order is "Copy", GitHub, the menu; without them
+           "Copy" and the menu stand on the left and GitHub on the right edge (126:23395). */
         :host {
             display: inline-flex;
-            gap: var(--kbq-size-s);
+            align-items: center;
+            gap: var(--kbq-size-3xs);
         }
 
-        .docs-next-page-actions__group {
-            display: inline-flex;
+        :host(.docs-next-page-actions_without-tabs) {
+            display: flex;
+        }
+
+        /* The library draws the keyboard focus as a border and a round outline outside it, which part ways on the
+           rounded corners into two rings. One ring of the same 2px is drawn on the border instead. */
+        :is(.kbq-button, .kbq-button-icon).kbq-button_transparent.kbq-contrast.cdk-keyboard-focused:not(.kbq-disabled) {
+            outline: none;
+            box-shadow: inset 0 0 0 1px var(--kbq-states-line-focus-theme);
         }
 
         .docs-next-page-actions__copy {
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
+            order: 1;
+        }
+
+        .docs-next-page-actions__github {
+            order: 2;
         }
 
         .docs-next-page-actions__more {
-            margin-left: 1px;
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
+            order: 3;
+        }
+
+        :host(.docs-next-page-actions_without-tabs) .docs-next-page-actions__more {
+            order: 2;
+        }
+
+        :host(.docs-next-page-actions_without-tabs) .docs-next-page-actions__github {
+            order: 3;
+            margin-left: auto;
         }
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: { '[class.docs-next-page-actions_without-tabs]': '!withTabs()' }
 })
 export class DocsNextPageActions {
     protected readonly state = inject(DocsNextSiteState);
@@ -136,6 +163,8 @@ export class DocsNextPageActions {
     readonly source = input.required<HTMLElement>();
     /** Source of a component on GitHub; other pages have none. */
     readonly githubUrl = input<string>();
+    /** Whether the tabs stand in the same row, which puts the actions to their right. */
+    readonly withTabs = input(false);
 
     protected readonly copied = signal(false);
     private resetTimer?: ReturnType<typeof setTimeout>;

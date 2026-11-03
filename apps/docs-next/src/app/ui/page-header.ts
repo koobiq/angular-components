@@ -39,13 +39,14 @@ import { DOCS_NEXT_ARTICLE_WIDTH } from './page-layout';
             }
         </div>
 
-        <div class="docs-next-page-header__bar">
+        <div class="docs-next-page-header__bar" [class.docs-next-page-header__bar_without-tabs]="!withTabs()">
             <ng-content />
             @if (!state.isMobile()) {
                 <docs-next-page-actions
                     class="docs-next-page-header__actions"
                     [githubUrl]="githubUrl()"
                     [source]="source()"
+                    [withTabs]="withTabs()"
                 />
             }
         </div>
@@ -63,4 +64,6 @@ export class DocsNextPageHeader {
     readonly source = input.required<HTMLElement>();
     /** Source of a component; other pages have no GitHub button. */
     readonly githubUrl = input<string>();
+    /** Whether the subsection tabs are projected: the actions then stand on the right of them. */
+    readonly withTabs = input(false);
 }
