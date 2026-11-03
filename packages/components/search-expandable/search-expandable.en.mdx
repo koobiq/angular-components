@@ -2,7 +2,7 @@ A search field that expands from a compact icon button.
 
 The component is a form control and has no standalone value input: bind it with `[formControl]`, `[formControlName]` or `[(ngModel)]`, otherwise it throws on initialization. The typed value reaches the bound control after `emitValueTimeout` milliseconds, or on `Enter` when `isEmitValueByEnterEnabled` is set.
 
-Activating the suffix of a non-empty search clears the value while keeping the search expanded and the input focused; activating the empty search suffix collapses it.
+The clear button and `Escape` clear a non-empty value while keeping the search expanded and the input focused; when the field is empty, they collapse the search.
 
 <Example id="search-expandable-overview" />
 

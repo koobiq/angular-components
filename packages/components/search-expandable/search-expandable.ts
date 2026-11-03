@@ -489,8 +489,8 @@ export class KbqSearchExpandable
     }
 
     /**
-     * Collapses the field on `Escape`. On `keydown` and spent, so that a container closing on the key, such as a
-     * modal, stays open.
+     * Clears a non-empty field on `Escape`, or collapses an empty one. On `keydown` and spent, so that a container
+     * closing on the key, such as a modal, stays open.
      *
      * @internal
      */
@@ -498,7 +498,7 @@ export class KbqSearchExpandable
         if (this.disabled || !this.isOpened) return;
 
         event.preventDefault();
-        this.toggle();
+        this.onSuffixClick();
     }
 
     /** @internal */
@@ -529,14 +529,13 @@ export class KbqSearchExpandable
         // An emission scheduled by the keystrokes that preceded the reset would put the discarded
         // query back into the bound control right after it.
         this.cancelPendingEmit.next();
-        // `emitEvent: false`: the reset reaches the consumer through the forced emit below, so
+        // `emitEvent: false`: the reset reaches the consumer through the immediate emit below, so
         // routing it through the debounce as well would only schedule a redundant no-op emission.
         this.control.setValue(defaultValue, { emitEvent: false });
         this.value.set(defaultValue);
-        // Force the emit — resetting must always synchronize the bound control to the empty value,
-        // rather than relying on the debounce to eventually settle (it can be raced by a value pushed
-        // just before the reset, silently leaving the control at a stale value).
-        this.emitValue(defaultValue, true);
+        // Emit immediately — resetting must synchronize the bound control to the empty value rather
+        // than relying on the debounce. `emitValue` skips the call when that value is already there.
+        this.emitValue(defaultValue);
     }
 
     /** Moves focus back onto the collapsed button, keeping its tooltip from opening on the way. */

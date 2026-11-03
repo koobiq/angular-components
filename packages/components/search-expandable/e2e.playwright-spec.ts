@@ -15,7 +15,7 @@ test.describe('KbqSearchExpandableModule', () => {
             await expect(getScreenshotTarget(locator)).toHaveScreenshot('01-dark.png');
         });
 
-        test('expands on click, accepts typing and collapses on escape', async ({ page }) => {
+        test('clears a non-empty query before collapsing on escape', async ({ page }) => {
             await page.goto('/E2eSearchExpandableStates');
 
             const component = page.getByTestId('e2eSearchExpandableCollapsed');
@@ -30,6 +30,12 @@ test.describe('KbqSearchExpandableModule', () => {
             await input.fill('query');
 
             await expect(input).toHaveValue('query');
+
+            await input.press('Escape');
+
+            await expect(input).toHaveCount(1);
+            await expect(input).toHaveValue('');
+            await expect(input).toBeFocused();
 
             await input.press('Escape');
 
