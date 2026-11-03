@@ -16,6 +16,7 @@ import { Subject, Subscription } from 'rxjs';
 import { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { KbqCalendarHeader } from './calendar-header.component';
 import { injectRequiredDateAdapter } from './datepicker-errors';
+import type { KbqDatepickerInput } from './datepicker-input.directive';
 import { KbqMonthView } from './month-view.component';
 
 /**
@@ -201,7 +202,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
      *
      * @param input The calendar input to register with this calendar.
      */
-    registerInput(input: any): void {
+    registerInput(input: KbqDatepickerInput<D>): void {
         if (this.datepickerInput) {
             throw Error('A KbqDatepicker can only be associated with a single input.');
         }

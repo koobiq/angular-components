@@ -1,6 +1,8 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
+        // tsconfig.strict.json leaves it off until DS-5813, and this project already passes it.
+        "strictPropertyInitialization": true,
         "rootDir": "./",
         "baseUrl": "./",
         "outDir": "dist",

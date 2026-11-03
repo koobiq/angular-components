@@ -34,7 +34,6 @@ export interface KbqDropdownPanel {
     closed: OutputEmitterRef<DropdownCloseReason>;
     // `KbqDropdown` declares `parent: KbqDropdownPanel | undefined`, which a consumer compiling with
     // `exactOptionalPropertyTypes` can assign here only while this type keeps `| undefined`.
-    // eslint-disable-next-line no-restricted-syntax
     parent?: KbqDropdownPanel | undefined;
     panelWidth?: Signal<KbqPanelWidth>;
     panelMinWidth?: Signal<KbqPanelMinWidth>;

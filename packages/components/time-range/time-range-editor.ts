@@ -357,9 +357,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
      */
     protected outOfBoundsMessage(): string {
         const bothOutOfBounds = borders.every((border) =>
-            this.borderHalves(border).some(
-                (control) => control.touched && !!control.errors?.['kbqTimeRangeOutOfBounds']
-            )
+            this.borderHalves(border).some((control) => control.touched && control.hasError('kbqTimeRangeOutOfBounds'))
         );
 
         if (!bothOutOfBounds) return '';

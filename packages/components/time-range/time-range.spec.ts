@@ -76,17 +76,9 @@ const getEditorControl = (debugElement: DebugElement): FormControl => {
     ).rangeEditorControl;
 };
 
-/** The editor's protected form, which declares these controls. */
-type EditorForm = FormGroup<{
-    type: FormControl<KbqTimeRangeType>;
-    fromTime: FormControl<unknown>;
-    fromDate: FormControl<unknown>;
-    toTime: FormControl<unknown>;
-    toDate: FormControl<unknown>;
-}>;
-
-const getEditorForm = (debugElement: DebugElement): EditorForm => {
-    return (getEditorInstance(debugElement) as unknown as { form: EditorForm }).form;
+/** The editor's protected form. */
+const getEditorForm = (debugElement: DebugElement): KbqTimeRangeEditor<unknown>['form'] => {
+    return getEditorInstance(debugElement)['form'];
 };
 
 const getRangeElement = (debugElement: DebugElement): HTMLElement => {

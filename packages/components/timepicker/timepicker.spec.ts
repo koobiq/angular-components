@@ -1438,7 +1438,7 @@ describe(KbqTimepicker.name, () => {
             fixture.componentInstance.min = DateTime.fromObject({ hour: 12, minute: 0 });
             fixture.detectChanges();
 
-            expect(control.errors?.['kbqTimepickerLowerThenMin']).toBeTruthy();
+            expect(control.hasError('kbqTimepickerLowerThenMin')).toBe(true);
         });
 
         it('should report an unbound disabled and required as false', () => {

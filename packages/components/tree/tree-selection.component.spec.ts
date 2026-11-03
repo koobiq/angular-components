@@ -265,6 +265,19 @@ describe('KbqTreeSelection', () => {
                 expect(option.classList).toContain('kbq-focused');
             });
 
+            it('should add focus class on first element when focus() is called with a keyboard event', async () => {
+                vi.useFakeTimers();
+
+                options = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
+                const option = options[0].nativeElement;
+
+                tree.injector.get(KbqTreeSelection).focus(new KeyboardEvent('keydown'));
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                expect(option.classList).toContain('kbq-focused');
+            });
+
             it('should add focus class on first selected element', async () => {
                 vi.useFakeTimers();
 
