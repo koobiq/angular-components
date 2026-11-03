@@ -206,33 +206,17 @@ The `kbqAgGridLoadingOverlay` directive controls the grid loading state: when th
 
 ### Skeleton cell renderer
 
-`KbqAgGridSkeletonCellRenderer` draws a skeleton in cells of rows the infinite row model (`rowModelType="infinite"`) has not loaded yet. Pick it through `cellRendererSelector` in `defaultColDef`: return the component for rows with `data === undefined` and `undefined` for the rest, so the column uses its own renderer. Bars fill the column width.
-
-To avoid an interactive checkbox in a row without data, wire `KbqAgGridSkeletonSelectionCellComponent` into `selectionColumnDef` the same way.
-
-The number of skeleton rows is set by the AG Grid options `infiniteInitialRowCount` (before the first load) and `cacheOverflowSize` (while the next page loads), both default to 1. The grid reads them when it builds the block cache, so new values take effect after you replace the datasource.
-
-While more data is coming, answer `-1` for the dataset size, including for pages served from your own cache. If the datasource names the total early, the grid lays out every row at once and stops appending the trailing rows the skeletons are drawn on.
+`KbqAgGridSkeletonCellRenderer` shows a skeleton in cells of rows the infinite row model (`rowModelType="infinite"`) has not loaded yet. The selection column has its own skeleton: while there is no data, the checkbox is unavailable.
 
 <Example id="ag-grid-skeleton-cell-renderer" />
 
 ### Load errors
 
-When a page fails to load, the `kbqAgGridLoadError` directive replaces it with a full width error row with a retry link. The row scrolls vertically with the data, stays put during horizontal scrolling, and spans the pinned columns.
+When a page fails to load, the `kbqAgGridLoadError` directive shows a row with a message and a retry link instead of it. The row spans the full grid width, scrolls with the data and covers the pinned columns.
 
-AG Grid's `failCallback()` does not report the error to the grid, so the data source has to call `loadError().fail(params.startRow)`, where `startRow` is the start of the failed request.
+A retry reloads every loaded block. To send a request only for the failed page, keep fetched pages in the data source.
 
-Retrying calls `refreshInfiniteCache()` and reloads every cached block. Keep fetched pages in the data source and serve them from there, so that only the failed page reaches the network.
-
-Russian labels are used by default. To switch the language, provide a labels provider:
-
-```ts
-providers: [kbqAgGridLoadErrorLabelsProvider(KBQ_AG_GRID_LOAD_ERROR_LABELS_EN)];
-```
-
-If the language can change while the grid is on screen, bind the labels to the `kbqAgGridLoadErrorLabels` input: a banner that is already rendered picks up the new strings.
-
-If the grid does not use skeletons, render a text loading indicator through `isFullWidthRow` and `fullWidthCellRenderer`: a full width row has no cells, so nothing indents the label and no selection checkbox is drawn beside it. Localize the label in the application, as you do the banner labels.
+Labels are in Russian by default, and the language can be switched, including while the grid is on screen. While data is loading, a text loading indicator can replace the skeleton.
 
 <Example id="ag-grid-load-error" />
 

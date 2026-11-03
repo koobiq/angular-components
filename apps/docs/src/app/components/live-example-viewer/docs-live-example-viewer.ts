@@ -15,7 +15,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqAgGridLoadingOverlayComponent } from '@koobiq/ag-grid-angular-theme';
+import { KbqAgGridLoadingOverlayComponent, kbqAgGridLoadingOverlayConfigProvider } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { kbqInjectNativeElement, KbqStateSavingService } from '@koobiq/components/core';
@@ -70,6 +70,9 @@ const DATA_GRID_EXAMPLES_IMPORT_PATH = 'components/ag-grid';
     ],
     templateUrl: './docs-live-example-viewer.html',
     styleUrls: ['./docs-live-example-viewer.scss'],
+    providers: [
+        kbqAgGridLoadingOverlayConfigProvider({ cols: 3, rows: 6, firstColWidth: '148px' })
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

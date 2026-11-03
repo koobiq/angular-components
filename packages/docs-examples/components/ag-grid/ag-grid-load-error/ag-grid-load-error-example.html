@@ -1,0 +1,22 @@
+<ag-grid-angular
+    kbqAgGridTheme
+    kbqAgGridThemeDisableCellFocusStyles
+    kbqAgGridLoadError
+    rowModelType="infinite"
+    [kbqAgGridLoadErrorLabels]="labels()"
+    [columnDefs]="columnDefs"
+    [defaultColDef]="defaultColDef"
+    [datasource]="datasource"
+    [rowSelection]="rowSelection"
+    [selectionColumnDef]="selectionColumnDef"
+    [isFullWidthRow]="isFullWidthRow"
+    [fullWidthCellRenderer]="loadingTextRenderer"
+    [fullWidthCellRendererParams]="loadingTextParams"
+    [cacheBlockSize]="pageSize"
+    [infiniteInitialRowCount]="initialRowCount"
+    (gridReady)="api = $event.api"
+/>
+
+<kbq-toggle [(ngModel)]="textInsteadOfSkeleton" (ngModelChange)="api?.redrawRows()">
+    Text instead of skeleton
+</kbq-toggle>
