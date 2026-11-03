@@ -1,0 +1,28 @@
+kbq-filter-bar {
+    width: 320px;
+}
+
+.example-tree-node {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--kbq-size-s);
+    width: 100%;
+    min-width: 0;
+}
+
+.example-tree-node__icon {
+    flex: 0 0 auto;
+}
+
+.example-tree-node__name {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.example-tree-node__count {
+    flex: 0 0 auto;
+    margin-inline-start: auto;
+    color: var(--kbq-foreground-contrast-secondary);
+    font-variant-numeric: tabular-nums;
+}

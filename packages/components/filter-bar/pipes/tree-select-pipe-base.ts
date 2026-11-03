@@ -25,6 +25,8 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
     treeFlattener: KbqTreeFlattener<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
     dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
 
+    private readonly sourceNodes = new WeakMap<KbqTreeSelectFlatNode, KbqTreeSelectNode>();
+
     /** @docs-private */
     readonly select = viewChild.required<KbqTreeSelect<KbqTreeSelectFlatNode>>(KbqTreeSelect);
 
@@ -84,6 +86,11 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
         this.treeControl.expandAll();
     }
 
+    /** @internal */
+    protected getSourceNode(node: KbqTreeSelectFlatNode): KbqTreeSelectNode {
+        return this.sourceNodes.get(node)!;
+    }
+
     protected transformer = (node: KbqTreeSelectNode, level: number, parent: KbqTreeSelectFlatNode | null) => {
         const flatNode = new KbqTreeSelectFlatNode();
 
@@ -92,6 +99,8 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
         flatNode.parent = parent ?? undefined;
         flatNode.level = level;
         flatNode.expandable = !!node.children;
+
+        this.sourceNodes.set(flatNode, node);
 
         return flatNode;
     };

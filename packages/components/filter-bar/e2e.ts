@@ -1,10 +1,10 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter } from '@koobiq/components/core';
+import { DateAdapter, KbqHighlightModule } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
 import { KbqFilterBarModule } from './filter-bar.module';
-import { kbqBuildTree, KbqFilter, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from './filter-bar.types';
+import { kbqBuildTree, KbqFilter, KbqPipe, KbqPipeTemplate, KbqPipeTypes, KbqTreeSelectNode } from './filter-bar.types';
 
 const DEV_DATA_OBJECT = {
     'No roles': 'value 0',
@@ -1630,4 +1630,180 @@ export class E2eFilterBarDateWithoutValues {
             }
         ]
     };
+}
+
+interface CustomTreeNode extends Omit<KbqTreeSelectNode, 'children'> {
+    children: CustomTreeNode[] | null;
+    icon?: string;
+    color?: string;
+    count?: number;
+}
+
+const CUSTOM_TREE_DATA: CustomTreeNode[] = [
+    {
+        name: 'Установлен',
+        value: 'installed',
+        icon: 'kbq-check_16',
+        color: 'success',
+        children: [
+            { name: '4.3.0.269', value: '4.3.0.269', count: 0, children: null },
+            { name: '5.0.0.0', value: '5.0.0.0', count: 210, children: null }
+        ]
+    },
+    {
+        name: 'Ошибка',
+        value: 'error',
+        icon: 'kbq-triangle-exclamation_16',
+        color: 'error',
+        children: [
+            {
+                name: 'Операционная система активного узла несовместима с текущей версией агента',
+                value: 'incompatible-os',
+                count: 789,
+                children: null
+            },
+            {
+                name: 'Ошибки неопределенного характера',
+                value: 'unknown-error',
+                count: 12345,
+                children: null
+            }
+        ]
+    }
+];
+
+@Component({
+    selector: 'e2e-filter-bar-multi-tree-select-value-template',
+    imports: [KbqFilterBarModule, KbqHighlightModule, KbqIcon],
+    template: `
+        <div class="e2e-filter-bar-multi-tree-select-value-template__target" data-testid="e2eScreenshotTarget">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
+                @for (pipe of filter.pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+            </kbq-filter-bar>
+        </div>
+
+        <button data-testid="e2eMultilineOptionsToggle" (click)="toggleMultilineOptions()">
+            Toggle multiline options
+        </button>
+
+        <ng-template #optionTemplate let-option="option" let-search="search">
+            <div class="e2e-filter-bar-multi-tree-select-value-template__node">
+                @if (option.icon) {
+                    <i
+                        class="e2e-filter-bar-multi-tree-select-value-template__icon"
+                        aria-hidden="true"
+                        [kbq-icon]="option.icon"
+                        [color]="option.color"
+                    ></i>
+                }
+                <span
+                    class="e2e-filter-bar-multi-tree-select-value-template__name"
+                    [innerHTML]="option.name | kbqHighlightBackground: search"
+                ></span>
+                @if (option.count !== undefined) {
+                    <span class="e2e-filter-bar-multi-tree-select-value-template__count">{{ option.count }}</span>
+                }
+            </div>
+        </ng-template>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 8px;
+        }
+
+        .e2e-filter-bar-multi-tree-select-value-template__target {
+            width: 380px;
+            height: 600px;
+        }
+
+        kbq-filter-bar {
+            width: 320px;
+        }
+
+        .e2e-filter-bar-multi-tree-select-value-template__node {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--kbq-size-s);
+            width: 100%;
+            min-width: 0;
+        }
+
+        .e2e-filter-bar-multi-tree-select-value-template__icon {
+            flex: 0 0 auto;
+        }
+
+        .e2e-filter-bar-multi-tree-select-value-template__name {
+            flex: 1 1 auto;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .e2e-filter-bar-multi-tree-select-value-template__count {
+            flex: 0 0 auto;
+            margin-inline-start: auto;
+            color: var(--kbq-foreground-contrast-secondary);
+            font-variant-numeric: tabular-nums;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarMultiTreeSelectValueTemplate'
+    }
+})
+export class E2eFilterBarMultiTreeSelectValueTemplate implements AfterViewInit {
+    readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
+
+    pipeTemplates: KbqPipeTemplate[] = [];
+
+    readonly filter: KbqFilter = {
+        name: '',
+        readonly: false,
+        disabled: false,
+        changed: false,
+        saved: false,
+        pipes: [
+            {
+                name: 'Состояние',
+                id: 'E2eMultiTreeSelectValueTemplate',
+                type: KbqPipeTypes.MultiTreeSelect,
+                value: null,
+                search: true,
+                selectAll: true,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]
+    };
+
+    ngAfterViewInit(): void {
+        this.pipeTemplates = [
+            {
+                name: 'Состояние',
+                id: 'E2eMultiTreeSelectValueTemplate',
+                type: KbqPipeTypes.MultiTreeSelect,
+                values: CUSTOM_TREE_DATA,
+                valueTemplate: this.optionTemplate(),
+                panelMaxHeight: 480,
+                multilineOptions: true,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ];
+    }
+
+    toggleMultilineOptions(): void {
+        this.pipeTemplates = [
+            {
+                ...this.pipeTemplates[0],
+                multilineOptions: !this.pipeTemplates[0].multilineOptions
+            }
+        ];
+    }
 }
