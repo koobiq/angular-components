@@ -209,7 +209,7 @@
         "docs:api-gen": "ts-node --project tools/api-gen/tsconfig.json tools/api-gen/generate-api-docs.ts",
         "validate:license": "ts-node --project ./tools/validate-licenses/tsconfig.json ./tools/validate-licenses/validate-licenses.ts",
         "-----RELEASE-----": "----------------------------------------------------------------------------------------",
-        "release:extract-docs-meta": "yarn run docs:api-gen && yarn run docs:generate-sitemap && yarn run docs:generate-prerender-routes && yarn run docs:generate-llms",
+        "release:extract-docs-meta": "yarn run docs:api-gen && yarn run docs:generate-sitemap && yarn run docs:generate-prerender-routes && yarn run docs:generate-llms && yarn run docs:update-stackblitz-lock",
         "release:stage:commit": "yarn run docs:prune-is-new-badges && ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli stage-commit",
         "release:publish:ci-github": "ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli publish-ci-github",
         "-----DEV-----": "--------------------------------------------------------------------------------------------",

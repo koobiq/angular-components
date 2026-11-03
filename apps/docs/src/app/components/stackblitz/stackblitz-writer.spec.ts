@@ -201,12 +201,13 @@ describe(DocsStackblitzWriter.name, () => {
     it('locks every dependency of the template; run docs:update-stackblitz-lock to update', () => {
         const template = JSON.parse(readTemplateFile('package.json').replace(/\${ngVersion}/g, `^${VERSION.major}`));
         const lock = JSON.parse(readTemplateFile('package-lock.json'));
-        const ranges: Record<string, string> = { ...template.dependencies, ...template.devDependencies };
+        const ranges = Object.fromEntries(
+            Object.entries<string>({ ...template.dependencies, ...template.devDependencies })
+                // The release regenerates the lock before it publishes the Koobiq packages, so npm resolves them.
+                .filter(([, range]) => range !== '${version}')
+        );
         const { dependencies, devDependencies } = lock.packages[''];
         const unlocked = Object.entries(ranges)
-            // The release bumps the version before publishing it, so these two lag behind until the next
-            // regeneration, and npm resolves them on top of the lock meanwhile.
-            .filter(([, range]) => range !== '${version}')
             .filter(([name, range]) => !satisfies(lock.packages[`node_modules/${name}`]?.version ?? '0.0.0', range))
             .map(([name]) => name);
 

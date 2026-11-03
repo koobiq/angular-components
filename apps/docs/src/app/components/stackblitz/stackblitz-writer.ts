@@ -233,7 +233,8 @@ export class DocsStackblitzWriter {
                 .replace(/\${version}/g, `^${docsKoobiqVersion}`)
         );
 
-        // npm resolves these on top of package-lock.json, which covers only the template.
+        // npm resolves these on top of package-lock.json, which covers only the template and leaves out the
+        // packages of this repository (see tools/update-stackblitz-lock.mjs).
         for (const pattern of patterns) {
             Object.assign(packageJson.dependencies, DOCS_STACKBLITZ_OPTIONAL_DEPENDENCIES[pattern]);
         }
