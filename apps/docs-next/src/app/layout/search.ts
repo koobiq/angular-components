@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, input, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, signal, viewChild } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DocsNextSiteState } from '../services/site-state';
 
@@ -11,7 +11,13 @@ import { DocsNextSiteState } from '../services/site-state';
     imports: [KbqIconModule],
     template: `
         @if (withButton()) {
-            <button class="docs-next-search__button" type="button" (click)="open()">
+            <button
+                #button
+                class="docs-next-search__button"
+                type="button"
+                [class.docs-next-search__button_held]="held()"
+                (click)="open()"
+            >
                 <span class="docs-next-search__inner">
                     <i kbq-icon="kbq-magnifying-glass_16" color="contrast-fade"></i>
                     <span class="docs-next-search__label">{{ state.t('search') }}</span>
@@ -21,7 +27,13 @@ import { DocsNextSiteState } from '../services/site-state';
         }
 
         <!-- closedby="any" closes it on a click outside, as well as on Escape. -->
-        <dialog #dialog class="docs-next-search__dialog" closedby="any" [attr.aria-label]="state.t('search')">
+        <dialog
+            #dialog
+            class="docs-next-search__dialog"
+            closedby="any"
+            [attr.aria-label]="state.t('search')"
+            (close)="held.set(false)"
+        >
             <div class="docs-next-search__field">
                 <i kbq-icon="kbq-magnifying-glass_16"></i>
                 <input
@@ -46,10 +58,21 @@ export class DocsNextSearch {
     /** Whether the field-shaped button shows; the phone header opens the dialog from its own icon. */
     readonly withButton = input(true);
 
+    /**
+     * The field is drawn in while the dialog is open when it was opened from the button, with the pointer on it or with
+     * the keyboard from its focus: the backdrop takes the hover away and the focus moves into the dialog, which would
+     * widen the field behind it. Opened with the hotkey from elsewhere, the field stays as it was.
+     */
+    protected readonly held = signal(false);
+
+    private readonly button = viewChild<ElementRef<HTMLButtonElement>>('button');
     private readonly dialog = viewChild.required<ElementRef<HTMLDialogElement>>('dialog');
     private readonly input = viewChild.required<ElementRef<HTMLInputElement>>('input');
 
     open(): void {
+        const button = this.button()?.nativeElement;
+
+        this.held.set(!!button && (button.matches(':hover') || button.matches(':focus-visible')));
         this.dialog().nativeElement.showModal();
         this.input().nativeElement.focus();
     }
