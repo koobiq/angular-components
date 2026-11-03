@@ -259,6 +259,24 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
                 expect(component.treeControl.isExpanded(otherBranch!)).toBe(false);
             });
 
+            it('should expand the ancestors of the committed value rather than a stale selection snapshot', () => {
+                fixture.componentInstance.activeFilter = createFilter([
+                    createPipe({ name: 'test', value: null, defaultExpanded: false })
+                ]);
+                fixture.detectChanges();
+
+                const component = getPipeComponent();
+
+                // A user-made selection commits to `data.value` but does not refresh the pipe's internal
+                // selection snapshot, so reading the snapshot here would expand nothing.
+                component.data.value = ['value 2'];
+                component.onOpen();
+
+                const expanded = component.treeControl.expansionModel.selected;
+
+                expect(expanded.map((node) => node.name)).toEqual(['Management and Configuration']);
+            });
+
             it('should not expand anything when only the select-all node is in the model', () => {
                 fixture.componentInstance.activeFilter = createFilter([
                     createPipe({ name: 'test', value: null, selectAll: true, defaultExpanded: false })

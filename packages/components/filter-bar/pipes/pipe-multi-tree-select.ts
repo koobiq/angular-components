@@ -193,9 +193,15 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
         return nodeData.value === kbqTreeSelectAllValue;
     }
 
-    /** @docs-private */
+    /**
+     * The committed value rather than `multiSelect.selected`: that snapshot is only refreshed on
+     * initialization, clearing and a full selection, so a user-made partial selection would leave
+     * the ancestors of the current value collapsed on reopen.
+     *
+     * @docs-private
+     */
     protected getSelectedValues(): unknown[] {
-        return this.multiSelect.selected ?? [];
+        return this.data.value ?? [];
     }
 
     /** @docs-private */
