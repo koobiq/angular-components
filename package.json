@@ -53,8 +53,8 @@
         "zod": "^4.6.5"
     },
     "devDependencies": {
-        "@analogjs/vite-plugin-angular": "2.9.0",
-        "@analogjs/vitest-angular": "2.9.0",
+        "@analogjs/vite-plugin-angular": "2.9.2",
+        "@analogjs/vitest-angular": "2.9.2",
         "@angular-devkit/architect": "0.2102.29",
         "@angular-devkit/architect-cli": "0.2102.29",
         "@angular-devkit/core": "21.2.29",
@@ -97,7 +97,7 @@
         "@types/node": "^24.10.4",
         "@types/semver": "^7.7.1",
         "@types/spdx-satisfies": "^6.0.0",
-        "@vitest/eslint-plugin": "^1.6.27",
+        "@vitest/eslint-plugin": "^1.6.28",
         "angular-eslint": "^21.4.0",
         "autoprefixer": "^10.6.0",
         "axe-core": "^4.14.0",
@@ -159,7 +159,7 @@
         "typescript": "5.9.3",
         "typescript-eslint": "^8.60.1",
         "unified": "^11.0.5",
-        "vite": "^8.3.4",
+        "vite": "^8.3.5",
         "vitest": "4.1.12"
     },
     "resolutions": {
