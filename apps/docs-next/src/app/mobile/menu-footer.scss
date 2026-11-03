@@ -11,18 +11,50 @@
     border-top: 1px solid var(--kbq-line-contrast-less);
 }
 
-// Figma: Theme Switcher Mobile Segmented (66:34744), 40 × 48 items.
+// Figma: Theme Switcher Mobile Segmented (66:34744), 40 × 48 items. The selected theme in contrast, the others faded;
+// hover and press change only the colour of the icon.
 .docs-next-menu-footer__themes {
     display: flex;
 }
 
-.docs-next-menu-footer__theme.kbq-icon-button {
+.docs-next-menu-footer__theme {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 40px;
     height: 48px;
     padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+
+    .kbq-icon {
+        color: var(--kbq-icon-contrast-fade);
+    }
+
+    &:hover .kbq-icon {
+        color: var(--kbq-states-icon-contrast-fade-hover);
+    }
+
+    &:active .kbq-icon {
+        color: var(--kbq-states-icon-contrast-fade-active);
+    }
+
+    &[aria-pressed='true'] .kbq-icon {
+        color: var(--kbq-icon-contrast);
+    }
+
+    // Figma: Focus Ring - Inner, 2px, 4px from the top and bottom.
+    &:focus-visible::after {
+        position: absolute;
+        inset: var(--kbq-size-xxs) 0;
+        border-radius: var(--kbq-size-s);
+        box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+        content: '';
+    }
 }
 
 .docs-next-menu-footer__locale {

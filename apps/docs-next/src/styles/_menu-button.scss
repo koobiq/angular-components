@@ -17,7 +17,7 @@
     -webkit-tap-highlight-color: transparent;
 
     .docs-next-menu-button__inner {
-        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-medium);
 
         display: flex;
         align-items: center;

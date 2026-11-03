@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqThemeMode, KbqThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { DocsNextI18nKey, DocsNextLocale } from '../data/site';
 import { DocsNextSiteState } from '../services/site-state';
 
@@ -21,21 +21,19 @@ const LOCALES: { id: DocsNextLocale; title: string }[] = [
 /** Bottom row of the phone menu: theme on the left, language on the right (Figma: Drawer Bottom Bar, 66:34654). */
 @Component({
     selector: 'docs-next-menu-footer',
-    imports: [RouterLink, KbqDropdownModule, KbqIconButton, KbqIconModule],
+    imports: [RouterLink, KbqDropdownModule, KbqIconModule],
     template: `
         <div class="docs-next-menu-footer__themes" role="group" [attr.aria-label]="state.t('theme')">
             @for (option of themeOptions; track option.mode) {
-                <!-- The selected theme in contrast, the others faded; no fill. -->
                 <button
                     class="docs-next-menu-footer__theme"
-                    size="compact"
                     type="button"
                     [attr.aria-label]="state.t(option.title)"
                     [attr.aria-pressed]="option.mode === themeMode()"
-                    [color]="option.mode === themeMode() ? 'contrast' : 'contrast-fade'"
-                    [kbq-icon-button]="option.icon"
                     (click)="theme.setMode(option.mode)"
-                ></button>
+                >
+                    <i kbq-icon="" [class]="option.icon"></i>
+                </button>
             }
         </div>
 
@@ -51,7 +49,12 @@ const LOCALES: { id: DocsNextLocale; title: string }[] = [
             </span>
         </button>
 
-        <kbq-dropdown #localeDropdown="kbqDropdown">
+        <kbq-dropdown
+            #localeDropdown="kbqDropdown"
+            class="docs-next-menu-dropdown"
+            xPosition="before"
+            yPosition="above"
+        >
             @for (locale of locales; track locale.id) {
                 <a
                     kbq-dropdown-item
