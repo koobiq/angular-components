@@ -95,7 +95,7 @@ export class FilterByValues<T, K = T> implements FlatTreeControlFilter<T> {
 
 // @public
 export class FilterByViewValue<T, K = T> implements FlatTreeControlFilter<T> {
-    constructor(control: FlatTreeControl<T, K>);
+    constructor(control: FlatTreeControl<T, K>, matches?: ((node: T, query: string | null) => boolean) | undefined);
     // (undocumented)
     handle(value: string | null): T[];
     // (undocumented)

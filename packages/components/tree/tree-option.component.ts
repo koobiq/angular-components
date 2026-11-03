@@ -319,7 +319,7 @@ export class KbqTreeOption<T = any>
 
     /** The displayed value used by type-ahead. Falls back to the text of the option. */
     get viewValue(): string {
-        return this.viewValueInput() ?? (this.getHostElement().textContent || '').trim();
+        return this.viewValueInput() || (this.getHostElement().textContent || '').trim();
     }
 
     get hasFocus(): boolean {

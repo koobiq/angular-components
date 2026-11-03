@@ -108,9 +108,11 @@
             [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
         ></div>
         @if (node.caption) {
-            <div class="kbq-option-caption" [class.kbq-truncate-line]="!multilineOptions">
-                {{ node.caption }}
-            </div>
+            <div
+                class="kbq-option-caption"
+                [class.kbq-truncate-line]="!multilineOptions"
+                [innerHTML]="node.caption | kbqHighlightBackground: treeControl.filterValue.value"
+            ></div>
         }
     }
 </ng-template>

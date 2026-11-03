@@ -10,13 +10,17 @@ export interface FlatTreeControlFilter<T> {
 
 /**
  * Default first stage of the filter pipeline: keeps the nodes whose view value matches the query.
+ * An optional `matches` predicate keeps a node matched by anything else, e.g. by another field.
  *
  * @docs-private
  */
 export class FilterByViewValue<T, K = T> implements FlatTreeControlFilter<T> {
     result: T[];
 
-    constructor(private control: FlatTreeControl<T, K>) {}
+    constructor(
+        private control: FlatTreeControl<T, K>,
+        private matches?: (node: T, query: string | null) => boolean
+    ) {}
 
     handle(value: string | null): T[] {
         const viewValue = value || null;
@@ -24,7 +28,10 @@ export class FilterByViewValue<T, K = T> implements FlatTreeControlFilter<T> {
         this.result = this.control.dataNodes.filter((node) => {
             if (node['value'] === kbqTreeSelectAllValue) return true;
 
-            return this.control.compareViewValues(this.control.getViewValue(node), viewValue);
+            return (
+                this.control.compareViewValues(this.control.getViewValue(node), viewValue) ||
+                !!this.matches?.(node, viewValue)
+            );
         });
 
         if (this.result.length === 1 && this.result[0]['value'] === kbqTreeSelectAllValue) {

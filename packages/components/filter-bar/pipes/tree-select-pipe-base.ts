@@ -2,12 +2,11 @@ import { AfterViewInit, Directive, OnInit, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import {
+    FilterByViewValue,
     FilterParentsForNodes,
     FlatTreeControl,
-    FlatTreeControlFilter,
     KbqTreeFlatDataSource,
-    KbqTreeFlattener,
-    kbqTreeSelectAllValue
+    KbqTreeFlattener
 } from '@koobiq/components/tree';
 import { KbqTreeSelect } from '@koobiq/components/tree-select';
 import { KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
@@ -49,29 +48,16 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
             this.getViewValue
         );
 
-        const filter: FlatTreeControlFilter<KbqTreeSelectFlatNode> = {
-            result: [],
-            handle: (value: string | null) => {
-                const query = value || null;
-                const matchCaption = !this.isTemplateRef(this.valueTemplate);
-                const result = this.treeControl.dataNodes.filter((node) => {
-                    if (node.value === kbqTreeSelectAllValue) return true;
+        const filterByViewValue = new FilterByViewValue<KbqTreeSelectFlatNode>(
+            this.treeControl,
+            // A `valueTemplate` replaces the caption, so a captioned node is matched by its name only.
+            (node, query) =>
+                !this.isTemplateRef(this.valueTemplate) &&
+                !!node.caption &&
+                this.treeControl.compareViewValues(node.caption, query)
+        );
 
-                    return (
-                        this.treeControl.compareViewValues(node.name, query) ||
-                        (matchCaption && !!node.caption && this.treeControl.compareViewValues(node.caption, query))
-                    );
-                });
-
-                if (result.length === 1 && result[0].value === kbqTreeSelectAllValue) {
-                    result.pop();
-                }
-
-                return (filter.result = result);
-            }
-        };
-
-        this.treeControl.setFilters(filter, new FilterParentsForNodes(this.treeControl));
+        this.treeControl.setFilters(filterByViewValue, new FilterParentsForNodes(this.treeControl));
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 

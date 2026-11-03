@@ -178,6 +178,10 @@ describe('KbqTreeSelection', () => {
                 expect(applications.viewValue).toBe('Applications');
                 expect(applications.getLabel()).toBe('Applications');
                 expect(plain.viewValue).toBe('rootNode_1');
+
+                const emptyViewValue = options.find((option) => option.value === 'Documents')!;
+
+                expect(emptyViewValue.viewValue).toBe('Documents');
             });
 
             it('should copy selected option - default handler', async () => {
@@ -3684,7 +3688,7 @@ class SimpleKbqTreeApp {
             <kbq-tree-option
                 *kbqTreeNodeDef="let node"
                 kbqTreeNodePadding
-                [viewValue]="node.name === 'Applications' ? 'Applications' : undefined"
+                [viewValue]="node.name === 'Applications' ? 'Applications' : node.name === 'Documents' ? '' : undefined"
             >
                 <div>{{ node.name }}</div>
                 @if (node.name === 'Applications') {

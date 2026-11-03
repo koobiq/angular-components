@@ -104,4 +104,25 @@
     }
 }
 
+// A wrapped row is taller than one line: pin the checkbox and the toggle to the FIRST line,
+// as `:has(.kbq-option-caption)` in `tree-option.scss` does for two-line options. On a 32px row
+// this alignment coincides with the centered one, so single-line options do not change.
+.kbq-pipe-tree-select__panel_multiline,
+.kbq-pipe-multi-tree-select__panel_multiline {
+    .kbq-tree-option {
+        & > .kbq-pseudo-checkbox,
+        & > kbq-checkbox {
+            align-self: flex-start;
+            margin-top: var(--kbq-size-3xs);
+        }
+
+        & > .kbq-tree-node-toggle {
+            align-self: flex-start;
+
+            height: var(--kbq-typography-text-normal-line-height);
+            margin-top: 0;
+        }
+    }
+}
+
 @include kbq-filter-bar-pipe-theme();

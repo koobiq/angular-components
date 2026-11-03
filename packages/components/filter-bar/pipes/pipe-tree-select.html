@@ -55,22 +55,7 @@
 
     <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
         <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [viewValue]="treeControl.getViewValue(node)">
-            @if (isTemplateRef(valueTemplate)) {
-                <ng-container
-                    [ngTemplateOutlet]="$any(valueTemplate)"
-                    [ngTemplateOutletContext]="{ $implicit, option: node }"
-                />
-            } @else {
-                <div
-                    [class.kbq-truncate-line]="!multilineOptions"
-                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
-                ></div>
-                @if (node.caption) {
-                    <div class="kbq-option-caption" [class.kbq-truncate-line]="!multilineOptions">
-                        {{ node.caption }}
-                    </div>
-                }
-            }
+            <ng-container [ngTemplateOutlet]="nodeContent" [ngTemplateOutletContext]="{ $implicit: node }" />
         </kbq-tree-option>
 
         <kbq-tree-option
@@ -80,25 +65,31 @@
             [viewValue]="treeControl.getViewValue(node)"
         >
             <kbq-tree-node-toggle [node]="node" />
-            @if (isTemplateRef(valueTemplate)) {
-                <ng-container
-                    [ngTemplateOutlet]="$any(valueTemplate)"
-                    [ngTemplateOutletContext]="{ $implicit, option: node }"
-                />
-            } @else {
-                <div
-                    [class.kbq-truncate-line]="!multilineOptions"
-                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
-                ></div>
-                @if (node.caption) {
-                    <div class="kbq-option-caption" [class.kbq-truncate-line]="!multilineOptions">
-                        {{ node.caption }}
-                    </div>
-                }
-            }
+            <ng-container [ngTemplateOutlet]="nodeContent" [ngTemplateOutletContext]="{ $implicit: node }" />
         </kbq-tree-option>
     </kbq-tree-selection>
 </kbq-tree-select>
+
+<ng-template #nodeContent let-node>
+    @if (isTemplateRef(valueTemplate)) {
+        <ng-container
+            [ngTemplateOutlet]="$any(valueTemplate)"
+            [ngTemplateOutletContext]="{ $implicit, option: node }"
+        />
+    } @else {
+        <div
+            [class.kbq-truncate-line]="!multilineOptions"
+            [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+        ></div>
+        @if (node.caption) {
+            <div
+                class="kbq-option-caption"
+                [class.kbq-truncate-line]="!multilineOptions"
+                [innerHTML]="node.caption | kbqHighlightBackground: treeControl.filterValue.value"
+            ></div>
+        }
+    }
+</ng-template>
 
 @if (showRemoveButton) {
     <kbq-pipe-button />

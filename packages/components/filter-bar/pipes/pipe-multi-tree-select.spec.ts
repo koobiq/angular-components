@@ -1113,6 +1113,23 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             expect(component.treeControl.filterModel.selected.map((node) => node.name)).toEqual(['Events', 'Action']);
         });
 
+        it('should highlight the caption matched by the search', async () => {
+            vi.useFakeTimers();
+
+            setTemplate();
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
+            fixture.detectChanges();
+            await renderPanel();
+
+            getPipeComponent().searchControl.setValue('category.generic');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const caption = getOption('threat').getHostElement().querySelector('.kbq-option-caption')!;
+
+            expect(caption.querySelector('mark.kbq-highlight-background')!.textContent).toBe('category.generic');
+        });
+
         it('should forward multilineOptions to the panel', async () => {
             vi.useFakeTimers();
 

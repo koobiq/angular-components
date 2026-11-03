@@ -47,7 +47,7 @@ The `input` type is the only one without a popover: it renders a bare input that
 
 ### Custom values in tree nodes
 
-For `multi-tree-select`, set `valueTemplate` to customize ordinary leaves and branches. Its context provides `option`, the original source node with any consumer-defined fields, and `search`, the current query. Use these fields to render icons, multiline text, counters or other Angular content.
+For `tree-select` and `multi-tree-select`, set `valueTemplate` to customize ordinary leaves and branches. Its context provides `option`, the original source node with any consumer-defined fields, and `search`, the current query. Use these fields to render icons, multiline text, counters or other Angular content.
 
 Filtering still uses only `name`. The template is responsible for highlighting matches, typically with `kbqHighlightBackground` applied to `option.name`. Select-all, selected values and the text-only trigger keep their standard behavior. Set `multilineOptions` to wrap long names instead of truncating them; this option works independently of `valueTemplate`. Multiline rows are taller than 32px, so fewer of them fit under `panelMaxHeight`.
 
@@ -112,7 +112,7 @@ An option with a `caption`, and any option under `multilineOptions`, is taller t
 
 Add `caption` to an option of a `select`, `multiselect`, `tree-select` or `multi-tree-select` pipe to show a second line in the dropdown — a technical identifier, for example.
 
-Both lines are truncated by default; `multilineOptions: true` wraps them instead. A `valueTemplate` replaces the default option content, including the caption.
+Both lines are truncated by default; `multilineOptions: true` wraps them instead. A `valueTemplate` replaces the default option content, including the caption, and search then matches only the option `name`.
 
 <Example id="filter-bar-option-caption" />
 
