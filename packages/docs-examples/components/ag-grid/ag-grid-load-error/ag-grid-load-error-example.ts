@@ -91,7 +91,29 @@ export class AgGridLoadErrorExampleLoadingText implements ICellRendererAngularCo
 @Component({
     selector: 'ag-grid-load-error-example',
     imports: [AgGridModule, KbqAgGridThemeModule],
-    templateUrl: 'ag-grid-load-error-example.html',
+    template: `
+        <ag-grid-angular
+            kbqAgGridTheme
+            kbqAgGridThemeDisableCellFocusStyles
+            kbqAgGridLoadError
+            kbqAgGridSettingsMenu
+            rowModelType="infinite"
+            [kbqAgGridSettingsMenuItems]="settingsMenuItems"
+            [kbqAgGridLoadErrorLabels]="labels()"
+            [columnDefs]="columnDefs"
+            [defaultColDef]="defaultColDef"
+            [datasource]="datasource"
+            [rowSelection]="rowSelection"
+            [selectionColumnDef]="selectionColumnDef"
+            [isFullWidthRow]="isFullWidthRow"
+            [fullWidthCellRenderer]="loadingTextRenderer"
+            [fullWidthCellRendererParams]="loadingTextParams"
+            [rowStyle]="rowStyle()"
+            [cacheBlockSize]="pageSize"
+            [rowBuffer]="pageSize"
+            [infiniteInitialRowCount]="initialRowCount"
+        />
+    `,
     styles: `
         :host {
             display: flex;

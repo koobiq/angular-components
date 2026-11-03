@@ -212,11 +212,16 @@ The `kbqAgGridLoadingOverlay` directive controls the grid loading state: when th
 
 ### Load errors
 
-When a page fails to load, the `kbqAgGridLoadError` directive shows a row with a message and a retry link instead of it. The row spans the full grid width, scrolls with the data and covers the pinned columns.
+On the initial load, the grid immediately requests the first and the second portions of data, and while scrolling it stays one step ahead of the user.
 
-A retry reloads every loaded block. To send a request only for the failed page, keep fetched pages in the data source.
+If a portion fails to load, the `kbqAgGridLoadError` directive shows an error message with a retry link on the last row:
 
-Labels are in Russian by default, and the language can be switched, including while the grid is on screen. While data is loading, a text loading indicator can replace the skeleton.
+- the message scrolls vertically together with the rows;
+- during horizontal scrolling, the message stays in the visible area of the grid;
+- the message takes up the whole visible area of the grid, even with pinned columns;
+- if row dividers appear or the row height changes, the message adapts to the overall styling.
+
+To see these cases in the example, open the grid settings menu.
 
 <Example id="ag-grid-load-error" />
 
