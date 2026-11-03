@@ -13,6 +13,28 @@ const createComponent = <T>(component: Type<T>, providers: Provider[] = []): Com
 
 const getDlElement = ({ nativeElement }: ComponentFixture<unknown>): HTMLElement => nativeElement;
 
+const createDl = (): ComponentFixture<KbqDlComponent> => {
+    TestBed.configureTestingModule({ imports: [KbqDlComponent] });
+
+    return TestBed.createComponent(KbqDlComponent);
+};
+
+/**
+ * Stubs the host geometry the way a browser would report it: a number, a getter for a changing width, or `null`
+ * for a host without a box. jsdom never lays anything out, so without the stub `getClientRects()` returns nothing
+ * in every test and the width branches stay uncovered.
+ */
+const stubHostWidth = (fixture: ComponentFixture<unknown>, width: number | null | (() => number | null)): void => {
+    Object.defineProperty(getDlElement(fixture), 'getClientRects', {
+        configurable: true,
+        value: () => {
+            const resolved = typeof width === 'function' ? width() : width;
+
+            return resolved === null ? [] : [{ width: resolved } as DOMRect];
+        }
+    });
+};
+
 describe(KbqDlComponent.name, () => {
     it('should use start alignment by default', () => {
         const fixture = createComponent(KbqDlComponent);
@@ -58,51 +80,47 @@ describe(KbqDlComponent.name, () => {
     });
 
     it('should choose the vertical layout during the first change detection when the host is at the breakpoint', () => {
-        const fixture = TestBed.createComponent(KbqDlComponent);
+        const fixture = createDl();
 
-        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
-            configurable: true,
-            value: () => [{ width: 400 } as DOMRect]
-        });
+        stubHostWidth(fixture, 400);
         fixture.autoDetectChanges();
 
         expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
     });
 
     it('should keep the horizontal layout during the first change detection when the host is wider than the breakpoint', () => {
-        const fixture = TestBed.createComponent(KbqDlComponent);
+        const fixture = createDl();
 
-        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
-            configurable: true,
-            value: () => [{ width: 401 } as DOMRect]
-        });
+        stubHostWidth(fixture, 401);
         fixture.autoDetectChanges();
 
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
     });
 
     it('should keep the consumer-set vertical input over the measured width', () => {
-        const fixture = TestBed.createComponent(KbqDlComponent);
+        const fixture = createDl();
 
-        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
-            configurable: true,
-            value: () => [{ width: 400 } as DOMRect]
-        });
+        stubHostWidth(fixture, 400);
         fixture.componentRef.setInput('vertical', false);
         fixture.autoDetectChanges();
 
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
     });
 
-    it('should re-evaluate the layout on window resize, debounced', fakeAsync(() => {
-        TestBed.configureTestingModule({ imports: [KbqDlComponent] });
-        const fixture = TestBed.createComponent(KbqDlComponent);
-        let width = 500;
+    it('should keep the default horizontal layout when the host has no box at init', () => {
+        const fixture = createDl();
 
-        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
-            configurable: true,
-            value: () => [{ width } as DOMRect]
-        });
+        stubHostWidth(fixture, null);
+        fixture.autoDetectChanges();
+
+        expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
+    });
+
+    it('should re-evaluate the layout on window resize, debounced', fakeAsync(() => {
+        const fixture = createDl();
+        let width: number | null = 500;
+
+        stubHostWidth(fixture, () => width);
         fixture.autoDetectChanges();
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
 
@@ -115,5 +133,18 @@ describe(KbqDlComponent.name, () => {
         tick(1);
         fixture.detectChanges();
         expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
+
+        width = 500;
+        window.dispatchEvent(new Event('resize'));
+        tick(100);
+        fixture.detectChanges();
+        expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
+
+        // a host left without a box keeps the layout it last had
+        width = null;
+        window.dispatchEvent(new Event('resize'));
+        tick(100);
+        fixture.detectChanges();
+        expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
     }));
 });
