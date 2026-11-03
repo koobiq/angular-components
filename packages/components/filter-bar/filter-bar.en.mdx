@@ -49,7 +49,7 @@ The `input` type is the only one without a popover: it renders a bare input that
 
 For `multi-tree-select`, set `valueTemplate` to customize ordinary leaves and branches. Its context provides `option`, the original source node with any consumer-defined fields, and `search`, the current query. Use these fields to render icons, multiline text, counters or other Angular content.
 
-Filtering still uses only `name`. The template is responsible for highlighting matches, typically with `kbqHighlightBackground` applied to `option.name`. Select-all, selected values and the text-only trigger keep their standard behavior. Custom rows can be taller than 32px, so fewer of them fit under `panelMaxHeight`.
+Filtering still uses only `name`. The template is responsible for highlighting matches, typically with `kbqHighlightBackground` applied to `option.name`. Select-all, selected values and the text-only trigger keep their standard behavior. Set `multilineOptions` to wrap long names instead of truncating them; this option works independently of `valueTemplate`. Multiline rows are taller than 32px, so fewer of them fit under `panelMaxHeight`.
 
 <Example id="filter-bar-multi-tree-select-value-template" />
 

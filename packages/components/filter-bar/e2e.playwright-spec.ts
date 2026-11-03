@@ -478,8 +478,9 @@ test.describe('KbqFilterBarModule', () => {
             await page.goto('/E2eFilterBarMultiTreeSelectValueTemplate');
 
             const component = getComponent(page);
+            const trigger = component.locator('.kbq-pipe__multi-tree-select .kbq-select__trigger');
 
-            await component.locator('.kbq-pipe__multi-tree-select .kbq-select__trigger').click();
+            await trigger.click();
 
             const panel = page.locator('.kbq-pipe-multi-tree-select__panel_custom-value');
             const options = panel.locator('.kbq-tree-option');
@@ -512,6 +513,17 @@ test.describe('KbqFilterBarModule', () => {
             await expect(screenshotTarget).toHaveScreenshot('08-custom-tree-value-light.png');
             await e2eEnableDarkTheme(page);
             await expect(screenshotTarget).toHaveScreenshot('08-custom-tree-value-dark.png');
+
+            const optionText = longOption.locator('.kbq-option-text');
+            const multilineToggle = page.getByTestId('e2eMultilineOptionsToggle');
+
+            await expect(optionText).toHaveCSS('white-space', 'normal');
+            await multilineToggle.click();
+            await trigger.click();
+            await expect(optionText).toHaveCSS('white-space', 'nowrap');
+            await multilineToggle.click();
+            await trigger.click();
+            await expect(optionText).toHaveCSS('white-space', 'normal');
 
             const search = panel.locator('input');
 

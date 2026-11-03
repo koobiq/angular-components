@@ -1684,6 +1684,10 @@ const CUSTOM_TREE_DATA: CustomTreeNode[] = [
             </kbq-filter-bar>
         </div>
 
+        <button data-testid="e2eMultilineOptionsToggle" (click)="toggleMultilineOptions()">
+            Toggle multiline options
+        </button>
+
         <ng-template #optionTemplate let-option="option" let-search="search">
             <div class="e2e-filter-bar-multi-tree-select-value-template__node">
                 @if (option.icon) {
@@ -1785,10 +1789,20 @@ export class E2eFilterBarMultiTreeSelectValueTemplate implements AfterViewInit {
                 values: CUSTOM_TREE_DATA,
                 valueTemplate: this.optionTemplate(),
                 panelMaxHeight: 480,
+                multilineOptions: true,
 
                 cleanable: false,
                 removable: false,
                 disabled: false
+            }
+        ];
+    }
+
+    toggleMultilineOptions(): void {
+        this.pipeTemplates = [
+            {
+                ...this.pipeTemplates[0],
+                multilineOptions: !this.pipeTemplates[0].multilineOptions
             }
         ];
     }

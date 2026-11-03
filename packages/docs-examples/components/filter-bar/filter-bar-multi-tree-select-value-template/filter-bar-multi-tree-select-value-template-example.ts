@@ -105,6 +105,7 @@ export class FilterBarMultiTreeSelectValueTemplateExample {
             values: this.values(),
             valueTemplate: this.optionTemplate(),
             panelMaxHeight: 480,
+            multilineOptions: true,
 
             cleanable: false,
             removable: false,

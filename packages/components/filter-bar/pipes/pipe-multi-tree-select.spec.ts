@@ -650,6 +650,38 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             ).toBe(false);
         });
 
+        it('should control multiline text independently of valueTemplate', async () => {
+            await renderCustomOptions();
+
+            const panel = document.querySelector('.kbq-pipe-multi-tree-select__panel')!;
+            const hasMultilineClass = () => panel.classList.contains('kbq-pipe-multi-tree-select__panel_multiline');
+            const hasCustomValueClass = () =>
+                panel.classList.contains('kbq-pipe-multi-tree-select__panel_custom-value');
+
+            expect(hasCustomValueClass()).toBe(true);
+            expect(hasMultilineClass()).toBe(false);
+
+            fixture.componentInstance.pipeTemplates = [
+                { ...fixture.componentInstance.pipeTemplates[0], multilineOptions: true }
+            ];
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(hasCustomValueClass()).toBe(true);
+            expect(hasMultilineClass()).toBe(true);
+
+            fixture.componentInstance.pipeTemplates = [
+                { ...fixture.componentInstance.pipeTemplates[0], multilineOptions: false }
+            ];
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(hasCustomValueClass()).toBe(true);
+            expect(hasMultilineClass()).toBe(false);
+        });
+
         it('should use current source fields after values are replaced', async () => {
             await renderCustomOptions();
 
