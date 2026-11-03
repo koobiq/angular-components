@@ -1,8 +1,3 @@
-// The curve of the motion of the site: it starts fast and settles.
-:root {
-    --docs-next-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-}
-
 // A link to the heading, the badge after its text and the highlight of the heading a link has led to. The headings come
 // as compiled HTML, so the rules are global.
 .docs-next-prose :is(h2, h3, h4, h5)[id] {
@@ -63,9 +58,6 @@
 // The link: a 24px target, with the 16px icon in it. On a phone it ends the line and is always there, as there is no
 // hover; on a desktop it hangs in the margin of the article and shows when the heading is pointed at or focused.
 .docs-next-heading-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     width: 24px;
     height: 24px;
     margin-left: var(--kbq-size-xxs);
@@ -99,11 +91,6 @@
     &:active {
         color: var(--kbq-states-icon-contrast-fade-active);
         transition-duration: 60ms;
-    }
-
-    // The tick that confirms a copy comes in with a small pop; the way back to the chain is not animated.
-    .kbq-check_16 {
-        animation: docs-next-heading-check 160ms var(--docs-next-ease-out);
     }
 
     &:focus-visible {
@@ -156,19 +143,6 @@
     }
 }
 
-@keyframes docs-next-heading-check {
-    from {
-        opacity: 0;
-        transform: scale(0.85);
-    }
-}
-
-@keyframes docs-next-heading-check-fade {
-    from {
-        opacity: 0;
-    }
-}
-
 .docs-next-heading_target,
 .docs-next-prose :is(h2, h3, h4, h5)[id]:target {
     // The fill is a layer behind the heading that reaches past its box, so it takes no room: the text stays where it is,
@@ -183,12 +157,5 @@
         content: '';
         pointer-events: none;
         animation: docs-next-heading-target 2s var(--docs-next-ease-out);
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    // Only the fade, without the pop.
-    .docs-next-heading-link .kbq-check_16 {
-        animation-name: docs-next-heading-check-fade;
     }
 }

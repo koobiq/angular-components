@@ -1,0 +1,4 @@
+// The curve of the motion of the site: it starts fast and settles.
+:root {
+    --docs-next-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}

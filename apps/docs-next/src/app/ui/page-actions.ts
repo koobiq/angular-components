@@ -34,7 +34,10 @@ const MCP_SERVER = { command: 'npx', args: ['-y', '@koobiq/mcp'] };
                 kbqStyle="transparent"
                 (click)="copy()"
             >
-                <i kbq-icon="" kbqButtonPrefix [class]="copied() ? 'kbq-check_16' : 'kbq-square-multiple-o_16'"></i>
+                <span class="docs-next-icon-swap" kbqButtonPrefix [attr.data-swapped]="copied() ? '' : null">
+                    <i kbq-icon="kbq-square-multiple-o_16" class="docs-next-icon-swap__from"></i>
+                    <i kbq-icon="kbq-check_16" class="docs-next-icon-swap__to"></i>
+                </span>
                 {{ copied() ? state.t('copied') : state.t('copyPage') }}
             </button>
             @if (githubUrl(); as url) {

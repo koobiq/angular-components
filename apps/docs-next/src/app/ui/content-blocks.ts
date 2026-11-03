@@ -26,6 +26,8 @@ import { DocsNextExampleFrame } from './example-frame';
 type DocsNextRenderedBlock = { kind: 'html'; html: SafeHtml } | Exclude<DocsNextContentBlock, { kind: 'html' }>;
 
 const HEADING_LINK = 'docs-next-heading-link';
+/** Set on the link while it shows that the address is copied. */
+const SWAPPED_ATTRIBUTE = 'data-swapped';
 /** How long the link shows that it has copied the address. */
 const COPIED_DURATION = 2000;
 
@@ -97,7 +99,8 @@ export class DocsNextContentBlocks {
 
     /** Said to screen readers when an address is copied. */
     protected readonly announcement = signal('');
-    private resetTimer?: ReturnType<typeof setTimeout>;
+    /** One timer per link: a link copied after another must not cancel the way back of the first. */
+    private readonly resetTimers = new Map<HTMLAnchorElement, ReturnType<typeof setTimeout>>();
 
     readonly blocks = input.required<DocsNextContentBlock[]>();
 
@@ -122,7 +125,7 @@ export class DocsNextContentBlocks {
                 takeUntilDestroyed()
             )
             .subscribe(() => this.addHeadingLinks());
-        destroyRef.onDestroy(() => clearTimeout(this.resetTimer));
+        destroyRef.onDestroy(() => this.resetTimers.forEach((timer) => clearTimeout(timer)));
     }
 
     // The HTML is compiled at build time from the MDX of this repository, so it is trusted: the sanitizer would
@@ -159,15 +162,33 @@ export class DocsNextContentBlocks {
             return;
         }
 
-        const icon = link.querySelector('i')!;
-
-        icon.className = 'kbq kbq-icon kbq-check_16';
+        this.addTick(link);
+        link.toggleAttribute(SWAPPED_ATTRIBUTE, true);
         this.announcement.set(this.state.t('linkCopied'));
-        clearTimeout(this.resetTimer);
-        this.resetTimer = setTimeout(() => {
-            icon.className = 'kbq kbq-icon kbq-link_16';
-            this.announcement.set('');
-        }, COPIED_DURATION);
+        clearTimeout(this.resetTimers.get(link));
+        this.resetTimers.set(
+            link,
+            setTimeout(() => {
+                link.toggleAttribute(SWAPPED_ATTRIBUTE, false);
+                this.resetTimers.delete(link);
+                this.announcement.set('');
+            }, COPIED_DURATION)
+        );
+    }
+
+    /**
+     * The tick is made the first time a link is copied, not for every heading of the article. It is laid out in its
+     * hidden state before the link is marked, so that the change from there is a transition.
+     */
+    private addTick(link: HTMLAnchorElement): void {
+        if (link.querySelector('.docs-next-icon-swap__to')) return;
+
+        const tick = this.document.createElement('i');
+
+        tick.className = 'kbq kbq-icon kbq-check_16 docs-next-icon-swap__to';
+        tick.setAttribute('aria-hidden', 'true');
+        link.append(tick);
+        void link.offsetWidth;
     }
 
     /** Whether a change is the work of `addHeadingLinks`: the tail it adds and what it moves into it. */
@@ -197,14 +218,14 @@ export class DocsNextContentBlocks {
             }
 
             const link = this.document.createElement('a');
-            const icon = this.document.createElement('i');
+            const chain = this.document.createElement('i');
 
-            link.className = HEADING_LINK;
+            link.className = `${HEADING_LINK} docs-next-icon-swap`;
             link.href = href;
             link.setAttribute('aria-label', this.state.t('linkToSection', { title: heading.textContent!.trim() }));
-            icon.className = 'kbq kbq-icon kbq-link_16';
-            icon.setAttribute('aria-hidden', 'true');
-            link.append(icon);
+            chain.className = 'kbq kbq-icon kbq-link_16 docs-next-icon-swap__from';
+            chain.setAttribute('aria-hidden', 'true');
+            link.append(chain);
 
             this.holdTogether(heading).append(link);
         }
