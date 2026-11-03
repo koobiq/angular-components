@@ -1,3 +1,4 @@
+// Matches popover.scss: the 24px arrow inset plus half of its 12px layout size.
 const ARROW_CENTER_INSET = 30;
 
 export const getPopoverArrowShift = (

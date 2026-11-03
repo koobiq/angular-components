@@ -1871,6 +1871,26 @@ describe('KbqPopover', () => {
             expect(panel.style.getPropertyValue('--kbq-popover-arrow-shift-y')).toBe('40px');
         });
 
+        it('should not write unchanged arrow shifts again', async () => {
+            await click(340, 220);
+
+            const connectionPair: ConnectionPositionPair = {
+                originX: 'center',
+                originY: 'top',
+                overlayX: 'center',
+                overlayY: 'bottom'
+            };
+
+            positionPanel(connectionPair);
+
+            const component = pointerInstance.popoverTrigger()['instance'] as KbqPopoverComponent;
+            const setStyle = vi.spyOn(component['renderer'], 'setStyle');
+
+            positionPanel(connectionPair);
+
+            expect(setStyle).not.toHaveBeenCalled();
+        });
+
         it('should recalculate the arrow after the entrance geometry is replaced by the visible panel', async () => {
             await click(340, 220);
 

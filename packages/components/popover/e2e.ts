@@ -368,8 +368,8 @@ export class E2ePopoverCloseOnScroll {
 
         .e2e-relative-to-pointer {
             position: relative;
-            width: 100vw;
-            height: 100vh;
+            width: 760px;
+            height: 240px;
         }
 
         .e2e-pointer-bottom-origin,
@@ -384,7 +384,7 @@ export class E2ePopoverCloseOnScroll {
         }
 
         .e2e-pointer-right-origin {
-            top: 320px;
+            top: 260px;
         }
 
         .e2e-pointer-trigger {

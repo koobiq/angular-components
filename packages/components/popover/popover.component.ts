@@ -212,6 +212,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     }
 
     private resolvedPlacement = 'top';
+    private appliedArrowShift: { x: string; y: string } | null = null;
 
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
         this.resolvedPlacement = placement;
@@ -227,17 +228,24 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
         const point = this.trigger?.getPointerPoint();
 
         if (!point || !this.arrow || this.trigger.stickToWindow) {
+            if (!this.appliedArrowShift) return;
+
             this.renderer.removeStyle(element, '--kbq-popover-arrow-shift-x', RendererStyleFlags2.DashCase);
             this.renderer.removeStyle(element, '--kbq-popover-arrow-shift-y', RendererStyleFlags2.DashCase);
+            this.appliedArrowShift = null;
 
             return;
         }
 
         const panelRect = element.getBoundingClientRect();
         const shift = getPopoverArrowShift(this.resolvedPlacement, panelRect, point);
+        const nextShift = { x: `${shift.x}px`, y: `${shift.y}px` };
 
-        this.renderer.setStyle(element, '--kbq-popover-arrow-shift-x', `${shift.x}px`, RendererStyleFlags2.DashCase);
-        this.renderer.setStyle(element, '--kbq-popover-arrow-shift-y', `${shift.y}px`, RendererStyleFlags2.DashCase);
+        if (this.appliedArrowShift?.x === nextShift.x && this.appliedArrowShift.y === nextShift.y) return;
+
+        this.renderer.setStyle(element, '--kbq-popover-arrow-shift-x', nextShift.x, RendererStyleFlags2.DashCase);
+        this.renderer.setStyle(element, '--kbq-popover-arrow-shift-y', nextShift.y, RendererStyleFlags2.DashCase);
+        this.appliedArrowShift = nextShift;
     }
 
     updateTrapFocus(isTrapFocus: boolean): void {

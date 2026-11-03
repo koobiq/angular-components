@@ -414,7 +414,7 @@ test.describe('KbqPopoverModule', () => {
         });
 
         test('renders the pointer-aligned arrow in light and dark themes', async ({ page }) => {
-            await pinTrigger(page, 'e2ePointerBottomOrigin', { top: 160, left: 50 });
+            await pinTrigger(page, 'e2ePointerBottomOrigin', { top: 80, left: 50 });
 
             const trigger = page.getByTestId('e2ePopoverPointerTrigger');
             const point = await clickAt(trigger, { x: 10, y: 20 });
