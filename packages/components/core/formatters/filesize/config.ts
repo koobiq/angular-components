@@ -15,6 +15,7 @@ export enum KbqMeasurementSystem {
 /** Unit systems as union type */
 export type KbqMeasurementSystemType = keyof typeof KbqMeasurementSystem;
 
+/** @docs-private */
 export interface KbqUnitSystem {
     abbreviations: string[];
     base: number;
@@ -39,6 +40,7 @@ export interface KbqSizeUnitsLocaleConfiguration {
     };
 }
 
+/** Default of `KBQ_SIZE_UNITS_LOCALE_CONFIGURATION`. */
 export const KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION: KbqSizeUnitsLocaleConfiguration =
     enUSFormattersData.sizeUnits;
 

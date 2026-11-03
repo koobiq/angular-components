@@ -98,6 +98,8 @@ const getOffsetFormatter = (timeZone: string): Intl.DateTimeFormat | null => {
  *
  * Takes the instant because an IANA zone has no single offset: `'Europe/Berlin'` is +60 in January and
  * +120 in July, and one list of dates can span the change.
+ *
+ * @docs-private
  */
 export const kbqResolveTimezoneOffset = (timezone: KbqTimezoneLike, timestamp: number): number | null => {
     if (timezone === 'system') return null;

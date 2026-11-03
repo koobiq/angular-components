@@ -18,6 +18,7 @@ import { kbqAfterAnimations, kbqAnimationsDisabled } from '../animation/animatio
 import { PopUpPlacements, PopUpVisibility } from './constants';
 import { KbqPopUpTrigger } from './pop-up-trigger';
 
+/** Base class of a pop-up panel, such as a tooltip or a popover. */
 @Directive({
     host: {
         '(mouseenter)': 'setHovered(true)',

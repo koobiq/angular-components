@@ -668,6 +668,7 @@ export class DurationShortFormatterImpurePipe<D> extends DurationShortFormatterP
 // zone changes (see `BaseLocaleAwareFormatterPipe`). Prefer these `kbq`-prefixed pipes when either can
 // change at runtime; the pure pipes above are kept for static usages and backward compatibility.
 
+/** Pipe form of `DateFormatter.absoluteLongDate`, recomputed on a locale or time zone change. */
 @Pipe({
     name: 'kbqAbsoluteLongDate',
     pure: false
@@ -687,6 +688,7 @@ export class KbqAbsoluteLongDatePipe<D>
     }
 }
 
+/** Pipe form of `DateFormatter.absoluteShortDate`, recomputed on a locale or time zone change. */
 @Pipe({
     name: 'kbqAbsoluteShortDate',
     pure: false
@@ -706,6 +708,7 @@ export class KbqAbsoluteShortDatePipe<D>
     }
 }
 
+/** Pipe form of `DateFormatter.absoluteLongDateTime`, recomputed on a locale or time zone change. */
 @Pipe({
     name: 'kbqAbsoluteLongDateTime',
     pure: false
@@ -725,6 +728,7 @@ export class KbqAbsoluteLongDateTimePipe<D>
     }
 }
 
+/** Pipe form of `DateFormatter.absoluteShortDateTime`, recomputed on a locale or time zone change. */
 @Pipe({
     name: 'kbqAbsoluteShortDateTime',
     pure: false
@@ -744,6 +748,7 @@ export class KbqAbsoluteShortDateTimePipe<D>
     }
 }
 
+/** Pipe form of `DateFormatter.relativeLongDate`, recomputed on a locale or time zone change. */
 @Pipe({
     name: 'kbqRelativeLongDate',
     pure: false
@@ -763,6 +768,7 @@ export class KbqRelativeLongDatePipe<D>
     }
 }
 
+/** Pipe form of `DateFormatter.relativeShortDate`, recomputed on a locale or time zone change. */
 @Pipe({
     name: 'kbqRelativeShortDate',
     pure: false
@@ -782,6 +788,7 @@ export class KbqRelativeShortDatePipe<D>
     }
 }
 
+/** Pipe form of `DateFormatter.relativeLongDateTime`, recomputed on a locale or time zone change. */
 @Pipe({
     name: 'kbqRelativeLongDateTime',
     pure: false
@@ -801,6 +808,7 @@ export class KbqRelativeLongDateTimePipe<D>
     }
 }
 
+/** Pipe form of `DateFormatter.relativeShortDateTime`, recomputed on a locale or time zone change. */
 @Pipe({
     name: 'kbqRelativeShortDateTime',
     pure: false
@@ -820,6 +828,7 @@ export class KbqRelativeShortDateTimePipe<D>
     }
 }
 
+/** Pipe form of `DateFormatter.rangeLongDate` for a `[from, to]` tuple, recomputed on a locale or time zone change. */
 @Pipe({
     name: 'kbqRangeLongDate',
     pure: false
@@ -841,6 +850,7 @@ export class KbqRangeLongDatePipe<D>
     }
 }
 
+/** Pipe form of `DateFormatter.rangeShortDate` for a `[from, to]` tuple, recomputed on a locale or time zone change. */
 @Pipe({
     name: 'kbqRangeShortDate',
     pure: false
@@ -862,6 +872,10 @@ export class KbqRangeShortDatePipe<D>
     }
 }
 
+/**
+ * Pipe form of `DateFormatter.rangeLongDateTime` for a `[from, to]` tuple, recomputed on a locale or time zone
+ * change.
+ */
 @Pipe({
     name: 'kbqRangeLongDateTime',
     pure: false
@@ -883,6 +897,10 @@ export class KbqRangeLongDateTimePipe<D>
     }
 }
 
+/**
+ * Pipe form of `DateFormatter.rangeMiddleDateTime` for a `[from, to]` tuple, recomputed on a locale or time zone
+ * change.
+ */
 @Pipe({
     name: 'kbqRangeMiddleDateTime',
     pure: false
@@ -905,6 +923,10 @@ export class KbqRangeMiddleDateTimePipe<D>
     }
 }
 
+/**
+ * Pipe form of `DateFormatter.rangeShortDateTime` for a `[from, to]` tuple, recomputed on a locale or time zone
+ * change.
+ */
 @Pipe({
     name: 'kbqRangeShortDateTime',
     pure: false

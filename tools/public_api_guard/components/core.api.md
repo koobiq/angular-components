@@ -69,7 +69,7 @@ import { ViewContainerRef } from '@angular/core';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { WritableSignal } from '@angular/core';
 
-// @public (undocumented)
+// @public
 export const A = 65;
 
 // @public @deprecated (undocumented)
@@ -152,31 +152,31 @@ export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
     static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteShortDateTimeFormatterPipe<any>, "absoluteShortDateTime", true>;
 }
 
-// @public (undocumented)
+// @public
 export class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable & T> {
     setActiveItem(index: number): void;
     setActiveItem(item: T): void;
 }
 
-// @public (undocumented)
+// @public
 export const ALT = 18;
 
-// @public (undocumented)
+// @public
 export const APOSTROPHE = 192;
 
-// @public (undocumented)
+// @public
 export const applyPopupMargins: (renderer: Renderer2, element: HTMLElement, name: string, value: string) => void;
 
-// @public (undocumented)
+// @public
 export const AT_SIGN = 64;
 
-// @public (undocumented)
+// @public
 export const B = 66;
 
-// @public (undocumented)
+// @public
 export const BACKSLASH = 220;
 
-// @public (undocumented)
+// @public
 export const BACKSPACE = 8;
 
 // @public @deprecated (undocumented)
@@ -200,7 +200,7 @@ export abstract class BaseLocaleAwareFormatterPipe<D, Value = D | string | null 
     transform(value: Value, ...args: Args): string;
 }
 
-// @public (undocumented)
+// @public
 export const C = 67;
 
 // @public
@@ -209,22 +209,22 @@ export interface CanUpdateErrorState {
     updateErrorState(): void;
 }
 
-// @public (undocumented)
+// @public
 export const CAPS_LOCK = 20;
 
 // @public
 export function checkAndNormalizeLocalizedNumber(num: string | null | undefined, locale?: string): number | null;
 
-// @public (undocumented)
+// @public
 export const CLOSE_SQUARE_BRACKET = 221;
 
-// @public (undocumented)
+// @public
 export const COMMA = 188;
 
-// @public (undocumented)
+// @public
 export const CONTEXT_MENU = 93;
 
-// @public (undocumented)
+// @public
 export const CONTROL = 17;
 
 // @public
@@ -245,18 +245,18 @@ export function createTouchEvent(type: string, pageX?: number, pageY?: number): 
 // @public
 export type CrossFieldErrorScope = (errorKey: string, errorValue: unknown) => readonly string[] | null;
 
-// @public (undocumented)
+// @public
 export const D = 68;
 
-// @public (undocumented)
+// @public
 export const DASH = 189;
 
-// @public (undocumented)
+// @public
 export abstract class DateAdapter<D> extends DateAdapter_2<D> {
     abstract get localeChanges(): Observable<any>;
 }
 
-// @public (undocumented)
+// @public
 export class DateFormatter<D> extends DateFormatter_2<D> {
     constructor();
     // (undocumented)
@@ -272,7 +272,7 @@ export class DateFormatter<D> extends DateFormatter_2<D> {
 // @public
 export const defaultOffsetY: number;
 
-// @public (undocumented)
+// @public
 export const DELETE = 46;
 
 // @public
@@ -291,7 +291,7 @@ export function dispatchMouseEvent(node: Node, type: string, x?: number, y?: num
 // @public
 export function dispatchTouchEvent(node: Node, type: string, x?: number, y?: number): Event;
 
-// @public (undocumented)
+// @public
 export const DOWN_ARROW = 40;
 
 // @public @deprecated (undocumented)
@@ -354,13 +354,13 @@ export class DurationShortFormatterPipe<D> extends BaseFormatterPipe<D> implemen
     static ɵpipe: i0.ɵɵPipeDeclaration<DurationShortFormatterPipe<any>, "durationShort", true>;
 }
 
-// @public (undocumented)
+// @public
 export const E = 69;
 
-// @public (undocumented)
+// @public
 export const EIGHT = 56;
 
-// @public (undocumented)
+// @public
 export class EmptyFocusTrapStrategy implements FocusTrapInertStrategy {
     // (undocumented)
     allowFocus(): void;
@@ -368,13 +368,13 @@ export class EmptyFocusTrapStrategy implements FocusTrapInertStrategy {
     preventFocus(): void;
 }
 
-// @public (undocumented)
+// @public
 export const END = 35;
 
-// @public (undocumented)
+// @public
 export const ENTER = 13;
 
-// @public (undocumented)
+// @public
 export const enUSFormattersData: {
     formatters: {
         number: {
@@ -412,7 +412,7 @@ export const enUSFormattersData: {
     };
 };
 
-// @public (undocumented)
+// @public
 export const enUSLocaleData: {
     a11y: {
         close: string;
@@ -636,7 +636,7 @@ export const enUSLocaleData: {
     };
 };
 
-// @public (undocumented)
+// @public
 export const EQUALS = 187;
 
 // @public
@@ -649,13 +649,13 @@ export class ErrorStateMatcher {
     static ɵprov: i0.ɵɵInjectableDeclaration<ErrorStateMatcher>;
 }
 
-// @public (undocumented)
+// @public
 export const ESCAPE = 27;
 
 // @public
 export function escapeRegExp(value: string): string;
 
-// @public (undocumented)
+// @public
 export const esLAFormattersData: {
     formatters: {
         number: {
@@ -697,7 +697,7 @@ export const esLAFormattersData: {
     };
 };
 
-// @public (undocumented)
+// @public
 export const esLALocaleData: {
     a11y: {
         close: string;
@@ -920,61 +920,61 @@ export const esLALocaleData: {
     };
 };
 
-// @public (undocumented)
+// @public
 export const F = 70;
 
-// @public (undocumented)
+// @public
 export const F1 = 112;
 
-// @public (undocumented)
+// @public
 export const F10 = 121;
 
-// @public (undocumented)
+// @public
 export const F11 = 122;
 
-// @public (undocumented)
+// @public
 export const F12 = 123;
 
-// @public (undocumented)
+// @public
 export const F2 = 113;
 
-// @public (undocumented)
+// @public
 export const F3 = 114;
 
-// @public (undocumented)
+// @public
 export const F4 = 115;
 
-// @public (undocumented)
+// @public
 export const F5 = 116;
 
-// @public (undocumented)
+// @public
 export const F6 = 117;
 
-// @public (undocumented)
+// @public
 export const F7 = 118;
 
-// @public (undocumented)
+// @public
 export const F8 = 119;
 
-// @public (undocumented)
+// @public
 export const F9 = 120;
 
-// @public (undocumented)
+// @public
 export const FF_EQUALS = 61;
 
-// @public (undocumented)
+// @public
 export const FF_MINUS = 173;
 
-// @public (undocumented)
+// @public
 export const FF_MUTE = 181;
 
-// @public (undocumented)
+// @public
 export const FF_SEMICOLON = 59;
 
-// @public (undocumented)
+// @public
 export const FF_VOLUME_DOWN = 182;
 
-// @public (undocumented)
+// @public
 export const FF_VOLUME_UP = 183;
 
 // @public
@@ -986,13 +986,13 @@ export class FileValidators {
 // @public
 export function findSearchMatchRanges(value: string, tokens: readonly string[]): Array<[number, number]>;
 
-// @public (undocumented)
+// @public
 export const FIRST_MEDIA = 166;
 
-// @public (undocumented)
+// @public
 export const FIVE = 53;
 
-// @public (undocumented)
+// @public
 export class FocusKeyManager<T> extends ListKeyManager<IFocusableOption & T> {
     // @deprecated (undocumented)
     getFocusOrigin(): FocusOrigin;
@@ -1003,10 +1003,10 @@ export class FocusKeyManager<T> extends ListKeyManager<IFocusableOption & T> {
 // @public
 export function formatNumberWithLocale(value: unknown, formatter: Intl.NumberFormat, options?: KbqNumberFormatOptions): string;
 
-// @public (undocumented)
+// @public
 export const FOUR = 52;
 
-// @public (undocumented)
+// @public
 export const G = 71;
 
 // @public
@@ -1033,7 +1033,7 @@ export function getKbqSelectNonArrayValueError(): Error;
 // @public
 export function getKbqSelectNonFunctionValueError(): Error;
 
-// @public (undocumented)
+// @public
 export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 
 // @public
@@ -1042,12 +1042,12 @@ export function getSafeTriangleVertices(origin: KbqPoint, targetRect: DOMRect): 
 // @public
 export function getSelectAllState<T>(adapter: KbqSelectAllAdapter<T>): KbqPseudoCheckboxState;
 
-// @public (undocumented)
+// @public
 export const H = 72;
 
 // Warning: (ae-forgotten-export) The symbol "ModifierKey" needs to be exported by the entry point koobiq-components-core.d.ts
 //
-// @public (undocumented)
+// @public
 export function hasModifierKey(event: KeyboardEvent | MouseEvent, ...modifiers: ModifierKey[]): boolean;
 
 // @public
@@ -1058,10 +1058,10 @@ export interface Highlightable extends ListKeyManagerOption {
     setInactiveStyles(): void;
 }
 
-// @public (undocumented)
+// @public
 export const HOME = 36;
 
-// @public (undocumented)
+// @public
 export const I = 73;
 
 // @public
@@ -1070,16 +1070,16 @@ export interface IFocusableOption extends ListKeyManagerOption {
     focus(origin?: FocusOrigin): void;
 }
 
-// @public (undocumented)
+// @public
 export const INSERT = 45;
 
 // @public @deprecated (undocumented)
 export function isBoolean(value: unknown): value is boolean;
 
-// @public (undocumented)
+// @public
 export function isControl(event: KeyboardEvent): boolean;
 
-// @public (undocumented)
+// @public
 export function isCopy(event: KeyboardEvent): boolean;
 
 // @public @deprecated (undocumented)
@@ -1091,10 +1091,10 @@ export const isElement: (value: unknown) => value is Element;
 // @public
 export function isExplicitPanelWidth(panelWidth: KbqPanelWidth | undefined): panelWidth is number | string;
 
-// @public (undocumented)
+// @public
 export function isFunctionKey(input: KeyboardEvent): boolean;
 
-// @public (undocumented)
+// @public
 export function isHorizontalMovement(input: KeyboardEvent): boolean;
 
 // @public
@@ -1103,13 +1103,13 @@ export const isHtmlElement: (value: unknown) => value is HTMLElement;
 // @public
 export const isHtmlElementOrNull: (value: unknown) => value is HTMLElement | null;
 
-// @public (undocumented)
+// @public
 export function isInput(event: Event): boolean;
 
-// @public (undocumented)
+// @public
 export function isLeftBracket(event: KeyboardEvent): boolean;
 
-// @public (undocumented)
+// @public
 export function isLetterKey(input: KeyboardEvent): boolean;
 
 // @public
@@ -1118,10 +1118,10 @@ export function isMac(): boolean;
 // @public
 export const isNull: (value: unknown) => value is null;
 
-// @public (undocumented)
+// @public
 export function isNumberKey(input: KeyboardEvent): boolean;
 
-// @public (undocumented)
+// @public
 export function isNumpadKey(input: KeyboardEvent): boolean;
 
 // @public
@@ -1130,22 +1130,22 @@ export function isPointInRect(point: KbqPoint, rect: DOMRect): boolean;
 // @public
 export function isPointInTriangle(point: KbqPoint, triangle: KbqTriangle): boolean;
 
-// @public (undocumented)
+// @public
 export function isRightBracket(event: KeyboardEvent): boolean;
 
-// @public (undocumented)
+// @public
 export function isSelectAll(event: KeyboardEvent): boolean;
 
 // @public
 export const isUndefined: (value: unknown) => value is undefined;
 
-// @public (undocumented)
+// @public
 export function isVerticalMovement(input: KeyboardEvent): boolean;
 
-// @public (undocumented)
+// @public
 export const J = 74;
 
-// @public (undocumented)
+// @public
 export const K = 75;
 
 // @public
@@ -1169,14 +1169,14 @@ export const KBQ_CONNECTED_OVERLAY_ORIGIN: InjectionToken<KbqConnectedOverlayOri
 // @public
 export const KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS = "kbq-connected-overlay_overlap";
 
-// @public (undocumented)
+// @public
 export const KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER: <T>(token: InjectionToken<T>, factory: (overlay: Overlay) => () => ScrollStrategy) => {
     provide: InjectionToken<T>;
     deps: (typeof Overlay)[];
     useFactory: (overlay: Overlay) => () => ScrollStrategy;
 };
 
-// @public (undocumented)
+// @public
 export const KBQ_DATE_FORMATS: InjectionToken<DateFormats>;
 
 // @public
@@ -1188,7 +1188,7 @@ export function KBQ_DATE_LOCALE_FACTORY(): string;
 // @public
 export const KBQ_DATE_TIMEZONE: InjectionToken<KbqTimezoneLike>;
 
-// @public (undocumented)
+// @public
 export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
     items: {
         id: string;
@@ -2484,7 +2484,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
     };
 };
 
-// @public (undocumented)
+// @public
 export const KBQ_DEFAULT_LOCALE_ID = "ru-RU";
 
 // @public
@@ -2499,22 +2499,22 @@ export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 // @public
 export const KBQ_FORMATTERS_LOCALE_CONFIGURATION: InjectionToken<KbqFormattersLocaleConfiguration>;
 
-// @public (undocumented)
+// @public
 export const KBQ_INVALID_VALUE_ERROR = "Argument \"value\" must be a finite number!";
 
 // @public
 export const KBQ_LOCALE_CONFIGURATION_OVERRIDES: InjectionToken<KbqPartialLocaleData[][]>;
 
-// @public (undocumented)
+// @public
 export const KBQ_LOCALE_DATA: InjectionToken<KbqLocaleDataInput>;
 
-// @public (undocumented)
+// @public
 export const KBQ_LOCALE_ID: InjectionToken<KbqLocaleIdLike>;
 
 // @public
 export const KBQ_LOCALE_OVERRIDES_HOST: InjectionToken<KbqLocaleOverridesHost>;
 
-// @public (undocumented)
+// @public
 export const KBQ_LOCALE_SERVICE: InjectionToken<KbqLocaleService>;
 
 // @public
@@ -2522,13 +2522,13 @@ export const KBQ_LOCALE_SERVICE_LANG_ATTR_NAME: InjectionToken<string>;
 
 // Warning: (ae-forgotten-export) The symbol "ParsedDigitsInfo" needs to be exported by the entry point koobiq-components-core.d.ts
 //
-// @public (undocumented)
+// @public
 export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo;
 
-// @public (undocumented)
+// @public
 export const KBQ_NUMBER_FORMATTER_OPTIONS: InjectionToken<ParsedDigitsInfo>;
 
-// @public (undocumented)
+// @public
 export const KBQ_OPTION_ACTION_PARENT: InjectionToken<KbqOptionActionParent>;
 
 // @public
@@ -2578,7 +2578,7 @@ export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsLocaleConfigurati
 // @public @deprecated (undocumented)
 export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsLocaleConfiguration;
 
-// @public (undocumented)
+// @public
 export const KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION: KbqSizeUnitsLocaleConfiguration;
 
 // @public
@@ -2602,7 +2602,7 @@ export const KBQ_THEME_CONFIG: InjectionToken<KbqThemeSettings<KbqThemeConfig>>;
 // @public
 export const KBQ_THEME_STORE: InjectionToken<KbqThemeStore>;
 
-// @public (undocumented)
+// @public
 export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 
 // @public
@@ -2636,7 +2636,7 @@ export type KbqA11yLocaleConfiguration = {
 // @public
 export const kbqA11yLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqA11yLocaleConfiguration>) => Provider;
 
-// @public (undocumented)
+// @public
 export class KbqAbsoluteLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [currYear?: boolean]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined, currYear?: boolean): string;
@@ -2648,7 +2648,7 @@ export class KbqAbsoluteLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, 
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqAbsoluteLongDatePipe<any>, "kbqAbsoluteLongDate", true>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqAbsoluteLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -2660,7 +2660,7 @@ export class KbqAbsoluteLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqAbsoluteLongDateTimePipe<any>, "kbqAbsoluteLongDateTime", true>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqAbsoluteShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [currYear?: boolean]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined, currYear?: boolean): string;
@@ -2672,7 +2672,7 @@ export class KbqAbsoluteShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D,
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqAbsoluteShortDatePipe<any>, "kbqAbsoluteShortDate", true>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqAbsoluteShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -2726,7 +2726,7 @@ export abstract class KbqAbstractSelect {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAbstractSelect, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqActionContainer {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqActionContainer, "kbq-action-container", ["kbqActionContainer"], {}, {}, never, ["*"], true, never>;
@@ -2787,7 +2787,7 @@ export interface KbqAutoHideScrollStrategyHooks {
     onHide?: () => void;
 }
 
-// @public (undocumented)
+// @public
 export interface KbqBaseFileUploadLocaleConfiguration {
     // (undocumented)
     browseLink: string;
@@ -2888,7 +2888,7 @@ export class KbqColorDirective<T extends string = KbqComponentColors | string> {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqColorDirective<any>, never>;
 }
 
-// @public (undocumented)
+// @public
 export enum KbqComponentColors {
     // (undocumented)
     Contrast = "contrast",
@@ -2921,7 +2921,7 @@ export const kbqCreateCaretOrigin: (measure: () => KbqCaretRect) => Readonly<Kbq
 // @public
 export const kbqCreateTextMirror: (field: HTMLInputElement | HTMLTextAreaElement, className: string) => KbqTextMirror;
 
-// @public (undocumented)
+// @public
 export class KbqDataSizePipe implements PipeTransform {
     transform(source: number, precision?: number, unitSystemName?: KbqMeasurementSystemType, locale?: string): string;
     // (undocumented)
@@ -2930,7 +2930,7 @@ export class KbqDataSizePipe implements PipeTransform {
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqDataSizePipe, "kbqDataSize", true>;
 }
 
-// @public (undocumented)
+// @public
 export type KbqDateFormats = DateFormats;
 
 // @public
@@ -2955,7 +2955,7 @@ export class KbqDateTimezoneService {
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqDateTimezoneService>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     constructor();
     // (undocumented)
@@ -3141,7 +3141,7 @@ export const kbqFocusAndReveal: (element: HTMLElement, skipReveal?: boolean) => 
 // @public
 export function kbqFocusOptionActionOnTab($event: KeyboardEvent, actionButton: KbqOptionActionComponent | undefined): void;
 
-// @public (undocumented)
+// @public
 export class KbqForm implements AfterContentInit {
     // (undocumented)
     readonly elements: i0.Signal<readonly KbqFormElement[]>;
@@ -3176,7 +3176,7 @@ export class KbqFormattersModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormattersModule, never, [typeof AbsoluteDateFormatterPipe, typeof AbsoluteDateTimeFormatterPipe, typeof AbsoluteDateShortFormatterPipe, typeof AbsoluteShortDateTimeFormatterPipe, typeof RelativeDateFormatterPipe, typeof RelativeDateTimeFormatterPipe, typeof RelativeShortDateFormatterPipe, typeof RelativeShortDateTimeFormatterPipe, typeof RangeDateFormatterPipe, typeof RangeShortDateFormatterPipe, typeof RangeDateTimeFormatterPipe, typeof RangeShortDateTimeFormatterPipe, typeof RangeMiddleDateTimeFormatterPipe, typeof DurationShortestFormatterPipe, typeof DurationLongFormatterPipe, typeof DurationShortFormatterPipe, typeof AbsoluteDateFormatterImpurePipe, typeof AbsoluteDateTimeFormatterImpurePipe, typeof AbsoluteDateShortFormatterImpurePipe, typeof AbsoluteShortDateTimeFormatterImpurePipe, typeof RelativeDateFormatterImpurePipe, typeof RelativeDateTimeFormatterImpurePipe, typeof RelativeShortDateFormatterImpurePipe, typeof RelativeShortDateTimeFormatterImpurePipe, typeof RangeDateFormatterImpurePipe, typeof RangeShortDateFormatterImpurePipe, typeof RangeDateTimeFormatterImpurePipe, typeof RangeShortDateTimeFormatterImpurePipe, typeof RangeMiddleDateTimeFormatterImpurePipe, typeof DurationShortestFormatterImpurePipe, typeof DurationLongFormatterImpurePipe, typeof DurationShortFormatterImpurePipe, typeof KbqAbsoluteLongDatePipe, typeof KbqAbsoluteLongDateTimePipe, typeof KbqAbsoluteShortDatePipe, typeof KbqAbsoluteShortDateTimePipe, typeof KbqRelativeLongDatePipe, typeof KbqRelativeLongDateTimePipe, typeof KbqRelativeShortDatePipe, typeof KbqRelativeShortDateTimePipe, typeof KbqRangeLongDatePipe, typeof KbqRangeLongDateTimePipe, typeof KbqRangeMiddleDateTimePipe, typeof KbqRangeShortDatePipe, typeof KbqRangeShortDateTimePipe, typeof KbqDurationShortestPipe, typeof KbqDurationLongPipe, typeof KbqDurationShortPipe, typeof KbqDataSizePipe, typeof KbqDecimalPipe, typeof KbqRoundDecimalPipe, typeof KbqTableNumberPipe], [typeof KbqDecimalPipe, typeof KbqRoundDecimalPipe, typeof KbqTableNumberPipe, typeof AbsoluteDateFormatterPipe, typeof AbsoluteDateTimeFormatterPipe, typeof AbsoluteDateShortFormatterPipe, typeof AbsoluteShortDateTimeFormatterPipe, typeof RelativeDateFormatterPipe, typeof RelativeDateTimeFormatterPipe, typeof RelativeShortDateFormatterPipe, typeof RelativeShortDateTimeFormatterPipe, typeof RangeDateFormatterPipe, typeof RangeShortDateFormatterPipe, typeof RangeDateTimeFormatterPipe, typeof RangeShortDateTimeFormatterPipe, typeof RangeMiddleDateTimeFormatterPipe, typeof DurationShortestFormatterPipe, typeof DurationLongFormatterPipe, typeof DurationShortFormatterPipe, typeof AbsoluteDateFormatterImpurePipe, typeof AbsoluteDateTimeFormatterImpurePipe, typeof AbsoluteDateShortFormatterImpurePipe, typeof AbsoluteShortDateTimeFormatterImpurePipe, typeof RelativeDateFormatterImpurePipe, typeof RelativeDateTimeFormatterImpurePipe, typeof RelativeShortDateFormatterImpurePipe, typeof RelativeShortDateTimeFormatterImpurePipe, typeof RangeDateFormatterImpurePipe, typeof RangeShortDateFormatterImpurePipe, typeof RangeDateTimeFormatterImpurePipe, typeof RangeShortDateTimeFormatterImpurePipe, typeof RangeMiddleDateTimeFormatterImpurePipe, typeof DurationShortestFormatterImpurePipe, typeof DurationLongFormatterImpurePipe, typeof DurationShortFormatterImpurePipe, typeof KbqAbsoluteLongDatePipe, typeof KbqAbsoluteLongDateTimePipe, typeof KbqAbsoluteShortDatePipe, typeof KbqAbsoluteShortDateTimePipe, typeof KbqRelativeLongDatePipe, typeof KbqRelativeLongDateTimePipe, typeof KbqRelativeShortDatePipe, typeof KbqRelativeShortDateTimePipe, typeof KbqRangeLongDatePipe, typeof KbqRangeLongDateTimePipe, typeof KbqRangeMiddleDateTimePipe, typeof KbqRangeShortDatePipe, typeof KbqRangeShortDateTimePipe, typeof KbqDurationShortestPipe, typeof KbqDurationLongPipe, typeof KbqDurationShortPipe, typeof KbqDataSizePipe]>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqFormElement implements AfterContentInit {
     // (undocumented)
     readonly elements: i0.Signal<readonly KbqFormElement[]>;
@@ -3252,7 +3252,7 @@ export const kbqGetTextQuery: (value: string, caret: number, input?: KbqTextQuer
 // @public
 export const kbqHasScrollOverflow: (element: Element, axis?: KbqScrollAxis) => boolean;
 
-// @public (undocumented)
+// @public
 export class KbqHighlightBackgroundPipe implements PipeTransform {
     // (undocumented)
     transform(value: unknown, keyword: unknown, foldDiacritics?: boolean): string;
@@ -3403,7 +3403,7 @@ export interface KbqLocaleOverridesHost {
 // @public
 export type KbqLocaleSection = keyof KbqLocaleData;
 
-// @public (undocumented)
+// @public
 export class KbqLocaleService {
     constructor();
     addLocale(id: KbqLocaleIdLike, localeData: KbqPartialLocaleData): void;
@@ -3518,7 +3518,7 @@ export class KbqMeasureScrollbarService {
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqMeasureScrollbarService>;
 }
 
-// @public (undocumented)
+// @public
 export interface KbqMultipleFileUploadLocaleConfiguration extends KbqBaseFileUploadLocaleConfiguration {
     // (undocumented)
     captionTextForCompactSize: string;
@@ -3539,7 +3539,7 @@ export type KbqNavbarLocaleConfiguration = {
     };
 };
 
-// @public (undocumented)
+// @public
 export class KbqNormalizeWhitespace {
     protected readonly elementRef: ElementRef<HTMLElement>;
     onCopy($event: ClipboardEvent): void;
@@ -3653,7 +3653,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOption, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     get active(): boolean;
@@ -3696,7 +3696,7 @@ export interface KbqOptionActionParent {
 // @public
 export const kbqOptionalNumberAttribute: (value: unknown) => number | undefined;
 
-// @public (undocumented)
+// @public
 export abstract class KbqOptionBase {
     // (undocumented)
     abstract deselect(): void;
@@ -3839,7 +3839,7 @@ export type KbqPanelWidth = 'auto' | number | (string & {}) | null | '';
 // @public
 export type KbqPanelWidthOrigin = ElementRef<HTMLElement> | CdkOverlayOrigin | HTMLElement;
 
-// @public (undocumented)
+// @public
 export interface KbqParentPopup {
     // (undocumented)
     closedStream: Observable<boolean>;
@@ -3860,7 +3860,7 @@ export type KbqPopoverConfirmLocaleConfiguration = {
 // @public
 export const kbqPopoverConfirmLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqPopoverConfirmLocaleConfiguration>) => Provider;
 
-// @public (undocumented)
+// @public
 export abstract class KbqPopUp implements OnDestroy {
     protected addEventListenerForHide(): void;
     afterHidden(): Observable<void>;
@@ -3921,10 +3921,10 @@ export abstract class KbqPopUp implements OnDestroy {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopUp, never>;
 }
 
-// @public (undocumented)
+// @public
 export type KbqPopUpPlacementValues = KbqEnumValues<PopUpPlacements>;
 
-// @public (undocumented)
+// @public
 export type KbqPopUpSizeValues = KbqEnumValues<PopUpSizes>;
 
 // @public
@@ -4042,13 +4042,13 @@ export class KbqPseudoCheckboxModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPseudoCheckboxModule, never, [typeof KbqPseudoCheckbox], [typeof KbqPseudoCheckbox]>;
 }
 
-// @public (undocumented)
+// @public
 export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' | boolean;
 
 // @public
 export function kbqQueryListFrom<T>(query: Signal<readonly T[]>): () => QueryList<T>;
 
-// @public (undocumented)
+// @public
 export class KbqRangeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, []> implements PipeTransform {
     // (undocumented)
     protected format(value: D[] | string[] | null | undefined): string;
@@ -4060,7 +4060,7 @@ export class KbqRangeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[]
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeLongDatePipe<any>, "kbqRangeLongDate", true>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqRangeLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string;
@@ -4072,7 +4072,7 @@ export class KbqRangeLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D,
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeLongDateTimePipe<any>, "kbqRangeLongDateTime", true>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqRangeMiddleDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string;
@@ -4084,7 +4084,7 @@ export class KbqRangeMiddleDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeMiddleDateTimePipe<any>, "kbqRangeMiddleDateTime", true>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqRangeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, []> implements PipeTransform {
     // (undocumented)
     protected format(value: D[] | string[] | null | undefined): string;
@@ -4096,7 +4096,7 @@ export class KbqRangeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeShortDatePipe<any>, "kbqRangeShortDate", true>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqRangeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string;
@@ -4122,7 +4122,7 @@ export class KbqReadStateDirective {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqReadStateDirective, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqRelativeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, []> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined): string;
@@ -4134,7 +4134,7 @@ export class KbqRelativeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, 
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRelativeLongDatePipe<any>, "kbqRelativeLongDate", true>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqRelativeLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -4146,7 +4146,7 @@ export class KbqRelativeLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRelativeLongDateTimePipe<any>, "kbqRelativeLongDateTime", true>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqRelativeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, []> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined): string;
@@ -4158,7 +4158,7 @@ export class KbqRelativeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D,
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRelativeShortDatePipe<any>, "kbqRelativeShortDate", true>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqRelativeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -4216,7 +4216,7 @@ export const kbqResolveTimezoneOffset: (timezone: KbqTimezoneLike, timestamp: nu
 // @public
 export const kbqRevealSelection: (element: HTMLInputElement) => void;
 
-// @public (undocumented)
+// @public
 export class KbqRoundDecimalPipe implements PipeTransform {
     constructor();
     // (undocumented)
@@ -4260,7 +4260,7 @@ export class KbqSelectAllEvent<T, S = unknown> {
 // @public
 export function kbqSelectAllHandlerTransform<S>(handler: ((event: KeyboardEvent, source: S) => void) | undefined): ((event: KeyboardEvent, source: S) => void) | undefined;
 
-// @public (undocumented)
+// @public
 export class KbqSelectFooter {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectFooter, "kbq-select-footer, [kbq-select-footer]", never, {}, {}, never, never, true, never>;
@@ -4285,7 +4285,7 @@ export type KbqSelectLocaleConfiguration = {
 // @public
 export const kbqSelectLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqSelectLocaleConfiguration>) => Provider;
 
-// @public (undocumented)
+// @public
 export class KbqSelectMatcher {
     // (undocumented)
     readonly useDefaultHandlers: i0.InputSignalWithTransform<boolean, unknown>;
@@ -4298,7 +4298,7 @@ export class KbqSelectMatcher {
 // @public
 export function kbqSelectScrollStrategyProviderFactory(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy;
 
-// @public (undocumented)
+// @public
 export class KbqSelectSearch implements AfterContentInit {
     constructor();
     // (undocumented)
@@ -4327,7 +4327,7 @@ export class KbqSelectSearch implements AfterContentInit {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectSearch, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqSelectSearchEmptyResult {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectSearchEmptyResult, "[kbq-select-search-empty-result]", ["kbqSelectSearchEmptyResult"], {}, {}, never, never, true, never>;
@@ -4335,7 +4335,7 @@ export class KbqSelectSearchEmptyResult {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectSearchEmptyResult, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqSelectTrigger {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectTrigger, "kbq-select-trigger, [kbq-select-trigger]", never, {}, {}, never, never, true, never>;
@@ -4460,13 +4460,13 @@ export interface KbqStateStore {
     setState(key: string, state: unknown): void;
 }
 
-// @public (undocumented)
+// @public
 export type KbqStickToWindowPlacementValues = KbqEnumValues<PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left>;
 
 // @public
 export const kbqStructuralStateSavingKey: KbqStateSavingKeyResolver;
 
-// @public (undocumented)
+// @public
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     constructor();
     // (undocumented)
@@ -4643,7 +4643,7 @@ export type KbqTimezoneLocaleConfiguration = {
     otherCountriesLabel: string;
 };
 
-// @public (undocumented)
+// @public
 export interface KbqTitleTextRef {
     // (undocumented)
     parentTextElement?: ElementRef;
@@ -4666,7 +4666,7 @@ export interface KbqTriangle {
     c: KbqPoint;
 }
 
-// @public (undocumented)
+// @public
 export interface KbqUnitSystem {
     // (undocumented)
     abbreviations: string[];
@@ -4681,7 +4681,7 @@ export type KbqUsernameLocaleConfiguration = {
     siteLabel: string;
 };
 
-// @public (undocumented)
+// @public
 export class KbqVirtualOption extends KbqOptionBase {
     constructor(value: any, _disabled?: boolean, _viewValue?: string | undefined);
     // (undocumented)
@@ -4725,13 +4725,13 @@ export interface KeyboardNavigationHandler {
     scrollActiveOptionIntoView(): void;
 }
 
-// @public (undocumented)
+// @public
 export const L = 76;
 
-// @public (undocumented)
+// @public
 export const LAST_MEDIA = 183;
 
-// @public (undocumented)
+// @public
 export const LEFT_ARROW = 37;
 
 // @public (undocumented)
@@ -4779,32 +4779,32 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 // @public
 export type ListKeyManagerModifierKey = 'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey';
 
-// @public (undocumented)
+// @public
 export interface ListKeyManagerOption {
     disabled?: boolean | Signal<boolean>;
     // (undocumented)
     getLabel?(): string;
 }
 
-// @public (undocumented)
+// @public
 export const M = 77;
 
-// @public (undocumented)
+// @public
 export const MAC_ENTER = 3;
 
-// @public (undocumented)
+// @public
 export const MAC_META = 224;
 
-// @public (undocumented)
+// @public
 export const MAC_WK_CMD_LEFT = 91;
 
-// @public (undocumented)
+// @public
 export const MAC_WK_CMD_RIGHT = 93;
 
-// @public (undocumented)
+// @public
 export const META = 91;
 
-// @public (undocumented)
+// @public
 export enum MultipleMode {
     // (undocumented)
     CHECKBOX = "checkbox",
@@ -4812,13 +4812,13 @@ export enum MultipleMode {
     KEYBOARD = "keyboard"
 }
 
-// @public (undocumented)
+// @public
 export const MUTE = 173;
 
-// @public (undocumented)
+// @public
 export const N = 78;
 
-// @public (undocumented)
+// @public
 export const NINE = 57;
 
 // @public
@@ -4827,73 +4827,73 @@ export function normalizeNumber(value: string | null | undefined, customConfig: 
 // @public
 export function normalizeSearchValue(value: string): string;
 
-// @public (undocumented)
+// @public
 export const NUM_CENTER = 12;
 
-// @public (undocumented)
+// @public
 export const NUM_LOCK = 144;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_DIVIDE = 111;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_EIGHT = 104;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_FIVE = 101;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_FOUR = 100;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_MINUS = 109;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_MULTIPLY = 106;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_NINE = 105;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_ONE = 97;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_PERIOD = 110;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_PLUS = 107;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_SEVEN = 103;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_SIX = 102;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_THREE = 99;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_TWO = 98;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_ZERO = 96;
 
-// @public (undocumented)
+// @public
 export const O = 79;
 
-// @public (undocumented)
+// @public
 export const ONE = 49;
 
-// @public (undocumented)
+// @public
 export const OPEN_SQUARE_BRACKET = 219;
 
-// @public (undocumented)
+// @public
 export const P = 80;
 
-// @public (undocumented)
+// @public
 export const PAGE_DOWN = 34;
 
-// @public (undocumented)
+// @public
 export const PAGE_UP = 33;
 
 // @public
@@ -4909,16 +4909,16 @@ export class PasswordValidators {
 // @public
 export function patchElementFocus(element: HTMLElement): void;
 
-// @public (undocumented)
+// @public
 export const PAUSE = 19;
 
-// @public (undocumented)
+// @public
 export const PERIOD = 190;
 
-// @public (undocumented)
+// @public
 export const PLUS_SIGN = 43;
 
-// @public (undocumented)
+// @public
 export enum PopUpPlacements {
     // (undocumented)
     Bottom = "bottom",
@@ -4946,7 +4946,7 @@ export enum PopUpPlacements {
     TopRight = "topRight"
 }
 
-// @public (undocumented)
+// @public
 export enum PopUpSizes {
     // (undocumented)
     Custom = "custom",
@@ -4958,7 +4958,7 @@ export enum PopUpSizes {
     Small = "small"
 }
 
-// @public (undocumented)
+// @public
 export enum PopUpTriggers {
     // (undocumented)
     Click = "click",
@@ -4972,7 +4972,7 @@ export enum PopUpTriggers {
     Program = "program"
 }
 
-// @public (undocumented)
+// @public
 export enum PopUpVisibility {
     // (undocumented)
     Hidden = "hidden",
@@ -4982,15 +4982,15 @@ export enum PopUpVisibility {
     Visible = "visible"
 }
 
-// @public (undocumented)
+// @public
 export const POSITION_TO_CSS_MAP: {
     [key: string]: string;
 };
 
-// @public (undocumented)
+// @public
 export const PRINT_SCREEN = 44;
 
-// @public (undocumented)
+// @public
 export const ptBRFormattersData: {
     formatters: {
         number: {
@@ -5028,7 +5028,7 @@ export const ptBRFormattersData: {
     };
 };
 
-// @public (undocumented)
+// @public
 export const ptBRLocaleData: {
     a11y: {
         close: string;
@@ -5251,13 +5251,13 @@ export const ptBRLocaleData: {
     };
 };
 
-// @public (undocumented)
+// @public
 export const Q = 81;
 
-// @public (undocumented)
+// @public
 export const QUESTION_MARK = 63;
 
-// @public (undocumented)
+// @public
 export const R = 82;
 
 // @public @deprecated (undocumented)
@@ -5443,7 +5443,7 @@ export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
 // @public
 export function resolveMultipleMode(value: KbqMultipleInput): MultipleMode | null;
 
-// @public (undocumented)
+// @public
 export const RIGHT_ARROW = 39;
 
 // @public (undocumented)
@@ -5455,7 +5455,7 @@ export function runClearPredicate<T>(clearPredicate: (item: T) => boolean, item:
 // @public
 export function runCompareWith<T>(compareWith: (o1: T, o2: T) => boolean, first: T, second: T): boolean;
 
-// @public (undocumented)
+// @public
 export const ruRUFormattersData: {
     formatters: {
         number: {
@@ -5498,7 +5498,7 @@ export const ruRUFormattersData: {
     };
 };
 
-// @public (undocumented)
+// @public
 export const ruRULocaleData: {
     a11y: {
         close: string;
@@ -5722,19 +5722,19 @@ export const ruRULocaleData: {
     };
 };
 
-// @public (undocumented)
+// @public
 export const S = 83;
 
-// @public (undocumented)
+// @public
 export const SCROLL_LOCK = 145;
 
-// @public (undocumented)
+// @public
 export const SEMICOLON = 186;
 
-// @public (undocumented)
+// @public
 export const SEVEN = 55;
 
-// @public (undocumented)
+// @public
 export const SHIFT = 16;
 
 // @public
@@ -5778,34 +5778,34 @@ export class ShowRequiredOnSubmitErrorStateMatcher implements ErrorStateMatcher 
     static ɵprov: i0.ɵɵInjectableDeclaration<ShowRequiredOnSubmitErrorStateMatcher>;
 }
 
-// @public (undocumented)
+// @public
 export const SINGLE_QUOTE = 222;
 
-// @public (undocumented)
+// @public
 export const SIX = 54;
 
-// @public (undocumented)
+// @public
 export const SLASH = 191;
 
-// @public (undocumented)
+// @public
 export const SPACE = 32;
 
 // @public
 export const supportsNativeDisabled: (element: Element) => boolean;
 
-// @public (undocumented)
+// @public
 export const T = 84;
 
-// @public (undocumented)
+// @public
 export const TAB = 9;
 
-// @public (undocumented)
+// @public
 export const THREE = 51;
 
-// @public (undocumented)
+// @public
 export const TILDE = 192;
 
-// @public (undocumented)
+// @public
 export const tkTMFormattersData: {
     formatters: {
         number: {
@@ -5844,7 +5844,7 @@ export const tkTMFormattersData: {
     };
 };
 
-// @public (undocumented)
+// @public
 export const tkTMLocaleData: {
     a11y: {
         close: string;
@@ -6082,19 +6082,19 @@ export enum TransitionCheckState {
     Unchecked = "unchecked"
 }
 
-// @public (undocumented)
+// @public
 export const TWO = 50;
 
 // @public
 export function typeInElement(value: string, element: HTMLInputElement): void;
 
-// @public (undocumented)
+// @public
 export const U = 85;
 
-// @public (undocumented)
+// @public
 export const UP_ARROW = 38;
 
-// @public (undocumented)
+// @public
 export const V = 86;
 
 // @public
@@ -6103,31 +6103,31 @@ export const validationTooltipHideDelay = 3000;
 // @public
 export const validationTooltipShowDelay = 10;
 
-// @public (undocumented)
+// @public
 export const VERSION: Version;
 
-// @public (undocumented)
+// @public
 export const VOLUME_DOWN = 174;
 
-// @public (undocumented)
+// @public
 export const VOLUME_UP = 175;
 
-// @public (undocumented)
+// @public
 export const W = 87;
 
-// @public (undocumented)
+// @public
 export function wrappedErrorMessage(e: Error): RegExp;
 
-// @public (undocumented)
+// @public
 export const X = 88;
 
-// @public (undocumented)
+// @public
 export const Y = 89;
 
-// @public (undocumented)
+// @public
 export const Z = 90;
 
-// @public (undocumented)
+// @public
 export const ZERO = 48;
 
 // (No @packageDocumentation comment for this package)

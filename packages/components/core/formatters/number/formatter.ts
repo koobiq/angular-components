@@ -15,6 +15,7 @@ import {
 } from '../../locales';
 import { KbqDeepPartial } from '../../utils';
 
+/** Precision and grouping of `kbqNumber` and `kbqTableNumber`. Defaults to `KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS`. */
 export const KBQ_NUMBER_FORMATTER_OPTIONS = new InjectionToken<ParsedDigitsInfo>('KbqNumberFormatterOptions');
 
 /**
@@ -56,6 +57,7 @@ const decimalFor = (
         ? formatters.number.decimal
         : localeService?.locales[locale]?.formatters.number.decimal;
 
+/** Precision and grouping used when `KBQ_NUMBER_FORMATTER_OPTIONS` is not provided. */
 export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo = {
     useGrouping: true,
     minimumIntegerDigits: 1,
@@ -63,7 +65,7 @@ export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo = {
     maximumFractionDigits: 3
 };
 
-/** Formats a number value according to locale and formatting options */
+/** Formats a number value according to locale and formatting options @docs-private */
 export function formatNumberWithLocale(
     value: unknown,
     formatter: Intl.NumberFormat,
@@ -87,6 +89,8 @@ export function formatNumberWithLocale(
 /**
  * Special contract between `KbqDecimalPipe` and `KbqTableNumberPipe`,
  * so they can be interchangeable in the cases of usage
+ *
+ * @docs-private
  */
 export interface KbqNumericPipe {
     transform(value: unknown, digitsInfo?: string, locale?: string): string | null;
@@ -187,6 +191,7 @@ function parseDigitsInfo(digitsInfo: string): ParsedDigitsInfo {
     return result;
 }
 
+/** Formats a number in the active locale for running text; in `ru-RU`, digits are grouped from five digits up. */
 @Injectable({ providedIn: 'root' })
 @Pipe({
     name: 'kbqNumber',
@@ -263,6 +268,7 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     }
 }
 
+/** Formats a number in the active locale for table columns: unlike `kbqNumber`, it groups short numbers too. */
 @Injectable({ providedIn: 'root' })
 @Pipe({
     name: 'kbqTableNumber',
@@ -331,6 +337,7 @@ function isWithin(startRange: number, endRange: number, valueToCheck: number): b
     return startRange <= valueToCheck && valueToCheck < endRange;
 }
 
+/** Rounds a large number and abbreviates it in the active locale, e.g. to thousands or millions. */
 @Injectable({ providedIn: 'root' })
 @Pipe({
     name: 'kbqRoundNumber',

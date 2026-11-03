@@ -3,7 +3,7 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, map, tap } from 'rxjs/operators';
 import { A, DOWN_ARROW, END, HOME, LEFT_ARROW, NINE, RIGHT_ARROW, TAB, UP_ARROW, Z, ZERO } from '../../keycodes';
 
-// This interface is for items that can be passed to a ListKeyManager.
+/** Item that can be passed to a `ListKeyManager`. @docs-private */
 export interface ListKeyManagerOption {
     /** Whether the option is disabled. A signal lets an option expose `disabled` as an `input()`. */
     disabled?: boolean | Signal<boolean>;
@@ -16,12 +16,14 @@ function isOptionDisabled(item: ListKeyManagerOption): boolean {
     return typeof item.disabled === 'function' ? item.disabled() : !!item.disabled;
 }
 
-/** Modifier keys handled by the ListKeyManager. */
+/** Modifier keys handled by the ListKeyManager. @docs-private */
 export type ListKeyManagerModifierKey = 'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey';
 
 /**
  * This class manages keyboard events for selectable lists. If you pass it a query list
  * of items, it will set the active item correctly when arrow events occur.
+ *
+ * @docs-private
  */
 export class ListKeyManager<T extends ListKeyManagerOption> {
     /**

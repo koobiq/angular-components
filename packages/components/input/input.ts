@@ -9,6 +9,7 @@ import {
     ElementRef,
     inject,
     input,
+    isDevMode,
     linkedSignal,
     signal,
     untracked,
@@ -25,9 +26,6 @@ import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { getKbqInputUnsupportedTypeError, KBQ_NUMBER_INPUT_UNSUPPORTED_TYPE_MESSAGE } from './input-errors';
 import { KbqNumberInput } from './input-number';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
-
-// `typeof ngDevMode` is the guard the build optimizer folds away in production bundles.
-declare const ngDevMode: boolean | undefined;
 
 const isObject = (value: unknown): value is object => typeof value === 'object' && value !== null;
 
@@ -350,7 +348,7 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
             throw getKbqInputUnsupportedTypeError(type);
         }
 
-        if (this.numberInput && type === 'number' && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+        if (this.numberInput && type === 'number' && isDevMode()) {
             // eslint-disable-next-line no-console
             console.warn(KBQ_NUMBER_INPUT_UNSUPPORTED_TYPE_MESSAGE);
         }

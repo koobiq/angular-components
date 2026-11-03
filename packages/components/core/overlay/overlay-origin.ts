@@ -8,17 +8,25 @@ import { KbqCaretRect } from '../form-field/caret-rect';
  */
 export type KbqOverlayOrigin = ElementRef<HTMLElement> | HTMLElement | CdkOverlayOrigin | KbqCaretRect;
 
-/** Whether the origin is an element with a box of its own, rather than a rectangle in viewport coordinates. */
+/**
+ * Whether the origin is an element with a box of its own, rather than a rectangle in viewport coordinates.
+ *
+ * @docs-private
+ */
 export const kbqIsElementOrigin = (origin: KbqOverlayOrigin): boolean =>
     origin instanceof CdkOverlayOrigin ||
     !!(origin as ElementRef<HTMLElement>).nativeElement ||
     'getBoundingClientRect' in origin;
 
-/** Resolves a Koobiq origin into the value a connected position strategy accepts. */
+/** Resolves a Koobiq origin into the value a connected position strategy accepts. @docs-private */
 export const kbqResolveOverlayOrigin = (origin: KbqOverlayOrigin): FlexibleConnectedPositionStrategyOrigin =>
     origin instanceof CdkOverlayOrigin ? origin.elementRef : origin;
 
-/** Size of an overlay origin, for the offsets that keep an arrow pointing at an anchor narrower than itself. */
+/**
+ * Size of an overlay origin, for the offsets that keep an arrow pointing at an anchor narrower than itself.
+ *
+ * @docs-private
+ */
 export const kbqGetOverlayOriginSize = (origin: KbqOverlayOrigin): Pick<KbqCaretRect, 'width' | 'height'> => {
     const resolved = kbqResolveOverlayOrigin(origin);
     const element = (resolved as ElementRef<HTMLElement>).nativeElement ?? (resolved as HTMLElement | KbqCaretRect);

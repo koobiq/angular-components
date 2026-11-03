@@ -32,8 +32,10 @@ export interface KbqOptionActionParent {
     focus(): void;
 }
 
+/** The list or tree option that hosts a `kbq-option-action`. */
 export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent>('KBQ_OPTION_ACTION_PARENT');
 
+/** Button at the end of a list or tree option that opens its dropdown menu. */
 @Component({
     selector: 'kbq-option-action',
     template: `
@@ -180,6 +182,8 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
  * when focus actually landed: the action lives in a `display: none` container until the option is
  * hovered or keyboard-focused, and focusing a hidden element is a no-op, so suppressing Tab there
  * would trap focus on the option.
+ *
+ * @docs-private
  */
 export function kbqFocusOptionActionOnTab(
     $event: KeyboardEvent,

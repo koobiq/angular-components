@@ -1,5 +1,6 @@
 import { KbqLocaleStringsData } from './types';
 
+/** Strings of the built-in `pt-BR` locale. */
 export const ptBRLocaleData = {
     a11y: {
         close: 'Fechar',

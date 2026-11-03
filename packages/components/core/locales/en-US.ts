@@ -1,5 +1,6 @@
 import { KbqLocaleStringsData } from './types';
 
+/** Strings of the built-in `en-US` locale. */
 export const enUSLocaleData = {
     a11y: {
         close: 'Close',

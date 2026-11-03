@@ -1,5 +1,6 @@
 import { KbqLocaleStringsData } from './types';
 
+/** Strings of the built-in `es-LA` locale. */
 export const esLALocaleData = {
     a11y: {
         close: 'Cerrar',

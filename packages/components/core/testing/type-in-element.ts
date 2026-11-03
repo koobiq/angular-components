@@ -6,6 +6,8 @@ import { dispatchFakeEvent } from './dispatch-events';
  *
  * @param value Value to be set on the input.
  * @param element Element onto which to set the value.
+ *
+ * @docs-private
  */
 export function typeInElement(value: string, element: HTMLInputElement) {
     element.focus();

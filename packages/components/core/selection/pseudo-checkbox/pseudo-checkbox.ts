@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, input } from '@angular/core';
 import { KbqColorDirective } from '../../common-behaviors';
 
+/** State of a `kbq-pseudo-checkbox`. */
 export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' | boolean;
 
 /**

@@ -4,6 +4,8 @@ import { KbqPseudoCheckboxState } from './pseudo-checkbox/pseudo-checkbox';
  * Adapter describing how a component reads and writes selection state for a set of items,
  * so the shared select-all logic can operate regardless of how selection is stored
  * (per-option setter, `SelectionModel` on data nodes, etc.).
+ *
+ * @docs-private
  */
 export interface KbqSelectAllAdapter<T> {
     /** All candidate items, in render/model order. */
@@ -22,7 +24,7 @@ export interface KbqSelectAllAdapter<T> {
     setSelected: (item: T, selected: boolean) => void;
 }
 
-/** Options for {@link toggleSelectAll}. */
+/** Options for {@link toggleSelectAll}. @docs-private */
 export interface KbqToggleSelectAllOptions {
     /**
      * When `true`, a repeated toggle deselects everything once all selectable items are already
@@ -39,6 +41,8 @@ export interface KbqToggleSelectAllOptions {
  * there are no selectable items.
  *
  * @returns the items whose selected state actually flipped, in input order.
+ *
+ * @docs-private
  */
 export function toggleSelectAll<T>(adapter: KbqSelectAllAdapter<T>, options?: KbqToggleSelectAllOptions): T[] {
     const selectable = adapter.items.filter((item) => adapter.isSelectable(item));
@@ -61,6 +65,8 @@ export function toggleSelectAll<T>(adapter: KbqSelectAllAdapter<T>, options?: Kb
  * Considers only selectable items, so items the toggle cannot reach (disabled, non-selectable) never
  * pin the checkbox to `indeterminate`. An empty selectable set reads as `unchecked`: there is nothing
  * to select, and `[].every()` being `true` would otherwise report a full selection.
+ *
+ * @docs-private
  */
 export function getSelectAllState<T>(adapter: KbqSelectAllAdapter<T>): KbqPseudoCheckboxState {
     const selectable = adapter.items.filter((item) => adapter.isSelectable(item));
@@ -78,7 +84,7 @@ export function getSelectAllState<T>(adapter: KbqSelectAllAdapter<T>): KbqPseudo
     return selected === selectable.length ? 'checked' : 'indeterminate';
 }
 
-/** Event emitted by the `onSelectAll` outputs when the select-all toggle runs. */
+/** Event emitted by the `onSelectAll` outputs when the select-all toggle runs. @docs-private */
 export class KbqSelectAllEvent<T, S = unknown> {
     constructor(
         /** Component that emitted the event. */
@@ -97,6 +103,8 @@ export class KbqSelectAllEvent<T, S = unknown> {
  * a partial selection, or just a caret). Returns `false` for an empty input (so select-all falls
  * straight through to the options) and when the whole value is already selected (a second press
  * then acts on the options).
+ *
+ * @docs-private
  */
 export function shouldSelectSearchText(input: HTMLInputElement | null | undefined): boolean {
     if (!input) {

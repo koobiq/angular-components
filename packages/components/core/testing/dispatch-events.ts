@@ -1,18 +1,22 @@
 import { createFakeEvent, createKeyboardEvent, createMouseEvent, createTouchEvent } from './event-objects';
 
-/** Utility to dispatch any event on a Node. */
+/** Utility to dispatch any event on a Node. @docs-private */
 export function dispatchEvent(node: Node | Window, event: Event): Event {
     node.dispatchEvent(event);
 
     return event;
 }
 
-/** Shorthand to dispatch a fake event on a specified node. */
+/** Shorthand to dispatch a fake event on a specified node. @docs-private */
 export function dispatchFakeEvent(node: Node | Window, type: string, canBubble?: boolean): Event {
     return dispatchEvent(node, createFakeEvent(type, canBubble));
 }
 
-/** Shorthand to dispatch a keyboard event with a specified key code and, optionally, a `KeyboardEvent.key`. */
+/**
+ * Shorthand to dispatch a keyboard event with a specified key code and, optionally, a `KeyboardEvent.key`.
+ *
+ * @docs-private
+ */
 export function dispatchKeyboardEvent(
     node: Node,
     type: string,
@@ -23,7 +27,7 @@ export function dispatchKeyboardEvent(
     return dispatchEvent(node, createKeyboardEvent(type, keyCode, target, key)) as KeyboardEvent;
 }
 
-/** Shorthand to dispatch a mouse event on the specified coordinates. */
+/** Shorthand to dispatch a mouse event on the specified coordinates. @docs-private */
 export function dispatchMouseEvent(
     node: Node,
     type: string,
@@ -34,7 +38,7 @@ export function dispatchMouseEvent(
     return dispatchEvent(node, event) as MouseEvent;
 }
 
-/** Shorthand to dispatch a touch event on the specified coordinates. */
+/** Shorthand to dispatch a touch event on the specified coordinates. @docs-private */
 export function dispatchTouchEvent(node: Node, type: string, x = 0, y = 0) {
     return dispatchEvent(node, createTouchEvent(type, x, y));
 }

@@ -18,6 +18,8 @@ export const kbqInjectNativeElement = <T extends Element = HTMLElement>(): T => 
  *
  * Pass `skipReveal` when the pointer caused the focus: the element is already under the cursor, so
  * revealing it would shift the list out from under it.
+ *
+ * @docs-private
  */
 export const kbqFocusAndReveal = (element: HTMLElement, skipReveal = false): void => {
     if (typeof element.focus !== 'function') return;
@@ -33,7 +35,7 @@ export const kbqFocusAndReveal = (element: HTMLElement, skipReveal = false): voi
     element.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
 };
 
-/** Axis a scroll-overflow check applies to. */
+/** Axis a scroll-overflow check applies to. @docs-private */
 export type KbqScrollAxis = 'horizontal' | 'vertical';
 
 /**
@@ -46,6 +48,8 @@ export type KbqScrollAxis = 'horizontal' | 'vertical';
  * on a 1× display it is already 3px, which is why a fixed tolerance leaks the bug back in at low zoom.
  *
  * The view is resolved from the element rather than a global, so the helper stays usable on the server.
+ *
+ * @docs-private
  */
 export const kbqGetScrollOverflowTolerance = (element: Element): number => {
     return 1 + 1 / (element.ownerDocument.defaultView?.devicePixelRatio || 1);
@@ -54,6 +58,8 @@ export const kbqGetScrollOverflowTolerance = (element: Element): number => {
 /**
  * Whether `element` has scroll overflow along `axis` larger than the measurement error of the metrics it is
  * derived from — i.e. whether there is a scroll range the user can actually reach.
+ *
+ * @docs-private
  */
 export const kbqHasScrollOverflow = (element: Element, axis: KbqScrollAxis = 'horizontal'): boolean => {
     const overflow =
@@ -69,6 +75,8 @@ export const kbqHasScrollOverflow = (element: Element, axis: KbqScrollAxis = 'ho
  * from the server DOM, so both the method and the first rect are read defensively rather than going
  * through `getBoundingClientRect()`, whose zeroes are indistinguishable from a genuinely collapsed
  * element.
+ *
+ * @docs-private
  */
 export const kbqGetElementHeight = (element: Element): number => {
     return element.getClientRects?.()?.[0]?.height ?? 0;

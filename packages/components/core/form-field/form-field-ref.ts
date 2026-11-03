@@ -61,6 +61,8 @@ export const KBQ_FORM_FIELD_REF = new InjectionToken<KbqFormFieldRef>('KbqFormFi
  * Contract for an ancestor that wants to override where overlays opened by a nested
  * `KbqFormField`'s control (e.g. a select's dropdown, a datepicker's calendar) are
  * anchored, instead of the form-field's own container.
+ *
+ * @docs-private
  */
 export interface KbqConnectedOverlayOriginProvider {
     /**
@@ -73,6 +75,8 @@ export interface KbqConnectedOverlayOriginProvider {
 /**
  * Injection token for `KbqConnectedOverlayOriginProvider`. Provide it on an ancestor
  * component to redirect where a nested `KbqFormField`'s control positions its overlay.
+ *
+ * @docs-private
  */
 export const KBQ_CONNECTED_OVERLAY_ORIGIN = new InjectionToken<KbqConnectedOverlayOriginProvider>(
     'KbqConnectedOverlayOrigin'

@@ -1,5 +1,6 @@
 import { Directive, ElementRef, inject, input, linkedSignal, Signal, signal, WritableSignal } from '@angular/core';
 
+/** Values of the `color` input of components. */
 export enum KbqComponentColors {
     Theme = 'theme',
     ThemeFade = 'theme-fade',
@@ -27,7 +28,7 @@ function writableColor<T>(read: () => T, target: WritableSignal<T | null | undef
     return color;
 }
 
-/** Renders the `color` of a component as its `kbq-<color>` host class. */
+/** Renders the `color` of a component as its `kbq-<color>` host class. @docs-private */
 @Directive({
     host: {
         '[class]': 'colorClassName'

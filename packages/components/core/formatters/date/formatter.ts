@@ -5,6 +5,7 @@ import { DateFormatter as BaseDateFormatter } from '@koobiq/date-formatter';
 import { KBQ_DATE_LOCALE, DateAdapter as KbqDateAdapter } from '../../datetime';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '../../locales';
 
+/** Formats dates in the active locale and follows its changes. */
 @Injectable()
 export class DateFormatter<D> extends BaseDateFormatter<D> {
     override readonly adapter: DateAdapter<D>;

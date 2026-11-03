@@ -25,10 +25,13 @@ import {
     KbqPartialLocaleData
 } from './types';
 
+/** Active locale. When it is not provided, `KBQ_DEFAULT_LOCALE_ID` applies. */
 export const KBQ_LOCALE_ID = new InjectionToken<KbqLocaleIdLike>('KbqLocaleId');
 
+/** Locale used when `KBQ_LOCALE_ID` is not provided. */
 export const KBQ_DEFAULT_LOCALE_ID = 'ru-RU';
 
+/** @docs-private */
 export function KBQ_DEFAULT_LOCALE_DATA_FACTORY() {
     return {
         items: [
@@ -45,6 +48,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY() {
         'tk-TM': { ...tkTMLocaleData, ...tkTMFormattersData }
     };
 }
+
+/** Available locales, including custom ones. Defaults to the built-in locales. */
 export const KBQ_LOCALE_DATA = new InjectionToken<KbqLocaleDataInput>('KBQ_LOCALE_DATA', {
     providedIn: 'root',
     factory: KBQ_DEFAULT_LOCALE_DATA_FACTORY
@@ -92,6 +97,10 @@ const resolveLocaleDataMap = (input: KbqLocaleDataInput | null): KbqLocaleDataMa
     return asLocaleDataMap(locales, items);
 };
 
+/**
+ * The `KbqLocaleService` components read their strings from. Has no factory: provide it with
+ * `kbqLocaleServiceProvider()`.
+ */
 export const KBQ_LOCALE_SERVICE = new InjectionToken<KbqLocaleService>('KBQ_LOCALE_SERVICE');
 
 /**
@@ -114,6 +123,7 @@ export const kbqLocaleServiceLangAttrNameProvider = (attrName: string): Provider
     useValue: attrName
 });
 
+/** Keeps the registered locales and the active one. */
 @Injectable({ providedIn: 'root' })
 export class KbqLocaleService {
     /**
@@ -272,7 +282,6 @@ export function kbqInjectLocaleService(options?: InjectOptions): KbqLocaleServic
     return inject(KBQ_LOCALE_SERVICE, options ?? {});
 }
 
-// todo code below need refactor or delete in DS-3603
 /** @docs-private */
 export const KBQ_DEFAULT_PRECISION_SEPARATOR = '.';
 
@@ -311,6 +320,8 @@ export function numberByParts(
 
 /**
  * Function that returns a string representation of a number without localized separators
+ *
+ * @docs-private
  */
 export function normalizeNumber(
     value: string | null | undefined,
@@ -330,6 +341,8 @@ export function normalizeNumber(
 
 /**
  * Function that parse string and return a number. The string can be in any locale.
+ *
+ * @docs-private
  */
 export function checkAndNormalizeLocalizedNumber(num: string | null | undefined, locale?: string): number | null {
     if (num === null || num === undefined) return null;
@@ -369,5 +382,3 @@ export function checkAndNormalizeLocalizedNumber(num: string | null | undefined,
 
     return numberOutput;
 }
-
-// todo code above need refactor or delete in DS-3603

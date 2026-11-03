@@ -15,7 +15,7 @@ import { fromEvent, Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { kbqInjectNativeElement } from '../utils';
 
-/** Shadow visibility state — which of the two shadows should be rendered. */
+/** Shadow visibility state — which of the two shadows should be rendered. @docs-private */
 export interface KbqOverflowShadowState {
     /** Whether the top (header) shadow should be visible — content is scrolled past the top. */
     top: boolean;
@@ -27,6 +27,8 @@ export interface KbqOverflowShadowState {
  * Source of scroll events and scroll metrics. Can be provided by a component that wraps
  * the scrollable element (e.g. `KbqScrollbar`) so that `KbqOverflowShadowContainer` does
  * not have to subscribe to the native `scroll` event directly.
+ *
+ * @docs-private
  */
 export interface KbqOverflowShadowSource {
     /** Emits whenever the wrapped element scrolls. */
@@ -38,13 +40,15 @@ export interface KbqOverflowShadowSource {
 /**
  * DI token a scrollable wrapper component can provide to expose itself as the scroll source
  * for a co-located `KbqOverflowShadowContainer` (see `KbqScrollbar`).
+ *
+ * @docs-private
  */
 export const KBQ_OVERFLOW_SHADOW_SOURCE = new InjectionToken<KbqOverflowShadowSource>('KBQ_OVERFLOW_SHADOW_SOURCE');
 
 /**
  * Container directive that sits on the scrollable element. Listens for scroll events and
- * keeps the `overflow` signal up to date, which is then read by `KbqOverflowShadowTop` and
- * `KbqOverflowShadowBottom`.
+ * keeps the `overflow` signal up to date for the element that draws the shadow, such as the
+ * `withShadow` input of `kbq-top-bar`.
  *
  * The scroll source is auto-detected: if `KBQ_OVERFLOW_SHADOW_SOURCE` is provided in the
  * host's DI, that source is used; otherwise the native `scroll` event on the host element
@@ -141,6 +145,8 @@ export class KbqOverflowShadowContainer implements OnInit {
  * (the Koobiq token by default). Consumers can override the shadow from the outside by
  * overriding the token `--kbq-shadow-overflow-normal-bottom` (or whichever token is passed
  * via the `shadow` input) in the relevant cascade scope.
+ *
+ * @docs-private
  */
 @Directive({
     selector: '[kbqOverflowShadowTop]',
@@ -166,6 +172,8 @@ export class KbqOverflowShadowTop {
  * template ref: `<footer [kbqOverflowShadowBottom]="containerRef">`.
  *
  * Sets an inline `box-shadow` on the host element. See {@link KbqOverflowShadowTop}.
+ *
+ * @docs-private
  */
 @Directive({
     selector: '[kbqOverflowShadowBottom]',

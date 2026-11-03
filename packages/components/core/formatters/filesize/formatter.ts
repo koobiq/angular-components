@@ -9,6 +9,7 @@ import {
 } from './config';
 import { getFormattedSizeParts } from './size';
 
+/** Formats a size in bytes with the units of the active locale. */
 @Pipe({
     name: 'kbqDataSize',
     pure: false

@@ -1,5 +1,6 @@
 import { KbqLocaleStringsData } from './types';
 
+/** Strings of the built-in `ru-RU` locale. */
 export const ruRULocaleData = {
     a11y: {
         close: 'Закрыть',

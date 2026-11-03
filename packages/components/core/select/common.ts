@@ -34,11 +34,13 @@ import { KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS } from '../pop-up/constants';
 import { KBQ_WINDOW } from '../tokens';
 import { KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD, SELECT_PANEL_VIEWPORT_PADDING } from './constants';
 
+/** Custom content of the select trigger, shown instead of the selected options. */
 @Directive({
     selector: 'kbq-select-trigger, [kbq-select-trigger]'
 })
 export class KbqSelectTrigger {}
 
+/** Replaces the whole content of the select trigger, including the placeholder, cleaner and arrow. */
 @Directive({
     selector: 'kbq-select-matcher, [kbq-select-matcher]'
 })
@@ -46,6 +48,7 @@ export class KbqSelectMatcher {
     readonly useDefaultHandlers = input<boolean, unknown>(true, { transform: booleanAttribute });
 }
 
+/** Message shown in the select panel when the search finds no options. */
 @Directive({
     selector: '[kbq-select-search-empty-result]',
     host: {
@@ -55,6 +58,7 @@ export class KbqSelectMatcher {
 })
 export class KbqSelectSearchEmptyResult {}
 
+/** Footer of the select panel. */
 @Directive({
     selector: 'kbq-select-footer, [kbq-select-footer]',
     host: { class: 'kbq-select__footer' }
@@ -71,6 +75,7 @@ export class KbqSelectFooter {}
 })
 export class KbqSelectFooterItem {}
 
+/** Search field of the select panel: emits the typed value in `changes`, and the application filters the options. */
 @Directive({
     selector: '[kbqSelectSearch]',
     host: {

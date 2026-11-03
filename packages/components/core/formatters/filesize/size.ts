@@ -1,5 +1,6 @@
 import { KbqUnitSystem } from './config';
 
+/** @docs-private */
 export const KBQ_INVALID_VALUE_ERROR = 'Argument "value" must be a finite number!';
 
 /**
@@ -12,6 +13,8 @@ export const KBQ_INVALID_VALUE_ERROR = 'Argument "value" must be a finite number
  * ```ts
  * getFormattedSizeParts(1500, 'SI'); // { value: "1.50", unit: "KB" }
  * ```
+ *
+ * @docs-private
  */
 export function getFormattedSizeParts(value: number, system: KbqUnitSystem): { value: string; unit: string } {
     const { result, unit } = getHumanizedBytes(value, system);
@@ -28,6 +31,8 @@ export function getFormattedSizeParts(value: number, system: KbqUnitSystem): { v
  * @param value the number of bytes
  * @param system the measurement system
  * @param threshold the lower counting threshold
+ *
+ * @docs-private
  */
 export const getHumanizedBytes = (
     value: number,

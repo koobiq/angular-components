@@ -1,5 +1,6 @@
 import { Directive, ElementRef, inject } from '@angular/core';
 
+/** Replaces thin spaces with regular ones in copied text, for fields with formatted numbers. */
 @Directive({
     selector: '[kbqNormalizeWhitespace]',
     host: {

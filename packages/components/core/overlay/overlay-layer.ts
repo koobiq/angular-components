@@ -8,10 +8,10 @@ const overlayLayerClass = 'kbq-overlay-layer';
 const overlayLayerExcludeClass = 'kbq-overlay-layer-exclude';
 const overlayPopoverClass = 'cdk-overlay-popover';
 
-/** Element an overlay is anchored to, or a getter read again on every attach of the overlay. */
+/** Element an overlay is anchored to, or a getter read again on every attach of the overlay. @docs-private */
 export type KbqOverlayLayerOrigin = Element | (() => Element | null | undefined);
 
-/** Places overlays into the layer of the {@link KbqOverlayLayer} element their origin is in. */
+/** Places overlays into the layer of the {@link KbqOverlayLayer} element their origin is in. @docs-private */
 export interface KbqOverlayLayers {
     /**
      * Moves the overlay into the layer of the innermost `kbqOverlayLayer` element that contains `origin` and keeps it
@@ -179,7 +179,7 @@ class KbqOverlayLayerRegistry implements KbqOverlayLayers {
     }
 }
 
-/** Places overlays into the layer of the {@link KbqOverlayLayer} element their origin is in. */
+/** Places overlays into the layer of the {@link KbqOverlayLayer} element their origin is in. @docs-private */
 export const KBQ_OVERLAY_LAYERS = new InjectionToken<KbqOverlayLayers>('KBQ_OVERLAY_LAYERS', {
     providedIn: 'root',
     factory: () => inject(KbqOverlayLayerRegistry)

@@ -1,5 +1,6 @@
 import { AfterContentInit, Directive, ElementRef, contentChildren, inject } from '@angular/core';
 
+/** Row, fieldset or legend of a Koobiq form, spaced by `KbqForm`. */
 @Directive({
     selector: '.kbq-form__row, .kbq-form__fieldset, .kbq-form__legend',
     host: {
@@ -31,6 +32,7 @@ export class KbqFormElement implements AfterContentInit {
     }
 }
 
+/** Lays out a `.kbq-form-vertical` or `.kbq-form-horizontal` form, spacing its rows. */
 @Directive({
     selector: '.kbq-form-vertical, .kbq-form-horizontal',
     host: {

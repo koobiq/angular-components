@@ -1,5 +1,6 @@
 import { KbqLocaleStringsData } from './types';
 
+/** Strings of the built-in `tk-TM` locale. */
 export const tkTMLocaleData = {
     a11y: {
         close: 'Ýap',
