@@ -75,11 +75,21 @@
             ></span>
         </kbq-tree-option>
 
-        <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
+        <kbq-tree-option
+            *kbqTreeNodeDef="let node"
+            kbqTreeNodePadding
+            [checkboxThirdState]="true"
+            [viewValue]="treeControl.getViewValue(node)"
+        >
             <ng-container [ngTemplateOutlet]="nodeContent" [ngTemplateOutletContext]="{ $implicit: node }" />
         </kbq-tree-option>
 
-        <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
+        <kbq-tree-option
+            *kbqTreeNodeDef="let node; when: hasChild"
+            kbqTreeNodePadding
+            [checkboxThirdState]="true"
+            [viewValue]="treeControl.getViewValue(node)"
+        >
             <kbq-tree-node-toggle [node]="node" />
             <ng-container [ngTemplateOutlet]="nodeContent" [ngTemplateOutletContext]="{ $implicit: node }" />
         </kbq-tree-option>
@@ -93,9 +103,15 @@
             [ngTemplateOutletContext]="getValueTemplateContext(node)"
         />
     } @else {
-        <span
+        <div
+            [class.kbq-truncate-line]="!multilineOptions"
             [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
-        ></span>
+        ></div>
+        @if (node.caption) {
+            <div class="kbq-option-caption" [class.kbq-truncate-line]="!multilineOptions">
+                {{ node.caption }}
+            </div>
+        }
     }
 </ng-template>
 

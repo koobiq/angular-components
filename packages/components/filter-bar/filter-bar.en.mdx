@@ -110,9 +110,9 @@ An option with a `caption`, and any option under `multilineOptions`, is taller t
 
 ### Caption in options
 
-Add `caption` to the option value of a `select` or `multiselect` pipe to show a second line in the dropdown — a technical identifier, for example.
+Add `caption` to an option of a `select`, `multiselect`, `tree-select` or `multi-tree-select` pipe to show a second line in the dropdown — a technical identifier, for example.
 
-Both lines are truncated by default; `multilineOptions: true` wraps them instead.
+Both lines are truncated by default; `multilineOptions: true` wraps them instead. A `valueTemplate` replaces the default option content, including the caption.
 
 <Example id="filter-bar-option-caption" />
 

@@ -521,10 +521,10 @@ export class KbqTreeOption<T = any> extends KbqTreeNode<T> implements OnInit, Af
     // (undocumented)
     get value(): any;
     set value(value: any);
-    // (undocumented)
     get viewValue(): string;
+    readonly viewValueInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTreeOption<any>, "kbq-tree-option", ["kbqTreeOption"], { "checkboxThirdState": { "alias": "checkboxThirdState"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "selectAllRow": { "alias": "selectAllRow"; "required": false; "isSignal": true; }; "showCheckboxInput": { "alias": "showCheckbox"; "required": false; "isSignal": true; }; }, { "selectionChange": "selectionChange"; "onSelectionChange": "onSelectionChange"; }, ["toggleElementDirective", "toggleElementComponent", "pseudoCheckbox", "actionButton", "tooltipTriggerQuery", "dropdownTriggerQuery"], ["kbq-tree-node-toggle, [kbq-tree-node-toggle], [kbqTreeNodeToggle]", "kbq-pseudo-checkbox", "kbq-checkbox", "[kbq-icon]", "kbq-progress-spinner", "*", "kbq-option-action"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTreeOption<any>, "kbq-tree-option", ["kbqTreeOption"], { "checkboxThirdState": { "alias": "checkboxThirdState"; "required": false; "isSignal": true; }; "viewValueInput": { "alias": "viewValue"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "selectAllRow": { "alias": "selectAllRow"; "required": false; "isSignal": true; }; "showCheckboxInput": { "alias": "showCheckbox"; "required": false; "isSignal": true; }; }, { "selectionChange": "selectionChange"; "onSelectionChange": "onSelectionChange"; }, ["toggleElementDirective", "toggleElementComponent", "pseudoCheckbox", "actionButton", "tooltipTriggerQuery", "dropdownTriggerQuery"], ["kbq-tree-node-toggle, [kbq-tree-node-toggle], [kbqTreeNodeToggle]", "kbq-pseudo-checkbox", "kbq-checkbox", "[kbq-icon]", "kbq-progress-spinner", "*", "kbq-option-action"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeOption<any>, never>;
 }

@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -31,7 +32,8 @@ import { KbqTreeSelectPipeBase } from './tree-select-pipe-base';
         KbqTreeModule,
         KbqTreeSelectModule,
         KbqSelectNoOptions,
-        FormsModule
+        FormsModule,
+        NgTemplateOutlet
     ],
     templateUrl: 'pipe-tree-select.html',
     styleUrls: ['base-pipe.scss', 'pipe-tree-select.scss'],

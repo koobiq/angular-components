@@ -1,7 +1,14 @@
 import { AfterViewInit, Directive, OnInit, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
+import {
+    FilterParentsForNodes,
+    FlatTreeControl,
+    FlatTreeControlFilter,
+    KbqTreeFlatDataSource,
+    KbqTreeFlattener,
+    kbqTreeSelectAllValue
+} from '@koobiq/components/tree';
 import { KbqTreeSelect } from '@koobiq/components/tree-select';
 import { KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
@@ -41,6 +48,30 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
             this.getValue,
             this.getViewValue
         );
+
+        const filter: FlatTreeControlFilter<KbqTreeSelectFlatNode> = {
+            result: [],
+            handle: (value: string | null) => {
+                const query = value || null;
+                const matchCaption = !this.isTemplateRef(this.valueTemplate);
+                const result = this.treeControl.dataNodes.filter((node) => {
+                    if (node.value === kbqTreeSelectAllValue) return true;
+
+                    return (
+                        this.treeControl.compareViewValues(node.name, query) ||
+                        (matchCaption && !!node.caption && this.treeControl.compareViewValues(node.caption, query))
+                    );
+                });
+
+                if (result.length === 1 && result[0].value === kbqTreeSelectAllValue) {
+                    result.pop();
+                }
+
+                return (filter.result = result);
+            }
+        };
+
+        this.treeControl.setFilters(filter, new FilterParentsForNodes(this.treeControl));
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
@@ -96,6 +127,7 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
 
         flatNode.name = node.name;
         flatNode.value = node.value;
+        flatNode.caption = node.caption;
         flatNode.parent = parent ?? undefined;
         flatNode.level = level;
         flatNode.expandable = !!node.children;

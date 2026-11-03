@@ -805,6 +805,7 @@ export interface KbqSelectValue {
 
 // @public
 export class KbqTreeSelectFlatNode {
+    caption?: string;
     // (undocumented)
     expandable: boolean;
     // (undocumented)
@@ -819,6 +820,7 @@ export class KbqTreeSelectFlatNode {
 
 // @public (undocumented)
 export interface KbqTreeSelectNode {
+    caption?: string;
     // (undocumented)
     children: KbqTreeSelectNode[] | null;
     // (undocumented)

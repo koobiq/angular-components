@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, inject, TemplateRef, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -76,10 +76,15 @@ const createFilter = (pipes: KbqPipe[]): KbqFilter => ({
             <kbq-pipe-add />
             <kbq-filter-reset />
         </kbq-filter-bar>
+
+        <ng-template #optionTemplate let-option="option" let-pipe>
+            <span class="custom-tree-option">{{ option.name }} / {{ option.caption }} / {{ pipe.data.id }}</span>
+        </ng-template>
     `
 })
 class TestComponent {
     readonly changeDetectorRef = inject(ChangeDetectorRef);
+    readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
 
     activeFilter: KbqFilter | null = null;
 
@@ -470,6 +475,142 @@ describe('KbqPipeTreeSelectComponent', () => {
             const component = getPipeComponent();
 
             expect(component.hasChild(0, { name: 'node', value: null, level: 0, expandable: false })).toBe(false);
+        });
+    });
+
+    describe('option content', () => {
+        const CAPTIONED_TREE_DATA: KbqTreeSelectNode[] = [
+            {
+                name: 'Events',
+                value: 'events',
+                caption: 'category.events',
+                children: [
+                    { name: 'Threat type', value: 'threat', caption: 'category.generic', children: null },
+                    { name: 'Action', value: 'action', children: null }
+                ]
+            }
+        ];
+
+        const setTemplate = (valueTemplate?: TemplateRef<any>, multilineOptions?: boolean) => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'TreeSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.TreeSelect,
+                    values: CAPTIONED_TREE_DATA,
+                    valueTemplate,
+                    multilineOptions,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+        };
+
+        const renderPanel = async () => {
+            getPipeComponent().select().open();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        const getOption = (value: unknown): KbqTreeOption =>
+            getPipeComponent()
+                .select()
+                .tree()!
+                .renderedOptions.find((option) => option.value === value)!;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        it('should render captions for branches and leaves only when provided', async () => {
+            vi.useFakeTimers();
+
+            setTemplate();
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+            await renderPanel();
+
+            expect(getOption('events').getHostElement().querySelector('.kbq-option-caption')!.textContent!.trim()).toBe(
+                'category.events'
+            );
+            expect(getOption('threat').getHostElement().querySelector('.kbq-option-caption')!.textContent!.trim()).toBe(
+                'category.generic'
+            );
+            expect(getOption('action').getHostElement().querySelector('.kbq-option-caption')).toBeNull();
+        });
+
+        it('should keep the caption out of the trigger and type-ahead label', async () => {
+            vi.useFakeTimers();
+
+            setTemplate();
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: 'threat' })]);
+            fixture.detectChanges();
+            await renderPanel();
+
+            expect(getPipeComponent().select().triggerValue).toBe('Threat type');
+            expect(getOption('threat').getLabel()).toBe('Threat type');
+        });
+
+        it('should search by name and caption in the default template', async () => {
+            vi.useFakeTimers();
+
+            setTemplate();
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            component.searchControl.setValue('category.generic');
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(component.treeControl.filterModel.selected.map((node) => node.name)).toEqual([
+                'Events',
+                'Threat type'
+            ]);
+
+            component.searchControl.setValue('Action');
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(component.treeControl.filterModel.selected.map((node) => node.name)).toEqual(['Events', 'Action']);
+        });
+
+        it('should let valueTemplate own the node content and hide the caption from search', async () => {
+            vi.useFakeTimers();
+
+            setTemplate(fixture.componentInstance.optionTemplate());
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+            await renderPanel();
+
+            const option = getOption('threat');
+            const customContent = option.getHostElement().querySelector('.custom-tree-option')!;
+
+            expect(customContent.textContent!.replace(/\s+/g, ' ').trim()).toBe(
+                'Threat type / category.generic / TestTreeSelect'
+            );
+            expect(option.getHostElement().querySelector('.kbq-option-caption')).toBeNull();
+            expect(option.getLabel()).toBe('Threat type');
+
+            getPipeComponent().searchControl.setValue('category.generic');
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(getPipeComponent().treeControl.filterModel.selected).toEqual([]);
+        });
+
+        it('should forward multilineOptions to the panel', async () => {
+            vi.useFakeTimers();
+
+            setTemplate(undefined, true);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+            await renderPanel();
+
+            const panel = document.querySelector<HTMLElement>('.kbq-pipe-tree-select__panel')!;
+
+            expect(panel.classList).toContain('kbq-pipe-tree-select__panel_multiline');
         });
     });
 

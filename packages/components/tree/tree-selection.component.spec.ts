@@ -1,4 +1,4 @@
-﻿import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import {
@@ -164,6 +164,20 @@ describe('KbqTreeSelection', () => {
                 const paddingDirective = treeOption.injector.get(KbqTreeNodePadding);
 
                 expect(treeOption.styles.paddingLeft).toBe(paddingDirective.paddingIndent());
+            });
+
+            it('should prefer an explicit view value over multiline option content', () => {
+                const customFixture = TestBed.createComponent(TreeWithViewValueApp);
+
+                customFixture.detectChanges();
+
+                const options = customFixture.componentInstance.tree().renderedOptions;
+                const applications = options.find((option) => option.value === 'Applications')!;
+                const plain = options.find((option) => option.value === 'rootNode_1')!;
+
+                expect(applications.viewValue).toBe('Applications');
+                expect(applications.getLabel()).toBe('Applications');
+                expect(plain.viewValue).toBe('rootNode_1');
             });
 
             it('should copy selected option - default handler', async () => {
@@ -3660,6 +3674,27 @@ class SimpleKbqTreeApp {
         return flatNode;
     };
 }
+
+@Component({
+    imports: [
+        KbqTreeModule
+    ],
+    template: `
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+                [viewValue]="node.name === 'Applications' ? 'Applications' : undefined"
+            >
+                <div>{{ node.name }}</div>
+                @if (node.name === 'Applications') {
+                    <div>category.generic</div>
+                }
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeWithViewValueApp extends SimpleKbqTreeApp {}
 
 abstract class TreeParams {
     treeControl: FlatTreeControl<FileFlatNode>;
