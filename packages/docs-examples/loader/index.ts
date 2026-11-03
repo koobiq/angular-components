@@ -763,6 +763,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverPlacementCenterExample);
         case 'popover-placement-edges':
             return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverPlacementEdgesExample);
+        case 'popover-relative-to-pointer':
+            return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverRelativeToPointerExample);
         case 'popover-scroll':
             return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverScrollExample);
         case 'popover-scrolling-and-layering-page':

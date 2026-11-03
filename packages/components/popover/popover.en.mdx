@@ -54,6 +54,14 @@ The popover aligns with the edge of the trigger element; the arrow is at a fixed
 
 <Example id="popover-placement-edges" />
 
+### Opening at the click point
+
+`kbqRelativeToPointer` anchors the popover to the clicked point instead of the whole trigger. The arrow follows that point when the panel is flipped or pushed away from a viewport edge, and the point stays attached to the trigger while the page scrolls.
+
+<Example id="popover-relative-to-pointer" />
+
+Keyboard and programmatic opens stay anchored to the trigger. An explicit `kbqPopoverOrigin` takes precedence. The input name is shared with tooltip: binding it on an element that carries both directives enables cursor-relative positioning for both.
+
 ### Behavior when scrolling the page
 
 By default, the popover does not close when the page scrolls and scrolls along with the page, remaining at the position from which it was opened.
