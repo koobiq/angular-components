@@ -7,11 +7,7 @@
         @if (exampleComponentType(); as exampleComponentType) {
             <ng-template [ngComponentOutlet]="exampleComponentType" />
         } @else if (isLoading()) {
-            @if (isDataGridExample()) {
-                <kbq-skeleton-table class="docs-live-example__skeleton" selectable [columns]="3" [rows]="6" />
-            } @else {
-                <kbq-skeleton class="docs-live-example__skeleton" />
-            }
+            <kbq-skeleton class="docs-live-example__skeleton" />
         }
     </div>
 

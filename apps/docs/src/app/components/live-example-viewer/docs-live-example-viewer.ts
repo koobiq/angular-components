@@ -22,7 +22,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
-import { KbqSkeleton, KbqSkeletonTable } from '@koobiq/components/skeleton';
+import { KbqSkeleton } from '@koobiq/components/skeleton';
 import { KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { EXAMPLE_COMPONENTS } from '@koobiq/docs-examples';
@@ -51,9 +51,6 @@ export interface DocsExampleLoader {
 const isLoader = (component: Type<unknown> | DocsExampleLoader): component is DocsExampleLoader =>
     typeof component !== 'function';
 
-/** Examples whose placeholder is shaped like a grid. Matches `importPath` in `EXAMPLE_COMPONENTS`. */
-const DATA_GRID_EXAMPLES_IMPORT_PATH = 'components/ag-grid';
-
 @Component({
     selector: 'docs-live-example-viewer',
     imports: [
@@ -64,8 +61,7 @@ const DATA_GRID_EXAMPLES_IMPORT_PATH = 'components/ag-grid';
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule,
-        KbqSkeleton,
-        KbqSkeletonTable
+        KbqSkeleton
     ],
     templateUrl: './docs-live-example-viewer.html',
     styleUrls: ['./docs-live-example-viewer.scss'],
@@ -116,16 +112,6 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     /** Whether the example waits for its class to load, which a skeleton shows. */
     protected readonly isLoading = computed(
         () => isLoader(this.component()) && !this.loadedComponent() && !this.hasFailedToLoad()
-    );
-
-    /**
-     * Whether the placeholder should be shaped like a data grid rather than a plain block. Keyed off
-     * the example's package rather than off `isLoading`: today AG Grid is the only family that cannot
-     * render on the server, but `packages/docs-examples/server-rendering.ts` takes further entries,
-     * and a grid-shaped placeholder would be wrong for them.
-     */
-    protected readonly isDataGridExample = computed(
-        () => this.exampleData().importPath === DATA_GRID_EXAMPLES_IMPORT_PATH
     );
 
     /** Component type for the current example. */
