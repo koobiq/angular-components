@@ -87,7 +87,7 @@ import {
     E2eVerticalNavbarBrandFirstExpand,
     E2eVerticalNavbarStates
 } from '../components/navbar/e2e';
-import { E2eNotificationCenterStates } from '../components/notification-center/e2e';
+import { E2eNotificationCenterLoading, E2eNotificationCenterStates } from '../components/notification-center/e2e';
 import {
     E2eOverflowItemsAdditionalTargets,
     E2eOverflowItemsDynamic,
@@ -273,6 +273,7 @@ const components = [
     E2eUsernameStateAndStyle,
     E2eToastStates,
     E2eEllipsisCenterOverflow,
+    E2eNotificationCenterLoading,
     E2eNotificationCenterStates,
     E2ePopoverStates,
     E2ePopoverPositioning,

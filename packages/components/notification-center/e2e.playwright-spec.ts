@@ -36,4 +36,18 @@ test.describe('KbqNotificationCenterModule', () => {
             expect((await timeValue.boundingBox())!.x).toBeGreaterThan(timeValueBefore!.x);
         });
     });
+
+    test.describe('E2eNotificationCenterLoading', () => {
+        test('loading mode replaces the list with the loader', async ({ page }) => {
+            await page.goto('/E2eNotificationCenterLoading');
+
+            await expect(page.getByTestId('kbq-notification-center-loader')).toBeVisible();
+            await expect(page.getByTestId('kbq-notification-center-empty')).toHaveCount(0);
+            await expect(page.getByTestId('e2eScreenshotTarget')).toHaveScreenshot('02-light.png');
+
+            await e2eEnableDarkTheme(page);
+
+            await expect(page.getByTestId('e2eScreenshotTarget')).toHaveScreenshot('02-dark.png');
+        });
+    });
 });
