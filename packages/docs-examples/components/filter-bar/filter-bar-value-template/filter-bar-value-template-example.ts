@@ -6,6 +6,7 @@ import {
     KbqMultiTreeSelectValueTemplateContext,
     KbqPipeTemplate,
     KbqPipeTypes,
+    KbqSelectValue,
     KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -18,11 +19,17 @@ interface AgentStateNode extends Omit<KbqTreeSelectNode, 'children'> {
     count?: number;
 }
 
+interface AgentStateValue extends KbqSelectValue {
+    icon?: string;
+    color?: 'success' | 'error' | 'warning';
+    count?: number;
+}
+
 /**
- * @title filter-bar-multi-tree-select-value-template
+ * @title filter-bar-value-template
  */
 @Component({
-    selector: 'filter-bar-multi-tree-select-value-template-example',
+    selector: 'filter-bar-value-template-example',
     imports: [KbqFilterBarModule, KbqHighlightModule, KbqIcon],
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates()" [(filter)]="activeFilter">
@@ -47,11 +54,28 @@ interface AgentStateNode extends Omit<KbqTreeSelectNode, 'children'> {
                 }
             </div>
         </ng-template>
+
+        <ng-template #flatOptionTemplate let-option="option">
+            <div class="example-tree-node">
+                @if (option.icon) {
+                    <i
+                        class="example-tree-node__icon"
+                        aria-hidden="true"
+                        [kbq-icon]="option.icon"
+                        [color]="option.color"
+                    ></i>
+                }
+                <span class="example-tree-node__name">{{ option.name }}</span>
+                @if (option.count !== undefined) {
+                    <span class="example-tree-node__count">{{ option.count }}</span>
+                }
+            </div>
+        </ng-template>
     `,
-    styleUrls: ['filter-bar-multi-tree-select-value-template-example.scss'],
+    styleUrls: ['filter-bar-value-template-example.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterBarMultiTreeSelectValueTemplateExample {
+export class FilterBarValueTemplateExample {
     private readonly text = injectLocalizedText({
         'ru-RU': {
             installed: 'Установлен',
@@ -94,13 +118,72 @@ export class FilterBarMultiTreeSelectValueTemplateExample {
         ];
     });
 
+    private readonly flatValues = computed<AgentStateValue[]>(() => {
+        const text = this.text();
+
+        return [
+            { name: '4.3.0.269', value: '4.3.0.269', icon: 'kbq-check_16', color: 'success', count: 0 },
+            { name: '5.0.0.0', value: '5.0.0.0', icon: 'kbq-check_16', color: 'success', count: 210 },
+            {
+                name: text.incompatible,
+                value: 'incompatible-os',
+                icon: 'kbq-triangle-exclamation_16',
+                color: 'error',
+                count: 789
+            },
+            {
+                name: text.unknown,
+                value: 'unknown-error',
+                icon: 'kbq-triangle-exclamation_16',
+                color: 'error',
+                count: 12345
+            }
+        ];
+    });
+
     readonly optionTemplate =
         viewChild<TemplateRef<KbqMultiTreeSelectValueTemplateContext<AgentStateNode>>>('optionTemplate');
 
+    readonly flatOptionTemplate = viewChild<TemplateRef<any>>('flatOptionTemplate');
+
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
-            name: 'State',
-            id: 'State',
+            name: 'Select',
+            id: 'Select',
+            type: KbqPipeTypes.Select,
+            values: this.flatValues(),
+            valueTemplate: this.flatOptionTemplate(),
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Multi select',
+            id: 'MultiSelect',
+            type: KbqPipeTypes.MultiSelect,
+            values: this.flatValues(),
+            valueTemplate: this.flatOptionTemplate(),
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Tree',
+            id: 'Tree',
+            type: KbqPipeTypes.TreeSelect,
+            values: this.values(),
+            valueTemplate: this.optionTemplate(),
+            multilineOptions: true,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Multi tree',
+            id: 'MultiTree',
             type: KbqPipeTypes.MultiTreeSelect,
             values: this.values(),
             valueTemplate: this.optionTemplate(),
@@ -121,8 +204,41 @@ export class FilterBarMultiTreeSelectValueTemplateExample {
         saved: false,
         pipes: [
             {
-                name: 'State',
-                id: 'State',
+                name: 'Select',
+                id: 'Select',
+                type: KbqPipeTypes.Select,
+                value: null,
+                search: true,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Multi select',
+                id: 'MultiSelect',
+                type: KbqPipeTypes.MultiSelect,
+                value: [],
+                search: true,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Tree',
+                id: 'Tree',
+                type: KbqPipeTypes.TreeSelect,
+                value: null,
+                search: true,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Multi tree',
+                id: 'MultiTree',
                 type: KbqPipeTypes.MultiTreeSelect,
                 value: null,
                 search: true,

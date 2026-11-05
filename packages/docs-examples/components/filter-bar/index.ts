@@ -7,7 +7,6 @@ import { FilterBarInactiveFilterExample } from './filter-bar-inactive-filter/fil
 import { FilterBarLocalizationExample } from './filter-bar-localization/filter-bar-localization-example';
 import { FilterBarLockedOptionsExample } from './filter-bar-locked-options/filter-bar-locked-options-example';
 import { FilterBarMasterCheckboxExample } from './filter-bar-master-checkbox/filter-bar-master-checkbox-example';
-import { FilterBarMultiTreeSelectValueTemplateExample } from './filter-bar-multi-tree-select-value-template/filter-bar-multi-tree-select-value-template-example';
 import { FilterBarNoOptionsExample } from './filter-bar-no-options/filter-bar-no-options-example';
 import { FilterBarNotSpecifiedExample } from './filter-bar-not-specified/filter-bar-not-specified-example';
 import { FilterBarOptionCaptionExample } from './filter-bar-option-caption/filter-bar-option-caption-example';
@@ -23,6 +22,7 @@ import { FilterBarSearchInPipesExample } from './filter-bar-search-in-pipes/filt
 import { FilterBarSearchExample } from './filter-bar-search/filter-bar-search-example';
 import { FilterBarStateSavingExample } from './filter-bar-state-saving/filter-bar-state-saving-example';
 import { FilterBarUniqPipesExample } from './filter-bar-uniq-pipes/filter-bar-uniq-pipes-example';
+import { FilterBarValueTemplateExample } from './filter-bar-value-template/filter-bar-value-template-example';
 
 export {
     FilterBarCleanableExample,
@@ -33,7 +33,6 @@ export {
     FilterBarLocalizationExample,
     FilterBarLockedOptionsExample,
     FilterBarMasterCheckboxExample,
-    FilterBarMultiTreeSelectValueTemplateExample,
     FilterBarNoOptionsExample,
     FilterBarNotSpecifiedExample,
     FilterBarOptionCaptionExample,
@@ -48,7 +47,8 @@ export {
     FilterBarSearchExample,
     FilterBarSearchInPipesExample,
     FilterBarStateSavingExample,
-    FilterBarUniqPipesExample
+    FilterBarUniqPipesExample,
+    FilterBarValueTemplateExample
 };
 
 const EXAMPLES = [
@@ -66,7 +66,6 @@ const EXAMPLES = [
     FilterBarReadonlyPipeExample,
     FilterBarReadonlyPipesExample,
     FilterBarMasterCheckboxExample,
-    FilterBarMultiTreeSelectValueTemplateExample,
     FilterBarNotSpecifiedExample,
     FilterBarLockedOptionsExample,
     FilterBarInactiveFilterExample,
@@ -75,7 +74,8 @@ const EXAMPLES = [
     FilterBarOptionCaptionExample,
     FilterBarNoOptionsExample,
     FilterBarLocalizationExample,
-    FilterBarStateSavingExample
+    FilterBarStateSavingExample,
+    FilterBarValueTemplateExample
 ];
 
 @NgModule({
