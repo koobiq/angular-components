@@ -918,7 +918,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'select',
                     hasApi: true,
                     apiId: 'select',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-19')
                 },
                 {
                     id: DocsStructureItemId.SearchExpandable,

@@ -227,6 +227,8 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 
 ### Подпись в опциях
 
+По умолчанию длинный текст опции обрезается до одной строки. Чтобы переносить текст на несколько строк, задайте `panelWidth="auto"`, чтобы панель сохраняла ширину поля, укажите у селекта `panelClass` и переопределите внутри панели `.kbq-option-text` — `white-space: normal` и `overflow-wrap: break-word`, как в примере ниже.
+
 <Example id="select-two-line-option" />
 
 ### Локализация

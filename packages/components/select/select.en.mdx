@@ -228,6 +228,8 @@ By default, the dropdown menu appears above the horizontal [Navbar](/en/componen
 
 ### Caption in options
 
+By default, long option text is truncated to a single line. To wrap it across multiple lines instead, set `panelWidth="auto"` so the panel keeps the field width, give the select a `panelClass`, and override `.kbq-option-text` inside the panel — `white-space: normal` and `overflow-wrap: break-word`, as in the example below.
+
 <Example id="select-two-line-option" />
 
 ### Localization
