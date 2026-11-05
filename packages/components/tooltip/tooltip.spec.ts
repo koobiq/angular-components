@@ -1,6 +1,11 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceElement } from '@angular/cdk/coercion';
-import { FlexibleConnectedPositionStrategy, Overlay, OverlayContainer } from '@angular/cdk/overlay';
+import {
+    ConnectedOverlayPositionChange,
+    FlexibleConnectedPositionStrategy,
+    Overlay,
+    OverlayContainer
+} from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Component, Directive, ElementRef, viewChild } from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
@@ -1403,6 +1408,172 @@ describe('KbqTooltip', () => {
 
             await vi.runOnlyPendingTimersAsync();
         });
+
+        it('should support arrow centering without changing the panel placement', async () => {
+            vi.useFakeTimers();
+
+            const triggerElement = component.trigger().nativeElement;
+
+            triggerElement.getBoundingClientRect = () => {
+                if (!triggerElement.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 300,
+                    bottom: 140,
+                    width: 200,
+                    height: 40,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            component.arrow = true;
+            component.arrowCentered = true;
+            component.placement = 'bottomRight';
+            fixture.detectChanges();
+
+            await showByHover(fixture, triggerElement);
+
+            const positions = () =>
+                (
+                    component.tooltipTrigger().createOverlay().getConfig()
+                        .positionStrategy as FlexibleConnectedPositionStrategy
+                ).positions;
+
+            expect(positions().some((position) => 'offsetX' in position || 'offsetY' in position)).toBe(false);
+
+            const tooltip = tooltipElement()!;
+
+            tooltip.getBoundingClientRect = () => {
+                if (!tooltip.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 400,
+                    bottom: 260,
+                    width: 300,
+                    height: 160,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            const bottomRight = positions()[0];
+
+            component
+                .tooltipTrigger()
+                .onPositionChange({ connectionPair: bottomRight } as ConnectedOverlayPositionChange);
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('-179px');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('0px');
+
+            component.arrowCentered = false;
+            fixture.detectChanges();
+            component
+                .tooltipTrigger()
+                .onPositionChange({ connectionPair: bottomRight } as ConnectedOverlayPositionChange);
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should center the arrow within a narrow panel when arrow centering is enabled', async () => {
+            vi.useFakeTimers();
+
+            component.arrow = true;
+            component.arrowCentered = true;
+            component.placement = 'bottomRight';
+            fixture.detectChanges();
+
+            await showByHover(fixture, component.trigger().nativeElement);
+
+            const tooltip = tooltipElement()!;
+
+            tooltip.getBoundingClientRect = () => {
+                if (!tooltip.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 140,
+                    bottom: 260,
+                    width: 40,
+                    height: 160,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            const strategy = component.tooltipTrigger().createOverlay().getConfig()
+                .positionStrategy as FlexibleConnectedPositionStrategy;
+
+            component.tooltipTrigger().onPositionChange({
+                connectionPair: strategy.positions[0]
+            } as ConnectedOverlayPositionChange);
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('1px');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('0px');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should remove the arrow centering shift when the arrow is hidden', async () => {
+            vi.useFakeTimers();
+
+            component.arrow = true;
+            component.arrowCentered = true;
+            component.placement = 'bottomRight';
+            fixture.detectChanges();
+
+            await showByHover(fixture, component.trigger().nativeElement);
+
+            const tooltip = tooltipElement()!;
+
+            tooltip.getBoundingClientRect = () => {
+                if (!tooltip.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 400,
+                    bottom: 260,
+                    width: 300,
+                    height: 160,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            const strategy = component.tooltipTrigger().createOverlay().getConfig()
+                .positionStrategy as FlexibleConnectedPositionStrategy;
+            const bottomRight = strategy.positions[0];
+
+            component
+                .tooltipTrigger()
+                .onPositionChange({ connectionPair: bottomRight } as ConnectedOverlayPositionChange);
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).not.toBe('');
+
+            component.arrow = false;
+            fixture.detectChanges();
+            component
+                .tooltipTrigger()
+                .onPositionChange({ connectionPair: bottomRight } as ConnectedOverlayPositionChange);
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('kbqTooltipColor', () => {
@@ -1712,6 +1883,20 @@ describe('KbqTooltip', () => {
             trigger.relativeToCaret = false;
 
             expect(trigger['getAnchorSize']().width).toBe(300);
+        });
+
+        it('should use the caret origin for arrow centering instead of the host center', () => {
+            const trigger = component.fieldTooltip();
+            const field = component.field().nativeElement;
+
+            field.getBoundingClientRect = () =>
+                ({ left: 0, top: 0, width: 300, height: 200, right: 300, bottom: 200, x: 0, y: 0 }) as DOMRect;
+            Object.defineProperty(trigger, 'caretOrigin', {
+                value: { x: 160, y: 90, width: 0, height: 20 }
+            });
+            trigger.arrowCentered = true;
+
+            expect(trigger.getArrowPoint()).toEqual({ x: 160, y: 100 });
         });
 
         describe('kbqRelativeToCaretVertical', () => {
@@ -2723,14 +2908,26 @@ class TooltipLeaveDelay {
     selector: 'tooltip-arrow-and-offset',
     imports: [KbqToolTipModule],
     template: `
-        <span #trigger [kbqTooltip]="'ARROW'" [kbqTooltipArrow]="arrow" [kbqTooltipOffset]="offset">Show</span>
+        <span
+            #trigger
+            [kbqTooltip]="'ARROW'"
+            [kbqTooltipArrow]="arrow"
+            [kbqTooltipArrowCentered]="arrowCentered"
+            [kbqTooltipOffset]="offset"
+            [kbqPlacement]="placement"
+        >
+            Show
+        </span>
     `
 })
 class TooltipArrowAndOffset {
     readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly tooltipTrigger = viewChild.required('trigger', { read: KbqTooltipTrigger });
 
     arrow = false;
+    arrowCentered = false;
     offset: number | null = null;
+    placement: 'top' | 'bottomRight' = 'top';
 }
 
 @Component({
