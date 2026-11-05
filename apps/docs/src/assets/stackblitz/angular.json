@@ -52,7 +52,8 @@
                 "serve": {
                     "builder": "@angular/build:dev-server",
                     "options": {
-                        "buildTarget": "koobiq-docs:build"
+                        "buildTarget": "koobiq-docs:build",
+                        "prebundle": false
                     }
                 }
             }
