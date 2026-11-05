@@ -200,9 +200,11 @@ providers: [
 
 ### Loading overlay
 
-The `kbqAgGridLoadingOverlay` directive controls the grid loading state: when the value is `true`, a skeleton overlay is shown on top of the rows. The number of skeleton rows and columns is configured via `kbqAgGridLoadingOverlayConfigProvider`.
+The `kbqAgGridLoadingOverlay` directive controls the grid loading state: when the value is `true`, a skeleton overlay is shown on top of the rows.
 
-The overlay can be shown before the first load: while there is no data, the overlay covers the grid, and once loading starts the rows appear with skeletons in the cells. In the example, a button starts the loading.
+The skeleton placeholder takes the place of the grid before loading. Regardless of the contents of the future grid, the placeholder consists of a header, 3 columns and 3 rows. The number of columns and rows can be adjusted via `kbqAgGridLoadingOverlayConfigProvider`. The first column has a fixed size, the rest stretch equally. The placeholder bars in the cells imitate the real content and have different widths.
+
+After the grid is initialized, the data starts loading. For consistency, the placeholder of three rows stays during loading, but now it reflects the real set of columns and their widths, and the selection column. The placeholder bars in the cells still have different widths to imitate the real content.
 
 <Example id="ag-grid-loading-overlay" />
 
