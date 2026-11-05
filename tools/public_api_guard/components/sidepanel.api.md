@@ -26,7 +26,6 @@ import { Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { SimpleChanges } from '@angular/core';
@@ -63,16 +62,13 @@ export class KbqSidepanelBody {
 }
 
 // @public
-export class KbqSidepanelClose implements OnInit, OnChanges {
-    constructor(sidepanelRef: KbqSidepanelRef, elementRef: ElementRef<HTMLElement>, sidepanelService: KbqSidepanelService);
+export class KbqSidepanelClose implements OnChanges {
+    constructor(declaredSidepanelRef: KbqSidepanelRef | null, elementRef: ElementRef<HTMLElement>, sidepanelService: KbqSidepanelService);
     // (undocumented)
     kbqSidepanelClose: any;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
-    // (undocumented)
-    ngOnInit(): void;
-    // (undocumented)
-    sidepanelRef: KbqSidepanelRef;
+    get sidepanelRef(): KbqSidepanelRef;
     // (undocumented)
     sidepanelResult: any;
     // (undocumented)
