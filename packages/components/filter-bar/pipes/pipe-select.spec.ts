@@ -693,6 +693,36 @@ describe('KbqPipeSelectComponent', () => {
             expect(getOptions()[0].querySelector('.kbq-option-caption')!.textContent!.trim()).toBe('category.generic');
         });
 
+        it('should highlight the name and caption matched by the search', async () => {
+            vi.useFakeTimers();
+
+            setTemplate([CAPTIONED]);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            getPipeComponent().searchControl.setValue('generic');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const option = getOptions()[0];
+
+            expect(option.querySelector('.kbq-option-caption mark.kbq-highlight-background')!.textContent).toBe(
+                'generic'
+            );
+
+            getPipeComponent().searchControl.setValue('Threat');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(
+                option.querySelector('div:not(.kbq-option-caption) mark.kbq-highlight-background')!.textContent
+            ).toBe('Threat');
+        });
+
         it('should leave an option without a caption as a bare text node', async () => {
             vi.useFakeTimers();
 

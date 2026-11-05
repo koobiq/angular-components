@@ -11,6 +11,7 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -36,7 +37,8 @@ import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
         NgTemplateOutlet,
         KbqIcon,
         KbqInputModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        KbqHighlightModule
     ],
     templateUrl: 'pipe-select.html',
     styleUrls: ['base-pipe.scss'],

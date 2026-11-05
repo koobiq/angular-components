@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import {
     KbqFilter,
     KbqFilterBarModule,
@@ -48,17 +48,10 @@ const TREE_EVENTS: KbqTreeSelectNode[] = [
                 <ng-container *kbqPipe="pipe" />
             }
         </kbq-filter-bar>
-
-        <ng-template #optionTemplate let-option="option">
-            <div>{{ option.name }}</div>
-            <div class="kbq-option-caption">{{ option.caption }}</div>
-        </ng-template>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarOptionCaptionExample {
-    readonly optionTemplate = viewChild<TemplateRef<any>>('optionTemplate');
-
     activeFilter: KbqFilter = this.getDefaultFilter();
 
     readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
@@ -90,6 +83,7 @@ export class FilterBarOptionCaptionExample {
             id: 'Select',
             type: KbqPipeTypes.Select,
             values: EVENTS,
+            search: true,
             multilineOptions: true,
 
             cleanable: true,
@@ -97,12 +91,11 @@ export class FilterBarOptionCaptionExample {
             disabled: false
         },
         {
-            name: 'Tree custom',
-            id: 'TreeCustom',
+            name: 'Tree',
+            id: 'Tree',
             type: KbqPipeTypes.TreeSelect,
             values: TREE_EVENTS,
             search: true,
-            valueTemplate: this.optionTemplate(),
             multilineOptions: true,
 
             cleanable: true,
@@ -158,14 +151,15 @@ export class FilterBarOptionCaptionExample {
                     id: 'Select',
                     type: KbqPipeTypes.Select,
                     value: null,
+                    search: true,
 
                     cleanable: true,
                     removable: false,
                     disabled: false
                 },
                 {
-                    name: 'Tree custom',
-                    id: 'TreeCustom',
+                    name: 'Tree',
+                    id: 'Tree',
                     type: KbqPipeTypes.TreeSelect,
                     search: true,
                     value: null,
