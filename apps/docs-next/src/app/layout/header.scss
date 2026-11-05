@@ -97,21 +97,63 @@
     align-self: center;
     flex-shrink: 0;
 
+    // A section that is hidden in this menu and open is marked as the others are: by the fill.
     &.docs-next-header__more_selected {
-        color: var(--kbq-foreground-error);
+        background: var(--kbq-background-contrast-less);
     }
 }
 
+// Figma: Navbar Item (126:23805). The link is the whole height of the header, 12px of room on each side and 1px after;
+// the pill with the 8px radius, 32 high, is drawn inside it, so the click area is more than what is painted. The open
+// section is filled, not coloured: the text stays contrast in every state.
 .docs-next-header__section {
+    position: relative;
+    padding: 0 calc(var(--kbq-size-m) + 1px) 0 var(--kbq-size-m);
     color: var(--kbq-foreground-contrast);
+    isolation: isolate;
 
-    &:hover {
-        color: var(--kbq-foreground-contrast-secondary);
+    &::before {
+        position: absolute;
+        // 32 high, in the middle of the link, which is a pixel short of the 48 of the header for its line.
+        top: calc(50% - var(--kbq-size-l));
+        right: 1px;
+        bottom: auto;
+        left: 0;
+        height: calc(var(--kbq-size-l) * 2);
+        z-index: -1;
+        border-radius: var(--kbq-size-s);
+        content: '';
     }
 
-    // The mockup marks the open section with the error color, the red of the logo.
+    &:hover::before {
+        background: var(--kbq-states-background-transparent-hover);
+    }
+
+    &:active::before {
+        background: var(--kbq-states-background-transparent-active);
+    }
+
+    // The ring is drawn on the pill, not on the whole link.
+    &:focus-visible {
+        box-shadow: none;
+
+        &::before {
+            box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+        }
+    }
+
     &.docs-next-header__section_selected {
-        color: var(--kbq-foreground-error);
+        &::before {
+            background: var(--kbq-background-contrast-less);
+        }
+
+        &:hover::before {
+            background: var(--kbq-states-background-contrast-fade-hover);
+        }
+
+        &:active::before {
+            background: var(--kbq-states-background-contrast-fade-active);
+        }
     }
 }
 
