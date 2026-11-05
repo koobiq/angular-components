@@ -14,7 +14,7 @@
     // over it, and no less than a press needs.
     --docs-next-toc-rail-height: max(
         32px,
-        min(calc(var(--docs-next-toc-rail-count) * 12px + 16px), calc(100vh - var(--docs-next-header-height) - 96px))
+        min(calc(var(--docs-next-toc-rail-count) * 12px + 16px), calc(100dvh - var(--docs-next-header-height) - 96px))
     );
     // The room the button leaves above itself, so that its ticks start level with the title of the article.
     --docs-next-toc-rail-top: 48px;
@@ -69,50 +69,53 @@
     }
 }
 
-@media (hover: hover) and (pointer: fine) {
-    .docs-next-toc-rail__trigger:hover .docs-next-toc-rail__tick:not(.docs-next-toc-rail__tick_active) {
-        background: var(--kbq-icon-contrast-fade);
-    }
-}
-
-// The panel hangs under the rail, with its right edges on the rail's, and spreads to the left over the text. It is part
-// of the rail's own element, so the pointer does not leave the two on its way into it. It never covers the button, so a
-// press still reaches it, and it stops at the bottom of the window: the list scrolls inside it.
+// The panel opens over the rail, a little above its first tick, with its right edges on the rail's, and spreads to the
+// left over the text. It is part of the rail's own element, so the pointer does not leave the two on its way into it.
+// It stops at the bottom of the window: the list scrolls inside it.
 .docs-next-toc-rail__panel {
-    // The room left under the button, down to the bottom of the window.
+    // The room from the top of the panel down to the bottom of the window.
     --docs-next-toc-rail-room: calc(
-        100vh - var(--docs-next-header-height) - var(--docs-next-toc-rail-top) - var(--docs-next-toc-rail-height)
+        100dvh - var(--docs-next-header-height) - var(--docs-next-toc-rail-top) + var(--kbq-size-s)
     );
 
     position: absolute;
-    top: calc(100% + var(--kbq-size-xxs));
+    top: calc(-1 * var(--kbq-size-s));
     right: 0;
     z-index: 1;
     box-sizing: border-box;
     width: min(260px, calc(100vw - var(--docs-next-aside-width) - 96px));
-    max-height: calc(var(--docs-next-toc-rail-room) - var(--kbq-size-xxs) - var(--kbq-size-l));
+    // Never less than a few items, however short the window: the list scrolls inside.
+    max-height: max(120px, calc(var(--docs-next-toc-rail-room) - var(--kbq-size-l)));
     padding: var(--kbq-size-xs);
     border: 1px solid var(--kbq-line-contrast-less);
     border-radius: var(--kbq-size-m);
     background: var(--kbq-background-card);
     box-shadow: var(--kbq-shadow-popup);
     overflow-y: auto;
-    overscroll-behavior: contain;
+    // The wheel scrolls the list while it has anything to scroll, and the page when it has not or when the list is at its end.
+    overscroll-behavior: auto;
     opacity: 0;
     transform: scale(0.96);
     transform-origin: top right;
     visibility: hidden;
-    // The panel goes out of sight after it has faded, and comes into it at once.
+    // Going is quicker than coming, as it answers the pointer leaving or an item chosen: the panel goes out of sight after
+    // it has faded, and comes into it at once.
     transition:
-        opacity 150ms var(--docs-next-ease-out),
-        transform 150ms var(--docs-next-ease-out),
-        visibility 0s linear 150ms;
+        opacity 100ms var(--docs-next-ease-out),
+        transform 100ms var(--docs-next-ease-out),
+        visibility 0s linear 100ms;
 
     &.docs-next-toc-rail__panel_open {
         opacity: 1;
         transform: none;
         visibility: visible;
+        transition-duration: 150ms, 150ms, 0s;
         transition-delay: 0s;
+    }
+
+    // A key press is answered at once, both ways.
+    &.docs-next-toc-rail__panel_instant {
+        transition: none;
     }
 }
 
@@ -145,6 +148,10 @@
         }
     }
 
+    &:active {
+        background: var(--kbq-states-background-transparent-active);
+    }
+
     &:focus-visible {
         box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
     }
@@ -153,8 +160,19 @@
         padding-left: calc(var(--kbq-size-s) + var(--kbq-size-l));
     }
 
+    // The item the reader is at keeps its own states, as the open item of the side menu does.
     &[aria-current='location'] {
         background: var(--kbq-background-contrast-less);
         color: var(--kbq-foreground-contrast);
+
+        @media (hover: hover) and (pointer: fine) {
+            &:hover {
+                background: var(--kbq-states-background-contrast-fade-hover);
+            }
+        }
+
+        &:active {
+            background: var(--kbq-states-background-contrast-fade-active);
+        }
     }
 }

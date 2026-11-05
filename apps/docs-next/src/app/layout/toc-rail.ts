@@ -3,28 +3,35 @@ import {
     afterNextRender,
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     ElementRef,
     inject,
     Injector,
     signal,
     viewChild
 } from '@angular/core';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { DocsNextPageOutline } from '../services/page-outline';
 import { docsNextIsPlainClick } from '../services/plain-click';
 import { DocsNextSiteState } from '../services/site-state';
 
+/**
+ * How long the pointer has to rest on the rail before it opens the panel: the rail stands at the edge of the window, on
+ * the way to the scrollbar of the page, and a pass across it is not a request.
+ */
+const OPEN_DELAY = 100;
 /** How long the panel stays after the mouse has left it, so that a pass across the edge does not close it. */
-const CLOSE_DELAY = 300;
+const CLOSE_DELAY = 120;
 
 /**
  * "On this page" on a tablet: a rail of ticks, one for each heading of the article with the one the reader is at
  * marked, and a panel with the list of the headings that the rail opens. The rail opens it by a press (a click, a tap,
- * Enter or Space) and, for a mouse, by pointing at it too. The panel hangs under the button, so a press reaches the
- * button while the list is open; Tab goes from the one into the other, Escape closes it and gives the focus back to
- * the button, and the item chosen gives the focus to its heading.
+ * Enter or Space) and, for a mouse, by pointing at it too. The panel opens over the rail; Tab goes from the button into
+ * it, Escape closes it and gives the focus back to the button, and the item chosen gives the focus to its heading.
  */
 @Component({
     selector: 'docs-next-toc-rail',
+    imports: [KbqScrollbarViewport],
     template: `
         <nav
             class="docs-next-toc-rail"
@@ -54,8 +61,10 @@ const CLOSE_DELAY = 300;
 
                 <div
                     #panel
+                    kbqScrollbarViewport
                     class="docs-next-toc-rail__panel"
                     id="docs-next-toc-rail-panel"
+                    [class.docs-next-toc-rail__panel_instant]="instant()"
                     [class.docs-next-toc-rail__panel_open]="open()"
                     [inert]="!open()"
                 >
@@ -83,7 +92,6 @@ const CLOSE_DELAY = 300;
     host: {
         '[style.display]': 'outline.links().length ? null : "none"',
         '(document:pointerdown)': 'onOutsidePress($event)',
-        '(document:keydown)': 'onEscape($event)',
         '(focusout)': 'onFocusOut($event)',
         '(keydown)': 'onKeydown($event)',
         '(pointerenter)': 'onPointer($event, true)',
@@ -101,16 +109,30 @@ export class DocsNextTocRail {
     private readonly panel = viewChild.required<ElementRef<HTMLElement>>('panel');
 
     protected readonly open = signal(false);
+    /** Whether the keyboard opened the panel: a key press is answered at once, without the fade. */
+    protected readonly instant = signal(false);
+    private openTimer?: ReturnType<typeof setTimeout>;
     private closeTimer?: ReturnType<typeof setTimeout>;
-    /** Whether pointing, not a press, opened the panel: the pointer is still over it, so a click does not close it. */
-    private openedByHover = false;
+    /**
+     * How the open panel got open: by a press or the keyboard ('press'); by pointing ('hover'), when the pointer is still
+     * over it, so a click on an item does not close it and it goes with the pointer; or by pointing and then a press
+     * ('pinned'), which keeps it open like a menu until it is closed.
+     */
+    private mode: 'press' | 'hover' | 'pinned' = 'press';
+
+    constructor() {
+        inject(DestroyRef).onDestroy(() => this.document.removeEventListener('keydown', this.onEscape));
+    }
 
     /** A press from the keyboard (a click with no pointer behind it) moves the focus into the list, as a mouse need not. */
     protected toggle(event: MouseEvent): void {
         // A panel the pointer has just opened is pinned by the press: closing it here would close what the pointer
-        // opened, and the panel could not be opened again until the pointer left the rail and came back.
-        if (this.openedByHover) {
-            this.openedByHover = false;
+        // opened, and the panel could not be opened again until the pointer left the rail and came back. From the
+        // keyboard the press still takes the focus into the list.
+        if (this.mode === 'hover') {
+            this.mode = 'pinned';
+
+            if (event.detail === 0) this.focusItem();
 
             return;
         }
@@ -137,7 +159,6 @@ export class DocsNextTocRail {
                     this.focusItem();
                 } else {
                     this.show(true);
-                    this.openedByHover = false;
                 }
             }
 
@@ -165,13 +186,18 @@ export class DocsNextTocRail {
 
     protected close(returnFocus = false): void {
         clearTimeout(this.closeTimer);
+        clearTimeout(this.openTimer);
 
         if (!this.open()) return;
 
-        this.open.set(false);
-        this.openedByHover = false;
+        // The panel goes `inert` when it closes, which would drop a focus that is inside it onto `<body>`.
+        const hadFocus = this.panel().nativeElement.contains(this.document.activeElement);
 
-        if (returnFocus) this.trigger().nativeElement.focus();
+        this.open.set(false);
+        this.mode = 'press';
+        this.document.removeEventListener('keydown', this.onEscape);
+
+        if (returnFocus || hadFocus) this.trigger().nativeElement.focus();
     }
 
     /** Pointing opens the panel for a mouse only: for a finger the press does it, and a touch is no hover. */
@@ -179,13 +205,19 @@ export class DocsNextTocRail {
         if (event.pointerType !== 'mouse') return;
 
         clearTimeout(this.closeTimer);
+        clearTimeout(this.openTimer);
 
         if (inside) {
             if (!this.open()) {
-                this.show();
-                this.openedByHover = true;
+                this.openTimer = setTimeout(() => {
+                    // A press or a key may have opened it in the meantime.
+                    if (this.open()) return;
+
+                    this.show();
+                    this.mode = 'hover';
+                }, OPEN_DELAY);
             }
-        } else if (this.openedByHover) {
+        } else if (this.mode === 'hover') {
             // A panel a press has pinned stays open, as a menu does; the one the pointer opened goes with the pointer.
             this.closeTimer = setTimeout(() => this.close(), CLOSE_DELAY);
         }
@@ -200,14 +232,15 @@ export class DocsNextTocRail {
 
     /**
      * Escape closes the panel. The pointer opens it with the focus left on the page, so the key is heard on the whole
-     * document: what a hover reveals has to be dismissible without moving the pointer (WCAG 1.4.13).
+     * document, but only while the panel is open: what a hover reveals has to be dismissible without moving the pointer
+     * (WCAG 1.4.13).
      */
-    protected onEscape(event: KeyboardEvent): void {
-        if (event.key !== 'Escape' || !this.open()) return;
+    private readonly onEscape = (event: KeyboardEvent): void => {
+        if (event.key !== 'Escape') return;
 
         // The focus inside the panel goes back to the button; there is none when the pointer has opened it.
         this.close(this.host.contains(this.document.activeElement));
-    }
+    };
 
     protected onOutsidePress(event: PointerEvent): void {
         if (this.open() && !this.host.contains(event.target as Node)) this.close();
@@ -219,32 +252,18 @@ export class DocsNextTocRail {
         event.preventDefault();
 
         // Opened by pointing, the panel stays while the pointer is over it, and goes with the pointer.
-        const keepsOpen = this.openedByHover;
-
-        if (!keepsOpen) this.close();
+        if (this.mode !== 'hover') this.close();
 
         this.outline.scrollTo(id);
-
-        // A panel that has closed under the focus would leave it on `<body>`, and the next Tab would start the page over.
-        if (!keepsOpen) this.focusHeading(id);
     }
 
     private show(focusItem = false): void {
+        this.instant.set(focusItem);
         this.open.set(true);
+        this.document.addEventListener('keydown', this.onEscape);
 
         // The list is hidden until it has been drawn open, and a hidden element takes no focus.
         if (focusItem) afterNextRender(() => this.focusItem(), { injector: this.injector });
-    }
-
-    /** Puts the focus on the heading the link has led to, without calling off the smooth scroll on its way there. */
-    private focusHeading(id: string): void {
-        const heading = this.document.getElementById(id);
-
-        if (!heading) return;
-
-        // A heading takes no focus of its own, and taking it must not scroll the page a second time.
-        heading.setAttribute('tabindex', '-1');
-        heading.focus({ preventScroll: true });
     }
 
     private items(): HTMLAnchorElement[] {
