@@ -95,6 +95,35 @@
     }
 }
 
+// Blink rounds the font metrics and the half-leading of a line, so under a fractional page zoom a label centred as a
+// line box sits up to a device pixel above the middle. Baseline alignment leaves the line box out of it: the empty
+// `::before` puts the baseline half a cap height below the middle of the badge, which centres the capitals.
+// Goes last in `kbq-badge-typography()`, whose line height it replaces.
+@mixin _kbq-badge-label-alignment() {
+    @supports (height: 1cap) {
+        .kbq-badge {
+            align-items: baseline;
+            // A flex line starts at the item with the longest way to its baseline. In the content box of an outlined
+            // badge a 16px line would take that place from `::before` and push the label down.
+            line-height: 1;
+
+            &::before {
+                content: '';
+
+                height: calc(50% + 0.5cap);
+            }
+
+            & > .kbq-icon {
+                align-self: center;
+            }
+
+            & .kbq-badge-caption {
+                line-height: 1;
+            }
+        }
+    }
+}
+
 @mixin kbq-badge-typography() {
     .kbq-badge {
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
@@ -111,4 +140,6 @@
             @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
     }
+
+    @include _kbq-badge-label-alignment();
 }
