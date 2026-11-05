@@ -42,21 +42,14 @@ const opensElsewhere = ({ button, ctrlKey, metaKey, shiftKey, altKey }: MouseEve
 /**
  * Holds the place of a code block until the block renders. On a tab reached in the app the blocks render as they come
  * into view, and the page has to be as tall before a block renders as after, or a link to a heading below it would
- * land off its heading. The block's own classes lay the placeholder out, down to the table the line numbers plugin
- * wraps a file of several lines in; a file of one line stays text, as the plugin leaves it. Never rendered on the
- * server, which renders the block itself.
+ * land off its heading. The block's own classes lay the placeholder out, and its plain text is as tall as the lines of
+ * the highlighted code. Never rendered on the server, which renders the block itself.
  */
 @Component({
     selector: 'docs-api-code-placeholder',
     template: `
         <div class="kbq-code-block__main kbq-scrollbar-viewport_native-scrollbar-hidden">
-            @if (lines().length > 1) {
-                <pre
-                    class="kbq-code-block__pre"
-                ><code class="hljs kbq-code-block__code"><table class="hljs-ln"><tbody>@for (line of lines(); track $index) {<tr><td class="hljs-ln-line hljs-ln-code">{{ line }}</td></tr>}</tbody></table></code></pre>
-            } @else {
-                <pre class="kbq-code-block__pre"><code class="hljs kbq-code-block__code">{{ code() }}</code></pre>
-            }
+            <pre class="kbq-code-block__pre"><code class="hljs kbq-code-block__code">{{ code() }}</code></pre>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,15 +64,6 @@ export class DocsApiCodePlaceholder {
     readonly code = input.required<string>();
     /** Whether the block is filled, as the blocks of JSDoc are, rather than outlined, as a signature is. */
     readonly filled = input(false, { transform: booleanAttribute });
-
-    /** The lines of the code, a last line of whitespace alone dropped, as the plugin drops it. */
-    protected readonly lines = computed(() => {
-        const lines = this.code().split(/\r\n|\r|\n/);
-
-        if (lines[lines.length - 1].trim() === '') lines.pop();
-
-        return lines;
-    });
 }
 
 /** JSDoc text: the HTML compiled from its Markdown, and the code in between, highlighted. */

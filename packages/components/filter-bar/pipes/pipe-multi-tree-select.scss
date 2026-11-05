@@ -13,3 +13,30 @@
         height: unset;
     }
 }
+
+.kbq-pipe-multi-tree-select__panel_custom-value {
+    .kbq-tree-option {
+        align-items: flex-start;
+
+        & > .kbq-pseudo-checkbox,
+        & > kbq-checkbox {
+            margin-top: var(--kbq-size-3xs);
+        }
+
+        & > .kbq-tree-node-toggle {
+            height: var(--kbq-typography-text-normal-line-height);
+            margin-top: 0;
+        }
+    }
+}
+
+.kbq-pipe-multi-tree-select__panel_multiline {
+    .kbq-tree-option .kbq-option-text {
+        flex: 1 1 auto;
+        min-width: 0;
+
+        white-space: normal;
+        overflow-wrap: break-word;
+        text-overflow: clip;
+    }
+}

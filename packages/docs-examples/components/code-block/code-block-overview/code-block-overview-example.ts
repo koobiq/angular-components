@@ -1,30 +1,23 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import {
     type KbqCodeBlockFile,
     kbqCodeBlockHighlightJsConfigProvider,
     KbqCodeBlockModule
 } from '@koobiq/components/code-block';
-import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
- * @title Code-block with lineNumbers attribute
+ * @title Code-block overview
  */
 @Component({
     selector: 'code-block-overview-example',
-    imports: [
-        KbqCodeBlockModule,
-        KbqToggleModule,
-        FormsModule
-    ],
+    imports: [KbqCodeBlockModule],
     template: `
-        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="lineNumbers">Line numbers</kbq-toggle>
-        <kbq-code-block canToggleSoftWrap [files]="files" [lineNumbers]="lineNumbers" />
+        <kbq-code-block [files]="files" />
     `,
     providers: [
         kbqCodeBlockHighlightJsConfigProvider({
             languages: {
-                javascript: () => import('highlight.js/lib/languages/javascript')
+                typescript: () => import('highlight.js/lib/languages/typescript')
             }
         })
     ],
@@ -33,10 +26,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 export class CodeBlockOverviewExample {
     readonly files: KbqCodeBlockFile[] = [
         {
-            content: `function getVulnerabilities() {\n\treturn ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert', 'IDS/IPS Alert', 'Zero-Day Exploit', 'XSS', 'Malware', 'Ransomware', 'Phishing'];\n};`,
-            language: 'javascript'
+            content: `function getVulnerabilities(): string[] {\n\treturn ['XSS', 'DDoS', 'Phishing'];\n}`,
+            language: 'typescript'
         }
     ];
-
-    lineNumbers: boolean = true;
 }

@@ -106,7 +106,7 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
 
         const { control } = context;
 
-        return !control.disabled() && !control.empty() && (context.canClear?.() ?? true);
+        return !control.disabled() && !control.readonly?.() && !control.empty() && (context.canClear?.() ?? true);
     }
 
     private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(

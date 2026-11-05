@@ -148,12 +148,14 @@ export class E2eCodeBlockTabs {
         <div class="e2e-code-block-grid" data-testid="e2eScreenshotTarget">
             <kbq-code-block lineNumbers [files]="[importsFile]" />
             <kbq-code-block hideTabs lineNumbers [files]="[importsFile]" />
+            <!-- A wrapped line goes on under its code, not under its number -->
+            <kbq-code-block hideTabs lineNumbers softWrap [files]="[importsFile]" />
         </div>
     `,
     styles: `
         .e2e-code-block-grid {
             display: inline-grid;
-            grid-template-columns: repeat(2, 250px);
+            grid-template-columns: repeat(3, 250px);
             align-items: start;
             gap: var(--kbq-size-s);
             padding: var(--kbq-size-xs);

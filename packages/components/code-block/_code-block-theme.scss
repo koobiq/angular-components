@@ -301,7 +301,7 @@
             color: kbq-code-block-hljs-attr(variable-language-color);
         }
 
-        .hljs-ln-n {
+        .kbq-code-block__line::before {
             color: kbq-code-block-hljs-attr(line-numbers-color);
         }
 

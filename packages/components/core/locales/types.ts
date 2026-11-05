@@ -14,7 +14,7 @@ import type { KbqDeepPartial } from '../utils';
 export type KbqA11yLocaleConfiguration = {
     /**
      * Close button of a modal, popover, sidepanel, content panel, notification center or toast, and of
-     * the expandable search, whose button collapses the field back to its icon.
+     * the expandable search, whose suffix collapses an empty field back to its icon.
      */
     close: string;
     /** Confirm button of an inline edit. */

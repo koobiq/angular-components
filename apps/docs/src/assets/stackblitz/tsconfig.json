@@ -1,11 +1,8 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "baseUrl": "./",
-        "outDir": "./dist/out-tsc",
-        "sourceMap": true,
-        "declaration": false,
-        "downlevelIteration": true,
+        "skipLibCheck": true,
+        "isolatedModules": true,
         "experimentalDecorators": true,
         "moduleResolution": "bundler",
         "importHelpers": true,

@@ -148,7 +148,7 @@ $z-index-above-content: 2;
     width: $arrow-size;
     height: $arrow-size;
 
-    transform: rotate(45deg);
+    transform: translate(var(--kbq-popover-arrow-shift-x, 0px), var(--kbq-popover-arrow-shift-y, 0px)) rotate(45deg);
 }
 
 @include pop-up.popup-arrow-positions(kbq-popover, $arrow-offset, $arrow-padding);

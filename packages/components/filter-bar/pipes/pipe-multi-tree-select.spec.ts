@@ -1,10 +1,10 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ChangeDetectorRef, Component, type DebugElement, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, type DebugElement, inject, type TemplateRef, viewChild } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs';
-import { KBQ_LOCALE_SERVICE, type KbqFilterBarLocaleConfiguration } from '@koobiq/components/core';
+import { KBQ_LOCALE_SERVICE, type KbqFilterBarLocaleConfiguration, KbqHighlightModule } from '@koobiq/components/core';
 import {
     KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
     kbqBuildTree,
@@ -16,6 +16,7 @@ import {
     KbqPipeTypes,
     type KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
+import { KbqIcon } from '@koobiq/components/icon';
 import { kbqTreeSelectAllValue } from '@koobiq/components/tree';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeMultiTreeSelectComponent } from './pipe-multi-tree-select';
@@ -66,9 +67,28 @@ const createFilter = (pipes: KbqPipe[]): KbqFilter => ({
     pipes
 });
 
+interface CustomTreeNode extends Omit<KbqTreeSelectNode, 'children'> {
+    children: CustomTreeNode[] | null;
+    icon?: string;
+    count?: number;
+}
+
+const CUSTOM_TREE_DATA: CustomTreeNode[] = [
+    {
+        name: 'Installed',
+        value: 'installed',
+        icon: 'kbq-square_16',
+        count: 12,
+        children: [
+            { name: 'Version 4.3.0.269', value: 'version-4', count: 0, children: null },
+            { name: 'Agent is unavailable for installation', value: 'agent-unavailable', count: 789, children: null }
+        ]
+    }
+];
+
 @Component({
     selector: 'test-app',
-    imports: [KbqFilterBarModule],
+    imports: [KbqFilterBarModule, KbqHighlightModule, KbqIcon],
     template: `
         <kbq-filter-bar
             [pipeTemplates]="pipeTemplates"
@@ -81,10 +101,24 @@ const createFilter = (pipes: KbqPipe[]): KbqFilter => ({
             <kbq-pipe-add />
             <kbq-filter-reset />
         </kbq-filter-bar>
+
+        <ng-template #optionTemplate let-option="option" let-search="search">
+            <div class="test-tree-node">
+                @if (option.icon) {
+                    <i class="test-tree-node__icon" aria-hidden="true" [kbq-icon]="option.icon"></i>
+                }
+                <span class="test-tree-node__name" [innerHTML]="option.name | kbqHighlightBackground: search"></span>
+                @if (option.count !== undefined) {
+                    <span class="test-tree-node__count">{{ option.count }}</span>
+                }
+            </div>
+        </ng-template>
     `
 })
 class TestComponent {
     readonly changeDetectorRef = inject(ChangeDetectorRef);
+
+    readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
 
     selectedAllEqualsSelectedNothing = true;
 
@@ -447,6 +481,230 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             expect(getPipeComponent().data.value).toBeNull();
             expect(changeSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('valueTemplate', () => {
+        const getOptions = (): HTMLElement[] => Array.from(document.querySelectorAll<HTMLElement>('.kbq-tree-option'));
+
+        const renderCustomOptions = async (value: unknown[] = []) => {
+            vi.useFakeTimers();
+
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            fixture.detectChanges();
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    ...fixture.componentInstance.pipeTemplates[0],
+                    values: CUSTOM_TREE_DATA,
+                    valueTemplate: fixture.componentInstance.optionTemplate()
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value, search: true, selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        it('should render source fields for branches and leaves without replacing tree controls', async () => {
+            await renderCustomOptions();
+
+            const [selectAll, branch, leaf] = getOptions();
+
+            expect(selectAll.querySelector('.test-tree-node')).toBeNull();
+            expect(branch.querySelector('.test-tree-node__icon')).not.toBeNull();
+            expect(branch.querySelector('.test-tree-node__name')!.textContent).toBe('Installed');
+            expect(branch.querySelector('.test-tree-node__count')!.textContent).toBe('12');
+            expect(branch.querySelector('kbq-pseudo-checkbox')).not.toBeNull();
+            expect(branch.querySelector('kbq-tree-node-toggle')).not.toBeNull();
+            expect(leaf.querySelector('.test-tree-node__name')!.textContent).toBe('Version 4.3.0.269');
+            expect(leaf.querySelector('.test-tree-node__count')!.textContent).toBe('0');
+            expect(leaf.querySelector('kbq-pseudo-checkbox')).not.toBeNull();
+        });
+
+        it('should preserve the selected value and text-only trigger', async () => {
+            await renderCustomOptions();
+
+            getOptions()[2].click();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getPipeComponent().data.value).toEqual(['version-4']);
+
+            getPipeComponent().select().close();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(
+                getPipeComponent()
+                    .select()
+                    .triggerValues.map(({ viewValue }) => viewValue)
+            ).toEqual([
+                'Version 4.3.0.269'
+            ]);
+            expect(fixture.nativeElement.querySelector('.kbq-pipe__value').textContent.trim()).toBe(
+                'Version 4.3.0.269'
+            );
+        });
+
+        it('should provide the search string for highlighting the source name', async () => {
+            await renderCustomOptions();
+
+            const component = getPipeComponent();
+
+            component.searchControl.setValue('Version');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(
+                component.treeControl.filterModel.selected
+                    .filter(({ value }) => value !== kbqTreeSelectAllValue)
+                    .map((node) => node.name)
+            ).toEqual(['Installed', 'Version 4.3.0.269']);
+            expect(document.querySelector('.test-tree-node__name mark')!.textContent).toBe('Version');
+        });
+
+        it('should not search by a rendered counter', async () => {
+            await renderCustomOptions();
+
+            const component = getPipeComponent();
+
+            component.searchControl.setValue('789');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(component.treeControl.filterModel.selected).toEqual([]);
+        });
+
+        it('should keep the default text-only nodes when no template is provided', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.pipeTemplates = [
+                { ...fixture.componentInstance.pipeTemplates[0], values: CUSTOM_TREE_DATA }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(document.querySelector('.test-tree-node')).toBeNull();
+            expect(getOptions()[0].querySelector('.kbq-option-text')!.textContent).toBe('Installed');
+        });
+
+        it('should apply and remove a template without replacing values', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.pipeTemplates = [
+                { ...fixture.componentInstance.pipeTemplates[0], values: CUSTOM_TREE_DATA }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    ...fixture.componentInstance.pipeTemplates[0],
+                    values: undefined,
+                    valueTemplate: fixture.componentInstance.optionTemplate()
+                }
+            ];
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(document.querySelector('.test-tree-node__name')!.textContent).toBe('Installed');
+            expect(
+                document
+                    .querySelector('.kbq-pipe-multi-tree-select__panel')!
+                    .classList.contains('kbq-pipe-multi-tree-select__panel_custom-value')
+            ).toBe(true);
+
+            fixture.componentInstance.pipeTemplates = [
+                { ...fixture.componentInstance.pipeTemplates[0], values: undefined, valueTemplate: undefined }
+            ];
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(document.querySelector('.test-tree-node')).toBeNull();
+            expect(getOptions()[0].querySelector('.kbq-option-text')!.textContent).toBe('Installed');
+            expect(
+                document
+                    .querySelector('.kbq-pipe-multi-tree-select__panel')!
+                    .classList.contains('kbq-pipe-multi-tree-select__panel_custom-value')
+            ).toBe(false);
+        });
+
+        it('should control multiline text independently of valueTemplate', async () => {
+            await renderCustomOptions();
+
+            const panel = document.querySelector('.kbq-pipe-multi-tree-select__panel')!;
+            const hasMultilineClass = () => panel.classList.contains('kbq-pipe-multi-tree-select__panel_multiline');
+            const hasCustomValueClass = () =>
+                panel.classList.contains('kbq-pipe-multi-tree-select__panel_custom-value');
+
+            expect(hasCustomValueClass()).toBe(true);
+            expect(hasMultilineClass()).toBe(false);
+
+            fixture.componentInstance.pipeTemplates = [
+                { ...fixture.componentInstance.pipeTemplates[0], multilineOptions: true }
+            ];
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(hasCustomValueClass()).toBe(true);
+            expect(hasMultilineClass()).toBe(true);
+
+            fixture.componentInstance.pipeTemplates = [
+                { ...fixture.componentInstance.pipeTemplates[0], multilineOptions: false }
+            ];
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(hasCustomValueClass()).toBe(true);
+            expect(hasMultilineClass()).toBe(false);
+        });
+
+        it('should use current source fields after values are replaced', async () => {
+            await renderCustomOptions();
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    ...fixture.componentInstance.pipeTemplates[0],
+                    values: [
+                        {
+                            ...CUSTOM_TREE_DATA[0],
+                            children: [{ name: 'Version 5.0.0.0', value: 'version-5', count: 42, children: null }]
+                        }
+                    ]
+                }
+            ];
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            getPipeComponent().treeControl.expandAll();
+            fixture.detectChanges();
+
+            expect(getOptions()[2].querySelector('.test-tree-node__name')!.textContent).toBe('Version 5.0.0.0');
+            expect(getOptions()[2].querySelector('.test-tree-node__count')!.textContent).toBe('42');
         });
     });
 

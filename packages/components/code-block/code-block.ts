@@ -80,8 +80,11 @@ export const kbqCodeBlockFallbackFileNameProvider = (fileName: string): Provider
 
 /** Default options for `kbq-code-block`. */
 export type KbqCodeBlockDefaultOptions = Partial<{
-    /** Whether the actionbar should remain visible when tabs are hidden. */
+    /** Whether the actionbar should remain visible when tabs are hidden. Defaults to `false`. */
     alwaysShowActionbar: boolean;
+
+    /** Whether to display line numbers. Defaults to `false`. */
+    lineNumbers: boolean;
 }>;
 
 /** Injection token used to configure the default options for all `kbq-code-block` components. */
@@ -168,8 +171,8 @@ export class KbqCodeBlock implements AfterViewInit {
         TemplateRef<KbqTabLinkTemplateContext>
     >(KbqCodeBlockTabLinkContent, { read: TemplateRef });
 
-    /** Whether to display line numbers. */
-    readonly lineNumbers = input(false, { transform: booleanAttribute });
+    /** Whether to display line numbers. Defaults to `lineNumbers` of `KBQ_CODE_BLOCK_DEFAULT_OPTIONS`, or `false`. */
+    readonly lineNumbers = input(this.defaultOptions?.lineNumbers ?? false, { transform: booleanAttribute });
 
     /** Whether the code block should be filled. */
     readonly filled = input<boolean, unknown>(false, { transform: booleanAttribute });

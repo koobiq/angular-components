@@ -53,8 +53,8 @@
         "zod": "^4.6.5"
     },
     "devDependencies": {
-        "@analogjs/vite-plugin-angular": "2.9.0",
-        "@analogjs/vitest-angular": "2.9.0",
+        "@analogjs/vite-plugin-angular": "2.9.2",
+        "@analogjs/vitest-angular": "2.9.2",
         "@angular-devkit/architect": "0.2102.29",
         "@angular-devkit/architect-cli": "0.2102.29",
         "@angular-devkit/core": "21.2.29",
@@ -97,7 +97,7 @@
         "@types/node": "^24.10.4",
         "@types/semver": "^7.7.1",
         "@types/spdx-satisfies": "^6.0.0",
-        "@vitest/eslint-plugin": "^1.6.27",
+        "@vitest/eslint-plugin": "^1.6.28",
         "angular-eslint": "^21.4.0",
         "autoprefixer": "^10.6.0",
         "axe-core": "^4.14.0",
@@ -161,7 +161,7 @@
         "typescript": "5.9.3",
         "typescript-eslint": "^8.60.1",
         "unified": "^11.0.5",
-        "vite": "^8.3.4",
+        "vite": "^8.3.5",
         "vitest": "4.1.12"
     },
     "resolutions": {
@@ -205,12 +205,13 @@
         "docs:generate-llms": "ts-node --project tools/llms/tsconfig.json tools/llms/generate.ts",
         "docs:generate-prerender-routes": "ts-node tools/generate-prerender-routes.ts",
         "docs:build": "yarn run build:docs-content && node tools/build-strict.mjs koobiq-docs:build:production",
+        "docs:update-stackblitz-lock": "node tools/update-stackblitz-lock.mjs",
         "docs:update-versions": "ts-node --project tools/update-doc-versions/tsconfig.json tools/update-doc-versions/update-doc-versions.ts",
         "docs:prune-is-new-badges": "ts-node tools/prune-is-new-badges",
         "docs:api-gen": "ts-node --project tools/api-gen/tsconfig.json tools/api-gen/generate-api-docs.ts",
         "validate:license": "ts-node --project ./tools/validate-licenses/tsconfig.json ./tools/validate-licenses/validate-licenses.ts",
         "-----RELEASE-----": "----------------------------------------------------------------------------------------",
-        "release:extract-docs-meta": "yarn run docs:api-gen && yarn run docs:generate-sitemap && yarn run docs:generate-prerender-routes && yarn run docs:generate-llms",
+        "release:extract-docs-meta": "yarn run docs:api-gen && yarn run docs:generate-sitemap && yarn run docs:generate-prerender-routes && yarn run docs:generate-llms && yarn run docs:update-stackblitz-lock",
         "release:stage:commit": "yarn run docs:prune-is-new-badges && ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli stage-commit",
         "release:publish:ci-github": "ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli publish-ci-github",
         "-----DEV-----": "--------------------------------------------------------------------------------------------",

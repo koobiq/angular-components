@@ -470,7 +470,7 @@ test.describe('docs app', () => {
     // After a navigation in the app the code blocks render as they come into view, each from a placeholder of its
     // height: the page is as tall before a block renders as after, so a link to a heading below lands on it. The tab
     // is reached from its overview, which lands at its top; the signature of the enum is a block of several lines,
-    // laid out as a table, well below the fold there.
+    // well below the fold there.
     test('renders the code blocks of an API tab reached in the app as they come into view', async ({ page }) => {
         await page.goto('/en/components/tooltip/overview');
         await waitForHydration(page);
@@ -482,7 +482,7 @@ test.describe('docs app', () => {
         const placeholder = entry.locator(':scope > docs-api-code-placeholder');
 
         await expect(page.locator('kbq-code-block').first()).toBeVisible();
-        await expect(placeholder.locator('table')).toBeAttached();
+        await expect(placeholder).toBeAttached();
 
         const placeholderHeight = await placeholder.evaluate((element) => element.getBoundingClientRect().height);
 

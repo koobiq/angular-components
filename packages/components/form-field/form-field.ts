@@ -152,6 +152,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
 
         '[class.kbq-form-field_invalid]': 'invalid',
         '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-form-field_readonly]': 'readonly()',
         '[class.kbq-form-field_autofilled]': 'autofilled',
         '[class.kbq-form-field_no-borders]': 'noBorders()',
         '[class.kbq-form-field_in-overlay]': 'inOverlay()',
@@ -380,7 +381,7 @@ export class KbqFormField
 
     /**
      * Whether the cleaner can be displayed: it requires a projected `kbq-cleaner`, an enabled control
-     * and a value that is not empty.
+     * that is not read-only and a value that is not empty.
      *
      * @docs-private
      */
@@ -392,6 +393,9 @@ export class KbqFormField
     get disabled(): boolean {
         return this.disabledState();
     }
+
+    /** Whether the form field control is read-only. */
+    readonly readonly = computed(() => !!this.control()?.readonly?.());
 
     /**
      * Whether the form field control's value was filled in by the browser. Controls that cannot be

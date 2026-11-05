@@ -33,6 +33,7 @@ import {
     type OnChanges,
     type OnInit,
     type Provider,
+    RendererStyleFlags2,
     type SimpleChanges,
     type TemplateRef,
     type Type,
@@ -47,7 +48,9 @@ import {
     applyPopupMargins,
     EmptyFocusTrapStrategy,
     KBQ_OVERLAY_LAYERS,
+    type KbqCaretRect,
     KbqComponentColors,
+    kbqCreateCaretOrigin,
     kbqInjectA11yLocaleConfiguration,
     kbqOptionalNumberAttribute,
     KbqOverflowShadowBottom,
@@ -68,6 +71,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
+import { getPopoverArrowShift } from './popover-positioning';
 
 export const defaultOffsetYWithArrow = 8;
 
@@ -188,6 +192,11 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
                 this.setStickPosition();
             }
 
+            if (state) {
+                this.detectChanges();
+                this.updateArrowPosition();
+            }
+
             // Every closing path ends here, and the panel is still in the DOM at this point, so this is the
             // one place where focus can be handed back to the trigger instead of falling to `<body>`.
             if (!state) {
@@ -202,8 +211,41 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
         }
     }
 
+    private resolvedPlacement = 'top';
+    private appliedArrowShift: { x: string; y: string } | null = null;
+
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
+        this.resolvedPlacement = placement;
         super.updateClassMap(placement, customClass, { [`${this.prefix}_${size}`]: !!size });
+    }
+
+    /** Recalculates pointer-relative arrow shifts after CDK positions the panel. @docs-private */
+    override updateArrowPosition(): void {
+        const element = this.popoverElement()?.nativeElement;
+
+        if (!element) return;
+
+        const point = this.trigger?.getPointerPoint();
+
+        if (!point || !this.arrow || this.trigger.stickToWindow) {
+            if (!this.appliedArrowShift) return;
+
+            this.renderer.removeStyle(element, '--kbq-popover-arrow-shift-x', RendererStyleFlags2.DashCase);
+            this.renderer.removeStyle(element, '--kbq-popover-arrow-shift-y', RendererStyleFlags2.DashCase);
+            this.appliedArrowShift = null;
+
+            return;
+        }
+
+        const panelRect = element.getBoundingClientRect();
+        const shift = getPopoverArrowShift(this.resolvedPlacement, panelRect, point);
+        const nextShift = { x: `${shift.x}px`, y: `${shift.y}px` };
+
+        if (this.appliedArrowShift?.x === nextShift.x && this.appliedArrowShift.y === nextShift.y) return;
+
+        this.renderer.setStyle(element, '--kbq-popover-arrow-shift-x', nextShift.x, RendererStyleFlags2.DashCase);
+        this.renderer.setStyle(element, '--kbq-popover-arrow-shift-y', nextShift.y, RendererStyleFlags2.DashCase);
+        this.appliedArrowShift = nextShift;
     }
 
     updateTrapFocus(isTrapFocus: boolean): void {
@@ -625,6 +667,12 @@ export class KbqPopoverTrigger
     autoFocus: boolean = true;
 
     /**
+     * Input (`kbqRelativeToPointer`) — positions a click-opened popover at the click point. Keyboard and
+     * programmatic opens stay on the trigger. An explicit `kbqPopoverOrigin` takes precedence. Defaults to `false`.
+     */
+    relativeToPointer: boolean = false;
+
+    /**
      * Input (`kbqPopoverOrigin`) — what the panel is positioned against: an element, or a rectangle in viewport
      * coordinates such as the one `kbqCreateCaretOrigin` keeps on the caret. `null` anchors it to the trigger.
      *
@@ -678,6 +726,15 @@ export class KbqPopoverTrigger
 
     /** Whether a position re-apply is already queued for this turn. */
     private repositionScheduled = false;
+
+    private pointerOffset: { x: number; y: number } | null = null;
+
+    private readonly pointerOrigin = kbqCreateCaretOrigin((): KbqCaretRect => {
+        const { left, top } = this.getNativeElement().getBoundingClientRect();
+        const offset = this.pointerOffset!;
+
+        return { x: left + offset.x, y: top + offset.y, width: 0, height: 0 };
+    });
 
     /**
      * Whether the open currently on screen was a deliberate one rather than a pointer or focus one.
@@ -806,6 +863,12 @@ export class KbqPopoverTrigger
     /** @docs-private */
     readonly autoFocusInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
         alias: 'kbqPopoverAutoFocus',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly relativeToPointerInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqRelativeToPointer',
         transform: booleanAttribute
     });
 
@@ -941,6 +1004,12 @@ export class KbqPopoverTrigger
             if (autoFocus !== undefined) this.autoFocus = autoFocus;
         }
 
+        if (changes['relativeToPointerInput']) {
+            const relativeToPointer = this.relativeToPointerInput();
+
+            if (relativeToPointer !== undefined) this.relativeToPointer = relativeToPointer;
+        }
+
         if (changes['popoverOriginInput']) {
             this.popoverOrigin = this.popoverOriginInput() ?? null;
         }
@@ -984,9 +1053,55 @@ export class KbqPopoverTrigger
 
     /** @docs-private */
     show(delay: number = this.enterDelay): void {
+        const event = this.mouseEvent;
+        const pointerEvent =
+            this.relativeToPointer && this.triggerName === PopUpTriggers.Click && event?.detail ? event : null;
+        const wasAttached = !!this.instance;
+
+        this.mouseEvent = undefined;
+
+        if (pointerEvent) {
+            const { left, top } = this.getNativeElement().getBoundingClientRect();
+
+            this.pointerOffset = { x: pointerEvent.clientX - left, y: pointerEvent.clientY - top };
+            Object.assign(pointerEvent, { kbqPopoverPreventHide: true });
+        } else if (!wasAttached) {
+            this.pointerOffset = null;
+        }
+
+        if (pointerEvent || !wasAttached) {
+            this.strategy?.setOrigin(this.getResolvedOrigin());
+        }
+
         this.deliberateOpen = !passiveOpenEvents.includes(this.triggerName);
 
         super.show(delay);
+
+        if (pointerEvent && wasAttached) {
+            this.ngZone.run(() => this.instance.show(delay));
+            this.updatePosition();
+            this.strategy.withLockedPosition(false);
+            this.overlayRef?.updatePosition();
+            this.strategy.withLockedPosition(true);
+            this.instance?.updateArrowPosition();
+        }
+    }
+
+    /** Current click point in viewport coordinates, or `null` when the host or an explicit origin is used. @docs-private */
+    getPointerPoint(): { x: number; y: number } | null {
+        if (!this.pointerOffset || this.origin) return null;
+
+        return { x: this.pointerOrigin.x, y: this.pointerOrigin.y };
+    }
+
+    /** @internal */
+    protected override getResolvedOrigin() {
+        return this.pointerOffset && !this.origin ? this.pointerOrigin : super.getResolvedOrigin();
+    }
+
+    /** @internal */
+    protected override getAnchorSize(): { width: number; height: number } {
+        return this.pointerOffset && !this.origin ? { width: 0, height: 0 } : super.getAnchorSize();
     }
 
     /** @docs-private */

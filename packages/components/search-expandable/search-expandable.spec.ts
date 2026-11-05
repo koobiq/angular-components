@@ -450,6 +450,155 @@ describe('KbqSearchExpandable', () => {
         });
     });
 
+    describe('suffix action', () => {
+        let local: ComponentFixture<TestSearchExpandableWithFormControl>;
+        let component: KbqSearchExpandable;
+
+        beforeEach(() => {
+            local = TestBed.createComponent(TestSearchExpandableWithFormControl);
+            local.componentInstance.openedState = true;
+            local.detectChanges();
+
+            debugElement = local.debugElement.query(By.directive(KbqSearchExpandable));
+            component = debugElement.componentInstance;
+        });
+
+        it('should clear a non-empty value without collapsing or emitting an open-state change', () => {
+            const isOpenedChange = vi.fn();
+            const inputElement: HTMLInputElement = debugElement.query(By.css('input')).nativeElement;
+            const suffix: HTMLButtonElement = debugElement.query(
+                By.css('.kbq-icon-button.kbq-icon.kbq-suffix')
+            ).nativeElement;
+
+            component.isOpenedChange.subscribe(isOpenedChange);
+            typeIntoInput(local, debugElement, 'typed');
+            suffix.focus();
+            suffix.click();
+
+            expect(document.activeElement).toBe(inputElement);
+
+            local.detectChanges();
+
+            expect(document.activeElement).toBe(inputElement);
+            expect(component.isOpened).toBe(true);
+            expect(component.value()).toBe(defaultValue);
+            expect(local.componentInstance.searchControl.value).toBe(defaultValue);
+            expect(debugElement.query(By.css('input'))).not.toBeNull();
+            expect(isOpenedChange).not.toHaveBeenCalled();
+        });
+
+        it('should collapse and focus the button when the suffix is clicked after clearing', () => {
+            typeIntoInput(local, debugElement, 'typed');
+            debugElement.query(By.css('.kbq-icon-button.kbq-icon.kbq-suffix')).nativeElement.click();
+            local.detectChanges();
+
+            expect(component.isOpened).toBe(true);
+
+            debugElement.query(By.css('.kbq-icon-button.kbq-icon.kbq-suffix')).nativeElement.click();
+            local.detectChanges();
+
+            const button = debugElement.query(By.css('.kbq-search-expandable__button'));
+
+            expect(component.isOpened).toBe(false);
+            expect(debugElement.query(By.css('input'))).toBeNull();
+            expect(document.activeElement).toBe(button.nativeElement);
+        });
+
+        it('should cancel the pending debounced value when clearing', async () => {
+            vi.useFakeTimers();
+
+            typeIntoInput(local, debugElement, 'typed');
+            debugElement.query(By.css('.kbq-icon-button.kbq-icon.kbq-suffix')).nativeElement.click();
+            local.detectChanges();
+
+            expect(component.isOpened).toBe(true);
+            expect(component.value()).toBe(defaultValue);
+            expect(local.componentInstance.searchControl.value).toBe(defaultValue);
+
+            await vi.advanceTimersByTimeAsync(defaultEmitValueTimeout + 1);
+            local.detectChanges();
+
+            expect(component.isOpened).toBe(true);
+            expect(component.value()).toBe(defaultValue);
+            expect(local.componentInstance.searchControl.value).toBe(defaultValue);
+        });
+
+        it('should not emit an already synchronized empty value when clearing and closing', () => {
+            vi.useFakeTimers();
+
+            const valueChanges = vi.fn();
+
+            local.componentInstance.searchControl.valueChanges.subscribe(valueChanges);
+
+            typeIntoInput(local, debugElement, 'typed');
+
+            const suffix: HTMLButtonElement = debugElement.query(
+                By.css('.kbq-icon-button.kbq-icon.kbq-suffix')
+            ).nativeElement;
+
+            suffix.click();
+            suffix.click();
+
+            expect(valueChanges).not.toHaveBeenCalled();
+        });
+
+        it('should emit an emptied bound control once, not again when closing', async () => {
+            vi.useFakeTimers();
+
+            const valueChanges = vi.fn();
+
+            local.componentInstance.searchControl.valueChanges.subscribe(valueChanges);
+
+            typeIntoInput(local, debugElement, 'typed');
+            await vi.advanceTimersByTimeAsync(defaultEmitValueTimeout);
+
+            const suffix: HTMLButtonElement = debugElement.query(
+                By.css('.kbq-icon-button.kbq-icon.kbq-suffix')
+            ).nativeElement;
+
+            suffix.click();
+            suffix.click();
+
+            expect(valueChanges.mock.calls.map(([value]) => value)).toEqual(['typed', defaultValue]);
+        });
+
+        it('should clear the bound control immediately when emission by Enter is enabled', () => {
+            const enterFixture = TestBed.createComponent(TestSearchExpandableWithEmitByEnter);
+
+            enterFixture.detectChanges();
+
+            const enterDebugElement = enterFixture.debugElement.query(By.directive(KbqSearchExpandable));
+            const enterComponent = enterDebugElement.componentInstance as KbqSearchExpandable;
+
+            typeIntoInput(enterFixture, enterDebugElement, 'typed');
+            pressEnter(enterDebugElement);
+
+            expect(enterFixture.componentInstance.searchControl.value).toBe('typed');
+
+            enterDebugElement.query(By.css('.kbq-icon-button.kbq-icon.kbq-suffix')).nativeElement.click();
+
+            expect(enterFixture.componentInstance.searchControl.value).toBe(defaultValue);
+            expect(enterComponent.isOpened).toBe(true);
+        });
+
+        it('should name the suffix clear for a non-empty value and close for an empty value', () => {
+            const suffix: HTMLButtonElement = debugElement.query(
+                By.css('.kbq-icon-button.kbq-icon.kbq-suffix')
+            ).nativeElement;
+
+            expect(suffix.getAttribute('aria-label')).toBe(ruRULocaleData.a11y.close);
+
+            typeIntoInput(local, debugElement, 'typed');
+
+            expect(suffix.getAttribute('aria-label')).toBe(ruRULocaleData.a11y.clear);
+
+            component.value.set(defaultValue);
+            local.detectChanges();
+
+            expect(suffix.getAttribute('aria-label')).toBe(ruRULocaleData.a11y.close);
+        });
+    });
+
     describe('validation', () => {
         let local: ComponentFixture<TestSearchExpandableWithValidatedFormControl>;
         let formField: HTMLElement;
@@ -684,7 +833,7 @@ describe('KbqSearchExpandable', () => {
             await vi.runOnlyPendingTimersAsync();
         });
 
-        it('should force-emit the reset value on close even mid-debounce', async () => {
+        it('should emit the reset value immediately on close even mid-debounce', async () => {
             vi.useFakeTimers();
 
             const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
@@ -994,7 +1143,37 @@ describe('KbqSearchExpandable', () => {
     });
 
     describe('escape key', () => {
-        it('should close on Escape keydown', () => {
+        it('should clear a non-empty value on the first Escape and close on the second', () => {
+            fixture.componentInstance.search = defaultValue;
+            fixture.componentInstance.openedState = true;
+            fixture.detectChanges();
+
+            const component = debugElement.componentInstance as KbqSearchExpandable;
+            const inputElement: HTMLInputElement = debugElement.query(By.css('input')).nativeElement;
+
+            typeIntoInput(fixture, debugElement, 'typed');
+            inputElement.focus();
+
+            const firstEscape = dispatchKeyboardEvent(inputElement, 'keydown', ESCAPE, undefined, 'Escape');
+
+            fixture.detectChanges();
+
+            expect(firstEscape.defaultPrevented).toBe(true);
+            expect(component.isOpened).toBe(true);
+            expect(component.value()).toBe(defaultValue);
+            expect(fixture.componentInstance.search).toBe(defaultValue);
+            expect(document.activeElement).toBe(inputElement);
+
+            const secondEscape = dispatchKeyboardEvent(inputElement, 'keydown', ESCAPE, undefined, 'Escape');
+
+            fixture.detectChanges();
+
+            expect(secondEscape.defaultPrevented).toBe(true);
+            expect(component.isOpened).toBe(false);
+            expect(nativeElement.querySelectorAll('.kbq-search-expandable__search').length).toBe(0);
+        });
+
+        it('should close an empty field on Escape keydown', () => {
             fixture.componentInstance.openedState = true;
             fixture.detectChanges();
 

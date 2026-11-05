@@ -498,7 +498,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'code-block',
                     hasExamples: true,
-                    isUpdated: expiresAt('2026-11-10')
+                    isUpdated: expiresAt('2026-11-16')
                 },
                 {
                     id: DocsStructureItemId.ContentPanel,
@@ -689,7 +689,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'filter-bar',
                     hasApi: true,
                     apiId: 'filter-bar',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-17')
                 },
                 {
                     id: DocsStructureItemId.Flag,
@@ -844,7 +845,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'popover',
                     hasApi: true,
                     apiId: 'popover',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-16')
                 },
                 {
                     id: DocsStructureItemId.ProgressBar,
@@ -1072,7 +1074,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'textarea',
                     hasApi: true,
                     apiId: 'textarea',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-11-17')
                 },
                 {
                     id: DocsStructureItemId.Timepicker,

@@ -205,6 +205,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/clamped-text').then((m) => m.ClampedTextOverviewExample);
         case 'code-block-header-pinned':
             return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockHeaderPinnedExample);
+        case 'code-block-line-numbers':
+            return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockLineNumbersExample);
         case 'code-block-overview':
             return import('@koobiq/docs-examples/components/code-block').then((m) => m.CodeBlockOverviewExample);
         case 'code-block-with-custom-locale-configuration':
@@ -417,6 +419,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarLockedOptionsExample);
         case 'filter-bar-master-checkbox':
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarMasterCheckboxExample);
+        case 'filter-bar-multi-tree-select-value-template':
+            return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarMultiTreeSelectValueTemplateExample);
         case 'filter-bar-no-options':
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarNoOptionsExample);
         case 'filter-bar-not-specified':
@@ -763,6 +767,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverPlacementCenterExample);
         case 'popover-placement-edges':
             return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverPlacementEdgesExample);
+        case 'popover-relative-to-pointer':
+            return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverRelativeToPointerExample);
         case 'popover-scroll':
             return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverScrollExample);
         case 'popover-scrolling-and-layering-page':
@@ -1073,6 +1079,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/textarea').then((m) => m.TextareaMaxRowsExample);
         case 'textarea-overview':
             return import('@koobiq/docs-examples/components/textarea').then((m) => m.TextareaOverviewExample);
+        case 'textarea-readonly':
+            return import('@koobiq/docs-examples/components/textarea').then((m) => m.TextareaReadonlyExample);
         case 'time-range-as-form-field':
             return import('@koobiq/docs-examples/components/time-range').then((m) => m.TimeRangeAsFormFieldExample);
         case 'time-range-custom-option':

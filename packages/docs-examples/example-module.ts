@@ -1243,9 +1243,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "code-block-header-pinned-example.ts",
     "importPath": "components/code-block"
   },
+  "code-block-line-numbers": {
+    "packagePath": "components/code-block/code-block-line-numbers",
+    "title": "Code-block with lineNumbers attribute",
+    "componentName": "CodeBlockLineNumbersExample",
+    "files": [
+      "code-block-line-numbers-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "code-block-line-numbers-example",
+    "primaryFile": "code-block-line-numbers-example.ts",
+    "importPath": "components/code-block"
+  },
   "code-block-overview": {
     "packagePath": "components/code-block/code-block-overview",
-    "title": "Code-block with lineNumbers attribute",
+    "title": "Code-block overview",
     "componentName": "CodeBlockOverviewExample",
     "files": [
       "code-block-overview-example.ts"
@@ -2540,6 +2552,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "filter-bar-master-checkbox-example",
     "primaryFile": "filter-bar-master-checkbox-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-multi-tree-select-value-template": {
+    "packagePath": "components/filter-bar/filter-bar-multi-tree-select-value-template",
+    "title": "filter-bar-multi-tree-select-value-template",
+    "componentName": "FilterBarMultiTreeSelectValueTemplateExample",
+    "files": [
+      "filter-bar-multi-tree-select-value-template-example.ts",
+      "filter-bar-multi-tree-select-value-template-example.scss"
+    ],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
+    "selector": "filter-bar-multi-tree-select-value-template-example",
+    "primaryFile": "filter-bar-multi-tree-select-value-template-example.ts",
     "importPath": "components/filter-bar"
   },
   "filter-bar-no-options": {
@@ -4715,6 +4742,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "popover-placement-edges-example.ts",
     "importPath": "components/popover"
   },
+  "popover-relative-to-pointer": {
+    "packagePath": "components/popover/popover-relative-to-pointer",
+    "title": "Popover at the click point",
+    "componentName": "PopoverRelativeToPointerExample",
+    "files": [
+      "popover-relative-to-pointer-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "popover-relative-to-pointer-example",
+    "primaryFile": "popover-relative-to-pointer-example.ts",
+    "importPath": "components/popover"
+  },
   "popover-scroll": {
     "packagePath": "components/popover/popover-scroll",
     "title": "popover-scroll",
@@ -6593,6 +6632,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "textarea-overview-example.ts",
     "importPath": "components/textarea"
   },
+  "textarea-readonly": {
+    "packagePath": "components/textarea/textarea-readonly",
+    "title": "Textarea readonly",
+    "componentName": "TextareaReadonlyExample",
+    "files": [
+      "textarea-readonly-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "textarea-readonly-example",
+    "primaryFile": "textarea-readonly-example.ts",
+    "importPath": "components/textarea"
+  },
   "time-range-as-form-field": {
     "packagePath": "components/time-range/time-range-as-form-field",
     "title": "Time range as form field",
@@ -8096,6 +8147,7 @@ export type LiveExampleId =
   | 'clamped-text-external-state'
   | 'clamped-text-overview'
   | 'code-block-header-pinned'
+  | 'code-block-line-numbers'
   | 'code-block-overview'
   | 'code-block-with-custom-locale-configuration'
   | 'code-block-with-filled'
@@ -8202,6 +8254,7 @@ export type LiveExampleId =
   | 'filter-bar-localization'
   | 'filter-bar-locked-options'
   | 'filter-bar-master-checkbox'
+  | 'filter-bar-multi-tree-select-value-template'
   | 'filter-bar-no-options'
   | 'filter-bar-not-specified'
   | 'filter-bar-option-caption'
@@ -8375,6 +8428,7 @@ export type LiveExampleId =
   | 'popover-paddings'
   | 'popover-placement-center'
   | 'popover-placement-edges'
+  | 'popover-relative-to-pointer'
   | 'popover-scroll'
   | 'popover-scrolling-and-layering-page'
   | 'popover-scrolling-and-layering'
@@ -8530,6 +8584,7 @@ export type LiveExampleId =
   | 'textarea-error-state'
   | 'textarea-max-rows'
   | 'textarea-overview'
+  | 'textarea-readonly'
   | 'time-range-as-form-field'
   | 'time-range-custom-option'
   | 'time-range-custom-range-types'

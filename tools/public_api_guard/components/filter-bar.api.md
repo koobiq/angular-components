@@ -381,6 +381,13 @@ export interface KbqFiltersHost {
     saveFocusedElement(button?: KbqButton): void;
 }
 
+// @public
+export interface KbqMultiTreeSelectValueTemplateContext<T extends KbqTreeSelectNode = KbqTreeSelectNode> {
+    $implicit: KbqPipeMultiTreeSelectComponent;
+    option: T;
+    search: string | null;
+}
+
 // @public (undocumented)
 export interface KbqPipe {
     // (undocumented)
@@ -608,6 +615,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     get allOptionsSelected(): boolean;
     get allVisibleOptionsSelected(): boolean;
     protected clearedValue(): KbqSelectValue[] | null;
+    protected getValueTemplateContext(node: KbqTreeSelectFlatNode): KbqMultiTreeSelectValueTemplateContext;
     get isEmpty(): boolean;
     // (undocumented)
     isNodeSelectAll(_: number, nodeData: KbqTreeSelectFlatNode): boolean;
@@ -694,7 +702,6 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
     panelMaxHeight?: KbqPanelMaxHeight;
     // (undocumented)
     values?: unknown[];
-    // (undocumented)
     valueTemplate?: TemplateRef<any> | string;
 }
 

@@ -1,5 +1,6 @@
 import {
     booleanAttribute,
+    computed,
     Directive,
     effect,
     inject,
@@ -16,11 +17,7 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 import type { HLJSApi, LanguageFn } from 'highlight.js';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
-import {
-    KbqCodeBlockHighlightJsLoader,
-    type KbqCodeBlockLineNumbersOptions,
-    PLAIN_TEXT_LANGUAGE
-} from './code-block-highlight-js-loader';
+import { KbqCodeBlockHighlightJsLoader, PLAIN_TEXT_LANGUAGE } from './code-block-highlight-js-loader';
 import type { KbqCodeBlockFile } from './types';
 
 /**
@@ -98,6 +95,8 @@ export const kbqCodeBlockFallbackFileLanguageProvider = (language: string): Prov
  */
 const HIGHLIGHTED_MARKUP_ATTRIBUTE = 'data-highlighted-markup';
 
+const LINE_BREAK = /\r\n|\r|\n/;
+
 /**
  * Directive which applies syntax highlighting to the code block content.
  *
@@ -106,7 +105,12 @@ const HIGHLIGHTED_MARKUP_ATTRIBUTE = 'data-highlighted-markup';
 @Directive({
     selector: 'code[kbqCodeBlockHighlight]',
     host: {
-        class: 'hljs'
+        class: 'hljs',
+        // Bound to the file rather than to the highlighted markup, so that markup kept from the server is numbered
+        // before highlight.js loads again.
+        '[class.kbq-code-block__code_line-numbers]': 'lineCount() > 1 || singleLine()',
+        '[style.--kbq-code-block-line-numbers-start]': 'startFrom() - 1',
+        '[style.--kbq-code-block-line-numbers-digits]': 'lineNumberDigits()'
     },
     exportAs: 'kbqCodeBlockHighlight'
 })
@@ -134,14 +138,10 @@ export class KbqCodeBlockHighlight {
     constructor() {
         effect((onCleanup) => {
             const file = this.file();
-            // Captured here rather than read inside `highlight()`: on the load path that read happens in a
-            // microtask, where nothing is tracked, so the effect's dependencies would otherwise depend on
-            // which branch had run before.
-            const lineNumbers = { startFrom: this.startFrom(), singleLine: this.singleLine() };
             const hljs = this.loader.loaded(this.config);
 
             if (hljs) {
-                this.highlight(hljs, file, lineNumbers);
+                this.highlight(hljs, file);
 
                 return;
             }
@@ -175,7 +175,7 @@ export class KbqCodeBlockHighlight {
             this.loader
                 .load(this.config)
                 .then((loaded) => {
-                    if (loaded && !cancelled) this.highlight(loaded, file, lineNumbers);
+                    if (loaded && !cancelled) this.highlight(loaded, file);
                 })
                 .finally(() => {
                     // A run cancelled by a newer file leaves `pending` to that one.
@@ -187,12 +187,22 @@ export class KbqCodeBlockHighlight {
     }
 
     /** The starting line number. */
-    readonly startFrom = input<number, unknown>(1, { transform: numberAttribute });
+    readonly startFrom = input<number, unknown>(1, { transform: (value: unknown) => numberAttribute(value, 1) });
 
     /** Whether to display line numbers for single line code block. */
     readonly singleLine = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    private highlight(hljs: HLJSApi, file: KbqCodeBlockFile, lineNumbers: KbqCodeBlockLineNumbersOptions): void {
+    /** Number of lines of the file, a line break at its end not counted, as it starts no line. */
+    protected readonly lineCount = computed(() => {
+        const lines = this.file().content.split(LINE_BREAK);
+
+        return lines.length > 1 && !lines[lines.length - 1] ? lines.length - 1 : lines.length;
+    });
+
+    /** Width of the line numbers column, in digits of its largest number. */
+    protected readonly lineNumberDigits = computed(() => String(this.startFrom() + this.lineCount() - 1).length);
+
+    private highlight(hljs: HLJSApi, file: KbqCodeBlockFile): void {
         this._pending.set(true);
 
         let { language } = file;
@@ -231,14 +241,52 @@ export class KbqCodeBlockHighlight {
             this.warn('[KbqCodeBlock] File content does not match the specified programming language.', file);
         }
 
-        const safeHTML = this.domSanitizer.sanitize(SecurityContext.HTML, highlightedHTML) ?? '';
-        const highlightedHTMLWithLineNumbers = this.loader.addLineNumbers(safeHTML, lineNumbers);
+        const safeHTML = this.domSanitizer.sanitize(SecurityContext.HTML, this.splitIntoLines(highlightedHTML)) ?? '';
 
         this.renderer.setAttribute(this.nativeElement, 'data-language', highlightedLanguage!);
-        this.renderer.setProperty(this.nativeElement, 'innerHTML', highlightedHTMLWithLineNumbers);
+        this.renderer.setProperty(this.nativeElement, 'innerHTML', safeHTML);
         this.renderer.setAttribute(this.nativeElement, HIGHLIGHTED_MARKUP_ATTRIBUTE, '');
 
         this._pending.set(false);
+    }
+
+    /**
+     * Wraps every line of the highlighted markup in an element of its own, for the line numbers to count. The spans a
+     * line break crosses are closed at the end of its line and opened again on the next one. The line break stays
+     * inside its line, so that an empty line keeps its height and the text of the code is the text of the file.
+     */
+    private splitIntoLines(html: string): string {
+        const lines: string[] = [];
+        const openSpans: string[] = [];
+        let line = '';
+        let lineHasText = false;
+
+        // highlight.js emits spans and escaped text. A tag of another kind, which a plugin of highlight.js may add,
+        // passes through as it is.
+        for (const [token, lineBreak] of html.matchAll(/(\r\n|\r|\n)|<span[^>]*>|<\/span>|<[^>]*>|[^<\r\n]+/g)) {
+            if (lineBreak) {
+                lines.push(`${line}${'</span>'.repeat(openSpans.length)}\n`);
+                line = openSpans.join('');
+                lineHasText = false;
+
+                continue;
+            }
+
+            if (token === '</span>') {
+                openSpans.pop();
+            } else if (token.startsWith('<span')) {
+                openSpans.push(token);
+            } else if (!token.startsWith('<')) {
+                lineHasText = true;
+            }
+
+            line += token;
+        }
+
+        // A line break at the end of the file starts no line, though the spans it crosses close after it.
+        if (lineHasText) lines.push(line);
+
+        return lines.map((content) => `<span class="kbq-code-block__line">${content}</span>`).join('');
     }
 
     /** The fallback language, or plain text, which the loader registers on every instance, if it is unknown too. */

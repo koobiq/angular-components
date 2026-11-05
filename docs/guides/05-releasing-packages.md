@@ -22,16 +22,17 @@ are still supported.
     - (**needs confirmation**) choose the bump: major, minor or patch
     - write the new version to `package.json`, then run the `release.hooks["post-version-bump"]` commands with
       `KOOBIQ_RELEASE` set to the new version: `release:extract-docs-meta` regenerates the sitemap, the prerender
-      routes and `llms.txt` for that version, and `build:mcp:data` regenerates `packages/mcp/data/guides.json` and
+      routes and `llms.txt` for that version and resolves the dependencies of the StackBlitz template anew into its
+      `package-lock.json` (this step needs the npm registry), and `build:mcp:data` regenerates `packages/mcp/data/guides.json` and
       `history.json` — `KOOBIQ_RELEASE` is what tells those two builders the working tree _is_ that release, so the
       guide text and the API diff they capture are stamped with it instead of with the newest tag
     - (**needs confirmation**) enter a `release name`
         - you can use [angular-release-name-generator](https://www.npmjs.com/package/angular-release-name-generator)
     - (**needs confirmation**) generate the changelog section
     - commit the bumped `package.json` and `CHANGELOG.md` as `chore: bump version to X.Y.Z w/ changelog` — this
-      stages everything the hooks above touched too, so `apps/docs/src/{llms.txt,sitemap.xml,prerender-routes.txt}`
-      and `packages/mcp/data/{guides.json,history.json}` showing up changed in this commit is expected, not a
-      mistake to drop
+      stages everything the hooks above touched too, so `apps/docs/src/{llms.txt,sitemap.xml,prerender-routes.txt}`,
+      `apps/docs/src/assets/stackblitz/package-lock.json` and `packages/mcp/data/{guides.json,history.json}` showing
+      up changed in this commit is expected, not a mistake to drop
     - create a signed annotated git tag `X.Y.Z` whose message is the changelog section
     - push the branch and the tag
 

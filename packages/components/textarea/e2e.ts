@@ -2,30 +2,93 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 
+const statesStyles = `
+    :host {
+        display: inline-grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 250px;
+        gap: var(--kbq-size-s);
+        padding: var(--kbq-size-xxs);
+    }
+`;
+
 @Component({
-    selector: 'e2e-textarea-states',
-    imports: [KbqTextareaModule, FormsModule, ReactiveFormsModule],
+    selector: 'e2e-textarea-default',
+    imports: [KbqTextareaModule, FormsModule],
     template: `
         <kbq-form-field>
-            <kbq-label>Label | empty</kbq-label>
+            <kbq-label>Label</kbq-label>
             <textarea kbqTextarea placeholder="Placeholder" canGrow="false"></textarea>
             <kbq-hint>Hint</kbq-hint>
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-label>Label | value</kbq-label>
+            <kbq-label>Label</kbq-label>
             <textarea kbqTextarea placeholder="Placeholder" canGrow="false" [(ngModel)]="value"></textarea>
             <kbq-hint>Hint</kbq-hint>
         </kbq-form-field>
 
+        <kbq-form-field class="cdk-keyboard-focused cdk-focused">
+            <kbq-label>Label</kbq-label>
+            <textarea kbqTextarea placeholder="Placeholder" canGrow="false" [(ngModel)]="value"></textarea>
+            <kbq-hint>Hint</kbq-hint>
+        </kbq-form-field>
+    `,
+    styles: statesStyles,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTextareaDefault'
+    }
+})
+export class E2eTextareaDefault {
+    protected readonly value = model('Value');
+}
+
+@Component({
+    selector: 'e2e-textarea-validation',
+    imports: [KbqTextareaModule, ReactiveFormsModule],
+    template: `
         <kbq-form-field>
-            <kbq-label>Label | disabled empty</kbq-label>
+            <kbq-label>Label</kbq-label>
+            <textarea kbqTextarea placeholder="Placeholder" canGrow="false" [formControl]="invalidControl"></textarea>
+            <kbq-hint>Hint</kbq-hint>
+            <kbq-error>Error</kbq-error>
+        </kbq-form-field>
+
+        <kbq-form-field class="cdk-keyboard-focused cdk-focused">
+            <kbq-label>Label</kbq-label>
+            <textarea kbqTextarea placeholder="Placeholder" canGrow="false" [formControl]="invalidControl"></textarea>
+            <kbq-hint>Hint</kbq-hint>
+            <kbq-error>Error</kbq-error>
+        </kbq-form-field>
+    `,
+    styles: statesStyles,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTextareaValidation'
+    }
+})
+export class E2eTextareaValidation {
+    protected readonly invalidControl = new FormControl('', [Validators.minLength(10), Validators.required]);
+
+    constructor() {
+        this.invalidControl.markAsTouched();
+        this.invalidControl.updateValueAndValidity();
+    }
+}
+
+@Component({
+    selector: 'e2e-textarea-disabled',
+    imports: [KbqTextareaModule, FormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Label</kbq-label>
             <textarea kbqTextarea placeholder="Placeholder" canGrow="false" [disabled]="true"></textarea>
             <kbq-hint>Hint</kbq-hint>
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-label>Label | disabled value</kbq-label>
+            <kbq-label>Label</kbq-label>
             <textarea
                 kbqTextarea
                 placeholder="Placeholder"
@@ -35,63 +98,75 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             ></textarea>
             <kbq-hint>Hint</kbq-hint>
         </kbq-form-field>
-
-        <kbq-form-field>
-            <kbq-label>Label | invalid</kbq-label>
-            <textarea kbqTextarea placeholder="Placeholder" canGrow="false" [formControl]="invalidControl"></textarea>
-            <kbq-hint>Hint</kbq-hint>
-            <kbq-error>Error</kbq-error>
-        </kbq-form-field>
-
-        <kbq-form-field class="cdk-keyboard-focused cdk-focused">
-            <kbq-label>Label | focused</kbq-label>
-            <textarea kbqTextarea placeholder="Placeholder" canGrow="false" [(ngModel)]="value"></textarea>
-            <kbq-hint>Hint</kbq-hint>
-        </kbq-form-field>
-
-        <kbq-form-field class="cdk-keyboard-focused cdk-focused">
-            <kbq-label>Label | focused invalid</kbq-label>
-            <textarea kbqTextarea placeholder="Placeholder" canGrow="false" [formControl]="invalidControl"></textarea>
-            <kbq-hint>Hint</kbq-hint>
-            <kbq-error>Error</kbq-error>
-        </kbq-form-field>
-
-        <kbq-form-field>
-            <kbq-label>Label | maxRows</kbq-label>
-            <textarea kbqTextarea placeholder="Placeholder" [maxRows]="5" [(ngModel)]="longValue"></textarea>
-            <kbq-hint>Hint</kbq-hint>
-        </kbq-form-field>
-
-        <kbq-form-field>
-            <kbq-label>Label | canGrow</kbq-label>
-            <textarea kbqTextarea placeholder="Placeholder" [canGrow]="true" [(ngModel)]="longValue"></textarea>
-            <kbq-hint>Hint</kbq-hint>
-        </kbq-form-field>
     `,
-    styles: `
-        :host {
-            display: inline-grid;
-            grid-template-columns: repeat(3, 250px);
-            gap: var(--kbq-size-s);
-            padding: var(--kbq-size-xxs);
-        }
-    `,
+    styles: statesStyles,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        'data-testid': 'e2eTextareaStates'
+        'data-testid': 'e2eTextareaDisabled'
     }
 })
-export class E2eTextareaStates {
+export class E2eTextareaDisabled {
     protected readonly value = model('Value');
-    protected readonly longValue = model(
+}
+
+@Component({
+    selector: 'e2e-textarea-readonly',
+    imports: [KbqTextareaModule, FormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Label</kbq-label>
+            <textarea kbqTextarea placeholder="Placeholder" canGrow="false" readonly></textarea>
+            <kbq-hint>Hint</kbq-hint>
+        </kbq-form-field>
+
+        <kbq-form-field>
+            <kbq-label>Label</kbq-label>
+            <textarea kbqTextarea placeholder="Placeholder" canGrow="false" readonly [(ngModel)]="value"></textarea>
+            <kbq-hint>Hint</kbq-hint>
+        </kbq-form-field>
+
+        <kbq-form-field class="cdk-keyboard-focused cdk-focused">
+            <kbq-label>Label</kbq-label>
+            <textarea kbqTextarea placeholder="Placeholder" canGrow="false" readonly [(ngModel)]="value"></textarea>
+            <kbq-hint>Hint</kbq-hint>
+        </kbq-form-field>
+    `,
+    styles: statesStyles,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTextareaReadonly'
+    }
+})
+export class E2eTextareaReadonly {
+    protected readonly value = model('Value');
+}
+
+@Component({
+    selector: 'e2e-textarea-height',
+    imports: [KbqTextareaModule, FormsModule],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Label</kbq-label>
+            <textarea kbqTextarea placeholder="Placeholder" [maxRows]="5" [(ngModel)]="value"></textarea>
+            <kbq-hint>Hint</kbq-hint>
+        </kbq-form-field>
+
+        <kbq-form-field>
+            <kbq-label>Label</kbq-label>
+            <textarea kbqTextarea placeholder="Placeholder" [canGrow]="true" [(ngModel)]="value"></textarea>
+            <kbq-hint>Hint</kbq-hint>
+        </kbq-form-field>
+    `,
+    styles: statesStyles,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTextareaHeight'
+    }
+})
+export class E2eTextareaHeight {
+    protected readonly value = model(
         'In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator seeks to make a machine or network resource unavailable to its intended users by temporarily or indefinitely disrupting services of a host connected to a network.'
     );
-    protected readonly invalidControl = new FormControl('', [Validators.minLength(10), Validators.required]);
-
-    constructor() {
-        this.invalidControl.markAsTouched();
-        this.invalidControl.updateValueAndValidity();
-    }
 }
 
 @Component({
