@@ -102,13 +102,13 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
 
     /**
      * Expands the ancestors of every selected node. Selected values are matched against the current
-     * `dataNodes` by `compareValues`, not by identity: re-assigning `dataSource.data` rebuilds the flat
-     * nodes, so a stale reference would miss.
+     * `dataNodes` by `compareValues`, not by flat-node reference: re-assigning `dataSource.data` rebuilds
+     * the flat nodes, so a stale node reference would miss.
      */
     private expandSelectedNodeAncestors(): void {
         const selectedValues = this.getSelectedValues();
         const selectedNodes = this.treeControl.dataNodes.filter((node) =>
-            selectedValues.some((value) => this.treeControl.compareValues(value, node.value))
+            selectedValues.some((value) => this.treeControl.compareValues(node.value, value))
         );
 
         for (const node of selectedNodes) {
