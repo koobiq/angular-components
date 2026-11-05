@@ -93,6 +93,12 @@
     margin: 0 var(--kbq-size-xxl);
 }
 
+// The last sections leave the row as one item; the link inside is the whole height, as before.
+.docs-next-header__group {
+    display: flex;
+    height: 100%;
+}
+
 .docs-next-header__more {
     align-self: center;
     flex-shrink: 0;

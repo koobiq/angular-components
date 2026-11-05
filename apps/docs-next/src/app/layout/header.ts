@@ -5,7 +5,7 @@ import { KbqThemeMode, KbqThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
-import { DOCS_NEXT_SECTIONS } from '../data/sections';
+import { DOCS_NEXT_SECTIONS, DocsNextSection } from '../data/sections';
 import {
     DOCS_NEXT_FRAMEWORKS,
     DocsNextFramework,
@@ -23,6 +23,28 @@ const THEME_OPTIONS: { mode: KbqThemeMode; title: DocsNextI18nKey; icon: string 
     { mode: 'light', title: 'themeLight', icon: 'kbq-sun_16' },
     { mode: 'dark', title: 'themeDark', icon: 'kbq-moon_16' }
 ];
+
+/** The fewest sections "More" holds once it shows at all. */
+const MIN_HIDDEN_SECTIONS = 2;
+
+interface DocsNextHeaderGroup {
+    id: string;
+    sections: readonly DocsNextSection[];
+}
+
+/**
+ * Hiding goes from the end, one item at a time, so the last `MIN_HIDDEN_SECTIONS` sections make one item: they leave
+ * the row together, and the menu that takes them never holds a lone entry.
+ */
+const docsNextHeaderGroups = (sections: readonly DocsNextSection[]): DocsNextHeaderGroup[] => {
+    const head = sections.slice(0, -MIN_HIDDEN_SECTIONS);
+    const tail = sections.slice(-MIN_HIDDEN_SECTIONS);
+
+    return [
+        ...head.map((section) => ({ id: section.id, sections: [section] })),
+        { id: tail.map(({ id }) => id).join('+'), sections: tail }
+    ];
+};
 
 /**
  * One row, left to right: logo, version, framework, sections, search, language, theme (spec/navigation/header.md).
@@ -50,6 +72,9 @@ export class DocsNextHeader {
     private readonly theme = inject(KbqThemeService);
 
     protected readonly sections = DOCS_NEXT_SECTIONS;
+    /** The sections the way the header hides them: the last ones are one item, so that "More" never holds just one. */
+    protected readonly groups = docsNextHeaderGroups(DOCS_NEXT_SECTIONS);
+    private readonly groupIds = new Map(this.groups.flatMap(({ id, sections }) => sections.map((s) => [s.id, id])));
     protected readonly frameworks = DOCS_NEXT_FRAMEWORKS;
     protected readonly frameworkTitle = docsNextFrameworkTitle;
     protected readonly shortTitle = docsNextVersionShortTitle;
@@ -71,8 +96,12 @@ export class DocsNextHeader {
         this.state.setPendingNotice(this.state.frameworkTarget(framework).notice);
     }
 
+    protected isHidden(hiddenIds: ReadonlySet<unknown>, sectionId: string | null): boolean {
+        return !!sectionId && hiddenIds.has(this.groupIds.get(sectionId));
+    }
+
     protected isSectionHidden(hiddenIds: ReadonlySet<unknown>): boolean {
-        return hiddenIds.has(this.state.section());
+        return this.isHidden(hiddenIds, this.state.section());
     }
 
     protected setTheme(mode: KbqThemeMode): void {

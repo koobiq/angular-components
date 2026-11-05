@@ -46,16 +46,19 @@
     class="docs-next-header__sections"
     [attr.aria-label]="state.t('mainMenu')"
 >
-    @for (section of sections; track section.id) {
-        <a
-            class="docs-next-header__section"
-            [attr.aria-current]="section.id === state.section() ? 'page' : null"
-            [class.docs-next-header__section_selected]="section.id === state.section()"
-            [kbqOverflowItem]="section.id"
-            [routerLink]="state.link(section.id)"
-        >
-            {{ section.title[state.locale()] }}
-        </a>
+    @for (group of groups; track group.id) {
+        <span class="docs-next-header__group" [kbqOverflowItem]="group.id">
+            @for (section of group.sections; track section.id) {
+                <a
+                    class="docs-next-header__section"
+                    [attr.aria-current]="section.id === state.section() ? 'page' : null"
+                    [class.docs-next-header__section_selected]="section.id === state.section()"
+                    [routerLink]="state.link(section.id)"
+                >
+                    {{ section.title[state.locale()] }}
+                </a>
+            }
+        </span>
     }
     <button
         kbq-button
@@ -156,7 +159,7 @@
 
 <kbq-dropdown #moreDropdown="kbqDropdown">
     @for (section of sections; track section.id) {
-        @if (overflow.hiddenItemIDs().has(section.id)) {
+        @if (isHidden(overflow.hiddenItemIDs(), section.id)) {
             <a
                 kbq-dropdown-item
                 [class.kbq-selected]="section.id === state.section()"
