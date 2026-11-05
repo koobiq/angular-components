@@ -9,7 +9,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-select multiple panelClass="example-select-multiline-options" panelWidth="auto" [value]="selected">
+            <kbq-select multiple multilineOptions [value]="selected">
                 @for (option of options; track option) {
                     <kbq-option [value]="option" [viewValue]="option">
                         <div>{{ option }}</div>
@@ -29,11 +29,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
 
         .kbq-form-field {
             width: 320px;
-        }
-
-        ::ng-deep .example-select-multiline-options .kbq-option-text {
-            white-space: normal;
-            overflow-wrap: break-word;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
