@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
     ChangeDetectionStrategy,
@@ -20,7 +21,7 @@ const CLOSE_DELAY = 300;
  * marked, and a panel with the list of the headings that the rail opens. The rail opens it by a press (a click, a tap,
  * Enter or Space) and, for a mouse, by pointing at it too. The panel hangs under the button, so a press reaches the
  * button while the list is open; Tab goes from the one into the other, Escape closes it and gives the focus back to
- * the button.
+ * the button, and the item chosen gives the focus to its heading.
  */
 @Component({
     selector: 'docs-next-toc-rail',
@@ -82,8 +83,8 @@ const CLOSE_DELAY = 300;
     host: {
         '[style.display]': 'outline.links().length ? null : "none"',
         '(document:pointerdown)': 'onOutsidePress($event)',
+        '(document:keydown)': 'onEscape($event)',
         '(focusout)': 'onFocusOut($event)',
-        '(keydown.escape)': 'close(true)',
         '(keydown)': 'onKeydown($event)',
         '(pointerenter)': 'onPointer($event, true)',
         '(pointerleave)': 'onPointer($event, false)'
@@ -92,6 +93,7 @@ const CLOSE_DELAY = 300;
 export class DocsNextTocRail {
     protected readonly state = inject(DocsNextSiteState);
     protected readonly outline = inject(DocsNextPageOutline);
+    private readonly document = inject(DOCUMENT);
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
     private readonly injector = inject(Injector);
@@ -196,6 +198,17 @@ export class DocsNextTocRail {
         if (next && !this.host.contains(next)) this.close();
     }
 
+    /**
+     * Escape closes the panel. The pointer opens it with the focus left on the page, so the key is heard on the whole
+     * document: what a hover reveals has to be dismissible without moving the pointer (WCAG 1.4.13).
+     */
+    protected onEscape(event: KeyboardEvent): void {
+        if (event.key !== 'Escape' || !this.open()) return;
+
+        // The focus inside the panel goes back to the button; there is none when the pointer has opened it.
+        this.close(this.host.contains(this.document.activeElement));
+    }
+
     protected onOutsidePress(event: PointerEvent): void {
         if (this.open() && !this.host.contains(event.target as Node)) this.close();
     }
@@ -206,9 +219,14 @@ export class DocsNextTocRail {
         event.preventDefault();
 
         // Opened by pointing, the panel stays while the pointer is over it, and goes with the pointer.
-        if (!this.openedByHover) this.close();
+        const keepsOpen = this.openedByHover;
+
+        if (!keepsOpen) this.close();
 
         this.outline.scrollTo(id);
+
+        // A panel that has closed under the focus would leave it on `<body>`, and the next Tab would start the page over.
+        if (!keepsOpen) this.focusHeading(id);
     }
 
     private show(focusItem = false): void {
@@ -216,6 +234,17 @@ export class DocsNextTocRail {
 
         // The list is hidden until it has been drawn open, and a hidden element takes no focus.
         if (focusItem) afterNextRender(() => this.focusItem(), { injector: this.injector });
+    }
+
+    /** Puts the focus on the heading the link has led to, without calling off the smooth scroll on its way there. */
+    private focusHeading(id: string): void {
+        const heading = this.document.getElementById(id);
+
+        if (!heading) return;
+
+        // A heading takes no focus of its own, and taking it must not scroll the page a second time.
+        heading.setAttribute('tabindex', '-1');
+        heading.focus({ preventScroll: true });
     }
 
     private items(): HTMLAnchorElement[] {
