@@ -281,7 +281,12 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             it('should not expand anything when only the select-all node is in the model', () => {
                 fixture.componentInstance.activeFilter = createFilter([
-                    createPipe({ name: 'test', value: null, selectAll: true, defaultExpanded: false })
+                    createPipe({
+                        name: 'test',
+                        value: [kbqTreeSelectAllValue],
+                        selectAll: true,
+                        defaultExpanded: false
+                    })
                 ]);
                 fixture.detectChanges();
 
