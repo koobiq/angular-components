@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    inject,
+    Injector,
+    signal,
+    viewChild
+} from '@angular/core';
 import { DocsNextPageOutline } from '../services/page-outline';
 import { docsNextIsPlainClick } from '../services/plain-click';
 import { DocsNextSiteState } from '../services/site-state';
@@ -24,7 +33,7 @@ const CLOSE_DELAY = 300;
                 [attr.aria-expanded]="open()"
                 [attr.aria-label]="state.t('onThisPage')"
                 [style.--docs-next-toc-rail-count]="outline.links().length"
-                (click)="toggle()"
+                (click)="toggle($event)"
             >
                 <span aria-hidden="true" class="docs-next-toc-rail__ticks">
                     @for (item of outline.links(); track item.id) {
@@ -38,6 +47,7 @@ const CLOSE_DELAY = 300;
             </button>
 
             <div
+                #panel
                 class="docs-next-toc-rail__panel"
                 id="docs-next-toc-rail-panel"
                 [class.docs-next-toc-rail__panel_open]="open()"
@@ -68,6 +78,7 @@ const CLOSE_DELAY = 300;
         '(document:pointerdown)': 'onOutsidePress($event)',
         '(focusout)': 'onFocusOut($event)',
         '(keydown.escape)': 'close(true)',
+        '(keydown)': 'onKeydown($event)',
         '(pointerenter)': 'onPointer($event, true)',
         '(pointerleave)': 'onPointer($event, false)'
     }
@@ -77,17 +88,64 @@ export class DocsNextTocRail {
     protected readonly outline = inject(DocsNextPageOutline);
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
+    private readonly injector = inject(Injector);
     private readonly trigger = viewChild.required<ElementRef<HTMLButtonElement>>('trigger');
+    private readonly panel = viewChild.required<ElementRef<HTMLElement>>('panel');
 
     protected readonly open = signal(false);
     private closeTimer?: ReturnType<typeof setTimeout>;
+    /** Whether pointing, not a press, opened the panel: the pointer is still over it, so a click does not close it. */
+    private openedByHover = false;
 
-    protected toggle(): void {
+    /** A press from the keyboard (a click with no pointer behind it) moves the focus into the list, as a mouse need not. */
+    protected toggle(event: MouseEvent): void {
         if (this.open()) {
             this.close();
         } else {
-            this.show();
+            this.show(event.detail === 0);
+            this.openedByHover = false;
         }
+    }
+
+    /**
+     * Inside the list the arrows go from one item to the next, and Home and End to the first and the last; on the button
+     * the down arrow opens the list. Tab still goes through the items one by one.
+     */
+    protected onKeydown(event: KeyboardEvent): void {
+        const target = event.target as HTMLElement;
+
+        if (target === this.trigger().nativeElement) {
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+
+                if (this.open()) {
+                    this.focusItem();
+                } else {
+                    this.show(true);
+                    this.openedByHover = false;
+                }
+            }
+
+            return;
+        }
+
+        const items = this.items();
+        const index = items.indexOf(target as HTMLAnchorElement);
+
+        if (index < 0) return;
+
+        const last = items.length - 1;
+        const next = {
+            ArrowDown: index === last ? 0 : index + 1,
+            ArrowUp: index === 0 ? last : index - 1,
+            Home: 0,
+            End: last
+        }[event.key];
+
+        if (next === undefined) return;
+
+        event.preventDefault();
+        items[next].focus();
     }
 
     protected close(returnFocus = false): void {
@@ -96,6 +154,7 @@ export class DocsNextTocRail {
         if (!this.open()) return;
 
         this.open.set(false);
+        this.openedByHover = false;
 
         if (returnFocus) this.trigger().nativeElement.focus();
     }
@@ -107,7 +166,10 @@ export class DocsNextTocRail {
         clearTimeout(this.closeTimer);
 
         if (inside) {
-            this.show();
+            if (!this.open()) {
+                this.show();
+                this.openedByHover = true;
+            }
         } else {
             this.closeTimer = setTimeout(() => this.close(), CLOSE_DELAY);
         }
@@ -128,11 +190,28 @@ export class DocsNextTocRail {
         if (!docsNextIsPlainClick(event)) return;
 
         event.preventDefault();
-        this.close();
+
+        // Opened by pointing, the panel stays while the pointer is over it, and goes with the pointer.
+        if (!this.openedByHover) this.close();
+
         this.outline.scrollTo(id);
     }
 
-    private show(): void {
+    private show(focusItem = false): void {
         this.open.set(true);
+
+        // The list is hidden until it has been drawn open, and a hidden element takes no focus.
+        if (focusItem) afterNextRender(() => this.focusItem(), { injector: this.injector });
+    }
+
+    private items(): HTMLAnchorElement[] {
+        return Array.from(this.panel().nativeElement.querySelectorAll('a'));
+    }
+
+    /** The item the reader is at, or the first one. */
+    private focusItem(): void {
+        const items = this.items();
+
+        (items.find((item) => item.getAttribute('aria-current') === 'location') ?? items[0])?.focus();
     }
 }
