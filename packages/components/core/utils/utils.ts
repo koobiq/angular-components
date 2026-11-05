@@ -1,38 +1,33 @@
 import { numberAttribute } from '@angular/core';
 
-/**
- * @deprecated Use `typeof value === 'boolean'`. Will be removed in 22.0.0.
- *
- * @docs-private
- */
+/** @deprecated Use `typeof value === 'boolean'`. Will be removed in 22.0.0. */
 export function isBoolean(value: unknown): value is boolean {
     return typeof value === 'boolean';
 }
 
-/** Whether the value is undefined. @docs-private */
+/** Whether the value is undefined. */
 export const isUndefined = (value: unknown): value is undefined => {
     return value === undefined;
 };
 
-/** Whether the value is null. @docs-private */
+/** Whether the value is null. */
 export const isNull = (value: unknown): value is null => {
     return value === null;
 };
 
-/** Whether the value is HTMLElement. @docs-private */
+/** Whether the value is HTMLElement. */
 export const isHtmlElement = (value: unknown): value is HTMLElement => {
     return value instanceof HTMLElement;
 };
 
-/** Whether the value is Element. @docs-private */
+/** Whether the value is Element. */
 export const isElement = (value: unknown): value is Element => value instanceof Element;
 
-/** Whether the value is HTMLElement or null. @docs-private */
+/** Whether the value is HTMLElement or null. */
 export const isHtmlElementOrNull = (value: unknown): value is HTMLElement | null => {
     return isHtmlElement(value) || isNull(value);
 };
 
-/** @docs-private */
 export const getNodesWithoutComments = (nodes: NodeList): Node[] => {
     return Array.from(nodes).filter((node) => node.nodeType !== Node.COMMENT_NODE);
 };
@@ -40,8 +35,6 @@ export const getNodesWithoutComments = (nodes: NodeList): Node[] => {
 /**
  * Child nodes that take part in the icon detection: comments and whitespace-only text nodes are
  * ignored so that detection does not depend on `preserveWhitespaces`.
- *
- * @docs-private
  */
 export const getContentNodes = (element: Node): Node[] => {
     return getNodesWithoutComments(element.childNodes).filter(
@@ -57,14 +50,14 @@ const nativelyDisableableTags = new Set([
     'textarea'
 ]);
 
-/** Whether the element supports the native `disabled` attribute; on any other host it is invalid HTML. @docs-private */
+/** Whether the element supports the native `disabled` attribute; on any other host it is invalid HTML. */
 export const supportsNativeDisabled = (element: Element): boolean =>
     nativelyDisableableTags.has(element.nodeName.toLowerCase());
 
 export const leftIconClassName = 'kbq-icon_left';
 export const rightIconClassName = 'kbq-icon_right';
 
-/** Whether the current platform is a Mac. @docs-private */
+/** Whether the current platform is a Mac. */
 export function isMac(): boolean {
     // eslint-disable-next-line no-restricted-globals
     return /^mac/i.test(navigator?.platform);
@@ -73,8 +66,6 @@ export function isMac(): boolean {
 /**
  * Converts an enumeration (enum) type into a string literal type containing
  * all possible string representations of the values.
- *
- * @docs-private
  */
 export type KbqEnumValues<T extends string | number> = `${T}`;
 
@@ -83,8 +74,6 @@ export type KbqEnumValues<T extends string | number> = `${T}`;
  *
  * Arrays and functions are passed through unchanged — making the elements of `string[]` optional
  * would turn it into `{ 0?: string }`, which is never what a partial override means.
- *
- * @docs-private
  */
 export type KbqDeepPartial<T> = T extends (...args: never[]) => unknown
     ? T
@@ -105,8 +94,6 @@ const isMergeableObject = (value: unknown): value is Record<string, unknown> =>
  *
  * Returns `base` itself whenever the patch adds nothing, so that overriding one section leaves every
  * other section referentially identical to the object it was completed from.
- *
- * @docs-private
  */
 export const kbqDeepMerge = <T>(base: T, patch: NoInfer<KbqDeepPartial<T>> | undefined): T => {
     if (patch === undefined) return base;
@@ -131,8 +118,6 @@ export const kbqDeepMerge = <T>(base: T, patch: NoInfer<KbqDeepPartial<T>> | und
  * `numberAttribute` for an input whose default is `undefined`: a missing, empty or unparsable value gives
  * `undefined` rather than `NaN` or `0`. Angular's own transform returns `NaN`, which is not nullish and
  * therefore walks past every `??` meant to apply the default, and `0` for `null` and for an empty string.
- *
- * @docs-private
  */
 export const kbqOptionalNumberAttribute = (value: unknown): number | undefined => {
     const parsed = value == null || value === '' ? NaN : numberAttribute(value);

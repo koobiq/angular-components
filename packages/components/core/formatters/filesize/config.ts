@@ -15,7 +15,6 @@ export enum KbqMeasurementSystem {
 /** Unit systems as union type */
 export type KbqMeasurementSystemType = keyof typeof KbqMeasurementSystem;
 
-/** @docs-private */
 export interface KbqUnitSystem {
     abbreviations: string[];
     base: number;

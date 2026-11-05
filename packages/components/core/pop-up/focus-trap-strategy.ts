@@ -1,10 +1,6 @@
 import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
 
-/**
- * Replaces `EventListenerFocusTrapInertStrategy`, so that focus works correctly while a popover is open.
- *
- * @docs-private
- */
+// Need replace EventListenerFocusTrapInertStrategy to EmptyFocusTrapStrategy for focus work correctly with open popover
 export class EmptyFocusTrapStrategy implements FocusTrapInertStrategy {
     preventFocus(): void {}
     allowFocus(): void {}

@@ -268,23 +268,78 @@ import { KbqOverlayLayer } from '@koobiq/components/core';
 
 ### Тени при прокрутке
 
-Директива `kbqOverflowShadowContainer` отслеживает прокручиваемую область: сигнал `overflow()` сообщает, осталось ли скрытое содержимое сверху (`top`) и снизу (`bottom`). Передайте его элементу, который рисует тень, например входу `withShadow` у `kbq-top-bar`:
+Директивы **Overflow Shadow** показывают границы прокручиваемой области. Тень появляется у шапки или подвала, когда в соответствующем направлении остается скрытое содержимое.
 
 ```html
-<div kbqOverflowShadowContainer #scroller="kbqOverflowShadowContainer" class="scrollable">
-    <kbq-top-bar [withShadow]="scroller.overflow().top">…</kbq-top-bar>
+<div kbqOverflowShadowContainer #shadow="kbqOverflowShadowContainer" class="scrollable">
+    <header [kbqOverflowShadowTop]="shadow">Заголовок</header>
 
     <!-- содержимое -->
+
+    <footer [kbqOverflowShadowBottom]="shadow">Подвал</footer>
 </div>
 ```
 
-| API               | Назначение                                                       |
-| ----------------- | ---------------------------------------------------------------- |
-| `overflow()`      | `{ top, bottom }`: осталось ли скрытое содержимое с этой стороны |
-| `debounce`        | Задержка обработки прокрутки в миллисекундах. По умолчанию — `0` |
-| `checkOverflow()` | Принудительное обновление состояния                              |
+| API                          | Назначение                                                        |
+| ---------------------------- | ----------------------------------------------------------------- |
+| `debounce`                   | Задержка обработки прокрутки в миллисекундах. По умолчанию — `0`  |
+| `shadow`                     | Значение `box-shadow` в активном состоянии                        |
+| `KBQ_OVERFLOW_SHADOW_SOURCE` | Источник событий и прокручиваемый элемент для собственной обертки |
+| `checkOverflow()`            | Принудительное обновление состояния                               |
+
+По умолчанию используются токены `--kbq-shadow-overflow-normal-bottom` и `--kbq-shadow-overflow-normal-top`.
 
 Контейнер отслеживает прокрутку и размеры элемента. Если содержимое увеличивает только `scrollHeight`, наблюдатель не замечает изменения. В таком случае состояние обновляет `checkOverflow()`.
+
+### Выбор всех элементов
+
+`getSelectAllState` и `toggleSelectAll` работают через адаптер. Способ хранения выбранных элементов библиотекой не задается.
+
+```ts
+import { getSelectAllState, KbqSelectAllAdapter, toggleSelectAll } from '@koobiq/components/core';
+
+const adapter: KbqSelectAllAdapter<Item> = {
+    items: this.items,
+    isSelectable: (item) => !item.disabled,
+    isSelected: (item) => this.selection.isSelected(item),
+    setSelected: (item, selected) => (selected ? this.selection.select(item) : this.selection.deselect(item))
+};
+
+const changed = toggleSelectAll(adapter, { allowDeselect: true });
+const masterCheckboxState = getSelectAllState(adapter);
+```
+
+Особенности:
+
+- `setSelected` вызывается для всех доступных элементов, включая те, чье состояние не изменилось; реализация должна быть идемпотентной;
+- `toggleSelectAll` возвращает только измененные элементы;
+- `allowDeselect: true` разрешает снять выбор повторным вызовом;
+- недоступные элементы не влияют на состояние мастер-чекбокса;
+- пустой набор имеет состояние `unchecked`;
+- `KbqSelectAllEvent` описывает событие `onSelectAll`;
+- `shouldSelectSearchText` определяет, должно ли сочетание клавиш выделить текст поиска вместо переключения опций.
+
+### Навигация по списку с клавиатуры
+
+Менеджеры клавиатуры управляют активным элементом:
+
+- `ListKeyManager` — базовое управление активным элементом;
+- `FocusKeyManager` — дополнительно переводит фокус на активный элемент;
+- `ActiveDescendantKeyManager` — оставляет фокус на контейнере и помечает активный элемент.
+
+```ts
+this.keyManager = new FocusKeyManager(this.items)
+    .withVerticalOrientation()
+    .withTypeAhead()
+    .withHomeAndEnd()
+    .withScrollSize(this.visibleRowsCount)
+    .skipPredicate((item) => item.disabled);
+```
+
+Классы Koobiq — отдельные реализации одноименных классов CDK с дополнениями:
+
+- `withScrollSize()`, `setNextPageItemActive()` и `setPreviousPageItemActive()` добавляют постраничное перемещение;
+- `previousActiveItemIndex` хранит предыдущий активный индекс для выделения диапазона с `Shift`.
 
 ### Валидаторы
 
@@ -325,9 +380,11 @@ import { KbqOverlayLayer } from '@koobiq/components/core';
 | `KbqOrientation`                                 | `horizontal`, `vertical`                                                                   |
 | `KbqFlexDirection`, `KbqFlexWrap`                | `row` / `column`, `nowrap` / `wrap`                                                        |
 | `PopUpPlacements`, `PopUpTriggers`, `PopUpSizes` | Положение, способ открытия и размер всплывающих элементов                                  |
-| `KbqMultipleInput`                               | Режим множественного выбора списков и деревьев                                             |
+| `KbqMultipleInput`, `MultipleMode`               | Режим множественного выбора списков и деревьев                                             |
 
-Компонент преобразует значение `color` в класс `kbq-<значение>`. Например, `color="error"` добавляет `kbq-error`, а `color="empty"` — `kbq-empty`. Эти классы формируются во время выполнения, поэтому могут не встречаться в исходниках как готовые строки.
+`KbqColorDirective` преобразует значение `color` в класс `kbq-<значение>`. Например, `color="error"` добавляет `kbq-error`, а `color="empty"` — `kbq-empty`. Эти классы формируются во время выполнения, поэтому могут не встречаться в исходниках как готовые строки.
+
+`resolveMultipleMode` преобразует допустимые значения `multiple` в режим выбора. Нераспознанное значение включает одиночный режим и выводит сообщение при разработке.
 
 ### Ширина панели
 
@@ -346,20 +403,39 @@ import { KbqOverlayLayer } from '@koobiq/components/core';
 
 ### Утилиты
 
-| Утилита                                      | Назначение                                                               |
-| -------------------------------------------- | ------------------------------------------------------------------------ |
-| `kbqInjectNativeElement<T>()`                | Получение `nativeElement` из внедренного `ElementRef`                    |
-| `escapeRegExp(value)`                        | Экранирование строки для регулярного выражения                           |
-| `KbqMeasureScrollbarService`                 | Измерение ширины системной полосы прокрутки. Устарел, удаляется в 22.0.0 |
-| `kbqInjectAutofilled()`                      | Сигнал о заполнении поля браузером                                       |
-| `KbqNormalizeWhitespace`                     | Замена тонкого пробела обычным при копировании                           |
-| `kbqRevealSelection`, `kbqSetSelectionRange` | Выделение текста и прокрутка поля к выделенному фрагменту                |
+| Утилита                                               | Назначение                                                                                             |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`      | Рекурсивное объединение конфигураций                                                                   |
+| `kbqInjectNativeElement<T>()`                         | Получение `nativeElement` из внедренного `ElementRef`                                                  |
+| `isHtmlElement`, `isElement`, `isNull`, `isUndefined` | Проверка и сужение типов                                                                               |
+| `isBoolean`                                           | Проверка и сужение до `boolean`. Устарел, удаляется в 22.0.0: используйте `typeof value === 'boolean'` |
+| `getNodesWithoutComments(nodes)`                      | Получение списка узлов без комментариев                                                                |
+| `getContentNodes(element)`                            | Дочерние узлы с содержимым: комментарии и пробельный текст игнорируются                                |
+| `supportsNativeDisabled(element)`                     | Поддерживает ли тег хоста нативный атрибут `disabled`                                                  |
+| `escapeRegExp(value)`                                 | Экранирование строки для регулярного выражения                                                         |
+| `isMac()`                                             | Определение платформы для подписей сочетаний клавиш                                                    |
+| `KbqMeasureScrollbarService`                          | Измерение ширины системной полосы прокрутки. Устарел, удаляется в 22.0.0                               |
+| `kbqInjectAutofilled()`                               | Сигнал о заполнении поля браузером                                                                     |
+| `KbqNormalizeWhitespace`                              | Замена тонкого пробела обычным при копировании                                                         |
+| `kbqRevealSelection`, `kbqSetSelectionRange`          | Выделение текста и прокрутка поля к выделенному фрагменту                                              |
 
 `KbqMeasureScrollbarService` возвращает `0` при серверном рендеринге.
 
 `KbqNormalizeWhitespace` применяется к полям с форматированными числами. При копировании директива заменяет разделяющий разряды тонкий пробел обычным. По умолчанию она не подключена. Пример приведен на странице [Input](/ru/components/input).
 
 `kbqInjectAutofilled()` вызывается в контексте внедрения директивы на `input` или `textarea`.
+
+### Тестирование
+
+**Core** экспортирует инструменты, которыми тестируются компоненты Koobiq. Они также подходят для тестирования прикладного кода на основе библиотеки.
+
+| Утилита                                                                                  | Назначение                                             |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `dispatchFakeEvent`, `dispatchKeyboardEvent`, `dispatchMouseEvent`, `dispatchTouchEvent` | Создают и отправляют событие                           |
+| `createFakeEvent`, `createKeyboardEvent`, `createMouseEvent`, `createTouchEvent`         | Создают событие без отправки                           |
+| `typeInElement(value, element)`                                                          | Вводит текст с полным набором событий                  |
+| `patchElementFocus(element)`                                                             | Управляет получением и потерей фокуса в тестовой среде |
+| `wrappedErrorMessage(error)`                                                             | Создает регулярное выражение для текста ошибки         |
 
 ### Стили
 

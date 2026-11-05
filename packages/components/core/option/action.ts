@@ -180,8 +180,6 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
  * when focus actually landed: the action lives in a `display: none` container until the option is
  * hovered or keyboard-focused, and focusing a hidden element is a no-op, so suppressing Tab there
  * would trap focus on the option.
- *
- * @docs-private
  */
 export function kbqFocusOptionActionOnTab(
     $event: KeyboardEvent,

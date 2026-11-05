@@ -152,7 +152,7 @@ export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
     static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteShortDateTimeFormatterPipe<any>, "absoluteShortDateTime", true>;
 }
 
-// @public
+// @public (undocumented)
 export class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable & T> {
     setActiveItem(index: number): void;
     setActiveItem(item: T): void;
@@ -164,7 +164,7 @@ export const ALT = 18;
 // @public
 export const APOSTROPHE = 192;
 
-// @public
+// @public (undocumented)
 export const applyPopupMargins: (renderer: Renderer2, element: HTMLElement, name: string, value: string) => void;
 
 // @public
@@ -360,7 +360,7 @@ export const E = 69;
 // @public
 export const EIGHT = 56;
 
-// @public
+// @public (undocumented)
 export class EmptyFocusTrapStrategy implements FocusTrapInertStrategy {
     // (undocumented)
     allowFocus(): void;
@@ -374,7 +374,7 @@ export const END = 35;
 // @public
 export const ENTER = 13;
 
-// @public
+// @public (undocumented)
 export const enUSFormattersData: {
     formatters: {
         number: {
@@ -655,7 +655,7 @@ export const ESCAPE = 27;
 // @public
 export function escapeRegExp(value: string): string;
 
-// @public
+// @public (undocumented)
 export const esLAFormattersData: {
     formatters: {
         number: {
@@ -992,7 +992,7 @@ export const FIRST_MEDIA = 166;
 // @public
 export const FIVE = 53;
 
-// @public
+// @public (undocumented)
 export class FocusKeyManager<T> extends ListKeyManager<IFocusableOption & T> {
     // @deprecated (undocumented)
     getFocusOrigin(): FocusOrigin;
@@ -1033,7 +1033,7 @@ export function getKbqSelectNonArrayValueError(): Error;
 // @public
 export function getKbqSelectNonFunctionValueError(): Error;
 
-// @public
+// @public (undocumented)
 export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 
 // @public
@@ -1169,7 +1169,7 @@ export const KBQ_CONNECTED_OVERLAY_ORIGIN: InjectionToken<KbqConnectedOverlayOri
 // @public
 export const KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS = "kbq-connected-overlay_overlap";
 
-// @public
+// @public (undocumented)
 export const KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER: <T>(token: InjectionToken<T>, factory: (overlay: Overlay) => () => ScrollStrategy) => {
     provide: InjectionToken<T>;
     deps: (typeof Overlay)[];
@@ -1188,7 +1188,7 @@ export function KBQ_DATE_LOCALE_FACTORY(): string;
 // @public
 export const KBQ_DATE_TIMEZONE: InjectionToken<KbqTimezoneLike>;
 
-// @public
+// @public (undocumented)
 export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
     items: {
         id: string;
@@ -2499,7 +2499,7 @@ export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 // @public
 export const KBQ_FORMATTERS_LOCALE_CONFIGURATION: InjectionToken<KbqFormattersLocaleConfiguration>;
 
-// @public
+// @public (undocumented)
 export const KBQ_INVALID_VALUE_ERROR = "Argument \"value\" must be a finite number!";
 
 // @public
@@ -2602,7 +2602,7 @@ export const KBQ_THEME_CONFIG: InjectionToken<KbqThemeSettings<KbqThemeConfig>>;
 // @public
 export const KBQ_THEME_STORE: InjectionToken<KbqThemeStore>;
 
-// @public
+// @public (undocumented)
 export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 
 // @public
@@ -2726,7 +2726,7 @@ export abstract class KbqAbstractSelect {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAbstractSelect, never>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqActionContainer {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqActionContainer, "kbq-action-container", ["kbqActionContainer"], {}, {}, never, ["*"], true, never>;
@@ -3839,7 +3839,7 @@ export type KbqPanelWidth = 'auto' | number | (string & {}) | null | '';
 // @public
 export type KbqPanelWidthOrigin = ElementRef<HTMLElement> | CdkOverlayOrigin | HTMLElement;
 
-// @public
+// @public (undocumented)
 export interface KbqParentPopup {
     // (undocumented)
     closedStream: Observable<boolean>;
@@ -4643,7 +4643,7 @@ export type KbqTimezoneLocaleConfiguration = {
     otherCountriesLabel: string;
 };
 
-// @public
+// @public (undocumented)
 export interface KbqTitleTextRef {
     // (undocumented)
     parentTextElement?: ElementRef;
@@ -4666,7 +4666,7 @@ export interface KbqTriangle {
     c: KbqPoint;
 }
 
-// @public
+// @public (undocumented)
 export interface KbqUnitSystem {
     // (undocumented)
     abbreviations: string[];
@@ -4779,7 +4779,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 // @public
 export type ListKeyManagerModifierKey = 'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey';
 
-// @public
+// @public (undocumented)
 export interface ListKeyManagerOption {
     disabled?: boolean | Signal<boolean>;
     // (undocumented)
@@ -4804,7 +4804,7 @@ export const MAC_WK_CMD_RIGHT = 93;
 // @public
 export const META = 91;
 
-// @public
+// @public (undocumented)
 export enum MultipleMode {
     // (undocumented)
     CHECKBOX = "checkbox",
@@ -4972,7 +4972,7 @@ export enum PopUpTriggers {
     Program = "program"
 }
 
-// @public
+// @public (undocumented)
 export enum PopUpVisibility {
     // (undocumented)
     Hidden = "hidden",
@@ -4982,7 +4982,7 @@ export enum PopUpVisibility {
     Visible = "visible"
 }
 
-// @public
+// @public (undocumented)
 export const POSITION_TO_CSS_MAP: {
     [key: string]: string;
 };
@@ -4990,7 +4990,7 @@ export const POSITION_TO_CSS_MAP: {
 // @public
 export const PRINT_SCREEN = 44;
 
-// @public
+// @public (undocumented)
 export const ptBRFormattersData: {
     formatters: {
         number: {
@@ -5455,7 +5455,7 @@ export function runClearPredicate<T>(clearPredicate: (item: T) => boolean, item:
 // @public
 export function runCompareWith<T>(compareWith: (o1: T, o2: T) => boolean, first: T, second: T): boolean;
 
-// @public
+// @public (undocumented)
 export const ruRUFormattersData: {
     formatters: {
         number: {
@@ -5805,7 +5805,7 @@ export const THREE = 51;
 // @public
 export const TILDE = 192;
 
-// @public
+// @public (undocumented)
 export const tkTMFormattersData: {
     formatters: {
         number: {
@@ -6115,7 +6115,7 @@ export const VOLUME_UP = 175;
 // @public
 export const W = 87;
 
-// @public
+// @public (undocumented)
 export function wrappedErrorMessage(e: Error): RegExp;
 
 // @public

@@ -234,7 +234,6 @@ export const POSITION_PRIORITY_STRATEGY = {
     rightBottom: RIGHT_BOTTOM_POSITION_PRIORITY
 };
 
-/** @docs-private */
 export const POSITION_TO_CSS_MAP: { [key: string]: string } = {
     top: 'top',
     topLeft: 'top-left',
@@ -250,7 +249,6 @@ export const POSITION_TO_CSS_MAP: { [key: string]: string } = {
     bottomRight: 'bottom-right'
 };
 
-/** @docs-private */
 export const KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER = <T>(
     token: InjectionToken<T>,
     factory: (overlay: Overlay) => () => ScrollStrategy

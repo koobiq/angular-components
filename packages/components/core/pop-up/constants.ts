@@ -3,15 +3,12 @@ import { SizeM } from '@koobiq/design-tokens';
 import { Observable } from 'rxjs';
 import { KbqEnumValues } from '../utils';
 
-/** @docs-private */
 export interface KbqParentPopup {
     closedStream: Observable<boolean>;
 }
 
 /**
  * InjectionToken for providing component with popup. Used in select and tree-select for tooltip.
- *
- * @docs-private
  */
 export const KBQ_PARENT_POPUP = new InjectionToken<KbqParentPopup>('kbq-parent-popup');
 
@@ -20,8 +17,6 @@ export const KBQ_PARENT_POPUP = new InjectionToken<KbqParentPopup>('kbq-parent-p
  *
  * A tooltip sharing its host with such a pop-up mutes itself while the pop-up is on screen, so the two never
  * compete for the same anchor and the focus restored by the closing pop-up does not re-open the tooltip.
- *
- * @docs-private
  */
 export interface KbqSiblingPopup {
     /**
@@ -37,8 +32,6 @@ export interface KbqSiblingPopup {
  * Element-level token for pop-ups sharing their trigger element with a tooltip. Multi-provided, so a single
  * element can carry several pop-ups at once — for example the filter-bar button with both a popover and a
  * dropdown attached to it.
- *
- * @docs-private
  */
 export const KBQ_SIBLING_POPUP = new InjectionToken<readonly KbqSiblingPopup[]>('kbq-sibling-popup');
 
@@ -48,8 +41,6 @@ export const KBQ_SIBLING_POPUP = new InjectionToken<readonly KbqSiblingPopup[]>(
  *
  * Every concrete trigger has to add it on its own: Angular copies `providers` to a subclass only when that
  * subclass has no decorator of its own, so inheriting from an already-announced trigger is not enough.
- *
- * @docs-private
  */
 export const kbqSiblingPopupProvider = (popup: Type<KbqSiblingPopup>): Provider => ({
     provide: KBQ_SIBLING_POPUP,
@@ -78,7 +69,6 @@ export type KbqStickToWindowPlacementValues = KbqEnumValues<
     PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left
 >;
 
-/** @docs-private */
 export enum PopUpVisibility {
     Initial = 'initial',
     Visible = 'visible',
@@ -105,8 +95,6 @@ export type KbqPopUpSizeValues = KbqEnumValues<PopUpSizes>;
 /**
  * Default value when configuring overlay in popups (Autocomplete, Datepicker, Dropdown, Select, Tags Autocomplete,
  * Tags Input, Timezone, TreeSelect).
- *
- * @docs-private
  */
 export const defaultOffsetY: number = 4;
 
@@ -116,8 +104,6 @@ export const defaultOffsetY: number = 4;
  * Used instead of a physical `offsetY` gap: the pane sits flush with the trigger and the visual gap is
  * recreated as transparent `padding-top` inside the pane (see the `kbq-connected-overlay-gap` styles), so the
  * gap is covered by the pane (`pointer-events: auto`) and can no longer be clicked/hovered through.
- *
- * @docs-private
  */
 export const KBQ_CONNECTED_OVERLAY_BELOW_CLASS = 'kbq-connected-overlay_below';
 
@@ -126,8 +112,6 @@ export const KBQ_CONNECTED_OVERLAY_BELOW_CLASS = 'kbq-connected-overlay_below';
  *
  * Mirror of {@link KBQ_CONNECTED_OVERLAY_BELOW_CLASS}: the visual gap is recreated as transparent
  * `padding-bottom` inside the pane so the flipped gap is not click/hover-through.
- *
- * @docs-private
  */
 export const KBQ_CONNECTED_OVERLAY_ABOVE_CLASS = 'kbq-connected-overlay_above';
 
@@ -140,8 +124,6 @@ export const KBQ_CONNECTED_OVERLAY_ABOVE_CLASS = 'kbq-connected-overlay_above';
  * `padding-top` as {@link KBQ_CONNECTED_OVERLAY_BELOW_CLASS}. It is a separate class because the room left
  * for the panel has to be measured from the first row rather than from the trigger's bottom edge, and the
  * class is how the component tells the two apart.
- *
- * @docs-private
  */
 export const KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS = 'kbq-connected-overlay_overlap';
 

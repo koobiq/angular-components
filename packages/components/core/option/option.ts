@@ -60,8 +60,6 @@ export interface KbqOptionParentComponent {
 
 /**
  * Handler that will update scroll position of elements inside overlay
- *
- * @docs-private
  */
 export interface KeyboardNavigationHandler {
     /** Scrolls the active option into view. */
@@ -70,8 +68,6 @@ export interface KeyboardNavigationHandler {
 
 /**
  * Injection token used to provide the parent component to options.
- *
- * @docs-private
  */
 export const KBQ_OPTION_PARENT_COMPONENT = new InjectionToken<KbqOptionParentComponent>('KBQ_OPTION_PARENT_COMPONENT');
 

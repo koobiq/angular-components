@@ -1,6 +1,6 @@
 import { RULER_INHERITED_PROPERTIES, WRAPPING_RULER_INHERITED_PROPERTIES } from './text-ruler';
 
-/** Layer that renders text over a text field in the field's own layout. @docs-private */
+/** Layer that renders text over a text field in the field's own layout. */
 export interface KbqTextMirror {
     /**
      * Shows `hint` exactly where the field would render it between `before` and `after`. Both of those stay

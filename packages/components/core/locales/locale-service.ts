@@ -29,7 +29,6 @@ export const KBQ_LOCALE_ID = new InjectionToken<KbqLocaleIdLike>('KbqLocaleId');
 
 export const KBQ_DEFAULT_LOCALE_ID = 'ru-RU';
 
-/** @docs-private */
 export function KBQ_DEFAULT_LOCALE_DATA_FACTORY() {
     return {
         items: [
@@ -273,6 +272,7 @@ export function kbqInjectLocaleService(options?: InjectOptions): KbqLocaleServic
     return inject(KBQ_LOCALE_SERVICE, options ?? {});
 }
 
+// todo code below need refactor or delete in DS-3603
 /** @docs-private */
 export const KBQ_DEFAULT_PRECISION_SEPARATOR = '.';
 
@@ -311,8 +311,6 @@ export function numberByParts(
 
 /**
  * Function that returns a string representation of a number without localized separators
- *
- * @docs-private
  */
 export function normalizeNumber(
     value: string | null | undefined,
@@ -332,8 +330,6 @@ export function normalizeNumber(
 
 /**
  * Function that parse string and return a number. The string can be in any locale.
- *
- * @docs-private
  */
 export function checkAndNormalizeLocalizedNumber(num: string | null | undefined, locale?: string): number | null {
     if (num === null || num === undefined) return null;
@@ -373,3 +369,5 @@ export function checkAndNormalizeLocalizedNumber(num: string | null | undefined,
 
     return numberOutput;
 }
+
+// todo code above need refactor or delete in DS-3603

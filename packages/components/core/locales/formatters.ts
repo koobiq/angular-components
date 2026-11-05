@@ -1,6 +1,5 @@
 import { KbqLocaleFormattersData } from './types';
 
-/** @docs-private */
 export const enUSFormattersData = {
     formatters: {
         number: {
@@ -38,7 +37,6 @@ export const enUSFormattersData = {
     }
 } satisfies KbqLocaleFormattersData;
 
-/** @docs-private */
 export const esLAFormattersData = {
     formatters: {
         number: {
@@ -81,7 +79,6 @@ export const esLAFormattersData = {
     }
 } satisfies KbqLocaleFormattersData;
 
-/** @docs-private */
 export const ptBRFormattersData = {
     formatters: {
         number: {
@@ -119,7 +116,6 @@ export const ptBRFormattersData = {
     }
 } satisfies KbqLocaleFormattersData;
 
-/** @docs-private */
 export const ruRUFormattersData = {
     formatters: {
         number: {
@@ -164,7 +160,6 @@ export const ruRUFormattersData = {
     }
 } satisfies KbqLocaleFormattersData;
 
-/** @docs-private */
 export const tkTMFormattersData = {
     formatters: {
         number: {

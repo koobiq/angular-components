@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
-/** @docs-private */
 @Component({
     selector: 'kbq-action-container',
     template: `

@@ -267,23 +267,78 @@ Layered panels become descendants of the marked element: their events bubble thr
 
 ### Scroll shadows
 
-The `kbqOverflowShadowContainer` directive tracks a scrollable area: its `overflow()` signal tells whether hidden content remains above (`top`) and below (`bottom`). Pass it to the element that draws the shadow, such as the `withShadow` input of `kbq-top-bar`:
+The **Overflow Shadow** directives show the edges of a scrollable area. A shadow appears at a header or footer when hidden content remains in the corresponding direction.
 
 ```html
-<div kbqOverflowShadowContainer #scroller="kbqOverflowShadowContainer" class="scrollable">
-    <kbq-top-bar [withShadow]="scroller.overflow().top">…</kbq-top-bar>
+<div kbqOverflowShadowContainer #shadow="kbqOverflowShadowContainer" class="scrollable">
+    <header [kbqOverflowShadowTop]="shadow">Header</header>
 
     <!-- content -->
+
+    <footer [kbqOverflowShadowBottom]="shadow">Footer</footer>
 </div>
 ```
 
-| API               | Purpose                                                        |
-| ----------------- | -------------------------------------------------------------- |
-| `overflow()`      | `{ top, bottom }`: whether hidden content remains on that side |
-| `debounce`        | Scroll handling delay in milliseconds. Defaults to `0`         |
-| `checkOverflow()` | Forces a state update                                          |
+| API                          | Purpose                                                  |
+| ---------------------------- | -------------------------------------------------------- |
+| `debounce`                   | Scroll handling delay in milliseconds. Defaults to `0`   |
+| `shadow`                     | The `box-shadow` value in the active state               |
+| `KBQ_OVERFLOW_SHADOW_SOURCE` | Event source and scrollable element for a custom wrapper |
+| `checkOverflow()`            | Forces a state update                                    |
+
+The default tokens are `--kbq-shadow-overflow-normal-bottom` and `--kbq-shadow-overflow-normal-top`.
 
 The container tracks scrolling and element dimensions. If the content grows only through `scrollHeight`, the observer does not detect the change. Call `checkOverflow()` to update the state.
+
+### Selecting all items
+
+`getSelectAllState` and `toggleSelectAll` work through an adapter. The library does not prescribe how selected items are stored.
+
+```ts
+import { getSelectAllState, KbqSelectAllAdapter, toggleSelectAll } from '@koobiq/components/core';
+
+const adapter: KbqSelectAllAdapter<Item> = {
+    items: this.items,
+    isSelectable: (item) => !item.disabled,
+    isSelected: (item) => this.selection.isSelected(item),
+    setSelected: (item, selected) => (selected ? this.selection.select(item) : this.selection.deselect(item))
+};
+
+const changed = toggleSelectAll(adapter, { allowDeselect: true });
+const masterCheckboxState = getSelectAllState(adapter);
+```
+
+Details:
+
+- `setSelected` is called for every selectable item, including items whose state did not change; the implementation must be idempotent;
+- `toggleSelectAll` returns only the items that changed;
+- `allowDeselect: true` allows a repeated call to clear the selection;
+- unavailable items do not affect the master checkbox state;
+- an empty set has the `unchecked` state;
+- `KbqSelectAllEvent` describes the `onSelectAll` event;
+- `shouldSelectSearchText` determines whether the shortcut selects search text instead of toggling options.
+
+### Keyboard navigation in lists
+
+Keyboard managers control the active item:
+
+- `ListKeyManager` — basic active-item management;
+- `FocusKeyManager` — additionally moves focus to the active item;
+- `ActiveDescendantKeyManager` — keeps focus on the container and marks the active item.
+
+```ts
+this.keyManager = new FocusKeyManager(this.items)
+    .withVerticalOrientation()
+    .withTypeAhead()
+    .withHomeAndEnd()
+    .withScrollSize(this.visibleRowsCount)
+    .skipPredicate((item) => item.disabled);
+```
+
+The Koobiq classes are separate implementations of the CDK classes with the same names, with additions:
+
+- `withScrollSize()`, `setNextPageItemActive()`, and `setPreviousPageItemActive()` add page-wise movement;
+- `previousActiveItemIndex` stores the previous active index for range selection with `Shift`.
 
 ### Validators
 
@@ -324,9 +379,11 @@ These types describe common input values across components. Use them in custom w
 | `KbqOrientation`                                 | `horizontal`, `vertical`                                                                   |
 | `KbqFlexDirection`, `KbqFlexWrap`                | `row` / `column`, `nowrap` / `wrap`                                                        |
 | `PopUpPlacements`, `PopUpTriggers`, `PopUpSizes` | Position, trigger, and size of pop-up elements                                             |
-| `KbqMultipleInput`                               | Multiple-selection mode for lists and trees                                                |
+| `KbqMultipleInput`, `MultipleMode`               | Multiple-selection mode for lists and trees                                                |
 
-A component turns its `color` value into a `kbq-<value>` class. For example, `color="error"` adds `kbq-error`, while `color="empty"` adds `kbq-empty`. These classes are created at runtime, so they may not appear as complete strings in the sources.
+`KbqColorDirective` converts the `color` value into a `kbq-<value>` class. For example, `color="error"` adds `kbq-error`, while `color="empty"` adds `kbq-empty`. These classes are created at runtime, so they may not appear as complete strings in the sources.
+
+`resolveMultipleMode` converts accepted `multiple` values into a selection mode. An unrecognized value enables single selection and reports a message in development mode.
 
 ### Panel width
 
@@ -345,20 +402,39 @@ The `KbqPanelWidth`, `KbqPanelMinWidth`, and `KbqPanelMaxWidth` types describe p
 
 ### Utilities
 
-| Utility                                      | Purpose                                                            |
-| -------------------------------------------- | ------------------------------------------------------------------ |
-| `kbqInjectNativeElement<T>()`                | Gets `nativeElement` from an injected `ElementRef`                 |
-| `escapeRegExp(value)`                        | Escapes a string for use in a regular expression                   |
-| `KbqMeasureScrollbarService`                 | Measures the system scrollbar width. Deprecated, removed in 22.0.0 |
-| `kbqInjectAutofilled()`                      | A signal that the browser autofilled a field                       |
-| `KbqNormalizeWhitespace`                     | Replaces a thin space with a regular space when copying            |
-| `kbqRevealSelection`, `kbqSetSelectionRange` | Selects text and scrolls a field to the selected fragment          |
+| Utility                                               | Purpose                                                                                          |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`      | Recursively merges configurations                                                                |
+| `kbqInjectNativeElement<T>()`                         | Gets `nativeElement` from an injected `ElementRef`                                               |
+| `isHtmlElement`, `isElement`, `isNull`, `isUndefined` | Checks and narrows types                                                                         |
+| `isBoolean`                                           | Checks and narrows to `boolean`. Deprecated, removed in 22.0.0: use `typeof value === 'boolean'` |
+| `getNodesWithoutComments(nodes)`                      | Gets a list of nodes without comments                                                            |
+| `getContentNodes(element)`                            | Child nodes that carry content: comments and whitespace-only text ignored                        |
+| `supportsNativeDisabled(element)`                     | Whether the host tag accepts the native `disabled` attribute                                     |
+| `escapeRegExp(value)`                                 | Escapes a string for use in a regular expression                                                 |
+| `isMac()`                                             | Detects the platform for keyboard shortcut labels                                                |
+| `KbqMeasureScrollbarService`                          | Measures the system scrollbar width. Deprecated, removed in 22.0.0                               |
+| `kbqInjectAutofilled()`                               | A signal that the browser autofilled a field                                                     |
+| `KbqNormalizeWhitespace`                              | Replaces a thin space with a regular space when copying                                          |
+| `kbqRevealSelection`, `kbqSetSelectionRange`          | Selects text and scrolls a field to the selected fragment                                        |
 
 `KbqMeasureScrollbarService` returns `0` during server-side rendering.
 
 `KbqNormalizeWhitespace` applies to fields with formatted numbers. When copying, the directive replaces the thin spaces between digit groups with regular spaces. It is not enabled by default. See the [Input](/en/components/input) page for an example.
 
 `kbqInjectAutofilled()` is called from a directive's injection context on an `input` or `textarea`.
+
+### Testing
+
+**Core** exports utilities used to test Koobiq components. They are also suitable for testing application code built on the library.
+
+| Utility                                                                                  | Purpose                                           |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| `dispatchFakeEvent`, `dispatchKeyboardEvent`, `dispatchMouseEvent`, `dispatchTouchEvent` | Creates and dispatches an event                   |
+| `createFakeEvent`, `createKeyboardEvent`, `createMouseEvent`, `createTouchEvent`         | Creates an event without dispatching it           |
+| `typeInElement(value, element)`                                                          | Enters text with the full sequence of events      |
+| `patchElementFocus(element)`                                                             | Controls focus and blur in the test environment   |
+| `wrappedErrorMessage(error)`                                                             | Creates a regular expression for an error message |
 
 ### Styles
 

@@ -63,7 +63,7 @@ export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo = {
     maximumFractionDigits: 3
 };
 
-/** Formats a number value according to locale and formatting options @docs-private */
+/** Formats a number value according to locale and formatting options */
 export function formatNumberWithLocale(
     value: unknown,
     formatter: Intl.NumberFormat,
@@ -87,8 +87,6 @@ export function formatNumberWithLocale(
 /**
  * Special contract between `KbqDecimalPipe` and `KbqTableNumberPipe`,
  * so they can be interchangeable in the cases of usage
- *
- * @docs-private
  */
 export interface KbqNumericPipe {
     transform(value: unknown, digitsInfo?: string, locale?: string): string | null;

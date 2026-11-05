@@ -5,15 +5,12 @@ import { ListKeyManager, ListKeyManagerOption } from './list-key-manager';
  * This is the interface for focusable items (used by the FocusKeyManager).
  * Each item must know how to focus itself, whether or not it is currently disabled
  * and be able to supply it's label.
- *
- * @docs-private
  */
 export interface IFocusableOption extends ListKeyManagerOption {
     // Focuses the `FocusableOption`. */
     focus(origin?: FocusOrigin): void;
 }
 
-/** @docs-private */
 export class FocusKeyManager<T> extends ListKeyManager<IFocusableOption & T> {
     private origin: FocusOrigin = 'program';
 
