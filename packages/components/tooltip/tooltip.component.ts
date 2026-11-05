@@ -147,6 +147,8 @@ export class KbqTooltipComponent extends KbqPopUp {
 
     prefix = 'kbq-tooltip';
 
+    protected override arrowCenterInset = 21;
+
     /**
      * Id rendered on the tooltip element; the trigger points its `aria-describedby` at it.
      *
@@ -528,6 +530,12 @@ export class KbqTooltipTrigger
     arrow: boolean = false;
 
     /**
+     * Input (`kbqTooltipArrowCentered`) — centers the arrow on the trigger while preserving the panel placement.
+     * Requires a visible arrow. Defaults to `false`.
+     */
+    override arrowCentered = false;
+
+    /**
      * Input (`kbqTooltipOffset`) — distance in pixels between the tooltip and its trigger. `null`, the default, keeps
      * the gap of the stylesheet.
      */
@@ -573,9 +581,9 @@ export class KbqTooltipTrigger
     header: string | TemplateRef<unknown>;
 
     /**
-     * Hands each bound input to its member, and pushes a later change of `modifier`, `header`, `arrow` or
-     * `offset` — plain fields — into an open tooltip, which would otherwise show stale data until the next
-     * show/hide cycle.
+     * Hands each bound input to its member, and pushes a later change of `modifier`, `header`, `arrow`,
+     * `arrowCentered` or `offset` — plain fields — into an open tooltip, which would otherwise show stale data
+     * until the next show/hide cycle.
      */
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member, a bound `undefined` restoring the
@@ -642,6 +650,11 @@ export class KbqTooltipTrigger
             const arrow = this.arrowInput();
 
             if (arrow !== undefined) this.arrow = arrow;
+        }
+
+        if (changes['arrowCenteredInput']) {
+            this.arrowCentered = this.arrowCenteredInput() ?? false;
+            this.updateData();
         }
 
         if (changes['offsetInput']) {
@@ -787,6 +800,12 @@ export class KbqTooltipTrigger
     /** @docs-private */
     readonly arrowInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
         alias: 'kbqTooltipArrow',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly arrowCenteredInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqTooltipArrowCentered',
         transform: booleanAttribute
     });
 
@@ -1129,6 +1148,7 @@ export class KbqTooltipTrigger
         // dropping them left the template rendering the previous context instead.
         this.instance.context = this.context != null ? { $implicit: this.context } : null;
         this.instance.arrow = this.arrow;
+        this.instance.arrowCentered = this.arrowCentered;
         this.instance.offset = this.offset;
         this.instance.detectChanges();
         // The margins live on the rendered tooltip element, so re-applying them is the only way a changed
@@ -1344,6 +1364,15 @@ export class KbqTooltipTrigger
     /** @docs-private */
     protected getAnchorSize(): { width: number; height: number } {
         return this.relativeToCaret ? this.caretOrigin : super.getAnchorSize();
+    }
+
+    /** @docs-private */
+    protected override getOriginCenter(): { x: number; y: number } {
+        if (!this.relativeToCaret) return super.getOriginCenter();
+
+        const { x, y, width, height } = this.caretOrigin;
+
+        return { x: x + width / 2, y: y + height / 2 };
     }
 
     /**
