@@ -74,7 +74,7 @@
     @if (isTemplateRef(valueTemplate)) {
         <ng-container
             [ngTemplateOutlet]="$any(valueTemplate)"
-            [ngTemplateOutletContext]="{ $implicit, option: node }"
+            [ngTemplateOutletContext]="{ $implicit: this, option: getSourceNode(node), search: searchControl.value }"
         />
     } @else {
         <div

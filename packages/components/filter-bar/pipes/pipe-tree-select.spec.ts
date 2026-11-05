@@ -77,8 +77,10 @@ const createFilter = (pipes: KbqPipe[]): KbqFilter => ({
             <kbq-filter-reset />
         </kbq-filter-bar>
 
-        <ng-template #optionTemplate let-option="option" let-pipe>
+        <ng-template #optionTemplate let-option="option" let-pipe let-search="search">
             <span class="custom-tree-option">{{ option.name }} / {{ option.caption }} / {{ pipe.data.id }}</span>
+            <span class="custom-tree-option__badge">{{ option.badge }}</span>
+            <span class="custom-tree-option__search">{{ search }}</span>
         </ng-template>
     `
 })
@@ -479,13 +481,18 @@ describe('KbqPipeTreeSelectComponent', () => {
     });
 
     describe('option content', () => {
-        const CAPTIONED_TREE_DATA: KbqTreeSelectNode[] = [
+        interface CaptionedNode extends Omit<KbqTreeSelectNode, 'children'> {
+            badge?: string;
+            children: CaptionedNode[] | null;
+        }
+
+        const CAPTIONED_TREE_DATA: CaptionedNode[] = [
             {
                 name: 'Events',
                 value: 'events',
                 caption: 'category.events',
                 children: [
-                    { name: 'Threat type', value: 'threat', caption: 'category.generic', children: null },
+                    { name: 'Threat type', value: 'threat', caption: 'category.generic', badge: 'B1', children: null },
                     { name: 'Action', value: 'action', children: null }
                 ]
             }
@@ -610,6 +617,24 @@ describe('KbqPipeTreeSelectComponent', () => {
             );
             expect(option.getHostElement().querySelector('.kbq-option-caption')).toBeNull();
             expect(option.getLabel()).toBe('Threat type');
+
+            expect(option.getHostElement().querySelector('.custom-tree-option__badge')!.textContent).toBe('B1');
+
+            // No query yet: the search context is null and renders empty.
+            expect(option.getHostElement().querySelector('.custom-tree-option__search')!.textContent).toBe('');
+
+            getPipeComponent().searchControl.setValue('Threat');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getOption('threat').getHostElement().querySelector('.custom-tree-option__search')!.textContent).toBe(
+                'Threat'
+            );
+
+            // The branch node also receives the source node and the query.
+            expect(getOption('events').getHostElement().querySelector('.custom-tree-option__search')!.textContent).toBe(
+                'Threat'
+            );
 
             getPipeComponent().searchControl.setValue('category.generic');
             await vi.runOnlyPendingTimersAsync();
