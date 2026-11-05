@@ -214,6 +214,21 @@ describe('Standalone ToastService', () => {
         flush();
         discardPeriodicTasks();
     }));
+
+    it('should stop the shared timer on destroy', () => {
+        jest.useFakeTimers();
+
+        try {
+            service = TestBed.inject(KbqToastService);
+
+            jest.advanceTimersByTime(500);
+            service.ngOnDestroy();
+
+            expect(jest.getTimerCount()).toBe(0);
+        } finally {
+            jest.useRealTimers();
+        }
+    });
 });
 
 @Component({
