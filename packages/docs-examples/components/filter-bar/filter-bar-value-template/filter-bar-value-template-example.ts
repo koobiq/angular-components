@@ -153,6 +153,7 @@ export class FilterBarValueTemplateExample {
             type: KbqPipeTypes.Select,
             values: this.flatValues(),
             valueTemplate: this.flatOptionTemplate(),
+            search: true,
 
             cleanable: false,
             removable: false,
@@ -164,6 +165,7 @@ export class FilterBarValueTemplateExample {
             type: KbqPipeTypes.MultiSelect,
             values: this.flatValues(),
             valueTemplate: this.flatOptionTemplate(),
+            search: true,
 
             cleanable: false,
             removable: false,
@@ -175,6 +177,7 @@ export class FilterBarValueTemplateExample {
             type: KbqPipeTypes.TreeSelect,
             values: this.values(),
             valueTemplate: this.optionTemplate(),
+            search: true,
             multilineOptions: true,
 
             cleanable: false,
@@ -187,6 +190,7 @@ export class FilterBarValueTemplateExample {
             type: KbqPipeTypes.MultiTreeSelect,
             values: this.values(),
             valueTemplate: this.optionTemplate(),
+            search: true,
             panelMaxHeight: 480,
             multilineOptions: true,
 

@@ -596,6 +596,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     open(): void;
     readonly options: Signal<readonly KbqOption[]>;
     readonly searchControl: FormControl<string | null>;
+    readonly searchTokens: Signal<string[]>;
     readonly select: Signal<KbqSelect>;
     selectAllHandler: (event: KeyboardEvent) => void;
     get selected(): KbqSelectValue[] | null;
@@ -671,6 +672,7 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     onSelect(item: KbqSelectValue): void;
     open(): void;
     readonly searchControl: FormControl<string | null>;
+    readonly searchTokens: Signal<string[]>;
     readonly select: Signal<KbqSelect>;
     get selected(): KbqSelectValue | null;
     // (undocumented)

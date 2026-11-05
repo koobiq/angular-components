@@ -90,12 +90,12 @@
                 <!-- Each line has to clip itself, and must not stay `nowrap` under `multilineOptions`. -->
                 <div
                     [class.kbq-truncate-line]="!multilineOptions"
-                    [innerHTML]="item.name | kbqHighlightBackground: searchControl.value"
+                    [innerHTML]="item.name | kbqHighlightBackground: searchTokens() : true"
                 ></div>
                 <div
                     class="kbq-option-caption"
                     [class.kbq-truncate-line]="!multilineOptions"
-                    [innerHTML]="caption | kbqHighlightBackground: searchControl.value"
+                    [innerHTML]="caption | kbqHighlightBackground: searchTokens() : true"
                 ></div>
             } @else {
                 <!-- Deliberately a bare text node: `text-overflow` does not reach a nested block box. -->

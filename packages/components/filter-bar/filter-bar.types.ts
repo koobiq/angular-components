@@ -234,9 +234,9 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
 
     /**
      * Custom option content for `select` and `multiselect`, or custom leaf and branch content for
-     * `multi-tree-select`. Tree templates receive a {@link KbqMultiTreeSelectValueTemplateContext} with the
+     * `tree-select` and `multi-tree-select`. Tree templates receive a {@link KbqMultiTreeSelectValueTemplateContext} with the
      * original `option` and current `search`; filtering and the trigger still use the node's `name`.
-     * Ignored by other pipe types, including `tree-select`.
+     * Ignored by other pipe types.
      */
     valueTemplate?: TemplateRef<any> | string;
 
