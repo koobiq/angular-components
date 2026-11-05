@@ -81,9 +81,9 @@ export const DOCS_NEXT_ARTICLE_WIDTH = new InjectionToken<{ readonly canExpand: 
             max-width: none;
         }
 
-        /* A tablet: the contents are a rail of 40px, so the article keeps less at its sides. */
+        /* A tablet with a rail of contents (40px): the article keeps less at its sides. Without one it keeps them. */
         @media (min-width: 720px) and (max-width: 1024px) {
-            .docs-next-page-layout__article {
+            :host(.docs-next-page-layout_with-rail) .docs-next-page-layout__article {
                 padding: 40px var(--kbq-size-l) 96px var(--kbq-size-xxl);
             }
         }
@@ -109,11 +109,13 @@ export const DOCS_NEXT_ARTICLE_WIDTH = new InjectionToken<{ readonly canExpand: 
     host: {
         '[class.docs-next-page-layout_wide]': 'wide()',
         '[class.docs-next-page-layout_with-toc]': 'withToc()',
+        '[class.docs-next-page-layout_with-rail]': 'withToc() && state.isTablet() && outline.items().length > 0',
         '[class.docs-next-page-layout_expanded]': 'state.articleExpanded() && !state.isMobile()'
     }
 })
 export class DocsNextPageLayout {
     protected readonly state = inject(DocsNextSiteState);
+    protected readonly outline = inject(DocsNextPageOutline);
 
     readonly wide = input(false);
     readonly withToc = input(true);
@@ -128,7 +130,7 @@ export class DocsNextPageLayout {
     readonly canExpand = signal(false);
 
     constructor() {
-        const outline = inject(DocsNextPageOutline);
+        const outline = this.outline;
         const destroyRef = inject(DestroyRef);
         const window = inject(KBQ_WINDOW);
         const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
