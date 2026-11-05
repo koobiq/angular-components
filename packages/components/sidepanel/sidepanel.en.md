@@ -45,6 +45,14 @@ Clicking the vertical area exposed by the panel underneath closes the top panel.
 | Used for editing like a regular modal dialog | Used only for editing parts of a large object, without explicitly saving those parts |
 | Action buttons are always required           | Action buttons are optional                                                          |
 
+#### Popups inside the sidepanel
+
+Tooltips, popovers and dropdowns open above the page. When the sidepanel body scrolls, they stay in place and detach from the element that opened them. To make them move with the content, add the `cdkScrollable` directive from `@angular/cdk/scrolling` to the sidepanel body:
+
+```html
+<kbq-sidepanel-body cdkScrollable>...</kbq-sidepanel-body>
+```
+
 #### Focus and keyboard interaction
 
 While the sidepanel is open, focus cycles only through elements inside the panel, including the close button and footer buttons, and does not leave the panel.
