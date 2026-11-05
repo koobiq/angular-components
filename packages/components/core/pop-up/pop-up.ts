@@ -7,16 +7,16 @@ import {
     EventEmitter,
     inject,
     Injector,
-    OnDestroy,
+    type OnDestroy,
     Renderer2,
-    Signal,
+    type Signal,
     signal,
     TemplateRef
 } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { type Observable, Subject } from 'rxjs';
 import { kbqAfterAnimations, kbqAnimationsDisabled } from '../animation/animations-state';
 import { PopUpPlacements, PopUpVisibility } from './constants';
-import { KbqPopUpTrigger } from './pop-up-trigger';
+import type { KbqPopUpTrigger } from './pop-up-trigger';
 
 @Directive({
     host: {

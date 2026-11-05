@@ -1,5 +1,5 @@
-import { InjectionToken, Provider } from '@angular/core';
-import { EventListenerArgs, EventListeners, InitializationTarget, PartialOptions } from 'overlayscrollbars';
+import { InjectionToken, type Provider } from '@angular/core';
+import type { EventListenerArgs, EventListeners, InitializationTarget, PartialOptions } from 'overlayscrollbars';
 
 export type KbqScrollbarEvents = EventListeners;
 export type KbqScrollbarEventListenerArgs = EventListenerArgs;

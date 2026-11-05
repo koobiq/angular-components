@@ -12,7 +12,7 @@ import {
 import { KBQ_TITLE_TEXT_REF, KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqDropdownItem } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqAppSwitcherApp } from './app-switcher';
+import type { KbqAppSwitcherApp } from './app-switcher';
 import { KbqAppSwitcherIconSanitizer } from './app-switcher-icon-sanitizer';
 
 /** @docs-private */

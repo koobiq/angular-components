@@ -1,7 +1,7 @@
 export {
-    extractReleaseNotes,
-    parseTag,
-    resolveChangelogPath,
     type ChangelogReleaseNotes,
-    type ParsedTag
+    extractReleaseNotes,
+    type ParsedTag,
+    parseTag,
+    resolveChangelogPath
 } from './extract-release-notes';

@@ -1,9 +1,9 @@
 import { visitAll } from './ast';
 import {
     memberAccessPattern,
-    Range,
-    TemplateExpression,
-    TemplateRefResolver,
+    type Range,
+    type TemplateExpression,
+    type TemplateRefResolver,
     TemplateScanner
 } from './signal-members-migration';
 

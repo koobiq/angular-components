@@ -1,7 +1,7 @@
-import { describeContext, indexSkew, type Catalog } from './catalog.js';
+import { type Catalog, describeContext, indexSkew } from './catalog.js';
 import { compoundParts } from './glossary.js';
 import { normalize, rarity, score, terms } from './matching.js';
-import { search, type HitKind } from './search.js';
+import { type HitKind, search } from './search.js';
 import { compare } from './semver.js';
 import type { ResolvedSymbol } from './sources/components.js';
 import { findSection, guideCaveat, guideIds, pickGuide, sectionPath } from './sources/guides.js';

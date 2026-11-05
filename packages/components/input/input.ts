@@ -4,7 +4,7 @@ import {
     booleanAttribute,
     computed,
     Directive,
-    DoCheck,
+    type DoCheck,
     effect,
     ElementRef,
     inject,
@@ -12,11 +12,11 @@ import {
     linkedSignal,
     signal,
     untracked,
-    WritableSignal
+    type WritableSignal
 } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
-    CanUpdateErrorState,
+    type CanUpdateErrorState,
     ErrorStateMatcher,
     KbqErrorStateTracker,
     kbqInjectAutofilled

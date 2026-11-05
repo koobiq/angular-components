@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { KbqPseudoCheckbox, KbqPseudoCheckboxState } from './pseudo-checkbox';
+import { KbqPseudoCheckbox, type KbqPseudoCheckboxState } from './pseudo-checkbox';
 
 @Component({
     imports: [KbqPseudoCheckbox],

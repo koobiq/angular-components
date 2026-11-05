@@ -1,7 +1,7 @@
-import { FormatterDurationTemplate } from '@koobiq/date-formatter';
+import type { FormatterDurationTemplate } from '@koobiq/date-formatter';
 // Type-only: `core/formatters` imports the locale data back, and a value import here would close the cycle.
 import type { KbqSizeUnitsLocaleConfiguration } from '../formatters';
-import { KbqDeepPartial } from '../utils';
+import type { KbqDeepPartial } from '../utils';
 
 /**
  * Text the library exposes to assistive tech only: accessible names for the icon-only buttons and the

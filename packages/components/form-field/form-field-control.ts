@@ -1,5 +1,5 @@
-import { Signal } from '@angular/core';
-import { NgControl } from '@angular/forms';
+import type { Signal } from '@angular/core';
+import type { NgControl } from '@angular/forms';
 
 /**
  * An interface which allows a control to work inside of a `KbqFormField`.

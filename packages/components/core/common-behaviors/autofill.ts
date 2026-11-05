@@ -1,5 +1,5 @@
 import { AutofillMonitor } from '@angular/cdk/text-field';
-import { DestroyRef, ElementRef, inject, Signal, signal } from '@angular/core';
+import { DestroyRef, ElementRef, inject, type Signal, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 /**

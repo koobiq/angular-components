@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, Signal, signal } from '@angular/core';
+import { computed, inject, Injectable, type Signal, signal } from '@angular/core';
 import { DateAdapter, DateFormatter } from '@koobiq/components/core';
 import {
     createMissingDateImplError,
@@ -6,7 +6,7 @@ import {
     KBQ_CUSTOM_TIME_RANGE_TYPES,
     KBQ_DEFAULT_TIME_RANGE_TYPES
 } from './constants';
-import {
+import type {
     KbqCustomTimeRangeType,
     KbqRange,
     KbqRangeValue,

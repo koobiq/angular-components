@@ -1,17 +1,22 @@
-import { Overlay, OverlayConfig, OverlayContainer, OverlayRef, ScrollStrategy } from '@angular/cdk/overlay';
-import { ComponentPortal, ComponentType, TemplatePortal } from '@angular/cdk/portal';
+import { Overlay, OverlayConfig, OverlayContainer, type OverlayRef, type ScrollStrategy } from '@angular/cdk/overlay';
+import { ComponentPortal, type ComponentType, TemplatePortal } from '@angular/cdk/portal';
 import {
-    ComponentRef,
+    type ComponentRef,
+    inject,
     Injectable,
     InjectionToken,
     Injector,
-    OnDestroy,
-    TemplateRef,
-    inject,
     isDevMode,
+    type OnDestroy,
+    TemplateRef,
     untracked
 } from '@angular/core';
-import { KBQ_STATE_STORE, KbqStateSavingRef, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
+import {
+    KBQ_STATE_STORE,
+    type KbqStateSavingRef,
+    KbqStateSavingService,
+    type KbqStateStore
+} from '@koobiq/components/core';
 import { KbqSidepanelAnimationState } from './sidepanel-animations';
 import { KBQ_SIDEPANEL_DATA, KbqSidepanelConfig } from './sidepanel-config';
 import { KBQ_SIDEPANEL_WITH_INDENT, KbqSidepanelContainerComponent } from './sidepanel-container.component';

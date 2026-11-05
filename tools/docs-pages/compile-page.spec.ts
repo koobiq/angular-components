@@ -1,4 +1,4 @@
-import { parseTemplate, TmplAstElement, TmplAstNode, TmplAstText } from '@angular/compiler';
+import { parseTemplate, TmplAstElement, type TmplAstNode, TmplAstText } from '@angular/compiler';
 import type { LiveExample } from '../../packages/docs-examples/example-module';
 import { compilePage } from './compile-page';
 

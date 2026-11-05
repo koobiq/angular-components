@@ -1,5 +1,5 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { logMessage } from './messages';
 import { setupOptions } from './package-config';
 import { visitProjectFiles } from './project-files';

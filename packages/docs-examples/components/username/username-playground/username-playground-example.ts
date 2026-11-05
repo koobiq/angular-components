@@ -3,7 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { KbqUserInfo, KbqUsername, KbqUsernameMode, KbqUsernameStyle } from '@koobiq/components/username';
+import {
+    type KbqUserInfo,
+    KbqUsername,
+    type KbqUsernameMode,
+    type KbqUsernameStyle
+} from '@koobiq/components/username';
 
 /**
  * @title Username playground

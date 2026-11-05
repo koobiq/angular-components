@@ -1,4 +1,4 @@
-import { Tree } from '@angular-devkit/schematics';
+import type { Tree } from '@angular-devkit/schematics';
 // `@schematics/angular`'s own bundled copy of the TypeScript compiler, not the `typescript` package: the nodes its
 // utilities return were created by it, and `SyntaxKind` values differ between versions.
 import ts from '@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript';

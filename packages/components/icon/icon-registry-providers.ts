@@ -1,4 +1,4 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, type Provider } from '@angular/core';
 
 export interface KbqIconsConfig {
     /** URL to the SVG sprite file. Must be served as a static asset. */

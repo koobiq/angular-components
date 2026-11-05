@@ -1,4 +1,4 @@
-import { Signal } from '@angular/core';
+import type { Signal } from '@angular/core';
 
 /**
  * Interface for a text control that is used to drive interaction with a kbq-tag-list.

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, model, signal } from '@an
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { type KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**

@@ -14,7 +14,7 @@
 
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import { DocEntry, EntryType, MemberEntry } from '../api-gen/rendering/entities';
+import { type DocEntry, EntryType, type MemberEntry } from '../api-gen/rendering/entities';
 import { flattenMembers, orderMembers } from '../api-gen/rendering/signature';
 import { normalizeFunctionFields } from '../api-gen/rendering/transforms/normalize-function-fields';
 

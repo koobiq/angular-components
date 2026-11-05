@@ -1,4 +1,4 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
 import {
     booleanAttribute,
@@ -11,28 +11,28 @@ import {
     ElementRef,
     inject,
     input,
-    OnDestroy,
+    type OnDestroy,
     signal,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { Subject } from 'rxjs';
 import {
-    Highlightable,
-    IFocusableOption,
+    type Highlightable,
+    type IFocusableOption,
     KBQ_TITLE_TEXT_REF,
     kbqAnimationsDisabled,
     KbqComponentColors,
-    KbqTitleTextRef
+    type KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-import { Subject } from 'rxjs';
+import { KBQ_DROPDOWN_PANEL, type KbqDropdownPanel } from './dropdown.types';
 import {
     KBQ_DROPDOWN_ITEM_ACTION_HOST,
     KbqDropdownItemAction,
-    KbqDropdownItemActionHost
+    type KbqDropdownItemActionHost
 } from './dropdown-item-action';
-import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
 
 /** Elements that carry no label text of their own and are skipped when reading an item's label. */
 const NON_LABEL_SELECTOR = '[kbq-icon], .kbq-icon, [kbqDropdownItemAction]';

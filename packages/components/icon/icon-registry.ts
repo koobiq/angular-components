@@ -1,8 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, SecurityContext } from '@angular/core';
-import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
-import { defer, Observable, of, throwError } from 'rxjs';
+import { DomSanitizer, type SafeHtml, type SafeResourceUrl } from '@angular/platform-browser';
+import { defer, type Observable, of, throwError } from 'rxjs';
 import { catchError, finalize, map, share } from 'rxjs/operators';
 import { KBQ_ICON_RESOLVER, KBQ_ICONS_CONFIG } from './icon-registry-providers';
 

@@ -2,14 +2,14 @@ import { Octokit } from '@octokit/rest';
 import chalk from 'chalk';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
-import { BaseReleaseTask, IReleaseTaskConfig } from './base-release-task';
+import { BaseReleaseTask, type IReleaseTaskConfig } from './base-release-task';
 import { promptAndGenerateChangelog } from './changelog';
 import { CHANGELOG_FILE_NAME } from './constants';
 import { extractReleaseNotes } from './extract-release-notes';
 import { GitClient } from './git/git-client';
 import { promptForNewVersion } from './prompt/new-version-prompt';
 import { promptForUpstreamRemote } from './prompt/upstream-remote-prompt';
-import { Version, parseVersionName } from './version-name/parse-version';
+import { parseVersionName, type Version } from './version-name/parse-version';
 
 const { green, yellow, red, cyan, bold, italic } = chalk;
 

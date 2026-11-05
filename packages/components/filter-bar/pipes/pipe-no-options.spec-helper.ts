@@ -1,14 +1,14 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchKeyboardEvent, ESCAPE } from '@koobiq/components/core';
 import {
     KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
-    KbqFilter,
-    KbqPipe,
-    KbqPipeTemplate
+    type KbqFilter,
+    type KbqPipe,
+    type KbqPipeTemplate
 } from '@koobiq/components/filter-bar';
-import { KbqBasePipe } from './base-pipe';
+import type { KbqBasePipe } from './base-pipe';
 
 /** Host contract shared by the `TestComponent` of every select-family pipe spec. */
 export interface PipeNoOptionsHost {

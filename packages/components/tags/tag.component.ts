@@ -1,9 +1,9 @@
-﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -20,19 +20,20 @@ import {
     Injector,
     input,
     numberAttribute,
-    OnChanges,
-    OnDestroy,
+    type OnChanges,
+    type OnDestroy,
     output,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject } from 'rxjs';
 import {
     hasModifierKey,
-    IFocusableOption,
+    type IFocusableOption,
     isNull,
     KBQ_TITLE_TEXT_REF,
     kbqAnimationsDisabled,
@@ -41,10 +42,10 @@ import {
     KbqFieldSizingContent,
     kbqInjectA11yLocaleConfiguration,
     KbqLocaleOverridesDirective,
-    KbqTitleTextRef
+    type KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-import { Subject } from 'rxjs';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqTagList } from './tag-list.component';
 
 /**

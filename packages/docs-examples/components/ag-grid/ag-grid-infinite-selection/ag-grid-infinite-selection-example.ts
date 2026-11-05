@@ -1,24 +1,24 @@
 import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, signal, viewChild } from '@angular/core';
-import {
-    KbqAgGridInfiniteSelection,
-    KbqAgGridInfiniteSelectionState,
-    KbqAgGridSkeletonCellRenderer,
-    KbqAgGridThemeModule
-} from '@koobiq/ag-grid-angular-theme';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
-    ColDef,
-    GetRowIdFunc,
-    ICellRendererParams,
-    IDatasource,
-    IGetRowsParams,
+    type ColDef,
+    type GetRowIdFunc,
+    type ICellRendererParams,
+    type IDatasource,
+    type IGetRowsParams,
     ModuleRegistry,
-    RowSelectionOptions,
-    SelectionChangedEvent,
-    SelectionColumnDef
+    type RowSelectionOptions,
+    type SelectionChangedEvent,
+    type SelectionColumnDef
 } from 'ag-grid-community';
+import {
+    KbqAgGridInfiniteSelection,
+    type KbqAgGridInfiniteSelectionState,
+    KbqAgGridSkeletonCellRenderer,
+    KbqAgGridThemeModule
+} from '@koobiq/ag-grid-angular-theme';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

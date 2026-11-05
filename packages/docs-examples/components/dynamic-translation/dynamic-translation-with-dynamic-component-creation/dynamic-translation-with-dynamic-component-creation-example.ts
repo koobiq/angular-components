@@ -9,7 +9,10 @@ import {
     Renderer2,
     viewChild
 } from '@angular/core';
-import { KbqDynamicTranslationHelper, KbqDynamicTranslationHelperSlot } from '@koobiq/components/dynamic-translation';
+import {
+    KbqDynamicTranslationHelper,
+    type KbqDynamicTranslationHelperSlot
+} from '@koobiq/components/dynamic-translation';
 
 /**
  * @title Dynamic-translation with dynamic component creation

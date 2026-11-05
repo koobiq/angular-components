@@ -1,4 +1,4 @@
-import { defineConfig, devices, ViewportSize } from '@playwright/test';
+import { defineConfig, devices, type ViewportSize } from '@playwright/test';
 import baseConfig from './playwright.config';
 
 /**

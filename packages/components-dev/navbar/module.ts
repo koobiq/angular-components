@@ -1,6 +1,7 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, viewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { map, timer } from 'rxjs';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
@@ -8,11 +9,10 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
-import { KbqNavbar, KbqNavbarModule } from '@koobiq/components/navbar';
+import { KbqModalModule, type KbqModalRef, KbqModalService } from '@koobiq/components/modal';
+import { type KbqNavbar, KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { map, timer } from 'rxjs';
 import { E2eNavbarCollapse } from '../../components/navbar/e2e';
 import { NavbarExamplesModule } from '../../docs-examples/components/navbar';
 

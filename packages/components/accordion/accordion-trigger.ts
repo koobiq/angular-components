@@ -1,17 +1,18 @@
 import { Platform } from '@angular/cdk/platform';
 import {
     afterNextRender,
-    AfterRenderRef,
-    AfterViewInit,
+    type AfterRenderRef,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     inject,
-    OnDestroy,
+    type OnDestroy,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { kbqAnimationsDisabled } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqAccordion } from './accordion';
 import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
 

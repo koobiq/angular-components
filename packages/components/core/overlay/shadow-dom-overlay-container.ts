@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ApplicationRef, ElementRef, Injectable, InjectionToken, Provider, inject } from '@angular/core';
+import { ApplicationRef, ElementRef, inject, Injectable, InjectionToken, type Provider } from '@angular/core';
 
 /**
  * Reference to the element used to locate the shadow root that should host the CDK overlay container.

@@ -1,7 +1,7 @@
-import { Rule } from '@angular-devkit/schematics';
+import type { Rule } from '@angular-devkit/schematics';
 import { warnOnlyRule } from '../../utils/warn-only-migration';
 import { SUMMARY, warnPatterns } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 /**
  * Reports the uses of the removed animation triggers and of the members that carried an `AnimationEvent`.

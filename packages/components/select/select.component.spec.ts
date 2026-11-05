@@ -5,23 +5,23 @@ import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    DebugElement,
-    OnInit,
-    TemplateRef,
-    Type,
+    type DebugElement,
     effect,
     getDebugNode,
     inject as inject_1,
+    type OnInit,
     signal,
+    type TemplateRef,
+    type Type,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import {
-    AsyncValidatorFn,
-    ControlValueAccessor,
+    type AsyncValidatorFn,
+    type ControlValueAccessor,
     FormControl,
-    FormControlStatus,
+    type FormControlStatus,
     FormGroup,
     FormGroupDirective,
     FormsModule,
@@ -29,62 +29,62 @@ import {
     ReactiveFormsModule,
     UntypedFormControl,
     UntypedFormGroup,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { merge, type Observable, of, Subject, type Subscription, timer } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import type { MockInstance } from 'vitest';
 import {
     A,
-    DOWN_ARROW,
-    END,
-    ENTER,
-    ESCAPE,
-    ErrorStateMatcher,
-    HOME,
-    KBQ_LOCALE_SERVICE,
-    KBQ_SELECT_SCROLL_STRATEGY,
-    KbqComponentColors,
-    KbqLocaleService,
-    KbqLocaleServiceModule,
-    KbqOption,
-    KbqOptionBase,
-    KbqOptionSelectionChange,
-    KbqOverlayLayer,
-    KbqPanelMaxHeight,
-    KbqPanelWidth,
-    KbqPartialLocaleData,
-    KbqRepositionScrollStrategy,
-    KbqVirtualOption,
-    LEFT_ARROW,
-    RIGHT_ARROW,
-    SPACE,
-    ShowOnControlDirtyErrorStateMatcher,
-    ShowOnFormSubmitErrorStateMatcher,
-    TAB,
-    UP_ARROW,
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ErrorStateMatcher,
+    ESCAPE,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
+    HOME,
+    KBQ_LOCALE_SERVICE,
+    KBQ_SELECT_SCROLL_STRATEGY,
+    KbqComponentColors,
     kbqErrorStateMatcherProvider,
+    type KbqLocaleService,
+    KbqLocaleServiceModule,
+    KbqOption,
+    type KbqOptionBase,
+    KbqOptionSelectionChange,
+    KbqOverlayLayer,
+    type KbqPanelMaxHeight,
+    type KbqPanelWidth,
+    type KbqPartialLocaleData,
+    KbqRepositionScrollStrategy,
+    KbqVirtualOption,
+    LEFT_ARROW,
+    RIGHT_ARROW,
     ruRULocaleData,
+    ShowOnControlDirtyErrorStateMatcher,
+    ShowOnFormSubmitErrorStateMatcher,
+    SPACE,
+    TAB,
+    UP_ARROW,
     wrappedErrorMessage
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { Observable, Subject, Subscription, merge, of, timer } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-import type { MockInstance } from 'vitest';
 import { KbqSelectHiddenItemsMeasurer } from './hidden-items-measurer';
-import { KbqOptionTooltip } from './select-option.directive';
-import { KbqSelect, delayBeforeDisplayingResultWithoutOptions, kbqSelectOptionsProvider } from './select.component';
+import { delayBeforeDisplayingResultWithoutOptions, KbqSelect, kbqSelectOptionsProvider } from './select.component';
 import { KbqSelectModule } from './select.module';
+import { KbqOptionTooltip } from './select-option.directive';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();

@@ -1,14 +1,14 @@
-import { Type } from '@angular/core';
+import type { Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import {
-    ActivatedRouteSnapshot,
+    type ActivatedRouteSnapshot,
     provideRouter,
     RedirectCommand,
-    ResolveFn,
+    type ResolveFn,
     Router,
-    RouterStateSnapshot
+    type RouterStateSnapshot
 } from '@angular/router';
-import { DocsApiEntryPoint, DocsApiEntryPoints } from '../components/api-page/api-page.types';
+import type { DocsApiEntryPoint, DocsApiEntryPoints } from '../components/api-page/api-page.types';
 import { DocsLocale } from '../constants/locale';
 import { DocsStructureItemTab } from '../structure';
 import {
@@ -17,7 +17,7 @@ import {
     docsApiPageResolver,
     DocsPagePrefetch,
     docsPageResolver,
-    DocsPages
+    type DocsPages
 } from './page-resolver';
 
 class DocsCompiledPage {}

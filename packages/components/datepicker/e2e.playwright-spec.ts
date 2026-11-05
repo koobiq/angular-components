@@ -1,4 +1,4 @@
-import { expect, Locator, Page, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme } from '../../e2e/utils';
 
 /** Sets `position: fixed` and `top`/`bottom`/`left` on the form field so the trigger lands at a known viewport spot. */

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
-import { KbqDefaultSizes } from '@koobiq/components/core';
+import type { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqBreadcrumbsModule } from './breadcrumbs.module';
-import { KbqBreadcrumbsWrapMode } from './breadcrumbs.types';
+import type { KbqBreadcrumbsWrapMode } from './breadcrumbs.types';
 
 type BreadcrumbState = {
     size: KbqDefaultSizes;

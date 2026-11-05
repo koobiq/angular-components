@@ -1,9 +1,9 @@
-import { FocusOrigin } from '@angular/cdk/a11y';
+import type { FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { SelectionModel } from '@angular/cdk/collections';
+import type { SelectionModel } from '@angular/cdk/collections';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     afterNextRender,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -11,8 +11,8 @@ import {
     Component,
     contentChild,
     DestroyRef,
-    DoCheck,
-    ElementRef,
+    type DoCheck,
+    type ElementRef,
     EnvironmentInjector,
     EventEmitter,
     inject,
@@ -20,15 +20,16 @@ import {
     input,
     linkedSignal,
     NgZone,
-    OnInit,
+    type OnInit,
     output,
-    QueryList,
+    type QueryList,
     Renderer2,
     signal,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { type Observable, Subject } from 'rxjs';
 import {
     hasModifierKey,
     KBQ_OPTION_ACTION_PARENT,
@@ -39,15 +40,14 @@ import {
     kbqGetElementHeight,
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
-    KbqPseudoCheckboxState,
-    KbqTitleTextRef
+    type KbqPseudoCheckboxState,
+    type KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Observable, Subject } from 'rxjs';
-import { FlatTreeControl } from './control/flat-tree-control';
-import { KbqTreeNodeToggleBaseDirective, KbqTreeNodeToggleComponent, KbqTreeNodeToggleDirective } from './toggle';
-import { KbqTreeBase, KbqTreeNode } from './tree-base';
+import type { FlatTreeControl } from './control/flat-tree-control';
+import { type KbqTreeNodeToggleBaseDirective, KbqTreeNodeToggleComponent, KbqTreeNodeToggleDirective } from './toggle';
+import { type KbqTreeBase, KbqTreeNode } from './tree-base';
 
 export interface KbqTreeOptionEvent {
     option: KbqTreeOption;

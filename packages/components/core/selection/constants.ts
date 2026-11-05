@@ -1,4 +1,4 @@
-import { KbqEnumValues } from '../utils';
+import type { KbqEnumValues } from '../utils';
 
 // Declared locally rather than imported: `typeof ngDevMode` is the guard the build optimizer folds away,
 // so the warning below leaves no trace in a production bundle.

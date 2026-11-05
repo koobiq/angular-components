@@ -8,8 +8,8 @@ import { CodeBlockWithLinkExample } from './code-block-with-link/code-block-with
 import { CodeBlockWithMaxHeightExample } from './code-block-with-max-height/code-block-with-max-height-example';
 import { CodeBlockWithNoBorderExample } from './code-block-with-no-border/code-block-with-no-border-example';
 import { CodeBlockWithSoftWrapExample } from './code-block-with-soft-wrap/code-block-with-soft-wrap-example';
-import { CodeBlockWithTabsAndShadowExample } from './code-block-with-tabs-and-shadow/code-block-with-tabs-and-shadow-example';
 import { CodeBlockWithTabsExample } from './code-block-with-tabs/code-block-with-tabs-example';
+import { CodeBlockWithTabsAndShadowExample } from './code-block-with-tabs-and-shadow/code-block-with-tabs-and-shadow-example';
 
 export {
     CodeBlockHeaderPinnedExample,

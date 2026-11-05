@@ -1,5 +1,5 @@
 import {
-    AfterContentInit,
+    type AfterContentInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -15,19 +15,20 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BehaviorSubject } from 'rxjs';
 import { KbqLocaleOverridesDirective, KbqStateSaving } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { BehaviorSubject } from 'rxjs';
 import {
     KBQ_FILTER_BAR_HOST,
     KBQ_FILTER_BAR_LOCALE_CONFIGURATION,
-    KbqFilter,
-    KbqFilterBarHost,
-    KbqFilterBarState,
-    KbqPipe,
-    KbqPipeTemplate
+    type KbqFilter,
+    type KbqFilterBarHost,
+    type KbqFilterBarState,
+    type KbqPipe,
+    type KbqPipeTemplate
 } from './filter-bar.types';
 import { KbqFilterReset } from './filter-reset';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqFilters } from './filters';
 import { getId } from './pipes/base-pipe';
 

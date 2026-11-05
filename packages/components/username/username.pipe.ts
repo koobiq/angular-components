@@ -1,4 +1,4 @@
-import { inject, isDevMode, Pipe, PipeTransform } from '@angular/core';
+import { inject, isDevMode, Pipe, type PipeTransform } from '@angular/core';
 import {
     KBQ_PROFILE_MAPPING,
     kbqDefaultFullNameFormat,
@@ -6,9 +6,9 @@ import {
     kbqDefaultProfileMapping
 } from './constants';
 import {
-    KbqFormatKeyToProfileMapping,
-    KbqFormatKeyToProfileMappingExtended,
-    KbqUserInfo,
+    type KbqFormatKeyToProfileMapping,
+    type KbqFormatKeyToProfileMappingExtended,
+    type KbqUserInfo,
     KbqUsernameFormatKey
 } from './types';
 

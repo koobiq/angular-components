@@ -1,5 +1,5 @@
 import { reflectComponentType } from '@angular/core';
-import { Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 import * as scenarios from './scenarios';
 
 // Keyed by export name: the production configuration minifies the bundle and mangles class names, so

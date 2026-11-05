@@ -1,13 +1,13 @@
 import { Location } from '@angular/common';
 import {
-    EnvironmentProviders,
+    type EnvironmentProviders,
     inject,
     Injectable,
     makeEnvironmentProviders,
     provideAppInitializer
 } from '@angular/core';
-import { KBQ_LOCALE_SERVICE, KbqThemeService } from '@koobiq/components/core';
 import { distinctUntilKeyChanged } from 'rxjs';
+import { KBQ_LOCALE_SERVICE, KbqThemeService } from '@koobiq/components/core';
 import { DocsNavbarProperty } from '../components/navbar/navbar-property';
 import { DocsLocale } from '../constants/locale';
 import { DocsLocaleService } from './locale';

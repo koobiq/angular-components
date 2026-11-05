@@ -5,10 +5,10 @@ import {
     ChangeDetectionStrategy,
     Component,
     contentChildren,
-    ElementRef,
+    type ElementRef,
     inject,
     input,
-    QueryList,
+    type QueryList,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';

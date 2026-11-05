@@ -1,14 +1,14 @@
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
-    TemplateRef,
-    afterNextRender,
     inject,
     signal,
+    TemplateRef,
     viewChild
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqSidepanelModule, KbqSidepanelRef, KbqSidepanelService } from '@koobiq/components/sidepanel';
+import { KbqSidepanelModule, type KbqSidepanelRef, KbqSidepanelService } from '@koobiq/components/sidepanel';
 
 const stateSavingKey = 'sidepanel-state-saving-example';
 

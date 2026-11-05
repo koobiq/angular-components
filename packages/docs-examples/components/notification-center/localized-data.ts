@@ -1,6 +1,6 @@
-import { computed, Signal, TemplateRef } from '@angular/core';
+import { computed, type Signal, type TemplateRef } from '@angular/core';
 import { kbqInjectLocaleService } from '@koobiq/components/core';
-import { KbqNotificationItem } from '@koobiq/components/notification-center';
+import type { KbqNotificationItem } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
 
 /** Resolves `data` for the active locale of the examples, falling back to `default` (English). */

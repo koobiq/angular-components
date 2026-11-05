@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { KbqFlag, KbqFlagShadow } from '@koobiq/components/flag';
 import { hasFlag } from 'country-flag-icons';
 import * as flags3x2 from 'country-flag-icons/string/3x2';
+import { KbqFlag, type KbqFlagShadow } from '@koobiq/components/flag';
 
 type FallbackCountry = { code: string; name: string; custom?: string; shadow?: KbqFlagShadow };
 

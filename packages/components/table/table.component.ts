@@ -1,15 +1,15 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
-    ViewEncapsulation,
-    booleanAttribute,
     effect,
+    ElementRef,
     inject,
     input,
-    signal
+    signal,
+    ViewEncapsulation
 } from '@angular/core';
 import { kbqGetElementHeight } from '@koobiq/components/core';
 

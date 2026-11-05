@@ -5,12 +5,12 @@ import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import {
     buildTree,
-    FlatNode,
+    type FlatNode,
     getChildren,
     getLevel,
     getValue,
     isExpandable,
-    Node,
+    type Node,
     transformer,
     TREE_DATA
 } from '../tree-select-cleaner-data';

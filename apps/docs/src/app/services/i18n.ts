@@ -1,4 +1,4 @@
-import { DocsLocale } from '../constants/locale';
+import type { DocsLocale } from '../constants/locale';
 
 /**
  * Central catalog of the docs app's localized strings. Add a key here instead of inlining a

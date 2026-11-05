@@ -1,21 +1,21 @@
 import {
-    ClassEntry,
-    ConstantEntry,
-    DirectiveEntry,
-    DocEntry,
+    type ClassEntry,
+    type ConstantEntry,
+    type DirectiveEntry,
+    type DocEntry,
     EntryType,
-    EnumMemberEntry,
-    FunctionEntry,
-    FunctionWithOverloads,
-    GenericEntry,
-    MemberEntry,
+    type EnumMemberEntry,
+    type FunctionEntry,
+    type FunctionWithOverloads,
+    type GenericEntry,
+    type MemberEntry,
     MemberTags,
     MemberType,
-    ParameterEntry,
-    PipeEntry,
-    PropertyEntry,
-    SignalApi,
-    TypeAliasEntry
+    type ParameterEntry,
+    type PipeEntry,
+    type PropertyEntry,
+    type SignalApi,
+    type TypeAliasEntry
 } from './entities';
 import { isDeprecatedEntry } from './entities/categorization';
 import { normalizeFunctionFields } from './transforms/normalize-function-fields';

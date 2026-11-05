@@ -1,15 +1,15 @@
 import { LOCALE_ID } from '@angular/core';
 import { inject, TestBed } from '@angular/core/testing';
+import { DateTime } from 'luxon';
 import {
     DateAdapter,
     KBQ_DATE_LOCALE,
     KBQ_LOCALE_SERVICE,
     kbqDateTimezoneProvider,
     KbqDateTimezoneService,
-    KbqTimezoneLike
+    type KbqTimezoneLike
 } from '@koobiq/components/core';
-import { DateTime } from 'luxon';
-import { KBQ_LUXON_DATE_ADAPTER_OPTIONS, KbqLuxonDateAdapterOptions, LuxonDateAdapter } from './date-adapter';
+import { KBQ_LUXON_DATE_ADAPTER_OPTIONS, type KbqLuxonDateAdapterOptions, type LuxonDateAdapter } from './date-adapter';
 import { LuxonDateModule } from './index';
 
 describe('LuxonDateAdapter with KBQ_DATE_LOCALE override', () => {

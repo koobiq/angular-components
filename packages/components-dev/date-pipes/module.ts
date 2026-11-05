@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import type { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     DateAdapter,
@@ -6,10 +7,9 @@ import {
     KBQ_LOCALE_SERVICE,
     KbqDateTimezoneService,
     KbqFormattersModule,
-    KbqLocaleService,
-    KbqTimezoneLike
+    type KbqLocaleService,
+    type KbqTimezoneLike
 } from '@koobiq/components/core';
-import { DateTime } from 'luxon';
 
 @Component({
     selector: 'dev-app',

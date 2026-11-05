@@ -6,7 +6,7 @@ import {
     computed,
     DestroyRef,
     Directive,
-    DoCheck,
+    type DoCheck,
     effect,
     ElementRef,
     inject,
@@ -14,16 +14,17 @@ import {
     input,
     linkedSignal,
     NgZone,
-    OnInit,
+    type OnInit,
     Renderer2,
     signal,
     untracked,
-    WritableSignal
+    type WritableSignal
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { asapScheduler } from 'rxjs';
 import {
-    CanUpdateErrorState,
+    type CanUpdateErrorState,
     ErrorStateMatcher,
     KBQ_PARENT_ANIMATION_COMPONENT,
     KBQ_WINDOW,
@@ -33,7 +34,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
-import { asapScheduler } from 'rxjs';
 
 export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('KBQ_TEXTAREA_VALUE_ACCESSOR');
 

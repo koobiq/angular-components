@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ErrorStateMatcher, KbqComponentColors } from '@koobiq/components/core';
+import { type ErrorStateMatcher, KbqComponentColors } from '@koobiq/components/core';
 import { KbqError, KbqHint } from '@koobiq/components/form-field';
 import { KbqRadioButton, KbqRadioGroup } from './radio.component';
 

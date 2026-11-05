@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideClientHydration, withIncrementalHydration } from '@angular/platform-browser';
 import {
     ActivatedRoute,
     convertToParamMap,
-    ParamMap,
-    Params,
+    type ParamMap,
+    type Params,
     provideRouter,
     Router,
     UrlSegment
@@ -19,7 +19,7 @@ import { DocsLocaleService } from '../../services/locale';
 import { DOCS_API_PAGES } from '../../services/page-resolver';
 import { DocsStructureCategoryId, DocsStructureItemId } from '../../structure';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
-import { DocsApiEntryPoint } from '../api-page/api-page.types';
+import type { DocsApiEntryPoint } from '../api-page/api-page.types';
 import {
     DocsComponentApiPageComponent,
     DocsComponentPageComponent,

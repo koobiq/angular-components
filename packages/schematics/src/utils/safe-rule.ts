@@ -1,4 +1,4 @@
-import { callRule, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { callRule, type Rule, type SchematicContext, type Tree } from '@angular-devkit/schematics';
 import { firstValueFrom } from 'rxjs';
 import { logMessage } from './messages';
 

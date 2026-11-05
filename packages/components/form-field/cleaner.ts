@@ -1,16 +1,17 @@
 import {
-    AfterContentInit,
+    type AfterContentInit,
     ChangeDetectionStrategy,
     Component,
     computed,
     inject,
     InjectionToken,
     input,
-    Provider,
+    type Provider,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { fromEvent } from 'rxjs';
 import {
     ESCAPE,
     KBQ_A11Y_LOCALE_CONFIGURATION,
@@ -18,8 +19,7 @@ import {
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
-import { fromEvent } from 'rxjs';
-import { KbqFormFieldControl } from './form-field-control';
+import type { KbqFormFieldControl } from './form-field-control';
 
 /** @docs-private */
 export interface KbqCleanerContextBase {

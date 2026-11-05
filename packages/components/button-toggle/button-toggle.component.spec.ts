@@ -1,9 +1,10 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
-import { Component, DebugElement, effect, signal, viewChild, viewChildren } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, type DebugElement, effect, signal, viewChild, viewChildren } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { EMPTY } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     dispatchKeyboardEvent,
@@ -16,8 +17,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
-import { EMPTY } from 'rxjs';
-import { KbqButtonToggle, KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from './index';
+import { KbqButtonToggle, type KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from './index';
 
 describe('KbqButtonToggle with forms', () => {
     beforeEach(() => {

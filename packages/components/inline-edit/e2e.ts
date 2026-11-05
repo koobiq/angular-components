@@ -1,6 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NEVER, throwError } from 'rxjs';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqInjectNativeElement, KbqOptionModule } from '@koobiq/components/core';
@@ -11,8 +12,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { NEVER, throwError } from 'rxjs';
-import { KbqInlineEdit, KbqInlineEditSaveHandler } from './inline-edit';
+import { KbqInlineEdit, type KbqInlineEditSaveHandler } from './inline-edit';
 import { KbqInlineEditModule } from './module';
 
 @Component({

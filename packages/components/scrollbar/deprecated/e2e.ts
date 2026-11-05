@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqScrollbarModule } from './scrollbar.module';
-import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarOptions } from './scrollbar.types';
+import { KBQ_SCROLLBAR_CONFIG, type KbqScrollbarOptions } from './scrollbar.types';
 
 type ScrollbarState = {
     state: 'default' | 'disabled' | 'active' | 'hover';

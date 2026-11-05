@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
-    AbstractControl,
+    type AbstractControl,
     FormControl,
     ReactiveFormsModule,
-    ValidationErrors,
-    ValidatorFn,
+    type ValidationErrors,
+    type ValidatorFn,
     Validators
 } from '@angular/forms';
+import { MaskitoDirective } from '@maskito/angular';
+import { type MaskitoOptions, type MaskitoPlugin, maskitoUpdateElement } from '@maskito/core';
+import { maskitoNumberOptionsGenerator, maskitoWithPlaceholder } from '@maskito/kit';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { MaskitoDirective } from '@maskito/angular';
-import { MaskitoOptions, MaskitoPlugin, maskitoUpdateElement } from '@maskito/core';
-import { maskitoNumberOptionsGenerator, maskitoWithPlaceholder } from '@maskito/kit';
 
 /**
  * @title Input with mask

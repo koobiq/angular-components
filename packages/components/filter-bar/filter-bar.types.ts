@@ -1,13 +1,20 @@
-import { InjectionToken, ModelSignal, OutputEmitterRef, Provider, Signal, TemplateRef } from '@angular/core';
+import {
+    InjectionToken,
+    type ModelSignal,
+    type OutputEmitterRef,
+    type Provider,
+    type Signal,
+    type TemplateRef
+} from '@angular/core';
+import type { BehaviorSubject } from 'rxjs';
 import type { KbqButton } from '@koobiq/components/button';
 import {
-    KbqDeepPartial,
-    KbqFilterBarLocaleConfiguration,
+    type KbqDeepPartial,
+    type KbqFilterBarLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
-    KbqPanelMaxHeight,
+    type KbqPanelMaxHeight,
     ruRULocaleData
 } from '@koobiq/components/core';
-import { BehaviorSubject } from 'rxjs';
 import type { KbqFilterBar } from './filter-bar';
 
 // Re-exported so that the name this package's own token is typed with resolves from this package too:

@@ -1,4 +1,4 @@
-import { ListKeyManager, ListKeyManagerOption } from './list-key-manager';
+import { ListKeyManager, type ListKeyManagerOption } from './list-key-manager';
 
 /**
  * This is the interface for highlightable items (used by the ActiveDescendantKeyManager).

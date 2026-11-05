@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, type TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { type KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { KbqSplitButton } from '@koobiq/components/split-button';
 
 /**

@@ -1,13 +1,13 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { visitAll, Visitor } from '../../utils/ast';
+import { visitAll, type Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
 import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
-    MigrationTarget,
+    type MigrationTarget,
     reportedMessage,
     SIGNAL_API_METHODS,
     signalQueryMessage,
@@ -18,7 +18,7 @@ import {
     UNRESOLVED_RECEIVER_MESSAGE,
     writeMessage
 } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const LABEL = '[timepicker-signals]';
 const TS_EXT = '.ts';

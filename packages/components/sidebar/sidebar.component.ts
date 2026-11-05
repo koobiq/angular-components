@@ -1,7 +1,7 @@
 ﻿import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     afterNextRender,
     ChangeDetectionStrategy,
     Component,
@@ -12,12 +12,12 @@ import {
     Injector,
     input,
     NgZone,
-    OnChanges,
-    OnDestroy,
+    type OnChanges,
+    type OnDestroy,
     output,
     Renderer2,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     ViewEncapsulation
 } from '@angular/core';

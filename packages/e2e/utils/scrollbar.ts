@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 
 export const e2eDisableResizeObserver = async (page: Page): Promise<void> => {
     // Awaited rather than returned: `addInitScript` resolves to a Disposable, which does not fit the

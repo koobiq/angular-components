@@ -1,23 +1,26 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { DataSource, SelectionModel } from '@angular/cdk/collections';
+import { type DataSource, SelectionModel } from '@angular/cdk/collections';
 import {
     Component,
-    DebugElement,
+    type DebugElement,
     Directive,
-    DoCheck,
+    type DoCheck,
     effect,
-    EventEmitter,
-    InputSignal,
+    type EventEmitter,
+    type InputSignal,
     NgZone,
     signal,
-    Type,
+    type Type,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { BehaviorSubject, type Observable, of } from 'rxjs';
+import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
+import { TestScheduler } from 'rxjs/testing';
 import {
     A,
     C,
@@ -32,12 +35,12 @@ import {
     ENTER,
     HOME,
     KBQ_STATE_STORE,
-    KbqMultipleInput,
+    type KbqMultipleInput,
     KbqOptionActionComponent,
     KbqOptionModule,
     KbqPseudoCheckbox,
     KbqStateSavingService,
-    KbqStateStore,
+    type KbqStateStore,
     LEFT_ARROW,
     MultipleMode,
     RIGHT_ARROW,
@@ -49,9 +52,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqTitleDirective, KbqTitleModule } from '@koobiq/components/title';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
-import { TestScheduler } from 'rxjs/testing';
 import {
     FilterByValues,
     FilterByViewValue,
@@ -64,11 +64,11 @@ import {
     KbqTreeNestedDataSource,
     KbqTreeNodePadding,
     KbqTreeOption,
-    KbqTreeSelectAllEvent,
+    type KbqTreeSelectAllEvent,
     KbqTreeSelection,
-    KbqTreeSelectionChange,
+    type KbqTreeSelectionChange,
     NestedTreeControl,
-    TreeControl
+    type TreeControl
 } from './index';
 import { getKbqTreeSelectionOwnedMultipleError } from './tree-errors';
 

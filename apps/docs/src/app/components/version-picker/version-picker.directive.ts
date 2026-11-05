@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { afterNextRender, ChangeDetectorRef, DestroyRef, Directive, ErrorHandler, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { catchError, map, type Observable, of, shareReplay, Subscription, timeout } from 'rxjs';
 import { KBQ_WINDOW } from '@koobiq/components/core';
-import { catchError, map, Observable, of, shareReplay, Subscription, timeout } from 'rxjs';
 import { docsGetVersionPageUrl, docsGetVersionSitemapUrl, docsParseSitemapPaths } from './version-url';
 
 /** How long a picked version waits for its sitemap before the reader is taken to its home page. */

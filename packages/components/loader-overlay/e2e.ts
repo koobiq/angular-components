@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, type TemplateRef, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqLoaderOverlayModule, KbqLoaderOverlaySurface } from '@koobiq/components/loader-overlay';
+import { KbqLoaderOverlayModule, type KbqLoaderOverlaySurface } from '@koobiq/components/loader-overlay';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 @Component({

@@ -1,4 +1,4 @@
-import { JsonValue, workspaces } from '@angular-devkit/core';
+import type { JsonValue, workspaces } from '@angular-devkit/core';
 
 export type KoobiqTheme = 'light' | 'dark' | 'auto';
 

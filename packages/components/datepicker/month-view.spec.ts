@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateTime } from 'luxon';
+import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqCalendarBody } from './calendar-body.component';
 import { KbqMonthView } from './month-view.component';
 

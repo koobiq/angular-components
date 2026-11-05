@@ -1,4 +1,4 @@
-import { ResolveFn, Routes, UrlMatcher } from '@angular/router';
+import type { ResolveFn, Routes, UrlMatcher } from '@angular/router';
 import { EXAMPLE_COMPONENTS } from '@koobiq/docs-examples';
 import { DocsExamplePage } from './example-page';
 

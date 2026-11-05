@@ -1,4 +1,4 @@
-import { kbqCreateTextMirror, KbqTextMirror } from './text-mirror';
+import { kbqCreateTextMirror, type KbqTextMirror } from './text-mirror';
 
 const CLASS_NAME = 'test-mirror';
 

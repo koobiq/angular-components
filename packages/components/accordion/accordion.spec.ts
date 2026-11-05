@@ -1,27 +1,27 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { DOWN_ARROW, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB, UP_ARROW } from '@angular/cdk/keycodes';
-import { Component, DebugElement, effect, signal, viewChild, viewChildren } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, type DebugElement, effect, signal, viewChild, viewChildren } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { EMPTY } from 'rxjs';
 import {
     dispatchKeyboardEvent,
     KBQ_ANIMATIONS_CONFIG,
     KBQ_STATE_STORE,
     KbqStateSavingService,
-    KbqStateStore
+    type KbqStateStore
 } from '@koobiq/components/core';
-import { EMPTY } from 'rxjs';
 import {
     KbqAccordion,
     KbqAccordionContent,
     KbqAccordionHeader,
     KbqAccordionItem,
     KbqAccordionModule,
-    KbqAccordionOrientation,
+    type KbqAccordionOrientation,
     KbqAccordionTrigger,
-    KbqAccordionType,
-    KbqAccordionVariant
+    type KbqAccordionType,
+    type KbqAccordionVariant
 } from './index';
 
 /** In-memory `KbqStateStore` used to make state-saving tests deterministic. */

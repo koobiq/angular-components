@@ -4,17 +4,18 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import {
     Component,
-    DebugElement,
+    type DebugElement,
     effect,
-    ElementRef,
-    Provider,
+    type ElementRef,
+    type Provider,
     signal,
-    TemplateRef,
-    Type,
+    type TemplateRef,
+    type Type,
     viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import type { MockInstance } from 'vitest';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqMomentDateModule } from '@koobiq/angular-moment-adapter/adapter';
 import {
@@ -25,8 +26,8 @@ import {
     KBQ_LOCALE_SERVICE,
     KbqFormattersModule,
     KbqLocaleService,
-    KbqPopUpPlacementValues,
-    KbqStickToWindowPlacementValues,
+    type KbqPopUpPlacementValues,
+    type KbqStickToWindowPlacementValues,
     PopUpPlacements,
     ruRULocaleData
 } from '@koobiq/components/core';
@@ -35,12 +36,11 @@ import {
     KbqNotificationCenterModule,
     KbqNotificationCenterService,
     KbqNotificationCenterTrigger,
-    KbqNotificationItem,
-    KbqNotificationsGroup
+    type KbqNotificationItem,
+    type KbqNotificationsGroup
 } from '@koobiq/components/notification-center';
 import { KbqToastService } from '@koobiq/components/toast';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import type { MockInstance } from 'vitest';
 
 /** Mirrors the panel's own rate-limit window for the scroll-to-bottom check. */
 const SCROLLED_TO_BOTTOM_AUDIT_TIME = 100;

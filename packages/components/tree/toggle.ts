@@ -9,8 +9,8 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { KbqIcon } from '@koobiq/components/icon';
 import { map } from 'rxjs/operators';
+import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
 
 /** @docs-private */

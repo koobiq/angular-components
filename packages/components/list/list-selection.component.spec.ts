@@ -6,19 +6,20 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    DebugElement,
+    type DebugElement,
     effect,
     inject,
     isSignal,
-    Provider,
+    type Provider,
     signal,
-    Type,
+    type Type,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import type { MockInstance } from 'vitest';
 import {
     A,
     C,
@@ -32,9 +33,9 @@ import {
     END,
     ENTER,
     ESCAPE,
-    FocusKeyManager,
+    type FocusKeyManager,
     HOME,
-    KbqMultipleInput,
+    type KbqMultipleInput,
     KbqOptionActionComponent,
     KbqOptionModule,
     kbqSelectLocaleConfigurationProvider,
@@ -51,16 +52,15 @@ import {
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import type { MockInstance } from 'vitest';
 import {
-    KbqListCopyEvent,
-    KbqListDragCursor,
+    type KbqListCopyEvent,
+    type KbqListDragCursor,
     KbqListModule,
     KbqListOption,
-    KbqListSelectAllEvent,
+    type KbqListSelectAllEvent,
     KbqListSelection,
-    KbqListSelectionChange,
-    KbqListSelectionDroppedEvent
+    type KbqListSelectionChange,
+    type KbqListSelectionDroppedEvent
 } from './index';
 
 const getFocusMonitor = () => TestBed.inject(FocusMonitor);

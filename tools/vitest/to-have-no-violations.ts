@@ -1,11 +1,12 @@
+import type * as AxeCore from 'axe-core';
 import type { Result, RunOptions } from 'axe-core';
 import type { MatcherState } from 'vitest';
 
-let axeCore: Promise<typeof import('axe-core')> | undefined;
+let axeCore: Promise<typeof AxeCore> | undefined;
 
 // Loaded by the first check rather than by the setup: most spec files run none, and every file evaluates the setup in
 // a context of its own.
-const loadAxe = (): Promise<typeof import('axe-core')> =>
+const loadAxe = (): Promise<typeof AxeCore> =>
     (axeCore ??= import('axe-core').then(({ default: axe }) => {
         // jsdom renders nothing, so the rules that need rendering could only report what it failed to compute: it
         // computes no colors, and `label-content-name-mismatch` tells an icon ligature from text by drawing it on a

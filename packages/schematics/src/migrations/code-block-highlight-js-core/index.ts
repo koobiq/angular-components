@@ -1,5 +1,5 @@
-import { Path, workspaces } from '@angular-devkit/core';
-import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path, workspaces } from '@angular-devkit/core';
+import { chain, type Rule, type SchematicContext, type Tree } from '@angular-devkit/schematics';
 import { addRootProvider, readWorkspace } from '@schematics/angular/utility';
 import ts from 'typescript';
 import { logMessage } from '../../utils/messages';
@@ -20,7 +20,7 @@ import {
     unreadConfigMessage
 } from './data';
 import { findRootProviders, isHighlightJsConfig } from './root-providers';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const LABEL = '[code-block-highlight-js-core]';
 const TS_EXT = '.ts';

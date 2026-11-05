@@ -2,9 +2,10 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, effect, ElementRef, signal, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, type DebugElement, effect, ElementRef, signal, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { type Observable, Subject } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     dispatchKeyboardEvent,
@@ -24,9 +25,8 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Observable, Subject } from 'rxjs';
-import { KbqIconModule } from './../icon/icon.module';
 import {
     KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION,
     KBQ_NAVBAR_LOCALE_CONFIGURATION,

@@ -1,20 +1,20 @@
 import { Component, Directive, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     KBQ_SKELETON_PRESETS_CONFIGURATION,
     KbqSkeletonAccordion,
     KbqSkeletonBadge,
     KbqSkeletonButton,
     KbqSkeletonCheckable,
-    KbqSkeletonCheckableControl,
+    type KbqSkeletonCheckableControl,
     KbqSkeletonDl,
     KbqSkeletonFormField,
-    KbqSkeletonFormFieldControl,
+    type KbqSkeletonFormFieldControl,
     KbqSkeletonGroup,
-    KbqSkeletonGroupPreset,
+    type KbqSkeletonGroupPreset,
     KbqSkeletonIcon,
     KbqSkeletonLink,
-    KbqSkeletonPresetsConfiguration,
+    type KbqSkeletonPresetsConfiguration,
     kbqSkeletonPresetsConfigurationProvider,
     KbqSkeletonTable,
     KbqSkeletonTabs,

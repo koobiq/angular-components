@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-    KbqCodeBlockFile,
+    type KbqCodeBlockFile,
     kbqCodeBlockHighlightJsConfigProvider,
     KbqCodeBlockModule
 } from '@koobiq/components/code-block';

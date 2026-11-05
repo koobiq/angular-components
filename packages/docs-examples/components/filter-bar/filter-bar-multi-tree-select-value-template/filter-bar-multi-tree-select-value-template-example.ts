@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, type TemplateRef, viewChild } from '@angular/core';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import {
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBarModule,
-    KbqMultiTreeSelectValueTemplateContext,
-    KbqPipeTemplate,
+    type KbqMultiTreeSelectValueTemplateContext,
+    type KbqPipeTemplate,
     KbqPipeTypes,
-    KbqTreeSelectNode
+    type KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
 import { injectLocalizedText } from '../localized-data';

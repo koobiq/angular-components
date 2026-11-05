@@ -1,6 +1,6 @@
 import { logging } from '@angular-devkit/core';
-import { SchematicContext, Tree } from '@angular-devkit/schematics';
-import { deprecatedPathMigration, DeprecatedPathMigrationOptions } from './deprecated-path-migration';
+import { type SchematicContext, Tree } from '@angular-devkit/schematics';
+import { deprecatedPathMigration, type DeprecatedPathMigrationOptions } from './deprecated-path-migration';
 
 // A made-up entry point, so nothing here can pass because of something specific to a real one.
 const LABEL = '[example-deprecated-path]';

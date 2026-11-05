@@ -1,6 +1,15 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, effect, model, Provider, signal, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+    Component,
+    type DebugElement,
+    effect,
+    model,
+    type Provider,
+    signal,
+    type Type,
+    viewChild
+} from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import {
     dispatchFakeEvent,
@@ -8,7 +17,7 @@ import {
     ESCAPE,
     KBQ_STATE_STORE,
     KbqStateSavingService,
-    KbqStateStore
+    type KbqStateStore
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqContentPanelContainer } from './content-panel';

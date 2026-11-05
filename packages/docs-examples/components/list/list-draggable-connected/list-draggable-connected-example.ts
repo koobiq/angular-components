@@ -1,6 +1,6 @@
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
-import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
+import { ChangeDetectionStrategy, Component, signal, type WritableSignal } from '@angular/core';
+import { KbqListModule, type KbqListSelectionDroppedEvent } from '@koobiq/components/list';
 
 type Metric = { id: number; name: string };
 

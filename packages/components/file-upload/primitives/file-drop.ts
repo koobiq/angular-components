@@ -1,9 +1,9 @@
 import { Platform } from '@angular/cdk/platform';
 import { DestroyRef, Directive, inject, model, NgZone, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { isHtmlElementOrNull, kbqInjectNativeElement } from '@koobiq/components/core';
 import { filter, fromEvent } from 'rxjs';
-import { KbqFile } from '../file-upload';
+import { isHtmlElementOrNull, kbqInjectNativeElement } from '@koobiq/components/core';
+import type { KbqFile } from '../file-upload';
 
 const isFolderCanBeDragged = (): boolean => 'webkitGetAsEntry' in DataTransferItem.prototype;
 const entryIsDirectory = (entry?: FileSystemEntry): entry is FileSystemDirectoryEntry => !!entry && entry.isDirectory;

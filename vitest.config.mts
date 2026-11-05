@@ -1,5 +1,5 @@
-import angular from '@analogjs/vite-plugin-angular';
 import { resolve } from 'node:path';
+import angular from '@analogjs/vite-plugin-angular';
 import ts from 'typescript';
 import { defineConfig } from 'vitest/config';
 

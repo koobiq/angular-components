@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     createSearchPredicate,
@@ -13,7 +14,6 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqCleaner, KbqFormField, KbqPrefix } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInput } from '@koobiq/components/input';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 
 /**
  * @title Dropdown with filter

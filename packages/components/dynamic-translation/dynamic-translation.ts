@@ -7,11 +7,11 @@ import {
     contentChildren,
     Directive,
     effect,
-    ElementRef,
+    type ElementRef,
     inject,
     input,
     Renderer2,
-    Signal,
+    type Signal,
     TemplateRef,
     viewChildren
 } from '@angular/core';

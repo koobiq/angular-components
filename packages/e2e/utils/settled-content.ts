@@ -1,4 +1,4 @@
-import { expect, Locator } from '@playwright/test';
+import { expect, type Locator } from '@playwright/test';
 
 /**
  * Waits until nothing under `root` is still animating, and fails the test if something never settles.

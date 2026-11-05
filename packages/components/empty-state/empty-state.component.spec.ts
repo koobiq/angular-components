@@ -1,11 +1,11 @@
-import { Component, Type, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, signal, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
-import { KbqIconItem, KbqIconModule } from '@koobiq/components/icon';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqComponentColors, type KbqDefaultSizes } from '@koobiq/components/core';
+import { KbqIconItem, KbqIconModule } from '@koobiq/components/icon';
 import {
     KbqEmptyState,
     KbqEmptyStateActions,

@@ -1,59 +1,59 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Point } from '@angular/cdk/drag-drop';
-import { Overlay, OverlayConfig, OverlayRef, ScrollStrategy } from '@angular/cdk/overlay';
+import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
+import { type BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import type { Point } from '@angular/cdk/drag-drop';
+import { Overlay, type OverlayConfig, type OverlayRef, type ScrollStrategy } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit,
+    type AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     Directive,
-    ElementRef,
+    effect,
+    type ElementRef,
     EventEmitter,
+    inject,
     Injectable,
     InjectionToken,
-    InputSignal,
-    OnChanges,
-    OnDestroy,
-    Renderer2,
-    SimpleChanges,
-    TemplateRef,
-    Type,
-    ViewEncapsulation,
-    WritableSignal,
-    booleanAttribute,
-    effect,
-    inject,
     input,
+    type InputSignal,
+    type OnChanges,
+    type OnDestroy,
+    Renderer2,
+    type SimpleChanges,
+    type TemplateRef,
+    type Type,
     untracked,
-    viewChild
+    viewChild,
+    ViewEncapsulation,
+    type WritableSignal
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EMPTY, merge } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import {
+    applyPopupMargins,
     ESCAPE,
     KBQ_PARENT_POPUP,
     KBQ_SIBLING_POPUP,
-    KbqCaretRect,
+    type KbqCaretRect,
     KbqComponentColors,
-    KbqEnumValues,
-    KbqParentPopup,
-    KbqPopUp,
-    KbqPopUpPlacementValues,
-    KbqPopUpTrigger,
-    KbqSiblingPopup,
-    KbqTextAnchor,
-    POSITION_TO_CSS_MAP,
-    PopUpPlacements,
-    PopUpTriggers,
-    applyPopupMargins,
     kbqCreateCaretOrigin,
+    type KbqEnumValues,
     kbqGetSelectionRect,
     kbqListenForCaretMoves,
-    kbqOptionalNumberAttribute
+    kbqOptionalNumberAttribute,
+    type KbqParentPopup,
+    KbqPopUp,
+    type KbqPopUpPlacementValues,
+    KbqPopUpTrigger,
+    type KbqSiblingPopup,
+    type KbqTextAnchor,
+    PopUpPlacements,
+    PopUpTriggers,
+    POSITION_TO_CSS_MAP
 } from '@koobiq/components/core';
-import { EMPTY, merge } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqExclusiveTooltip, KbqTooltipRegistry } from './tooltip-registry';
+import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, type KbqExclusiveTooltip, KbqTooltipRegistry } from './tooltip-registry';
 
 /**
  * What the tooltip is vertically anchored to when it is positioned relative to the caret:

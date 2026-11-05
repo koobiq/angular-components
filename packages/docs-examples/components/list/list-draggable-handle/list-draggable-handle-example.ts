@@ -1,7 +1,7 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
+import { KbqListModule, type KbqListSelectionDroppedEvent } from '@koobiq/components/list';
 
 /**
  * @title Draggable list with a handle

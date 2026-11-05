@@ -1,6 +1,6 @@
 import { logging } from '@angular-devkit/core';
-import { SchematicContext, Tree } from '@angular-devkit/schematics';
-import { WarnOnlyConfig, warnOnlyRule } from './warn-only-migration';
+import { type SchematicContext, Tree } from '@angular-devkit/schematics';
+import { type WarnOnlyConfig, warnOnlyRule } from './warn-only-migration';
 
 const LABEL = '[example-warn-only]';
 

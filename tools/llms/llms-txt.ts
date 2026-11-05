@@ -1,6 +1,6 @@
 import {
-    DocsStructureCategory,
-    DocsStructureItem,
+    type DocsStructureCategory,
+    type DocsStructureItem,
     DocsStructureItemId,
     DocsStructureItemTab
 } from '../../apps/docs/src/app/structure';
@@ -12,7 +12,7 @@ import {
     getPageSource,
     getSiteUrl,
     LLMS_SITE_ORIGIN,
-    LlmsPageSources,
+    type LlmsPageSources,
     readRepoFile,
     resolveSiteUrl
 } from './sources';

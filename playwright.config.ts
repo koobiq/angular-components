@@ -1,4 +1,4 @@
-import { defineConfig, devices, ViewportSize } from '@playwright/test';
+import { defineConfig, devices, type ViewportSize } from '@playwright/test';
 import { e2eChromiumArgs } from './packages/e2e/utils/launch-options';
 
 const isCI = !!process.env.CI;

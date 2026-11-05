@@ -6,7 +6,7 @@ import { KbqFormsModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
-import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqToolTipModule, type KbqTooltipTrigger } from '@koobiq/components/tooltip';
 
 const restSymbolsRegex = /[^0-9]+/g;
 

@@ -1,8 +1,8 @@
 import type { CompiledBlock } from '../compile-page';
 import {
-    DocsMigrationSection,
     docsFindUnknownMigrationDirectives,
     docsJoinMigrationBlocks,
+    type DocsMigrationSection,
     docsSplitMigrationSections
 } from './migration-steps';
 

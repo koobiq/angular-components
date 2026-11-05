@@ -1,4 +1,4 @@
-import { ElementRef, InjectionToken } from '@angular/core';
+import { type ElementRef, InjectionToken } from '@angular/core';
 
 export interface KbqTitleTextRef {
     textElement?: ElementRef;

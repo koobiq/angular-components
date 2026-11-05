@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
@@ -13,18 +13,18 @@ import {
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
-    KbqTreeOption,
+    type KbqTreeOption,
     KbqTreeSelection
 } from '@koobiq/components/tree';
 import {
     KbqTreeSelect,
-    KbqTreeSelectChange,
+    type KbqTreeSelectChange,
     KbqTreeSelectModule,
     kbqTreeSelectOptionsProvider
 } from '@koobiq/components/tree-select';
 import { TreeSelectExamplesModule } from '../../docs-examples/components/tree-select';
 import { DevThemeToggle } from '../theme-toggle';
-import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from '../tree/module';
+import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, type DevFileNode } from '../tree/module';
 
 @Component({
     selector: 'dev-examples',

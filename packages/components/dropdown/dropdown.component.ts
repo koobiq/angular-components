@@ -1,75 +1,75 @@
-import { FocusOrigin } from '@angular/cdk/a11y';
-import { Direction } from '@angular/cdk/bidi';
+import type { FocusOrigin } from '@angular/cdk/a11y';
+import type { Direction } from '@angular/cdk/bidi';
 import { DOWN_ARROW, ENTER, UP_ARROW } from '@angular/cdk/keycodes';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
-    AfterContentInit,
-    AfterRenderRef,
+    type AfterContentInit,
+    afterNextRender,
+    type AfterRenderRef,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    DestroyRef,
-    Directive,
-    ElementRef,
-    Injector,
-    NgZone,
-    OnDestroy,
-    QueryList,
-    Renderer2,
-    Signal,
-    TemplateRef,
-    ViewEncapsulation,
-    afterNextRender,
-    booleanAttribute,
     computed,
     contentChild,
     contentChildren,
+    DestroyRef,
+    Directive,
     effect,
+    ElementRef,
     inject,
+    Injector,
     input,
     model,
+    NgZone,
     numberAttribute,
+    type OnDestroy,
     output,
+    QueryList,
+    Renderer2,
+    type Signal,
     signal,
+    TemplateRef,
     untracked,
-    viewChild
+    viewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { merge, type Observable, Subject, Subscription, timer } from 'rxjs';
+import { delay, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import {
     ActiveDescendantKeyManager,
     ESCAPE,
     FocusKeyManager,
-    KBQ_PANEL_DEFAULT_MIN_WIDTH,
-    KbqPanelMaxWidth,
-    KbqPanelMinWidth,
-    KbqPanelWidth,
-    KbqPoint,
-    LEFT_ARROW,
-    ListKeyManager,
-    RIGHT_ARROW,
     getSafeTriangleVertices,
     isExplicitPanelWidth,
     isPointInRect,
     isPointInTriangle,
-    isVerticalMovement
+    isVerticalMovement,
+    KBQ_PANEL_DEFAULT_MIN_WIDTH,
+    type KbqPanelMaxWidth,
+    type KbqPanelMinWidth,
+    type KbqPanelWidth,
+    type KbqPoint,
+    LEFT_ARROW,
+    type ListKeyManager,
+    RIGHT_ARROW
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { Observable, Subject, Subscription, merge, timer } from 'rxjs';
-import { delay, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import {
+    type DropdownCloseReason,
+    KBQ_DROPDOWN_DEFAULT_OPTIONS,
+    KBQ_DROPDOWN_PANEL,
+    type KbqDropdownDefaultOptions,
+    type KbqDropdownPanel,
+    type KbqDropdownPositionX,
+    type KbqDropdownPositionY
+} from './dropdown.types';
 import { KbqDropdownContent } from './dropdown-content.directive';
 import { throwKbqDropdownInvalidPositionX, throwKbqDropdownInvalidPositionY } from './dropdown-errors';
 import { KbqDropdownItem } from './dropdown-item.component';
 import { KbqDropdownSearch } from './dropdown-search';
-import {
-    DropdownCloseReason,
-    KBQ_DROPDOWN_DEFAULT_OPTIONS,
-    KBQ_DROPDOWN_PANEL,
-    KbqDropdownDefaultOptions,
-    KbqDropdownPanel,
-    KbqDropdownPositionX,
-    KbqDropdownPositionY
-} from './dropdown.types';
 
 /** Options for binding a passive event listener. */
 const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: true }) as EventListenerOptions;

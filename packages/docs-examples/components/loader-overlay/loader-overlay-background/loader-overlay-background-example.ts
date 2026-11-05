@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqLoaderOverlayModule, KbqLoaderOverlaySurface } from '@koobiq/components/loader-overlay';
+import { KbqLoaderOverlayModule, type KbqLoaderOverlaySurface } from '@koobiq/components/loader-overlay';
 
 /**
  * @title Loader-overlay background

@@ -1,5 +1,5 @@
-import { Component, effect, signal, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, effect, signal, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqFileList, KbqFileLoader, KbqFileUploadContext } from '@koobiq/components/file-upload';
 

@@ -3,9 +3,9 @@ import { Directionality } from '@angular/cdk/bidi';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import {
-    AfterContentChecked,
-    AfterContentInit,
-    AfterViewInit,
+    type AfterContentChecked,
+    type AfterContentInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -18,14 +18,15 @@ import {
     Injector,
     input,
     numberAttribute,
-    OnDestroy,
+    type OnDestroy,
     output,
-    Signal,
+    type Signal,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqStateSaving } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
+import { KbqStateSaving } from '@koobiq/components/core';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqAccordionItem } from './accordion-item';
 
 /** Available visual variants of the accordion. */

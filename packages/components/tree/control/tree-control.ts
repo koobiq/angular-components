@@ -1,5 +1,5 @@
-import { SelectionModel } from '@angular/cdk/collections';
-import { BehaviorSubject, Observable } from 'rxjs';
+import type { SelectionModel } from '@angular/cdk/collections';
+import type { BehaviorSubject, Observable } from 'rxjs';
 
 /** Options of `FlatTreeControl` and `NestedTreeControl`. */
 export interface KbqTreeControlOptions<T, K> {

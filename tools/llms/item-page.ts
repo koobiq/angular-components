@@ -5,7 +5,7 @@ import {
     docsGetItemById,
     docsGetItems,
     DocsStructureCategoryId,
-    DocsStructureItem,
+    type DocsStructureItem,
     DocsStructureItemId,
     DocsStructureItemTab
 } from '../../apps/docs/src/app/structure';
@@ -25,7 +25,7 @@ import {
     getSectionsPath,
     getSiteUrl,
     getTokensPath,
-    LlmsPageSources,
+    type LlmsPageSources,
     readApiManifest,
     readExample,
     readRepoFile,

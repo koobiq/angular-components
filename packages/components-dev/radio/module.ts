@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
+import { type KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
 import { RadioExamplesModule } from 'packages/docs-examples/components/radio';
 import { DevThemeToggle } from '../theme-toggle';
 

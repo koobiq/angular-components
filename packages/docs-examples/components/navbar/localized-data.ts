@@ -1,4 +1,4 @@
-import { computed, Signal } from '@angular/core';
+import { computed, type Signal } from '@angular/core';
 import { kbqInjectLocaleService } from '@koobiq/components/core';
 
 /** Resolves `data` for the active locale of the examples, falling back to `default` (English). */

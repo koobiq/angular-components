@@ -1,9 +1,9 @@
 import { DOCUMENT } from '@angular/common';
-import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import { KbqModalRef } from './modal-ref.class';
-import { KbqModalComponent } from './modal.component';
+import { computed, inject, Injectable, type Signal, signal, type WritableSignal } from '@angular/core';
+import { Subject, type Subscription } from 'rxjs';
+import type { KbqModalComponent } from './modal.component';
 import { MODAL_ANIMATE_DURATION } from './modal.type';
+import type { KbqModalRef } from './modal-ref.class';
 
 interface IRegisteredMeta {
     modalRef: KbqModalRef;

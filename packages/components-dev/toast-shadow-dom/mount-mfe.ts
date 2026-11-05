@@ -1,8 +1,15 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ApplicationRef, EnvironmentProviders, InjectionToken, Provider, Type, createComponent } from '@angular/core';
+import {
+    type ApplicationRef,
+    createComponent,
+    type EnvironmentProviders,
+    InjectionToken,
+    type Provider,
+    type Type
+} from '@angular/core';
 import { createApplication } from '@angular/platform-browser';
 import { kbqShadowDomOverlayProvider } from '@koobiq/components/core';
-import { KbqToastData, KbqToastPosition, kbqToastConfigurationProvider } from '@koobiq/components/toast';
+import { kbqToastConfigurationProvider, type KbqToastData, KbqToastPosition } from '@koobiq/components/toast';
 
 /** Per-MFE configuration propagated through DI. */
 export interface DevMfeConfig {

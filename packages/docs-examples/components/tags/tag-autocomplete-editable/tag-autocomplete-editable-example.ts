@@ -1,11 +1,17 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, computed, ElementRef, model, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import { KbqAutocompleteModule, type KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqComponentColors, KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagEditChange, KbqTagEvent, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import {
+    type KbqTagEditChange,
+    type KbqTagEvent,
+    KbqTagInput,
+    type KbqTagInputEvent,
+    KbqTagsModule
+} from '@koobiq/components/tags';
 import { KbqTitleModule } from '@koobiq/components/title';
 
 const getAutocompleteOptions = () => [

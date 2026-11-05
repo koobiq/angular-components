@@ -4,32 +4,35 @@ import {
     ChangeDetectionStrategy,
     Component,
     effect,
-    FactoryProvider,
+    type FactoryProvider,
     inject as inject_1,
     input,
     LOCALE_ID,
-    Provider,
+    type Provider,
     signal,
-    Type,
-    ValueProvider,
+    type Type,
+    type ValueProvider,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import {
-    AsyncValidatorFn,
+    type AsyncValidatorFn,
     FormControl,
-    FormControlStatus,
+    type FormControlStatus,
     FormGroup,
     FormsModule,
     NgModel,
     ReactiveFormsModule,
     UntypedFormControl,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { DateTime } from 'luxon';
+import { map, type Observable, timer } from 'rxjs';
+import type { MockInstance } from 'vitest';
 import {
     KBQ_LUXON_DATE_FORMATS,
     KbqLuxonDateModule,
@@ -61,19 +64,16 @@ import {
     UP_ARROW
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
-import { DateTime } from 'luxon';
-import { map, Observable, timer } from 'rxjs';
-import type { MockInstance } from 'vitest';
-import { KbqInputModule } from '../input/index';
+import { KbqDatepicker } from './datepicker.component';
 import {
     KBQ_DATEPICKER_LOCALE_CONFIGURATION,
     KbqDatepickerInput,
-    KbqDatepickerInputEvent,
+    type KbqDatepickerInputEvent,
     kbqDatepickerLocaleConfigurationProvider
 } from './datepicker-input.directive';
 import { KbqDatepickerToggleIconComponent } from './datepicker-toggle.component';
-import { KbqDatepicker } from './datepicker.component';
 import { KbqDatepickerModule } from './index';
 
 // The modal's own animation timeout, which is internal to its entry point.

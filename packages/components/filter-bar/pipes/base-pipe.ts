@@ -1,8 +1,8 @@
-import { FocusMonitor, FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
+import { FocusMonitor, type FocusOrigin, InputModalityDetector } from '@angular/cdk/a11y';
 import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectorRef,
     computed,
     DestroyRef,
@@ -13,16 +13,16 @@ import {
     TemplateRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { isMac, KbqFilterBarLocaleConfiguration, KbqPanelMaxHeight } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { filter, skip } from 'rxjs/operators';
+import { isMac, type KbqFilterBarLocaleConfiguration, type KbqPanelMaxHeight } from '@koobiq/components/core';
 import {
     KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
     KBQ_FILTER_BAR_HOST,
-    KbqPipeData,
-    KbqPipeTemplate,
-    KbqPipeType,
-    KbqSelectValue
+    type KbqPipeData,
+    type KbqPipeTemplate,
+    type KbqPipeType,
+    type KbqSelectValue
 } from '../filter-bar.types';
 
 /** Injection Token for providing configuration of filter-bar */

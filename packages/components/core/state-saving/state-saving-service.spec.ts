@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { KbqStateSaving } from './state-saving';
 import { KbqStateSavingService } from './state-saving-service';
-import { KBQ_STATE_STORE, KbqStateStore } from './state-store';
+import { KBQ_STATE_STORE, type KbqStateStore } from './state-store';
 
 /** In-memory `KbqStateStore` that can enumerate, the way the web-storage ones can. */
 class InMemoryStateStore implements KbqStateStore {

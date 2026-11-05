@@ -1,6 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { EMPTY } from 'rxjs';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
@@ -11,7 +12,6 @@ import {
     KbqTreeFlattener,
     KbqTreeModule
 } from '@koobiq/components/tree';
-import { EMPTY } from 'rxjs';
 import { KbqTreeSelectModule } from './tree-select.module';
 
 class FileNode {

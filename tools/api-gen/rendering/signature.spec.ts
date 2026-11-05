@@ -1,14 +1,14 @@
 import {
-    ClassEntry,
-    DocEntry,
+    type ClassEntry,
+    type DocEntry,
     EntryType,
-    EnumMemberEntry,
-    FunctionEntry,
-    FunctionWithOverloads,
-    MemberEntry,
+    type EnumMemberEntry,
+    type FunctionEntry,
+    type FunctionWithOverloads,
+    type MemberEntry,
     MemberTags,
     MemberType,
-    PropertyEntry
+    type PropertyEntry
 } from './entities';
 import {
     compareEntries,

@@ -1,16 +1,16 @@
 import {
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     contentChild,
     Directive,
     ElementRef,
     inject,
     input,
-    OnChanges,
+    type OnChanges,
     Renderer2,
-    SimpleChanges
+    type SimpleChanges
 } from '@angular/core';
-import { KbqTab } from './tab.component';
+import type { KbqTab } from './tab.component';
 
 /**
  * Used in the `kbq-tab-group` view to display tab labels.

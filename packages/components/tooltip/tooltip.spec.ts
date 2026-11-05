@@ -1,10 +1,12 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceElement } from '@angular/cdk/coercion';
-import { FlexibleConnectedPositionStrategy, Overlay, OverlayContainer } from '@angular/cdk/overlay';
+import { type FlexibleConnectedPositionStrategy, Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Component, Directive, ElementRef, viewChild } from '@angular/core';
-import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
+import type { Mock } from 'vitest';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
     dispatchFakeEvent,
@@ -13,19 +15,17 @@ import {
     ENTER,
     ESCAPE,
     KBQ_PARENT_POPUP,
-    KbqParentPopup,
-    KbqSiblingPopup,
+    type KbqParentPopup,
+    type KbqSiblingPopup,
     kbqSiblingPopupProvider,
     TAB
 } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
-import { Subject } from 'rxjs';
-import type { Mock } from 'vitest';
-import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqTooltipRegistry } from './tooltip-registry';
-import { KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, KbqCaretVerticalAnchor, KbqTooltipTrigger } from './tooltip.component';
+import { KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, type KbqCaretVerticalAnchor, KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
+import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqTooltipRegistry } from './tooltip-registry';
 
 // KbqPopUpTrigger default enter delay (400ms) plus a buffer for the deferred show.
 const tooltipDefaultEnterDelayWithDefer = 410;

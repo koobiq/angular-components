@@ -5,19 +5,19 @@ import {
     computed,
     ElementRef,
     inject,
-    OnInit,
+    type OnInit,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { fromEvent } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { KbqThemeService } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { fromEvent } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 import { DocsDocStates } from 'src/app/services/doc-states';
 import { DocsLocaleState } from 'src/app/services/locale';
-import { docsGetCategories, DocsStructureCategory } from '../../structure';
+import { docsGetCategories, type DocsStructureCategory } from '../../structure';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({

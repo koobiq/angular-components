@@ -1,7 +1,7 @@
 import { AsyncPipe, Location, ViewportScroller } from '@angular/common';
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     inject,
@@ -13,6 +13,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -24,10 +25,9 @@ import {
     KbqTreeModule,
     KbqTreeSelection
 } from '@koobiq/components/tree';
-import { filter } from 'rxjs/operators';
-import { DocsLocale } from 'src/app/constants/locale';
+import type { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleState } from 'src/app/services/locale';
-import { docsGetCategories, DocsStructureCategory, DocsStructureItemTab } from 'src/app/structure';
+import { docsGetCategories, type DocsStructureCategory, DocsStructureItemTab } from 'src/app/structure';
 import { DocsDocStates } from '../../services/doc-states';
 import { DocsPagePrefetch } from '../../services/page-resolver';
 import { DocsFooterComponent } from '../footer/footer.component';

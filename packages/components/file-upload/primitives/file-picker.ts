@@ -4,7 +4,7 @@ import {
     Component,
     computed,
     Directive,
-    ElementRef,
+    type ElementRef,
     inject,
     input,
     model,

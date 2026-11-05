@@ -2,7 +2,7 @@ import { _IdGenerator } from '@angular/cdk/a11y';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -13,21 +13,21 @@ import {
     input,
     model,
     numberAttribute,
+    type Signal,
     signal,
-    Signal,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounce, timer } from 'rxjs';
 import { KbqLocaleOverridesDirective } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
-import { debounce, timer } from 'rxjs';
 import { KbqClampedListTrigger } from './clamped-list';
 import { kbqInjectCollapseAnimation } from './collapse-animation';
 import {
-    KbqClamped,
+    type KbqClamped,
     KbqClampedRoot,
     kbqClampedTextDefaultMaxRows,
     kbqInjectClampedTextLocaleConfiguration

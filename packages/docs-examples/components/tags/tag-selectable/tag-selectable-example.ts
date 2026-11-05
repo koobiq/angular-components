@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqTagSelectionChange, KbqTagsModule } from '@koobiq/components/tags';
+import { type KbqTagSelectionChange, KbqTagsModule } from '@koobiq/components/tags';
 
 /**
  * @title Tag selectable

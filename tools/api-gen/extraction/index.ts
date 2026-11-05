@@ -1,8 +1,14 @@
 import { NgtscProgram } from '@angular/compiler-cli';
 import { basename, join } from 'path';
 import ts from 'typescript';
-import { ConstantEntry, DocEntry, EntryType } from '../rendering/entities';
-import { ClassEntryMetadata, DeclarationSourceMetadata, EntryCollection, ModuleInfo, PackageMetadata } from '../types';
+import { type ConstantEntry, type DocEntry, EntryType } from '../rendering/entities';
+import type {
+    ClassEntryMetadata,
+    DeclarationSourceMetadata,
+    EntryCollection,
+    ModuleInfo,
+    PackageMetadata
+} from '../types';
 import { src } from '../utils';
 import { prepareMergedMetadata, readSourceFile, updateEntries } from './helpers';
 

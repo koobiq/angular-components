@@ -2,7 +2,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
-import { loadCatalog, type Catalog } from './catalog.js';
+import { type Catalog, loadCatalog } from './catalog.js';
 import {
     toolGetComponent,
     toolGetExample,

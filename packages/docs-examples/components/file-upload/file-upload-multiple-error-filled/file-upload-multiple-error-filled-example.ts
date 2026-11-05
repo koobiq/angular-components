@@ -1,8 +1,8 @@
 import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FileValidators, KbqFileTypeSpecifier } from '@koobiq/components/core';
-import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
+import { FileValidators, type KbqFileTypeSpecifier } from '@koobiq/components/core';
+import { type KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 

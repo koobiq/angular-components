@@ -5,7 +5,7 @@ import {
     DestroyRef,
     inject,
     InjectionToken,
-    Injector,
+    type Injector,
     MAX_ANIMATION_TIMEOUT,
     PLATFORM_ID
 } from '@angular/core';

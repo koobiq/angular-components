@@ -1,9 +1,9 @@
 import { DocsLocale } from '../../apps/docs/src/app/constants/locale';
 import { DocsStructureItemId, DocsStructureItemTab } from '../../apps/docs/src/app/structure';
-import { LiveExample } from '../../packages/docs-examples/example-module';
-import { CompiledPage } from './compile-page';
+import type { LiveExample } from '../../packages/docs-examples/example-module';
+import type { CompiledPage } from './compile-page';
 import { emitPage, emitPagesRegistry } from './emit-page';
-import { DocsPageSource } from './sources';
+import type { DocsPageSource } from './sources';
 
 const alertOverview = (locale: DocsLocale): DocsPageSource => ({
     path: `packages/components/alert/alert.${locale}.mdx`,

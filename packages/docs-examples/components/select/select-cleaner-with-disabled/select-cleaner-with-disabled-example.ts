@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqOptionBase } from '@koobiq/components/core';
+import type { KbqOptionBase } from '@koobiq/components/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**

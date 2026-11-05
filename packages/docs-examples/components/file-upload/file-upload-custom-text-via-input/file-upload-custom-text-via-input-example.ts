@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { of, skip } from 'rxjs';
 import {
     KBQ_LOCALE_SERVICE,
-    KbqBaseFileUploadLocaleConfiguration,
-    KbqMultipleFileUploadLocaleConfiguration
+    type KbqBaseFileUploadLocaleConfiguration,
+    type KbqMultipleFileUploadLocaleConfiguration
 } from '@koobiq/components/core';
 import { KbqMultipleFileUploadComponent, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { of, skip } from 'rxjs';
 
 const localeData = {
     'en-US': {

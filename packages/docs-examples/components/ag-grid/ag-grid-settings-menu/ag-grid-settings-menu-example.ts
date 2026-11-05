@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { AgGridModule } from 'ag-grid-angular';
+import { AllCommunityModule, type ColDef, ModuleRegistry } from 'ag-grid-community';
 import {
     KBQ_AG_GRID_COLUMN_MENU_LABELS_EN,
     KBQ_AG_GRID_SETTINGS_MENU_LABELS_EN,
     kbqAgGridColumnMenuLabelsProvider,
     kbqAgGridSettingsMenuColumnsItem,
-    KbqAgGridSettingsMenuItems,
+    type KbqAgGridSettingsMenuItems,
     kbqAgGridSettingsMenuLabelsProvider,
     kbqAgGridSettingsMenuSeparator,
     kbqAgGridSettingsMenuSortItem,
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
-import { AgGridModule } from 'ag-grid-angular';
-import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

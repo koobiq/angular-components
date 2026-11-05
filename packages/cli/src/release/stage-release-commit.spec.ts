@@ -2,7 +2,7 @@ import { mkdtempSync, rmSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import type { MockInstance } from 'vitest';
-import { GitClient } from './git/git-client';
+import type { GitClient } from './git/git-client';
 import { promptForNewVersion } from './prompt/new-version-prompt';
 import { StageReleaseCommitTask } from './stage-release-commit';
 import { parseVersionName } from './version-name/parse-version';

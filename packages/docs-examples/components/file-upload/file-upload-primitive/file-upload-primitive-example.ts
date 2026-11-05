@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { KbqBadge } from '@koobiq/components/badge';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqEmptyState } from '@koobiq/components/empty-state';
 import {
-    KbqFile,
+    type KbqFile,
     KbqFileDropDirective,
-    KbqFileItem,
+    type KbqFileItem,
     KbqFileList,
     KbqFileLoader,
     KbqFileUploadContext
 } from '@koobiq/components/file-upload';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
-import { BehaviorSubject } from 'rxjs';
 
 /**
  @title File upload primitive

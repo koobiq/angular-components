@@ -1,21 +1,21 @@
-import { ChangeDetectionStrategy, Component, inject, signal, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, type TemplateRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { type Observable, of, switchMap, throwError, timer } from 'rxjs';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
-    KbqInlineEditMode,
+    type KbqInlineEditMode,
     KbqInlineEditModule,
-    KbqInlineEditSaveErrorContext,
-    KbqInlineEditSaveHandler
+    type KbqInlineEditSaveErrorContext,
+    type KbqInlineEditSaveHandler
 } from '@koobiq/components/inline-edit';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { Observable, of, switchMap, throwError, timer } from 'rxjs';
+import { type KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
 const ROLES = ['user:read', 'user:create', 'user:update', 'user:delete', 'audit:read'];
 /** Roles the fake server refuses to grant. */

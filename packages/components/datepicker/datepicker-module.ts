@@ -7,12 +7,12 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqCalendar } from './calendar.component';
 import { KbqCalendarBody } from './calendar-body.component';
 import { KbqCalendarHeader } from './calendar-header.component';
-import { KbqCalendar } from './calendar.component';
+import { KbqDatepicker, KbqDatepickerContent } from './datepicker.component';
 import { KbqDatepickerInput } from './datepicker-input.directive';
 import { KbqDatepickerToggleIcon, KbqDatepickerToggleIconComponent } from './datepicker-toggle.component';
-import { KbqDatepicker, KbqDatepickerContent } from './datepicker.component';
 import { KbqMonthView } from './month-view.component';
 
 @NgModule({

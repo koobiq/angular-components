@@ -5,18 +5,18 @@ import {
     Component,
     Directive,
     input,
-    OnChanges,
+    type OnChanges,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, toObservable } from '@angular/core/rxjs-interop';
-import { KbqSiblingPopup, kbqSiblingPopupProvider } from '@koobiq/components/core';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { merge, Observable } from 'rxjs';
+import { merge, type Observable } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
-import { KbqDatepicker } from './datepicker.component';
+import { type KbqSiblingPopup, kbqSiblingPopupProvider } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
+import type { KbqDatepicker } from './datepicker.component';
 
 /** Can be used to override the icon of a `kbqDatepickerToggle`. */
 @Directive({

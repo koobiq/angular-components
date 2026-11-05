@@ -1,5 +1,5 @@
 import type { DocsStructureItem } from '../../apps/docs/src/app/structure';
-import { ComponentGuide, findGuideProblems, parseComponentGuide, renderComponentGuide } from './component-guide';
+import { type ComponentGuide, findGuideProblems, parseComponentGuide, renderComponentGuide } from './component-guide';
 
 const DASH = '—';
 
