@@ -54,6 +54,11 @@ test.describe('KbqNotificationCenterModule', () => {
 
             await expect(page.getByTestId('kbq-notification-center-loader')).toBeVisible();
             await expect(page.getByTestId('kbq-notification-center-empty')).toHaveCount(0);
+            await expect(page.getByTestId('e2eScreenshotTarget')).toHaveScreenshot('02-light.png');
+
+            await e2eEnableDarkTheme(page);
+
+            await expect(page.getByTestId('e2eScreenshotTarget')).toHaveScreenshot('02-dark.png');
         });
 
         test('error mode replaces the list with the error state', async ({ page }) => {
