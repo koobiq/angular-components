@@ -1,0 +1,40 @@
+{
+    "name": "koobiq-example",
+    "version": "0.0.0",
+    "homepage": "https://github.com/koobiq/angular-components",
+    "private": true,
+    "license": "MIT",
+    "scripts": {
+        "ng": "ng",
+        "start": "ng serve",
+        "build": "ng build"
+    },
+    "dependencies": {
+        "@angular/cdk": "${ngVersion}",
+        "@angular/common": "${ngVersion}",
+        "@angular/compiler": "${ngVersion}",
+        "@angular/core": "${ngVersion}",
+        "@angular/forms": "${ngVersion}",
+        "@angular/platform-browser": "${ngVersion}",
+        "@angular/router": "${ngVersion}",
+        "@fontsource/jetbrains-mono": "^5.3.0",
+        "@koobiq/angular-luxon-adapter": "${version}",
+        "@koobiq/components": "${version}",
+        "@koobiq/date-formatter": "^3.4.0",
+        "@koobiq/date-adapter": "^3.4.0",
+        "@koobiq/design-tokens": "^4.1.0",
+        "@koobiq/icons": "^12.4.0",
+        "@messageformat/core": "^3.4.0",
+        "inter-ui": "^4.1.1",
+        "luxon": "^3.7.2",
+        "rxjs": "^7.8.2",
+        "tslib": "^2.8.1"
+    },
+    "devDependencies": {
+        "@angular/build": "${ngVersion}",
+        "@angular/cli": "${ngVersion}",
+        "@angular/compiler-cli": "${ngVersion}",
+        "@types/luxon": "^3.7.1",
+        "typescript": "~5.9.2"
+    }
+}

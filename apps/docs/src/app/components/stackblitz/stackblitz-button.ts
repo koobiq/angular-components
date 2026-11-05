@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal, ViewEncapsulation } from '@angular/core';
 import { KbqLink } from '@koobiq/components/link';
 import { ExampleData } from '@koobiq/docs-examples';
 import { DocsStackblitzWriter } from './stackblitz-writer';
@@ -13,9 +13,12 @@ import { DocsStackblitzWriter } from './stackblitz-writer';
             external
             role="button"
             tabindex="0"
-            (click)="openStackBlitz()"
-            (keydown.enter)="openStackBlitz()"
-            (keydown.space)="$event.preventDefault(); openStackBlitz()"
+            [disabled]="isOpening()"
+            (pointerenter)="prefetch()"
+            (focus)="prefetch()"
+            (click)="openStackBlitz($event)"
+            (keydown.enter)="openStackBlitz($event)"
+            (keydown.space)="$event.preventDefault(); openStackBlitz($event)"
         >
             StackBlitz
         </span>
@@ -44,12 +47,55 @@ export class DocsStackblitzButtonComponent {
         return id ? new ExampleData(id) : undefined;
     });
 
-    protected openStackBlitz(): void {
+    /**
+     * The project of the example, ready to open within the click: Firefox blocks a StackBlitz tab opened after
+     * the files are loaded as a pop-up.
+     */
+    private prepared?: { exampleId: string; open: () => void };
+
+    /** Whether a click waits for the files of the example; the clicks that follow it are ignored. */
+    protected readonly isOpening = signal(false);
+
+    /** Loads the files of the example before the click. */
+    protected prefetch(): void {
+        // A failed build is evicted from the writer's cache, so the click loads the files again.
+        this.prepare()?.catch(() => undefined);
+    }
+
+    protected openStackBlitz(event: Event): void {
+        // The second click of a double click and a held key would open the project once more each.
+        if (this.isOpening() || (event as MouseEvent).detail > 1 || (event as KeyboardEvent).repeat) return;
+
+        const prepared = this.prepared;
+
+        if (prepared && prepared.exampleId === this.exampleId()) {
+            prepared.open();
+
+            return;
+        }
+
+        const preparing = this.prepare();
+
+        if (!preparing) return;
+
+        this.isOpening.set(true);
+        preparing
+            .then((open) => open())
+            // The failed build is evicted as well, so the link is active again and the next click retries.
+            .catch(() => undefined)
+            .finally(() => this.isOpening.set(false));
+    }
+
+    private prepare(): Promise<() => void> | undefined {
         const id = this.exampleId();
         const data = this.exampleData();
 
         if (!id || !data?.isKnown) return;
 
-        this.stackBlitzWriter.createStackBlitzForExample(id, data).then((open) => open());
+        return this.stackBlitzWriter.createStackBlitzForExample(id, data).then((open) => {
+            this.prepared = { exampleId: id, open };
+
+            return open;
+        });
     }
 }
