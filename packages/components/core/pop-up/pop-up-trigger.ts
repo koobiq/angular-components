@@ -277,6 +277,9 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      */
     abstract arrow: boolean;
 
+    /** Whether the arrow points at the origin center while the panel keeps its placement. Defaults to `false`. */
+    arrowCentered = false;
+
     /**
      * Space/comma-separated list of trigger events (`hover`, `focus`, `click`, `keydown`); implemented by the subclass.
      *
@@ -966,6 +969,27 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         return this.externalNativeElement || this.elementRef.nativeElement;
     }
 
+    /** Point the arrow should follow, or `null` when trigger-centered arrows are disabled. @docs-private */
+    getArrowPoint(): { x: number; y: number } | null {
+        return this.arrowCentered ? this.getOriginCenter() : null;
+    }
+
+    /** Center of the explicit origin or the native host, in viewport coordinates. @docs-private */
+    protected getOriginCenter(): { x: number; y: number } {
+        const resolved = kbqResolveOverlayOrigin(this.origin ?? this.getNativeElement());
+        const element = ((resolved as ElementRef<HTMLElement>).nativeElement ?? resolved) as
+            HTMLElement | { x: number; y: number; width: number; height: number };
+
+        // Duck typing rather than `instanceof Element`, which is not defined on the server.
+        if ('getBoundingClientRect' in element) {
+            const { left, top, width, height } = element.getBoundingClientRect();
+
+            return { x: left + width / 2, y: top + height / 2 };
+        }
+
+        return { x: element.x + element.width / 2, y: element.y + element.height / 2 };
+    }
+
     /**
      * Sets an external element to anchor and measure the pop-up against instead of the host element.
      *
@@ -984,7 +1008,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         const res: ConnectionPositionPair[] = [];
         // Measured once instead of once per candidate position: every read forces a synchronous layout, and
         // `updateData()` reaches this method on every content, context, header, arrow and offset change.
-        const anchorSize = this.arrow ? this.getAnchorSize() : null;
+        const anchorSize = this.arrow && !this.arrowCentered ? this.getAnchorSize() : null;
 
         for (const pos of this.getPrioritizedPositions()) {
             const offset: KbqPopupTriggerOffset = anchorSize ? getOffset(pos, anchorSize) : {};
