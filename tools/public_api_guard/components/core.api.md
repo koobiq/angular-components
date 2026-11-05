@@ -251,12 +251,12 @@ export const D = 68;
 // @public
 export const DASH = 189;
 
-// @public
+// @public (undocumented)
 export abstract class DateAdapter<D> extends DateAdapter_2<D> {
     abstract get localeChanges(): Observable<any>;
 }
 
-// @public
+// @public (undocumented)
 export class DateFormatter<D> extends DateFormatter_2<D> {
     constructor();
     // (undocumented)
@@ -412,7 +412,7 @@ export const enUSFormattersData: {
     };
 };
 
-// @public
+// @public (undocumented)
 export const enUSLocaleData: {
     a11y: {
         close: string;
@@ -697,7 +697,7 @@ export const esLAFormattersData: {
     };
 };
 
-// @public
+// @public (undocumented)
 export const esLALocaleData: {
     a11y: {
         close: string;
@@ -1176,7 +1176,7 @@ export const KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER: <T>(token: InjectionToken<T>, 
     useFactory: (overlay: Overlay) => () => ScrollStrategy;
 };
 
-// @public
+// @public (undocumented)
 export const KBQ_DATE_FORMATS: InjectionToken<DateFormats>;
 
 // @public
@@ -2484,7 +2484,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
     };
 };
 
-// @public
+// @public (undocumented)
 export const KBQ_DEFAULT_LOCALE_ID = "ru-RU";
 
 // @public
@@ -2505,16 +2505,16 @@ export const KBQ_INVALID_VALUE_ERROR = "Argument \"value\" must be a finite numb
 // @public
 export const KBQ_LOCALE_CONFIGURATION_OVERRIDES: InjectionToken<KbqPartialLocaleData[][]>;
 
-// @public
+// @public (undocumented)
 export const KBQ_LOCALE_DATA: InjectionToken<KbqLocaleDataInput>;
 
-// @public
+// @public (undocumented)
 export const KBQ_LOCALE_ID: InjectionToken<KbqLocaleIdLike>;
 
 // @public
 export const KBQ_LOCALE_OVERRIDES_HOST: InjectionToken<KbqLocaleOverridesHost>;
 
-// @public
+// @public (undocumented)
 export const KBQ_LOCALE_SERVICE: InjectionToken<KbqLocaleService>;
 
 // @public
@@ -2522,13 +2522,13 @@ export const KBQ_LOCALE_SERVICE_LANG_ATTR_NAME: InjectionToken<string>;
 
 // Warning: (ae-forgotten-export) The symbol "ParsedDigitsInfo" needs to be exported by the entry point koobiq-components-core.d.ts
 //
-// @public
+// @public (undocumented)
 export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo;
 
-// @public
+// @public (undocumented)
 export const KBQ_NUMBER_FORMATTER_OPTIONS: InjectionToken<ParsedDigitsInfo>;
 
-// @public
+// @public (undocumented)
 export const KBQ_OPTION_ACTION_PARENT: InjectionToken<KbqOptionActionParent>;
 
 // @public
@@ -2578,7 +2578,7 @@ export const KBQ_SIZE_UNITS_CONFIG: InjectionToken<KbqSizeUnitsLocaleConfigurati
 // @public @deprecated (undocumented)
 export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsLocaleConfiguration;
 
-// @public
+// @public (undocumented)
 export const KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION: KbqSizeUnitsLocaleConfiguration;
 
 // @public
@@ -2636,7 +2636,7 @@ export type KbqA11yLocaleConfiguration = {
 // @public
 export const kbqA11yLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqA11yLocaleConfiguration>) => Provider;
 
-// @public
+// @public (undocumented)
 export class KbqAbsoluteLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [currYear?: boolean]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined, currYear?: boolean): string;
@@ -2648,7 +2648,7 @@ export class KbqAbsoluteLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, 
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqAbsoluteLongDatePipe<any>, "kbqAbsoluteLongDate", true>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqAbsoluteLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -2660,7 +2660,7 @@ export class KbqAbsoluteLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqAbsoluteLongDateTimePipe<any>, "kbqAbsoluteLongDateTime", true>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqAbsoluteShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [currYear?: boolean]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined, currYear?: boolean): string;
@@ -2672,7 +2672,7 @@ export class KbqAbsoluteShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D,
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqAbsoluteShortDatePipe<any>, "kbqAbsoluteShortDate", true>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqAbsoluteShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -2787,7 +2787,7 @@ export interface KbqAutoHideScrollStrategyHooks {
     onHide?: () => void;
 }
 
-// @public
+// @public (undocumented)
 export interface KbqBaseFileUploadLocaleConfiguration {
     // (undocumented)
     browseLink: string;
@@ -2888,7 +2888,7 @@ export class KbqColorDirective<T extends string = KbqComponentColors | string> {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqColorDirective<any>, never>;
 }
 
-// @public
+// @public (undocumented)
 export enum KbqComponentColors {
     // (undocumented)
     Contrast = "contrast",
@@ -2921,7 +2921,7 @@ export const kbqCreateCaretOrigin: (measure: () => KbqCaretRect) => Readonly<Kbq
 // @public
 export const kbqCreateTextMirror: (field: HTMLInputElement | HTMLTextAreaElement, className: string) => KbqTextMirror;
 
-// @public
+// @public (undocumented)
 export class KbqDataSizePipe implements PipeTransform {
     transform(source: number, precision?: number, unitSystemName?: KbqMeasurementSystemType, locale?: string): string;
     // (undocumented)
@@ -2930,7 +2930,7 @@ export class KbqDataSizePipe implements PipeTransform {
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqDataSizePipe, "kbqDataSize", true>;
 }
 
-// @public
+// @public (undocumented)
 export type KbqDateFormats = DateFormats;
 
 // @public
@@ -2955,7 +2955,7 @@ export class KbqDateTimezoneService {
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqDateTimezoneService>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     constructor();
     // (undocumented)
@@ -3141,7 +3141,7 @@ export const kbqFocusAndReveal: (element: HTMLElement, skipReveal?: boolean) => 
 // @public
 export function kbqFocusOptionActionOnTab($event: KeyboardEvent, actionButton: KbqOptionActionComponent | undefined): void;
 
-// @public
+// @public (undocumented)
 export class KbqForm implements AfterContentInit {
     // (undocumented)
     readonly elements: i0.Signal<readonly KbqFormElement[]>;
@@ -3176,7 +3176,7 @@ export class KbqFormattersModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormattersModule, never, [typeof AbsoluteDateFormatterPipe, typeof AbsoluteDateTimeFormatterPipe, typeof AbsoluteDateShortFormatterPipe, typeof AbsoluteShortDateTimeFormatterPipe, typeof RelativeDateFormatterPipe, typeof RelativeDateTimeFormatterPipe, typeof RelativeShortDateFormatterPipe, typeof RelativeShortDateTimeFormatterPipe, typeof RangeDateFormatterPipe, typeof RangeShortDateFormatterPipe, typeof RangeDateTimeFormatterPipe, typeof RangeShortDateTimeFormatterPipe, typeof RangeMiddleDateTimeFormatterPipe, typeof DurationShortestFormatterPipe, typeof DurationLongFormatterPipe, typeof DurationShortFormatterPipe, typeof AbsoluteDateFormatterImpurePipe, typeof AbsoluteDateTimeFormatterImpurePipe, typeof AbsoluteDateShortFormatterImpurePipe, typeof AbsoluteShortDateTimeFormatterImpurePipe, typeof RelativeDateFormatterImpurePipe, typeof RelativeDateTimeFormatterImpurePipe, typeof RelativeShortDateFormatterImpurePipe, typeof RelativeShortDateTimeFormatterImpurePipe, typeof RangeDateFormatterImpurePipe, typeof RangeShortDateFormatterImpurePipe, typeof RangeDateTimeFormatterImpurePipe, typeof RangeShortDateTimeFormatterImpurePipe, typeof RangeMiddleDateTimeFormatterImpurePipe, typeof DurationShortestFormatterImpurePipe, typeof DurationLongFormatterImpurePipe, typeof DurationShortFormatterImpurePipe, typeof KbqAbsoluteLongDatePipe, typeof KbqAbsoluteLongDateTimePipe, typeof KbqAbsoluteShortDatePipe, typeof KbqAbsoluteShortDateTimePipe, typeof KbqRelativeLongDatePipe, typeof KbqRelativeLongDateTimePipe, typeof KbqRelativeShortDatePipe, typeof KbqRelativeShortDateTimePipe, typeof KbqRangeLongDatePipe, typeof KbqRangeLongDateTimePipe, typeof KbqRangeMiddleDateTimePipe, typeof KbqRangeShortDatePipe, typeof KbqRangeShortDateTimePipe, typeof KbqDurationShortestPipe, typeof KbqDurationLongPipe, typeof KbqDurationShortPipe, typeof KbqDataSizePipe, typeof KbqDecimalPipe, typeof KbqRoundDecimalPipe, typeof KbqTableNumberPipe], [typeof KbqDecimalPipe, typeof KbqRoundDecimalPipe, typeof KbqTableNumberPipe, typeof AbsoluteDateFormatterPipe, typeof AbsoluteDateTimeFormatterPipe, typeof AbsoluteDateShortFormatterPipe, typeof AbsoluteShortDateTimeFormatterPipe, typeof RelativeDateFormatterPipe, typeof RelativeDateTimeFormatterPipe, typeof RelativeShortDateFormatterPipe, typeof RelativeShortDateTimeFormatterPipe, typeof RangeDateFormatterPipe, typeof RangeShortDateFormatterPipe, typeof RangeDateTimeFormatterPipe, typeof RangeShortDateTimeFormatterPipe, typeof RangeMiddleDateTimeFormatterPipe, typeof DurationShortestFormatterPipe, typeof DurationLongFormatterPipe, typeof DurationShortFormatterPipe, typeof AbsoluteDateFormatterImpurePipe, typeof AbsoluteDateTimeFormatterImpurePipe, typeof AbsoluteDateShortFormatterImpurePipe, typeof AbsoluteShortDateTimeFormatterImpurePipe, typeof RelativeDateFormatterImpurePipe, typeof RelativeDateTimeFormatterImpurePipe, typeof RelativeShortDateFormatterImpurePipe, typeof RelativeShortDateTimeFormatterImpurePipe, typeof RangeDateFormatterImpurePipe, typeof RangeShortDateFormatterImpurePipe, typeof RangeDateTimeFormatterImpurePipe, typeof RangeShortDateTimeFormatterImpurePipe, typeof RangeMiddleDateTimeFormatterImpurePipe, typeof DurationShortestFormatterImpurePipe, typeof DurationLongFormatterImpurePipe, typeof DurationShortFormatterImpurePipe, typeof KbqAbsoluteLongDatePipe, typeof KbqAbsoluteLongDateTimePipe, typeof KbqAbsoluteShortDatePipe, typeof KbqAbsoluteShortDateTimePipe, typeof KbqRelativeLongDatePipe, typeof KbqRelativeLongDateTimePipe, typeof KbqRelativeShortDatePipe, typeof KbqRelativeShortDateTimePipe, typeof KbqRangeLongDatePipe, typeof KbqRangeLongDateTimePipe, typeof KbqRangeMiddleDateTimePipe, typeof KbqRangeShortDatePipe, typeof KbqRangeShortDateTimePipe, typeof KbqDurationShortestPipe, typeof KbqDurationLongPipe, typeof KbqDurationShortPipe, typeof KbqDataSizePipe]>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqFormElement implements AfterContentInit {
     // (undocumented)
     readonly elements: i0.Signal<readonly KbqFormElement[]>;
@@ -3252,7 +3252,7 @@ export const kbqGetTextQuery: (value: string, caret: number, input?: KbqTextQuer
 // @public
 export const kbqHasScrollOverflow: (element: Element, axis?: KbqScrollAxis) => boolean;
 
-// @public
+// @public (undocumented)
 export class KbqHighlightBackgroundPipe implements PipeTransform {
     // (undocumented)
     transform(value: unknown, keyword: unknown, foldDiacritics?: boolean): string;
@@ -3403,7 +3403,7 @@ export interface KbqLocaleOverridesHost {
 // @public
 export type KbqLocaleSection = keyof KbqLocaleData;
 
-// @public
+// @public (undocumented)
 export class KbqLocaleService {
     constructor();
     addLocale(id: KbqLocaleIdLike, localeData: KbqPartialLocaleData): void;
@@ -3518,7 +3518,7 @@ export class KbqMeasureScrollbarService {
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqMeasureScrollbarService>;
 }
 
-// @public
+// @public (undocumented)
 export interface KbqMultipleFileUploadLocaleConfiguration extends KbqBaseFileUploadLocaleConfiguration {
     // (undocumented)
     captionTextForCompactSize: string;
@@ -3539,7 +3539,7 @@ export type KbqNavbarLocaleConfiguration = {
     };
 };
 
-// @public
+// @public (undocumented)
 export class KbqNormalizeWhitespace {
     protected readonly elementRef: ElementRef<HTMLElement>;
     onCopy($event: ClipboardEvent): void;
@@ -3653,7 +3653,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOption, never>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     get active(): boolean;
@@ -3696,7 +3696,7 @@ export interface KbqOptionActionParent {
 // @public
 export const kbqOptionalNumberAttribute: (value: unknown) => number | undefined;
 
-// @public
+// @public (undocumented)
 export abstract class KbqOptionBase {
     // (undocumented)
     abstract deselect(): void;
@@ -3860,7 +3860,7 @@ export type KbqPopoverConfirmLocaleConfiguration = {
 // @public
 export const kbqPopoverConfirmLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqPopoverConfirmLocaleConfiguration>) => Provider;
 
-// @public
+// @public (undocumented)
 export abstract class KbqPopUp implements OnDestroy {
     protected addEventListenerForHide(): void;
     afterHidden(): Observable<void>;
@@ -3921,10 +3921,10 @@ export abstract class KbqPopUp implements OnDestroy {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPopUp, never>;
 }
 
-// @public
+// @public (undocumented)
 export type KbqPopUpPlacementValues = KbqEnumValues<PopUpPlacements>;
 
-// @public
+// @public (undocumented)
 export type KbqPopUpSizeValues = KbqEnumValues<PopUpSizes>;
 
 // @public
@@ -4042,13 +4042,13 @@ export class KbqPseudoCheckboxModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqPseudoCheckboxModule, never, [typeof KbqPseudoCheckbox], [typeof KbqPseudoCheckbox]>;
 }
 
-// @public
+// @public (undocumented)
 export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' | boolean;
 
 // @public
 export function kbqQueryListFrom<T>(query: Signal<readonly T[]>): () => QueryList<T>;
 
-// @public
+// @public (undocumented)
 export class KbqRangeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, []> implements PipeTransform {
     // (undocumented)
     protected format(value: D[] | string[] | null | undefined): string;
@@ -4060,7 +4060,7 @@ export class KbqRangeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[]
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeLongDatePipe<any>, "kbqRangeLongDate", true>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqRangeLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string;
@@ -4072,7 +4072,7 @@ export class KbqRangeLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D,
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeLongDateTimePipe<any>, "kbqRangeLongDateTime", true>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqRangeMiddleDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string;
@@ -4084,7 +4084,7 @@ export class KbqRangeMiddleDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeMiddleDateTimePipe<any>, "kbqRangeMiddleDateTime", true>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqRangeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, []> implements PipeTransform {
     // (undocumented)
     protected format(value: D[] | string[] | null | undefined): string;
@@ -4096,7 +4096,7 @@ export class KbqRangeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRangeShortDatePipe<any>, "kbqRangeShortDate", true>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqRangeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D[] | string[] | null | undefined, options?: DateTimeOptions): string;
@@ -4122,7 +4122,7 @@ export class KbqReadStateDirective {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqReadStateDirective, never>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqRelativeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, []> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined): string;
@@ -4134,7 +4134,7 @@ export class KbqRelativeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, 
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRelativeLongDatePipe<any>, "kbqRelativeLongDate", true>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqRelativeLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -4146,7 +4146,7 @@ export class KbqRelativeLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRelativeLongDateTimePipe<any>, "kbqRelativeLongDateTime", true>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqRelativeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, []> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined): string;
@@ -4158,7 +4158,7 @@ export class KbqRelativeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D,
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRelativeShortDatePipe<any>, "kbqRelativeShortDate", true>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqRelativeShortDateTimePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined, options?: DateTimeOptions): string;
@@ -4216,7 +4216,7 @@ export const kbqResolveTimezoneOffset: (timezone: KbqTimezoneLike, timestamp: nu
 // @public
 export const kbqRevealSelection: (element: HTMLInputElement) => void;
 
-// @public
+// @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
     constructor();
     // (undocumented)
@@ -4260,7 +4260,7 @@ export class KbqSelectAllEvent<T, S = unknown> {
 // @public
 export function kbqSelectAllHandlerTransform<S>(handler: ((event: KeyboardEvent, source: S) => void) | undefined): ((event: KeyboardEvent, source: S) => void) | undefined;
 
-// @public
+// @public (undocumented)
 export class KbqSelectFooter {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectFooter, "kbq-select-footer, [kbq-select-footer]", never, {}, {}, never, never, true, never>;
@@ -4285,7 +4285,7 @@ export type KbqSelectLocaleConfiguration = {
 // @public
 export const kbqSelectLocaleConfigurationProvider: (configuration: KbqDeepPartial<KbqSelectLocaleConfiguration>) => Provider;
 
-// @public
+// @public (undocumented)
 export class KbqSelectMatcher {
     // (undocumented)
     readonly useDefaultHandlers: i0.InputSignalWithTransform<boolean, unknown>;
@@ -4298,7 +4298,7 @@ export class KbqSelectMatcher {
 // @public
 export function kbqSelectScrollStrategyProviderFactory(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy;
 
-// @public
+// @public (undocumented)
 export class KbqSelectSearch implements AfterContentInit {
     constructor();
     // (undocumented)
@@ -4327,7 +4327,7 @@ export class KbqSelectSearch implements AfterContentInit {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectSearch, never>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqSelectSearchEmptyResult {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectSearchEmptyResult, "[kbq-select-search-empty-result]", ["kbqSelectSearchEmptyResult"], {}, {}, never, never, true, never>;
@@ -4335,7 +4335,7 @@ export class KbqSelectSearchEmptyResult {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectSearchEmptyResult, never>;
 }
 
-// @public
+// @public (undocumented)
 export class KbqSelectTrigger {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectTrigger, "kbq-select-trigger, [kbq-select-trigger]", never, {}, {}, never, never, true, never>;
@@ -4460,13 +4460,13 @@ export interface KbqStateStore {
     setState(key: string, state: unknown): void;
 }
 
-// @public
+// @public (undocumented)
 export type KbqStickToWindowPlacementValues = KbqEnumValues<PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left>;
 
 // @public
 export const kbqStructuralStateSavingKey: KbqStateSavingKeyResolver;
 
-// @public
+// @public (undocumented)
 export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     constructor();
     // (undocumented)
@@ -4681,7 +4681,7 @@ export type KbqUsernameLocaleConfiguration = {
     siteLabel: string;
 };
 
-// @public
+// @public (undocumented)
 export class KbqVirtualOption extends KbqOptionBase {
     constructor(value: any, _disabled?: boolean, _viewValue?: string | undefined);
     // (undocumented)
@@ -4918,7 +4918,7 @@ export const PERIOD = 190;
 // @public
 export const PLUS_SIGN = 43;
 
-// @public
+// @public (undocumented)
 export enum PopUpPlacements {
     // (undocumented)
     Bottom = "bottom",
@@ -4946,7 +4946,7 @@ export enum PopUpPlacements {
     TopRight = "topRight"
 }
 
-// @public
+// @public (undocumented)
 export enum PopUpSizes {
     // (undocumented)
     Custom = "custom",
@@ -4958,7 +4958,7 @@ export enum PopUpSizes {
     Small = "small"
 }
 
-// @public
+// @public (undocumented)
 export enum PopUpTriggers {
     // (undocumented)
     Click = "click",
@@ -5028,7 +5028,7 @@ export const ptBRFormattersData: {
     };
 };
 
-// @public
+// @public (undocumented)
 export const ptBRLocaleData: {
     a11y: {
         close: string;
@@ -5498,7 +5498,7 @@ export const ruRUFormattersData: {
     };
 };
 
-// @public
+// @public (undocumented)
 export const ruRULocaleData: {
     a11y: {
         close: string;
@@ -5844,7 +5844,7 @@ export const tkTMFormattersData: {
     };
 };
 
-// @public
+// @public (undocumented)
 export const tkTMLocaleData: {
     a11y: {
         close: string;
@@ -6103,7 +6103,7 @@ export const validationTooltipHideDelay = 3000;
 // @public
 export const validationTooltipShowDelay = 10;
 
-// @public
+// @public (undocumented)
 export const VERSION: Version;
 
 // @public

@@ -75,7 +75,6 @@ export interface KeyboardNavigationHandler {
  */
 export const KBQ_OPTION_PARENT_COMPONENT = new InjectionToken<KbqOptionParentComponent>('KBQ_OPTION_PARENT_COMPONENT');
 
-/** Common contract of `KbqOption` and `KbqVirtualOption`. */
 export abstract class KbqOptionBase {
     abstract get value(): any;
     abstract get viewValue(): string;
@@ -93,7 +92,6 @@ export abstract class KbqOptionBase {
     }
 }
 
-/** Stand-in for a selected value whose `KbqOption` is not rendered, such as under virtual scroll. */
 export class KbqVirtualOption extends KbqOptionBase {
     get disabled() {
         return this._disabled;

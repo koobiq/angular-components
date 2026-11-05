@@ -1,6 +1,5 @@
 import { Directive, ElementRef, inject, input, linkedSignal, Signal, signal, WritableSignal } from '@angular/core';
 
-/** Values of the `color` input of components. */
 export enum KbqComponentColors {
     Theme = 'theme',
     ThemeFade = 'theme-fade',

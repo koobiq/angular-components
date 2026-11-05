@@ -57,7 +57,6 @@ export const kbqSiblingPopupProvider = (popup: Type<KbqSiblingPopup>): Provider 
     multi: true
 });
 
-/** Position of a pop-up relative to its trigger. */
 export enum PopUpPlacements {
     Top = 'top',
     TopLeft = 'topLeft',
@@ -73,10 +72,8 @@ export enum PopUpPlacements {
     BottomRight = 'bottomRight'
 }
 
-/** `PopUpPlacements` values as strings. */
 export type KbqPopUpPlacementValues = KbqEnumValues<PopUpPlacements>;
 
-/** Window edges a popover can stick to. */
 export type KbqStickToWindowPlacementValues = KbqEnumValues<
     PopUpPlacements.Top | PopUpPlacements.Right | PopUpPlacements.Bottom | PopUpPlacements.Left
 >;
@@ -88,7 +85,6 @@ export enum PopUpVisibility {
     Hidden = 'hidden'
 }
 
-/** Ways a pop-up opens: by click, focus, hover, key press or from code. */
 export enum PopUpTriggers {
     Click = 'click',
     Focus = 'focus',
@@ -97,7 +93,6 @@ export enum PopUpTriggers {
     Program = 'program'
 }
 
-/** Sizes of a pop-up. */
 export enum PopUpSizes {
     Small = 'small',
     Medium = 'medium',
@@ -105,7 +100,6 @@ export enum PopUpSizes {
     Custom = 'custom'
 }
 
-/** `PopUpSizes` values as strings. */
 export type KbqPopUpSizeValues = KbqEnumValues<PopUpSizes>;
 
 /**

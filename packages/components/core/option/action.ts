@@ -32,10 +32,8 @@ export interface KbqOptionActionParent {
     focus(): void;
 }
 
-/** The list or tree option that hosts a `kbq-option-action`. */
 export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent>('KBQ_OPTION_ACTION_PARENT');
 
-/** Button at the end of a list or tree option that opens its dropdown menu. */
 @Component({
     selector: 'kbq-option-action',
     template: `

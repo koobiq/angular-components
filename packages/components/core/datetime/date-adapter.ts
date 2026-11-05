@@ -13,7 +13,6 @@ export function KBQ_DATE_LOCALE_FACTORY(): string {
     return inject(LOCALE_ID);
 }
 
-/** Base class of the date adapters, such as `LuxonDateAdapter` and `MomentDateAdapter`. */
 export abstract class DateAdapter<D> extends BaseDateAdapter<D> {
     /** A stream that emits when the locale changes. */
     abstract get localeChanges(): Observable<any>;

@@ -364,7 +364,6 @@ export type KbqTimeRangeLocaleConfiguration = {
     };
 };
 
-/** Strings of the single file upload. */
 export interface KbqBaseFileUploadLocaleConfiguration {
     captionText: string;
     captionTextOnlyFolder: string;
@@ -374,7 +373,6 @@ export interface KbqBaseFileUploadLocaleConfiguration {
     browseLinkFolderMixed?: string;
 }
 
-/** Strings of the multiple file upload. */
 export interface KbqMultipleFileUploadLocaleConfiguration extends KbqBaseFileUploadLocaleConfiguration {
     captionTextWhenSelected: string;
     captionTextForCompactSize: string;
