@@ -9,6 +9,7 @@ import { docsNextGetSection, docsNextGetSectionPages, docsNextIsAvailable } from
 import {
     DOCS_NEXT_I18N,
     DOCS_NEXT_MOBILE_QUERY,
+    DOCS_NEXT_TABLET_QUERY,
     DOCS_NEXT_VERSIONS,
     docsNextFormat,
     DocsNextFramework,
@@ -69,6 +70,7 @@ export class DocsNextSiteState {
     private readonly document = inject(DOCUMENT);
     private readonly window = inject(KBQ_WINDOW);
     private readonly mobileQuery = this.window.matchMedia?.(DOCS_NEXT_MOBILE_QUERY);
+    private readonly tabletQuery = this.window.matchMedia?.(DOCS_NEXT_TABLET_QUERY);
 
     private readonly url = toSignal(
         this.router.events.pipe(
@@ -104,6 +106,9 @@ export class DocsNextSiteState {
     /** Whether the phone layout is on. */
     readonly isMobile = signal(this.mobileQuery?.matches ?? false);
 
+    /** Whether the tablet layout is on. */
+    readonly isTablet = signal(this.tabletQuery?.matches ?? false);
+
     /** Repository of the selected framework, until the monorepo of both libraries exists. */
     readonly githubUrl = computed(() =>
         this.framework() === 'angular'
@@ -130,6 +135,7 @@ export class DocsNextSiteState {
         if (Number.isInteger(count) && count > 0) this.versions.set(docsNextVersionsOfCount(count));
 
         this.mobileQuery?.addEventListener('change', ({ matches }) => this.isMobile.set(matches));
+        this.tabletQuery?.addEventListener('change', ({ matches }) => this.isTablet.set(matches));
 
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
             this.notice.set(this.pendingNotice);

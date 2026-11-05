@@ -23,6 +23,9 @@ export const docsNextFrameworkTitle = (framework: DocsNextFramework): string =>
 /** Below 720px the site switches to its phone layout (spec/navigation/mobile.md). */
 export const DOCS_NEXT_MOBILE_QUERY = '(max-width: 719.98px)';
 
+/** From 720px to 1024px the site is on a tablet: the contents shrink to a rail (the same range as the header's). */
+export const DOCS_NEXT_TABLET_QUERY = '(min-width: 720px) and (max-width: 1024px)';
+
 /** The short label of a version on a phone: `Next` or the major number. */
 export const docsNextVersionShortTitle = (id: string): string => (id === 'next' ? 'Next' : id);
 

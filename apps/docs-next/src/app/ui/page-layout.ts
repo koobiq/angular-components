@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { DocsNextToc } from '../layout/toc';
+import { DocsNextTocRail } from '../layout/toc-rail';
 import { DocsNextPageBar } from '../mobile/page-bar';
 import { DocsNextTocSheet } from '../mobile/toc-sheet';
 import { DocsNextPageOutline } from '../services/page-outline';
@@ -29,11 +30,12 @@ export const DOCS_NEXT_ARTICLE_WIDTH = new InjectionToken<{ readonly canExpand: 
  * of the article lifts the limit, and the article takes the whole width next to the contents; the button is there only
  * when the room is wider than the limit.
  *
- * On a phone the contents move into the "On this page" island floating at the bottom of the screen (Figma: 122:35907).
+ * On a tablet the contents shrink to a rail of ticks that opens a panel, and the text takes the room they gave up. On a
+ * phone they move into the "On this page" island floating at the bottom of the screen (Figma: 122:35907).
  */
 @Component({
     selector: 'docs-next-page-layout',
-    imports: [DocsNextToc, DocsNextPageBar, DocsNextTocSheet],
+    imports: [DocsNextToc, DocsNextTocRail, DocsNextPageBar, DocsNextTocSheet],
     template: `
         @if (state.isMobile() && withActions()) {
             <docs-next-page-bar class="docs-next-page-layout__bar" [githubUrl]="githubUrl()" [source]="article" />
@@ -46,6 +48,8 @@ export const DOCS_NEXT_ARTICLE_WIDTH = new InjectionToken<{ readonly canExpand: 
         @if (withToc()) {
             @if (state.isMobile()) {
                 <docs-next-toc-sheet />
+            } @else if (state.isTablet()) {
+                <docs-next-toc-rail class="docs-next-page-layout__toc" />
             } @else {
                 <docs-next-toc class="docs-next-page-layout__toc" />
             }
@@ -75,6 +79,13 @@ export const DOCS_NEXT_ARTICLE_WIDTH = new InjectionToken<{ readonly canExpand: 
 
         :host(.docs-next-page-layout_expanded) .docs-next-page-layout__column {
             max-width: none;
+        }
+
+        /* A tablet: the contents are a rail of 40px, so the article keeps less at its sides. */
+        @media (min-width: 720px) and (max-width: 1024px) {
+            .docs-next-page-layout__article {
+                padding: 40px var(--kbq-size-l) 96px var(--kbq-size-xxl);
+            }
         }
 
         @media (max-width: 719.98px) {

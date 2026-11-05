@@ -39,6 +39,8 @@
     --docs-next-header-height: 48px;
     --docs-next-aside-width: 240px;
     --docs-next-toc-width: 240px;
+    // On a tablet the contents are a rail of ticks this wide.
+    --docs-next-toc-rail-width: 40px;
     // About 80 characters of 16px Inter (spec/text-width.md).
     --docs-next-text-width: 672px;
     --docs-next-wide-width: 1120px;
