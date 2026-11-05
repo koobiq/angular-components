@@ -215,16 +215,41 @@ describe('Standalone ToastService', () => {
         discardPeriodicTasks();
     }));
 
-    it('should stop the shared timer on destroy', () => {
+    it('should replay only the latest timer tick', () => {
         jest.useFakeTimers();
 
         try {
             service = TestBed.inject(KbqToastService);
+            service.show(MOCK_TOAST_DATA, 0);
 
-            jest.advanceTimersByTime(500);
+            jest.advanceTimersByTime(1500);
+
+            const ticks: number[] = [];
+            const subscription = service.timer.subscribe((value) => ticks.push(value));
+
+            subscription.unsubscribe();
             service.ngOnDestroy();
 
-            expect(jest.getTimerCount()).toBe(0);
+            expect(ticks).toEqual([2]);
+        } finally {
+            jest.useRealTimers();
+        }
+    });
+
+    it('should stop the shared timer on destroy', () => {
+        jest.useFakeTimers();
+
+        try {
+            const baseline = jest.getTimerCount();
+
+            service = TestBed.inject(KbqToastService);
+
+            jest.advanceTimersByTime(500);
+            expect(jest.getTimerCount()).toBe(baseline + 1);
+
+            service.ngOnDestroy();
+
+            expect(jest.getTimerCount()).toBe(baseline);
         } finally {
             jest.useRealTimers();
         }
