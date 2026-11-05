@@ -78,7 +78,7 @@ export const KBQ_STEPPER_INTERVAL_DELAY = 75;
             kbq-icon-button="kbq-chevron-up-s_16"
             [tabindex]="-1"
             [autoColor]="true"
-            [disabled]="control().disabled"
+            [disabled]="inactive()"
             (mousedown)="onStepUp($event)"
         ></i>
         <i
@@ -88,7 +88,7 @@ export const KBQ_STEPPER_INTERVAL_DELAY = 75;
             kbq-icon-button="kbq-chevron-down-s_16"
             [tabindex]="-1"
             [autoColor]="true"
-            [disabled]="control().disabled"
+            [disabled]="inactive()"
             (mousedown)="onStepDown($event)"
         ></i>
     `,
@@ -147,6 +147,13 @@ export class KbqStepper {
         return inputNumberControl;
     });
 
+    /**
+     * Whether the steps are blocked. A read-only field keeps the stepper visible, as a disabled one does.
+     *
+     * @docs-private
+     */
+    protected readonly inactive = computed(() => this.control().disabled || !!this.formField?.readonly());
+
     constructor() {
         this.destroyRef.onDestroy(() => this.mouseUp.complete());
     }
@@ -168,7 +175,7 @@ export class KbqStepper {
     ): void {
         const control = this.control();
 
-        if (control.disabled) return;
+        if (this.inactive()) return;
 
         const performStep = () => {
             step(control);

@@ -113,6 +113,7 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
     parentFormGroup: FormGroupDirective | null;
     readonly placeholder: WritableSignal<string | undefined>;
     readonly placeholderInput: _angular_core.InputSignal<string | undefined>;
+    readonly readonly: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     readonly required: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     get type(): string;
     readonly typeInput: _angular_core.InputSignal<string | undefined>;
@@ -124,7 +125,7 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
     readonly value: WritableSignal<string>;
     readonly valueInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqInput, "input[kbqInput],input[kbqNumberInput]", ["kbqInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "placeholderInput": { "alias": "placeholder"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "typeInput": { "alias": "type"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqInput, "input[kbqInput],input[kbqNumberInput]", ["kbqInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "placeholderInput": { "alias": "placeholder"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "typeInput": { "alias": "type"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInput, never>;
 }
@@ -185,6 +186,7 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
     parentFormGroup: FormGroupDirective | null;
     readonly placeholder: WritableSignal<string | undefined>;
     readonly placeholderInput: _angular_core.InputSignal<string | undefined>;
+    readonly readonly: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     readonly required: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     toggleType(): void;
     // (undocumented)
@@ -194,7 +196,7 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
     readonly value: WritableSignal<string>;
     readonly valueInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqInputPassword, "input[kbqInputPassword]", ["kbqInputPassword"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "placeholderInput": { "alias": "placeholder"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqInputPassword, "input[kbqInputPassword]", ["kbqInputPassword"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "placeholderInput": { "alias": "placeholder"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInputPassword, never>;
 }

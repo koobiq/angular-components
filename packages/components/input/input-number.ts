@@ -455,6 +455,8 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         if (event.shiftKey || isLetter) {
             event.preventDefault();
 
+            if (this.nativeElement.readOnly) return;
+
             // process steps
             const step = event.shiftKey ? this.bigStep() : this.step();
 
@@ -507,6 +509,9 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     }
 
     onPaste(event: ClipboardEvent) {
+        // The browser fires `paste` on a read-only input too, and the integer branch below writes the value itself.
+        if (this.nativeElement.readOnly) return;
+
         this.valueFromPaste = checkAndNormalizeLocalizedNumber(
             event.clipboardData?.getData('text'),
             this.localeService?.localeId()
