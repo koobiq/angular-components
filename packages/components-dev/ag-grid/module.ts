@@ -9,7 +9,7 @@ import {
     AgGridFilterStateExample,
     AgGridInfiniteSelectionExample,
     AgGridLoadErrorExample,
-    AgGridLoadErrorTextExample,
+    AgGridLoadTextExample,
     AgGridLoadingOverlayExample,
     AgGridLongCellContentExample,
     AgGridOverviewExample,
@@ -51,12 +51,12 @@ import { DevThemeToggle } from '../theme-toggle';
         AgGridAndContentPanelExample,
         AgGridLongCellContentExample,
         AgGridLoadErrorExample,
-        AgGridLoadErrorTextExample
+        AgGridLoadTextExample
     ],
     template: `
         <ag-grid-load-error-example />
         <hr />
-        <ag-grid-load-error-text-example />
+        <ag-grid-load-text-example />
         <hr />
         <ag-grid-settings-menu-example />
         <hr />
