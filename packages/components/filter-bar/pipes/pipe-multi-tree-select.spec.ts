@@ -13,6 +13,7 @@ import {
     KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
+    KbqSelectValue,
     KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -268,8 +269,9 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
                 const component = getPipeComponent();
 
                 // A user-made selection commits to `data.value` but does not refresh the pipe's internal
-                // selection snapshot, so reading the snapshot here would expand nothing.
-                component.data.value = ['value 2'];
+                // selection snapshot, so reading the snapshot here would expand nothing. The entries are
+                // raw node values at runtime, though the pipe types them as `KbqSelectValue`.
+                component.data.value = ['value 2' as unknown as KbqSelectValue];
                 component.onOpen();
 
                 const expanded = component.treeControl.expansionModel.selected;

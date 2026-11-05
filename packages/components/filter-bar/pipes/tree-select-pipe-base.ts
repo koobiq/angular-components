@@ -95,6 +95,8 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
      * Values of the currently selected nodes, in the shape `treeControl.compareValues` understands.
      * Read from the pipe's own state rather than the select's selection model: the select applies a
      * value written ahead of its data only once the options render, which is after `onOpen` fires.
+     *
+     * @internal
      */
     protected abstract getSelectedValues(): unknown[];
 
