@@ -46,6 +46,11 @@
     --docs-next-wide-width: 1120px;
 
     // Figma: Navbar - Mobile (65:16609), 48px buttons above a 1px line.
+    // Figma: NAvbar on a tablet (159:26981), two lines of 48px and the line under them.
+    @include breakpoints.docs-next-tablet {
+        --docs-next-header-height: 97px;
+    }
+
     @include breakpoints.docs-next-mobile {
         --docs-next-header-height: 49px;
     }

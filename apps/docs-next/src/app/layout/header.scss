@@ -31,29 +31,13 @@
 }
 
 .docs-next-header__version,
-.docs-next-header__framework,
-.docs-next-header__framework-button {
+.docs-next-header__framework {
     user-select: none;
 }
 
 // Tabular figures keep the width of the version, and the row next to it, steady when it changes.
 .docs-next-header__version {
     font-variant-numeric: tabular-nums;
-}
-
-// Only one of the two framework switches is shown, so a screen reader meets one as well.
-.docs-next-header__framework-button {
-    display: none;
-}
-
-@include breakpoints.docs-next-tablet {
-    .docs-next-header__frameworks {
-        display: none;
-    }
-
-    .docs-next-header__framework-button {
-        display: inline-flex;
-    }
 }
 
 .docs-next-header__framework,
@@ -165,6 +149,40 @@
 
 .docs-next-header__end {
     gap: var(--kbq-size-xxs);
+}
+
+// Figma: NAvbar on a tablet (159:26981). Two lines of 48px: the logo, the version, the frameworks and the search with
+// the switches on the first, the sections on the second under a line of their own. The sections start 8px in from the
+// edge, where the items have their own 12px.
+@include breakpoints.docs-next-tablet {
+    :host {
+        flex-wrap: wrap;
+        align-content: flex-start;
+        padding: 0;
+    }
+
+    .docs-next-header__start {
+        height: 48px;
+        padding-left: var(--kbq-size-l);
+    }
+
+    .docs-next-header__end {
+        height: 48px;
+        margin-left: auto;
+        padding-right: var(--kbq-size-m);
+    }
+
+    // The sections come before the end of the first line in the markup, and after it on the screen.
+    .docs-next-header__sections {
+        order: 1;
+        flex: 0 0 100%;
+        justify-content: flex-start;
+        height: 48px;
+        box-sizing: border-box;
+        margin: 0;
+        padding-left: var(--kbq-size-s);
+        border-top: 1px solid var(--kbq-line-contrast-less);
+    }
 }
 
 // Figma: Select Single Dropdown — versions (92:45036). Numbers in tabular figures, so the list reads as a column; the

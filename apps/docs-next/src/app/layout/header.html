@@ -26,18 +26,6 @@
             </a>
         }
     </nav>
-
-    <button
-        kbq-button
-        class="docs-next-header__framework-button"
-        color="contrast"
-        kbqStyle="transparent"
-        [attr.aria-label]="`${state.t('framework')} ${frameworkTitle(state.framework())}`"
-        [kbqDropdownTriggerFor]="frameworkDropdown"
-    >
-        {{ frameworkTitle(state.framework()) }}
-        <i kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
-    </button>
 </div>
 
 <nav
@@ -120,19 +108,6 @@
                 </span>
             }
         </button>
-    }
-</kbq-dropdown>
-
-<kbq-dropdown #frameworkDropdown="kbqDropdown">
-    @for (framework of frameworks; track framework.id) {
-        <a
-            kbq-dropdown-item
-            [class.kbq-selected]="framework.id === state.framework()"
-            [routerLink]="frameworkUrl(framework.id)"
-            (click)="onFrameworkClick(framework.id)"
-        >
-            {{ framework.title }}
-        </a>
     }
 </kbq-dropdown>
 

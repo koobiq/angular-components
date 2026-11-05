@@ -9,7 +9,6 @@ import { DOCS_NEXT_SECTIONS, DocsNextSection } from '../data/sections';
 import {
     DOCS_NEXT_FRAMEWORKS,
     DocsNextFramework,
-    docsNextFrameworkTitle,
     DocsNextI18nKey,
     DocsNextLocale,
     docsNextVersionShortTitle
@@ -76,7 +75,6 @@ export class DocsNextHeader {
     protected readonly groups = docsNextHeaderGroups(DOCS_NEXT_SECTIONS);
     private readonly groupIds = new Map(this.groups.flatMap(({ id, sections }) => sections.map((s) => [s.id, id])));
     protected readonly frameworks = DOCS_NEXT_FRAMEWORKS;
-    protected readonly frameworkTitle = docsNextFrameworkTitle;
     protected readonly shortTitle = docsNextVersionShortTitle;
     protected readonly locales: { id: DocsNextLocale; title: string }[] = [
         { id: 'ru', title: 'Русский' },

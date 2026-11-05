@@ -1,4 +1,5 @@
 @use '../../../../../packages/components/core/styles/common/tokens';
+@use '../../styles/breakpoints';
 
 // Only the button takes the height of the header; the dialog is laid out on its own.
 :host {
@@ -112,6 +113,13 @@
                 transition-delay: var(--docs-next-search-delay);
             }
         }
+    }
+}
+
+// Figma: Search Wrapper on a tablet (159:27127): the field is 240 wide, as there is room.
+@include breakpoints.docs-next-tablet {
+    .docs-next-search__button {
+        width: 240px;
     }
 }
 
