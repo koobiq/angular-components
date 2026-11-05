@@ -141,37 +141,44 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             </div>
         </div>
 
-        <div class="e2e__grid" data-testid="e2eInputReadonlyTable">
-            @for (focused of [false, true]; track $index) {
-                <div class="e2e__row">
-                    <div class="e2e__cell">
-                        <kbq-form-field [class.cdk-keyboard-focused]="focused" [class.cdk-focused]="focused">
-                            <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-                            <input kbqInput readonly placeholder="kbqInput" [ngModel]="inputValue()" />
-                            <i kbqSuffix kbq-icon="kbq-circle-info_16"></i>
-                        </kbq-form-field>
-                    </div>
+        <div>
+            <div class="e2e__grid" data-testid="e2eInputReadonlyTable">
+                @for (focused of [false, true]; track $index) {
+                    <div class="e2e__row">
+                        <div class="e2e__cell">
+                            <kbq-form-field [class.cdk-keyboard-focused]="focused" [class.cdk-focused]="focused">
+                                <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
+                                <input kbqInput readonly placeholder="kbqInput" [ngModel]="inputValue()" />
+                                <i kbqSuffix kbq-icon="kbq-circle-info_16"></i>
+                            </kbq-form-field>
+                        </div>
 
-                    <div class="e2e__cell">
-                        <kbq-form-field [class.cdk-keyboard-focused]="focused" [class.cdk-focused]="focused">
-                            <input kbqNumberInput readonly placeholder="NumberInput" [ngModel]="inputNumberValue()" />
-                            <kbq-stepper />
-                        </kbq-form-field>
-                    </div>
+                        <div class="e2e__cell">
+                            <kbq-form-field [class.cdk-keyboard-focused]="focused" [class.cdk-focused]="focused">
+                                <input
+                                    kbqNumberInput
+                                    readonly
+                                    placeholder="NumberInput"
+                                    [ngModel]="inputNumberValue()"
+                                />
+                                <kbq-stepper />
+                            </kbq-form-field>
+                        </div>
 
-                    <div class="e2e__cell">
-                        <kbq-form-field [class.cdk-keyboard-focused]="focused" [class.cdk-focused]="focused">
-                            <input
-                                kbqInputPassword
-                                readonly
-                                placeholder="kbqInputPassword"
-                                [ngModel]="inputMonoValue()"
-                            />
-                            <kbq-password-toggle />
-                        </kbq-form-field>
+                        <div class="e2e__cell">
+                            <kbq-form-field [class.cdk-keyboard-focused]="focused" [class.cdk-focused]="focused">
+                                <input
+                                    kbqInputPassword
+                                    readonly
+                                    placeholder="kbqInputPassword"
+                                    [ngModel]="inputMonoValue()"
+                                />
+                                <kbq-password-toggle />
+                            </kbq-form-field>
+                        </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
         </div>
 
         <!--
