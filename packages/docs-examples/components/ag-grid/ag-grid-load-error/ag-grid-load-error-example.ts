@@ -39,7 +39,6 @@ import {
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const PAGE_SIZE = 20;
-const FAILING_PAGE_START_ROW = PAGE_SIZE * 3;
 const PINNED_LEFT = ['ag-Grid-SelectionColumn', 'column0'];
 const PINNED_RIGHT = ['column4'];
 
@@ -138,7 +137,7 @@ export class AgGridLoadErrorExample {
     private readonly localeService = inject(KbqLocaleService);
     private readonly pageCache = new Map<number, (typeof ROW_DATA)[number][]>();
 
-    private failingPageAlreadyFailed = false;
+    private requestCount = 0;
 
     protected readonly pageSize = PAGE_SIZE;
     protected readonly initialRowCount = 7;
@@ -248,9 +247,10 @@ export class AgGridLoadErrorExample {
             return;
         }
 
+        const shouldFail = ++this.requestCount % 2 === 0;
+
         setTimeout(() => {
-            if (startRow === FAILING_PAGE_START_ROW && !this.failingPageAlreadyFailed) {
-                this.failingPageAlreadyFailed = true;
+            if (shouldFail) {
                 failCallback();
                 this.loadError().fail(startRow);
 
