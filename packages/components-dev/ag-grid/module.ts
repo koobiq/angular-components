@@ -9,6 +9,7 @@ import {
     AgGridFilterStateExample,
     AgGridInfiniteSelectionExample,
     AgGridLoadErrorExample,
+    AgGridLoadErrorTextExample,
     AgGridLoadingOverlayExample,
     AgGridLongCellContentExample,
     AgGridOverviewExample,
@@ -49,10 +50,13 @@ import { DevThemeToggle } from '../theme-toggle';
         AgGridAndActionsPanelExample,
         AgGridAndContentPanelExample,
         AgGridLongCellContentExample,
-        AgGridLoadErrorExample
+        AgGridLoadErrorExample,
+        AgGridLoadErrorTextExample
     ],
     template: `
         <ag-grid-load-error-example />
+        <hr />
+        <ag-grid-load-error-text-example />
         <hr />
         <ag-grid-settings-menu-example />
         <hr />

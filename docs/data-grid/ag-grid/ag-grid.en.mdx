@@ -221,9 +221,13 @@ If a portion fails to load, the `kbqAgGridLoadError` directive shows an error me
 - the message takes up the whole visible area of the grid, even with pinned columns;
 - if row dividers appear or the row height changes, the message adapts to the overall styling.
 
-To see these cases in the example, open the grid settings menu.
+To see these cases in the example, switch the options under the grid.
 
 <Example id="ag-grid-load-error" />
+
+If the grid has no skeletons, a text loading indicator can be shown while data is loading. It spans the whole row width, so the selection column does not shift its label.
+
+<Example id="ag-grid-load-error-text" />
 
 ### Row selection with infinite scrolling
 

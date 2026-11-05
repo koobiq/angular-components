@@ -1,27 +1,16 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    inject,
-    signal,
-    Signal,
-    viewChild,
-    WritableSignal
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, model, viewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
     KBQ_AG_GRID_LOAD_ERROR_LABELS_EN,
     KBQ_AG_GRID_LOAD_ERROR_LABELS_RU,
-    KBQ_AG_GRID_SETTINGS_MENU_LABELS_EN,
     KbqAgGridLoadError,
-    KbqAgGridSettingsMenuItem,
-    KbqAgGridSettingsMenuItems,
-    kbqAgGridSettingsMenuLabelsProvider,
     KbqAgGridSkeletonCellRenderer,
     KbqAgGridSkeletonSelectionCellComponent,
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqLocaleService } from '@koobiq/components/core';
-import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
+import { KbqToggleModule } from '@koobiq/components/toggle';
+import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
     ColDef,
@@ -29,7 +18,6 @@ import {
     ICellRendererParams,
     IDatasource,
     IGetRowsParams,
-    IsFullWidthRowParams,
     ModuleRegistry,
     RowSelectionOptions,
     RowStyle,
@@ -50,68 +38,35 @@ const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
     column4: 'Text ' + index
 }));
 
-type LoadingTextParams = ICellRendererParams & { label: Signal<string> };
-
-@Component({
-    selector: 'ag-grid-load-error-example-loading-text',
-    template: `
-        {{ label() }}
-    `,
-    styles: `
-        :host {
-            display: flex;
-            align-items: center;
-            height: 100%;
-            padding-left: calc(var(--ag-cell-horizontal-padding) + 1px);
-            color: var(--kbq-foreground-contrast-secondary);
-        }
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class AgGridLoadErrorExampleLoadingText implements ICellRendererAngularComp {
-    private readonly params = signal<LoadingTextParams | undefined>(undefined);
-
-    protected readonly label = computed(() => this.params()?.label() ?? '');
-
-    agInit(params: LoadingTextParams): void {
-        this.params.set(params);
-    }
-
-    refresh(params: LoadingTextParams): boolean {
-        this.params.set(params);
-
-        return true;
-    }
-}
-
 /**
  * @title AG Grid with a load error row
  */
 @Component({
     selector: 'ag-grid-load-error-example',
-    imports: [AgGridModule, KbqAgGridThemeModule],
+    imports: [AgGridModule, KbqAgGridThemeModule, KbqToggleModule, FormsModule],
     template: `
         <ag-grid-angular
             kbqAgGridTheme
             kbqAgGridThemeDisableCellFocusStyles
             kbqAgGridLoadError
-            kbqAgGridSettingsMenu
             rowModelType="infinite"
-            [kbqAgGridSettingsMenuItems]="settingsMenuItems"
             [kbqAgGridLoadErrorLabels]="labels()"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
             [datasource]="datasource"
             [rowSelection]="rowSelection"
             [selectionColumnDef]="selectionColumnDef"
-            [isFullWidthRow]="isFullWidthRow"
-            [fullWidthCellRenderer]="loadingTextRenderer"
-            [fullWidthCellRendererParams]="loadingTextParams"
             [rowStyle]="rowStyle()"
             [cacheBlockSize]="pageSize"
             [rowBuffer]="pageSize"
-            [infiniteInitialRowCount]="initialRowCount"
+            [infiniteInitialRowCount]="7"
+            (gridReady)="api = $event.api"
         />
+
+        <div class="layout-row layout-gap-xl">
+            <kbq-toggle [(ngModel)]="pinnedColumns" (ngModelChange)="applyPinned()">Pinned columns</kbq-toggle>
+            <kbq-toggle [(ngModel)]="rowDividers">Row dividers</kbq-toggle>
+        </div>
     `,
     styles: `
         :host {
@@ -125,13 +80,11 @@ export class AgGridLoadErrorExampleLoadingText implements ICellRendererAngularCo
             width: 100%;
         }
     `,
-    providers: [kbqAgGridSettingsMenuLabelsProvider(KBQ_AG_GRID_SETTINGS_MENU_LABELS_EN)],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridLoadErrorExample {
-    private readonly textInsteadOfSkeleton = signal(false);
-    private readonly pinnedColumns = signal(true);
-    private readonly rowDividers = signal(false);
+    protected readonly pinnedColumns = model(true);
+    protected readonly rowDividers = model(false);
 
     private readonly loadError = viewChild.required(KbqAgGridLoadError);
     private readonly localeService = inject(KbqLocaleService);
@@ -139,19 +92,12 @@ export class AgGridLoadErrorExample {
 
     private requestCount = 0;
 
+    protected api?: GridApi;
     protected readonly pageSize = PAGE_SIZE;
-    protected readonly initialRowCount = 7;
-    protected readonly loadingTextRenderer = AgGridLoadErrorExampleLoadingText;
 
     protected readonly labels = computed(() =>
         this.localeService.localeId() === 'ru-RU' ? KBQ_AG_GRID_LOAD_ERROR_LABELS_RU : KBQ_AG_GRID_LOAD_ERROR_LABELS_EN
     );
-
-    protected readonly loadingLabel = computed(() =>
-        this.localeService.localeId() === 'ru-RU' ? 'Загрузка...' : 'Loading...'
-    );
-
-    protected readonly loadingTextParams = { label: this.loadingLabel };
 
     protected readonly rowStyle = computed<RowStyle>(() =>
         this.rowDividers()
@@ -161,24 +107,6 @@ export class AgGridLoadErrorExample {
               }
             : { borderBottom: '', borderRadius: '' }
     );
-
-    protected readonly settingsMenuItems: KbqAgGridSettingsMenuItems = [
-        this.createSwitchItem('pinned-columns', 'Pinned columns', 'kbq-pin_16', this.pinnedColumns, (api, pinned) => {
-            api.setColumnsPinned(PINNED_LEFT, pinned ? 'left' : null);
-            api.setColumnsPinned(PINNED_RIGHT, pinned ? 'right' : null);
-        }),
-        this.createSwitchItem('row-dividers', 'Row dividers', 'kbq-bars-horizontal_16', this.rowDividers),
-        this.createSwitchItem(
-            'text-instead-of-skeleton',
-            'Text instead of skeleton',
-            'kbq-arrow-rotate-right_16',
-            this.textInsteadOfSkeleton,
-            (api) => api.redrawRows()
-        )
-    ];
-
-    protected readonly isFullWidthRow = ({ rowNode }: IsFullWidthRowParams): boolean =>
-        this.textInsteadOfSkeleton() && rowNode.data === undefined;
 
     protected readonly columnDefs: ColDef[] = [
         { field: 'column0', headerName: 'Text', width: 130, pinned: 'left' },
@@ -210,34 +138,14 @@ export class AgGridLoadErrorExample {
         getRows: (params: IGetRowsParams) => this.getRows(params)
     };
 
-    private createSwitchItem(
-        id: string,
-        label: string,
-        icon: string,
-        state: WritableSignal<boolean>,
-        onChange?: (api: GridApi, value: boolean) => void
-    ): KbqAgGridSettingsMenuItem {
-        return {
-            id,
-            label,
-            icon,
-            mode: 'single',
-            value: computed(() => (state() ? 'On' : 'Off')),
-            items: [true, false].map((value) => ({
-                id: `${id}-${value ? 'on' : 'off'}`,
-                label: value ? 'On' : 'Off',
-                checked: computed(() => state() === value),
-                keepOpen: true,
-                action: (api: GridApi) => {
-                    state.set(value);
-                    onChange?.(api, value);
-                }
-            }))
-        };
+    protected applyPinned(): void {
+        const pinned = this.pinnedColumns();
+
+        this.api?.setColumnsPinned(PINNED_LEFT, pinned ? 'left' : null);
+        this.api?.setColumnsPinned(PINNED_RIGHT, pinned ? 'right' : null);
     }
 
-    private getRows(params: IGetRowsParams): void {
-        const { startRow, endRow, successCallback, failCallback } = params;
+    private getRows({ startRow, endRow, successCallback, failCallback }: IGetRowsParams): void {
         const lastRow = endRow >= ROW_DATA.length ? ROW_DATA.length : -1;
         const cached = this.pageCache.get(startRow);
 

@@ -7,6 +7,7 @@ import { AgGridExportExample } from './ag-grid-export/ag-grid-export-example';
 import { AgGridExternalFilterStateExample } from './ag-grid-external-filter-state/ag-grid-external-filter-state-example';
 import { AgGridFilterStateExample } from './ag-grid-filter-state/ag-grid-filter-state-example';
 import { AgGridInfiniteSelectionExample } from './ag-grid-infinite-selection/ag-grid-infinite-selection-example';
+import { AgGridLoadErrorTextExample } from './ag-grid-load-error-text/ag-grid-load-error-text-example';
 import { AgGridLoadErrorExample } from './ag-grid-load-error/ag-grid-load-error-example';
 import { AgGridLoadingOverlayExample } from './ag-grid-loading-overlay/ag-grid-loading-overlay-example';
 import { AgGridLongCellContentExample } from './ag-grid-long-cell-content/ag-grid-long-cell-content-example';
@@ -32,6 +33,7 @@ export {
     AgGridFilterStateExample,
     AgGridInfiniteSelectionExample,
     AgGridLoadErrorExample,
+    AgGridLoadErrorTextExample,
     AgGridLoadingOverlayExample,
     AgGridLongCellContentExample,
     AgGridOverviewExample,
@@ -69,7 +71,8 @@ const EXAMPLES = [
     AgGridAndContentPanelExample,
     AgGridLongCellContentExample,
     AgGridRowDetailExample,
-    AgGridLoadErrorExample
+    AgGridLoadErrorExample,
+    AgGridLoadErrorTextExample
 ];
 
 @NgModule({
