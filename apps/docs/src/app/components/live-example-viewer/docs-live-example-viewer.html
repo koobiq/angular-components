@@ -8,9 +8,7 @@
             <ng-template [ngComponentOutlet]="exampleComponentType" />
         } @else if (isLoading()) {
             @if (isDataGridExample()) {
-                <div class="ag-theme-koobiq docs-live-example__skeleton docs-live-example__skeleton_grid">
-                    <kbq-ag-grid-loading-overlay />
-                </div>
+                <kbq-skeleton-table class="docs-live-example__skeleton" selectable [columns]="5" [rows]="6" />
             } @else {
                 <kbq-skeleton class="docs-live-example__skeleton" />
             }

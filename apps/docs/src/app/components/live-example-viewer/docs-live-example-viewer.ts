@@ -15,7 +15,6 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqAgGridLoadingOverlayComponent, kbqAgGridLoadingOverlayConfigProvider } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { kbqInjectNativeElement, KbqStateSavingService } from '@koobiq/components/core';
@@ -23,7 +22,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
-import { KbqSkeleton } from '@koobiq/components/skeleton';
+import { KbqSkeleton, KbqSkeletonTable } from '@koobiq/components/skeleton';
 import { KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { EXAMPLE_COMPONENTS } from '@koobiq/docs-examples';
@@ -66,13 +65,10 @@ const DATA_GRID_EXAMPLES_IMPORT_PATH = 'components/ag-grid';
         KbqToolTipModule,
         KbqIconModule,
         KbqSkeleton,
-        KbqAgGridLoadingOverlayComponent
+        KbqSkeletonTable
     ],
     templateUrl: './docs-live-example-viewer.html',
     styleUrls: ['./docs-live-example-viewer.scss'],
-    providers: [
-        kbqAgGridLoadingOverlayConfigProvider({ cols: 3, rows: 6, firstColWidth: '148px' })
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
