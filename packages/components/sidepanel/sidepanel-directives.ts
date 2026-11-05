@@ -21,6 +21,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KbqSidepanelRef } from './sidepanel-ref';
+import { KbqSidepanelService } from './sidepanel.service';
 
 /**
  * Button that will close the current sidepanel.
@@ -34,10 +35,11 @@ import { KbqSidepanelRef } from './sidepanel-ref';
     }
 })
 export class KbqSidepanelClose {
-    // `CdkPortalOutlet.attachTemplatePortal()` forwards the portal injector to the embedded view, so the
-    // ref is reachable from a `<ng-template>` sidepanel as well as from a component one.
-    readonly sidepanelRef = inject(KbqSidepanelRef);
-
+    // Dependency injection follows where a template is declared, not where it is rendered: a template declared
+    // outside the sidepanel and shown in it through `ngTemplateOutlet` has no ref here, or the ref of another
+    // sidepanel when it was declared in that one.
+    private readonly declaredSidepanelRef = inject(KbqSidepanelRef, { optional: true });
+    private readonly sidepanelService = inject(KbqSidepanelService);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
 
@@ -46,6 +48,22 @@ export class KbqSidepanelClose {
 
     /** The same value, under the camel-case spelling. */
     readonly kbqSidepanelClose = input<any>();
+
+    /**
+     * Sidepanel the button closes: the one it is rendered in. A button rendered outside any sidepanel, such as
+     * an item of a dropdown opened from one, closes the sidepanel its template is declared in.
+     */
+    get sidepanelRef(): KbqSidepanelRef {
+        const container = this.elementRef.nativeElement.closest('.kbq-sidepanel-container');
+        const renderedIn = container && this.sidepanelService.openedSidepanels.find(({ id }) => id === container.id);
+        const sidepanelRef = renderedIn ?? this.declaredSidepanelRef;
+
+        if (!sidepanelRef) {
+            throw Error('kbqSidepanelClose: the button is neither rendered nor declared inside a sidepanel.');
+        }
+
+        return sidepanelRef;
+    }
 
     constructor() {
         afterNextRender(() => {

@@ -60,8 +60,7 @@ export class KbqSidepanelBody {
 export class KbqSidepanelClose {
     constructor();
     readonly kbqSidepanelClose: i0.InputSignal<any>;
-    // (undocumented)
-    readonly sidepanelRef: KbqSidepanelRef<any, any>;
+    get sidepanelRef(): KbqSidepanelRef;
     readonly sidepanelResult: i0.InputSignal<any>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelClose, "button[kbq-sidepanel-close], button[kbqSidepanelClose]", never, { "sidepanelResult": { "alias": "kbq-sidepanel-close"; "required": false; "isSignal": true; }; "kbqSidepanelClose": { "alias": "kbqSidepanelClose"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
