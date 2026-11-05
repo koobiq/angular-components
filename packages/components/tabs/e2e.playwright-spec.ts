@@ -178,6 +178,52 @@ test.describe('KbqTabsModule', () => {
         });
     });
 
+    test.describe('E2eTabsVerticalScrollMask', () => {
+        const getStrip = (page: Page, testId: string) => page.getByTestId(testId).locator(TAB_SCROLLPORT_SELECTOR);
+
+        const scrollStrip = (page: Page, testId: string, to: 'middle' | 'end') =>
+            getStrip(page, testId).evaluate((strip, position) => {
+                const max = strip.scrollHeight - strip.clientHeight;
+
+                strip.scrollTop = position === 'end' ? max : Math.round(max / 2);
+            }, to);
+
+        test('fades out each edge a vertical strip is scrolled away from', async ({ page }) => {
+            await page.goto('/E2eTabsVerticalScrollMask');
+            await e2eWaitForFonts(page);
+
+            await scrollStrip(page, 'e2eTabsScrollMaskBoth', 'middle');
+            await scrollStrip(page, 'e2eTabsScrollMaskBefore', 'end');
+            await scrollStrip(page, 'e2eTabNavBarScrollMaskRtl', 'middle');
+
+            const before = /kbq-tab-header__scroll-container_overflow-before/;
+            const after = /kbq-tab-header__scroll-container_overflow-after/;
+
+            await expect(getStrip(page, 'e2eTabsScrollMaskAfter')).not.toHaveClass(before);
+            await expect(getStrip(page, 'e2eTabsScrollMaskAfter')).toHaveClass(after);
+            await expect(getStrip(page, 'e2eTabsScrollMaskBoth')).toHaveClass(before);
+            await expect(getStrip(page, 'e2eTabsScrollMaskBoth')).toHaveClass(after);
+            await expect(getStrip(page, 'e2eTabsScrollMaskBefore')).toHaveClass(before);
+            await expect(getStrip(page, 'e2eTabsScrollMaskBefore')).not.toHaveClass(after);
+            await expect(getStrip(page, 'e2eTabNavBarScrollMaskRtl')).toHaveClass(before);
+            await expect(getStrip(page, 'e2eTabNavBarScrollMaskRtl')).toHaveClass(after);
+
+            const component = page.getByTestId('e2eTabsVerticalScrollMask');
+            const viewport = page.viewportSize()!;
+
+            // Off the scenario: the pointer rests on the first group's first tab otherwise.
+            await page.mouse.move(viewport.width - 1, viewport.height - 1);
+
+            // A track in each of the 3 × 10 tab bodies and in the 4 vertical strips, which the scrolls above
+            // revealed.
+            await e2eWaitForSettledScrollbars(component, 34);
+
+            await expect(component).toHaveScreenshot('02-vertical-scroll-mask-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(component).toHaveScreenshot('02-vertical-scroll-mask-dark.png');
+        });
+    });
+
     test.describe('E2eTabNavBar', () => {
         test('should make disabled links unclickable', async ({ page }) => {
             await page.goto('/E2eTabNavBar');

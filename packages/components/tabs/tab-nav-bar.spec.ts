@@ -295,6 +295,48 @@ describe(KbqTabNavBar.name, () => {
 
             expect(scrollbarMode(fixture)).toBe('hidden');
         });
+
+        it('should fade out each edge the strip is scrolled away from along the block axis', async () => {
+            const fixture = TestBed.createComponent(TabNavBarWithPanel);
+
+            fixture.componentInstance.vertical = true;
+            fixture.detectChanges();
+
+            const navBar = fixture.debugElement.query(By.directive(KbqTabNavBar)).componentInstance as KbqTabNavBar;
+            const container = navBar.tabListContainer.nativeElement;
+            const masks = (): boolean[] => [
+                container.classList.contains('kbq-tab-header__scroll-container_overflow-before'),
+                container.classList.contains('kbq-tab-header__scroll-container_overflow-after')
+            ];
+            const scrollTo = async (scrollTop: number): Promise<void> => {
+                container.scrollTop = scrollTop;
+                container.dispatchEvent(new Event('scroll'));
+                await vi.advanceTimersByTimeAsync(SCROLL_CD_THROTTLE);
+                fixture.detectChanges();
+            };
+
+            Object.defineProperty(container, 'scrollHeight', { configurable: true, value: 400 });
+            Object.defineProperty(container, 'clientHeight', { configurable: true, value: 100 });
+            navBar.updatePagination();
+            fixture.detectChanges();
+
+            expect(masks()).toEqual([false, true]);
+
+            vi.useFakeTimers();
+
+            try {
+                await scrollTo(150);
+
+                expect(masks()).toEqual([true, true]);
+
+                // scrollHeight(400) - clientHeight(100) = 300, the largest scrollTop a real browser allows.
+                await scrollTo(300);
+
+                expect(masks()).toEqual([true, false]);
+            } finally {
+                vi.useRealTimers();
+            }
+        });
     });
 
     describe('disablePagination', () => {

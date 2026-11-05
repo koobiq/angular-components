@@ -398,3 +398,53 @@ export class E2eTabsScrollbarFlash {
     protected readonly manyTabs: string[] = Array.from({ length: 12 }, (_, index) => `Tab ${index + 1}`);
     protected readonly fewTabs: string[] = ['Tab 1', 'Tab 2', 'Tab 3'];
 }
+
+@Component({
+    selector: 'e2e-tabs-vertical-scroll-mask',
+    imports: [KbqTabsModule],
+    template: `
+        @for (testid of groups; track testid) {
+            <kbq-tab-group vertical class="e2e-tabs-vertical-scroll-mask" [attr.data-testid]="testid">
+                @for (tab of tabs; track tab) {
+                    <kbq-tab [tabId]="tab" [label]="tab">{{ tab }}</kbq-tab>
+                }
+            </kbq-tab-group>
+        }
+
+        <nav
+            kbqTabNavBar
+            vertical
+            dir="rtl"
+            class="e2e-tabs-vertical-scroll-mask"
+            data-testid="e2eTabNavBarScrollMaskRtl"
+            [tabNavPanel]="tabNavPanel"
+        >
+            @for (tab of tabs; track tab) {
+                <a kbqTabLink [active]="$first">{{ tab }}</a>
+            }
+        </nav>
+        <div #tabNavPanel="kbqTabNavPanel" kbqTabNavPanel></div>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            gap: var(--kbq-size-l);
+            padding: var(--kbq-size-m);
+        }
+
+        /* The strip only scrolls against a height cap, and a vertical group's height is its own. */
+        .e2e-tabs-vertical-scroll-mask {
+            width: 160px;
+            height: 160px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTabsVerticalScrollMask'
+    }
+})
+export class E2eTabsVerticalScrollMask {
+    // The spec scrolls each strip to the edge its name says is faded out.
+    protected readonly groups = ['e2eTabsScrollMaskAfter', 'e2eTabsScrollMaskBoth', 'e2eTabsScrollMaskBefore'];
+    protected readonly tabs: string[] = Array.from({ length: 10 }, (_, index) => `Tab ${index + 1}`);
+}
