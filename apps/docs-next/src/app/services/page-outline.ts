@@ -48,6 +48,8 @@ export class DocsNextPageOutline {
     });
 
     private container: HTMLElement | null = null;
+    /** The item pressed in the contents, while the page is still scrolling to its heading. */
+    private lockedId: string | null = null;
     private readonly observer = new MutationObserver(() => this.collect());
     private readonly onScroll = (): void => {
         this.updateActive();
@@ -67,6 +69,7 @@ export class DocsNextPageOutline {
             this.observer.disconnect();
             this.window.removeEventListener('scroll', this.onScroll);
             this.container = null;
+            this.lockedId = null;
             this.items.set([]);
             this.activeId.set(null);
             this.progress.set(0);
@@ -77,10 +80,15 @@ export class DocsNextPageOutline {
         this.document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         this.replaceHash(id);
         this.activeId.set(id);
-        this.highlight.highlightAfterScroll(id);
+        // The item that was pressed stays the open one while the page goes there: the headings it passes on the way are
+        // not "where the reader is", and lighting them one after another makes the contents flicker.
+        this.lockedId = id;
+        this.highlight.highlightAfterScroll(id, () => (this.lockedId = null));
     }
 
     private updateActive(): void {
+        if (this.lockedId) return;
+
         const items = this.items();
         // The heading the reader is at: the last one above the line under the header.
         const line =

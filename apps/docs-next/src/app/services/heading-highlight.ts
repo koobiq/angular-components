@@ -37,20 +37,26 @@ export class DocsNextHeadingHighlight {
 
     /**
      * Lights the heading once the page has got there: the fill would otherwise fade while the smooth scroll is still on
-     * its way, and the reader would arrive at a heading that has already gone out.
+     * its way, and the reader would arrive at a heading that has already gone out. `done` is called when the scroll is
+     * over, and not at all if another call takes its place first.
      */
-    highlightAfterScroll(id: string): void {
+    highlightAfterScroll(id: string, done?: () => void): void {
         const heading = this.document.getElementById(id);
 
         this.cancelScrollWait?.();
 
-        if (!heading) return;
+        if (!heading) {
+            done?.();
+
+            return;
+        }
 
         const target = parseFloat(this.window.getComputedStyle(this.document.documentElement).scrollPaddingTop) || 0;
 
         // Nothing to scroll: the heading is there already, and no `scrollend` would come.
         if (Math.abs(heading.getBoundingClientRect().top - target) < 1) {
             this.highlight(id);
+            done?.();
 
             return;
         }
@@ -65,6 +71,7 @@ export class DocsNextHeadingHighlight {
         const light = (): void => {
             cancel();
             this.highlight(id);
+            done?.();
         };
         // `scrollend` is the end of the scroll; a browser without it is judged by the scroll going quiet.
         const wait = (): void => {
