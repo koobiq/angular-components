@@ -623,6 +623,12 @@ export class KbqPopoverTrigger
     /** Input (`kbqPopoverArrow`) — renders the arrow pointing at the trigger. */
     arrow: boolean = true;
 
+    /**
+     * Input (`kbqPopoverArrowCentered`) — centers the arrow on the trigger while preserving the panel placement.
+     * Defaults to `false`.
+     */
+    override arrowCentered = false;
+
     /** Input (`kbqPopoverOffset`) — distance between the trigger and the panel, in pixels. */
     offset: number | null = defaultOffsetYWithArrow;
 
@@ -822,6 +828,12 @@ export class KbqPopoverTrigger
     });
 
     /** @docs-private */
+    readonly arrowCenteredInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqPopoverArrowCentered',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
     readonly offsetInput = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'kbqPopoverOffset',
         transform: kbqOptionalNumberAttribute
@@ -961,6 +973,11 @@ export class KbqPopoverTrigger
             if (arrow !== undefined) this.arrow = arrow;
         }
 
+        if (changes['arrowCenteredInput']) {
+            this.arrowCentered = this.arrowCenteredInput() ?? false;
+            this.updateData();
+        }
+
         if (changes['offsetInput']) {
             this.offset = this.offsetInput() ?? defaultOffsetYWithArrow;
         }
@@ -1095,6 +1112,7 @@ export class KbqPopoverTrigger
         // `setStickPosition` drops the arrow because a stuck panel no longer points at its trigger; copying
         // the input back would resurrect a detached rotated square on the next update.
         this.instance.arrow = this.stickToWindow ? false : this.arrow;
+        this.instance.arrowCentered = this.arrowCentered;
         this.instance.offset = this.offset;
         this.instance.footer = this.footer;
         this.instance.hasCloseButton = this.hasCloseButton;
