@@ -160,6 +160,9 @@ export class KbqSelectChange {
 
 /** Options for the `kbq-select` that can be configured using the `KBQ_SELECT_OPTIONS` injection token. */
 export type KbqSelectOptions = Partial<{
+    /** Whether option text wraps onto multiple lines. Defaults to `false`. */
+    multilineOptions: boolean;
+
     /**
      * Width of the panel. If set to `auto`, the panel will match the trigger width.
      * If set to null or an empty string, the panel will grow to match the longest option's text.
@@ -589,6 +592,12 @@ export class KbqSelect
      * When true, allows multiple lines of text in the selected value display.
      */
     readonly multiline = input<boolean, unknown>(false, { transform: booleanAttribute });
+
+    /** Whether option text wraps onto multiple lines. Defaults to `false`. */
+    readonly multilineOptions = input<boolean, boolean | string | null | undefined>(
+        this.defaultOptions?.multilineOptions ?? false,
+        { transform: booleanAttribute }
+    );
 
     /**
      * Controls when the search functionality is displayed based on the number of available options.
@@ -1566,7 +1575,11 @@ export class KbqSelect
             this.overlayOrigin = this.parentFormField.getConnectedOverlayOrigin();
         }
 
-        this.updateOverlayWidth(this.panelWidth(), this.panelMinWidth(), this.overlayOrigin ?? this.elementRef);
+        this.updateOverlayWidth(
+            this.panelWidth() ?? (this.multilineOptions() ? 'auto' : null),
+            this.panelMinWidth(),
+            this.overlayOrigin ?? this.elementRef
+        );
 
         this.panelOpen = true;
 
@@ -1779,13 +1792,20 @@ export class KbqSelect
     }
 
     /**
-     * Returns the full set of classes for the panel: base class, theme and custom `panelClass`.
+     * Returns the full set of classes for the panel: base class, multiline modifier, theme and custom `panelClass`.
      *
-     * Only the theme is read per change detection — it comes from the form field, which does not expose
-     * its color as a signal — while the `panelClass` expansion is memoised.
+     * The theme comes from the form field, which does not expose its color as a signal, while the `panelClass`
+     * expansion is memoised.
      */
     protected getPanelClasses(): string {
-        return ['kbq-select__panel', this.getPanelTheme(), this.customPanelClasses()].filter(Boolean).join(' ');
+        return [
+            'kbq-select__panel',
+            this.multilineOptions() ? 'kbq-select__panel_multiline' : '',
+            this.getPanelTheme(),
+            this.customPanelClasses()
+        ]
+            .filter(Boolean)
+            .join(' ');
     }
 
     /** Focuses the select element. */
