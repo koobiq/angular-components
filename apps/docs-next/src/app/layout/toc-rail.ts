@@ -18,56 +18,62 @@ const CLOSE_DELAY = 300;
 /**
  * "On this page" on a tablet: a rail of ticks, one for each heading of the article with the one the reader is at
  * marked, and a panel with the list of the headings that the rail opens. The rail opens it by a press (a click, a tap,
- * Enter or Space) and, for a mouse, by pointing at it too. The panel stands right after the button, so Tab goes from the
- * one into the other; Escape closes it and gives the focus back to the button.
+ * Enter or Space) and, for a mouse, by pointing at it too. The panel hangs under the button, so a press reaches the
+ * button while the list is open; Tab goes from the one into the other, Escape closes it and gives the focus back to
+ * the button.
  */
 @Component({
     selector: 'docs-next-toc-rail',
     template: `
-        <nav class="docs-next-toc-rail" [attr.aria-label]="state.t('onThisPage')">
-            <button
-                #trigger
-                aria-controls="docs-next-toc-rail-panel"
-                class="docs-next-toc-rail__trigger"
-                type="button"
-                [attr.aria-expanded]="open()"
-                [attr.aria-label]="state.t('onThisPage')"
-                [style.--docs-next-toc-rail-count]="outline.links().length"
-                (click)="toggle($event)"
-            >
-                <span aria-hidden="true" class="docs-next-toc-rail__ticks">
-                    @for (item of outline.links(); track item.id) {
-                        <span
-                            class="docs-next-toc-rail__tick"
-                            [class.docs-next-toc-rail__tick_active]="item.id === outline.activeId()"
-                            [class.docs-next-toc-rail__tick_nested]="item.level > 0"
-                        ></span>
-                    }
-                </span>
-            </button>
+        <nav
+            class="docs-next-toc-rail"
+            [attr.aria-label]="state.t('onThisPage')"
+            [style.--docs-next-toc-rail-count]="outline.links().length"
+        >
+            <div class="docs-next-toc-rail__anchor">
+                <button
+                    #trigger
+                    aria-controls="docs-next-toc-rail-panel"
+                    class="docs-next-toc-rail__trigger"
+                    type="button"
+                    [attr.aria-expanded]="open()"
+                    [attr.aria-label]="state.t('onThisPage')"
+                    (click)="toggle($event)"
+                >
+                    <span aria-hidden="true" class="docs-next-toc-rail__ticks">
+                        @for (item of outline.links(); track item.id) {
+                            <span
+                                class="docs-next-toc-rail__tick"
+                                [class.docs-next-toc-rail__tick_active]="item.id === outline.activeId()"
+                                [class.docs-next-toc-rail__tick_nested]="item.level > 0"
+                            ></span>
+                        }
+                    </span>
+                </button>
 
-            <div
-                #panel
-                class="docs-next-toc-rail__panel"
-                id="docs-next-toc-rail-panel"
-                [class.docs-next-toc-rail__panel_open]="open()"
-                [inert]="!open()"
-            >
-                <ul class="docs-next-toc-rail__list">
-                    @for (item of outline.links(); track item.id) {
-                        <li>
-                            <a
-                                class="docs-next-toc-rail__item"
-                                [attr.aria-current]="item.id === outline.activeId() ? 'location' : null"
-                                [class.docs-next-toc-rail__item_nested]="item.level > 0"
-                                [href]="item.href"
-                                (click)="go($event, item.id)"
-                            >
-                                {{ item.title }}
-                            </a>
-                        </li>
-                    }
-                </ul>
+                <div
+                    #panel
+                    class="docs-next-toc-rail__panel"
+                    id="docs-next-toc-rail-panel"
+                    [class.docs-next-toc-rail__panel_open]="open()"
+                    [inert]="!open()"
+                >
+                    <ul class="docs-next-toc-rail__list">
+                        @for (item of outline.links(); track item.id) {
+                            <li>
+                                <a
+                                    class="docs-next-toc-rail__item"
+                                    [attr.aria-current]="item.id === outline.activeId() ? 'location' : null"
+                                    [class.docs-next-toc-rail__item_nested]="item.level > 0"
+                                    [href]="item.href"
+                                    (click)="go($event, item.id)"
+                                >
+                                    {{ item.title }}
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
         </nav>
     `,

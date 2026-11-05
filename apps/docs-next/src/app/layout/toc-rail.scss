@@ -10,8 +10,21 @@
 }
 
 .docs-next-toc-rail {
+    // The height of the button: twelve pixels for a tick, held to what fits under the header, so that the ticks spread
+    // over it, and no less than a press needs.
+    --docs-next-toc-rail-height: max(
+        32px,
+        min(calc(var(--docs-next-toc-rail-count) * 12px + 16px), calc(100vh - var(--docs-next-header-height) - 96px))
+    );
+    // The room the button leaves above itself, so that its ticks start level with the title of the article.
+    --docs-next-toc-rail-top: 48px;
+
+    padding-top: var(--docs-next-toc-rail-top);
+}
+
+// The button and its panel, so that the panel hangs under the button whatever its height.
+.docs-next-toc-rail__anchor {
     position: relative;
-    padding-top: 48px;
 }
 
 // The button is the target: 40px wide and as high as its ticks, so each tick needs no target of its own.
@@ -19,12 +32,7 @@
     display: flex;
     box-sizing: border-box;
     width: var(--docs-next-toc-rail-width);
-    // Twelve pixels for a tick, held to what fits under the header, with the ticks spread over it.
-    height: min(
-        calc(var(--docs-next-toc-rail-count) * 12px + 16px),
-        calc(100vh - var(--docs-next-header-height) - 96px)
-    );
-    min-height: 32px;
+    height: var(--docs-next-toc-rail-height);
     padding: var(--kbq-size-s) var(--kbq-size-m) var(--kbq-size-s) 0;
     border: none;
     border-radius: var(--kbq-size-s);
@@ -67,20 +75,29 @@
     }
 }
 
-// The panel opens over the rail, with its right edges on the rail's, and spreads to the left over the text. It is part of
-// the rail's own element, so the pointer does not leave the two on its way into it. It is as high as its list.
+// The panel hangs under the rail, with its right edges on the rail's, and spreads to the left over the text. It is part
+// of the rail's own element, so the pointer does not leave the two on its way into it. It never covers the button, so a
+// press still reaches it, and it stops at the bottom of the window: the list scrolls inside it.
 .docs-next-toc-rail__panel {
+    // The room left under the button, down to the bottom of the window.
+    --docs-next-toc-rail-room: calc(
+        100vh - var(--docs-next-header-height) - var(--docs-next-toc-rail-top) - var(--docs-next-toc-rail-height)
+    );
+
     position: absolute;
-    top: 40px;
+    top: calc(100% + var(--kbq-size-xxs));
     right: 0;
     z-index: 1;
     box-sizing: border-box;
     width: min(260px, calc(100vw - var(--docs-next-aside-width) - 96px));
+    max-height: calc(var(--docs-next-toc-rail-room) - var(--kbq-size-xxs) - var(--kbq-size-l));
     padding: var(--kbq-size-xs);
     border: 1px solid var(--kbq-line-contrast-less);
     border-radius: var(--kbq-size-m);
     background: var(--kbq-background-card);
     box-shadow: var(--kbq-shadow-popup);
+    overflow-y: auto;
+    overscroll-behavior: contain;
     opacity: 0;
     transform: scale(0.96);
     transform-origin: top right;
