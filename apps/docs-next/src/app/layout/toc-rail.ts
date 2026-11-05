@@ -105,11 +105,18 @@ export class DocsNextTocRail {
 
     /** A press from the keyboard (a click with no pointer behind it) moves the focus into the list, as a mouse need not. */
     protected toggle(event: MouseEvent): void {
+        // A panel the pointer has just opened is pinned by the press: closing it here would close what the pointer
+        // opened, and the panel could not be opened again until the pointer left the rail and came back.
+        if (this.openedByHover) {
+            this.openedByHover = false;
+
+            return;
+        }
+
         if (this.open()) {
             this.close();
         } else {
             this.show(event.detail === 0);
-            this.openedByHover = false;
         }
     }
 
@@ -176,7 +183,8 @@ export class DocsNextTocRail {
                 this.show();
                 this.openedByHover = true;
             }
-        } else {
+        } else if (this.openedByHover) {
+            // A panel a press has pinned stays open, as a menu does; the one the pointer opened goes with the pointer.
             this.closeTimer = setTimeout(() => this.close(), CLOSE_DELAY);
         }
     }
