@@ -79,7 +79,11 @@ export class DocsStackblitzButtonComponent {
         if (!preparing) return;
 
         this.isOpening.set(true);
-        preparing.then((open) => open()).finally(() => this.isOpening.set(false));
+        preparing
+            .then((open) => open())
+            // The failed build is evicted as well, so the link is active again and the next click retries.
+            .catch(() => undefined)
+            .finally(() => this.isOpening.set(false));
     }
 
     private prepare(): Promise<() => void> | undefined {

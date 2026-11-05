@@ -84,6 +84,26 @@ describe(DocsStackblitzButtonComponent.name, () => {
         expect(link().hasAttribute('aria-disabled')).toBe(false);
     });
 
+    it('makes the link active again after the click failed to load the files, so the next click retries', async () => {
+        createStackBlitzForExample.mockReturnValueOnce(Promise.reject(new Error('offline')));
+
+        link().click();
+        fixture.detectChanges();
+
+        expect(link().getAttribute('aria-disabled')).toBe('true');
+
+        await vi.waitFor(() => {
+            fixture.detectChanges();
+            expect(link().hasAttribute('aria-disabled')).toBe(false);
+        });
+
+        link().click();
+        resolveProject(open);
+        await vi.waitFor(() => expect(open).toHaveBeenCalled());
+
+        expect(createStackBlitzForExample).toHaveBeenCalledTimes(2);
+    });
+
     it('loads the files again on the click after the hover failed to load them', async () => {
         createStackBlitzForExample.mockReturnValueOnce(Promise.reject(new Error('offline')));
 
