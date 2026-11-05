@@ -5,7 +5,6 @@ import {
     KbqAgGridSkeletonCellRenderer,
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
-import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { AgGridModule } from 'ag-grid-angular';
 import {
@@ -33,12 +32,9 @@ const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
  */
 @Component({
     selector: 'ag-grid-loading-overlay-example',
-    imports: [AgGridModule, KbqAgGridThemeModule, FormsModule, KbqToggleModule, KbqButtonModule],
+    imports: [AgGridModule, KbqAgGridThemeModule, FormsModule, KbqToggleModule],
     template: `
-        <div class="layout-row layout-align-start-center layout-gap-xl">
-            <kbq-toggle [(ngModel)]="loading">Show loading overlay</kbq-toggle>
-            <button kbq-button (click)="loadData()">Load data</button>
-        </div>
+        <kbq-toggle [(ngModel)]="loading" (ngModelChange)="onLoadingChange($event)">Show loading overlay</kbq-toggle>
 
         <ag-grid-angular
             kbqAgGridTheme
@@ -61,6 +57,7 @@ const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
         :host {
             display: flex;
             flex-direction: column;
+            align-items: center;
             gap: var(--kbq-size-xl);
         }
 
@@ -90,8 +87,11 @@ export class AgGridLoadingOverlayExample {
             data === undefined ? { component: KbqAgGridSkeletonCellRenderer } : undefined
     };
 
-    protected loadData(): void {
-        this.loading.set(false);
+    protected onLoadingChange(loading: boolean): void {
+        if (loading || this.datasource()) {
+            return;
+        }
+
         this.datasource.set({
             getRows: ({ startRow, endRow, successCallback }: IGetRowsParams) => {
                 setTimeout(() => successCallback(ROW_DATA.slice(startRow, endRow), ROW_DATA.length), 1500);
