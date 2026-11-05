@@ -2086,6 +2086,24 @@ class SelectWithMultilineOptions {
 }
 
 @Component({
+    imports: [KbqSelectModule, ScrollingModule],
+    template: `
+        <kbq-form-field style="width: 300px">
+            <kbq-select multilineOptions>
+                <cdk-virtual-scroll-viewport itemSize="32">
+                    <kbq-option *cdkVirtualFor="let option of options" [value]="option">
+                        {{ option }}
+                    </kbq-option>
+                </cdk-virtual-scroll-viewport>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithMultilineOptionsAndVirtualScroll {
+    readonly options = ['option1', 'option2'];
+}
+
+@Component({
     imports: [KbqSelectModule],
     template: `
         <kbq-form-field style="width: 300px">
@@ -8266,6 +8284,37 @@ describe('KbqSelect', () => {
                 return panelOverlayContainerElement.querySelector('.kbq-select__panel') as HTMLElement;
             }
 
+            function getPane(): HTMLElement {
+                return panelOverlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+            }
+
+            function mockTriggerWidth<T>(fixture: ComponentFixture<T>): MockInstance {
+                const connectionContainer = fixture.debugElement.query(By.css('.kbq-form-field__container'))
+                    .nativeElement as HTMLElement;
+
+                return vi.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({
+                    width: 300,
+                    height: 40,
+                    top: 0,
+                    left: 0,
+                    right: 300,
+                    bottom: 40,
+                    x: 0,
+                    y: 0,
+                    toJSON: () => {}
+                } as DOMRect);
+            }
+
+            async function setMultilineOptions(
+                fixture: ComponentFixture<SelectWithMultilineOptions>,
+                value: boolean
+            ): Promise<void> {
+                fixture.componentInstance.multilineOptions = value;
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+            }
+
             it('should not add the panel modifier by default', () => {
                 const fixture = createPanelWidthComponent(SelectWithMultilineOptions);
                 const panel = openPanel(fixture);
@@ -8323,6 +8372,67 @@ describe('KbqSelect', () => {
                 expect(
                     (panelOverlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement).style.width
                 ).toBe('344px');
+            });
+
+            it('should apply the trigger-width fallback when enabled while open', async () => {
+                const fixture = createPanelWidthComponent(SelectWithMultilineOptions);
+                const spy = mockTriggerWidth(fixture);
+                const panel = openPanel(fixture);
+
+                expect(getPane().style.width).toBe('');
+
+                await setMultilineOptions(fixture, true);
+
+                expect(getPane().style.width).toBe('300px');
+                expect(panel.classList).toContain('kbq-select__panel_multiline');
+                spy.mockRestore();
+            });
+
+            it('should remove the trigger-width fallback when disabled while open', async () => {
+                const fixture = createPanelWidthComponent(SelectWithMultilineOptions);
+
+                fixture.componentInstance.multilineOptions = true;
+                fixture.detectChanges();
+                const spy = mockTriggerWidth(fixture);
+                const panel = openPanel(fixture);
+
+                expect(getPane().style.width).toBe('300px');
+
+                await setMultilineOptions(fixture, false);
+
+                expect(getPane().style.width).toBe('');
+                expect(panel.classList).not.toContain('kbq-select__panel_multiline');
+                spy.mockRestore();
+            });
+
+            it('should preserve an explicit panel width across open-panel toggles', async () => {
+                const fixture = createPanelWidthComponent(SelectWithMultilineOptions);
+
+                fixture.componentInstance.panelWidth = 344;
+                fixture.detectChanges();
+                openPanel(fixture);
+
+                await setMultilineOptions(fixture, true);
+                expect(getPane().style.width).toBe('344px');
+
+                await setMultilineOptions(fixture, false);
+                expect(getPane().style.width).toBe('344px');
+            });
+
+            it('should ignore multiline behavior with virtual scroll', async () => {
+                const fixture = createPanelWidthComponent(SelectWithMultilineOptionsAndVirtualScroll);
+
+                await finishInit(fixture);
+                const spy = mockTriggerWidth(fixture);
+                const panel = openPanel(fixture);
+                const select = getSelectDebugElement(fixture.debugElement).injector.get(KbqSelect);
+
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(select.withVirtualScroll).toBe(true);
+                expect(panel.classList).not.toContain('kbq-select__panel_multiline');
+                expect(getPane().style.width).toBe('');
+                spy.mockRestore();
             });
 
             it('should enable the panel modifier through KBQ_SELECT_OPTIONS', () => {

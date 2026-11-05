@@ -160,7 +160,11 @@ export class KbqSelectChange {
 
 /** Options for the `kbq-select` that can be configured using the `KBQ_SELECT_OPTIONS` injection token. */
 export type KbqSelectOptions = Partial<{
-    /** Whether option text wraps onto multiple lines. Defaults to `false`. */
+    /**
+     * Whether option text wraps onto multiple lines. When `panelWidth` is nullish, the panel matches the trigger
+     * width; an explicit `panelWidth` takes precedence. Not supported with `cdk-virtual-scroll-viewport`: the panel
+     * modifier and automatic width fallback are not applied. Defaults to `false`.
+     */
     multilineOptions: boolean;
 
     /**
@@ -593,7 +597,11 @@ export class KbqSelect
      */
     readonly multiline = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    /** Whether option text wraps onto multiple lines. Defaults to `false`. */
+    /**
+     * Whether option text wraps onto multiple lines. When `panelWidth` is nullish, the panel matches the trigger
+     * width; an explicit `panelWidth` takes precedence. Not supported with `cdk-virtual-scroll-viewport`: the panel
+     * modifier and automatic width fallback are not applied. Defaults to `false`.
+     */
     readonly multilineOptions = input<boolean, boolean | string | null | undefined>(
         this.defaultOptions?.multilineOptions ?? false,
         { transform: booleanAttribute }
@@ -1233,6 +1241,32 @@ export class KbqSelect
     constructor() {
         super();
 
+        let widthInputsInitialized = false;
+
+        // The overlay width bindings are plain fields, so refresh them after render rather than in this effect.
+        effect(() => {
+            this.getEffectivePanelWidth();
+            this.panelMinWidth();
+
+            if (!widthInputsInitialized) {
+                widthInputsInitialized = true;
+
+                return;
+            }
+
+            if (!this.panelOpen) return;
+
+            afterNextRender(
+                () => {
+                    if (!this.panelOpen) return;
+
+                    this.updatePanelWidth();
+                    this._changeDetectorRef.markForCheck();
+                },
+                { injector: this.injector }
+            );
+        });
+
         // A different comparator means a different set of options can match the value.
         let comparatorBound = false;
 
@@ -1554,6 +1588,18 @@ export class KbqSelect
         untracked(() => this.attachPanel());
     }
 
+    private updatePanelWidth(): void {
+        this.updateOverlayWidth(
+            this.getEffectivePanelWidth(),
+            this.panelMinWidth(),
+            this.overlayOrigin ?? this.elementRef
+        );
+    }
+
+    private getEffectivePanelWidth(): KbqPanelWidth {
+        return this.panelWidth() ?? (this.multilineOptions() && !this.withVirtualScroll ? 'auto' : null);
+    }
+
     private attachPanel(): void {
         const trigger = this.trigger();
 
@@ -1575,11 +1621,7 @@ export class KbqSelect
             this.overlayOrigin = this.parentFormField.getConnectedOverlayOrigin();
         }
 
-        this.updateOverlayWidth(
-            this.panelWidth() ?? (this.multilineOptions() ? 'auto' : null),
-            this.panelMinWidth(),
-            this.overlayOrigin ?? this.elementRef
-        );
+        this.updatePanelWidth();
 
         this.panelOpen = true;
 
@@ -1800,7 +1842,7 @@ export class KbqSelect
     protected getPanelClasses(): string {
         return [
             'kbq-select__panel',
-            this.multilineOptions() ? 'kbq-select__panel_multiline' : '',
+            this.multilineOptions() && !this.withVirtualScroll ? 'kbq-select__panel_multiline' : '',
             this.getPanelTheme(),
             this.customPanelClasses()
         ]

@@ -332,6 +332,26 @@ test.describe('KbqSelectModule', () => {
 
             expect(hasHorizontalOverflow).toBe(false);
         });
+
+        test('updates the open panel width in both toggle directions', async ({ page }) => {
+            await page.goto('/E2eSelectMultilineOptions');
+            const select = page.getByTestId('e2eSelect');
+
+            await select.click();
+
+            const overlay = page.locator('.cdk-overlay-pane');
+            const panel = overlay.locator('.kbq-select__panel');
+
+            await expect(overlay).toHaveCSS('width', '200px');
+            await select.dispatchEvent('toggleMultilineOptions');
+            await expect(panel).not.toHaveClass(/kbq-select__panel_multiline/);
+            await expect(panel).toBeVisible();
+            await expect.poll(async () => (await box(overlay)).width).toBeGreaterThan(200);
+
+            await select.dispatchEvent('toggleMultilineOptions');
+            await expect(panel).toHaveClass(/kbq-select__panel_multiline/);
+            await expect(overlay).toHaveCSS('width', '200px');
+        });
     });
 
     test.describe('E2eSelectSelectionState', () => {

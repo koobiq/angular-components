@@ -4,7 +4,7 @@
 
 **Goal:** Add a public `multilineOptions` switch to `KbqSelect` that wraps option text and defaults the panel to trigger width without consumer CSS.
 
-**Architecture:** `KbqSelect` owns a boolean input and provider default, appends a panel modifier and resolves a nullish `panelWidth` to `auto` only while multiline options are enabled. Explicit panel sizing and the existing trigger-oriented `multiline` remain independent.
+**Architecture:** `KbqSelect` owns a boolean input and provider default, appends a panel modifier and resolves a nullish `panelWidth` to `auto` only while multiline options are enabled without virtual scroll. Explicit panel sizing and the existing trigger-oriented `multiline` remain independent. Initial attachment and open-panel input changes share one effective-width calculation, refreshed after render so effects do not write template-bound plain fields.
 
 **Tech Stack:** Angular signal inputs, TypeScript, SCSS, Vitest, Playwright, MDX, Koobiq API tooling.
 
@@ -15,9 +15,12 @@
 - Use the public name `multilineOptions`, defaulting to `false`, and the panel modifier `kbq-select__panel_multiline`.
 - Declare the input as `input<boolean, boolean | string | null | undefined>(…, { transform: booleanAttribute })` with a JSDoc default.
 - Preserve custom `panelClass` and explicit `panelWidth`; only a nullish width falls back to `auto` under `multilineOptions`.
+- Recompute effective width for relevant input changes while the panel is open, preserving explicit width in both toggle directions.
+- `multilineOptions` is unsupported with fixed-size virtual scroll: omit the modifier and automatic fallback rather than virtualizing variable-height rows.
 - Set only `white-space: normal` and `overflow-wrap: break-word` under the modifier, preserving the existing overflow behavior.
 - Do not change the existing `multiline` trigger input or default single-line option behavior.
 - Support `multilineOptions` in `KbqSelectOptions` and `kbqSelectOptionsProvider`.
+- Document width precedence, the default 200 px `panelMinWidth` floor and the virtual-scroll limitation in public JSDoc and RU/EN.
 - Replace the DS-3000 CSS recipe in PR #2325 and remove its superseded plan/spec files.
 - Commit and push tasks into the existing `fix/DS-3000` / PR #2325 workflow; no AI attribution and no direct pushes to `main`.
 
@@ -132,3 +135,35 @@ Serve the docs and inspect the example in RU and EN. Confirm only `multilineOpti
 - [ ] **Step 6: Run the final regression gate and commit**
 
 Run `yarn run unit:all` and the focused Playwright command from Task 2 again. Expected: all unit tests and the focused browser test pass. Commit the docs/API changes as `docs(select): document multiline options (#DS-3000)` without attribution, push `fix/DS-3000`, and verify PR #2325 reflects all three commits.
+
+### Task 4: Final-review edge cases
+
+**Files:**
+
+- Modify: `packages/components/select/select.component.ts`
+- Test: `packages/components/select/select.component.spec.ts`
+- Modify: `packages/components/select/e2e.ts` and `e2e.playwright-spec.ts` for real-browser toggling without screenshots
+- Modify: `packages/components/select/select.{en,ru}.mdx`
+- Modify: `tools/public_api_guard/components/select.api.md` via `approve-api`
+- Update this design and plan only; do not restore superseded documents
+
+**Interfaces:**
+
+- Preserve `KbqSelect.multilineOptions(): boolean`, explicit `panelWidth` precedence and provider defaults.
+- Produce one effective-width path for initial attachment and open-panel changes; virtual scroll retains single-line options and existing width behavior.
+
+- [ ] **Step 1: Add regression coverage**
+
+Add focused tests for false-to-true and true-to-false toggles while open, explicit-width preservation across toggles, and the virtual-scroll guard. Extend the existing multiline Playwright scenario to toggle both directions while the panel remains open. Verify unit and browser RED results show stale widths and the missing virtual-scroll guard.
+
+- [ ] **Step 2: Implement the shared width path and guard**
+
+Resolve explicit `panelWidth`, multiline `auto`, or existing null behavior in one method used by `attachPanel()` and open-panel input changes. Schedule after-render updates without writing template-bound plain fields in the effect, and suppress the modifier and fallback when `withVirtualScroll` is true.
+
+- [ ] **Step 3: Document the final contract**
+
+Update both public JSDoc declarations with trigger-width fallback, explicit-width precedence and the unsupported virtual-scroll combination. Update RU/EN prose with the `panelMinWidth` floor (200 px by default) and the same limitation. Regenerate only the Select API golden.
+
+- [ ] **Step 4: Verify and commit**
+
+Run focused Select unit tests, `build:components`, focused Docker Playwright, docs example/content builds as relevant, Select API checks, public-API ratchets, docs API generation, LLM checks and targeted static checks. Do not run `unit:all`; scoped re-review owns that gate. Commit all related files as `fix(select): handle multiline option edge cases (#DS-3000)` without attribution and without pushing.

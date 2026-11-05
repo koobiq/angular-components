@@ -228,7 +228,7 @@ By default, the dropdown menu appears above the horizontal [Navbar](/en/componen
 
 ### Caption in options
 
-By default, long option text is truncated to a single line. Add `multilineOptions` to wrap option text across multiple lines. The panel automatically matches the trigger width; an explicit `panelWidth` overrides this behavior.
+By default, long option text is truncated to a single line. Add `multilineOptions` to wrap option text across multiple lines. The panel automatically matches the trigger width, but never becomes narrower than `panelMinWidth` (200px by default); an explicit `panelWidth` overrides this behavior. `multilineOptions` is not supported with `cdk-virtual-scroll-viewport`: options stay single-line and the panel keeps its existing width behavior.
 
 <Example id="select-two-line-option" />
 
