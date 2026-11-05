@@ -177,8 +177,30 @@
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
 }
 
+// The mark stands right after the text, as in the side menu on a desktop, in colour only and in the size of the item.
+.docs-next-menu__mark {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+    flex: none;
+    // The mark and its title share a baseline, not a middle: the mark is the smaller text.
+    align-self: baseline;
+
+    &.docs-next-menu__mark_new {
+        color: var(--kbq-foreground-theme);
+    }
+
+    &.docs-next-menu__mark_updated {
+        color: var(--kbq-foreground-success);
+    }
+}
+
+.docs-next-menu__title:has(+ .docs-next-menu__mark) {
+    align-self: baseline;
+}
+
+// The title stands right after its text, as in the side menu on a desktop.
 .docs-next-menu__title {
-    flex: 1;
+    flex: 0 1 auto;
     min-width: 0;
 }
 
@@ -187,6 +209,8 @@
     align-items: center;
     justify-content: center;
     width: 48px;
+    // The title now takes the width of its text, so the arrow keeps the right edge itself.
+    margin-left: auto;
     color: var(--kbq-foreground-contrast-secondary);
 }
 

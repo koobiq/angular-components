@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { DocsNextMenuGroup, docsNextMenuGroups } from '../data/menu';
 import { DocsNextSiteState } from '../services/site-state';
@@ -8,7 +7,7 @@ import { DocsNextSiteState } from '../services/site-state';
 /** Menu of the open section: groups with titles, the open page highlighted, no filter. */
 @Component({
     selector: 'docs-next-side-menu',
-    imports: [RouterLink, KbqBadgeModule, KbqScrollbar],
+    imports: [RouterLink, KbqScrollbar],
     templateUrl: './side-menu.html',
     styleUrl: './side-menu.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

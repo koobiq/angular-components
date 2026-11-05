@@ -20,11 +20,13 @@
                         >
                             <span class="docs-next-side-menu__title">{{ item.title }}</span>
                             @if (item.isNew) {
-                                <kbq-badge badgeColor="fade-theme" compact outline>{{ state.t('isNew') }}</kbq-badge>
+                                <span class="docs-next-side-menu__mark docs-next-side-menu__mark_new">
+                                    {{ state.t('isNew') }}
+                                </span>
                             } @else if (item.isUpdated) {
-                                <kbq-badge badgeColor="fade-success" compact outline>
+                                <span class="docs-next-side-menu__mark docs-next-side-menu__mark_updated">
                                     {{ state.t('isUpdated') }}
-                                </kbq-badge>
+                                </span>
                             }
                         </a>
                     </li>

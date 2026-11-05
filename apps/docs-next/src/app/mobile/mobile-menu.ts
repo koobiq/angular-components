@@ -11,7 +11,6 @@ import {
     viewChild
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { DocsNextMenuGroup, docsNextMenuGroups } from '../data/menu';
@@ -39,7 +38,6 @@ const hasPages = (section: DocsNextSection): boolean => section.id !== 'icons';
     imports: [
         NgTemplateOutlet,
         RouterLink,
-        KbqBadgeModule,
         KbqIconButton,
         KbqIconModule,
         DocsNextMenuFooter,

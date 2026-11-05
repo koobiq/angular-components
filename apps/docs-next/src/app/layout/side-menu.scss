@@ -70,8 +70,31 @@
     }
 }
 
+.docs-next-side-menu__title:has(+ .docs-next-side-menu__mark) {
+    align-self: baseline;
+}
+
+// The mark stands right after the text, in colour only: no frame, and no component behind it.
+.docs-next-side-menu__mark {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+
+    flex: none;
+    // The mark and its title share a baseline, not a middle: the mark is the smaller text.
+    align-self: baseline;
+
+    &.docs-next-side-menu__mark_new {
+        color: var(--kbq-foreground-theme);
+    }
+
+    &.docs-next-side-menu__mark_updated {
+        color: var(--kbq-foreground-success);
+    }
+}
+
+// The mark stands right after the text, not at the edge of the item: the item has no border, and a badge at the edge
+// would belong to nothing.
 .docs-next-side-menu__title {
-    flex: 1;
+    flex: 0 1 auto;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
