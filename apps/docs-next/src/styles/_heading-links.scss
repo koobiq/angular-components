@@ -118,7 +118,9 @@
 }
 
 @media (hover: hover) and (pointer: fine) and (min-width: 720px) {
-    .docs-next-prose :is(h2, h3, h4, h5)[id]:is(:hover, :focus-within) .docs-next-heading-link {
+    // The heading shows it when it is pointed at, or when it has the focus the keyboard gave it (the contents put it there
+    // when the reader chose an item from the keyboard); the focus a mouse click gave does not count, as that reader has the pointer.
+    .docs-next-prose :is(h2, h3, h4, h5)[id]:is(:hover, :focus-visible) .docs-next-heading-link {
         opacity: 1;
         transition-delay: 0s;
     }
@@ -140,6 +142,21 @@
 
     100% {
         background-color: transparent;
+    }
+}
+
+// The focus a heading takes from the keyboard (the contents give it when an item is chosen): a 2px ring the size of the
+// fill above, a layer of its own, so that it takes no room and the text stays where it is.
+.docs-next-prose :is(h2, h3, h4, h5)[id]:focus-visible {
+    outline: none;
+
+    &::after {
+        position: absolute;
+        inset: calc(-1 * var(--kbq-size-xs)) calc(-1 * var(--kbq-size-s));
+        border-radius: var(--kbq-size-s);
+        box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+        content: '';
+        pointer-events: none;
     }
 }
 

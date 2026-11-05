@@ -77,13 +77,22 @@ export class DocsNextPageOutline {
     }
 
     scrollTo(id: string): void {
-        this.document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const heading = this.document.getElementById(id);
+
+        heading?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         this.replaceHash(id);
         this.activeId.set(id);
         // The item that was pressed stays the open one while the page goes there: the headings it passes on the way are
         // not "where the reader is", and lighting them one after another makes the contents flicker.
         this.lockedId = id;
         this.highlight.highlightAfterScroll(id, () => (this.lockedId = null));
+
+        // The focus goes where the page goes, whichever contents was used: left on the link, it would be on `<body>` once
+        // the panel or the island closes, and the next Tab would start the page over. It must not scroll a second time.
+        if (heading) {
+            heading.setAttribute('tabindex', '-1');
+            heading.focus({ preventScroll: true });
+        }
     }
 
     private updateActive(): void {
