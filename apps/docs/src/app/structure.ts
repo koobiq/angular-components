@@ -1074,7 +1074,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'textarea',
                     hasApi: true,
                     apiId: 'textarea',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-11-17')
                 },
                 {
                     id: DocsStructureItemId.Timepicker,

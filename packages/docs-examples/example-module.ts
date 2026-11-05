@@ -6620,6 +6620,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "textarea-overview-example.ts",
     "importPath": "components/textarea"
   },
+  "textarea-readonly": {
+    "packagePath": "components/textarea/textarea-readonly",
+    "title": "Textarea readonly",
+    "componentName": "TextareaReadonlyExample",
+    "files": [
+      "textarea-readonly-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "textarea-readonly-example",
+    "primaryFile": "textarea-readonly-example.ts",
+    "importPath": "components/textarea"
+  },
   "time-range-as-form-field": {
     "packagePath": "components/time-range/time-range-as-form-field",
     "title": "Time range as form field",
@@ -8559,6 +8571,7 @@ export type LiveExampleId =
   | 'textarea-error-state'
   | 'textarea-max-rows'
   | 'textarea-overview'
+  | 'textarea-readonly'
   | 'time-range-as-form-field'
   | 'time-range-custom-option'
   | 'time-range-custom-range-types'

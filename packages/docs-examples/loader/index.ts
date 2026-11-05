@@ -1077,6 +1077,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/textarea').then((m) => m.TextareaMaxRowsExample);
         case 'textarea-overview':
             return import('@koobiq/docs-examples/components/textarea').then((m) => m.TextareaOverviewExample);
+        case 'textarea-readonly':
+            return import('@koobiq/docs-examples/components/textarea').then((m) => m.TextareaReadonlyExample);
         case 'time-range-as-form-field':
             return import('@koobiq/docs-examples/components/time-range').then((m) => m.TimeRangeAsFormFieldExample);
         case 'time-range-custom-option':

@@ -70,6 +70,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
     readonly parentFormGroup: FormGroupDirective | null;
     readonly placeholder: WritableSignal<string | undefined>;
     readonly placeholderInput: _angular_core.InputSignal<string | undefined>;
+    readonly readonly: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     protected readonly renderer: Renderer2;
     readonly required: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
@@ -80,7 +81,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
     readonly value: WritableSignal<string>;
     readonly valueInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTextarea, "textarea[kbqTextarea]", ["kbqTextarea"], { "canGrow": { "alias": "canGrow"; "required": false; "isSignal": true; }; "maxRows": { "alias": "maxRows"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "placeholderInput": { "alias": "placeholder"; "required": false; "isSignal": true; }; "freeRowsHeight": { "alias": "freeRowsHeight"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.KbqNativeScrollbar; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTextarea, "textarea[kbqTextarea]", ["kbqTextarea"], { "canGrow": { "alias": "canGrow"; "required": false; "isSignal": true; }; "maxRows": { "alias": "maxRows"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "placeholderInput": { "alias": "placeholder"; "required": false; "isSignal": true; }; "freeRowsHeight": { "alias": "freeRowsHeight"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.KbqNativeScrollbar; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTextarea, never>;
 }
