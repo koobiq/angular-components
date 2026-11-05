@@ -1,0 +1,42 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import {
+    KbqCodeBlockFile,
+    kbqCodeBlockHighlightJsConfigProvider,
+    KbqCodeBlockModule
+} from '@koobiq/components/code-block';
+import { KbqToggleModule } from '@koobiq/components/toggle';
+
+/**
+ * @title Code-block with lineNumbers attribute
+ */
+@Component({
+    selector: 'code-block-line-numbers-example',
+    imports: [
+        KbqCodeBlockModule,
+        KbqToggleModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="lineNumbers">Line numbers</kbq-toggle>
+        <kbq-code-block canToggleSoftWrap [files]="files" [lineNumbers]="lineNumbers" />
+    `,
+    providers: [
+        kbqCodeBlockHighlightJsConfigProvider({
+            languages: {
+                javascript: () => import('highlight.js/lib/languages/javascript')
+            }
+        })
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class CodeBlockLineNumbersExample {
+    readonly files: KbqCodeBlockFile[] = [
+        {
+            content: `function getVulnerabilities() {\n\treturn ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert', 'IDS/IPS Alert', 'Zero-Day Exploit', 'XSS', 'Malware', 'Ransomware', 'Phishing'];\n};`,
+            language: 'javascript'
+        }
+    ];
+
+    lineNumbers: boolean = true;
+}

@@ -5,11 +5,11 @@ test.describe('KbqCodeBlockModule', () => {
     const getScreenshotTarget = (page: Page, testId: string) =>
         page.getByTestId(testId).getByTestId('e2eScreenshotTarget');
 
-    // highlight.js arrives through a dynamic import and its line-numbers plugin then rebuilds every block into a
-    // table of rows, line numbers shown or not, which changes its height. A block that does not overflow reveals no
-    // track to wait for, so gate on the tables rather than on anything the shot itself can cause to be true.
+    // highlight.js arrives through a dynamic import, and only the highlighted markup is split into the lines that
+    // carry the numbers. A block that does not overflow reveals no track to wait for, so gate on the marker of the
+    // highlighted markup rather than on anything the shot itself can cause to be true.
     const expectHighlighted = (target: Locator, blocks: number) =>
-        expect(target.locator('.hljs-ln')).toHaveCount(blocks);
+        expect(target.locator('[data-highlighted-markup]')).toHaveCount(blocks);
 
     test.describe('E2eCodeBlockNoTabs', () => {
         test('actionbar over the code', async ({ page }) => {
@@ -47,8 +47,8 @@ test.describe('KbqCodeBlockModule', () => {
 
             const target = getScreenshotTarget(page, 'e2eCodeBlockLineNumbers');
 
-            await expectHighlighted(target, 2);
-            await e2eWaitForSettledScrollbars(target, 2);
+            await expectHighlighted(target, 3);
+            await e2eWaitForSettledScrollbars(target, 3);
 
             await expect(target).toHaveScreenshot('03-line-numbers-light.png');
             await e2eEnableDarkTheme(page);

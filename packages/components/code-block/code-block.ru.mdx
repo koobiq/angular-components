@@ -1,5 +1,7 @@
 `<kbq-code-block>` - компонент который показывает переформатированный текстовый контент и подсвечивает синтаксис.
 
+<Example id="code-block-overview" />
+
 <div class="kbq-callout kbq-callout_theme">
 <div class="kbq-callout__header">Обрати внимание</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
@@ -43,9 +45,9 @@ providers: [
 
 ### Нумерация строк
 
-Пронумеровать строки полезно, чтобы дать ссылку на конкретное место в документе. Нумерация строк отключена по умолчанию, включается при помощи атрибута `lineNumbers`.
+Пронумеровать строки полезно, чтобы дать ссылку на конкретное место в документе. Нумерация строк отключена по умолчанию, включается при помощи атрибута `lineNumbers` или для всех блоков кода в [настройках по умолчанию](#настройки-по-умолчанию).
 
-<Example id="code-block-overview" />
+<Example id="code-block-line-numbers" />
 
 ### Шапка с заголовком
 
@@ -105,11 +107,7 @@ providers: [
 <kbq-code-block [files]="files" canCopy alwaysShowActionbar />
 ```
 
-Чтобы включить настройку для всех блоков кода, зарегистрируйте провайдер:
-
-```typescript
-providers: [kbqCodeBlockDefaultOptionsProvider({ alwaysShowActionbar: true })];
-```
+Чтобы включить настройку для всех блоков кода, используйте [настройки по умолчанию](#настройки-по-умолчанию).
 
 #### Изменение режима переноса
 
@@ -142,3 +140,13 @@ providers: [kbqCodeBlockDefaultOptionsProvider({ alwaysShowActionbar: true })];
 Адрес берется из поля `link`. Ссылка открывается в новой вкладке.
 
 <Example id="code-block-with-link" />
+
+### Настройки по умолчанию
+
+`kbqCodeBlockDefaultOptionsProvider` задает настройки блоков кода по умолчанию для всего приложения или отдельного компонента.
+
+```ts
+bootstrapApplication(AppComponent, {
+    providers: [kbqCodeBlockDefaultOptionsProvider({ lineNumbers: true, alwaysShowActionbar: true })]
+});
+```

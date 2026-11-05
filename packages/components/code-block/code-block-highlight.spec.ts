@@ -60,10 +60,8 @@ const getCodeElements = (fixture: ComponentFixture<unknown>): HTMLElement[] =>
 const getHighlight = (fixture: ComponentFixture<unknown>): KbqCodeBlockHighlight =>
     fixture.debugElement.query(By.directive(KbqCodeBlockHighlight)).injector.get(KbqCodeBlockHighlight);
 
-const countPluginStyles = (): number =>
-    Array.from(document.head.querySelectorAll('style')).filter(({ textContent }) =>
-        textContent?.includes('.hljs-ln-n:before{content:attr(data-line-number)}')
-    ).length;
+const getLines = (code: HTMLElement): HTMLElement[] =>
+    Array.from(code.querySelectorAll<HTMLElement>(':scope > .kbq-code-block__line'));
 
 @Component({
     imports: [KbqCodeBlockHighlight],
@@ -119,6 +117,19 @@ class ScopedBlock {
 })
 class RootAndScopedBlocks {
     readonly file: KbqCodeBlockFile = { content: 'root', language: 'typescript' };
+}
+
+@Component({
+    imports: [KbqCodeBlockHighlight],
+    template: `
+        <code kbqCodeBlockHighlight [file]="file()" [startFrom]="startFrom()" [singleLine]="singleLine()"></code>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class NumberedBlock {
+    readonly file = signal<KbqCodeBlockFile>({ content: 'one\ntwo', language: 'typescript' });
+    readonly startFrom = signal<unknown>(1);
+    readonly singleLine = signal(false);
 }
 
 // Markup as the server leaves it, marked as highlighted, which is what the browser finds inside `<code>` on hydration.
@@ -196,29 +207,20 @@ describe(KbqCodeBlockHighlight.name, () => {
         expect(getHighlight(fixture).pending()).toBe(true);
     });
 
-    it('should load highlight.js and install the line numbers plugin once for every block on the page', async () => {
-        const addEventListener = vi.spyOn(document, 'addEventListener');
-        const stylesBefore = countPluginStyles();
+    it('should load highlight.js once for every block on the page', async () => {
+        const core = buildMockCore();
+        const load = coreLoader(core);
+        const fixture = createComponent(ThreeBlocks, [kbqCodeBlockHighlightJsConfigProvider({ core: load })]);
 
-        try {
-            const core = buildMockCore();
-            const load = coreLoader(core);
-            const fixture = createComponent(ThreeBlocks, [kbqCodeBlockHighlightJsConfigProvider({ core: load })]);
+        await settle(fixture);
 
-            await settle(fixture);
-
-            expect(load).toHaveBeenCalledTimes(1);
-            expect(core.highlight).toHaveBeenCalledTimes(3);
-            expect(getCodeElements(fixture).map((code) => code.getAttribute('data-language'))).toEqual([
-                'typescript',
-                'css',
-                'xml'
-            ]);
-            expect(countPluginStyles() - stylesBefore).toBe(1);
-            expect(addEventListener.mock.calls.filter(([type]) => type === 'copy')).toHaveLength(1);
-        } finally {
-            addEventListener.mockRestore();
-        }
+        expect(load).toHaveBeenCalledTimes(1);
+        expect(core.highlight).toHaveBeenCalledTimes(3);
+        expect(getCodeElements(fixture).map((code) => code.getAttribute('data-language'))).toEqual([
+            'typescript',
+            'css',
+            'xml'
+        ]);
     });
 
     it('should load the languages alongside highlight.js', async () => {
@@ -391,6 +393,122 @@ describe(KbqCodeBlockHighlight.name, () => {
         } finally {
             warn.mockRestore();
         }
+    });
+
+    describe('lines', () => {
+        it('should wrap every line, opening the spans a line break crosses again on the next line', async () => {
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(buildMockCore()) })
+            ]);
+            const [code] = getCodeElements(fixture);
+
+            fixture.componentInstance.file.set({ content: 'one\n\ntwo', language: 'typescript' });
+            await settle(fixture);
+
+            const lines = getLines(code);
+
+            expect(lines.map((line) => line.textContent)).toEqual(['one\n', '\n', 'two']);
+            expect(lines.map((line) => line.querySelector('.hljs-keyword')?.textContent)).toEqual(['one', '', 'two']);
+        });
+
+        it('should keep the text of the file, with no line after a line break at its end', async () => {
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({
+                    languages: { typescript: () => import('highlight.js/lib/languages/typescript') }
+                })
+            ]);
+            const [code] = getCodeElements(fixture);
+            const content = '/**\n * A comment\n */\nconst template = `\n\t<b>${value}</b>\n`;\n';
+
+            fixture.componentInstance.file.set({ content, language: 'typescript' });
+            fixture.detectChanges();
+            await settle(fixture);
+
+            const lines = getLines(code);
+
+            expect(code.textContent).toBe(content);
+            expect(lines).toHaveLength(6);
+            expect(lines[1].querySelector('.hljs-comment')?.textContent).toBe(' * A comment');
+            expect(lines[4].querySelector('.hljs-string')?.textContent).toBe('\t<b>${value}</b>');
+        });
+
+        it('should keep a tag other than a span that a plugin of highlight.js adds', async () => {
+            const core = buildMockCore();
+
+            core.highlight = vi.fn().mockReturnValue({
+                value: '<a href="#one">one</a>\ntwo',
+                language: 'typescript',
+                illegal: false,
+                relevance: 10
+            });
+
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(core) })
+            ]);
+            const [code] = getCodeElements(fixture);
+
+            fixture.componentInstance.file.set({ content: 'one\ntwo', language: 'typescript' });
+            await settle(fixture);
+
+            expect(getLines(code).map((line) => line.textContent)).toEqual(['one\n', 'two']);
+            expect(code.querySelector('a')?.textContent).toBe('one');
+        });
+
+        it('should break lines at every kind of line break', async () => {
+            const fixture = createComponent(SingleBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(buildMockCore()) })
+            ]);
+            const [code] = getCodeElements(fixture);
+
+            fixture.componentInstance.file.set({ content: 'one\r\ntwo\rthree', language: 'typescript' });
+            await settle(fixture);
+
+            expect(getLines(code).map((line) => line.textContent)).toEqual(['one\n', 'two\n', 'three']);
+        });
+
+        it('should number the lines of a file of several lines, from the first number', async () => {
+            const fixture = createComponent(NumberedBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(buildMockCore()) })
+            ]);
+            const [code] = getCodeElements(fixture);
+
+            await settle(fixture);
+
+            expect(code.classList).toContain('kbq-code-block__code_line-numbers');
+            expect(code.style.getPropertyValue('--kbq-code-block-line-numbers-start')).toBe('0');
+            expect(code.style.getPropertyValue('--kbq-code-block-line-numbers-digits')).toBe('1');
+
+            // Its lines run from 99 to 100.
+            fixture.componentInstance.startFrom.set(99);
+            fixture.detectChanges();
+
+            expect(code.style.getPropertyValue('--kbq-code-block-line-numbers-start')).toBe('98');
+            expect(code.style.getPropertyValue('--kbq-code-block-line-numbers-digits')).toBe('3');
+
+            // Not a number: from the first line again.
+            fixture.componentInstance.startFrom.set('first');
+            fixture.detectChanges();
+
+            expect(code.style.getPropertyValue('--kbq-code-block-line-numbers-start')).toBe('0');
+            expect(code.style.getPropertyValue('--kbq-code-block-line-numbers-digits')).toBe('1');
+        });
+
+        it('should number a file of one line only when told to', async () => {
+            const fixture = createComponent(NumberedBlock, [
+                kbqCodeBlockHighlightJsConfigProvider({ core: coreLoader(buildMockCore()) })
+            ]);
+            const [code] = getCodeElements(fixture);
+
+            fixture.componentInstance.file.set({ content: 'one\n', language: 'typescript' });
+            await settle(fixture);
+
+            expect(code.classList).not.toContain('kbq-code-block__code_line-numbers');
+
+            fixture.componentInstance.singleLine.set(true);
+            fixture.detectChanges();
+
+            expect(code.classList).toContain('kbq-code-block__code_line-numbers');
+        });
     });
 
     // The mocks above know every language; the core knows none, and throws on a language it has not registered.

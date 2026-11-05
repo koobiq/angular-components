@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
     CodeBlockHeaderPinnedExample,
+    CodeBlockLineNumbersExample,
     CodeBlockOverviewExample,
     CodeBlockWithCustomLocaleConfigurationExample,
     CodeBlockWithFilledExample,
@@ -23,17 +24,20 @@ import { DevThemeToggle } from '../theme-toggle';
         CodeBlockWithFilledExample,
         CodeBlockWithNoBorderExample,
         CodeBlockOverviewExample,
+        CodeBlockLineNumbersExample,
         CodeBlockWithCustomLocaleConfigurationExample,
         CodeBlockWithTabsAndShadowExample,
         CodeBlockWithLinkExample,
         CodeBlockHeaderPinnedExample
     ],
     template: `
+        <code-block-overview-example />
+        <hr />
         <code-block-with-soft-wrap-example />
         <hr />
         <code-block-with-max-height-example />
         <hr />
-        <code-block-overview-example />
+        <code-block-line-numbers-example />
         <hr />
         <code-block-with-tabs-example />
         <hr />

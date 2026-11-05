@@ -39,9 +39,7 @@ export const publishedJsDocConfig = jsdoc({
     ignores: [
         '**/*.spec.ts',
         '**/*.playwright-spec.ts',
-        '**/e2e.ts',
-        // the highlight.js plugin, kept as its author wrote it
-        'packages/components/code-block/highlightjs-line-numbers.ts'
+        '**/e2e.ts'
     ],
     settings: {
         mode: 'typescript'

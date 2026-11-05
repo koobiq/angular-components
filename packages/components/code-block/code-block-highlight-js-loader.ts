@@ -1,10 +1,7 @@
-import { DOCUMENT } from '@angular/common';
-import { inject, Injectable, isDevMode } from '@angular/core';
-import { KBQ_WINDOW } from '@koobiq/components/core';
+import { Injectable, isDevMode } from '@angular/core';
 import type { HLJSApi } from 'highlight.js';
 import plaintext from 'highlight.js/lib/languages/plaintext';
 import type { KbqCodeBlockHighlightJsConfig } from './code-block-highlight';
-import { highlightJSLineNumbersPlugin } from './highlightjs-line-numbers';
 
 // The core and not the full bundle: a bundler emits a chunk for every `import()` it finds, called or not, so the
 // full bundle has to be imported by the application that asks for it. An instance of its own, as the module is one
@@ -25,19 +22,7 @@ const DEFAULT_CONFIG: KbqCodeBlockHighlightJsConfig = {};
 export const PLAIN_TEXT_LANGUAGE = 'plaintext';
 
 /**
- * Options of the line numbers table.
- *
- * @internal
- */
-export type KbqCodeBlockLineNumbersOptions = { startFrom: number; singleLine: boolean };
-
-/** The part of the API the line numbers plugin attaches to its host that the code block calls. */
-type LineNumbersApi = {
-    lineNumbersValue(value: string, options: KbqCodeBlockLineNumbersOptions): string;
-};
-
-/**
- * Loads highlight.js once per configuration and installs its line numbers plugin once per application.
+ * Loads highlight.js once per configuration.
  *
  * The configuration is passed in rather than injected: `KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG` may be provided by a
  * component or a route, where a root service would not see it. Loads are shared by the identity of the configuration,
@@ -47,12 +32,9 @@ type LineNumbersApi = {
  */
 @Injectable({ providedIn: 'root' })
 export class KbqCodeBlockHighlightJsLoader {
-    private readonly document = inject<Document>(DOCUMENT);
-    private readonly window = inject(KBQ_WINDOW);
     // Weak, so that a configuration made for one component instance goes away with it.
     private readonly loads = new WeakMap<KbqCodeBlockHighlightJsConfig, Promise<HLJSApi | null>>();
     private readonly instances = new WeakMap<KbqCodeBlockHighlightJsConfig, HLJSApi>();
-    private lineNumbers: LineNumbersApi | null = null;
 
     /** The instance loaded for `config`, or `null` until it is. */
     loaded(config: KbqCodeBlockHighlightJsConfig | null): HLJSApi | null {
@@ -91,12 +73,6 @@ export class KbqCodeBlockHighlightJsLoader {
         return loading;
     }
 
-    /** Wraps highlighted markup in the line numbers table. */
-    addLineNumbers(html: string, options: KbqCodeBlockLineNumbersOptions): string {
-        // The plugin cannot take empty markup: it reads the last of no lines.
-        return html ? this.lineNumbersPlugin().lineNumbersValue(html, options) : html;
-    }
-
     private async importInstance({ core, languages = {} }: KbqCodeBlockHighlightJsConfig): Promise<HLJSApi> {
         const entries = Object.entries(languages);
         // The languages do not need the core to load, so they load alongside it.
@@ -112,30 +88,5 @@ export class KbqCodeBlockHighlightJsLoader {
         if (!instance.getLanguage(PLAIN_TEXT_LANGUAGE)) instance.registerLanguage(PLAIN_TEXT_LANGUAGE, plaintext);
 
         return instance;
-    }
-
-    /**
-     * The plugin appends a `<style>` to `<head>` and registers a document `copy` listener, and removes neither, so it
-     * is installed once, for the lifetime of the application.
-     */
-    private lineNumbersPlugin(): LineNumbersApi {
-        if (!this.lineNumbers) {
-            const window = this.window;
-            // The plugin attaches its API to `w.hljs` and reads nothing else from `w` but the selection and the user
-            // agent. A host of its own keeps the plugin off the highlight.js module, which every server render in the
-            // process shares, and off the global `window.hljs`.
-            const host = {
-                hljs: {},
-                getSelection: () => window.getSelection(),
-                get navigator() {
-                    return window.navigator;
-                }
-            };
-
-            highlightJSLineNumbersPlugin(this.document, host as unknown as Window);
-            this.lineNumbers = host.hljs as LineNumbersApi;
-        }
-
-        return this.lineNumbers;
     }
 }
