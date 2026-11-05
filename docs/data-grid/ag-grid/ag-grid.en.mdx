@@ -202,6 +202,8 @@ providers: [
 
 The `kbqAgGridLoadingOverlay` directive controls the grid loading state: when the value is `true`, a skeleton overlay is shown on top of the rows. The number of skeleton rows and columns is configured via `kbqAgGridLoadingOverlayConfigProvider`.
 
+The overlay can be shown before the first load: while there is no data, the overlay covers the grid, and once loading starts the rows appear with skeletons in the cells. In the example, a button starts the loading.
+
 <Example id="ag-grid-loading-overlay" />
 
 ### Skeleton cell renderer
