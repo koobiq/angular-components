@@ -2,6 +2,8 @@
 
 .kbq-content-panel {
     display: flex;
+    flex-grow: 1;
+    min-width: 0;
     @include kbq-squircle(var(--kbq-content-panel-border-radius));
     background-color: var(--kbq-content-panel-background-color);
     border: var(--kbq-content-panel-border);
@@ -13,6 +15,7 @@
         display: flex;
         flex: 1;
         flex-direction: column;
+        min-width: 0;
         @include kbq-squircle-inherit(border-top-right-radius border-bottom-right-radius);
     }
 }
