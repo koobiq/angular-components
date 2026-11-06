@@ -1,4 +1,6 @@
 // The curve of the motion of the site: it starts fast and settles.
 :root {
     --docs-next-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    // A slide: it stays visible for longer than the curve above, which has done nine tenths of the way in a few frames.
+    --docs-next-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }

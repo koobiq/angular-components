@@ -70,7 +70,7 @@
 }
 
 // The panel opens over the rail, a little above its first tick, with its right edges on the rail's, and spreads to the
-// left over the text. It is part of the rail's own element, so the pointer does not leave the two on its way into it.
+// left over the text, sliding in from the right. It is part of the rail's own element, so the pointer does not leave the two on its way into it.
 // It stops at the bottom of the window: the list scrolls inside it.
 .docs-next-toc-rail__panel {
     // The room from the top of the panel down to the bottom of the window.
@@ -95,22 +95,25 @@
     // The wheel scrolls the list while it has anything to scroll, and the page when it has not or when the list is at its end.
     overscroll-behavior: auto;
     opacity: 0;
-    transform: scale(0.96);
-    transform-origin: top right;
+    // It comes out of the right, from the edge of the window, and grows from the middle of its right edge.
+    transform: translateX(var(--kbq-size-xxl)) scale(0.96);
+    transform-origin: right center;
     visibility: hidden;
     // Going is quicker than coming, as it answers the pointer leaving or an item chosen: the panel goes out of sight after
     // it has faded, and comes into it at once.
     transition:
         opacity 100ms var(--docs-next-ease-out),
-        transform 100ms var(--docs-next-ease-out),
+        transform 100ms var(--docs-next-ease-drawer),
         visibility 0s linear 100ms;
 
     &.docs-next-toc-rail__panel_open {
         opacity: 1;
         transform: none;
         visibility: visible;
-        transition-duration: 150ms, 150ms, 0s;
-        transition-delay: 0s;
+        transition:
+            opacity 150ms var(--docs-next-ease-out),
+            transform 150ms var(--docs-next-ease-drawer),
+            visibility 0s;
     }
 
     // A key press is answered at once, both ways.
@@ -120,6 +123,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+    // Only the fade, without the slide and the growing.
     .docs-next-toc-rail__panel {
         transform: none;
     }

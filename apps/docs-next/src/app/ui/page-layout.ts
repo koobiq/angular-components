@@ -59,6 +59,9 @@ export const DOCS_NEXT_ARTICLE_WIDTH = new InjectionToken<{ readonly canExpand: 
         :host {
             display: flex;
             align-items: flex-start;
+            /* The panel of the contents rail on a tablet slides in from beyond the right edge: what is past it is cut, and
+               does not give the page a scrollbar. Clipping, not hiding, so the rail still sticks to the header. */
+            overflow-x: clip;
         }
 
         .docs-next-page-layout__article {
