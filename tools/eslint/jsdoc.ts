@@ -58,6 +58,18 @@ export const publishedJsDocConfig = jsdoc({
                         message: 'A private member is not in the docs anyway: drop `@docs-private` or `@internal`.'
                     }
                 ]
+            },
+            'internal-tag-on-member': {
+                description: 'Disallows @internal on a member of a class, interface, type literal or enum.',
+                contexts: [
+                    {
+                        comment: 'JsdocBlock:has(JsdocTag[tag="internal"])',
+                        context:
+                            ':matches(PropertyDefinition, MethodDefinition, AccessorProperty, TSAbstractPropertyDefinition, TSAbstractMethodDefinition, TSAbstractAccessorProperty, TSParameterProperty, TSPropertySignature, TSMethodSignature, TSIndexSignature, TSCallSignatureDeclaration, TSConstructSignatureDeclaration, TSEnumMember):not([accessibility="private"]):not([key.type="PrivateIdentifier"])',
+                        message:
+                            'Use `@internal` only on a whole declaration; use `@docs-private` to keep a member in typings but out of the docs.'
+                    }
+                ]
             }
         }
     },
@@ -135,6 +147,7 @@ export const publishedJsDocConfig = jsdoc({
         // a rule of its own rather than an entry above: `no-restricted-syntax` takes the first entry whose comment
         // matches a block and only then checks its context, so an entry with a context would swallow the ones after it
         'jsdoc/forbid-hiding-tag-on-private-member': 1,
+        'jsdoc/forbid-internal-tag-on-member': 1,
         // `/*` with a tag in it: meant as JSDoc, but TypeScript does not read it
         'jsdoc/no-bad-blocks': 1,
         // an empty block documents nothing, so the fix removes it
