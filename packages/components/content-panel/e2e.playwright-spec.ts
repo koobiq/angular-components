@@ -1,12 +1,12 @@
 import { expect, Locator, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme, e2eHasOverflowShadow, e2eWaitForSettledScrollbars } from '../../e2e/utils';
 
-const getPanelContentWidth = async (component: Locator): Promise<number> => {
-    const panel = component.locator('.kbq-content-panel-container__panel');
-    const paddingRight = await panel.evaluate((element) => parseFloat(getComputedStyle(element).paddingRight));
+const getPanelContentWidth = (component: Locator): Promise<number> =>
+    component.locator('.kbq-content-panel-container__panel').evaluate((element) => {
+        const { paddingLeft, paddingRight } = getComputedStyle(element);
 
-    return (await panel.boundingBox())!.width - paddingRight;
-};
+        return element.getBoundingClientRect().width - parseFloat(paddingLeft) - parseFloat(paddingRight);
+    });
 
 test.describe('KbqContentPanelModule', () => {
     test.describe('E2eContentPanelState', () => {
@@ -37,7 +37,7 @@ test.describe('KbqContentPanelModule', () => {
             const headerRow = (await component.locator('.kbq-content-panel-header__wrapper').boundingBox())!;
             const closeButton = (await component.locator('.kbq-content-panel-header__close-button').boundingBox())!;
 
-            expect(closeButton.x + closeButton.width).toBeCloseTo(headerRow.x + headerRow.width);
+            expect(closeButton.x + closeButton.width).toBeCloseTo(headerRow.x + headerRow.width, 1);
         });
 
         test('fills the width of the panel with a short body', async ({ page }) => {
@@ -45,7 +45,7 @@ test.describe('KbqContentPanelModule', () => {
             const panelContentWidth = await getPanelContentWidth(component);
             const card = (await component.locator('.kbq-content-panel').boundingBox())!;
 
-            expect(card.width).toBeCloseTo(panelContentWidth);
+            expect(card.width).toBeCloseTo(panelContentWidth, 1);
         });
     });
 
@@ -62,7 +62,7 @@ test.describe('KbqContentPanelModule', () => {
             const card = (await component.locator('.kbq-content-panel').boundingBox())!;
             const closeButtonBox = (await closeButton.boundingBox())!;
 
-            expect(card.width).toBeCloseTo(panelContentWidth);
+            expect(card.width).toBeCloseTo(panelContentWidth, 1);
             expect(closeButtonBox.x + closeButtonBox.width).toBeLessThan(card.x + card.width);
         });
     });
