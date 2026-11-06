@@ -10,6 +10,7 @@ import {
     signal,
     viewChild
 } from '@angular/core';
+import { KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { DocsNextPageOutline } from '../services/page-outline';
 import { docsNextIsPlainClick } from '../services/plain-click';
@@ -22,6 +23,8 @@ import { DocsNextSiteState } from '../services/site-state';
 const OPEN_DELAY = 100;
 /** How long the panel stays after the mouse has left it, so that a pass across the edge does not close it. */
 const CLOSE_DELAY = 120;
+/** A panel that was closed less than this long ago opens at once, without the rest the pointer needs the first time. */
+const REOPEN_WINDOW = 300;
 
 /**
  * "On this page" on a tablet: a rail of ticks, one for each heading of the article with the one the reader is at
@@ -102,6 +105,7 @@ export class DocsNextTocRail {
     protected readonly state = inject(DocsNextSiteState);
     protected readonly outline = inject(DocsNextPageOutline);
     private readonly document = inject(DOCUMENT);
+    private readonly window = inject(KBQ_WINDOW);
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
     private readonly injector = inject(Injector);
@@ -113,6 +117,8 @@ export class DocsNextTocRail {
     protected readonly instant = signal(false);
     private openTimer?: ReturnType<typeof setTimeout>;
     private closeTimer?: ReturnType<typeof setTimeout>;
+    /** When the panel last closed, in `performance.now()` milliseconds. */
+    private closedAt = -Infinity;
     /**
      * How the open panel got open: by a press or the keyboard ('press'); by pointing ('hover'), when the pointer is still
      * over it, so a click on an item does not close it and it goes with the pointer; or by pointing and then a press
@@ -194,6 +200,7 @@ export class DocsNextTocRail {
         const hadFocus = this.panel().nativeElement.contains(this.document.activeElement);
 
         this.open.set(false);
+        this.closedAt = this.window.performance.now();
         this.mode = 'press';
         this.document.removeEventListener('keydown', this.onEscape);
 
@@ -208,14 +215,20 @@ export class DocsNextTocRail {
         clearTimeout(this.openTimer);
 
         if (inside) {
-            if (!this.open()) {
-                this.openTimer = setTimeout(() => {
-                    // A press or a key may have opened it in the meantime.
-                    if (this.open()) return;
+            if (this.open()) return;
 
-                    this.show();
-                    this.mode = 'hover';
-                }, OPEN_DELAY);
+            const open = (): void => {
+                // A press or a key may have opened it in the meantime.
+                if (this.open()) return;
+
+                this.show();
+                this.mode = 'hover';
+            };
+
+            if (this.window.performance.now() - this.closedAt < REOPEN_WINDOW) {
+                open();
+            } else {
+                this.openTimer = setTimeout(open, OPEN_DELAY);
             }
         } else if (this.mode === 'hover') {
             // A panel a press has pinned stays open, as a menu does; the one the pointer opened goes with the pointer.
