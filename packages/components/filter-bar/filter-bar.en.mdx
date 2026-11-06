@@ -73,7 +73,7 @@ If the filter has many values, it is useful to enable search in the drop-down me
 
 If there are many values, "Select All" will allow you to select all values ​​or deselect all values ​​in one action. When searching, the master checkbox selects only the results that match the query.
 
-Pass `selectAllCounter: true` in the pipe to show a counter of the elements "Select all" would toggle next to its row: all of them, or only the ones matching the search while searching. In a `multi-tree-select` only leaf nodes are counted — group nodes never are. Locked values are not counted, since "Select all" does not toggle them. The option is ignored by other pipe types.
+Pass `selectAllCounter: true` in the pipe to show a counter of the elements "Select all" would toggle next to its row: all of them, or only the ones matching the search while searching. In a `multi-tree-select` only leaf nodes are counted — group nodes never are. Locked values are not counted, since "Select all" does not toggle them. The counter renders inside the "Select all" row, so `selectAll` has to be enabled for it to appear. The option is ignored by other pipe types.
 
 <Example id="filter-bar-master-checkbox" />
 
