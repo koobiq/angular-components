@@ -53,6 +53,10 @@ Filtering still uses only `name`. Tree templates highlight matches themselves, t
 
 <Example id="filter-bar-value-template" />
 
+### Collapsed tree on open
+
+By default the `tree-select` and `multi-tree-select` pipes open the dropdown with every branch expanded. Pass `defaultExpanded: false` in the pipe template to open it collapsed instead: only the ancestors of the selected node(s) are expanded, so the current selection stays visible. Searching still expands the parent branches of the matches temporarily and restores the collapsed state once the query is cleared. The option is ignored by other pipe types.
+
 ### Date and time limits
 
 The `date` and `datetime` pipe templates accept optional limits for the custom period. `minDateTime` and `maxDateTime` bound the selectable range — the `datetime` pipe uses the full instant (date and time), the `date` pipe only the day. `minInterval` and `maxInterval` constrain the length of the selected period (`end − start`) as a duration-like object (e.g. `{ days: 3 }`, `{ hours: 1 }`); a period outside these bounds shows an error and disables Apply, with the limit formatted for the current locale. All four are ignored by other pipe types.

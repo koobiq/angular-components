@@ -100,7 +100,42 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
 
     /** @docs-private */
     onOpen() {
-        this.treeControl.expandAll();
+        if (this.data.defaultExpanded === false) {
+            this.treeControl.collapseAll();
+            this.expandSelectedNodeAncestors();
+        } else {
+            this.treeControl.expandAll();
+        }
+    }
+
+    /**
+     * Values of the currently selected nodes, in the shape `treeControl.compareValues` understands.
+     * Read from the pipe's own state rather than the select's selection model: the select applies a
+     * value written ahead of its data only once the options render, which is after `onOpen` fires.
+     *
+     * @internal
+     */
+    protected abstract getSelectedValues(): unknown[];
+
+    /**
+     * Expands the ancestors of every selected node. Selected values are matched against the current
+     * `dataNodes` by `compareValues`, not by flat-node reference: re-assigning `dataSource.data` rebuilds
+     * the flat nodes, so a stale node reference would miss.
+     */
+    private expandSelectedNodeAncestors(): void {
+        const selectedValues = this.getSelectedValues();
+        const selectedNodes = this.treeControl.dataNodes.filter((node) =>
+            selectedValues.some((value) => this.treeControl.compareValues(node.value, value))
+        );
+
+        for (const node of selectedNodes) {
+            let current = node.parent;
+
+            while (current) {
+                this.treeControl.expand(current);
+                current = current.parent;
+            }
+        }
     }
 
     /** @internal */

@@ -392,6 +392,7 @@ export interface KbqMultiTreeSelectValueTemplateContext<T extends KbqTreeSelectN
 export interface KbqPipe {
     // (undocumented)
     cleanable: boolean;
+    defaultExpanded?: boolean;
     // (undocumented)
     disabled: boolean;
     // (undocumented)
