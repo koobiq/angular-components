@@ -573,6 +573,23 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             expect(getOptions()[0].querySelector('.kbq-pipe-select-all__counter')!.textContent!.trim()).toBe('10');
         });
 
+        it('should render the counter when the tree is collapsed by default', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true, selectAllCounter: true, defaultExpanded: false })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // A collapsed tree renders the select-all row and the root rows only, not all ten leaves.
+            expect(getOptions().length).toBeLessThan(10);
+            expect(getOptions()[0].querySelector('.kbq-pipe-select-all__counter')!.textContent!.trim()).toBe('10');
+        });
+
         it('should count only the leaves matching the search', async () => {
             vi.useFakeTimers();
 
