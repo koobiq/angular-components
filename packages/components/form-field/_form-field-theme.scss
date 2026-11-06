@@ -185,15 +185,6 @@
             }
         }
 
-        &.kbq-form-field_readonly {
-            .kbq-form-field__prefix,
-            .kbq-form-field__suffix {
-                .kbq-icon.kbq-empty {
-                    color: var(--kbq-form-field-states-readonly-icon);
-                }
-            }
-        }
-
         .kbq-form-field__hint {
             @include kbq-form-field-hint-theme();
         }
