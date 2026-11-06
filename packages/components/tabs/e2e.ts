@@ -427,14 +427,14 @@ export class E2eTabsScrollbarFlash {
     `,
     styles: `
         :host {
-            display: flex;
+            display: inline-flex;
             gap: var(--kbq-size-l);
             padding: var(--kbq-size-m);
         }
 
         /* The strip only scrolls against a height cap, and a vertical group's height is its own. */
         .e2e-tabs-vertical-scroll-mask {
-            width: 160px;
+            width: 120px;
             height: 160px;
         }
     `,

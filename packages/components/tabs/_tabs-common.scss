@@ -263,9 +263,6 @@
             );
         }
 
-        // No paginator overlays a vertical strip's edges, so the fade starts right at the edge rather than
-        // past a paginator-wide transparent band. Declared after the RTL rules of the same specificity: the
-        // block axis does not flip with the reading direction.
         .kbq-tab-group_vertical & {
             --mask-size: var(--kbq-size-3xl);
         }

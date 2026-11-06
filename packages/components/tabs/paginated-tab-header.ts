@@ -202,18 +202,10 @@ export abstract class KbqPaginatedTabHeader
     /** Whether the tab list can be scrolled more towards the beginning of the tab label list. */
     disableScrollBefore = true;
 
-    /**
-     * Whether part of the tab list is scrolled out past its start edge, which is then faded out.
-     *
-     * @internal
-     */
+    /** @internal */
     protected overflowBefore = false;
 
-    /**
-     * Whether part of the tab list is scrolled out past its end edge, which is then faded out.
-     *
-     * @internal
-     */
+    /** @internal */
     protected overflowAfter = false;
 
     /**
@@ -405,7 +397,6 @@ export abstract class KbqPaginatedTabHeader
             fromEvent(container, 'scroll', passiveEventListenerOptions)
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => {
-                    // A vertical header scrolls natively and only its edge masks follow the scroll.
                     if (this.vertical) {
                         const { overflowBefore, overflowAfter } = this;
 
@@ -418,10 +409,8 @@ export abstract class KbqPaginatedTabHeader
                         return;
                     }
 
-                    // A horizontal `disablePagination` header still fires native `scroll` events;
-                    // without this guard every one of them would still throttle-trigger a whole-app
-                    // change-detection tick for booleans that `updateScrollState` has already pinned
-                    // to a constant and can never change.
+                    // Without this guard every native `scroll` of a `disablePagination` header would
+                    // throttle-trigger a whole-app change-detection tick for pinned booleans.
                     if (this.disablePagination) return;
 
                     this.updateScrollState();
@@ -960,8 +949,6 @@ export abstract class KbqPaginatedTabHeader
         if (this.disablePagination) {
             this.disableScrollAfter = this.disableScrollBefore = true;
 
-            // A vertical header never paginates but still scrolls natively along the block axis,
-            // which no reading direction flips. The far bound takes the same tolerance as below.
             if (this.vertical) {
                 const maxScrollTop = container.scrollHeight - container.clientHeight;
 
