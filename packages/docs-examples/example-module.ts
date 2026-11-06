@@ -4322,6 +4322,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "navbar-app-long-name-example.ts",
     "importPath": "components/navbar"
   },
+  "navbar-item-custom-component": {
+    "packagePath": "components/navbar/navbar-item-custom-component",
+    "title": "Navbar item with a custom interactive component",
+    "componentName": "NavbarItemCustomComponentExample",
+    "files": [
+      "navbar-item-custom-component-example.ts",
+      "navbar-item-custom-component-example.html"
+    ],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
+    "selector": "navbar-item-custom-component-example",
+    "primaryFile": "navbar-item-custom-component-example.ts",
+    "importPath": "components/navbar"
+  },
   "navbar-item-custom-content": {
     "packagePath": "components/navbar/navbar-item-custom-content",
     "title": "Navbar item with custom content instead of the icon",
@@ -8434,6 +8449,7 @@ export type LiveExampleId =
   | 'modal-sizes'
   | 'modal-template'
   | 'navbar-app-long-name'
+  | 'navbar-item-custom-component'
   | 'navbar-item-custom-content'
   | 'navbar-item-suffix'
   | 'navbar-overview'

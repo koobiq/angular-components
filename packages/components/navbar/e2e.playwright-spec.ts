@@ -487,4 +487,50 @@ test.describe('KbqNavbarModule', () => {
             await expect(item.locator('.kbq-navbar-item__container')).toBeHidden();
         });
     });
+
+    test.describe('E2eNavbarItemCustomComponent', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eNavbarItemCustomComponent');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eNavbarItemCustomComponent');
+            const locator = getComponent(page);
+            const viewport = page.viewportSize()!;
+
+            await page.mouse.move(viewport.width - 1, viewport.height - 1);
+
+            await expect(locator.getByTestId('e2eScreenshotTarget')).toHaveScreenshot('10-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(locator.getByTestId('e2eScreenshotTarget')).toHaveScreenshot('10-dark.png');
+        });
+
+        /**
+         * Tab hands focus to the navbar, which roves it onto the first item; the item forwards it into the
+         * custom component's button. Enter then reaches the button natively — a synthetic item click on top
+         * would toggle the popover a second time and close it right away.
+         */
+        test('should open the component popover from the keyboard', async ({ page }) => {
+            await page.goto('/E2eNavbarItemCustomComponent');
+
+            await page.keyboard.press('Tab');
+
+            await expect(getComponent(page).getByTestId('custom-item').locator('button')).toBeFocused();
+
+            await page.keyboard.press('Enter');
+
+            await expect(page.locator('.kbq-popover')).toBeVisible();
+
+            await page.keyboard.press('Escape');
+
+            await expect(page.locator('.kbq-popover')).toBeHidden();
+        });
+
+        test('arrow keys should move roving focus past the custom item', async ({ page }) => {
+            await page.goto('/E2eNavbarItemCustomComponent');
+
+            await page.keyboard.press('Tab');
+            await page.keyboard.press('ArrowDown');
+
+            await expect(getComponent(page).getByTestId('plain-item')).toHaveClass(/cdk-keyboard-focused/);
+        });
+    });
 });
