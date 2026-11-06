@@ -1,3 +1,16 @@
+## 20.4.4 (2026-11-06)
+
+### Koobiq
+
+ * bug fix  **badge:** keep the label in the middle under a fractional page zoom ([#DS-5756](https://github.com/koobiq/angular-components/issues/issue/DS-5756)) ([#2332](https://github.com/koobiq/angular-components/issues/2332)) ([4cdcf4d](https://github.com/koobiq/angular-components/commit/4cdcf4d7340b5d82a4cddb6b420a4a6ca0bc9f6e))
+ * bug fix  **notification-center:** use card surface for loading overlay ([#DS-5825](https://github.com/koobiq/angular-components/issues/issue/DS-5825)) ([#2318](https://github.com/koobiq/angular-components/issues/2318)) ([c54038a](https://github.com/koobiq/angular-components/commit/c54038ac08617018cc1ccdecec6f2e55f8396a4f))
+ * bug fix  **sidepanel:** close the sidepanel the kbqSidepanelClose button is rendered in ([#DS-5356](https://github.com/koobiq/angular-components/issues/issue/DS-5356)) ([#2331](https://github.com/koobiq/angular-components/issues/2331)) ([dd4a465](https://github.com/koobiq/angular-components/commit/dd4a46554c62e43e3acd8a523e09734312b46ad4))
+ * bug fix  **toast:** stop timer after service destroy ([#DS-5840](https://github.com/koobiq/angular-components/issues/issue/DS-5840)) ([#2321](https://github.com/koobiq/angular-components/issues/2321)) ([35d0385](https://github.com/koobiq/angular-components/commit/35d0385550b8213922c1ac080e2c6729d20b99e0))
+
+### Documentation
+
+ * docs  **sidepanel:** describe cdkScrollable for popups in the body ([#DS-4192](https://github.com/koobiq/angular-components/issues/issue/DS-4192)) (#2314) ([undefined](https://github.com/koobiq/angular-components/commit/55e9ef5c27f31452524ce576b7986697804004b6))
+
 ## 20.4.3 (2026-11-03)
 
 ### Koobiq
