@@ -69,7 +69,7 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
     ngOnInit(): void {
         this.searchControl.valueChanges
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((value) => this.treeControl.filterNodes(value));
+            .subscribe((value) => this.treeControl.applyFilter(value));
     }
 
     override ngAfterViewInit() {

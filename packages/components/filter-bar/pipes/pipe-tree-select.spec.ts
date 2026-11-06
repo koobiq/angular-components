@@ -671,12 +671,12 @@ describe('KbqPipeTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const filterNodesSpy = vi.spyOn(component.treeControl, 'filterNodes');
+            const applyFilterSpy = vi.spyOn(component.treeControl, 'applyFilter');
 
             component.searchControl.setValue('Admin');
             await vi.runOnlyPendingTimersAsync();
 
-            expect(filterNodesSpy).toHaveBeenCalledWith('Admin');
+            expect(applyFilterSpy).toHaveBeenCalledWith('Admin');
         });
     });
 });
