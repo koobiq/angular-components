@@ -116,6 +116,13 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         return 'indeterminate';
     }
 
+    /** Number of options the "select all" action would toggle right now — template-only. */
+    get selectAllCount(): number {
+        const options = this.searchControl.value ? this.filteredOptions() : this.values;
+
+        return options?.filter((option) => !this.isLocked(option)).length ?? 0;
+    }
+
     /** true if all visible options selected */
     get allVisibleOptionsSelected(): boolean {
         const visible = this.visibleOptions;
