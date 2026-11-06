@@ -163,6 +163,60 @@ describe('publishedJsDocConfig', () => {
         ]);
     });
 
+    it.each([
+        ['public method', 'export class A { /** @internal */ method(): void {} }'],
+        ['protected property', 'export class A { /** @internal */ protected value = 1; }'],
+        ['accessor', 'export class A { /** @internal */ get value(): number { return 1; } }'],
+        ['abstract method', 'export abstract class A { /** @internal */ abstract method(): void; }'],
+        [
+            'parameter property',
+            'export class A { constructor(/** @internal */ public value: string) {} }'
+        ],
+        ['interface member', 'export interface A { /** @internal */ value: string; }'],
+        ['type literal member', 'export type A = { /** @internal */ method(): void };'],
+        ['enum member', 'export enum A { /** @internal */ Value }']
+    ])('reports @internal on a %s', async (_name, code) => {
+        expect(await restrictedSyntax(code)).toEqual([
+            expect.stringContaining('Use `@internal` only on a whole declaration')
+        ]);
+    });
+
+    it('accepts @internal on whole declarations and @docs-private on members', async () => {
+        const code = [
+            '/** @internal */',
+            'export class A {',
+            '    /** @docs-private */',
+            '    public value = 1;',
+            '',
+            '    /** @docs-private */',
+            '    protected otherValue = 2;',
+            '',
+            '    /** @docs-private */',
+            '    public method(): void {}',
+            '',
+            '    /** @docs-private */',
+            '    protected otherMethod(): void {}',
+            '}',
+            '',
+            '/** @internal */',
+            'export interface B {}',
+            '',
+            '/** @internal */',
+            'export enum C { Value }',
+            '',
+            '/** @internal */',
+            'export type D = string;',
+            '',
+            '/** @internal */',
+            'export function e(): void {}',
+            '',
+            '/** @internal */',
+            'export const f = 1;'
+        ].join('\n');
+
+        expect(await restrictedSyntax(code)).toEqual([]);
+    });
+
     it('reports `@docs-private` and `@internal` on a private member only', async () => {
         const code = [
             'export class A {',
@@ -170,14 +224,18 @@ describe('publishedJsDocConfig', () => {
             '    private a = 1;',
             '',
             '    /** @internal */',
-            '    #b = 1;',
+            '    private value = 1;',
+            '',
+            '    /** @internal */',
+            '    #value = 1;',
             '',
             '    /** @docs-private */',
-            '    protected c = this.#b;',
+            '    protected c = this.#value;',
             '}'
         ].join('\n');
 
         expect(await restrictedSyntax(code)).toEqual([
+            expect.stringContaining('A private member is not in the docs anyway'),
             expect.stringContaining('A private member is not in the docs anyway'),
             expect.stringContaining('A private member is not in the docs anyway')
         ]);
