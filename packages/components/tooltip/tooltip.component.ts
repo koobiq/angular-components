@@ -1020,6 +1020,8 @@ export class KbqTooltipTrigger
             this.applyRelativeToCaret();
         } else if (this.relativeToPointer) {
             this.applyRelativeToPointer();
+        } else {
+            this.pointerOrigin = null;
         }
     }
 
@@ -1130,6 +1132,7 @@ export class KbqTooltipTrigger
 
         if (!this.strategy) return;
 
+        this.pointerOrigin = null;
         this.strategy.setOrigin(element);
     }
 
@@ -1362,12 +1365,15 @@ export class KbqTooltipTrigger
      */
     private readonly caretOrigin = kbqCreateCaretOrigin(() => this.measureCaretAnchor());
 
+    private pointerOrigin: Point | null = null;
+
     /**
      * Anchors the overlay to the caret of the field.
      *
      * @docs-private
      */
     protected applyRelativeToCaret() {
+        this.pointerOrigin = null;
         this.strategy?.setOrigin(this.caretOrigin);
     }
 
@@ -1378,11 +1384,13 @@ export class KbqTooltipTrigger
 
     /** @docs-private */
     protected override getOriginCenter(): { x: number; y: number } {
-        if (!this.relativeToCaret) return super.getOriginCenter();
+        if (this.relativeToCaret) {
+            const { x, y, width, height } = this.caretOrigin;
 
-        const { x, y, width, height } = this.caretOrigin;
+            return { x: x + width / 2, y: y + height / 2 };
+        }
 
-        return { x: x + width / 2, y: y + height / 2 };
+        return this.pointerOrigin ?? super.getOriginCenter();
     }
 
     /**
@@ -1453,6 +1461,7 @@ export class KbqTooltipTrigger
             ![PopUpPlacements.Top, PopUpPlacements.Bottom].includes(this.placement as PopUpPlacements) ||
             this.triggerName !== 'mouseenter'
         ) {
+            this.pointerOrigin = null;
             this.resetOrigin();
 
             return;
@@ -1469,6 +1478,7 @@ export class KbqTooltipTrigger
             point.y = triggerRects.y + triggerRects.height;
         }
 
+        this.pointerOrigin = point;
         this.strategy.setOrigin(point);
     }
 }

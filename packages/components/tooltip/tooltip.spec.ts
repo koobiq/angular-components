@@ -1,4 +1,4 @@
-﻿import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceElement } from '@angular/cdk/coercion';
 import {
     ConnectedOverlayPositionChange,
@@ -1742,6 +1742,39 @@ describe('KbqTooltip', () => {
             await vi.runOnlyPendingTimersAsync();
         });
 
+        it('should use the pointer origin for arrow centering when relativeToPointer is enabled', async () => {
+            vi.useFakeTimers();
+
+            const trigger = component.tooltipTrigger();
+            const triggerElement = component.trigger().nativeElement;
+
+            triggerElement.getBoundingClientRect = () =>
+                ({
+                    left: 100,
+                    top: 100,
+                    right: 300,
+                    bottom: 140,
+                    width: 200,
+                    height: 40,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                }) as DOMRect;
+            trigger.arrowCentered = true;
+
+            dispatchMouseEvent(triggerElement, 'mouseenter', 260, 130);
+
+            expect(trigger.getArrowPoint()).toEqual({ x: 260, y: 100 });
+
+            trigger.relativeToCaret = true;
+            trigger['applyRelativeToCaret']();
+            trigger.relativeToCaret = false;
+
+            expect(trigger.getArrowPoint()).toEqual({ x: 200, y: 120 });
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
         it('should keep [kbqPlacementPriority] intact across a cursor-relative show', async () => {
             vi.useFakeTimers();
 
@@ -2147,6 +2180,41 @@ describe('KbqTooltip', () => {
             dispatchMouseEvent(cell, 'mouseover');
             cell.removeEventListener('mouseover', listener);
         };
+
+        it('should use the pointer origin for arrow centering in showForMouseEvent', async () => {
+            vi.useFakeTimers();
+
+            const trigger = component.tooltip();
+            const cellA = component.cellA().nativeElement;
+
+            cellA.getBoundingClientRect = () => {
+                if (!cellA.isConnected) return new DOMRect();
+
+                return {
+                    left: 300,
+                    top: 200,
+                    right: 400,
+                    bottom: 240,
+                    width: 100,
+                    height: 40,
+                    x: 300,
+                    y: 200,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            trigger.arrowCentered = true;
+
+            const listener = (event: Event) => trigger.showForMouseEvent(event as MouseEvent);
+
+            cellA.addEventListener('mouseover', listener);
+            dispatchMouseEvent(cellA, 'mouseover', 320, 230);
+            cellA.removeEventListener('mouseover', listener);
+
+            expect(trigger.getArrowPoint()).toEqual({ x: 320, y: 200 });
+
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         it('should move aria-describedby onto the element the tooltip is re-anchored to', async () => {
             vi.useFakeTimers();
