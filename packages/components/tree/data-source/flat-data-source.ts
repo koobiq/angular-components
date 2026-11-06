@@ -186,7 +186,9 @@ export class KbqTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
             this.treeControl.expansionModel.changed.pipe(
                 map((value) => ({ type: KbqTreeDataSourceChangeTypes.Expansion, value }))
             ),
-            this.treeControl.filterValue.pipe(map((value) => ({ type: KbqTreeDataSourceChangeTypes.Filter, value }))),
+            this.treeControl.filterModel.changed.pipe(
+                map(() => ({ type: KbqTreeDataSourceChangeTypes.Filter, value: this.treeControl.filterModel.selected }))
+            ),
             this.flattenedData
         ).pipe(
             map((changeObj: any): any => {
