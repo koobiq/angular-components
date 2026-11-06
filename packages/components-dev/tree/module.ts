@@ -259,7 +259,7 @@ export class DevApp {
             this.filterByValues.setValues(values);
         }
 
-        this.treeControl.applyFilter(this.filterValue);
+        this.treeControl.applyFilter(this.filterValue || null);
     }
 
     private transformer = (node: DevFileNode, level: number, parent: any) => {

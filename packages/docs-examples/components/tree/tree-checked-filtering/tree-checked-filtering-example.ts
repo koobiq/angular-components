@@ -264,6 +264,6 @@ export class TreeCheckedFilteringExample extends TreeParams {
             this.filterByValues.setValues(values);
         }
 
-        this.treeControl.applyFilter(this.filterValue);
+        this.treeControl.applyFilter(this.filterValue || null);
     }
 }

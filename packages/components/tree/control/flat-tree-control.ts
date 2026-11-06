@@ -13,7 +13,7 @@ export function defaultCompareViewValues(firstViewValue: string, secondViewValue
 
 /** Flat tree control. Able to expand/collapse a subtree recursively for flattened tree. */
 export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
-    expandedItemsBeforeFiltration: K[];
+    expandedItemsBeforeFiltration: K[] = [];
 
     private filters: FlatTreeControlFilter<T>[];
 

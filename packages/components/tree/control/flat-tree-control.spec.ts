@@ -354,6 +354,12 @@ describe('FlatTreeControl', () => {
                 control.expand(byName(nodes, 'images'));
                 expect(control.isExpanded(byName(nodes, 'images'))).toBe(false);
             });
+
+            it('should ignore expand while a zero-match filter is active', () => {
+                control.applyFilter('nothing');
+                control.expand(byName(nodes, 'images'));
+                expect(control.expansionModel.selected).toEqual([]);
+            });
         });
 
         describe('resetFilter', () => {
