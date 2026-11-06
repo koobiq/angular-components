@@ -132,6 +132,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
 
     prefix = 'kbq-popover';
 
+    // Safe arrow inset from popover.scss: the 24px arrow padding plus half of its 12px square.
     protected override arrowCenterInset = 30;
 
     header: string | TemplateRef<any>;

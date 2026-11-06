@@ -1468,6 +1468,81 @@ describe('KbqTooltip', () => {
             await vi.runOnlyPendingTimersAsync();
         });
 
+        it('should recalculate centered arrows after the entrance animation', async () => {
+            vi.useFakeTimers();
+
+            const triggerElement = component.trigger().nativeElement;
+
+            triggerElement.getBoundingClientRect = () => {
+                if (!triggerElement.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 300,
+                    bottom: 140,
+                    width: 200,
+                    height: 40,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            component.arrow = true;
+            component.arrowCentered = true;
+            component.placement = 'bottomRight';
+            fixture.detectChanges();
+
+            dispatchMouseEvent(triggerElement, 'mouseenter');
+            fixture.detectChanges();
+
+            const tooltip = tooltipElement()!;
+            let animationScale = true;
+            let finishAnimation!: () => void;
+            const animationFinished = new Promise<void>((resolve) => (finishAnimation = resolve));
+
+            tooltip.getAnimations = () =>
+                [
+                    {
+                        finished: animationFinished,
+                        effect: { getComputedTiming: () => ({ endTime: 200 }) }
+                    }
+                ] as unknown as Animation[];
+
+            tooltip.getBoundingClientRect = () => {
+                if (!tooltip.isConnected || animationScale) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 400,
+                    bottom: 260,
+                    width: 300,
+                    height: 160,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('19px');
+
+            animationScale = false;
+            finishAnimation();
+            await animationFinished;
+            await vi.advanceTimersByTimeAsync(0);
+            fixture.detectChanges();
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('-181px');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('0px');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
         it('should support arrow centering without changing the panel placement', async () => {
             vi.useFakeTimers();
 
@@ -1539,6 +1614,70 @@ describe('KbqTooltip', () => {
 
             expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('');
             expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should keep legacy narrow-trigger positioning while centering the arrow', async () => {
+            vi.useFakeTimers();
+
+            const triggerElement = component.trigger().nativeElement;
+
+            triggerElement.getBoundingClientRect = () => {
+                if (!triggerElement.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 116,
+                    bottom: 140,
+                    width: 16,
+                    height: 40,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            component.arrow = true;
+            component.arrowCentered = true;
+            component.placement = 'bottomLeft';
+            fixture.detectChanges();
+
+            await showByHover(fixture, triggerElement);
+
+            const positions = () =>
+                (
+                    component.tooltipTrigger().createOverlay().getConfig()
+                        .positionStrategy as FlexibleConnectedPositionStrategy
+                ).positions;
+
+            expect(positions()[0].offsetX).toBe(-9);
+
+            const tooltip = tooltipElement()!;
+
+            tooltip.getBoundingClientRect = () => {
+                if (!tooltip.isConnected) return new DOMRect();
+
+                return {
+                    left: 91,
+                    top: 100,
+                    right: 391,
+                    bottom: 260,
+                    width: 300,
+                    height: 160,
+                    x: 91,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            component.tooltipTrigger().onPositionChange({
+                connectionPair: positions()[0]
+            } as ConnectedOverlayPositionChange);
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('0px');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('0px');
 
             await vi.runOnlyPendingTimersAsync();
         });
@@ -2114,7 +2253,34 @@ describe('KbqTooltip', () => {
 
             const host = component.emptyTrigger().nativeElement;
             const trigger = component.enabledTooltip();
+            const directiveHost = trigger.getNativeElement();
 
+            directiveHost.getBoundingClientRect = () =>
+                ({
+                    left: 0,
+                    top: 0,
+                    right: 100,
+                    bottom: 20,
+                    width: 100,
+                    height: 20,
+                    x: 0,
+                    y: 0,
+                    toJSON: () => ({})
+                }) as DOMRect;
+            host.getBoundingClientRect = () =>
+                ({
+                    left: 200,
+                    top: 100,
+                    right: 300,
+                    bottom: 140,
+                    width: 100,
+                    height: 40,
+                    x: 200,
+                    y: 100,
+                    toJSON: () => ({})
+                }) as DOMRect;
+
+            trigger.arrowCentered = true;
             trigger.createOverlay();
 
             const setOrigin = vi.spyOn(trigger['strategy'], 'setOrigin');
@@ -2124,6 +2290,8 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
 
             expect(setOrigin).toHaveBeenCalledWith(host);
+            expect(trigger.getNativeElement()).toBe(host);
+            expect(trigger.getArrowPoint()).toEqual({ x: 250, y: 120 });
 
             trigger.hide(0);
             await vi.runOnlyPendingTimersAsync();

@@ -3235,19 +3235,10 @@ export const kbqGetCaretRect: (element: KbqTextAnchor) => KbqCaretRect | null;
 export const kbqGetElementHeight: (element: Element) => number;
 
 // @public
-export const kbqGetOverlayOriginSize: (origin: KbqOverlayOrigin) => Pick<KbqCaretRect, "width" | "height">;
+export const kbqGetOverlayOriginSize: (origin: KbqOverlayOrigin | FlexibleConnectedPositionStrategyOrigin) => Pick<KbqCaretRect, "x" | "y" | "width" | "height">;
 
 // @public
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
-
-// @public
-export const kbqGetPopUpArrowShift: (placement: string, panelRect: DOMRect, point: {
-    x: number;
-    y: number;
-}, arrowCenterInset: number) => {
-    x: number;
-    y: number;
-};
 
 // @public
 export const kbqGetScrollOverflowTolerance: (element: Element) => number;
@@ -3968,6 +3959,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     enterDelay: number;
     protected externalNativeElement: HTMLElement;
     focus(): void;
+    protected getActiveOrigin(): FlexibleConnectedPositionStrategyOrigin;
     protected getAdjustedPositions(): ConnectionPositionPair[];
     protected getAnchorSize(): {
         width: number;
@@ -4022,6 +4014,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected abstract scrollStrategy: () => ScrollStrategy;
     setExternalNativeElement(value: HTMLElement): void;
     protected setHovered(value: boolean): void;
+    protected setOrigin(origin: FlexibleConnectedPositionStrategyOrigin | null): void;
     show(delay?: number): void;
     stickToWindow: KbqStickToWindowPlacementValues | undefined;
     protected strategy: FlexibleConnectedPositionStrategy;
@@ -4228,7 +4221,7 @@ export interface KbqResolvedPanelWidth {
 }
 
 // @public
-export const kbqResolveOverlayOrigin: (origin: KbqOverlayOrigin) => FlexibleConnectedPositionStrategyOrigin;
+export const kbqResolveOverlayOrigin: (origin: KbqOverlayOrigin | FlexibleConnectedPositionStrategyOrigin) => FlexibleConnectedPositionStrategyOrigin;
 
 // @public
 export function kbqResolvePanelMaxHeightToken(panelMaxHeight: KbqPanelMaxHeight | undefined): string | null;
