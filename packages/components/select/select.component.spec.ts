@@ -2124,7 +2124,7 @@ class SelectWithPanelMaxHeight {
     imports: [KbqSelectModule, KbqInputModule, ReactiveFormsModule],
     template: `
         <kbq-form-field style="width: 300px">
-            <kbq-select [panelWidth]="panelWidth">
+            <kbq-select [panelWidth]="panelWidth" [panelMinWidth]="panelMinWidth">
                 <kbq-form-field kbqSelectSearch>
                     <input kbqInput type="text" [formControl]="searchCtrl" />
                 </kbq-form-field>
@@ -2140,6 +2140,7 @@ class SelectWithPanelMaxHeight {
 })
 class SelectWithSearchAndPanelWidth {
     panelWidth: KbqPanelWidth | null = null;
+    panelMinWidth = 200;
     searchCtrl = new UntypedFormControl();
 }
 
@@ -8177,6 +8178,33 @@ describe('KbqSelect', () => {
 
                 expect(getPane().style.width).toBe('412px');
 
+                spy.mockRestore();
+            });
+
+            it('should keep the search-locked width after tracked input changes and reopen', async () => {
+                const fixture = createPanelWidthComponent(SelectWithSearchAndPanelWidth, [], { autoDetect: false });
+                const spy = mockPanelBoundingRect(412);
+                const select = getSelectDebugElement(fixture.debugElement).injector.get(KbqSelect);
+
+                select.open();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+                expect(getPane().style.width).toBe('412px');
+
+                select.close();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                fixture.componentInstance.panelMinWidth = 201;
+                fixture.detectChanges();
+
+                select.open();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                expect(getPane().style.width).toBe('412px');
                 spy.mockRestore();
             });
 

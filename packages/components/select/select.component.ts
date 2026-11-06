@@ -1254,11 +1254,11 @@ export class KbqSelect
                 return;
             }
 
-            if (!this.panelOpen) return;
+            if (!untracked(() => this.panelOpen)) return;
 
             afterNextRender(
                 () => {
-                    if (!this.panelOpen) return;
+                    if (!untracked(() => this.panelOpen)) return;
 
                     this.updatePanelWidth();
                     this._changeDetectorRef.markForCheck();
