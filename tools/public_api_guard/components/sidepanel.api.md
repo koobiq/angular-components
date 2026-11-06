@@ -67,15 +67,14 @@ export class KbqSidepanelBody {
 
 // @public
 export class KbqSidepanelClose implements OnInit, OnChanges {
-    constructor(sidepanelRef: KbqSidepanelRef, elementRef: ElementRef<HTMLElement>, sidepanelService: KbqSidepanelService);
+    constructor(declaredSidepanelRef: KbqSidepanelRef | null, elementRef: ElementRef<HTMLElement>, sidepanelService: KbqSidepanelService);
     // (undocumented)
     kbqSidepanelClose: any;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnInit(): void;
-    // (undocumented)
-    sidepanelRef: KbqSidepanelRef;
+    get sidepanelRef(): KbqSidepanelRef;
     // (undocumented)
     sidepanelResult: any;
     // (undocumented)
