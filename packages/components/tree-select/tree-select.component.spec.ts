@@ -8,6 +8,7 @@ import {
     DebugElement,
     InputSignalWithTransform,
     OnInit,
+    PLATFORM_ID,
     Provider,
     Signal,
     Type,
@@ -4927,6 +4928,34 @@ describe('KbqTreeSelect', () => {
 
                 expect(viewportRect - panelRight).toBeGreaterThan(0);
             });
+        });
+    });
+
+    describe('on the server', () => {
+        beforeEach(() => {
+            configureKbqTreeSelectTestingModule(
+                [MultiTreeSelectWithCleaner],
+                [{ provide: PLATFORM_ID, useValue: 'server' }]
+            );
+        });
+
+        // Written after the first render, as `ngModel` does, so the tags are built from the options at once. A remove
+        // icon that only the server renders is a view the browser does not claim, which fails hydration.
+        it('should render no remove icon for a node disabled through the option input', () => {
+            const fixture = TestBed.createComponent(MultiTreeSelectWithCleaner);
+
+            fixture.componentInstance.disabledByInput = ['Downloads'];
+            fixture.componentInstance.control.setValue([]);
+            fixture.detectChanges();
+
+            fixture.componentInstance.control.setValue(['Documents', 'Downloads']);
+            fixture.detectChanges();
+
+            const removeIcons = Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('kbq-tag'))
+                .filter((tag) => tag.querySelector('[kbqTagRemove]'))
+                .map((tag) => tag.textContent!.trim());
+
+            expect(removeIcons).toEqual(['Documents']);
         });
     });
 
