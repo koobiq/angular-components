@@ -3241,6 +3241,15 @@ export const kbqGetOverlayOriginSize: (origin: KbqOverlayOrigin) => Pick<KbqCare
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
 
 // @public
+export const kbqGetPopUpArrowShift: (placement: string, panelRect: DOMRect, point: {
+    x: number;
+    y: number;
+}, arrowCenterInset: number) => {
+    x: number;
+    y: number;
+};
+
+// @public
 export const kbqGetScrollOverflowTolerance: (element: Element) => number;
 
 // @public
@@ -3872,6 +3881,8 @@ export abstract class KbqPopUp implements OnDestroy {
     protected readonly animationsDisabled: boolean;
     // (undocumented)
     arrow: boolean;
+    arrowCentered: boolean;
+    protected arrowCenterInset: number;
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
     get classMap(): {};
@@ -3935,6 +3946,7 @@ export type KbqPopUpSizeValues = KbqEnumValues<PopUpSizes>;
 // @public
 export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblingPopup {
     abstract arrow: boolean;
+    arrowCentered: boolean;
     protected readonly availablePositions: {
         [key: string]: ConnectionPositionPair;
     };
@@ -3961,8 +3973,16 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         width: number;
         height: number;
     };
+    getArrowPoint(): {
+        x: number;
+        y: number;
+    } | null;
     getMouseLeaveListener(): () => void;
     getNativeElement(): HTMLElement;
+    protected getOriginCenter(): {
+        x: number;
+        y: number;
+    };
     abstract getOverlayHandleComponentType(): Type<T>;
     protected getPrioritizedPositions(): ConnectionPositionPair[];
     protected getPriorityPlacementStrategy(value: string | string[]): ConnectionPositionPair[];

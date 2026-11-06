@@ -72,10 +72,14 @@ export interface KbqExclusiveTooltip {
 }
 
 // @public (undocumented)
-export class KbqTooltipComponent extends KbqPopUp {
+export class KbqTooltipComponent extends KbqPopUp implements AfterViewInit {
     applyOffset(): void;
+    // (undocumented)
+    protected arrowCenterInset: number;
     get elementRef(): ElementRef<HTMLElement>;
     id: string;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     prefix: string;
     // (undocumented)
@@ -130,6 +134,8 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected applyRelativeToCaret(): void;
     protected applyRelativeToPointer(): void;
     arrow: boolean;
+    arrowCentered: boolean;
+    readonly arrowCenteredInput: i0.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     readonly arrowInput: i0.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     closingActions(): rxjs.Observable<void | MouseEvent>;
     get color(): KbqComponentColors | string;
@@ -157,6 +163,10 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected getAnchorSize(): {
         width: number;
         height: number;
+    };
+    protected getOriginCenter(): {
+        x: number;
+        y: number;
     };
     getOverlayHandleComponentType(): Type<KbqTooltipComponent>;
     header: string | TemplateRef<unknown>;
@@ -215,7 +225,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     readonly visibleChange: EventEmitter<boolean>;
     readonly visibleChangeOutput: i0.OutputRef<boolean>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTooltipTrigger, "[kbqTooltip]", ["kbqTooltip"], { "scrollStrategyOverride": { "alias": "kbqTooltipScrollStrategy"; "required": false; "isSignal": true; }; "forDisabledComponent": { "alias": "forDisabledComponent"; "required": false; "isSignal": true; }; "ignoreTooltipPointerEvents": { "alias": "ignoreTooltipPointerEvents"; "required": false; "isSignal": true; }; "singleInstance": { "alias": "kbqTooltipSingleInstance"; "required": false; "isSignal": true; }; "triggerInput": { "alias": "kbqTrigger"; "required": false; "isSignal": true; }; "hideWithTimeoutInput": { "alias": "hideWithTimeout"; "required": false; "isSignal": true; }; "enterDelayInput": { "alias": "kbqEnterDelay"; "required": false; "isSignal": true; }; "leaveDelayInput": { "alias": "kbqLeaveDelay"; "required": false; "isSignal": true; }; "relativeToPointerInput": { "alias": "kbqRelativeToPointer"; "required": false; "isSignal": true; }; "relativeToCaretInput": { "alias": "kbqRelativeToCaret"; "required": false; "isSignal": true; }; "relativeToCaretVerticalInput": { "alias": "kbqRelativeToCaretVertical"; "required": false; "isSignal": true; }; "contentInput": { "alias": "kbqTooltip"; "required": false; "isSignal": true; }; "headerInput": { "alias": "kbqTooltipHeader"; "required": false; "isSignal": true; }; "modifierInput": { "alias": "kbqTooltipModifier"; "required": false; "isSignal": true; }; "contextInput": { "alias": "kbqTooltipContext"; "required": false; "isSignal": true; }; "customClassInput": { "alias": "kbqTooltipClass"; "required": false; "isSignal": true; }; "colorInput": { "alias": "kbqTooltipColor"; "required": false; "isSignal": true; }; "arrowInput": { "alias": "kbqTooltipArrow"; "required": false; "isSignal": true; }; "offsetInput": { "alias": "kbqTooltipOffset"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "kbqTooltipDisabled"; "required": false; "isSignal": true; }; "tooltipPlacementPriorityInput": { "alias": "kbqPlacementPriority"; "required": false; "isSignal": true; }; "tooltipPlacementInput": { "alias": "kbqPlacement"; "required": false; "isSignal": true; }; "tooltipVisibleInput": { "alias": "kbqVisible"; "required": false; "isSignal": true; }; }, { "placementChangeOutput": "kbqPlacementChange"; "visibleChangeOutput": "kbqVisibleChange"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTooltipTrigger, "[kbqTooltip]", ["kbqTooltip"], { "scrollStrategyOverride": { "alias": "kbqTooltipScrollStrategy"; "required": false; "isSignal": true; }; "forDisabledComponent": { "alias": "forDisabledComponent"; "required": false; "isSignal": true; }; "ignoreTooltipPointerEvents": { "alias": "ignoreTooltipPointerEvents"; "required": false; "isSignal": true; }; "singleInstance": { "alias": "kbqTooltipSingleInstance"; "required": false; "isSignal": true; }; "triggerInput": { "alias": "kbqTrigger"; "required": false; "isSignal": true; }; "hideWithTimeoutInput": { "alias": "hideWithTimeout"; "required": false; "isSignal": true; }; "enterDelayInput": { "alias": "kbqEnterDelay"; "required": false; "isSignal": true; }; "leaveDelayInput": { "alias": "kbqLeaveDelay"; "required": false; "isSignal": true; }; "relativeToPointerInput": { "alias": "kbqRelativeToPointer"; "required": false; "isSignal": true; }; "relativeToCaretInput": { "alias": "kbqRelativeToCaret"; "required": false; "isSignal": true; }; "relativeToCaretVerticalInput": { "alias": "kbqRelativeToCaretVertical"; "required": false; "isSignal": true; }; "contentInput": { "alias": "kbqTooltip"; "required": false; "isSignal": true; }; "headerInput": { "alias": "kbqTooltipHeader"; "required": false; "isSignal": true; }; "modifierInput": { "alias": "kbqTooltipModifier"; "required": false; "isSignal": true; }; "contextInput": { "alias": "kbqTooltipContext"; "required": false; "isSignal": true; }; "customClassInput": { "alias": "kbqTooltipClass"; "required": false; "isSignal": true; }; "colorInput": { "alias": "kbqTooltipColor"; "required": false; "isSignal": true; }; "arrowInput": { "alias": "kbqTooltipArrow"; "required": false; "isSignal": true; }; "arrowCenteredInput": { "alias": "kbqTooltipArrowCentered"; "required": false; "isSignal": true; }; "offsetInput": { "alias": "kbqTooltipOffset"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "kbqTooltipDisabled"; "required": false; "isSignal": true; }; "tooltipPlacementPriorityInput": { "alias": "kbqPlacementPriority"; "required": false; "isSignal": true; }; "tooltipPlacementInput": { "alias": "kbqPlacement"; "required": false; "isSignal": true; }; "tooltipVisibleInput": { "alias": "kbqVisible"; "required": false; "isSignal": true; }; }, { "placementChangeOutput": "kbqPlacementChange"; "visibleChangeOutput": "kbqVisibleChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTooltipTrigger, never>;
 }
