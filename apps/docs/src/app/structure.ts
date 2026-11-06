@@ -665,7 +665,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'input',
                     hasExamples: true,
-                    isUpdated: expiresAt('2026-11-13')
+                    isUpdated: expiresAt('2026-11-19')
                 },
                 {
                     id: DocsStructureItemId.FileUpload,

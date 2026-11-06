@@ -16,6 +16,7 @@ import {
     InputNumberOverviewExample,
     InputOverviewExample,
     InputPasswordOverviewExample,
+    InputReadonlyExample,
     InputWithMaskExample
 } from 'packages/docs-examples/components/input';
 import { DevThemeToggle } from '../theme-toggle';
@@ -53,7 +54,8 @@ export class DevDocsExamples {}
         KbqIconModule,
         KbqNormalizeWhitespace,
         DevThemeToggle,
-        KbqToggleComponent
+        KbqToggleComponent,
+        InputReadonlyExample
     ],
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
