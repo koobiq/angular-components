@@ -202,10 +202,18 @@ export abstract class KbqPaginatedTabHeader
     /** Whether the tab list can be scrolled more towards the beginning of the tab label list. */
     disableScrollBefore = true;
 
-    /** Whether part of the tab list is scrolled out past its start edge, which is then faded out. */
+    /**
+     * Whether part of the tab list is scrolled out past its start edge, which is then faded out.
+     *
+     * @internal
+     */
     protected overflowBefore = false;
 
-    /** Whether part of the tab list is scrolled out past its end edge, which is then faded out. */
+    /**
+     * Whether part of the tab list is scrolled out past its end edge, which is then faded out.
+     *
+     * @internal
+     */
     protected overflowAfter = false;
 
     /**

@@ -98,8 +98,6 @@ export abstract class KbqPaginatedTabHeader implements OnChanges, AfterContentCh
     // (undocumented)
     ngOnDestroy(): void;
     onContentChanges(): void;
-    protected overflowAfter: boolean;
-    protected overflowBefore: boolean;
     // (undocumented)
     abstract get previousPaginator(): ElementRef<HTMLElement>;
     protected get scrollbarMode(): KbqScrollbarMode;
