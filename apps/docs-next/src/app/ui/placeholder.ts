@@ -44,7 +44,7 @@ export const docsNextPlaceholderArticle = (locale: DocsNextLocale, isComponent: 
     return isComponent
         ? [
               { kind: 'html', html: lead },
-              { kind: 'example', id: 'overview', title: locale === 'ru' ? 'Пример' : 'Example', files: [] },
+              { kind: 'example', id: 'overview', title: locale === 'ru' ? 'Пример' : 'Example' },
               { kind: 'html', html }
           ]
         : [{ kind: 'html', html: lead + html }];

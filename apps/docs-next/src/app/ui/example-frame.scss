@@ -82,6 +82,15 @@
     border-top: 1px solid var(--kbq-line-contrast-less);
 }
 
+.docs-next-example__code-loading {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+    margin: 0;
+    padding: var(--kbq-size-l);
+    border-top: 1px solid var(--kbq-line-contrast-less);
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
 // On a phone the example keeps 16px around it (spec/examples/placement.md) and the footer holds icon buttons only.
 @include breakpoints.docs-next-mobile {
     .docs-next-example__body {

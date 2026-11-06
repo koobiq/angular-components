@@ -1,7 +1,8 @@
 /**
  * Compiles the MDX pages the unified docs prototype (`apps/docs-next`) shows into static JSON under
  * `dist/docs-next-content`, which the app loads at runtime. Live examples stay out: each example becomes a block with
- * its title and source files, rendered as a static viewer frame.
+ * its title, rendered as a static viewer frame. The source files of the examples go to a file of their own next to the
+ * page (`<page>.sources.json`): they are most of the weight of a page and are only needed when the code is opened.
  */
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { globSync } from 'glob';
@@ -17,9 +18,11 @@ const LOCALES = ['ru', 'en'];
 type ContentBlock =
     | { kind: 'html'; html: string }
     | { kind: 'code'; language: string; content: string }
-    | { kind: 'example'; id: string; title: string; files: { name: string; content: string }[] };
+    | { kind: 'example'; id: string; title: string; sources: string };
 
-const readExampleFiles = (example: LiveExample): { name: string; content: string }[] =>
+type ExampleFiles = { name: string; content: string }[];
+
+const readExampleFiles = (example: LiveExample): ExampleFiles =>
     example.files.map((name) => ({
         name,
         content: readFileSync(join('packages', 'docs-examples', example.packagePath, name), 'utf8')
@@ -43,7 +46,11 @@ const withPlainCode = (template: string, codeBlocks: { content: string; language
         template
     );
 
-const compileBlocks = (path: string): ContentBlock[] => {
+/**
+ * The blocks of a page. The source files of its examples are added to `sources` by example id, and the blocks name the
+ * file they will be in by `sourcesKey`, the address of the page without the extension.
+ */
+const compileBlocks = (path: string, sourcesKey: string, sources: Record<string, ExampleFiles>): ContentBlock[] => {
     let topLevel: CompiledBlock[] = [];
     const { codeBlocks } = compilePage(readFileSync(path, 'utf8'), {
         path,
@@ -68,7 +75,8 @@ const compileBlocks = (path: string): ContentBlock[] => {
             );
             const example = EXAMPLE_COMPONENTS[id];
 
-            blocks.push({ kind: 'example', id, title: example.title, files: readExampleFiles(example) });
+            sources[id] = readExampleFiles(example);
+            blocks.push({ kind: 'example', id, title: example.title, sources: sourcesKey });
         } else if (template) {
             const html = withPlainCode(template, codeBlocks);
             const last = blocks.at(-1);
@@ -87,9 +95,11 @@ const compileBlocks = (path: string): ContentBlock[] => {
 const findComponentSource = (name: string, locale: string, examples: boolean): string | undefined =>
     globSync(`packages/components/**/${examples ? 'examples.' : ''}${name}.${locale}.mdx`, { posix: true })[0];
 
-const write = (path: string, blocks: ContentBlock[]): void => {
+const write = (path: string, blocks: ContentBlock[], sources: Record<string, ExampleFiles>): void => {
     mkdirSync(join(OUTPUT_DIR, ...path.split('/').slice(0, -1)), { recursive: true });
     writeFileSync(join(OUTPUT_DIR, `${path}.json`), JSON.stringify(blocks));
+
+    if (Object.keys(sources).length) writeFileSync(join(OUTPUT_DIR, `${path}.sources.json`), JSON.stringify(sources));
 };
 
 const generate = (): void => {
@@ -109,7 +119,14 @@ const generate = (): void => {
 
             if (!sources.length) continue;
 
-            write(`components/${component.id}.${locale}`, sources.flatMap(compileBlocks));
+            const key = `components/${component.id}.${locale}`;
+            const exampleFiles: Record<string, ExampleFiles> = {};
+
+            write(
+                key,
+                sources.flatMap((path) => compileBlocks(path, key, exampleFiles)),
+                exampleFiles
+            );
             count++;
         }
     }
@@ -124,7 +141,10 @@ const generate = (): void => {
             }
 
             try {
-                write(`pages/${pageId}.${locale}`, compileBlocks(path));
+                const key = `pages/${pageId}.${locale}`;
+                const exampleFiles: Record<string, ExampleFiles> = {};
+
+                write(key, compileBlocks(path, key, exampleFiles), exampleFiles);
                 count++;
             } catch (error) {
                 console.warn(`${basename(path)}: skipped, ${(error as Error).message}`);

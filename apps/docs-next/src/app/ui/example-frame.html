@@ -7,7 +7,7 @@
     </div>
 
     <div class="docs-next-example__footer">
-        @if (files().length) {
+        @if (sources()) {
             @if (state.isMobile()) {
                 <button
                     kbq-button
@@ -17,7 +17,9 @@
                     [attr.aria-expanded]="codeVisible()"
                     [attr.aria-label]="codeVisible() ? state.t('hideCode') : state.t('showCode')"
                     [kbqTooltip]="codeVisible() ? state.t('hideCode') : state.t('showCode')"
-                    (click)="codeVisible.set(!codeVisible())"
+                    (click)="toggleCode()"
+                    (focus)="loadFiles()"
+                    (pointerenter)="loadFiles()"
                 >
                     <i kbq-icon="kbq-code_16"></i>
                 </button>
@@ -28,7 +30,9 @@
                     class="docs-next-example__code-toggle"
                     type="button"
                     [attr.aria-expanded]="codeVisible()"
-                    (click)="codeVisible.set(!codeVisible())"
+                    (click)="toggleCode()"
+                    (focus)="loadFiles()"
+                    (pointerenter)="loadFiles()"
                 >
                     {{ codeVisible() ? state.t('hideCode') : state.t('showCode') }}
                 </button>
@@ -91,6 +95,10 @@
     </div>
 
     @if (codeVisible()) {
-        <kbq-code-block class="docs-next-example__code" noBorder [files]="codeFiles()" />
+        @if (codeFiles().length) {
+            <kbq-code-block class="docs-next-example__code" noBorder [files]="codeFiles()" />
+        } @else if (codeLoading()) {
+            <p class="docs-next-example__code-loading" role="status">{{ state.t('loading') }}</p>
+        }
     }
 </figure>

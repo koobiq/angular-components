@@ -55,7 +55,7 @@ const COPIED_DURATION = 2000;
                     <docs-next-example-frame
                         [exampleId]="block.id"
                         [exampleTitle]="block.title"
-                        [files]="block.files"
+                        [sources]="block.sources"
                     />
                 }
             }
