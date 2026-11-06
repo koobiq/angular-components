@@ -1,4 +1,4 @@
-﻿import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -513,7 +513,7 @@ export class KbqTreeSelection<T = any, K = T>
                 .map((option) => option.data)
         );
 
-        const candidates = this.treeControl.filterValue.value?.length
+        const candidates = this.treeControl.hasActiveFilter
             ? this.renderedOptions.map((option) => option.data)
             : (this.treeControl.dataNodes ?? []);
 
