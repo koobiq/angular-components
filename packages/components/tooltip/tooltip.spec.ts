@@ -19,6 +19,7 @@ import {
     ESCAPE,
     KBQ_PARENT_POPUP,
     KbqParentPopup,
+    KbqPopUpPlacementValues,
     KbqSiblingPopup,
     kbqSiblingPopupProvider,
     TAB
@@ -3222,7 +3223,7 @@ class TooltipArrowAndOffset {
     arrow = false;
     arrowCentered = false;
     offset: number | null = null;
-    placement: 'top' | 'bottomRight' = 'top';
+    placement: KbqPopUpPlacementValues = 'top';
 }
 
 @Component({
