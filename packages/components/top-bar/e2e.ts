@@ -14,7 +14,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
+import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer, KbqTopBarTitle } from './top-bar';
 
 /** An overflowing action rendered as a button. Annotated so the values keep the button's types. */
 type TopBarAction = {
@@ -49,11 +49,7 @@ const ACTIONS: TopBarAction[] = [
     ],
     template: `
         <kbq-top-bar [style.width.px]="width()" [withShadow]="withShadow()">
-            <div
-                class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs"
-                kbqTopBarContainer
-                placement="start"
-            >
+            <div class="layout-row layout-align-center-center" kbqTopBarContainer placement="start">
                 <ng-content />
             </div>
 
@@ -132,24 +128,25 @@ export class TopBarActionsRow {
         KbqBreadcrumbItem,
         KbqBreadcrumbs,
         KbqTooltipTrigger,
-        RouterLink
+        RouterLink,
+        KbqTopBarTitle
     ],
     template: `
         <div>
             <e2e-top-bar-actions-row [withShadow]="true">
-                <div class="kbq-title kbq-truncate-line">Dashboards</div>
+                <div class="kbq-truncate-line" kbqTopBarTitle>Dashboards</div>
             </e2e-top-bar-actions-row>
         </div>
 
         <div>
             <e2e-top-bar-actions-row [width]="380">
-                <div class="kbq-title kbq-truncate-line">Dashboards</div>
+                <div class="kbq-truncate-line" kbqTopBarTitle>Dashboards</div>
             </e2e-top-bar-actions-row>
         </div>
 
         <div style="width: 550px">
             <e2e-top-bar-actions-row>
-                <div class="kbq-title kbq-truncate-line e2e-top-bar-states__title">
+                <div class="kbq-truncate-line e2e-top-bar-states__title" kbqTopBarTitle>
                     <span class="kbq-truncate-line layout-margin-right-xs">Dashboards</span>
 
                     <span class="e2e-top-bar-states__counter">{{ 13294 | kbqNumber: '' : 'en-US' }}</span>
@@ -225,7 +222,7 @@ export class TopBarActionsRow {
         <div data-testid="e2eTopBarNestedOverflowItems">
             <kbq-top-bar>
                 <div kbqTopBarContainer placement="start">
-                    <div class="kbq-title kbq-truncate-line">Nested</div>
+                    <div class="kbq-truncate-line" kbqTopBarTitle>Nested</div>
                 </div>
                 <div kbqTopBarSpacer></div>
                 <div kbqTopBarContainer placement="end">
@@ -275,7 +272,7 @@ export class TopBarActionsRow {
         <div data-testid="e2eTopBarStartContainerFloor" style="width: 320px">
             <kbq-top-bar style="--kbq-top-bar-container-start-min-width: 120px">
                 <div kbqTopBarContainer placement="start">
-                    <div class="kbq-title kbq-truncate-line">A dashboard title far too long for this bar</div>
+                    <div class="kbq-truncate-line" kbqTopBarTitle>A dashboard title far too long for this bar</div>
                 </div>
                 <div kbqTopBarSpacer></div>
                 <div kbqTopBarContainer placement="end">
@@ -324,13 +321,14 @@ export class E2eTopBarStates {
         KbqButton,
         KbqButtonCssStyler,
         KbqButtonDropdownTrigger,
-        KbqDropdownModule
+        KbqDropdownModule,
+        KbqTopBarTitle
     ],
     template: `
         <div class="e2e-top-bar-sticky__scroller" data-testid="e2eTopBarStickyScroller">
             <kbq-top-bar role="banner" aria-label="Dashboards" [withShadow]="true">
                 <div kbqTopBarContainer placement="start">
-                    <div class="kbq-title kbq-truncate-line">Dashboards</div>
+                    <div class="kbq-truncate-line" kbqTopBarTitle>Dashboards</div>
                 </div>
 
                 <div kbqTopBarSpacer></div>
@@ -393,3 +391,81 @@ export class E2eTopBarSticky {
     protected readonly rows = Array.from({ length: 12 }, (_, index) => index + 1);
     protected readonly componentColors = KbqComponentColors;
 }
+
+/**
+ * The same bar three times: a page title in the start slot of one, `size="big"` breadcrumbs in the second, and a title
+ * long enough to wrap in the third. The first two must keep the bar height and put the text in the same place, so a
+ * page that swaps one variant for the other does not jump; the third must grow the bar instead of painting over it.
+ */
+@Component({
+    selector: 'e2e-top-bar-title-breadcrumbs',
+    imports: [KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer, KbqTopBarTitle, KbqBreadcrumbs, KbqBreadcrumbItem],
+    template: `
+        <kbq-top-bar data-testid="e2eTopBarTitleBar">
+            <div class="layout-row layout-align-center-center" kbqTopBarContainer placement="start">
+                <div class="layout-row layout-margin-right-l flex-none">
+                    <span class="e2e-top-bar-title-breadcrumbs__icon"></span>
+                </div>
+                <div class="kbq-truncate-line" data-testid="e2eTopBarTitleText" kbqTopBarTitle>Dashboards</div>
+            </div>
+
+            <div kbqTopBarSpacer></div>
+
+            <div kbqTopBarContainer placement="end"></div>
+        </kbq-top-bar>
+
+        <kbq-top-bar data-testid="e2eTopBarBreadcrumbsBar">
+            <div class="layout-row layout-align-center-center" kbqTopBarContainer placement="start">
+                <div class="layout-row layout-margin-right-l flex-none">
+                    <span class="e2e-top-bar-title-breadcrumbs__icon"></span>
+                </div>
+                <nav kbq-breadcrumbs size="big">
+                    <kbq-breadcrumb-item text="Dashboards" />
+                    <kbq-breadcrumb-item text="MEIS Dashboard" />
+                </nav>
+            </div>
+
+            <div kbqTopBarSpacer></div>
+
+            <div kbqTopBarContainer placement="end"></div>
+        </kbq-top-bar>
+
+        <kbq-top-bar data-testid="e2eTopBarWrappingTitleBar">
+            <div class="layout-row layout-align-center-center" kbqTopBarContainer placement="start">
+                <div class="layout-row layout-margin-right-l flex-none">
+                    <span class="e2e-top-bar-title-breadcrumbs__icon"></span>
+                </div>
+                <!-- No kbq-truncate-line here: the title wraps, and the bar has to follow it instead of clipping the text. -->
+                <div data-testid="e2eTopBarWrappingTitleText" kbqTopBarTitle>
+                    Dashboards of the whole infrastructure department and everything else
+                </div>
+            </div>
+
+            <div kbqTopBarSpacer></div>
+
+            <div kbqTopBarContainer placement="end"></div>
+        </kbq-top-bar>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-m);
+            padding: var(--kbq-size-xxs);
+            max-width: 550px;
+        }
+
+        .e2e-top-bar-title-breadcrumbs__icon {
+            display: block;
+            width: var(--kbq-size-xxl);
+            height: var(--kbq-size-xxl);
+            border-radius: var(--kbq-size-xs);
+            background: var(--kbq-background-theme);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTopBarTitleBreadcrumbs'
+    }
+})
+export class E2eTopBarTitleBreadcrumbs {}
