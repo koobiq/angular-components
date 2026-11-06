@@ -86,6 +86,25 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
         return tally && tally.selected > 0 ? 'indeterminate' : 'unchecked';
     }
 
+    /**
+     * Number of leaf nodes "select all" would toggle right now — template-only. Searching counts only
+     * the matching leaves among the rendered options; the group ancestors shown for context are not
+     * leaves and drop out of the count by construction.
+     */
+    get selectAllCount(): number {
+        if (!this.select()) return 0;
+
+        if (this.select().search()?.ngControl?.value) {
+            return this.tree().renderedOptions.filter(
+                (option) => option.value !== kbqTreeSelectAllValue && !option.data.expandable && !option.disabled
+            ).length;
+        }
+
+        return (this.treeControl.dataNodes ?? []).filter(
+            (node) => node.value !== kbqTreeSelectAllValue && !node.expandable && !this.isLockedNode(node)
+        ).length;
+    }
+
     get numberOfSelectedLeaves(): number {
         return this.select().selectionModel.selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length;
     }
