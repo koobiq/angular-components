@@ -11,11 +11,18 @@
 
 <div
     #tabListContainer
+    #overflowShadow="kbqOverflowShadowContainer"
     kbqScrollbarViewport
+    kbqOverflowShadowContainer
     class="kbq-tab-link__container kbq-tab-header__scroll-container"
     [kbqScrollbarMode]="scrollbarMode"
-    [class.kbq-tab-header__scroll-container_overflow-before]="overflowBefore"
-    [class.kbq-tab-header__scroll-container_overflow-after]="overflowAfter"
+    [kbqOverflowShadowContainerDisabled]="!vertical"
+    [class.kbq-tab-header__scroll-container_overflow-before]="
+        vertical ? overflowShadow.overflow().top : !disableScrollBefore
+    "
+    [class.kbq-tab-header__scroll-container_overflow-after]="
+        vertical ? overflowShadow.overflow().bottom : !disableScrollAfter
+    "
     (keydown)="handleKeydown($event)"
 >
     <div #tabList class="kbq-tab-list" (cdkObserveContent)="onContentChanges()">

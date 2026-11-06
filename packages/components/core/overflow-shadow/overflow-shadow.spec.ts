@@ -1,5 +1,5 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { ChangeDetectionStrategy, Component, Directive, Provider, Type, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Observable, Subject } from 'rxjs';
 import {
@@ -119,6 +119,26 @@ class TestHostDebounceComponent {
 })
 class TestHostUndefinedRefComponent {
     readonly container = viewChild.required(KbqOverflowShadowContainer);
+}
+
+@Component({
+    selector: 'test-overflow-shadow-disabled-host',
+    imports: [KbqOverflowShadowContainer],
+    template: `
+        <div
+            #container="kbqOverflowShadowContainer"
+            data-testid="body"
+            kbqOverflowShadowContainer
+            [kbqOverflowShadowContainerDisabled]="disabled()"
+        >
+            body
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TestHostDisabledComponent {
+    readonly container = viewChild.required(KbqOverflowShadowContainer);
+    readonly disabled = signal(true);
 }
 
 class MockOverflowShadowSource implements KbqOverflowShadowSource {
@@ -329,6 +349,50 @@ describe(KbqOverflowShadowContainer.name, () => {
             ]);
 
             expect(resizeObserver.observed).toContain(externalSource.element);
+        });
+    });
+
+    describe('kbqOverflowShadowContainerDisabled', () => {
+        it('should neither listen to scroll nor observe resize while disabled', () => {
+            const resizeObserver = new MockSharedResizeObserver();
+            const fixture = createComponent(TestHostDisabledComponent, [
+                { provide: SharedResizeObserver, useValue: resizeObserver }
+            ]);
+            const body = fixture.debugElement.nativeElement.querySelector('[data-testid="body"]') as HTMLElement;
+
+            setScrollMetrics(body, { scrollTop: 10, clientHeight: 100, scrollHeight: 500 });
+            body.dispatchEvent(new Event('scroll'));
+            fixture.detectChanges();
+
+            expect(resizeObserver.observed).not.toContain(body);
+            expect(fixture.componentInstance.container().overflow()).toEqual({ top: false, bottom: false });
+        });
+
+        it('should check overflow once enabled and clear it once disabled again', () => {
+            const fixture = createComponent(TestHostDisabledComponent);
+            const { container, disabled } = fixture.componentInstance;
+            const body = fixture.debugElement.nativeElement.querySelector('[data-testid="body"]') as HTMLElement;
+
+            setScrollMetrics(body, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
+            disabled.set(false);
+            fixture.detectChanges();
+
+            expect(container().overflow()).toEqual({ top: false, bottom: true });
+
+            setScrollMetrics(body, { scrollTop: 10 });
+            body.dispatchEvent(new Event('scroll'));
+
+            expect(container().overflow()).toEqual({ top: true, bottom: true });
+
+            disabled.set(true);
+            fixture.detectChanges();
+
+            expect(container().overflow()).toEqual({ top: false, bottom: false });
+
+            setScrollMetrics(body, { scrollTop: 20 });
+            body.dispatchEvent(new Event('scroll'));
+
+            expect(container().overflow()).toEqual({ top: false, bottom: false });
         });
     });
 
