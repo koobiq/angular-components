@@ -36,8 +36,27 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
 
     private readonly renderer = inject(Renderer2);
 
+    /**
+     * Sidepanel the button closes: the one it is rendered in. A button rendered outside any sidepanel, such as
+     * an item of a dropdown opened from one, closes the sidepanel its template is declared in.
+     */
+    get sidepanelRef(): KbqSidepanelRef {
+        const container = this.elementRef.nativeElement.closest('.kbq-sidepanel-container');
+        const renderedIn = container && this.sidepanelService.openedSidepanels.find(({ id }) => id === container.id);
+        const sidepanelRef = renderedIn ?? this.declaredSidepanelRef;
+
+        if (!sidepanelRef) {
+            throw Error('kbqSidepanelClose: the button is neither rendered nor declared inside a sidepanel.');
+        }
+
+        return sidepanelRef;
+    }
+
     constructor(
-        @Optional() public sidepanelRef: KbqSidepanelRef,
+        // Dependency injection follows where a template is declared, not where it is rendered: a template declared
+        // outside the sidepanel and shown in it through `ngTemplateOutlet` has no ref here, or the ref of another
+        // sidepanel when it was declared in that one.
+        @Optional() private declaredSidepanelRef: KbqSidepanelRef | null,
         private elementRef: ElementRef<HTMLElement>,
         private sidepanelService: KbqSidepanelService
     ) {}
@@ -47,18 +66,6 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
         // submit it too. A type the author set is left alone.
         if (!this.elementRef.nativeElement.hasAttribute('type')) {
             this.renderer.setAttribute(this.elementRef.nativeElement, 'type', 'button');
-        }
-
-        if (!this.sidepanelRef) {
-            // When this directive is included in a sidepanel via TemplateRef (rather than being
-            // in a Component), the SidepanelRef isn't available via injection because embedded
-            // views cannot be given a custom injector. Instead, we look up the SidepanelRef by
-            // ID.
-            // This must occur in `onInit`, as the ID binding for the sidepanel container won't
-            // be resolved at constructor time. We use setTimeout by same reason.
-            setTimeout(() => {
-                this.sidepanelRef = getClosestSidepanel(this.elementRef, this.sidepanelService.openedSidepanels)!;
-            });
         }
     }
 
@@ -170,18 +177,3 @@ export class KbqSidepanelFooter {
     }
 })
 export class KbqSidepanelActions {}
-
-/**
- * Finds the closest KbqSidepanelRef to an element by looking at the DOM.
- * @param element Element relative to which to look for a sidepanel.
- * @param openSidepanels References to the currently-open sidepanels.
- */
-function getClosestSidepanel(element: ElementRef<HTMLElement>, openSidepanels: KbqSidepanelRef[]) {
-    let parent: HTMLElement | null = element.nativeElement.parentElement;
-
-    while (parent && !parent.classList.contains('kbq-sidepanel-container')) {
-        parent = parent.parentElement;
-    }
-
-    return parent ? openSidepanels.find((sidepanel) => sidepanel.id === parent!.id) : null;
-}
