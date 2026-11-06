@@ -70,6 +70,7 @@ export const DOCS_NEXT_COMPONENTS: readonly DocsNextComponent[] = [
     { id: 'dialog', title: 'Dialog', react: 'Dialog' },
     { id: 'divider', title: 'Divider', angular: 'divider', react: 'Divider' },
     { id: 'dropdown', title: 'Dropdown', angular: 'dropdown', react: 'DropdownMenu' },
+    { id: 'dynamic-translation', title: 'Dynamic translation', angular: 'dynamic-translation' },
     { id: 'ellipsis-center', title: 'Ellipsis center', angular: 'ellipsis-center' },
     { id: 'empty-state', title: 'Empty state', angular: 'empty-state', react: 'EmptyState' },
     { id: 'file-trigger', title: 'File trigger', react: 'FileTrigger' },

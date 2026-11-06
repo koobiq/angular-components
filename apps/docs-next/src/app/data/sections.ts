@@ -53,7 +53,6 @@ export const DOCS_NEXT_SECTIONS: readonly DocsNextSection[] = [
             {
                 pages: [
                     page('core', 'Core', 'Core', { framework: 'angular' }),
-                    page('dynamic-translation', 'Dynamic translation', 'Dynamic translation', { framework: 'angular' }),
                     page('formatter-date', 'Форматтер даты', 'Date formatter'),
                     page('formatter-number', 'Форматтер числа', 'Number formatter'),
                     page('formatter-file-size', 'Форматтер размера файла', 'File size formatter'),
@@ -129,8 +128,7 @@ export const DOCS_NEXT_GUIDE_SOURCES: Record<string, string> = {
     versioning: 'docs/guides/versioning.{locale}.mdx',
     localization: 'docs/guides/localization.{locale}.mdx',
     'smart-search': 'docs/guides/search-smart.{locale}.mdx',
-    core: 'packages/components/core/core.{locale}.mdx',
-    'dynamic-translation': 'packages/components/dynamic-translation/dynamic-translation.{locale}.mdx'
+    core: 'packages/components/core/core.{locale}.mdx'
 };
 
 export const docsNextGetSection = (id: string): DocsNextSection | undefined =>
