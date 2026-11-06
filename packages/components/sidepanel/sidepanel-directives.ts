@@ -5,7 +5,6 @@ import {
     ElementRef,
     Input,
     OnChanges,
-    OnInit,
     Optional,
     SimpleChanges
 } from '@angular/core';
@@ -22,30 +21,32 @@ import { KbqSidepanelService } from './sidepanel.service';
         class: 'kbq-sidepanel-close'
     }
 })
-export class KbqSidepanelClose implements OnInit, OnChanges {
+export class KbqSidepanelClose implements OnChanges {
     @Input('kbq-sidepanel-close') sidepanelResult: any;
 
     @Input() kbqSidepanelClose: any;
 
+    /**
+     * Sidepanel the button closes: the one it is rendered in. A button rendered outside any sidepanel, such as
+     * an item of a dropdown opened from one, closes the sidepanel its template is declared in.
+     */
+    get sidepanelRef(): KbqSidepanelRef {
+        const container = this.elementRef.nativeElement.closest('.kbq-sidepanel-container');
+        const renderedIn = container && this.sidepanelService.openedSidepanels.find(({ id }) => id === container.id);
+        const sidepanelRef = renderedIn ?? this.declaredSidepanelRef;
+
+        if (!sidepanelRef) {
+            throw Error('kbqSidepanelClose: the button is neither rendered nor declared inside a sidepanel.');
+        }
+
+        return sidepanelRef;
+    }
+
     constructor(
-        @Optional() public sidepanelRef: KbqSidepanelRef,
+        @Optional() private declaredSidepanelRef: KbqSidepanelRef | null,
         private elementRef: ElementRef<HTMLElement>,
         private sidepanelService: KbqSidepanelService
     ) {}
-
-    ngOnInit() {
-        if (!this.sidepanelRef) {
-            // When this directive is included in a sidepanel via TemplateRef (rather than being
-            // in a Component), the SidepanelRef isn't available via injection because embedded
-            // views cannot be given a custom injector. Instead, we look up the SidepanelRef by
-            // ID.
-            // This must occur in `onInit`, as the ID binding for the sidepanel container won't
-            // be resolved at constructor time. We use setTimeout by same reason.
-            setTimeout(() => {
-                this.sidepanelRef = getClosestSidepanel(this.elementRef, this.sidepanelService.openedSidepanels)!;
-            });
-        }
-    }
 
     ngOnChanges(changes: SimpleChanges) {
         const proxiedChange = changes.kbqSidepanelClose || changes.sidepanelResult;
@@ -117,18 +118,3 @@ export class KbqSidepanelFooter {}
     }
 })
 export class KbqSidepanelActions {}
-
-/**
- * Finds the closest KbqSidepanelRef to an element by looking at the DOM.
- * @param element Element relative to which to look for a sidepanel.
- * @param openSidepanels References to the currently-open sidepanels.
- */
-function getClosestSidepanel(element: ElementRef<HTMLElement>, openSidepanels: KbqSidepanelRef[]) {
-    let parent: HTMLElement | null = element.nativeElement.parentElement;
-
-    while (parent && !parent.classList.contains('kbq-sidepanel-container')) {
-        parent = parent.parentElement;
-    }
-
-    return parent ? openSidepanels.find((sidepanel) => sidepanel.id === parent!.id) : null;
-}
