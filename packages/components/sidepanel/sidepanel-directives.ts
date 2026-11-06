@@ -35,9 +35,6 @@ import { KbqSidepanelService } from './sidepanel.service';
     }
 })
 export class KbqSidepanelClose {
-    // Dependency injection follows where a template is declared, not where it is rendered: a template declared
-    // outside the sidepanel and shown in it through `ngTemplateOutlet` has no ref here, or the ref of another
-    // sidepanel when it was declared in that one.
     private readonly declaredSidepanelRef = inject(KbqSidepanelRef, { optional: true });
     private readonly sidepanelService = inject(KbqSidepanelService);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
