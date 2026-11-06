@@ -57,6 +57,9 @@
 }
 
 html {
+    // The root scrollbar is always there, so a short page does not stand wider than a long one. `scrollbar-gutter:
+    // stable` on its own reserved no space on the root in Chrome.
+    overflow-y: scroll;
     scroll-padding-top: calc(var(--docs-next-header-height) + var(--kbq-size-l));
 }
 
