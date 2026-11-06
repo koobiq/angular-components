@@ -181,6 +181,8 @@ describe('KbqTreeSelection', () => {
 
                 const emptyViewValue = options.find((option) => option.value === 'Documents')!;
 
+                // The binding delivers the empty string, and the getter still falls back to the text.
+                expect(emptyViewValue.viewValueInput()).toBe('');
                 expect(emptyViewValue.viewValue).toBe('Documents');
             });
 
