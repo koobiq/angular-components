@@ -69,7 +69,7 @@ import { ViewContainerRef } from '@angular/core';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { WritableSignal } from '@angular/core';
 
-// @public (undocumented)
+// @public
 export const A = 65;
 
 // @public @deprecated (undocumented)
@@ -158,25 +158,25 @@ export class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable 
     setActiveItem(item: T): void;
 }
 
-// @public (undocumented)
+// @public
 export const ALT = 18;
 
-// @public (undocumented)
+// @public
 export const APOSTROPHE = 192;
 
 // @public (undocumented)
 export const applyPopupMargins: (renderer: Renderer2, element: HTMLElement, name: string, value: string) => void;
 
-// @public (undocumented)
+// @public
 export const AT_SIGN = 64;
 
-// @public (undocumented)
+// @public
 export const B = 66;
 
-// @public (undocumented)
+// @public
 export const BACKSLASH = 220;
 
-// @public (undocumented)
+// @public
 export const BACKSPACE = 8;
 
 // @public @deprecated (undocumented)
@@ -200,7 +200,7 @@ export abstract class BaseLocaleAwareFormatterPipe<D, Value = D | string | null 
     transform(value: Value, ...args: Args): string;
 }
 
-// @public (undocumented)
+// @public
 export const C = 67;
 
 // @public
@@ -209,22 +209,22 @@ export interface CanUpdateErrorState {
     updateErrorState(): void;
 }
 
-// @public (undocumented)
+// @public
 export const CAPS_LOCK = 20;
 
 // @public
 export function checkAndNormalizeLocalizedNumber(num: string | null | undefined, locale?: string): number | null;
 
-// @public (undocumented)
+// @public
 export const CLOSE_SQUARE_BRACKET = 221;
 
-// @public (undocumented)
+// @public
 export const COMMA = 188;
 
-// @public (undocumented)
+// @public
 export const CONTEXT_MENU = 93;
 
-// @public (undocumented)
+// @public
 export const CONTROL = 17;
 
 // @public
@@ -245,10 +245,10 @@ export function createTouchEvent(type: string, pageX?: number, pageY?: number): 
 // @public
 export type CrossFieldErrorScope = (errorKey: string, errorValue: unknown) => readonly string[] | null;
 
-// @public (undocumented)
+// @public
 export const D = 68;
 
-// @public (undocumented)
+// @public
 export const DASH = 189;
 
 // @public (undocumented)
@@ -272,7 +272,7 @@ export class DateFormatter<D> extends DateFormatter_2<D> {
 // @public
 export const defaultOffsetY: number;
 
-// @public (undocumented)
+// @public
 export const DELETE = 46;
 
 // @public
@@ -291,7 +291,7 @@ export function dispatchMouseEvent(node: Node, type: string, x?: number, y?: num
 // @public
 export function dispatchTouchEvent(node: Node, type: string, x?: number, y?: number): Event;
 
-// @public (undocumented)
+// @public
 export const DOWN_ARROW = 40;
 
 // @public @deprecated (undocumented)
@@ -354,10 +354,10 @@ export class DurationShortFormatterPipe<D> extends BaseFormatterPipe<D> implemen
     static ɵpipe: i0.ɵɵPipeDeclaration<DurationShortFormatterPipe<any>, "durationShort", true>;
 }
 
-// @public (undocumented)
+// @public
 export const E = 69;
 
-// @public (undocumented)
+// @public
 export const EIGHT = 56;
 
 // @public (undocumented)
@@ -368,10 +368,10 @@ export class EmptyFocusTrapStrategy implements FocusTrapInertStrategy {
     preventFocus(): void;
 }
 
-// @public (undocumented)
+// @public
 export const END = 35;
 
-// @public (undocumented)
+// @public
 export const ENTER = 13;
 
 // @public (undocumented)
@@ -636,7 +636,7 @@ export const enUSLocaleData: {
     };
 };
 
-// @public (undocumented)
+// @public
 export const EQUALS = 187;
 
 // @public
@@ -649,7 +649,7 @@ export class ErrorStateMatcher {
     static ɵprov: i0.ɵɵInjectableDeclaration<ErrorStateMatcher>;
 }
 
-// @public (undocumented)
+// @public
 export const ESCAPE = 27;
 
 // @public
@@ -920,61 +920,61 @@ export const esLALocaleData: {
     };
 };
 
-// @public (undocumented)
+// @public
 export const F = 70;
 
-// @public (undocumented)
+// @public
 export const F1 = 112;
 
-// @public (undocumented)
+// @public
 export const F10 = 121;
 
-// @public (undocumented)
+// @public
 export const F11 = 122;
 
-// @public (undocumented)
+// @public
 export const F12 = 123;
 
-// @public (undocumented)
+// @public
 export const F2 = 113;
 
-// @public (undocumented)
+// @public
 export const F3 = 114;
 
-// @public (undocumented)
+// @public
 export const F4 = 115;
 
-// @public (undocumented)
+// @public
 export const F5 = 116;
 
-// @public (undocumented)
+// @public
 export const F6 = 117;
 
-// @public (undocumented)
+// @public
 export const F7 = 118;
 
-// @public (undocumented)
+// @public
 export const F8 = 119;
 
-// @public (undocumented)
+// @public
 export const F9 = 120;
 
-// @public (undocumented)
+// @public
 export const FF_EQUALS = 61;
 
-// @public (undocumented)
+// @public
 export const FF_MINUS = 173;
 
-// @public (undocumented)
+// @public
 export const FF_MUTE = 181;
 
-// @public (undocumented)
+// @public
 export const FF_SEMICOLON = 59;
 
-// @public (undocumented)
+// @public
 export const FF_VOLUME_DOWN = 182;
 
-// @public (undocumented)
+// @public
 export const FF_VOLUME_UP = 183;
 
 // @public
@@ -986,10 +986,10 @@ export class FileValidators {
 // @public
 export function findSearchMatchRanges(value: string, tokens: readonly string[]): Array<[number, number]>;
 
-// @public (undocumented)
+// @public
 export const FIRST_MEDIA = 166;
 
-// @public (undocumented)
+// @public
 export const FIVE = 53;
 
 // @public (undocumented)
@@ -1003,10 +1003,10 @@ export class FocusKeyManager<T> extends ListKeyManager<IFocusableOption & T> {
 // @public
 export function formatNumberWithLocale(value: unknown, formatter: Intl.NumberFormat, options?: KbqNumberFormatOptions): string;
 
-// @public (undocumented)
+// @public
 export const FOUR = 52;
 
-// @public (undocumented)
+// @public
 export const G = 71;
 
 // @public
@@ -1042,12 +1042,12 @@ export function getSafeTriangleVertices(origin: KbqPoint, targetRect: DOMRect): 
 // @public
 export function getSelectAllState<T>(adapter: KbqSelectAllAdapter<T>): KbqPseudoCheckboxState;
 
-// @public (undocumented)
+// @public
 export const H = 72;
 
 // Warning: (ae-forgotten-export) The symbol "ModifierKey" needs to be exported by the entry point koobiq-components-core.d.ts
 //
-// @public (undocumented)
+// @public
 export function hasModifierKey(event: KeyboardEvent | MouseEvent, ...modifiers: ModifierKey[]): boolean;
 
 // @public
@@ -1058,10 +1058,10 @@ export interface Highlightable extends ListKeyManagerOption {
     setInactiveStyles(): void;
 }
 
-// @public (undocumented)
+// @public
 export const HOME = 36;
 
-// @public (undocumented)
+// @public
 export const I = 73;
 
 // @public
@@ -1070,16 +1070,16 @@ export interface IFocusableOption extends ListKeyManagerOption {
     focus(origin?: FocusOrigin): void;
 }
 
-// @public (undocumented)
+// @public
 export const INSERT = 45;
 
 // @public @deprecated (undocumented)
 export function isBoolean(value: unknown): value is boolean;
 
-// @public (undocumented)
+// @public
 export function isControl(event: KeyboardEvent): boolean;
 
-// @public (undocumented)
+// @public
 export function isCopy(event: KeyboardEvent): boolean;
 
 // @public @deprecated (undocumented)
@@ -1091,10 +1091,10 @@ export const isElement: (value: unknown) => value is Element;
 // @public
 export function isExplicitPanelWidth(panelWidth: KbqPanelWidth | undefined): panelWidth is number | string;
 
-// @public (undocumented)
+// @public
 export function isFunctionKey(input: KeyboardEvent): boolean;
 
-// @public (undocumented)
+// @public
 export function isHorizontalMovement(input: KeyboardEvent): boolean;
 
 // @public
@@ -1103,13 +1103,13 @@ export const isHtmlElement: (value: unknown) => value is HTMLElement;
 // @public
 export const isHtmlElementOrNull: (value: unknown) => value is HTMLElement | null;
 
-// @public (undocumented)
+// @public
 export function isInput(event: Event): boolean;
 
-// @public (undocumented)
+// @public
 export function isLeftBracket(event: KeyboardEvent): boolean;
 
-// @public (undocumented)
+// @public
 export function isLetterKey(input: KeyboardEvent): boolean;
 
 // @public
@@ -1118,10 +1118,10 @@ export function isMac(): boolean;
 // @public
 export const isNull: (value: unknown) => value is null;
 
-// @public (undocumented)
+// @public
 export function isNumberKey(input: KeyboardEvent): boolean;
 
-// @public (undocumented)
+// @public
 export function isNumpadKey(input: KeyboardEvent): boolean;
 
 // @public
@@ -1130,22 +1130,22 @@ export function isPointInRect(point: KbqPoint, rect: DOMRect): boolean;
 // @public
 export function isPointInTriangle(point: KbqPoint, triangle: KbqTriangle): boolean;
 
-// @public (undocumented)
+// @public
 export function isRightBracket(event: KeyboardEvent): boolean;
 
-// @public (undocumented)
+// @public
 export function isSelectAll(event: KeyboardEvent): boolean;
 
 // @public
 export const isUndefined: (value: unknown) => value is undefined;
 
-// @public (undocumented)
+// @public
 export function isVerticalMovement(input: KeyboardEvent): boolean;
 
-// @public (undocumented)
+// @public
 export const J = 74;
 
-// @public (undocumented)
+// @public
 export const K = 75;
 
 // @public
@@ -4726,13 +4726,13 @@ export interface KeyboardNavigationHandler {
     scrollActiveOptionIntoView(): void;
 }
 
-// @public (undocumented)
+// @public
 export const L = 76;
 
-// @public (undocumented)
+// @public
 export const LAST_MEDIA = 183;
 
-// @public (undocumented)
+// @public
 export const LEFT_ARROW = 37;
 
 // @public (undocumented)
@@ -4787,22 +4787,22 @@ export interface ListKeyManagerOption {
     getLabel?(): string;
 }
 
-// @public (undocumented)
+// @public
 export const M = 77;
 
-// @public (undocumented)
+// @public
 export const MAC_ENTER = 3;
 
-// @public (undocumented)
+// @public
 export const MAC_META = 224;
 
-// @public (undocumented)
+// @public
 export const MAC_WK_CMD_LEFT = 91;
 
-// @public (undocumented)
+// @public
 export const MAC_WK_CMD_RIGHT = 93;
 
-// @public (undocumented)
+// @public
 export const META = 91;
 
 // @public (undocumented)
@@ -4813,13 +4813,13 @@ export enum MultipleMode {
     KEYBOARD = "keyboard"
 }
 
-// @public (undocumented)
+// @public
 export const MUTE = 173;
 
-// @public (undocumented)
+// @public
 export const N = 78;
 
-// @public (undocumented)
+// @public
 export const NINE = 57;
 
 // @public
@@ -4828,73 +4828,73 @@ export function normalizeNumber(value: string | null | undefined, customConfig: 
 // @public
 export function normalizeSearchValue(value: string): string;
 
-// @public (undocumented)
+// @public
 export const NUM_CENTER = 12;
 
-// @public (undocumented)
+// @public
 export const NUM_LOCK = 144;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_DIVIDE = 111;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_EIGHT = 104;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_FIVE = 101;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_FOUR = 100;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_MINUS = 109;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_MULTIPLY = 106;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_NINE = 105;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_ONE = 97;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_PERIOD = 110;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_PLUS = 107;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_SEVEN = 103;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_SIX = 102;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_THREE = 99;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_TWO = 98;
 
-// @public (undocumented)
+// @public
 export const NUMPAD_ZERO = 96;
 
-// @public (undocumented)
+// @public
 export const O = 79;
 
-// @public (undocumented)
+// @public
 export const ONE = 49;
 
-// @public (undocumented)
+// @public
 export const OPEN_SQUARE_BRACKET = 219;
 
-// @public (undocumented)
+// @public
 export const P = 80;
 
-// @public (undocumented)
+// @public
 export const PAGE_DOWN = 34;
 
-// @public (undocumented)
+// @public
 export const PAGE_UP = 33;
 
 // @public
@@ -4910,13 +4910,13 @@ export class PasswordValidators {
 // @public
 export function patchElementFocus(element: HTMLElement): void;
 
-// @public (undocumented)
+// @public
 export const PAUSE = 19;
 
-// @public (undocumented)
+// @public
 export const PERIOD = 190;
 
-// @public (undocumented)
+// @public
 export const PLUS_SIGN = 43;
 
 // @public (undocumented)
@@ -4988,7 +4988,7 @@ export const POSITION_TO_CSS_MAP: {
     [key: string]: string;
 };
 
-// @public (undocumented)
+// @public
 export const PRINT_SCREEN = 44;
 
 // @public (undocumented)
@@ -5252,13 +5252,13 @@ export const ptBRLocaleData: {
     };
 };
 
-// @public (undocumented)
+// @public
 export const Q = 81;
 
-// @public (undocumented)
+// @public
 export const QUESTION_MARK = 63;
 
-// @public (undocumented)
+// @public
 export const R = 82;
 
 // @public @deprecated (undocumented)
@@ -5444,7 +5444,7 @@ export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
 // @public
 export function resolveMultipleMode(value: KbqMultipleInput): MultipleMode | null;
 
-// @public (undocumented)
+// @public
 export const RIGHT_ARROW = 39;
 
 // @public (undocumented)
@@ -5723,19 +5723,19 @@ export const ruRULocaleData: {
     };
 };
 
-// @public (undocumented)
+// @public
 export const S = 83;
 
-// @public (undocumented)
+// @public
 export const SCROLL_LOCK = 145;
 
-// @public (undocumented)
+// @public
 export const SEMICOLON = 186;
 
-// @public (undocumented)
+// @public
 export const SEVEN = 55;
 
-// @public (undocumented)
+// @public
 export const SHIFT = 16;
 
 // @public
@@ -5779,31 +5779,31 @@ export class ShowRequiredOnSubmitErrorStateMatcher implements ErrorStateMatcher 
     static ɵprov: i0.ɵɵInjectableDeclaration<ShowRequiredOnSubmitErrorStateMatcher>;
 }
 
-// @public (undocumented)
+// @public
 export const SINGLE_QUOTE = 222;
 
-// @public (undocumented)
+// @public
 export const SIX = 54;
 
-// @public (undocumented)
+// @public
 export const SLASH = 191;
 
-// @public (undocumented)
+// @public
 export const SPACE = 32;
 
 // @public
 export const supportsNativeDisabled: (element: Element) => boolean;
 
-// @public (undocumented)
+// @public
 export const T = 84;
 
-// @public (undocumented)
+// @public
 export const TAB = 9;
 
-// @public (undocumented)
+// @public
 export const THREE = 51;
 
-// @public (undocumented)
+// @public
 export const TILDE = 192;
 
 // @public (undocumented)
@@ -6083,19 +6083,19 @@ export enum TransitionCheckState {
     Unchecked = "unchecked"
 }
 
-// @public (undocumented)
+// @public
 export const TWO = 50;
 
 // @public
 export function typeInElement(value: string, element: HTMLInputElement): void;
 
-// @public (undocumented)
+// @public
 export const U = 85;
 
-// @public (undocumented)
+// @public
 export const UP_ARROW = 38;
 
-// @public (undocumented)
+// @public
 export const V = 86;
 
 // @public
@@ -6107,28 +6107,28 @@ export const validationTooltipShowDelay = 10;
 // @public (undocumented)
 export const VERSION: Version;
 
-// @public (undocumented)
+// @public
 export const VOLUME_DOWN = 174;
 
-// @public (undocumented)
+// @public
 export const VOLUME_UP = 175;
 
-// @public (undocumented)
+// @public
 export const W = 87;
 
 // @public (undocumented)
 export function wrappedErrorMessage(e: Error): RegExp;
 
-// @public (undocumented)
+// @public
 export const X = 88;
 
-// @public (undocumented)
+// @public
 export const Y = 89;
 
-// @public (undocumented)
+// @public
 export const Z = 90;
 
-// @public (undocumented)
+// @public
 export const ZERO = 48;
 
 // (No @packageDocumentation comment for this package)

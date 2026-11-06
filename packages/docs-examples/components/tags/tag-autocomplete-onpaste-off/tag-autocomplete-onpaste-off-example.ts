@@ -1,8 +1,9 @@
-﻿import { AsyncPipe } from '@angular/common';
+﻿import { ENTER } from '@angular/cdk/keycodes';
+import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
-import { ENTER, KbqHighlightBackgroundPipe } from '@koobiq/components/core';
+import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagInput, KbqTagInputEvent, KbqTagsModule, kbqTagsDefaultOptionsProvider } from '@koobiq/components/tags';

@@ -1,8 +1,5 @@
+import { isDevMode } from '@angular/core';
 import { KbqEnumValues } from '../utils';
-
-// Declared locally rather than imported: `typeof ngDevMode` is the guard the build optimizer folds away,
-// so the warning below leaves no trace in a production bundle.
-declare const ngDevMode: boolean | undefined;
 
 export enum MultipleMode {
     CHECKBOX = 'checkbox',
@@ -53,7 +50,7 @@ export function resolveMultipleMode(value: KbqMultipleInput): MultipleMode | nul
         return MultipleMode.CHECKBOX;
     }
 
-    if (!singleAliases.includes(value) && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+    if (!singleAliases.includes(value) && isDevMode()) {
         // eslint-disable-next-line no-console
         console.warn(
             `Unsupported \`multiple\` value ${JSON.stringify(value)}, falling back to single selection. ` +

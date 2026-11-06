@@ -1,4 +1,5 @@
-﻿import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+﻿import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import {
     AbstractControl,
     FormBuilder,
@@ -9,7 +10,7 @@ import {
     Validators
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { COMMA, ENTER, kbqErrorStateMatcherProvider, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
+import { kbqErrorStateMatcherProvider, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
