@@ -17,6 +17,8 @@
                             [class.docs-next-side-menu__item_selected]="item.id === current()"
                             [class.docs-next-side-menu__item_unavailable]="item.unavailable"
                             [routerLink]="item.url"
+                            (focus)="content.prefetchItem(item.id, state.locale())"
+                            (pointerenter)="content.prefetchItem(item.id, state.locale())"
                         >
                             <span class="docs-next-side-menu__title">{{ item.title }}</span>
                             @if (item.isNew) {

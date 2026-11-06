@@ -1,0 +1,26 @@
+@use '../../../../../packages/components/core/styles/common/tokens';
+
+.docs-next-slow-badge {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+
+    position: fixed;
+    bottom: var(--kbq-size-m);
+    left: var(--kbq-size-m);
+    z-index: 1001;
+    padding: var(--kbq-size-xxs) var(--kbq-size-s);
+    border: none;
+    border-radius: var(--kbq-size-xxl);
+    background: var(--kbq-background-contrast);
+    color: var(--kbq-foreground-on-contrast);
+    cursor: pointer;
+    opacity: 0.85;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--kbq-states-line-focus-theme);
+        outline-offset: 2px;
+    }
+}

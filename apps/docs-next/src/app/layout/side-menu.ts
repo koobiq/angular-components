@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { RouterLink } from '@angular/router';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { DocsNextMenuGroup, docsNextMenuGroups } from '../data/menu';
+import { DocsNextContent } from '../services/content';
 import { DocsNextSiteState } from '../services/site-state';
 
 /** Menu of the open section: groups with titles, the open page highlighted, no filter. */
@@ -15,6 +16,7 @@ import { DocsNextSiteState } from '../services/site-state';
 })
 export class DocsNextSideMenu {
     protected readonly state = inject(DocsNextSiteState);
+    protected readonly content = inject(DocsNextContent);
 
     /** Address of the open page without its subsection: a component stays selected on any of its tabs. */
     protected readonly current = computed(() => this.state.rest().slice(0, 2).join('/'));

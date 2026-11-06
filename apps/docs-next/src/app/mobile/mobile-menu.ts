@@ -15,6 +15,7 @@ import { KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { DocsNextMenuGroup, docsNextMenuGroups } from '../data/menu';
 import { DOCS_NEXT_SECTIONS, DocsNextSection } from '../data/sections';
+import { DocsNextContent } from '../services/content';
 import { DocsNextSiteState } from '../services/site-state';
 import { DocsNextMenuFooter } from './menu-footer';
 import { DocsNextNavVariantState } from './nav-variant';
@@ -49,6 +50,7 @@ const hasPages = (section: DocsNextSection): boolean => section.id !== 'icons';
 })
 export class DocsNextMobileMenu {
     protected readonly state = inject(DocsNextSiteState);
+    protected readonly content = inject(DocsNextContent);
     protected readonly navVariant = inject(DocsNextNavVariantState);
     private readonly window = inject(KBQ_WINDOW);
     private readonly injector = inject(Injector);

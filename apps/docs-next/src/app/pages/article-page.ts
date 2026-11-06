@@ -5,8 +5,10 @@ import { map, startWith, switchMap } from 'rxjs/operators';
 import { docsNextGetSection, docsNextGetSectionPages, docsNextIsAvailable } from '../data/sections';
 import { docsNextFrameworkTitle } from '../data/site';
 import { DocsNextContent } from '../services/content';
+import { DocsNextLoading } from '../services/loading';
 import { DocsNextSiteState } from '../services/site-state';
 import { DocsNextContentBlocks } from '../ui/content-blocks';
+import { DocsNextContentSkeleton } from '../ui/content-skeleton';
 import { DocsNextNotice } from '../ui/notice';
 import { DocsNextPageHeader } from '../ui/page-header';
 import { DocsNextPageLayout } from '../ui/page-layout';
@@ -15,7 +17,7 @@ import { docsNextPlaceholderArticle, docsNextSplitLead } from '../ui/placeholder
 /** A text page of a section: Development, Design, Patterns, Templates. */
 @Component({
     selector: 'docs-next-article-page',
-    imports: [DocsNextContentBlocks, DocsNextNotice, DocsNextPageHeader, DocsNextPageLayout],
+    imports: [DocsNextContentBlocks, DocsNextContentSkeleton, DocsNextNotice, DocsNextPageHeader, DocsNextPageLayout],
     template: `
         <docs-next-page-layout [wide]="sectionId() === 'templates'">
             @if (state.notice(); as notice) {
@@ -35,7 +37,7 @@ import { docsNextPlaceholderArticle, docsNextSplitLead } from '../ui/placeholder
                     } @else if (article().blocks.length) {
                         <docs-next-content-blocks [blocks]="article().blocks" />
                     } @else {
-                        <p class="docs-next-page__loading">{{ state.t('loading') }}</p>
+                        <docs-next-content-skeleton />
                     }
                 </div>
             } @else {
@@ -43,12 +45,12 @@ import { docsNextPlaceholderArticle, docsNextSplitLead } from '../ui/placeholder
             }
         </docs-next-page-layout>
     `,
-    styleUrl: './page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsNextArticlePage {
     protected readonly state = inject(DocsNextSiteState);
     private readonly content = inject(DocsNextContent);
+    private readonly loading = inject(DocsNextLoading);
     private readonly params = toSignal(inject(ActivatedRoute).paramMap, { requireSync: true });
 
     protected readonly sectionId = computed(() => this.params().get('section'));
@@ -70,7 +72,7 @@ export class DocsNextArticlePage {
     private readonly blocks = toSignal(
         toObservable(computed(() => ({ id: this.page()?.id, locale: this.state.locale() }))).pipe(
             switchMap(({ id, locale }) =>
-                this.content.load('pages', id ?? '', locale).pipe(
+                this.loading.track(this.content.load('pages', id ?? '', locale)).pipe(
                     map((blocks) => blocks ?? docsNextPlaceholderArticle(locale, false)),
                     startWith([])
                 )

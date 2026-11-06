@@ -7,9 +7,11 @@ import { map, startWith, switchMap } from 'rxjs/operators';
 import { DOCS_NEXT_COMPONENT_TABS, DOCS_NEXT_COMPONENTS, docsNextComponentGithubUrl } from '../data/components';
 import { docsNextFrameworkTitle } from '../data/site';
 import { DocsNextContent } from '../services/content';
+import { DocsNextLoading } from '../services/loading';
 import { DocsNextSiteState } from '../services/site-state';
 import { DocsNextApiPreview } from '../ui/api-preview';
 import { DocsNextContentBlocks } from '../ui/content-blocks';
+import { DocsNextContentSkeleton } from '../ui/content-skeleton';
 import { DocsNextNotice } from '../ui/notice';
 import { DocsNextPageHeader } from '../ui/page-header';
 import { DocsNextPageLayout } from '../ui/page-layout';
@@ -31,18 +33,19 @@ const TABS = DOCS_NEXT_COMPONENT_TABS;
         KbqTabsModule,
         DocsNextApiPreview,
         DocsNextContentBlocks,
+        DocsNextContentSkeleton,
         DocsNextNotice,
         DocsNextPageHeader,
         DocsNextPageLayout,
         DocsNextStub
     ],
     templateUrl: './component-page.html',
-    styleUrl: './page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsNextComponentPage {
     protected readonly state = inject(DocsNextSiteState);
     private readonly content = inject(DocsNextContent);
+    private readonly loading = inject(DocsNextLoading);
     private readonly params = toSignal(inject(ActivatedRoute).paramMap, { requireSync: true });
 
     protected readonly tabs = TABS;
@@ -65,7 +68,9 @@ export class DocsNextComponentPage {
         toObservable(computed(() => ({ component: this.component(), locale: this.state.locale() }))).pipe(
             switchMap(({ component, locale }) =>
                 component?.angular
-                    ? this.content.load('components', component.id, locale).pipe(startWith(undefined))
+                    ? this.loading
+                          .track(this.content.load('components', component.id, locale))
+                          .pipe(startWith(undefined))
                     : of(null)
             ),
             map((blocks) => (blocks === null ? docsNextPlaceholderArticle(this.state.locale(), true) : blocks))

@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { DocsNextMobileHeader } from '../mobile/mobile-header';
 import { DocsNextSiteState } from '../services/site-state';
 import { DocsNextHeader } from './header';
+import { DocsNextRouteProgress } from './route-progress';
 import { DocsNextSideMenu } from './side-menu';
 
 /**
@@ -11,13 +12,14 @@ import { DocsNextSideMenu } from './side-menu';
  */
 @Component({
     selector: 'docs-next-shell',
-    imports: [RouterOutlet, DocsNextHeader, DocsNextMobileHeader, DocsNextSideMenu],
+    imports: [RouterOutlet, DocsNextHeader, DocsNextMobileHeader, DocsNextRouteProgress, DocsNextSideMenu],
     template: `
         @if (state.isMobile()) {
             <docs-next-mobile-header />
         } @else {
             <docs-next-header />
         }
+        <docs-next-route-progress />
         <div class="docs-next-shell__body">
             @if (hasSideMenu() && !state.isMobile()) {
                 <docs-next-side-menu class="docs-next-shell__aside" />

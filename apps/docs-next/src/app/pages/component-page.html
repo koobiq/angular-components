@@ -53,7 +53,7 @@
                     @if (loaded()) {
                         <docs-next-content-blocks [blocks]="article().blocks" />
                     } @else {
-                        <p class="docs-next-page__loading">{{ state.t('loading') }}</p>
+                        <docs-next-content-skeleton />
                     }
                 }
             }

@@ -156,6 +156,8 @@
                         [class.docs-next-menu__item_unavailable]="item.unavailable"
                         [routerLink]="item.url"
                         (click)="close()"
+                        (focus)="content.prefetchItem(item.id, state.locale())"
+                        (pointerenter)="content.prefetchItem(item.id, state.locale())"
                     >
                         <span class="docs-next-menu__title">{{ item.title }}</span>
                         @if (item.isNew) {
