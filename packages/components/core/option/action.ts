@@ -102,7 +102,7 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     /**
      * Value of the `disabled` and `aria-disabled` attributes.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly disabledAttribute = computed(() => this.disabled() || null);
 

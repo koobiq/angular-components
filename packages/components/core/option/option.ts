@@ -271,7 +271,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     /**
      * Value of `aria-disabled`: the same as `disabled`, but a signal of its own, since `kbq-disabled` reads that one.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly ariaDisabled = computed(() => this.disabled);
 

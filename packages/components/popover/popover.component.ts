@@ -1094,12 +1094,12 @@ export class KbqPopoverTrigger
         return { x: this.pointerOrigin.x, y: this.pointerOrigin.y };
     }
 
-    /** @internal */
+    /** @docs-private */
     protected override getResolvedOrigin() {
         return this.pointerOffset && !this.origin ? this.pointerOrigin : super.getResolvedOrigin();
     }
 
-    /** @internal */
+    /** @docs-private */
     protected override getAnchorSize(): { width: number; height: number } {
         return this.pointerOffset && !this.origin ? { width: 0, height: 0 } : super.getAnchorSize();
     }

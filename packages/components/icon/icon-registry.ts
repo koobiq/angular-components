@@ -136,7 +136,7 @@ export class KbqIconRegistry {
      * `getNamedSvgIcon` without the error for a miss: `null` when nothing registered can resolve the name. Every font
      * icon is looked up, and an error per miss would cost a stack trace each.
      *
-     * @internal
+     * @docs-private
      */
     findSvgIcon(name: string, namespace = ''): Observable<SVGElement> | null {
         if (isSvgMarkup(name)) {

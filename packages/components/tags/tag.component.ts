@@ -464,7 +464,7 @@ export class KbqTag
     /**
      * Value of the `disabled` attribute.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly disabledAttribute = computed(() => this.disabled || null);
 

@@ -83,6 +83,7 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
     set disabled(value: boolean);
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     emitChangeEvent(source: KbqButtonToggle): void;
+    followToggleValue(toggle: KbqButtonToggle, previous: KbqButtonToggle['value']): void;
     isPrechecked(toggle: KbqButtonToggle): boolean;
     isSelected(toggle: KbqButtonToggle): boolean;
     readonly multiple: _angular_core.InputSignalWithTransform<boolean, unknown>;

@@ -510,7 +510,7 @@ export class KbqTreeSelect<T = any, K = T>
     /**
      * Id of the element that names the control: its own `aria-labelledby`, or else the form-field label.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly resolvedAriaLabelledby = computed(
         () => this.ariaLabelledby() ?? this.parentFormField?.labelId() ?? null
@@ -666,11 +666,11 @@ export class KbqTreeSelect<T = any, K = T>
     private readonly resolvedAriaLabel = computed(() =>
         this.resolvedAriaLabelledby() ? null : this.ariaLabel() || this.placeholder() || null
     );
-    /** @internal */
+    /** @docs-private */
     protected readonly disabledAttribute = computed(() => this.disabled() || null);
-    /** @internal */
+    /** @docs-private */
     protected readonly disabledClass = computed(() => this.disabled());
-    /** @internal */
+    /** @docs-private */
     protected readonly invalidClass = computed(() => this.errorState());
 
     /** @docs-private */

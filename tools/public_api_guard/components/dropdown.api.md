@@ -74,7 +74,9 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     protected readonly classList: Signal<Record<string, boolean>>;
     // (undocumented)
     close(): void;
+    closeChain(reason: DropdownCloseReason): void;
     readonly closed: _angular_core.OutputEmitterRef<void | "click" | "keydown" | "tab">;
+    closingChain: boolean;
     deactivateSafeArea(): void;
     direction: Direction;
     focusFirstItem(origin?: FocusOrigin): void;
@@ -169,6 +171,7 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     checkDisabled(event: Event): void;
     protected readonly componentColors: typeof KbqComponentColors;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    protected readonly disabledAttribute: _angular_core.Signal<true | null>;
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     readonly focused: Subject<KbqDropdownItem>;
     getHostElement(): HTMLElement;

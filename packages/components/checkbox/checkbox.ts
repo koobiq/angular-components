@@ -144,21 +144,21 @@ export class KbqCheckbox
     /**
      * Whether the projected `kbq-error` is shown. Without one, nothing is rendered under the label.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly showError = computed(() => this.errorState() && !!this.error());
 
     /**
      * Id of the element wrapping the projected `kbq-error`.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly errorId = computed(() => `${this.id()}-error`);
 
     /**
      * Id of the label text, which alone names the native input.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly labelId = computed(() => `${this.id()}-label`);
 
@@ -168,7 +168,7 @@ export class KbqCheckbox
     /**
      * Value of `aria-describedby` of the native input: the error, while it is shown, and the hints.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly ariaDescribedBy = computed(
         () =>
@@ -178,7 +178,7 @@ export class KbqCheckbox
     /**
      * Value of `aria-invalid` of the native input: set whenever the checkbox is painted as invalid.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly ariaInvalid = computed(() => (this.errorState() || this.color() === 'error' ? 'true' : null));
 

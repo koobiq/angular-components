@@ -96,6 +96,8 @@ export class KbqTreeSelect<T = any, K = T> extends KbqAbstractSelect implements 
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
     readonly disabled: _angular_core.WritableSignal<boolean>;
+    protected readonly disabledAttribute: _angular_core.Signal<true | null>;
+    protected readonly disabledClass: _angular_core.Signal<boolean>;
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
@@ -116,6 +118,7 @@ export class KbqTreeSelect<T = any, K = T> extends KbqAbstractSelect implements 
     readonly hiddenItemsTextFormatter: InputSignal<(hiddenItemsText: string, hiddenItems: number) => string>;
     readonly id: _angular_core.Signal<string>;
     readonly idInput: InputSignal<string | undefined>;
+    protected readonly invalidClass: _angular_core.Signal<boolean>;
     get isAttached(): boolean;
     // (undocumented)
     protected readonly isBrowser: boolean;
@@ -188,6 +191,7 @@ export class KbqTreeSelect<T = any, K = T> extends KbqAbstractSelect implements 
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: () => void): void;
     readonly required: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
+    protected readonly resolvedAriaLabelledby: _angular_core.Signal<string | null>;
     scrollStrategy: ScrollStrategy;
     // (undocumented)
     readonly search: _angular_core.Signal<KbqSelectSearch | undefined>;

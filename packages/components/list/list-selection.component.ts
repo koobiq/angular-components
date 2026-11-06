@@ -1834,7 +1834,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     /**
      * Value of `aria-disabled`: the disabled state, but a signal of its own, since `kbq-disabled` reads that one.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly ariaDisabled = computed(() => this.disabled || null);
 
