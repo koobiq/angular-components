@@ -2695,7 +2695,7 @@ class TestItemSuffixApp {}
             <kbq-navbar-container>
                 <a href="#" id="marked" kbq-navbar-item>
                     <div kbqNavbarItemContent><div class="custom-content-logo"></div></div>
-                    <kbq-navbar-title>PT Naira</kbq-navbar-title>
+                    <kbq-navbar-title>Orbit</kbq-navbar-title>
                 </a>
                 <a href="#" id="unmarked" kbq-navbar-item>
                     <kbq-navbar-title>Plain item</kbq-navbar-title>

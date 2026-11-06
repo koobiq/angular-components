@@ -891,14 +891,14 @@ export class E2eVerticalNavbarItemClippedTitle {}
                             <div kbqNavbarItemContent>
                                 <div class="e2e-custom-content-logo"></div>
                             </div>
-                            <kbq-navbar-title>PT Naira</kbq-navbar-title>
+                            <kbq-navbar-title>Orbit</kbq-navbar-title>
                         </a>
 
                         <a href="#" kbq-navbar-item data-testid="full-bleed">
                             <div kbqNavbarItemContent>
                                 <div class="e2e-custom-content-logo e2e-custom-content-logo_full"></div>
                             </div>
-                            <kbq-navbar-title>PT Naira</kbq-navbar-title>
+                            <kbq-navbar-title>Orbit</kbq-navbar-title>
                         </a>
 
                         <a href="#" kbq-navbar-item class="kbq-active">
