@@ -836,11 +836,7 @@ export class KbqTreeSelection<T = any, K = T>
     ngAfterContentInit(): void {
         super.ngAfterContentInit();
 
-        if (this.platform.isBrowser) {
-            this.unorderedOptions.changes
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(this.updateRenderedOptions);
-        }
+        this.unorderedOptions.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateRenderedOptions);
 
         this.keyManager = new FocusKeyManager<KbqTreeOption<T>>(this.renderedOptions)
             .withVerticalOrientation(true)
@@ -1670,7 +1666,10 @@ export class KbqTreeSelection<T = any, K = T>
         this.renderedOptions.reset(orderedOptions);
         this.renderedOptions.notifyOnChanges();
 
-        this.updateScrollSize();
+        // The list above is for the server too: an embedding `KbqTreeSelect` reads it for the tags it renders.
+        if (this.platform.isBrowser) {
+            this.updateScrollSize();
+        }
     };
 
     private getSortedNodes(viewContainer: ViewContainerRef): T[] {
