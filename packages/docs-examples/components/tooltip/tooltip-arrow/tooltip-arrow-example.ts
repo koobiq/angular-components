@@ -13,7 +13,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     ],
     template: `
         <button kbq-button kbqTooltip="Tooltip without arrow">No arrow</button>
-        <button kbq-button kbqTooltip="Tooltip with arrow" [kbqTooltipArrow]="true">With arrow</button>
+        <button kbq-button kbqTooltip="Tooltip with arrow" kbqPlacement="bottomRight" [kbqTooltipArrow]="true">
+            With arrow
+        </button>
         <button
             kbq-button
             kbqTooltip="Tooltip with centered arrow"
