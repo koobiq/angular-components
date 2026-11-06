@@ -1,5 +1,5 @@
 <label class="kbq-checkbox__layout" [attr.for]="inputId()">
-    <div
+    <span
         class="kbq-checkbox__inner-container"
         [class.kbq-checkbox__inner-container_no-side-margin]="
             !checkboxLabel.textContent || !checkboxLabel.textContent.trim()
@@ -29,24 +29,24 @@
             (change)="onInteractionEvent($event)"
             (click)="onInputClick($event)"
         />
-        <div class="kbq-checkbox__frame">
+        <span class="kbq-checkbox__frame">
             <i class="kbq-checkbox-checkmark kbq kbq-check-s_16"></i>
             <i class="kbq-checkbox-mixedmark kbq kbq-minus-s_16"></i>
-        </div>
-    </div>
+        </span>
+    </span>
 
-    <div class="kbq-checkbox__text-container">
+    <span class="kbq-checkbox__text-container">
         <span #checkboxLabel class="kbq-checkbox-label" [id]="labelId()" (cdkObserveContent)="onLabelTextChange()">
             <ng-content />
         </span>
 
         <!-- The error comes before the hint, as in a form field. -->
         @if (showError()) {
-            <div class="kbq-checkbox__error" [id]="errorId()">
+            <span class="kbq-checkbox__error" [id]="errorId()">
                 <ng-content select="kbq-error" />
-            </div>
+            </span>
         }
 
         <ng-content select="kbq-hint" />
-    </div>
+    </span>
 </label>
