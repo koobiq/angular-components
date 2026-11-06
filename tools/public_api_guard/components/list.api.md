@@ -94,6 +94,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     // (undocumented)
     readonly actionButton: _angular_core.Signal<KbqOptionActionComponent | undefined>;
     protected get ariaChecked(): string | null;
+    protected readonly ariaDisabled: _angular_core.Signal<true | null>;
     protected get ariaSelected(): boolean | null;
     blur(): void;
     // (undocumented)

@@ -16,6 +16,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i1$1 from '@koobiq/components/icon';
 import * as i1 from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
+import * as _koobiq_components_accordion from '@koobiq/components/accordion';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -81,6 +82,7 @@ export class KbqAccordionContent {
 export class KbqAccordionContentDirective implements OnInit, DoCheck, AfterViewInit {
     constructor();
     get contentId(): string;
+    protected readonly dataState: _angular_core.Signal<_koobiq_components_accordion.KbqAccordionItemState>;
     // (undocumented)
     disableAnimation(): void;
     // (undocumented)
@@ -107,6 +109,7 @@ export class KbqAccordionContentDirective implements OnInit, DoCheck, AfterViewI
 // @public (undocumented)
 export class KbqAccordionHeader {
     protected readonly accordion: KbqAccordion;
+    protected readonly dataState: _angular_core.Signal<_koobiq_components_accordion.KbqAccordionItemState>;
     protected readonly item: KbqAccordionItem;
     protected get labelledBy(): string | null;
     // (undocumented)
@@ -204,6 +207,8 @@ export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {
 export class KbqAccordionTriggerDirective {
     protected readonly accordion: KbqAccordion;
     get contentId(): string;
+    protected readonly dataState: _angular_core.Signal<_koobiq_components_accordion.KbqAccordionItemState>;
+    protected readonly expanded: _angular_core.Signal<boolean>;
     focus(): void;
     protected readonly item: KbqAccordionItem;
     protected readonly nativeElement: HTMLElement;

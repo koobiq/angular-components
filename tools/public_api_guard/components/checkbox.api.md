@@ -29,6 +29,8 @@ export const KBQ_CHECKBOX_REQUIRED_VALIDATOR: Provider;
 
 // @public
 export class KbqCheckbox extends KbqColorDirective implements OnChanges, DoCheck, AfterViewInit, OnDestroy, CanUpdateErrorState {
+    protected readonly ariaDescribedBy: _angular_core.Signal<string | null>;
+    protected readonly ariaInvalid: _angular_core.Signal<"true" | null>;
     readonly big: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly change: _angular_core.OutputEmitterRef<KbqCheckboxChange>;
     get checked(): boolean;
@@ -38,6 +40,7 @@ export class KbqCheckbox extends KbqColorDirective implements OnChanges, DoCheck
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
+    protected readonly errorId: _angular_core.Signal<string>;
     readonly errorState: _angular_core.Signal<boolean>;
     readonly errorStateMatcher: _angular_core.InputSignal<ErrorStateMatcher | undefined>;
     focus(): void;
@@ -49,6 +52,7 @@ export class KbqCheckbox extends KbqColorDirective implements OnChanges, DoCheck
     readonly indeterminateInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     protected readonly inputElement: _angular_core.Signal<ElementRef<HTMLInputElement>>;
     protected readonly inputId: _angular_core.Signal<string>;
+    protected readonly labelId: _angular_core.Signal<string>;
     readonly labelPosition: _angular_core.InputSignal<"before" | "after">;
     readonly name: _angular_core.InputSignal<string | null>;
     // (undocumented)
@@ -63,6 +67,7 @@ export class KbqCheckbox extends KbqColorDirective implements OnChanges, DoCheck
     protected onInteractionEvent(event: Event): void;
     protected onLabelTextChange(): void;
     readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    protected readonly showError: _angular_core.Signal<boolean>;
     get tabIndex(): number;
     set tabIndex(value: number);
     readonly tabIndexInput: _angular_core.InputSignalWithTransform<number | undefined, string | number | null | undefined>;

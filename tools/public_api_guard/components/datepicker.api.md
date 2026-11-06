@@ -434,6 +434,7 @@ export class KbqDatepickerToggleIconComponent<D> implements OnChanges, KbqSiblin
     get isAttached(): boolean;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
+    protected onMousedown(event: MouseEvent): void;
     open($event: MouseEvent): void;
     readonly openedChange: Observable<boolean>;
     // (undocumented)

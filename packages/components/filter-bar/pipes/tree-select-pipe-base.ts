@@ -103,7 +103,7 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
         this.treeControl.expandAll();
     }
 
-    /** @internal */
+    /** @docs-private */
     protected getSourceNode(node: KbqTreeSelectFlatNode): KbqTreeSelectNode {
         return this.sourceNodes.get(node)!;
     }

@@ -26,7 +26,7 @@ export class KbqAccordionHeader {
     /**
      * Value of `data-state`.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly dataState = computed(() => this.item.dataState);
 

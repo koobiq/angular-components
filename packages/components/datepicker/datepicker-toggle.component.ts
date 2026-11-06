@@ -139,7 +139,7 @@ export class KbqDatepickerToggleIconComponent<D> implements OnChanges, KbqSiblin
         datepicker.open();
     }
 
-    /** @internal */
+    /** @docs-private */
     protected onMousedown(event: MouseEvent): void {
         // A press on the icon, focusable by its `tabindex`, would take the focus from the input.
         event.preventDefault();

@@ -139,7 +139,7 @@ export class KbqModalComponent<T = any, R = any>
      * Whether the dialog and its dim layer move without motion. Read from the dialog's own injector, under
      * `options.injector` when the service opened it.
      *
-     * @internal
+     * @docs-private
      */
     readonly animationsDisabled = kbqAnimationsDisabled();
 

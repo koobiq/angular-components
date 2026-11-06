@@ -124,7 +124,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      * `color`: the host bindings of every icon in a view run in that view's reactive consumer, which finds a
      * signal read a second time by scanning all it has read so far, O(N²) per check across N icons.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly colorIsError = computed(() => this.color() === KbqComponentColors.Error);
 
