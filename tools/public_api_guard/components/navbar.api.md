@@ -212,9 +212,17 @@ export class KbqNavbarItem implements AfterContentInit {
     readonly tooltipDisabled: i0.InputSignalWithTransform<boolean | undefined, unknown>;
     updateTooltip(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarItem, "kbq-navbar-item, [kbq-navbar-item]", ["kbqNavbarItem"], { "collapsedText": { "alias": "collapsedText"; "required": false; "isSignal": true; }; "collapsable": { "alias": "collapsable"; "required": false; "isSignal": true; }; "tooltipDisabled": { "alias": "kbqTooltipDisabled"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, ["title", "icons"], ["[kbq-icon]:not([kbqNavbarItemSuffix])", "kbq-navbar-title, [kbq-navbar-title]", "[kbqNavbarItemSuffix]", "*"], true, [{ directive: typeof i1.KbqTooltipTrigger; inputs: { "kbqTooltip": "tooltipText"; "kbqTooltipClass": "kbqTooltipClass"; "kbqTooltipColor": "kbqTooltipColor"; "kbqTooltipContext": "kbqTooltipContext"; "kbqTooltipOffset": "kbqTooltipOffset"; "kbqTrigger": "kbqTrigger"; "kbqPlacement": "kbqPlacement"; "kbqPlacementPriority": "kbqPlacementPriority"; "kbqEnterDelay": "kbqEnterDelay"; "kbqLeaveDelay": "kbqLeaveDelay"; "kbqVisible": "kbqVisible"; }; outputs: { "kbqVisibleChange": "kbqVisibleChange"; "kbqPlacementChange": "kbqPlacementChange"; }; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarItem, "kbq-navbar-item, [kbq-navbar-item]", ["kbqNavbarItem"], { "collapsedText": { "alias": "collapsedText"; "required": false; "isSignal": true; }; "collapsable": { "alias": "collapsable"; "required": false; "isSignal": true; }; "tooltipDisabled": { "alias": "kbqTooltipDisabled"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, ["title", "icons"], ["[kbq-icon]:not([kbqNavbarItemSuffix]), [kbqNavbarItemContent]", "kbq-navbar-title, [kbq-navbar-title]", "[kbqNavbarItemSuffix]", "*"], true, [{ directive: typeof i1.KbqTooltipTrigger; inputs: { "kbqTooltip": "tooltipText"; "kbqTooltipClass": "kbqTooltipClass"; "kbqTooltipColor": "kbqTooltipColor"; "kbqTooltipContext": "kbqTooltipContext"; "kbqTooltipOffset": "kbqTooltipOffset"; "kbqTrigger": "kbqTrigger"; "kbqPlacement": "kbqPlacement"; "kbqPlacementPriority": "kbqPlacementPriority"; "kbqEnterDelay": "kbqEnterDelay"; "kbqLeaveDelay": "kbqLeaveDelay"; "kbqVisible": "kbqVisible"; }; outputs: { "kbqVisibleChange": "kbqVisibleChange"; "kbqPlacementChange": "kbqPlacementChange"; }; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarItem, never>;
+}
+
+// @public
+export class KbqNavbarItemContent {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarItemContent, "[kbqNavbarItemContent]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarItemContent, never>;
 }
 
 // @public
@@ -245,7 +253,7 @@ export class KbqNavbarModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqNavbarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1$1.A11yModule, typeof i2$1.PlatformModule, typeof i3.KbqIconModule, typeof i1.KbqToolTipModule, typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento, typeof KbqNavbarItemSuffix], [typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento, typeof KbqNavbarItemSuffix]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1$1.A11yModule, typeof i2$1.PlatformModule, typeof i3.KbqIconModule, typeof i1.KbqToolTipModule, typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento, typeof KbqNavbarItemContent, typeof KbqNavbarItemSuffix], [typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento, typeof KbqNavbarItemContent, typeof KbqNavbarItemSuffix]>;
 }
 
 // @public

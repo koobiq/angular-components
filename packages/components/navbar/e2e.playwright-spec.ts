@@ -565,4 +565,41 @@ test.describe('KbqNavbarModule', () => {
             });
         }
     });
+    test.describe('E2eNavbarItemCustomContent', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eNavbarItemCustomContent');
+        const getContent = (item: Locator) => item.locator('.kbq-navbar-item-content');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eNavbarItemCustomContent');
+            const locator = getComponent(page);
+            const viewport = page.viewportSize()!;
+
+            // The pointer starts at the page origin, over the first item; only the kbq-active item may look active.
+            await page.mouse.move(viewport.width - 1, viewport.height - 1);
+
+            await expect(locator.getByTestId('e2eScreenshotTarget')).toHaveScreenshot('09-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(locator.getByTestId('e2eScreenshotTarget')).toHaveScreenshot('09-dark.png');
+        });
+
+        test('should reserve a 40px square for the content', async ({ page }) => {
+            await page.goto('/E2eNavbarItemCustomContent');
+
+            for (const testId of ['padded', 'full-bleed']) {
+                const content = getContent(getComponent(page).getByTestId('vertical-expanded').getByTestId(testId));
+
+                await expect(content).toHaveCSS('width', '40px');
+                await expect(content).toHaveCSS('height', '40px');
+            }
+        });
+
+        test('should keep the content visible while the vertical navbar is collapsed', async ({ page }) => {
+            await page.goto('/E2eNavbarItemCustomContent');
+
+            const item = getComponent(page).getByTestId('vertical-collapsed').getByTestId('padded');
+
+            await expect(getContent(item)).toBeVisible();
+            await expect(item.locator('.kbq-navbar-item__container')).toBeHidden();
+        });
+    });
 });

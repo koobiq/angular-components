@@ -640,6 +640,54 @@ describe('KbqNavbar', () => {
         });
     });
 
+    describe('KbqNavbarItemContent', () => {
+        const createFixture = async (): Promise<ComponentFixture<TestItemCustomContentApp>> => {
+            const fixture = TestBed.createComponent(TestItemCustomContentApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            return fixture;
+        };
+
+        const getItem = (fixture: ComponentFixture<TestItemCustomContentApp>, id: string): DebugElement =>
+            fixture.debugElement.query(By.css(`#${id}`));
+
+        it('should project marked content into the leading slot, before the title', async () => {
+            const item = getItem(await createFixture(), 'marked').nativeElement as HTMLElement;
+            const [content, container] = Array.from(item.children);
+
+            expect(content.classList).toContain('kbq-navbar-item-content');
+            expect(container.classList).toContain('kbq-navbar-item__container');
+        });
+
+        it('should project content without the marker after the title', async () => {
+            const item = getItem(await createFixture(), 'unmarked').nativeElement as HTMLElement;
+            const last = item.children[item.children.length - 1];
+
+            expect(last.classList).toContain('custom-content-logo');
+            expect(Array.from(item.children).some((child) => child.classList.contains('kbq-navbar-item-content'))).toBe(
+                false
+            );
+        });
+
+        it('should keep the content visible when the item collapses', async () => {
+            const fixture = await createFixture();
+
+            (getItem(fixture, 'marked').componentInstance as KbqNavbarItem).collapsed = true;
+            fixture.detectChanges();
+
+            const item = getItem(fixture, 'marked').nativeElement as HTMLElement;
+            const content = item.querySelector('.kbq-navbar-item-content')!;
+
+            // The collapsed presentation hides the title container; the content is not a part of it and stays.
+            expect(item.classList).toContain('kbq-navbar-item_collapsed');
+            expect(content).not.toBeNull();
+            expect(content.closest('.kbq-navbar-item__container')).toBeNull();
+        });
+    });
+
     describe('owned tooltip', () => {
         const getOwnedTooltips = (fixture: ComponentFixture<TestTooltipApp>): KbqTooltipTrigger[] => {
             const owners = [
@@ -2690,6 +2738,26 @@ class TestBoundTabIndexApp {
     `
 })
 class TestItemSuffixApp {}
+
+@Component({
+    selector: 'test-item-custom-content-app',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <a href="#" id="marked" kbq-navbar-item>
+                    <div kbqNavbarItemContent><div class="custom-content-logo"></div></div>
+                    <kbq-navbar-title>PT Naira</kbq-navbar-title>
+                </a>
+                <a href="#" id="unmarked" kbq-navbar-item>
+                    <kbq-navbar-title>Plain item</kbq-navbar-title>
+                    <div class="custom-content-logo"></div>
+                </a>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestItemCustomContentApp {}
 
 @Component({
     selector: 'test-collapse-app',

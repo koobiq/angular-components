@@ -979,3 +979,64 @@ export class E2eNavbarPopupArrowCentering {
     // The default closes a tooltip on scroll; this scenario measures its repositioned geometry instead.
     protected readonly tooltipScrollStrategy = (): ScrollStrategy => this.overlay.scrollStrategies.reposition();
 }
+/**
+ * Custom content marked with `kbqNavbarItemContent` in place of the item icon — a logo padded inside the reserved
+ * square and one filling it edge to edge — next to a plain icon item, in the expanded and the collapsed navbar.
+ */
+@Component({
+    selector: 'e2e-navbar-item-custom-content',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget" style="height: 220px; display: flex; gap: 20px">
+            @for (expanded of [true, false]; track expanded) {
+                <kbq-vertical-navbar
+                    [attr.data-testid]="expanded ? 'vertical-expanded' : 'vertical-collapsed'"
+                    [expanded]="expanded"
+                >
+                    <kbq-navbar-container>
+                        <a href="#" kbq-navbar-item data-testid="padded">
+                            <div kbqNavbarItemContent>
+                                <div class="e2e-custom-content-logo"></div>
+                            </div>
+                            <kbq-navbar-title>PT Naira</kbq-navbar-title>
+                        </a>
+
+                        <a href="#" kbq-navbar-item data-testid="full-bleed">
+                            <div kbqNavbarItemContent>
+                                <div class="e2e-custom-content-logo e2e-custom-content-logo_full"></div>
+                            </div>
+                            <kbq-navbar-title>PT Naira</kbq-navbar-title>
+                        </a>
+
+                        <a href="#" kbq-navbar-item class="kbq-active">
+                            <i kbq-icon="kbq-folder_16"></i>
+                            <kbq-navbar-title>Панель мониторинга</kbq-navbar-title>
+                        </a>
+                    </kbq-navbar-container>
+                </kbq-vertical-navbar>
+            }
+        </div>
+    `,
+    styles: `
+        .e2e-custom-content-logo {
+            width: 32px;
+            height: 32px;
+            margin: 4px;
+            border-radius: 8px;
+            background: #ec2fa2;
+        }
+
+        .e2e-custom-content-logo_full {
+            width: 40px;
+            height: 40px;
+            margin: 0;
+            border-radius: 0;
+            background: #b026ff;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNavbarItemCustomContent'
+    }
+})
+export class E2eNavbarItemCustomContent {}

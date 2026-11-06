@@ -89,6 +89,22 @@ export class KbqNavbarBento {}
 })
 export class KbqNavbarItemSuffix {}
 
+/**
+ * Marks arbitrary content of a navbar item that takes the spot of the item icon.
+ *
+ * The navbar reserves a 40×40px square for the content and leaves the positioning inside the square to the
+ * content itself: it can fill the whole square or render smaller with its own paddings. The square size is
+ * controlled by the `--kbq-navbar-item-size-custom-content-width` and `--kbq-navbar-item-size-custom-content-height`
+ * tokens.
+ */
+@Directive({
+    selector: '[kbqNavbarItemContent]',
+    host: {
+        class: 'kbq-navbar-item-content'
+    }
+})
+export class KbqNavbarItemContent {}
+
 @Directive({
     selector: 'kbq-navbar-title, [kbq-navbar-title]',
     host: {
