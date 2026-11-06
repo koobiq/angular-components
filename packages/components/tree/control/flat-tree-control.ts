@@ -157,6 +157,7 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
         this.filterQuery = value;
 
         if (!this.filterModel.setSelection(...result)) {
+            // CDK does not emit an empty selection diff, but the flat data source must re-render zero-match results.
             this.filterModel.changed.next({ source: this.filterModel, added: [], removed: [] });
         }
 
@@ -167,12 +168,12 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
 
     /** Clears the active filter and restores the expansion state saved before filtering. */
     resetFilter(): void {
-        if (this.filterModel.selected.length) {
+        if (this.filterActive) {
             Promise.resolve().then(() => this.restoreExpansionState());
         }
 
-        this.filterModel.clear();
         this.filterQuery = null;
+        this.filterModel.clear();
         this.updateFilterValue(null);
     }
 
@@ -189,14 +190,18 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
         Promise.resolve().then(() => this.filterValue.next(value));
     }
 
+    private get filterActive(): boolean {
+        return this.filterModel.selected.length > 0 || this.filterQuery != null;
+    }
+
     private saveExpansionState() {
-        if (!this.filterModel.selected.length) {
+        if (!this.filterActive) {
             this.expandedItemsBeforeFiltration = this.expansionModel.selected;
         }
     }
 
     private restoreExpansionState() {
-        if (!this.filterModel.selected.length) {
+        if (!this.filterActive) {
             this.expansionModel.setSelection(...this.expandedItemsBeforeFiltration);
         }
     }

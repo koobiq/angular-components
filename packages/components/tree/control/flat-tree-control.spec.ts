@@ -320,11 +320,16 @@ describe('FlatTreeControl', () => {
                 expect(control.filterQuery).toBeNull();
             });
 
-            it('should not overwrite the remembered expansion state on a second application', () => {
+            it('should not overwrite the remembered expansion state on a second application', async () => {
                 control.expand(byName(nodes, 'images'));
                 control.applyFilter('draft');
                 control.applyFilter('specs');
                 expect(control.expandedItemsBeforeFiltration.map((node) => node.name)).toEqual(['images']);
+
+                control.resetFilter();
+                await Promise.resolve();
+
+                expect(control.expansionModel.selected.map((node) => node.name)).toEqual(['images']);
             });
 
             it('should treat an empty query as a reset', async () => {
