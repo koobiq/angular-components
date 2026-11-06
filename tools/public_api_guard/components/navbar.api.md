@@ -41,6 +41,9 @@ import { Subject } from 'rxjs';
 export const KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION: KbqNavbarLocaleConfiguration;
 
 // @public
+export const KBQ_NAVBAR_ITEM_TRIGGER: InjectionToken<KbqNavbarItemTrigger>;
+
+// @public
 export const KBQ_NAVBAR_LOCALE_CONFIGURATION: InjectionToken<KbqNavbarLocaleConfiguration>;
 
 // @public @deprecated (undocumented)
@@ -148,6 +151,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
     constructor();
     blur(): void;
     readonly button: Signal<KbqButton | undefined>;
+    readonly customTrigger: Signal<KbqNavbarItemTrigger | undefined>;
     readonly decorative: i0.WritableSignal<boolean>;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -158,7 +162,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
     getLabel(): string;
     get hasFocus(): boolean;
     set hasFocus(value: boolean);
-    get nestedElement(): KbqButton | KbqFormField | undefined;
+    get nestedElement(): KbqNavbarNestedElement | undefined;
     ngAfterContentInit(): void;
     ngAfterViewInit(): void;
     // (undocumented)
@@ -172,7 +176,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
     readonly title: Signal<KbqNavbarTitle | undefined>;
     get tooltip(): KbqTooltipTrigger;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarFocusableItem, "kbq-navbar-item, [kbq-navbar-item], kbq-navbar-brand, [kbq-navbar-brand], kbq-navbar-toggle", never, { "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, ["title", "button", "formField"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarFocusableItem, "kbq-navbar-item, [kbq-navbar-item], kbq-navbar-brand, [kbq-navbar-brand], kbq-navbar-toggle", never, { "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, ["title", "button", "formField", "customTrigger"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarFocusableItem, never>;
 }
@@ -233,6 +237,13 @@ export class KbqNavbarItemSuffix {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarItemSuffix, never>;
 }
 
+// @public
+export interface KbqNavbarItemTrigger {
+    focus(): void;
+    focusViaKeyboard?(): void;
+    readonly hasFocus: boolean;
+}
+
 export { KbqNavbarLocaleConfiguration }
 
 // @public
@@ -255,6 +266,9 @@ export class KbqNavbarModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqNavbarModule, never, [typeof i1$1.A11yModule, typeof i2$1.PlatformModule, typeof i3.KbqIconModule, typeof i1.KbqToolTipModule, typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento, typeof KbqNavbarItemContent, typeof KbqNavbarItemSuffix], [typeof KbqNavbar, typeof KbqNavbarContainer, typeof KbqNavbarTitle, typeof KbqNavbarItem, typeof KbqNavbarBrand, typeof KbqNavbarLogo, typeof KbqNavbarToggle, typeof KbqVerticalNavbar, typeof KbqNavbarDivider, typeof KbqNavbarFocusableItem, typeof KbqNavbarRectangleElement, typeof KbqNavbarBento, typeof KbqNavbarItemContent, typeof KbqNavbarItemSuffix]>;
 }
+
+// @public
+export type KbqNavbarNestedElement = KbqButton | KbqFormField | KbqNavbarItemTrigger;
 
 // @public
 export type KbqNavbarOrientation = 'horizontal' | 'vertical';

@@ -1,12 +1,14 @@
 import { Overlay, ScrollStrategy } from '@angular/cdk/overlay';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, inject, viewChild } from '@angular/core';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
+import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { KBQ_NAVBAR_ITEM_TRIGGER, KbqNavbarItemTrigger } from './index';
 import { KbqNavbarModule } from './navbar.module';
 
 @Component({
@@ -1040,3 +1042,82 @@ export class E2eNavbarPopupArrowCentering {
     }
 })
 export class E2eNavbarItemCustomContent {}
+
+/**
+ * A custom interactive component provided as `KBQ_NAVBAR_ITEM_TRIGGER`: it owns a popover and the item's
+ * keyboard focus, so the item forwards focus into it and adds no click or button behavior of its own.
+ */
+@Component({
+    selector: 'e2e-notifications-trigger',
+    imports: [KbqBadgeModule, KbqButtonModule, KbqIconModule, KbqPopoverModule],
+    template: `
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="'Body of the popover'"
+            [kbqPopoverHeader]="'Notifications'"
+            [kbqPopoverPlacement]="popUpPlacements.Right"
+        >
+            <i kbq-icon="kbq-bell_16" [color]="'empty'"></i>
+            <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+        </button>
+    `,
+    providers: [{ provide: KBQ_NAVBAR_ITEM_TRIGGER, useExisting: forwardRef(() => E2eNotificationsTrigger) }],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class E2eNotificationsTrigger implements KbqNavbarItemTrigger {
+    protected readonly popUpPlacements = PopUpPlacements;
+
+    private readonly button = viewChild(KbqButton);
+
+    get hasFocus(): boolean {
+        return this.button()?.hasFocus ?? false;
+    }
+
+    focus(): void {
+        this.button()?.focus();
+    }
+
+    focusViaKeyboard(): void {
+        this.button()?.focusViaKeyboard();
+    }
+}
+
+/**
+ * A navbar item hosting a custom interactive component next to a plain item: roving keyboard focus reaches
+ * the component, and its popover opens from the keyboard with no synthetic clicks getting in the way.
+ */
+@Component({
+    selector: 'e2e-navbar-item-custom-component',
+    imports: [
+        KbqNavbarModule,
+        KbqIconModule,
+        KbqBadgeModule,
+        KbqButtonModule,
+        KbqPopoverModule,
+        E2eNotificationsTrigger
+    ],
+    template: `
+        <div data-testid="e2eScreenshotTarget" style="height: 180px; display: flex">
+            <kbq-vertical-navbar [expanded]="true">
+                <kbq-navbar-container>
+                    <kbq-navbar-item data-testid="custom-item">
+                        <e2e-notifications-trigger />
+                    </kbq-navbar-item>
+
+                    <kbq-navbar-item data-testid="plain-item">
+                        <i kbq-icon="kbq-folder_16"></i>
+                        <kbq-navbar-title>Tasks</kbq-navbar-title>
+                    </kbq-navbar-item>
+                </kbq-navbar-container>
+
+                <button kbq-navbar-toggle></button>
+            </kbq-vertical-navbar>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNavbarItemCustomComponent'
+    }
+})
+export class E2eNavbarItemCustomComponent {}

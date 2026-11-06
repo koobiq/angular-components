@@ -2,7 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, effect, ElementRef, signal, viewChild } from '@angular/core';
+import { Component, DebugElement, effect, ElementRef, forwardRef, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -29,6 +29,7 @@ import { Observable, Subject } from 'rxjs';
 import { KbqIconModule } from './../icon/icon.module';
 import {
     KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION,
+    KBQ_NAVBAR_ITEM_TRIGGER,
     KBQ_NAVBAR_LOCALE_CONFIGURATION,
     KbqNavbar,
     KbqNavbarBrand,
@@ -36,6 +37,7 @@ import {
     KbqNavbarDivider,
     KbqNavbarFocusableItem,
     KbqNavbarItem,
+    KbqNavbarItemTrigger,
     kbqNavbarLocaleConfigurationProvider,
     KbqNavbarModule,
     KbqNavbarRectangleElement,
@@ -685,6 +687,64 @@ describe('KbqNavbar', () => {
             expect(item.classList).toContain('kbq-navbar-item_collapsed');
             expect(content).not.toBeNull();
             expect(content.closest('.kbq-navbar-item__container')).toBeNull();
+        });
+    });
+
+    describe('KBQ_NAVBAR_ITEM_TRIGGER', () => {
+        const createFixture = async (): Promise<ComponentFixture<TestItemCustomTriggerApp>> => {
+            const fixture = TestBed.createComponent(TestItemCustomTriggerApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            return fixture;
+        };
+
+        const getItem = (fixture: ComponentFixture<TestItemCustomTriggerApp>) =>
+            fixture.debugElement.query(By.css('#custom-trigger'));
+
+        const getTrigger = (fixture: ComponentFixture<TestItemCustomTriggerApp>) =>
+            fixture.debugElement.query(By.directive(TestNavbarCustomTriggerComponent)).componentInstance;
+
+        it('should recognize a custom component as the nested element of the item', async () => {
+            const fixture = await createFixture();
+
+            expect((getItem(fixture).componentInstance as KbqNavbarItem).navbarFocusableItem.nestedElement).toBe(
+                getTrigger(fixture)
+            );
+            expect(getItem(fixture).nativeElement.classList).toContain('kbq-navbar-item_has-nested');
+        });
+
+        it('should not treat the item as a button, so Enter and Space do not synthesize a click', async () => {
+            const element: HTMLElement = getItem(await createFixture()).nativeElement;
+
+            expect(element.getAttribute('role')).toBeNull();
+
+            const clicked = vi.fn();
+
+            element.addEventListener('click', clicked);
+
+            dispatchKeyboardEvent(element, 'keydown', ENTER);
+            dispatchKeyboardEvent(element, 'keydown', SPACE);
+
+            expect(clicked).not.toHaveBeenCalled();
+        });
+
+        it('should forward keyboard focus into the custom component', async () => {
+            const fixture = await createFixture();
+
+            (getItem(fixture).componentInstance as KbqNavbarItem).navbarFocusableItem.focus('keyboard');
+
+            expect(getTrigger(fixture).focusViaKeyboard).toHaveBeenCalled();
+        });
+
+        it('should forward pointer focus into the custom component', async () => {
+            const fixture = await createFixture();
+
+            (getItem(fixture).componentInstance as KbqNavbarItem).navbarFocusableItem.focus('mouse');
+
+            expect(getTrigger(fixture).focusViaKeyboard).not.toHaveBeenCalled();
         });
     });
 
@@ -2758,6 +2818,36 @@ class TestItemSuffixApp {}
     `
 })
 class TestItemCustomContentApp {}
+
+@Component({
+    selector: 'test-navbar-custom-trigger',
+    template: `
+        <button type="button">Open</button>
+    `,
+    providers: [{ provide: KBQ_NAVBAR_ITEM_TRIGGER, useExisting: forwardRef(() => TestNavbarCustomTriggerComponent) }]
+})
+class TestNavbarCustomTriggerComponent implements KbqNavbarItemTrigger {
+    hasFocus = false;
+
+    readonly focus = vi.fn();
+
+    readonly focusViaKeyboard = vi.fn();
+}
+
+@Component({
+    selector: 'test-item-custom-trigger-app',
+    imports: [KbqNavbarModule, TestNavbarCustomTriggerComponent],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item id="custom-trigger">
+                    <test-navbar-custom-trigger />
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestItemCustomTriggerApp {}
 
 @Component({
     selector: 'test-collapse-app',
