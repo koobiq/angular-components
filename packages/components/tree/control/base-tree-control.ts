@@ -21,6 +21,17 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
 
     filterValue = new BehaviorSubject<T[] | string | null>('');
 
+    /**
+     * The query of the active filter, or `null` when no filter is active. Defaults to `null`.
+     * Set by `FlatTreeControl.applyFilter`; stays `null` on controls without filtering, such as `NestedTreeControl`.
+     */
+    filterQuery: string | null = null;
+
+    /** Whether a filter is active: the filter model holds at least one node, or a query is set. */
+    get hasActiveFilter(): boolean {
+        return this.filterModel.selected.length > 0 || this.filterQuery != null;
+    }
+
     /** Get depth of a given data node, return the level number. This is for flat tree node. */
     getLevel: (dataNode: T) => number;
 

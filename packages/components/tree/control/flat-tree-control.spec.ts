@@ -369,6 +369,55 @@ describe('FlatTreeControl', () => {
             });
         });
 
+        describe('hasActiveFilter', () => {
+            it('should be false initially', () => {
+                expect(control.hasActiveFilter).toBe(false);
+            });
+
+            it('should be true while a matching filter is active', () => {
+                control.applyFilter('draft');
+
+                expect(control.hasActiveFilter).toBe(true);
+            });
+
+            it('should be true while a zero-match filter is active', () => {
+                control.applyFilter('nothing');
+
+                expect(control.filterModel.selected).toEqual([]);
+                expect(control.hasActiveFilter).toBe(true);
+            });
+
+            it('should be false after the filter is reset', () => {
+                control.applyFilter('draft');
+                control.resetFilter();
+
+                expect(control.hasActiveFilter).toBe(false);
+            });
+
+            it('should be true for a null query that leaves a non-empty selection', () => {
+                const filterByValues = new FilterByValues(control);
+
+                filterByValues.setValues(['draft', 'images']);
+                control.setFilters(filterByValues);
+
+                control.applyFilter(null);
+
+                expect(control.hasActiveFilter).toBe(true);
+            });
+
+            it('should be false for a null query with an empty selection', () => {
+                const filterByValues = new FilterByValues(control);
+
+                filterByValues.setValues(['nothing']);
+                control.setFilters(filterByValues);
+
+                control.applyFilter(null);
+
+                expect(control.filterModel.selected).toEqual([]);
+                expect(control.hasActiveFilter).toBe(false);
+            });
+        });
+
         describe('filterNodes (deprecated)', () => {
             it('should delegate to applyFilter', () => {
                 const spy = vi.spyOn(control, 'applyFilter');

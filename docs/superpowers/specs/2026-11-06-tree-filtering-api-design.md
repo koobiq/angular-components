@@ -26,13 +26,15 @@ DS-2105 добавил механизм внешних фильтров (`FlatTr
 ## Мои решения (для проверки при чтении)
 
 - **`applyFilter(value: string | null)`**: если фильтр не активен — сохранить expansion-состояние; прогнать пайплайн `filters`; выставить `expansionModel` по результату; записать `filterQuery`; обновить `filterModel` **последним** (эмиссия `filterModel.changed` — триггер перерисовки data source, поэтому порядок: сначала expansion, потом filterModel — иначе `expansionHandler` перезатрёт отфильтрованные данные). Восстановление expansion — в микротаске, как сейчас, с guard «фильтр всё ещё активен» по `filterModel.selected.length`.
-- **Пустой запрос == сброс.** `applyFilter('')` и `applyFilter(null)` приводят к `resetFilter()`: `filterModel.clear()`, восстановление expansion, `filterQuery = null`. Это осознанное отличие от текущего `filterNodes('')` (он оставлял `filterModel` заполненным всеми узлами); по смыслу «очистили поиск» — дерево должно вернуться к обычному виду.
+- **Пустая строка == сброс.** `applyFilter('')` приводит к `resetFilter()`: `filterModel.clear()`, восстановление expansion, `filterQuery = null`. Это осознанное отличие от текущего `filterNodes('')`, который оставлял `filterModel` заполненным всеми узлами; по смыслу «очистили поиск» — дерево должно вернуться к обычному виду.
+- **`null` == «применить фильтры без текстового запроса».** `applyFilter(null)` прогоняет пайплайн с пустым текстовым запросом: `FilterByViewValue` ничего не ищет, а preset-фильтры (например, `FilterByValues` после `setValues`) применяются. Так сохраняется поведение существующего `filterNodes(null)`, с которым выбираются, например, отмеченные узлы без текстового поиска.
 - **`resetFilter()`**: если фильтр активен — восстановить expansion-состояние, очистить `filterModel` и `filterQuery`.
+- Единый признак «фильтр активен» — публичный предикат `hasActiveFilter: boolean` на `BaseTreeControl` и в интерфейсе `TreeControl` (`filterModel.selected.length > 0 || filterQuery != null`; `filterQuery` живёт на `BaseTreeControl`). Его используют все потребители: select-all, `saveState`, toggle-директива, ветка фильтра в data source, save/restore expansion в `FlatTreeControl` — вместо разбросанных двухчленных проверок, которые уже один раз разошлись (Ctrl+A при zero-match выбирал всё дерево).
 - **`filterNodes(value)`** остаётся, `@deprecated`, делегирует в `applyFilter`.
 - **Внутренние потребители мигрируют с `filterValue` на `filterModel`/`filterQuery`**:
     - `BaseTreeControl.toggle/expand/collapse` — guard по `filterModel.selected.length` (для nested-контрола `filterModel` всегда пуст — поведение не меняется).
     - `KbqTreeFlatDataSource.connect` — вместо `filterValue` мержить `filterModel.changed`; непустая выборка → `filterHandler`, пустая → `expansionHandler`.
-    - `KbqTreeSelection.selectAllTargets` — `filterModel.selected.length > 0`.
+    - `KbqTreeSelection.selectAllTargets` — по `hasActiveFilter`.
     - `KbqTreeNodeToggleBaseDirective` — `filterModel.changed` вместо `filterValue.pipe`.
 - **Шаблоны и примеры библиотеки** (filter-bar pipes, dev-apps, docs-examples) переводятся на `applyFilter`/`filterQuery` — не должны использовать задеприкейченное API.
 - **Сопутствующее**: обновить API golden files (`approve-api`), у новых публичных членов — JSDoc-описания (`check-api-docs`), историю изменений MCP (`build:mcp:data`), при необходимости llms.

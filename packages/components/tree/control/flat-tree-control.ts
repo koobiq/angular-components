@@ -15,9 +15,6 @@ export function defaultCompareViewValues(firstViewValue: string, secondViewValue
 export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
     expandedItemsBeforeFiltration: K[];
 
-    /** The query passed to the latest `applyFilter` call, or `null` when no filter is active. Defaults to `null`. */
-    filterQuery: string | null = null;
-
     private filters: FlatTreeControlFilter<T>[];
 
     // Positions in each `dataNodes` array: a tree looks up every rendered row, and `indexOf` would make that
@@ -168,7 +165,7 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
 
     /** Clears the active filter and restores the expansion state saved before filtering. */
     resetFilter(): void {
-        if (this.filterActive) {
+        if (this.hasActiveFilter) {
             Promise.resolve().then(() => this.restoreExpansionState());
         }
 
@@ -190,18 +187,14 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
         Promise.resolve().then(() => this.filterValue.next(value));
     }
 
-    private get filterActive(): boolean {
-        return this.filterModel.selected.length > 0 || this.filterQuery != null;
-    }
-
     private saveExpansionState() {
-        if (!this.filterActive) {
+        if (!this.hasActiveFilter) {
             this.expandedItemsBeforeFiltration = this.expansionModel.selected;
         }
     }
 
     private restoreExpansionState() {
-        if (!this.filterActive) {
+        if (!this.hasActiveFilter) {
             this.expansionModel.setSelection(...this.expandedItemsBeforeFiltration);
         }
     }

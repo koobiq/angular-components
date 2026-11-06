@@ -1789,6 +1789,20 @@ describe('KbqTreeSelection', () => {
                 expect(component.modelValue).toEqual(['Pictures', 'Sun']);
             });
 
+            it('should select nothing on CTRL + A while a zero-match filter is active', async () => {
+                vi.useFakeTimers();
+
+                component.treeControl.applyFilter('condition for filter all nodes');
+                await vi.advanceTimersByTimeAsync(0);
+                fixture.detectChanges();
+
+                component.tree().onKeyDown(selectAllKeyEvent);
+                fixture.detectChanges();
+
+                expect(component.savedSelectAllEvent!.options.length).toBe(0);
+                expect(component.modelValue.length).toBe(0);
+            });
+
             it('should not emit selectionChange with an undefined option on a no-op CTRL + A (default)', async () => {
                 // first press selects everything (default: selectAllToggle off)
                 component.tree().onKeyDown(selectAllKeyEvent);
@@ -1881,6 +1895,20 @@ describe('KbqTreeSelection', () => {
                 clickSelectAll();
 
                 expect(component.modelValue.length).toBe(ALL_NODES_COUNT);
+            });
+
+            it('should select only the rendered matches while a filter is active', async () => {
+                vi.useFakeTimers();
+
+                component.treeControl.applyFilter('Sun');
+                await vi.advanceTimersByTimeAsync(0);
+                fixture.detectChanges();
+
+                clickSelectAll();
+
+                // `FilterParentsForNodes` keeps the match's ancestors visible, so they take part too.
+                expect(component.modelValue).toEqual(['Pictures', 'Sun']);
+                expect(component.tree().selectAllState).toBe('checked');
             });
 
             it('should deselect every node on a second click', () => {

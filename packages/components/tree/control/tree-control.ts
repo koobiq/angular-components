@@ -21,6 +21,12 @@ export interface TreeControl<T, K = T> {
 
     filterModel: SelectionModel<T>;
 
+    /** The query of the active filter, or `null` when no filter is active. */
+    readonly filterQuery: string | null;
+
+    /** Whether a filter is active: the filter model holds at least one node, or a query is set. */
+    readonly hasActiveFilter: boolean;
+
     /** Gives the key a data node is expanded by. Without it the node object is its own key. */
     trackBy?: (dataNode: T) => K;
 

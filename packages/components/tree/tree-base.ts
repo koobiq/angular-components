@@ -275,7 +275,7 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
         // Untracked, as in `clearSavedState()`: called from a consumer's `effect()`, the inputs read on the way would
         // make the effect run again whenever they change.
         untracked(() => {
-            if (!this.persists || this.treeControl.filterModel.selected.length) return;
+            if (!this.persists || this.treeControl.hasActiveFilter) return;
 
             this.stateSaving!.write(this.expandedValues());
         });

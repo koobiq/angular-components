@@ -513,7 +513,7 @@ export class KbqTreeSelection<T = any, K = T>
                 .map((option) => option.data)
         );
 
-        const candidates = this.treeControl.filterModel.selected.length
+        const candidates = this.treeControl.hasActiveFilter
             ? this.renderedOptions.map((option) => option.data)
             : (this.treeControl.dataNodes ?? []);
 
