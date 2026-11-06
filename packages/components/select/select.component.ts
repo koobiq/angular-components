@@ -920,11 +920,11 @@ export class KbqSelect
     private readonly resolvedAriaLabelValue = computed(
         () => this.ariaLabel() ?? (this.ariaLabelledby ? null : this.placeholder() || null)
     );
-    /** @internal */
+    /** @docs-private */
     protected readonly disabledAttribute = computed(() => this.disabled() || null);
-    /** @internal */
+    /** @docs-private */
     protected readonly disabledClass = computed(() => this.disabled());
-    /** @internal */
+    /** @docs-private */
     protected readonly invalidClass = computed(() => this.errorState());
 
     private readonly focusedValue = signal(false);

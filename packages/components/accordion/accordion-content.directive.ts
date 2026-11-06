@@ -56,7 +56,7 @@ export class KbqAccordionContentDirective implements OnInit, DoCheck, AfterViewI
     /**
      * Value of `data-state`.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly dataState = computed(() => this.item.dataState);
 

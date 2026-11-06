@@ -84,8 +84,8 @@ if (grown.length > 0) {
     console.error('\n❌ The public API gained entries or members with no description:\n');
     grown.forEach((name) => console.error(`  - ${name}: ${baseline[name] ?? 0} → ${current[name] ?? 0}`));
     console.error(
-        '\nAdd a description, or tag it `@docs-private` (hides it from the docs, keeps it in the typings) or\n' +
-            '`@internal` (removes it from the typings entirely) if it was never meant to be documented.\n'
+        '\nAdd a description, use `@docs-private` for a member (hides it from the docs, keeps it in the typings), or\n' +
+            'use `@internal` for a whole declaration (removes it from the typings entirely) if it was never meant to be documented.\n'
     );
     process.exit(1);
 }

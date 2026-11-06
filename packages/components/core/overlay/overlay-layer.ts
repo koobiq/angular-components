@@ -202,7 +202,7 @@ export class KbqOverlayLayer implements OnDestroy {
     private readonly document = inject(DOCUMENT);
     private container: HTMLElement | null = null;
 
-    /** @internal */
+    /** @docs-private */
     readonly host = kbqInjectNativeElement();
 
     constructor() {
@@ -219,7 +219,7 @@ export class KbqOverlayLayer implements OnDestroy {
      * Created with the first panel, so an element that never opens one is left untouched. Lives inside the host to
      * share its stacking context with a bar rendered in the same scrolling viewport.
      *
-     * @internal
+     * @docs-private
      */
     getContainerElement(): HTMLElement {
         if (!this.container) {

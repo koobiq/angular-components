@@ -492,7 +492,7 @@ export class KbqSearchExpandable
      * Clears a non-empty field on `Escape`, or collapses an empty one. On `keydown` and spent, so that a container
      * closing on the key, such as a modal, stays open.
      *
-     * @internal
+     * @docs-private
      */
     protected onEscape(event: Event): void {
         if (this.disabled || !this.isOpened) return;
@@ -501,7 +501,7 @@ export class KbqSearchExpandable
         this.onSuffixClick();
     }
 
-    /** @internal */
+    /** @docs-private */
     protected onSuffixClick(): void {
         if (this.value()) {
             this.resetValue();

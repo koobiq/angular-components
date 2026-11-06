@@ -9,15 +9,20 @@ const eslint = new ESLint({ overrideConfigFile: true, overrideConfig });
 const fixingEslint = new ESLint({ overrideConfigFile: true, overrideConfig, fix: true });
 
 /**
- * Messages of the checks the config adds through `jsdoc/no-restricted-syntax` and a `forbid-*` rule of its own, which
- * read the AST of a comment: a change of that AST in a plugin update turns them off without an error, so each one is
- * pinned here.
+ * Messages of the checks the config adds through `jsdoc/no-restricted-syntax`, a `forbid-*` rule of its own and a
+ * local rule for what the plugin cannot see, which read the AST of a comment: a change of that AST in a plugin
+ * update turns them off without an error, so each one is pinned here.
  */
 const restrictedSyntax = async (code: string, path = filePath): Promise<string[]> => {
     const [result] = await eslint.lintText(code, { filePath: path });
 
     return result.messages
-        .filter(({ ruleId }) => ruleId === 'jsdoc/no-restricted-syntax' || ruleId?.startsWith('jsdoc/forbid-'))
+        .filter(
+            ({ ruleId }) =>
+                ruleId === 'jsdoc/no-restricted-syntax' ||
+                ruleId?.startsWith('jsdoc/forbid-') ||
+                ruleId === 'kbq/forbid-internal-line-comment-on-member'
+        )
         .map(({ message }) => message);
 };
 
@@ -163,6 +168,117 @@ describe('publishedJsDocConfig', () => {
         ]);
     });
 
+    it.each([
+        ['public method', 'export class A { /** @internal */ method(): void {} }'],
+        ['protected property', 'export class A { /** @internal */ protected value = 1; }'],
+        ['accessor', 'export class A { /** @internal */ get value(): number { return 1; } }'],
+        ['abstract method', 'export abstract class A { /** @internal */ abstract method(): void; }'],
+        [
+            'parameter property',
+            'export class A { constructor(/** @internal */ public value: string) {} }'
+        ],
+        ['interface member', 'export interface A { /** @internal */ value: string; }'],
+        ['index signature', 'export interface A { /** @internal */ [key: string]: number; }'],
+        ['call signature', 'export interface A { /** @internal */ (): void; }'],
+        ['construct signature', 'export interface A { /** @internal */ new (): A; }'],
+        ['type literal member', 'export type A = { /** @internal */ method(): void };'],
+        ['enum member', 'export enum A { /** @internal */ Value }']
+    ])('reports @internal on a %s', async (_name, code) => {
+        expect(await restrictedSyntax(code)).toEqual([
+            expect.stringContaining('Use `@internal` only on a whole declaration')
+        ]);
+    });
+
+    it.each([
+        [
+            'public method',
+            'export class A {\n    // @internal\n    method(): void {}\n}',
+            'Use `@internal` only on a whole declaration'
+        ],
+        [
+            'protected property',
+            'export class A {\n    // @internal\n    protected value = 1;\n}',
+            'Use `@internal` only on a whole declaration'
+        ],
+        [
+            'interface member',
+            'export interface A {\n    // @internal\n    value: string;\n}',
+            'Use `@internal` only on a whole declaration'
+        ],
+        [
+            'enum member',
+            'export enum A {\n    // @internal\n    Value\n}',
+            'Use `@internal` only on a whole declaration'
+        ],
+        [
+            'private property',
+            'export class A {\n    // @internal\n    private value = 1;\n}',
+            'A private member is not in the docs anyway'
+        ],
+        [
+            'private identifier property',
+            'export class A {\n    // @internal\n    #value = 1;\n}',
+            'A private member is not in the docs anyway'
+        ]
+    ])('reports a `// @internal` line comment on a %s', async (_name, code, message) => {
+        expect(await restrictedSyntax(code)).toEqual([expect.stringContaining(message)]);
+    });
+
+    it('accepts `// @internal` on a whole declaration and a plain line comment on a member', async () => {
+        const code = [
+            '// @internal',
+            'export class A {',
+            '    method(): void {}',
+            '}',
+            '',
+            '// @internal',
+            'export const b = 1;',
+            '',
+            'export class C {',
+            '    // keeps the value',
+            '    value = 1;',
+            '}'
+        ].join('\n');
+
+        expect(await restrictedSyntax(code)).toEqual([]);
+    });
+
+    it('accepts @internal on whole declarations and @docs-private on members', async () => {
+        const code = [
+            '/** @internal */',
+            'export class A {',
+            '    /** @docs-private */',
+            '    public value = 1;',
+            '',
+            '    /** @docs-private */',
+            '    protected otherValue = 2;',
+            '',
+            '    /** @docs-private */',
+            '    public method(): void {}',
+            '',
+            '    /** @docs-private */',
+            '    protected otherMethod(): void {}',
+            '}',
+            '',
+            '/** @internal */',
+            'export interface B {}',
+            '',
+            '/** @internal */',
+            'export enum C { Value }',
+            '',
+            '/** @internal */',
+            'export type D = string;',
+            '',
+            '/** @internal */',
+            'export function e(): void {}',
+            '',
+            '/** @internal */',
+            'export const f = 1;'
+        ].join('\n');
+
+        expect(await restrictedSyntax(code)).toEqual([]);
+    });
+
     it('reports `@docs-private` and `@internal` on a private member only', async () => {
         const code = [
             'export class A {',
@@ -170,14 +286,18 @@ describe('publishedJsDocConfig', () => {
             '    private a = 1;',
             '',
             '    /** @internal */',
-            '    #b = 1;',
+            '    private value = 1;',
+            '',
+            '    /** @internal */',
+            '    #value = 1;',
             '',
             '    /** @docs-private */',
-            '    protected c = this.#b;',
+            '    protected c = this.#value;',
             '}'
         ].join('\n');
 
         expect(await restrictedSyntax(code)).toEqual([
+            expect.stringContaining('A private member is not in the docs anyway'),
             expect.stringContaining('A private member is not in the docs anyway'),
             expect.stringContaining('A private member is not in the docs anyway')
         ]);

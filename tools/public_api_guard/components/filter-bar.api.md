@@ -841,6 +841,7 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
     protected getChildren: (node: KbqTreeSelectNode) => KbqTreeSelectNode[] | null;
     // (undocumented)
     protected getLevel: (node: KbqTreeSelectFlatNode) => number;
+    protected getSourceNode(node: KbqTreeSelectFlatNode): KbqTreeSelectNode;
     // (undocumented)
     protected getValue: (node: KbqTreeSelectFlatNode) => unknown;
     // (undocumented)

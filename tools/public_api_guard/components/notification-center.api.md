@@ -111,11 +111,13 @@ export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): ()
 export class KbqNotificationCenterService {
     constructor();
     readonly changes: Observable<void>;
+    readonly empty: Signal<boolean>;
     readonly errorMode: Signal<boolean>;
     readonly groupedItems: Signal<KbqNotificationsGroup[]>;
     readonly hasMore: Signal<boolean>;
     hideToast(item: KbqNotificationItem): void;
     get isEmpty(): boolean;
+    isRead(item: KbqNotificationItem): boolean;
     get items(): KbqNotificationItem[];
     set items(values: KbqNotificationItem[]);
     readonly loadingMode: Signal<boolean>;

@@ -137,6 +137,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     get afterOpen(): Observable<void>;
     animateMaskTo(state: AnimationState): void;
+    readonly animationsDisabled: boolean;
     protected get ariaDescribedBy(): string | null;
     protected get ariaLabel(): string | null;
     protected get ariaLabelledBy(): string | null;

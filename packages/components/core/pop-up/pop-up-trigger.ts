@@ -682,7 +682,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      * Re-evaluates the delayed hide of `hideWithTimeout` after the pointer has entered or left the trigger or the
      * pop-up. Called by the pop-up, a separate class.
      *
-     * @internal
+     * @docs-private
      */
     handleHoverChange(): void {
         if (!this.hoverHideArmed) return;

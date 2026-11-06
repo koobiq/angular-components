@@ -231,7 +231,7 @@ export class KbqNotificationCenterService {
     /**
      * Whether there are no notifications, for the center's own view to follow.
      *
-     * @internal
+     * @docs-private
      */
     readonly empty: Signal<boolean> = computed(() => this.originalItems().length === 0);
 
@@ -257,7 +257,7 @@ export class KbqNotificationCenterService {
      * Whether a notification is read, for a view to follow: `read` is flipped in place on the consumer's object,
      * so a view handed that object is not told.
      *
-     * @internal
+     * @docs-private
      */
     isRead(item: KbqNotificationItem): boolean {
         let state = this.readStates.get(item);
