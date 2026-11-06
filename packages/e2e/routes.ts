@@ -12,7 +12,13 @@ import {
     E2eAutocompleteScrollClose,
     E2eAutocompleteStates
 } from '../components/autocomplete/e2e';
-import { E2eBadgeAsyncIcon, E2eBadgeStyles } from '../components/badge/e2e';
+import {
+    E2eBadgeAlignment,
+    E2eBadgeAsyncIcon,
+    E2eBadgeContent,
+    E2eBadgeContentColors,
+    E2eBadgeStyles
+} from '../components/badge/e2e';
 import {
     E2eBreadcrumbsInForm,
     E2eBreadcrumbsItemCount,
@@ -225,6 +231,9 @@ const components = [
     E2eIconStateAndStyle,
     E2eIconSvg,
     E2eBadgeStyles,
+    E2eBadgeContent,
+    E2eBadgeContentColors,
+    E2eBadgeAlignment,
     E2eBadgeAsyncIcon,
     E2eLinkStates,
     E2eLinkWithCaption,
