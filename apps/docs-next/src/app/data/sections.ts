@@ -38,40 +38,26 @@ export const DOCS_NEXT_SECTIONS: readonly DocsNextSection[] = [
         title: { ru: 'Разработка', en: 'Development' },
         groups: [
             {
-                title: { ru: 'Начало работы', en: 'Getting started' },
                 pages: [
                     page('install', 'Установка', 'Installation', { dependent: true }),
+                    page('agents', 'ИИ-агенты', 'AI agents', { dependent: true }),
                     page('theming', 'Темизация', 'Theming', { dependent: true, isUpdated: true }),
                     page('fonts', 'Шрифты', 'Fonts', { dependent: true }),
+                    page('icons-setup', 'Иконки', 'Icons', { dependent: true }),
+                    page('versioning', 'Версионирование', 'Versioning'),
+                    page('localization', 'Локализация', 'Localization', { dependent: true }),
                     page('schematics', 'Схематики', 'Schematics', { framework: 'angular' }),
                     page('migrations', 'Миграции', 'Migrations', { dependent: true })
                 ]
             },
             {
-                title: { ru: 'Справочник', en: 'Reference' },
                 pages: [
-                    page('versioning', 'Версионирование', 'Versioning'),
                     page('core', 'Core', 'Core', { framework: 'angular' }),
                     page('dynamic-translation', 'Dynamic translation', 'Dynamic translation', { framework: 'angular' }),
                     page('formatter-date', 'Форматтер даты', 'Date formatter'),
                     page('formatter-number', 'Форматтер числа', 'Number formatter'),
                     page('formatter-file-size', 'Форматтер размера файла', 'File size formatter'),
-                    page('icons-setup', 'Иконки', 'Icons', { dependent: true }),
-                    page('localization', 'Локализация', 'Localization', { dependent: true }),
                     page('hooks', 'Хуки', 'Hooks', { framework: 'react', isNew: true })
-                ]
-            },
-            {
-                pages: [
-                    page('agents', 'Для агентов', 'For agents', {
-                        dependent: true,
-                        children: [
-                            page('llms-txt', 'LLMs.txt', 'LLMs.txt', { dependent: true }),
-                            page('mcp-server', 'MCP-сервер', 'MCP server', { dependent: true }),
-                            page('skills', 'Скиллы', 'Skills', { dependent: true }),
-                            page('claude-plugin', 'Claude-плагин для Koobiq', 'Claude plugin for Koobiq')
-                        ]
-                    })
                 ]
             }
         ]
@@ -98,7 +84,6 @@ export const DOCS_NEXT_SECTIONS: readonly DocsNextSection[] = [
                 ]
             },
             {
-                title: { ru: 'Контент', en: 'Content' },
                 pages: [page('syntax', 'Синтаксис', 'Syntax'), page('wording', 'Формулировки', 'Wording')]
             },
             { pages: [page('generator', 'Генератор оформления', 'Theme generator')] }
