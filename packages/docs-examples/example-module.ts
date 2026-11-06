@@ -325,6 +325,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "ag-grid-infinite-selection-example.ts",
     "importPath": "components/ag-grid"
   },
+  "ag-grid-load-error": {
+    "packagePath": "components/ag-grid/ag-grid-load-error",
+    "title": "AG Grid with a load error row",
+    "componentName": "AgGridLoadErrorExample",
+    "files": [
+      "ag-grid-load-error-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-load-error-example",
+    "primaryFile": "ag-grid-load-error-example.ts",
+    "importPath": "components/ag-grid"
+  },
+  "ag-grid-load-text": {
+    "packagePath": "components/ag-grid/ag-grid-load-text",
+    "title": "AG Grid with a text loading indicator",
+    "componentName": "AgGridLoadTextExample",
+    "files": [
+      "ag-grid-load-text-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-load-text-example",
+    "primaryFile": "ag-grid-load-text-example.ts",
+    "importPath": "components/ag-grid"
+  },
   "ag-grid-loading-overlay": {
     "packagePath": "components/ag-grid/ag-grid-loading-overlay",
     "title": "AG Grid with loading overlay",
@@ -8073,6 +8097,8 @@ export type LiveExampleId =
   | 'ag-grid-external-filter-state'
   | 'ag-grid-filter-state'
   | 'ag-grid-infinite-selection'
+  | 'ag-grid-load-error'
+  | 'ag-grid-load-text'
   | 'ag-grid-loading-overlay'
   | 'ag-grid-long-cell-content'
   | 'ag-grid-overview'
