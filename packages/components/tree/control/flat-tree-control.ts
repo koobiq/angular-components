@@ -131,9 +131,9 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
         return this.dataNodes?.find((node: any) => this.compareValues(this.getValue(node), value));
     }
 
-    /** Filters nodes by a query and expands the ancestors of every match. An empty query resets the filter. */
+    /** Filters nodes by a query and expands the ancestors of every match. An empty string resets the filter. */
     applyFilter(value: string | null = null): void {
-        if (!value) {
+        if (value === '') {
             this.resetFilter();
 
             return;
@@ -155,8 +155,10 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
         );
 
         this.filterQuery = value;
-        this.filterModel.clear();
-        this.filterModel.select(...result);
+
+        if (!this.filterModel.setSelection(...result)) {
+            this.filterModel.changed.next({ source: this.filterModel, added: [], removed: [] });
+        }
 
         this.updateFilterValue(value);
 

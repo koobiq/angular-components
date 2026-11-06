@@ -261,6 +261,33 @@ describe('KbqTreeFlatDataSource', () => {
         expect(emissions[emissions.length - 1]).toEqual(['root', 'documents', 'draft']);
     });
 
+    it('should emit no nodes when a zero-match query starts with an empty filter model', async () => {
+        const emissions: string[][] = [];
+
+        dataSource.data = buildData();
+        dataSource.connect(collectionViewer).subscribe((nodes) => emissions.push(names(nodes)));
+
+        control.applyFilter('no-such-thing');
+        await Promise.resolve();
+
+        expect(emissions[emissions.length - 1]).toEqual([]);
+    });
+
+    it('should emit no nodes when an active filter is replaced by a zero-match query', async () => {
+        const emissions: string[][] = [];
+
+        dataSource.data = buildData();
+        dataSource.connect(collectionViewer).subscribe((nodes) => emissions.push(names(nodes)));
+
+        control.applyFilter('draft');
+        await Promise.resolve();
+
+        control.applyFilter('no-such-thing');
+        await Promise.resolve();
+
+        expect(emissions[emissions.length - 1]).toEqual([]);
+    });
+
     it('should re-render when the consumer mutates filterModel directly', () => {
         const emissions: string[][] = [];
 

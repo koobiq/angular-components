@@ -1,4 +1,5 @@
 import { FlatTreeControl } from './flat-tree-control';
+import { FilterByValues } from './flat-tree-control.filters';
 
 describe('FlatTreeControl', () => {
     let treeControl: FlatTreeControl<TestData>;
@@ -305,6 +306,18 @@ describe('FlatTreeControl', () => {
                     'draft'
                 ]);
                 expect(control.filterQuery).toBe('draft');
+            });
+
+            it('should run preset filters when the query is null', () => {
+                const filterByValues = new FilterByValues(control);
+
+                filterByValues.setValues(['draft', 'images']);
+                control.setFilters(filterByValues);
+
+                control.applyFilter(null);
+
+                expect(control.filterModel.selected.map((node) => node.name)).toEqual(['draft', 'images']);
+                expect(control.filterQuery).toBeNull();
             });
 
             it('should not overwrite the remembered expansion state on a second application', () => {

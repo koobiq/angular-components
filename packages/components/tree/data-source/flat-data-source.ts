@@ -193,7 +193,7 @@ export class KbqTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
         ).pipe(
             map((changeObj: any): any => {
                 if (changeObj.type === KbqTreeDataSourceChangeTypes.Filter) {
-                    if (changeObj.value && changeObj.value.length > 0) {
+                    if (changeObj.value.length > 0 || this.treeControl.filterQuery != null) {
                         return this.filterHandler();
                     } else {
                         return this.expansionHandler(changeObj.value);
