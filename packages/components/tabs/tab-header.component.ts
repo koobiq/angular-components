@@ -12,7 +12,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { isUndefined, KbqOverflowShadowContainer, kbqQueryListFrom } from '@koobiq/components/core';
+import { isUndefined, kbqQueryListFrom } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
@@ -31,7 +31,7 @@ const TAB_PADDING = 12;
  */
 @Component({
     selector: 'kbq-tab-header',
-    imports: [KbqIconModule, CdkObserveContent, KbqScrollbarViewport, KbqOverflowShadowContainer],
+    imports: [KbqIconModule, CdkObserveContent, KbqScrollbarViewport],
     templateUrl: './tab-header.html',
     styleUrl: './tab-header.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -23,12 +23,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-    isUndefined,
-    kbqOptionalNumberAttribute,
-    KbqOverflowShadowContainer,
-    kbqQueryListFrom
-} from '@koobiq/components/core';
+import { isUndefined, kbqOptionalNumberAttribute, kbqQueryListFrom } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { startWith } from 'rxjs/operators';
@@ -48,8 +43,7 @@ const TAB_PADDING = 12;
     imports: [
         KbqIconModule,
         CdkObserveContent,
-        KbqScrollbarViewport,
-        KbqOverflowShadowContainer
+        KbqScrollbarViewport
     ],
     templateUrl: './tab-nav-bar.html',
     styleUrls: [

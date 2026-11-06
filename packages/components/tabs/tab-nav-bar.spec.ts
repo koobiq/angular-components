@@ -296,7 +296,7 @@ describe(KbqTabNavBar.name, () => {
             expect(scrollbarMode(fixture)).toBe('hidden');
         });
 
-        it('should fade out each edge the strip is scrolled away from along the block axis', () => {
+        it('should fade out each edge the strip is scrolled away from along the block axis', async () => {
             const fixture = TestBed.createComponent(TabNavBarWithPanel);
 
             fixture.componentInstance.vertical = true;
@@ -308,46 +308,34 @@ describe(KbqTabNavBar.name, () => {
                 container.classList.contains('kbq-tab-header__scroll-container_overflow-before'),
                 container.classList.contains('kbq-tab-header__scroll-container_overflow-after')
             ];
-            const scrollTo = (scrollTop: number): void => {
+            const scrollTo = async (scrollTop: number): Promise<void> => {
                 container.scrollTop = scrollTop;
                 container.dispatchEvent(new Event('scroll'));
+                await vi.advanceTimersByTimeAsync(SCROLL_CD_THROTTLE);
                 fixture.detectChanges();
             };
 
             Object.defineProperty(container, 'scrollHeight', { configurable: true, value: 400 });
             Object.defineProperty(container, 'clientHeight', { configurable: true, value: 100 });
-
-            scrollTo(0);
+            navBar.updatePagination();
+            fixture.detectChanges();
 
             expect(masks()).toEqual([false, true]);
 
-            scrollTo(150);
+            vi.useFakeTimers();
 
-            expect(masks()).toEqual([true, true]);
+            try {
+                await scrollTo(150);
 
-            // scrollHeight(400) - clientHeight(100) = 300, the largest scrollTop a real browser allows.
-            scrollTo(300);
+                expect(masks()).toEqual([true, true]);
 
-            expect(masks()).toEqual([true, false]);
-        });
+                // scrollHeight(400) - clientHeight(100) = 300, the largest scrollTop a real browser allows.
+                await scrollTo(300);
 
-        it('should leave the edge masks of a horizontal strip to pagination', () => {
-            const fixture = TestBed.createComponent(TabNavBarWithPanel);
-
-            fixture.detectChanges();
-
-            const navBar = fixture.debugElement.query(By.directive(KbqTabNavBar)).componentInstance as KbqTabNavBar;
-            const container = navBar.tabListContainer.nativeElement;
-
-            // Overflows along the block axis only, which a horizontal strip does not scroll on.
-            Object.defineProperty(container, 'scrollHeight', { configurable: true, value: 400 });
-            Object.defineProperty(container, 'clientHeight', { configurable: true, value: 100 });
-            container.scrollTop = 150;
-            container.dispatchEvent(new Event('scroll'));
-            fixture.detectChanges();
-
-            expect(container.classList.contains('kbq-tab-header__scroll-container_overflow-before')).toBe(false);
-            expect(container.classList.contains('kbq-tab-header__scroll-container_overflow-after')).toBe(false);
+                expect(masks()).toEqual([true, false]);
+            } finally {
+                vi.useRealTimers();
+            }
         });
     });
 

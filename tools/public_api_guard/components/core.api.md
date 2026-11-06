@@ -3759,14 +3759,15 @@ export class KbqOverflowShadowBottom {
 }
 
 // @public
-export class KbqOverflowShadowContainer {
+export class KbqOverflowShadowContainer implements OnInit {
     constructor();
     checkOverflow(): void;
     readonly debounce: i0.InputSignalWithTransform<number, unknown>;
-    readonly disabled: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
+    // (undocumented)
+    ngOnInit(): void;
     readonly overflow: i0.WritableSignal<KbqOverflowShadowState>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowShadowContainer, "[kbqOverflowShadowContainer]", ["kbqOverflowShadowContainer"], { "debounce": { "alias": "debounce"; "required": false; "isSignal": true; }; "disabled": { "alias": "kbqOverflowShadowContainerDisabled"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowShadowContainer, "[kbqOverflowShadowContainer]", ["kbqOverflowShadowContainer"], { "debounce": { "alias": "debounce"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowShadowContainer, never>;
 }

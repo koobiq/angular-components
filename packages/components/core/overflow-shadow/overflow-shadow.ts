@@ -1,16 +1,17 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import {
-    afterRenderEffect,
-    booleanAttribute,
+    afterNextRender,
+    DestroyRef,
     Directive,
     inject,
     InjectionToken,
     input,
     numberAttribute,
-    signal,
-    untracked
+    OnInit,
+    signal
 } from '@angular/core';
-import { fromEvent, merge, NEVER, Observable, Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { fromEvent, Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { kbqInjectNativeElement } from '../utils';
 
@@ -54,27 +55,19 @@ export const KBQ_OVERFLOW_SHADOW_SOURCE = new InjectionToken<KbqOverflowShadowSo
  * and alter the viewport size (modal open/close animation, window resize, reflow that resizes
  * the element). Content that only grows `scrollHeight` without changing the element's box size
  * is not detected by the resize observer; call `checkOverflow()` manually for those cases.
- *
- * `kbqOverflowShadowContainerDisabled` stops both subscriptions and clears the state, for a host
- * that needs the shadows only in some of its layouts.
  */
 @Directive({
     selector: '[kbqOverflowShadowContainer]',
     exportAs: 'kbqOverflowShadowContainer'
 })
-export class KbqOverflowShadowContainer {
+export class KbqOverflowShadowContainer implements OnInit {
+    private readonly destroyRef = inject(DestroyRef);
     private readonly hostElement = kbqInjectNativeElement();
     private readonly externalSource = inject(KBQ_OVERFLOW_SHADOW_SOURCE, { optional: true, self: true });
     private readonly sharedResizeObserver = inject(SharedResizeObserver);
 
     /** Optional debounce for scroll events, in milliseconds. Default is 0. */
     readonly debounce = input(0, { transform: numberAttribute });
-
-    /** Whether the container stops tracking scroll and resize and reports no overflow. Defaults to `false`. */
-    readonly disabled = input<boolean, boolean | string | null | undefined>(false, {
-        alias: 'kbqOverflowShadowContainerDisabled',
-        transform: booleanAttribute
-    });
 
     /** Current shadow state. Re-checked on every scroll event and resize; changes only when an edge does. */
     readonly overflow = signal<KbqOverflowShadowState>(
@@ -84,19 +77,22 @@ export class KbqOverflowShadowContainer {
 
     constructor() {
         // In the read phase, so that containers rendered together measure in one layout rather than one each.
-        afterRenderEffect({
-            read: (onCleanup) => {
-                if (this.disabled()) {
-                    this.overflow.set({ top: false, bottom: false });
-
-                    return;
-                }
-
-                const subscription = untracked(() => this.observe());
-
-                onCleanup(() => subscription.unsubscribe());
+        afterNextRender({
+            read: () => {
+                this.checkOverflow();
+                this.observeResize();
             }
         });
+    }
+
+    ngOnInit(): void {
+        const source$ = this.externalSource
+            ? this.externalSource.onScroll
+            : fromEvent(this.hostElement, 'scroll', { passive: true });
+
+        const stream$ = this.debounce() > 0 ? source$.pipe(debounceTime(this.debounce())) : source$;
+
+        stream$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.checkOverflow());
     }
 
     /**
@@ -125,18 +121,15 @@ export class KbqOverflowShadowContainer {
         return this.externalSource ? this.externalSource.getScrollElement() : this.hostElement;
     }
 
-    private observe(): Subscription {
-        this.checkOverflow();
-
-        const scroll$ = this.externalSource
-            ? this.externalSource.onScroll
-            : fromEvent(this.hostElement, 'scroll', { passive: true });
+    private observeResize(): void {
         const source = this.getScrollSource();
-        const resize$ = source ? this.sharedResizeObserver.observe(source) : NEVER;
 
-        return merge(this.debounce() > 0 ? scroll$.pipe(debounceTime(this.debounce())) : scroll$, resize$).subscribe(
-            () => this.checkOverflow()
-        );
+        if (!source) return;
+
+        this.sharedResizeObserver
+            .observe(source)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.checkOverflow());
     }
 }
 
