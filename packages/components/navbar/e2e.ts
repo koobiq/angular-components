@@ -1,9 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Overlay, ScrollStrategy } from '@angular/cdk/overlay';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqPopoverModule } from '@koobiq/components/popover';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqNavbarModule } from './navbar.module';
 
 @Component({
@@ -871,3 +874,59 @@ export class E2eNavbarCollapse {}
     }
 })
 export class E2eVerticalNavbarItemClippedTitle {}
+
+@Component({
+    selector: 'e2e-navbar-popup-arrow-centering',
+    imports: [KbqNavbarModule, KbqButtonModule, KbqPopoverModule, KbqToolTipModule],
+    template: `
+        <div style="padding: 160px 160px 800px">
+            <kbq-navbar aria-label="Popup arrow centering">
+                <kbq-navbar-container>
+                    <kbq-navbar-item>
+                        <button
+                            type="button"
+                            kbq-button
+                            kbqPopover
+                            kbqPopoverPlacement="bottomRight"
+                            kbqPopoverContent="Popover content with a centered arrow."
+                            kbqTrigger="click"
+                            data-testid="popover-trigger"
+                            style="width: 280px"
+                            [kbqPopoverArrow]="true"
+                            [kbqPopoverArrowCentered]="true"
+                        >
+                            Popover
+                        </button>
+                    </kbq-navbar-item>
+
+                    <kbq-navbar-item>
+                        <button
+                            type="button"
+                            kbq-button
+                            kbqPlacement="bottomRight"
+                            kbqTooltip="Tooltip content with a centered arrow."
+                            kbqTrigger="click"
+                            data-testid="tooltip-trigger"
+                            style="width: 280px"
+                            [kbqTooltipArrow]="true"
+                            [kbqTooltipArrowCentered]="true"
+                            [kbqTooltipScrollStrategy]="tooltipScrollStrategy"
+                        >
+                            Tooltip
+                        </button>
+                    </kbq-navbar-item>
+                </kbq-navbar-container>
+            </kbq-navbar>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNavbarPopupArrowCentering'
+    }
+})
+export class E2eNavbarPopupArrowCentering {
+    private readonly overlay = inject(Overlay);
+
+    // The default closes a tooltip on scroll; this scenario measures its repositioned geometry instead.
+    protected readonly tooltipScrollStrategy = (): ScrollStrategy => this.overlay.scrollStrategies.reposition();
+}

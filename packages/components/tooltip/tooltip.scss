@@ -109,7 +109,7 @@ $navbar-trigger-margin: $trigger-margin + 1px;
     width: var(--kbq-tooltip-size-arrow-size);
     height: var(--kbq-tooltip-size-arrow-size);
 
-    transform: rotate(45deg);
+    transform: translate(var(--kbq-tooltip-arrow-shift-x, 0px), var(--kbq-tooltip-arrow-shift-y, 0px)) rotate(45deg);
 
     z-index: -1;
 }
