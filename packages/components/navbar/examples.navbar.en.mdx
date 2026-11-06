@@ -13,3 +13,15 @@ To show an icon after the item title — for example, on a link to an external r
 In the vertical menu the icon is pinned to the right edge of the item.
 
 <Example id="navbar-vertical-item-suffix" />
+
+### Custom content instead of the icon
+
+An item can show something other than an icon in the spot before the title: mark the content with `kbqNavbarItemContent`. The navbar reserves a 40×40px square for it — the `--kbq-navbar-item-size-custom-content-width` and `--kbq-navbar-item-size-custom-content-height` tokens — and leaves the positioning inside the square to the content itself: it can fill the whole square or render smaller with its own paddings. The content stays visible when the menu collapses, replacing the icon in the collapsed item.
+
+<Example id="navbar-item-custom-content" />
+
+### Custom component as the item
+
+To keep logic in your own component — a notifications center, a site switcher — implement `KbqNavbarItemTrigger` on it and provide the class as `KBQ_NAVBAR_ITEM_TRIGGER`. The item then hands keyboard focus to the component and adds no button behavior of its own: the navbar keeps a single keyboard tab stop, arrow navigation works, and Enter and Space reach the component's own control. Inside the component, attach a dropdown, a popover, or any other overlay as usual.
+
+<Example id="navbar-item-custom-component" />

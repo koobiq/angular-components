@@ -1,9 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, viewChild } from '@angular/core';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
+import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqPopoverModule } from '@koobiq/components/popover';
+import { KBQ_NAVBAR_ITEM_TRIGGER, KbqNavbarItemTrigger } from './index';
 import { KbqNavbarModule } from './navbar.module';
 
 @Component({
@@ -871,3 +874,144 @@ export class E2eNavbarCollapse {}
     }
 })
 export class E2eVerticalNavbarItemClippedTitle {}
+
+/**
+ * Custom content marked with `kbqNavbarItemContent` in place of the item icon — a logo padded inside the reserved
+ * square and one filling it edge to edge — next to a plain icon item, in the expanded and the collapsed navbar.
+ */
+@Component({
+    selector: 'e2e-navbar-item-custom-content',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget" style="height: 220px; display: flex; gap: 20px">
+            @for (expanded of [true, false]; track expanded) {
+                <kbq-vertical-navbar
+                    [attr.data-testid]="expanded ? 'vertical-expanded' : 'vertical-collapsed'"
+                    [expanded]="expanded"
+                >
+                    <kbq-navbar-container>
+                        <a href="#" kbq-navbar-item data-testid="padded">
+                            <div kbqNavbarItemContent>
+                                <div class="e2e-custom-content-logo"></div>
+                            </div>
+                            <kbq-navbar-title>Orbit</kbq-navbar-title>
+                        </a>
+
+                        <a href="#" kbq-navbar-item data-testid="full-bleed">
+                            <div kbqNavbarItemContent>
+                                <div class="e2e-custom-content-logo e2e-custom-content-logo_full"></div>
+                            </div>
+                            <kbq-navbar-title>Orbit</kbq-navbar-title>
+                        </a>
+
+                        <a href="#" kbq-navbar-item class="kbq-active">
+                            <i kbq-icon="kbq-folder_16"></i>
+                            <kbq-navbar-title>Панель мониторинга</kbq-navbar-title>
+                        </a>
+                    </kbq-navbar-container>
+                </kbq-vertical-navbar>
+            }
+        </div>
+    `,
+    styles: `
+        .e2e-custom-content-logo {
+            width: 32px;
+            height: 32px;
+            margin: 4px;
+            border-radius: 8px;
+            background: #ec2fa2;
+        }
+
+        .e2e-custom-content-logo_full {
+            width: 40px;
+            height: 40px;
+            margin: 0;
+            border-radius: 0;
+            background: #b026ff;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNavbarItemCustomContent'
+    }
+})
+export class E2eNavbarItemCustomContent {}
+
+/**
+ * A custom interactive component provided as `KBQ_NAVBAR_ITEM_TRIGGER`: it owns a popover and the item's
+ * keyboard focus, so the item forwards focus into it and adds no click or button behavior of its own.
+ */
+@Component({
+    selector: 'e2e-notifications-trigger',
+    imports: [KbqBadgeModule, KbqButtonModule, KbqIconModule, KbqPopoverModule],
+    template: `
+        <button
+            kbq-button
+            kbqPopover
+            [kbqPopoverContent]="'Body of the popover'"
+            [kbqPopoverHeader]="'Notifications'"
+            [kbqPopoverPlacement]="popUpPlacements.Right"
+        >
+            <i kbq-icon="kbq-bell_16" [color]="'empty'"></i>
+            <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+        </button>
+    `,
+    providers: [{ provide: KBQ_NAVBAR_ITEM_TRIGGER, useExisting: forwardRef(() => E2eNotificationsTrigger) }],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class E2eNotificationsTrigger implements KbqNavbarItemTrigger {
+    protected readonly popUpPlacements = PopUpPlacements;
+
+    private readonly button = viewChild(KbqButton);
+
+    get hasFocus(): boolean {
+        return this.button()?.hasFocus ?? false;
+    }
+
+    focus(): void {
+        this.button()?.focus();
+    }
+
+    focusViaKeyboard(): void {
+        this.button()?.focusViaKeyboard();
+    }
+}
+
+/**
+ * A navbar item hosting a custom interactive component next to a plain item: roving keyboard focus reaches
+ * the component, and its popover opens from the keyboard with no synthetic clicks getting in the way.
+ */
+@Component({
+    selector: 'e2e-navbar-item-custom-component',
+    imports: [
+        KbqNavbarModule,
+        KbqIconModule,
+        KbqBadgeModule,
+        KbqButtonModule,
+        KbqPopoverModule,
+        E2eNotificationsTrigger
+    ],
+    template: `
+        <div data-testid="e2eScreenshotTarget" style="height: 180px; display: flex">
+            <kbq-vertical-navbar [expanded]="true">
+                <kbq-navbar-container>
+                    <kbq-navbar-item data-testid="custom-item">
+                        <e2e-notifications-trigger />
+                    </kbq-navbar-item>
+
+                    <kbq-navbar-item data-testid="plain-item">
+                        <i kbq-icon="kbq-folder_16"></i>
+                        <kbq-navbar-title>Tasks</kbq-navbar-title>
+                    </kbq-navbar-item>
+                </kbq-navbar-container>
+
+                <button kbq-navbar-toggle></button>
+            </kbq-vertical-navbar>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNavbarItemCustomComponent'
+    }
+})
+export class E2eNavbarItemCustomComponent {}

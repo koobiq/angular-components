@@ -705,6 +705,10 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalTemplateExample);
         case 'navbar-app-long-name':
             return import('@koobiq/docs-examples/components/navbar').then((m) => m.NavbarAppLongNameExample);
+        case 'navbar-item-custom-component':
+            return import('@koobiq/docs-examples/components/navbar').then((m) => m.NavbarItemCustomComponentExample);
+        case 'navbar-item-custom-content':
+            return import('@koobiq/docs-examples/components/navbar').then((m) => m.NavbarItemCustomContentExample);
         case 'navbar-item-suffix':
             return import('@koobiq/docs-examples/components/navbar').then((m) => m.NavbarItemSuffixExample);
         case 'navbar-overview':

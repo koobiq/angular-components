@@ -1,0 +1,16 @@
+<div style="height: 480px" class="layout-row">
+    <kbq-vertical-navbar [expanded]="true">
+        <kbq-navbar-container>
+            <kbq-navbar-item>
+                <example-navbar-notifications />
+            </kbq-navbar-item>
+
+            <a href="#" kbq-navbar-item>
+                <i kbq-icon="kbq-folder_16" color="contrast"></i>
+                <kbq-navbar-title>{{ text().dashboards }}</kbq-navbar-title>
+            </a>
+        </kbq-navbar-container>
+
+        <button kbq-navbar-toggle></button>
+    </kbq-vertical-navbar>
+</div>
