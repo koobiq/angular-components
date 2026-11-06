@@ -144,6 +144,20 @@ describe('KbqNotificationCenter', () => {
                 getCenter().onContainerScroll();
             };
 
+            it('uses the card surface for the full-screen loader', fakeAsync(() => {
+                const service = getService();
+
+                openCenter();
+
+                service.setLoadingMode(true);
+                fixture.detectChanges();
+
+                const loader = debugElement.query(By.css('[data-testid="kbq-notification-center-loader"]'));
+
+                expect(loader).not.toBeNull();
+                expect(loader.nativeElement.classList).toContain('kbq-loader-overlay_card');
+            }));
+
             it('shows the bottom "load more" spinner without replacing the list', fakeAsync(() => {
                 const service = getService();
 

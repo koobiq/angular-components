@@ -84,3 +84,22 @@ export class E2eNotificationCenterStates {
         this.notificationService.items = this.items;
     }
 }
+
+@Component({
+    selector: 'e2e-notification-center-loading',
+    imports: [KbqNotificationCenterModule, KbqLuxonDateModule, KbqFormattersModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget" style="height: 700px; width: 405px">
+            <kbq-notification-center style="max-height: 100%" />
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNotificationCenterLoading'
+    }
+})
+export class E2eNotificationCenterLoading {
+    constructor() {
+        inject(KbqNotificationCenterService).setLoadingMode(true);
+    }
+}
