@@ -1,6 +1,8 @@
 ﻿import { InteractivityChecker } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { NgTemplateOutlet } from '@angular/common';
 import {
+    ApplicationRef,
     Component,
     InjectionToken,
     Injector,
@@ -395,6 +397,82 @@ describe('KbqSidepanelService', () => {
         expect(submitSpy).not.toHaveBeenCalled();
     }));
 
+    describe('close button rendered apart from where it is declared', () => {
+        const render = () => {
+            rootComponentFixture.detectChanges();
+            TestBed.inject(ApplicationRef).tick();
+        };
+
+        const closedSpy = (sidepanelRef: KbqSidepanelRef) => {
+            const closed = jest.fn();
+
+            sidepanelRef.afterClosed().subscribe(closed);
+
+            return closed;
+        };
+
+        it('should close the sidepanel it is rendered in when declared outside any sidepanel', fakeAsync(() => {
+            const declaringFixture = TestBed.createComponent(CloseButtonDeclaredOutsideSidepanel);
+
+            declaringFixture.detectChanges();
+
+            const sidepanelRef = sidepanelService.open(SidepanelWithTemplateOutlet, {
+                data: { template: declaringFixture.componentInstance.template() }
+            });
+            const closed = closedSpy(sidepanelRef);
+
+            render();
+            // Clicked in the same task it renders in, before any timer could look the sidepanel up.
+            overlayContainerElement.querySelector<HTMLButtonElement>('#declared-outside')!.click();
+            render();
+            flush();
+
+            expect(closed).toHaveBeenCalledWith('rendered-in');
+        }));
+
+        it('should close the sidepanel it is rendered in, not the one it is declared in', fakeAsync(() => {
+            const outerRef = sidepanelService.open(SidepanelDeclaringCloseButton);
+            const outerClosed = closedSpy(outerRef);
+
+            render();
+            flush();
+
+            const innerRef = sidepanelService.open(SidepanelWithTemplateOutlet, {
+                data: { template: outerRef.instance.template() }
+            });
+            const innerClosed = closedSpy(innerRef);
+
+            render();
+            flush();
+            overlayContainerElement.querySelector<HTMLButtonElement>('#declared-in-outer')!.click();
+            render();
+            flush();
+
+            expect(innerClosed).toHaveBeenCalled();
+            expect(outerClosed).not.toHaveBeenCalled();
+        }));
+
+        it('should close the sidepanel it is declared in when rendered outside any sidepanel', fakeAsync(() => {
+            const sidepanelRef = sidepanelService.open(SidepanelDeclaringCloseButton);
+            const closed = closedSpy(sidepanelRef);
+
+            render();
+            flush();
+
+            const view = sidepanelRef.instance.template().createEmbeddedView({});
+
+            document.body.append(...view.rootNodes);
+            view.detectChanges();
+            document.body.querySelector<HTMLButtonElement>('#declared-in-outer')!.click();
+            render();
+            flush();
+
+            expect(closed).toHaveBeenCalled();
+
+            view.destroy();
+        }));
+    });
+
     it('should set focus inside modal when opened by dropdown', fakeAsync(() => {
         // jsdom gives every element zero geometry, so the focus trap would find nothing tabbable.
         jest.spyOn(TestBed.inject(InteractivityChecker), 'isVisible').mockReturnValue(true);
@@ -528,6 +606,44 @@ class ComponentWithTemplateForSidepanel {
 }
 
 @Component({
+    imports: [KbqSidepanelModule, NgTemplateOutlet],
+    template: `
+        <kbq-sidepanel-body>
+            <ng-container [ngTemplateOutlet]="data.template" />
+        </kbq-sidepanel-body>
+    `
+})
+class SidepanelWithTemplateOutlet {
+    readonly data = injectCore<{ template: TemplateRef<unknown> }>(KBQ_SIDEPANEL_DATA);
+}
+
+@Component({
+    imports: [KbqSidepanelModule, KbqButtonModule],
+    template: `
+        <ng-template #closeButton>
+            <button id="declared-outside" kbq-button kbq-sidepanel-close="rendered-in">Close</button>
+        </ng-template>
+    `
+})
+class CloseButtonDeclaredOutsideSidepanel {
+    readonly template = viewChild.required<TemplateRef<unknown>>('closeButton');
+}
+
+@Component({
+    imports: [KbqSidepanelModule, KbqButtonModule],
+    template: `
+        <kbq-sidepanel-body>Outer sidepanel</kbq-sidepanel-body>
+
+        <ng-template #closeButton>
+            <button id="declared-in-outer" kbq-button kbq-sidepanel-close>Close</button>
+        </ng-template>
+    `
+})
+class SidepanelDeclaringCloseButton {
+    readonly template = viewChild.required<TemplateRef<unknown>>('closeButton');
+}
+
+@Component({
     selector: 'root-component',
     template: `
         <div></div>
@@ -543,7 +659,10 @@ const TEST_COMPONENTS = [
     SidepanelWithFormComponent,
     ComponentWithTemplateForSidepanel,
     RootComponent,
-    SidepanelFromDropdownComponent
+    SidepanelFromDropdownComponent,
+    SidepanelWithTemplateOutlet,
+    CloseButtonDeclaredOutsideSidepanel,
+    SidepanelDeclaringCloseButton
 ];
 
 @NgModule({

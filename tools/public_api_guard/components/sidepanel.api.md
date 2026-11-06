@@ -67,8 +67,7 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnInit(): void;
-    // (undocumented)
-    sidepanelRef: KbqSidepanelRef<any, any>;
+    get sidepanelRef(): KbqSidepanelRef;
     // (undocumented)
     sidepanelResult: any;
     // (undocumented)
