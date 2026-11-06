@@ -30,6 +30,11 @@ export interface TreeControl<T, K = T> {
     /** Gives the key a data node is expanded by. Without it the node object is its own key. */
     trackBy?: (dataNode: T) => K;
 
+    /**
+     * Stream with the filter query or result. Published for backward compatibility.
+     *
+     * @deprecated Use `filterQuery` for the query string and `filterModel` for the filter state. Will be removed in 22.0.0.
+     */
     filterValue: BehaviorSubject<T[] | string | null>;
 
     /** Get depth of a given data node, return the level number. This is for flat tree node. */

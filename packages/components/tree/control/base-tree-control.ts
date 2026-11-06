@@ -19,6 +19,11 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
 
     filterModel: SelectionModel<T> = new SelectionModel<T>(true);
 
+    /**
+     * Stream with the filter query or result. Published for backward compatibility.
+     *
+     * @deprecated Use `filterQuery` for the query string and `filterModel` for the filter state. Will be removed in 22.0.0.
+     */
     filterValue = new BehaviorSubject<T[] | string | null>('');
 
     /**
