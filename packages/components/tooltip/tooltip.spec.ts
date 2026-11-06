@@ -1409,6 +1409,65 @@ describe('KbqTooltip', () => {
             await vi.runOnlyPendingTimersAsync();
         });
 
+        it('should recalculate arrow centering from visible geometry on initial show', async () => {
+            vi.useFakeTimers();
+
+            const triggerElement = component.trigger().nativeElement;
+
+            triggerElement.getBoundingClientRect = () => {
+                if (!triggerElement.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 300,
+                    bottom: 140,
+                    width: 200,
+                    height: 40,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            component.arrow = true;
+            component.arrowCentered = true;
+            component.placement = 'bottomRight';
+            fixture.detectChanges();
+
+            dispatchMouseEvent(triggerElement, 'mouseenter');
+            fixture.detectChanges();
+
+            const tooltip = tooltipElement()!;
+
+            tooltip.getBoundingClientRect = () => {
+                if (!tooltip.isConnected || !tooltip.classList.contains('kbq-tooltip_visible')) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 400,
+                    bottom: 260,
+                    width: 300,
+                    height: 160,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+            fixture.detectChanges();
+
+            expect(tooltip.classList).toContain('kbq-tooltip_visible');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('-181px');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('0px');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
         it('should support arrow centering without changing the panel placement', async () => {
             vi.useFakeTimers();
 
@@ -1469,7 +1528,7 @@ describe('KbqTooltip', () => {
                 .tooltipTrigger()
                 .onPositionChange({ connectionPair: bottomRight } as ConnectedOverlayPositionChange);
 
-            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('-179px');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('-181px');
             expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('0px');
 
             component.arrowCentered = false;
@@ -1502,9 +1561,9 @@ describe('KbqTooltip', () => {
                 return {
                     left: 100,
                     top: 100,
-                    right: 140,
+                    right: 130,
                     bottom: 260,
-                    width: 40,
+                    width: 30,
                     height: 160,
                     x: 100,
                     y: 100,
@@ -1519,7 +1578,7 @@ describe('KbqTooltip', () => {
                 connectionPair: strategy.positions[0]
             } as ConnectedOverlayPositionChange);
 
-            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('1px');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('4px');
             expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('0px');
 
             await vi.runOnlyPendingTimersAsync();

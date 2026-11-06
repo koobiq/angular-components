@@ -142,12 +142,13 @@ let nextTooltipUniqueId = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqTooltipComponent extends KbqPopUp {
+export class KbqTooltipComponent extends KbqPopUp implements AfterViewInit {
     private readonly delayTracker = inject(KbqTooltipDelayTracker);
 
     prefix = 'kbq-tooltip';
 
-    protected override arrowCenterInset = 21;
+    // The 13px arrow padding plus half of the 12px square defined in tooltip.scss.
+    protected override arrowCenterInset = 19;
 
     /**
      * Id rendered on the tooltip element; the trigger points its `aria-describedby` at it.
@@ -164,6 +165,15 @@ export class KbqTooltipComponent extends KbqPopUp {
     /** The tooltip panel, which the base pop-up measures and decorates instead of the host. */
     override get elementRef(): ElementRef<HTMLElement> {
         return this.tooltipElement()!;
+    }
+
+    ngAfterViewInit() {
+        this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
+            if (state) {
+                this.detectChanges();
+                this.updateArrowPosition();
+            }
+        });
     }
 
     show(delay: number) {
