@@ -49,6 +49,8 @@
     // Figma: NAvbar on a tablet (159:26981), two lines of 48px and the line under them.
     @include breakpoints.docs-next-tablet {
         --docs-next-header-height: 97px;
+        // The text column and the rail of the contents need the room more than the menu does.
+        --docs-next-aside-width: 200px;
     }
 
     @include breakpoints.docs-next-mobile {

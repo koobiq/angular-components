@@ -38,7 +38,9 @@ const MCP_SERVER = { command: 'npx', args: ['-y', '@koobiq/mcp'] };
                     <i kbq-icon="kbq-square-multiple-o_16" class="docs-next-icon-swap__from"></i>
                     <i kbq-icon="kbq-check_16" class="docs-next-icon-swap__to"></i>
                 </span>
-                {{ copied() ? state.t('copied') : state.t('copyPage') }}
+                <span class="docs-next-page-actions__label">
+                    {{ copied() ? state.t('copied') : state.t('copyPage') }}
+                </span>
             </button>
             @if (githubUrl(); as url) {
                 <a
@@ -126,6 +128,32 @@ const MCP_SERVER = { command: 'npx', args: ['-y', '@koobiq/mcp'] };
 
         .docs-next-page-actions__copy {
             order: 1;
+        }
+
+        /* Beside the tabs, the row can be too narrow for them and the label together: "Copy" then keeps the icon, the
+           size of the buttons next to it. The label stays for assistive technology. */
+        @container docs-next-page-bar (max-width: 500px) {
+            :host(:not(.docs-next-page-actions_without-tabs)) {
+                .docs-next-page-actions__copy {
+                    width: var(--kbq-size-3xl);
+                    min-width: 0;
+                    padding: 0;
+                    justify-content: center;
+                }
+
+                .docs-next-icon-swap {
+                    margin: 0;
+                }
+
+                .docs-next-page-actions__label {
+                    position: absolute;
+                    width: 1px;
+                    height: 1px;
+                    overflow: hidden;
+                    clip-path: inset(50%);
+                    white-space: nowrap;
+                }
+            }
         }
 
         .docs-next-page-actions__github {

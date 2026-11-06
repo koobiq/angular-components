@@ -32,6 +32,8 @@
 // the left, the actions on the right.
 .docs-next-page-header__bar {
     position: relative;
+    // The actions beside the tabs ask how much room the row has (page-actions.ts).
+    container: docs-next-page-bar / inline-size;
     display: flex;
     align-items: center;
     justify-content: space-between;
