@@ -21,6 +21,15 @@
         min-height: var(--kbq-size-l);
     }
 
+    // Custom content in place of the icon: the navbar only reserves the square, the content
+    // positions itself inside it.
+    & > .kbq-navbar-item-content {
+        flex-shrink: 0;
+
+        width: var(--kbq-navbar-item-size-custom-content-width);
+        height: var(--kbq-navbar-item-size-custom-content-height);
+    }
+
     // Filled fade-contrast only: its background is a semi-transparent tint, so the
     // navbar icon shows through. Composite the tint over an opaque bg-tertiary substrate.
     // The outline variant is intentionally left untouched — it stays a clean transparent outline.

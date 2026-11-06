@@ -4,6 +4,9 @@
     /* SIZE TOKENS */
     /* 40px of content plus the 1px gap that keeps the focus ring of adjacent items apart. */
     --kbq-navbar-item-vertical-size-height: 41px;
+    /* The square an item reserves for custom content in place of the 16px icon. */
+    --kbq-navbar-item-size-custom-content-width: var(--kbq-size-4xl);
+    --kbq-navbar-item-size-custom-content-height: var(--kbq-size-4xl);
     --kbq-navbar-vertical-size-expanded-width: 240px;
     --kbq-navbar-brand-vertical-size-title-max-width: 200px;
     --kbq-navbar-toggle-size-circle: 28px;
