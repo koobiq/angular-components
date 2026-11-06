@@ -73,6 +73,7 @@ export interface KbqExclusiveTooltip {
 
 // @public (undocumented)
 export class KbqTooltipComponent extends KbqPopUp implements AfterViewInit {
+    protected afterShowAnimation(): void;
     applyOffset(): void;
     // (undocumented)
     protected arrowCenterInset: number;

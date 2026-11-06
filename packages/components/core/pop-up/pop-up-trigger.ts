@@ -437,6 +437,9 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      */
     protected origin: KbqOverlayOrigin | null = null;
 
+    /** Origin currently applied to the position strategy; `null` follows the configured origin or host. */
+    private activeOrigin: FlexibleConnectedPositionStrategyOrigin | null = null;
+
     /**
      * Hide pop-up with timeout. Need if you want to show pop-up after leaving trigger
      *
@@ -761,7 +764,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         // Create connected position strategy that listens for scroll events to reposition.
         this.strategy = this.overlay
             .position()
-            .flexibleConnectedTo(this.getResolvedOrigin())
+            .flexibleConnectedTo(this.getActiveOrigin())
             .withTransformOriginOn(this.originSelector)
             .withFlexibleDimensions(false)
             .withPositions([...EXTENDED_OVERLAY_POSITIONS])
@@ -788,7 +791,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      * @docs-private
      */
     resetOrigin() {
-        this.strategy.setOrigin(this.getResolvedOrigin());
+        this.setOrigin(null);
     }
 
     /**
@@ -802,19 +805,35 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     updateOrigin(origin: KbqOverlayOrigin | null): void {
         this.origin = origin;
 
-        if (!this.strategy) return;
-
         // Told to the strategy even while the pop-up is closed: the overlay is created once and reused, so an
         // origin bound between two opens would otherwise never reach it.
-        this.strategy.setOrigin(this.getResolvedOrigin());
+        this.setOrigin(this.getResolvedOrigin());
 
-        if (!this.overlayRef?.hasAttached()) return;
+        if (!this.strategy || !this.overlayRef?.hasAttached()) return;
 
         // Through `updatePosition()`, because the new positions it applies clear the position locked in by
         // `withLockedPosition()`. Re-applying the last position instead would keep the pop-up on the placement
         // picked for the previous origin, with no chance to flip.
         this.updatePosition();
         this.overlayRef.updatePosition();
+    }
+
+    /** Sets and records the origin applied to the position strategy. @docs-private */
+    protected setOrigin(origin: FlexibleConnectedPositionStrategyOrigin | null): void {
+        this.activeOrigin = origin;
+
+        if (this.strategy) {
+            this.strategy.setOrigin(origin ?? this.getResolvedOrigin());
+        }
+    }
+
+    /**
+     * The origin currently applied to the position strategy, or the configured origin while none was set.
+     *
+     * @docs-private
+     */
+    protected getActiveOrigin(): FlexibleConnectedPositionStrategyOrigin {
+        return this.activeOrigin ?? this.getResolvedOrigin();
     }
 
     /**
@@ -974,20 +993,11 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         return this.arrowCentered ? this.getOriginCenter() : null;
     }
 
-    /** Center of the explicit origin or the native host, in viewport coordinates. @docs-private */
+    /** Center of the active origin in viewport coordinates. @docs-private */
     protected getOriginCenter(): { x: number; y: number } {
-        const resolved = kbqResolveOverlayOrigin(this.origin ?? this.getNativeElement());
-        const element = ((resolved as ElementRef<HTMLElement>).nativeElement ?? resolved) as
-            HTMLElement | { x: number; y: number; width: number; height: number };
+        const { x, y, width, height } = kbqGetOverlayOriginSize(this.getActiveOrigin());
 
-        // Duck typing rather than `instanceof Element`, which is not defined on the server.
-        if ('getBoundingClientRect' in element) {
-            const { left, top, width, height } = element.getBoundingClientRect();
-
-            return { x: left + width / 2, y: top + height / 2 };
-        }
-
-        return { x: element.x + element.width / 2, y: element.y + element.height / 2 };
+        return { x: x + width / 2, y: y + height / 2 };
     }
 
     /**
@@ -1008,7 +1018,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         const res: ConnectionPositionPair[] = [];
         // Measured once instead of once per candidate position: every read forces a synchronous layout, and
         // `updateData()` reaches this method on every content, context, header, arrow and offset change.
-        const anchorSize = this.arrow && !this.arrowCentered ? this.getAnchorSize() : null;
+        const anchorSize = this.arrow ? this.getAnchorSize() : null;
 
         for (const pos of this.getPrioritizedPositions()) {
             const offset: KbqPopupTriggerOffset = anchorSize ? getOffset(pos, anchorSize) : {};
@@ -1024,12 +1034,12 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
 
     /**
      * Size of what the pop-up is positioned against: a corner placement shifts the pop-up so that its arrow still
-     * points at an anchor narrower than the arrow's inset. The host element by default.
+     * points at an anchor narrower than the arrow's inset. The active origin by default.
      *
      * @docs-private
      */
     protected getAnchorSize(): { width: number; height: number } {
-        return this.origin ? kbqGetOverlayOriginSize(this.origin) : this.getNativeElement().getBoundingClientRect();
+        return kbqGetOverlayOriginSize(this.getActiveOrigin());
     }
 
     /**

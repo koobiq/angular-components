@@ -1497,6 +1497,69 @@ describe('KbqPopover', () => {
             expect(popover.style.getPropertyValue('--kbq-popover-arrow-shift-y')).toBe('');
         });
 
+        it('should keep legacy narrow-trigger positioning while centering the arrow', async () => {
+            vi.useFakeTimers();
+
+            const triggerElement = placementInstance.trigger().nativeElement;
+
+            triggerElement.getBoundingClientRect = () => {
+                if (!triggerElement.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 124,
+                    bottom: 140,
+                    width: 24,
+                    height: 40,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            placementInstance.placement = 'bottomRight';
+            placementInstance.arrowCentered = true;
+            placementFixture.detectChanges();
+
+            await open();
+
+            const positions = () =>
+                (
+                    placementInstance.popoverTrigger().createOverlay().getConfig()
+                        .positionStrategy as FlexibleConnectedPositionStrategy
+                ).positions;
+
+            expect(positions()[0].offsetX).toBe(5);
+
+            const popover = overlayContainerElement.querySelector<HTMLElement>('.kbq-popover')!;
+
+            popover.getBoundingClientRect = () => {
+                if (!popover.isConnected) return new DOMRect();
+
+                return {
+                    left: 105,
+                    top: 100,
+                    right: 505,
+                    bottom: 260,
+                    width: 400,
+                    height: 160,
+                    x: 105,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            placementInstance.popoverTrigger().onPositionChange({
+                connectionPair: positions()[0]
+            } as ConnectedOverlayPositionChange);
+
+            expect(popover.style.getPropertyValue('--kbq-popover-arrow-shift-x')).toBe('-340px');
+            expect(popover.style.getPropertyValue('--kbq-popover-arrow-shift-y')).toBe('0px');
+
+            await close();
+        });
+
         it('should keep the arrow dropped while stuck to the window', async () => {
             vi.useFakeTimers();
 

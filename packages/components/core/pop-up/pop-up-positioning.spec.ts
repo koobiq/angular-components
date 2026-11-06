@@ -42,7 +42,7 @@ describe('kbqGetPopUpArrowShift', () => {
         expect(kbqGetPopUpArrowShift('bottom-right', narrowRect, { x: 200, y: 200 }, 30)).toEqual({ x: 10, y: 0 });
     });
 
-    it('should use the tooltip arrow inset', () => {
-        expect(kbqGetPopUpArrowShift('bottom-right', panelRect, { x: 200, y: 200 }, 21)).toEqual({ x: -179, y: 0 });
+    it('should use the requested arrow inset', () => {
+        expect(kbqGetPopUpArrowShift('bottom-right', panelRect, { x: 200, y: 200 }, 19)).toEqual({ x: -181, y: 0 });
     });
 });

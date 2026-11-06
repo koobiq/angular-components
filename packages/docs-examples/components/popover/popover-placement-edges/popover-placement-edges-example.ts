@@ -47,5 +47,5 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 export class PopoverPlacementEdgesExample {
     placements = PopUpPlacements;
     activePopover: KbqPopoverTrigger;
-    arrowCentered = false;
+    protected arrowCentered = false;
 }

@@ -147,7 +147,7 @@ export class KbqTooltipComponent extends KbqPopUp implements AfterViewInit {
 
     prefix = 'kbq-tooltip';
 
-    // The 13px arrow padding plus half of the 12px square defined in tooltip.scss.
+    // Safe arrow inset from tooltip.scss: ($arrow-footprint + $trigger-margin) / 2 with the default arrow token.
     protected override arrowCenterInset = 19;
 
     /**
@@ -169,11 +169,18 @@ export class KbqTooltipComponent extends KbqPopUp implements AfterViewInit {
 
     ngAfterViewInit() {
         this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
-            if (state) {
+            if (state && this.arrowCentered) {
                 this.detectChanges();
                 this.updateArrowPosition();
             }
         });
+    }
+
+    /** Recalculates from the settled geometry: the entrance starts from `scale(0)`, an empty measurement box. */
+    protected override afterShowAnimation(): void {
+        if (this.arrowCentered) {
+            this.updateArrowPosition();
+        }
     }
 
     show(delay: number) {
@@ -664,7 +671,6 @@ export class KbqTooltipTrigger
 
         if (changes['arrowCenteredInput']) {
             this.arrowCentered = this.arrowCenteredInput() ?? false;
-            this.updateData();
         }
 
         if (changes['offsetInput']) {
@@ -697,6 +703,7 @@ export class KbqTooltipTrigger
         if (
             (changes['headerInput'] && !changes['headerInput'].firstChange) ||
             (changes['arrowInput'] && !changes['arrowInput'].firstChange) ||
+            (changes['arrowCenteredInput'] && !changes['arrowCenteredInput'].firstChange) ||
             (changes['offsetInput'] && !changes['offsetInput'].firstChange)
         ) {
             this.updateData();
@@ -1021,7 +1028,7 @@ export class KbqTooltipTrigger
         } else if (this.relativeToPointer) {
             this.applyRelativeToPointer();
         } else {
-            this.pointerOrigin = null;
+            this.setOrigin(null);
         }
     }
 
@@ -1132,8 +1139,17 @@ export class KbqTooltipTrigger
 
         if (!this.strategy) return;
 
-        this.pointerOrigin = null;
-        this.strategy.setOrigin(element);
+        this.setExternalNativeElement(element);
+        this.setOrigin(element);
+
+        if (this.overlayRef?.hasAttached()) {
+            this.updatePosition();
+            this.overlayRef.updatePosition();
+        }
+
+        if (untracked(() => this.isOpen)) {
+            this.describeTrigger();
+        }
     }
 
     /**
@@ -1365,16 +1381,13 @@ export class KbqTooltipTrigger
      */
     private readonly caretOrigin = kbqCreateCaretOrigin(() => this.measureCaretAnchor());
 
-    private pointerOrigin: Point | null = null;
-
     /**
      * Anchors the overlay to the caret of the field.
      *
      * @docs-private
      */
     protected applyRelativeToCaret() {
-        this.pointerOrigin = null;
-        this.strategy?.setOrigin(this.caretOrigin);
+        this.setOrigin(this.caretOrigin);
     }
 
     /** @docs-private */
@@ -1390,7 +1403,7 @@ export class KbqTooltipTrigger
             return { x: x + width / 2, y: y + height / 2 };
         }
 
-        return this.pointerOrigin ?? super.getOriginCenter();
+        return super.getOriginCenter();
     }
 
     /**
@@ -1461,7 +1474,6 @@ export class KbqTooltipTrigger
             ![PopUpPlacements.Top, PopUpPlacements.Bottom].includes(this.placement as PopUpPlacements) ||
             this.triggerName !== 'mouseenter'
         ) {
-            this.pointerOrigin = null;
             this.resetOrigin();
 
             return;
@@ -1478,7 +1490,6 @@ export class KbqTooltipTrigger
             point.y = triggerRects.y + triggerRects.height;
         }
 
-        this.pointerOrigin = point;
-        this.strategy.setOrigin(point);
+        this.setOrigin(point);
     }
 }
