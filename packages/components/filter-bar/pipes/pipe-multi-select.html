@@ -71,6 +71,9 @@
         >
             <kbq-pseudo-checkbox [state]="checkboxState" />
             {{ localeConfiguration().pipe.selectAll }}
+            @if (data.selectAllCounter) {
+                <span class="kbq-pipe-select-all__counter">{{ selectAllCount }}</span>
+            }
         </kbq-option>
     }
 

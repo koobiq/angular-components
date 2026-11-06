@@ -73,6 +73,9 @@
             <span
                 [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
             ></span>
+            @if (data.selectAllCounter) {
+                <span class="kbq-pipe-select-all__counter">{{ selectAllCount }}</span>
+            }
         </kbq-tree-option>
 
         <kbq-tree-option
