@@ -92,12 +92,36 @@
 
 // The dropdown is portaled into the overlay, so it is reachable only through the pipe's `panelClass`.
 .kbq-pipe-select__panel_multiline,
-.kbq-pipe-multiselect__panel_multiline {
+.kbq-pipe-multiselect__panel_multiline,
+.kbq-pipe-tree-select__panel_multiline,
+.kbq-pipe-multi-tree-select__panel_multiline {
     // `overflow: hidden` from `kbq-list-text()` stays: it gives the flex item a minimum size of 0, so the
     // text shrinks to the option width instead of stretching the row.
-    .kbq-option-text {
+    .kbq-option-text,
+    .kbq-tree-option .kbq-option-text {
         white-space: normal;
         overflow-wrap: break-word;
+    }
+}
+
+// A wrapped row is taller than one line: pin the checkbox and the toggle to the FIRST line,
+// as `:has(.kbq-option-caption)` in `tree-option.scss` does for two-line options. On a 32px row
+// this alignment coincides with the centered one, so single-line options do not change.
+.kbq-pipe-tree-select__panel_multiline,
+.kbq-pipe-multi-tree-select__panel_multiline {
+    .kbq-tree-option {
+        & > .kbq-pseudo-checkbox,
+        & > kbq-checkbox {
+            align-self: flex-start;
+            margin-top: var(--kbq-size-3xs);
+        }
+
+        & > .kbq-tree-node-toggle {
+            align-self: flex-start;
+
+            height: var(--kbq-typography-text-normal-line-height);
+            margin-top: 0;
+        }
     }
 }
 

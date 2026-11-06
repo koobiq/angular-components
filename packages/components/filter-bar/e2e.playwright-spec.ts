@@ -250,6 +250,18 @@ test.describe('KbqFilterBarModule', () => {
             return option;
         };
 
+        /** Opens a tree pipe and returns its long captioned leaf below the branch. */
+        const openTreePipe = async (page: Page, selector: string, index: number = 0) => {
+            await page.goto('/E2eFilterBarOptionCaption');
+            await page.locator(selector).nth(index).locator('.kbq-select__trigger').click();
+
+            const option = page.locator('.cdk-overlay-pane .kbq-tree-option').nth(1);
+
+            await option.waitFor();
+
+            return option;
+        };
+
         /** Overflow of the name line: a two-line option gives each line its own clipping box. */
         const getNameWidths = (option: Locator) =>
             option
@@ -315,6 +327,37 @@ test.describe('KbqFilterBarModule', () => {
 
             // The caption is a secondary line: `text-compact`, not the option's own `text-normal`.
             await expect(option.locator('.kbq-option-caption')).toHaveCSS('font-size', '12px');
+        });
+
+        test('should caption and wrap tree options according to multilineOptions', async ({ page }) => {
+            const truncated = await openTreePipe(page, '.kbq-pipe__tree-select');
+
+            await expect(truncated.locator('.kbq-option-caption')).toHaveText(
+                'A caption long enough to need a second line of its own once the panel stops growing'
+            );
+            await expect(truncated.locator('.kbq-option-text')).toHaveCSS('white-space', 'nowrap');
+
+            const { scroll, client } = await getNameWidths(truncated);
+
+            expect(scroll).toBeGreaterThan(client);
+
+            const multiline = await openTreePipe(page, '.kbq-pipe__multi-tree-select');
+
+            await expect(multiline.locator('.kbq-option-text')).toHaveCSS('white-space', 'normal');
+        });
+
+        test('should render a custom tree option and keep its caption out of the trigger', async ({ page }) => {
+            const option = await openTreePipe(page, '.kbq-pipe__tree-select', 1);
+            const name =
+                'Warning: additional information about the event that is far too long to be shown on a single line of the dropdown panel';
+
+            await expect(option.locator('.e2e-custom-tree-option')).toHaveText(name);
+
+            await option.click();
+
+            const triggerValue = page.locator('.kbq-pipe__tree-select').nth(1).locator('.kbq-pipe__value');
+
+            await expect(triggerValue).toHaveText(name);
         });
 
         test('states', async ({ page }) => {

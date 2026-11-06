@@ -72,6 +72,20 @@ describe('FlatTreeControl filters', () => {
 
             expect(names(filter.result)).toEqual(['draft']);
         });
+
+        it('should also keep the nodes matched by the optional predicate', () => {
+            const filter = new FilterByViewValue(control, (node, query) => query === 'first level' && node.level === 1);
+
+            expect(names(filter.handle('first level'))).toEqual(['documents', 'images']);
+        });
+
+        it('should keep the select-all row next to a predicate match', () => {
+            nodes.unshift({ name: 'select all', level: 0, expandable: false, value: kbqTreeSelectAllValue });
+
+            const filter = new FilterByViewValue(control, (node) => node.name === 'other');
+
+            expect(names(filter.handle('nothing matches this'))).toEqual(['select all', 'other']);
+        });
     });
 
     describe('FilterParentsForNodes', () => {

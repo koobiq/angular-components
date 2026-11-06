@@ -2554,21 +2554,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-master-checkbox-example.ts",
     "importPath": "components/filter-bar"
   },
-  "filter-bar-multi-tree-select-value-template": {
-    "packagePath": "components/filter-bar/filter-bar-multi-tree-select-value-template",
-    "title": "filter-bar-multi-tree-select-value-template",
-    "componentName": "FilterBarMultiTreeSelectValueTemplateExample",
-    "files": [
-      "filter-bar-multi-tree-select-value-template-example.ts",
-      "filter-bar-multi-tree-select-value-template-example.scss"
-    ],
-    "localImportFiles": [
-      "../localized-data.ts"
-    ],
-    "selector": "filter-bar-multi-tree-select-value-template-example",
-    "primaryFile": "filter-bar-multi-tree-select-value-template-example.ts",
-    "importPath": "components/filter-bar"
-  },
   "filter-bar-no-options": {
     "packagePath": "components/filter-bar/filter-bar-no-options",
     "title": "filter-bar-no-options",
@@ -2765,6 +2750,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "filter-bar-uniq-pipes-example",
     "primaryFile": "filter-bar-uniq-pipes-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-value-template": {
+    "packagePath": "components/filter-bar/filter-bar-value-template",
+    "title": "filter-bar-value-template",
+    "componentName": "FilterBarValueTemplateExample",
+    "files": [
+      "filter-bar-value-template-example.ts",
+      "filter-bar-value-template-example.scss"
+    ],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
+    "selector": "filter-bar-value-template-example",
+    "primaryFile": "filter-bar-value-template-example.ts",
     "importPath": "components/filter-bar"
   },
   "flag-aspect-ratio": {
@@ -8254,7 +8254,6 @@ export type LiveExampleId =
   | 'filter-bar-localization'
   | 'filter-bar-locked-options'
   | 'filter-bar-master-checkbox'
-  | 'filter-bar-multi-tree-select-value-template'
   | 'filter-bar-no-options'
   | 'filter-bar-not-specified'
   | 'filter-bar-option-caption'
@@ -8270,6 +8269,7 @@ export type LiveExampleId =
   | 'filter-bar-search'
   | 'filter-bar-state-saving'
   | 'filter-bar-uniq-pipes'
+  | 'filter-bar-value-template'
   | 'flag-aspect-ratio'
   | 'flag-circle'
   | 'flag-custom-ratio'

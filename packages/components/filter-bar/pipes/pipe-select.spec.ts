@@ -693,6 +693,72 @@ describe('KbqPipeSelectComponent', () => {
             expect(getOptions()[0].querySelector('.kbq-option-caption')!.textContent!.trim()).toBe('category.generic');
         });
 
+        it('should highlight the name and caption matched by the search', async () => {
+            vi.useFakeTimers();
+
+            setTemplate([CAPTIONED]);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            getPipeComponent().searchControl.setValue('generic');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const option = getOptions()[0];
+
+            expect(option.querySelector('.kbq-option-caption mark.kbq-highlight-background')!.textContent).toBe(
+                'generic'
+            );
+
+            getPipeComponent().searchControl.setValue('Threat');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(
+                option.querySelector('div:not(.kbq-option-caption) mark.kbq-highlight-background')!.textContent
+            ).toBe('Threat');
+        });
+
+        it('should highlight every search token and fold diacritics', async () => {
+            vi.useFakeTimers();
+
+            setTemplate([CAPTIONED, { name: 'Café', value: 'cafe', caption: 'category.café' }]);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // Two tokens matched across different fields of the same option.
+            getPipeComponent().searchControl.setValue('Threat generic');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const option = getOptions()[0];
+
+            expect(
+                option.querySelector('div:not(.kbq-option-caption) mark.kbq-highlight-background')!.textContent
+            ).toBe('Threat');
+            expect(option.querySelector('.kbq-option-caption mark.kbq-highlight-background')!.textContent).toBe(
+                'generic'
+            );
+
+            getPipeComponent().searchControl.setValue('cafe');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const cafe = getOptions()[0];
+
+            expect(cafe.querySelector('div:not(.kbq-option-caption) mark.kbq-highlight-background')!.textContent).toBe(
+                'Café'
+            );
+        });
+
         it('should leave an option without a caption as a bare text node', async () => {
             vi.useFakeTimers();
 
