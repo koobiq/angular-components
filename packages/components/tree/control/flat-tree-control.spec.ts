@@ -330,6 +330,12 @@ describe('FlatTreeControl', () => {
                 await Promise.resolve();
                 expect(control.filterValue.value).toBe('draft');
             });
+
+            it('should ignore expand and collapse while a filter is active', () => {
+                control.applyFilter('draft');
+                control.expand(byName(nodes, 'images'));
+                expect(control.isExpanded(byName(nodes, 'images'))).toBe(false);
+            });
         });
 
         describe('resetFilter', () => {

@@ -41,7 +41,7 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
 
     /** Toggles one single data node's expanded/collapsed state. */
     toggle(dataNode: T): void {
-        if (this.filterValue.value?.length) {
+        if (this.filterModel.selected.length) {
             return;
         }
 
@@ -50,7 +50,7 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
 
     /** Expands one single data node. */
     expand(dataNode: T): void {
-        if (this.filterValue.value?.length) {
+        if (this.filterModel.selected.length) {
             return;
         }
 
@@ -59,7 +59,7 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
 
     /** Collapses one single data node. */
     collapse(dataNode: T): void {
-        if (this.filterValue.value?.length) {
+        if (this.filterModel.selected.length) {
             return;
         }
 
