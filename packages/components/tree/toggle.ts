@@ -34,7 +34,9 @@ export class KbqTreeNodeToggleBaseDirective<T> {
 
     /** Set while a filter is active: filtering already decides what is expanded. */
     private readonly filterDisabled = toSignal(
-        this.tree.treeControl.filterValue.pipe(map((value) => !!value?.length)),
+        this.tree.treeControl.filterModel.changed.pipe(
+            map(() => this.tree.treeControl.filterModel.selected.length > 0)
+        ),
         { initialValue: false }
     );
 
