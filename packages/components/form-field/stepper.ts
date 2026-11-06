@@ -25,6 +25,8 @@ type KbqStepperControl = {
     readonly controlType: 'input-number';
     /** Read by the template, so it has to be backed by a signal for the stepper to follow it. */
     readonly disabled: boolean;
+    /** Whether the field is read-only: the stepper stays visible but does not step. */
+    readonly readonly: Signal<boolean>;
     /** A signal since the input review: `step` is an `input()` on `KbqNumberInput`. */
     readonly step: Signal<number>;
     stepUp: (step: number) => void;
@@ -152,7 +154,7 @@ export class KbqStepper {
      *
      * @docs-private
      */
-    protected readonly inactive = computed(() => this.control().disabled || !!this.formField?.readonly());
+    protected readonly inactive = computed(() => this.control().disabled || this.control().readonly());
 
     constructor() {
         this.destroyRef.onDestroy(() => this.mouseUp.complete());

@@ -258,6 +258,12 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
     private readonly disabledState = signal(false);
 
+    /**
+     * Whether the field is read-only: the arrow keys, `kbq-stepper` and a paste leave the value as it is.
+     * `KbqInput` on the same element binds the native attribute. Defaults to `false`.
+     */
+    readonly readonly = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
+
     focused: boolean = false;
 
     get nativeElement(): HTMLInputElement {
@@ -455,7 +461,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         if (event.shiftKey || isLetter) {
             event.preventDefault();
 
-            if (this.nativeElement.readOnly) return;
+            if (this.readonly()) return;
 
             // process steps
             const step = event.shiftKey ? this.bigStep() : this.step();
@@ -510,7 +516,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
     onPaste(event: ClipboardEvent) {
         // The browser fires `paste` on a read-only input too, and the integer branch below writes the value itself.
-        if (this.nativeElement.readOnly) return;
+        if (this.readonly()) return;
 
         this.valueFromPaste = checkAndNormalizeLocalizedNumber(
             event.clipboardData?.getData('text'),
