@@ -1,6 +1,13 @@
 import { expect, Locator, Page, test } from '@playwright/test';
 import { e2eEnableDarkTheme, e2eHasOverflowShadow, e2eWaitForSettledScrollbars } from '../../e2e/utils';
 
+const getPanelContentWidth = async (component: Locator): Promise<number> => {
+    const panel = component.locator('.kbq-content-panel-container__panel');
+    const paddingRight = await panel.evaluate((element) => parseFloat(getComputedStyle(element).paddingRight));
+
+    return (await panel.boundingBox())!.width - paddingRight;
+};
+
 test.describe('KbqContentPanelModule', () => {
     test.describe('E2eContentPanelState', () => {
         const getComponent = (page: Page): Locator => page.getByTestId('e2eContentPanelState');
@@ -14,6 +21,49 @@ test.describe('KbqContentPanelModule', () => {
             await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
+        });
+    });
+
+    test.describe('E2eContentPanelMinimalContent', () => {
+        const getComponent = (page: Page): Locator => page.getByTestId('e2eContentPanelMinimalContent');
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eContentPanelMinimalContent');
+            await expect(getComponent(page).locator('.kbq-content-panel-header__close-button')).toBeVisible();
+        });
+
+        test('keeps the close button at the end of the header', async ({ page }) => {
+            const component = getComponent(page);
+            const headerRow = (await component.locator('.kbq-content-panel-header__wrapper').boundingBox())!;
+            const closeButton = (await component.locator('.kbq-content-panel-header__close-button').boundingBox())!;
+
+            expect(closeButton.x + closeButton.width).toBeCloseTo(headerRow.x + headerRow.width);
+        });
+
+        test('fills the width of the panel with a short body', async ({ page }) => {
+            const component = getComponent(page);
+            const panelContentWidth = await getPanelContentWidth(component);
+            const card = (await component.locator('.kbq-content-panel').boundingBox())!;
+
+            expect(card.width).toBeCloseTo(panelContentWidth);
+        });
+    });
+
+    test.describe('E2eContentPanelWideContent', () => {
+        test('stays inside the panel with a wide body', async ({ page }) => {
+            await page.goto('/E2eContentPanelWideContent');
+
+            const component = page.getByTestId('e2eContentPanelWideContent');
+            const closeButton = component.locator('.kbq-content-panel-header__close-button');
+
+            await expect(closeButton).toBeVisible();
+
+            const panelContentWidth = await getPanelContentWidth(component);
+            const card = (await component.locator('.kbq-content-panel').boundingBox())!;
+            const closeButtonBox = (await closeButton.boundingBox())!;
+
+            expect(card.width).toBeCloseTo(panelContentWidth);
+            expect(closeButtonBox.x + closeButtonBox.width).toBeLessThan(card.x + card.width);
         });
     });
 
