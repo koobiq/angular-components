@@ -38,6 +38,18 @@ export class KbqTopBarContainer {
 }
 
 /**
+ * Marks the page title of `kbq-top-bar` and sizes it like `size="big"` breadcrumbs, so the bar keeps
+ * its height and the text its baseline when a page swaps the trail for a title.
+ */
+@Directive({
+    selector: '[kbqTopBarTitle]',
+    host: {
+        class: 'kbq-top-bar-title'
+    }
+})
+export class KbqTopBarTitle {}
+
+/**
  * Toolbar row for the top of a page or a panel. It expects two `[kbqTopBarContainer]` slots —
  * `placement="start"` and `placement="end"` — with an optional `[kbqTopBarSpacer]` between them.
  *

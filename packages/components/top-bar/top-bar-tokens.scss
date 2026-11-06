@@ -14,6 +14,9 @@
     --kbq-top-bar-padding-vertical: var(--kbq-size-m);
     --kbq-top-bar-padding-horizontal: var(--kbq-size-xxl);
     --kbq-top-bar-border-radius: 0;
+    /* Box of `[kbqTopBarTitle]`, the height of a `size="big"` breadcrumb item: the bar and the title
+       keep their place when a page swaps the trail for a title. */
+    --kbq-top-bar-title-height: var(--kbq-size-3xl);
     --kbq-top-bar-container-start-gap: 0;
     --kbq-top-bar-container-start-min-width: 0;
     --kbq-top-bar-container-end-gap: var(--kbq-size-s);
