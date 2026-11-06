@@ -1,0 +1,21 @@
+# Tasks
+
+No source, test or docs file changes in this change. Each task re-reads the evidence behind one or more corrected requirements in `specs/time-range/spec.md`; paths are relative to `packages/components`.
+
+## 1. Verify the corrections
+
+- [ ] 1.1 "Opening the editor from the keyboard": verify that `activate()` in `link/link.ts` calls `preventDefault()` only for the link element itself, that the `keydown` listener in `initListeners()` of `core/pop-up/pop-up-trigger.ts` opens on Enter and Space without cancelling the event, and that `kbq-time-range-title-as-control` in `time-range/time-range-title-as-form-field.ts` handles no key
+- [ ] 1.2 "Popover placement and arrow": verify that `time-range/time-range.ts` binds `PopUpPlacements.BottomLeft`, that `bottomLeft` in `core/overlay/overlay-position-map.ts` uses `start` on both axes, and that `createOverlay()` in `core/pop-up/pop-up-trigger.ts` passes the `Directionality` to the overlay
+- [ ] 1.3 "Preset options in the editor", "Visibility of the manual range", "Editor without presets" and "Manual range fields": in `time-range/time-range-editor.html`, verify that the radio group, the `range` option included, sits under `@if (types.length)` and the from/to block under `@if (isRangeVisible())`; in `time-range/time-range-editor.ts`, verify that `ngOnInit()` selects `range` for an empty list and that `syncRangeControlsDisabledState()` enables the fields only for the `range` type
+- [ ] 1.4 "Option checked on open" and "Closing discards unapplied edits": verify that `applyValue()` of the editor runs the opened value through `checkAndCorrectTimeRangeValue()` with its own `availableTimeRangeTypes`, that `onVisibleChange()` in `time-range/time-range.ts` resets the editor control to the applied value or to `defaultEditorValue()`, and that `getTimeRangeDefaultValue()` in `time-range/time-range.service.ts` falls back to `providedDefaultTimeRangeTypes[0]` for an empty list
+- [ ] 1.5 "Default manual range" and "Default manual range within the bounds": verify that `normalizedDefaultRangeValue` in `time-range/time-range.ts` is a `computed` whose only signals are `defaultRangeValue` and the bounds, and that `getDefaultRangeValue()` in `time-range/time-range.service.ts` clamps the end of a range opened upwards with `clampToBounds()`
+- [ ] 1.6 "Shape of the value", "Missing dates are filled in" and "Custom option template": in `time-range/time-range.service.ts`, verify that `calculateTimeRange()` reads the fixed `range` only in its `'other'` branch and returns `{}` for `allTime`, and that `checkAndCorrectTimeRangeValue()` replaces an incomplete value with that result; in `time-range/time-range-editor.ts`, verify that `getFormattedOption()` returns an empty string for every `'other'` type
+- [ ] 1.7 "Bounds caption": in `time-range/time-range-editor.html`, verify that both captions are rendered inside the `range` option or the from/to block, so neither shows while `isRangeVisible()` is false
+- [ ] 1.8 "Date adapter and formatter are required": verify that `KbqTimeRangeService` in `time-range/time-range.service.ts` injects `DateAdapter` and then `DateFormatter` with `optional: true` before its constructor checks them, and that the `DateFormatter` constructor in `core/formatters/date/formatter.ts` injects `DateAdapter` without `optional`
+- [ ] 1.9 "Writing null" and "Corrections are not written back": in `time-range/time-range.ts`, verify that `applyValue()` keeps the corrected default even for an empty list, and that `handleAvailableTypesChange()`, run once by `toObservable()` after `ngOnInit()` and the forms setup, calls `onChange()` with `range` when the list is empty
+- [ ] 1.10 "Disabled state": verify that `kbq-time-range-title-as-control` in `time-range/time-range-title-as-form-field.ts` binds `tabindex` and `disabled` to the time range's disabled state, and that the test "should follow the disabled state of the bound control" in `time-range/time-range.spec.ts` asserts it
+- [ ] 1.11 Run `openspec validate correct-time-range-baseline --strict` and verify it passes
+
+## Workflow follow-up
+
+- Archive the change with `/opsx:archive`, which merges the corrected requirements into `openspec/specs/time-range/spec.md`.
