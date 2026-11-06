@@ -1,0 +1,42 @@
+// Two icons lie one on the other and trade places on `data-swapped`: the one that leaves shrinks, blurs and fades, the
+// one that comes grows from there. A transition, so that a second change in the middle of it turns around from where
+// it is. Used where an icon confirms an action (copy, copy a link).
+.docs-next-icon-swap {
+    display: inline-grid;
+    place-items: center;
+
+    > .kbq-icon {
+        grid-area: 1 / 1;
+        transition-duration: 200ms;
+        transition-property: opacity, transform, filter;
+        transition-timing-function: var(--docs-next-ease-out);
+    }
+
+    > .docs-next-icon-swap__to,
+    &[data-swapped] > .docs-next-icon-swap__from {
+        opacity: 0;
+        transform: scale(0.25);
+        filter: blur(4px);
+    }
+
+    &[data-swapped] > .docs-next-icon-swap__to {
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    // Only the fade between the icons, without the growing and the blur.
+    .docs-next-icon-swap {
+        > .kbq-icon {
+            transition-property: opacity;
+        }
+
+        > .docs-next-icon-swap__to,
+        &[data-swapped] > .docs-next-icon-swap__from {
+            transform: none;
+            filter: none;
+        }
+    }
+}

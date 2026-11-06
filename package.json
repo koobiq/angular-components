@@ -196,6 +196,8 @@
         "check-mcp-data": "tsx packages/mcp/src/indexer/check-data-freshness.ts",
         "mcp:probe": "tsx packages/mcp/test/probe-stdio.ts",
         "docs": "yarn run build:components && yarn run build:components-experimental && yarn run styles:build-all && yarn run build:angular-luxon-adapter && yarn run build:angular-moment-adapter && yarn run build:tokens:data && yarn run build:docs-examples-module && yarn run build:package-docs-content && yarn run build:docs-examples && yarn run docs:start:dev",
+        "docs-next:content": "ts-node --project ./tools/docs-pages/tsconfig.json ./tools/docs-next/generate-content.ts",
+        "docs-next:dev": "yarn run docs-next:content && ng serve koobiq-docs-next --port 4310",
         "docs:start:dev": "yarn run docs:generate-seo-descriptions && yarn run docs:api-gen && yarn run docs:generate-llms && ts-node --project ./tools/docs-pages/tsconfig.json ./tools/docs-pages/serve-dev.ts",
         "docs:start:prod": "ng serve --configuration=production koobiq-docs",
         "docs:generate-seo-descriptions": "ts-node --project ./tools/docs-pages/tsconfig.json ./tools/docs-pages/generate-seo-descriptions.ts",

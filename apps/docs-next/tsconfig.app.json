@@ -1,0 +1,5 @@
+{
+    "extends": "../../packages/components-dev/tsconfig.json",
+    "include": ["src/**/*.d.ts"],
+    "files": ["src/main.ts"]
+}

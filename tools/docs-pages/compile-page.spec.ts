@@ -50,6 +50,31 @@ describe(compilePage.name, () => {
         );
     });
 
+    it('turns {isNew} and {isUpdated} in a heading into a badge and keeps them out of its id', () => {
+        expect(compile('### Size {isNew}').template).toBe(
+            '<h3 id="size" class="docs-header-link kbq-markdown__h3" data-docsearch-lvl2>Size <span class="docs-header-badge" data-badge="new"></span></h3>'
+        );
+        expect(compile('## Usage {isUpdated}').template).toContain('data-badge="updated"');
+    });
+
+    it('turns {isNew} in a heading at a given depth into a badge too', () => {
+        expect(
+            compilePage('## Usage {isNew}', { path: 'KbqAlert', examples: {}, url: null, headingDepth: 4 }).template
+        ).toBe(
+            '<h4 class="kbq-markdown__h4" data-docsearch-lvl2>Usage <span class="docs-header-badge" data-badge="new"></span></h4>'
+        );
+    });
+
+    it('keeps a heading made of a badge alone', () => {
+        expect(compile('## {isUpdated}').template).toBe(
+            '<h2 id="" class="docs-header-link kbq-markdown__h2"><span class="docs-header-badge" data-badge="updated"></span></h2>'
+        );
+    });
+
+    it('does not accept {isNew} outside of a heading', () => {
+        expect(() => compile('Text {isNew}')).toThrow('{expressions} are not supported');
+    });
+
     // The search crawler reads a page by these attributes: `apps/docs/src/app/components/docsearch/docsearch.ts`.
     it('marks the headings of the sections and the paragraphs for the search', () => {
         expect(compile('## Usage\n\n### Size\n\n#### Small\n\n##### Note\n\nText.').template).toBe(

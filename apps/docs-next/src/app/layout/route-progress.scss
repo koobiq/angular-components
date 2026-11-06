@@ -1,0 +1,41 @@
+// Sticks to the top edge of the window, over the sticky header (z-index 10). Only `transform` and `opacity` change.
+:host {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1000;
+    height: 2px;
+    background: var(--kbq-states-line-focus-theme);
+    opacity: 0;
+    pointer-events: none;
+    transform: scaleX(0);
+    transform-origin: left center;
+}
+
+// It starts fast and slows down, as it cannot know how long the wait will be; it never reaches the end by itself.
+:host(.docs-next-route-progress_running) {
+    opacity: 1;
+    transform: scaleX(0.85);
+    transition: transform 8s cubic-bezier(0.05, 0.6, 0.2, 1);
+}
+
+:host(.docs-next-route-progress_finishing) {
+    opacity: 0;
+    transform: scaleX(1);
+    transition:
+        transform 150ms var(--docs-next-ease-out),
+        opacity 200ms linear 150ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :host(.docs-next-route-progress_running) {
+        transform: scaleX(1);
+        transition: none;
+        opacity: 0.6;
+    }
+
+    :host(.docs-next-route-progress_finishing) {
+        transition: opacity 200ms linear;
+    }
+}

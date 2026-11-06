@@ -1,0 +1,88 @@
+@use '../../../../../packages/components/core/styles/common/tokens';
+
+// The dialog lives in the top layer, so the host takes no room in the row it is placed in.
+:host {
+    display: contents;
+}
+
+// Figma: Version, Lang (65:17347).
+.docs-next-context__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kbq-size-xl);
+    padding: var(--kbq-size-l) var(--kbq-size-l) var(--kbq-size-xl);
+}
+
+.docs-next-context__label {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
+
+    margin: 0 0 var(--kbq-size-m);
+}
+
+// Figma: Version, Framework (73:36420). Tiles of a row share its width.
+.docs-next-context__tiles {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kbq-size-s);
+}
+
+.docs-next-context__row {
+    display: flex;
+    gap: var(--kbq-size-s);
+}
+
+.docs-next-context__chip {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    min-width: 64px;
+    box-sizing: border-box;
+    padding: var(--kbq-size-m) var(--kbq-size-l);
+    border: none;
+    border-radius: var(--kbq-size-s);
+    background: var(--kbq-background-contrast-fade);
+    color: var(--kbq-foreground-contrast);
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    &:focus-visible {
+        box-shadow: 0 0 0 2px var(--kbq-states-line-focus-theme);
+    }
+
+    &[aria-pressed='true'],
+    &[aria-current='true'] {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-medium);
+
+        // The mockup's theme-fade leaves the theme text at 4.4:1; the lighter fill reaches AA.
+        background: var(--kbq-background-theme-less);
+        color: var(--kbq-foreground-theme);
+    }
+}
+
+.docs-next-context__footer {
+    padding: 10px;
+}
+
+.docs-next-context__close {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big-medium);
+
+    width: 100%;
+    padding: var(--kbq-size-m) 0;
+    border: none;
+    border-radius: var(--kbq-size-s);
+    background: var(--kbq-background-contrast);
+    color: var(--kbq-foreground-on-contrast);
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+
+    &:focus-visible {
+        box-shadow: 0 0 0 2px var(--kbq-states-line-focus-theme);
+    }
+}
