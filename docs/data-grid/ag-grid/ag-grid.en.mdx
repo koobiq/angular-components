@@ -200,15 +200,38 @@ providers: [
 
 ### Loading overlay
 
-The `kbqAgGridLoadingOverlay` directive controls the grid loading state: when the value is `true`, a skeleton overlay is shown on top of the rows. The number of skeleton rows and columns is configured via `kbqAgGridLoadingOverlayConfigProvider`.
+The `kbqAgGridLoadingOverlay` directive controls the grid loading state: when the value is `true`, a skeleton overlay is shown on top of the rows.
+
+The skeleton placeholder takes the place of the grid before loading. Regardless of the contents of the future grid, the placeholder consists of a header, 3 columns and 3 rows. The number of columns and rows can be adjusted via `kbqAgGridLoadingOverlayConfigProvider`. The first column has a fixed size, the rest stretch equally. The placeholder bars in the cells imitate the real content and have different widths.
+
+After the grid is initialized, the data starts loading. For consistency, the placeholder of three rows stays during loading, but now it reflects the real set of columns and their widths, and the selection column. The placeholder bars in the cells still have different widths to imitate the real content.
 
 <Example id="ag-grid-loading-overlay" />
 
 ### Skeleton cell renderer
 
-`KbqAgGridSkeletonCellRenderer` is used together with the infinite row model (`rowModelType="infinite"`). While a data block is not yet loaded (`params.data === undefined`), cells display skeleton placeholders.
+`KbqAgGridSkeletonCellRenderer` shows a skeleton in cells of rows the infinite row model (`rowModelType="infinite"`) has not loaded yet. The selection column has its own skeleton: while there is no data, the checkbox is unavailable.
 
 <Example id="ag-grid-skeleton-cell-renderer" />
+
+### Load error
+
+On the initial load, the grid immediately requests the first and the second portions of data, and while scrolling it stays one step ahead of the user.
+
+If a portion fails to load, the `kbqAgGridLoadError` directive shows an error message with a retry link on the last row:
+
+- the message scrolls vertically together with the rows;
+- during horizontal scrolling, the message stays in the visible area of the grid;
+- the message takes up the whole visible area of the grid, even with pinned columns;
+- if row dividers appear or the row height changes, the message adapts to the overall styling.
+
+To see these cases in the example, switch the options under the grid.
+
+<Example id="ag-grid-load-error" />
+
+If the grid has no skeletons, a text loading indicator can be shown while data is loading. It spans the whole row width, so the selection column does not shift its label.
+
+<Example id="ag-grid-load-text" />
 
 ### Row selection with infinite scrolling
 

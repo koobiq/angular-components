@@ -57,6 +57,10 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridFilterStateExample);
         case 'ag-grid-infinite-selection':
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridInfiniteSelectionExample);
+        case 'ag-grid-load-error':
+            return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridLoadErrorExample);
+        case 'ag-grid-load-text':
+            return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridLoadTextExample);
         case 'ag-grid-loading-overlay':
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridLoadingOverlayExample);
         case 'ag-grid-long-cell-content':
@@ -419,8 +423,6 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarLockedOptionsExample);
         case 'filter-bar-master-checkbox':
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarMasterCheckboxExample);
-        case 'filter-bar-multi-tree-select-value-template':
-            return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarMultiTreeSelectValueTemplateExample);
         case 'filter-bar-no-options':
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarNoOptionsExample);
         case 'filter-bar-not-specified':
@@ -451,6 +453,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarStateSavingExample);
         case 'filter-bar-uniq-pipes':
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarUniqPipesExample);
+        case 'filter-bar-value-template':
+            return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarValueTemplateExample);
         case 'flag-aspect-ratio':
             return import('@koobiq/docs-examples/components/flag').then((m) => m.FlagAspectRatioExample);
         case 'flag-circle':

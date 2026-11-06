@@ -1960,7 +1960,10 @@ describe('KbqNotificationCenter', () => {
             service.setLoadingMode(true);
             fixture.detectChanges();
 
-            expect(queryPanel('[data-testid="kbq-notification-center-loader"]')).not.toBeNull();
+            const loader = queryPanel('[data-testid="kbq-notification-center-loader"]');
+
+            expect(loader).not.toBeNull();
+            expect(loader!.classList).toContain('kbq-loader-overlay_card');
             expect(queryPanel('kbq-notification-item')).toBeNull();
         });
 

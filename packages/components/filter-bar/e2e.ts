@@ -1,4 +1,12 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    TemplateRef,
+    viewChild
+} from '@angular/core';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, KbqHighlightModule } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -1196,18 +1204,23 @@ export class E2eFilterBarPanelMaxHeight {
     };
 }
 
-/** Captioned options in two `multiselect` pipes — with and without `multilineOptions` — and a `select` pipe. */
+/** Captioned and custom options in select and tree pipes, with and without `multilineOptions`. */
 @Component({
     selector: 'e2e-filter-bar-option-caption',
     imports: [KbqFilterBarModule],
     template: `
         <div class="e2e-filter-bar-option-caption__target" data-testid="e2eScreenshotTarget">
-            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates()" [filter]="filter">
                 @for (pipe of filter.pipes; track pipe) {
                     <ng-container *kbqPipe="pipe" />
                 }
             </kbq-filter-bar>
         </div>
+
+        <ng-template #treeOptionTemplate let-option="option">
+            <div class="e2e-custom-tree-option">{{ option.name }}</div>
+            <div class="kbq-option-caption">{{ option.caption }}</div>
+        </ng-template>
     `,
     styles: `
         :host {
@@ -1218,7 +1231,7 @@ export class E2eFilterBarPanelMaxHeight {
         /* The panel is portaled into the overlay, so the target needs room for it to overlap. */
         .e2e-filter-bar-option-caption__target {
             height: 240px;
-            width: 800px;
+            width: 1000px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1239,7 +1252,26 @@ export class E2eFilterBarOptionCaption {
         { name: 'Event: Threat type', id: 'threat', value: 'threat', caption: 'category.generic' }
     ];
 
-    readonly pipeTemplates: KbqPipeTemplate[] = [
+    private readonly treeValues = [
+        {
+            name: 'Event fields',
+            value: 'event',
+            caption: 'event',
+            children: [
+                {
+                    name: this.values[0].name,
+                    value: 'warning',
+                    caption: this.values[0].caption,
+                    children: null
+                },
+                { name: 'Event: Action', value: 'action', caption: 'action', children: null }
+            ]
+        }
+    ];
+
+    readonly treeOptionTemplate = viewChild<TemplateRef<any>>('treeOptionTemplate');
+
+    readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
             name: 'Truncated',
             id: 'E2eCaptionTruncated',
@@ -1271,8 +1303,41 @@ export class E2eFilterBarOptionCaption {
             cleanable: false,
             removable: false,
             disabled: false
+        },
+        {
+            name: 'Tree truncated',
+            id: 'E2eCaptionTreeTruncated',
+            type: KbqPipeTypes.TreeSelect,
+            values: this.treeValues,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Tree custom',
+            id: 'E2eCaptionTreeCustom',
+            type: KbqPipeTypes.TreeSelect,
+            values: this.treeValues,
+            valueTemplate: this.treeOptionTemplate(),
+            multilineOptions: true,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Multi tree',
+            id: 'E2eCaptionMultiTree',
+            type: KbqPipeTypes.MultiTreeSelect,
+            values: this.treeValues,
+            multilineOptions: true,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
         }
-    ];
+    ]);
 
     readonly filter: KbqFilter = {
         name: '',
@@ -1305,6 +1370,36 @@ export class E2eFilterBarOptionCaption {
                 name: 'Select',
                 id: 'E2eCaptionSelect',
                 type: KbqPipeTypes.Select,
+                value: null,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Tree truncated',
+                id: 'E2eCaptionTreeTruncated',
+                type: KbqPipeTypes.TreeSelect,
+                value: null,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Tree custom',
+                id: 'E2eCaptionTreeCustom',
+                type: KbqPipeTypes.TreeSelect,
+                value: null,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Multi tree',
+                id: 'E2eCaptionMultiTree',
+                type: KbqPipeTypes.MultiTreeSelect,
                 value: null,
 
                 cleanable: false,

@@ -104,7 +104,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 
     /**
      * Whether the dropdown's option names and captions wrap instead of being truncated, forwarded from
-     * the pipe template. Only consumed by the select / multi-select pipe components.
+     * the pipe template. Only consumed by the select-family pipe components.
      */
     protected multilineOptions?: boolean;
 

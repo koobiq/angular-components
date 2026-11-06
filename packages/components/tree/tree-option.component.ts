@@ -221,6 +221,9 @@ export class KbqTreeOption<T = any>
     private _value: any;
 
     /** @docs-private */
+    readonly viewValueInput = input<string | undefined>(undefined, { alias: 'viewValue' });
+
+    /** @docs-private */
     readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
         alias: 'disabled',
         transform: booleanAttribute
@@ -314,9 +317,9 @@ export class KbqTreeOption<T = any>
 
     private _id = `kbq-tree-option-${uniqueIdCounter++}`;
 
+    /** The displayed value used by type-ahead. Falls back to the text of the option. */
     get viewValue(): string {
-        // TODO: Add input property alternative for node envs.
-        return (this.getHostElement().textContent || '').trim();
+        return this.viewValueInput() || (this.getHostElement().textContent || '').trim();
     }
 
     get hasFocus(): boolean {

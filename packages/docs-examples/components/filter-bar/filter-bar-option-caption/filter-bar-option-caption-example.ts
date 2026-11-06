@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import {
     KbqFilter,
     KbqFilterBarModule,
     KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSelectValue
+    KbqSelectValue,
+    KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
 
 const EVENTS: KbqSelectValue[] = [
@@ -20,6 +21,19 @@ const EVENTS: KbqSelectValue[] = [
     { name: 'Event: Source', id: 'source', value: 'source', caption: 'event.source' }
 ];
 
+const TREE_EVENTS: KbqTreeSelectNode[] = [
+    {
+        name: 'Event fields',
+        value: 'event',
+        caption: 'event',
+        children: [
+            { name: 'Event: Action', value: 'action', caption: 'action', children: null },
+            { name: 'Event: Threat type', value: 'threat', caption: 'category.generic', children: null },
+            { name: 'Event: Source', value: 'source', caption: 'event.source', children: null }
+        ]
+    }
+];
+
 /**
  * @title filter-bar-option-caption
  */
@@ -29,7 +43,7 @@ const EVENTS: KbqSelectValue[] = [
         KbqFilterBarModule
     ],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter">
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates()" [(filter)]="activeFilter">
             @for (pipe of activeFilter.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
@@ -40,7 +54,7 @@ const EVENTS: KbqSelectValue[] = [
 export class FilterBarOptionCaptionExample {
     activeFilter: KbqFilter = this.getDefaultFilter();
 
-    pipeTemplates: KbqPipeTemplate[] = [
+    readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
         {
             name: 'Single line',
             id: 'SingleLine',
@@ -69,13 +83,38 @@ export class FilterBarOptionCaptionExample {
             id: 'Select',
             type: KbqPipeTypes.Select,
             values: EVENTS,
+            search: true,
+            multilineOptions: true,
+
+            cleanable: true,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Tree',
+            id: 'Tree',
+            type: KbqPipeTypes.TreeSelect,
+            values: TREE_EVENTS,
+            search: true,
+            multilineOptions: true,
+
+            cleanable: true,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Multi tree',
+            id: 'MultiTree',
+            type: KbqPipeTypes.MultiTreeSelect,
+            values: TREE_EVENTS,
+            search: true,
             multilineOptions: true,
 
             cleanable: true,
             removable: false,
             disabled: false
         }
-    ];
+    ]);
 
     getDefaultFilter(): KbqFilter {
         return {
@@ -112,6 +151,29 @@ export class FilterBarOptionCaptionExample {
                     id: 'Select',
                     type: KbqPipeTypes.Select,
                     value: null,
+                    search: true,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'Tree',
+                    id: 'Tree',
+                    type: KbqPipeTypes.TreeSelect,
+                    search: true,
+                    value: null,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'Multi tree',
+                    id: 'MultiTree',
+                    type: KbqPipeTypes.MultiTreeSelect,
+                    value: null,
+                    search: true,
 
                     cleanable: true,
                     removable: false,

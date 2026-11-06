@@ -234,9 +234,9 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
 
     /**
      * Custom option content for `select` and `multiselect`, or custom leaf and branch content for
-     * `multi-tree-select`. Tree templates receive a {@link KbqMultiTreeSelectValueTemplateContext} with the
+     * `tree-select` and `multi-tree-select`. Tree templates receive a {@link KbqMultiTreeSelectValueTemplateContext} with the
      * original `option` and current `search`; filtering and the trigger still use the node's `name`.
-     * Ignored by other pipe types, including `tree-select`.
+     * Ignored by other pipe types.
      */
     valueTemplate?: TemplateRef<any> | string;
 
@@ -274,9 +274,9 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
 
     /**
      * Whether option names and captions in the dropdown wrap instead of being truncated to one line.
-     * Applies to the `select`, `multiselect` and `multi-tree-select` pipes independently of `valueTemplate`;
-     * ignored by the other pipe types. Unrelated to `KbqSelect.multiline`, which lays the trigger's values out
-     * in rows.
+     * Applies to the `select`, `multiselect`, `tree-select` and `multi-tree-select` pipes independently of
+     * `valueTemplate`; ignored by the other pipe types. Unrelated to `KbqSelect.multiline`, which lays the
+     * trigger's values out in rows.
      */
     multilineOptions?: boolean;
 
@@ -347,12 +347,16 @@ export class KbqTreeSelectFlatNode {
     level: number;
     expandable: boolean;
     parent?: KbqTreeSelectFlatNode;
+    /** Second line under `name` in the dropdown of the tree-select pipes. */
+    caption?: string;
 }
 
 export interface KbqTreeSelectNode {
     children: KbqTreeSelectNode[] | null;
     name: string;
     value: unknown;
+    /** Second line under `name` in the dropdown of the tree-select pipes. Ignored when `valueTemplate` is used. */
+    caption?: string;
 }
 
 /**

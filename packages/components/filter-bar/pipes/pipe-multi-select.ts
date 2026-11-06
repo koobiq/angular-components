@@ -14,13 +14,19 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqOption, KbqPseudoCheckboxModule, KbqPseudoCheckboxState } from '@koobiq/components/core';
+import {
+    KbqHighlightModule,
+    KbqOption,
+    KbqPseudoCheckboxModule,
+    KbqPseudoCheckboxState,
+    tokenizeSearchQuery
+} from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { merge } from 'rxjs';
+import { merge, startWith } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqSelectValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
@@ -44,7 +50,8 @@ import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
         KbqIconModule,
         KbqInputModule,
         ReactiveFormsModule,
-        KbqPseudoCheckboxModule
+        KbqPseudoCheckboxModule,
+        KbqHighlightModule
     ],
     templateUrl: 'pipe-multi-select.html',
     styleUrls: ['base-pipe.scss', 'pipe-multiselect.scss'],
@@ -60,6 +67,15 @@ import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
 export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements AfterViewInit, OnInit {
     /** control for search options */
     readonly searchControl = new FormControl<string | null>(null);
+
+    /** Query tokens for option highlighting: tokenized like the filter, so every matched token is marked. */
+    readonly searchTokens = toSignal(
+        this.searchControl.valueChanges.pipe(
+            startWith(this.searchControl.value),
+            map((value) => tokenizeSearchQuery(value ?? ''))
+        ),
+        { initialValue: [] as string[] }
+    );
 
     /**
      * Options of the pipe template that match the search query. Follows the templates too, so options

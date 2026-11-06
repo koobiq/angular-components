@@ -1,7 +1,13 @@
 import { AfterViewInit, Directive, OnInit, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
+import {
+    FilterByViewValue,
+    FilterParentsForNodes,
+    FlatTreeControl,
+    KbqTreeFlatDataSource,
+    KbqTreeFlattener
+} from '@koobiq/components/tree';
 import { KbqTreeSelect } from '@koobiq/components/tree-select';
 import { KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
@@ -41,6 +47,17 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
             this.getValue,
             this.getViewValue
         );
+
+        const filterByViewValue = new FilterByViewValue<KbqTreeSelectFlatNode>(
+            this.treeControl,
+            // A `valueTemplate` replaces the caption, so a captioned node is matched by its name only.
+            (node, query) =>
+                !this.isTemplateRef(this.valueTemplate) &&
+                !!node.caption &&
+                this.treeControl.compareViewValues(node.caption, query)
+        );
+
+        this.treeControl.setFilters(filterByViewValue, new FilterParentsForNodes(this.treeControl));
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
@@ -96,6 +113,7 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
 
         flatNode.name = node.name;
         flatNode.value = node.value;
+        flatNode.caption = node.caption;
         flatNode.parent = parent ?? undefined;
         flatNode.level = level;
         flatNode.expandable = !!node.children;
