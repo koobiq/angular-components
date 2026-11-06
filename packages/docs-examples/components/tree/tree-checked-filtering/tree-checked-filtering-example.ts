@@ -200,7 +200,7 @@ abstract class TreeParams {
         >
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
                 <span
-                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                 ></span>
             </kbq-tree-option>
 
@@ -208,7 +208,7 @@ abstract class TreeParams {
                 <kbq-tree-node-toggle [node]="node" />
 
                 <span
-                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+                    [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
                 ></span>
             </kbq-tree-option>
         </kbq-tree-selection>
@@ -248,7 +248,7 @@ export class TreeCheckedFilteringExample extends TreeParams {
     }
 
     onFilterChange(value: string): void {
-        this.treeControl.filterNodes(value);
+        this.treeControl.applyFilter(value);
     }
 
     onToggleClick({ value }: KbqButtonToggleChange) {
@@ -264,6 +264,6 @@ export class TreeCheckedFilteringExample extends TreeParams {
             this.filterByValues.setValues(values);
         }
 
-        this.treeControl.filterNodes(this.filterValue);
+        this.treeControl.applyFilter(this.filterValue);
     }
 }
