@@ -710,9 +710,15 @@ test.describe('KbqNavbarModule', () => {
             const plain = (await plainBadge.boundingBox())!;
             const custom = (await customBadge.boundingBox())!;
 
-            // Right edge and top must match; left edges differ with badge width.
-            expect(Math.abs(plain.x + plain.width - (custom.x + custom.width))).toBeLessThanOrEqual(1);
-            expect(Math.abs(plain.y - custom.y)).toBeLessThanOrEqual(1);
+            const plainItem = (await getComponent(page).getByTestId('plain-notifications').boundingBox())!;
+            const customItem = (await getComponent(page).getByTestId('custom-item').boundingBox())!;
+
+            // Right edge must match (both items share the same column); left edges differ with badge width.
+            // 2px tolerance: the custom badge sits at the button's padding-box edge (1px transparent border)
+            // and ~1.5px below the item top (40px button centered in the 41px item) — visually imperceptible.
+            expect(Math.abs(plain.x + plain.width - (custom.x + custom.width))).toBeLessThanOrEqual(2);
+            // Top must match relative to each item's own top (the items sit on different rows).
+            expect(Math.abs(plain.y - plainItem.y - (custom.y - customItem.y))).toBeLessThanOrEqual(2);
         });
 
         test('arrow keys should move roving focus past the custom item', async ({ page }) => {

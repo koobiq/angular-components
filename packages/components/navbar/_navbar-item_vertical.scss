@@ -53,9 +53,22 @@
         gap: var(--kbq-size-m);
 
         // The shared `.kbq-navbar-item .kbq-badge` rule takes the badge out of flow for the icon-corner
-        // overlay used when collapsed; expanded, it stays a normal flex child laid out after the title.
-        & .kbq-badge {
+        // overlay used when collapsed; expanded, a badge that is a direct child stays a normal flex child
+        // laid out after the title. Nested badges (inside a custom trigger) keep their own positioning.
+        & > .kbq-badge {
             position: static;
+        }
+
+        // A titleless item has no trailing slot for the badge: it overlays the top-right corner of the
+        // leading 40px area, matching the custom component (whose badge is `top: 0; right: 0` of its 40×40 box).
+        // Scoped to the badge as a direct child, so a badge nested inside a custom trigger keeps its own position.
+        &:not(.kbq-navbar-item_with-title) > .kbq-badge {
+            position: absolute;
+            top: 0;
+            left: calc(
+                var(--kbq-size-xl) + var(--kbq-navbar-item-size-custom-content-width) - var(--kbq-size-border-width)
+            );
+            transform: translateX(-100%);
         }
 
         &.kbq-navbar-item_has-nested {
@@ -96,9 +109,16 @@
             height: var(--kbq-navbar-item-size-custom-content-height);
         }
 
+        // The trigger's button centers its content by default; in expanded, left-align it so the leading icon
+        // matches a plain item's inline icon (the badge is absolute in the corner and stays put). Collapsed
+        // keeps the default centering, which is what aligns the icon with a plain collapsed item.
         &.kbq-expanded {
             padding-right: var(--kbq-size-xl);
             padding-left: var(--kbq-size-xl);
+
+            & .kbq-button {
+                justify-content: flex-start;
+            }
         }
     }
 
