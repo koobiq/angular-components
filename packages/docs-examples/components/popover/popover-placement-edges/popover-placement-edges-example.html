@@ -1,3 +1,7 @@
+<kbq-toggle class="layout-margin-bottom-l" [checked]="arrowCentered" (change)="arrowCentered = $event.checked">
+    Arrow centered
+</kbq-toggle>
+
 <div class="popover-placement-edges-example">
     <ng-template #customContent>
         <div class="layout-margin-bottom-s">Интересно, что это такое?</div>
@@ -46,6 +50,7 @@
             kbqPopover
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
+            [kbqPopoverArrowCentered]="arrowCentered"
             [kbqPopoverPlacement]="placements.TopLeft"
             (click)="activePopover = kbqTopLeftPopover"
         >
@@ -57,6 +62,7 @@
             kbqPopover
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
+            [kbqPopoverArrowCentered]="arrowCentered"
             [kbqPopoverPlacement]="placements.BottomLeft"
             (click)="activePopover = kbqBottomLeftPopover"
         >
@@ -71,6 +77,7 @@
             kbqPopover
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
+            [kbqPopoverArrowCentered]="arrowCentered"
             [kbqPopoverPlacement]="placements.TopRight"
             (click)="activePopover = kbqTopRightPopover"
         >
@@ -82,6 +89,7 @@
             kbqPopover
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
+            [kbqPopoverArrowCentered]="arrowCentered"
             [kbqPopoverPlacement]="placements.BottomRight"
             (click)="activePopover = kbqBottomRightPopover"
         >

@@ -133,6 +133,7 @@ describe('KbqNavbar', () => {
                 TestTwoContainersApp,
                 TestTooltipApp,
                 TestTooltipSelectorApp,
+                TestNestedTooltipDefaultsApp,
                 TestVerticalDrivenByEffectApp
             ]
         }).compileComponents();
@@ -699,6 +700,57 @@ describe('KbqNavbar', () => {
         // so on a host that already owns a tooltip it matches the same directive twice.
         it('should reject the tooltip selector written on a navbar host', () => {
             expect(() => TestBed.createComponent(TestTooltipSelectorApp)).toThrow(/NG0309/);
+        });
+    });
+
+    describe('navbar tooltip defaults', () => {
+        const nestedTrigger = (fixture: ComponentFixture<TestNestedTooltipDefaultsApp>, selector: string) =>
+            fixture.debugElement.query(By.css(selector)).injector.get(KbqTooltipTrigger);
+
+        const panelClasses = (trigger: KbqTooltipTrigger) => trigger.createOverlay().getConfig().panelClass;
+
+        it('should inherit the navbar tooltip defaults in both orientations', () => {
+            const fixture = TestBed.createComponent(TestNestedTooltipDefaultsApp);
+
+            fixture.detectChanges();
+
+            const horizontal = nestedTrigger(fixture, '#nested-horizontal');
+            const vertical = nestedTrigger(fixture, '#nested-vertical');
+            const toggle = fixture.debugElement.query(By.directive(KbqNavbarToggle)).injector.get(KbqTooltipTrigger);
+
+            for (const trigger of [horizontal, vertical, toggle]) {
+                expect(trigger.offset).toBe(0);
+                expect(panelClasses(trigger)).toContain('kbq-tooltip-panel_horizontal-navbar');
+            }
+        });
+
+        it('should prefer an explicit nested tooltip offset and restore the inherited default', () => {
+            const fixture = TestBed.createComponent(TestNestedTooltipDefaultsApp);
+
+            fixture.componentInstance.horizontalOffset = 24;
+            fixture.componentInstance.verticalOffset = 24;
+            fixture.detectChanges();
+
+            expect(nestedTrigger(fixture, '#nested-horizontal').offset).toBe(24);
+            expect(nestedTrigger(fixture, '#nested-vertical').offset).toBe(24);
+
+            fixture.componentInstance.horizontalOffset = undefined;
+            fixture.componentInstance.verticalOffset = undefined;
+            fixture.detectChanges();
+
+            expect(nestedTrigger(fixture, '#nested-horizontal').offset).toBe(0);
+            expect(nestedTrigger(fixture, '#nested-vertical').offset).toBe(0);
+        });
+
+        it('should keep the owned tooltip defaults on an item without a navbar root', () => {
+            const fixture = TestBed.createComponent(TestNestedTooltipDefaultsApp);
+
+            fixture.detectChanges();
+
+            const item = fixture.debugElement.query(By.css('#standalone-item')).componentInstance as KbqNavbarItem;
+
+            expect(item.tooltip.offset).toBe(0);
+            expect(panelClasses(item.tooltip)).toContain('kbq-tooltip-panel_horizontal-navbar');
         });
     });
 
@@ -2960,6 +3012,39 @@ class TestTooltipApp {}
     `
 })
 class TestTooltipSelectorApp {}
+
+@Component({
+    selector: 'test-nested-tooltip-defaults-app',
+    imports: [KbqNavbarModule, KbqIconModule, KbqToolTipModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item>
+                    <button
+                        id="nested-horizontal"
+                        kbqTooltip="Horizontal"
+                        [kbqTooltipOffset]="horizontalOffset"
+                    ></button>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+        </kbq-navbar>
+
+        <kbq-vertical-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item>
+                    <button id="nested-vertical" kbqTooltip="Vertical" [kbqTooltipOffset]="verticalOffset"></button>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+            <button kbq-navbar-toggle></button>
+        </kbq-vertical-navbar>
+
+        <kbq-navbar-item id="standalone-item" />
+    `
+})
+class TestNestedTooltipDefaultsApp {
+    horizontalOffset: number | null | undefined;
+    verticalOffset: number | null | undefined;
+}
 
 @Component({
     selector: 'test-in-overlay-layer-app',

@@ -449,4 +449,120 @@ test.describe('KbqNavbarModule', () => {
             await expect(getTooltip(page)).toBeVisible();
         });
     });
+
+    test.describe('E2eNavbarTooltipOffset', () => {
+        /**
+         * Both tooltips inherit `offset: 0` and the navbar panel class from the navbar root, so the panel
+         * class's margin renders the same gap for the item's own tooltip and a `kbqTooltip` nested inside it.
+         * Without the inheritance the nested tooltip keeps the stylesheet's own arrowless gap, which this
+         * would measure.
+         */
+        test('should render the same gap for a navbar-owned tooltip and a nested tooltip', async ({ page }) => {
+            await page.goto('/E2eNavbarTooltipOffset');
+
+            const readGapAfterHover = async (testId: string) => {
+                const trigger = page.getByTestId(testId);
+
+                await trigger.hover();
+
+                const tooltip = page.locator('.kbq-tooltip');
+
+                await expect(tooltip).toBeVisible();
+
+                const triggerBox = (await trigger.boundingBox())!;
+                const tooltipBox = (await tooltip.boundingBox())!;
+                const gap = tooltipBox.x - (triggerBox.x + triggerBox.width);
+
+                // Park the pointer off the navbar and let the overlay detach, so the two tooltips never
+                // share the DOM and the strict locator stays unambiguous.
+                const viewport = page.viewportSize()!;
+
+                await page.mouse.move(viewport.width - 1, viewport.height - 1);
+                await expect(tooltip).toBeHidden();
+
+                return gap;
+            };
+
+            const ownedGap = await readGapAfterHover('owned-tooltip-trigger');
+            const nestedGap = await readGapAfterHover('nested-tooltip-trigger');
+
+            expect(Math.abs(ownedGap - nestedGap)).toBeLessThanOrEqual(1);
+        });
+    });
+
+    test.describe('E2eNavbarPopupArrowCentering', () => {
+        type PopupKind = 'popover' | 'tooltip';
+
+        type Direction = 'ltr' | 'rtl';
+
+        const assertPopupGeometry = async (page: Page, kind: PopupKind, direction: Direction) => {
+            const panel = page.locator(`.kbq-${kind}`);
+            const trigger = page.getByTestId(`${kind}-trigger`);
+            const arrow = panel.locator(`.kbq-${kind}__arrow`);
+
+            await expect(panel).toBeVisible();
+            await expect(arrow).toBeVisible();
+
+            const getArrowDelta = async () => {
+                const triggerBox = (await trigger.boundingBox())!;
+                const arrowBox = (await arrow.boundingBox())!;
+
+                return Math.abs(arrowBox.x + arrowBox.width / 2 - (triggerBox.x + triggerBox.width / 2));
+            };
+            const getAlignmentDelta = async () => {
+                const triggerBox = (await trigger.boundingBox())!;
+                const panelBox = (await panel.boundingBox())!;
+
+                return direction === 'ltr'
+                    ? Math.abs(panelBox.x + panelBox.width - (triggerBox.x + triggerBox.width))
+                    : Math.abs(panelBox.x - triggerBox.x);
+            };
+
+            await expect.poll(getArrowDelta).toBeLessThanOrEqual(1);
+            await expect.poll(getAlignmentDelta).toBeLessThanOrEqual(1);
+        };
+
+        for (const direction of ['ltr', 'rtl'] as const) {
+            test(`popup arrow centering preserves ${direction} logical end alignment after scroll and resize`, async ({
+                page
+            }) => {
+                await page.route('**/E2eNavbarPopupArrowCentering', async (route) => {
+                    const response = await route.fetch();
+                    const body = (await response.text()).replace(
+                        '<html lang="en">',
+                        `<html lang="en" dir="${direction}">`
+                    );
+
+                    await route.fulfill({ response, body });
+                });
+                await page.goto('/E2eNavbarPopupArrowCentering');
+                await expect(page.locator('html')).toHaveAttribute('dir', direction);
+
+                const scrollTo = async (y: number) => {
+                    await page.evaluate((top) => window.scrollTo(0, top), y);
+                    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(y);
+                };
+                const assertAfterScrollAndResize = async (kind: PopupKind) => {
+                    await assertPopupGeometry(page, kind, direction);
+
+                    await scrollTo(120);
+                    await assertPopupGeometry(page, kind, direction);
+
+                    await page.setViewportSize({ width: 900, height: 600 });
+                    await assertPopupGeometry(page, kind, direction);
+
+                    await page.setViewportSize({ width: 1000, height: 600 });
+                    await scrollTo(0);
+                };
+
+                await page.getByTestId('popover-trigger').click();
+                await assertAfterScrollAndResize('popover');
+                await page.keyboard.press('Escape');
+                await expect(page.locator('.kbq-popover')).toBeHidden();
+
+                await page.getByTestId('tooltip-trigger').click();
+                await assertAfterScrollAndResize('tooltip');
+            });
+        }
+    });
 });

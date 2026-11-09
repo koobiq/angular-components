@@ -53,6 +53,7 @@ import {
 } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { KBQ_TOOLTIP_DEFAULT_OPTIONS, KbqTooltipDefaultOptions } from './tooltip-config';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqExclusiveTooltip, KbqTooltipRegistry } from './tooltip-registry';
 
 /**
@@ -142,10 +143,13 @@ let nextTooltipUniqueId = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqTooltipComponent extends KbqPopUp {
+export class KbqTooltipComponent extends KbqPopUp implements AfterViewInit {
     private readonly delayTracker = inject(KbqTooltipDelayTracker);
 
     prefix = 'kbq-tooltip';
+
+    // Safe arrow inset from tooltip.scss: ($arrow-footprint + $trigger-margin) / 2 with the default arrow token.
+    protected override arrowCenterInset = 19;
 
     /**
      * Id rendered on the tooltip element; the trigger points its `aria-describedby` at it.
@@ -162,6 +166,22 @@ export class KbqTooltipComponent extends KbqPopUp {
     /** The tooltip panel, which the base pop-up measures and decorates instead of the host. */
     override get elementRef(): ElementRef<HTMLElement> {
         return this.tooltipElement()!;
+    }
+
+    ngAfterViewInit() {
+        this.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
+            if (state && this.arrowCentered) {
+                this.detectChanges();
+                this.updateArrowPosition();
+            }
+        });
+    }
+
+    /** Recalculates from the settled geometry: the entrance starts from `scale(0)`, an empty measurement box. */
+    protected override afterShowAnimation(): void {
+        if (this.arrowCentered) {
+            this.updateArrowPosition();
+        }
     }
 
     show(delay: number) {
@@ -234,6 +254,13 @@ const FOCUS_ORIGINS_THAT_SHOW: FocusOrigin[] = ['keyboard'];
 /** Base panel class of the tooltip overlay. */
 const TOOLTIP_PANEL_CLASS = 'kbq-tooltip-panel';
 
+/** Normalizes a `panelClass` value into the array the overlay configuration keeps. */
+function coercePanelClasses(panelClass: string | string[] | undefined): string[] {
+    if (!panelClass) return [];
+
+    return Array.isArray(panelClass) ? panelClass : [panelClass];
+}
+
 /** Default `kbqEnterDelay`, in milliseconds. */
 const defaultEnterDelay = 400;
 
@@ -288,6 +315,12 @@ export class KbqTooltipTrigger
     private readonly tooltipRegistry = inject(KbqTooltipRegistry);
 
     private readonly injectedScrollStrategy: () => ScrollStrategy = inject(KBQ_TOOLTIP_SCROLL_STRATEGY);
+
+    /**
+     * Default options inherited from the token's scope: the initial `offset` and the overlay `panelClass`,
+     * and the value a `kbqTooltipOffset` binding changed to `undefined` restores.
+     */
+    private readonly defaultOptions: KbqTooltipDefaultOptions = inject(KBQ_TOOLTIP_DEFAULT_OPTIONS);
 
     /**
      * Per-instance override for the scroll strategy, taking precedence over `KBQ_TOOLTIP_SCROLL_STRATEGY`
@@ -528,10 +561,18 @@ export class KbqTooltipTrigger
     arrow: boolean = false;
 
     /**
-     * Input (`kbqTooltipOffset`) — distance in pixels between the tooltip and its trigger. `null`, the default, keeps
-     * the gap of the stylesheet.
+     * Input (`kbqTooltipArrowCentered`) — centers the arrow on the trigger while preserving the panel placement.
+     * Requires a visible arrow. Defaults to `false`.
      */
-    offset: number | null = null;
+    override arrowCentered = false;
+
+    /**
+     * Input (`kbqTooltipOffset`) — distance in pixels between the tooltip and its trigger. `null` keeps
+     * the gap of the stylesheet. Defaults to the `offset` of {@link KBQ_TOOLTIP_DEFAULT_OPTIONS}, when a
+     * provider in scope set one. Inside a provider scope such as the navbar's, `null`/`undefined` restores
+     * that inherited default.
+     */
+    offset: number | null = this.defaultOptions.offset ?? null;
 
     /** Output (`kbqPlacementChange`) that emits the new placement whenever the tooltip repositions. */
     readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
@@ -555,7 +596,7 @@ export class KbqTooltipTrigger
 
     /** @docs-private */
     protected overlayConfig: OverlayConfig = {
-        panelClass: [TOOLTIP_PANEL_CLASS]
+        panelClass: [TOOLTIP_PANEL_CLASS, ...coercePanelClasses(this.defaultOptions.panelClass)]
     };
 
     /**
@@ -573,9 +614,9 @@ export class KbqTooltipTrigger
     header: string | TemplateRef<unknown>;
 
     /**
-     * Hands each bound input to its member, and pushes a later change of `modifier`, `header`, `arrow` or
-     * `offset` — plain fields — into an open tooltip, which would otherwise show stale data until the next
-     * show/hide cycle.
+     * Hands each bound input to its member, and pushes a later change of `modifier`, `header`, `arrow`,
+     * `arrowCentered` or `offset` — plain fields — into an open tooltip, which would otherwise show stale data
+     * until the next show/hide cycle.
      */
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member, a bound `undefined` restoring the
@@ -644,8 +685,12 @@ export class KbqTooltipTrigger
             if (arrow !== undefined) this.arrow = arrow;
         }
 
+        if (changes['arrowCenteredInput']) {
+            this.arrowCentered = this.arrowCenteredInput() ?? false;
+        }
+
         if (changes['offsetInput']) {
-            this.offset = this.offsetInput() ?? null;
+            this.offset = this.offsetInput() ?? this.defaultOptions.offset ?? null;
         }
 
         if (changes['disabledInput']) {
@@ -674,6 +719,7 @@ export class KbqTooltipTrigger
         if (
             (changes['headerInput'] && !changes['headerInput'].firstChange) ||
             (changes['arrowInput'] && !changes['arrowInput'].firstChange) ||
+            (changes['arrowCenteredInput'] && !changes['arrowCenteredInput'].firstChange) ||
             (changes['offsetInput'] && !changes['offsetInput'].firstChange)
         ) {
             this.updateData();
@@ -787,6 +833,12 @@ export class KbqTooltipTrigger
     /** @docs-private */
     readonly arrowInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
         alias: 'kbqTooltipArrow',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly arrowCenteredInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqTooltipArrowCentered',
         transform: booleanAttribute
     });
 
@@ -991,6 +1043,8 @@ export class KbqTooltipTrigger
             this.applyRelativeToCaret();
         } else if (this.relativeToPointer) {
             this.applyRelativeToPointer();
+        } else {
+            this.setOrigin(null);
         }
     }
 
@@ -1101,7 +1155,17 @@ export class KbqTooltipTrigger
 
         if (!this.strategy) return;
 
-        this.strategy.setOrigin(element);
+        this.setExternalNativeElement(element);
+        this.setOrigin(element);
+
+        if (this.overlayRef?.hasAttached()) {
+            this.updatePosition();
+            this.overlayRef.updatePosition();
+        }
+
+        if (untracked(() => this.isOpen)) {
+            this.describeTrigger();
+        }
     }
 
     /**
@@ -1129,6 +1193,7 @@ export class KbqTooltipTrigger
         // dropping them left the template rendering the previous context instead.
         this.instance.context = this.context != null ? { $implicit: this.context } : null;
         this.instance.arrow = this.arrow;
+        this.instance.arrowCentered = this.arrowCentered;
         this.instance.offset = this.offset;
         this.instance.detectChanges();
         // The margins live on the rendered tooltip element, so re-applying them is the only way a changed
@@ -1338,12 +1403,23 @@ export class KbqTooltipTrigger
      * @docs-private
      */
     protected applyRelativeToCaret() {
-        this.strategy?.setOrigin(this.caretOrigin);
+        this.setOrigin(this.caretOrigin);
     }
 
     /** @docs-private */
     protected getAnchorSize(): { width: number; height: number } {
         return this.relativeToCaret ? this.caretOrigin : super.getAnchorSize();
+    }
+
+    /** @docs-private */
+    protected override getOriginCenter(): { x: number; y: number } {
+        if (this.relativeToCaret) {
+            const { x, y, width, height } = this.caretOrigin;
+
+            return { x: x + width / 2, y: y + height / 2 };
+        }
+
+        return super.getOriginCenter();
     }
 
     /**
@@ -1430,6 +1506,6 @@ export class KbqTooltipTrigger
             point.y = triggerRects.y + triggerRects.height;
         }
 
-        this.strategy.setOrigin(point);
+        this.setOrigin(point);
     }
 }
