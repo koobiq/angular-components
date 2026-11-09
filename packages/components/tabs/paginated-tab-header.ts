@@ -202,10 +202,10 @@ export abstract class KbqPaginatedTabHeader
     /** Whether the tab list can be scrolled more towards the beginning of the tab label list. */
     disableScrollBefore = true;
 
-    /** @internal */
+    /** @docs-private */
     protected overflowBefore = false;
 
-    /** @internal */
+    /** @docs-private */
     protected overflowAfter = false;
 
     /**
