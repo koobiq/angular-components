@@ -195,6 +195,7 @@ test.describe('KbqTabsModule', () => {
             await scrollStrip(page, 'e2eTabsScrollMaskBoth', 'middle');
             await scrollStrip(page, 'e2eTabsScrollMaskBefore', 'end');
             await scrollStrip(page, 'e2eTabNavBarScrollMaskRtl', 'middle');
+            await scrollStrip(page, 'e2eTabNavBarScrollMaskOnColor', 'middle');
 
             const before = /kbq-tab-header__scroll-container_overflow-before/;
             const after = /kbq-tab-header__scroll-container_overflow-after/;
@@ -207,6 +208,8 @@ test.describe('KbqTabsModule', () => {
             await expect(getStrip(page, 'e2eTabsScrollMaskBefore')).not.toHaveClass(after);
             await expect(getStrip(page, 'e2eTabNavBarScrollMaskRtl')).toHaveClass(before);
             await expect(getStrip(page, 'e2eTabNavBarScrollMaskRtl')).toHaveClass(after);
+            await expect(getStrip(page, 'e2eTabNavBarScrollMaskOnColor')).toHaveClass(before);
+            await expect(getStrip(page, 'e2eTabNavBarScrollMaskOnColor')).toHaveClass(after);
 
             const component = page.getByTestId('e2eTabsVerticalScrollMask');
             const viewport = page.viewportSize()!;
@@ -214,9 +217,9 @@ test.describe('KbqTabsModule', () => {
             // Off the scenario: the pointer rests on the first group's first tab otherwise.
             await page.mouse.move(viewport.width - 1, viewport.height - 1);
 
-            // A track in each of the 3 × 10 tab bodies and in the 4 vertical strips, which the scrolls above
+            // A track in each of the 3 × 10 tab bodies and in the 5 vertical strips, which the scrolls above
             // revealed.
-            await e2eWaitForSettledScrollbars(component, 34);
+            await e2eWaitForSettledScrollbars(component, 35);
 
             await expect(component).toHaveScreenshot('02-vertical-scroll-mask-light.png');
             await e2eEnableDarkTheme(page);
