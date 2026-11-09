@@ -88,15 +88,15 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: Provider = {
             assistive technology announces the alert as it appears, then the hints of the group.
         -->
         @if (showError() || hints().length) {
-            <div class="kbq-radio-group__subscript">
+            <span class="kbq-radio-group__subscript">
                 @if (showError()) {
-                    <div class="kbq-radio-group__error" [id]="errorId">
+                    <span class="kbq-radio-group__error" [id]="errorId">
                         <ng-content select="kbq-error" />
-                    </div>
+                    </span>
                 }
 
                 <ng-content select="kbq-hint" />
-            </div>
+            </span>
         }
     `,
     providers: [KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR],

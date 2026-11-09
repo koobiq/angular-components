@@ -875,6 +875,18 @@ describe('KbqToggle', () => {
             expect(errorElement()).toBeNull();
         });
 
+        // A server-rendered page reaches the browser through its HTML parser, where a block element in the markup
+        // would close a `<p>` around the control and fail hydration.
+        it('should leave its markup inside a paragraph, with the error and the hint shown', () => {
+            create();
+            fixture.componentInstance.form.controls.twoFactor.markAsTouched();
+            fixture.detectChanges();
+
+            const markup = `<p>${host.outerHTML}</p>`;
+
+            expect(new DOMParser().parseFromString(markup, 'text/html').body.innerHTML).toBe(markup);
+        });
+
         it('should show the error once focus leaves an invalid control, without a forced check', async () => {
             create();
 
