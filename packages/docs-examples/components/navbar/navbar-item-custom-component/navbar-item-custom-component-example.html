@@ -5,6 +5,11 @@
                 <example-navbar-notifications />
             </kbq-navbar-item>
 
+            <kbq-navbar-item>
+                <i kbq-icon="kbq-bell_16" color="empty"></i>
+                <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+            </kbq-navbar-item>
+
             <a href="#" kbq-navbar-item>
                 <i kbq-icon="kbq-folder_16" color="contrast"></i>
                 <kbq-navbar-title>{{ text().dashboards }}</kbq-navbar-title>

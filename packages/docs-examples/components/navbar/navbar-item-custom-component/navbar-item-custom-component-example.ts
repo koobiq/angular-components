@@ -57,7 +57,7 @@ export class ExampleNavbarNotifications implements KbqNavbarItemTrigger {
  */
 @Component({
     selector: 'navbar-item-custom-component-example',
-    imports: [KbqIconModule, KbqNavbarModule, ExampleNavbarNotifications],
+    imports: [KbqBadgeModule, KbqIconModule, KbqNavbarModule, ExampleNavbarNotifications],
     templateUrl: 'navbar-item-custom-component-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
