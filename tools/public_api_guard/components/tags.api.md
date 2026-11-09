@@ -62,6 +62,7 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnCha
     readonly destroyed: _angular_core.OutputEmitterRef<KbqTagEvent>;
     get disabled(): boolean;
     set disabled(value: boolean);
+    protected readonly disabledAttribute: _angular_core.Signal<true | null>;
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     protected get draggable(): boolean;
     readonly editable: _angular_core.Signal<boolean>;

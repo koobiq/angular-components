@@ -39,6 +39,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     autoColor: boolean;
     protected get autoColorError(): boolean;
     readonly autoColorInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
+    protected readonly colorIsError: _angular_core.Signal<boolean>;
     protected readonly defaultAriaHidden: boolean;
     // (undocumented)
     protected readonly destroyRef: DestroyRef;
@@ -146,6 +147,7 @@ export class KbqIconRegistry {
     addSvgIconLiteralInNamespace(namespace: string, name: string, literal: SafeHtml, options?: KbqIconOptions): void;
     addSvgIconSet(url: SafeResourceUrl, options?: KbqIconOptions): void;
     addSvgIconSetInNamespace(namespace: string, url: SafeResourceUrl, options?: KbqIconOptions): void;
+    findSvgIcon(name: string, namespace?: string): Observable<SVGElement> | null;
     getNamedSvgIcon(name: string, namespace?: string): Observable<SVGElement>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqIconRegistry, never>;

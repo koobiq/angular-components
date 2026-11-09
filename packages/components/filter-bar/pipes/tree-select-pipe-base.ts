@@ -9,7 +9,7 @@ import {
     KbqTreeFlattener
 } from '@koobiq/components/tree';
 import { KbqTreeSelect } from '@koobiq/components/tree-select';
-import { KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
+import { KbqSelectValue, KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 
 /**
@@ -113,9 +113,9 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
      * Read from the pipe's own state rather than the select's selection model: the select applies a
      * value written ahead of its data only once the options render, which is after `onOpen` fires.
      *
-     * @internal
+     * @docs-private
      */
-    protected abstract getSelectedValues(): unknown[];
+    protected abstract getSelectedValues(): KbqSelectValue[];
 
     /**
      * Expands the ancestors of every selected node. Selected values are matched against the current
@@ -138,7 +138,7 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
         }
     }
 
-    /** @internal */
+    /** @docs-private */
     protected getSourceNode(node: KbqTreeSelectFlatNode): KbqTreeSelectNode {
         return this.sourceNodes.get(node)!;
     }

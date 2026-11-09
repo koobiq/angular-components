@@ -144,6 +144,8 @@ export class KbqSelect extends KbqAbstractSelect implements AfterViewChecked, Af
     }> | null;
     protected readonly destroyRef: DestroyRef;
     readonly disabled: _angular_core.WritableSignal<boolean>;
+    protected readonly disabledAttribute: _angular_core.Signal<true | null>;
+    protected readonly disabledClass: _angular_core.Signal<boolean>;
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
@@ -168,6 +170,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterViewChecked, Af
     readonly hiddenItemsTextFormatter: _angular_core.InputSignal<(hiddenItemsText: string, hiddenItems: number) => string>;
     readonly id: _angular_core.Signal<string>;
     readonly idInput: _angular_core.InputSignal<string | undefined>;
+    protected readonly invalidClass: _angular_core.Signal<boolean>;
     get isAttached(): boolean;
     // (undocumented)
     protected readonly isBrowser: boolean;

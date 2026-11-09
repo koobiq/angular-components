@@ -4,28 +4,31 @@
 
 ```ts
 
-import * as i0 from '@angular/core';
+import * as _angular_core from '@angular/core';
 
 // @public
 export class KbqDivider {
-    readonly decorative: i0.InputSignalWithTransform<boolean, unknown>;
-    readonly length: i0.InputSignalWithTransform<number | null, unknown>;
-    readonly paddings: i0.InputSignalWithTransform<boolean, unknown>;
-    readonly vertical: i0.InputSignalWithTransform<boolean, unknown>;
+    protected readonly ariaOrientation: _angular_core.Signal<"vertical" | null>;
+    readonly decorative: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    protected readonly heightStyle: _angular_core.Signal<number | null>;
+    readonly length: _angular_core.InputSignalWithTransform<number | null, unknown>;
+    readonly paddings: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly vertical: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    protected readonly widthStyle: _angular_core.Signal<number | null>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDivider, "kbq-divider", never, { "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "paddings": { "alias": "paddings"; "required": false; "isSignal": true; }; "decorative": { "alias": "decorative"; "required": false; "isSignal": true; }; "length": { "alias": "length"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDivider, "kbq-divider", never, { "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "paddings": { "alias": "paddings"; "required": false; "isSignal": true; }; "decorative": { "alias": "decorative"; "required": false; "isSignal": true; }; "length": { "alias": "length"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDivider, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDivider, never>;
 }
 
 // @public (undocumented)
 export class KbqDividerModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDividerModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDividerModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqDividerModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqDividerModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDividerModule, never, [typeof KbqDivider], [typeof KbqDivider]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqDividerModule, never, [typeof KbqDivider], [typeof KbqDivider]>;
 }
 
 // (No @packageDocumentation comment for this package)

@@ -19,6 +19,15 @@ test.describe('KbqInputModule', () => {
             });
         });
 
+        test('readonly', async ({ page }) => {
+            await page.goto('/E2eInputStateAndStyle');
+            const screenshotTarget = getComponent(page).getByTestId('e2eInputReadonlyTable');
+
+            await expect(screenshotTarget).toHaveScreenshot('06-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('06-dark.png');
+        });
+
         test.describe('KbqInputPassword', () => {
             const getTestTable = (locator: Locator) => locator.getByTestId('e2eInputPasswordTable');
             const getInputPasswordTestRow = (locator: Locator) => locator.getByTestId('e2eInputPasswordWithHints');

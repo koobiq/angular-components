@@ -3599,6 +3599,7 @@ export class KbqOptgroup {
 // @public
 export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDestroy, KbqTitleTextRef {
     get active(): boolean;
+    protected readonly ariaDisabled: i0.Signal<boolean>;
     // (undocumented)
     deselect(emitEvent?: boolean): void;
     get disabled(): boolean;
@@ -3659,6 +3660,7 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     get active(): boolean;
     readonly ariaLabel: i0.InputSignal<string>;
     readonly disabled: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
+    protected readonly disabledAttribute: i0.Signal<true | null>;
     // (undocumented)
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     // (undocumented)
@@ -3797,6 +3799,8 @@ export class KbqOverflowShadowTop {
 // @public
 export class KbqOverlayLayer implements OnDestroy {
     constructor();
+    getContainerElement(): HTMLElement;
+    readonly host: HTMLElement;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -3963,6 +3967,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected getPrioritizedPositions(): ConnectionPositionPair[];
     protected getPriorityPlacementStrategy(value: string | string[]): ConnectionPositionPair[];
     protected getResolvedOrigin(): FlexibleConnectedPositionStrategyOrigin;
+    handleHoverChange(): void;
     hide(delay?: number): void;
     protected hideWithTimeout: boolean;
     protected readonly hostView: ViewContainerRef;
@@ -4359,6 +4364,7 @@ export const kbqSetSelectionRange: (element: HTMLInputElement, start: number, en
 
 // @public
 export class KbqShadowDomOverlayContainer extends OverlayContainer {
+    protected _createContainer(): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqShadowDomOverlayContainer, never>;
     // (undocumented)

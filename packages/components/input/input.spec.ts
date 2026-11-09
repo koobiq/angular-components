@@ -85,7 +85,13 @@ class InputWithMonospace {
     ],
     template: `
         <kbq-form-field>
-            <input kbqInput [placeholder]="placeholder" [disabled]="disabled" [(ngModel)]="value" />
+            <input
+                kbqInput
+                [placeholder]="placeholder"
+                [disabled]="disabled"
+                [readonly]="readonly"
+                [(ngModel)]="value"
+            />
         </kbq-form-field>
     `
 })
@@ -93,6 +99,7 @@ class InputForBehaviors {
     value: string = 'test';
     placeholder: string;
     disabled: boolean = false;
+    readonly: boolean = false;
 }
 
 @Component({
@@ -103,13 +110,14 @@ class InputForBehaviors {
     ],
     template: `
         <kbq-form-field>
-            <input kbqInput [(ngModel)]="value" />
+            <input kbqInput [readonly]="readonly" [(ngModel)]="value" />
             <kbq-cleaner />
         </kbq-form-field>
     `
 })
 class FormFieldWithCleaner {
     value: string;
+    readonly: boolean = false;
 }
 
 @Component({
@@ -447,6 +455,67 @@ describe('KbqInput', () => {
             fixture.detectChanges();
 
             expect(inputElement.getAttribute('placeholder')).toBe('');
+        });
+
+        describe('readonly', () => {
+            it('should reflect the readonly state on the native input and the form field', async () => {
+                const fixture = createComponent(InputForBehaviors);
+                const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
+                const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                await fixture.whenStable();
+
+                expect(formFieldElement.classList).not.toContain('kbq-form-field_readonly');
+                expect(inputElement.readOnly).toBe(false);
+
+                fixture.componentInstance.readonly = true;
+                fixture.detectChanges();
+
+                expect(formFieldElement.classList).toContain('kbq-form-field_readonly');
+                expect(inputElement.readOnly).toBe(true);
+            });
+
+            it('should hide the placeholder while readonly', async () => {
+                const fixture = createComponent(InputForBehaviors);
+                const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                fixture.componentInstance.placeholder = 'placeholder';
+                fixture.componentInstance.readonly = true;
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                expect(inputElement.getAttribute('placeholder')).toBe(null);
+
+                fixture.componentInstance.readonly = false;
+                fixture.detectChanges();
+
+                expect(inputElement.getAttribute('placeholder')).toBe('placeholder');
+            });
+
+            it('should hide the cleaner and keep the value on Escape while readonly', async () => {
+                const fixture = createComponent(FormFieldWithCleaner);
+                const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
+                const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                await fixture.whenStable();
+
+                inputElement.value = 'test';
+                dispatchFakeEvent(inputElement, 'input');
+                dispatchFakeEvent(inputElement, 'focus');
+                fixture.detectChanges();
+
+                expect(formFieldElement.querySelectorAll('.kbq-form-field__cleaner').length).toBe(1);
+
+                fixture.componentInstance.readonly = true;
+                fixture.detectChanges();
+
+                expect(formFieldElement.querySelectorAll('.kbq-form-field__cleaner').length).toBe(0);
+
+                dispatchKeyboardEvent(formFieldElement, 'keydown', ESCAPE, undefined, 'Escape');
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.value).toBe('test');
+            });
         });
 
         describe('cleaner', () => {

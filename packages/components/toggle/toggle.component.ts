@@ -107,14 +107,14 @@ export class KbqToggleComponent
     /**
      * Whether the projected `kbq-error` is shown. Without one, nothing is rendered under the label.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly showError = computed(() => this.errorState() && !!this.error());
 
     /**
      * Value of `aria-invalid` of the native input: set whenever the toggle is painted as invalid.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly ariaInvalid = computed(() => (this.errorState() || this.color() === 'error' ? 'true' : null));
 
@@ -385,7 +385,7 @@ export class KbqToggleComponent
     /**
      * Id of the element wrapping the projected `kbq-error`.
      *
-     * @internal
+     * @docs-private
      */
     protected get errorId(): string {
         return `${this.id || this.uniqueId}-error`;
@@ -394,7 +394,7 @@ export class KbqToggleComponent
     /**
      * Id of the label text, which names the native input unless `aria-label` or `aria-labelledby` is given.
      *
-     * @internal
+     * @docs-private
      */
     protected get labelId(): string {
         return `${this.id || this.uniqueId}-label`;
@@ -403,7 +403,7 @@ export class KbqToggleComponent
     /**
      * The error, while it is shown, and the hint, in the order a form field gives them.
      *
-     * @internal
+     * @docs-private
      */
     protected get ariaDescribedBy(): string {
         return this.showError() ? `${this.errorId} ${this.hintId}` : this.hintId;

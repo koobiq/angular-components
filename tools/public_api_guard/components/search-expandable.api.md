@@ -71,6 +71,8 @@ export class KbqSearchExpandable implements OnChanges, ControlValueAccessor, Aft
     ngOnDestroy(): void;
     onChange: (value: string) => void;
     protected onEnter(event: Event): void;
+    protected onEscape(event: Event): void;
+    protected onSuffixClick(): void;
     onTouch: () => void;
     get placeholder(): string;
     set placeholder(value: string | null);

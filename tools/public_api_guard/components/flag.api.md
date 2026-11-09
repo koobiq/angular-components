@@ -13,6 +13,9 @@ export class KbqFlag {
     readonly decorative: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly empty: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly label: _angular_core.InputSignal<string | undefined>;
+    protected readonly resolvedAriaHidden: _angular_core.Signal<"true" | null>;
+    protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
+    protected readonly resolvedRole: _angular_core.Signal<"img" | null>;
     readonly shadow: _angular_core.InputSignal<KbqFlagShadow>;
     readonly shape: _angular_core.InputSignal<KbqFlagShape>;
     readonly svg: _angular_core.InputSignal<string | SafeHtml | undefined>;
