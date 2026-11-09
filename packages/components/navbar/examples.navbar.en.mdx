@@ -22,6 +22,8 @@ An item can show something other than an icon in the spot before the title: mark
 
 ### Custom component as the item
 
-To keep logic in your own component — a notifications center, a site switcher — implement `KbqNavbarItemTrigger` on it and provide the class as `KBQ_NAVBAR_ITEM_TRIGGER`. The item then hands keyboard focus to the component and adds no button behavior of its own: the navbar keeps a single keyboard tab stop, arrow navigation works, and Enter and Space reach the component's own control. Inside the component, attach a dropdown, a popover, or any other overlay as usual.
+To keep logic in your own component — a notifications center, a site switcher — implement `KbqNavbarItemTrigger` on it and provide the class as `KBQ_NAVBAR_ITEM_TRIGGER`. The item then hands keyboard focus to the component and adds no button behavior of its own: the navbar keeps a single keyboard tab stop, arrow navigation works, and Enter and Space reach the component's own control. Keep the component's inner controls out of the tab order with `tabindex="-1"`; the navbar moves focus to them programmatically. Inside the component, attach a dropdown, a popover, or any other overlay as usual.
+
+In a horizontal navbar, automatic collapsing still relies on an icon, so items with custom content or a custom component do not collapse automatically.
 
 <Example id="navbar-item-custom-component" />

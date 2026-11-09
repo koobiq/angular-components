@@ -619,25 +619,28 @@ test.describe('KbqNavbarModule', () => {
         });
 
         /**
-         * Tab hands focus to the navbar, which roves it onto the first item; the item forwards it into the
-         * custom component's button. Enter then reaches the button natively — a synthetic item click on top
-         * would toggle the popover a second time and close it right away.
+         * Tab hands focus to the navbar, and ArrowDown roves it onto the custom item, which forwards it into
+         * the component's button. The activation key then reaches the button natively — a synthetic item click
+         * on top would toggle the popover a second time and close it right away.
          */
-        test('should open the component popover from the keyboard', async ({ page }) => {
-            await page.goto('/E2eNavbarItemCustomComponent');
+        for (const key of ['Enter', 'Space']) {
+            test(`should open the component popover with ${key}`, async ({ page }) => {
+                await page.goto('/E2eNavbarItemCustomComponent');
 
-            await page.keyboard.press('Tab');
+                await page.keyboard.press('Tab');
+                await page.keyboard.press('ArrowDown');
 
-            await expect(getComponent(page).getByTestId('custom-item').locator('button')).toBeFocused();
+                await expect(getComponent(page).getByTestId('custom-item').locator('button')).toBeFocused();
 
-            await page.keyboard.press('Enter');
+                await page.keyboard.press(key);
 
-            await expect(page.locator('.kbq-popover')).toBeVisible();
+                await expect(page.locator('.kbq-popover')).toBeVisible();
 
-            await page.keyboard.press('Escape');
+                await page.keyboard.press('Escape');
 
-            await expect(page.locator('.kbq-popover')).toBeHidden();
-        });
+                await expect(page.locator('.kbq-popover')).toBeHidden();
+            });
+        }
 
         test('arrow keys should move roving focus past the custom item', async ({ page }) => {
             await page.goto('/E2eNavbarItemCustomComponent');
@@ -645,7 +648,19 @@ test.describe('KbqNavbarModule', () => {
             await page.keyboard.press('Tab');
             await page.keyboard.press('ArrowDown');
 
+            await expect(getComponent(page).getByTestId('custom-item').locator('button')).toBeFocused();
+        });
+
+        test('should keep the custom component out of the tab order', async ({ page }) => {
+            await page.goto('/E2eNavbarItemCustomComponent');
+
+            await page.keyboard.press('Tab');
+
             await expect(getComponent(page).getByTestId('plain-item')).toHaveClass(/cdk-keyboard-focused/);
+
+            await page.keyboard.press('Tab');
+
+            await expect(getComponent(page).locator('[kbq-navbar-toggle]')).toBeFocused();
         });
     });
 });

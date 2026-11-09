@@ -1054,6 +1054,7 @@ export class E2eNavbarItemCustomContent {}
         <button
             kbq-button
             kbqPopover
+            [tabIndex]="-1"
             [kbqPopoverContent]="'Body of the popover'"
             [kbqPopoverHeader]="'Notifications'"
             [kbqPopoverPlacement]="popUpPlacements.Right"
@@ -1101,13 +1102,13 @@ class E2eNotificationsTrigger implements KbqNavbarItemTrigger {
         <div data-testid="e2eScreenshotTarget" style="height: 180px; display: flex">
             <kbq-vertical-navbar [expanded]="true">
                 <kbq-navbar-container>
-                    <kbq-navbar-item data-testid="custom-item">
-                        <e2e-notifications-trigger />
-                    </kbq-navbar-item>
-
                     <kbq-navbar-item data-testid="plain-item">
                         <i kbq-icon="kbq-folder_16"></i>
                         <kbq-navbar-title>Tasks</kbq-navbar-title>
+                    </kbq-navbar-item>
+
+                    <kbq-navbar-item data-testid="custom-item">
+                        <e2e-notifications-trigger />
                     </kbq-navbar-item>
                 </kbq-navbar-container>
 

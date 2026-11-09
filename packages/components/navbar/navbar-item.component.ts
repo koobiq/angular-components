@@ -419,7 +419,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
 
                 this.tooltip?.hide();
 
-                if (this.button()?.hasFocus) {
+                if (this.nestedElement?.hasFocus) {
                     return;
                 }
 

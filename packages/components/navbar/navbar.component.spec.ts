@@ -739,11 +739,27 @@ describe('KbqNavbar', () => {
             expect(getTrigger(fixture).focusViaKeyboard).toHaveBeenCalled();
         });
 
-        it('should forward pointer focus into the custom component', async () => {
+        it('should not emit blur while the custom component holds focus', async () => {
+            const fixture = await createFixture();
+            const focusableItem = (getItem(fixture).componentInstance as KbqNavbarItem).navbarFocusableItem;
+            const onBlur = vi.fn();
+
+            focusableItem.onBlur.subscribe(onBlur);
+            getTrigger(fixture).hasFocus = true;
+
+            focusableItem.blur();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(onBlur).not.toHaveBeenCalled();
+        });
+
+        it('should not move pointer focus into the custom component', async () => {
             const fixture = await createFixture();
 
             (getItem(fixture).componentInstance as KbqNavbarItem).navbarFocusableItem.focus('mouse');
 
+            expect(getTrigger(fixture).focus).not.toHaveBeenCalled();
             expect(getTrigger(fixture).focusViaKeyboard).not.toHaveBeenCalled();
         });
     });

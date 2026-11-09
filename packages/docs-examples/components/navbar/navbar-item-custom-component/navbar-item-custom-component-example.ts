@@ -18,6 +18,7 @@ import { injectExampleText } from '../localized-data';
         <button
             kbq-button
             kbqPopover
+            [tabIndex]="-1"
             [kbqPopoverContent]="'Body of the notifications center'"
             [kbqPopoverHeader]="text().notifications"
             [kbqPopoverPlacement]="popUpPlacements.Right"
