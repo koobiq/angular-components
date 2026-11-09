@@ -710,9 +710,9 @@ test.describe('KbqFilterBarModule', () => {
 
             const pane = page.locator('.cdk-overlay-pane');
 
-            await expect(pane).toHaveScreenshot('01-light.png');
+            await expect(pane).toHaveScreenshot('09-select-all-counter-light.png');
             await e2eEnableDarkTheme(page);
-            await expect(pane).toHaveScreenshot('01-dark.png');
+            await expect(pane).toHaveScreenshot('09-select-all-counter-dark.png');
         });
     });
 });
