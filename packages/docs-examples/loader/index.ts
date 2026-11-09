@@ -449,6 +449,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarSearchInPipesExample);
         case 'filter-bar-search':
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarSearchExample);
+        case 'filter-bar-select-all-counter':
+            return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarSelectAllCounterExample);
         case 'filter-bar-state-saving':
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarStateSavingExample);
         case 'filter-bar-uniq-pipes':
