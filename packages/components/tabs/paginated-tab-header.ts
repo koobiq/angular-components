@@ -202,6 +202,12 @@ export abstract class KbqPaginatedTabHeader
     /** Whether the tab list can be scrolled more towards the beginning of the tab label list. */
     disableScrollBefore = true;
 
+    /** @docs-private */
+    protected overflowBefore = false;
+
+    /** @docs-private */
+    protected overflowAfter = false;
+
     /**
      * Whether pagination should be disabled. This can be used to avoid unnecessary
      * layout recalculations if it's known that pagination won't be required.
@@ -391,11 +397,20 @@ export abstract class KbqPaginatedTabHeader
             fromEvent(container, 'scroll', passiveEventListenerOptions)
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => {
-                    // A `vertical`/`disablePagination` header still fires native `scroll` events
-                    // (e.g. `kbq-tab-group_vertical`'s own `overflow-y: auto`); without this guard
-                    // every one of them would still throttle-trigger a whole-app change-detection
-                    // tick for four booleans that `updateScrollState` has already pinned to a
-                    // constant and can never change.
+                    if (this.vertical) {
+                        const { overflowBefore, overflowAfter } = this;
+
+                        this.updateScrollState();
+
+                        if (overflowBefore !== this.overflowBefore || overflowAfter !== this.overflowAfter) {
+                            this.scrollProgress.next();
+                        }
+
+                        return;
+                    }
+
+                    // Without this guard every native `scroll` of a `disablePagination` header would
+                    // throttle-trigger a whole-app change-detection tick for pinned booleans.
                     if (this.disablePagination) return;
 
                     this.updateScrollState();
@@ -929,13 +944,23 @@ export abstract class KbqPaginatedTabHeader
      * should be called sparingly.
      */
     private updateScrollState(): void {
+        const container = this.tabListContainer.nativeElement;
+
         if (this.disablePagination) {
             this.disableScrollAfter = this.disableScrollBefore = true;
+
+            if (this.vertical) {
+                const maxScrollTop = container.scrollHeight - container.clientHeight;
+
+                this.overflowBefore = container.scrollTop > 0;
+                this.overflowAfter = container.scrollTop < maxScrollTop - kbqGetScrollOverflowTolerance(container);
+            } else {
+                this.overflowBefore = this.overflowAfter = false;
+            }
 
             return;
         }
 
-        const container = this.tabListContainer.nativeElement;
         const position = this.logicalScrollPosition;
         const maxScrollPosition = container.scrollWidth - container.clientWidth;
 
@@ -946,6 +971,8 @@ export abstract class KbqPaginatedTabHeader
         // leaves the arrow and its edge mask enabled with nowhere left to scroll.
         this.disableScrollBefore = position <= 0;
         this.disableScrollAfter = position >= maxScrollPosition - kbqGetScrollOverflowTolerance(container);
+        this.overflowBefore = !this.disableScrollBefore;
+        this.overflowAfter = !this.disableScrollAfter;
     }
 
     private handlePointerDown(event: PointerEvent): void {
