@@ -298,6 +298,62 @@ test.describe('KbqSelectModule', () => {
         });
     });
 
+    test.describe('E2eSelectMultilineOptions', () => {
+        test('wraps option text within the overlay without changing the trigger', async ({ page }) => {
+            await page.goto('/E2eSelectMultilineOptions');
+
+            const select = page.getByTestId('e2eSelect');
+
+            await expect(select).not.toHaveClass(/kbq-select_multiline/);
+            await select.click();
+
+            const overlay = page.locator('.cdk-overlay-pane');
+            const panel = overlay.locator('.kbq-select__panel');
+
+            await expect(panel).toBeVisible();
+            await expect(panel).toHaveClass(/kbq-select__panel_multiline/);
+            await expect(overlay).toHaveCSS('width', '200px');
+
+            const shortOption = page.getByTestId('e2eOption-short');
+            const longOption = page.getByTestId('e2eOption-long');
+            const longOptionText = longOption.locator('.kbq-option-text');
+
+            await expect(longOptionText).toHaveCSS('white-space', 'normal');
+            await expect(longOptionText).toHaveCSS('overflow-wrap', 'break-word');
+
+            const shortOptionBox = await box(shortOption);
+            const longOptionBox = await box(longOption);
+
+            expect(longOptionBox.height).toBeGreaterThan(shortOptionBox.height);
+
+            const hasHorizontalOverflow = await longOptionText.evaluate(
+                (element) => element.scrollWidth > element.clientWidth
+            );
+
+            expect(hasHorizontalOverflow).toBe(false);
+        });
+
+        test('updates the open panel width in both toggle directions', async ({ page }) => {
+            await page.goto('/E2eSelectMultilineOptions');
+            const select = page.getByTestId('e2eSelect');
+
+            await select.click();
+
+            const overlay = page.locator('.cdk-overlay-pane');
+            const panel = overlay.locator('.kbq-select__panel');
+
+            await expect(overlay).toHaveCSS('width', '200px');
+            await select.dispatchEvent('toggleMultilineOptions');
+            await expect(panel).not.toHaveClass(/kbq-select__panel_multiline/);
+            await expect(panel).toBeVisible();
+            await expect.poll(async () => (await box(overlay)).width).toBeGreaterThan(200);
+
+            await select.dispatchEvent('toggleMultilineOptions');
+            await expect(panel).toHaveClass(/kbq-select__panel_multiline/);
+            await expect(overlay).toHaveCSS('width', '200px');
+        });
+    });
+
     test.describe('E2eSelectSelectionState', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eSelectSelectionState');
 

@@ -9,7 +9,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-select multiple [value]="selected">
+            <kbq-select multiple multilineOptions [value]="selected">
                 @for (option of options; track option) {
                     <kbq-option [value]="option" [viewValue]="option">
                         <div>{{ option }}</div>
@@ -34,6 +34,12 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectTwoLineOptionExample {
-    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    readonly options = [
+        'Option #0',
+        'Option #1',
+        'Option #2 with a very long label that does not fit on a single line of the panel',
+        'Option #3',
+        'Option #4 with another quite long label that also has to wrap onto the next line'
+    ];
     readonly selected = [this.options[0]];
 }

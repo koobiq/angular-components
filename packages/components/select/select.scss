@@ -29,6 +29,13 @@
     }
 }
 
+.kbq-select__panel_multiline {
+    .kbq-option-text {
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+}
+
 .kbq-select__content {
     @extend %kbq-select-content;
 
