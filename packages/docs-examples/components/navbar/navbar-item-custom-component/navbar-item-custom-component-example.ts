@@ -18,15 +18,17 @@ import { injectExampleText } from '../localized-data';
         <button
             kbq-button
             kbqPopover
+            class="example-navbar-notifications__trigger"
             [tabIndex]="-1"
             [kbqPopoverContent]="'Body of the notifications center'"
             [kbqPopoverHeader]="text().notifications"
             [kbqPopoverPlacement]="popUpPlacements.Right"
         >
             <i kbq-icon="kbq-bell_16" color="contrast"></i>
-            <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+            <kbq-badge class="example-navbar-notifications__badge" [badgeColor]="'error'" [compact]="true">2</kbq-badge>
         </button>
     `,
+    styleUrl: 'navbar-item-custom-component-example.scss',
     providers: [{ provide: KBQ_NAVBAR_ITEM_TRIGGER, useExisting: forwardRef(() => ExampleNavbarNotifications) }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

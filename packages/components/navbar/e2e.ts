@@ -1054,15 +1054,22 @@ export class E2eNavbarItemCustomContent {}
         <button
             kbq-button
             kbqPopover
+            class="e2e-notifications-trigger__button"
             [tabIndex]="-1"
             [kbqPopoverContent]="'Body of the popover'"
             [kbqPopoverHeader]="'Notifications'"
             [kbqPopoverPlacement]="popUpPlacements.Right"
         >
             <i kbq-icon="kbq-bell_16" [color]="'empty'"></i>
-            <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+            <kbq-badge class="e2e-notifications-trigger__badge" [badgeColor]="'error'" [compact]="true">2</kbq-badge>
         </button>
     `,
+    styles: [
+        ':host { display: block; }',
+        '.e2e-notifications-trigger__button { width: 100%; height: 100%; padding-right: 0; padding-left: 0; }',
+        '.e2e-notifications-trigger__button .kbq-button-wrapper { justify-content: flex-start; }',
+        '.e2e-notifications-trigger__badge { position: absolute; top: 0; right: 0; }'
+    ],
     providers: [{ provide: KBQ_NAVBAR_ITEM_TRIGGER, useExisting: forwardRef(() => E2eNotificationsTrigger) }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

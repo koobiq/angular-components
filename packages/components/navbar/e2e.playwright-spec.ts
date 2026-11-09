@@ -565,6 +565,7 @@ test.describe('KbqNavbarModule', () => {
             });
         }
     });
+
     test.describe('E2eNavbarItemCustomContent', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eNavbarItemCustomContent');
         const getContent = (item: Locator) => item.locator('.kbq-navbar-item-content');
@@ -648,6 +649,36 @@ test.describe('KbqNavbarModule', () => {
             const component = getComponent(page);
             const customItem = component.getByTestId('custom-item');
             const plainItem = component.getByTestId('plain-item');
+            const customHost = customItem.locator(':scope > *').first();
+            const toggle = component.locator('[kbq-navbar-toggle]');
+
+            const measureIconCenters = () =>
+                page.evaluate(() => {
+                    const center = (element: Element, container: Element) => {
+                        const rect = element.getBoundingClientRect();
+                        const containerRect = container.getBoundingClientRect();
+
+                        return {
+                            x: rect.x + rect.width / 2 - containerRect.x,
+                            y: rect.y + rect.height / 2 - containerRect.y
+                        };
+                    };
+
+                    const custom = document.querySelector('[data-testid="custom-item"]')!;
+                    const plain = document.querySelector('[data-testid="plain-item"]')!;
+
+                    return {
+                        customIcon: center(custom.querySelector('.kbq-icon')!, custom),
+                        plainIcon: center(plain.querySelector('.kbq-icon')!, plain)
+                    };
+                });
+
+            const expectIconsAligned = async () => {
+                const centers = await measureIconCenters();
+
+                expect(Math.abs(centers.customIcon.x - centers.plainIcon.x)).toBeLessThanOrEqual(3.5);
+                expect(Math.abs(centers.customIcon.y - centers.plainIcon.y)).toBeLessThanOrEqual(3.5);
+            };
 
             await expect(plainItem).toBeVisible();
 
@@ -656,6 +687,16 @@ test.describe('KbqNavbarModule', () => {
 
             await expect(customItem).toHaveCSS('padding-left', paddingLeft);
             await expect(customItem).toHaveCSS('padding-right', paddingRight);
+            await expect(customHost).toHaveCSS('width', '40px');
+            await expect(customHost).toHaveCSS('height', '40px');
+            await expectIconsAligned();
+
+            await toggle.click();
+            await expect(customItem).toHaveClass(/kbq-collapsed/);
+
+            await expect(customHost).toHaveCSS('width', '40px');
+            await expect(customHost).toHaveCSS('height', '40px');
+            await expectIconsAligned();
         });
 
         test('arrow keys should move roving focus past the custom item', async ({ page }) => {
