@@ -65,8 +65,8 @@ export class KbqPipeTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSelectV
         this.filterBar?.internalTemplatesChanges.pipe(takeUntilDestroyed()).subscribe(this.updateTemplates);
     }
 
-    /** @internal */
-    protected getSelectedValues(): unknown[] {
+    /** @docs-private */
+    protected getSelectedValues(): KbqSelectValue[] {
         return this.data.value == null ? [] : [this.data.value];
     }
 

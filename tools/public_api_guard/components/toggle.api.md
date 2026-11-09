@@ -34,6 +34,8 @@ export type KbqToggleClickAction = KbqCheckableClickAction;
 export class KbqToggleComponent extends KbqColorDirective implements OnChanges, DoCheck, AfterViewInit, OnDestroy, CanUpdateErrorState {
     constructor();
     protected readonly animationsDisabled: boolean;
+    protected get ariaDescribedBy(): string;
+    protected readonly ariaInvalid: Signal<"true" | null>;
     // (undocumented)
     readonly ariaLabel: _angular_core.InputSignal<string>;
     // (undocumented)
@@ -53,6 +55,7 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
+    protected get errorId(): string;
     readonly errorState: Signal<boolean>;
     readonly errorStateMatcher: _angular_core.InputSignal<ErrorStateMatcher | undefined>;
     // (undocumented)
@@ -71,6 +74,7 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     readonly inputElement: Signal<ElementRef<HTMLInputElement>>;
     // (undocumented)
     get inputId(): string;
+    protected get labelId(): string;
     // (undocumented)
     readonly labelPosition: _angular_core.InputSignal<ToggleLabelPositionType>;
     readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -91,6 +95,7 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     onInputClick(event: MouseEvent): void;
     // @deprecated
     onLabelTextChange(): void;
+    protected readonly showError: Signal<boolean>;
     // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);

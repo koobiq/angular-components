@@ -148,9 +148,11 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
     constructor();
     blur(): void;
     readonly button: Signal<KbqButton | undefined>;
+    readonly decorative: i0.WritableSignal<boolean>;
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly disabledInput: i0.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
+    get explicitlyDisabled(): boolean;
     focus(origin?: FocusOrigin): void;
     readonly formField: Signal<KbqFormField | undefined>;
     getLabel(): string;

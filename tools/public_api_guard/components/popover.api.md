@@ -6,6 +6,7 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_cdk_overlay from '@angular/cdk/overlay';
 import * as _angular_core from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
@@ -14,6 +15,7 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { InputSignal } from '@angular/core';
+import { KbqCaretRect } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqOverflowShadowContainer } from '@koobiq/components/core';
 import { KbqOverlayOrigin } from '@koobiq/components/core';
@@ -190,11 +192,16 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     get footer(): string | TemplateRef<any>;
     set footer(value: string | TemplateRef<any>);
     readonly footerInput: InputSignal<KbqPopoverTrigger['footer'] | undefined>;
+    protected getAnchorSize(): {
+        width: number;
+        height: number;
+    };
     getOverlayHandleComponentType(): Type<KbqPopoverComponent>;
     getPointerPoint(): {
         x: number;
         y: number;
     } | null;
+    protected getResolvedOrigin(): _angular_cdk_overlay.FlexibleConnectedPositionStrategyOrigin | Readonly<KbqCaretRect>;
     get hasBackdrop(): boolean;
     set hasBackdrop(value: boolean);
     get hasClickTrigger(): boolean;

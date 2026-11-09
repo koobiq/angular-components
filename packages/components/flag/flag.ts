@@ -91,21 +91,21 @@ export class KbqFlag {
     /**
      * Value of `role`.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly resolvedRole = computed(() => (this.decorative() ? null : this.label() ? 'img' : null));
 
     /**
      * Value of `aria-label`.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly resolvedAriaLabel = computed(() => (this.decorative() ? null : this.label() || null));
 
     /**
      * Value of `aria-hidden`.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly resolvedAriaHidden = computed(() => (this.decorative() || !this.label() ? 'true' : null));
 }

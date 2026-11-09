@@ -1,6 +1,6 @@
 import { KbqSidepanelPosition } from './sidepanel-config';
 
-/** @internal */
+/** @docs-private */
 export enum KbqSidepanelAnimationState {
     Void = 'void',
     Visible = 'visible',
@@ -13,7 +13,7 @@ export enum KbqSidepanelAnimationState {
 /**
  * A state transition of the sidepanel container: started, or ended — finished, or interrupted by the next one.
  *
- * @internal
+ * @docs-private
  */
 export interface KbqSidepanelAnimationEvent {
     phaseName: 'start' | 'done';

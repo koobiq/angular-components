@@ -234,14 +234,14 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
      * Keeps an element with nothing to interact with out of the roving focus order, without announcing or
      * styling it as disabled.
      *
-     * @internal
+     * @docs-private
      */
     readonly decorative = signal(false);
 
     /**
      * Whether the item was disabled through `disabled`, as opposed to being decorative.
      *
-     * @internal
+     * @docs-private
      */
     get explicitlyDisabled(): boolean {
         return this.disabledState();

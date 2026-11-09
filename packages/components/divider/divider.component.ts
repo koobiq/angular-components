@@ -73,21 +73,21 @@ export class KbqDivider {
     /**
      * Value of `aria-orientation`.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly ariaOrientation = computed(() => (!this.decorative() && this.vertical() ? 'vertical' : null));
 
     /**
      * Value of the `height` style.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly heightStyle = computed(() => (this.vertical() ? this.length() : null));
 
     /**
      * Value of the `width` style.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly widthStyle = computed(() => (this.vertical() ? null : this.length()));
 }

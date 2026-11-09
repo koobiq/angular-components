@@ -53,7 +53,7 @@ export class KbqShadowDomOverlayContainer extends OverlayContainer {
     /**
      * CDK lifecycle hook — overridden to relocate the container into a shadow root.
      *
-     * @internal
+     * @docs-private
      */
     protected override _createContainer(): void {
         // Let CDK create the container (and run its test-environment cleanup). It is appended to `document.body`.
