@@ -1,7 +1,5 @@
 # Koobiq Terminal Interface
 
-🚧 WIP. This feature is not stable yet. 🚧
-
 # Usage
 
 ```bash

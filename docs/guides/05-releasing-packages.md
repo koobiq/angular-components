@@ -17,6 +17,8 @@ are still supported.
     yarn run release:stage:commit
     ```
 
+    See the [Release CLI guide](./09-cli.md) for the CLI's commands and options.
+
     The CLI walks through the release and asks for confirmation at each step that needs it:
 
     - (**needs confirmation**) choose the bump: major, minor or patch

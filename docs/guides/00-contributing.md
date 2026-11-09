@@ -3,6 +3,7 @@
 - [Versioning][versioning]
 - [Testing][testing]
 - [Linting][linting]
+- [Release CLI][release-cli]
 
 ## Code of Conduct
 
@@ -16,4 +17,5 @@ This project is bound by a [Code of Conduct][code-of-conduct].
 [versioning]: ./04-versioning.md
 [testing]: ./06-testing.md
 [linting]: ./07-linting.md
+[release-cli]: ./09-cli.md
 [code-of-conduct]: ../../CODE_OF_CONDUCT.md
