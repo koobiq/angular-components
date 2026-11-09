@@ -64,6 +64,11 @@
             padding: 0 var(--kbq-size-m);
         }
 
+        &.kbq-navbar-item_has-custom-trigger {
+            padding-right: var(--kbq-size-xl);
+            padding-left: var(--kbq-size-xl);
+        }
+
         &.kbq-navbar-bento .kbq-navbar-item__title {
             margin-left: calc(-1 * var(--kbq-size-s));
             opacity: 0;

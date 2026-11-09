@@ -642,6 +642,22 @@ test.describe('KbqNavbarModule', () => {
             });
         }
 
+        test('should align the custom component with a plain item', async ({ page }) => {
+            await page.goto('/E2eNavbarItemCustomComponent');
+
+            const component = getComponent(page);
+            const customItem = component.getByTestId('custom-item');
+            const plainItem = component.getByTestId('plain-item');
+
+            await expect(plainItem).toBeVisible();
+
+            const paddingLeft = await plainItem.evaluate((element) => getComputedStyle(element).paddingLeft);
+            const paddingRight = await plainItem.evaluate((element) => getComputedStyle(element).paddingRight);
+
+            await expect(customItem).toHaveCSS('padding-left', paddingLeft);
+            await expect(customItem).toHaveCSS('padding-right', paddingRight);
+        });
+
         test('arrow keys should move roving focus past the custom item', async ({ page }) => {
             await page.goto('/E2eNavbarItemCustomComponent');
 

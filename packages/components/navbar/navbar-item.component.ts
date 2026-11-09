@@ -215,6 +215,7 @@ export class KbqNavbarDivider {
 
         class: 'kbq-navbar-focusable-item',
         '[class.kbq-navbar-item_has-nested]': '!!nestedElement',
+        '[class.kbq-navbar-item_has-custom-trigger]': '!!customTrigger()',
         '[class.kbq-disabled]': 'explicitlyDisabled',
 
         '(focus)': 'onFocusHandler()',
