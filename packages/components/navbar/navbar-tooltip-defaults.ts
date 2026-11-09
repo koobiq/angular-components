@@ -1,4 +1,5 @@
 import { Provider } from '@angular/core';
+import type { KbqTooltipDefaultOptions } from '@koobiq/components/tooltip';
 import { KBQ_TOOLTIP_DEFAULT_OPTIONS } from '@koobiq/components/tooltip';
 
 /**
@@ -10,5 +11,5 @@ import { KBQ_TOOLTIP_DEFAULT_OPTIONS } from '@koobiq/components/tooltip';
  */
 export const kbqNavbarTooltipOptionsProvider: Provider = {
     provide: KBQ_TOOLTIP_DEFAULT_OPTIONS,
-    useValue: { offset: 0, panelClass: 'kbq-tooltip-panel_horizontal-navbar' }
+    useValue: { offset: 0, panelClass: 'kbq-tooltip-panel_horizontal-navbar' } satisfies KbqTooltipDefaultOptions
 };

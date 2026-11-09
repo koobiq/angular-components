@@ -569,7 +569,8 @@ export class KbqTooltipTrigger
     /**
      * Input (`kbqTooltipOffset`) — distance in pixels between the tooltip and its trigger. `null` keeps
      * the gap of the stylesheet. Defaults to the `offset` of {@link KBQ_TOOLTIP_DEFAULT_OPTIONS}, when a
-     * provider in scope set one.
+     * provider in scope set one. Inside a provider scope such as the navbar's, `null`/`undefined` restores
+     * that inherited default.
      */
     offset: number | null = this.defaultOptions.offset ?? null;
 
