@@ -1117,6 +1117,11 @@ class E2eNotificationsTrigger implements KbqNavbarItemTrigger {
                     <kbq-navbar-item data-testid="custom-item">
                         <e2e-notifications-trigger />
                     </kbq-navbar-item>
+
+                    <kbq-navbar-item data-testid="plain-notifications">
+                        <i kbq-icon="kbq-bell_16" [color]="'empty'"></i>
+                        <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                    </kbq-navbar-item>
                 </kbq-navbar-container>
 
                 <button kbq-navbar-toggle></button>

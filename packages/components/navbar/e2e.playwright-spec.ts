@@ -699,6 +699,22 @@ test.describe('KbqNavbarModule', () => {
             await expectIconsAligned();
         });
 
+        test('should place the badge of a plain titleless item at the custom component badge position', async ({
+            page
+        }) => {
+            await page.goto('/E2eNavbarItemCustomComponent');
+
+            const plainBadge = getComponent(page).getByTestId('plain-notifications').locator('.kbq-badge');
+            const customBadge = getComponent(page).getByTestId('custom-item').locator('.kbq-badge');
+
+            const plain = (await plainBadge.boundingBox())!;
+            const custom = (await customBadge.boundingBox())!;
+
+            // Right edge and top must match; left edges differ with badge width.
+            expect(Math.abs(plain.x + plain.width - (custom.x + custom.width))).toBeLessThanOrEqual(1);
+            expect(Math.abs(plain.y - custom.y)).toBeLessThanOrEqual(1);
+        });
+
         test('arrow keys should move roving focus past the custom item', async ({ page }) => {
             await page.goto('/E2eNavbarItemCustomComponent');
 
