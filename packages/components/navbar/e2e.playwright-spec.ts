@@ -450,6 +450,46 @@ test.describe('KbqNavbarModule', () => {
         });
     });
 
+    test.describe('E2eNavbarTooltipOffset', () => {
+        /**
+         * Both tooltips inherit `offset: 0` and the navbar panel class from the navbar root, so the panel
+         * class's margin renders the same gap for the item's own tooltip and a `kbqTooltip` nested inside it.
+         * Without the inheritance the nested tooltip keeps the stylesheet's own arrowless gap, which this
+         * would measure.
+         */
+        test('should render the same gap for a navbar-owned tooltip and a nested tooltip', async ({ page }) => {
+            await page.goto('/E2eNavbarTooltipOffset');
+
+            const readGapAfterHover = async (testId: string) => {
+                const trigger = page.getByTestId(testId);
+
+                await trigger.hover();
+
+                const tooltip = page.locator('.kbq-tooltip');
+
+                await expect(tooltip).toBeVisible();
+
+                const triggerBox = (await trigger.boundingBox())!;
+                const tooltipBox = (await tooltip.boundingBox())!;
+                const gap = tooltipBox.x - (triggerBox.x + triggerBox.width);
+
+                // Park the pointer off the navbar and let the overlay detach, so the two tooltips never
+                // share the DOM and the strict locator stays unambiguous.
+                const viewport = page.viewportSize()!;
+
+                await page.mouse.move(viewport.width - 1, viewport.height - 1);
+                await expect(tooltip).toBeHidden();
+
+                return gap;
+            };
+
+            const ownedGap = await readGapAfterHover('owned-tooltip-trigger');
+            const nestedGap = await readGapAfterHover('nested-tooltip-trigger');
+
+            expect(Math.abs(ownedGap - nestedGap)).toBeLessThanOrEqual(1);
+        });
+    });
+
     test.describe('E2eNavbarPopupArrowCentering', () => {
         type PopupKind = 'popover' | 'tooltip';
 

@@ -33,6 +33,9 @@ import { Type } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
 // @public
+export const KBQ_TOOLTIP_DEFAULT_OPTIONS: InjectionToken<KbqTooltipDefaultOptions>;
+
+// @public
 export const KBQ_TOOLTIP_INSTANT_SHOW_WINDOW: InjectionToken<number>;
 
 // @public @deprecated (undocumented)
@@ -93,6 +96,12 @@ export class KbqTooltipComponent extends KbqPopUp implements AfterViewInit {
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTooltipComponent, "kbq-tooltip-component", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTooltipComponent, never>;
+}
+
+// @public
+export interface KbqTooltipDefaultOptions {
+    readonly offset?: number | null;
+    readonly panelClass?: string | string[];
 }
 
 // @public
