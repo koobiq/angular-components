@@ -21,17 +21,17 @@
         (click)="onInputClick($event)"
     />
 
-    <div class="kbq-radio-label-content" [class.kbq-radio-label-before]="labelPosition === 'before'">
-        <div class="kbq-radio-button__outer-circle">
-            <div class="kbq-radio-button__inner-circle"></div>
-        </div>
+    <span class="kbq-radio-label-content" [class.kbq-radio-label-before]="labelPosition === 'before'">
+        <span class="kbq-radio-button__outer-circle">
+            <span class="kbq-radio-button__inner-circle"></span>
+        </span>
 
-        <div class="kbq-radio__text-container">
+        <span class="kbq-radio__text-container">
             <span class="kbq-radio__text" [id]="labelId()">
                 <ng-content />
             </span>
 
             <ng-content select="kbq-hint" />
-        </div>
-    </div>
+        </span>
+    </span>
 </label>
