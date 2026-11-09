@@ -127,7 +127,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
     private pendingTransition?: { state: 'visible' | 'hidden'; wait: { destroy(): void } };
 
     /** Whether the actions panel container has been destroyed. */
-    private destroyed: boolean;
+    private destroyed?: boolean;
 
     /**
      * Actions panel configuration.

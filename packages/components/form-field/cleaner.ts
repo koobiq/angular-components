@@ -128,7 +128,7 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
         this.autoColor = true;
     }
 
-    ngAfterContentInit(): void {
+    override ngAfterContentInit(): void {
         super.ngAfterContentInit();
 
         if (this.context?.control?.controlType === 'input-number') {

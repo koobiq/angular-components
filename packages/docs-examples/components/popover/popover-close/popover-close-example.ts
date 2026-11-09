@@ -17,7 +17,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverCloseExample {
-    members: Record<string, string>[] = [
+    members: { name: string; role: string }[] = [
         { name: 'Alex Unipraise', role: 'Editor' },
         { name: 'Serge Vox', role: 'Editor' },
         { name: 'Rick Brick', role: 'Viewer' },

@@ -21,7 +21,7 @@ const TEMPLATE_PATH = 'assets/stackblitz/';
  * dependencies that should be added to the generated StackBlitz `package.json`.
  * These are only included when the example actually uses them.
  */
-export const DOCS_STACKBLITZ_OPTIONAL_DEPENDENCIES = {
+export const DOCS_STACKBLITZ_OPTIONAL_DEPENDENCIES: Record<string, Record<string, string>> = {
     'country-flag-icons': {
         'country-flag-icons': '^1'
     },
@@ -55,14 +55,14 @@ export const DOCS_STACKBLITZ_OPTIONAL_DEPENDENCIES = {
     '@koobiq/components/scrollbar/deprecated': {
         overlayscrollbars: '2.7.3'
     }
-} as const;
+};
 
 /** Global stylesheets added to the generated `angular.json` of an example that uses the import pattern. */
-export const DOCS_STACKBLITZ_OPTIONAL_STYLES = {
+export const DOCS_STACKBLITZ_OPTIONAL_STYLES: Partial<Record<string, string[]>> = {
     '@koobiq/ag-grid-angular-theme': [
         'node_modules/@koobiq/ag-grid-angular-theme/_index.scss'
     ]
-} as const;
+};
 
 export const DOCS_TEMPLATE_FILES = [
     'angular.json',

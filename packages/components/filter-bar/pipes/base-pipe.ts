@@ -75,7 +75,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected destroyed = false;
 
     /** values to select from the pipe template */
-    protected values;
+    protected values: any;
     /** TemplateRef for selecting an option */
     protected valueTemplate?: TemplateRef<any> | string;
 

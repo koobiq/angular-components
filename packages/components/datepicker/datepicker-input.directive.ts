@@ -116,28 +116,15 @@ class DateDigit {
         return this.value === DateParts.day;
     }
 
-    get isMonth(): boolean {
-        return this.value === DateParts.month;
-    }
-
-    get isYear(): boolean {
-        return this.value === DateParts.year;
-    }
-
-    get fullName(): string {
-        if (this.isDay) {
-            return 'date';
+    get fullName(): 'date' | 'month' | 'year' {
+        switch (this.value) {
+            case DateParts.day:
+                return 'date';
+            case DateParts.month:
+                return 'month';
+            case DateParts.year:
+                return 'year';
         }
-
-        if (this.isMonth) {
-            return 'month';
-        }
-
-        if (this.isYear) {
-            return 'year';
-        }
-
-        return '';
     }
 
     private parseDay(value: string): number {
@@ -937,10 +924,10 @@ export class KbqDatepickerInput<D>
         this.onInput();
     }
 
-    onPaste($event) {
-        $event.preventDefault();
+    onPaste(event: ClipboardEvent): void {
+        event.preventDefault();
 
-        let rawValue = $event.clipboardData.getData('text');
+        let rawValue = event.clipboardData!.getData('text');
 
         if (rawValue.match(/^\d\D/)) {
             rawValue = `0${rawValue}`;
@@ -952,22 +939,22 @@ export class KbqDatepickerInput<D>
             this.incorrectInput.emit();
         }
 
-        const match: RegExpMatchArray | null = rawValue.match(/^(?<first>\d+)\W(?<second>\d+)\W(?<third>\d+)$/);
+        const { first, second, third } = rawValue.match(/^(?<first>\d+)\W(?<second>\d+)\W(?<third>\d+)$/)?.groups ?? {};
 
-        if (!match?.groups?.first || !match?.groups?.second || !match?.groups?.third) {
+        if (!first || !second || !third) {
             this.setViewValue(rawValue);
 
-            return rawValue;
+            return;
         }
 
-        const value = [match.groups.first, match.groups.second, match.groups.third].join(this.separator);
+        const value = [first, second, third].join(this.separator);
 
         const newTimeObj = this.getDateFromString(value);
 
         if (!newTimeObj) {
             this.setViewValue(value);
 
-            return value;
+            return;
         }
 
         this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.dateInputFormat));
@@ -1014,7 +1001,7 @@ export class KbqDatepickerInput<D>
         // takes in the six characters ASCII puts between the two alphabets — opening bracket,
         // backslash, closing bracket, caret, underscore and backtick. A format escaping a literal in
         // brackets could therefore have had that bracket counted as part of a placeholder.
-        this.separator = format.match(/[a-zA-Z]+(?<separator>\W|\D)[a-zA-Z]+/)!.groups!.separator;
+        this.separator = format.match(/[a-zA-Z]+(?<separator>\W|\D)[a-zA-Z]+/)!.groups!['separator'];
 
         this.separatorPositions = format
             .split('')
@@ -1419,7 +1406,7 @@ export class KbqDatepickerInput<D>
             return;
         }
 
-        let changedTime;
+        let changedTime: D | null = null;
 
         const [modifiedTimePart, selectionStart, selectionEnd] = this.getDateEditMetrics(this.selectionStart as number);
 

@@ -1701,15 +1701,15 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
     id: number;
     name: string;
 }> {
-    scrollDispatcher: ScrollDispatcher;
+    override scrollDispatcher: ScrollDispatcher;
 
-    values: any[] = [
+    override values: any[] = [
         { id: 3, name: 'Anapa' },
         { id: 55, name: 'Lyubertsy' },
         { id: 114, name: 'Tomsk' }
     ];
 
-    options: { id: number; name: string }[] = OPTIONS.sort().map((option, index) => {
+    override options: { id: number; name: string }[] = OPTIONS.sort().map((option, index) => {
         return { id: index, name: option, active: true };
     });
 
@@ -6740,7 +6740,7 @@ describe('KbqSelect', () => {
             await vi.advanceTimersByTimeAsync(0);
             await vi.runOnlyPendingTimersAsync();
 
-            HTMLElement.prototype.querySelector = function (selectors: string) {
+            HTMLElement.prototype.querySelector = function (this: HTMLElement, selectors: string) {
                 if (selectors === '.kbq-select__match-hidden-text') return null;
 
                 return originalQuerySelector.call(this, selectors);

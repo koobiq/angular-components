@@ -177,7 +177,7 @@ export abstract class KbqPopUp implements OnDestroy {
         return this.visibility === PopUpVisibility.Visible;
     }
 
-    updateClassMap(placement: string, customClass: string, classMap?): void {
+    updateClassMap(placement: string, customClass: string, classMap?: any): void {
         // `customClass` may be a whitespace-separated list of class names; expand it into
         // individual keys so the native `[class]` binding (which doesn't tokenise object keys)
         // applies each class correctly.

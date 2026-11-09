@@ -45,7 +45,9 @@ export class KbqMeasureScrollbarService {
 
         for (const scrollProp in this.scrollbarMeasure) {
             if (this.scrollbarMeasure.hasOwnProperty(scrollProp)) {
-                scrollDiv.style[scrollProp] = this.scrollbarMeasure[scrollProp];
+                const key = scrollProp as keyof typeof this.scrollbarMeasure;
+
+                scrollDiv.style[key] = this.scrollbarMeasure[key];
             }
         }
 

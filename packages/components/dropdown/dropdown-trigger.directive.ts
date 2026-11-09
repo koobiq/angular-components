@@ -281,7 +281,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     private readonly openedState = signal(false);
 
-    private portal: TemplatePortal;
+    private portal?: TemplatePortal;
 
     private overlayRef: OverlayRef | null = null;
 

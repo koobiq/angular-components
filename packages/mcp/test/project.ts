@@ -21,7 +21,7 @@ export const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..',
 
 const BUILT = join(REPO, 'dist', 'components');
 
-export const CONSUMER = process.env.KOOBIQ_TEST_CONSUMER ?? REPO;
+export const CONSUMER = process.env['KOOBIQ_TEST_CONSUMER'] ?? REPO;
 
 /**
  * Points the package resolver at the built library, unless a real consumer was named.
@@ -30,8 +30,8 @@ export const CONSUMER = process.env.KOOBIQ_TEST_CONSUMER ?? REPO;
  * top level runs before any of its tests do. The variable is read, not cached, so a test that wants
  * a different version can still set it.
  */
-if (!process.env.KOOBIQ_TEST_CONSUMER && !process.env.KOOBIQ_COMPONENTS_ROOT && existsSync(BUILT)) {
-    process.env.KOOBIQ_COMPONENTS_ROOT = BUILT;
+if (!process.env['KOOBIQ_TEST_CONSUMER'] && !process.env['KOOBIQ_COMPONENTS_ROOT'] && existsSync(BUILT)) {
+    process.env['KOOBIQ_COMPONENTS_ROOT'] = BUILT;
 }
 
 /**
@@ -43,4 +43,4 @@ if (!process.env.KOOBIQ_TEST_CONSUMER && !process.env.KOOBIQ_COMPONENTS_ROOT && 
  * `unit:mcp:dts` still runs them for real once `api.yml` has built the package.
  */
 export const componentsAvailable = (): boolean =>
-    Boolean(process.env.KOOBIQ_TEST_CONSUMER) || listEntryPointTypings(BUILT).has('');
+    Boolean(process.env['KOOBIQ_TEST_CONSUMER']) || listEntryPointTypings(BUILT).has('');

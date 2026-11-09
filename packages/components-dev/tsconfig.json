@@ -2,13 +2,5 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "outDir": "../../dist/out-tsc"
-    },
-    "angularCompilerOptions": {
-        "extendedDiagnostics": {
-            "defaultCategory": "error",
-            "checks": {
-                "optionalChainNotNullable": "suppress"
-            }
-        }
     }
 }

@@ -46,5 +46,5 @@ export abstract class KbqModalRef<C = any, R = unknown> {
     /**
      * Call markForCheck for change detector
      */
-    abstract markForCheck();
+    abstract markForCheck(): void;
 }

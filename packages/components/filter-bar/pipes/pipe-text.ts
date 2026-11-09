@@ -63,7 +63,7 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
         this.control.setValue(this.data.value);
     }
 
-    ngAfterViewInit() {
+    override ngAfterViewInit() {
         super.ngAfterViewInit();
 
         this.popover()

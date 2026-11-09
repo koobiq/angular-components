@@ -1,20 +1,15 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
+        // tsconfig.strict.json leaves it off until DS-5813, and this project already passes it.
+        "strictPropertyInitialization": true,
         "rootDir": "./",
         "baseUrl": "./",
         "outDir": "dist",
         "module": "commonjs",
         "moduleResolution": "node",
         "noEmitOnError": true,
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitAny": false,
-        "noImplicitThis": true,
-        "noUnusedParameters": true,
-        "noUnusedLocals": true,
         "skipDefaultLibCheck": true,
-        "skipLibCheck": true,
-        "strict": true,
         "types": ["node", "vitest/globals"]
     },
     "include": ["./**/*.ts"]

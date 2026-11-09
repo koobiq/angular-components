@@ -13,7 +13,7 @@ import { KbqPopUpTrigger } from './pop-up-trigger';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class TestPopUp extends KbqPopUp {
-    protected prefix = 'test-pop-up';
+    protected override prefix = 'test-pop-up';
 
     /** Number of times the pop-up has finished animating in. */
     entrances = 0;

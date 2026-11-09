@@ -133,10 +133,10 @@ export class KbqTreeBase<T, C extends Omit<TreeControl<T>, 'expansionModel' | 't
     protected dataDiffer: IterableDiffer<T>;
 
     /** Stores the node definition that does not have a when predicate. */
-    private defaultNodeDef: KbqTreeNodeDef<T> | null;
+    private defaultNodeDef?: KbqTreeNodeDef<T> | null;
 
     /** Data subscription */
-    private dataSubscription: Subscription | null;
+    private dataSubscription?: Subscription | null;
 
     /** Level of nodes */
     private levels: Map<T, number> = new Map<T, number>();

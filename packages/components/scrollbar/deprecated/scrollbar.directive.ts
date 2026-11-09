@@ -68,7 +68,7 @@ export class KbqScrollbarDirective implements OnDestroy {
     private requestDefer: ReturnType<typeof createDefer>[0];
     private cancelDefer: ReturnType<typeof createDefer>[1];
 
-    private _options: KbqScrollbarOptions;
+    private _options?: KbqScrollbarOptions;
 
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.

@@ -143,7 +143,7 @@ async function validateLicense(): Promise<ReturnCode> {
 
         return ReturnCode.Success;
     } catch (error) {
-        console.error(`Something happened:\n${error.message}`);
+        console.error('Something happened:', error);
 
         return ReturnCode.Error;
     }

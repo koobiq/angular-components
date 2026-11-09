@@ -152,7 +152,7 @@ export class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
         super(treeControl, treeFlattener, []);
     }
 
-    expansionHandler(change: SelectionChange<F>): F[] {
+    override expansionHandler(change: SelectionChange<F>): F[] {
         if (change?.added?.length) {
             this.dataService.loadChildren((change.added[0] as any).id);
         }

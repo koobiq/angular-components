@@ -102,7 +102,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     // (undocumented)
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
-    onPaste($event: any): void;
+    onPaste(event: ClipboardEvent): void;
     readonly placeholder: _angular_core.Signal<string>;
     readonly placeholderInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)

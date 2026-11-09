@@ -94,7 +94,7 @@ describe('KbqListSelection without forms', () => {
                             const originalClipboard = new Clipboard(document);
 
                             return {
-                                copy: (value) => {
+                                copy: (value: string) => {
                                     originalClipboard.copy(value);
                                     clipboardContent = value;
                                 }

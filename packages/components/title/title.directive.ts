@@ -78,7 +78,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      * the host had to truncate, so it floats over the neighbouring content — and a pointer-capturing pane
      * would swallow the clicks meant for it.
      */
-    readonly ignoreTooltipPointerEvents = input<boolean>(true);
+    override readonly ignoreTooltipPointerEvents = input<boolean>(true);
 
     /**
      * The hint repeats text the host had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for a
@@ -95,7 +95,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      *
      * Unifying the alias family is a breaking change owned by the pop-up base, not a title-local fix.
      */
-    set trigger(value: string) {
+    override set trigger(value: string) {
         super.trigger = value;
     }
 
@@ -103,7 +103,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      * The pop-up trigger. Always reports `PopUpTriggers.Hover`, so the title tooltip reacts to hover and
      * keyboard focus regardless of the assigned value.
      */
-    get trigger(): string {
+    override get trigger(): string {
         return PopUpTriggers.Hover;
     }
 
@@ -220,7 +220,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      * container resizes and content mutations re-evaluate overflow, and keyboard focus opens the tooltip
      * while other focus origins hide it.
      */
-    ngAfterViewInit() {
+    override ngAfterViewInit() {
         this.content = this.resolvedContent;
 
         // Keep the title tooltip centered on the trigger: fall back only to center-aligned placements

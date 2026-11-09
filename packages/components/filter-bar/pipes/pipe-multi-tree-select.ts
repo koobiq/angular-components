@@ -70,7 +70,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     }
 
     /** Whether the current pipe is empty. */
-    get isEmpty(): boolean {
+    override get isEmpty(): boolean {
         return this.multiSelect.isEmpty(super.isEmpty);
     }
 
@@ -209,7 +209,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
         return { $implicit: this, option: this.getSourceNode(node), search: this.searchControl.value };
     }
 
-    onSelect({ value: option }) {
+    onSelect({ value: option }: { value: any }) {
         if (!option) return;
 
         const tree = this.tree();

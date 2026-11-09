@@ -44,7 +44,7 @@ const enum StyleProperty {
     Height = 'height',
     MaxWidth = 'max-width',
     MinHeight = 'min-height',
-    MinWidth = 'minWidth',
+    MinWidth = 'min-width',
     OffsetHeight = 'offsetHeight',
     OffsetWidth = 'offsetWidth',
     Order = 'order',
@@ -664,7 +664,7 @@ export class KbqSplitterAreaDirective implements OnInit, AfterViewInit, OnDestro
     getSize(): number {
         if (!this.platform.isBrowser) return 0;
 
-        return this.elementRef.nativeElement[this.getOffsetSizeProperty()];
+        return this.elementRef.nativeElement[this.getOffsetSizeProperty() as 'offsetHeight' | 'offsetWidth'];
     }
 
     getPosition(): IPoint {
@@ -677,7 +677,7 @@ export class KbqSplitterAreaDirective implements OnInit, AfterViewInit, OnDestro
     getMinSize(): number {
         const styles = this.window.getComputedStyle(this.elementRef.nativeElement);
 
-        return parseFloat(styles[this.getMinSizeProperty()]);
+        return parseFloat(styles.getPropertyValue(this.getMinSizeProperty()));
     }
 
     private isVertical(): boolean {

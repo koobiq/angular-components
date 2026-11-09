@@ -117,7 +117,7 @@ describe('KbqTreeSelection', () => {
                             const originalClipboard = new Clipboard(document);
 
                             return {
-                                copy: (value) => {
+                                copy: (value: string) => {
                                     originalClipboard.copy(value);
                                     clipboardContent = value;
                                 }
@@ -163,7 +163,7 @@ describe('KbqTreeSelection', () => {
                 const treeOption = fixture.debugElement.queryAll(By.directive(KbqTreeNodePadding))[0];
                 const paddingDirective = treeOption.injector.get(KbqTreeNodePadding);
 
-                expect(treeOption.styles.paddingLeft).toBe(paddingDirective.paddingIndent());
+                expect(treeOption.styles['paddingLeft']).toBe(paddingDirective.paddingIndent());
             });
 
             it('should prefer an explicit view value over multiline option content', () => {
@@ -266,6 +266,32 @@ describe('KbqTreeSelection', () => {
                 expect(option.classList).not.toContain('kbq-focused');
 
                 dispatchFakeEvent(tree.nativeElement, 'focus');
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                expect(option.classList).toContain('kbq-focused');
+            });
+
+            it('should add focus class on first element when focus() is called without an event', async () => {
+                vi.useFakeTimers();
+
+                options = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
+                const option = options[0].nativeElement;
+
+                tree.injector.get(KbqTreeSelection).focus();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                expect(option.classList).toContain('kbq-focused');
+            });
+
+            it('should add focus class on first element when focus() is called with a keyboard event', async () => {
+                vi.useFakeTimers();
+
+                options = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
+                const option = options[0].nativeElement;
+
+                tree.injector.get(KbqTreeSelection).focus(new KeyboardEvent('keydown'));
                 await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
@@ -3900,7 +3926,7 @@ class KbqTreeAppMultipleCheckbox extends TreeParams {
         );
     }
 
-    onModelValueChange(values) {
+    onModelValueChange(values: string[]) {
         this.modelValue = values;
         this.filterByValues.setValues(values);
     }

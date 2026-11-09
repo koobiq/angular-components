@@ -1230,10 +1230,10 @@ export class KbqSelect
     /** Origin element for the overlay panel positioning. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
 
-    private openPanelTimeout: ReturnType<typeof setTimeout>;
+    private openPanelTimeout?: ReturnType<typeof setTimeout>;
 
     /** Pending re-highlight scheduled by a search keystroke. */
-    private highlightOptionTimeout: ReturnType<typeof setTimeout>;
+    private highlightOptionTimeout?: ReturnType<typeof setTimeout>;
 
     /** Accessible names of the controls the select renders itself. */
     private readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
@@ -1612,7 +1612,7 @@ export class KbqSelect
 
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
         // `parseInt` ignores the trailing 'px' and converts this to a number.
-        this.triggerFontSize = parseInt(this.window.getComputedStyle(trigger.nativeElement)['font-size']);
+        this.triggerFontSize = parseInt(this.window.getComputedStyle(trigger.nativeElement).fontSize);
 
         // It's important that we read this as late as possible, because doing so earlier will
         // return a different element since it's based on queries in the form field which may

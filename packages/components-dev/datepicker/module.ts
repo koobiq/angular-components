@@ -62,8 +62,10 @@ export class DevApp implements AfterViewInit {
 
     date = this.adapter.today();
     formControlValue: UntypedFormControl;
-    minDate;
-    maxDate;
+    // `KbqMinValidator` and `KbqMaxValidator` of the input module also match `[min]` and `[max]` on the input with
+    // `ngModel` and take numbers, so the dates are bound untyped.
+    minDate: any;
+    maxDate: any;
     startAt;
 
     readonly datepicker = viewChild.required(KbqDatepicker);

@@ -209,7 +209,7 @@ export class KbqSearchExpandable
         this._tooltipText = value;
     }
 
-    private _tooltipText: string | null;
+    private _tooltipText?: string | null;
 
     /** Placeholder for input when expanded */
     get placeholder(): string {

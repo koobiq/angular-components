@@ -177,7 +177,7 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     }
 
     /** @docs-private */
-    updateData() {
+    override updateData() {
         if (!this.instance) {
             return;
         }
@@ -212,7 +212,7 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     }
 
     /** @docs-private */
-    getOverlayHandleComponentType() {
+    override getOverlayHandleComponentType() {
         return KbqPopoverConfirmComponent;
     }
 }

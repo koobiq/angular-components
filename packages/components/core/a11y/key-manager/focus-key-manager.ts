@@ -19,9 +19,9 @@ export class FocusKeyManager<T> extends ListKeyManager<IFocusableOption & T> {
      *
      * @param item Item to be set as active.
      */
-    setActiveItem(item: number | T): void;
+    override setActiveItem(item: number | T): void;
 
-    setActiveItem(item: any): void {
+    override setActiveItem(item: any): void {
         super.setActiveItem(item);
 
         if (this.activeItem) {

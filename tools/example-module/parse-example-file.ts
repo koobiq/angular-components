@@ -7,6 +7,8 @@ interface ParsedMetadata {
     selector: string;
     templateUrl: string;
     styleUrls: string[];
+    /** Read only to reject it: an example lists its styles in `styleUrls`. */
+    styleUrl?: string;
 }
 
 interface ParsedMetadataResults {

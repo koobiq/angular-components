@@ -269,7 +269,7 @@ export class KbqTag
     private readonly injector = inject(Injector);
 
     /** @docs-private */
-    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    override readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     /**
      * Emits when the tag is focused.

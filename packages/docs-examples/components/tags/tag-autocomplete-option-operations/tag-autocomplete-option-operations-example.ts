@@ -9,7 +9,10 @@ import { KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
+type AutocompleteValue = string | { new: true; value: string } | null;
+
+const autocompleteValueCoercion = (value: AutocompleteValue): string =>
+    (typeof value === 'string' ? value : value?.value) || '';
 const getAutocompleteOptions = () => [
     'BruteForce',
     'Complex Attack',

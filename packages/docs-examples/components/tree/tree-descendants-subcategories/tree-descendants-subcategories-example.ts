@@ -189,11 +189,6 @@ abstract class TreeParams {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeDescendantsSubcategoriesExample extends TreeParams {
-    treeControl: FlatTreeControl<FileFlatNode>;
-    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
-
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
     modelValue: any = ['docs'];
 
     readonly tree = viewChild.required(KbqTreeSelection);
@@ -212,7 +207,7 @@ export class TreeDescendantsSubcategoriesExample extends TreeParams {
         this.toggleParents(($event.option.data as any)?.parent);
     }
 
-    private toggleParents(parent) {
+    private toggleParents(parent: FileFlatNode | null) {
         if (!parent) {
             return;
         }

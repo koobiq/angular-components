@@ -83,7 +83,7 @@ describe(KbqScrollbarModule.name, () => {
         it('should emit scroll event', () => {
             fixture.detectChanges();
 
-            fixture.nativeElement.querySelectorAll('*').forEach((e) => dispatchFakeEvent(e, 'scroll'));
+            fixture.nativeElement.querySelectorAll('*').forEach((e: Element) => dispatchFakeEvent(e, 'scroll'));
 
             expect(component.scroll).toHaveBeenCalledTimes(1);
         });

@@ -33,7 +33,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     protected readonly isListMode = signal(true);
 
     /** @docs-private */
-    protected formGroup: FormGroup;
+    protected formGroup: FormGroup<{ start: FormControl<D | null>; end: FormControl<D | null> }>;
 
     /** @docs-private */
     protected readonly showStartCalendar = signal(false);
@@ -194,8 +194,8 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
      * (months/years) are respected; unset intervals impose no constraint.
      */
     private validateInterval: ValidatorFn = (group) => {
-        const start = (group as FormGroup).controls.start?.value;
-        const end = (group as FormGroup).controls.end?.value;
+        const start = group.get('start')?.value;
+        const end = group.get('end')?.value;
 
         if (!this.adapter.isDateInstance(start) || !this.adapter.isDateInstance(end)) return null;
 
@@ -416,8 +416,8 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
 
     onApplyPeriod() {
         this.data.value = {
-            start: this.formGroup.controls.start.value.toISO(),
-            end: this.formGroup.controls.end.value.toISO()
+            start: this.adapter.toIso8601(this.formGroup.controls.start.value),
+            end: this.adapter.toIso8601(this.formGroup.controls.end.value)
         };
         this.stateChanges.next();
 

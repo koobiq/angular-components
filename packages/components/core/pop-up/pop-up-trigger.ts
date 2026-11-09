@@ -526,7 +526,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      *
      * @docs-private
      */
-    updatePlacementPriority(value) {
+    updatePlacementPriority(value: string | string[] | null | undefined) {
         if (value && value.length > 0) {
             this.placementPriority = value;
         } else {
@@ -628,7 +628,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
 
         this.instance.visibleChange
             .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-            .subscribe((value) => {
+            .subscribe((value: boolean) => {
                 this.visible = value;
                 this.visibleChange.emit(value);
                 this.isOpen = value;
@@ -1035,7 +1035,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      *
      * @docs-private
      */
-    protected getPrioritizedPositions() {
+    protected getPrioritizedPositions(): ConnectionPositionPair[] {
         if (this.placementPriority) {
             return this.getPriorityPlacementStrategy(this.placementPriority);
         }

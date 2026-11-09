@@ -666,7 +666,7 @@ describe('KbqNumberInput', () => {
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
 
-            const testLongPressFor = async (icon, emitter) => {
+            const testLongPressFor = async (icon: DebugElement, emitter: Mock) => {
                 dispatchFakeEvent(icon.nativeElement, 'mousedown');
 
                 fixture.detectChanges();
@@ -692,7 +692,7 @@ describe('KbqNumberInput', () => {
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
 
-            const testLongPressFor = async (icon, emitter) => {
+            const testLongPressFor = async (icon: DebugElement, emitter: Mock) => {
                 dispatchFakeEvent(icon.nativeElement, 'mousedown');
                 fixture.detectChanges();
                 await vi.advanceTimersByTimeAsync(KBQ_STEPPER_INITIAL_TIMEOUT);
@@ -721,7 +721,7 @@ describe('KbqNumberInput', () => {
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
 
-            const testLongPressFor = async (icon, emitter) => {
+            const testLongPressFor = async (icon: DebugElement, emitter: Mock) => {
                 dispatchFakeEvent(icon.nativeElement, 'mousedown');
                 fixture.detectChanges();
                 await vi.advanceTimersByTimeAsync(KBQ_STEPPER_INITIAL_TIMEOUT);
@@ -747,7 +747,7 @@ describe('KbqNumberInput', () => {
 
             expect(debugElement.query(By.directive(KbqFormField)).nativeElement).toBeTruthy();
 
-            const testLongPressFor = async (queryIconFn, emitter: Mock) => {
+            const testLongPressFor = async (queryIconFn: (icons: DebugElement[]) => DebugElement, emitter: Mock) => {
                 const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
                 const icon = queryIconFn(stepper.queryAll(By.css('.kbq-icon')));
 
@@ -1591,8 +1591,8 @@ describe('KbqNumberInput', () => {
 
         describe('negative values', () => {
             let fixture: ComponentFixture<NumberInputMaxMinStepInput>;
-            let inputElementDebug;
-            let inputElement;
+            let inputElementDebug: DebugElement;
+            let inputElement: HTMLInputElement;
 
             beforeEach(async () => {
                 vi.useFakeTimers();

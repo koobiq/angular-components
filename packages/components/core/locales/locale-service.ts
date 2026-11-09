@@ -211,7 +211,9 @@ export class KbqLocaleService {
     getParams<K extends KbqLocaleSection>(section: K): KbqLocaleData[K];
     getParams(section: string): any;
     getParams(section: string) {
-        return this._data()?.[section] ?? SHIPPED_LOCALE_DATA[KBQ_DEFAULT_LOCALE_ID][section];
+        const key = section as KbqLocaleSection;
+
+        return this._data()?.[key] ?? SHIPPED_LOCALE_DATA[KBQ_DEFAULT_LOCALE_ID][key];
     }
 
     /** Reactive counterpart of {@link getParams}: re-emits whenever the locale changes. */
@@ -334,7 +336,7 @@ export function normalizeNumber(
 export function checkAndNormalizeLocalizedNumber(num: string | null | undefined, locale?: string): number | null {
     if (num === null || num === undefined) return null;
 
-    const locales = KBQ_DEFAULT_LOCALE_DATA_FACTORY();
+    const locales = SHIPPED_LOCALE_DATA;
 
     if (locale && locales[locale]) {
         const config = locales[locale].input.number;

@@ -66,7 +66,7 @@ export class DevDocsExamples {}
     }
 })
 export class DevToastComponent extends KbqToastComponent {
-    readonly data: KbqToastData;
+    override readonly data: KbqToastData;
     readonly service: KbqToastService;
 
     constructor() {
@@ -170,7 +170,7 @@ export class DevApp {
         );
     }
 
-    showSingleActonToast(caption: TemplateRef<any>, actions: TemplateRef<any>, closeButton) {
+    showSingleActonToast(caption: TemplateRef<any>, actions: TemplateRef<any>, closeButton: TemplateRef<any>) {
         this.toastService.show({ caption, actions, closeButton }, 0);
     }
 

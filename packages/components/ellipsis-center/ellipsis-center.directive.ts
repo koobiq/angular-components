@@ -73,7 +73,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
      * the directive had to truncate, so it floats over the neighbouring content — and a pointer-capturing
      * pane would swallow the clicks meant for it.
      */
-    readonly ignoreTooltipPointerEvents = input<boolean>(true);
+    override readonly ignoreTooltipPointerEvents = input<boolean>(true);
 
     /**
      * The hint spells out what the split hid, so `kbqTooltipDisabled="false"` cannot conjure one for a name
@@ -136,7 +136,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
         this.refresh();
     }
 
-    ngAfterViewInit(): void {
+    override ngAfterViewInit(): void {
         super.ngAfterViewInit();
 
         this.resizeObserver
@@ -149,7 +149,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
             });
     }
 
-    ngOnDestroy() {
+    override ngOnDestroy() {
         clearTimeout(this.refreshTimeoutId);
 
         super.ngOnDestroy();

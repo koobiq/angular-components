@@ -9,8 +9,11 @@ import { KbqMultipleInput, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
+    KbqListCopyEvent,
     KbqListDragPreview,
     KbqListModule,
+    KbqListOption,
+    KbqListSelectAllEvent,
     KbqListSelectionChange,
     KbqListSelectionDroppedEvent
 } from '@koobiq/components/list';
@@ -149,13 +152,13 @@ export class DevApp {
         console.log(`onSelectionChange: ${$event.option.value}`);
     }
 
-    onSelectAll($event) {
-        console.log('onSelectAll', $event);
+    onSelectAll(event: KbqListSelectAllEvent<KbqListOption<string>>) {
+        console.log('onSelectAll', event);
     }
 
-    onCopy($event) {
-        console.log('onCopy', $event);
-        this.clipboard.copy($event.option.value);
+    onCopy(event: KbqListCopyEvent<KbqListOption<string>>) {
+        console.log('onCopy', event);
+        this.clipboard.copy(event.option.value);
     }
 
     onRemove(item: string) {

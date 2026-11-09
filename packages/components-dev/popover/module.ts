@@ -6,6 +6,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import {
     KbqFormsModule,
+    KbqPopUpPlacementValues,
     KbqPopUpSizeValues,
     KbqStickToWindowPlacementValues,
     PopUpPlacements,
@@ -143,13 +144,13 @@ export class DevApp {
         this.popoverActiveStage += direction;
     }
 
-    onPopoverVisibleChange($event) {
-        if (!$event) {
+    onPopoverVisibleChange(event: boolean) {
+        if (!event) {
             this.activatedPosition = '';
         }
     }
 
-    onStrategyPlacementChange(event) {
+    onStrategyPlacementChange(event: KbqPopUpPlacementValues) {
         this.activatedPosition = event;
     }
 

@@ -132,12 +132,12 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     /** Debounce shared by the mutation observer and the scroll-shadow container (both expose `debounce`). */
     protected readonly contentObserverDebounce = contentObserverDebounce;
 
-    prefix = 'kbq-popover';
+    override prefix = 'kbq-popover';
 
-    header: string | TemplateRef<any>;
+    override header: string | TemplateRef<any>;
     footer: string | TemplateRef<any>;
 
-    trigger: KbqPopoverTrigger;
+    override trigger: KbqPopoverTrigger;
 
     isTrapFocus: boolean = false;
     hasCloseButton: boolean = false;
@@ -214,7 +214,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     private resolvedPlacement = 'top';
     private appliedArrowShift: { x: string; y: string } | null = null;
 
-    updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
+    override updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues) {
         this.resolvedPlacement = placement;
         super.updateClassMap(placement, customClass, { [`${this.prefix}_${size}`]: !!size });
     }
@@ -398,10 +398,10 @@ export class KbqPopoverTrigger
      * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
      * If container is specified, the positioning will be relative to it.
      * */
-    stickToWindow: KbqStickToWindowPlacementValues | undefined;
+    override stickToWindow: KbqStickToWindowPlacementValues | undefined;
 
     /** Container for additional positioning, used with `kbqPopoverStickToWindow`. Bound with `kbqPopoverContainer`. */
-    container: HTMLElement | undefined;
+    override container: HTMLElement | undefined;
 
     /** Input (`kbqPopoverContainer`) — sets {@link container}. */
     set popoverContainer(value: HTMLElement | undefined) {
@@ -687,7 +687,7 @@ export class KbqPopoverTrigger
     }
 
     /** Input (`kbqEnterDelay`) — delay before opening, in milliseconds. Defaults to `0`. */
-    enterDelay: number = 0;
+    override enterDelay: number = 0;
 
     /**
      * Input (`kbqLeaveDelay`) — delay before closing, in milliseconds. Defaults to `0`, and to
@@ -1033,7 +1033,7 @@ export class KbqPopoverTrigger
         }
     }
 
-    ngOnInit(): void {
+    override ngOnInit(): void {
         super.ngOnInit();
 
         this.scrollable
@@ -1052,7 +1052,7 @@ export class KbqPopoverTrigger
     }
 
     /** @docs-private */
-    show(delay: number = this.enterDelay): void {
+    override show(delay: number = this.enterDelay): void {
         const event = this.mouseEvent;
         const pointerEvent =
             this.relativeToPointer && this.triggerName === PopUpTriggers.Click && event?.detail ? event : null;
@@ -1158,7 +1158,7 @@ export class KbqPopoverTrigger
      * which is the task in which that click's change detection writes a popover input — would drop the
      * close the click had already scheduled.
      */
-    updatePosition(reapplyPosition: boolean = false) {
+    override updatePosition(reapplyPosition: boolean = false) {
         this.overlayRef = this.createOverlay();
 
         const position = (this.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy)
