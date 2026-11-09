@@ -1,10 +1,11 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 import { Component, Injectable, Provider, signal, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KBQ_WINDOW } from '@koobiq/components/core';
-import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, Subject } from 'rxjs';
 import {
     fitSplitterSizes,
     KbqSplitter,
@@ -21,6 +22,9 @@ import {
 /** Size the splitter measures itself as; every expectation below is expressed against it. */
 const CONTAINER_SIZE = 600;
 
+/** Viewport the `vw` and `vh` sizes resolve against until a test resizes it. */
+const VIEWPORT = { width: 1000, height: 500 };
+
 /** `SharedResizeObserver` stand-in: the real one never emits in jsdom, where `ResizeObserver` is a no-op stub. */
 @Injectable()
 class MockResizeObserver extends SharedResizeObserver {
@@ -28,6 +32,26 @@ class MockResizeObserver extends SharedResizeObserver {
 
     override observe(_target: Element, _options?: ResizeObserverOptions): Observable<ResizeObserverEntry[]> {
         return this.changes.asObservable();
+    }
+}
+
+/** `ViewportRuler` stand-in: jsdom's window never resizes, and the real one audits its events on a timer. */
+@Injectable()
+class MockViewportRuler {
+    private readonly changes = new Subject<Event>();
+    private size = VIEWPORT;
+
+    change(): Observable<Event> {
+        return this.changes;
+    }
+
+    getViewportSize(): { width: number; height: number } {
+        return this.size;
+    }
+
+    resize(width: number, height: number): void {
+        this.size = { width, height };
+        this.changes.next(new Event('resize'));
     }
 }
 
@@ -97,6 +121,19 @@ class TestSplitter {
 })
 class TestSplitterOptions {}
 
+/** Declares its size in the template, so the very first render already holds a size in viewport units. */
+@Component({
+    selector: 'test-splitter-viewport-size',
+    imports: [KbqSplitter, KbqSplitterPanel],
+    template: `
+        <kbq-splitter>
+            <kbq-splitter-panel size="25vw">first</kbq-splitter-panel>
+            <kbq-splitter-panel>second</kbq-splitter-panel>
+        </kbq-splitter>
+    `
+})
+class TestSplitterViewportSize {}
+
 /** Writable, so a test can flip the direction the way `Dir` does at runtime. */
 const directionalityStub = (value: Direction) => {
     const valueSignal = signal<Direction>(value);
@@ -110,7 +147,13 @@ const directionalityStub = (value: Direction) => {
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
         imports: [component],
-        providers: [{ provide: SharedResizeObserver, useClass: MockResizeObserver }, windowStub, ...providers]
+        providers: [
+            { provide: SharedResizeObserver, useClass: MockResizeObserver },
+            MockViewportRuler,
+            { provide: ViewportRuler, useExisting: MockViewportRuler },
+            windowStub,
+            ...providers
+        ]
     });
 
     const fixture = TestBed.createComponent<T>(component);
@@ -171,17 +214,20 @@ describe('splitter layout', () => {
             { size: '240px', expected: 240 },
             { size: '30%', expected: 180 },
             { size: ' 30% ', expected: 180 },
+            { size: '30vw', expected: 300 },
+            { size: '30vh', expected: 150 },
+            { size: '12.5VW', expected: 125 },
             { size: undefined, expected: null },
             { size: null, expected: null },
             { size: 'auto', expected: null },
             { size: '12.5PX', expected: 12.5 },
             { size: '10rem', expected: null },
             { size: '2em', expected: null },
-            { size: '50vw', expected: null },
+            { size: '50dvh', expected: null },
             { size: '10 px', expected: null },
             { size: Number.NaN, expected: null }
         ])('should resolve $size against a 600px splitter as $expected', ({ size, expected }) => {
-            expect(resolveSplitterSize(size, 600)).toBe(expected);
+            expect(resolveSplitterSize(size, 600, () => VIEWPORT)).toBe(expected);
         });
     });
 
@@ -386,6 +432,15 @@ describe(KbqSplitter.name, () => {
         expect(getSizes(fixture)).toEqual([60, 540]);
     });
 
+    it('should resolve a percentage snap size', () => {
+        const fixture = createComponent(TestSplitter);
+
+        fixture.componentInstance.panels.set([{ id: 'first', size: 190, snapSizes: ['35%'] }, { id: 'second' }]);
+        measure(fixture);
+
+        expect(getSizes(fixture)).toEqual([210, 390]);
+    });
+
     it('should warn once in dev mode about a size in a unit it does not support, and ignore that size', () => {
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
         const fixture = createComponent(TestSplitter);
@@ -426,6 +481,167 @@ describe(KbqSplitter.name, () => {
         measure(fixture, 800);
 
         expect(getSizes(fixture)).toEqual([200, 600]);
+    });
+
+    it('should keep the proportions of a resized layout when the splitter is resized', () => {
+        const fixture = createComponent(TestSplitter);
+
+        fixture.componentInstance.panels.set([
+            { id: 'first', size: '40%' },
+            { id: 'second', size: '60%' }
+        ]);
+        measure(fixture);
+        pressKey(getSeparators(fixture)[0], 'ArrowRight');
+        fixture.detectChanges();
+
+        expect(getSizes(fixture)).toEqual([248, 352]);
+
+        measure(fixture, 1200);
+
+        expect(getSizes(fixture)).toEqual([496, 704]);
+    });
+
+    it('should resolve a size in viewport units', () => {
+        const fixture = createComponent(TestSplitter);
+
+        fixture.componentInstance.panels.set([
+            { id: 'first', size: '20vw' },
+            { id: 'second', size: '20vh' },
+            { id: 'third' }
+        ]);
+        measure(fixture);
+
+        expect(getSizes(fixture)).toEqual([200, 100, 300]);
+    });
+
+    it('should read `vw` as the viewport width in a vertical splitter too', () => {
+        const fixture = createComponent(TestSplitter);
+
+        fixture.componentInstance.orientation.set('vertical');
+        fixture.componentInstance.panels.set([{ id: 'first', size: '20vw' }, { id: 'second' }]);
+        measure(fixture);
+
+        expect(getSizes(fixture)).toEqual([200, 400]);
+    });
+
+    it.each<{ name: string; panel: TestPanel; expected: number[] }>([
+        { name: 'minimum', panel: { id: 'first', size: 100, minSize: '30vw' }, expected: [300, 300] },
+        { name: 'maximum', panel: { id: 'first', size: 500, maxSize: '30vh' }, expected: [150, 450] },
+        { name: 'snap size', panel: { id: 'first', size: 190, snapSizes: ['20vw'] }, expected: [200, 400] }
+    ])('should resolve a $name in viewport units', ({ panel, expected }) => {
+        const fixture = createComponent(TestSplitter);
+
+        fixture.componentInstance.panels.set([panel, { id: 'second' }]);
+        measure(fixture);
+
+        expect(getSizes(fixture)).toEqual(expected);
+    });
+
+    it('should resolve a collapsed size in viewport units', () => {
+        const fixture = createComponent(TestSplitter);
+
+        fixture.componentInstance.panels.set([
+            { id: 'first', size: 200, minSize: 100, collapsible: true, collapsedSize: '10vw' },
+            { id: 'second' }
+        ]);
+        measure(fixture);
+        pressKey(getSeparators(fixture)[0], 'Enter');
+        fixture.detectChanges();
+
+        expect(getSizes(fixture)).toEqual([100, 500]);
+    });
+
+    it('should leave a sized neighbour alone beside a panel collapsed to a strip in viewport units', () => {
+        const fixture = createComponent(TestSplitter);
+
+        fixture.componentInstance.panels.set([
+            { id: 'first', size: 200, minSize: 100, collapsible: true, collapsedSize: '10vw' },
+            { id: 'second', size: 200 },
+            { id: 'third' }
+        ]);
+        measure(fixture);
+        pressKey(getSeparators(fixture)[0], 'Enter');
+        fixture.detectChanges();
+
+        expect(getSizes(fixture)).toEqual([100, 200, 300]);
+    });
+
+    it('should re-resolve viewport units when only the viewport changes', () => {
+        const fixture = createComponent(TestSplitter);
+
+        fixture.componentInstance.panels.set([{ id: 'first', size: '20vw' }, { id: 'second' }]);
+        measure(fixture);
+
+        expect(getSizes(fixture)).toEqual([200, 400]);
+
+        TestBed.inject(MockViewportRuler).resize(500, 500);
+        fixture.detectChanges();
+
+        expect(getSizes(fixture)).toEqual([100, 500]);
+    });
+
+    it('should schedule no render on a viewport change when no panel uses viewport units', async () => {
+        const fixture = createComponent(TestSplitter);
+
+        fixture.componentInstance.panels.set([{ id: 'first', size: '40%', minSize: 100 }, { id: 'second' }]);
+        measure(fixture);
+        await fixture.whenStable();
+
+        TestBed.inject(MockViewportRuler).resize(500, 500);
+
+        expect(fixture.isStable()).toBe(true);
+    });
+
+    it('should schedule a render on a viewport change when a panel uses viewport units', async () => {
+        const fixture = createComponent(TestSplitter);
+
+        fixture.componentInstance.panels.set([{ id: 'first', size: '20vw' }, { id: 'second' }]);
+        measure(fixture);
+        await fixture.whenStable();
+
+        TestBed.inject(MockViewportRuler).resize(500, 500);
+
+        expect(fixture.isStable()).toBe(false);
+    });
+
+    it('should never measure itself over tracks resolved against an unread viewport', () => {
+        const tracks: string[] = [];
+        const clientWidth = vi.spyOn(Element.prototype, 'clientWidth', 'get').mockImplementation(function (
+            this: HTMLElement
+        ) {
+            if (this.tagName === 'KBQ-SPLITTER') tracks.push(this.style.gridTemplateColumns);
+
+            return CONTAINER_SIZE;
+        });
+
+        try {
+            createComponent(TestSplitterViewportSize);
+
+            expect(tracks).toContain('41.6667% 58.3333%');
+            expect(tracks).not.toContain('0.0000% 100.0000%');
+        } finally {
+            clientWidth.mockRestore();
+        }
+    });
+
+    it('should mix a minimum in pixels, a size in percent and a maximum in viewport units on one panel', () => {
+        const fixture = createComponent(TestSplitter);
+
+        fixture.componentInstance.panels.set([
+            { id: 'first', size: '40%', minSize: 100, maxSize: '30vw' },
+            { id: 'second' }
+        ]);
+        measure(fixture);
+
+        expect(getSizes(fixture)).toEqual([240, 360]);
+
+        measure(fixture, 1000);
+
+        expect(getSizes(fixture)).toEqual([300, 700]);
+
+        measure(fixture, 200);
+
+        expect(getSizes(fixture)).toEqual([100, 100]);
     });
 
     it('should clamp a declared size to the panel constraints', () => {

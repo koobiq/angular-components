@@ -978,7 +978,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'splitter',
                     hasApi: true,
                     apiId: 'splitter',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-11-23')
                 },
                 {
                     id: DocsStructureItemId.SplitButton,
