@@ -53,6 +53,7 @@ import {
 } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { KBQ_TOOLTIP_DEFAULT_OPTIONS, KbqTooltipDefaultOptions } from './tooltip-config';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqExclusiveTooltip, KbqTooltipRegistry } from './tooltip-registry';
 
 /**
@@ -253,6 +254,13 @@ const FOCUS_ORIGINS_THAT_SHOW: FocusOrigin[] = ['keyboard'];
 /** Base panel class of the tooltip overlay. */
 const TOOLTIP_PANEL_CLASS = 'kbq-tooltip-panel';
 
+/** Normalizes a `panelClass` value into the array the overlay configuration keeps. */
+function coercePanelClasses(panelClass: string | string[] | undefined): string[] {
+    if (!panelClass) return [];
+
+    return Array.isArray(panelClass) ? panelClass : [panelClass];
+}
+
 /** Default `kbqEnterDelay`, in milliseconds. */
 const defaultEnterDelay = 400;
 
@@ -307,6 +315,12 @@ export class KbqTooltipTrigger
     private readonly tooltipRegistry = inject(KbqTooltipRegistry);
 
     private readonly injectedScrollStrategy: () => ScrollStrategy = inject(KBQ_TOOLTIP_SCROLL_STRATEGY);
+
+    /**
+     * Default options inherited from the token's scope: the initial `offset` and the overlay `panelClass`,
+     * and the value a `kbqTooltipOffset` binding changed to `undefined` restores.
+     */
+    private readonly defaultOptions: KbqTooltipDefaultOptions = inject(KBQ_TOOLTIP_DEFAULT_OPTIONS);
 
     /**
      * Per-instance override for the scroll strategy, taking precedence over `KBQ_TOOLTIP_SCROLL_STRATEGY`
@@ -553,10 +567,11 @@ export class KbqTooltipTrigger
     override arrowCentered = false;
 
     /**
-     * Input (`kbqTooltipOffset`) — distance in pixels between the tooltip and its trigger. `null`, the default, keeps
-     * the gap of the stylesheet.
+     * Input (`kbqTooltipOffset`) — distance in pixels between the tooltip and its trigger. `null` keeps
+     * the gap of the stylesheet. Defaults to the `offset` of {@link KBQ_TOOLTIP_DEFAULT_OPTIONS}, when a
+     * provider in scope set one.
      */
-    offset: number | null = null;
+    offset: number | null = this.defaultOptions.offset ?? null;
 
     /** Output (`kbqPlacementChange`) that emits the new placement whenever the tooltip repositions. */
     readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
@@ -580,7 +595,7 @@ export class KbqTooltipTrigger
 
     /** @docs-private */
     protected overlayConfig: OverlayConfig = {
-        panelClass: [TOOLTIP_PANEL_CLASS]
+        panelClass: [TOOLTIP_PANEL_CLASS, ...coercePanelClasses(this.defaultOptions.panelClass)]
     };
 
     /**
@@ -674,7 +689,7 @@ export class KbqTooltipTrigger
         }
 
         if (changes['offsetInput']) {
-            this.offset = this.offsetInput() ?? null;
+            this.offset = this.offsetInput() ?? this.defaultOptions.offset ?? null;
         }
 
         if (changes['disabledInput']) {

@@ -29,6 +29,7 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
 import { Subject } from 'rxjs';
 import type { Mock } from 'vitest';
+import { KBQ_TOOLTIP_DEFAULT_OPTIONS } from './tooltip-config';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqTooltipRegistry } from './tooltip-registry';
 import { KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, KbqCaretVerticalAnchor, KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
@@ -83,7 +84,8 @@ describe('KbqTooltip', () => {
                 KbqTooltipTestWrapperComponent,
                 KbqTooltipDisabledComponent,
                 KbqTooltipWithTemplateRefContent,
-                TooltipWithSiblingPopup
+                TooltipWithSiblingPopup,
+                TooltipWithDefaultOptions
             ]
         }).compileComponents();
     });
@@ -2789,6 +2791,37 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).not.toContain('Visible');
         });
     });
+
+    describe('default options', () => {
+        let fixture: ComponentFixture<TooltipWithDefaultOptions>;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipWithDefaultOptions);
+            fixture.detectChanges();
+        });
+
+        it('should inherit the offset and panel class from the default options', () => {
+            const trigger = fixture.componentInstance.trigger();
+
+            expect(trigger.offset).toBe(0);
+            expect(trigger.createOverlay().getConfig().panelClass).toContain('kbq-tooltip-panel_horizontal-navbar');
+        });
+
+        it('should prefer an explicit offset and restore the inherited offset for undefined', () => {
+            const component = fixture.componentInstance;
+            const trigger = component.trigger();
+
+            component.offset = 24;
+            fixture.detectChanges();
+
+            expect(trigger.offset).toBe(24);
+
+            component.offset = undefined;
+            fixture.detectChanges();
+
+            expect(trigger.offset).toBe(0);
+        });
+    });
 });
 
 // The modal yields Escape only to a control that consumed it to close a popup of its own.
@@ -3224,6 +3257,24 @@ class TooltipArrowAndOffset {
     arrowCentered = false;
     offset: number | null = null;
     placement: KbqPopUpPlacementValues = 'top';
+}
+
+@Component({
+    selector: 'tooltip-with-default-options',
+    imports: [KbqToolTipModule],
+    template: `
+        <button kbqTooltip="configured" [kbqTooltipOffset]="offset">trigger</button>
+    `,
+    providers: [
+        {
+            provide: KBQ_TOOLTIP_DEFAULT_OPTIONS,
+            useValue: { offset: 0, panelClass: 'kbq-tooltip-panel_horizontal-navbar' }
+        }
+    ]
+})
+class TooltipWithDefaultOptions {
+    offset: number | null | undefined = undefined;
+    readonly trigger = viewChild.required(KbqTooltipTrigger);
 }
 
 @Component({
