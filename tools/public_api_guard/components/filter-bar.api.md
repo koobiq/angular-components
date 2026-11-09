@@ -617,6 +617,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     get allOptionsSelected(): boolean;
     get allVisibleOptionsSelected(): boolean;
     protected clearedValue(): KbqSelectValue[] | null;
+    protected getSelectedValues(): KbqSelectValue[];
     protected getValueTemplateContext(node: KbqTreeSelectFlatNode): KbqMultiTreeSelectValueTemplateContext;
     get isEmpty(): boolean;
     // (undocumented)
@@ -733,6 +734,7 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
 // @public (undocumented)
 export class KbqPipeTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSelectValue> {
     constructor();
+    protected getSelectedValues(): KbqSelectValue[];
     get isEmpty(): boolean;
     // (undocumented)
     onSelect(item: KbqTreeOption): void;
@@ -841,6 +843,7 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
     protected getChildren: (node: KbqTreeSelectNode) => KbqTreeSelectNode[] | null;
     // (undocumented)
     protected getLevel: (node: KbqTreeSelectFlatNode) => number;
+    protected abstract getSelectedValues(): KbqSelectValue[];
     protected getSourceNode(node: KbqTreeSelectFlatNode): KbqTreeSelectNode;
     // (undocumented)
     protected getValue: (node: KbqTreeSelectFlatNode) => unknown;

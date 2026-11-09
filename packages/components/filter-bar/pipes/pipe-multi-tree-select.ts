@@ -198,9 +198,9 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
      * initialization, clearing and a full selection, so a user-made partial selection would leave
      * the ancestors of the current value collapsed on reopen.
      *
-     * @internal
+     * @docs-private
      */
-    protected getSelectedValues(): unknown[] {
+    protected getSelectedValues(): KbqSelectValue[] {
         return this.data.value ?? [];
     }
 
