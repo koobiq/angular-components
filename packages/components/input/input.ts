@@ -54,8 +54,9 @@ const KBQ_INPUT_INVALID_TYPES = [
         // Native input properties that are overwritten by Angular inputs need to be synced with
         // the native input element. Otherwise property bindings for those don't work.
         '[attr.id]': 'id()',
-        '[attr.placeholder]': 'placeholder()',
+        '[attr.placeholder]': 'readonly() ? null : placeholder()',
         '[attr.disabled]': 'disabled() || null',
+        '[readonly]': 'readonly()',
         '[attr.aria-invalid]': 'errorState()',
         '[required]': 'required()',
         '(blur)': 'onBlur()',
@@ -143,6 +144,12 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
      * @docs-private
      */
     readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
+
+    /**
+     * Whether the input is read-only: its value can be selected and copied, but not changed. A read-only
+     * input shows no placeholder. Defaults to `false`.
+     */
+    readonly readonly = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
     /** @docs-private */
     readonly idInput = input<string | undefined>(undefined, { alias: 'id' });

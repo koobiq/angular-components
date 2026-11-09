@@ -3555,6 +3555,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "input-password-template-driven-example.ts",
     "importPath": "components/input"
   },
+  "input-readonly": {
+    "packagePath": "components/input/input-readonly",
+    "title": "Input readonly",
+    "componentName": "InputReadonlyExample",
+    "files": [
+      "input-readonly-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "input-readonly-example",
+    "primaryFile": "input-readonly-example.ts",
+    "importPath": "components/input"
+  },
   "input-with-mask": {
     "packagePath": "components/input/input-with-mask",
     "title": "Input with mask",
@@ -8359,6 +8371,7 @@ export type LiveExampleId =
   | 'input-overview'
   | 'input-password-overview'
   | 'input-password-template-driven'
+  | 'input-readonly'
   | 'input-with-mask'
   | 'layout-flex-alignment'
   | 'layout-flex-behaviour-modifiers'

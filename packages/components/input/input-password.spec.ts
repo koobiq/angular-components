@@ -43,7 +43,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     ],
     template: `
         <kbq-form-field>
-            <input kbqInputPassword [disabled]="disabled" [(ngModel)]="value" />
+            <input kbqInputPassword [disabled]="disabled" [readonly]="readonly" [(ngModel)]="value" />
             <kbq-password-toggle
                 [kbqTooltipNotHidden]="'Скрыть пароль'"
                 [kbqTooltipDisabled]="disabled"
@@ -66,6 +66,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 })
 class PasswordInputDefault {
     disabled = false;
+    readonly = false;
 
     value: any = '1';
 }
@@ -244,6 +245,27 @@ describe('KbqPasswordInput', () => {
         fixture.detectChanges();
 
         expect(passwordInput.getAttribute('type')).toBe('password');
+    });
+
+    it('should be readonly and keep the toggle working', () => {
+        const fixture = createComponent(PasswordInputDefault);
+
+        fixture.componentInstance.readonly = true;
+        fixture.detectChanges();
+
+        const formField = fixture.debugElement.query(By.css('.kbq-form-field')).nativeElement;
+        const passwordToggle = fixture.debugElement.query(By.directive(KbqPasswordToggle)).nativeElement;
+        const passwordInput: HTMLInputElement = fixture.debugElement.query(
+            By.directive(KbqInputPassword)
+        ).nativeElement;
+
+        expect(passwordInput.readOnly).toBe(true);
+        expect(formField.classList).toContain('kbq-form-field_readonly');
+
+        dispatchFakeEvent(passwordToggle, 'click');
+        fixture.detectChanges();
+
+        expect(passwordInput.getAttribute('type')).toBe('text');
     });
 
     it('should have password hints', () => {

@@ -3,6 +3,7 @@ import { InputNumberOverviewExample } from './input-number-overview/input-number
 import { InputOverviewExample } from './input-overview/input-overview-example';
 import { InputPasswordOverviewExample } from './input-password-overview/input-password-overview-example';
 import { InputPasswordTemplateDrivenExample } from './input-password-template-driven/input-password-template-driven-example';
+import { InputReadonlyExample } from './input-readonly/input-readonly-example';
 import { InputWithMaskExample } from './input-with-mask/input-with-mask-example';
 
 export {
@@ -10,6 +11,7 @@ export {
     InputOverviewExample,
     InputPasswordOverviewExample,
     InputPasswordTemplateDrivenExample,
+    InputReadonlyExample,
     InputWithMaskExample
 };
 
@@ -18,6 +20,7 @@ const EXAMPLES = [
     InputNumberOverviewExample,
     InputPasswordOverviewExample,
     InputPasswordTemplateDrivenExample,
+    InputReadonlyExample,
     InputWithMaskExample
 ];
 

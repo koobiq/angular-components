@@ -39,8 +39,9 @@ const isObject = (value: unknown): value is object => typeof value === 'object' 
         // the native input element. Otherwise property bindings for those don't work.
         '[attr.id]': 'id()',
         '[attr.type]': 'elementType()',
-        '[attr.placeholder]': 'placeholder()',
+        '[attr.placeholder]': 'readonly() ? null : placeholder()',
         '[attr.disabled]': 'disabled() || null',
+        '[readonly]': 'readonly()',
         '[attr.aria-invalid]': 'errorState()',
         '[required]': 'required()',
         '(blur)': 'onBlur()',
@@ -126,6 +127,12 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
      * @docs-private
      */
     readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
+
+    /**
+     * Whether the input is read-only: its value can be selected and copied, but not changed. A read-only
+     * input shows no placeholder. Defaults to `false`.
+     */
+    readonly readonly = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
     /** @docs-private */
     readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
