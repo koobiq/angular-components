@@ -10,8 +10,8 @@ import {
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
-    KbqTreeOption,
-    KbqTreeSelectAllEvent
+    type KbqTreeOption,
+    type KbqTreeSelectAllEvent
 } from '@koobiq/components/tree';
 
 export class FileNode {

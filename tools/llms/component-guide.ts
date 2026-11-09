@@ -1,4 +1,4 @@
-import { DocsStructureItem, DocsStructureItemId } from '../../apps/docs/src/app/structure';
+import { type DocsStructureItem, DocsStructureItemId } from '../../apps/docs/src/app/structure';
 import { compactTables, renderTable, slugify, splitByHeading } from './markdown-text';
 
 /** The guide that maps a task to a component; the MCP server reads it too, with `packages/mcp/src/sources/which-component.ts`. */

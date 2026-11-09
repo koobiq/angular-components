@@ -1,19 +1,19 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
-import { inject, Injectable, InjectionToken, Pipe, PipeTransform, Provider } from '@angular/core';
+import { inject, Injectable, InjectionToken, Pipe, type PipeTransform, type Provider } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     KBQ_DEFAULT_LOCALE_ID,
     KBQ_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
-    KbqFormattersLocaleConfiguration,
+    type KbqFormattersLocaleConfiguration,
     kbqInjectLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
-    KbqLocaleService,
-    KbqNumberFormatOptions,
-    KbqNumberRoundingLocaleConfiguration,
+    type KbqLocaleService,
+    type KbqNumberFormatOptions,
+    type KbqNumberRoundingLocaleConfiguration,
     ruRUFormattersData
 } from '../../locales';
-import { KbqDeepPartial } from '../../utils';
+import type { KbqDeepPartial } from '../../utils';
 
 export const KBQ_NUMBER_FORMATTER_OPTIONS = new InjectionToken<ParsedDigitsInfo>('KbqNumberFormatterOptions');
 

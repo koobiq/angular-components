@@ -1,10 +1,10 @@
-import { Path } from '@angular-devkit/core';
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import type { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
 import { ACTIONS_PANEL_PACKAGE, ACTIONS_PANEL_TYPE, SUMMARY, warnPatterns } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const LABEL = '[actions-panel-overlay-container]';
 const EXTENSIONS = ['.ts', '.html'];

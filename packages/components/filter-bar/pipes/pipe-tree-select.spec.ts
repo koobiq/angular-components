@@ -1,19 +1,19 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, DebugElement, inject, TemplateRef, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectorRef, Component, type DebugElement, inject, type TemplateRef, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     kbqBuildTree,
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
-    KbqPipe,
-    KbqPipeTemplate,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSelectValue,
-    KbqTreeSelectNode
+    type KbqSelectValue,
+    type KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
-import { KbqTreeOption } from '@koobiq/components/tree';
+import type { KbqTreeOption } from '@koobiq/components/tree';
 import { KbqBasePipe } from './base-pipe';
 import { registerNoOptionsTests } from './pipe-no-options.spec-helper';
 import { registerPipeStatesTests } from './pipe-states.spec-helper';

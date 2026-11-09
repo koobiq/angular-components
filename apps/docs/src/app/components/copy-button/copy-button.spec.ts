@@ -1,5 +1,5 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject, map } from 'rxjs';
 import type { Mock } from 'vitest';
 import { DocsLocale } from '../../constants/locale';

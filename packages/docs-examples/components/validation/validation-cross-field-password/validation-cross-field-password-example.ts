@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
 import {
-    AbstractControl,
+    type AbstractControl,
     FormControl,
     FormGroup,
-    FormGroupDirective,
+    type FormGroupDirective,
     ReactiveFormsModule,
-    ValidationErrors,
-    Validators,
-    type ValidatorFn
+    type ValidationErrors,
+    type ValidatorFn,
+    Validators
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {

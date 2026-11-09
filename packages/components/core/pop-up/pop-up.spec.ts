@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { dispatchMouseEvent } from '../testing';
 import { PopUpVisibility } from './constants';
 import { KbqPopUp } from './pop-up';
-import { KbqPopUpTrigger } from './pop-up-trigger';
+import type { KbqPopUpTrigger } from './pop-up-trigger';
 
 @Component({
     selector: 'test-pop-up',

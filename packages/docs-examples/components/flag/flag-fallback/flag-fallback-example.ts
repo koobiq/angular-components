@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { KbqFlag, KbqFlagShadow } from '@koobiq/components/flag';
 import { hasFlag } from 'country-flag-icons';
 import * as flags3x2 from 'country-flag-icons/string/3x2';
+import { KbqFlag, type KbqFlagShadow } from '@koobiq/components/flag';
 
 // The codes are plain strings, real or not, so the flags are looked up by string.
 const flags: Record<string, string> = flags3x2;

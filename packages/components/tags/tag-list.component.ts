@@ -1,11 +1,11 @@
 ﻿import { _IdGenerator, FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
-import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
+import { type CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { BACKSPACE, END, HOME, LEFT_ARROW, RIGHT_ARROW, TAB } from '@angular/cdk/keycodes';
 import {
-    AfterContentChecked,
-    AfterContentInit,
-    AfterViewInit,
+    type AfterContentChecked,
+    type AfterContentInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -14,26 +14,28 @@ import {
     contentChild,
     contentChildren,
     DestroyRef,
-    DoCheck,
+    type DoCheck,
     effect,
     ElementRef,
     forwardRef,
     inject,
     input,
     linkedSignal,
-    OnChanges,
-    OnDestroy,
+    type OnChanges,
+    type OnDestroy,
     output,
-    QueryList,
+    type QueryList,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { type ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { merge, type Observable, Subject } from 'rxjs';
+import { filter, startWith, takeUntil } from 'rxjs/operators';
 import {
-    CanUpdateErrorState,
+    type CanUpdateErrorState,
     ErrorStateMatcher,
     FocusKeyManager,
     isNull,
@@ -44,10 +46,15 @@ import {
     runClearPredicate
 } from '@koobiq/components/core';
 import { KbqCleaner, kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koobiq/components/form-field';
-import { merge, Observable, Subject } from 'rxjs';
-import { filter, startWith, takeUntil } from 'rxjs/operators';
-import { KbqTagTextControl } from './tag-text-control';
-import { KbqTag, KbqTagDragData, KbqTagEditChange, KbqTagEvent, KbqTagFocusEvent } from './tag.component';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
+import {
+    KbqTag,
+    type KbqTagDragData,
+    type KbqTagEditChange,
+    type KbqTagEvent,
+    type KbqTagFocusEvent
+} from './tag.component';
+import type { KbqTagTextControl } from './tag-text-control';
 
 /** Change event object that is emitted when the tag list value has changed. */
 export class KbqTagListChange {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { ResizerOverviewExample } from 'packages/docs-examples/components/resizer/resizer-overview/resizer-overview-example';
+import { ResizerOverviewExample } from 'packages/docs-examples/components/resizer';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({

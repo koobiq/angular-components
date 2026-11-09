@@ -1,15 +1,26 @@
 ﻿import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import {
-    CdkConnectedOverlay,
+    type CdkConnectedOverlay,
     CloseScrollStrategy,
     OverlayContainer,
     RepositionScrollStrategy
 } from '@angular/cdk/overlay';
-import { Component, DebugElement, effect, model, Provider, signal, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+    Component,
+    type DebugElement,
+    effect,
+    model,
+    type Provider,
+    signal,
+    type Type,
+    viewChild
+} from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { DateTime } from 'luxon';
+import { defer, type Observable, Subject } from 'rxjs';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     createKeyboardEvent,
@@ -32,12 +43,10 @@ import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTimepicker, KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { DateTime } from 'luxon';
-import { defer, Observable, Subject } from 'rxjs';
 import {
     KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER,
     KbqInlineEdit,
-    KbqInlineEditMode,
+    type KbqInlineEditMode,
     kbqInlineEditSaveProgressDelay,
     kbqInlineEditSaveProgressMinimumDuration
 } from './inline-edit';

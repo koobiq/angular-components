@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
+import { type AfterViewInit, ChangeDetectionStrategy, Component, type ElementRef, viewChild } from '@angular/core';
 import { KbqTitleDirective } from './title.directive';
 
 /**

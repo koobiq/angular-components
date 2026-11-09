@@ -1,6 +1,6 @@
 ﻿import { F8 } from '@angular/cdk/keycodes';
-import { Component, Directive, ElementRef, inject, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
+import { Component, Directive, ElementRef, inject, type Provider, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { dispatchFakeEvent, PasswordValidators } from '@koobiq/components/core';

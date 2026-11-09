@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, type TemplateRef } from '@angular/core';
+import { merge, Subscription, tap, timer } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqSkeletonDl, KbqSkeletonGroup, KbqSkeletonTable } from '@koobiq/components/skeleton';
 import { KbqTableModule } from '@koobiq/components/table';
-import { merge, Subscription, tap, timer } from 'rxjs';
 
 type Detail = { term: string; value: string };
 

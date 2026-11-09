@@ -1,29 +1,29 @@
 import { coerceBooleanProperty, coerceCssPixelValue, coerceNumberProperty } from '@angular/cdk/coercion';
 import { Platform } from '@angular/cdk/platform';
 import {
-    AfterContentInit,
-    AfterViewInit,
+    type AfterContentInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ContentChildren,
     Directive,
     ElementRef,
-    Input,
-    NgZone,
-    OnDestroy,
-    OnInit,
-    QueryList,
-    Renderer2,
-    ViewEncapsulation,
     forwardRef,
     inject,
+    Input,
+    NgZone,
+    type OnDestroy,
+    type OnInit,
     output,
+    type QueryList,
+    Renderer2,
     viewChild,
-    viewChildren
+    viewChildren,
+    ViewEncapsulation
 } from '@angular/core';
-import { KBQ_WINDOW } from '@koobiq/components/core';
 import { Subscription } from 'rxjs';
+import { KBQ_WINDOW } from '@koobiq/components/core';
 
 interface IArea {
     area: KbqSplitterAreaDirective;

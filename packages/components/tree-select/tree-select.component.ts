@@ -1,55 +1,69 @@
 import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, ScrollStrategy } from '@angular/cdk/overlay';
-import { Platform, _getEventTarget } from '@angular/cdk/platform';
+import {
+    CdkConnectedOverlay,
+    CdkOverlayOrigin,
+    type ConnectedPosition,
+    type ScrollStrategy
+} from '@angular/cdk/overlay';
+import { _getEventTarget, Platform } from '@angular/cdk/platform';
 import { NgTemplateOutlet } from '@angular/common';
 import {
-    AfterContentInit,
-    AfterViewChecked,
-    AfterViewInit,
+    type AfterContentInit,
+    afterNextRender,
+    type AfterRenderRef,
+    type AfterViewChecked,
+    type AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    DestroyRef,
-    DoCheck,
-    ElementRef,
-    EventEmitter,
-    InjectionToken,
-    Injector,
-    InputSignal,
-    OnDestroy,
-    OnInit,
-    Provider,
-    QueryList,
-    Renderer2,
-    TemplateRef,
-    ViewEncapsulation,
-    afterNextRender,
-    booleanAttribute,
     computed,
     contentChild,
+    DestroyRef,
+    type DoCheck,
     effect,
+    ElementRef,
+    EventEmitter,
     inject,
+    InjectionToken,
+    Injector,
     input,
+    type InputSignal,
     linkedSignal,
     numberAttribute,
+    type OnDestroy,
+    type OnInit,
     output,
+    type Provider,
+    type QueryList,
+    Renderer2,
     signal,
+    TemplateRef,
     untracked,
     viewChild,
     viewChildren,
-    type AfterRenderRef
+    ViewEncapsulation
 } from '@angular/core';
 import { outputFromObservable, outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { type ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { audit, defer, fromEvent, merge, type Observable, Subject, Subscription, timer } from 'rxjs';
+import { debounceTime, delay, distinctUntilChanged, filter, map, startWith, switchMap, take } from 'rxjs/operators';
 import {
-    CanUpdateErrorState,
+    type CanUpdateErrorState,
+    defaultOffsetY,
     DOWN_ARROW,
     END,
     ENTER,
-    ESCAPE,
     ErrorStateMatcher,
+    ESCAPE,
+    getKbqSelectDynamicMultipleError,
+    getKbqSelectNonArrayValueError,
+    hasModifierKey,
     HOME,
+    isInput,
+    isSelectAll,
+    isUndefined,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_OVERLAY_LAYERS,
@@ -61,51 +75,42 @@ import {
     KbqComponentColors,
     KbqErrorStateTracker,
     KbqLocaleOverridesDirective,
-    KbqPanelMaxHeight,
-    KbqPanelMaxWidth,
-    KbqPanelMinWidth,
-    KbqPanelWidth,
+    type KbqPanelMaxHeight,
+    type KbqPanelMaxWidth,
+    type KbqPanelMinWidth,
+    type KbqPanelWidth,
+    kbqQueryListFrom,
+    kbqResolvePanelMaxHeightToken,
     KbqSelectAllEvent,
+    kbqSelectAllHandlerTransform,
     KbqSelectMatcher,
     KbqSelectSearch,
     KbqSelectTrigger,
-    KbqSiblingPopup,
+    type KbqSiblingPopup,
+    kbqSiblingPopupProvider,
     LEFT_ARROW,
     MultipleMode,
     PAGE_DOWN,
     PAGE_UP,
     RIGHT_ARROW,
+    runClearPredicate,
+    shouldSelectSearchText,
     SPACE,
     TAB,
-    UP_ARROW,
-    defaultOffsetY,
-    getKbqSelectDynamicMultipleError,
-    getKbqSelectNonArrayValueError,
-    hasModifierKey,
-    isInput,
-    isSelectAll,
-    isUndefined,
-    kbqQueryListFrom,
-    kbqResolvePanelMaxHeightToken,
-    kbqSelectAllHandlerTransform,
-    kbqSiblingPopupProvider,
-    runClearPredicate,
-    shouldSelectSearchText
+    UP_ARROW
 } from '@koobiq/components/core';
 import {
     KBQ_FORM_FIELD,
     KbqCleaner,
-    KbqFormFieldControl,
-    kbqCleanerFactoryProvider
+    kbqCleanerFactoryProvider,
+    KbqFormFieldControl
 } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqSelectNoOptions } from '@koobiq/components/select';
 import { KbqTag, KbqTagRemove } from '@koobiq/components/tags';
-import { KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';
+import { type KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
-import { Observable, Subject, Subscription, audit, defer, fromEvent, merge, timer } from 'rxjs';
-import { debounceTime, delay, distinctUntilChanged, filter, map, startWith, switchMap, take } from 'rxjs/operators';
 
 let nextUniqueId = 0;
 

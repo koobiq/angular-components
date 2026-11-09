@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DateAdapter } from '@koobiq/date-adapter';
+import type { DateAdapter } from '@koobiq/date-adapter';
 import { DateFormatter as BaseDateFormatter } from '@koobiq/date-formatter';
-import { KBQ_DATE_LOCALE, DateAdapter as KbqDateAdapter } from '../../datetime';
-import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '../../locales';
+import { DateAdapter as KbqDateAdapter, KBQ_DATE_LOCALE } from '../../datetime';
+import { KBQ_LOCALE_SERVICE, type KbqLocaleService } from '../../locales';
 
 @Injectable()
 export class DateFormatter<D> extends BaseDateFormatter<D> {

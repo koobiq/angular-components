@@ -1,4 +1,4 @@
-import { Version } from '../version-name/parse-version';
+import type { Version } from '../version-name/parse-version';
 
 /** Inquirer choice for selecting an alpha pre-release label. */
 const ALPHA_CHOICE = { value: 'alpha', name: 'Alpha pre-release' };

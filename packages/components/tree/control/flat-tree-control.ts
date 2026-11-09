@@ -1,7 +1,7 @@
 import { escapeRegExp } from '@koobiq/components/core';
 import { BaseTreeControl } from './base-tree-control';
-import { FilterByViewValue, FilterParentsForNodes, FlatTreeControlFilter } from './flat-tree-control.filters';
-import { KbqTreeControlOptions } from './tree-control';
+import { FilterByViewValue, FilterParentsForNodes, type FlatTreeControlFilter } from './flat-tree-control.filters';
+import type { KbqTreeControlOptions } from './tree-control';
 
 export function defaultCompareValues(firstValue: string, secondValue: string): boolean {
     return firstValue === secondValue;

@@ -5,8 +5,8 @@ import { kbqFilterBarPipesProvider } from './filter-bar-pipes';
 import { KbqFilterRefresher } from './filter-refresher';
 import { KbqFilterReset } from './filter-reset';
 import { KbqFilters } from './filters';
-import { KbqPipeAdd } from './pipe-add';
 import { KbqPipeDirective } from './pipe.directive';
+import { KbqPipeAdd } from './pipe-add';
 import { KbqPipeButton } from './pipes/pipe-button';
 import { KbqPipeState } from './pipes/pipe-state';
 

@@ -1,10 +1,10 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
-    OnInit,
-    Signal,
+    type OnInit,
+    type Signal,
     untracked,
     viewChild,
     viewChildren,
@@ -12,13 +12,15 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { merge, startWith } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqHighlightModule,
     KbqOption,
     KbqPseudoCheckboxModule,
-    KbqPseudoCheckboxState,
+    type KbqPseudoCheckboxState,
     tokenizeSearchQuery
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -26,9 +28,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { merge, startWith } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { KbqSelectValue } from '../filter-bar.types';
+import type { KbqSelectValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 import { KbqMultiSelectPipeState } from './multi-select-pipe-state';
 import { KbqPipeButton } from './pipe-button';

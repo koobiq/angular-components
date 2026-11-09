@@ -1,13 +1,13 @@
 ﻿import { Component, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { dispatchFakeEvent } from '@koobiq/components/core';
 import { KbqScrollbar } from './scrollbar.component';
 import { KbqScrollbarModule } from './scrollbar.module';
 import {
     KBQ_SCROLLBAR_CONFIG,
     KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG,
-    KbqScrollbarEvents,
-    KbqScrollbarOptions
+    type KbqScrollbarEvents,
+    type KbqScrollbarOptions
 } from './scrollbar.types';
 
 const configureTestingModule = () => {

@@ -1,9 +1,9 @@
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     computed,
-    OnInit,
+    type OnInit,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -17,11 +17,11 @@ import {
     defaultFilterBarPipes,
     KBQ_FILTER_BAR_PIPES,
     KbqBasePipe,
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBarModule,
     KbqPipeButton,
     KbqPipeState,
-    KbqPipeTemplate,
+    type KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
 import { KbqInputModule } from '@koobiq/components/input';

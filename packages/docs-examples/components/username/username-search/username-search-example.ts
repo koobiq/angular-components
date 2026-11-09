@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, model, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { startWith } from 'rxjs';
 import { createSearchPredicate, KbqHighlightModule, tokenizeSearchQuery } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -9,10 +10,9 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 import {
     kbqBuildUsernameText,
     kbqInjectUsernameFormatter,
-    KbqUserInfo,
+    type KbqUserInfo,
     KbqUsernameModule
 } from '@koobiq/components/username';
-import { startWith } from 'rxjs';
 
 /**
  * @title Username search

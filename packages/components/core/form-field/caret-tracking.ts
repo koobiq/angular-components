@@ -1,4 +1,4 @@
-import { Renderer2 } from '@angular/core';
+import type { Renderer2 } from '@angular/core';
 
 /**
  * Events after which the caret of a text field may stand somewhere else.

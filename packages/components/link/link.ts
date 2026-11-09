@@ -2,14 +2,14 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import {
     afterEveryRender,
     afterNextRender,
-    AfterViewChecked,
+    type AfterViewChecked,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     computed,
     DestroyRef,
     Directive,
-    ElementRef,
+    type ElementRef,
     HostAttributeToken,
     inject,
     InjectionToken,
@@ -17,12 +17,12 @@ import {
     linkedSignal,
     NgZone,
     numberAttribute,
+    type Provider,
     Renderer2,
     viewChild,
-    ViewEncapsulation,
-    type Provider
+    ViewEncapsulation
 } from '@angular/core';
-import { KbqDefaultSizes, kbqInjectNativeElement, supportsNativeDisabled } from '@koobiq/components/core';
+import { type KbqDefaultSizes, kbqInjectNativeElement, supportsNativeDisabled } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
 /** When the text of a link is underlined: always, only while the pointer is over the link, or never. */

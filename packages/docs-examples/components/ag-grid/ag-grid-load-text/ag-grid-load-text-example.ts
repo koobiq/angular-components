@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
-import { KbqLocaleService } from '@koobiq/components/core';
-import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
+import { AgGridModule, type ICellRendererAngularComp } from 'ag-grid-angular';
 import {
     AllCommunityModule,
-    IDatasource,
-    IGetRowsParams,
-    IsFullWidthRowParams,
+    type IDatasource,
+    type IGetRowsParams,
+    type IsFullWidthRowParams,
     ModuleRegistry,
-    RowSelectionOptions
+    type RowSelectionOptions
 } from 'ag-grid-community';
+import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
+import { KbqLocaleService } from '@koobiq/components/core';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

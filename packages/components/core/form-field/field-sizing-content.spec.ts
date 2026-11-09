@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqFieldSizingContent } from './field-sizing-content';
 

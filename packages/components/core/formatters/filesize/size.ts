@@ -1,4 +1,4 @@
-import { KbqUnitSystem } from './config';
+import type { KbqUnitSystem } from './config';
 
 export const KBQ_INVALID_VALUE_ERROR = 'Argument "value" must be a finite number!';
 

@@ -1,20 +1,29 @@
-import { Component, DebugElement, Directive, DoCheck, effect, signal, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
-    AbstractControl,
+    Component,
+    type DebugElement,
+    Directive,
+    type DoCheck,
+    effect,
+    signal,
+    type Type,
+    viewChild
+} from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+    type AbstractControl,
     FormControl,
     FormGroup,
-    FormGroupDirective,
-    NgForm,
+    type FormGroupDirective,
+    type NgForm,
     ReactiveFormsModule,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
-    CrossFieldErrorScope,
+    type CrossFieldErrorScope,
     dispatchFakeEvent,
-    ErrorStateMatcher,
+    type ErrorStateMatcher,
     ESCAPE,
     KBQ_FORM_FIELD_REF,
     PasswordValidators,
@@ -31,8 +40,8 @@ import {
     KbqFormField,
     kbqFormFieldDefaultOptionsProvider
 } from './form-field';
-import { KbqFormFieldControl } from './form-field-control';
 import { KbqFormFieldModule } from './form-field.module';
+import { KbqFormFieldControl } from './form-field-control';
 import { KbqHint } from './hint';
 import { KbqLabel } from './label';
 import { KbqPasswordToggle } from './password-toggle';

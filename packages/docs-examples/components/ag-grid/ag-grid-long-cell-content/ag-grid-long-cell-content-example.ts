@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AgGridModule, type ICellRendererAngularComp } from 'ag-grid-angular';
+import { AllCommunityModule, type ColDef, type ICellRendererParams, ModuleRegistry } from 'ag-grid-community';
+import { filter, fromEvent } from 'rxjs';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import { KbqPopoverModule } from '@koobiq/components/popover';
-import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
-import { AllCommunityModule, ColDef, ICellRendererParams, ModuleRegistry } from 'ag-grid-community';
-import { filter, fromEvent } from 'rxjs';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

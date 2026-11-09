@@ -11,30 +11,35 @@ import {
     contentChildren,
     DestroyRef,
     effect,
-    ElementRef,
+    type ElementRef,
     inject,
     InjectionToken,
     input,
-    InputSignal,
+    type InputSignal,
     isDevMode,
     model,
-    ModelSignal,
+    type ModelSignal,
     numberAttribute,
-    Provider,
-    Signal,
+    type Provider,
+    type Signal,
     signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { startWith } from 'rxjs/operators';
 import {
     hasModifierKey,
     KBQ_WINDOW,
     kbqInjectA11yLocaleConfiguration,
     kbqInjectNativeElement
 } from '@koobiq/components/core';
-import { KbqResizable, KbqResizer, KbqResizerDirection, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
-import { startWith } from 'rxjs/operators';
+import {
+    KbqResizable,
+    KbqResizer,
+    type KbqResizerDirection,
+    type KbqResizerSizeChangeEvent
+} from '@koobiq/components/resizer';
 
 /** Direction the panels of a splitter are laid out in. */
 export type KbqSplitterOrientation = 'horizontal' | 'vertical';

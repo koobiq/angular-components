@@ -1,34 +1,34 @@
 import { JsonPipe } from '@angular/common';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
     inject,
-    TemplateRef,
+    type TemplateRef,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import type { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import {
     kbqBuildTree,
-    KbqFilter,
-    KbqFilterBar,
+    type KbqFilter,
+    type KbqFilterBar,
     KbqFilterBarModule,
-    KbqPipe,
-    KbqPipeTemplate,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSaveFilterEvent,
+    type KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
-import { DateTime } from 'luxon';
 import { FilterBarExamplesModule } from '../../docs-examples/components/filter-bar';
 import { DevLocaleSelector } from '../locale-selector';
 

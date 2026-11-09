@@ -1,10 +1,10 @@
-import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { Platform } from '@angular/cdk/platform';
 import {
-    AfterContentChecked,
-    AfterContentInit,
+    type AfterContentChecked,
+    type AfterContentInit,
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -19,12 +19,14 @@ import {
     input,
     model,
     NgZone,
-    OnDestroy,
-    QueryList,
+    type OnDestroy,
+    type QueryList,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { fromEvent, merge, type Observable, Subject, type Subscription } from 'rxjs';
+import { debounceTime, startWith } from 'rxjs/operators';
 import {
     FocusKeyManager,
     isHorizontalMovement,
@@ -37,11 +39,9 @@ import {
     RIGHT_ARROW,
     TAB
 } from '@koobiq/components/core';
-import { fromEvent, merge, Observable, Subject, Subscription } from 'rxjs';
-import { debounceTime, startWith } from 'rxjs/operators';
 import {
     KbqNavbarFocusableItem,
-    KbqNavbarFocusableItemEvent,
+    type KbqNavbarFocusableItemEvent,
     KbqNavbarItem,
     KbqNavbarRectangleElement
 } from './navbar-item.component';

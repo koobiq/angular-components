@@ -1,28 +1,28 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
-import { SelectionModel } from '@angular/cdk/collections';
+import type { SelectionModel } from '@angular/cdk/collections';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ScrollDispatcher, ViewportRuler } from '@angular/cdk/scrolling';
 import {
     ChangeDetectionStrategy,
     Component,
-    DebugElement,
-    InputSignalWithTransform,
-    OnInit,
-    PLATFORM_ID,
-    Provider,
-    Signal,
-    Type,
+    type DebugElement,
     effect,
+    type InputSignalWithTransform,
+    type OnInit,
+    PLATFORM_ID,
+    type Provider,
+    type Signal,
     signal,
+    type Type,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import {
-    AsyncValidatorFn,
-    ControlValueAccessor,
+    type AsyncValidatorFn,
+    type ControlValueAccessor,
     FormControl,
-    FormControlStatus,
+    type FormControlStatus,
     FormGroup,
     FormGroupDirective,
     FormsModule,
@@ -30,44 +30,45 @@ import {
     ReactiveFormsModule,
     UntypedFormControl,
     UntypedFormGroup,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { BehaviorSubject, map, type Observable, of, Subject, timer } from 'rxjs';
 import {
     A,
-    DOWN_ARROW,
-    END,
-    ENTER,
-    ESCAPE,
-    ErrorStateMatcher,
-    HOME,
-    KBQ_LOCALE_SERVICE,
-    KbqComponentColors,
-    KbqLocaleService,
-    KbqLocaleServiceModule,
-    KbqOverlayLayer,
-    KbqPanelMaxHeight,
-    KbqPanelWidth,
-    KbqPseudoCheckbox,
-    KbqPseudoCheckboxModule,
-    KbqPseudoCheckboxState,
-    LEFT_ARROW,
-    MultipleMode,
-    RIGHT_ARROW,
-    SPACE,
-    ShowOnControlDirtyErrorStateMatcher,
-    ShowOnFormSubmitErrorStateMatcher,
-    TAB,
-    UP_ARROW,
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ErrorStateMatcher,
+    ESCAPE,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
+    HOME,
+    KBQ_LOCALE_SERVICE,
+    KbqComponentColors,
     kbqErrorStateMatcherProvider,
+    type KbqLocaleService,
+    KbqLocaleServiceModule,
+    KbqOverlayLayer,
+    type KbqPanelMaxHeight,
+    type KbqPanelWidth,
+    KbqPseudoCheckbox,
+    KbqPseudoCheckboxModule,
+    type KbqPseudoCheckboxState,
+    LEFT_ARROW,
+    MultipleMode,
+    RIGHT_ARROW,
     ruRULocaleData,
+    ShowOnControlDirtyErrorStateMatcher,
+    ShowOnFormSubmitErrorStateMatcher,
+    SPACE,
+    TAB,
+    UP_ARROW,
     wrappedErrorMessage
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -75,17 +76,16 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import {
+    defaultCompareValues,
+    defaultCompareViewValues,
     FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
     KbqTreeOption,
-    KbqTreeSelection,
-    defaultCompareValues,
-    defaultCompareViewValues
+    KbqTreeSelection
 } from '@koobiq/components/tree';
-import { BehaviorSubject, Observable, Subject, map, of, timer } from 'rxjs';
-import { KbqTreeSelect, KbqTreeSelectChange, kbqTreeSelectOptionsProvider } from './tree-select.component';
+import { KbqTreeSelect, type KbqTreeSelectChange, kbqTreeSelectOptionsProvider } from './tree-select.component';
 import { KbqTreeSelectModule } from './tree-select.module';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {

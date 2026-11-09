@@ -3,16 +3,16 @@ import {
     ApplicationRef,
     ChangeDetectionStrategy,
     Component,
-    DebugElement,
+    type DebugElement,
     effect,
     signal,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { dispatchFakeEvent, ErrorStateMatcher, KbqComponentColors } from '@koobiq/components/core';
+import { dispatchFakeEvent, type ErrorStateMatcher, KbqComponentColors } from '@koobiq/components/core';
 import { KbqError, KbqFormFieldModule, KbqHint } from '@koobiq/components/form-field';
 import { KbqRadioButton, KbqRadioGroup, KbqRadioModule } from './index';
 

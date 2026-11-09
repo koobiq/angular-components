@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, DestroyRef, inject, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, inject, Pipe, type PipeTransform } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DurationUnit } from '@koobiq/date-adapter';
-import { DateTimeOptions } from '@koobiq/date-formatter';
-import { DateAdapter, KbqDateTimezoneService, KbqTimezoneLike } from '../../datetime';
+import type { DurationUnit } from '@koobiq/date-adapter';
+import type { DateTimeOptions } from '@koobiq/date-formatter';
+import { DateAdapter, KbqDateTimezoneService, type KbqTimezoneLike } from '../../datetime';
 import { KBQ_LOCALE_SERVICE } from '../../locales';
 import { DateFormatter } from './formatter';
 

@@ -3,20 +3,20 @@ import { relative } from 'path';
 import ts from 'typescript';
 import { isPublic } from '../manifest/helpers';
 import {
-    ClassEntry,
-    DeclaredFunctionType,
-    DocEntry,
+    type ClassEntry,
+    type DeclaredFunctionType,
+    type DocEntry,
     EntryType,
-    FunctionEntry,
-    FunctionWithOverloads,
-    MemberEntry,
+    type FunctionEntry,
+    type FunctionWithOverloads,
+    type MemberEntry,
     MemberTags,
     MemberType,
-    PropertyEntry,
-    SignalApi
+    type PropertyEntry,
+    type SignalApi
 } from '../rendering/entities';
 import { isClassEntry } from '../rendering/entities/categorization';
-import {
+import type {
     ClassEntryMetadata,
     DeclarationSourceMetadata,
     DeclaredCallable,

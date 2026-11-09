@@ -8,69 +8,69 @@ import {
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
-    CdkScrollable,
-    FlexibleConnectedPositionStrategy,
-    OverlayConfig,
-    OverlayRef,
+    type CdkScrollable,
+    type FlexibleConnectedPositionStrategy,
+    type OverlayConfig,
+    type OverlayRef,
     ScrollDispatcher,
-    ScrollStrategy
+    type ScrollStrategy
 } from '@angular/cdk/overlay';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
-    AfterContentInit,
-    AfterViewInit,
+    type AfterContentInit,
+    type AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    DestroyRef,
+    type DestroyRef,
     Directive,
-    ElementRef,
+    type ElementRef,
     EventEmitter,
-    InjectionToken,
-    InputSignal,
-    OnChanges,
-    OnInit,
-    Provider,
-    RendererStyleFlags2,
-    SimpleChanges,
-    TemplateRef,
-    Type,
-    ViewEncapsulation,
-    booleanAttribute,
     inject,
+    InjectionToken,
     input,
+    type InputSignal,
+    type OnChanges,
+    type OnInit,
+    type Provider,
+    RendererStyleFlags2,
+    type SimpleChanges,
+    type TemplateRef,
+    type Type,
     untracked,
-    viewChild
+    viewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { merge, NEVER } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
+    applyPopupMargins,
     EmptyFocusTrapStrategy,
     KBQ_OVERLAY_LAYERS,
-    KbqCaretRect,
+    type KbqCaretRect,
     KbqComponentColors,
-    KbqOverflowShadowBottom,
-    KbqOverflowShadowContainer,
-    KbqOverflowShadowTop,
-    KbqOverlayOrigin,
-    KbqPopUp,
-    KbqPopUpPlacementValues,
-    KbqPopUpSizeValues,
-    KbqPopUpTrigger,
-    KbqStickToWindowPlacementValues,
-    POSITION_TO_CSS_MAP,
-    PopUpPlacements,
-    PopUpSizes,
-    PopUpTriggers,
-    applyPopupMargins,
     kbqCreateCaretOrigin,
     kbqInjectA11yLocaleConfiguration,
     kbqOptionalNumberAttribute,
+    KbqOverflowShadowBottom,
+    KbqOverflowShadowContainer,
+    KbqOverflowShadowTop,
+    type KbqOverlayOrigin,
+    KbqPopUp,
+    type KbqPopUpPlacementValues,
+    type KbqPopUpSizeValues,
+    KbqPopUpTrigger,
     kbqRepositionScrollStrategyFactory,
-    kbqSiblingPopupProvider
+    kbqSiblingPopupProvider,
+    type KbqStickToWindowPlacementValues,
+    PopUpPlacements,
+    PopUpSizes,
+    PopUpTriggers,
+    POSITION_TO_CSS_MAP
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { NEVER, merge } from 'rxjs';
 import { getPopoverArrowShift } from './popover-positioning';
 
 export const defaultOffsetYWithArrow = 8;

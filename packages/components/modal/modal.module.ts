@@ -6,10 +6,10 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { CssUnitPipe } from './css-unit.pipe';
-import { KbqModalControlService } from './modal-control.service';
 import { KbqModalComponent } from './modal.component';
 import { KbqModalBody, KbqModalCaption, KbqModalFooter, KbqModalMainAction, KbqModalTitle } from './modal.directive';
 import { KbqModalService } from './modal.service';
+import { KbqModalControlService } from './modal-control.service';
 
 @NgModule({
     imports: [

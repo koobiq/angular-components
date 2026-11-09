@@ -6,7 +6,7 @@ import {
     Component,
     computed,
     DestroyRef,
-    ElementRef,
+    type ElementRef,
     inject,
     Renderer2,
     signal,
@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import {
     createSearchPredicate,
-    KbqCaretRect,
+    type KbqCaretRect,
     kbqCreateCaretOrigin,
     kbqGetSelectionRect,
     kbqGetTextQuery,

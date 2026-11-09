@@ -3,8 +3,8 @@ import { Directionality } from '@angular/cdk/bidi';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
-    AfterContentInit,
-    AfterViewInit,
+    type AfterContentInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -18,18 +18,18 @@ import {
     inject,
     input,
     isDevMode,
-    OnChanges,
-    OnDestroy,
-    OnInit,
+    type OnChanges,
+    type OnDestroy,
+    type OnInit,
     output,
-    Provider,
+    type Provider,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import { DOWN_ARROW, END, getContentNodes, HOME, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';

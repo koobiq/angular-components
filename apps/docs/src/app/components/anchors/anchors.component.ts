@@ -6,16 +6,16 @@ import {
     DestroyRef,
     inject,
     input,
-    OnDestroy,
-    OnInit,
+    type OnDestroy,
+    type OnInit,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
+import { filter, fromEvent, type Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { kbqAnimationsDisabled, PopUpPlacements } from '@koobiq/components/core';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { filter, fromEvent, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 import { DOCS_API_WITHOUT_MEMBER } from '../../constants/api-page';
 import { DOCS_MARKDOWN_HEADING_CLASSES } from '../live-example/markdown-content';
 

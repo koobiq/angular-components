@@ -1,11 +1,11 @@
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
-import { AfterViewInit, Directive, inject, input, OnDestroy } from '@angular/core';
-import { PopUpPlacements } from '@koobiq/components/core';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { type AfterViewInit, Directive, inject, input, type OnDestroy } from '@angular/core';
 import { Subscription, throttleTime } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { PopUpPlacements } from '@koobiq/components/core';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqTimezoneOption } from './timezone-option.component';
 
 /**

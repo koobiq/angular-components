@@ -1,14 +1,14 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CDK_DRAG_HANDLE, CdkDrag, CdkDragDrop, CdkDragPreview, CdkDropList } from '@angular/cdk/drag-drop';
+import { CDK_DRAG_HANDLE, CdkDrag, type CdkDragDrop, CdkDragPreview, CdkDropList } from '@angular/cdk/drag-drop';
 import { _getFocusedElementPierceShadowDom, Platform } from '@angular/cdk/platform';
 import { CdkVirtualForOf } from '@angular/cdk/scrolling';
 import {
-    AfterContentChecked,
-    AfterContentInit,
+    type AfterContentChecked,
+    type AfterContentInit,
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -27,10 +27,10 @@ import {
     input,
     isDevMode,
     NgZone,
-    OnDestroy,
-    OnInit,
+    type OnDestroy,
+    type OnInit,
     output,
-    Provider,
+    type Provider,
     QueryList,
     signal,
     untracked,
@@ -38,7 +38,9 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { fromEvent, merge, type Observable, Subject, type Subscription } from 'rxjs';
+import { auditTime, startWith, switchMap, take } from 'rxjs/operators';
 import {
     DOWN_ARROW,
     END,
@@ -48,7 +50,7 @@ import {
     getSelectAllState,
     hasModifierKey,
     HOME,
-    IFocusableOption,
+    type IFocusableOption,
     isCopy,
     isSelectAll,
     isVerticalMovement,
@@ -61,16 +63,16 @@ import {
     kbqGetElementHeight,
     kbqInjectLocaleConfiguration,
     kbqLeaveTabOrderOnTabOut,
-    KbqMultipleInput,
+    type KbqMultipleInput,
     KbqOptgroup,
     KbqOptionActionComponent,
     kbqOptionalNumberAttribute,
     KbqPseudoCheckbox,
-    KbqPseudoCheckboxState,
+    type KbqPseudoCheckboxState,
     kbqQueryListFrom,
-    KbqSelectAllAdapter,
+    type KbqSelectAllAdapter,
     kbqSelectAllHandlerTransform,
-    KbqTitleTextRef,
+    type KbqTitleTextRef,
     LEFT_ARROW,
     MultipleMode,
     PAGE_DOWN,
@@ -85,8 +87,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { fromEvent, merge, Observable, Subject, Subscription } from 'rxjs';
-import { auditTime, startWith, switchMap, take } from 'rxjs/operators';
 
 /** How long consecutive `window.resize` ticks are collapsed before the scroll size is recalculated. */
 const RESIZE_AUDIT_TIME = 100;

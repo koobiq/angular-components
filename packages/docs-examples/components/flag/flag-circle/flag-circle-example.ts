@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { KbqFlag } from '@koobiq/components/flag';
 import * as flags1x1 from 'country-flag-icons/string/1x1';
+import { KbqFlag } from '@koobiq/components/flag';
 
 /**
  * @title Circular flags

@@ -1,7 +1,7 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { _CdkPrivateStyleLoader } from '@angular/cdk/private';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -10,14 +10,14 @@ import {
     input,
     NgModule,
     numberAttribute,
-    OnDestroy,
-    OnInit,
-    SimpleChanges,
+    type OnDestroy,
+    type OnInit,
+    type SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { debounceTime } from 'rxjs/operators';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 
 /**
  * Component used to load the `.kbq-ellipsis-center` styles.

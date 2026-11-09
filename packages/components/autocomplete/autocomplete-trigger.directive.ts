@@ -1,14 +1,14 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
 import {
-    ConnectedPosition,
-    FlexibleConnectedPositionStrategy,
-    FlexibleConnectedPositionStrategyOrigin,
+    type ConnectedPosition,
+    type FlexibleConnectedPositionStrategy,
+    type FlexibleConnectedPositionStrategyOrigin,
     Overlay,
     OverlayConfig,
-    OverlayRef,
-    PositionStrategy,
+    type OverlayRef,
+    type PositionStrategy,
     ScrollDispatcher,
-    ScrollStrategy
+    type ScrollStrategy
 } from '@angular/cdk/overlay';
 import { _getEventTarget, _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -16,7 +16,7 @@ import { ViewportRuler } from '@angular/cdk/scrolling';
 import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectorRef,
     Directive,
@@ -29,16 +29,18 @@ import {
     input,
     isWritableSignal,
     NgZone,
-    OnDestroy,
+    type OnDestroy,
     output,
-    Provider,
+    type Provider,
     Renderer2,
     signal,
     untracked,
     ViewContainerRef
 } from '@angular/core';
 import { outputToObservable, toObservable } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { EMPTY, fromEvent, merge, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
+import { delay, filter, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 import {
     defaultOffsetY,
     DOWN_ARROW,
@@ -49,7 +51,7 @@ import {
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_OVERLAY_LAYERS,
     KBQ_WINDOW,
-    KbqCaretRect,
+    type KbqCaretRect,
     kbqCreateCaretOrigin,
     kbqCreateTextMirror,
     kbqGetCaretRect,
@@ -57,26 +59,24 @@ import {
     kbqGetTextQuery,
     kbqIsTextLaidOutFromStart,
     kbqListenForCaretMoves,
-    KbqOption,
+    type KbqOption,
     kbqOptionalNumberAttribute,
     KbqOptionSelectionChange,
     kbqRepositionScrollStrategyFactory,
-    KbqResolvedPanelWidth,
+    type KbqResolvedPanelWidth,
     kbqResolvePanelWidth,
-    KbqSiblingPopup,
+    type KbqSiblingPopup,
     kbqSiblingPopupProvider,
-    KbqTextMirror,
-    KbqTextQuery,
-    KeyboardNavigationHandler,
+    type KbqTextMirror,
+    type KbqTextQuery,
+    type KeyboardNavigationHandler,
     RIGHT_ARROW,
     TAB,
     UP_ARROW
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';
-import { EMPTY, fromEvent, merge, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
-import { delay, filter, map, startWith, switchMap, take, tap } from 'rxjs/operators';
-import { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
-import { KbqAutocomplete } from './autocomplete.component';
+import type { KbqAutocomplete } from './autocomplete.component';
+import type { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
 
 /**
  * Injection token that determines the scroll handling while the autocomplete panel is open. The root default

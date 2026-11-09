@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, VERSION } from '@angular/core';
-import { EXAMPLE_COMPONENTS, ExampleData } from '@koobiq/docs-examples';
-import StackBlitzSDK, { ProjectFiles } from '@stackblitz/sdk';
+import StackBlitzSDK, { type ProjectFiles } from '@stackblitz/sdk';
 import { firstValueFrom } from 'rxjs';
+import { EXAMPLE_COMPONENTS, type ExampleData } from '@koobiq/docs-examples';
 import { docsKoobiqVersion } from '../../version';
 import { docsNormalizePath } from './normalize-path';
 
@@ -58,7 +58,7 @@ export const DOCS_STACKBLITZ_OPTIONAL_DEPENDENCIES: Record<string, Record<string
 };
 
 /** Global stylesheets added to the generated `angular.json` of an example that uses the import pattern. */
-export const DOCS_STACKBLITZ_OPTIONAL_STYLES: Partial<Record<string, string[]>> = {
+export const DOCS_STACKBLITZ_OPTIONAL_STYLES: Record<string, string[]> = {
     '@koobiq/ag-grid-angular-theme': [
         'node_modules/@koobiq/ag-grid-angular-theme/_index.scss'
     ]

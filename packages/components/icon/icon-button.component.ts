@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -9,9 +9,9 @@ import {
     input,
     isDevMode,
     numberAttribute,
-    OnDestroy,
+    type OnDestroy,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqIcon } from './icon.component';

@@ -1,4 +1,4 @@
-import { QueryList, Signal } from '@angular/core';
+import { QueryList, type Signal } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, map, tap } from 'rxjs/operators';
 import { A, DOWN_ARROW, END, HOME, LEFT_ARROW, NINE, RIGHT_ARROW, TAB, UP_ARROW, Z, ZERO } from '../../keycodes';

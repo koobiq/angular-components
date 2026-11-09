@@ -1,38 +1,38 @@
-import { _IdGenerator, FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { _IdGenerator, FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     computed,
     contentChild,
     contentChildren,
-    DoCheck,
-    ElementRef,
+    type DoCheck,
+    type ElementRef,
     inject,
     input,
-    OnChanges,
-    OnDestroy,
+    type OnChanges,
+    type OnDestroy,
     output,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
-    CanUpdateErrorState,
+    type CanUpdateErrorState,
     ErrorStateMatcher,
     KbqCheckable,
-    KbqCheckedState,
+    type KbqCheckedState,
     KbqColorDirective,
     KbqErrorStateTracker,
     kbqOptionalNumberAttribute,
     TransitionCheckState
 } from '@koobiq/components/core';
 import { KbqError, KbqHint } from '@koobiq/components/form-field';
-import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
+import { KBQ_CHECKBOX_CLICK_ACTION, type KbqCheckboxClickAction } from './checkbox-config';
 
 /** Change event object emitted by KbqCheckbox. */
 export class KbqCheckboxChange {

@@ -1,8 +1,15 @@
-import { OverlayRef } from '@angular/cdk/overlay';
-import { EventEmitter, InjectionToken, Injector, Signal, TemplateRef, Type } from '@angular/core';
-import { KbqButtonColor } from '@koobiq/components/button';
-import { KbqComponentColors, KbqOverflowShadowState } from '@koobiq/components/core';
-import { Observable } from 'rxjs';
+import type { OverlayRef } from '@angular/cdk/overlay';
+import {
+    type EventEmitter,
+    InjectionToken,
+    type Injector,
+    type Signal,
+    type TemplateRef,
+    type Type
+} from '@angular/core';
+import type { Observable } from 'rxjs';
+import type { KbqButtonColor } from '@koobiq/components/button';
+import type { KbqComponentColors, KbqOverflowShadowState } from '@koobiq/components/core';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type OnClickCallback<T> = (instance: T) => (false | void | {}) | Promise<false | void | {}>;

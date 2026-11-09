@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import type { Routes } from '@angular/router';
 import { EXAMPLE_COMPONENTS } from '../../docs-examples/example-module';
 import { loadExampleComponent } from '../../docs-examples/loader';
 import {

@@ -1,33 +1,33 @@
-﻿import { CdkConnectedOverlay, ConnectedPosition } from '@angular/cdk/overlay';
+﻿import type { CdkConnectedOverlay, ConnectedPosition } from '@angular/cdk/overlay';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     booleanAttribute,
     ChangeDetectorRef,
     Directive,
-    ElementRef,
+    type ElementRef,
     EventEmitter,
     inject,
     input,
     isWritableSignal,
-    Signal,
+    type Signal,
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '../form-field';
+import { KBQ_FORM_FIELD_REF, type KbqFormFieldRef } from '../form-field';
 import { END, ESCAPE, HOME, SPACE } from '../keycodes';
 import {
     KBQ_PANEL_DEFAULT_MAX_HEIGHT,
-    KbqPanelSpaceContext,
+    type KbqPanelSpaceContext,
     kbqResolveTriggerFirstRowOffset,
     kbqShouldAnchorPanelToFirstRow
 } from '../overlay/panel-height';
 import {
     kbqGetPanelWidthOrigin,
-    KbqPanelMinWidth,
-    KbqPanelWidth,
-    KbqPanelWidthOrigin,
+    type KbqPanelMinWidth,
+    type KbqPanelWidth,
+    type KbqPanelWidthOrigin,
     kbqResolvePanelWidth
 } from '../overlay/panel-width';
 import { KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS } from '../pop-up/constants';

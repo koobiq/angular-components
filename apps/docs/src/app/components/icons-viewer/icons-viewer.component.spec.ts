@@ -1,10 +1,10 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideLocationMocks } from '@angular/common/testing';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, ParamMap, provideRouter, Router } from '@angular/router';
-import { KbqModalRef, KbqModalService } from '@koobiq/components/modal';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute, convertToParamMap, type ParamMap, provideRouter, Router } from '@angular/router';
 import { BehaviorSubject, map, NEVER } from 'rxjs';
+import { type KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
 import { DocsIconsViewerComponent } from './icons-viewer.component';

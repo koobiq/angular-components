@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqScrollbarEventListenerArgs, KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
+import { type KbqScrollbarEventListenerArgs, KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
 
 /**
  * @title Scrollbar scroll to top

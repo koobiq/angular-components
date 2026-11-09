@@ -1,6 +1,6 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
-import { KbqSplitter, KbqSplitterAppearance, KbqSplitterOrientation, KbqSplitterPanel } from './splitter';
+import { KbqSplitter, type KbqSplitterAppearance, type KbqSplitterOrientation, KbqSplitterPanel } from './splitter';
 
 const HOST_STYLES = `
     :host {

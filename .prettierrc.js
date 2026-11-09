@@ -9,7 +9,6 @@ const config = {
     trailingComma: 'none',
     htmlWhitespaceSensitivity: 'ignore',
     plugins: [
-        'prettier-plugin-organize-imports',
         'prettier-plugin-sh',
         // should be last
         'prettier-plugin-multiline-arrays'

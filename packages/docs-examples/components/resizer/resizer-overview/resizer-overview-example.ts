@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
+import { KbqResizable, KbqResizer, type KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 
 /**
  * @title Resizer overview example

@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
-import { KbqActionContainer, KbqPseudoCheckboxModule } from '@koobiq/components/core';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { asyncScheduler } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
+import { KbqActionContainer, KbqPseudoCheckboxModule } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTreeNodeDef } from './node';
 import { KbqTreeNodeOutlet } from './outlet';
 import { KbqTreeNodePadding } from './padding.directive';

@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ApplicationConfig, ErrorHandler, inject, mergeApplicationConfig, Provider } from '@angular/core';
+import { type ApplicationConfig, ErrorHandler, inject, mergeApplicationConfig, type Provider } from '@angular/core';
 import { provideServerRendering } from '@angular/platform-server';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { appConfig } from './app/config';

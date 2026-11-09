@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, output } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KBQ_FILTER_BAR_HOST, KbqFilter } from './filter-bar.types';
+import { KBQ_FILTER_BAR_HOST, type KbqFilter } from './filter-bar.types';
 
 @Component({
     selector: 'kbq-filter-reset',

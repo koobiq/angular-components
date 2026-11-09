@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import {
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBarModule,
-    KbqPipeTemplate,
+    type KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSelectValue,
-    KbqTreeSelectNode
+    type KbqSelectValue,
+    type KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
 
 const EVENTS: KbqSelectValue[] = [

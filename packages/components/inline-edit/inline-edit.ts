@@ -1,8 +1,8 @@
-import { CdkMonitorFocus, CdkTrapFocus, FocusMonitor, FocusOrigin, InteractivityChecker } from '@angular/cdk/a11y';
+import { CdkMonitorFocus, CdkTrapFocus, FocusMonitor, type FocusOrigin, InteractivityChecker } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { CdkConnectedOverlay, Overlay, ScrollDispatcher, ScrollStrategy } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, Overlay, ScrollDispatcher, type ScrollStrategy } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
@@ -27,12 +27,14 @@ import {
     output,
     PendingTasks,
     signal,
-    TemplateRef,
+    type TemplateRef,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms';
+import { AbstractControl, type ControlValueAccessor, NgControl } from '@angular/forms';
+import { concat, debounceTime, merge, type Observable, of, startWith, timer } from 'rxjs';
+import { catchError, concatMap, defaultIfEmpty, ignoreElements, map, take, takeUntil, takeWhile } from 'rxjs/operators';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     isElement,
@@ -42,7 +44,7 @@ import {
     KBQ_WINDOW,
     kbqAnimationsDisabled,
     KbqComponentColors,
-    KbqConnectedOverlayOriginProvider,
+    type KbqConnectedOverlayOriginProvider,
     KbqLocaleOverridesDirective,
     PopUpPlacements,
     runCompareWith
@@ -52,8 +54,6 @@ import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { concat, debounceTime, merge, Observable, of, startWith, timer } from 'rxjs';
-import { catchError, concatMap, defaultIfEmpty, ignoreElements, map, take, takeUntil, takeWhile } from 'rxjs/operators';
 
 const baseClass = 'kbq-inline-edit';
 

@@ -7,11 +7,22 @@ import {
     inject,
     input,
     output,
-    Signal,
+    type Signal,
     signal,
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AgGridModule } from 'ag-grid-angular';
+import {
+    AllCommunityModule,
+    type ColDef,
+    type FirstDataRenderedEvent,
+    type GridApi,
+    ModuleRegistry,
+    type RowSelectionOptions,
+    type SelectionChangedEvent,
+    type SelectionColumnDef
+} from 'ag-grid-community';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KBQ_ACTIONS_PANEL_DATA, KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -20,17 +31,6 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToastService } from '@koobiq/components/toast';
-import { AgGridModule } from 'ag-grid-angular';
-import {
-    AllCommunityModule,
-    ColDef,
-    FirstDataRenderedEvent,
-    GridApi,
-    ModuleRegistry,
-    RowSelectionOptions,
-    SelectionChangedEvent,
-    SelectionColumnDef
-} from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

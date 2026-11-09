@@ -1,4 +1,4 @@
-import { expect, Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
 /**
  * Loads every font face the page declares and waits for them, so that whatever renders next is measured

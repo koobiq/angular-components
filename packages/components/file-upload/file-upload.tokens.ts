@@ -1,7 +1,7 @@
-import { InjectionToken, Provider } from '@angular/core';
+import { InjectionToken, type Provider } from '@angular/core';
 import {
-    KbqDeepPartial,
-    KbqFileUploadLocaleConfiguration,
+    type KbqDeepPartial,
+    type KbqFileUploadLocaleConfiguration,
     kbqLocaleConfigurationOverrideProvider,
     ruRULocaleData
 } from '@koobiq/components/core';

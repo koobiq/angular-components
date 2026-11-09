@@ -6,14 +6,15 @@ import {
     DestroyRef,
     inject,
     output,
-    OutputEmitterRef,
-    Signal,
+    type OutputEmitterRef,
+    type Signal,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { concatMap, fromEvent, interval, Subject, timer } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
+import { KbqIconModule } from '@koobiq/components/icon';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KBQ_FORM_FIELD } from './form-field';
 
 /**

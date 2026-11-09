@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { combineLatest } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { combineLatest } from 'rxjs';
 
 const E2E_BUTTON_STATES: ButtonState[] = [
     { title: 'disabled', disabled: true },

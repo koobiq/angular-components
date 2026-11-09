@@ -4,21 +4,21 @@ import {
     computed,
     inject,
     linkedSignal,
-    TemplateRef,
+    type TemplateRef,
     viewChild
 } from '@angular/core';
+import type { DateTime } from 'luxon';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter } from '@koobiq/components/core';
 import {
-    KbqFilter,
+    type KbqFilter,
     KbqFilterBarModule,
-    KbqPipe,
-    KbqPipeTemplate,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSaveFilterEvent
+    type KbqSaveFilterEvent
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
-import { DateTime } from 'luxon';
 import { injectLocalizedPeriods, injectLocalizedText } from '../localized-data';
 
 /** Text search is the first pipe in every filter: always present, never removable. */

@@ -10,16 +10,16 @@ import {
 } from '../../apps/docs/src/app/page-paths';
 import {
     docsGetItemById,
-    DocsStructureCategoryId,
-    DocsStructureItem,
+    type DocsStructureCategoryId,
+    type DocsStructureItem,
     DocsStructureItemId,
     DocsStructureItemTab,
     DocsStructureTokensTab
 } from '../../apps/docs/src/app/structure';
 import { EXAMPLE_COMPONENTS } from '../../packages/docs-examples/example-module';
-import { DocEntry } from '../api-gen/rendering/entities';
+import type { DocEntry } from '../api-gen/rendering/entities';
 import { DOCS_PAGE_SOURCES, parsePageSource } from '../docs-pages/sources';
-import { LlmsExample, LlmsExampleFile } from './page-markdown';
+import type { LlmsExample, LlmsExampleFile } from './page-markdown';
 
 /** The site of the latest major version, which the committed `llms.txt` and the skills link. */
 export const KOOBIQ_SITE_ORIGIN = 'https://koobiq.io';

@@ -1,14 +1,14 @@
 import { logging } from '@angular-devkit/core';
-import { SchematicContext, Tree } from '@angular-devkit/schematics';
+import { type SchematicContext, Tree } from '@angular-devkit/schematics';
 import {
-    MigrateOutsideFiles,
-    ReplacementMigration,
-    ReplacementMigrationOptions,
     applyReplacements,
     compileReplacements,
     dedupeImportSpecifiers,
     ensureImport,
+    type MigrateOutsideFiles,
     removeImport,
+    type ReplacementMigration,
+    type ReplacementMigrationOptions,
     replacementMigrationRule
 } from './replacement-driver';
 

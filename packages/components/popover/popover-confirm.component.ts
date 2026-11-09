@@ -9,14 +9,14 @@ import {
     input,
     output,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqInjectPopoverConfirmLocaleConfiguration, kbqSiblingPopupProvider } from '@koobiq/components/core';
-import { Subject } from 'rxjs';
 import { KBQ_POPOVER_FOCUS_TRAP_PROVIDERS, KbqPopoverComponent, KbqPopoverTrigger } from './popover.component';
 
 /**

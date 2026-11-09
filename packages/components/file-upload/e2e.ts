@@ -8,20 +8,26 @@ import {
     signal,
     viewChild
 } from '@angular/core';
-import { AbstractControl, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
-import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
-import { ErrorStateMatcher } from '@koobiq/components/core';
 import {
-    KbqFileItem,
+    type AbstractControl,
+    type FormGroupDirective,
+    FormsModule,
+    type NgForm,
+    ReactiveFormsModule
+} from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
+import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
+import type { ErrorStateMatcher } from '@koobiq/components/core';
+import {
+    type KbqFileItem,
     KbqFileUploadAllowedType,
-    KbqFileUploadAllowedTypeValues,
+    type KbqFileUploadAllowedTypeValues,
     KbqFileUploadModule,
     KbqFullScreenDropzoneService,
     KbqLocalDropzone
 } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { kbqScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
-import { BehaviorSubject } from 'rxjs';
 
 type SingleUploadState = {
     file: KbqFileItem | null;

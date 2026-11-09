@@ -1,16 +1,16 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Direction, Directionality } from '@angular/cdk/bidi';
+import { type Direction, Directionality } from '@angular/cdk/bidi';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { Component, Injectable, Provider, signal, Type, WritableSignal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, Injectable, type Provider, signal, type Type, type WritableSignal } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { EMPTY, type Observable, Subject } from 'rxjs';
 import { enUSLocaleData, kbqA11yLocaleConfigurationProvider } from '@koobiq/components/core';
-import { EMPTY, Observable, Subject } from 'rxjs';
 import {
     KbqDd,
     KbqDdComponent,
     KbqDl,
-    KbqDlAlign,
+    type KbqDlAlign,
     KbqDlComponent,
     kbqDlOptionsProvider,
     KbqDt,

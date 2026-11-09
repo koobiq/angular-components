@@ -1,17 +1,17 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    OnDestroy,
-    TemplateRef,
-    ViewEncapsulation,
     inject,
     model,
+    type OnDestroy,
     signal,
-    viewChild
+    type TemplateRef,
+    viewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -22,10 +22,10 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 import {
     DEV_MFE_CONFIG,
     DEV_TOAST_BRIDGE,
-    DevMountedMfe,
-    DevToastBridge,
     devMirrorGlobalStyles,
-    devMountMfe
+    type DevMountedMfe,
+    devMountMfe,
+    type DevToastBridge
 } from './mount-mfe';
 
 /**

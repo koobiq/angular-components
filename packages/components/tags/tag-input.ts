@@ -3,16 +3,16 @@ import {
     booleanAttribute,
     computed,
     Directive,
-    DoCheck,
+    type DoCheck,
     ElementRef,
     inject,
     InjectionToken,
     input,
-    OnChanges,
+    type OnChanges,
     output,
-    Provider,
+    type Provider,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked
 } from '@angular/core';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
@@ -28,8 +28,8 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqTrim } from '@koobiq/components/form-field';
-import { KbqTagList } from './tag-list.component';
-import { KbqTagTextControl } from './tag-text-control';
+import type { KbqTagList } from './tag-list.component';
+import type { KbqTagTextControl } from './tag-text-control';
 
 const KBQ_TAG_INPUT_DEFAULT_SEPARATORS: KbqTagSeparator[] = [
     { symbol: /\r?\n/, key: 'Enter', keyCode: ENTER },

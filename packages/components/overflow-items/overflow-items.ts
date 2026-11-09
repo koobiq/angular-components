@@ -17,14 +17,14 @@ import {
     untracked
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { debounce, EMPTY, fromEvent, merge, switchMap, timer } from 'rxjs';
 import {
     KBQ_WINDOW,
-    KbqFlexDirection,
-    KbqFlexWrap,
+    type KbqFlexDirection,
+    type KbqFlexWrap,
     kbqInjectNativeElement,
-    KbqOrientation
+    type KbqOrientation
 } from '@koobiq/components/core';
-import { debounce, EMPTY, fromEvent, merge, switchMap, timer } from 'rxjs';
 
 /**
  * Overflow, in device pixels, from which an item is hidden. At a fractional `devicePixelRatio` (browser zoom, display

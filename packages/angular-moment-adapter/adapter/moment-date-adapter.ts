@@ -1,10 +1,15 @@
-import { Injectable, InjectionToken, inject } from '@angular/core';
+import { inject, Injectable, InjectionToken } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE, KbqDateTimezoneService, KbqLocaleService } from '@koobiq/components/core';
-import { DateUnit, DurationObjectUnits, DurationUnit } from '@koobiq/date-adapter';
-import { MomentDateAdapter as BaseMomentDateAdapter, MomentDateAdapterOptions } from '@koobiq/moment-date-adapter';
-import { Moment } from 'moment';
-import { Observable, Subject } from 'rxjs';
+import type { Moment } from 'moment';
+import { type Observable, Subject } from 'rxjs';
+import {
+    KBQ_DATE_LOCALE,
+    KBQ_LOCALE_SERVICE,
+    KbqDateTimezoneService,
+    type KbqLocaleService
+} from '@koobiq/components/core';
+import type { DateUnit, DurationObjectUnits, DurationUnit } from '@koobiq/date-adapter';
+import { MomentDateAdapter as BaseMomentDateAdapter, type MomentDateAdapterOptions } from '@koobiq/moment-date-adapter';
 
 /** Configurable options for {@see MomentDateAdapter}. */
 export type IKbqMomentDateAdapterOptions = MomentDateAdapterOptions;

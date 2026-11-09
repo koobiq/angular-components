@@ -1,33 +1,33 @@
-﻿import { CollectionViewer, DataSource } from '@angular/cdk/collections';
+﻿import type { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import {
-    AfterContentChecked,
-    AfterContentInit,
+    type AfterContentChecked,
+    type AfterContentInit,
     ChangeDetectorRef,
+    contentChildren,
     DestroyRef,
     Directive,
-    ElementRef,
-    EmbeddedViewRef,
-    IterableChangeRecord,
-    IterableDiffer,
-    IterableDiffers,
-    OnDestroy,
-    OnInit,
-    Signal,
-    TrackByFunction,
-    ViewContainerRef,
-    contentChildren,
     effect,
+    ElementRef,
+    type EmbeddedViewRef,
     inject,
     input,
     isDevMode,
+    type IterableChangeRecord,
+    type IterableDiffer,
+    IterableDiffers,
+    type OnDestroy,
+    type OnInit,
+    type Signal,
+    type TrackByFunction,
     untracked,
-    viewChild
+    viewChild,
+    type ViewContainerRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IFocusableOption, KbqStateSaving } from '@koobiq/components/core';
-import { BehaviorSubject, Observable, Subject, Subscription, of as observableOf } from 'rxjs';
-import { FlatTreeControl } from './control/flat-tree-control';
-import { TreeControl } from './control/tree-control';
+import { BehaviorSubject, Observable, of as observableOf, Subject, type Subscription } from 'rxjs';
+import { type IFocusableOption, KbqStateSaving } from '@koobiq/components/core';
+import type { FlatTreeControl } from './control/flat-tree-control';
+import type { TreeControl } from './control/tree-control';
 import { KbqTreeNodeDef, KbqTreeNodeOutletContext } from './node';
 import { KbqTreeNodeOutlet } from './outlet';
 import {

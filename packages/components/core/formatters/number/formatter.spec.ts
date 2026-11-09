@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import fc from 'fast-check';
 import {
     KBQ_LOCALE_ID,
     KBQ_LOCALE_SERVICE,
@@ -7,7 +8,6 @@ import {
     KbqLocaleService,
     KbqRoundDecimalPipe
 } from '@koobiq/components/core';
-import fc from 'fast-check';
 
 describe('KbqRoundDecimalPipe', () => {
     let pipe: KbqRoundDecimalPipe;

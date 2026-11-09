@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { KbqFlag } from '@koobiq/components/flag';
 import { BR } from 'country-flag-icons/string/3x2';
+import { KbqFlag } from '@koobiq/components/flag';
 
 /**
  * @title Stylized flag

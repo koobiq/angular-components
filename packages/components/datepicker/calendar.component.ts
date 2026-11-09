@@ -1,19 +1,19 @@
 import {
-    AfterContentInit,
+    type AfterContentInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    OnChanges,
-    OnDestroy,
-    SimpleChanges,
-    ViewEncapsulation,
     inject,
     input,
+    type OnChanges,
+    type OnDestroy,
     output,
-    viewChild
+    type SimpleChanges,
+    viewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { KbqCalendarCellCssClasses } from './calendar-body.component';
+import type { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { KbqCalendarHeader } from './calendar-header.component';
 import { injectRequiredDateAdapter } from './datepicker-errors';
 import type { KbqDatepickerInput } from './datepicker-input.directive';

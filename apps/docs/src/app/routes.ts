@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { CanMatchFn, Route, Routes, UrlMatcher, UrlSegment } from '@angular/router';
+import type { CanMatchFn, Route, Routes, UrlMatcher, UrlSegment } from '@angular/router';
 import { docsIsExamplePagePath } from './constants/example-page';
 import { DOCS_DEFAULT_LOCALE } from './constants/locale';
 import { DocsLocaleService } from './services/locale';

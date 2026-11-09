@@ -1,5 +1,5 @@
-import { logging } from '@angular-devkit/core';
-import { SchematicsException, Tree } from '@angular-devkit/schematics';
+import type { logging } from '@angular-devkit/core';
+import { SchematicsException, type Tree } from '@angular-devkit/schematics';
 import fs from 'fs';
 import * as path from 'path';
 

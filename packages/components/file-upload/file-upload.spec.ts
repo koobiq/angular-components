@@ -1,50 +1,60 @@
-﻿import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+﻿import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
-    ElementRef,
-    Provider,
     effect,
+    ElementRef,
     inject as inject_1,
+    type Provider,
     signal,
     viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import {
-    AbstractControl,
-    AsyncValidatorFn,
+    type AbstractControl,
+    type AsyncValidatorFn,
     FormControl,
-    FormControlStatus,
+    type FormControlStatus,
     FormsModule,
     ReactiveFormsModule,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { BehaviorSubject, Observable, timer } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
-    DELETE,
-    ErrorStateMatcher,
-    KBQ_LOCALE_SERVICE,
-    KbqDefaultSizes,
-    KbqPartialLocaleData,
-    TAB,
     createFakeEvent,
     createMouseEvent,
+    DELETE,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
     enUSLocaleData,
+    type ErrorStateMatcher,
+    KBQ_LOCALE_SERVICE,
+    type KbqDefaultSizes,
     kbqLocaleServiceProvider,
-    ruRULocaleData
+    type KbqPartialLocaleData,
+    ruRULocaleData,
+    TAB
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';
-import { BehaviorSubject, Observable, timer } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { KbqDropzoneData, KbqFileUploadEmptyState, KbqFullScreenDropzoneService, KbqLocalDropzone } from './dropzone';
-import { KbqFile, KbqFileItem, KbqFileUploadAddStrategy, KbqFileUploadAddStrategyValues } from './file-upload';
+import {
+    type KbqDropzoneData,
+    KbqFileUploadEmptyState,
+    KbqFullScreenDropzoneService,
+    KbqLocalDropzone
+} from './dropzone';
+import {
+    type KbqFile,
+    type KbqFileItem,
+    KbqFileUploadAddStrategy,
+    type KbqFileUploadAddStrategyValues
+} from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { kbqFileUploadLocaleConfigurationProvider } from './file-upload.tokens';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';

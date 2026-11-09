@@ -1,15 +1,14 @@
 import { NgModule } from '@angular/core';
+import { TooltipArrowExample } from './tooltip-arrow/tooltip-arrow-example';
 import { TooltipDisabledExample } from './tooltip-disabled/tooltip-disabled-example';
+import { TooltipDisabledForComponentExample } from './tooltip-disabled-for-component/tooltip-disabled-for-component-example';
+import { TooltipDynamicExample } from './tooltip-dynamic/tooltip-dynamic-example';
 import { TooltipExtendedExample } from './tooltip-extended/tooltip-extended-example';
+import { TooltipHideWithTimeoutExample } from './tooltip-hide-with-timeout/tooltip-hide-with-timeout-example';
+import { TooltipInteractiveExample } from './tooltip-interactive/tooltip-interactive-example';
 import { TooltipOffsetExample } from './tooltip-offset/tooltip-offset-example';
 import { TooltipOverviewExample } from './tooltip-overview/tooltip-overview-example';
 import { TooltipPlacementsExample } from './tooltip-placements/tooltip-placements-example';
-
-import { TooltipArrowExample } from './tooltip-arrow/tooltip-arrow-example';
-import { TooltipDisabledForComponentExample } from './tooltip-disabled-for-component/tooltip-disabled-for-component-example';
-import { TooltipDynamicExample } from './tooltip-dynamic/tooltip-dynamic-example';
-import { TooltipHideWithTimeoutExample } from './tooltip-hide-with-timeout/tooltip-hide-with-timeout-example';
-import { TooltipInteractiveExample } from './tooltip-interactive/tooltip-interactive-example';
 import { TooltipRelativeToCaretExample } from './tooltip-relative-to-caret/tooltip-relative-to-caret-example';
 import { TooltipRelativeToPointerExample } from './tooltip-relative-to-pointer/tooltip-relative-to-pointer-example';
 import { TooltipStyleExample } from './tooltip-style/tooltip-style-example';

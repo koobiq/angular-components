@@ -1,14 +1,19 @@
 ﻿import { ENTER } from '@angular/cdk/keycodes';
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
+import { type AfterViewInit, ChangeDetectionStrategy, Component, type ElementRef, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import type { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { KbqAutocompleteModule, type KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagInput, KbqTagInputEvent, KbqTagsModule, kbqTagsDefaultOptionsProvider } from '@koobiq/components/tags';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+    KbqTagInput,
+    type KbqTagInputEvent,
+    kbqTagsDefaultOptionsProvider,
+    KbqTagsModule
+} from '@koobiq/components/tags';
 
 type AutocompleteValue = string | { new: true; value: string } | null;
 

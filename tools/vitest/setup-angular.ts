@@ -1,12 +1,11 @@
 import '@analogjs/vitest-angular/setup-serializers';
 import '@angular/compiler';
-
-import { setupTestBed } from '@analogjs/vitest-angular/setup-testbed';
+import './fail-on-console';
 import { DebugNode, provideCheckNoChangesConfig } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
+import { setupTestBed } from '@analogjs/vitest-angular/setup-testbed';
 import type { JSDOM } from 'jsdom';
-import { expect, SnapshotSerializer, vi } from 'vitest';
-import './fail-on-console';
+import { expect, type SnapshotSerializer, vi } from 'vitest';
 import { toHaveNoViolations } from './to-have-no-violations';
 
 // Zoneless, the default of `setupTestBed`, as the library runs.

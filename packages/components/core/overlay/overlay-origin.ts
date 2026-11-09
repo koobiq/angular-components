@@ -1,6 +1,6 @@
-import { CdkOverlayOrigin, FlexibleConnectedPositionStrategyOrigin } from '@angular/cdk/overlay';
-import { ElementRef } from '@angular/core';
-import { KbqCaretRect } from '../form-field/caret-rect';
+import { CdkOverlayOrigin, type FlexibleConnectedPositionStrategyOrigin } from '@angular/cdk/overlay';
+import type { ElementRef } from '@angular/core';
+import type { KbqCaretRect } from '../form-field/caret-rect';
 
 /**
  * Anything a connected overlay can be anchored to: an element, or a rectangle in viewport coordinates such as

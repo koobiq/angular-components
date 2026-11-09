@@ -1,6 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, type Type, viewChild } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { KBQ_ANIMATIONS_CONFIG, KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';

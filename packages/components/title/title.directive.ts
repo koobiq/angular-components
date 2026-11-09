@@ -1,27 +1,27 @@
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     contentChild,
     contentChildren,
     Directive,
     ElementRef,
     inject,
     input,
-    Signal,
-    TemplateRef
+    type Signal,
+    type TemplateRef
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { debounceTime, filter, skip, throttleTime } from 'rxjs';
 import {
     KBQ_TITLE_TEXT_REF,
     KBQ_WINDOW,
     kbqInjectNativeElement,
-    KbqTitleTextRef,
+    type KbqTitleTextRef,
     PopUpPlacements,
     PopUpTriggers
 } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { debounceTime, filter, skip, throttleTime } from 'rxjs';
 
 /**
  * Shows a tooltip with the full text of the host element, but only when that text is truncated —

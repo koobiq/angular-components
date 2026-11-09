@@ -2,21 +2,31 @@
 import { DASH } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { PlatformModule } from '@angular/cdk/platform';
-import { APP_ID, Component, DebugElement, effect, Provider, signal, Type, viewChild } from '@angular/core';
-import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import {
-    AbstractControl,
+    APP_ID,
+    Component,
+    type DebugElement,
+    effect,
+    type Provider,
+    signal,
+    type Type,
+    viewChild
+} from '@angular/core';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
+import {
+    type AbstractControl,
     FormControl,
     FormGroup,
     ReactiveFormsModule,
-    ValidationErrors,
-    ValidatorFn,
+    type ValidationErrors,
+    type ValidatorFn,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
 import {
     KbqAutocompleteModule,
-    KbqAutocompleteSelectedEvent,
+    type KbqAutocompleteSelectedEvent,
     KbqAutocompleteTrigger
 } from '@koobiq/components/autocomplete';
 import {
@@ -33,9 +43,8 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { Subject } from 'rxjs';
 import { KbqTagsModule } from './index';
-import { KbqTagInput, KbqTagInputEvent, kbqTagsDefaultOptionsProvider } from './tag-input';
+import { KbqTagInput, type KbqTagInputEvent, kbqTagsDefaultOptionsProvider } from './tag-input';
 import { KbqTagList } from './tag-list.component';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {

@@ -1,19 +1,19 @@
 import {
-    AfterContentInit,
+    type AfterContentInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    OnChanges,
-    SimpleChanges,
-    ViewEncapsulation,
     inject,
     input,
+    type OnChanges,
     output,
-    viewChild
+    type SimpleChanges,
+    viewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DateAdapter, KbqDateTimezoneService } from '@koobiq/components/core';
-import { KbqCalendarBody, KbqCalendarCell, KbqCalendarCellCssClasses } from './calendar-body.component';
+import { type DateAdapter, KbqDateTimezoneService } from '@koobiq/components/core';
+import { KbqCalendarBody, KbqCalendarCell, type KbqCalendarCellCssClasses } from './calendar-body.component';
 import { injectRequiredDateAdapter } from './datepicker-errors';
 
 const DAYS_PER_WEEK = 7;

@@ -1,4 +1,4 @@
-import { KoobiqTheme } from './workspace-styles';
+import type { KoobiqTheme } from './workspace-styles';
 
 const KNOWN_THEME_CLASSES = ['kbq-app-background', 'kbq-light', 'kbq-dark'];
 const COMMENT_START = '<!--';

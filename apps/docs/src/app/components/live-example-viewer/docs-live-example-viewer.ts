@@ -6,17 +6,19 @@ import {
     Component,
     computed,
     effect,
-    ElementRef,
+    type ElementRef,
     inject,
     input,
     signal,
-    Type,
+    type Type,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { forkJoin, type Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
+import { type KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { kbqInjectNativeElement, KbqStateSavingService } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
@@ -26,8 +28,6 @@ import { KbqSkeleton } from '@koobiq/components/skeleton';
 import { KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { EXAMPLE_COMPONENTS } from '@koobiq/docs-examples';
-import { forkJoin, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { docsExamplePageUrl } from '../../constants/example-page';
 import { DocsDocumentLoader } from '../../services/document-loader';

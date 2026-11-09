@@ -12,11 +12,11 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { NavigationEnd, PRIMARY_OUTLET, Router, RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { filter } from 'rxjs/operators';
 import { DevLocaleSelector } from '../locale-selector';
 import { devSsrExampleIds } from './routes';
 

@@ -1,6 +1,6 @@
 import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     ChangeDetectionStrategy,
     Component,
     contentChild,
@@ -11,7 +11,7 @@ import {
     InjectionToken,
     input,
     model,
-    Provider,
+    type Provider,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
@@ -19,17 +19,17 @@ import {
     DOWN_ARROW,
     isHorizontalMovement,
     isVerticalMovement,
-    KbqDeepPartial,
+    type KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
-    KbqNavbarLocaleConfiguration,
+    type KbqNavbarLocaleConfiguration,
     KbqOverlayLayerExclude,
     ruRULocaleData,
     TAB,
     UP_ARROW
 } from '@koobiq/components/core';
-import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
 import { KbqFocusableComponent } from './navbar.component';
+import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
 
 // Re-exported so that the name this package's own token is typed with resolves from this package too:
 // `KbqVerticalNavbarConfiguration` used to be declared here, and the migration renames it in place.

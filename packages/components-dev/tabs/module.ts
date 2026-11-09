@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule } from '@koobiq/components/popover';
-import { KbqTabChangeEvent, KbqTabsModule } from '@koobiq/components/tabs';
+import { type KbqTabChangeEvent, KbqTabsModule } from '@koobiq/components/tabs';
 import {
     TabsActionbarExample,
     TabsAddTabExample,

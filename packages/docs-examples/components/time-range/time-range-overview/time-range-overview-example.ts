@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
-import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeType } from '@koobiq/components/time-range';
-import { of } from 'rxjs';
+import { KbqTimeRange, type KbqTimeRangeRange, type KbqTimeRangeType } from '@koobiq/components/time-range';
 
 const ExampleLocalizedData = new InjectionToken<Record<string | 'default', string>>('ExampleLocalizedData', {
     factory: () => ({

@@ -1,5 +1,5 @@
+import { kbqHighlightMark, KbqHighlightPipe } from './highlight.pipe';
 import { KbqHighlightBoldPipe } from './highlight-bold.pipe';
-import { KbqHighlightPipe, kbqHighlightMark } from './highlight.pipe';
 
 describe(KbqHighlightBoldPipe.name, () => {
     const pipe = new KbqHighlightBoldPipe();

@@ -31,7 +31,7 @@ import {
     FormFieldWithoutBordersExample,
     FormFieldWithPrefixAndSuffixExample
 } from 'packages/docs-examples/components/form-field';
-import { FormFieldsetWithButtonExample } from 'packages/docs-examples/components/forms/form-fieldset-with-button/form-fieldset-with-button-example';
+import { FormFieldsetWithButtonExample } from 'packages/docs-examples/components/forms';
 import { DevThemeToggle } from '../theme-toggle';
 import { DevFileFlatNode, DevFileNode } from '../tree/module';
 

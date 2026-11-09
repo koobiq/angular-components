@@ -1,8 +1,8 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, viewChild } from '@angular/core';
+import { type AfterViewInit, ChangeDetectionStrategy, Component, type TemplateRef, viewChild } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { KbqTooltipComponent, KbqTooltipTrigger } from './tooltip.component';
+import { type KbqTooltipComponent, KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
 @Component({

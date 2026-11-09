@@ -1,15 +1,15 @@
-import { FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
-import { Direction, Directionality } from '@angular/cdk/bidi';
+import { type FocusableOption, FocusKeyManager } from '@angular/cdk/a11y';
+import { type Direction, Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { ENTER, hasModifierKey, SPACE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
-    AfterContentChecked,
-    AfterContentInit,
+    type AfterContentChecked,
+    type AfterContentInit,
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectorRef,
     DestroyRef,
@@ -20,14 +20,16 @@ import {
     Injector,
     input,
     NgZone,
-    OnChanges,
-    OnDestroy,
-    QueryList,
+    type OnChanges,
+    type OnDestroy,
+    type QueryList,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { fromEvent, merge, of as observableOf, ReplaySubject, Subject, timer } from 'rxjs';
+import { auditTime, debounceTime, takeUntil } from 'rxjs/operators';
 import {
     DOWN_ARROW,
     END,
@@ -42,8 +44,6 @@ import {
     UP_ARROW
 } from '@koobiq/components/core';
 import { KBQ_SCROLLBAR_OPTIONS, type KbqScrollbarMode, type KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { fromEvent, merge, of as observableOf, ReplaySubject, Subject, timer } from 'rxjs';
-import { auditTime, debounceTime, takeUntil } from 'rxjs/operators';
 
 /** Config used to bind passive event listeners */
 const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: true }) as EventListenerOptions;

@@ -1,61 +1,61 @@
 import { FocusTrap } from '@angular/cdk/a11y';
 import { coerceElement } from '@angular/cdk/coercion';
 import {
-    ConnectedOverlayPositionChange,
-    ConnectionPositionPair,
-    FlexibleConnectedPositionStrategy,
+    type ConnectedOverlayPositionChange,
+    type ConnectionPositionPair,
+    type FlexibleConnectedPositionStrategy,
     OverlayContainer,
     OverlayPositionBuilder
 } from '@angular/cdk/overlay';
-import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
+import { type CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import {
     Component,
-    DebugElement,
-    ElementRef,
-    Provider,
-    TemplateRef,
-    Type,
+    type DebugElement,
     effect,
+    ElementRef,
+    type Provider,
     signal,
+    type TemplateRef,
+    type Type,
     viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { type ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { filter, Subject } from 'rxjs';
+import type { Mock } from 'vitest';
 import {
-    ENTER,
-    ESCAPE,
-    KBQ_LOCALE_SERVICE,
-    KbqLocaleService,
-    KbqOverlayLayer,
-    KbqOverlayOrigin,
-    KbqPopUpPlacementValues,
-    KbqStickToWindowPlacementValues,
-    POSITION_TO_CSS_MAP,
-    SPACE,
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
+    ENTER,
     enUSLocaleData,
-    ruRULocaleData
+    ESCAPE,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    KbqOverlayLayer,
+    type KbqOverlayOrigin,
+    type KbqPopUpPlacementValues,
+    type KbqStickToWindowPlacementValues,
+    POSITION_TO_CSS_MAP,
+    ruRULocaleData,
+    SPACE
 } from '@koobiq/components/core';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Subject, filter } from 'rxjs';
-import type { Mock } from 'vitest';
+import {
+    defaultHoverLeaveDelay,
+    defaultOffsetYWithArrow,
+    KbqPopoverComponent,
+    KbqPopoverTrigger
+} from './popover.component';
+import { KbqPopoverModule } from './popover.module';
 import {
     KBQ_POPOVER_CONFIRM_BUTTON_TEXT,
     KBQ_POPOVER_CONFIRM_TEXT,
     KbqPopoverConfirmTrigger
 } from './popover-confirm.component';
-import {
-    KbqPopoverComponent,
-    KbqPopoverTrigger,
-    defaultHoverLeaveDelay,
-    defaultOffsetYWithArrow
-} from './popover.component';
-import { KbqPopoverModule } from './popover.module';
 
 /** `KbqTooltipTrigger` default enter delay (400 ms) plus a buffer for the deferred show. */
 const tooltipEnterDelay = 410;

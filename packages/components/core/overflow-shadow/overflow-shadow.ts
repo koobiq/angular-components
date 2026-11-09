@@ -7,11 +7,11 @@ import {
     InjectionToken,
     input,
     numberAttribute,
-    OnInit,
+    type OnInit,
     signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { fromEvent, Observable } from 'rxjs';
+import { fromEvent, type Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { kbqInjectNativeElement } from '../utils';
 

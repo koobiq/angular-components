@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { AgGridModule } from 'ag-grid-angular';
+import { AllCommunityModule, type ColDef, type GetRowIdParams, ModuleRegistry } from 'ag-grid-community';
 import {
     KbqAgGridRowFocusStateLocalStorageStore,
     kbqAgGridRowFocusStateStoreProvider,
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { AgGridModule } from 'ag-grid-angular';
-import { AllCommunityModule, ColDef, GetRowIdParams, ModuleRegistry } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

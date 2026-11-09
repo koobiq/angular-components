@@ -1,19 +1,20 @@
 import { Platform } from '@angular/cdk/platform';
 import {
     afterNextRender,
-    AfterViewInit,
+    type AfterViewInit,
     computed,
     Directive,
-    DoCheck,
+    type DoCheck,
     inject,
     Injector,
-    OnInit,
+    type OnInit,
     Renderer2,
     RendererStyleFlags2,
     signal,
     untracked
 } from '@angular/core';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KbqAccordionItem } from './accordion-item';
 
 const CONTENT_HEIGHT = '--kbq-accordion-content-height';

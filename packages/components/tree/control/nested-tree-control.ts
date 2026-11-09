@@ -1,7 +1,7 @@
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { BaseTreeControl } from './base-tree-control';
-import { KbqTreeControlOptions } from './tree-control';
+import type { KbqTreeControlOptions } from './tree-control';
 
 /** Nested tree control. Able to expand/collapse a subtree recursively for NestedNode type. */
 export class NestedTreeControl<T, K = T> extends BaseTreeControl<T, K> {

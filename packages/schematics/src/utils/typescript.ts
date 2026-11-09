@@ -1,6 +1,6 @@
-import { Tree } from '@angular-devkit/schematics';
+import type { Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { Attribute, Block, Element, getSimpleAttributeName, Visitor } from './ast';
+import { type Attribute, type Block, type Element, getSimpleAttributeName, type Visitor } from './ast';
 
 export const LEADING_TRIVIA_CHARS = [' ', '\n', '\r', '\t'];
 

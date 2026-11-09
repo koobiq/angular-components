@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { DocsLocale } from 'src/app/constants/locale';
+import type { DocsLocale } from 'src/app/constants/locale';
 import { DOCS_TRANSLATIONS } from 'src/app/services/i18n';
 import { DocsStructureTokensTab } from '../../structure';
 import { DocsComponentViewerComponent } from '../component-viewer/component-viewer.component';

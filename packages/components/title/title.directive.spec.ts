@@ -4,26 +4,26 @@ import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {
     Component,
-    DebugElement,
+    type DebugElement,
     Directive,
-    ElementRef,
+    type ElementRef,
     Injectable,
     TemplateRef,
-    Type,
+    type Type,
     viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { type Observable, Subject } from 'rxjs';
+import type { Mock } from 'vitest';
 import {
     dispatchMouseEvent,
     KBQ_TITLE_TEXT_REF,
-    KbqSiblingPopup,
+    type KbqSiblingPopup,
     kbqSiblingPopupProvider,
-    KbqTitleTextRef,
+    type KbqTitleTextRef,
     PopUpTriggers
 } from '@koobiq/components/core';
-import { Observable, Subject } from 'rxjs';
-import type { Mock } from 'vitest';
 import { KbqTitleDirective } from './title.directive';
 
 /** Drives the directive's resize path by hand — the real observer never emits under JSDOM. */

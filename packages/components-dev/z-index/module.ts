@@ -1,7 +1,14 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, TemplateRef, ViewEncapsulation, inject, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    type TemplateRef,
+    viewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOptionModule, KbqOverlayLayer, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';

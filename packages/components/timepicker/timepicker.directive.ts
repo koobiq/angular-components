@@ -1,10 +1,10 @@
 ﻿import { _IdGenerator } from '@angular/cdk/a11y';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     booleanAttribute,
     computed,
     Directive,
-    DoCheck,
+    type DoCheck,
     effect,
     ElementRef,
     forwardRef,
@@ -12,28 +12,29 @@ import {
     InjectionToken,
     input,
     linkedSignal,
-    OnChanges,
+    type OnChanges,
     output,
-    Provider,
+    type Provider,
     Renderer2,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-    AbstractControl,
-    ControlValueAccessor,
+    type AbstractControl,
+    type ControlValueAccessor,
     FormGroupDirective,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
-    NgControl,
+    type NgControl,
     NgForm,
-    ValidationErrors,
-    Validator,
-    ValidatorFn,
+    type ValidationErrors,
+    type Validator,
+    type ValidatorFn,
     Validators
 } from '@angular/forms';
+import { noop } from 'rxjs';
 import {
     BACKSPACE,
     DateAdapter,
@@ -47,13 +48,13 @@ import {
     isLetterKey,
     isVerticalMovement,
     KbqDateTimezoneService,
-    KbqDeepPartial,
+    type KbqDeepPartial,
     KbqErrorStateTracker,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
     kbqRevealSelection,
     kbqSetSelectionRange,
-    KbqTimepickerLocaleConfiguration,
+    type KbqTimepickerLocaleConfiguration,
     LEFT_ARROW,
     PAGE_DOWN,
     PAGE_UP,
@@ -67,8 +68,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import type { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { noop } from 'rxjs';
-
 import {
     AM_PM_FORMAT_REGEXP,
     DEFAULT_TIME_FORMAT,

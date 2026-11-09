@@ -1,6 +1,8 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import type { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import {
     createSearchPredicate,
@@ -9,8 +11,6 @@ import {
     tokenizeSearchQuery
 } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 
 /**
  * @title Autocomplete smart search

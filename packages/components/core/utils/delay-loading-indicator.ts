@@ -3,7 +3,7 @@ import {
     defer,
     distinctUntilChanged,
     EMPTY,
-    MonoTypeOperatorFunction,
+    type MonoTypeOperatorFunction,
     of,
     switchMap,
     timer

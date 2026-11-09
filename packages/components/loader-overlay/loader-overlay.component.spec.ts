@@ -3,14 +3,14 @@ import { Platform } from '@angular/cdk/platform';
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchKeyboardEvent, ENTER, KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
+import { dispatchKeyboardEvent, ENTER, KbqComponentColors, type KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import {
     KbqLoaderOverlay,
     KbqLoaderOverlayCaption,
     KbqLoaderOverlayIndicator,
     KbqLoaderOverlayModule,
-    KbqLoaderOverlaySurface,
+    type KbqLoaderOverlaySurface,
     KbqLoaderOverlayText
 } from './index';
 

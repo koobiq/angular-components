@@ -4,17 +4,17 @@ import {
     Component,
     computed,
     Directive,
-    DoCheck,
+    type DoCheck,
     ElementRef,
     inject,
-    Signal,
+    type Signal,
     signal
 } from '@angular/core';
-import { FormGroupDirective, NgControl, NgForm, Validators } from '@angular/forms';
+import { FormGroupDirective, type NgControl, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher, KbqErrorStateTracker } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTimeRange } from './time-range';
-import { KbqTimeRangeRange } from './types';
+import type { KbqTimeRangeRange } from './types';
 
 /** Directive for easy using styles of time-range placeholder publicly. */
 @Directive({

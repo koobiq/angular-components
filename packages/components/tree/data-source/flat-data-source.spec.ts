@@ -1,8 +1,8 @@
-import { CollectionViewer } from '@angular/cdk/collections';
+import type { CollectionViewer } from '@angular/cdk/collections';
 import { computed } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, type Observable, of } from 'rxjs';
 import { FlatTreeControl } from '../control/flat-tree-control';
-import { TreeControl } from '../control/tree-control';
+import type { TreeControl } from '../control/tree-control';
 import { KbqTreeFlatDataSource, KbqTreeFlattener } from './flat-data-source';
 
 interface Node {

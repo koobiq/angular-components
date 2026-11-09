@@ -1,4 +1,4 @@
-import { HostTree } from '@angular-devkit/schematics';
+import type { HostTree } from '@angular-devkit/schematics';
 import { visitProjectFiles } from './project-files';
 import { listingTree } from './testing';
 

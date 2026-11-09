@@ -4,7 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqComponentColors, KbqFormsModule, KbqPopUpPlacementValues, PopUpPlacements } from '@koobiq/components/core';
+import {
+    KbqComponentColors,
+    KbqFormsModule,
+    type KbqPopUpPlacementValues,
+    PopUpPlacements
+} from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';

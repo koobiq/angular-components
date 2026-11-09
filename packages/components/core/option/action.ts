@@ -1,6 +1,6 @@
-﻿import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+﻿import { FocusMonitor, type FocusOrigin } from '@angular/cdk/a11y';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -9,10 +9,10 @@ import {
     inject,
     InjectionToken,
     input,
-    OnDestroy,
-    OutputRef,
+    type OnDestroy,
+    type OutputRef,
     ViewEncapsulation,
-    WritableSignal
+    type WritableSignal
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, SPACE, TAB } from '../keycodes';

@@ -1,9 +1,9 @@
 import {
-    AfterContentInit,
+    type AfterContentInit,
     booleanAttribute,
     computed,
     Directive,
-    DoCheck,
+    type DoCheck,
     effect,
     ElementRef,
     EventEmitter,
@@ -12,29 +12,30 @@ import {
     InjectionToken,
     input,
     linkedSignal,
-    OnChanges,
-    OnDestroy,
+    type OnChanges,
+    type OnDestroy,
     output,
-    Provider,
+    type Provider,
     Renderer2,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-    AbstractControl,
-    ControlValueAccessor,
+    type AbstractControl,
+    type ControlValueAccessor,
     FormGroupDirective,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
-    NgControl,
+    type NgControl,
     NgForm,
-    ValidationErrors,
-    Validator,
-    ValidatorFn,
+    type ValidationErrors,
+    type Validator,
+    type ValidatorFn,
     Validators
 } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import {
     BACKSPACE,
     DateAdapter,
@@ -51,13 +52,13 @@ import {
     KBQ_DATE_FORMATS,
     KBQ_DATE_LOCALE,
     KBQ_DEFAULT_LOCALE_DATA_FACTORY,
-    KbqDateFormats,
-    KbqDatepickerLocaleConfiguration,
+    type KbqDateFormats,
+    type KbqDatepickerLocaleConfiguration,
     KbqDateTimezoneService,
-    KbqDeepPartial,
+    type KbqDeepPartial,
     KbqErrorStateTracker,
     kbqLocaleConfigurationOverrideProvider,
-    KbqLocaleDataInput,
+    type KbqLocaleDataInput,
     KbqLocaleOverridesDirective,
     kbqRevealSelection,
     kbqSetSelectionRange,
@@ -74,10 +75,9 @@ import {
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';
 import type { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Subscription } from 'rxjs';
-import { KbqCalendar } from './calendar.component';
+import type { KbqCalendar } from './calendar.component';
+import type { KbqDatepicker } from './datepicker.component';
 import { injectRequiredDateAdapter } from './datepicker-errors';
-import { KbqDatepicker } from './datepicker.component';
 
 enum DateParts {
     year = 'y',

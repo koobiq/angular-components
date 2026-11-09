@@ -1,17 +1,18 @@
 ﻿import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
 import {
-    AbstractControl,
+    type AbstractControl,
     FormControl,
     FormGroup,
     FormsModule,
-    NgForm,
+    type NgForm,
     ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
-    UntypedFormGroup,
-    ValidatorFn,
+    type UntypedFormGroup,
+    type ValidatorFn,
     Validators
 } from '@angular/forms';
+import type { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -20,15 +21,14 @@ import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { type KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { DateTime } from 'luxon';
 import { ValidationExamplesModule } from '../../docs-examples/components/validation';
-import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from '../tree/module';
+import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, type DevFileNode } from '../tree/module';
 
 function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {

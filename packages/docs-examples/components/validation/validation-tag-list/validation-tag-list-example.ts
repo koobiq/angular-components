@@ -1,19 +1,19 @@
 ﻿import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, type OnInit } from '@angular/core';
 import {
-    AbstractControl,
+    type AbstractControl,
     FormBuilder,
-    FormGroup,
+    type FormGroup,
     ReactiveFormsModule,
-    ValidationErrors,
-    ValidatorFn,
+    type ValidationErrors,
+    type ValidatorFn,
     Validators
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqErrorStateMatcherProvider, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { type KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 const LATIN_PATTERN = /^[a-zA-Z]+$/;

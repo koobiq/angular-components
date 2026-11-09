@@ -1,8 +1,8 @@
-import { Direction, Directionality } from '@angular/cdk/bidi';
-import { CdkPortalOutlet, TemplatePortal } from '@angular/cdk/portal';
+import { type Direction, Directionality } from '@angular/cdk/bidi';
+import { CdkPortalOutlet, type TemplatePortal } from '@angular/cdk/portal';
 import {
     afterNextRender,
-    AfterRenderRef,
+    type AfterRenderRef,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -16,19 +16,19 @@ import {
     Injector,
     input,
     MAX_ANIMATION_TIMEOUT,
-    OnChanges,
-    OnDestroy,
-    OnInit,
+    type OnChanges,
+    type OnDestroy,
+    type OnInit,
     output,
-    SimpleChanges,
+    type SimpleChanges,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
-import { kbqAnimationsDisabled, kbqAnimationsSettled } from '@koobiq/components/core';
-import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
+import { kbqAnimationsDisabled, kbqAnimationsSettled } from '@koobiq/components/core';
+import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 
 /**
  * These position states are used internally as the translation states of the tab body. Setting the

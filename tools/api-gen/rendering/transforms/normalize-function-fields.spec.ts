@@ -1,4 +1,4 @@
-import { FunctionEntry } from '../entities';
+import type { FunctionEntry } from '../entities';
 import { normalizeFunctionFields } from './normalize-function-fields';
 
 describe('normalizeFunctionFields', () => {

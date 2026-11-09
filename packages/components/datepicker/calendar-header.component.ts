@@ -1,12 +1,12 @@
 import { TitleCasePipe } from '@angular/common';
 import {
-    AfterContentInit,
+    type AfterContentInit,
     ChangeDetectionStrategy,
     Component,
     input,
-    OnChanges,
+    type OnChanges,
     output,
-    SimpleChanges,
+    type SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';

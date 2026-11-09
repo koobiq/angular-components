@@ -1,9 +1,16 @@
-import { ChangeDetectionStrategy, Component, OnInit, untracked, viewChild, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    type OnInit,
+    untracked,
+    viewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { Subject, timer } from 'rxjs';
 import { distinctUntilChanged, filter, map, switchMap, takeUntil } from 'rxjs/operators';
+import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { KbqBasePipe } from './base-pipe';
 
 @Component({

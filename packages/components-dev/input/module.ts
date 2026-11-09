@@ -3,7 +3,7 @@ import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KBQ_LOCALE_SERVICE,
-    KbqLocaleService,
+    type KbqLocaleService,
     KbqLocaleServiceModule,
     KbqNormalizeWhitespace,
     PasswordValidators

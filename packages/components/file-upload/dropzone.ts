@@ -1,5 +1,5 @@
 import { CdkTrapFocus } from '@angular/cdk/a11y';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, type OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -14,17 +14,18 @@ import {
     Injector,
     input,
     NgZone,
-    OnDestroy,
+    type OnDestroy,
     TemplateRef,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter, fromEvent, Subject, takeUntil } from 'rxjs';
 import {
     isHtmlElementOrNull,
     KBQ_WINDOW,
     kbqAnimationsDisabled,
-    KbqDefaultSizes,
+    type KbqDefaultSizes,
     kbqInjectNativeElement,
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
@@ -35,11 +36,10 @@ import {
     KbqEmptyStateTitle
 } from '@koobiq/components/empty-state';
 import { KbqIcon } from '@koobiq/components/icon';
-import { filter, fromEvent, Subject, takeUntil } from 'rxjs';
 import { KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION } from './file-upload.tokens';
-import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
+import type { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqDrop } from './primitives';
-import { KbqSingleFileUploadComponent } from './single-file-upload.component';
+import type { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
 /** Dropzone overlay content configuration. */
 export type KbqDropzoneData = Partial<{

@@ -1,8 +1,8 @@
-import { Component, signal, Type } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, signal, type Type } from '@angular/core';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
-import { KbqComponentColors, KbqEnumValues } from '@koobiq/components/core';
+import { KbqComponentColors, type KbqEnumValues } from '@koobiq/components/core';
 import { KbqIcon, KbqIconButton, KbqIconItem } from '@koobiq/components/icon';
 import { KbqAlert, KbqAlertCloseButton, KbqAlertColors, KbqAlertControl, KbqAlertStyles, KbqAlertTitle } from './index';
 

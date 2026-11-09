@@ -1,11 +1,11 @@
-import { SelectionChange } from '@angular/cdk/collections';
-import { ChangeDetectionStrategy, Component, Injectable, inject } from '@angular/core';
+import type { SelectionChange } from '@angular/cdk/collections';
+import { ChangeDetectionStrategy, Component, inject, Injectable } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { BehaviorSubject, type Observable, timer } from 'rxjs';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { BehaviorSubject, Observable, timer } from 'rxjs';
 
 interface INodeResponse {
     id: string;

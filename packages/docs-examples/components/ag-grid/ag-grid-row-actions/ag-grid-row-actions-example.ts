@@ -1,16 +1,16 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { KBQ_AG_GRID_ROW_ACTIONS_PARAMS, KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqToastService } from '@koobiq/components/toast';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
-    ColDef,
-    FirstDataRenderedEvent,
+    type ColDef,
+    type FirstDataRenderedEvent,
     ModuleRegistry,
-    RowSelectionOptions
+    type RowSelectionOptions
 } from 'ag-grid-community';
+import { KBQ_AG_GRID_ROW_ACTIONS_PARAMS, KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqToastService } from '@koobiq/components/toast';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

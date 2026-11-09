@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
-    KbqCodeBlockFile,
+    type KbqCodeBlockFile,
     kbqCodeBlockHighlightJsConfigProvider,
     KbqCodeBlockModule
 } from '@koobiq/components/code-block';

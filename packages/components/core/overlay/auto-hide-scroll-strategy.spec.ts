@@ -1,8 +1,8 @@
-import { CdkScrollable, FlexibleConnectedPositionStrategy, ScrollDispatcher } from '@angular/cdk/overlay';
-import { ViewportRuler } from '@angular/cdk/scrolling';
-import { ElementRef, NgZone } from '@angular/core';
-import { KbqAutoHideScrollStrategy, kbqAutoHideScrollStrategyFactory } from '@koobiq/components/core';
+import { type CdkScrollable, FlexibleConnectedPositionStrategy, type ScrollDispatcher } from '@angular/cdk/overlay';
+import type { ViewportRuler } from '@angular/cdk/scrolling';
+import { ElementRef, type NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
+import { KbqAutoHideScrollStrategy, kbqAutoHideScrollStrategyFactory } from '@koobiq/components/core';
 
 function makeRect(top: number, left: number, bottom: number, right: number): DOMRect {
     return {

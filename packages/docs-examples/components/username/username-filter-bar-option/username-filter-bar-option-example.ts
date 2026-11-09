@@ -1,10 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, viewChild } from '@angular/core';
+import { type AfterViewInit, ChangeDetectionStrategy, Component, type TemplateRef, viewChild } from '@angular/core';
 import { KbqHighlightBackgroundPipe, tokenizeSearchQuery } from '@koobiq/components/core';
-import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import { type KbqFilter, KbqFilterBarModule, type KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import {
     kbqBuildUsernameText,
     kbqInjectUsernameFormatter,
-    KbqUserInfo,
+    type KbqUserInfo,
     KbqUsernameModule
 } from '@koobiq/components/username';
 

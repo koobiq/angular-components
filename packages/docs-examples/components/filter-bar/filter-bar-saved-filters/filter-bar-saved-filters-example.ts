@@ -4,23 +4,23 @@ import {
     computed,
     inject,
     linkedSignal,
-    TemplateRef,
+    type TemplateRef,
     viewChild
 } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateFormatter } from '@koobiq/components/core';
 import {
-    KbqFilter,
-    KbqFilterBar,
+    type KbqFilter,
+    type KbqFilterBar,
     KbqFilterBarModule,
-    KbqPipe,
-    KbqPipeTemplate,
+    type KbqPipe,
+    type KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSaveFilterEvent,
+    type KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
 import { KbqLink } from '@koobiq/components/link';
-import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+import { type KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { injectLocalizedPeriods, injectLocalizedText } from '../localized-data';
 
 interface ExampleFilter extends KbqFilter {

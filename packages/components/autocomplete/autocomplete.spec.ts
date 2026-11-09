@@ -5,24 +5,31 @@ import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    OnDestroy,
-    OnInit,
-    Provider,
-    Type,
-    ViewEncapsulation,
     computed,
     effect,
     inject,
     input,
+    type OnDestroy,
+    type OnInit,
     output,
+    type Provider,
     signal,
+    type Type,
     viewChild,
-    viewChildren
+    viewChildren,
+    ViewEncapsulation
 } from '@angular/core';
-import { ComponentFixture, TestBed, inject as testingInject } from '@angular/core/testing';
+import { type ComponentFixture, inject as testingInject, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { EMPTY, type Observable, Subject, type Subscription } from 'rxjs';
+import { map, startWith, take } from 'rxjs/operators';
+import type { Mock } from 'vitest';
 import {
+    createKeyboardEvent,
+    dispatchEvent,
+    dispatchFakeEvent,
+    dispatchKeyboardEvent,
     DOWN_ARROW,
     ENTER,
     ESCAPE,
@@ -31,35 +38,28 @@ import {
     KbqOption,
     KbqOptionSelectionChange,
     KbqOverlayLayer,
-    KbqPanelMaxWidth,
-    KbqPanelWidth,
-    KbqTextQuery,
+    type KbqPanelMaxWidth,
+    type KbqPanelWidth,
+    type KbqTextQuery,
     RIGHT_ARROW,
     SPACE,
     TAB,
-    UP_ARROW,
-    createKeyboardEvent,
-    dispatchEvent,
-    dispatchFakeEvent,
-    dispatchKeyboardEvent,
-    typeInElement
+    typeInElement,
+    UP_ARROW
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { KbqModalService } from '@koobiq/components/modal';
 import { KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { EMPTY, Observable, Subject, Subscription } from 'rxjs';
-import { map, startWith, take } from 'rxjs/operators';
-import type { Mock } from 'vitest';
-import { KbqInput, KbqInputModule } from '../input/index';
 import {
+    getKbqAutocompleteMissingPanelError,
     KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS,
     KbqAutocomplete,
     KbqAutocompleteModule,
     KbqAutocompleteOrigin,
-    KbqAutocompleteSelectedEvent,
-    KbqAutocompleteTrigger,
-    getKbqAutocompleteMissingPanelError
+    type KbqAutocompleteSelectedEvent,
+    KbqAutocompleteTrigger
 } from './index';
 
 // The modal's own animation timeout, which is internal to its entry point.

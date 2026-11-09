@@ -1,11 +1,11 @@
-import { Path } from '@angular-devkit/core';
-import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import type { Path } from '@angular-devkit/core';
+import { chain, type Rule, type SchematicContext, type Tree } from '@angular-devkit/schematics';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
 import { signalMembersRule } from '../../utils/signal-members-migration';
 import { config, REMOVED_TOKENS_MESSAGE, REMOVED_TOKENS_PATTERN } from './data';
-import { Schema } from './schema';
+import type { Schema } from './schema';
 
 const STYLE_EXTENSIONS = ['.scss', '.css'];
 

@@ -2,7 +2,7 @@ import { globSync } from 'glob';
 import {
     docsGetItemById,
     DocsStructureCategoryId,
-    DocsStructureItem,
+    type DocsStructureItem,
     DocsStructureItemId
 } from '../../apps/docs/src/app/structure';
 import { shiftHeadings } from './markdown-text';

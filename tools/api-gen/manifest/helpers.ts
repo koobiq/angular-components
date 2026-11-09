@@ -1,10 +1,10 @@
 import {
-    ClassEntry,
-    DocEntry,
+    type ClassEntry,
+    type DocEntry,
     EntryType,
-    FunctionEntry,
-    JsDocTagEntry,
-    MemberEntry,
+    type FunctionEntry,
+    type JsDocTagEntry,
+    type MemberEntry,
     MemberTags
 } from '../rendering/entities';
 import { normalizeFunctionFields } from '../rendering/transforms/normalize-function-fields';

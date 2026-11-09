@@ -9,7 +9,6 @@
         "lib": ["ES2023", "DOM", "DOM.Iterable", "DOM.AsyncIterable"],
         "moduleResolution": "bundler",
         "declaration": true,
-        "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "importHelpers": true,
         "skipLibCheck": true,

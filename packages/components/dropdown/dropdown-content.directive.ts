@@ -1,6 +1,14 @@
 import { DomPortalOutlet, TemplatePortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
-import { ApplicationRef, Directive, inject, Injector, OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+    ApplicationRef,
+    Directive,
+    inject,
+    Injector,
+    type OnDestroy,
+    TemplateRef,
+    ViewContainerRef
+} from '@angular/core';
 import { Subject } from 'rxjs';
 
 /**

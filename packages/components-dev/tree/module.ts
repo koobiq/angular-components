@@ -1,10 +1,11 @@
 import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { debounceTime, Subject } from 'rxjs';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqButtonToggleChange, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
+import { type KbqButtonToggleChange, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqHighlightModule, KbqMultipleInput, PopUpPlacements } from '@koobiq/components/core';
+import { KbqHighlightModule, type KbqMultipleInput, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -15,16 +16,15 @@ import {
     FilterByViewValue,
     FilterParentsForNodes,
     FlatTreeControl,
-    KbqTreeCopyEvent,
+    type KbqTreeCopyEvent,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
-    KbqTreeNavigationChange,
-    KbqTreeOption,
-    KbqTreeSelectAllEvent,
-    KbqTreeSelectionChange
+    type KbqTreeNavigationChange,
+    type KbqTreeOption,
+    type KbqTreeSelectAllEvent,
+    type KbqTreeSelectionChange
 } from '@koobiq/components/tree';
-import { Subject, debounceTime } from 'rxjs';
 import { TreeExamplesModule } from '../../docs-examples/components/tree';
 import { DEV_TREE_DATA } from './mock';
 

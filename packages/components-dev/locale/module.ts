@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KBQ_LOCALE_SERVICE,
-    KbqLocaleItem,
+    type KbqLocaleItem,
     KbqLocaleOverridesDirective,
-    KbqLocaleService,
+    type KbqLocaleService,
     KbqLocaleServiceModule,
     KbqOptionModule
 } from '@koobiq/components/core';

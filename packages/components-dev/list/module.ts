@@ -4,24 +4,24 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal, ViewEncapsulation } from '@angular/core';
 import { FormsModule, UntypedFormControl } from '@angular/forms';
+import { of } from 'rxjs';
+import { debounceTime, startWith, switchMap } from 'rxjs/operators';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqMultipleInput, PopUpPlacements } from '@koobiq/components/core';
+import { type KbqMultipleInput, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
-    KbqListCopyEvent,
-    KbqListDragPreview,
+    type KbqListCopyEvent,
+    type KbqListDragPreview,
     KbqListModule,
-    KbqListOption,
-    KbqListSelectAllEvent,
-    KbqListSelectionChange,
-    KbqListSelectionDroppedEvent
+    type KbqListOption,
+    type KbqListSelectAllEvent,
+    type KbqListSelectionChange,
+    type KbqListSelectionDroppedEvent
 } from '@koobiq/components/list';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { ListExamplesModule } from 'packages/docs-examples/components/list';
-import { of } from 'rxjs';
-import { debounceTime, startWith, switchMap } from 'rxjs/operators';
 import { DevThemeToggle } from '../theme-toggle';
 
 type DevItem = { id: number; label: string; caption?: string };

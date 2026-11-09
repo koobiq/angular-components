@@ -1,6 +1,12 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Overlay, OverlayConfig, OverlayRef, PositionStrategy, ScrollStrategy } from '@angular/cdk/overlay';
+import {
+    Overlay,
+    OverlayConfig,
+    type OverlayRef,
+    type PositionStrategy,
+    type ScrollStrategy
+} from '@angular/cdk/overlay';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
@@ -9,22 +15,24 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ComponentRef,
+    type ComponentRef,
     ElementRef,
     inject,
     InjectionToken,
     Injector,
     input,
-    OnChanges,
-    OnDestroy,
+    type OnChanges,
+    type OnDestroy,
     output,
     signal,
-    SimpleChanges,
+    type SimpleChanges,
     untracked,
     viewChild,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
+import { merge, Subject, Subscription } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 import {
     ESCAPE,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
@@ -34,12 +42,10 @@ import {
     kbqAnimationsDisabled,
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
-import { merge, Subject, Subscription } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
-import { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { KbqCalendar } from './calendar.component';
+import type { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { injectRequiredDateAdapter } from './datepicker-errors';
-import { KbqDatepickerInput } from './datepicker-input.directive';
+import type { KbqDatepickerInput } from './datepicker-input.directive';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;

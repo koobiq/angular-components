@@ -41,7 +41,7 @@ export class PopoverRelativeToPointerExample {
     protected selectOwner(event: MouseEvent): void {
         if (!(event.target instanceof Element)) return;
 
-        const owner = event.target.closest<HTMLElement>('[data-owner]')?.dataset.owner;
+        const owner = event.target.closest<HTMLElement>('[data-owner]')?.dataset['owner'];
 
         if (owner) {
             this.selectedOwner = owner;

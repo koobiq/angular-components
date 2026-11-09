@@ -1,23 +1,23 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-
 import { F8 } from '@angular/cdk/keycodes';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     computed,
     inject,
     input,
-    InputSignal,
+    type InputSignal,
     numberAttribute,
-    OnDestroy,
-    Signal,
-    TemplateRef,
+    type OnDestroy,
+    type Signal,
+    type TemplateRef,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { fromEvent } from 'rxjs';
 import {
     KBQ_A11Y_LOCALE_CONFIGURATION,
     kbqInjectNativeElement,
@@ -26,9 +26,9 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { fromEvent } from 'rxjs';
+// eslint-disable-next-line import-x/no-cycle -- to be fixed in DS-3893
 import { KBQ_FORM_FIELD } from './form-field';
-import { KbqFormFieldControl } from './form-field-control';
+import type { KbqFormFieldControl } from './form-field-control';
 
 /**
  * Narrow structural contract for `kbqInputPassword`, duck-typed here to avoid a circular

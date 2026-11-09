@@ -1,74 +1,73 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { CdkScrollable, Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
-
+import { CdkScrollable, Overlay, type OverlayConfig, type ScrollStrategy } from '@angular/cdk/overlay';
 import {
-    AfterContentInit,
-    AfterViewChecked,
-    AfterViewInit,
+    type AfterContentInit,
+    type AfterViewChecked,
+    type AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
     Directive,
     EventEmitter,
-    InjectionToken,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Provider,
-    QueryList,
-    SimpleChanges,
-    TemplateRef,
-    Type,
-    ViewEncapsulation,
-    booleanAttribute,
-    computed,
     inject,
+    InjectionToken,
     input,
     model,
+    type OnChanges,
+    type OnDestroy,
+    type OnInit,
+    type Provider,
+    QueryList,
     signal,
+    type SimpleChanges,
+    type TemplateRef,
+    type Type,
     viewChild,
-    viewChildren
+    viewChildren,
+    ViewEncapsulation
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { merge } from 'rxjs';
+import { auditTime, distinctUntilChanged, filter, startWith } from 'rxjs/operators';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import {
+    applyPopupMargins,
     DOWN_ARROW,
     ENTER,
     ESCAPE,
     FocusKeyManager,
-    KbqAppSwitcherLocaleConfiguration,
-    KbqDeepPartial,
+    type KbqAppSwitcherLocaleConfiguration,
+    type KbqDeepPartial,
+    kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
+    kbqOptionalNumberAttribute,
     KbqOptionModule,
     KbqPopUp,
-    KbqPopUpPlacementValues,
-    KbqPopUpSizeValues,
+    type KbqPopUpPlacementValues,
+    type KbqPopUpSizeValues,
     KbqPopUpTrigger,
+    kbqQueryListFrom,
+    kbqSiblingPopupProvider,
     LEFT_ARROW,
-    POSITION_TO_CSS_MAP,
     PopUpPlacements,
     PopUpSizes,
     PopUpTriggers,
+    POSITION_TO_CSS_MAP,
     RIGHT_ARROW,
+    ruRULocaleData,
     SPACE,
     TAB,
-    UP_ARROW,
-    applyPopupMargins,
-    kbqLocaleConfigurationOverrideProvider,
-    kbqOptionalNumberAttribute,
-    kbqQueryListFrom,
-    kbqSiblingPopupProvider,
-    ruRULocaleData
+    UP_ARROW
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqDropdown, KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
+import { type KbqDropdown, KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
-import { merge } from 'rxjs';
-import { auditTime, distinctUntilChanged, filter, startWith } from 'rxjs/operators';
 import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
 import { KbqAppSwitcherListItem } from './app-switcher-list-item';

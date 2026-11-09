@@ -1,4 +1,4 @@
-import { logging } from '@angular-devkit/core';
+import type { logging } from '@angular-devkit/core';
 
 export function noProject(project: string) {
     return `Unable to find project '${project}' in the workspace`;

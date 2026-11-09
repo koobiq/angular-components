@@ -1,6 +1,6 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, viewChild } from '@angular/core';
+import { type AfterViewInit, ChangeDetectionStrategy, Component, type TemplateRef, viewChild } from '@angular/core';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
-import { KbqPopoverComponent, KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
+import { type KbqPopoverComponent, KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 @Component({

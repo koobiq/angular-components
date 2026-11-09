@@ -5,7 +5,7 @@ import {
     Component,
     inject,
     signal,
-    Type,
+    type Type,
     ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';

@@ -12,6 +12,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { auditTime, BehaviorSubject, combineLatest, distinctUntilChanged, map, startWith } from 'rxjs';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
@@ -22,14 +23,13 @@ import { KbqModalService } from '@koobiq/components/modal';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import type { KbqIconsMetadata } from '@koobiq/icons/types/icons';
-import { auditTime, BehaviorSubject, combineLatest, distinctUntilChanged, map, startWith } from 'rxjs';
-import { DocsIconItem, DocsIconItems } from 'src/app/services/icon-items';
+import { type DocsIconItem, DocsIconItems } from 'src/app/services/icon-items';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsDocStates } from '../../services/doc-states';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 import {
     DocsIconPreviewModalComponent,
-    DocsIconPreviewModalData
+    type DocsIconPreviewModalData
 } from './icon-preview-modal/icon-preview-modal.component';
 
 const SEARCH_DEBOUNCE_TIME = 300;

@@ -2,6 +2,8 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { kbqBreadcrumbsConfigurationProvider, KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KBQ_LOCALE_SERVICE, KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
@@ -10,8 +12,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 interface ExampleLocalizedText {
     breadcrumbShortening: string;

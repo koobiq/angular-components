@@ -4,7 +4,7 @@ import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqFormFieldModule, KbqLabel } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqUserInfo, KbqUsername } from '@koobiq/components/username';
+import { type KbqUserInfo, KbqUsername } from '@koobiq/components/username';
 
 const USERS: KbqUserInfo[] = [
     {

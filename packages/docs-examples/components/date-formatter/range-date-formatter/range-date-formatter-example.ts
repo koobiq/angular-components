@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
-import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE, KbqFormattersModule } from '@koobiq/components/core';
-import { DateTime } from 'luxon';
+import type { DateTime } from 'luxon';
 import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE, KbqFormattersModule } from '@koobiq/components/core';
 
 /**
  * @title Range date-formatter

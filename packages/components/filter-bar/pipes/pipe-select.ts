@@ -1,15 +1,17 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     Component,
-    Signal,
+    type Signal,
     untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { merge, startWith } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule, tokenizeSearchQuery } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -17,9 +19,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { merge, startWith } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { KbqSelectValue } from '../filter-bar.types';
+import type { KbqSelectValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';

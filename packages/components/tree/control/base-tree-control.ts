@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { TreeControl } from './tree-control';
+import { BehaviorSubject, type Observable } from 'rxjs';
+import type { TreeControl } from './tree-control';
 
 /** Base tree control. It has basic toggle/expand/collapse operations on a single data node. */
 export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {

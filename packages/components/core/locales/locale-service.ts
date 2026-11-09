@@ -1,5 +1,14 @@
 import { DOCUMENT } from '@angular/common';
-import { computed, inject, Injectable, InjectionToken, InjectOptions, Provider, Signal, signal } from '@angular/core';
+import {
+    computed,
+    inject,
+    Injectable,
+    InjectionToken,
+    type InjectOptions,
+    type Provider,
+    type Signal,
+    signal
+} from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { kbqDeepMerge } from '../utils';
 import { enUSLocaleData } from './en-US';
@@ -14,7 +23,7 @@ import {
 import { ptBRLocaleData } from './pt-BR';
 import { ruRULocaleData } from './ru-RU';
 import { tkTMLocaleData } from './tk-TM';
-import {
+import type {
     KbqInputNumberLocaleConfiguration,
     KbqLocaleData,
     KbqLocaleDataInput,

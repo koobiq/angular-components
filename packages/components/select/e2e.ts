@@ -2,12 +2,12 @@ import { Directionality } from '@angular/cdk/bidi';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { EMPTY } from 'rxjs';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { EMPTY } from 'rxjs';
 import { KbqSelect } from './select.component';
 import { KbqSelectModule } from './select.module';
 

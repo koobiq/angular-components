@@ -1,8 +1,8 @@
 ﻿import { Component } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchEvent, dispatchFakeEvent } from '@koobiq/components/core';
-import { KbqFile } from '../file-upload';
+import type { KbqFile } from '../file-upload';
 import { KbqFileDropDirective } from './file-drop';
 
 export const createFile = (

@@ -5,19 +5,19 @@ import {
     Component,
     computed,
     DestroyRef,
-    ElementRef,
+    type ElementRef,
     inject,
     InjectionToken,
     input,
-    Provider,
+    type Provider,
     signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
+import type { MarkedOptions } from 'marked';
 import { KbqNativeScrollbar, kbqNativeScrollbarOptionsProvider } from '@koobiq/components/scrollbar';
-import { MarkedOptions } from 'marked';
 import { KbqMarkdownService } from './markdown.service';
 
 /** List of options for `marked` library. */

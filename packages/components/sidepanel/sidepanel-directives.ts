@@ -20,8 +20,8 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTitleDirective } from '@koobiq/components/title';
-import { KbqSidepanelRef } from './sidepanel-ref';
 import { KbqSidepanelService } from './sidepanel.service';
+import { KbqSidepanelRef } from './sidepanel-ref';
 
 /**
  * Button that will close the current sidepanel.

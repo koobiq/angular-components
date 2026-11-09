@@ -1,34 +1,35 @@
 ﻿import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
-import { Direction, Directionality } from '@angular/cdk/bidi';
+import { type Direction, Directionality } from '@angular/cdk/bidi';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { A } from '@angular/cdk/keycodes';
 import {
     ChangeDetectionStrategy,
     Component,
-    DebugElement,
+    type DebugElement,
     effect,
     model,
-    Provider,
-    QueryList,
+    type Provider,
+    type QueryList,
     signal,
-    Type,
+    type Type,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import {
-    AsyncValidatorFn,
+    type AsyncValidatorFn,
     FormControl,
-    FormControlStatus,
+    type FormControlStatus,
     FormGroup,
     FormsModule,
-    NgForm,
+    type NgForm,
     ReactiveFormsModule,
     UntypedFormControl,
-    ValidationErrors,
+    type ValidationErrors,
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { map, type Observable, Subject, timer } from 'rxjs';
 import { KbqAutocompleteModule, KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import {
     BACKSPACE,
@@ -38,27 +39,24 @@ import {
     dispatchKeyboardEvent,
     END,
     ENTER,
-    FocusKeyManager,
+    ErrorStateMatcher,
+    type FocusKeyManager,
     HOME,
     KBQ_ANIMATIONS_CONFIG,
+    kbqErrorStateMatcherProvider,
     LEFT_ARROW,
     RIGHT_ARROW,
+    ShowOnControlDirtyErrorStateMatcher,
+    ShowOnFormSubmitErrorStateMatcher,
     SPACE,
     TAB,
     typeInElement
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
-import { map, Observable, Subject, timer } from 'rxjs';
-import {
-    ErrorStateMatcher,
-    kbqErrorStateMatcherProvider,
-    ShowOnControlDirtyErrorStateMatcher,
-    ShowOnFormSubmitErrorStateMatcher
-} from '../core';
-import { KbqInputModule } from '../input/index';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagList, KbqTagsModule } from './index';
-import { KbqTagInput, KbqTagInputEvent } from './tag-input';
-import { KbqTag, KbqTagEvent } from './tag.component';
+import { KbqTag, type KbqTagEvent } from './tag.component';
+import { KbqTagInput, type KbqTagInputEvent } from './tag-input';
 
 const createStandaloneComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({

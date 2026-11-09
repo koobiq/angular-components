@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { AbstractControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
-import { ErrorStateMatcher, KbqNormalizeWhitespace } from '@koobiq/components/core';
+import { type AbstractControl, type FormGroupDirective, FormsModule, type NgForm } from '@angular/forms';
+import { type ErrorStateMatcher, KbqNormalizeWhitespace } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from './input.module';
 

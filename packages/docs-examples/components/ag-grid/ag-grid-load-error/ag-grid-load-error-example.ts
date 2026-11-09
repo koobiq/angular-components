@@ -1,5 +1,18 @@
 import { ChangeDetectionStrategy, Component, computed, inject, model, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AgGridModule } from 'ag-grid-angular';
+import {
+    AllCommunityModule,
+    type ColDef,
+    type GridApi,
+    type ICellRendererParams,
+    type IDatasource,
+    type IGetRowsParams,
+    ModuleRegistry,
+    type RowSelectionOptions,
+    type RowStyle,
+    type SelectionColumnDef
+} from 'ag-grid-community';
 import {
     KBQ_AG_GRID_LOAD_ERROR_LABELS_EN,
     KBQ_AG_GRID_LOAD_ERROR_LABELS_RU,
@@ -10,19 +23,6 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { AgGridModule } from 'ag-grid-angular';
-import {
-    AllCommunityModule,
-    ColDef,
-    GridApi,
-    ICellRendererParams,
-    IDatasource,
-    IGetRowsParams,
-    ModuleRegistry,
-    RowSelectionOptions,
-    RowStyle,
-    SelectionColumnDef
-} from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

@@ -1,4 +1,4 @@
-import { Component, Renderer2, inject } from '@angular/core';
+import { Component, inject, Renderer2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { dispatchFakeEvent } from '../testing';
 import { kbqListenForCaretMoves } from './caret-tracking';

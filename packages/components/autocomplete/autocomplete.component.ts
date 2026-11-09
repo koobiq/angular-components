@@ -1,7 +1,7 @@
 ﻿import { _IdGenerator } from '@angular/cdk/a11y';
 import {
-    AfterContentChecked,
-    AfterContentInit,
+    type AfterContentChecked,
+    type AfterContentInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
@@ -10,19 +10,20 @@ import {
     DestroyRef,
     Directive,
     effect,
-    ElementRef,
+    type ElementRef,
     inject,
     InjectionToken,
     input,
     numberAttribute,
     output,
-    QueryList,
+    type QueryList,
     signal,
     TemplateRef,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { delay, filter } from 'rxjs/operators';
 import {
     ActiveDescendantKeyManager,
     KBQ_OPTION_PARENT_COMPONENT,
@@ -30,14 +31,13 @@ import {
     kbqInjectNativeElement,
     KbqOptgroup,
     KbqOption,
-    KbqOptionParentComponent,
-    KbqPanelMaxWidth,
-    KbqPanelWidth,
+    type KbqOptionParentComponent,
+    type KbqPanelMaxWidth,
+    type KbqPanelWidth,
     kbqQueryListFrom
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { delay, filter } from 'rxjs/operators';
 
 /** Footer that is rendered below the autocomplete options panel. */
 @Directive({

@@ -1,45 +1,53 @@
 import {
+    _IdGenerator,
     CdkTrapFocus,
     ConfigurableFocusTrapFactory,
     FOCUS_TRAP_INERT_STRATEGY,
     FocusMonitor,
     FocusTrapFactory,
-    InputModalityDetector,
-    _IdGenerator
+    InputModalityDetector
 } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { FlexibleConnectedPositionStrategy, Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
+import {
+    type FlexibleConnectedPositionStrategy,
+    Overlay,
+    type OverlayConfig,
+    type ScrollStrategy
+} from '@angular/cdk/overlay';
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { DOCUMENT } from '@angular/common';
 import {
-    AfterContentInit,
-    AfterViewInit,
+    type AfterContentInit,
+    afterNextRender,
+    type AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     Directive,
     EventEmitter,
-    InjectionToken,
-    Injector,
-    NgZone,
-    OnChanges,
-    RendererStyleFlags2,
-    Signal,
-    SimpleChanges,
-    TemplateRef,
-    Type,
-    ViewEncapsulation,
-    afterNextRender,
-    booleanAttribute,
     forwardRef,
     inject,
+    InjectionToken,
+    Injector,
     input,
+    NgZone,
     numberAttribute,
-    viewChild
+    type OnChanges,
+    RendererStyleFlags2,
+    type Signal,
+    type SimpleChanges,
+    type TemplateRef,
+    type Type,
+    viewChild,
+    ViewEncapsulation
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { merge, type Observable, Subject } from 'rxjs';
+import { auditTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
+import { type KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
+    applyPopupMargins,
     EmptyFocusTrapStrategy,
     KBQ_A11Y_LOCALE_CONFIGURATION,
     KbqLocaleOverridesDirective,
@@ -47,16 +55,15 @@ import {
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
     KbqPopUp,
-    KbqPopUpPlacementValues,
-    KbqPopUpSizeValues,
+    type KbqPopUpPlacementValues,
+    type KbqPopUpSizeValues,
     KbqPopUpTrigger,
-    KbqStickToWindowPlacementValues,
-    POSITION_TO_CSS_MAP,
+    kbqSiblingPopupProvider,
+    type KbqStickToWindowPlacementValues,
     PopUpPlacements,
     PopUpSizes,
     PopUpTriggers,
-    applyPopupMargins,
-    kbqSiblingPopupProvider
+    POSITION_TO_CSS_MAP
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -65,13 +72,11 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { Observable, Subject, merge } from 'rxjs';
-import { auditTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
-import { KbqNotificationCenterService, KbqNotificationsGroup } from './notification-center.service';
+import { KbqNotificationCenterService, type KbqNotificationsGroup } from './notification-center.service';
 import {
     KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION,
     KBQ_NOTIFICATION_CENTER_PANEL,
-    KbqNotificationCenterPanel
+    type KbqNotificationCenterPanel
 } from './notification-center.tokens';
 import { KbqNotificationItemComponent } from './notification-item';
 

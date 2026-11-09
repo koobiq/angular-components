@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { kbqAnimationsDisabled } from '@koobiq/components/core';
-import { BehaviorSubject, fromEvent, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, fromEvent, type Observable, type Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { kbqAnimationsDisabled } from '@koobiq/components/core';
 
 export enum DocsNavbarState {
     Opened,

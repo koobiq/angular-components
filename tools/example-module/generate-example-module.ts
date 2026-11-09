@@ -70,7 +70,7 @@ function generateExampleLoader({ exampleMetadata }: AnalyzedExamples): string {
         ' ******************************************************************************',
         ' */',
         '',
-        `import { Type } from '@angular/core';`,
+        `import type { Type } from '@angular/core';`,
         '',
         '/** Loads the component of the example with the given id, or resolves to `undefined` for an unknown id. */',
         'export async function loadExampleComponent(id: string): Promise<Type<unknown> | undefined> {',

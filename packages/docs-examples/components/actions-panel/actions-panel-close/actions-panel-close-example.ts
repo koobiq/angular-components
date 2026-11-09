@@ -7,7 +7,7 @@ import {
     TemplateRef,
     viewChild
 } from '@angular/core';
-import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
+import { KbqActionsPanel, type KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToastService } from '@koobiq/components/toast';

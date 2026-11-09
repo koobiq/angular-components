@@ -1,4 +1,4 @@
-import { computed, inject, Signal, untracked } from '@angular/core';
+import { computed, inject, type Signal, untracked } from '@angular/core';
 import {
     DateAdapter,
     DateFormatter,

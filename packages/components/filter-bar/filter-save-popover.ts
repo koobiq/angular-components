@@ -1,28 +1,33 @@
 import { FocusMonitor, InputModalityDetector } from '@angular/cdk/a11y';
 import {
-    AfterViewInit,
+    type AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ElementRef,
+    type ElementRef,
     inject,
     input,
     output,
-    TemplateRef,
+    type TemplateRef,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { KbqAlertModule } from '@koobiq/components/alert';
-import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormsModule } from '@koobiq/components/core';
-import { KbqInputModule } from '@koobiq/components/input';
-import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { merge } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
+import { KbqAlertModule } from '@koobiq/components/alert';
+import { type KbqButton, KbqButtonModule } from '@koobiq/components/button';
+import { KbqFormsModule } from '@koobiq/components/core';
+import { KbqInputModule } from '@koobiq/components/input';
+import type { KbqPopoverTrigger } from '@koobiq/components/popover';
 import type { KbqFilterBar } from './filter-bar';
-import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuses } from './filter-bar.types';
+import {
+    type KbqFilter,
+    type KbqSaveFilterError,
+    type KbqSaveFilterEvent,
+    KbqSaveFilterStatuses
+} from './filter-bar.types';
 
 /**
  * The "save / rename filter" popover, extracted from `KbqFilters` (SRP). Owns the save form state, the

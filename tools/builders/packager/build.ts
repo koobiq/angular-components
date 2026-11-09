@@ -1,12 +1,12 @@
-import { BuilderContext, BuilderOutput, Target } from '@angular-devkit/architect';
+import type { BuilderContext, BuilderOutput, Target } from '@angular-devkit/architect';
 // chalk 5+ is an ES module: the colour helpers are properties of the default export, not
 // named exports.
 import chalk from 'chalk';
 import { execSync } from 'child_process';
 import { promises as fs, writeFileSync } from 'fs';
 import { dirname, join, resolve } from 'path';
-import { IPackagerOptions } from './schema';
-import { assertNoPlaceholders, IPackageJson, syncComponentsVersion, syncNgVersion } from './version-placeholders';
+import type { IPackagerOptions } from './schema';
+import { assertNoPlaceholders, type IPackageJson, syncComponentsVersion, syncNgVersion } from './version-placeholders';
 
 const { green } = chalk;
 

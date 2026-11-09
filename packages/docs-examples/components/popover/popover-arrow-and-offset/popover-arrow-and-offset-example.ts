@@ -1,11 +1,15 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { type AfterViewInit, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqButtonToggleChange, KbqButtonToggleGroup, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
+import {
+    type KbqButtonToggleChange,
+    KbqButtonToggleGroup,
+    KbqButtonToggleModule
+} from '@koobiq/components/button-toggle';
 import { PopUpSizes } from '@koobiq/components/core';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
-import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
+import { type KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
  * @title Popover arrow and offset example

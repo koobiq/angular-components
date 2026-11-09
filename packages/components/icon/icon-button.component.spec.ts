@@ -1,9 +1,9 @@
 import { Component, contentChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqIcon, KbqIconButtonSize, KbqIconModule } from '@koobiq/components/icon';
+import { KbqIcon, type KbqIconButtonSize, KbqIconModule } from '@koobiq/components/icon';
 
 describe('KbqIconButton', () => {
     beforeEach(() => {
