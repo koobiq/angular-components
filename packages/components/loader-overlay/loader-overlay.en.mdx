@@ -22,7 +22,7 @@ Elements behind the overlay must not be accessible for focus, selection, or clic
 #### Default state
 
 Semi-transparent overlay, spinner, main text.
-The default text is "Loading"; it is recommended to choose the text individually.
+It is recommended to choose the text individually.
 Do not use single-word "Loading" text with an enlarged spinner.
 
 <Example id="loader-overlay-default" />
@@ -64,16 +64,10 @@ If `surface` is not set, the deprecated `transparent` and `card` attributes sele
 #### Horizontal alignment and width
 
 The overlay covers the full width and height of the container it is displayed over.
-Padding from the overlay edges is 10% of its width.
-Maximum width of the text and caption under the spinner is 480px.
 
 #### Vertical alignment
 
-Center alignment with optical compensation is available: the top offset should be smaller than the bottom. By default, the compensation height equals 40% of the block height comprising the loading indicator and captions.
-
-Fixed top-offset alignment is also available (72px by default).
-
-<Example id="loader-overlay-fixed-top" />
+The content of the overlay is centered vertically.
 
 #### Enlarged spinner
 
