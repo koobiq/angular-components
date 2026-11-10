@@ -810,7 +810,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'navbar',
                     hasApi: true,
                     apiId: 'navbar',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-23')
                 },
                 {
                     id: DocsStructureItemId.NotificationCenter,

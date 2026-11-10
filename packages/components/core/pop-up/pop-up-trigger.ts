@@ -912,7 +912,12 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
 
         if (this.trigger.includes(PopUpTriggers.Keydown)) {
             this.listeners.set('keydown', (event) => {
-                if (event instanceof KeyboardEvent && [ENTER, SPACE].includes(event.keyCode)) {
+                // With a click listener, a native button activates itself for Enter/Space. Opening here as well
+                // can make CDK treat that click as outside the panel that the timer just opened and close it again.
+                const opensNatively =
+                    this.getNativeElement().tagName === 'BUTTON' && this.trigger.includes(PopUpTriggers.Click);
+
+                if (event instanceof KeyboardEvent && [ENTER, SPACE].includes(event.keyCode) && !opensNatively) {
                     // Recorded the way `createListener` does it for every other trigger. Without it the show
                     // is still attributed to whichever event ran last, and a stale `focus` there makes the
                     // tooltip's keyboard-origin gate swallow the show outright. The event itself carries the
