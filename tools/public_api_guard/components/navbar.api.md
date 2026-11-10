@@ -171,6 +171,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
     readonly onBlur: Subject<KbqNavbarFocusableItemEvent>;
     readonly onFocus: Subject<KbqNavbarFocusableItemEvent>;
     onFocusHandler(): void;
+    protected onFocusOut(event: FocusEvent): void;
     setTooltip(value: KbqTooltipTrigger): void;
     get tabIndex(): number;
     readonly title: Signal<KbqNavbarTitle | undefined>;

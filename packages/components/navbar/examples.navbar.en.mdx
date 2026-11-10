@@ -22,9 +22,11 @@ An item can show something other than an icon in the spot before the title: mark
 
 ### Custom component as the item
 
-To keep logic in your own component — a notifications center, a site switcher — implement `KbqNavbarItemTrigger` on it and provide the class as `KBQ_NAVBAR_ITEM_TRIGGER`. The item then hands keyboard focus to the component and adds no button behavior of its own: the navbar keeps a single keyboard tab stop, arrow navigation works, and Enter and Space reach the component's own control. Keep the component's inner controls out of the tab order with `tabindex="-1"`; the navbar moves focus to them programmatically. Inside the component, attach a dropdown, a popover, or any other overlay as usual.
+To keep logic in your own component — a notifications center, a site switcher — implement `KbqNavbarItemTrigger` on it and provide the class as `KBQ_NAVBAR_ITEM_TRIGGER`. The component's host element becomes the trigger: it owns the overlay and takes the keyboard focus, so it does not need an inner button. Keep the host and any inner controls out of the tab order with `tabindex="-1"`; the item moves focus to it programmatically. The item paints the hover, pressed, selected and keyboard-focus states around the component, exactly as it does for a plain item, so do not add a focus outline to the component itself. Inside the component, attach a dropdown, a popover, or any other overlay as usual.
 
-A plain item with an icon and a badge — no custom component — renders identically: an item without a title places its badge in the top-right corner of the leading area, matching the collapsed item and the custom component.
+A titled item sizes its leading area like an icon: set `--kbq-navbar-item-size-custom-content-width` and `--kbq-navbar-item-size-custom-content-height` to 16px on the expanded item, and the title starts on the same text axis as in a plain item. The collapsed item keeps the full square.
+
+A plain item with the same content — no custom component — renders identically: mark the leading area with `kbqNavbarItemContent` and set the same tokens, so the title and the badge line up with the component's in both the expanded and the collapsed navbar.
 
 In a horizontal navbar, automatic collapsing still relies on an icon, so items with custom content or a custom component do not collapse automatically.
 

@@ -689,8 +689,9 @@ test.describe('KbqNavbarModule', () => {
 
             await expect(customItem).toHaveCSS('padding-left', paddingLeft);
             await expect(customItem).toHaveCSS('padding-right', paddingRight);
-            await expect(customHost).toHaveCSS('width', '40px');
-            await expect(customHost).toHaveCSS('height', '40px');
+            // A titled item sizes the leading area like an icon; the collapsed presentation keeps the square.
+            await expect(customHost).toHaveCSS('width', '16px');
+            await expect(customHost).toHaveCSS('height', '16px');
             await expectIconsAligned();
 
             await toggle.click();
@@ -701,26 +702,149 @@ test.describe('KbqNavbarModule', () => {
             await expectIconsAligned();
         });
 
-        test('should place the badge of a plain titleless item at the custom component badge position', async ({
-            page
-        }) => {
+        /**
+         * The custom component and a plain item with the same content must be indistinguishable: the same
+         * leading 40×40 square, the same title and the same badge, in every state and in both presentations.
+         * A plain item reaches that by marking its leading content with `kbqNavbarItemContent`; the item paints
+         * hover, pressed, selected and keyboard focus for a custom trigger itself, because the trigger host
+         * has no styles of its own.
+         */
+        test('should match a plain item in geometry and every state', async ({ page }) => {
             await page.goto('/E2eNavbarItemCustomComponent');
 
-            const plainBadge = getComponent(page).getByTestId('plain-notifications').locator('.kbq-badge');
-            const customBadge = getComponent(page).getByTestId('custom-item').locator('.kbq-badge');
+            const component = getComponent(page);
+            const customItem = component.getByTestId('custom-item');
+            const plainItem = component.getByTestId('plain-notifications');
+            const customHost = customItem.locator('e2e-notifications-trigger');
+            const toggle = component.locator('[kbq-navbar-toggle]');
+            const viewport = page.viewportSize()!;
 
-            const plain = (await plainBadge.boundingBox())!;
-            const custom = (await customBadge.boundingBox())!;
+            const itemState = (item: Locator) =>
+                item.evaluate((element) => {
+                    const itemRect = element.getBoundingClientRect();
+                    const box = (child: Element | null) => {
+                        // A collapsed item hides its title: `display: none` leaves no client rect.
+                        if (!child?.getClientRects().length) return null;
 
-            const plainItem = (await getComponent(page).getByTestId('plain-notifications').boundingBox())!;
-            const customItem = (await getComponent(page).getByTestId('custom-item').boundingBox())!;
+                        const rect = child.getBoundingClientRect();
 
-            // Right edge must match (both items share the same column); left edges differ with badge width.
-            // 2px tolerance: the custom badge sits at the button's padding-box edge (1px transparent border)
-            // and ~1.5px below the item top (40px button centered in the 41px item) — visually imperceptible.
-            expect(Math.abs(plain.x + plain.width - (custom.x + custom.width))).toBeLessThanOrEqual(2);
-            // Top must match relative to each item's own top (the items sit on different rows).
-            expect(Math.abs(plain.y - plainItem.y - (custom.y - customItem.y))).toBeLessThanOrEqual(2);
+                        return {
+                            x: +(rect.x - itemRect.x).toFixed(2),
+                            y: +(rect.y - itemRect.y).toFixed(2),
+                            width: +rect.width.toFixed(2),
+                            height: +rect.height.toFixed(2)
+                        };
+                    };
+                    const color = (child: Element | null) => (child ? getComputedStyle(child).color : null);
+                    const after = getComputedStyle(element, '::after');
+                    const icon = element.querySelector('.kbq-icon');
+                    const title = element.querySelector('.kbq-navbar-title');
+                    const badge = element.querySelector('.kbq-badge');
+
+                    return {
+                        paint: { display: after.display, background: after.backgroundColor, ring: after.boxShadow },
+                        colors: {
+                            icon: color(icon),
+                            title: color(title),
+                            badge: color(badge)
+                        },
+                        boxes: { icon: box(icon), title: box(title), badge: box(badge) }
+                    };
+                });
+
+            const compare = async (state: string) => {
+                const custom = await itemState(customItem);
+                const plain = await itemState(plainItem);
+
+                expect(custom, state).toEqual(plain);
+            };
+
+            const resetPointer = () => page.mouse.move(viewport.width - 1, viewport.height - 1);
+            const setClass = (className: string, add: boolean) =>
+                page.evaluate(
+                    ([name, on]) => {
+                        for (const testId of ['custom-item', 'plain-notifications']) {
+                            document.querySelector(`[data-testid="${testId}"]`)?.classList.toggle(name, on);
+                        }
+                    },
+                    [className, add] as [string, boolean]
+                );
+
+            const checkStates = async () => {
+                await resetPointer();
+                await compare('default');
+
+                await customHost.hover();
+
+                const customHover = await itemState(customItem);
+
+                await plainItem.hover();
+
+                const plainHover = await itemState(plainItem);
+
+                expect(customHover, 'hover').toEqual(plainHover);
+
+                await resetPointer();
+                await page.keyboard.press('Tab');
+                await page.keyboard.press('ArrowDown');
+                await expect(customHost).toBeFocused();
+
+                const customFocus = await itemState(customItem);
+
+                await expect(customItem).toHaveClass(/kbq-navbar-item_keyboard-focused/);
+
+                await page.keyboard.press('ArrowDown');
+                await expect(plainItem).toHaveClass(/cdk-keyboard-focused/);
+
+                const plainFocus = await itemState(plainItem);
+
+                expect(customFocus, 'keyboard focus').toEqual(plainFocus);
+
+                await resetPointer();
+                await page.evaluate(() => (document.activeElement as HTMLElement)?.blur());
+
+                const customBox = (await customHost.boundingBox())!;
+
+                await page.mouse.move(customBox.x + customBox.width / 2, customBox.y + customBox.height / 2);
+                await page.mouse.down();
+
+                const customPressed = await itemState(customItem);
+
+                // Release away from the trigger: a release on it would count as a click and open the popover.
+                await resetPointer();
+                await page.mouse.up();
+
+                const plainBox = (await plainItem.boundingBox())!;
+
+                await page.mouse.move(plainBox.x + plainBox.width / 2, plainBox.y + plainBox.height / 2);
+                await page.mouse.down();
+
+                const plainPressed = await itemState(plainItem);
+
+                expect(customPressed, 'pressed').toEqual(plainPressed);
+
+                await resetPointer();
+                await page.mouse.up();
+
+                await setClass('kbq-active', true);
+                await compare('selected');
+                await setClass('kbq-active', false);
+
+                await setClass('kbq-disabled', true);
+                await compare('disabled');
+                await setClass('kbq-disabled', false);
+            };
+
+            await checkStates();
+
+            // The toggle is hidden until the navbar is hovered; a click on a hidden element cannot bring it up.
+            const navbarBox = (await component.locator('.kbq-vertical-navbar').boundingBox())!;
+
+            await page.mouse.move(navbarBox.x + 10, navbarBox.y + 10);
+            await toggle.click();
+            await expect(customItem).toHaveClass(/kbq-collapsed/);
+
+            await checkStates();
         });
 
         test('arrow keys should move roving focus past the custom item', async ({ page }) => {

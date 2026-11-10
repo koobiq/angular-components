@@ -1049,15 +1049,10 @@ export class E2eNavbarItemCustomContent {}
  */
 @Component({
     selector: 'e2e-notifications-trigger',
-    imports: [KbqBadgeModule, KbqIconModule],
+    imports: [KbqIconModule],
     template: `
         <i kbq-icon="kbq-bell_16" [color]="'empty'"></i>
-        <kbq-badge class="e2e-notifications-trigger__badge" [badgeColor]="'error'" [compact]="true">2</kbq-badge>
     `,
-    styles: [
-        ':host { position: relative; }',
-        '.e2e-notifications-trigger__badge { position: absolute; top: 0; right: 0; }'
-    ],
     providers: [{ provide: KBQ_NAVBAR_ITEM_TRIGGER, useExisting: forwardRef(() => E2eNotificationsTrigger) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -1107,16 +1102,22 @@ class E2eNotificationsTrigger implements KbqNavbarItemTrigger {
                         <kbq-navbar-title>Tasks</kbq-navbar-title>
                     </kbq-navbar-item>
 
-                    <kbq-navbar-item data-testid="custom-item">
+                    <kbq-navbar-item data-testid="custom-item" class="e2e-navbar-item_compact-leading">
                         <e2e-notifications-trigger
+                            kbqNavbarItemContent
                             kbqPopoverContent="Body of the popover"
                             kbqPopoverHeader="Notifications"
                             kbqPopoverPlacement="right"
                         />
+                        <kbq-navbar-title>Notifications</kbq-navbar-title>
+                        <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
                     </kbq-navbar-item>
 
-                    <kbq-navbar-item data-testid="plain-notifications">
-                        <i kbq-icon="kbq-bell_16" [color]="'empty'"></i>
+                    <kbq-navbar-item data-testid="plain-notifications" class="e2e-navbar-item_compact-leading">
+                        <span kbqNavbarItemContent class="e2e-navbar-item-leading">
+                            <i kbq-icon="kbq-bell_16" [color]="'empty'"></i>
+                        </span>
+                        <kbq-navbar-title>Notifications</kbq-navbar-title>
                         <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
                     </kbq-navbar-item>
                 </kbq-navbar-container>
@@ -1125,6 +1126,25 @@ class E2eNotificationsTrigger implements KbqNavbarItemTrigger {
             </kbq-vertical-navbar>
         </div>
     `,
+    styles: [
+        `
+            .e2e-navbar-item-leading {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .kbq-expanded .e2e-navbar-item-leading {
+                justify-content: flex-start;
+            }
+
+            /* A titled item has an icon-sized leading slot, so its title starts on the plain item's text axis. */
+            .e2e-navbar-item_compact-leading.kbq-expanded {
+                --kbq-navbar-item-size-custom-content-width: var(--kbq-size-l);
+                --kbq-navbar-item-size-custom-content-height: var(--kbq-size-l);
+            }
+        `
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eNavbarItemCustomComponent'

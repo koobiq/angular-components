@@ -739,6 +739,36 @@ describe('KbqNavbar', () => {
             expect(getTrigger(fixture).focusViaKeyboard).toHaveBeenCalled();
         });
 
+        it('should paint the keyboard focus ring while the custom component holds keyboard focus', async () => {
+            const fixture = await createFixture();
+            const item: HTMLElement = getItem(fixture).nativeElement;
+            const focusableItem = (getItem(fixture).componentInstance as KbqNavbarItem).navbarFocusableItem;
+
+            focusableItem.focus('keyboard');
+
+            expect(item.classList).toContain('kbq-navbar-item_keyboard-focused');
+
+            // The item hands the focus to the component: the focusout that follows stays inside the item.
+            item.dispatchEvent(
+                new FocusEvent('focusout', { bubbles: true, relatedTarget: item.querySelector('button') })
+            );
+
+            expect(item.classList).toContain('kbq-navbar-item_keyboard-focused');
+
+            item.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: document.body }));
+
+            expect(item.classList).not.toContain('kbq-navbar-item_keyboard-focused');
+        });
+
+        it('should not paint the keyboard focus ring for pointer focus', async () => {
+            const fixture = await createFixture();
+            const item: HTMLElement = getItem(fixture).nativeElement;
+
+            (getItem(fixture).componentInstance as KbqNavbarItem).navbarFocusableItem.focus('mouse');
+
+            expect(item.classList).not.toContain('kbq-navbar-item_keyboard-focused');
+        });
+
         it('should not emit blur while the custom component holds focus', async () => {
             const fixture = await createFixture();
             const focusableItem = (getItem(fixture).componentInstance as KbqNavbarItem).navbarFocusableItem;

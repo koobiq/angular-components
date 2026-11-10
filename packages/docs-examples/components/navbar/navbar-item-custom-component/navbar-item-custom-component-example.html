@@ -1,16 +1,22 @@
 <div style="height: 480px" class="layout-row">
     <kbq-vertical-navbar [expanded]="true">
         <kbq-navbar-container>
-            <kbq-navbar-item>
+            <kbq-navbar-item class="example-navbar-item_compact-leading">
                 <example-navbar-notifications
+                    kbqNavbarItemContent
                     kbqPopoverContent="Body of the notifications center"
                     [kbqPopoverHeader]="text().notifications"
                     [kbqPopoverPlacement]="popUpPlacements.Right"
                 />
+                <kbq-navbar-title>{{ text().notifications }}</kbq-navbar-title>
+                <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
             </kbq-navbar-item>
 
-            <kbq-navbar-item>
-                <i kbq-icon="kbq-bell_16" color="contrast"></i>
+            <kbq-navbar-item class="example-navbar-item_compact-leading">
+                <span kbqNavbarItemContent class="example-navbar-item-leading">
+                    <i kbq-icon="kbq-bell_16" color="contrast"></i>
+                </span>
+                <kbq-navbar-title>{{ text().notifications }}</kbq-navbar-title>
                 <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
             </kbq-navbar-item>
 

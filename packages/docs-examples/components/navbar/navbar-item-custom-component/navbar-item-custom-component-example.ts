@@ -13,12 +13,10 @@ import { injectExampleText } from '../localized-data';
  */
 @Component({
     selector: 'example-navbar-notifications',
-    imports: [KbqBadgeModule, KbqIconModule],
+    imports: [KbqIconModule],
     template: `
         <i kbq-icon="kbq-bell_16" color="contrast"></i>
-        <kbq-badge class="example-navbar-notifications__badge" [badgeColor]="'error'" [compact]="true">2</kbq-badge>
     `,
-    styleUrl: 'navbar-item-custom-component-example.scss',
     providers: [{ provide: KBQ_NAVBAR_ITEM_TRIGGER, useExisting: forwardRef(() => ExampleNavbarNotifications) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -59,6 +57,25 @@ export class ExampleNavbarNotifications implements KbqNavbarItemTrigger {
     selector: 'navbar-item-custom-component-example',
     imports: [KbqBadgeModule, KbqIconModule, KbqNavbarModule, ExampleNavbarNotifications],
     templateUrl: 'navbar-item-custom-component-example.html',
+    styles: [
+        `
+            .example-navbar-item-leading {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .kbq-expanded .example-navbar-item-leading {
+                justify-content: flex-start;
+            }
+
+            /* A titled item has an icon-sized leading slot, so its title starts on the plain item's text axis. */
+            .example-navbar-item_compact-leading.kbq-expanded {
+                --kbq-navbar-item-size-custom-content-width: var(--kbq-size-l);
+                --kbq-navbar-item-size-custom-content-height: var(--kbq-size-l);
+            }
+        `
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarItemCustomComponentExample {
