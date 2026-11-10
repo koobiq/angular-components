@@ -91,7 +91,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
      * the matching leaves among the rendered options; the group ancestors shown for context are not
      * leaves and drop out of the count by construction.
      */
-    get selectAllCount(): number {
+    protected get selectAllCount(): number {
         if (!this.select()) return 0;
 
         if (this.select().search()?.ngControl?.value) {

@@ -117,7 +117,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     /** Number of options the "select all" action would toggle right now — template-only. */
-    get selectAllCount(): number {
+    protected get selectAllCount(): number {
         const options = this.searchControl.value ? this.filteredOptions() : this.values;
 
         return options?.filter((option) => !this.isLocked(option)).length ?? 0;
