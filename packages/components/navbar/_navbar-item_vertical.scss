@@ -65,9 +65,7 @@
         &:not(.kbq-navbar-item_with-title) > .kbq-badge {
             position: absolute;
             top: 0;
-            left: calc(
-                var(--kbq-size-xl) + var(--kbq-navbar-item-size-custom-content-width) - var(--kbq-size-border-width)
-            );
+            left: calc(var(--kbq-size-xl) + var(--kbq-navbar-item-size-custom-content-width));
             transform: translateX(-100%);
         }
 
@@ -101,7 +99,10 @@
 
     &.kbq-navbar-item_has-custom-trigger {
         & > :first-child {
-            display: block;
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
 
             flex-shrink: 0;
 
@@ -109,15 +110,24 @@
             height: var(--kbq-navbar-item-size-custom-content-height);
         }
 
-        // The trigger's button centers its content by default; in expanded, left-align it so the leading icon
-        // matches a plain item's inline icon (the badge is absolute in the corner and stays put). Collapsed
-        // keeps the default centering, which is what aligns the icon with a plain collapsed item.
+        // Collapsed: the 40×40 host is centered in the item, so centering its content aligns the icon with a
+        // plain collapsed item. Expanded: the host starts at the item padding, so left-aligning its content
+        // puts the icon on the plain item's inline icon axis.
         &.kbq-expanded {
             padding-right: var(--kbq-size-xl);
             padding-left: var(--kbq-size-xl);
 
-            & .kbq-button {
+            & > :first-child {
                 justify-content: flex-start;
+            }
+        }
+
+        // Collapsed: the item is the badge's reference, as it is for a plain item (the collapsed `.kbq-badge`
+        // offsets are item-relative). A relative host would measure them from its own 40×40 box and shift the
+        // badge left by the host's centering offset.
+        &.kbq-collapsed {
+            & > :first-child {
+                position: static;
             }
         }
     }

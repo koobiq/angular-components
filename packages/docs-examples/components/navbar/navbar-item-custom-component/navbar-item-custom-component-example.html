@@ -2,7 +2,11 @@
     <kbq-vertical-navbar [expanded]="true">
         <kbq-navbar-container>
             <kbq-navbar-item>
-                <example-navbar-notifications />
+                <example-navbar-notifications
+                    kbqPopoverContent="Body of the notifications center"
+                    [kbqPopoverHeader]="text().notifications"
+                    [kbqPopoverPlacement]="popUpPlacements.Right"
+                />
             </kbq-navbar-item>
 
             <kbq-navbar-item>

@@ -631,7 +631,9 @@ test.describe('KbqNavbarModule', () => {
                 await page.keyboard.press('Tab');
                 await page.keyboard.press('ArrowDown');
 
-                await expect(getComponent(page).getByTestId('custom-item').locator('button')).toBeFocused();
+                await expect(
+                    getComponent(page).getByTestId('custom-item').locator('e2e-notifications-trigger')
+                ).toBeFocused();
 
                 await page.keyboard.press(key);
 
@@ -727,7 +729,9 @@ test.describe('KbqNavbarModule', () => {
             await page.keyboard.press('Tab');
             await page.keyboard.press('ArrowDown');
 
-            await expect(getComponent(page).getByTestId('custom-item').locator('button')).toBeFocused();
+            await expect(
+                getComponent(page).getByTestId('custom-item').locator('e2e-notifications-trigger')
+            ).toBeFocused();
         });
 
         test('should keep the custom component out of the tab order', async ({ page }) => {

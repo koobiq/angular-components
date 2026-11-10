@@ -1,12 +1,12 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Overlay, ScrollStrategy } from '@angular/cdk/overlay';
-import { ChangeDetectionStrategy, Component, forwardRef, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, inject, signal } from '@angular/core';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
-import { PopUpPlacements } from '@koobiq/components/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqPopoverModule } from '@koobiq/components/popover';
+import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KBQ_NAVBAR_ITEM_TRIGGER, KbqNavbarItemTrigger } from './index';
 import { KbqNavbarModule } from './navbar.module';
@@ -1049,45 +1049,45 @@ export class E2eNavbarItemCustomContent {}
  */
 @Component({
     selector: 'e2e-notifications-trigger',
-    imports: [KbqBadgeModule, KbqButtonModule, KbqIconModule, KbqPopoverModule],
+    imports: [KbqBadgeModule, KbqIconModule],
     template: `
-        <button
-            kbq-button
-            kbqPopover
-            class="e2e-notifications-trigger__button"
-            [tabIndex]="-1"
-            [kbqPopoverContent]="'Body of the popover'"
-            [kbqPopoverHeader]="'Notifications'"
-            [kbqPopoverPlacement]="popUpPlacements.Right"
-        >
-            <i kbq-icon="kbq-bell_16" [color]="'empty'"></i>
-            <kbq-badge class="e2e-notifications-trigger__badge" [badgeColor]="'error'" [compact]="true">2</kbq-badge>
-        </button>
+        <i kbq-icon="kbq-bell_16" [color]="'empty'"></i>
+        <kbq-badge class="e2e-notifications-trigger__badge" [badgeColor]="'error'" [compact]="true">2</kbq-badge>
     `,
     styles: [
-        ':host { display: block; }',
-        '.e2e-notifications-trigger__button { width: 100%; height: 100%; padding-right: 0; padding-left: 0; }',
-        '.e2e-notifications-trigger__button .kbq-button-wrapper { justify-content: flex-start; }',
+        ':host { position: relative; }',
         '.e2e-notifications-trigger__badge { position: absolute; top: 0; right: 0; }'
     ],
     providers: [{ provide: KBQ_NAVBAR_ITEM_TRIGGER, useExisting: forwardRef(() => E2eNotificationsTrigger) }],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[attr.tabindex]': '-1',
+        '(focus)': 'hasFocusState.set(true)',
+        '(blur)': 'hasFocusState.set(false)'
+    },
+    hostDirectives: [
+        {
+            directive: KbqPopoverTrigger,
+            inputs: ['kbqPopoverContent', 'kbqPopoverHeader', 'kbqPopoverPlacement']
+        }
+    ]
 })
 class E2eNotificationsTrigger implements KbqNavbarItemTrigger {
-    protected readonly popUpPlacements = PopUpPlacements;
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly focusMonitor = inject(FocusMonitor);
 
-    private readonly button = viewChild(KbqButton);
+    protected readonly hasFocusState = signal(false);
 
     get hasFocus(): boolean {
-        return this.button()?.hasFocus ?? false;
+        return this.hasFocusState();
     }
 
     focus(): void {
-        this.button()?.focus();
+        this.host.nativeElement.focus();
     }
 
     focusViaKeyboard(): void {
-        this.button()?.focusViaKeyboard();
+        this.focusMonitor.focusVia(this.host.nativeElement, 'keyboard');
     }
 }
 
@@ -1097,14 +1097,7 @@ class E2eNotificationsTrigger implements KbqNavbarItemTrigger {
  */
 @Component({
     selector: 'e2e-navbar-item-custom-component',
-    imports: [
-        KbqNavbarModule,
-        KbqIconModule,
-        KbqBadgeModule,
-        KbqButtonModule,
-        KbqPopoverModule,
-        E2eNotificationsTrigger
-    ],
+    imports: [KbqNavbarModule, KbqIconModule, KbqBadgeModule, E2eNotificationsTrigger],
     template: `
         <div data-testid="e2eScreenshotTarget" style="height: 180px; display: flex">
             <kbq-vertical-navbar [expanded]="true">
@@ -1115,7 +1108,11 @@ class E2eNotificationsTrigger implements KbqNavbarItemTrigger {
                     </kbq-navbar-item>
 
                     <kbq-navbar-item data-testid="custom-item">
-                        <e2e-notifications-trigger />
+                        <e2e-notifications-trigger
+                            kbqPopoverContent="Body of the popover"
+                            kbqPopoverHeader="Notifications"
+                            kbqPopoverPlacement="right"
+                        />
                     </kbq-navbar-item>
 
                     <kbq-navbar-item data-testid="plain-notifications">

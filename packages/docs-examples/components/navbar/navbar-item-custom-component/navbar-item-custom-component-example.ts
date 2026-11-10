@@ -1,54 +1,54 @@
-import { ChangeDetectionStrategy, Component, forwardRef, viewChild } from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, inject, signal } from '@angular/core';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KBQ_NAVBAR_ITEM_TRIGGER, KbqNavbarItemTrigger, KbqNavbarModule } from '@koobiq/components/navbar';
-import { KbqPopoverModule } from '@koobiq/components/popover';
+import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { injectExampleText } from '../localized-data';
 
 /**
- * A custom interactive component: it owns a popover and the item's keyboard focus, so the navbar item
- * delegates interaction to it instead of acting as a button itself.
+ * A custom interactive component: the host element itself is the trigger — it owns the popover and the item's
+ * keyboard focus, so the navbar delegates interaction to it without a nested button.
  */
 @Component({
     selector: 'example-navbar-notifications',
-    imports: [KbqBadgeModule, KbqButtonModule, KbqIconModule, KbqPopoverModule],
+    imports: [KbqBadgeModule, KbqIconModule],
     template: `
-        <button
-            kbq-button
-            kbqPopover
-            class="example-navbar-notifications__trigger"
-            [tabIndex]="-1"
-            [kbqPopoverContent]="'Body of the notifications center'"
-            [kbqPopoverHeader]="text().notifications"
-            [kbqPopoverPlacement]="popUpPlacements.Right"
-        >
-            <i kbq-icon="kbq-bell_16" color="contrast"></i>
-            <kbq-badge class="example-navbar-notifications__badge" [badgeColor]="'error'" [compact]="true">2</kbq-badge>
-        </button>
+        <i kbq-icon="kbq-bell_16" color="contrast"></i>
+        <kbq-badge class="example-navbar-notifications__badge" [badgeColor]="'error'" [compact]="true">2</kbq-badge>
     `,
     styleUrl: 'navbar-item-custom-component-example.scss',
     providers: [{ provide: KBQ_NAVBAR_ITEM_TRIGGER, useExisting: forwardRef(() => ExampleNavbarNotifications) }],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[attr.tabindex]': '-1',
+        '(focus)': 'hasFocusState.set(true)',
+        '(blur)': 'hasFocusState.set(false)'
+    },
+    hostDirectives: [
+        {
+            directive: KbqPopoverTrigger,
+            inputs: ['kbqPopoverContent', 'kbqPopoverHeader', 'kbqPopoverPlacement']
+        }
+    ]
 })
 export class ExampleNavbarNotifications implements KbqNavbarItemTrigger {
-    protected readonly text = injectExampleText();
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly focusMonitor = inject(FocusMonitor);
 
-    protected readonly popUpPlacements = PopUpPlacements;
-
-    private readonly button = viewChild(KbqButton);
+    protected readonly hasFocusState = signal(false);
 
     get hasFocus(): boolean {
-        return this.button()?.hasFocus ?? false;
+        return this.hasFocusState();
     }
 
     focus(): void {
-        this.button()?.focus();
+        this.host.nativeElement.focus();
     }
 
     focusViaKeyboard(): void {
-        this.button()?.focusViaKeyboard();
+        this.focusMonitor.focusVia(this.host.nativeElement, 'keyboard');
     }
 }
 
@@ -63,4 +63,6 @@ export class ExampleNavbarNotifications implements KbqNavbarItemTrigger {
 })
 export class NavbarItemCustomComponentExample {
     protected readonly text = injectExampleText();
+
+    protected readonly popUpPlacements = PopUpPlacements;
 }
