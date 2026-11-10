@@ -12,7 +12,9 @@ const config = {
         '**/CHANGELOG.md',
         '**/public_api_guard/**',
         // instructions for AI agents, full of code identifiers; not user-facing documentation
-        '.claude/rules/**'
+        '.claude/rules/**',
+        // superpowers plans and specs — AI-agent process docs, not user-facing documentation
+        'docs/superpowers/**'
     ],
     import: [
         'tools/cspell-locales/en.json',
