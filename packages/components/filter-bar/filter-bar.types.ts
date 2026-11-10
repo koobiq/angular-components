@@ -184,6 +184,13 @@ export interface KbqPipe {
     selectAll?: boolean;
 
     /**
+     * `multiselect` / `multi-tree-select` pipes only: shows a counter of the elements "Select all" would
+     * toggle next to its row — all of them, or only the ones matching the search while searching. Locked
+     * values are not counted. Ignored by other pipe types. Default is `false`.
+     */
+    selectAllCounter?: boolean;
+
+    /**
      * Tree-based pipes only (`tree-select`, `multi-tree-select`): whether the panel opens with every
      * branch expanded. When `false`, all branches start collapsed except the ancestors of the selected
      * node(s). Default is `true`.

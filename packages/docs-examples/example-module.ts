@@ -2750,6 +2750,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-search-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-select-all-counter": {
+    "packagePath": "components/filter-bar/filter-bar-select-all-counter",
+    "title": "filter-bar-select-all-counter",
+    "componentName": "FilterBarSelectAllCounterExample",
+    "files": [
+      "filter-bar-select-all-counter-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "filter-bar-select-all-counter-example",
+    "primaryFile": "filter-bar-select-all-counter-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-state-saving": {
     "packagePath": "components/filter-bar/filter-bar-state-saving",
     "title": "filter-bar-state-saving",
@@ -8305,6 +8317,7 @@ export type LiveExampleId =
   | 'filter-bar-saved-filters'
   | 'filter-bar-search-in-pipes'
   | 'filter-bar-search'
+  | 'filter-bar-select-all-counter'
   | 'filter-bar-state-saving'
   | 'filter-bar-uniq-pipes'
   | 'filter-bar-value-template'
