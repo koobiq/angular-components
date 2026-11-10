@@ -100,6 +100,25 @@ async function openAndAssertPopover<T>(componentFixture: ComponentFixture<T>, tr
     return popover;
 }
 
+/**
+ * Fakes the panel's layout box for `KbqPopUp.updateArrowPosition`: the `offset*` reads are the only layout
+ * measurements unaffected by the entrance `scale(...)` transform, which is what the pop-up measures.
+ */
+function mockPanelLayout(element: HTMLElement, rect: { left: number; top: number; width: number; height: number }) {
+    const { left, top, width, height } = rect;
+
+    Object.defineProperties(element, {
+        offsetWidth: { configurable: true, value: width },
+        offsetHeight: { configurable: true, value: height },
+        offsetLeft: { configurable: true, value: left },
+        offsetTop: { configurable: true, value: top },
+        offsetParent: {
+            configurable: true,
+            value: { getBoundingClientRect: () => new DOMRect() } as unknown as HTMLElement
+        }
+    });
+}
+
 describe('KbqPopover', () => {
     let fixture: ComponentFixture<PopoverTestComponent>;
     let componentInstance: PopoverTestComponent;
@@ -1456,6 +1475,8 @@ describe('KbqPopover', () => {
                 } as DOMRect;
             };
 
+            mockPanelLayout(popover, { left: 100, top: 100, width: 400, height: 160 });
+
             const bottomRight = positions()[0];
 
             placementInstance
@@ -1549,6 +1570,8 @@ describe('KbqPopover', () => {
                     toJSON: () => ({})
                 } as DOMRect;
             };
+
+            mockPanelLayout(popover, { left: 105, top: 100, width: 400, height: 160 });
 
             placementInstance.popoverTrigger().onPositionChange({
                 connectionPair: positions()[0]
@@ -2068,6 +2091,8 @@ describe('KbqPopover', () => {
                     toJSON: () => ({})
                 }) as DOMRect;
 
+            mockPanelLayout(panel, { left: 79, top: 0, width: 200, height: 72 });
+
             const component = pointerInstance.popoverTrigger()['instance'] as KbqPopoverComponent;
 
             component.visibleChange.emit(true);
@@ -2121,6 +2146,9 @@ describe('KbqPopover', () => {
                     y: 100,
                     toJSON: () => ({})
                 }) as DOMRect;
+
+            mockPanelLayout(panel, { left: 100, top: 100, width: 300, height: 160 });
+
             pointerInstance.popoverTrigger().onPositionChange({ connectionPair } as ConnectedOverlayPositionChange);
 
             return panel;

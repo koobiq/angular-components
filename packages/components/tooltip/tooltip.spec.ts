@@ -64,6 +64,25 @@ async function showByHover<T>(componentFixture: ComponentFixture<T>, element: HT
     componentFixture.detectChanges();
 }
 
+/**
+ * Fakes the panel's layout box for `KbqPopUp.updateArrowPosition`: the `offset*` reads are the only layout
+ * measurements unaffected by the entrance `scale(...)` transform, which is what the pop-up measures.
+ */
+function mockPanelLayout(element: HTMLElement, rect: { left: number; top: number; width: number; height: number }) {
+    const { left, top, width, height } = rect;
+
+    Object.defineProperties(element, {
+        offsetWidth: { configurable: true, value: width },
+        offsetHeight: { configurable: true, value: height },
+        offsetLeft: { configurable: true, value: left },
+        offsetTop: { configurable: true, value: top },
+        offsetParent: {
+            configurable: true,
+            value: { getBoundingClientRect: () => new DOMRect() } as unknown as HTMLElement
+        }
+    });
+}
+
 /** Opens a tooltip by keyboard focus — a non-keyboard focus origin is ignored by the trigger. */
 async function showByKeyboardFocus<T>(componentFixture: ComponentFixture<T>, element: HTMLElement) {
     dispatchKeyboardEvent(document, 'keydown', TAB);
@@ -1459,6 +1478,8 @@ describe('KbqTooltip', () => {
                 } as DOMRect;
             };
 
+            mockPanelLayout(tooltip, { left: 100, top: 100, width: 300, height: 160 });
+
             await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
             await vi.advanceTimersByTimeAsync(0);
@@ -1471,7 +1492,7 @@ describe('KbqTooltip', () => {
             await vi.runOnlyPendingTimersAsync();
         });
 
-        it('should recalculate centered arrows after the entrance animation', async () => {
+        it('should keep the centered arrow shift stable through the entrance animation', async () => {
             vi.useFakeTimers();
 
             const triggerElement = component.trigger().nativeElement;
@@ -1513,6 +1534,8 @@ describe('KbqTooltip', () => {
                     }
                 ] as unknown as Animation[];
 
+            // The panel reports a degenerate box while the entrance animation scales it; the laid-out box
+            // still comes from the offset* reads.
             tooltip.getBoundingClientRect = () => {
                 if (!tooltip.isConnected || animationScale) return new DOMRect();
 
@@ -1529,16 +1552,69 @@ describe('KbqTooltip', () => {
                 } as DOMRect;
             };
 
+            mockPanelLayout(tooltip, { left: 100, top: 100, width: 300, height: 160 });
+
             await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
-            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('19px');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('-181px');
 
             animationScale = false;
             finishAnimation();
             await animationFinished;
             await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
+
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('-181px');
+            expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('0px');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should measure the panel box without the entrance scale transform', async () => {
+            vi.useFakeTimers();
+
+            const triggerElement = component.trigger().nativeElement;
+
+            triggerElement.getBoundingClientRect = () => {
+                if (!triggerElement.isConnected) return new DOMRect();
+
+                return {
+                    left: 100,
+                    top: 100,
+                    right: 300,
+                    bottom: 140,
+                    width: 200,
+                    height: 40,
+                    x: 100,
+                    y: 100,
+                    toJSON: () => ({})
+                } as DOMRect;
+            };
+
+            component.arrow = true;
+            component.arrowCentered = true;
+            component.placement = 'bottomRight';
+            fixture.detectChanges();
+
+            await showByHover(fixture, triggerElement);
+
+            const tooltip = tooltipElement()!;
+
+            // From attach until the entrance animation ends the panel carries `transform: scale(...)` —
+            // `scale(0)` at the start — so `getBoundingClientRect` reports a degenerate box. The shift must
+            // come from the laid-out box instead.
+            tooltip.getBoundingClientRect = () => new DOMRect();
+            mockPanelLayout(tooltip, { left: 100, top: 100, width: 300, height: 160 });
+
+            const bottomRight = (
+                component.tooltipTrigger().createOverlay().getConfig()
+                    .positionStrategy as FlexibleConnectedPositionStrategy
+            ).positions[0];
+
+            component
+                .tooltipTrigger()
+                .onPositionChange({ connectionPair: bottomRight } as ConnectedOverlayPositionChange);
 
             expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-x')).toBe('-181px');
             expect(tooltip.style.getPropertyValue('--kbq-tooltip-arrow-shift-y')).toBe('0px');
@@ -1599,6 +1675,8 @@ describe('KbqTooltip', () => {
                     toJSON: () => ({})
                 } as DOMRect;
             };
+
+            mockPanelLayout(tooltip, { left: 100, top: 100, width: 300, height: 160 });
 
             const bottomRight = positions()[0];
 
@@ -1675,6 +1753,8 @@ describe('KbqTooltip', () => {
                 } as DOMRect;
             };
 
+            mockPanelLayout(tooltip, { left: 91, top: 100, width: 300, height: 160 });
+
             component.tooltipTrigger().onPositionChange({
                 connectionPair: positions()[0]
             } as ConnectedOverlayPositionChange);
@@ -1712,6 +1792,8 @@ describe('KbqTooltip', () => {
                     toJSON: () => ({})
                 } as DOMRect;
             };
+
+            mockPanelLayout(tooltip, { left: 100, top: 100, width: 30, height: 160 });
 
             const strategy = component.tooltipTrigger().createOverlay().getConfig()
                 .positionStrategy as FlexibleConnectedPositionStrategy;
@@ -1753,6 +1835,8 @@ describe('KbqTooltip', () => {
                     toJSON: () => ({})
                 } as DOMRect;
             };
+
+            mockPanelLayout(tooltip, { left: 100, top: 100, width: 300, height: 160 });
 
             const strategy = component.tooltipTrigger().createOverlay().getConfig()
                 .positionStrategy as FlexibleConnectedPositionStrategy;
