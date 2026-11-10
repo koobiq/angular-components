@@ -73,6 +73,18 @@ export class RelativeDateFormatterExample {
 
                 afterTomorrowNotCurrentYear: ''
             }
+        },
+        sentenceCase: {
+            long: {
+                yesterday: '',
+                today: '',
+                tomorrow: ''
+            },
+            short: {
+                yesterday: '',
+                today: '',
+                tomorrow: ''
+            }
         }
     };
 
@@ -85,6 +97,7 @@ export class RelativeDateFormatterExample {
 
         this.populateRelativeLong(locale);
         this.populateRelativeShort(locale);
+        this.populateSentenceCase(locale);
 
         this.changeDetectorRef.markForCheck();
     };
@@ -182,5 +195,22 @@ export class RelativeDateFormatterExample {
         });
 
         long.afterTomorrowNotCurrentYear = this.dateFormatter.relativeLongDate(now.plus({ years: 1, days: 2 }));
+    }
+
+    private populateSentenceCase(locale: string) {
+        this.dateFormatter.setLocale(locale);
+        this.adapter.setLocale(locale);
+
+        const sentenceCase = this.formats.sentenceCase;
+        const now = this.adapter.today();
+        const options = { sentenceStart: false };
+
+        sentenceCase.long.yesterday = this.dateFormatter.relativeLongDate(now.minus({ days: 1 }), options);
+        sentenceCase.long.today = this.dateFormatter.relativeLongDate(now.minus({ hours: 1 }), options);
+        sentenceCase.long.tomorrow = this.dateFormatter.relativeLongDate(now.plus({ days: 1, hours: 1 }), options);
+
+        sentenceCase.short.yesterday = this.dateFormatter.relativeShortDate(now.minus({ days: 1 }), options);
+        sentenceCase.short.today = this.dateFormatter.relativeShortDate(now.minus({ hours: 1 }), options);
+        sentenceCase.short.tomorrow = this.dateFormatter.relativeShortDate(now.plus({ days: 1, hours: 1 }), options);
     }
 }

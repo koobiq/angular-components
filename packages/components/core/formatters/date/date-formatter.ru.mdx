@@ -40,8 +40,8 @@ const formattedStringOfDate = this.formatter.absoluteLongDate(this.adapter.today
 | `kbqAbsoluteLongDate`      | дата             | `currYear?: boolean`                           | `absoluteLongDate`      |
 | `kbqAbsoluteShortDateTime` | дата             | `options?: DateTimeOptions`                    | `absoluteShortDateTime` |
 | `kbqAbsoluteLongDateTime`  | дата             | `options?: DateTimeOptions`                    | `absoluteLongDateTime`  |
-| `kbqRelativeShortDate`     | дата             | —                                              | `relativeShortDate`     |
-| `kbqRelativeLongDate`      | дата             | —                                              | `relativeLongDate`      |
+| `kbqRelativeShortDate`     | дата             | `options?: DateTimeOptions`                    | `relativeShortDate`     |
+| `kbqRelativeLongDate`      | дата             | `options?: DateTimeOptions`                    | `relativeLongDate`      |
 | `kbqRelativeShortDateTime` | дата             | `options?: DateTimeOptions`                    | `relativeShortDateTime` |
 | `kbqRelativeLongDateTime`  | дата             | `options?: DateTimeOptions`                    | `relativeLongDateTime`  |
 | `kbqRangeShortDate`        | `[от, до]`       | —                                              | `rangeShortDate`        |
@@ -53,7 +53,7 @@ const formattedStringOfDate = this.formatter.absoluteLongDate(this.adapter.today
 | `kbqDurationShort`         | `[от, до]`       | `units?: DurationUnit[]`, `fraction?: boolean` | `durationShort`         |
 | `kbqDurationLong`          | `[от, до]`       | `units?: DurationUnit[]`, `fraction?: boolean` | `durationLong`          |
 
-`DateTimeOptions` — это `{ seconds?: boolean; milliseconds?: boolean; currYear?: boolean }`. `kbqDurationShortest` использует из него только `seconds` (по умолчанию `true`) и `milliseconds`.
+`DateTimeOptions` — это `{ seconds?: boolean; milliseconds?: boolean; currYear?: boolean; sentenceStart?: boolean }`; `sentenceStart` используется только относительными форматами. `kbqDurationShortest` использует из него только `seconds` (по умолчанию `true`) и `milliseconds`.
 
 ```html
 <div>{{ [task.startedAt, task.finishedAt] | kbqDurationShortest }}</div>
@@ -188,6 +188,8 @@ export const appConfig: ApplicationConfig = {
 #### Относительная дата
 
 <Example id="relative-date-formatter" />
+
+По умолчанию относительная дата начинается с заглавной буквы — она может открывать предложение. Если дата стоит в середине предложения, передайте `{ sentenceStart: false }` в pipe или форматтер, чтобы относительное слово было в нижнем регистре («Обновлено вчера, 14:48»). Абсолютная часть того же формата не меняется.
 
 #### Диапазон дат
 
