@@ -749,17 +749,17 @@ export class KbqAbsoluteShortDateTimePipe<D>
     pure: false
 })
 export class KbqRelativeLongDatePipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, []>
+    extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]>
     implements PipeTransform
 {
-    override transform(value: D | string | null | undefined): string {
-        return super.transform(value);
+    override transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
+        return super.transform(value, options);
     }
 
-    protected format(value: D | string | null | undefined): string {
+    protected format(value: D | string | null | undefined, options?: DateTimeOptions): string {
         const date = toValidDate(this.adapter, value);
 
-        return date ? this.formatter.relativeLongDate(date) : '';
+        return date ? this.formatter.relativeLongDate(date, options) : '';
     }
 }
 
@@ -768,17 +768,17 @@ export class KbqRelativeLongDatePipe<D>
     pure: false
 })
 export class KbqRelativeShortDatePipe<D>
-    extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, []>
+    extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]>
     implements PipeTransform
 {
-    override transform(value: D | string | null | undefined): string {
-        return super.transform(value);
+    override transform(value: D | string | null | undefined, options?: DateTimeOptions): string {
+        return super.transform(value, options);
     }
 
-    protected format(value: D | string | null | undefined): string {
+    protected format(value: D | string | null | undefined, options?: DateTimeOptions): string {
         const date = toValidDate(this.adapter, value);
 
-        return date ? this.formatter.relativeShortDate(date) : '';
+        return date ? this.formatter.relativeShortDate(date, options) : '';
     }
 }
 
