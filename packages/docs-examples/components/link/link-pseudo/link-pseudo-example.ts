@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqLinkModule } from '@koobiq/components/link';
 
 /**
@@ -10,9 +10,31 @@ import { KbqLinkModule } from '@koobiq/components/link';
     selector: 'link-pseudo-example',
     imports: [KbqLinkModule],
     template: `
-        <div style="padding: 16px">
-            <span kbq-link pseudo>Отчет от 19.05.2020</span>
-        </div>
+        <span
+            kbq-link
+            pseudo
+            role="button"
+            (click)="runScan()"
+            (keydown.enter)="runScan()"
+            (keydown.space)="$event.preventDefault()"
+            (keyup.space)="runScan()"
+        >
+            Run scan
+        </span>
+        <span>Scans run: {{ scans() }}</span>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            gap: var(--kbq-size-m);
+            padding: var(--kbq-size-l);
+        }
     `
 })
-export class LinkPseudoExample {}
+export class LinkPseudoExample {
+    protected readonly scans = signal(0);
+
+    protected runScan(): void {
+        this.scans.update((count) => count + 1);
+    }
+}
