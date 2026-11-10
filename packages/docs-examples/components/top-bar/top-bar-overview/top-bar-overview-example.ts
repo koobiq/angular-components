@@ -34,15 +34,11 @@ type ExampleAction = {
     ],
     template: `
         <kbq-top-bar>
-            <div
-                class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs"
-                kbqTopBarContainer
-                placement="start"
-            >
+            <div class="layout-row layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-margin-right-l flex-none">
                     <img alt="example icon" src="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
                 </div>
-                <div class="kbq-title kbq-truncate-line">Dashboards</div>
+                <div class="kbq-truncate-line" kbqTopBarTitle>Dashboards</div>
             </div>
 
             <div kbqTopBarSpacer></div>

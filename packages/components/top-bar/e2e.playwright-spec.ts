@@ -45,4 +45,93 @@ test.describe('KbqTopBarModule', () => {
             await expect(getComponent(page)).toHaveScreenshot('02-dark.png');
         });
     });
+
+    test.describe('E2eTopBarTitleBreadcrumbs', () => {
+        // One read of every box the test compares, after the bars are on screen: nothing is polled for a value that
+        // never changes, and the assertions below see a single consistent layout.
+        const measure = (page: Page) =>
+            page.evaluate(() => {
+                const relative = (bar: Element | null, text: Element | null) => {
+                    if (!bar || !text) return null;
+                    const barBox = bar.getBoundingClientRect();
+                    const textBox = text.getBoundingClientRect();
+
+                    return {
+                        barHeight: barBox.height,
+                        left: textBox.x - barBox.x,
+                        centre: textBox.y + textBox.height / 2 - barBox.y
+                    };
+                };
+                const title = relative(
+                    document.querySelector('[data-testid=e2eTopBarTitleBar]'),
+                    document.querySelector('[data-testid=e2eTopBarTitleText]')
+                );
+                const crumbsBar = document.querySelector('[data-testid=e2eTopBarBreadcrumbsBar]');
+                const crumbs = relative(
+                    crumbsBar,
+                    crumbsBar?.querySelector('.kbq-breadcrumb-item .kbq-button-text') ?? null
+                );
+
+                return title && crumbs ? { title, crumbs } : null;
+            });
+
+        // A screenshot shows that the text moved, but not why; the two variants of the bar have to agree on the number.
+        test('should place the page title where size="big" breadcrumbs sit', async ({ page }) => {
+            await page.goto('/E2eTopBarTitleBreadcrumbs');
+
+            const titleText = page.getByTestId('e2eTopBarTitleText');
+            const firstCrumbText = page
+                .getByTestId('e2eTopBarBreadcrumbsBar')
+                .locator('.kbq-breadcrumb-item .kbq-button-text')
+                .first();
+
+            await expect(titleText).toBeVisible();
+            await expect(firstCrumbText).toBeVisible();
+
+            const layout = await measure(page);
+
+            expect(layout).not.toBeNull();
+            expect(layout!.title.barHeight).toBe(layout!.crumbs.barHeight);
+            // The same left edge, and the same vertical centre inside the bar.
+            expect(layout!.title.left).toBeCloseTo(layout!.crumbs.left, 0);
+            expect(layout!.title.centre).toBeCloseTo(layout!.crumbs.centre, 0);
+
+            // "One size" is the point of the change, and the boxes above cannot see a typography regression: a title
+            // that fell back to 20/700 would keep the same 32 px line box.
+            await expect(titleText).toHaveCSS('font-size', '18px');
+            await expect(titleText).toHaveCSS('font-weight', '600');
+            await expect(firstCrumbText).toHaveCSS('font-size', '18px');
+            await expect(firstCrumbText).toHaveCSS('font-weight', '600');
+        });
+
+        test('should grow the bar instead of painting over it when the title wraps', async ({ page }) => {
+            await page.goto('/E2eTopBarTitleBreadcrumbs');
+
+            const title = page.getByTestId('e2eTopBarWrappingTitleText');
+
+            await expect(title).toBeVisible();
+            // The title overflows its own line box when the bar is a fixed height; the minimum height lets it grow.
+            await expect
+                .poll(() => title.evaluate((element) => element.scrollHeight <= element.clientHeight))
+                .toBe(true);
+
+            const heights = await page.evaluate(() => {
+                const bar = document.querySelector('[data-testid=e2eTopBarWrappingTitleBar]')!;
+                const title = document.querySelector('[data-testid=e2eTopBarWrappingTitleText]')!;
+                const barBox = bar.getBoundingClientRect();
+                const range = document.createRange();
+
+                range.selectNodeContents(title);
+
+                return {
+                    bar: barBox.height,
+                    barBottom: barBox.bottom,
+                    inkBottom: range.getBoundingClientRect().bottom
+                };
+            });
+
+            expect(heights.bar).toBeGreaterThan(56);
+            expect(heights.inkBottom).toBeLessThanOrEqual(heights.barBottom);
+        });
+    });
 });

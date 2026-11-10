@@ -866,8 +866,9 @@ describe('reading object literal types from source', () => {
 
         expect(literal).toEqual({ before: 'Partial<', after: '>' });
         expect(
-            members?.slice(0, 2).map(({ name, memberTags, optionalByWrapper }) => [name, memberTags, optionalByWrapper])
+            members?.slice(0, 3).map(({ name, memberTags, optionalByWrapper }) => [name, memberTags, optionalByWrapper])
         ).toEqual([
+            ['multilineOptions', [], true],
             ['panelWidth', [], true],
             ['panelMinWidth', [], true]
         ]);

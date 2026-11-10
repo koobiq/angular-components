@@ -13,7 +13,7 @@ export function defaultCompareViewValues(firstViewValue: string, secondViewValue
 
 /** Flat tree control. Able to expand/collapse a subtree recursively for flattened tree. */
 export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
-    expandedItemsBeforeFiltration: K[];
+    expandedItemsBeforeFiltration: K[] = [];
 
     private filters: FlatTreeControlFilter<T>[];
 
@@ -128,7 +128,14 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
         return this.dataNodes?.find((node: any) => this.compareValues(this.getValue(node), value));
     }
 
-    filterNodes(value: string | null = null): void {
+    /** Filters nodes by a query and expands the ancestors of every match. An empty string resets the filter. */
+    applyFilter(value: string | null = null): void {
+        if (value === '') {
+            this.resetFilter();
+
+            return;
+        }
+
         this.saveExpansionState();
 
         let result: T[] = [];
@@ -139,17 +146,41 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
             result = filter.handle(value, prevFilter);
         });
 
-        this.filterModel.clear();
-        this.filterModel.select(...result);
-
         // set current expansion state according to filtered tree
         this.expansionModel.setSelection(
             ...result.filter((node) => this.isExpandable(node)).map((node) => this.expansionKey(node))
         );
 
-        this.updateFilterValue(value || result);
+        this.filterQuery = value;
+
+        if (!this.filterModel.setSelection(...result)) {
+            // CDK does not emit an empty selection diff, but the flat data source must re-render zero-match results.
+            this.filterModel.changed.next({ source: this.filterModel, added: [], removed: [] });
+        }
+
+        this.updateFilterValue(value);
 
         Promise.resolve().then(() => this.restoreExpansionState());
+    }
+
+    /** Clears the active filter and restores the expansion state saved before filtering. */
+    resetFilter(): void {
+        if (this.hasActiveFilter) {
+            Promise.resolve().then(() => this.restoreExpansionState());
+        }
+
+        this.filterQuery = null;
+        this.filterModel.clear();
+        this.updateFilterValue(null);
+    }
+
+    /**
+     * Filters nodes by a query and expands the ancestors of every match.
+     *
+     * @deprecated Use `applyFilter` instead. Will be removed in 22.0.0.
+     */
+    filterNodes(value: string | null = null): void {
+        this.applyFilter(value);
     }
 
     private updateFilterValue(value: T[] | string | null) {
@@ -157,13 +188,13 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
     }
 
     private saveExpansionState() {
-        if (!this.filterValue.value?.length) {
+        if (!this.hasActiveFilter) {
             this.expandedItemsBeforeFiltration = this.expansionModel.selected;
         }
     }
 
     private restoreExpansionState() {
-        if (!this.filterValue.value?.length) {
+        if (!this.hasActiveFilter) {
             this.expansionModel.setSelection(...this.expandedItemsBeforeFiltration);
         }
     }

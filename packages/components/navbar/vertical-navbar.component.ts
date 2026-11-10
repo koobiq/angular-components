@@ -29,6 +29,7 @@ import {
     UP_ARROW
 } from '@koobiq/components/core';
 import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
+import { kbqNavbarTooltipOptionsProvider } from './navbar-tooltip-defaults';
 import { KbqFocusableComponent } from './navbar.component';
 
 // Re-exported so that the name this package's own token is typed with resolves from this package too:
@@ -78,6 +79,7 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = KBQ_NAVBAR_LOCALE_CONFIGURATION
         './navbar-divider.scss',
         './navbar-tokens.scss'
     ],
+    providers: [kbqNavbarTooltipOptionsProvider],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

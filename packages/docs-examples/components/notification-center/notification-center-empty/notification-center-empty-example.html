@@ -115,12 +115,8 @@
 
     <div class="layout-fill">
         <kbq-top-bar>
-            <div
-                class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs"
-                kbqTopBarContainer
-                placement="start"
-            >
-                <div class="kbq-title kbq-truncate-line">{{ text().pageTitle }}</div>
+            <div class="layout-row layout-align-center-center" kbqTopBarContainer placement="start">
+                <div class="kbq-truncate-line" kbqTopBarTitle>{{ text().pageTitle }}</div>
             </div>
 
             <div kbqTopBarSpacer></div>

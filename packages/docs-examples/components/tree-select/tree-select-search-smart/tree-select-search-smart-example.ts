@@ -186,7 +186,7 @@ export class TreeSelectSearchSmartExample implements OnInit {
     }
 
     ngOnInit(): void {
-        this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
+        this.searchControl.valueChanges.subscribe((value) => this.treeControl.applyFilter(value));
     }
 
     hasChild(_: number, nodeData: FileFlatNode) {
