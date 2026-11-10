@@ -233,16 +233,20 @@ export abstract class KbqPopUp implements OnDestroy {
         const point = this.trigger?.getArrowPoint();
 
         if (!point || !this.arrow || this.trigger.stickToWindow) {
-            if (!this.appliedArrowShift) return;
-
-            this.renderer.removeStyle(element, `--${this.prefix}-arrow-shift-x`, RendererStyleFlags2.DashCase);
-            this.renderer.removeStyle(element, `--${this.prefix}-arrow-shift-y`, RendererStyleFlags2.DashCase);
-            this.appliedArrowShift = null;
+            this.resetArrowShift();
 
             return;
         }
 
-        const panelRect = element.getBoundingClientRect();
+        const panelRect = this.getPanelViewportRect(element);
+
+        // Not laid out (detached or `display: none`): a stale shift is as wrong as a made-up one.
+        if (!panelRect) {
+            this.resetArrowShift();
+
+            return;
+        }
+
         const shift = kbqGetPopUpArrowShift(this.resolvedPlacement, panelRect, point, this.arrowCenterInset);
         const nextShift = { x: `${shift.x}px`, y: `${shift.y}px` };
 
@@ -251,6 +255,44 @@ export abstract class KbqPopUp implements OnDestroy {
         this.renderer.setStyle(element, `--${this.prefix}-arrow-shift-x`, nextShift.x, RendererStyleFlags2.DashCase);
         this.renderer.setStyle(element, `--${this.prefix}-arrow-shift-y`, nextShift.y, RendererStyleFlags2.DashCase);
         this.appliedArrowShift = nextShift;
+    }
+
+    /**
+     * Border box of the panel in viewport coordinates. `getBoundingClientRect` reflects the entrance
+     * `scale(...)` transform — an empty box at `scale(0)` — while the `offset*` reads describe the laid-out
+     * panel regardless of transforms; measuring the transformed box makes the arrow jump whenever this runs
+     * between attach and the end of the show animation.
+     */
+    private getPanelViewportRect(element: HTMLElement): DOMRect | null {
+        const { offsetWidth, offsetHeight } = element;
+
+        if (!offsetWidth || !offsetHeight) return null;
+
+        const offsetParent = element.offsetParent as HTMLElement | null;
+
+        if (!offsetParent) return null;
+
+        const parentRect = offsetParent.getBoundingClientRect();
+
+        return new DOMRect(
+            parentRect.left + element.offsetLeft,
+            parentRect.top + element.offsetTop,
+            offsetWidth,
+            offsetHeight
+        );
+    }
+
+    /** Removes the arrow shift written earlier, if any. */
+    private resetArrowShift(): void {
+        if (!this.appliedArrowShift) return;
+
+        const element = this.elementRef?.nativeElement;
+
+        if (!element) return;
+
+        this.renderer.removeStyle(element, `--${this.prefix}-arrow-shift-x`, RendererStyleFlags2.DashCase);
+        this.renderer.removeStyle(element, `--${this.prefix}-arrow-shift-y`, RendererStyleFlags2.DashCase);
+        this.appliedArrowShift = null;
     }
 
     /**
