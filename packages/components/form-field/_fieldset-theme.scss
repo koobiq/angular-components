@@ -4,6 +4,5 @@
     // Geometry of the hint area lives in `fieldset.scss`, next to the rest of the fieldset layout.
     .kbq-form-field__hint {
         @include form-field-theme.kbq-form-field-hint-theme();
-        @include form-field-theme.kbq-form-field-hint-typography();
     }
 }

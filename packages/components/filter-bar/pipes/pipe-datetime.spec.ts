@@ -1406,6 +1406,7 @@ describe('KbqPipeDatetimeComponent', () => {
             const hint = overlayContainer.querySelector('.kbq-date-period__hint');
 
             expect(hint?.textContent?.trim()).toBe(component.minIntervalErrorHint);
+            expect(hint?.classList.contains('kbq-hint_compact')).toBe(true);
         });
     });
 });

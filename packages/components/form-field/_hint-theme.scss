@@ -9,7 +9,15 @@
 }
 
 @mixin kbq-hint-theme() {
-    .kbq-hint {
+    // The token is not declared on the hint, so its value comes from the control around it; unset, the hint inherits
+    // its color. `:where` keeps this below a class that a consumer puts on the hint.
+    :where(.kbq-hint) {
+        color: var(--kbq-hint-text);
+    }
+
+    // A disabled hint drops its color, except the error one: an error has to read as an error under a disabled control
+    // too. `:where` leaves the specificity of the colors as it was.
+    .kbq-hint:where(:not(.kbq-hint_disabled)) {
         &.kbq-contrast-fade {
             @include _kbq-hint-color(fill-text-on, fade-contrast);
         }
@@ -20,10 +28,6 @@
 
         &.kbq-warning {
             @include _kbq-hint-color(fill-text-on, warning);
-        }
-
-        &.kbq-error {
-            @include _kbq-hint-color(fill-text-on, error);
         }
 
         &.kbq-hint_fill-text-off {
@@ -38,10 +42,22 @@
             &.kbq-warning {
                 @include _kbq-hint-color(fill-text-off, warning);
             }
+        }
+    }
 
-            &.kbq-error {
-                @include _kbq-hint-color(fill-text-off, error);
-            }
+    .kbq-hint.kbq-error {
+        @include _kbq-hint-color(fill-text-on, error);
+
+        &.kbq-hint_fill-text-off {
+            @include _kbq-hint-color(fill-text-off, error);
+        }
+    }
+
+    .kbq-hint.kbq-hint_disabled:not(.kbq-error) {
+        color: var(--kbq-hint-states-disabled-text);
+
+        & .kbq-icon {
+            color: var(--kbq-hint-states-disabled-icon);
         }
     }
 }

@@ -643,4 +643,26 @@ test.describe('KbqFilterBarModule', () => {
             await expect(locator).toHaveScreenshot('07-date-without-values-dark.png');
         });
     });
+
+    test.describe('E2eFilterBarDateWithHint', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eFilterBarDateWithHint');
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eFilterBarDateWithHint');
+            await getComponent(page).locator('.kbq-pipe__date button').first().focus();
+            await page.keyboard.press('Enter');
+
+            const panel = page.locator('.kbq-pipe-date__popover');
+
+            await expect(panel.locator('input[formcontrolname="start"]')).toBeFocused();
+            await expect(panel.locator('kbq-calendar').first()).toBeVisible();
+            await expect(panel.locator('.kbq-date-period__hint')).toBeVisible();
+
+            const locator = getComponent(page).getByTestId('e2eScreenshotTarget');
+
+            await expect(locator).toHaveScreenshot('09-hint-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(locator).toHaveScreenshot('09-hint-dark.png');
+        });
+    });
 });

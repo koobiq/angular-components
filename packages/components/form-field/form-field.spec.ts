@@ -506,12 +506,18 @@ describe(KbqFormField.name, () => {
         expect(hint.closest('.kbq-form-field__hint')).toBeTruthy();
     });
 
-    it('should NOT set kbq-hint_fill-text-off and kbq-hint_compact for KbqHint by default', () => {
+    it('should make KbqHint compact inside a form field', () => {
+        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+        const hint = getHintDebugElement(debugElement).nativeElement;
+
+        expect(hint.classList.contains('kbq-hint_compact')).toBe(true);
+    });
+
+    it('should leave kbq-hint_fill-text-off off by default', () => {
         const { debugElement } = createComponent(InputFormFieldWithHintAndError);
         const hint = getHintDebugElement(debugElement).nativeElement;
 
         expect(hint.classList.contains('kbq-hint_fill-text-off')).toBe(false);
-        expect(hint.classList.contains('kbq-hint_compact')).toBe(false);
     });
 
     it('should set kbq-hint_fill-text-off and kbq-hint_compact for KbqHint by attribute', () => {

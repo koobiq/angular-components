@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, signal, ViewEncapsulation } from '@
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -81,10 +82,6 @@ export class E2eFormFieldGroup {}
                     <i kbq-icon="kbq-floppy-disk_16"></i>
                     Save
                 </button>
-
-                <kbq-hint>
-                    A long hint text under the field that wraps to a new line and even extends beneath the button.
-                </kbq-hint>
             </kbq-fieldset>
         </div>
     `,
@@ -101,6 +98,110 @@ export class E2eFormFieldGroup {}
     }
 })
 export class E2eFormFieldset {}
+
+@Component({
+    selector: 'e2e-form-field-with-hint',
+    imports: [KbqInputModule, KbqButtonModule, KbqIconModule, ReactiveFormsModule],
+    template: `
+        <div class="e2e-grids" data-testid="e2eScreenshotTarget">
+            <div class="e2e-grid">
+                @for (content of contents; track content) {
+                    @for (state of states; track state) {
+                        <kbq-form-field>
+                            <input
+                                kbqInput
+                                [errorStateMatcher]="state === 'error' ? errorStateMatcher : undefined"
+                                [formControl]="state === 'disabled' ? disabled : enabled"
+                            />
+                            @if (state === 'error') {
+                                <kbq-error>Error</kbq-error>
+                            }
+                            @switch (content) {
+                                @case ('hint') {
+                                    <kbq-hint>Hint</kbq-hint>
+                                }
+                                @case ('icon') {
+                                    <kbq-hint>
+                                        <i kbq-icon="kbq-circle-info_16"></i>
+                                        Hint with an icon
+                                    </kbq-hint>
+                                }
+                                @case ('color') {
+                                    <kbq-hint color="success">
+                                        <i kbq-icon="kbq-check_16"></i>
+                                        Colored hint
+                                    </kbq-hint>
+                                }
+                                @case ('error-color') {
+                                    <kbq-hint color="error">Hint with the error color</kbq-hint>
+                                }
+                                @case ('fill-text-off') {
+                                    <kbq-hint color="success" fillTextOff>
+                                        <i kbq-icon="kbq-check_16"></i>
+                                        Hint with no text color
+                                    </kbq-hint>
+                                }
+                                @case ('password') {
+                                    <kbq-reactive-password-hint [hasError]="state === 'error'">
+                                        Password hint
+                                    </kbq-reactive-password-hint>
+                                }
+                            }
+                        </kbq-form-field>
+                    }
+                }
+            </div>
+
+            <kbq-fieldset class="e2e-fieldset">
+                <kbq-form-field kbqFieldsetItem>
+                    <input kbqInput />
+                </kbq-form-field>
+
+                <button kbq-button kbqFieldsetItem kbqStyle="outline">
+                    <i kbq-icon="kbq-floppy-disk_16"></i>
+                    Save
+                </button>
+
+                <kbq-hint>
+                    A long hint text under the field that wraps to a new line and even extends beneath the button.
+                </kbq-hint>
+            </kbq-fieldset>
+        </div>
+    `,
+    styles: `
+        .e2e-grids {
+            display: inline-grid;
+            gap: var(--kbq-size-xl);
+            justify-items: start;
+            padding: var(--kbq-size-xs);
+        }
+
+        .e2e-grid {
+            display: inline-grid;
+            grid-template-columns: repeat(3, 200px);
+            gap: var(--kbq-size-m);
+            align-items: start;
+            justify-items: stretch;
+        }
+
+        .e2e-fieldset {
+            width: 320px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFormFieldWithHint'
+    }
+})
+export class E2eFormFieldWithHint {
+    protected readonly contents = ['hint', 'icon', 'color', 'error-color', 'fill-text-off', 'password'] as const;
+    protected readonly states = ['normal', 'error', 'disabled'] as const;
+
+    // Always in the error state, so the screenshot does not depend on touching or submitting.
+    protected readonly errorStateMatcher: ErrorStateMatcher = { isErrorState: () => true };
+    protected readonly enabled = new FormControl('');
+    protected readonly disabled = new FormControl({ value: '', disabled: true });
+}
 
 @Component({
     selector: 'e2e-form-field-addons',

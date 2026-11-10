@@ -8,6 +8,7 @@ import {
     effect,
     inject,
     input,
+    Signal,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -49,6 +50,13 @@ export class KbqReactivePasswordHint extends KbqHint {
 
     /** Disables `color` for the hint text. */
     override readonly fillTextOff = input(true, { transform: booleanAttribute });
+
+    /**
+     * A password hint keeps its size under any control, so `compact` of the control does not apply to it.
+     *
+     * @docs-private
+     */
+    protected override readonly isCompact: Signal<boolean> = this.compact;
 
     /**
      * The form field hint icon.
