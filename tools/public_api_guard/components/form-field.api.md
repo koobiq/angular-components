@@ -82,7 +82,6 @@ export const kbqCleanerFactoryProvider: (factory: () => KbqCleanerContext) => Pr
 // @public
 export class KbqError extends KbqHint {
     constructor();
-    protected readonly isDisabled: Signal<boolean>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqError, "kbq-error", ["kbqError"], {}, {}, never, ["[kbq-icon]", "*"], true, never>;
     // (undocumented)

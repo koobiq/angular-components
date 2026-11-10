@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Signal, signal, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqHint } from './hint';
 
@@ -23,14 +23,6 @@ import { KbqHint } from './hint';
     exportAs: 'kbqError'
 })
 export class KbqError extends KbqHint {
-    /**
-     * An error is never shown as disabled, even under a disabled control: it is the one text under a control that the
-     * user has to read.
-     *
-     * @docs-private
-     */
-    protected override readonly isDisabled: Signal<boolean> = signal(false);
-
     constructor() {
         super();
 

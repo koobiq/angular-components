@@ -210,7 +210,8 @@ describe('KbqHint', () => {
             expect(classes.contains(DISABLED)).toBe(false);
         });
 
-        it('should pass the size and the text color to an error, but never the disabled state', () => {
+        // The stylesheet keeps the error color under a disabled control, which `07-hint` of the form field e2e checks.
+        it('should pass the config to an error too', () => {
             const classes = classesOf(fixture, 'error');
 
             config.compact.set(true);
@@ -220,7 +221,7 @@ describe('KbqHint', () => {
 
             expect(classes.contains(COMPACT)).toBe(true);
             expect(classes.contains(FILL_TEXT_OFF)).toBe(true);
-            expect(classes.contains(DISABLED)).toBe(false);
+            expect(classes.contains(DISABLED)).toBe(true);
         });
 
         it('should keep its own inputs while the config leaves them off', () => {

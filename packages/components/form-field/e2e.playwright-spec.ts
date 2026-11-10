@@ -142,7 +142,7 @@ test.describe('KbqFormFieldModule', () => {
             const target = page.getByTestId('e2eFormFieldWithHint').getByTestId('e2eScreenshotTarget');
 
             // The form field mounts the error once it has read the state of the control.
-            await expect(target.locator('kbq-error')).toHaveCount(6);
+            await expect(target.locator('kbq-error')).toHaveCount(7);
             await expect(target).toHaveScreenshot('07-hint-light.png');
 
             await e2eEnableDarkTheme(page);

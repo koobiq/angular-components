@@ -152,20 +152,29 @@ export class E2eFormFieldset {}
                 }
             </div>
 
-            <kbq-fieldset class="e2e-fieldset">
-                <kbq-form-field kbqFieldsetItem>
-                    <input kbqInput />
+            <div class="e2e-row">
+                <kbq-fieldset class="e2e-fieldset">
+                    <kbq-form-field kbqFieldsetItem>
+                        <input kbqInput />
+                    </kbq-form-field>
+
+                    <button kbq-button kbqFieldsetItem kbqStyle="outline">
+                        <i kbq-icon="kbq-floppy-disk_16"></i>
+                        Save
+                    </button>
+
+                    <kbq-hint>
+                        A long hint text under the field that wraps to a new line and even extends beneath the button.
+                    </kbq-hint>
+                </kbq-fieldset>
+
+                <!-- An error keeps its color under a disabled control, unlike the hint next to it. -->
+                <kbq-form-field class="e2e-disabled-error">
+                    <input kbqInput [errorStateMatcher]="errorStateMatcher" [formControl]="disabled" />
+                    <kbq-error>Error</kbq-error>
+                    <kbq-hint>Hint</kbq-hint>
                 </kbq-form-field>
-
-                <button kbq-button kbqFieldsetItem kbqStyle="outline">
-                    <i kbq-icon="kbq-floppy-disk_16"></i>
-                    Save
-                </button>
-
-                <kbq-hint>
-                    A long hint text under the field that wraps to a new line and even extends beneath the button.
-                </kbq-hint>
-            </kbq-fieldset>
+            </div>
         </div>
     `,
     styles: `
@@ -184,8 +193,18 @@ export class E2eFormFieldset {}
             justify-items: stretch;
         }
 
+        .e2e-row {
+            display: flex;
+            gap: var(--kbq-size-m);
+            align-items: flex-start;
+        }
+
         .e2e-fieldset {
             width: 320px;
+        }
+
+        .e2e-disabled-error {
+            width: 200px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
