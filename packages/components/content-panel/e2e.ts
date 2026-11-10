@@ -45,6 +45,68 @@ export class E2eContentPanelScrollOverflow {
 }
 
 @Component({
+    selector: 'e2e-content-panel-minimal-content',
+    imports: [KbqContentPanelModule],
+    template: `
+        <kbq-content-panel-container width="350" maxWidth="400" minWidth="300" [opened]="true">
+            <div>Content panel container content</div>
+            <kbq-content-panel>
+                <kbq-content-panel-header />
+                <kbq-content-panel-body>Content</kbq-content-panel-body>
+            </kbq-content-panel>
+        </kbq-content-panel-container>
+    `,
+    styles: `
+        :host {
+            display: inline-flex;
+        }
+
+        .kbq-content-panel-container {
+            height: 300px;
+            width: 500px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eContentPanelMinimalContent'
+    }
+})
+export class E2eContentPanelMinimalContent {}
+
+@Component({
+    selector: 'e2e-content-panel-wide-content',
+    imports: [KbqContentPanelModule],
+    template: `
+        <kbq-content-panel-container width="350" maxWidth="400" minWidth="300" [opened]="true">
+            <div>Content panel container content</div>
+            <kbq-content-panel>
+                <kbq-content-panel-header />
+                <kbq-content-panel-body>
+                    <pre>{{ wideLine }}</pre>
+                </kbq-content-panel-body>
+            </kbq-content-panel>
+        </kbq-content-panel-container>
+    `,
+    styles: `
+        :host {
+            display: inline-flex;
+        }
+
+        .kbq-content-panel-container {
+            height: 300px;
+            width: 500px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eContentPanelWideContent'
+    }
+})
+export class E2eContentPanelWideContent {
+    protected readonly wideLine = 'A line of preformatted text that does not wrap. '.repeat(10);
+}
+
+@Component({
     selector: 'e2e-content-panel-state',
     imports: [KbqButtonModule, KbqContentPanelModule, KbqIconModule],
     standalone: true,
