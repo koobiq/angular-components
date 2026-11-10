@@ -84,6 +84,8 @@ Sometimes specifying the product and adding a logo may be excessive. If you are 
 
 An analog of a button. Does not reload the page, does not open in a new tab or by link.
 
+To make a pseudo-link work from the keyboard like a button, add `role="button"` to it and handle Enter and Space, as in the example.
+
 <!-- example(link-pseudo) -->
 
 A link should not lead to the same page it is on. Such links are useless and only confuse the user: you click, the page loads, and you end up where you started. The exception is interfaces with refreshable content, where a link duplicates a page refresh.
@@ -121,7 +123,8 @@ It is important that a link not only looks like a link but also works like one. 
 
 | <div style="min-width: 110px;">Key</div>                                                      | Action                        |
 | --------------------------------------------------------------------------------------------- | ----------------------------- |
-| <span class="docs-hot-key-button">Space</span> \ <span class="docs-hot-key-button">⏎</span>   | Follow the link               |
+| <span class="docs-hot-key-button">⏎</span>                                                    | Follow the link               |
+| <span class="docs-hot-key-button">Space</span> \ <span class="docs-hot-key-button">⏎</span>   | Press a pseudo-link           |
 | <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">F10</span> | Open context menu (for links) |
 |                                                                                               | (Applicable on Windows only.) |
 
