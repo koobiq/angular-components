@@ -4626,23 +4626,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "loader-overlay-delay-example.ts",
     "importPath": "components/loader-overlay"
   },
-<<<<<<< HEAD
-=======
-  "loader-overlay-fixed-top": {
-    "packagePath": "components/loader-overlay/loader-overlay-fixed-top",
-    "title": "Loader-overlay fixed-top",
-    "componentName": "LoaderOverlayFixedTopExample",
-    "files": [
-      "loader-overlay-fixed-top-example.ts"
-    ],
-    "localImportFiles": [
-      "../l10n.ts"
-    ],
-    "selector": "loader-overlay-fixed-top-example",
-    "primaryFile": "loader-overlay-fixed-top-example.ts",
-    "importPath": "components/loader-overlay"
-  },
->>>>>>> 350597504 (docs(examples): rename localized-data to l10n and localize the docs examples (#DS-4922))
   "loader-overlay-large": {
     "packagePath": "components/loader-overlay/loader-overlay-large",
     "title": "Loader-overlay large",

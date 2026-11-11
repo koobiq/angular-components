@@ -14,17 +14,17 @@ import { injectExampleText } from './l10n';
     ],
     template: `
         <button kbq-button [kbqTooltip]="text().tooltipWithoutArrow">{{ text().noArrow }}</button>
-        <button kbq-button [kbqTooltip]="text().tooltipWithArrow" kbqPlacement="bottomRight" [kbqTooltipArrow]="true">
+        <button kbq-button kbqPlacement="bottomRight" [kbqTooltip]="text().tooltipWithArrow" [kbqTooltipArrow]="true">
             {{ text().withArrow }}
         </button>
         <button
             kbq-button
-            kbqTooltip="Tooltip with centered arrow"
             kbqPlacement="bottomRight"
+            [kbqTooltip]="text().tooltipWithCenteredArrow"
             [kbqTooltipArrow]="true"
             [kbqTooltipArrowCentered]="true"
         >
-            Centered arrow
+            {{ text().centeredArrow }}
         </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

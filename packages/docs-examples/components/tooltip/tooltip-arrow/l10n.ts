@@ -7,6 +7,8 @@ export interface ExampleText {
     tooltipWithArrow: string;
     noArrow: string;
     withArrow: string;
+    tooltipWithCenteredArrow: string;
+    centeredArrow: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -14,13 +16,17 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         tooltipWithoutArrow: 'Тултип без стрелки',
         tooltipWithArrow: 'Тултип со стрелкой',
         noArrow: 'Без стрелки',
-        withArrow: 'Со стрелкой'
+        withArrow: 'Со стрелкой',
+        tooltipWithCenteredArrow: 'Тултип с центрированной стрелкой',
+        centeredArrow: 'Центрированная стрелка'
     },
     default: {
         tooltipWithoutArrow: 'Tooltip without arrow',
         tooltipWithArrow: 'Tooltip with arrow',
         noArrow: 'No arrow',
-        withArrow: 'With arrow'
+        withArrow: 'With arrow',
+        tooltipWithCenteredArrow: 'Tooltip with centered arrow',
+        centeredArrow: 'Centered arrow'
     }
 };
 
