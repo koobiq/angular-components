@@ -3,8 +3,6 @@
 @mixin kbq-checkbox-color($style-name) {
     $base: checkbox-#{$style-name};
 
-    --kbq-hint-text: var(--kbq-#{$base}-default-caption);
-
     .kbq-checkbox__frame {
         border-color: var(--kbq-#{$base}-default-border);
         background-color: var(--kbq-#{$base}-default-background);

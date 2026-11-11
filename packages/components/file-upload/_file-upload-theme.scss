@@ -1,11 +1,5 @@
 @use '../core/styles/common/tokens';
 
-@mixin kbq-file-upload-theme() {
-    .kbq-file-upload__hint {
-        --kbq-hint-text: var(--kbq-foreground-contrast-secondary);
-    }
-}
-
 @mixin kbq-file-upload-typography() {
     .kbq-file-upload {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);

@@ -1,9 +1,5 @@
 @use '../core/styles/common/tokens';
 
-@mixin kbq-form-field-hint-theme {
-    --kbq-hint-text: var(--kbq-form-field-hint-text);
-}
-
 @mixin _kbq-form-field-state($state-name) {
     .kbq-form-field__container {
         border-color: var(--kbq-form-field-#{$state-name}-border-color);
@@ -175,10 +171,6 @@
             .kbq-icon.kbq-empty {
                 color: var(--kbq-icon-contrast-fade);
             }
-        }
-
-        .kbq-form-field__hint {
-            @include kbq-form-field-hint-theme();
         }
     }
 }

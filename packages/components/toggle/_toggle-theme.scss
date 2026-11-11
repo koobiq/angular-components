@@ -64,8 +64,6 @@
 
 @mixin kbq-toggle-theme() {
     .kbq-toggle {
-        --kbq-hint-text: var(--kbq-foreground-contrast-secondary);
-
         @include _kbq-toggle-color(theme);
 
         &.kbq-error,

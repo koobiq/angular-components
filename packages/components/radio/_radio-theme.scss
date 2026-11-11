@@ -14,8 +14,6 @@
 }
 
 @mixin kbq-radio-color($type-name) {
-    --kbq-hint-text: var(--kbq-radio-#{$type-name}-default-caption);
-
     @include kbq-radio-state($type-name, default);
 
     &:hover,
@@ -75,11 +73,6 @@
     .kbq-radio-group.kbq-error .kbq-radio-button,
     .kbq-radio-group.kbq-invalid .kbq-radio-button {
         @include kbq-radio-color(error);
-    }
-
-    // A hint of the group reads like the hints of its options; the error keeps its own color.
-    .kbq-radio-group__subscript {
-        --kbq-hint-text: var(--kbq-radio-theme-default-caption);
     }
 }
 

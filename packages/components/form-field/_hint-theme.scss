@@ -9,8 +9,7 @@
 }
 
 @mixin kbq-hint-theme() {
-    // The token is not declared on the hint, so its value comes from the control around it; unset, the hint inherits
-    // its color. `:where` keeps this below a class that a consumer puts on the hint.
+    // `:where` keeps the default color below a class that a consumer puts on the hint.
     :where(.kbq-hint) {
         color: var(--kbq-hint-text);
     }
