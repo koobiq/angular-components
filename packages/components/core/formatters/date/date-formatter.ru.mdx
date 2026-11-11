@@ -34,24 +34,24 @@ const formattedStringOfDate = this.formatter.absoluteLongDate(this.adapter.today
 
 #### Список pipe
 
-| Pipe                       | Входное значение | Аргументы                                      | Метод DateFormatter     |
-| -------------------------- | ---------------- | ---------------------------------------------- | ----------------------- |
-| `kbqAbsoluteShortDate`     | дата             | `currYear?: boolean`                           | `absoluteShortDate`     |
-| `kbqAbsoluteLongDate`      | дата             | `currYear?: boolean`                           | `absoluteLongDate`      |
-| `kbqAbsoluteShortDateTime` | дата             | `options?: DateTimeOptions`                    | `absoluteShortDateTime` |
-| `kbqAbsoluteLongDateTime`  | дата             | `options?: DateTimeOptions`                    | `absoluteLongDateTime`  |
-| `kbqRelativeShortDate`     | дата             | `options?: DateTimeOptions`                    | `relativeShortDate`     |
-| `kbqRelativeLongDate`      | дата             | `options?: DateTimeOptions`                    | `relativeLongDate`      |
-| `kbqRelativeShortDateTime` | дата             | `options?: DateTimeOptions`                    | `relativeShortDateTime` |
-| `kbqRelativeLongDateTime`  | дата             | `options?: DateTimeOptions`                    | `relativeLongDateTime`  |
-| `kbqRangeShortDate`        | `[от, до]`       | —                                              | `rangeShortDate`        |
-| `kbqRangeLongDate`         | `[от, до]`       | —                                              | `rangeLongDate`         |
-| `kbqRangeShortDateTime`    | `[от, до]`       | `options?: DateTimeOptions`                    | `rangeShortDateTime`    |
-| `kbqRangeMiddleDateTime`   | `[от, до]`       | `options?: DateTimeOptions`                    | `rangeMiddleDateTime`   |
-| `kbqRangeLongDateTime`     | `[от, до]`       | `options?: DateTimeOptions`                    | `rangeLongDateTime`     |
-| `kbqDurationShortest`      | `[от, до]`       | `options?: DateTimeOptions`                    | `durationShortest`      |
-| `kbqDurationShort`         | `[от, до]`       | `units?: DurationUnit[]`, `fraction?: boolean` | `durationShort`         |
-| `kbqDurationLong`          | `[от, до]`       | `units?: DurationUnit[]`, `fraction?: boolean` | `durationLong`          |
+| Pipe                       | Входное значение | Аргументы                                          | Метод DateFormatter     |
+| -------------------------- | ---------------- | -------------------------------------------------- | ----------------------- |
+| `kbqAbsoluteShortDate`     | дата             | `currYear?: boolean`                               | `absoluteShortDate`     |
+| `kbqAbsoluteLongDate`      | дата             | `currYear?: boolean`                               | `absoluteLongDate`      |
+| `kbqAbsoluteShortDateTime` | дата             | `options?: DateTimeOptions`                        | `absoluteShortDateTime` |
+| `kbqAbsoluteLongDateTime`  | дата             | `options?: DateTimeOptions`                        | `absoluteLongDateTime`  |
+| `kbqRelativeShortDate`     | дата             | `options?: Pick<DateTimeOptions, 'sentenceStart'>` | `relativeShortDate`     |
+| `kbqRelativeLongDate`      | дата             | `options?: Pick<DateTimeOptions, 'sentenceStart'>` | `relativeLongDate`      |
+| `kbqRelativeShortDateTime` | дата             | `options?: DateTimeOptions`                        | `relativeShortDateTime` |
+| `kbqRelativeLongDateTime`  | дата             | `options?: DateTimeOptions`                        | `relativeLongDateTime`  |
+| `kbqRangeShortDate`        | `[от, до]`       | —                                                  | `rangeShortDate`        |
+| `kbqRangeLongDate`         | `[от, до]`       | —                                                  | `rangeLongDate`         |
+| `kbqRangeShortDateTime`    | `[от, до]`       | `options?: DateTimeOptions`                        | `rangeShortDateTime`    |
+| `kbqRangeMiddleDateTime`   | `[от, до]`       | `options?: DateTimeOptions`                        | `rangeMiddleDateTime`   |
+| `kbqRangeLongDateTime`     | `[от, до]`       | `options?: DateTimeOptions`                        | `rangeLongDateTime`     |
+| `kbqDurationShortest`      | `[от, до]`       | `options?: DateTimeOptions`                        | `durationShortest`      |
+| `kbqDurationShort`         | `[от, до]`       | `units?: DurationUnit[]`, `fraction?: boolean`     | `durationShort`         |
+| `kbqDurationLong`          | `[от, до]`       | `units?: DurationUnit[]`, `fraction?: boolean`     | `durationLong`          |
 
 `DateTimeOptions` — это `{ seconds?: boolean; milliseconds?: boolean; currYear?: boolean; sentenceStart?: boolean }`; `sentenceStart` используется только относительными форматами. `kbqDurationShortest` использует из него только `seconds` (по умолчанию `true`) и `milliseconds`.
 

@@ -1233,7 +1233,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'date',
                     hasApi: false,
                     apiId: 'date-formatter',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-25')
                 },
                 {
                     id: DocsStructureItemId.FilesizeFormatter,

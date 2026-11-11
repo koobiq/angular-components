@@ -4142,11 +4142,13 @@ export class KbqReadStateDirective {
 }
 
 // @public (undocumented)
-export class KbqRelativeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
+export class KbqRelativeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [
+options?: Pick<DateTimeOptions, 'sentenceStart'>
+]> implements PipeTransform {
     // (undocumented)
-    protected format(value: D | string | null | undefined, options?: DateTimeOptions): string;
+    protected format(value: D | string | null | undefined, options?: Pick<DateTimeOptions, 'sentenceStart'>): string;
     // (undocumented)
-    transform(value: D | string | null | undefined, options?: DateTimeOptions): string;
+    transform(value: D | string | null | undefined, options?: Pick<DateTimeOptions, 'sentenceStart'>): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRelativeLongDatePipe<any>, never>;
     // (undocumented)
@@ -4166,11 +4168,13 @@ export class KbqRelativeLongDateTimePipe<D> extends BaseLocaleAwareFormatterPipe
 }
 
 // @public (undocumented)
-export class KbqRelativeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [options?: DateTimeOptions]> implements PipeTransform {
+export class KbqRelativeShortDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, [
+options?: Pick<DateTimeOptions, 'sentenceStart'>
+]> implements PipeTransform {
     // (undocumented)
-    protected format(value: D | string | null | undefined, options?: DateTimeOptions): string;
+    protected format(value: D | string | null | undefined, options?: Pick<DateTimeOptions, 'sentenceStart'>): string;
     // (undocumented)
-    transform(value: D | string | null | undefined, options?: DateTimeOptions): string;
+    transform(value: D | string | null | undefined, options?: Pick<DateTimeOptions, 'sentenceStart'>): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRelativeShortDatePipe<any>, never>;
     // (undocumented)
