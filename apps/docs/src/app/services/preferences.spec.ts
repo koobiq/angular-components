@@ -20,6 +20,9 @@ describe(DocsLanguagePreferences.name, () => {
 
         router = { navigate: vi.fn(), parseUrl: (url: string) => serializer.parse(url) };
 
+        let currentDocsLocale =
+            Object.values(DocsLocale).find((locale) => path.startsWith(`/${locale}/`)) ?? DocsLocale.Ru;
+
         TestBed.configureTestingModule({
             providers: [
                 kbqLocaleServiceProvider(),
@@ -28,9 +31,15 @@ describe(DocsLanguagePreferences.name, () => {
                 {
                     provide: DocsLocaleService,
                     useValue: {
+                        get locale() {
+                            return currentDocsLocale;
+                        },
                         getLocaleFromURL: (url: string) =>
                             Object.values(DocsLocale).find((locale) => url.startsWith(`/${locale}/`)) ?? null,
-                        setLocale: setDocsLocale
+                        setLocale: (locale: DocsLocale) => {
+                            currentDocsLocale = locale;
+                            setDocsLocale(locale);
+                        }
                     }
                 }
             ]
@@ -137,5 +146,44 @@ describe(DocsLanguagePreferences.name, () => {
             queryParams: { 'examples-lang': 'ru-RU' },
             queryParamsHandling: 'merge'
         });
+    });
+
+    // The examples language follows the docs language until the reader picks a different one.
+    it('switches the examples language together with the docs language while they match', () => {
+        configure('/ru/components/alert/overview');
+
+        const { items } = TestBed.inject(KBQ_LOCALE_SERVICE).locales;
+
+        localStorage.setItem('docs_examples-language', String(items.findIndex(({ id }) => id === 'ru-RU')));
+
+        const preferences = create();
+        const enIndex = preferences.docsLanguageSwitch.data.findIndex(({ id }) => id === DocsLocale.En);
+
+        preferences.docsLanguageSwitch.setValue(enIndex);
+
+        expect(setExamplesLocale).toHaveBeenLastCalledWith('en-US');
+        expect(preferences.examplesLanguageSwitch.currentValue.id).toBe('en-US');
+        expect(router.navigate).toHaveBeenLastCalledWith([], {
+            queryParams: { 'examples-lang': 'en-US' },
+            queryParamsHandling: 'merge'
+        });
+    });
+
+    it('keeps a deliberately different examples language when the docs language changes', () => {
+        configure('/ru/components/alert/overview');
+
+        const { items } = TestBed.inject(KBQ_LOCALE_SERVICE).locales;
+        const esIndex = items.findIndex(({ id }) => id === 'es-LA');
+
+        localStorage.setItem('docs_examples-language', String(esIndex));
+
+        const preferences = create();
+
+        preferences.docsLanguageSwitch.setValue(
+            preferences.docsLanguageSwitch.data.findIndex(({ id }) => id === DocsLocale.En)
+        );
+
+        expect(setExamplesLocale).toHaveBeenLastCalledWith('es-LA');
+        expect(preferences.examplesLanguageSwitch.currentValue.id).toBe('es-LA');
     });
 });
