@@ -49,6 +49,7 @@ import {
     ESCAPE,
     KBQ_DATE_FORMATS,
     KBQ_DATE_LOCALE,
+    KbqDateTimezoneService,
     kbqErrorStateMatcherProvider,
     kbqLocaleIDProvider,
     kbqLocaleServiceProvider,
@@ -2489,7 +2490,294 @@ describe('KbqDatepicker', () => {
             expect(host.runs).toBe(1);
         });
     });
+
+    describe('text that is not a date', () => {
+        const setup = (host: Type<DatepickerWithText> = DatepickerWithText) => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(host, [KbqLuxonDateModule]);
+
+            fixture.detectChanges();
+
+            const { control, datepickerInput } = fixture.componentInstance;
+            const debugElement = fixture.debugElement.query(By.directive(KbqDatepickerInput));
+            const input: HTMLInputElement = debugElement.nativeElement;
+            const values: (string | null)[] = [];
+            const incorrectInput = vi.fn();
+
+            control.valueChanges.subscribe((value) => values.push(value?.toISODate() ?? null));
+            datepickerInput().incorrectInput.subscribe(incorrectInput);
+
+            const settle = async () => {
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+            };
+
+            return {
+                control,
+                input,
+                values,
+                incorrectInput,
+                paste: async (text: string) => {
+                    debugElement.triggerEventHandler('paste', {
+                        preventDefault: () => null,
+                        clipboardData: { getData: () => text }
+                    });
+                    await settle();
+                },
+                drop: async (text: string) => {
+                    const preventDefault = vi.fn();
+
+                    debugElement.triggerEventHandler('drop', { preventDefault, dataTransfer: { getData: () => text } });
+                    await settle();
+
+                    return preventDefault;
+                },
+                // An edit that comes with no keydown - an undo, an IME, autofill - followed by leaving the field.
+                writeAndBlur: async (text: string) => {
+                    dispatchFakeEvent(input, 'focus');
+                    input.value = text;
+                    dispatchFakeEvent(input, 'blur');
+                    await settle();
+                }
+            };
+        };
+
+        it.each(['abc', '1a2b3c', '2024-05-17', '17', '17.05.20245', '17д05д2024'])(
+            'should reject the pasted text "%s"',
+            async (text) => {
+                const { control, input, values, incorrectInput, paste } = setup();
+
+                await paste(text);
+
+                expect(input.value).toBe('17.05.2024');
+                expect(control.value?.toISODate()).toBe('2024-05-17');
+                expect(values).toEqual([]);
+                expect(incorrectInput).toHaveBeenCalledTimes(1);
+            }
+        );
+
+        it('should not report an empty paste as incorrect input', async () => {
+            const { input, incorrectInput, paste } = setup();
+
+            await paste('  ');
+
+            expect(input.value).toBe('17.05.2024');
+            expect(incorrectInput).not.toHaveBeenCalled();
+        });
+
+        it.each([
+            ['18.05.2024', '2024-05-18'],
+            [' 18/05/2024 ', '2024-05-18'],
+            ['(18.05.2024).', '2024-05-18'],
+            ['01.01.00', '2000-01-01'],
+            ['18.5.24', '2024-05-18'],
+            ['1.2.95', '1995-02-01'],
+            ['12.12', '2024-12-12']
+        ])('should take the pasted date "%s" at once', async (text, date) => {
+            const { control, input, values, incorrectInput, paste } = setup();
+
+            await paste(text);
+
+            expect(control.value?.toISODate()).toBe(date);
+            expect(input.value).toBe(DateTime.fromISO(date).toFormat('dd.MM.yyyy'));
+            expect(values).toEqual([date]);
+            expect(incorrectInput).not.toHaveBeenCalled();
+        });
+
+        it('should not cut the day of a date pasted into an empty field to the month pasted before', async () => {
+            const { control, paste } = setup();
+
+            await paste('15.02.2023');
+            control.setValue(null);
+            await paste('30.01.2024');
+
+            expect(control.value?.toISODate()).toBe('2024-01-30');
+        });
+
+        it('should read a year of two zeros on blur as the paste does', async () => {
+            const { control, writeAndBlur } = setup();
+
+            await writeAndBlur('01.01.00');
+
+            expect(control.value?.toISODate()).toBe('2000-01-01');
+        });
+
+        it('should keep the text and its error when the time zone changes', async () => {
+            const { control, input, writeAndBlur } = setup();
+
+            await writeAndBlur('abc');
+            TestBed.inject(KbqDateTimezoneService).setTimezone('Asia/Tokyo');
+
+            expect(input.value).toBe('abc');
+            expect(control.errors).toEqual({ kbqDatepickerParse: { text: 'abc' } });
+        });
+
+        it('should not paste into a read-only field', async () => {
+            const { input, values, paste } = setup();
+
+            input.readOnly = true;
+            await paste('18.05.2024');
+
+            expect(input.value).toBe('17.05.2024');
+            expect(values).toEqual([]);
+        });
+
+        it('should take a dropped date in place of the native insertion', async () => {
+            const { control, input, values, drop } = setup();
+
+            const preventDefault = await drop('18.05.2024');
+
+            expect(preventDefault).toHaveBeenCalledTimes(1);
+            expect(input.value).toBe('18.05.2024');
+            expect(control.value?.toISODate()).toBe('2024-05-18');
+            expect(values).toEqual(['2024-05-18']);
+        });
+
+        it('should reject dropped text that is not a date', async () => {
+            const { control, input, values, incorrectInput, drop } = setup();
+
+            const preventDefault = await drop('abc');
+
+            expect(preventDefault).toHaveBeenCalledTimes(1);
+            expect(input.value).toBe('17.05.2024');
+            expect(control.value?.toISODate()).toBe('2024-05-17');
+            expect(values).toEqual([]);
+            expect(incorrectInput).toHaveBeenCalledTimes(1);
+        });
+
+        it('should ignore text dragged within the field itself', async () => {
+            const { input, values, incorrectInput, drop } = setup();
+
+            dispatchFakeEvent(input, 'dragstart');
+            await drop('17');
+
+            expect(input.value).toBe('17.05.2024');
+            expect(values).toEqual([]);
+            expect(incorrectInput).not.toHaveBeenCalled();
+
+            dispatchFakeEvent(input, 'dragend');
+            await drop('18.05.2024');
+
+            expect(input.value).toBe('18.05.2024');
+        });
+
+        it('should ignore a drop on a disabled or read-only field', async () => {
+            const { control, input, values, drop } = setup();
+
+            control.disable();
+            values.length = 0;
+            await drop('18.05.2024');
+
+            expect(input.value).toBe('17.05.2024');
+
+            control.enable();
+            values.length = 0;
+            input.readOnly = true;
+            await drop('18.05.2024');
+
+            expect(input.value).toBe('17.05.2024');
+            expect(values).toEqual([]);
+        });
+
+        it('should mark the control as touched by a drop into a window that is not active', async () => {
+            const { control, input, drop } = setup();
+
+            // What `focus()` amounts to there: the element becomes active and no event fires.
+            vi.spyOn(input, 'focus').mockImplementation(() => undefined);
+
+            await drop('18.05.2024');
+
+            expect(control.touched).toBe(true);
+        });
+
+        it('should tell the form once, on blur', async () => {
+            const { control, input, values, writeAndBlur } = setup();
+
+            await writeAndBlur('abc');
+
+            expect(input.value).toBe('abc');
+            expect(control.value).toBeNull();
+            expect(control.errors).toEqual({ kbqDatepickerParse: { text: 'abc' } });
+            expect(values).toEqual([null]);
+
+            // Every emission restarts the async validators of the form.
+            await writeAndBlur('abc');
+
+            expect(values).toEqual([null]);
+        });
+
+        it('should tell a control that commits on blur on the first blur', async () => {
+            const { control, writeAndBlur } = setup(DatepickerWithTextOnBlur);
+
+            await writeAndBlur('abc');
+
+            expect(control.value).toBeNull();
+            expect(control.errors).toEqual({ kbqDatepickerParse: { text: 'abc' } });
+        });
+
+        it('should commit a date to a control that commits on blur', async () => {
+            const { control, writeAndBlur } = setup(DatepickerWithTextOnBlur);
+
+            await writeAndBlur('abc');
+            await writeAndBlur('18.05.2024');
+
+            expect(control.value?.toISODate()).toBe('2024-05-18');
+            expect(control.errors).toBeNull();
+        });
+
+        it('should drop the parse error once the text is erased', async () => {
+            const { control, values, writeAndBlur } = setup();
+
+            await writeAndBlur('abc');
+            await writeAndBlur('');
+
+            expect(control.value).toBeNull();
+            expect(control.errors).toBeNull();
+            expect(control.valid).toBe(true);
+            expect(values).toEqual([null]);
+        });
+
+        it('should take a date entered over it', async () => {
+            const { control, input, writeAndBlur } = setup();
+
+            await writeAndBlur('abc');
+            await writeAndBlur('18.5.24');
+
+            expect(input.value).toBe('18.05.2024');
+            expect(control.value?.toISODate()).toBe('2024-05-18');
+            expect(control.errors).toBeNull();
+        });
+    });
 });
+
+@Component({
+    imports: [KbqDatepickerModule, KbqFormFieldModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <input [kbqDatepicker]="d" [formControl]="control" />
+            <kbq-datepicker #d />
+        </kbq-form-field>
+    `
+})
+class DatepickerWithText {
+    readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+    readonly control = new FormControl<DateTime | null>(DateTime.fromISO('2024-05-17T10:30:00'));
+}
+
+@Component({
+    imports: [KbqDatepickerModule, KbqFormFieldModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <input [kbqDatepicker]="d" [formControl]="control" />
+            <kbq-datepicker #d />
+        </kbq-form-field>
+    `
+})
+class DatepickerWithTextOnBlur {
+    readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+    readonly control = new FormControl<DateTime | null>(DateTime.fromISO('2024-05-17T10:30:00'), { updateOn: 'blur' });
+}
 
 /** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
 const EFFECT_RUN_LIMIT = 10;

@@ -363,7 +363,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     // (undocumented)
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
-    onPaste($event: any): any;
+    onPaste(event: ClipboardEvent): void;
     onTouched: () => void;
     // (undocumented)
     parseOnBlur: () => any;
