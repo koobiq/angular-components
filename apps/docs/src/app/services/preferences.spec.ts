@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
+import { DefaultUrlSerializer, Router } from '@angular/router';
 import { KBQ_LOCALE_SERVICE, kbqLocaleServiceProvider } from '@koobiq/components/core';
 import type { Mock, MockInstance } from 'vitest';
 import { DocsLocale } from '../constants/locale';
@@ -9,15 +10,21 @@ import { DocsLanguagePreferences } from './preferences';
 describe(DocsLanguagePreferences.name, () => {
     let setDocsLocale: Mock;
     let setExamplesLocale: MockInstance;
+    let router: { navigate: Mock; parseUrl: (url: string) => ReturnType<DefaultUrlSerializer['parse']> };
 
     /** Configures the app at the given URL, the preferences not created yet. */
     const configure = (path: string): void => {
         setDocsLocale = vi.fn();
 
+        const serializer = new DefaultUrlSerializer();
+
+        router = { navigate: vi.fn(), parseUrl: (url: string) => serializer.parse(url) };
+
         TestBed.configureTestingModule({
             providers: [
                 kbqLocaleServiceProvider(),
                 { provide: Location, useValue: { path: () => path } },
+                { provide: Router, useValue: router },
                 {
                     provide: DocsLocaleService,
                     useValue: {
@@ -97,5 +104,38 @@ describe(DocsLanguagePreferences.name, () => {
 
         expect(preferences.docsLanguageSwitch.currentValue.id).toBe(DocsLocale.Ru);
         expect(setExamplesLocale).toHaveBeenLastCalledWith(preferences.examplesLanguageSwitch.currentValue.id);
+    });
+
+    it('prefers the examples language from the query param', () => {
+        configure('/examples/select-overview?examples-lang=ru-RU');
+
+        const preferences = create();
+
+        expect(setExamplesLocale).toHaveBeenLastCalledWith('ru-RU');
+        expect(preferences.examplesLanguageSwitch.currentValue.id).toBe('ru-RU');
+    });
+
+    it('ignores an unknown examples language in the query param', () => {
+        configure('/examples/select-overview?examples-lang=zz-ZZ');
+
+        const preferences = create();
+
+        expect(preferences.examplesLanguageSwitch.currentValue.id).toBe(
+            TestBed.inject(KBQ_LOCALE_SERVICE).locales.items[0].id
+        );
+    });
+
+    it('writes the examples language to the query param when it changes', () => {
+        configure('/examples/select-overview');
+
+        const preferences = create();
+        const ruIndex = preferences.examplesLanguageSwitch.data.findIndex(({ id }) => id === 'ru-RU');
+
+        preferences.examplesLanguageSwitch.setValue(ruIndex);
+
+        expect(router.navigate).toHaveBeenCalledWith([], {
+            queryParams: { 'examples-lang': 'ru-RU' },
+            queryParamsHandling: 'merge'
+        });
     });
 });
