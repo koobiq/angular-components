@@ -644,6 +644,78 @@ test.describe('KbqFilterBarModule', () => {
         });
     });
 
+    test.describe('E2eFilterBarSelectAllCounter', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eFilterBarSelectAllCounter');
+
+        /** Opens the pipe dropdown and returns the portaled overlay pane. `multiselect` at 1 is the pipe without the counter. */
+        const openPipe = async (page: Page, type: 'multiselect' | 'tree', index: number = 0) => {
+            await page.goto('/E2eFilterBarSelectAllCounter');
+
+            const selector = type === 'tree' ? '.kbq-pipe__multi-tree-select' : '.kbq-pipe__multiselect';
+
+            await getComponent(page).locator(selector).nth(index).locator('.kbq-select__trigger').click();
+
+            const pane = page.locator('.cdk-overlay-pane');
+
+            await pane.waitFor();
+
+            return pane;
+        };
+
+        test('should show the counter with the number of selectable options', async ({ page }) => {
+            const multiselect = await openPipe(page, 'multiselect');
+
+            await expect(multiselect.locator('.kbq-pipe-select-all__counter')).toHaveText('8');
+
+            const tree = await openPipe(page, 'tree');
+
+            // Leaves only: the three group parents rendered above them are not counted.
+            await expect(tree.locator('.kbq-pipe-select-all__counter')).toHaveText('10');
+        });
+
+        test('should recalculate the counter while searching', async ({ page }) => {
+            const tree = await openPipe(page, 'tree');
+
+            await tree.locator('input').fill('Admin');
+
+            await expect(tree.locator('.kbq-pipe-select-all__counter')).toHaveText('3');
+
+            const multiselect = await openPipe(page, 'multiselect');
+
+            await multiselect.locator('input').fill('1');
+
+            await expect(multiselect.locator('.kbq-pipe-select-all__counter')).toHaveText('1');
+        });
+
+        test('should keep a gap between the label and the counter', async ({ page }) => {
+            const tree = await openPipe(page, 'tree');
+
+            // The gap is a stylesheet margin: template whitespace between the label and the counter
+            // is stripped by the compiler, so this pins the deterministic source of the spacing.
+            await expect(tree.locator('.kbq-pipe-select-all__counter')).toHaveCSS('margin-inline-start', '4px');
+        });
+
+        test('should not render the counter when the option is off', async ({ page }) => {
+            const multiselect = await openPipe(page, 'multiselect', 1);
+
+            await expect(multiselect.locator('.kbq-pipe-select-all__counter')).toHaveCount(0);
+
+            // The select-all row itself is still there: only the counter is gated by the option.
+            // The e2e app runs in the Russian locale.
+            await expect(multiselect.locator('kbq-option').first()).toContainText('Выбрать все');
+        });
+
+        test('panel', async ({ page }) => {
+            await openPipe(page, 'tree');
+
+            const pane = page.locator('.cdk-overlay-pane');
+
+            await expect(pane).toHaveScreenshot('09-select-all-counter-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(pane).toHaveScreenshot('09-select-all-counter-dark.png');
+        });
+    });
+
     test.describe('E2eFilterBarDateWithHint', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eFilterBarDateWithHint');
 
@@ -660,9 +732,9 @@ test.describe('KbqFilterBarModule', () => {
 
             const locator = getComponent(page).getByTestId('e2eScreenshotTarget');
 
-            await expect(locator).toHaveScreenshot('09-hint-light.png');
+            await expect(locator).toHaveScreenshot('10-hint-light.png');
             await e2eEnableDarkTheme(page);
-            await expect(locator).toHaveScreenshot('09-hint-dark.png');
+            await expect(locator).toHaveScreenshot('10-hint-dark.png');
         });
     });
 });

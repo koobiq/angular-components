@@ -427,7 +427,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'button',
                     hasApi: true,
                     apiId: 'button',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-11-23')
                 },
                 {
                     id: DocsStructureItemId.ButtonToggle,
@@ -810,7 +811,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'navbar',
                     hasApi: true,
                     apiId: 'navbar',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-23')
                 },
                 {
                     id: DocsStructureItemId.NotificationCenter,

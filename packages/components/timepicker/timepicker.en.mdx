@@ -40,7 +40,7 @@ In most cases, the field is empty, showing only the input mask. In other cases, 
 
 ##### Entering letters and symbols
 
-[Validation during input](/en/other/validation/overview#during-value-input) is triggered:
+[Validation during input](/en/other/validation/overview#while-typing) is triggered:
 
 - when entering letters in any part of the mask;
 - when entering the first character, except digits.
@@ -83,11 +83,7 @@ When copying values from the clipboard or pasting them using drag-and-drop, vali
 
 ### Design and animation
 
-The time field has a fixed width, which is built by the formula _left padding + mask + right padding_.
-
-The mask width will be different for each language; after entering time, the width does not change, even if the entered value is less than the mask width.
-
-The left padding varies depending on the variation (with or without icon). The right padding is always 16px.
+The time field has a fixed width: it does not change even if the entered value is shorter than the mask.
 
 ### Additional
 

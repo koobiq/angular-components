@@ -1969,3 +1969,119 @@ export class E2eFilterBarMultiTreeSelectValueTemplate implements AfterViewInit {
         ];
     }
 }
+
+/**
+ * `selectAllCounter` in both multi-select pipes: the flat one counts options, the tree one counts leaves,
+ * and a third pipe keeps `selectAll` without the counter to pin the off state.
+ */
+@Component({
+    selector: 'e2e-filter-bar-select-all-counter',
+    imports: [KbqFilterBarModule],
+    template: `
+        <div class="e2e-filter-bar-select-all-counter__target" data-testid="e2eScreenshotTarget">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
+                @for (pipe of filter.pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+            </kbq-filter-bar>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 8px;
+        }
+
+        /* The panel is portaled into the overlay, so the target needs room for it to open inside the viewport. */
+        .e2e-filter-bar-select-all-counter__target {
+            height: 560px;
+            width: 720px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarSelectAllCounter'
+    }
+})
+export class E2eFilterBarSelectAllCounter {
+    readonly filter: KbqFilter = {
+        name: '',
+        readonly: false,
+        disabled: false,
+        changed: false,
+        saved: false,
+        pipes: [
+            {
+                name: 'MultiSelect',
+                id: 'E2eSelectAllCounterMultiSelect',
+                type: KbqPipeTypes.MultiSelect,
+                value: null,
+
+                search: true,
+                selectAll: true,
+                selectAllCounter: true,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'MultiTreeSelect',
+                id: 'E2eSelectAllCounterMultiTreeSelect',
+                type: KbqPipeTypes.MultiTreeSelect,
+                value: null,
+
+                search: true,
+                selectAll: true,
+                selectAllCounter: true,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Without Counter',
+                id: 'E2eSelectAllCounterOff',
+                type: KbqPipeTypes.MultiSelect,
+                value: null,
+
+                search: true,
+                selectAll: true,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]
+    };
+
+    readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'MultiSelect',
+            id: 'E2eSelectAllCounterMultiSelect',
+            type: KbqPipeTypes.MultiSelect,
+            values: Array.from({ length: 8 }, (_, i) => ({ name: `Option #${i}`, id: i.toString() })),
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'MultiTreeSelect',
+            id: 'E2eSelectAllCounterMultiTreeSelect',
+            type: KbqPipeTypes.MultiTreeSelect,
+            values: kbqBuildTree(DEV_DATA_OBJECT, 0),
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Without Counter',
+            id: 'E2eSelectAllCounterOff',
+            type: KbqPipeTypes.MultiSelect,
+            values: Array.from({ length: 8 }, (_, i) => ({ name: `Item #${i}`, id: i.toString() })),
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ];
+}

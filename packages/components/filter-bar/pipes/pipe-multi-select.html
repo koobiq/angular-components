@@ -70,7 +70,12 @@
             (keydown.enter)="toggleSelectionAll()"
         >
             <kbq-pseudo-checkbox [state]="checkboxState" />
-            {{ localeConfiguration().pipe.selectAll }}
+            <!-- A span, not a bare interpolation: the compiler strips the whitespace-only text node
+                 between elements, so the counter's margin is the only gap, same as in the tree pipe. -->
+            <span>{{ localeConfiguration().pipe.selectAll }}</span>
+            @if (data.selectAllCounter) {
+                <span class="kbq-pipe-select-all__counter">{{ selectAllCount }}</span>
+            }
         </kbq-option>
     }
 

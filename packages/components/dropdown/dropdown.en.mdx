@@ -81,11 +81,13 @@ Search splits a multi-word query into parts and searches for them independently,
 
 ### Menu at the caret
 
-`kbqDropdownTriggerOrigin` detaches the panel from the trigger element: bind an element, or a rectangle in viewport coordinates, and the panel is positioned against that. `kbqCreateCaretOrigin` from `@koobiq/components/core` builds such a rectangle out of a measurement it repeats on every reposition — here the `/` and the query typed after it, which `kbqGetTextQuery` finds and `kbqListenForCaretMoves` keeps watching — so the panel keeps up with the caret. `updatePosition()` moves a panel that is already open, and `null` anchors it back to the trigger.
-
-Keep the trigger off the editor: it answers `Enter` and `Space` itself, so it belongs on a separate element. `[kbqDropdownTriggerAutoFocus]="false"` leaves the caret in the text, and `[activeDescendantNavigation]="true"` on the panel makes the arrow keys move the highlight without taking focus — the editor then hands `ArrowUp`, `ArrowDown`, `Enter` and `Escape` over with `handleKeydown($event)`. The highlighted item is not announced yet: the panel sets no `aria-activedescendant`.
+A dropdown with actions can open next to the text caret, for example after `/` is typed in an editor. The user picks an action and keeps typing. This suits command menus, suggestions and other quick actions.
 
 <Example id="dropdown-slash-menu" />
+
+`kbqDropdownTriggerOrigin` anchors the dropdown to an element or to a rectangle in viewport coordinates rather than only to the trigger. `kbqCreateCaretOrigin` creates a dynamic anchor to the text caret: the caret coordinates are measured again whenever the position of the dropdown is updated. The `updatePosition()` method updates the position of an open dropdown, and `null` anchors it back to the trigger.
+
+To keep the usual keyboard behavior while editing text, move the trigger outside the input area. When needed, the code of the input area passes individual events to the dropdown with `handleKeydown($event)`. The `[kbqDropdownTriggerAutoFocus]="false"` attribute leaves the text caret in the input area, and `[activeDescendantNavigation]="true"` lets the highlight move between items without moving focus to the list.
 
 ### Horizontal alignment
 

@@ -333,13 +333,17 @@ describe('KbqPopover', () => {
             expect(triggerElement.classList).toContain('kbq-active');
         });
 
-        it('should open popover with keyboard when kbqTrigger = default', async () => {
+        it('should keep popover open when a native button click follows keyboard activation', async () => {
             vi.useFakeTimers();
 
             const triggerElement = componentInstance.test7().nativeElement;
 
             for (const keyCode of [ENTER, SPACE]) {
                 dispatchKeyboardEvent(triggerElement, 'keydown', keyCode);
+                await runDueTimers();
+                fixture.detectChanges();
+
+                dispatchMouseEvent(triggerElement, 'click');
                 await runDueTimers();
                 fixture.detectChanges();
 
