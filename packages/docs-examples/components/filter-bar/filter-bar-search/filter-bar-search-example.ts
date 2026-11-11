@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
 import { createSearchPredicate } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTypes } from '@koobiq/components/filter-bar';
-import { injectLocalizedText } from '../l10n';
+import { injectExampleText } from '../l10n';
 
 interface Network {
     name: string;
@@ -70,10 +70,7 @@ export class FilterBarSearchExample {
         { name: 'Café Wi-Fi guest network', description: 'Guest cafe wireless network' }
     ];
 
-    protected readonly text = injectLocalizedText({
-        'ru-RU': { search: 'Поиск' },
-        default: { search: 'Search' }
-    });
+    protected readonly text = injectExampleText();
 
     // Rebuilt whenever the locale changes: `*kbqPipe` builds a pipe component once from the object it is
     // given and ignores later changes to that binding, so the relabelled pipe only reaches the screen as

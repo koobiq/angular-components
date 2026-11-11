@@ -4,7 +4,8 @@ import { DateFormatter } from '@koobiq/components/core';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { KbqLink } from '@koobiq/components/link';
-import { injectLocalizedPeriods, injectLocalizedText } from '../l10n';
+import { injectLocalizedPeriods } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
 const createSearchPipe = (name: string): KbqPipe => ({
@@ -62,28 +63,7 @@ const createSearchPipe = (name: string): KbqPipe => ({
 })
 export class FilterBarReadonlyPipesExample {
     /** Text the example owns: it has no counterpart in the library's locale data. */
-    protected readonly text = injectLocalizedText({
-        'ru-RU': {
-            search: 'Поиск',
-            user: 'Пользователь',
-            readonlyPipes: [
-                { name: 'Домен', value: 'Управление системой' },
-                { name: 'Тип объекта', value: 'PaxMatrol IEMS' },
-                { name: 'Действие', value: 'Изменение' },
-                { name: 'Объект', value: 'Resolver' }
-            ]
-        },
-        default: {
-            search: 'Search',
-            user: 'User',
-            readonlyPipes: [
-                { name: 'Domain', value: 'System management' },
-                { name: 'Object type', value: 'PaxMatrol IEMS' },
-                { name: 'Action', value: 'Modification' },
-                { name: 'Object', value: 'Resolver' }
-            ]
-        }
-    });
+    protected readonly text = injectExampleText();
 
     /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
     protected readonly periods = injectLocalizedPeriods();

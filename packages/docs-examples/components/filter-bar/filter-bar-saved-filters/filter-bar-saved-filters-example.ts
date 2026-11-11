@@ -21,7 +21,8 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { injectLocalizedPeriods, injectLocalizedText } from '../l10n';
+import { injectLocalizedPeriods } from '../l10n';
+import { injectExampleText } from './l10n';
 
 interface ExampleFilter extends KbqFilter {
     id?: number;
@@ -94,20 +95,7 @@ export class FilterBarSavedFiltersExample {
     protected readonly periods = injectLocalizedPeriods();
 
     /** Text the example owns: it has no counterpart in the library's locale data. */
-    protected readonly text = injectLocalizedText({
-        'ru-RU': {
-            search: 'Поиск',
-            retry: 'Повторить',
-            deleteError: 'Не удалось удалить фильтр: ',
-            saveError: (name: string) => `Не удалось сохранить фильтр: ${name}`
-        },
-        default: {
-            search: 'Search',
-            retry: 'Retry',
-            deleteError: 'Could not delete the filter: ',
-            saveError: (name: string) => `Could not save the filter: ${name}`
-        }
-    });
+    protected readonly text = injectExampleText();
 
     // Everything below is derived from the period labels, so it is rebuilt whenever the locale changes:
     // `*kbqPipe` builds a pipe component once from the object it is given and ignores later changes to

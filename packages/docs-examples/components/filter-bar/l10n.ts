@@ -117,3 +117,17 @@ export const injectLocalizedText = <T>(data: Record<string, T> & { default: T })
 
     return computed(() => data[localeService?.localeId() ?? 'default'] ?? data.default);
 };
+
+/** Text shared by the filter-bar examples. */
+export interface ExampleText {
+    /** The text search pipe: the first pipe in every filter, always present, never removable. */
+    search: string;
+}
+
+const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+    'ru-RU': { search: 'Поиск' },
+    default: { search: 'Search' }
+};
+
+/** Shared text of the examples in the active locale. */
+export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);
