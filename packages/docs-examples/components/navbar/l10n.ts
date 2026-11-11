@@ -21,7 +21,6 @@ export interface ExampleText {
     newTask: string;
     documentation: string;
     more: string;
-    point: (index: number) => string;
     notifications: string;
     administration: string;
     help: string;
@@ -46,7 +45,6 @@ export const injectExampleText = (): Signal<ExampleText> =>
             newTask: 'Новая задача',
             documentation: 'Документация',
             more: 'Еще',
-            point: (index) => `Пункт ${index}`,
             notifications: 'Уведомления',
             administration: 'Администрирование',
             help: 'Справка',
@@ -76,7 +74,6 @@ export const injectExampleText = (): Signal<ExampleText> =>
             newTask: 'New task',
             documentation: 'Documentation',
             more: 'More',
-            point: (index) => `Point ${index}`,
             notifications: 'Notifications',
             administration: 'Administration',
             help: 'Help',

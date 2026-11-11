@@ -19,10 +19,10 @@ import { injectExampleText } from '../l10n';
 
         <kbq-splitter class="example-splitter" [appearance]="appearance()">
             <kbq-splitter-panel minSize="125">
-                <div class="example-splitter-panel-content layout-margin-right-s">{{ text().panel(1) }}</div>
+                <div class="example-splitter-panel-content layout-margin-right-s">Panel 1</div>
             </kbq-splitter-panel>
             <kbq-splitter-panel minSize="125">
-                <div class="example-splitter-panel-content layout-margin-left-s">{{ text().panel(2) }}</div>
+                <div class="example-splitter-panel-content layout-margin-left-s">Panel 2</div>
             </kbq-splitter-panel>
         </kbq-splitter>
     `,

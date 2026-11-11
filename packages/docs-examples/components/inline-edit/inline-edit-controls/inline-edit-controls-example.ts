@@ -166,7 +166,7 @@ export class InlineEditControlsExample {
     protected get placeholder(): string {
         return this.text().placeholder;
     }
-    protected readonly options = computed(() => Array.from({ length: 10 }, (_, i) => this.text().optionN(i + 1)));
+    protected readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + (i + 1)));
 
     protected readonly form = new FormGroup({
         input: new FormControl('Spain'),

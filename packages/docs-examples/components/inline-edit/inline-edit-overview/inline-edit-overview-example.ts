@@ -49,7 +49,7 @@ export class InlineEditOverviewExample {
     protected get placeholder(): string {
         return this.text().placeholder;
     }
-    protected readonly options = computed(() => Array.from({ length: 10 }, (_, i) => this.text().optionN(i)));
+    protected readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + i));
     protected value: string[] = [this.options()[0]];
     protected readonly displayValue = signal(this.value);
 

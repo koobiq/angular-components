@@ -37,7 +37,7 @@ import { injectExampleText } from '../l10n';
 export class SelectGroupsExample {
     protected readonly text = injectExampleText();
 
-    readonly groups = computed(() => Array.from({ length: 3 }, (_, i) => this.text().groupN(i)));
-    readonly options = computed(() => Array.from({ length: 5 }, (_, i) => this.text().optionN(i)));
+    readonly groups = computed(() => Array.from({ length: 3 }, (_, i) => 'Group #' + i));
+    readonly options = computed(() => Array.from({ length: 5 }, (_, i) => 'Option #' + i));
     readonly selected = this.options[0];
 }

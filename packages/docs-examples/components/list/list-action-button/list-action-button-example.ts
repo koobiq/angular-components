@@ -49,9 +49,9 @@ import { injectExampleText } from './l10n';
         <div>{{ text().selected }} {{ selected }}</div>
 
         <kbq-dropdown #dropdown>
-            <button kbq-dropdown-item>{{ text().dropdownItem(1) }}</button>
-            <button kbq-dropdown-item>{{ text().dropdownItem(2) }}</button>
-            <button kbq-dropdown-item>{{ text().dropdownItem(3) }}</button>
+            <button kbq-dropdown-item>item 1</button>
+            <button kbq-dropdown-item>item 2</button>
+            <button kbq-dropdown-item>item 3</button>
         </kbq-dropdown>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -41,6 +41,6 @@ import { injectExampleText } from '../l10n';
 export class SelectPreselectedValuesExample {
     protected readonly text = injectExampleText();
 
-    readonly options = computed(() => Array.from({ length: 15 }, (_, i) => this.text().optionN(i)));
-    control = new FormControl([this.text().optionN(101), this.text().optionN(102)]);
+    readonly options = computed(() => Array.from({ length: 15 }, (_, i) => 'Option #' + i));
+    control = new FormControl(['Option #101', 'Option #102']);
 }

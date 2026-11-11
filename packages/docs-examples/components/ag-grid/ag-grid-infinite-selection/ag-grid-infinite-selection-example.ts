@@ -114,11 +114,11 @@ export class AgGridInfiniteSelectionExample {
                     successCallback(
                         Array.from({ length: endRow - startRow }, (_, i) => ({
                             id: 'ProjectName' + (startRow + i),
-                            column0: this.text().projectNameN(startRow + i),
+                            column0: 'Project name ' + (startRow + i),
                             ...Object.fromEntries(
                                 Array.from({ length: 5 }, (_, c) => [
                                     'column' + (c + 1),
-                                    this.text().text(startRow + i)
+                                    'Text ' + (startRow + i)
                                 ])
                             )
                         })),

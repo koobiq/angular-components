@@ -5,19 +5,16 @@ import { injectLocalizedText } from '../l10n';
 export interface ExampleText {
     selected: string;
     items: string;
-    optionN: (index: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
         selected: 'Выбрано:',
-        items: 'Пункты',
-        optionN: (index) => `Вариант №${index}`
+        items: 'Пункты'
     },
     default: {
         selected: 'Selected:',
-        items: 'Items',
-        optionN: (index) => `Option #${index}`
+        items: 'Items'
     }
 };
 

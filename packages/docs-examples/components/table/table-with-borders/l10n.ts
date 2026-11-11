@@ -7,7 +7,6 @@ export interface ExampleText {
     owner: string;
     modified: string;
     size: string;
-    userN: (index: number) => string;
     bigBook: string;
 }
 
@@ -17,7 +16,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         owner: 'Владелец',
         modified: 'Изменён',
         size: 'Размер',
-        userN: (index) => `Пользователь ${index}`,
         bigBook: 'Большая книга стихов и сказок'
     },
     default: {
@@ -25,7 +23,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         owner: 'Owner',
         modified: 'Modified',
         size: 'Size',
-        userN: (index) => `User ${index}`,
         bigBook: 'The Big Book of Poems and Fairy Tales'
     }
 };

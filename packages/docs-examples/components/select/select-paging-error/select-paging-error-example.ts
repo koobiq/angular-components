@@ -54,9 +54,7 @@ const DELAY = 1000;
 export class OptionsApiService {
     protected readonly text = injectExampleText();
 
-    private readonly data = computed(() =>
-        Array.from({ length: 100 }, (_, i) => ({ id: i, label: this.text().optionN(i) }))
-    );
+    private readonly data = computed(() => Array.from({ length: 100 }, (_, i) => ({ id: i, label: 'Option #' + i })));
 
     getOptions(
         search: string,
@@ -322,7 +320,7 @@ export class SelectPagingErrorExample implements OnDestroy {
 
     protected readonly facade = inject(SelectFacade);
 
-    protected selectedOption: Option = { id: 0, label: this.text().optionN(0) };
+    protected selectedOption: Option = { id: 0, label: 'Option #0' };
 
     protected readonly compareWith = (a: Option | null, b: Option | null) => a?.id === b?.id;
     protected readonly virtualOptionFactory = (value: Option) => new KbqVirtualOption(value, false, value.label);

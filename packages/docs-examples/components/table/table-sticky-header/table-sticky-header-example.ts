@@ -45,15 +45,15 @@ export class TableStickyHeaderExample {
     readonly value = this.adapter.today();
 
     protected readonly rows = computed(() => [
-        { name: 'document.txt', owner: this.text().userN(1), modified: this.value },
-        { name: 'report-2023.pdf', owner: this.text().userN(2), modified: this.value },
-        { name: 'notes.doc', owner: this.text().userN(3), modified: this.value },
-        { name: 'archive.zip', owner: this.text().userN(4), modified: this.value },
-        { name: 'presentation.pptx', owner: this.text().userN(5), modified: this.value },
-        { name: 'budget.xlsx', owner: this.text().userN(6), modified: this.value },
-        { name: 'photo.png', owner: this.text().userN(7), modified: this.value },
-        { name: 'contract.pdf', owner: this.text().userN(8), modified: this.value },
-        { name: 'summary.doc', owner: this.text().userN(9), modified: this.value },
-        { name: 'backup.zip', owner: this.text().userN(10), modified: this.value }
+        { name: 'document.txt', owner: 'User 1', modified: this.value },
+        { name: 'report-2023.pdf', owner: 'User 2', modified: this.value },
+        { name: 'notes.doc', owner: 'User 3', modified: this.value },
+        { name: 'archive.zip', owner: 'User 4', modified: this.value },
+        { name: 'presentation.pptx', owner: 'User 5', modified: this.value },
+        { name: 'budget.xlsx', owner: 'User 6', modified: this.value },
+        { name: 'photo.png', owner: 'User 7', modified: this.value },
+        { name: 'contract.pdf', owner: 'User 8', modified: this.value },
+        { name: 'summary.doc', owner: 'User 9', modified: this.value },
+        { name: 'backup.zip', owner: 'User 10', modified: this.value }
     ]);
 }

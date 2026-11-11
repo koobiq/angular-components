@@ -16,7 +16,6 @@ import { injectExampleText } from './l10n';
 })
 export class AccordionHeaderExample {
     protected readonly text = injectExampleText();
-
     icon: boolean = false;
     caption: boolean = false;
     leftBadge: boolean = false;

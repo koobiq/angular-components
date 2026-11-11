@@ -48,7 +48,7 @@ import { injectExampleText } from './l10n';
 export class SelectValidationExample {
     protected readonly text = injectExampleText();
 
-    readonly options = computed(() => Array.from({ length: 10 }, (_, i) => this.text().optionN(i)));
+    readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + i));
     readonly invalidControl = new FormControl(null, Validators.required);
 
     constructor() {

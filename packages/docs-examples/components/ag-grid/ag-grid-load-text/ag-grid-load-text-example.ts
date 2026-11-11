@@ -90,7 +90,10 @@ export class AgGridLoadTextExample {
                     successCallback(
                         Array.from({ length: endRow - startRow }, (_, i) =>
                             Object.fromEntries(
-                                Array.from({ length: 3 }, (_, c) => ['column' + c, this.text().text(startRow + i)])
+                                Array.from({ length: 3 }, (_, c) => [
+                                    'column' + c,
+                                    this.text().headerText + ' ' + (startRow + i)
+                                ])
                             )
                         ),
                         endRow >= 1000 ? 1000 : -1

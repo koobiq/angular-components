@@ -17,8 +17,6 @@ export interface ExampleText {
     pageTitle: string;
     primaryAction: string;
     emptyState: { image: string; title: string; text: string };
-    pageItemTitle: (index: number) => string;
-    pageItemCaption: (page: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -40,9 +38,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         },
         pageTitle: 'Заголовок страницы',
         primaryAction: 'Основное действие',
-        emptyState: { image: 'Пустое состояние', title: 'Нет объектов', text: 'Здесь пока нет добавленных объектов' },
-        pageItemTitle: (index) => `Уведомление № ${index}`,
-        pageItemCaption: (page) => `Загружено на странице ${page}`
+        emptyState: { image: 'Пустое состояние', title: 'Нет объектов', text: 'Здесь пока нет добавленных объектов' }
     },
     default: {
         appName: 'Short App Name',
@@ -62,9 +58,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         },
         pageTitle: 'Page Title',
         primaryAction: 'Primary Action',
-        emptyState: { image: 'Empty state', title: 'No items', text: 'No objects have been added here yet' },
-        pageItemTitle: (index) => `Notification #${index}`,
-        pageItemCaption: (page) => `Loaded with page ${page}`
+        emptyState: { image: 'Empty state', title: 'No items', text: 'No objects have been added here yet' }
     }
 };
 

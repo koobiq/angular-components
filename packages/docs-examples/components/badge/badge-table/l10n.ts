@@ -4,7 +4,6 @@ import { injectLocalizedText } from '../l10n';
 /** Text of the badge-table example. */
 export interface ExampleText {
     badge: string;
-    column: (index: number) => string;
     value: string;
     link: string;
     phishingResource: string;
@@ -14,7 +13,6 @@ export interface ExampleText {
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
         badge: 'Бейдж',
-        column: (index) => `Столбец ${index}`,
         value: 'Значение',
         link: 'Ссылка',
         phishingResource: 'EXT. Использование фишинговых ресурсов (phishingAttacks)',
@@ -23,7 +21,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     },
     default: {
         badge: 'Badge',
-        column: (index) => `Column ${index}`,
         value: 'Value',
         link: 'Link',
         phishingResource: 'EXT. Use of phishing resources (phishingAttacks)',

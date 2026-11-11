@@ -47,8 +47,8 @@ import { injectExampleText } from './l10n';
                     }
                 </kbq-content-panel-body>
                 <kbq-content-panel-footer>
-                    <button kbq-button [color]="componentColors.Contrast">{{ text().button(1) }}</button>
-                    <button kbq-button [color]="componentColors.ContrastFade">{{ text().button(2) }}</button>
+                    <button kbq-button [color]="componentColors.Contrast">Button 1</button>
+                    <button kbq-button [color]="componentColors.ContrastFade">Button 2</button>
                 </kbq-content-panel-footer>
             </kbq-content-panel>
         </kbq-content-panel-container>

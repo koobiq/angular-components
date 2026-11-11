@@ -67,9 +67,9 @@ import { injectExampleText } from './l10n';
         </div>
 
         <kbq-dropdown #dropdown="kbqDropdown">
-            <button kbq-dropdown-item>{{ text().extraAction(1) }}</button>
-            <button kbq-dropdown-item>{{ text().extraAction(2) }}</button>
-            <button kbq-dropdown-item>{{ text().extraAction(3) }}</button>
+            <button kbq-dropdown-item>Extra Action 1</button>
+            <button kbq-dropdown-item>Extra Action 2</button>
+            <button kbq-dropdown-item>Extra Action 3</button>
         </kbq-dropdown>
     `,
     styles: `

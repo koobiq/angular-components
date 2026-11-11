@@ -59,7 +59,7 @@ import { injectExampleText } from './l10n';
 export class AutocompleteWithFooterExample {
     protected readonly text = injectExampleText();
 
-    readonly options = computed(() => Array.from({ length: 100 }, (_, i) => this.text().option(i + 1)));
+    readonly options = computed(() => Array.from({ length: 100 }, (_, i) => 'Option #' + (i + 1)));
     readonly control = new FormControl('');
     readonly filteredOptions = toSignal(
         this.control.valueChanges.pipe(

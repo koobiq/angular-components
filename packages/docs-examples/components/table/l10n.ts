@@ -14,8 +14,6 @@ export interface ExampleText {
     owner: string;
     modified: string;
     size: string;
-    userN: (index: number) => string;
-    companyN: (index: number) => string;
     events: string[];
 }
 
@@ -25,8 +23,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         owner: 'Владелец',
         modified: 'Изменён',
         size: 'Размер',
-        userN: (index) => `Пользователь ${index}`,
-        companyN: (index) => `Компания ${index}`,
         events: [
             'Кража учётных данных',
             'DDoS',
@@ -41,8 +37,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         owner: 'Owner',
         modified: 'Modified',
         size: 'Size',
-        userN: (index) => `User ${index}`,
-        companyN: (index) => `Company ${index}`,
         events: ['Identity Theft', 'DDoS', 'HIPS Alert', 'Spam Attack', 'Vulnerability Exploitation', 'Complex Attack']
     }
 };

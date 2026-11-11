@@ -7,7 +7,6 @@ export interface ExampleText {
     elements: string;
     longElementName: string;
     badge: string;
-    dropdownItem: (index: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -15,15 +14,13 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         selected: 'Выбрано:',
         elements: 'Элементы',
         longElementName: 'Элемент с очень очень очень очень очень очень длинным именем',
-        badge: 'бейдж',
-        dropdownItem: (index) => `пункт ${index}`
+        badge: 'бейдж'
     },
     default: {
         selected: 'Selected:',
         elements: 'Elements',
         longElementName: 'Element with a very very very very very very long name',
-        badge: 'badge',
-        dropdownItem: (index) => `item ${index}`
+        badge: 'badge'
     }
 };
 

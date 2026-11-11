@@ -6,21 +6,18 @@ export interface ExampleText {
     label: string;
     withFooterHint: string;
     link: string;
-    option: (index: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
         label: 'Метка',
         withFooterHint: 'Автодополнение с футером',
-        link: 'Ссылка',
-        option: (index) => `Вариант ${index}`
+        link: 'Ссылка'
     },
     default: {
         label: 'Label',
         withFooterHint: 'Autocomplete with footer',
-        link: 'Link',
-        option: (index) => `Option ${index}`
+        link: 'Link'
     }
 };
 

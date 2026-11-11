@@ -14,7 +14,6 @@ export interface ExampleText {
     terminalCollapsed: string;
     dragLeftToCollapse: string;
     dragBottomToCollapse: string;
-    panel: (index: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -22,15 +21,13 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         sidebarCollapsed: 'Панель свёрнута',
         terminalCollapsed: 'Терминал свёрнут',
         dragLeftToCollapse: 'Перетащите влево, чтобы свернуть',
-        dragBottomToCollapse: 'Перетащите вниз, чтобы свернуть',
-        panel: (index) => `Панель ${index}`
+        dragBottomToCollapse: 'Перетащите вниз, чтобы свернуть'
     },
     default: {
         sidebarCollapsed: 'Sidebar collapsed',
         terminalCollapsed: 'Terminal collapsed',
         dragLeftToCollapse: 'Drag left to collapse',
-        dragBottomToCollapse: 'Drag bottom to collapse',
-        panel: (index) => `Panel ${index}`
+        dragBottomToCollapse: 'Drag bottom to collapse'
     }
 };
 

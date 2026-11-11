@@ -11,7 +11,7 @@ import { injectExampleText } from '../l10n';
     template: `
         <kbq-splitter class="example-splitter">
             <kbq-splitter-panel>
-                <div class="example-splitter-panel-content">{{ text().panel(1) }}</div>
+                <div class="example-splitter-panel-content">Panel 1</div>
             </kbq-splitter-panel>
             <kbq-splitter-panel minSize="200" maxSize="500" snapTolerance="100" [snapSizes]="[300, 400]">
                 <div class="example-splitter-panel-content">

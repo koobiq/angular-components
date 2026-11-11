@@ -14,7 +14,6 @@ export interface ExampleText {
     badge: string;
     horizontal: string;
     vertical: string;
-    column: (index: number) => string;
     value: string;
     link: string;
 }
@@ -25,7 +24,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         badge: 'Бейдж',
         horizontal: 'Горизонтально',
         vertical: 'Вертикально',
-        column: (index) => `Столбец ${index}`,
         value: 'Значение',
         link: 'Ссылка'
     },
@@ -34,7 +32,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         badge: 'Badge',
         horizontal: 'Horizontal',
         vertical: 'Vertical',
-        column: (index) => `Column ${index}`,
         value: 'Value',
         link: 'Link'
     }

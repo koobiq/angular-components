@@ -86,6 +86,6 @@ export class SelectFooterExample {
 
     // Enough options to overflow the panel's default 256px — exactly eight rows fit — so the footer is
     // seen doing its job: staying put while the list scrolls under it.
-    protected readonly options = computed(() => Array.from({ length: 10 }, (_, i) => this.text().optionN(i)));
+    protected readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + i));
     protected readonly selected = this.options[0];
 }

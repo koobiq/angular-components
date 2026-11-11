@@ -7,7 +7,6 @@ export interface ExampleText {
     complexAttack: string;
     ddos: string;
     hipsAlert: string;
-    tabN: (index: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -15,15 +14,13 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         bruteforce: 'Подбор пароля',
         complexAttack: 'Сложная атака',
         ddos: 'DDoS',
-        hipsAlert: 'HIPS-алерт',
-        tabN: (index) => `Вкладка ${index}`
+        hipsAlert: 'HIPS-алерт'
     },
     default: {
         bruteforce: 'BruteForce',
         complexAttack: 'Complex Attack',
         ddos: 'DDoS',
-        hipsAlert: 'HIPS alert',
-        tabN: (index) => `Tab ${index}`
+        hipsAlert: 'HIPS alert'
     }
 };
 

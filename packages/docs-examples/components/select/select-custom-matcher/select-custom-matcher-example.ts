@@ -43,6 +43,6 @@ import { injectExampleText } from '../l10n';
 export class SelectCustomMatcherExample {
     protected readonly text = injectExampleText();
 
-    readonly options = computed(() => Array.from({ length: 5 }, (_, i) => this.text().optionN(i)));
+    readonly options = computed(() => Array.from({ length: 5 }, (_, i) => 'Option #' + i));
     readonly selected = this.options[0];
 }

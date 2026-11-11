@@ -15,8 +15,6 @@ export interface ExampleText {
     loading: string;
     loadFailedRecords: string;
     tryAgain: string;
-    optionN: (index: number) => string;
-    groupN: (index: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -25,18 +23,14 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         nothingFound: 'Ничего не найдено',
         loading: 'Загрузка',
         loadFailedRecords: 'Не удалось показать записи',
-        tryAgain: 'Повторить',
-        optionN: (index) => `Вариант №${index}`,
-        groupN: (index) => `Группа №${index}`
+        tryAgain: 'Повторить'
     },
     default: {
         placeholder: 'Placeholder',
         nothingFound: 'Nothing found',
         loading: 'Loading',
         loadFailedRecords: 'Failed to load records',
-        tryAgain: 'Try Again',
-        optionN: (index) => `Option #${index}`,
-        groupN: (index) => `Group #${index}`
+        tryAgain: 'Try Again'
     }
 };
 

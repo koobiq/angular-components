@@ -5,19 +5,16 @@ import { injectLocalizedText } from '../l10n';
 export interface ExampleText {
     file: string;
     size: string;
-    fileN: (index: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
         file: 'Файл',
-        size: 'Размер',
-        fileN: (index) => `Файл ${index}`
+        size: 'Размер'
     },
     default: {
         file: 'File',
-        size: 'Size',
-        fileN: (index) => `File ${index}`
+        size: 'Size'
     }
 };
 

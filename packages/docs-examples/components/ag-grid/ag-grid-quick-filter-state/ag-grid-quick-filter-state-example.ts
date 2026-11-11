@@ -58,13 +58,13 @@ export class AgGridQuickFilterStateExample {
     readonly columnDefs = computed<ColDef[]>(() =>
         Array.from({ length: 6 }, (_, i) => ({
             field: 'column' + i,
-            headerName: this.text().column(i),
+            headerName: 'Column ' + i,
             width: 130
         }))
     );
     readonly rowData = computed(() =>
         Array.from({ length: 100 }, (_, index) =>
-            Object.fromEntries(Array.from({ length: 6 }, (_, i) => ['column' + i, this.text().text(index)]))
+            Object.fromEntries(Array.from({ length: 6 }, (_, i) => ['column' + i, 'Text ' + index]))
         )
     );
 }

@@ -5,19 +5,16 @@ import { injectLocalizedText } from '../l10n';
 export interface ExampleText {
     loading: string;
     headerText: string;
-    text: (index: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
         loading: 'Загрузка...',
-        headerText: 'Текст',
-        text: (index) => `Текст ${index}`
+        headerText: 'Текст'
     },
     default: {
         loading: 'Loading...',
-        headerText: 'Text',
-        text: (index) => `Text ${index}`
+        headerText: 'Text'
     }
 };
 

@@ -47,7 +47,7 @@ export class SelectCleanerWithDisabledExample {
 
     readonly options = computed(() =>
         Array.from({ length: 4 }, (_, i) => ({
-            value: this.text().optionN(i),
+            value: 'Option #' + i,
             disabled: i === 1
         }))
     );

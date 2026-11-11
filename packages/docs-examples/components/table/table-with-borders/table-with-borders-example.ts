@@ -38,9 +38,9 @@ export class TableWithBordersExample {
     protected readonly text = injectExampleText();
 
     protected readonly rows = computed(() => [
-        { name: '000.txt', owner: this.text().userN(1), modified: '27 May 2024', size: '17 KB' },
-        { name: this.text().bigBook, owner: this.text().userN(2), modified: '1 Dec 2023', size: '998 KB' },
-        { name: 'notes.doc', owner: this.text().userN(3), modified: '7 Mar 1993', size: '502 KB' },
-        { name: 'recipe.txt', owner: this.text().userN(4), modified: '24 Aug 2022', size: '128 KB' }
+        { name: '000.txt', owner: 'User 1', modified: '27 May 2024', size: '17 KB' },
+        { name: this.text().bigBook, owner: 'User 2', modified: '1 Dec 2023', size: '998 KB' },
+        { name: 'notes.doc', owner: 'User 3', modified: '7 Mar 1993', size: '502 KB' },
+        { name: 'recipe.txt', owner: 'User 4', modified: '24 Aug 2022', size: '128 KB' }
     ]);
 }

@@ -43,7 +43,7 @@ export class ListDraggableExample {
     ]);
 
     protected itemName(item: { id: number }): string {
-        return item.id === 7 ? this.text().item7Pinned : this.text().item(item.id);
+        return item.id === 7 ? this.text().item7Pinned : 'Item ' + item.id;
     }
 
     // The group and the divider sit at fixed positions, so the sections are plain slices and the indices

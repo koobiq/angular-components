@@ -14,7 +14,6 @@ export interface ExampleText {
     pageNumbers: string;
     paragraphStyles: string;
     table: string;
-    heading: (level: number) => string;
     normalText: string;
     subtitle: string;
     title: string;
@@ -38,7 +37,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         pageNumbers: 'Номера страниц',
         paragraphStyles: 'Стили абзаца',
         table: 'Таблица',
-        heading: (level) => `Заголовок ${level}`,
         normalText: 'Обычный текст',
         subtitle: 'Подзаголовок',
         title: 'Название',
@@ -60,7 +58,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         pageNumbers: 'Page numbers',
         paragraphStyles: 'Paragraph styles',
         table: 'Table',
-        heading: (level) => `Heading ${level}`,
         normalText: 'Normal text',
         subtitle: 'Subtitle',
         title: 'Title',

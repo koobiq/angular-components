@@ -45,7 +45,7 @@ export class SelectPrioritizedSelectedExample {
 
     constructor() {
         effect(() => {
-            const all = Array.from({ length: 15 }, (_, i) => this.text().optionN(i));
+            const all = Array.from({ length: 15 }, (_, i) => 'Option #' + i);
 
             if (!this.selected.length) {
                 this.selected = [all.at(-1)!, all.at(-2)!];

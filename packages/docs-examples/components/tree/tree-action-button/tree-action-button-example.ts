@@ -159,9 +159,9 @@ export const DATA_OBJECT = {
         </kbq-tree-selection>
 
         <kbq-dropdown #dropdown>
-            <button kbq-dropdown-item>{{ text().action(1) }}</button>
-            <button kbq-dropdown-item>{{ text().action(2) }}</button>
-            <button kbq-dropdown-item>{{ text().action(3) }}</button>
+            <button kbq-dropdown-item>action 1</button>
+            <button kbq-dropdown-item>action 2</button>
+            <button kbq-dropdown-item>action 3</button>
         </kbq-dropdown>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

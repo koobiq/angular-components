@@ -7,8 +7,6 @@ export interface ExampleText {
     restore: string;
     view: string;
     reject: string;
-    action: (index: number) => string;
-    secondaryAction: (index: number) => string;
     twoActions: string;
     manyActions: string;
     updateAvailableComponents: string;
@@ -26,8 +24,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         restore: 'Восстановить',
         view: 'Посмотреть',
         reject: 'Отклонить',
-        action: (index) => `Действие ${index}`,
-        secondaryAction: (index) => `Второстепенное действие ${index}`,
         twoActions: 'Два действия',
         manyActions: 'Много действий',
         updateAvailableComponents: 'Доступно обновление компонентов',
@@ -43,8 +39,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         restore: 'Restore',
         view: 'View',
         reject: 'Reject',
-        action: (index) => `Action ${index}`,
-        secondaryAction: (index) => `Secondary action ${index}`,
         twoActions: 'Two actions',
         manyActions: 'Many actions',
         updateAvailableComponents: 'Component update available',

@@ -14,18 +14,18 @@
 </ng-template>
 
 <ng-template #toastManyActionActionsTemplate let-toast>
-    <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">{{ text().action(1) }}</a>
-    <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">{{ text().action(2) }}</a>
+    <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">Action 1</a>
+    <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">Action 2</a>
     <a kbqLink pseudo role="button" [kbqDropdownTriggerFor]="dropdown">
         {{ text().more }}
         <i kbqLinkSuffix kbq-icon="kbq-chevron-down-s_16"></i>
     </a>
 </ng-template>
 <kbq-dropdown #dropdown="kbqDropdown">
-    <button kbq-dropdown-item>{{ text().secondaryAction(1) }}</button>
-    <button kbq-dropdown-item>{{ text().secondaryAction(2) }}</button>
-    <button kbq-dropdown-item>{{ text().secondaryAction(3) }}</button>
-    <button kbq-dropdown-item>{{ text().secondaryAction(4) }}</button>
+    <button kbq-dropdown-item>Secondary action 1</button>
+    <button kbq-dropdown-item>Secondary action 2</button>
+    <button kbq-dropdown-item>Secondary action 3</button>
+    <button kbq-dropdown-item>Secondary action 4</button>
 </kbq-dropdown>
 
 <div style="gap: 16px" class="layout-row">

@@ -3,7 +3,6 @@ import { injectLocalizedText } from '../l10n';
 
 /** Text of the table-overview example. */
 export interface ExampleText {
-    companyN: (index: number) => string;
     events: string[];
     client: string;
     event: string;
@@ -12,7 +11,6 @@ export interface ExampleText {
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
-        companyN: (index) => `Компания ${index}`,
         events: [
             'Кража учётных данных',
             'DDoS',
@@ -26,7 +24,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         registered: 'Зарегистрирован'
     },
     default: {
-        companyN: (index) => `Company ${index}`,
         events: ['Identity Theft', 'DDoS', 'HIPS Alert', 'Spam Attack', 'Vulnerability Exploitation', 'Complex Attack'],
         client: 'Client',
         event: 'Event',
