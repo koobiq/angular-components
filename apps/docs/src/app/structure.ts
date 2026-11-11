@@ -427,7 +427,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'button',
                     hasApi: true,
                     apiId: 'button',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-11-23')
                 },
                 {
                     id: DocsStructureItemId.ButtonToggle,

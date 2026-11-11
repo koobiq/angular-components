@@ -16,13 +16,13 @@ Displaying length of progress bar depends on this property
 The range of value is [0, 100]  
 Default: 0
 
+Values outside the range are clamped, and the property is ignored in indeterminate mode.
+
 This will fill 30% of the whole progress bar:
 
 ```html
 <kbq-progress-bar [value]="30"></kbq-progress-bar>
 ```
-
-Values outside the range are clamped, and the property is ignored in indeterminate mode.
 
 <Example id="progress-bar-overview" />
 
