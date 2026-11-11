@@ -33,8 +33,10 @@
             cdkConnectedOverlayLockPosition
             [cdkConnectedOverlayOpen]="isEditMode()"
             [cdkConnectedOverlayOrigin]="overlayOrigin"
+            [cdkConnectedOverlayPositions]="overlayPositions"
             [cdkConnectedOverlayOffsetY]="-overlayOrigin.offsetHeight"
             [cdkConnectedOverlayWidth]="overlayWidth()"
+            [cdkConnectedOverlayPush]="false"
             [cdkConnectedOverlayDisableClose]="true"
             [cdkConnectedOverlayScrollStrategy]="scrollStrategy()"
             [cdkConnectedOverlayPanelClass]="overlayPanelClass()"

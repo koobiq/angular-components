@@ -2,7 +2,13 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { CdkMonitorFocus, CdkTrapFocus } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { CdkConnectedOverlay, Overlay, ScrollDispatcher, ScrollStrategy } from '@angular/cdk/overlay';
+import {
+    CdkConnectedOverlay,
+    ConnectedPosition,
+    Overlay,
+    ScrollDispatcher,
+    ScrollStrategy
+} from '@angular/cdk/overlay';
 import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
@@ -58,6 +64,17 @@ const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
 ]);
 
 const baseClass = 'kbq-inline-edit';
+
+/**
+ * Positions the edit mode panel so that it covers the view mode element. A single position is used instead of the
+ * default fallback set, because the panel must stay anchored to the origin even when it does not fit in the viewport.
+ */
+const KBQ_INLINE_EDIT_CONNECTED_POSITION: ConnectedPosition = {
+    originX: 'start',
+    originY: 'bottom',
+    overlayX: 'start',
+    overlayY: 'top'
+};
 
 /**
  * Fallback delay before showing the validation tooltip if `scrollend` never fires — e.g. the browser doesn't
@@ -268,6 +285,15 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     protected readonly mode = signal<KbqInlineEditMode>('view');
     /** @docs-private */
     protected readonly overlayWidth = signal<number | string>('');
+
+    /**
+     * Single overlay position that keeps the panel anchored to the view mode element. Fallback positions are
+     * intentionally omitted so the panel does not flip or get pushed away from the origin when space is tight.
+     *
+     * @docs-private
+     */
+    protected readonly overlayPositions: ConnectedPosition[] = [KBQ_INLINE_EDIT_CONNECTED_POSITION];
+
     /** @docs-private */
     protected readonly scrollStrategy = signal<ScrollStrategy>(this.overlay.scrollStrategies.reposition());
     /** @docs-private */
