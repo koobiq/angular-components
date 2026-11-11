@@ -4650,6 +4650,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "loader-overlay-delay-example.ts",
     "importPath": "components/loader-overlay"
   },
+  "loader-overlay-fixed-top": {
+    "packagePath": "components/loader-overlay/loader-overlay-fixed-top",
+    "title": "Loader-overlay fixed-top",
+    "componentName": "LoaderOverlayFixedTopExample",
+    "files": [
+      "loader-overlay-fixed-top-example.ts"
+    ],
+    "localImportFiles": [
+      "../l10n.ts"
+    ],
+    "selector": "loader-overlay-fixed-top-example",
+    "primaryFile": "loader-overlay-fixed-top-example.ts",
+    "importPath": "components/loader-overlay"
+  },
   "loader-overlay-large": {
     "packagePath": "components/loader-overlay/loader-overlay-large",
     "title": "Loader-overlay large",
@@ -5069,7 +5083,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "navbar-item-custom-component-example.html"
     ],
     "localImportFiles": [
-      "../localized-data.ts"
+      "../l10n.ts"
     ],
     "selector": "navbar-item-custom-component-example",
     "primaryFile": "navbar-item-custom-component-example.ts",
@@ -9741,6 +9755,7 @@ export type LiveExampleId =
   | 'loader-overlay-background'
   | 'loader-overlay-default'
   | 'loader-overlay-delay'
+  | 'loader-overlay-fixed-top'
   | 'loader-overlay-large'
   | 'loader-overlay-overview'
   | 'loader-overlay-size'
