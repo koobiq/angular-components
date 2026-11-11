@@ -50,6 +50,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "accordion-header-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "accordion-header-example",
@@ -65,6 +66,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "accordion-in-panel-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "accordion-in-panel-example",
@@ -111,6 +113,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "accordion-interactive-elements-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "accordion-interactive-elements-example",
@@ -156,6 +159,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "accordion-state-saving-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "accordion-state-saving-example",
@@ -185,6 +189,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "actions-panel-adaptive-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "actions-panel-adaptive-example",
@@ -199,6 +204,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "actions-panel-close-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "actions-panel-close-example",
@@ -213,6 +219,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "actions-panel-custom-counter-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "actions-panel-custom-counter-example",
@@ -255,6 +262,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "actions-panel-with-dropdown-and-popover-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "actions-panel-with-dropdown-and-popover-example",
@@ -269,6 +277,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-and-actions-panel-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-and-actions-panel-example",
@@ -283,6 +292,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-and-content-panel-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-and-content-panel-example",
@@ -297,6 +307,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-column-state-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-column-state-example",
@@ -311,6 +322,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-copy-selected-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-copy-selected-example",
@@ -325,6 +337,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-export-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-export-example",
@@ -339,6 +352,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-external-filter-state-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-external-filter-state-example",
@@ -353,6 +367,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-filter-state-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-filter-state-example",
@@ -367,6 +382,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-infinite-selection-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-infinite-selection-example",
@@ -381,6 +397,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-load-error-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-load-error-example",
@@ -395,6 +412,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-load-text-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-load-text-example",
@@ -409,6 +427,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-loading-overlay-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-loading-overlay-example",
@@ -423,8 +442,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-long-cell-content-example.ts"
     ],
     "localImportFiles": [
-      "../l10n.ts",
-      "l10n.ts"
+      "l10n.ts",
+      "../l10n.ts"
     ],
     "selector": "ag-grid-long-cell-content-example",
     "primaryFile": "ag-grid-long-cell-content-example.ts",
@@ -438,6 +457,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-overview-example",
@@ -452,6 +472,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-quick-filter-state-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-quick-filter-state-example",
@@ -466,6 +487,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-row-actions-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-row-actions-example",
@@ -480,8 +502,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-row-detail-example.ts"
     ],
     "localImportFiles": [
-      "../l10n.ts",
-      "l10n.ts"
+      "l10n.ts",
+      "../l10n.ts"
     ],
     "selector": "ag-grid-row-detail-example",
     "primaryFile": "ag-grid-row-detail-example.ts",
@@ -509,6 +531,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-row-focus-state-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-row-focus-state-example",
@@ -523,6 +546,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-row-group-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-row-group-example",
@@ -537,6 +561,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-row-selection-state-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-row-selection-state-example",
@@ -551,6 +576,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-settings-menu-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-settings-menu-example",
@@ -579,6 +605,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-status-bar-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "ag-grid-status-bar-example",
@@ -609,6 +636,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "alert-content-example.css"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "alert-content-example",
@@ -639,6 +667,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "alert-overview-example.css"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "alert-overview-example",
@@ -655,6 +684,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "alert-status-example.css"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "alert-status-example",
@@ -754,6 +784,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "autocomplete-triggers-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "autocomplete-triggers-example",
@@ -768,6 +799,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "autocomplete-with-footer-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "autocomplete-with-footer-example",
@@ -797,6 +829,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "badge-list-example.css"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "badge-list-example",
@@ -840,6 +873,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "badge-table-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "badge-table-example",
@@ -855,6 +889,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "badge-tooltip-example.css"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "badge-tooltip-example",
@@ -897,6 +932,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "breadcrumbs-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "breadcrumbs-overview-example",
@@ -951,6 +987,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "breadcrumbs-truncate-by-abbrev-items-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "breadcrumbs-truncate-by-abbrev-items-example",
@@ -965,6 +1002,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "breadcrumbs-truncate-center-items-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "breadcrumbs-truncate-center-items-example",
@@ -979,6 +1017,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "breadcrumbs-truncate-head-items-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "breadcrumbs-truncate-head-items-example",
@@ -993,6 +1032,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "breadcrumbs-truncate-tail-items-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "breadcrumbs-truncate-tail-items-example",
@@ -1007,6 +1047,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "breadcrumbs-with-auto-wrap-adaptive-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "breadcrumbs-with-auto-wrap-adaptive-example",
@@ -1021,6 +1062,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "breadcrumbs-with-wrap-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "breadcrumbs-with-wrap-example",
@@ -1126,6 +1168,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-fill-and-style-only-icon-example.css"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "button-fill-and-style-only-icon-example",
@@ -1186,6 +1229,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-group-content-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "button-group-content-example",
@@ -1200,6 +1244,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-group-custom-content-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "button-group-custom-content-example",
@@ -1228,6 +1273,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-group-style-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "button-group-style-example",
@@ -1242,6 +1288,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "button-group-vertical-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "button-group-vertical-example",
@@ -1343,6 +1390,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "checkbox-overview-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "checkbox-overview-example",
@@ -1357,6 +1405,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "checkbox-validation-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "checkbox-validation-example",
@@ -1593,6 +1642,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "content-panel-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "content-panel-overview-example",
@@ -1607,6 +1657,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "content-panel-state-saving-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "content-panel-state-saving-example",
@@ -1837,6 +1888,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dl-alignment-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dl-alignment-example",
@@ -1851,6 +1903,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dl-dt-width-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dl-dt-width-example",
@@ -1865,6 +1918,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dl-long-text-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dl-long-text-example",
@@ -1879,6 +1933,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dl-min-width-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dl-min-width-example",
@@ -1893,6 +1948,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dl-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dl-overview-example",
@@ -1907,6 +1963,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dl-resizable-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dl-resizable-example",
@@ -1921,6 +1978,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dl-vertical-breakpoint-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dl-vertical-breakpoint-example",
@@ -1935,6 +1993,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dl-vertical-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dl-vertical-example",
@@ -1949,6 +2008,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dl-wide-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dl-wide-example",
@@ -1963,6 +2023,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dl-width-sync-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dl-width-sync-example",
@@ -1978,6 +2039,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dropdown-disabled-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dropdown-disabled-example",
@@ -1992,6 +2054,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dropdown-item-action-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dropdown-item-action-example",
@@ -2031,6 +2094,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dropdown-lazyload-data-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dropdown-lazyload-data-example",
@@ -2061,6 +2125,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dropdown-nested-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dropdown-nested-example",
@@ -2076,6 +2141,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dropdown-open-by-arrow-down-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dropdown-open-by-arrow-down-example",
@@ -2091,6 +2157,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dropdown-overview-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dropdown-overview-example",
@@ -2171,6 +2238,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "dropdown-with-filter-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "dropdown-with-filter-example",
@@ -2293,6 +2361,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "empty-state-content-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "empty-state-content-example",
@@ -2307,6 +2376,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "empty-state-error-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "empty-state-error-example",
@@ -2321,6 +2391,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "empty-state-icon-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "empty-state-icon-example",
@@ -2363,6 +2434,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "empty-state-text-only-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "empty-state-text-only-example",
@@ -2459,6 +2531,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "file-upload-local-dropzone-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "file-upload-local-dropzone-example",
@@ -2576,6 +2649,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "file-upload-multiple-error-filled-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "file-upload-multiple-error-filled-example",
@@ -2702,6 +2776,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "file-upload-single-accept-validation-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "file-upload-single-accept-validation-example",
@@ -2716,6 +2791,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "file-upload-single-async-validation-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "file-upload-single-async-validation-example",
@@ -2758,6 +2834,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "file-upload-single-validation-reactive-forms-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "file-upload-single-validation-reactive-forms-overview-example",
@@ -2800,6 +2877,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "filesize-formatter-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "filesize-formatter-overview-example",
@@ -2814,6 +2892,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "filesize-formatter-table-number-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "filesize-formatter-table-number-example",
@@ -2840,7 +2919,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "filter-bar-complete-functions-example.ts"
     ],
     "localImportFiles": [
-      "../l10n.ts"
+      "../l10n.ts",
+      "l10n.ts"
     ],
     "selector": "filter-bar-complete-functions-example",
     "primaryFile": "filter-bar-complete-functions-example.ts",
@@ -2943,6 +3023,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "filter-bar-not-specified-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "filter-bar-not-specified-example",
@@ -3021,7 +3102,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "filter-bar-readonly-pipes-example.ts"
     ],
     "localImportFiles": [
-      "../l10n.ts"
+      "../l10n.ts",
+      "l10n.ts"
     ],
     "selector": "filter-bar-readonly-pipes-example",
     "primaryFile": "filter-bar-readonly-pipes-example.ts",
@@ -3063,7 +3145,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "filter-bar-saved-filters-example.ts"
     ],
     "localImportFiles": [
-      "../l10n.ts"
+      "../l10n.ts",
+      "l10n.ts"
     ],
     "selector": "filter-bar-saved-filters-example",
     "primaryFile": "filter-bar-saved-filters-example.ts",
@@ -3142,6 +3225,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "filter-bar-value-template-example.scss"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "filter-bar-value-template-example",
@@ -3302,6 +3386,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "form-field-password-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "form-field-password-overview-example",
@@ -3316,6 +3401,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "form-field-with-cleaner-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "form-field-with-cleaner-example",
@@ -3358,6 +3444,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "form-field-with-error-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "form-field-with-error-example",
@@ -3372,6 +3459,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "form-field-with-hint-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "form-field-with-hint-example",
@@ -3386,6 +3474,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "form-field-with-label-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "form-field-with-label-example",
@@ -3400,6 +3489,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "form-field-with-prefix-and-suffix-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "form-field-with-prefix-and-suffix-example",
@@ -3414,6 +3504,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "form-field-without-borders-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "form-field-without-borders-example",
@@ -3428,6 +3519,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "form-fieldset-invalid-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "form-fieldset-invalid-example",
@@ -3442,6 +3534,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "form-fieldset-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "form-fieldset-overview-example",
@@ -3456,6 +3549,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "form-fieldset-with-button-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "form-fieldset-with-button-example",
@@ -3471,7 +3565,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "horizontal-form-labels-example.html",
       "horizontal-form-labels-example.css"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "l10n.ts",
+      "../l10n.ts"
+    ],
     "selector": "horizontal-form-labels-example",
     "primaryFile": "horizontal-form-labels-example.ts",
     "importPath": "components/forms"
@@ -3485,6 +3582,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "horizontal-form-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "horizontal-form-example",
@@ -3500,6 +3598,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "vertical-form-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "vertical-form-example",
@@ -3700,6 +3799,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "inline-edit-controls-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "inline-edit-controls-example",
@@ -3728,6 +3828,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "inline-edit-customized-design-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "inline-edit-customized-design-example",
@@ -3798,6 +3899,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "inline-edit-menu-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "inline-edit-menu-example",
@@ -3826,6 +3928,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "inline-edit-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "inline-edit-overview-example",
@@ -3840,6 +3943,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "inline-edit-save-error-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "inline-edit-save-error-example",
@@ -3854,6 +3958,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "inline-edit-save-invalid-items-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "inline-edit-save-invalid-items-example",
@@ -3882,6 +3987,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "inline-edit-select-basic-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "inline-edit-select-basic-example",
@@ -3896,6 +4002,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "inline-edit-select-multiline-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "inline-edit-select-multiline-example",
@@ -3910,6 +4017,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "inline-edit-select-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "inline-edit-select-example",
@@ -3924,6 +4032,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "inline-edit-unfilled-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "inline-edit-unfilled-example",
@@ -3938,6 +4047,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "inline-edit-validation-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "inline-edit-validation-example",
@@ -3980,6 +4090,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "input-number-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "input-number-overview-example",
@@ -4008,6 +4119,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "input-password-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "input-password-overview-example",
@@ -4022,6 +4134,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "input-password-template-driven-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "input-password-template-driven-example",
@@ -4036,6 +4149,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "input-readonly-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "input-readonly-example",
@@ -4050,6 +4164,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "input-with-mask-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "input-with-mask-example",
@@ -4143,6 +4258,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "link-disabled-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "link-disabled-example",
@@ -4311,6 +4427,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "list-action-button-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "list-action-button-example",
@@ -4355,6 +4472,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "list-draggable-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "list-draggable-example",
@@ -4385,6 +4503,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "./list-intermediate-state-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "list-intermediate-state-example",
@@ -4456,6 +4575,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "list-virtual-scroll-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "list-virtual-scroll-example",
@@ -4470,6 +4590,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "loader-overlay-background-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "loader-overlay-background-example",
@@ -4498,6 +4619,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "loader-overlay-delay-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "loader-overlay-delay-example",
@@ -4600,6 +4722,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "./markdown-code-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "markdown-code-example",
@@ -4732,6 +4855,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "./markdown-paragraph-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "markdown-paragraph-example",
@@ -4747,6 +4871,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "./markdown-quote-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "markdown-quote-example",
@@ -4787,6 +4912,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "modal-caption-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "modal-caption-example",
@@ -4801,6 +4927,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "modal-component-with-injector-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "modal-component-with-injector-example",
@@ -4815,6 +4942,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "modal-component-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "modal-component-example",
@@ -4829,6 +4957,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "modal-full-custom-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "modal-full-custom-example",
@@ -4843,6 +4972,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "modal-multiple-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "modal-multiple-example",
@@ -4857,6 +4987,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "modal-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "modal-overview-example",
@@ -4871,6 +5002,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "modal-scroll-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "modal-scroll-example",
@@ -4899,6 +5031,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "modal-template-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "modal-template-example",
@@ -5062,6 +5195,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-empty-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "notification-center-empty-example",
@@ -5077,7 +5211,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-error-example.html"
     ],
     "localImportFiles": [
-      "../l10n.ts"
+      "../l10n.ts",
+      "l10n.ts"
     ],
     "selector": "notification-center-error-example",
     "primaryFile": "notification-center-error-example.ts",
@@ -5092,6 +5227,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-infinite-scroll-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "notification-center-infinite-scroll-example",
@@ -5107,7 +5243,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-overview-example.html"
     ],
     "localImportFiles": [
-      "../l10n.ts"
+      "../l10n.ts",
+      "l10n.ts"
     ],
     "selector": "notification-center-overview-example",
     "primaryFile": "notification-center-overview-example.ts",
@@ -5122,7 +5259,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-popover-example.html"
     ],
     "localImportFiles": [
-      "../l10n.ts"
+      "../l10n.ts",
+      "l10n.ts"
     ],
     "selector": "notification-center-popover-example",
     "primaryFile": "notification-center-popover-example.ts",
@@ -5137,7 +5275,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-push-example.html"
     ],
     "localImportFiles": [
-      "../l10n.ts"
+      "../l10n.ts",
+      "l10n.ts"
     ],
     "selector": "notification-center-push-example",
     "primaryFile": "notification-center-push-example.ts",
@@ -5277,6 +5416,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-arrow-and-offset-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "popover-arrow-and-offset-example",
@@ -5307,6 +5447,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-close-example.css"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "popover-close-example",
@@ -5323,6 +5464,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-content-example.css"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "popover-content-example",
@@ -5338,6 +5480,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-header-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "popover-header-example",
@@ -5353,6 +5496,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-height-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "popover-height-example",
@@ -5367,6 +5511,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-hover-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "popover-hover-example",
@@ -5381,6 +5526,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "popover-overview-example",
@@ -5411,6 +5557,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-placement-center-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "popover-placement-center-example",
@@ -5426,6 +5573,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-placement-edges-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "popover-placement-edges-example",
@@ -5440,6 +5588,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-relative-to-pointer-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "popover-relative-to-pointer-example",
@@ -5454,6 +5603,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-scroll-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "popover-scroll-example",
@@ -5468,6 +5618,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-scrolling-and-layering-page-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "popover-scrolling-and-layering-page-example",
@@ -5526,6 +5677,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "popover-width-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "popover-width-example",
@@ -5659,6 +5811,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "radio-validation-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "radio-validation-example",
@@ -5685,6 +5838,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "native-scrollbar-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "native-scrollbar-example",
@@ -5765,6 +5919,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "select-add-new-option-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "select-add-new-option-example",
@@ -5779,6 +5934,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "select-auto-hide-scroll-strategy-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "select-auto-hide-scroll-strategy-example",
@@ -5793,6 +5949,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "select-cleaner-with-disabled-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "select-cleaner-with-disabled-example",
@@ -5821,6 +5978,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "select-custom-tag-content-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "select-custom-tag-content-example",
@@ -5849,6 +6007,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "select-disabled-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "select-disabled-example",
@@ -5863,6 +6022,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "select-footer-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "select-footer-example",
@@ -5919,6 +6079,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "select-loading-error-custom-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "select-loading-error-custom-example",
@@ -5961,6 +6122,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "select-locale-configuration-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "select-locale-configuration-example",
@@ -5989,6 +6151,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "select-no-variants-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "select-no-variants-example",
@@ -6143,6 +6306,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "select-two-line-option-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "select-two-line-option-example",
@@ -6157,6 +6321,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "select-validation-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "select-validation-example",
@@ -6255,6 +6420,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "sidebar-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "sidebar-overview-example",
@@ -6269,6 +6435,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "sidebar-state-saving-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "sidebar-state-saving-example",
@@ -6283,6 +6450,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "sidebar-with-splitter-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "sidebar-with-splitter-example",
@@ -6297,6 +6465,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "sidepanel-disable-close-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "sidepanel-disable-close-example",
@@ -6312,6 +6481,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "sidepanel-normal-mode-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "sidepanel-normal-mode-example",
@@ -6327,6 +6497,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "./sidepanel-overlayed-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "sidepanel-overlayed-example",
@@ -6371,6 +6542,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "sidepanel-state-saving-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "sidepanel-state-saving-example",
@@ -6385,6 +6557,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "sidepanel-with-custom-injector-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "sidepanel-with-custom-injector-example",
@@ -6399,6 +6572,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "sidepanel-with-dynamic-config-update-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "sidepanel-with-dynamic-config-update-example",
@@ -6413,6 +6587,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "skeleton-accordion-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "skeleton-accordion-example",
@@ -6469,6 +6644,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "skeleton-directive-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "skeleton-directive-example",
@@ -6483,6 +6659,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "skeleton-dl-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "skeleton-dl-example",
@@ -6497,6 +6674,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "skeleton-elements-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "skeleton-elements-example",
@@ -6511,6 +6689,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "skeleton-form-field-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "skeleton-form-field-example",
@@ -6539,6 +6718,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "skeleton-group-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "skeleton-group-example",
@@ -6553,6 +6733,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "skeleton-in-sidepanel-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "skeleton-in-sidepanel-example",
@@ -6567,6 +6748,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "skeleton-tabs-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "skeleton-tabs-example",
@@ -6581,6 +6763,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "skeleton-tree-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "skeleton-tree-example",
@@ -6595,6 +6778,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "skeleton-typography-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "skeleton-typography-example",
@@ -6665,6 +6849,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "split-button-progress-state-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "split-button-progress-state-example",
@@ -6693,6 +6878,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "split-button-text-overflow-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "split-button-text-overflow-example",
@@ -6849,6 +7035,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "table-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "table-overview-example",
@@ -6877,6 +7064,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "table-with-borders-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "table-with-borders-example",
@@ -6906,6 +7094,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tabs-active-tab-id-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tabs-active-tab-id-example",
@@ -6920,6 +7109,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tabs-active-tab-index-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tabs-active-tab-index-example",
@@ -6935,6 +7125,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "./tabs-add-tab-vertical-example.css"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tabs-add-tab-vertical-example",
@@ -6950,6 +7141,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "./tabs-add-tab-example.css"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tabs-add-tab-example",
@@ -7022,6 +7214,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tabs-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tabs-overview-example",
@@ -7036,6 +7229,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tabs-state-saving-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tabs-state-saving-example",
@@ -7094,6 +7288,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tabs-vertical-example.css"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tabs-vertical-example",
@@ -7109,6 +7304,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tabs-with-scroll-vertical-example.css"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tabs-with-scroll-vertical-example",
@@ -7123,6 +7319,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tabs-with-scroll-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tabs-with-scroll-example",
@@ -7173,7 +7370,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tag-autocomplete-onpaste-off-example.ts",
       "tag-autocomplete-onpaste-off-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "l10n.ts"
+    ],
     "selector": "tag-autocomplete-onpaste-off-example",
     "primaryFile": "tag-autocomplete-onpaste-off-example.ts",
     "importPath": "components/tags"
@@ -7342,7 +7541,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tag-input-onpaste-off-example.ts",
       "tag-input-onpaste-off-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "l10n.ts"
+    ],
     "selector": "tag-input-onpaste-off-example",
     "primaryFile": "tag-input-onpaste-off-example.ts",
     "importPath": "components/tags"
@@ -7812,6 +8013,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "./title-overview-example.css"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "title-overview-example",
@@ -7842,6 +8044,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "toast-actions-overview-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "toast-actions-overview-example",
@@ -7857,6 +8060,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "toast-hide-overview-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "toast-hide-overview-example",
@@ -7872,6 +8076,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "toast-link-overview-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "toast-link-overview-example",
@@ -7886,6 +8091,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "toast-multiline-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "toast-multiline-example",
@@ -7914,6 +8120,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "toast-progress-bar-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "toast-progress-bar-overview-example",
@@ -7928,6 +8135,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "toast-report-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "toast-report-overview-example",
@@ -7943,6 +8151,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "toast-types-overview-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "toast-types-overview-example",
@@ -7958,6 +8167,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "toast-user-data-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "toast-user-data-example",
@@ -8070,6 +8280,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "toggle-validation-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "toggle-validation-example",
@@ -8098,6 +8309,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tooltip-arrow-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tooltip-arrow-example",
@@ -8112,6 +8324,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tooltip-disabled-for-component-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tooltip-disabled-for-component-example",
@@ -8126,6 +8339,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tooltip-disabled-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tooltip-disabled-example",
@@ -8154,6 +8368,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tooltip-extended-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tooltip-extended-example",
@@ -8168,6 +8383,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tooltip-hide-with-timeout-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tooltip-hide-with-timeout-example",
@@ -8182,6 +8398,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tooltip-interactive-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tooltip-interactive-example",
@@ -8196,6 +8413,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tooltip-offset-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tooltip-offset-example",
@@ -8350,6 +8568,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "top-bar-overflow-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "top-bar-overflow-example",
@@ -8378,6 +8597,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "top-bar-title-counter-adaptive-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "top-bar-title-counter-adaptive-example",
@@ -8420,8 +8640,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tree-select-cleaner-with-disabled-example.ts"
     ],
     "localImportFiles": [
-      "../l10n.ts",
-      "../tree-select-cleaner-data.ts"
+      "../tree-select-cleaner-data.ts",
+      "l10n.ts",
+      "../l10n.ts"
     ],
     "selector": "tree-select-cleaner-with-disabled-example",
     "primaryFile": "tree-select-cleaner-with-disabled-example.ts",
@@ -8491,6 +8712,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "tree-select-footer-overview-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "tree-select-footer-overview-example",
@@ -8925,6 +9147,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-basic-multiple-validators-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "validation-basic-multiple-validators-example",
@@ -8953,6 +9176,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-cross-field-async-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "validation-cross-field-async-example",
@@ -8967,6 +9191,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-cross-field-dates-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "validation-cross-field-dates-example",
@@ -8981,6 +9206,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-cross-field-password-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "validation-cross-field-password-example",
@@ -8995,6 +9221,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-message-for-specific-field-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "validation-message-for-specific-field-example",
@@ -9010,6 +9237,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-message-global-with-links-example.html"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "validation-message-global-with-links-example",
@@ -9024,6 +9252,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-message-global-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "validation-message-global-example",
@@ -9038,6 +9267,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-no-message-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "validation-no-message-example",
@@ -9052,6 +9282,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-on-blur-filled-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "validation-on-blur-filled-example",
@@ -9066,6 +9297,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-on-blur-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "validation-on-blur-example",
@@ -9080,6 +9312,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-on-open-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "validation-on-open-example",
@@ -9108,6 +9341,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-on-submit-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "validation-on-submit-example",
@@ -9122,6 +9356,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-on-type-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "validation-on-type-example",
@@ -9150,8 +9385,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-required-label-example.ts"
     ],
     "localImportFiles": [
-      "../l10n.ts",
-      "l10n.ts"
+      "l10n.ts",
+      "../l10n.ts"
     ],
     "selector": "validation-required-label-example",
     "primaryFile": "validation-required-label-example.ts",
@@ -9165,6 +9400,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "validation-tag-list-example.ts"
     ],
     "localImportFiles": [
+      "l10n.ts",
       "../l10n.ts"
     ],
     "selector": "validation-tag-list-example",
