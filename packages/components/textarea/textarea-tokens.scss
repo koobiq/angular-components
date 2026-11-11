@@ -1,6 +1,8 @@
 :where(.kbq-textarea) {
-    // Three lines and the vertical padding, as tall as an empty growing textarea.
-    --kbq-textarea-size-min-height: calc(3lh + 2 * var(--kbq-textarea-size-padding-vertical));
+    --kbq-textarea-size-min-rows: 3;
+    --kbq-textarea-size-min-height: calc(
+        var(--kbq-textarea-size-min-rows) * 1lh + 2 * var(--kbq-textarea-size-padding-vertical)
+    );
     --kbq-textarea-size-max-height: 96px;
     --kbq-textarea-size-padding-vertical: 5px;
     --kbq-textarea-size-padding-horizontal: 11px;
