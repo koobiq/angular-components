@@ -22,8 +22,8 @@ import {
     RowSelectionOptions,
     SELECTION_COLUMN_ID
 } from 'ag-grid-community';
-import { injectExampleText } from '../l10n';
-import { injectExampleText as injectIncidentsText } from './l10n';
+
+import { injectExampleText, injectExampleText as injectIncidentsText } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

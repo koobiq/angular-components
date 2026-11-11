@@ -5,7 +5,7 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { switchMap, timer } from 'rxjs';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Toast hide

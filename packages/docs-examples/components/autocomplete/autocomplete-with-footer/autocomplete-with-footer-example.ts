@@ -6,7 +6,7 @@ import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Autocomplete with footer

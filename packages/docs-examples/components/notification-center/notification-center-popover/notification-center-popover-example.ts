@@ -6,7 +6,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
-import { createNotifications, injectExampleText } from '../l10n';
+import { createNotifications } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title notification-center-popover
@@ -49,7 +50,7 @@ export class NotificationCenterPopoverExample {
             if (!actions) return;
 
             this.notificationService.items = createNotifications(
-                this.text(),
+                this.text().list,
                 { actions },
                 this.notificationService.items
             );

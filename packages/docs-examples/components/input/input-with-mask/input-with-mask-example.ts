@@ -12,7 +12,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { MaskitoDirective } from '@maskito/angular';
 import { MaskitoOptions, MaskitoPlugin, maskitoUpdateElement } from '@maskito/core';
 import { maskitoNumberOptionsGenerator, maskitoWithPlaceholder } from '@maskito/kit';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Input with mask

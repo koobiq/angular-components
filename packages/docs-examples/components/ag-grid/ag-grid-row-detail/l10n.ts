@@ -20,6 +20,21 @@ export interface ExampleIncident {
 /** Incident rows of the row-detail example. */
 export interface ExampleText {
     incidents: ExampleIncident[];
+
+    expandMultipleRows: string;
+    fillExpandedRows: string;
+    collapse: string;
+    description: string;
+    affectedHost: string;
+    detectedBy: string;
+    event: string;
+    severity: string;
+    status: string;
+    sourceIp: string;
+    destinationIp: string;
+    protocol: string;
+    port: string;
+    mitreTechnique: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -137,7 +152,21 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
                 detector: 'EDR',
                 description: 'PowerShell выполнил закодированную в Base64 команду, отключающую журналирование скриптов.'
             }
-        ]
+        ],
+        expandMultipleRows: 'Раскрывать несколько строк',
+        fillExpandedRows: 'Заполнять раскрытые строки',
+        collapse: 'Свернуть',
+        description: 'Описание',
+        affectedHost: 'Затронутый узел',
+        detectedBy: 'Обнаружено',
+        event: 'Событие',
+        severity: 'Важность',
+        status: 'Статус',
+        sourceIp: 'IP-адрес источника',
+        destinationIp: 'IP-адрес назначения',
+        protocol: 'Протокол',
+        port: 'Порт',
+        mitreTechnique: 'Техника MITRE'
     },
     default: {
         incidents: [
@@ -253,7 +282,21 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
                 detector: 'EDR',
                 description: 'PowerShell ran a Base64-encoded command that disables script logging.'
             }
-        ]
+        ],
+        expandMultipleRows: 'Expand multiple rows',
+        fillExpandedRows: 'Fill expanded rows',
+        collapse: 'Collapse',
+        description: 'Description',
+        affectedHost: 'Affected host',
+        detectedBy: 'Detected by',
+        event: 'Event',
+        severity: 'Severity',
+        status: 'Status',
+        sourceIp: 'Source IP',
+        destinationIp: 'Destination IP',
+        protocol: 'Protocol',
+        port: 'Port',
+        mitreTechnique: 'MITRE technique'
     }
 };
 

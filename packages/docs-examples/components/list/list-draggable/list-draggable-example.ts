@@ -2,7 +2,7 @@ import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Draggable list

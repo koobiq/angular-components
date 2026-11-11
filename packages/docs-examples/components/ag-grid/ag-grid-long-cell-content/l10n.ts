@@ -16,6 +16,10 @@ export interface ExampleText {
     hostsHeader: string;
     techniquesHeader: string;
     statusHeader: string;
+
+    collapseLink: string;
+    moreCount: (count: number) => string;
+    allCount: (count: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -73,7 +77,10 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         eventHeader: 'Событие',
         hostsHeader: 'Узлы',
         techniquesHeader: 'Техники',
-        statusHeader: 'Статус'
+        statusHeader: 'Статус',
+        collapseLink: 'Свернуть',
+        moreCount: (count) => `${count} еще`,
+        allCount: (count) => `Все ${count}`
     },
     default: {
         events: [
@@ -129,7 +136,10 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         eventHeader: 'Event',
         hostsHeader: 'Hosts',
         techniquesHeader: 'Techniques',
-        statusHeader: 'Status'
+        statusHeader: 'Status',
+        collapseLink: 'Collapse',
+        moreCount: (count) => `${count} more`,
+        allCount: (count) => `All ${count}`
     }
 };
 

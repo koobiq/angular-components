@@ -5,6 +5,17 @@ import { injectLocalizedText } from '../l10n';
 export interface ExampleText {
     reasons: { value: number; label: string }[];
     estimations: { value: number; label: string }[];
+
+    name: string;
+    lastName: string;
+    patronymic: string;
+    comment: string;
+    email: string;
+    estimation: string;
+    requestReason: string;
+    required: string;
+    optional: string;
+    submit: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -26,7 +37,17 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
             { value: 2, label: 'Удовлетворительно' },
             { value: 3, label: 'Хорошо' },
             { value: 4, label: 'Лучше всего' }
-        ]
+        ],
+        name: 'Имя',
+        lastName: 'Фамилия',
+        patronymic: 'Отчество',
+        comment: 'Комментарий',
+        email: 'Эл. почта',
+        estimation: 'Оценка',
+        requestReason: 'Причина запроса',
+        required: 'Обязательно',
+        optional: 'Необязательно',
+        submit: 'Отправить'
     },
     default: {
         reasons: [
@@ -46,9 +67,22 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
             { value: 2, label: 'Satisfactory' },
             { value: 3, label: 'Good' },
             { value: 4, label: 'Best of all' }
-        ]
+        ],
+        name: 'Name',
+        lastName: 'Last name',
+        patronymic: 'Patronymic',
+        comment: 'Comment',
+        email: 'Email',
+        estimation: 'Estimation',
+        requestReason: 'Request reason',
+        required: 'Required',
+        optional: 'Optional',
+        submit: 'Submit'
     }
 };
 
 /** Option lists of the example in the active locale. */
 export const injectOptionsText = (): Signal<ExampleText> => injectLocalizedText(TEXT);
+
+/** Text of the example in the active locale. */
+export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, ViewEncapsulation } from 
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Tabs vertical

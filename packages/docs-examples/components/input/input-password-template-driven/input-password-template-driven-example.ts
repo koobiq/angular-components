@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Directive, signal } from '@angular/
 import { AbstractControl, FormsModule, NG_VALIDATORS, ValidationErrors, Validator, Validators } from '@angular/forms';
 import { PasswordValidators } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /** Template-driven forms take validators from directives, so this one hands `PasswordValidators` to `ngModel`. */
 @Directive({

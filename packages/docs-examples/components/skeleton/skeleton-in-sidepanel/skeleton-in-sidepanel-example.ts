@@ -6,7 +6,7 @@ import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/side
 import { KbqSkeletonDl, KbqSkeletonGroup, KbqSkeletonTable } from '@koobiq/components/skeleton';
 import { KbqTableModule } from '@koobiq/components/table';
 import { merge, Subscription, tap, timer } from 'rxjs';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 type Detail = { term: string; value: string };
 

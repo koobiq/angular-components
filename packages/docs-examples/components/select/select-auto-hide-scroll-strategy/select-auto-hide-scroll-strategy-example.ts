@@ -17,7 +17,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title select-auto-hide-scroll-strategy

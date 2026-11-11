@@ -4,7 +4,7 @@ import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqTextQuery } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 interface Suggestion {
     /** What the option shows. */

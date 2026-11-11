@@ -13,16 +13,10 @@ export interface ExampleText {
     fieldLabel: string;
     item: (index: number) => string;
     itemDisabled: (index: number) => string;
-    textWithCaption: string;
-    professions: string[];
     practiceOptions: { label: string; hint: string }[];
-    secondFactor: string;
     authenticatorApp: string;
     hardwareKey: string;
     smsCode: string;
-    saveWithoutChoosing: string;
-    chooseSecondFactor: string;
-    save: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -30,8 +24,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         fieldLabel: 'Подпись поля',
         item: (index) => `Пункт ${index}`,
         itemDisabled: (index) => `Пункт ${index} (Отключен)`,
-        textWithCaption: 'Текст с подписью',
-        professions: ['Юрист', 'Программист', 'Биолог', 'Банкир', 'Писатель'],
         practiceOptions: [
             {
                 label: 'Регулярное обновление программ и операционной системы',
@@ -46,20 +38,14 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
                 hint: 'Многофакторная аутентификация требует нескольких форм подтверждения перед доступом к учётной записи, снижая риск несанкционированного доступа'
             }
         ],
-        secondFactor: 'Второй фактор входа',
         authenticatorApp: 'Приложение-аутентификатор',
         hardwareKey: 'Аппаратный ключ безопасности',
-        smsCode: 'Код в текстовом сообщении',
-        saveWithoutChoosing: 'Сохраните, не выбрав вариант, чтобы увидеть ошибку',
-        chooseSecondFactor: 'Выберите второй фактор для защиты учётной записи',
-        save: 'Сохранить'
+        smsCode: 'Код в текстовом сообщении'
     },
     default: {
         fieldLabel: 'Field label',
         item: (index) => `Item ${index}`,
         itemDisabled: (index) => `Item ${index} (Disabled)`,
-        textWithCaption: 'Text with Caption',
-        professions: ['Lawyer', 'Programmer', 'Biologist', 'Banker', 'Writer'],
         practiceOptions: [
             {
                 label: 'Regular software and operating system updates',
@@ -74,13 +60,9 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
                 hint: 'Multi-factor authentication involves multiple identification forms before account access, reducing the risk of unauthorized access'
             }
         ],
-        secondFactor: 'Second sign-in factor',
         authenticatorApp: 'Authenticator app',
         hardwareKey: 'Hardware security key',
-        smsCode: 'Code in a text message',
-        saveWithoutChoosing: 'Save without choosing to see the error',
-        chooseSecondFactor: 'Choose a second factor to protect the account',
-        save: 'Save'
+        smsCode: 'Code in a text message'
     }
 };
 

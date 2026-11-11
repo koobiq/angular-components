@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, InjectionToken, Injector } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/sidepanel';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 export const EXAMPLE_SIDEPANEL_TOKEN = new InjectionToken<{ name: string; role: string }>('SidepanelUser');
 

@@ -9,7 +9,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

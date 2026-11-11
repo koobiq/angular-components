@@ -15,7 +15,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToastService } from '@koobiq/components/toast';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 type ExampleAction = {
     id: string;

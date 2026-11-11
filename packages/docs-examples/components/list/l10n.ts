@@ -17,16 +17,6 @@ export interface ExampleText {
     items: string;
     securityControls: string;
     incidentTypes: string;
-    longElementName: string;
-    badge: string;
-    dropdownItem: (index: number) => string;
-    groupHeader: string;
-    optionN: (index: number) => string;
-    assignUsers: string;
-    user: string;
-    nothingFound: string;
-    apply: string;
-    cancel: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -37,17 +27,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         elements: 'Элементы',
         items: 'Пункты',
         securityControls: 'Средства защиты',
-        incidentTypes: 'Типы инцидентов',
-        longElementName: 'Элемент с очень очень очень очень очень очень длинным именем',
-        badge: 'бейдж',
-        dropdownItem: (index) => `пункт ${index}`,
-        groupHeader: 'Заголовок группы',
-        optionN: (index) => `Вариант №${index}`,
-        assignUsers: 'Назначить пользователей',
-        user: 'Пользователь',
-        nothingFound: 'Ничего не найдено',
-        apply: 'Применить',
-        cancel: 'Отмена'
+        incidentTypes: 'Типы инцидентов'
     },
     default: {
         item: (index) => `Item ${index}`,
@@ -56,17 +36,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         elements: 'Elements',
         items: 'Items',
         securityControls: 'Security controls',
-        incidentTypes: 'Incident types',
-        longElementName: 'Element with a very very very very very very long name',
-        badge: 'badge',
-        dropdownItem: (index) => `item ${index}`,
-        groupHeader: 'Group header',
-        optionN: (index) => `Option #${index}`,
-        assignUsers: 'Assign users',
-        user: 'User',
-        nothingFound: 'Nothing found',
-        apply: 'Apply',
-        cancel: 'Cancel'
+        incidentTypes: 'Incident types'
     }
 };
 

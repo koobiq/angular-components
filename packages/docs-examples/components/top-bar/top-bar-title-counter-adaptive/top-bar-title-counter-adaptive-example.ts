@@ -10,7 +10,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 interface ExampleLocalizedText {
     fullDisplay: string;

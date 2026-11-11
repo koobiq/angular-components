@@ -17,15 +17,6 @@ export interface ExampleText {
     main: string;
     standards: string;
     aes: string;
-    edit: string;
-    test: string;
-    components: string;
-    commit: string;
-    users: string;
-    reviews: string;
-    groups: string;
-    reportDated: string;
-    reportNumber: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -36,16 +27,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         roles: 'Роли',
         main: 'Главная',
         standards: 'Стандарты',
-        aes: 'Стандарт расширенного шифрования',
-        edit: 'Редактирование',
-        test: 'Тест',
-        components: 'Компоненты',
-        commit: 'Коммит',
-        users: 'Пользователи',
-        reviews: 'Обзоры',
-        groups: 'Группы',
-        reportDated: 'Отчёт от 28.08.2018',
-        reportNumber: 'Отчёт №123456789'
+        aes: 'Стандарт расширенного шифрования'
     },
     default: {
         informationSecurity: 'Information Security',
@@ -54,16 +36,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         roles: 'Roles',
         main: 'Main',
         standards: 'Standards',
-        aes: 'Advanced Encryption Standard',
-        edit: 'Edit',
-        test: 'Test',
-        components: 'Components',
-        commit: 'Commit',
-        users: 'Users',
-        reviews: 'Reviews',
-        groups: 'Groups',
-        reportDated: 'Report dated 28.08.2018',
-        reportNumber: 'Report №123456789'
+        aes: 'Advanced Encryption Standard'
     }
 };
 

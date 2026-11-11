@@ -17,9 +17,6 @@ export interface ExampleText {
     tapToWakeHint: string;
     shakeToUndoHint: string;
     vibrationHint: string;
-    automaticBackup: string;
-    turnOffHint: string;
-    backupRequired: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -32,10 +29,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         shakeToUndoHint:
             'Если вы случайно делитесь телефоном, вы можете отключить встряхивание для отмены, чтобы предотвратить появление предупреждения об отмене.',
         vibrationHint:
-            'Когда этот переключатель выключен, вся вибрация на телефоне будет отключена, включая оповещения о землетрясениях, цунами и других чрезвычайных ситуациях.',
-        automaticBackup: 'Автоматическое резервное копирование',
-        turnOffHint: 'Выключите, чтобы увидеть ошибку',
-        backupRequired: 'Требуется политикой безопасности вашей организации'
+            'Когда этот переключатель выключен, вся вибрация на телефоне будет отключена, включая оповещения о землетрясениях, цунами и других чрезвычайных ситуациях.'
     },
     default: {
         vibration: 'Vibration',
@@ -46,10 +40,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         shakeToUndoHint:
             'If you tend to share your phone by accident, you can disable Shake to Undo to prevent the Undo alert from appearing.',
         vibrationHint:
-            'When this switch is off, all vibration on your phone will be disabled, including those for earthquake, tsunami and other emergency alerts.',
-        automaticBackup: 'Automatic backup',
-        turnOffHint: 'Turn it off to see the error',
-        backupRequired: 'Required by the security policy of your organization'
+            'When this switch is off, all vibration on your phone will be disabled, including those for earthquake, tsunami and other emergency alerts.'
     }
 };
 

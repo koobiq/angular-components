@@ -5,7 +5,7 @@ import { KbqFormFieldModule, KbqLabel } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqUserInfo, KbqUsername } from '@koobiq/components/username';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 const USERS: KbqUserInfo[] = [
     {

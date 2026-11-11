@@ -17,10 +17,6 @@ export interface ExampleText {
     column: (index: number) => string;
     value: string;
     link: string;
-    phishingResource: string;
-    processListAttempt: string;
-    dosTooltip: string;
-    categories: string[];
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -31,24 +27,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         vertical: 'Вертикально',
         column: (index) => `Столбец ${index}`,
         value: 'Значение',
-        link: 'Ссылка',
-        phishingResource: 'EXT. Использование фишинговых ресурсов (phishingAttacks)',
-        processListAttempt:
-            'Обнаружена попытка получить список процессов, запущенных в системе, на узле qa-kolobok.mpqa.rd.koobiq.com',
-        dosTooltip:
-            'DoS (аббр. англ. denial-of-service attack «отказ в обслуживании») — хакерская атака на вычислительную систему с целью довести ее до отказа, то есть создание таких условий, при которых добросовестные пользователи системы не смогут получить доступ к предоставляемым системным ресурсам (серверам), либо этот доступ будет затруднен',
-        categories: [
-            'Подбор пароля',
-            'Сложная атака',
-            'DDoS',
-            'DoS',
-            'HIPS-алерт',
-            'IDS/IPS-алерт',
-            'Кража учётных данных',
-            'Разное',
-            'Сетевая атака',
-            'Пост-компрометация'
-        ]
+        link: 'Ссылка'
     },
     default: {
         normal: 'Normal',
@@ -57,24 +36,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         vertical: 'Vertical',
         column: (index) => `Column ${index}`,
         value: 'Value',
-        link: 'Link',
-        phishingResource: 'EXT. Use of phishing resources (phishingAttacks)',
-        processListAttempt:
-            'An attempt to get the list of processes running on the system was detected on host qa-kolobok.mpqa.rd.koobiq.com',
-        dosTooltip:
-            'DoS (abbreviation of English denial-of-service attack) is a hacker attack on a computing system aimed at bringing it to failure, i.e. creating conditions under which legitimate users of the system cannot access the provided system resources (servers), or this access is difficult',
-        categories: [
-            'Bruteforce',
-            'Complex Attack',
-            'DDoS',
-            'DoS',
-            'HIPS Alert',
-            'IDS/IPS Alert',
-            'Identity Theft',
-            'Miscellaneous',
-            'Network Attack',
-            'Post Compromise'
-        ]
+        link: 'Link'
     }
 };
 

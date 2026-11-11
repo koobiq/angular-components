@@ -17,20 +17,6 @@ export interface ExampleText {
     incidentDescription: string;
     typePrefixes: string;
     comment: string;
-    typeTriggers: string;
-    closedLabel: string;
-    escalateLabel: string;
-    signLabel: string;
-    closedInsert: string;
-    escalateInsert: string;
-    signInsert: string;
-    alice: string;
-    bob: string;
-    carol: string;
-    label: string;
-    withFooterHint: string;
-    link: string;
-    option: (index: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -214,21 +200,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         or: 'или',
         incidentDescription: 'Описание инцидента',
         typePrefixes: 'Введите fire, thr или vul',
-        comment: 'Комментарий',
-        typeTriggers: 'Введите / для сниппета или @, чтобы упомянуть коллегу',
-        closedLabel: '/closed — закрывающая заметка',
-        escalateLabel: '/escalate — заметка об эскалации',
-        signLabel: '/sign — подпись',
-        closedInsert: 'Закрыто как ложное срабатывание.',
-        escalateInsert: 'Передано на вторую линию.',
-        signInsert: 'С уважением, команда SOC',
-        alice: 'Алиса Джонсон',
-        bob: 'Боб Смит',
-        carol: 'Кэрол Уайт',
-        label: 'Метка',
-        withFooterHint: 'Автодополнение с футером',
-        link: 'Ссылка',
-        option: (index) => `Вариант ${index}`
+        comment: 'Комментарий'
     },
     default: {
         countries: [
@@ -410,21 +382,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         or: 'or',
         incidentDescription: 'Incident description',
         typePrefixes: 'Type fire, thr or vul',
-        comment: 'Comment',
-        typeTriggers: 'Type / for a snippet or @ to mention a colleague',
-        closedLabel: '/closed — closing note',
-        escalateLabel: '/escalate — escalation note',
-        signLabel: '/sign — signature',
-        closedInsert: 'Closed as a false positive.',
-        escalateInsert: 'Escalated to the second line.',
-        signInsert: 'Best regards, SOC team',
-        alice: 'Alice Johnson',
-        bob: 'Bob Smith',
-        carol: 'Carol White',
-        label: 'Label',
-        withFooterHint: 'Autocomplete with footer',
-        link: 'Link',
-        option: (index) => `Option ${index}`
+        comment: 'Comment'
     }
 };
 

@@ -3,7 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
 import { map } from 'rxjs';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /** @title Form field with kbq-hint */
 @Component({

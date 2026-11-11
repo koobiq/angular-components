@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqDivider } from '@koobiq/components/divider';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Description list shared width

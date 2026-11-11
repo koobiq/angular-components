@@ -7,7 +7,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 type ExampleSection = {
     id: string;

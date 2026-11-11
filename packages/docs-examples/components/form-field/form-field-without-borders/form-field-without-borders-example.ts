@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /** @title Form field without borders */
 @Component({

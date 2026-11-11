@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Checkbox

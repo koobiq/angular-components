@@ -10,7 +10,7 @@ import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KBQ_MODAL_DATA, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { take } from 'rxjs';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 type DocsFormData = {
     firstName: string;

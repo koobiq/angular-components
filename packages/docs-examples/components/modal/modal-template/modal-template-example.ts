@@ -4,7 +4,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { KbqSplitButton } from '@koobiq/components/split-button';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Modal template

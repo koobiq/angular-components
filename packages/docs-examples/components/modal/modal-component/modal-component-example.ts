@@ -6,7 +6,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 import { KbqTitleDirective } from '@koobiq/components/title';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 interface CustomModalData {
     title: string;

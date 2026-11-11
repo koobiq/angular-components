@@ -17,15 +17,6 @@ export interface ExampleText {
     hipsAlert: string;
     idsIpsAlert: string;
     zeroDay: string;
-    xss: string;
-    malware: string;
-    vulnExploitation: string;
-    tabContent: (name: string) => string;
-    tabN: (index: number) => string;
-    files: string;
-    settings: string;
-    tasks: string;
-    contentForId: (id: string) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -36,16 +27,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         dos: 'DoS',
         hipsAlert: 'HIPS-алерт',
         idsIpsAlert: 'IDS/IPS-алерт',
-        zeroDay: 'Эксплойт нулевого дня',
-        xss: 'XSS',
-        malware: 'Вредоносное ПО',
-        vulnExploitation: 'Эксплуатация уязвимости',
-        tabContent: (name) => `Содержимое вкладки ${name}`,
-        tabN: (index) => `Вкладка ${index}`,
-        files: 'Файлы',
-        settings: 'Настройки',
-        tasks: 'Задачи',
-        contentForId: (id) => `Содержимое выбранной вкладки с id: ${id}`
+        zeroDay: 'Эксплойт нулевого дня'
     },
     default: {
         bruteforce: 'BruteForce',
@@ -54,16 +36,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         dos: 'DoS',
         hipsAlert: 'HIPS alert',
         idsIpsAlert: 'IDS/IPS Alert',
-        zeroDay: 'Zero-Day Exploit',
-        xss: 'XSS',
-        malware: 'Malware',
-        vulnExploitation: 'Vulnerability Exploitation',
-        tabContent: (name) => `${name} tab content`,
-        tabN: (index) => `Tab ${index}`,
-        files: 'files',
-        settings: 'settings',
-        tasks: 'tasks',
-        contentForId: (id) => `Content for selected tab with id: ${id}`
+        zeroDay: 'Zero-Day Exploit'
     }
 };
 

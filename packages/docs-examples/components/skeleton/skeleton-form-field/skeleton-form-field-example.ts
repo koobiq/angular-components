@@ -5,7 +5,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSkeletonFormField } from '@koobiq/components/skeleton';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Skeleton form field preset

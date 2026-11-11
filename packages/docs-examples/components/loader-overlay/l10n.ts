@@ -17,10 +17,6 @@ export interface ExampleText {
     updating: string;
     updates: string;
     refresh: string;
-    displayDelay: string;
-    requestDuration: string;
-    backgroundContent: string;
-    backgroundContentFade: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -31,13 +27,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         reportProgress: '18,7 МБ из 25 МБ — осталось 2 мин',
         updating: 'Обновление...',
         updates: 'Обновления',
-        refresh: 'Обновить',
-        displayDelay: 'Задержка отображения',
-        requestDuration: 'Длительность запроса',
-        backgroundContent:
-            'Содержимое под оверлеем становится едва различимым, будто скрыто в тумане. Интерфейс остаётся узнаваемым, пока идёт загрузка, но основные действия временно недоступны.',
-        backgroundContentFade:
-            'Оверлей органично сливается с фоном, не оставляя видимой границы по краям. Подбор цвета оверлея под поверхность сохраняет связь контейнера с окружающим интерфейсом.'
+        refresh: 'Обновить'
     },
     default: {
         loading: 'Loading',
@@ -46,13 +36,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         reportProgress: '18.7 MB of 25 MB — 2 min left',
         updating: 'Updating...',
         updates: 'Updates',
-        refresh: 'Refresh',
-        displayDelay: 'Display delay',
-        requestDuration: 'Request duration',
-        backgroundContent:
-            'Content behind the overlay becomes barely visible, as if hidden in fog. The interface remains recognizable while loading continues, but the main actions are temporarily unavailable.',
-        backgroundContentFade:
-            'The overlay blends seamlessly with the background, leaving no visible boundary around its edges. Matching the overlay color to the surface keeps the container connected to the surrounding interface.'
+        refresh: 'Refresh'
     }
 };
 

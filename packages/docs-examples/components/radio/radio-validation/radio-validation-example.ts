@@ -4,7 +4,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqError, KbqHint } from '@koobiq/components/form-field';
 import { KbqRadioModule } from '@koobiq/components/radio';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Radio validation

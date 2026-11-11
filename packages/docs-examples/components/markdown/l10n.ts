@@ -17,9 +17,6 @@ export interface ExampleText {
     lineBreak: string;
     link: string;
     list: string;
-    paragraph: string;
-    quote: string;
-    code: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -118,12 +115,7 @@ $ nmap -sS -O 192.168.1.1
 - Первый пункт
 - Второй пункт
 - Третий пункт
-- Четвёртый пункт`,
-        paragraph: `Атака полным перебором — это криптоаналитическая атака, которая теоретически может быть использована для попытки расшифровать любые зашифрованные данные (кроме данных, зашифрованных абсолютно стойким способом).
-
-Такая атака может применяться, когда невозможно воспользоваться другими слабостями системы шифрования (если они есть), которые облегчили бы задачу.`,
-        quote: `> [Атака полным перебором](#) — это криптоаналитическая атака, которая теоретически может быть использована для попытки расшифровать любые зашифрованные данные (кроме данных, зашифрованных абсолютно стойким способом). Такая атака может применяться, когда невозможно воспользоваться другими слабостями системы шифрования (если они есть), которые облегчили бы задачу.`,
-        code: 'Используйте функцию `bypassSecurityTrustHtml()`'
+- Четвёртый пункт`
     },
     default: {
         overview: `# Heading 1
@@ -220,12 +212,7 @@ A [\`brute-force\` attack](#) is a cryptanalytic attack that can, in theory, be 
 - First item
 - Second item
 - Third item
-- Fourth item`,
-        paragraph: `A brute-force attack is a cryptanalytic attack that can, in theory, be used to attempt to decrypt any encrypted data (except for data encrypted in an information-theoretically secure manner).
-
-Such an attack might be used when it is not possible to take advantage of other weaknesses in an encryption system (if any exist) that would make the task easier.`,
-        quote: `> A [brute-force attack](#) is a cryptanalytic attack that can, in theory, be used to attempt to decrypt any encrypted data (except for data encrypted in an information-theoretically secure manner). Such an attack might be used when it is not possible to take advantage of other weaknesses in an encryption system (if any exist) that would make the task easier.`,
-        code: 'Use the `bypassSecurityTrustHtml()` function'
+- Fourth item`
     }
 };
 

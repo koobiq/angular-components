@@ -13,7 +13,7 @@ import { KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/fi
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { Observable } from 'rxjs';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 const MAX_LINE_COUNT = 100;
 

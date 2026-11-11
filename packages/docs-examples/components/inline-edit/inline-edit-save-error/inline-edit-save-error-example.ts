@@ -14,7 +14,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { Observable, of, switchMap, throwError, timer } from 'rxjs';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 const TAKEN_NAMES = ['Admins', 'Support'];
 

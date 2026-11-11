@@ -16,10 +16,6 @@ export interface ExampleText {
     share: string;
     page: string;
     description: string;
-    status: string;
-    additionalInformation: string;
-    badge: string;
-    pageHeader: string;
     dashboards: string;
 }
 
@@ -31,10 +27,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         share: 'Поделиться',
         page: 'Страница',
         description: 'Описание',
-        status: 'Статус',
-        additionalInformation: 'Дополнительная информация',
-        badge: 'Бейдж',
-        pageHeader: 'Заголовок страницы',
         dashboards: 'Дашборды'
     },
     default: {
@@ -44,10 +36,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         share: 'Share',
         page: 'Page',
         description: 'Description',
-        status: 'Status',
-        additionalInformation: 'Additional Information',
-        badge: 'Badge',
-        pageHeader: 'Page Header',
         dashboards: 'Dashboards'
     }
 };

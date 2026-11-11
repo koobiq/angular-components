@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqSkeletonTabs } from '@koobiq/components/skeleton';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Skeleton tabs preset

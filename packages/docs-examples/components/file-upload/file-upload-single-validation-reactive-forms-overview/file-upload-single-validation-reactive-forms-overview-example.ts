@@ -4,7 +4,7 @@ import { FileValidators } from '@koobiq/components/core';
 import { KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 const MAX_FILE_SIZE = 5 * 2 ** 20;
 

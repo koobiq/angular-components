@@ -5,7 +5,7 @@ import { KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { take } from 'rxjs/operators';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Toast actions

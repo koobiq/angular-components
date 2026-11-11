@@ -5,7 +5,7 @@ import { KbqForm, KbqFormElement } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 const delayBeforeShowError = 3000;
 

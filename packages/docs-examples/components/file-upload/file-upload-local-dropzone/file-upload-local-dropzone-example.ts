@@ -4,7 +4,7 @@ import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqLocalDropzone, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSidebar, KbqSidebarClosed, KbqSidebarOpened, SidebarPositions } from '@koobiq/components/sidebar';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title File-upload local dropzone

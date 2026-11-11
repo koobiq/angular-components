@@ -1,0 +1,49 @@
+import { Signal } from '@angular/core';
+import { injectLocalizedText } from '../l10n';
+
+/** Text of the toast-actions-overview example. */
+export interface ExampleText {
+    mailServersWindows: string;
+    restore: string;
+    view: string;
+    reject: string;
+    action: (index: number) => string;
+    secondaryAction: (index: number) => string;
+    twoActions: string;
+    manyActions: string;
+    updateAvailableComponents: string;
+    title: string;
+    subtitleDetails: string;
+}
+
+const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+    'ru-RU': {
+        mailServersWindows: 'Почтовые серверы Windows',
+        restore: 'Восстановить',
+        view: 'Посмотреть',
+        reject: 'Отклонить',
+        action: (index) => `Действие ${index}`,
+        secondaryAction: (index) => `Второстепенное действие ${index}`,
+        twoActions: 'Два действия',
+        manyActions: 'Много действий',
+        updateAvailableComponents: 'Доступно обновление компонентов',
+        title: 'Заголовок',
+        subtitleDetails: 'Подзаголовок, подробности'
+    },
+    default: {
+        mailServersWindows: 'Windows mail servers',
+        restore: 'Restore',
+        view: 'View',
+        reject: 'Reject',
+        action: (index) => `Action ${index}`,
+        secondaryAction: (index) => `Secondary action ${index}`,
+        twoActions: 'Two actions',
+        manyActions: 'Many actions',
+        updateAvailableComponents: 'Component update available',
+        title: 'Title',
+        subtitleDetails: 'Subtitle, details'
+    }
+};
+
+/** Text of the example in the active locale. */
+export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

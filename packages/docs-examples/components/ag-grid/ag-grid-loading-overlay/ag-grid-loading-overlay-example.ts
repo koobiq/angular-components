@@ -15,7 +15,7 @@ import {
     IGetRowsParams,
     ModuleRegistry
 } from 'ag-grid-community';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

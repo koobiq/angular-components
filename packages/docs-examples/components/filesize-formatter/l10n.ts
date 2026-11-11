@@ -17,11 +17,6 @@ export interface ExampleText {
     base10: string;
     base2: string;
     siStandard: string;
-    iec: string;
-    default10: string;
-    file: string;
-    size: string;
-    fileN: (index: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -32,12 +27,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         base: 'Основание',
         base10: 'Основание 10',
         base2: 'Основание 2',
-        siStandard: 'байт = 1000 байт (стандарт SI)',
-        iec: 'байт = 1024 байт (IEC)',
-        default10: 'По умолчанию (10)',
-        file: 'Файл',
-        size: 'Размер',
-        fileN: (index) => `Файл ${index}`
+        siStandard: 'байт = 1000 байт (стандарт SI)'
     },
     default: {
         sizeInBits: 'Size in bits',
@@ -46,12 +36,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         base: 'Base',
         base10: 'Base 10',
         base2: 'Base 2',
-        siStandard: 'bytes = 1000 bytes (SI standard)',
-        iec: 'bytes = 1024 bytes (IEC)',
-        default10: 'Default (10)',
-        file: 'File',
-        size: 'Size',
-        fileN: (index) => `File ${index}`
+        siStandard: 'bytes = 1000 bytes (SI standard)'
     }
 };
 
