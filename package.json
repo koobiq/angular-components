@@ -32,7 +32,7 @@
         "@fontsource/jetbrains-mono": "^5.3.0",
         "@koobiq/ag-grid-angular-theme": "^34.7.0",
         "@koobiq/date-adapter": "^3.5.1",
-        "@koobiq/date-formatter": "^3.5.1",
+        "@koobiq/date-formatter": "^3.7.0",
         "@koobiq/icons": "^12.5.0",
         "@koobiq/visuals": "^12.5.0",
         "@maskito/angular": "^5.1.0",
