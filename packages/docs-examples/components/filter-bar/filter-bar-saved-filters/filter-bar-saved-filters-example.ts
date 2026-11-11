@@ -14,7 +14,7 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { injectLocalizedText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 interface ExampleFilter extends KbqFilter {
     id?: number;
@@ -89,40 +89,11 @@ export class FilterBarSavedFiltersExample {
     readonly toastErrorTitleTemplate = viewChild.required<TemplateRef<any>>('toastErrorTitleTemplate');
 
     /** Text the example owns: it has no counterpart in the library's locale data. */
-    protected readonly text = injectLocalizedText({
-        'ru-RU': {
-            search: 'Поиск',
-            retry: 'Повторить',
-            deleteError: 'Не удалось удалить фильтр: ',
-            saveError: (name: string) => `Не удалось сохранить фильтр: ${name}`
-        },
-        default: {
-            search: 'Search',
-            retry: 'Retry',
-            deleteError: 'Could not delete the filter: ',
-            saveError: (name: string) => `Could not save the filter: ${name}`
-        }
-    });
-
-    /** Translations of the period labels. The period objects below are created once and stay stable. */
-    private readonly periodText = injectLocalizedText({
-        'ru-RU': {
-            'filters.last24h': 'Последние 24 часа',
-            'filters.last7days': 'Последние 7 дней',
-            'filters.last30days': 'Последние 30 дней',
-            'filters.lastYear': 'Последний год'
-        },
-        default: {
-            'filters.last24h': 'Last 24 hours',
-            'filters.last7days': 'Last 7 days',
-            'filters.last30days': 'Last 30 days',
-            'filters.lastYear': 'Last year'
-        }
-    });
+    protected readonly text = injectExampleText();
 
     /** Resolves a period `nameKey`; the `name` stays the stable English fallback. */
     protected readonly nameResolver: KbqFilterBarNameResolver = ({ key, fallback }) =>
-        this.periodText()[key] ?? fallback;
+        this.text().periods[key] ?? fallback;
 
     /** Stable periods; the saved-filter data below is never rebuilt for a locale change. */
     private readonly period = (nameKey: string, name: string, start: Record<string, number>): ExamplePeriod => ({

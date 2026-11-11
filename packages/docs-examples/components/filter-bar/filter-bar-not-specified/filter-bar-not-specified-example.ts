@@ -6,7 +6,7 @@ import {
     KbqPipeTypes,
     KbqSelectValue
 } from '@koobiq/components/filter-bar';
-import { injectLocalizedText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 const ATTACK_TYPES: KbqSelectValue[] = [
     'Adversary-in-the-Middle',
@@ -50,10 +50,7 @@ const ATTACK_TYPES: KbqSelectValue[] = [
 })
 export class FilterBarNotSpecifiedExample {
     /** Text the example owns; the option is worded to agree with the name of the filter. */
-    protected readonly text = injectLocalizedText({
-        'ru-RU': { name: 'Тип атаки', notSpecified: 'Не указан' },
-        default: { name: 'Attack Type', notSpecified: 'Not specified' }
-    });
+    protected readonly text = injectExampleText();
 
     /** Objects whose attack type is not set: the first option of the list. */
     private readonly notSpecified = computed<KbqSelectValue>(() => ({

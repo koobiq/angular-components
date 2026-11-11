@@ -11,7 +11,7 @@ import {
     KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
-import { injectLocalizedPeriods, injectLocalizedText } from '../l10n';
+import { injectExampleText, injectLocalizedPeriods } from '../l10n';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
 const createSearchPipe = (name: string): KbqPipe => ({
@@ -62,10 +62,7 @@ export class FilterBarUniqPipesExample {
     protected readonly periods = injectLocalizedPeriods();
 
     /** Text the example owns: it has no counterpart in the library's locale data. */
-    protected readonly text = injectLocalizedText({
-        'ru-RU': { search: 'Поиск' },
-        default: { search: 'Search' }
-    });
+    protected readonly text = injectExampleText();
 
     // Everything below is derived from the period labels, so it is rebuilt whenever the locale changes:
     // `*kbqPipe` builds a pipe component once from the object it is given and ignores later changes to

@@ -10,7 +10,7 @@ import {
     KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
-import { injectLocalizedText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 interface AgentStateNode extends Omit<KbqTreeSelectNode, 'children'> {
     children: AgentStateNode[] | null;
@@ -76,20 +76,7 @@ interface AgentStateValue extends KbqSelectValue {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarValueTemplateExample {
-    private readonly text = injectLocalizedText({
-        'ru-RU': {
-            installed: 'Установлен',
-            error: 'Ошибка',
-            incompatible: 'Операционная система активного узла несовместима с текущей версией агента',
-            unknown: 'Ошибки неопределенного характера'
-        },
-        default: {
-            installed: 'Installed',
-            error: 'Error',
-            incompatible: 'The active node operating system is incompatible with the current agent version',
-            unknown: 'Unspecified errors'
-        }
-    });
+    private readonly text = injectExampleText();
 
     private readonly values = computed<AgentStateNode[]>(() => {
         const text = this.text();

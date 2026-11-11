@@ -19,7 +19,8 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
-import { injectLocalizedPeriods, injectLocalizedText } from '../l10n';
+import { injectLocalizedPeriods } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
 const createSearchPipe = (name: string): KbqPipe => ({
@@ -111,24 +112,7 @@ export class FilterBarCompleteFunctionsExample {
     protected readonly periods = injectLocalizedPeriods();
 
     /** Text the example owns: it has no counterpart in the library's locale data. */
-    protected readonly text = injectLocalizedText({
-        'ru-RU': {
-            search: 'Поиск',
-            undefinedOption: 'Не определен',
-            legitimateAction: 'Легитимное действие',
-            changeAlert: 'Нужно что то изменить в фильтре',
-            resetAlert: 'Нужно сбросить изменения в фильтре',
-            deleteAlert: 'Нужно удалить фильтр'
-        },
-        default: {
-            search: 'Search',
-            undefinedOption: 'Undefined',
-            legitimateAction: 'Legitimate action',
-            changeAlert: 'Something has to change in the filter',
-            resetAlert: 'The filter changes have to be reset',
-            deleteAlert: 'The filter has to be deleted'
-        }
-    });
+    protected readonly text = injectExampleText();
 
     // Read as a signal, not resolved in `ngAfterViewInit`: the templates below are rebuilt whenever the
     // locale changes, so they have to be able to pick the query up on any pass, not only the first.
