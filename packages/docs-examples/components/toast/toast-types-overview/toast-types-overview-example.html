@@ -11,7 +11,7 @@
     <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: text().changePassword }" />
 </ng-template>
 <ng-template #toastActionError let-toast>
-    <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: 'Повторить' }" />
+    <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: text().retry }" />
 </ng-template>
 
 <div style="gap: 16px" class="layout-row">

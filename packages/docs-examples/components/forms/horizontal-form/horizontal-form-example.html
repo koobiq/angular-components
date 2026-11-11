@@ -42,7 +42,7 @@
 
             <div class="kbq-form__row">
                 <label class="kbq-form__label flex-20">
-                    Длинное название поля в несколько строк с возможным переносом на новую строку
+                    {{ text().longLabel }}
                 </label>
                 <kbq-form-field class="kbq-form__control">
                     <input kbqInput name="input" [(ngModel)]="value" />

@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Popover height

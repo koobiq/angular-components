@@ -5,6 +5,7 @@ import { injectLocalizedText } from '../l10n';
 export interface ExampleText {
     close: string;
     openAnother: string;
+    open: string;
     position: string;
     templateContent: string;
     templateBody: string;
@@ -14,6 +15,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
         close: 'Закрыть',
         openAnother: 'Открыть другую панель',
+        open: 'Открыть',
         position: 'Позиция',
         templateContent: 'Содержимое шаблона панели',
         templateBody: 'Тело шаблона панели'
@@ -21,6 +23,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     default: {
         close: 'Close',
         openAnother: 'Open another sidepanel',
+        open: 'Open',
         position: 'Position',
         templateContent: 'Sidepanel Template Content',
         templateBody: 'Sidepanel Template Body'

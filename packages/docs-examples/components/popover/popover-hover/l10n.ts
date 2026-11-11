@@ -7,6 +7,7 @@ export interface ExampleText {
     save: string;
     cancel: string;
     placeholder: string;
+    open: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -14,13 +15,15 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         wonder: 'Интересно, что это такое?',
         save: 'Сохранить',
         cancel: 'Отмена',
-        placeholder: 'Интересная мысль'
+        placeholder: 'Интересная мысль',
+        open: 'Открыть поповер'
     },
     default: {
         wonder: 'I wonder what this?',
         save: 'Save',
         cancel: 'Cancel',
-        placeholder: 'Interesting thought'
+        placeholder: 'Interesting thought',
+        open: 'Open popover'
     }
 };
 

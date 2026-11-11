@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title popover-scroll
@@ -18,7 +18,7 @@ import { injectExampleText } from '../l10n';
         <ng-template #customContent>
             <div class="layout-margin-bottom-s">{{ text().wonder }}</div>
             <kbq-form-field>
-                <input kbqInput placeholder="Интересная мысль" />
+                <input kbqInput [placeholder]="text().placeholder" />
             </kbq-form-field>
         </ng-template>
 
@@ -39,7 +39,7 @@ import { injectExampleText } from '../l10n';
                 [kbqPopoverFooter]="customFooter"
                 (click)="activePopover = kbqNoClosePopover"
             >
-                Поповер не закрывается при прокрутке
+                {{ text().noCloseOnScroll }}
             </button>
             <button
                 #kbqClosePopover="kbqPopover"
@@ -51,7 +51,7 @@ import { injectExampleText } from '../l10n';
                 [kbqPopoverFooter]="customFooter"
                 (click)="activePopover = kbqClosePopover"
             >
-                Закрывается при прокрутке
+                {{ text().closeOnScroll }}
             </button>
         </div>
     `,

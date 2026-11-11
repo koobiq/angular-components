@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Popover common
@@ -14,7 +14,7 @@ import { injectExampleText } from '../l10n';
         <ng-template #customContent>
             <div class="layout-margin-bottom-s">{{ text().wonder }}</div>
             <kbq-form-field>
-                <input kbqInput placeholder="Интересная мысль" />
+                <input kbqInput [placeholder]="text().placeholder" />
             </kbq-form-field>
         </ng-template>
 
@@ -33,7 +33,7 @@ import { injectExampleText } from '../l10n';
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
         >
-            Открыть поповер
+            {{ text().open }}
         </button>
     `,
     styles: `

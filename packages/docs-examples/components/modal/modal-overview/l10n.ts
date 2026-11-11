@@ -14,6 +14,8 @@ export interface ExampleText {
     allChangesSaved: string;
     deleteCustomer: string;
     delete: string;
+    ok: string;
+    deleteContent: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -28,7 +30,10 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         changesSaved: 'Изменения сохранены',
         allChangesSaved: 'Все изменения сохранены!',
         deleteCustomer: 'Удалить клиента',
-        delete: 'Удалить'
+        delete: 'Удалить',
+        ok: 'ОК',
+        deleteContent:
+            'Задачи, политики и метки, связанные с заказчиком, также будут удалены. Удалить выбранного заказчика?'
     },
     default: {
         openConfirmModal: 'Open Confirm Modal',
@@ -41,7 +46,10 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         changesSaved: 'Changes saved',
         allChangesSaved: 'All changes are saved!',
         deleteCustomer: 'Delete customer',
-        delete: 'Delete'
+        delete: 'Delete',
+        ok: 'OK',
+        deleteContent:
+            'The tasks, policies and tags associated with the customer will be deleted too. Delete selected customer?'
     }
 };
 

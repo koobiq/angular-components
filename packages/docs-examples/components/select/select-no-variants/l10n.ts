@@ -4,14 +4,17 @@ import { injectLocalizedText } from '../l10n';
 /** Text of the select-no-variants example. */
 export interface ExampleText {
     emptySelect: string;
+    noOptions: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
-        emptySelect: 'Пустой селект'
+        emptySelect: 'Пустой селект',
+        noOptions: 'Нет вариантов выбора'
     },
     default: {
-        emptySelect: 'Empty select'
+        emptySelect: 'Empty select',
+        noOptions: 'No options to select'
     }
 };
 

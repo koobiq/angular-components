@@ -51,7 +51,7 @@ export class ModalOverviewExample {
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
             kbqContent: this.text().allChangesSaved,
-            kbqOkText: 'ОК',
+            kbqOkText: this.text().ok,
             kbqCancelText: this.text().cancel,
             kbqOkClick: () => console.log('OK'),
             kbqCancelClick: () => console.log('Cancel')
@@ -61,8 +61,7 @@ export class ModalOverviewExample {
     showDeleteModal(): void {
         this.modalService.delete({
             kbqAriaLabel: this.text().deleteCustomer,
-            kbqContent:
-                'The tasks, policies and tags associated with the customer will be deleted too. Delete selected customer?',
+            kbqContent: this.text().deleteContent,
             kbqOkText: this.text().delete,
             kbqCancelText: this.text().cancel,
             kbqWidth: '480px',

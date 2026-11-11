@@ -41,7 +41,7 @@ export class ModalMultipleExample {
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
             kbqContent: this.text().allChangesSaved,
-            kbqOkText: 'ОК',
+            kbqOkText: this.text().ok,
             kbqCancelText: this.text().cancel,
             kbqOkClick: () => console.log('OK'),
             kbqCancelClick: () => console.log('Cancel')

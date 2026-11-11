@@ -34,7 +34,7 @@ import { injectExampleText } from './l10n';
             [kbqPopoverFooter]="customFooter"
             [kbqTrigger]="'hover'"
         >
-            Открыть поповер
+            {{ text().open }}
         </button>
     `,
     styles: `

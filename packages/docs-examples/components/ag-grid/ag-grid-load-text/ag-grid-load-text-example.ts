@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
-import { KbqLocaleService } from '@koobiq/components/core';
 import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -10,7 +9,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -31,11 +30,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridLoadTextExampleLoadingText implements ICellRendererAngularComp {
-    private readonly localeService = inject(KbqLocaleService);
+    protected readonly text = injectExampleText();
 
-    protected readonly label = computed(() =>
-        this.localeService.localeId() === 'ru-RU' ? 'Загрузка...' : 'Loading...'
-    );
+    protected readonly label = computed(() => this.text().loading);
 
     agInit(): void {}
 

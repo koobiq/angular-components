@@ -11,7 +11,7 @@
         <input
             #tagInput
             autocomplete="off"
-            placeholder="New tag"
+            [placeholder]="text().newTag"
             [distinct]="true"
             [formControl]="control"
             [kbqAutocomplete]="autocomplete"
@@ -27,10 +27,12 @@
     </kbq-tag-list>
     <kbq-autocomplete #autocomplete (optionSelected)="onSelect($event)">
         @if (canCreate) {
-            <kbq-option [value]="{ new: true, value: tagInput.value }">Создать: {{ tagInput.value }}</kbq-option>
+            <kbq-option [value]="{ new: true, value: tagInput.value }">
+                {{ text().createTag }}{{ tagInput.value }}
+            </kbq-option>
         }
         @if (hasDuplicates) {
-            <kbq-option [disabled]="true">Ничего не найдено</kbq-option>
+            <kbq-option [disabled]="true">{{ text().notFound }}</kbq-option>
         }
         @for (tag of filteredTags | async; track $index) {
             <kbq-option [value]="tag">

@@ -14,6 +14,10 @@ export interface ExampleText {
     updateAvailableComponents: string;
     title: string;
     subtitleDetails: string;
+    captionDeleted: string;
+    more: string;
+    singleAction: string;
+    policy: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -28,7 +32,11 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         manyActions: 'Много действий',
         updateAvailableComponents: 'Доступно обновление компонентов',
         title: 'Заголовок',
-        subtitleDetails: 'Подзаголовок, подробности'
+        subtitleDetails: 'Подзаголовок, подробности',
+        captionDeleted: 'удалена',
+        more: 'Еще',
+        singleAction: 'Одно действие',
+        policy: 'Политика'
     },
     default: {
         mailServersWindows: 'Windows mail servers',
@@ -41,7 +49,11 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         manyActions: 'Many actions',
         updateAvailableComponents: 'Component update available',
         title: 'Title',
-        subtitleDetails: 'Subtitle, details'
+        subtitleDetails: 'Subtitle, details',
+        captionDeleted: 'deleted',
+        more: 'More',
+        singleAction: 'Single action',
+        policy: 'Policy'
     }
 };
 
