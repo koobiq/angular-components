@@ -478,6 +478,42 @@ describe('KbqPipeAdd', () => {
 
             expect(filterBar.filter()!.pipes.length).toBe(1);
         });
+
+        it('should clone a signal-bearing filterTemplate without dropping its signal names', async () => {
+            // This suite replaces `structuredClone` with a JSON round trip; put the real one back here so a
+            // function value would raise `DataCloneError` instead of being dropped silently.
+            const stubbedStructuredClone = window.structuredClone;
+
+            window.structuredClone = originalStructuredClone;
+
+            try {
+                const pipeName = signal('Статус');
+                const templateValue = { id: 'active', name: pipeName, value: 'active' };
+
+                fixture.componentInstance.filterTemplate = createFilter([
+                    createPipe({ id: 'Existing', name: pipeName, type: KbqPipeTypes.Text, value: templateValue })
+                ]);
+                fixture.detectChanges();
+
+                const filterBar = getFilterBar();
+
+                getPipeAdd().select().open();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                (document.querySelectorAll('.kbq-option')[0] as HTMLElement).click();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                expect(filterBar.filter()!.name).toBe('TestFilter');
+                expect(filterBar.filter()!.pipes[0].name).toBe(pipeName);
+                expect((filterBar.filter()!.pipes[0].value as { name: unknown }).name).toBe(pipeName);
+                // The input template stays untouched.
+                expect(fixture.componentInstance.filterTemplate.pipes[0].name).toBe(pipeName);
+            } finally {
+                window.structuredClone = stubbedStructuredClone;
+            }
+        });
     });
 
     describe('keyboard (Enter/Space)', () => {

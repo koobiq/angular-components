@@ -29,6 +29,7 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { filter } from 'rxjs/operators';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilterBarButton } from './filter-bar-button';
+import { rehydrateFilterBarFilter } from './filter-bar-value';
 import {
     KBQ_FILTERS,
     KbqFilter,
@@ -182,12 +183,20 @@ export class KbqFilters implements OnInit {
     }
 
     selectFilter(filter: KbqFilter) {
+        // Saved filters come back from the application's storage as plain data, so their built-in values
+        // carry the label of the locale they were saved in. Rebuild those values from the current
+        // templates by stable id — a signal-backed option/preset then follows the active translation, and
+        // a value the templates no longer contain keeps its persisted business value.
+        const rehydrated = rehydrateFilterBarFilter(filter, untracked(this.filterBar.pipeTemplates));
+
         // Isolate the active filter from the saved source with a shallow structural copy (new filter object
-        // + new pipes array + per-pipe shallow copy) instead of a deep `structuredClone`. Every pipe writes
-        // its `value` by reassignment (never in-place mutation), so this fully isolates subsequent edits
-        // while preserving any non-cloneable payload inside `value`. `structuredClone` (P2-20) is reserved
-        // for the explicit save/restore boundary (`KbqFilterBar.saveFilterState`/`restoreFilterState`).
-        this.filterBar.internalFilterChanges.next({ ...filter, pipes: filter.pipes.map((pipe) => ({ ...pipe })) });
+        // + new pipes array + per-pipe shallow copy) instead of a deep clone. Every pipe writes its `value`
+        // by reassignment (never in-place mutation), so this fully isolates subsequent edits while
+        // preserving any non-cloneable payload inside `value`.
+        this.filterBar.internalFilterChanges.next({
+            ...rehydrated,
+            pipes: rehydrated.pipes.map((pipe) => ({ ...pipe }))
+        });
 
         this.onSelectFilter.emit(filter);
     }

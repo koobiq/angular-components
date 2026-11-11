@@ -1,19 +1,32 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, DebugElement, effect, ElementRef, inject, viewChild } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    DebugElement,
+    effect,
+    ElementRef,
+    inject,
+    signal,
+    Signal,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButton } from '@koobiq/components/button';
 import { enUSLocaleData, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import {
     KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
+    KbqDateTimeValue,
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
+    kbqFilterBarToSerializableFilter,
     KbqFilters,
     KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
-    KbqSaveFilterStatuses
+    KbqSaveFilterStatuses,
+    KbqSelectValue
 } from '@koobiq/components/filter-bar';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { setInputModality } from './pipes/pipe-states.spec-helper';
@@ -104,6 +117,21 @@ class EffectHost {
     }
 }
 
+/** A bar with a saved-filter list and no rendered pipes, so a saved filter can be selected for its data. */
+@Component({
+    imports: [KbqFilterBarModule],
+    template: `
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter">
+            <kbq-filters [filters]="filters" />
+        </kbq-filter-bar>
+    `
+})
+class SavedFiltersHost {
+    activeFilter: KbqFilter | null = null;
+    filters: KbqFilter[] = [];
+    pipeTemplates: KbqPipeTemplate[] = [];
+}
+
 describe('KbqFilters', () => {
     let fixture: ComponentFixture<TestComponent>;
     let filterBarDebugElement: DebugElement;
@@ -121,7 +149,7 @@ describe('KbqFilters', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqFilterBarModule, TestComponent]
+            imports: [KbqFilterBarModule, TestComponent, SavedFiltersHost]
         }).compileComponents();
     });
 
@@ -307,6 +335,153 @@ describe('KbqFilters', () => {
 
             expect(filter.pipes[0].name).toBe('original');
             expect(filter.pipes[0].value).toBe(valueFn);
+        });
+    });
+
+    describe('selectFilter saved-filter rehydration', () => {
+        const STATUS_PIPE_ID = 'Status';
+        const PERIOD_PIPE_ID = 'Period';
+
+        const createSelectTemplate = (
+            optionName: Signal<string>,
+            type: KbqPipeTypes = KbqPipeTypes.Select
+        ): KbqPipeTemplate => ({
+            name: 'Status',
+            id: STATUS_PIPE_ID,
+            type,
+            values: [{ id: 'active', name: optionName, value: 'active' }],
+            cleanable: false,
+            removable: false,
+            disabled: false
+        });
+
+        const createDateTemplate = (presetName: Signal<string>): KbqPipeTemplate => ({
+            name: 'Period',
+            id: PERIOD_PIPE_ID,
+            type: KbqPipeTypes.Date,
+            values: [{ id: 'last7', name: presetName, start: { days: -7 }, end: null }],
+            cleanable: false,
+            removable: false,
+            disabled: false
+        });
+
+        let savedHost: ComponentFixture<SavedFiltersHost>;
+
+        const createHost = (templates: KbqPipeTemplate[], filters: KbqFilter[] = []): void => {
+            savedHost = TestBed.createComponent(SavedFiltersHost);
+            savedHost.componentInstance.pipeTemplates = templates;
+            savedHost.componentInstance.filters = filters;
+            savedHost.detectChanges();
+        };
+
+        const getSavedBar = (): KbqFilterBar =>
+            savedHost.debugElement.query(By.directive(KbqFilterBar)).componentInstance;
+
+        const getSavedFilters = (): KbqFilters =>
+            savedHost.debugElement.query(By.directive(KbqFilters)).componentInstance;
+
+        it('rehydrates a round-tripped select value with the current template label', () => {
+            const optionName = signal('Активен');
+            const liveFilter = createFilter(
+                [
+                    createPipe({
+                        id: STATUS_PIPE_ID,
+                        name: optionName,
+                        type: KbqPipeTypes.Select,
+                        value: { id: 'active', name: optionName, value: 'active' }
+                    })
+                ],
+                { name: 'Saved', saved: true }
+            );
+            const saved = kbqFilterBarToSerializableFilter(liveFilter);
+
+            createHost([createSelectTemplate(optionName)], [saved]);
+
+            // The "locale" changes after the filter was stored: only the template knows the current label.
+            optionName.set('Active');
+            savedHost.detectChanges();
+
+            getSavedFilters().selectFilter(saved);
+            savedHost.detectChanges();
+
+            const value = getSavedBar().filter()!.pipes[0].value as KbqSelectValue;
+
+            expect(value.name).toBe(optionName);
+            expect(value.value).toBe('active');
+            expect(getSavedBar().filter()!.changed).toBe(false);
+            // The application's stored copy stays plain data.
+            expect((saved.pipes[0].value as KbqSelectValue).name).toBe('Активен');
+        });
+
+        it('keeps a persisted business value the current templates have no option for', () => {
+            const savedValue = { id: 'archived', name: 'Archived', value: 'archived' };
+            const saved = createFilter(
+                [createPipe({ id: STATUS_PIPE_ID, name: 'Status', type: KbqPipeTypes.Select, value: savedValue })],
+                { name: 'Saved', saved: true }
+            );
+
+            createHost([createSelectTemplate(signal('Active'))], [saved]);
+
+            getSavedFilters().selectFilter(saved);
+
+            expect(getSavedBar().filter()!.pipes[0].value).toBe(savedValue);
+            expect(saved.pipes[0].value).toBe(savedValue);
+        });
+
+        it('rehydrates a multiselect value entry by entry', () => {
+            const optionName = signal('Active');
+            const matched = { id: 'active', name: 'Активен', value: 'active' };
+            const unmatched = { id: 'archived', name: 'Archived', value: 'archived' };
+            const saved = createFilter(
+                [
+                    createPipe({
+                        id: STATUS_PIPE_ID,
+                        name: 'Status',
+                        type: KbqPipeTypes.MultiSelect,
+                        value: [matched, unmatched]
+                    })
+                ],
+                { name: 'Saved', saved: true }
+            );
+
+            createHost([createSelectTemplate(optionName, KbqPipeTypes.MultiSelect)], [saved]);
+
+            getSavedFilters().selectFilter(saved);
+
+            const value = getSavedBar().filter()!.pipes[0].value as KbqSelectValue[];
+
+            expect(value[0].name).toBe(optionName);
+            expect(value[1]).toBe(unmatched);
+        });
+
+        it('rehydrates a date preset and passes a custom range through', () => {
+            const presetName = signal('Последние 7 дней');
+            const saved = createFilter(
+                [
+                    createPipe({
+                        id: PERIOD_PIPE_ID,
+                        name: 'Period',
+                        type: KbqPipeTypes.Date,
+                        value: { id: 'last7', name: 'Last 7 days', start: { days: -7 }, end: null }
+                    })
+                ],
+                { name: 'Saved', saved: true }
+            );
+
+            createHost([createDateTemplate(presetName)], [saved]);
+
+            getSavedFilters().selectFilter(saved);
+
+            expect((getSavedBar().filter()!.pipes[0].value as KbqDateTimeValue).name).toBe(presetName);
+
+            const range = { start: '2025-01-01T00:00:00.000Z', end: '2025-01-02T00:00:00.000Z' };
+            const rangeFilter = createFilter([
+                createPipe({ id: PERIOD_PIPE_ID, name: 'Period', type: KbqPipeTypes.Date, value: range })
+            ]);
+
+            getSavedFilters().selectFilter(rangeFilter);
+
+            expect(getSavedBar().filter()!.pipes[0].value).toEqual(range);
         });
     });
 

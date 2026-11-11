@@ -2,6 +2,7 @@ export * from './filter-bar';
 export * from './filter-bar-button';
 export * from './filter-bar-name';
 export * from './filter-bar-pipes';
+export { kbqFilterBarToSerializableFilter } from './filter-bar-value';
 export * from './filter-bar.module';
 export * from './filter-bar.types';
 export * from './filter-refresher';

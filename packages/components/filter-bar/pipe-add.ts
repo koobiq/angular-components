@@ -16,6 +16,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { kbqResolveFilterBarName } from './filter-bar-name';
+import { cloneFilterBarFilter } from './filter-bar-value';
 import { KBQ_FILTER_BAR_HOST, KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
 import { getId } from './pipes/base-pipe';
 
@@ -118,7 +119,7 @@ export class KbqPipeAdd {
         } else {
             option.select();
 
-            const current = this.filterBar.filter() ?? structuredClone(this.filterTemplate());
+            const current = this.filterBar.filter() ?? cloneFilterBarFilter(this.filterTemplate())!;
 
             // Build a new filter reference (immutable add) so the `filter` model reacts; keep `pipes` on a
             // new-reference-on-change model instead of an in-place push. `model.set(...)` auto-emits

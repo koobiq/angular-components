@@ -1,4 +1,14 @@
-import { ChangeDetectorRef, Component, computed, DebugElement, effect, inject, viewChild } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    computed,
+    DebugElement,
+    effect,
+    inject,
+    signal,
+    Signal,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -11,15 +21,19 @@ import {
 import {
     KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
     KBQ_FILTER_BAR_LOCALE_CONFIGURATION,
+    KbqDateTimeValue,
     KbqFilter,
     KbqFilterBar,
     kbqFilterBarLocaleConfigurationProvider,
     KbqFilterBarModule,
+    kbqFilterBarToSerializableFilter,
     KbqPipe,
     KbqPipeTemplate,
-    KbqPipeTypes
+    KbqPipeTypes,
+    KbqSelectValue
 } from '@koobiq/components/filter-bar';
 import { KbqSearchExpandable, KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
+import { DateTime } from 'luxon';
 import { BehaviorSubject } from 'rxjs';
 
 const PIPE_TEMPLATE_ID = 'TestText';
@@ -849,6 +863,366 @@ describe('KbqFilterBar', () => {
     });
 });
 
+const STATUS_PIPE_ID = 'Status';
+const PERIOD_PIPE_ID = 'Period';
+
+const createSelectTemplate = (
+    optionName: Signal<string>,
+    overrides: Partial<KbqPipeTemplate> = {}
+): KbqPipeTemplate => ({
+    name: 'Status',
+    id: STATUS_PIPE_ID,
+    type: KbqPipeTypes.Select,
+    values: [{ id: 'active', name: optionName, value: 'active' }],
+    cleanable: false,
+    removable: false,
+    disabled: false,
+    ...overrides
+});
+
+const createDateTemplate = (presetName: Signal<string>): KbqPipeTemplate => ({
+    name: 'Period',
+    id: PERIOD_PIPE_ID,
+    type: KbqPipeTypes.Date,
+    values: [{ id: 'last7', name: presetName, start: { days: -7 }, end: null }],
+    cleanable: false,
+    removable: false,
+    disabled: false
+});
+
+describe('kbqFilterBarToSerializableFilter', () => {
+    it('should resolve every signal-backed name without modifying the filter', () => {
+        const pipeName = signal('Статус');
+        const optionName = signal('Активен');
+        const presetName = signal('Последние 7 дней');
+        const filter = createFilter(
+            [
+                createPipe({
+                    id: STATUS_PIPE_ID,
+                    name: pipeName,
+                    type: KbqPipeTypes.Select,
+                    value: { id: 'active', name: optionName, value: 'active' }
+                }),
+                createPipe({
+                    id: PERIOD_PIPE_ID,
+                    name: 'Period',
+                    type: KbqPipeTypes.Date,
+                    value: { id: 'last7', name: presetName, start: { days: -7 }, end: null }
+                })
+            ],
+            { name: 'SavedFilter' }
+        );
+
+        const serializable = kbqFilterBarToSerializableFilter(filter);
+
+        expect(serializable).not.toBe(filter);
+        expect(serializable.name).toBe('SavedFilter');
+        expect(serializable.pipes[0].name).toBe('Статус');
+        expect((serializable.pipes[0].value as KbqSelectValue).name).toBe('Активен');
+        expect((serializable.pipes[1].value as KbqDateTimeValue).name).toBe('Последние 7 дней');
+        // The business payload around the label is kept.
+        expect((serializable.pipes[1].value as KbqDateTimeValue).start).toEqual({ days: -7 });
+
+        // The live filter is untouched, signal references included.
+        expect(filter.pipes[0].name).toBe(pipeName);
+        expect((filter.pipes[0].value as KbqSelectValue).name).toBe(optionName);
+        expect((filter.pipes[1].value as KbqDateTimeValue).name).toBe(presetName);
+    });
+
+    it('should resolve only name signals and keep a business-payload signal by reference', () => {
+        const optionName = signal('Активен');
+        const businessSignal = signal(42);
+        const filter = createFilter([
+            createPipe({
+                id: STATUS_PIPE_ID,
+                name: optionName,
+                type: KbqPipeTypes.Select,
+                value: { id: 'active', name: optionName, value: businessSignal }
+            }),
+            createPipe({ id: 'Counter', name: 'Counter', type: 'custom', value: businessSignal })
+        ]);
+
+        const serializable = kbqFilterBarToSerializableFilter(filter);
+
+        // Labels are resolved to their current strings...
+        expect(serializable.pipes[0].name).toBe('Активен');
+        expect((serializable.pipes[0].value as KbqSelectValue).name).toBe('Активен');
+
+        // ...while a business payload keeps the signal itself instead of being turned into data.
+        expect((serializable.pipes[0].value as { value: unknown }).value).toBe(businessSignal);
+        expect(serializable.pipes[1].value).toBe(businessSignal);
+
+        // The live filter is untouched as well.
+        expect((filter.pipes[0].value as { value: unknown }).value).toBe(businessSignal);
+        expect(filter.pipes[1].value).toBe(businessSignal);
+    });
+
+    it('should leave non-plain configuration such as compareWith and a date limit by reference', () => {
+        const compareWith = (o1: KbqSelectValue | null, o2: KbqSelectValue | null): boolean =>
+            !!o1 && !!o2 && o1.id === o2.id;
+        const minDateTime = DateTime.fromISO('2025-01-01T00:00:00.000Z');
+        const pipe: KbqPipe & { compareWith: typeof compareWith; minDateTime: DateTime } = {
+            ...createPipe({
+                id: PERIOD_PIPE_ID,
+                name: 'Period',
+                type: KbqPipeTypes.Date,
+                value: { id: 'last7', name: 'Last 7 days', start: { days: -7 }, end: null }
+            }),
+            compareWith,
+            minDateTime
+        };
+
+        const serializable = kbqFilterBarToSerializableFilter(createFilter([pipe]));
+
+        // Configuration is not name data: a `compareWith` copied from a template and a date-adapter bound
+        // must survive as the same value, not become a clone, a plain object or a `DataCloneError`.
+        expect((serializable.pipes[0] as unknown as { compareWith: unknown }).compareWith).toBe(compareWith);
+        expect((serializable.pipes[0] as unknown as { minDateTime: unknown }).minDateTime).toBe(minDateTime);
+        expect(() => JSON.stringify(serializable)).not.toThrow();
+        // Such a copy is not cloneable, exactly like the source: only JSON persistence is supported for a
+        // filter carrying a function payload.
+        expect(() => structuredClone(serializable)).toThrow();
+    });
+
+    it('should survive JSON.stringify and structuredClone', () => {
+        const filter = createFilter([
+            createPipe({
+                id: STATUS_PIPE_ID,
+                name: signal('Статус'),
+                type: KbqPipeTypes.Select,
+                value: { id: 'active', name: signal('Активен'), value: 'active' }
+            })
+        ]);
+
+        const serializable = kbqFilterBarToSerializableFilter(filter);
+
+        // A live signal-bearing filter cannot be cloned — that is what the helper exists for.
+        expect(() => structuredClone(filter)).toThrow();
+        expect(() => JSON.stringify(serializable)).not.toThrow();
+
+        const cloned = structuredClone(serializable);
+
+        expect(cloned.pipes[0].name).toBe('Статус');
+        expect(cloned.pipes[0].value).toEqual({ id: 'active', name: 'Активен', value: 'active' });
+    });
+
+    it('should terminate on a cyclic business value and keep the cycle in the copy', () => {
+        const businessValue: Record<string, unknown> = { id: 'node' };
+
+        businessValue['parent'] = businessValue;
+
+        const serializable = kbqFilterBarToSerializableFilter(
+            createFilter([createPipe({ id: 'Custom', name: 'Custom', type: 'custom', value: businessValue })])
+        );
+        const copy = serializable.pipes[0].value as Record<string, unknown>;
+
+        expect(copy).not.toBe(businessValue);
+        expect(copy['id']).toBe('node');
+        expect(copy['parent']).toBe(copy);
+
+        // The copy is plain data around the cycle, so it clones in turn and keeps the shape.
+        const roundTripped = structuredClone(serializable);
+
+        expect((roundTripped.pipes[0].value as Record<string, unknown>)['parent']).toBe(roundTripped.pipes[0].value);
+    });
+
+    it('should copy a payload shared by two pipes once and keep it shared', () => {
+        const shared = { id: 'shared' };
+        const filter = createFilter([
+            createPipe({ id: 'First', name: 'First', type: 'custom', value: shared }),
+            createPipe({ id: 'Second', name: 'Second', type: 'custom', value: shared })
+        ]);
+
+        const serializable = kbqFilterBarToSerializableFilter(filter);
+        const first = serializable.pipes[0].value as Record<string, unknown>;
+
+        expect(first).not.toBe(shared);
+        expect(first).toEqual({ id: 'shared' });
+        expect(serializable.pipes[1].value).toBe(first);
+    });
+});
+
+describe(`${KbqFilterBarModule.name} snapshots with signal-backed values`, () => {
+    @Component({
+        imports: [KbqFilterBarModule],
+        template: `
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter" />
+        `
+    })
+    class SnapshotFilterBar {
+        activeFilter: KbqFilter | null = null;
+        pipeTemplates: KbqPipeTemplate[] = [];
+    }
+
+    let fixture: ComponentFixture<SnapshotFilterBar>;
+    let filterBar: KbqFilterBar;
+
+    const createSelectPipe = (value: unknown): KbqPipe =>
+        createPipe({ id: STATUS_PIPE_ID, name: 'Status', type: KbqPipeTypes.Select, value });
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [KbqFilterBarModule, SnapshotFilterBar] });
+
+        fixture = TestBed.createComponent(SnapshotFilterBar);
+        fixture.detectChanges();
+
+        filterBar = fixture.debugElement.query(By.directive(KbqFilterBar)).componentInstance;
+    });
+
+    it('should keep signal-backed names by reference across save and restore', () => {
+        const pipeName = signal('Статус');
+        const optionName = signal('Активен');
+
+        filterBar.filter.set(
+            createFilter([
+                createPipe({
+                    id: STATUS_PIPE_ID,
+                    name: pipeName,
+                    type: KbqPipeTypes.Select,
+                    value: { id: 'active', name: optionName, value: 'active' }
+                })
+            ])
+        );
+
+        filterBar.saveFilterState();
+        filterBar.filter.set(null);
+        filterBar.restoreFilterState();
+
+        expect(filterBar.filter()!.pipes[0].name).toBe(pipeName);
+        expect((filterBar.filter()!.pipes[0].value as KbqSelectValue).name).toBe(optionName);
+    });
+
+    it('should keep a signal-backed date preset name by reference', () => {
+        const presetName = signal('Последние 7 дней');
+
+        filterBar.filter.set(
+            createFilter([
+                createPipe({
+                    id: PERIOD_PIPE_ID,
+                    name: 'Period',
+                    type: KbqPipeTypes.Date,
+                    value: { id: 'last7', name: presetName, start: { days: -7 }, end: null }
+                })
+            ])
+        );
+
+        filterBar.saveFilterState();
+        filterBar.filter.set(null);
+        filterBar.restoreFilterState();
+
+        expect((filterBar.filter()!.pipes[0].value as KbqDateTimeValue).name).toBe(presetName);
+    });
+
+    it('should keep a business signal by reference across save and restore', () => {
+        const businessSignal = signal(42);
+
+        filterBar.filter.set(
+            createFilter([
+                createSelectPipe({ id: 'active', name: 'Active', value: businessSignal }),
+                createPipe({ id: 'Counter', name: 'Counter', type: 'custom', value: businessSignal })
+            ])
+        );
+
+        expect(() => filterBar.saveFilterState()).not.toThrow();
+
+        filterBar.filter.set(null);
+
+        expect(() => filterBar.restoreFilterState()).not.toThrow();
+
+        const selectValue = filterBar.filter()!.pipes[0].value as KbqSelectValue;
+
+        // A business signal is not a label: it is shared as the signal itself, so its value stays readable.
+        expect(selectValue.value).toBe(businessSignal);
+        expect((selectValue.value as () => number)()).toBe(42);
+        expect(filterBar.filter()!.pipes[1].value).toBe(businessSignal);
+    });
+
+    it('should keep the snapshot restriction for a non-cloneable custom payload', () => {
+        // Clone mode is deliberately unchanged for non-signal functions: a function payload still throws
+        // `DataCloneError`, so a snapshot never silently turns a custom value into data.
+        expect(() => filterBar.saveFilterState(createFilter([createPipe({ value: () => 'custom' })]))).toThrow();
+    });
+
+    it('should keep a non-plain payload shared by two pipes shared across save and restore', () => {
+        const shared = new Date(2026, 10, 11);
+
+        filterBar.filter.set(
+            createFilter([
+                createPipe({ id: 'First', name: 'First', type: 'custom', value: shared }),
+                createPipe({ id: 'Second', name: 'Second', type: 'custom', value: shared })
+            ])
+        );
+
+        filterBar.saveFilterState();
+        filterBar.filter.set(null);
+        filterBar.restoreFilterState();
+
+        const [first, second] = filterBar.filter()!.pipes;
+
+        // One `structuredClone` per source, as a whole-filter clone did before the walk was introduced.
+        expect(first.value).not.toBe(shared);
+        expect(first.value).toEqual(shared);
+        expect(second.value).toBe(first.value);
+    });
+
+    it('should rehydrate a restored select value from the current template by id', () => {
+        const optionName = signal('Активен');
+
+        fixture.componentInstance.pipeTemplates = [createSelectTemplate(optionName)];
+        fixture.detectChanges();
+
+        filterBar.restoreFilterState(
+            createFilter([createSelectPipe({ id: 'active', name: 'Active', value: 'active' })])
+        );
+
+        const value = filterBar.filter()!.pipes[0].value as KbqSelectValue;
+
+        expect(value.name).toBe(optionName);
+        expect(value.value).toBe('active');
+        expect(filterBar.filter()!.changed).toBe(false);
+    });
+
+    it('should pass a custom date range through on restore', () => {
+        const presetName = signal('Последние 7 дней');
+        const range = { start: '2025-01-01T00:00:00.000Z', end: '2025-01-02T00:00:00.000Z' };
+
+        fixture.componentInstance.pipeTemplates = [createDateTemplate(presetName)];
+        fixture.detectChanges();
+
+        filterBar.restoreFilterState(
+            createFilter([createPipe({ id: PERIOD_PIPE_ID, name: 'Period', type: KbqPipeTypes.Date, value: range })])
+        );
+
+        expect(filterBar.filter()!.pipes[0].value).toEqual(range);
+    });
+
+    it('should not emit or mark the filter changed when a restored label changes', () => {
+        const optionName = signal('Активен');
+
+        fixture.componentInstance.pipeTemplates = [createSelectTemplate(optionName)];
+        fixture.detectChanges();
+
+        filterBar.restoreFilterState(
+            createFilter([createSelectPipe({ id: 'active', name: 'Активен', value: 'active' })])
+        );
+
+        const filterChange = vi.fn();
+        const pipeChange = vi.fn();
+
+        filterBar.filter.subscribe(filterChange);
+        filterBar.onChangePipe.subscribe(pipeChange);
+
+        optionName.set('Active');
+        fixture.detectChanges();
+
+        expect(filterChange).not.toHaveBeenCalled();
+        expect(pipeChange).not.toHaveBeenCalled();
+        expect(filterBar.filter()!.changed).toBe(false);
+        // The restored value is the current template option itself, so it follows the label.
+        expect((filterBar.filter()!.pipes[0].value as KbqSelectValue).name).toBe(optionName);
+    });
+});
+
 /** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
 class InMemoryStateStore implements KbqStateStore {
     readonly store = new Map<string, unknown>();
@@ -937,6 +1311,23 @@ class FilterBarWithoutFilterList {
     ];
 }
 
+/** A persisting bar with a saved-filter list, whose templates and filters each test supplies. */
+@Component({
+    imports: [KbqFilterBarModule],
+    template: `
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [stateSavingKey]="stateSavingKey" [(filter)]="activeFilter">
+            <kbq-filters [filters]="filters" />
+        </kbq-filter-bar>
+    `
+})
+class SignalValueFilterBar {
+    stateSavingKey = 'filter-bar-key';
+
+    activeFilter: KbqFilter | null = null;
+    filters: KbqFilter[] = [];
+    pipeTemplates: KbqPipeTemplate[] = [];
+}
+
 describe(`${KbqFilterBarModule.name} state saving`, () => {
     const key = 'filter-bar-key';
 
@@ -953,14 +1344,31 @@ describe(`${KbqFilterBarModule.name} state saving`, () => {
         return created;
     };
 
+    const createWith = (setup: (component: SignalValueFilterBar) => void): ComponentFixture<SignalValueFilterBar> => {
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+        const created = TestBed.createComponent(SignalValueFilterBar);
+
+        setup(created.componentInstance);
+        created.detectChanges();
+
+        return created;
+    };
+
     const getBar = (created: ComponentFixture<unknown>): KbqFilterBar =>
         created.debugElement.query(By.directive(KbqFilterBar)).componentInstance;
+
+    const createSelectPipe = (value: unknown, type: KbqPipeTypes = KbqPipeTypes.Select): KbqPipe =>
+        createPipe({ id: STATUS_PIPE_ID, name: 'Status', type, value });
+
+    const createDatePipe = (value: unknown): KbqPipe =>
+        createPipe({ id: PERIOD_PIPE_ID, name: 'Period', type: KbqPipeTypes.Date, value });
 
     beforeEach(() => {
         store = new InMemoryStateStore();
 
         TestBed.configureTestingModule({
-            imports: [KbqFilterBarModule, StateSavingFilterBar, FilterBarWithoutFilterList]
+            imports: [KbqFilterBarModule, StateSavingFilterBar, FilterBarWithoutFilterList, SignalValueFilterBar]
         }).compileComponents();
     });
 
@@ -1229,5 +1637,220 @@ describe(`${KbqFilterBarModule.name} state saving`, () => {
         fixture.detectChanges();
 
         expect(store.getState(key)).toBeNull();
+    });
+
+    it('persists built-in signal-backed values as current strings', () => {
+        const optionName = signal('Активен');
+        const filter = createFilter([createSelectPipe({ id: 'active', name: optionName, value: 'active' })], {
+            name: 'Saved',
+            saved: true
+        });
+
+        const fixture = createWith((component) => {
+            component.pipeTemplates = [createSelectTemplate(optionName)];
+            component.filters = [filter];
+        });
+
+        getBar(fixture).filters()!.selectFilter(filter);
+        fixture.detectChanges();
+
+        expect(store.getState(key)).toEqual({
+            name: 'Saved',
+            changed: false,
+            pipes: [{ id: STATUS_PIPE_ID, value: { id: 'active', name: 'Активен', value: 'active' } }]
+        });
+
+        optionName.set('Active');
+        fixture.detectChanges();
+
+        // A translation is not a filter change, so nothing new is written.
+        expect(store.getState(key)).toEqual({
+            name: 'Saved',
+            changed: false,
+            pipes: [{ id: STATUS_PIPE_ID, value: { id: 'active', name: 'Активен', value: 'active' } }]
+        });
+    });
+
+    it('rehydrates a restored select value from the current template by id', () => {
+        const optionName = signal('Активен');
+
+        store.setState(key, {
+            name: 'Saved',
+            changed: false,
+            pipes: [{ id: STATUS_PIPE_ID, value: { id: 'active', name: 'Активен', value: 'active' } }]
+        });
+
+        optionName.set('Active');
+
+        const fixture = createWith((component) => {
+            component.pipeTemplates = [createSelectTemplate(optionName)];
+            component.filters = [createFilter([createSelectPipe(null)], { name: 'Saved', saved: true })];
+        });
+
+        const value = getBar(fixture).filter()!.pipes[0].value as KbqSelectValue;
+
+        expect(value.name).toBe(optionName);
+        expect(value.value).toBe('active');
+        expect(getBar(fixture).isChanged()).toBe(false);
+    });
+
+    it('rehydrates a multiselect value entry by entry and keeps unmatched entries', () => {
+        const optionName = signal('Active');
+
+        store.setState(key, {
+            name: 'Saved',
+            changed: false,
+            pipes: [
+                {
+                    id: STATUS_PIPE_ID,
+                    value: [
+                        { id: 'active', name: 'Активен', value: 'active' },
+                        { id: 'archived', name: 'Archived', value: 'archived' }
+                    ]
+                }
+            ]
+        });
+
+        const fixture = createWith((component) => {
+            component.pipeTemplates = [createSelectTemplate(optionName, { type: KbqPipeTypes.MultiSelect })];
+            component.filters = [
+                createFilter([createSelectPipe(null, KbqPipeTypes.MultiSelect)], { name: 'Saved', saved: true })
+            ];
+        });
+
+        const value = getBar(fixture).filter()!.pipes[0].value as KbqSelectValue[];
+
+        expect(value[0].name).toBe(optionName);
+        expect(value[1]).toEqual({ id: 'archived', name: 'Archived', value: 'archived' });
+    });
+
+    it('rehydrates a restored date preset from the current template by id', () => {
+        const presetName = signal('Последние 7 дней');
+
+        store.setState(key, {
+            name: 'Saved',
+            changed: false,
+            pipes: [{ id: PERIOD_PIPE_ID, value: { id: 'last7', name: 'Last 7 days', start: { days: -7 }, end: null } }]
+        });
+
+        const fixture = createWith((component) => {
+            component.pipeTemplates = [createDateTemplate(presetName)];
+            component.filters = [createFilter([createDatePipe(null)], { name: 'Saved', saved: true })];
+        });
+
+        expect((getBar(fixture).filter()!.pipes[0].value as KbqDateTimeValue).name).toBe(presetName);
+    });
+
+    it('keeps a restored custom date range', () => {
+        const presetName = signal('Последние 7 дней');
+        const range = { start: '2025-01-01T00:00:00.000Z', end: '2025-01-02T00:00:00.000Z' };
+
+        store.setState(key, { name: 'Saved', changed: false, pipes: [{ id: PERIOD_PIPE_ID, value: range }] });
+
+        const fixture = createWith((component) => {
+            component.pipeTemplates = [createDateTemplate(presetName)];
+            component.filters = [createFilter([createDatePipe(null)], { name: 'Saved', saved: true })];
+        });
+
+        expect(getBar(fixture).filter()!.pipes[0].value).toEqual(range);
+    });
+
+    it('keeps a persisted business value the templates have no option for', () => {
+        store.setState(key, {
+            name: 'Saved',
+            changed: false,
+            pipes: [{ id: STATUS_PIPE_ID, value: { id: 'archived', name: 'Archived', value: 'archived' } }]
+        });
+
+        const fixture = createWith((component) => {
+            component.pipeTemplates = [createSelectTemplate(signal('Active'))];
+            component.filters = [createFilter([createSelectPipe(null)], { name: 'Saved', saved: true })];
+        });
+
+        expect(getBar(fixture).filter()!.pipes[0].value).toEqual({
+            id: 'archived',
+            name: 'Archived',
+            value: 'archived'
+        });
+    });
+
+    it('rehydrates a pipe rebuilt when its templates arrive after initialization', () => {
+        const optionName = signal('Active');
+
+        store.setState(key, {
+            name: 'Saved',
+            changed: false,
+            pipes: [{ id: STATUS_PIPE_ID, value: { id: 'active', name: 'Активен', value: 'active' } }]
+        });
+
+        const fixture = createWith((component) => {
+            component.filters = [createFilter([], { name: 'Saved', saved: true })];
+        });
+
+        // Nothing can be rebuilt while the templates are missing: the payload stays pending.
+        expect(getBar(fixture).filter()).toBeNull();
+
+        fixture.componentInstance.pipeTemplates = [createSelectTemplate(optionName)];
+        fixture.detectChanges();
+
+        const filter = getBar(fixture).filter()!;
+
+        expect(filter.pipes).toEqual([expect.objectContaining({ id: STATUS_PIPE_ID, type: KbqPipeTypes.Select })]);
+        expect((filter.pipes[0].value as KbqSelectValue).name).toBe(optionName);
+    });
+
+    it('does not emit or mark the filter changed when a persisted label is re-resolved', () => {
+        const optionName = signal('Active');
+
+        store.setState(key, {
+            name: 'Saved',
+            changed: false,
+            pipes: [{ id: STATUS_PIPE_ID, value: { id: 'active', name: 'Активен', value: 'active' } }]
+        });
+
+        const fixture = createWith((component) => {
+            component.pipeTemplates = [createSelectTemplate(optionName)];
+            component.filters = [createFilter([createSelectPipe(null)], { name: 'Saved', saved: true })];
+        });
+
+        const filterBar = getBar(fixture);
+        const filterChange = vi.fn();
+        const pipeChange = vi.fn();
+
+        filterBar.filter.subscribe(filterChange);
+        filterBar.onChangePipe.subscribe(pipeChange);
+
+        optionName.set('Activo');
+        fixture.detectChanges();
+
+        expect(filterChange).not.toHaveBeenCalled();
+        expect(pipeChange).not.toHaveBeenCalled();
+        expect(filterBar.filter()!.changed).toBe(false);
+
+        // The restored value is the current template option, so its label follows the translation while the
+        // filter itself stays unchanged.
+        expect((filterBar.filter()!.pipes[0].value as KbqSelectValue).name).toBe(optionName);
+    });
+
+    it('persists a select value with a non-cloneable business payload without throwing', () => {
+        const payload = () => 'business';
+        const filter = createFilter([createSelectPipe({ id: 'active', name: 'Active', value: payload })], {
+            name: 'Saved'
+        });
+
+        const fixture = createWith((component) => {
+            component.filters = [filter];
+        });
+
+        getBar(fixture).filter.set(filter);
+        fixture.detectChanges();
+
+        // JSON cannot store a function and drops it, exactly as it did before Task 5; the bar must not throw
+        // from its persisting effect just because the business payload is not cloneable.
+        expect(store.getState(key)).toEqual({
+            name: 'Saved',
+            changed: false,
+            pipes: [{ id: STATUS_PIPE_ID, value: { id: 'active', name: 'Active' } }]
+        });
     });
 });

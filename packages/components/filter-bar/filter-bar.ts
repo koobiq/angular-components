@@ -18,6 +18,7 @@ import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-inter
 import { KbqLocaleOverridesDirective, KbqStateSaving } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { BehaviorSubject } from 'rxjs';
+import { cloneFilterBarFilter, kbqFilterBarSerializablePipeValue, rehydrateFilterBarFilter } from './filter-bar-value';
 import {
     KBQ_FILTER_BAR_HOST,
     KBQ_FILTER_BAR_LOCALE_CONFIGURATION,
@@ -294,25 +295,34 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
     /**
      * Save current state of filter.
      *
-     * Deep-clones the filter via `structuredClone`, so any pipe `value` payload handed to save/restore must be
-     * structured-cloneable (plain data — no functions, DOM nodes, class instances or `TemplateRef`s), otherwise
-     * `structuredClone` throws `DataCloneError`. All built-in pipes produce cloneable values.
+     * The snapshot is a structural copy: it keeps every Angular signal by reference — name signals and
+     * business signals alike — while copying the arrays and plain objects around them. A restored filter
+     * therefore shares those signal references: a name stays reactive to a later translation, and a
+     * business signal keeps its identity.
+     *
+     * A signal is kept only where the copy walks the structure: as a pipe value, or nested inside a plain
+     * object or an array. One held in a `Map`, a `Set` or a class instance is not walked — its container
+     * goes to `structuredClone` whole, and `DataCloneError` is thrown. The same applies to any other value
+     * `structuredClone` rejects: a non-signal function, a DOM node or a symbol.
      */
     saveFilterState(filter?: KbqFilter) {
-        this.savedFilter = structuredClone(filter ?? untracked(this.filter));
+        this.savedFilter = cloneFilterBarFilter(filter ?? untracked(this.filter));
     }
 
     /**
-     * Restore previously saved filter state. As with {@link saveFilterState}, pipe `value` payloads must be
-     * structured-cloneable.
+     * Restore previously saved filter state. Built-in select, multiselect and date values are rehydrated
+     * from the current `pipeTemplates` by stable id; a restored value the templates do not contain keeps
+     * its persisted business value. Signals in the snapshot — name signals and business signals alike —
+     * are shared by reference; every other payload keeps the `structuredClone` restrictions described on
+     * {@link saveFilterState}.
      */
     restoreFilterState(filter?: KbqFilter) {
-        const state = filter ?? this.savedFilter;
+        const state = cloneFilterBarFilter(filter ?? this.savedFilter);
 
-        // Nothing to restore — bail out instead of wiping the current filter with `structuredClone(null)`.
+        // Nothing to restore — bail out instead of wiping the current filter with an empty state.
         if (!state) return;
 
-        this.filter.set(structuredClone(state));
+        this.filter.set(rehydrateFilterBarFilter(state, untracked(this.pipeTemplates)));
     }
 
     /** Set the filter state "changed" to false */
@@ -353,8 +363,17 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
             changed: filter.changed,
             name: filter.name,
             // A projection, not the pipes: one built from a template keeps that template's `compareWith`
-            // and date bounds, which `JSON.stringify` drops silently rather than rejecting.
-            pipes: filter.pipes.map((pipe) => ({ id: getId(pipe), value: pipe.value ?? null }))
+            // and date bounds, which `JSON.stringify` drops silently rather than rejecting. Built-in
+            // values also resolve their signal-backed labels, so the stored payload keeps those labels as
+            // plain strings; any other non-plain payload is left for the store to serialize as before.
+            // Untracked: reading a label must not make the persisting effect run on a translation — a
+            // translated label is not a filter change.
+            pipes: untracked(() =>
+                filter.pipes.map((pipe) => ({
+                    id: getId(pipe),
+                    value: kbqFilterBarSerializablePipeValue(pipe) ?? null
+                }))
+            )
         } satisfies KbqFilterBarState);
     }
 
@@ -420,13 +439,18 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
         // Nothing could be rebuilt yet — the templates arrive alongside the filters.
         if (state.pipes.length && !pipes.length) return;
 
+        // The persisted values are plain data: select, multiselect and date values get the current
+        // signal-named option or preset from the templates, matched by id. Unmatched business values and
+        // tree values stay as they were persisted.
+        const restored = rehydrateFilterBarFilter({ ...base, changed: state.changed, pipes }, pipeTemplates);
+
         this.pendingState = null;
         this.restoring = true;
 
         try {
             // Through the model, so `filterChange` fires and the application fetches for the restored
             // filter exactly as it would for one the user had picked.
-            this.stateSaving.applying(() => this.filter.set({ ...base, changed: state.changed, pipes }));
+            this.stateSaving.applying(() => this.filter.set(restored));
         } finally {
             this.restoring = false;
         }
