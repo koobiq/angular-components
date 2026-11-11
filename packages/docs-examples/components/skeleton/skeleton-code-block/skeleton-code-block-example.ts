@@ -7,6 +7,7 @@ import {
 } from '@koobiq/components/code-block';
 import { KbqSkeleton } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Skeleton in place of a code block
@@ -15,7 +16,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'skeleton-code-block-example',
     imports: [KbqSkeleton, KbqCodeBlockModule, KbqToggleModule, FormsModule],
     template: `
-        <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
 
         @if (loading()) {
             <kbq-skeleton [style.height.px]="98" />
@@ -42,6 +43,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 })
 export class SkeletonCodeBlockExample {
     protected readonly loading = model(true);
+
+    protected readonly text = injectExampleText();
     protected readonly files: KbqCodeBlockFile[] = [
         {
             content: `function getVulnerabilities() {\n\treturn ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert', 'IDS/IPS Alert', 'Zero-Day Exploit', 'XSS', 'Malware', 'Ransomware', 'Phishing'];\n};`,

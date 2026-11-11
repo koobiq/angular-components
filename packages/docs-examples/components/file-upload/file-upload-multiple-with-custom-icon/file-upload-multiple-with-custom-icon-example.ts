@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 const createBlobPart = (sizeInMB: number): BlobPart => {
     const chunk = 'a'.repeat(1024 * 1024);
@@ -34,6 +35,8 @@ const createMockFile = (fileName: string = 'Filename.txt', options?: FilePropert
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleWithCustomIconExample {
+    protected readonly text = injectExampleText();
+
     files: KbqFileItem[] = [
         { file: createMockFile('image.jpg') },
         { file: createMockFile('file.txt') }

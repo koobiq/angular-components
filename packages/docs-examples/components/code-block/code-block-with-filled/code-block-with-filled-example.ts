@@ -6,6 +6,7 @@ import {
     KbqCodeBlockModule
 } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Code-block with filled attribute
@@ -18,8 +19,12 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         FormsModule
     ],
     template: `
-        <kbq-toggle class="layout-margin-bottom-m layout-margin-right-m" [(ngModel)]="filled">Filled</kbq-toggle>
-        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="alwaysShowActionbar">Always show actionbar</kbq-toggle>
+        <kbq-toggle class="layout-margin-bottom-m layout-margin-right-m" [(ngModel)]="filled">
+            {{ text().filled }}
+        </kbq-toggle>
+        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="alwaysShowActionbar">
+            {{ text().alwaysShowActionbar }}
+        </kbq-toggle>
 
         <kbq-code-block [files]="files" [filled]="filled()" [alwaysShowActionbar]="alwaysShowActionbar()" />
     `,
@@ -33,6 +38,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockWithFilledExample {
+    protected readonly text = injectExampleText();
+
     readonly files: KbqCodeBlockFile[] = [
         {
             language: 'bash',

@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Select footer
@@ -15,10 +16,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
     ],
     template: `
         <div class="example-row">
-            <div class="kbq-form__label">Button</div>
+            <div class="kbq-form__label">{{ text().button }}</div>
             <kbq-form-field class="example-select-field">
                 <kbq-select [value]="selected">
-                    @for (option of options; track option) {
+                    @for (option of options(); track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                     <kbq-select-footer>
@@ -32,10 +33,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
         </div>
 
         <div class="example-row">
-            <div class="kbq-form__label">Caption</div>
+            <div class="kbq-form__label">{{ text().caption }}</div>
             <kbq-form-field class="example-select-field">
                 <kbq-select [value]="selected">
-                    @for (option of options; track option) {
+                    @for (option of options(); track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                     <kbq-select-footer class="example-select-footer-with-caption">Caption ⌥+⌘+F</kbq-select-footer>
@@ -44,10 +45,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
         </div>
 
         <div class="example-row">
-            <div class="kbq-form__label">Link</div>
+            <div class="kbq-form__label">{{ text().link }}</div>
             <kbq-form-field class="example-select-field">
                 <kbq-select [value]="selected">
-                    @for (option of options; track option) {
+                    @for (option of options(); track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                     <kbq-select-footer>
@@ -79,8 +80,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectFooterExample {
+    protected readonly text = injectExampleText();
+
     // Enough options to overflow the panel's default 256px — exactly eight rows fit — so the footer is
     // seen doing its job: staying put while the list scrolls under it.
-    protected readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
+    protected readonly options = computed(() => Array.from({ length: 10 }, (_, i) => this.text().optionN(i)));
     protected readonly selected = this.options[0];
 }

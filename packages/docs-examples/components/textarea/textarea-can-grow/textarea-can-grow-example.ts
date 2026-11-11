@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Textarea with canGrow attribute
@@ -13,8 +14,13 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="canGrow">canGrow</kbq-toggle>
 
         <kbq-form-field>
-            <kbq-label>Label</kbq-label>
-            <textarea kbqTextarea placeholder="Placeholder" [canGrow]="canGrow()" [(ngModel)]="value"></textarea>
+            <kbq-label>{{ text().label }}</kbq-label>
+            <textarea
+                kbqTextarea
+                [placeholder]="text().placeholder"
+                [canGrow]="canGrow()"
+                [(ngModel)]="value"
+            ></textarea>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,8 +29,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     }
 })
 export class TextareaCanGrowExample {
+    protected readonly text = injectExampleText();
+
     protected readonly canGrow = model(true);
-    protected readonly value = model(
-        'In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator seeks to make a machine or network resource unavailable to its intended users by temporarily or indefinitely disrupting services of a host connected to a network. Denial of service is typically accomplished by flooding the targeted machine or resource with superfluous requests in an attempt to overload systems and prevent some or all legitimate requests from being fulfilled. The range of attacks varies widely, spanning from inundating a server with millions of requests to slow its performance, overwhelming a server with a substantial amount of invalid data, to submitting requests with an illegitimate IP address.'
-    );
+    protected readonly value = model(this.text().dosText);
 }

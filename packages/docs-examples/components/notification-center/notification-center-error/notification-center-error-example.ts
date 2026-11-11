@@ -22,7 +22,7 @@ import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map } from 'rxjs/operators';
-import { createNotifications, injectExampleText } from '../localized-data';
+import { createNotifications, injectExampleText } from '../l10n';
 
 type ExampleAction = {
     id: string;

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqSplitter, KbqSplitterPanel } from '@koobiq/components/splitter';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Splitter collapsible panel
@@ -10,15 +11,15 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'splitter-collapsible-example',
     imports: [KbqSplitter, KbqSplitterPanel, KbqToggleModule, FormsModule],
     template: `
-        <kbq-toggle [(ngModel)]="sidebarCollapsed">Sidebar collapsed</kbq-toggle>
-        <kbq-toggle [(ngModel)]="terminalCollapsed">Terminal collapsed</kbq-toggle>
+        <kbq-toggle [(ngModel)]="sidebarCollapsed">{{ text().sidebarCollapsed }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="terminalCollapsed">{{ text().terminalCollapsed }}</kbq-toggle>
 
         <kbq-splitter class="example-splitter layout-margin-top-l">
             <kbq-splitter-panel minSize="125" size="150" maxSize="200" collapsible [(collapsed)]="sidebarCollapsed">
                 <div class="example-splitter-panel-content">
                     Sidebar
                     @if (!sidebarCollapsed()) {
-                        <small>Drag left to collapse</small>
+                        <small>{{ text().dragLeftToCollapse }}</small>
                     }
                 </div>
             </kbq-splitter-panel>
@@ -37,7 +38,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
                         <div class="example-splitter-panel-content">
                             Terminal
                             @if (!terminalCollapsed()) {
-                                <small>Drag bottom to collapse</small>
+                                <small>{{ text().dragBottomToCollapse }}</small>
                             }
                         </div>
                     </kbq-splitter-panel>
@@ -79,6 +80,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SplitterCollapsibleExample {
+    protected readonly text = injectExampleText();
+
     protected readonly terminalCollapsed = model(false);
     protected readonly sidebarCollapsed = model(false);
 }

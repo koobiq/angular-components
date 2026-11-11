@@ -6,6 +6,7 @@ import { KbqDivider } from '@koobiq/components/divider';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqTableModule } from '@koobiq/components/table';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Tooltip extended
@@ -68,16 +69,16 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             <div
                 class="layout-row layout-gap-xs layout-padding-top-m layout-padding-bottom-s layout-padding-left-l layout-padding-right-l"
             >
-                <span class="kbq-text-normal-strong">Confidence</span>
+                <span class="kbq-text-normal-strong">{{ text().confidence }}</span>
                 <span class="kbq-mono-normal" style="color: var(--kbq-foreground-warning)">0,0001</span>
             </div>
             <kbq-divider />
             <table kbq-table class="layout-padding-bottom-l">
                 <thead>
                     <tr>
-                        <th class="layout-padding-left-l">Incident Type</th>
-                        <th>Detected</th>
-                        <th class="layout-padding-right-l">Updated</th>
+                        <th class="layout-padding-left-l">{{ text().incidentType }}</th>
+                        <th>{{ text().detected }}</th>
+                        <th class="layout-padding-right-l">{{ text().updated }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -130,26 +131,28 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     }
 })
 export class TooltipExtendedExample {
+    protected readonly text = injectExampleText();
+
     protected readonly extendedTooltipPreferredColor = KbqComponentColors.ContrastFade;
 
     protected readonly data = [
         {
-            type: 'Malware Infection',
+            type: this.text().extendedTypes[0],
             detected: 'Feb 18, 15:30',
             updated: 'Feb 18, 15:33'
         },
         {
-            type: 'Phishing Attack',
+            type: this.text().extendedTypes[1],
             detected: 'Feb 18, 15:33',
             updated: 'Feb 18, 15:33'
         },
         {
-            type: 'Data Breach',
+            type: this.text().extendedTypes[2],
             detected: 'Feb 18, 15:33',
             updated: 'Feb 18, 15:33'
         },
         {
-            type: 'DoS/DDoS Attack',
+            type: this.text().extendedTypes[3],
             detected: 'Feb 18, 15:33',
             updated: 'Feb 18, 15:33'
         }

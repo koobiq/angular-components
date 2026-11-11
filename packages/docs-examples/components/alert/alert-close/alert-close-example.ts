@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAlert, KbqAlertCloseButton } from '@koobiq/components/alert';
 import { kbqAnimationsDisabled, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Alert close
@@ -24,12 +25,11 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
                 (closed)="state = false"
             >
                 <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
-                The alert is dismissed with the close icon in the corner; do not duplicate this with a button below the
-                message text
+                {{ text().closeHint }}
                 <button
                     kbq-alert-close-button
                     kbq-icon-button="kbq-xmark-s_16"
-                    aria-label="Close"
+                    [attr.aria-label]="text().close"
                     [color]="colors.ContrastFade"
                 ></button>
             </kbq-alert>
@@ -59,6 +59,8 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertCloseExample {
+    protected readonly text = injectExampleText();
+
     protected readonly animationsDisabled = kbqAnimationsDisabled();
     colors = KbqComponentColors;
     state = true;

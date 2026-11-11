@@ -3,6 +3,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Flag is not a language
@@ -13,7 +14,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     template: `
         <kbq-form-field>
             <i kbqPrefix color="contrast-fade" kbq-icon="kbq-globe_16"></i>
-            <kbq-select placeholder="Select your language" [formControl]="control">
+            <kbq-select [placeholder]="text().selectLanguage" [formControl]="control">
                 @for (language of languages; track language) {
                     <kbq-option [value]="language">{{ language }}</kbq-option>
                 }
@@ -31,7 +32,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
     }
 })
 export class FlagLanguageExample {
+    protected readonly text = injectExampleText();
+
     // Languages are picked with a neutral icon, not a flag: one language spans several countries.
+    // Language names stay in their own tongue by convention.
     protected readonly languages = ['English (UK)', 'English (US)', 'Español', 'Français', 'Русский', 'हिन्दी', '中文'];
 
     protected readonly control = new FormControl(this.languages[0]);

@@ -12,6 +12,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { MaskitoDirective } from '@maskito/angular';
 import { MaskitoOptions, MaskitoPlugin, maskitoUpdateElement } from '@maskito/core';
 import { maskitoNumberOptionsGenerator, maskitoWithPlaceholder } from '@maskito/kit';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Input with mask
@@ -26,51 +27,51 @@ import { maskitoNumberOptionsGenerator, maskitoWithPlaceholder } from '@maskito/
     ],
     template: `
         <kbq-form-field>
-            <kbq-label>IP address</kbq-label>
+            <kbq-label>{{ text().ipAddress }}</kbq-label>
             <input kbqInput placeholder="192.168.0.1" [maskito]="ipAddressMask" [formControl]="ipAddressControl" />
-            <kbq-hint>Format: 192.168.0.1</kbq-hint>
-            <kbq-error>Invalid IP address</kbq-error>
+            <kbq-hint>{{ text().format }} 192.168.0.1</kbq-hint>
+            <kbq-error>{{ text().invalidIp }}</kbq-error>
             <kbq-cleaner />
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-label>MAC address</kbq-label>
+            <kbq-label>{{ text().macAddress }}</kbq-label>
             <input
                 kbqInput
                 placeholder="AA:BB:CC:DD:EE:FF"
                 [maskito]="macAddressMask"
                 [formControl]="macAddressControl"
             />
-            <kbq-hint>Format: AA:BB:CC:DD:EE:FF</kbq-hint>
-            <kbq-error>Invalid MAC address</kbq-error>
+            <kbq-hint>{{ text().format }} AA:BB:CC:DD:EE:FF</kbq-hint>
+            <kbq-error>{{ text().invalidMac }}</kbq-error>
             <kbq-cleaner />
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-label>IPv6 address</kbq-label>
+            <kbq-label>{{ text().ipv6Address }}</kbq-label>
             <input
                 kbqInput
                 placeholder="2001:0db8:85a3:0000:0000:8a2e:0370:7334"
                 [maskito]="ipv6AddressMask"
                 [formControl]="ipv6AddressControl"
             />
-            <kbq-hint>Format: 2001:0db8:85a3:0000:0000:8a2e:0370:7334</kbq-hint>
-            <kbq-error>Invalid IPv6 address</kbq-error>
+            <kbq-hint>{{ text().format }} 2001:0db8:85a3:0000:0000:8a2e:0370:7334</kbq-hint>
+            <kbq-error>{{ text().invalidIpv6 }}</kbq-error>
             <kbq-cleaner />
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-label>Port</kbq-label>
+            <kbq-label>{{ text().port }}</kbq-label>
             <input kbqInput placeholder="8080" [maskito]="portMask" [formControl]="portControl" />
-            <kbq-hint>Range: 0-65535</kbq-hint>
-            <kbq-hint>Use ↑/↓ to increase or decrease the value</kbq-hint>
+            <kbq-hint>{{ text().range }}</kbq-hint>
+            <kbq-hint>{{ text().useArrows }}</kbq-hint>
             <kbq-cleaner />
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-label>License key</kbq-label>
+            <kbq-label>{{ text().licenseKey }}</kbq-label>
             <input kbqInput placeholder="XXXX-XXXX-XXXX-XXXX" [maskito]="licenseMask" [formControl]="licenseControl" />
-            <kbq-error>Invalid license key</kbq-error>
+            <kbq-error>{{ text().invalidLicense }}</kbq-error>
             <kbq-cleaner />
         </kbq-form-field>
     `,
@@ -89,6 +90,8 @@ import { maskitoNumberOptionsGenerator, maskitoWithPlaceholder } from '@maskito/
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputWithMaskExample {
+    protected readonly text = injectExampleText();
+
     readonly ipAddressControl = new FormControl('192.168.0.1', [this.ipAddressValidator()]);
     readonly macAddressControl = new FormControl('AA:BB:CC:DD:EE:FF', [
         Validators.pattern(/^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/)

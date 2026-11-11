@@ -2,6 +2,7 @@ import {
     afterNextRender,
     ChangeDetectionStrategy,
     Component,
+    computed,
     ElementRef,
     inject,
     TemplateRef,
@@ -15,10 +16,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../l10n';
 
 type ExampleAction = {
     id: string;
     icon: string;
+    label: string;
     divider?: boolean;
 };
 
@@ -36,18 +39,18 @@ type ExampleAction = {
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button (click)="open()">open</button>
+        <button kbq-button (click)="open()">{{ text().open }}</button>
 
         <ng-template let-data>
             <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
                 <div order="99" [kbqOverflowItem]="action.Counter">
                     <div class="example-counter">
-                        <div class="kbq-text-normal-medium">Selected: {{ data.selected }}</div>
+                        <div class="kbq-text-normal-medium">{{ text().selected }} {{ data.selected }}</div>
                         <span
-                            aria-label="Total number of items in selected groups: +{{ data.counter }}"
                             class="example-counter-extra kbq-text-normal"
-                            kbqTooltip="Total number of items in selected groups"
                             tabindex="0"
+                            [attr.aria-label]="text().totalInGroupsAria(data.counter)"
+                            [kbqTooltip]="text().totalInGroups"
                             [kbqTooltipOffset]="22"
                         >
                             +{{ data.counter }}
@@ -56,7 +59,7 @@ type ExampleAction = {
                     <kbq-divider class="example-divider-vertical" [vertical]="true" />
                 </div>
 
-                @for (action of actions; track action.id) {
+                @for (action of actions(); track action.id) {
                     <div [kbqOverflowItem]="action.id">
                         @if (action.divider) {
                             <kbq-divider class="example-divider-vertical" [vertical]="true" />
@@ -68,7 +71,7 @@ type ExampleAction = {
                             (click)="onAction(action)"
                         >
                             <i [kbq-icon]="action.icon"></i>
-                            {{ action.id }}
+                            {{ action.label }}
                         </button>
                     </div>
                 }
@@ -81,7 +84,7 @@ type ExampleAction = {
                     kbqOverflowItemsResult
                     color="contrast"
                     kbq-button
-                    aria-label="More"
+                    [attr.aria-label]="text().more"
                     [kbqDropdownTriggerFor]="dropdown"
                 >
                     <i kbq-icon="kbq-ellipsis-vertical_16"></i>
@@ -90,12 +93,12 @@ type ExampleAction = {
 
             <kbq-dropdown #dropdown="kbqDropdown">
                 <div class="example-counter-dropdown">
-                    <div>Selected: {{ data.selected }}</div>
+                    <div>{{ text().selected }} {{ data.selected }}</div>
                     <span
-                        aria-label="Total number of items in selected groups: +{{ data.counter }}"
                         class="example-counter-extra kbq-text-normal"
-                        kbqTooltip="Total number of items in selected groups"
                         tabindex="0"
+                        [attr.aria-label]="text().totalInGroupsAria(data.counter)"
+                        [kbqTooltip]="text().totalInGroups"
                         [kbqTooltipOffset]="22"
                     >
                         +{{ data.counter }}
@@ -103,14 +106,14 @@ type ExampleAction = {
                 </div>
                 <kbq-divider />
 
-                @for (action of actions; track action.id) {
+                @for (action of actions(); track action.id) {
                     @if (hiddenItemIDs.has(action.id)) {
-                        @if (action.divider && hiddenItemIDs.has(actions[$index - 1].id)) {
+                        @if (action.divider && hiddenItemIDs.has(actions()[$index - 1].id)) {
                             <kbq-divider />
                         }
                         <button kbq-dropdown-item (click)="onAction(action)">
                             <i [kbq-icon]="action.icon"></i>
-                            {{ action.id }}
+                            {{ action.label }}
                         </button>
                     }
                 }
@@ -171,11 +174,13 @@ type ExampleAction = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionsPanelCustomCounterExample {
-    protected readonly actions: ExampleAction[] = [
-        { id: 'Responsible', icon: 'kbq-user_16' },
-        { id: 'Link to incident', icon: 'kbq-link_16' },
-        { id: 'Remove', icon: 'kbq-trash_16', divider: true }
-    ];
+    protected readonly text = injectExampleText();
+
+    protected readonly actions = computed<ExampleAction[]>(() => [
+        { id: 'Responsible', icon: 'kbq-user_16', label: this.text().responsible },
+        { id: 'Link to incident', icon: 'kbq-link_16', label: this.text().linkToIncident },
+        { id: 'Remove', icon: 'kbq-trash_16', label: this.text().remove, divider: true }
+    ]);
     protected readonly action = { Counter: 'counter' };
 
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
@@ -207,6 +212,6 @@ export class ActionsPanelCustomCounterExample {
     }
 
     protected onAction(action: ExampleAction): void {
-        this.toast.show({ title: `Action initiated ${action.id}` });
+        this.toast.show({ title: this.text().actionInitiated(action.label) });
     }
 }

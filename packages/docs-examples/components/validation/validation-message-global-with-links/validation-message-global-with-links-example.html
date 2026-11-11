@@ -9,12 +9,12 @@
         >
             <i kbq-icon="kbq-circle-info_16" [color]="'error'"></i>
             <span>
-                Fill in at least one of the fields:
-                <span kbqLink (click)="seriesInput.focus()">Series,</span>
+                {{ text().fillAtLeastOne }}
+                <span kbqLink (click)="seriesInput.focus()">{{ text().series }},</span>
                 <span>&nbsp;</span>
-                <span kbqLink (click)="numberInput.focus()">Number</span>
-                or
-                <span kbqLink (click)="lastNameInput.focus()">Last name</span>
+                <span kbqLink (click)="numberInput.focus()">{{ text().number }}</span>
+                {{ text().or }}
+                <span kbqLink (click)="lastNameInput.focus()">{{ text().lastName }}</span>
             </span>
         </kbq-alert>
     }
@@ -23,7 +23,7 @@
         <div class="kbq-form__fieldset kbq-horizontal">
             <div class="kbq-form__row flex-25">
                 <kbq-form-field class="kbq-form__control">
-                    <kbq-label>Series</kbq-label>
+                    <kbq-label>{{ text().series }}</kbq-label>
                     <input
                         #seriesInput
                         #seriesTooltip="kbqTooltip"
@@ -33,7 +33,7 @@
                         kbqTooltipColor="error"
                         [kbqEnterDelay]="10"
                         [kbqPlacement]="popUpPlacements.Top"
-                        [kbqTooltip]="'Only numbers'"
+                        [kbqTooltip]="text().onlyNumbers"
                         [kbqTrigger]="'manual'"
                         (blur)="seriesTooltip.hide()"
                         (input)="onInput($event, seriesTooltip, form.controls.series)"
@@ -43,7 +43,7 @@
 
             <div class="kbq-form__row flex-40">
                 <kbq-form-field class="kbq-form__control">
-                    <kbq-label>Number</kbq-label>
+                    <kbq-label>{{ text().number }}</kbq-label>
                     <input
                         #numberInput
                         #numberTooltip="kbqTooltip"
@@ -53,7 +53,7 @@
                         kbqTooltipColor="error"
                         [kbqEnterDelay]="10"
                         [kbqPlacement]="popUpPlacements.Top"
-                        [kbqTooltip]="'Only numbers'"
+                        [kbqTooltip]="text().onlyNumbers"
                         [kbqTrigger]="'manual'"
                         (blur)="numberTooltip.hide()"
                         (input)="onInput($event, numberTooltip, form.controls.number)"
@@ -64,33 +64,33 @@
 
         <div class="kbq-form__row">
             <kbq-form-field class="kbq-form__control">
-                <kbq-label>Last name</kbq-label>
+                <kbq-label>{{ text().lastName }}</kbq-label>
                 <input #lastNameInput formControlName="lastName" kbqInput name="input" />
             </kbq-form-field>
         </div>
 
         <div class="kbq-form__row">
             <kbq-form-field class="kbq-form__control">
-                <kbq-label>Name</kbq-label>
+                <kbq-label>{{ text().name }}</kbq-label>
                 <input formControlName="firstName" kbqInput name="input" />
 
-                <kbq-hint>Optional</kbq-hint>
+                <kbq-hint>{{ text().optional }}</kbq-hint>
             </kbq-form-field>
         </div>
 
         <div class="kbq-form__row">
             <kbq-form-field class="kbq-form__control">
-                <kbq-label>Patronymic</kbq-label>
+                <kbq-label>{{ text().patronymic }}</kbq-label>
                 <input formControlName="patronymic" kbqInput name="input" />
 
-                <kbq-hint>Optional</kbq-hint>
+                <kbq-hint>{{ text().optional }}</kbq-hint>
             </kbq-form-field>
         </div>
     </div>
 
     <div class="kbq-form__row layout-align-start-start">
         <button color="contrast" kbq-button type="submit" [class.kbq-progress]="inProgress()" [disabled]="inProgress()">
-            Submit
+            {{ text().submit }}
         </button>
     </div>
 </form>

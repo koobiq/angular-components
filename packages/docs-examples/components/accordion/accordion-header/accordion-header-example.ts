@@ -3,6 +3,7 @@ import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Accordion header
@@ -14,6 +15,8 @@ import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionHeaderExample {
+    protected readonly text = injectExampleText();
+
     icon: boolean = false;
     caption: boolean = false;
     leftBadge: boolean = false;

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqContentPanelContainer, KbqContentPanelModule } from '@koobiq/components/content-panel';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Content panel state saving
@@ -17,20 +18,18 @@ import { KbqContentPanelContainer, KbqContentPanelModule } from '@koobiq/compone
             width="350"
         >
             <div class="example-content-panel-container__content">
-                <button kbq-button (click)="panel.toggle()">Toggle</button>
-                <button kbq-button type="button" (click)="container().clearSavedState()">Reset saved state</button>
+                <button kbq-button (click)="panel.toggle()">{{ text().toggle }}</button>
+                <button kbq-button type="button" (click)="container().clearSavedState()">
+                    {{ text().resetSavedState }}
+                </button>
             </div>
 
             <kbq-content-panel>
                 <kbq-content-panel-header>
-                    <div kbqContentPanelHeaderTitle>Title</div>
+                    <div kbqContentPanelHeaderTitle>{{ text().title }}</div>
                 </kbq-content-panel-header>
                 <kbq-content-panel-body>
-                    <p>
-                        Open the panel and drag its left edge, then reload the page — the panel comes back open and at
-                        the width it was left. Double-clicking the edge restores the declared width, and that is
-                        remembered too.
-                    </p>
+                    <p>{{ text().stateSavingHint }}</p>
                 </kbq-content-panel-body>
             </kbq-content-panel>
         </kbq-content-panel-container>
@@ -45,5 +44,7 @@ import { KbqContentPanelContainer, KbqContentPanelModule } from '@koobiq/compone
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContentPanelStateSavingExample {
+    protected readonly text = injectExampleText();
+
     protected readonly container = viewChild.required(KbqContentPanelContainer);
 }

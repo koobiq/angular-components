@@ -11,7 +11,7 @@ import {
     KbqSaveFilterEvent,
     KbqSaveFilterStatuses
 } from '@koobiq/components/filter-bar';
-import { injectLocalizedPeriods, injectLocalizedText } from '../localized-data';
+import { injectLocalizedPeriods, injectLocalizedText } from '../l10n';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
 const createSearchPipe = (name: string): KbqPipe => ({

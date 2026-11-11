@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title popover-scrolling-and-layering
@@ -23,4 +24,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverScrollingAndLayeringExample {}
+export class PopoverScrollingAndLayeringExample {
+    protected readonly text = injectExampleText();
+}

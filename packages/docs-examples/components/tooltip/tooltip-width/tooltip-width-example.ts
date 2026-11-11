@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Tooltip width
@@ -13,13 +14,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button kbqTooltip="Tooltip">Tooltip</button>
-        <button
-            kbq-button
-            kbqTooltip="A tooltip is a hint that appears when the pointer hovers over or focuses on an interface element. A tooltip cannot contain interactive elements."
-        >
-            Max Width
-        </button>
+        <button kbq-button [kbqTooltip]="text().tooltip">Tooltip</button>
+        <button kbq-button [kbqTooltip]="text().longTooltip">Max Width</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -27,5 +23,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     }
 })
 export class TooltipWidthExample {
+    protected readonly text = injectExampleText();
+
     placement: PopUpPlacements = PopUpPlacements.Top;
 }

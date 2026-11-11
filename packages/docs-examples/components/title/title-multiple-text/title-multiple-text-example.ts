@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Multiple text elements
@@ -19,6 +20,8 @@ import { KbqTitleModule } from '@koobiq/components/title';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleMultipleTextExample {
-    name = 'Status';
-    value = 'A long value that does not fit and is truncated with an ellipsis';
+    protected readonly text = injectExampleText();
+
+    name = this.text().status;
+    value = this.text().longValueMultiple;
 }

@@ -1,29 +1,30 @@
 <table kbq-table class="docs-table-example badge-table-example">
     <thead>
         <tr>
-            <th style="width: 33.3%">Столбец 1</th>
-            <th style="width: 33.3%">Столбец 2</th>
-            <th style="width: 33.3%">Столбец 3</th>
+            <th style="width: 33.3%">{{ text().column(1) }}</th>
+            <th style="width: 33.3%">{{ text().column(2) }}</th>
+            <th style="width: 33.3%">{{ text().column(3) }}</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>Значение</td>
-            <td><kbq-badge [badgeColor]="colors.FadeContrast">Badge</kbq-badge></td>
-            <td>EXT. Использование фишинговых ресурсов (phishingAttacks)</td>
+            <td>{{ text().value }}</td>
+            <td>
+                <kbq-badge [badgeColor]="colors.FadeContrast">{{ text().badge }}</kbq-badge>
+            </td>
+            <td>{{ text().phishingResource }}</td>
         </tr>
         <tr>
             <td>
-                <a kbqLink href="https://koobiq.io/en/components/badge">Ссылка</a>
+                <a kbqLink href="https://koobiq.io/en/components/badge">{{ text().link }}</a>
                 &nbsp;
-                <kbq-badge [badgeColor]="colors.FadeContrast" [compact]="true">Badge</kbq-badge>
+                <kbq-badge [badgeColor]="colors.FadeContrast" [compact]="true">{{ text().badge }}</kbq-badge>
             </td>
             <td>
-                Обнаружена попытка получить список процессов, запущенных в системе, на узле
-                qa-kolobok.mpqa.rd.koobiq.com
+                {{ text().processListAttempt }}
             </td>
             <td>
-                <kbq-badge [badgeColor]="colors.FadeSuccess" [outline]="true">Badge</kbq-badge>
+                <kbq-badge [badgeColor]="colors.FadeSuccess" [outline]="true">{{ text().badge }}</kbq-badge>
             </td>
         </tr>
     </tbody>

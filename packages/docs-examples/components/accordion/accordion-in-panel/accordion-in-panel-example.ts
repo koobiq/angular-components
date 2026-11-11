@@ -7,6 +7,7 @@ import {
     KbqSidepanelService,
     KbqSidepanelSize
 } from '@koobiq/components/sidepanel';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Accordion in panel
@@ -18,6 +19,8 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccordionInPanelExample {
+    protected readonly text = injectExampleText();
+
     private sidepanelService = inject(KbqSidepanelService);
 
     position: KbqSidepanelPosition = KbqSidepanelPosition.Right;

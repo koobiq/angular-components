@@ -13,6 +13,7 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { KbqUsernameModule } from '@koobiq/components/username';
 import { merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { injectExampleText } from '../l10n';
 
 interface ExampleUser {
     lastName: string;
@@ -58,6 +59,8 @@ interface ExampleUser {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListIntermediateStateExample {
+    protected readonly text = injectExampleText();
+
     PopUpSizes = PopUpSizes;
     PopUpPlacements = PopUpPlacements;
 

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angula
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Toast user data
@@ -16,6 +17,8 @@ import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastUserDataExample {
+    protected readonly text = injectExampleText();
+
     readonly toastService = inject(KbqToastService);
 
     showToast(actions: TemplateRef<any>) {
@@ -26,12 +29,12 @@ export class ToastUserDataExample {
 
         this.toastService.show(<ExtendedUserData>{
             style: KbqToastStyle.Success,
-            title: 'Agent update available',
-            caption: 'Version 2.03.15 from May 15, 2022',
+            title: this.text().agentUpdateAvailable,
+            caption: this.text().version20315,
             actions,
             closeButton: true,
             userData: 'AnyUserData',
-            userButtonName: 'Update'
+            userButtonName: this.text().update
         });
     }
 }

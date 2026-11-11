@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Link multi-line
@@ -10,10 +11,10 @@ import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
     imports: [KbqLink, KbqLinkPrefix, KbqIconModule],
     template: `
         <p class="example-text">
-            I fully agree
+            {{ text().agree }}
             <a kbqLink external href="https://koobiq.io/en/components/link" target="_blank">
                 <i kbqLinkPrefix kbq-icon="kbq-scroll-o_16"></i>
-                with the terms of the license agreement
+                {{ text().licenseTerms }}
             </a>
         </p>
     `,
@@ -32,4 +33,6 @@ import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinkMultiLineExample {}
+export class LinkMultiLineExample {
+    protected readonly text = injectExampleText();
+}

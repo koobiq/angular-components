@@ -6,7 +6,7 @@
                     @if (icon) {
                         <i kbq-icon="kbq-database_16" class="layout-margin-right-xxs"></i>
                     }
-                    <span class="layout-margin-right-s">Text</span>
+                    <span class="layout-margin-right-s">{{ text().sectionTitle }}</span>
                     @if (caption) {
                         <span
                             style="color: var(--kbq-foreground-contrast-secondary)"
@@ -30,18 +30,26 @@
                      own section, since every section here shares the same "Text" title. -->
                 @if (actions) {
                     <div class="kbq-accordion-header__actions">
-                        <button kbq-icon-button="kbq-bolt_16" type="button" aria-label="Bolt, section 1"></button>
-                        <button kbq-icon-button="kbq-bug_16" type="button" aria-label="Bug, section 1"></button>
+                        <button
+                            kbq-icon-button="kbq-bolt_16"
+                            type="button"
+                            [attr.aria-label]="text().boltSection(1)"
+                        ></button>
+                        <button
+                            kbq-icon-button="kbq-bug_16"
+                            type="button"
+                            [attr.aria-label]="text().bugSection(1)"
+                        ></button>
                         <button
                             kbq-icon-button="kbq-ellipsis-vertical_16"
                             type="button"
-                            aria-label="More, section 1"
+                            [attr.aria-label]="text().moreSection(1)"
                         ></button>
                     </div>
                 }
             </kbq-accordion-header>
             <kbq-accordion-content>
-                Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                {{ text().content }}
             </kbq-accordion-content>
         </kbq-accordion-item>
         <kbq-accordion-item>
@@ -50,7 +58,7 @@
                     @if (icon) {
                         <i kbq-icon="kbq-database_16" class="layout-margin-right-xxs"></i>
                     }
-                    <span class="layout-margin-right-s">Text</span>
+                    <span class="layout-margin-right-s">{{ text().sectionTitle }}</span>
                     @if (caption) {
                         <span
                             style="color: var(--kbq-foreground-contrast-secondary)"
@@ -71,18 +79,26 @@
 
                 @if (actions) {
                     <div class="kbq-accordion-header__actions">
-                        <button kbq-icon-button="kbq-bolt_16" type="button" aria-label="Bolt, section 2"></button>
-                        <button kbq-icon-button="kbq-bug_16" type="button" aria-label="Bug, section 2"></button>
+                        <button
+                            kbq-icon-button="kbq-bolt_16"
+                            type="button"
+                            [attr.aria-label]="text().boltSection(2)"
+                        ></button>
+                        <button
+                            kbq-icon-button="kbq-bug_16"
+                            type="button"
+                            [attr.aria-label]="text().bugSection(2)"
+                        ></button>
                         <button
                             kbq-icon-button="kbq-ellipsis-vertical_16"
                             type="button"
-                            aria-label="More, section 2"
+                            [attr.aria-label]="text().moreSection(2)"
                         ></button>
                     </div>
                 }
             </kbq-accordion-header>
             <kbq-accordion-content>
-                Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                {{ text().content }}
             </kbq-accordion-content>
         </kbq-accordion-item>
         <kbq-accordion-item>
@@ -91,7 +107,7 @@
                     @if (icon) {
                         <i kbq-icon="kbq-database_16" class="layout-margin-right-xxs"></i>
                     }
-                    <span class="layout-margin-right-s">Text</span>
+                    <span class="layout-margin-right-s">{{ text().sectionTitle }}</span>
                     @if (caption) {
                         <span
                             style="color: var(--kbq-foreground-contrast-secondary)"
@@ -112,18 +128,26 @@
 
                 @if (actions) {
                     <div class="kbq-accordion-header__actions">
-                        <button kbq-icon-button="kbq-bolt_16" type="button" aria-label="Bolt, section 3"></button>
-                        <button kbq-icon-button="kbq-bug_16" type="button" aria-label="Bug, section 3"></button>
+                        <button
+                            kbq-icon-button="kbq-bolt_16"
+                            type="button"
+                            [attr.aria-label]="text().boltSection(3)"
+                        ></button>
+                        <button
+                            kbq-icon-button="kbq-bug_16"
+                            type="button"
+                            [attr.aria-label]="text().bugSection(3)"
+                        ></button>
                         <button
                             kbq-icon-button="kbq-ellipsis-vertical_16"
                             type="button"
-                            aria-label="More, section 3"
+                            [attr.aria-label]="text().moreSection(3)"
                         ></button>
                     </div>
                 }
             </kbq-accordion-header>
             <kbq-accordion-content>
-                Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                {{ text().content }}
             </kbq-accordion-content>
         </kbq-accordion-item>
         <kbq-accordion-item>
@@ -132,7 +156,7 @@
                     @if (icon) {
                         <i kbq-icon="kbq-database_16" class="layout-margin-right-xxs"></i>
                     }
-                    <span class="layout-margin-right-s">Text</span>
+                    <span class="layout-margin-right-s">{{ text().sectionTitle }}</span>
                     @if (caption) {
                         <span
                             style="color: var(--kbq-foreground-contrast-secondary)"
@@ -153,18 +177,26 @@
 
                 @if (actions) {
                     <div class="kbq-accordion-header__actions">
-                        <button kbq-icon-button="kbq-bolt_16" type="button" aria-label="Bolt, section 4"></button>
-                        <button kbq-icon-button="kbq-bug_16" type="button" aria-label="Bug, section 4"></button>
+                        <button
+                            kbq-icon-button="kbq-bolt_16"
+                            type="button"
+                            [attr.aria-label]="text().boltSection(4)"
+                        ></button>
+                        <button
+                            kbq-icon-button="kbq-bug_16"
+                            type="button"
+                            [attr.aria-label]="text().bugSection(4)"
+                        ></button>
                         <button
                             kbq-icon-button="kbq-ellipsis-vertical_16"
                             type="button"
-                            aria-label="More, section 4"
+                            [attr.aria-label]="text().moreSection(4)"
                         ></button>
                     </div>
                 }
             </kbq-accordion-header>
             <kbq-accordion-content>
-                Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                {{ text().content }}
             </kbq-accordion-content>
         </kbq-accordion-item>
         <kbq-accordion-item>
@@ -173,7 +205,7 @@
                     @if (icon) {
                         <i kbq-icon="kbq-database_16" class="layout-margin-right-xxs"></i>
                     }
-                    <span class="layout-margin-right-s">Text</span>
+                    <span class="layout-margin-right-s">{{ text().sectionTitle }}</span>
                     @if (caption) {
                         <span
                             style="color: var(--kbq-foreground-contrast-secondary)"
@@ -194,18 +226,26 @@
 
                 @if (actions) {
                     <div class="kbq-accordion-header__actions">
-                        <button kbq-icon-button="kbq-bolt_16" type="button" aria-label="Bolt, section 5"></button>
-                        <button kbq-icon-button="kbq-bug_16" type="button" aria-label="Bug, section 5"></button>
+                        <button
+                            kbq-icon-button="kbq-bolt_16"
+                            type="button"
+                            [attr.aria-label]="text().boltSection(5)"
+                        ></button>
+                        <button
+                            kbq-icon-button="kbq-bug_16"
+                            type="button"
+                            [attr.aria-label]="text().bugSection(5)"
+                        ></button>
                         <button
                             kbq-icon-button="kbq-ellipsis-vertical_16"
                             type="button"
-                            aria-label="More, section 5"
+                            [attr.aria-label]="text().moreSection(5)"
                         ></button>
                     </div>
                 }
             </kbq-accordion-header>
             <kbq-accordion-content>
-                Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                {{ text().content }}
             </kbq-accordion-content>
         </kbq-accordion-item>
     </kbq-accordion>
@@ -223,5 +263,5 @@
     style="color: var(--kbq-foreground-contrast-secondary)"
     class="kbq-text-normal layout-margin-top-l layout-margin-bottom-s layout-row layout-align-center"
 >
-    Скрытие и раскрытие секций производится по нажатию на всю секцию
+    {{ text().toggleSectionHint }}
 </div>

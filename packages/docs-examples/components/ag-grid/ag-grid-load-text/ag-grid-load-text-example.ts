@@ -10,14 +10,9 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
+import { injectExampleText } from '../l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-
-const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
-    column0: 'Text ' + index,
-    column1: 'Text ' + index,
-    column2: 'Text ' + index
-}));
 
 @Component({
     selector: 'ag-grid-load-text-example-loading-text',
@@ -60,8 +55,8 @@ export class AgGridLoadTextExampleLoadingText implements ICellRendererAngularCom
             kbqAgGridTheme
             kbqAgGridThemeDisableCellFocusStyles
             rowModelType="infinite"
-            [columnDefs]="columnDefs"
-            [datasource]="datasource"
+            [columnDefs]="columnDefs()"
+            [datasource]="datasource()"
             [rowSelection]="rowSelection"
             [isFullWidthRow]="isFullWidthRow"
             [fullWidthCellRenderer]="loadingTextRenderer"
@@ -78,25 +73,35 @@ export class AgGridLoadTextExampleLoadingText implements ICellRendererAngularCom
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridLoadTextExample {
+    protected readonly text = injectExampleText();
+
     protected readonly loadingTextRenderer = AgGridLoadTextExampleLoadingText;
 
-    protected readonly columnDefs = [
-        { field: 'column0', headerName: 'Text' },
-        { field: 'column1', headerName: 'Text' },
-        { field: 'column2', headerName: 'Text' }
-    ];
+    protected readonly columnDefs = computed(() =>
+        Array.from({ length: 3 }, (_, i) => ({
+            field: 'column' + i,
+            headerName: this.text().headerText
+        }))
+    );
 
     protected readonly rowSelection: RowSelectionOptions = { mode: 'multiRow', headerCheckbox: false };
 
-    protected readonly datasource: IDatasource = {
+    protected readonly datasource = computed<IDatasource>(() => ({
         getRows: ({ startRow, endRow, successCallback }: IGetRowsParams) => {
             setTimeout(
                 () =>
-                    successCallback(ROW_DATA.slice(startRow, endRow), endRow >= ROW_DATA.length ? ROW_DATA.length : -1),
+                    successCallback(
+                        Array.from({ length: endRow - startRow }, (_, i) =>
+                            Object.fromEntries(
+                                Array.from({ length: 3 }, (_, c) => ['column' + c, this.text().text(startRow + i)])
+                            )
+                        ),
+                        endRow >= 1000 ? 1000 : -1
+                    ),
                 1000
             );
         }
-    };
+    }));
 
     protected readonly isFullWidthRow = ({ rowNode }: IsFullWidthRowParams): boolean => rowNode.data === undefined;
 }

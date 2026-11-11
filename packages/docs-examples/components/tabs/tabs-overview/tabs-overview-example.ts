@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Tabs overview
@@ -9,12 +10,18 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     imports: [KbqTabsModule],
     template: `
         <kbq-tab-group>
-            <kbq-tab label="BruteForce">BruteForce tab content</kbq-tab>
-            <kbq-tab label="Complex attack">Complex attack tab content</kbq-tab>
-            <kbq-tab label="DDoS">DDoS tab content</kbq-tab>
-            <kbq-tab label="DoS">DoS tab content</kbq-tab>
+            <kbq-tab [label]="text().bruteforce">{{ text().tabContent(text().bruteforce) }}</kbq-tab>
+            /kbq-tab>
+            <kbq-tab [label]="text().complexAttack">{{ text().tabContent(text().complexAttack) }}</kbq-tab>
+            /kbq-tab>
+            <kbq-tab [label]="text().ddos">{{ text().tabContent(text().ddos) }}</kbq-tab>
+            /kbq-tab>
+            <kbq-tab [label]="text().dos">{{ text().tabContent(text().dos) }}</kbq-tab>
+            /kbq-tab>
         </kbq-tab-group>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabsOverviewExample {}
+export class TabsOverviewExample {
+    protected readonly text = injectExampleText();
+}

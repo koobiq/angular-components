@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, TemplateRef, inject, viewChild } fr
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Sidepanel modal mode
@@ -13,6 +14,8 @@ import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelOverviewExample {
+    protected readonly text = injectExampleText();
+
     private sidepanelService = inject(KbqSidepanelService);
 
     position = KbqSidepanelPosition.Right;

@@ -8,6 +8,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Validation no message
@@ -25,20 +26,20 @@ import { KbqInputModule } from '@koobiq/components/input';
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>Address</kbq-label>
+                        <kbq-label>{{ text().address }}</kbq-label>
                         <input formControlName="first" kbqInput />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-margin-bottom-xxl">
                     <kbq-form-field>
-                        <kbq-label>Comment</kbq-label>
+                        <kbq-label>{{ text().comment }}</kbq-label>
                         <input formControlName="last" kbqInput />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-align-start-start">
-                    <button color="contrast" kbq-button type="submit">Submit</button>
+                    <button color="contrast" kbq-button type="submit">{{ text().submit }}</button>
                 </div>
             </div>
         </form>
@@ -58,6 +59,8 @@ import { KbqInputModule } from '@koobiq/components/input';
     }
 })
 export class ValidationNoMessageExample {
+    protected readonly text = injectExampleText();
+
     protected readonly form = new FormGroup({
         first: new FormControl('', [Validators.required]),
         last: new FormControl('')

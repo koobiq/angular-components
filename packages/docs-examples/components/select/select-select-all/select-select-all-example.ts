@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Select all
@@ -9,10 +10,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-select multiple selectAll placeholder="Placeholder" [value]="selected">
+            <kbq-select multiple selectAll [placeholder]="text().placeholder" [value]="selected">
                 <kbq-cleaner />
 
-                @for (option of options; track option) {
+                @for (option of options(); track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
             </kbq-select>
@@ -32,6 +33,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectSelectAllExample {
-    readonly options = Array.from({ length: 6 }).map((_, i) => `Option ${i + 1}`);
+    protected readonly text = injectExampleText();
+
+    readonly options = computed(() => Array.from({ length: 6 }, (_, i) => this.text().optionN(i + 1)));
     readonly selected = [this.options[1]];
 }

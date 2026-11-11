@@ -2,37 +2,37 @@
     <kbq-button-toggle-group #group1="kbqButtonToggleGroup">
         <kbq-button-toggle [checked]="true" [value]="1">
             <i kbq-icon="kbq-briefcase_16"></i>
-            Курьером
+            {{ text().courier }}
         </kbq-button-toggle>
         <kbq-button-toggle [value]="2">
             <i kbq-icon="kbq-briefcase_16"></i>
-            Ослик Экспресс
+            {{ text().donkeyExpress }}
         </kbq-button-toggle>
         <kbq-button-toggle [value]="3">
             <i kbq-icon="kbq-briefcase_16"></i>
-            Почтой Средиземья
+            {{ text().middleEarthPost }}
         </kbq-button-toggle>
     </kbq-button-toggle-group>
 </div>
 
 <div class="layout-margin-bottom-m">
     <kbq-button-toggle-group #group2="kbqButtonToggleGroup">
-        <kbq-button-toggle [checked]="true" [value]="1">Курьером</kbq-button-toggle>
-        <kbq-button-toggle [value]="2">Ослик Экспресс</kbq-button-toggle>
-        <kbq-button-toggle [value]="3">Почтой Средиземья</kbq-button-toggle>
+        <kbq-button-toggle [checked]="true" [value]="1">{{ text().courier }}</kbq-button-toggle>
+        <kbq-button-toggle [value]="2">{{ text().donkeyExpress }}</kbq-button-toggle>
+        <kbq-button-toggle [value]="3">{{ text().middleEarthPost }}</kbq-button-toggle>
     </kbq-button-toggle-group>
 </div>
 
 <div>
     <!-- an icon carries no accessible name, so an icon-only toggle needs one of its own -->
-    <kbq-button-toggle-group #group3="kbqButtonToggleGroup" aria-label="Способ доставки">
-        <kbq-button-toggle aria-label="Курьером" [checked]="true" [value]="1">
+    <kbq-button-toggle-group #group3="kbqButtonToggleGroup" [aria-label]="text().deliveryMethod">
+        <kbq-button-toggle [aria-label]="text().courier" [checked]="true" [value]="1">
             <i kbq-icon="kbq-briefcase_16"></i>
         </kbq-button-toggle>
-        <kbq-button-toggle aria-label="Ослик Экспресс" [value]="2">
+        <kbq-button-toggle [aria-label]="text().donkeyExpress" [value]="2">
             <i kbq-icon="kbq-briefcase_16"></i>
         </kbq-button-toggle>
-        <kbq-button-toggle aria-label="Почтой Средиземья" [value]="3">
+        <kbq-button-toggle [aria-label]="text().middleEarthPost" [value]="3">
             <i kbq-icon="kbq-briefcase_16"></i>
         </kbq-button-toggle>
     </kbq-button-toggle-group>

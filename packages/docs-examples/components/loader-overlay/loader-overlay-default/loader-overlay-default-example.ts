@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Loader-overlay default
@@ -15,9 +16,11 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text
-            <kbq-loader-overlay [text]="'Загрузка'" />
+            <kbq-loader-overlay [text]="text().loading" />
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoaderOverlayDefaultExample {}
+export class LoaderOverlayDefaultExample {
+    protected readonly text = injectExampleText();
+}

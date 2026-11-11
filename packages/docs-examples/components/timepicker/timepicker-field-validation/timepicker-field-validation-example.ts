@@ -5,6 +5,7 @@ import { DateAdapter } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { DateTime } from 'luxon';
+import { injectExampleText } from '../l10n';
 
 /** @title Timepicker field validation */
 @Component({
@@ -15,21 +16,23 @@ import { DateTime } from 'luxon';
             <i kbq-icon="kbq-clock_16" kbqPrefix></i>
             <input kbqTimepicker [max]="max" [min]="min" [formControl]="control" [format]="timeFormats.HHmm" />
             @if (control.hasError('required')) {
-                <kbq-error>Required</kbq-error>
+                <kbq-error>{{ text().required }}</kbq-error>
             }
             <!-- Component built-in validation -->
             @if (control.hasError('kbqTimepickerLowerThenMin')) {
-                <kbq-error>Min is {{ min.toFormat(timeFormats.HHmm) }}</kbq-error>
+                <kbq-error>{{ text().minIs(min.toFormat(timeFormats.HHmm)) }}</kbq-error>
             }
             <!-- Component built-in validation -->
             @if (control.hasError('kbqTimepickerHigherThenMax')) {
-                <kbq-error>Maximum is {{ max.toFormat(timeFormats.HHmm) }}</kbq-error>
+                <kbq-error>{{ text().maxIs(max.toFormat(timeFormats.HHmm)) }}</kbq-error>
             }
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimepickerFieldValidationExample {
+    protected readonly text = injectExampleText();
+
     private readonly adapter = inject(DateAdapter<DateTime>);
     protected readonly timeFormats = TimeFormats;
 

@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Breadcrumbs custom-template
@@ -17,7 +18,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     ],
     template: `
         <nav kbq-breadcrumbs>
-            @for (breadcrumb of breadcrumbs; track breadcrumb) {
+            @for (breadcrumb of breadcrumbs(); track breadcrumb) {
                 <kbq-breadcrumb-item [routerLink]="breadcrumb.url" [text]="breadcrumb.label">
                     <a
                         *kbqBreadcrumbView
@@ -39,11 +40,13 @@ import { KbqIconModule } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsCustomTemplateExample {
-    breadcrumbs = [
-        { label: 'Information Security', url: '/information-security' },
-        { label: 'Access Control', url: '/information-security/access-control' },
-        { label: 'Authorization', url: '/information-security/access-control/authorization' },
+    protected readonly text = injectExampleText();
+
+    readonly breadcrumbs = computed(() => [
+        { label: this.text().informationSecurity, url: '/information-security' },
+        { label: this.text().accessControl, url: '/information-security/access-control' },
+        { label: this.text().authorization, url: '/information-security/access-control/authorization' },
         { label: 'RBAC', url: '/information-security/access-control/authorization/rbac' },
-        { label: 'Roles', url: '/information-security/access-control/authorization/rbac/roles' }
-    ];
+        { label: this.text().roles, url: '/information-security/access-control/authorization/rbac/roles' }
+    ]);
 }

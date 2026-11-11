@@ -1,26 +1,26 @@
 <div class="layout-column layout-fill layout-align-center-center docs-example-vertical-margin">
     <kbq-accordion #accordion stateSavingKey="accordion-state-saving-example" style="width: 300px" [type]="'multiple'">
         <kbq-accordion-item [value]="'delivery'">
-            <button kbq-accordion-trigger type="button">Доставка</button>
+            <button kbq-accordion-trigger type="button">{{ text().delivery }}</button>
             <kbq-accordion-content>
-                Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                {{ text().content }}
             </kbq-accordion-content>
         </kbq-accordion-item>
         <kbq-accordion-item [value]="'payment'">
-            <button kbq-accordion-trigger type="button">Оплата</button>
+            <button kbq-accordion-trigger type="button">{{ text().payment }}</button>
             <kbq-accordion-content>
-                Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                {{ text().content }}
             </kbq-accordion-content>
         </kbq-accordion-item>
         <kbq-accordion-item [value]="'refund'">
-            <button kbq-accordion-trigger type="button">Возврат</button>
+            <button kbq-accordion-trigger type="button">{{ text().refund }}</button>
             <kbq-accordion-content>
-                Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона
+                {{ text().content }}
             </kbq-accordion-content>
         </kbq-accordion-item>
     </kbq-accordion>
 
     <button kbq-button class="layout-margin-top-l" type="button" (click)="accordion.clearSavedState()">
-        Reset saved state
+        {{ text().resetSavedState }}
     </button>
 </div>

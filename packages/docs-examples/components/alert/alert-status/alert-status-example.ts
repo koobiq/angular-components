@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAlert, KbqAlertColors, KbqAlertStyles, KbqAlertTitle } from '@koobiq/components/alert';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Alert status
@@ -18,9 +19,9 @@ import { KbqIcon } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertStatusExample {
+    protected readonly text = injectExampleText();
+
     colors = KbqComponentColors;
     alertStyles = KbqAlertStyles;
     alertColors = KbqAlertColors;
-    text =
-        'If there is no heading, do not put a period at the end of the last sentence. If the message contains both body text and a heading, put a period at the end of the body text.';
 }

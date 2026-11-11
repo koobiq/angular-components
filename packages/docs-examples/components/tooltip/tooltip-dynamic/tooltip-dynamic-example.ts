@@ -3,6 +3,7 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title tooltip-dynamic-example
@@ -28,6 +29,8 @@ import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TooltipDynamicExample {
+    protected readonly text = injectExampleText();
+
     private readonly injector = inject(Injector);
 
     private dynamicTooltip: KbqTooltipTrigger;

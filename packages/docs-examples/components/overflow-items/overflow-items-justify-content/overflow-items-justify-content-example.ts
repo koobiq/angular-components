@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Overflow items justify content
@@ -26,7 +27,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 </kbq-badge>
             }
             <div class="layout-margin-right-xs" kbqOverflowItemsResult>
-                and {{ kbqOverflowItems.hiddenItemIDs().size }} more
+                {{ text().andMore(kbqOverflowItems.hiddenItemIDs().size) }}
             </div>
         </div>
     `,
@@ -60,6 +61,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverflowItemsJustifyContentExample {
+    protected readonly text = injectExampleText();
+
     readonly items = Array.from({ length: 7 }, (_, i) => `Item${i}`);
     readonly justifyContentOptions = ['center', 'start', 'end', 'space-between', 'space-around'] as const;
     readonly justifyContent = model(this.justifyContentOptions[0]);

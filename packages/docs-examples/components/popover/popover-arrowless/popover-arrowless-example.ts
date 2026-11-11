@@ -3,6 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpSizes } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Popover arrowless
@@ -17,7 +18,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     template: `
         <ng-template #customContent>
             <div [style.width.px]="400">
-                <div class="layout-margin-bottom-s">I wonder what this?</div>
+                <div class="layout-margin-bottom-s">{{ text().wonder }}</div>
                 <kbq-form-field>
                     <input kbqInput placeholder="Interesting thought" />
                 </kbq-form-field>
@@ -26,8 +27,8 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
 
         <ng-template #customFooter>
             <div class="layout-row layout-wrap layout-gap-l">
-                <button color="contrast" kbq-button (click)="kbqPopover.hide(0)">Save</button>
-                <button kbq-button (click)="kbqPopover.hide(0)">Cancel</button>
+                <button color="contrast" kbq-button (click)="kbqPopover.hide(0)">{{ text().save }}</button>
+                <button kbq-button (click)="kbqPopover.hide(0)">{{ text().cancel }}</button>
             </div>
         </ng-template>
 
@@ -49,6 +50,8 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     }
 })
 export class PopoverArrowlessExample {
+    protected readonly text = injectExampleText();
+
     colors = KbqComponentColors;
     protected readonly popoverSize = PopUpSizes.Large;
 }

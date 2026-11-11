@@ -1,8 +1,10 @@
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
 import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
+import { injectExampleText } from '../l10n';
+import { injectExampleText as injectMetricsText } from './l10n';
 
-type Metric = { id: number; name: string };
+type Metric = { id: number };
 
 /**
  * @title Draggable list with transfer between lists
@@ -21,7 +23,7 @@ type Metric = { id: number; name: string };
                 (dropped)="dropped($event)"
             >
                 @for (metric of availableMetrics(); track metric.id) {
-                    <kbq-list-option [value]="metric">{{ metric.name }}</kbq-list-option>
+                    <kbq-list-option [value]="metric">{{ metricName(metric.id) }}</kbq-list-option>
                 }
             </kbq-list-selection>
 
@@ -34,7 +36,7 @@ type Metric = { id: number; name: string };
                 (dropped)="dropped($event)"
             >
                 @for (metric of selectedMetrics(); track metric.id) {
-                    <kbq-list-option [value]="metric">{{ metric.name }}</kbq-list-option>
+                    <kbq-list-option [value]="metric">{{ metricName(metric.id) }}</kbq-list-option>
                 }
             </kbq-list-selection>
         </div>
@@ -42,13 +44,17 @@ type Metric = { id: number; name: string };
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListDraggableConnectedExample {
-    protected readonly availableMetrics = signal<Metric[]>([
-        { id: 1, name: 'CPU load' },
-        { id: 2, name: 'Memory usage' },
-        { id: 3, name: 'Disk I/O' }
-    ]);
+    protected readonly text = injectExampleText();
 
-    protected readonly selectedMetrics = signal<Metric[]>([{ id: 4, name: 'Network traffic' }]);
+    protected metricName(id: number): string {
+        return this.metricsText().metrics[id - 1];
+    }
+
+    private readonly metricsText = injectMetricsText();
+
+    protected readonly availableMetrics = signal<Metric[]>([{ id: 1 }, { id: 2 }, { id: 3 }]);
+
+    protected readonly selectedMetrics = signal<Metric[]>([{ id: 4 }]);
 
     protected dropped({
         previousIndex,

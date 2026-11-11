@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqSplitter, KbqSplitterPanel } from '@koobiq/components/splitter';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Splitter nested
@@ -61,4 +62,6 @@ import { KbqSplitter, KbqSplitterPanel } from '@koobiq/components/splitter';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitterNestedExample {}
+export class SplitterNestedExample {
+    protected readonly text = injectExampleText();
+}

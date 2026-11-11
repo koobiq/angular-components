@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
 import { Direction, KbqSplitterModule } from '@koobiq/components/splitter/deprecated';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Sidebar with splitter
@@ -18,14 +19,18 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter/deprec
                 [position]="position.Left"
                 (stateChanged)="onStateChanged($event)"
             >
-                <div kbq-sidebar-opened minWidth="170px" width="170px" maxWidth="50%">Opened content</div>
-                <div kbq-sidebar-closed width="44px">Closed content</div>
+                <div kbq-sidebar-opened minWidth="170px" width="170px" maxWidth="50%">{{ text().openedContent }}</div>
+                <div kbq-sidebar-closed width="44px">{{ text().closedContent }}</div>
             </kbq-sidebar>
 
             <main kbq-splitter-area>
-                <div>Main content</div>
-                <div><button kbq-button (click)="toggle()">Toggle model</button></div>
-                <div><button kbq-button (click)="sidebar.toggle()">Toggle</button></div>
+                <div>{{ text().mainContent }}</div>
+                <div>
+                    <button kbq-button (click)="toggle()">{{ text().toggleModel }}</button>
+                </div>
+                <div>
+                    <button kbq-button (click)="sidebar.toggle()">{{ text().toggle }}</button>
+                </div>
             </main>
         </kbq-splitter>
     `,
@@ -65,6 +70,8 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter/deprec
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarWithSplitterExample {
+    protected readonly text = injectExampleText();
+
     readonly direction = Direction;
     readonly position = SidebarPositions;
 

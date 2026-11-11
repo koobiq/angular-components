@@ -2,6 +2,7 @@ import {
     afterNextRender,
     ChangeDetectionStrategy,
     Component,
+    computed,
     ElementRef,
     inject,
     TemplateRef,
@@ -14,10 +15,12 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToastService } from '@koobiq/components/toast';
+import { injectExampleText } from '../l10n';
 
 type ExampleAction = {
     id: string;
     icon: string;
+    label: string;
 };
 
 @Component({
@@ -30,7 +33,7 @@ type ExampleAction = {
         KbqDividerModule
     ],
     template: `
-        <button kbq-button (click)="open()">open</button>
+        <button kbq-button (click)="open()">{{ text().open }}</button>
 
         <ng-template let-data>
             <div
@@ -39,11 +42,11 @@ type ExampleAction = {
                 [additionalResizeObserverTargets]="additionalResizeObserverTargets"
             >
                 <div order="99" [kbqOverflowItem]="action.Counter">
-                    <div class="example-counter">Selected: {{ data.length }}</div>
+                    <div class="example-counter">{{ text().selected }} {{ data.length }}</div>
                     <kbq-divider class="example-divider-vertical" [vertical]="true" />
                 </div>
 
-                @for (action of actions; track action.id) {
+                @for (action of actions(); track action.id) {
                     <button
                         color="contrast"
                         kbq-button
@@ -52,7 +55,7 @@ type ExampleAction = {
                         (click)="onAction(action)"
                     >
                         <i kbq-icon [class]="action.icon"></i>
-                        {{ action.id }}
+                        {{ action.label }}
                     </button>
                 }
 
@@ -63,7 +66,7 @@ type ExampleAction = {
                         kbqOverflowItemsResult
                         color="contrast"
                         kbq-button
-                        aria-label="More"
+                        [attr.aria-label]="text().more"
                         [kbqDropdownTriggerFor]="dropdown"
                     >
                         <i kbq-icon="kbq-ellipsis-vertical_16"></i>
@@ -71,14 +74,14 @@ type ExampleAction = {
                 }
 
                 <kbq-dropdown #dropdown="kbqDropdown">
-                    <div class="example-counter-dropdown">Selected: {{ data.length }}</div>
+                    <div class="example-counter-dropdown">{{ text().selected }} {{ data.length }}</div>
                     <kbq-divider />
 
-                    @for (action of actions; track action.id) {
+                    @for (action of actions(); track action.id) {
                         @if (hiddenItemIDs.has(action.id)) {
                             <button kbq-dropdown-item (click)="onAction(action)">
                                 <i [kbq-icon]="action.icon"></i>
-                                {{ action.id }}
+                                {{ action.label }}
                             </button>
                         }
                     }
@@ -125,17 +128,19 @@ type ExampleAction = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleActionsPanel {
+    protected readonly text = injectExampleText();
+
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
     private actionsPanelRef: KbqActionsPanelRef | null;
     private readonly toast = inject(KbqToastService);
 
-    protected readonly actions: ExampleAction[] = [
-        { id: 'Responsible', icon: 'kbq-user_16' },
-        { id: 'Status', icon: 'kbq-arrow-right-s_16' },
-        { id: 'Archive', icon: 'kbq-box-archive-arrow-down_16' }
-    ];
+    protected readonly actions = computed<ExampleAction[]>(() => [
+        { id: 'Responsible', icon: 'kbq-user_16', label: this.text().responsible },
+        { id: 'Status', icon: 'kbq-arrow-right-s_16', label: this.text().status },
+        { id: 'Archive', icon: 'kbq-box-archive-arrow-down_16', label: this.text().archive }
+    ]);
     protected readonly action = { Counter: 'counter' };
     protected readonly additionalResizeObserverTargets = this.elementRef.nativeElement;
 
@@ -162,7 +167,7 @@ export class ExampleActionsPanel {
     }
 
     protected onAction(action: ExampleAction): void {
-        this.toast.show({ title: `Action initiated ${action.id}` });
+        this.toast.show({ title: this.text().actionInitiated(action.label) });
     }
 }
 
@@ -173,13 +178,13 @@ export class ExampleActionsPanel {
     selector: 'actions-panel-adaptive-example',
     imports: [ExampleActionsPanel],
     template: `
-        <div>First, the number of records is hidden</div>
+        <div>{{ text().adaptiveFirst }}</div>
         <example-actions-panel [style.width.px]="377" />
 
-        <div>Then, the actions are hidden under the dropdown menu</div>
+        <div>{{ text().adaptiveThen }}</div>
         <example-actions-panel [style.width.px]="308" />
 
-        <div>Everything is hidden under the dropdown menu</div>
+        <div>{{ text().adaptiveAll }}</div>
         <example-actions-panel [style.width.px]="89" />
     `,
     styles: `
@@ -197,4 +202,6 @@ export class ExampleActionsPanel {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsPanelAdaptiveExample {}
+export class ActionsPanelAdaptiveExample {
+    protected readonly text = injectExampleText();
+}

@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Select height
@@ -11,7 +12,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <kbq-form-field>
             <kbq-label>panelMaxHeight</kbq-label>
             <kbq-select [panelMaxHeight]="500" [(value)]="value">
-                @for (option of options; track option) {
+                @for (option of options(); track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
             </kbq-select>
@@ -20,7 +21,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <kbq-form-field>
             <kbq-label>--kbq-select-panel-size-max-height</kbq-label>
             <kbq-select [panelClass]="'example-select-panel-height'" [(value)]="themedValue">
-                @for (option of options; track option) {
+                @for (option of options(); track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
             </kbq-select>
@@ -47,7 +48,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectHeightExample {
-    readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i + 1}`);
+    protected readonly text = injectExampleText();
+
+    readonly options = computed(() => Array.from({ length: 10 }, (_, i) => this.text().optionN(i + 1)));
     protected readonly value = model(this.options[0]);
     protected readonly themedValue = model(this.options[0]);
 }

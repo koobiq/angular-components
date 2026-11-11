@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ViewEncapsulation } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Tabs with scroll vertical
@@ -10,8 +11,8 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     template: `
         <div class="example-tabs-with-scroll-vertical">
             <kbq-tab-group vertical>
-                @for (tab of tabs; track tab) {
-                    <kbq-tab [label]="tab">{{ tab }} tab content</kbq-tab>
+                @for (tab of tabs(); track tab) {
+                    <kbq-tab [label]="tab">{{ text().tabContent(tab) }}</kbq-tab>
                 }
             </kbq-tab-group>
         </div>
@@ -21,16 +22,18 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     encapsulation: ViewEncapsulation.None
 })
 export class TabsWithScrollVerticalExample {
-    readonly tabs = [
-        'BruteForce',
-        'Complex Attack',
-        'DDoS',
-        'HIPS alert',
-        'IDS/IPS Alert',
-        'Zero-Day Exploit',
-        'XSS',
-        'Malware',
+    protected readonly text = injectExampleText();
+
+    readonly tabs = computed(() => [
+        this.text().bruteforce,
+        this.text().complexAttack,
+        this.text().ddos,
+        this.text().hipsAlert,
+        this.text().idsIpsAlert,
+        this.text().zeroDay,
+        this.text().xss,
+        this.text().malware,
         'Ransomware',
         'Phishing'
-    ];
+    ]);
 }

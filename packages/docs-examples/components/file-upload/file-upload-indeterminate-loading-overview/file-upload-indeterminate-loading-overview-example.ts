@@ -7,6 +7,7 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title File-upload indeterminate loading
@@ -30,7 +31,7 @@ import { take } from 'rxjs/operators';
         </kbq-file-upload>
 
         @if (isLoading) {
-            <p class="kbq-text-big">Immediately load to backend...</p>
+            <p class="kbq-text-big">{{ text().immediatelyLoad }}</p>
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,6 +40,8 @@ import { take } from 'rxjs/operators';
     }
 })
 export class FileUploadIndeterminateLoadingOverviewExample {
+    protected readonly text = injectExampleText();
+
     isLoading: boolean;
 
     onFileChange(file: KbqFileItem | null) {

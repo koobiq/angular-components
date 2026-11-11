@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqPopoverModule } from '@koobiq/components/popover';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Popover at the click point
@@ -9,7 +10,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     selector: 'popover-relative-to-pointer-example',
     imports: [KbqButtonModule, KbqPopoverModule],
     template: `
-        <ng-template #owner let-owner>Information about {{ owner }}.</ng-template>
+        <ng-template #owner let-owner>{{ text().informationAbout(owner) }}</ng-template>
 
         <button
             type="button"
@@ -36,6 +37,8 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverRelativeToPointerExample {
+    protected readonly text = injectExampleText();
+
     protected selectedOwner = 'Ivan Ivanov';
 
     protected selectOwner(event: MouseEvent): void {

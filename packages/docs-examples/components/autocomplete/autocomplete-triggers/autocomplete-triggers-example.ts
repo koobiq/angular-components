@@ -4,6 +4,7 @@ import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqTextQuery } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
+import { injectExampleText } from '../l10n';
 
 interface Suggestion {
     /** What the option shows. */
@@ -25,10 +26,10 @@ interface Suggestion {
     ],
     template: `
         <kbq-form-field>
-            <kbq-label>Comment</kbq-label>
+            <kbq-label>{{ text().comment }}</kbq-label>
             <textarea
                 kbqTextarea
-                placeholder="Type / for a snippet or @ to mention a colleague"
+                [placeholder]="text().typeTriggers"
                 [formControl]="control"
                 [kbqAutocomplete]="auto"
                 [kbqAutocompleteRelativeToCaret]="true"
@@ -55,6 +56,8 @@ interface Suggestion {
     }
 })
 export class AutocompleteTriggersExample {
+    protected readonly text = injectExampleText();
+
     protected readonly control = new FormControl('');
     protected readonly triggers = ['/', '@'];
     protected readonly query = signal<KbqTextQuery | null>(null);
@@ -64,7 +67,7 @@ export class AutocompleteTriggersExample {
 
         if (!query) return [];
 
-        const suggestions = query.trigger === '@' ? this.colleagues : this.snippets;
+        const suggestions = query.trigger === '@' ? this.colleagues() : this.snippets();
         const text = query.text.toLowerCase();
 
         return suggestions.filter(({ insert, label }) =>
@@ -74,15 +77,15 @@ export class AutocompleteTriggersExample {
 
     protected readonly insertText = (suggestion: Suggestion): string => suggestion.insert;
 
-    private readonly snippets: Suggestion[] = [
-        { label: '/closed — closing note', insert: 'Closed as a false positive.' },
-        { label: '/escalate — escalation note', insert: 'Escalated to the second line.' },
-        { label: '/sign — signature', insert: 'Best regards, SOC team' }
-    ];
+    protected readonly snippets = computed<Suggestion[]>(() => [
+        { label: this.text().closedLabel, insert: this.text().closedInsert },
+        { label: this.text().escalateLabel, insert: this.text().escalateInsert },
+        { label: this.text().signLabel, insert: this.text().signInsert }
+    ]);
 
-    private readonly colleagues: Suggestion[] = [
-        { label: 'Alice Johnson', insert: '@alice' },
-        { label: 'Bob Smith', insert: '@bob' },
-        { label: 'Carol White', insert: '@carol' }
-    ];
+    protected readonly colleagues = computed<Suggestion[]>(() => [
+        { label: this.text().alice, insert: '@alice' },
+        { label: this.text().bob, insert: '@bob' },
+        { label: this.text().carol, insert: '@carol' }
+    ]);
 }

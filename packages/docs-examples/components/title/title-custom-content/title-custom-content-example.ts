@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Custom tooltip content
@@ -13,12 +14,12 @@ import { KbqTitleModule } from '@koobiq/components/title';
     ],
     template: `
         <div class="example-title-custom-content">
-            <div class="kbq-subheading">Plain string content</div>
+            <div class="kbq-subheading">{{ text().plainStringContent }}</div>
             <div class="example-title-custom-content__row kbq-text-normal" [kbq-title]="stringContent">
                 {{ longValue }}
             </div>
 
-            <div class="kbq-subheading">Rich template content</div>
+            <div class="kbq-subheading">{{ text().richTemplateContent }}</div>
             <div class="example-title-custom-content__row kbq-text-normal" [kbq-title]="templateContent">
                 {{ longValue }}
             </div>
@@ -27,7 +28,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
         <ng-template #templateContent>
             <div class="example-title-custom-content__tooltip">
                 <i kbq-icon="kbq-circle-info_16" style="color: var(--kbq-icon-white)"></i>
-                <span>Rich tooltip with custom markup</span>
+                <span>{{ text().richTooltip }}</span>
             </div>
         </ng-template>
     `,
@@ -35,6 +36,8 @@ import { KbqTitleModule } from '@koobiq/components/title';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleCustomContentExample {
-    longValue = 'A long text that does not fit into the container and is truncated with an ellipsis';
-    stringContent = 'Tooltip content provided as a plain string';
+    protected readonly text = injectExampleText();
+
+    longValue = this.text().longValue;
+    stringContent = this.text().stringContent;
 }

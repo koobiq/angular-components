@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Inline edit horizontal list
@@ -91,7 +92,11 @@ import { KbqInputModule } from '@koobiq/components/input';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditHorizontalListExample {
-    protected readonly placeholder = 'Placeholder';
+    protected readonly text = injectExampleText();
+
+    protected get placeholder(): string {
+        return this.text().placeholder;
+    }
 
     protected readonly form = new FormGroup({
         country: new FormControl('Spain'),

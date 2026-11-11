@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqTableModule } from '@koobiq/components/table';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Badge table
@@ -17,5 +18,7 @@ import { KbqTableModule } from '@koobiq/components/table';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BadgeTableExample {
+    protected readonly text = injectExampleText();
+
     colors = KbqBadgeColors;
 }

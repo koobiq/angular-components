@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqUserInfo, KbqUsername } from '@koobiq/components/username';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Username as link
@@ -17,6 +18,8 @@ import { KbqUserInfo, KbqUsername } from '@koobiq/components/username';
     }
 })
 export class UsernameAsLinkExample {
+    protected readonly text = injectExampleText();
+
     userInfo: KbqUserInfo = {
         firstName: 'Maxwell',
         middleName: 'Alan',

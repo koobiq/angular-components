@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqLink } from '@koobiq/components/link';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Link size
@@ -18,7 +19,9 @@ import { KbqLink } from '@koobiq/components/link';
         </kbq-button-toggle-group>
 
         <div class="example-stage layout-row layout-align-center-center">
-            <a kbqLink href="https://koobiq.io/en/components/link" target="_blank" [size]="size()">Scan report</a>
+            <a kbqLink href="https://koobiq.io/en/components/link" target="_blank" [size]="size()">
+                {{ text().scanReport }}
+            </a>
         </div>
     `,
     styles: `
@@ -30,5 +33,7 @@ import { KbqLink } from '@koobiq/components/link';
     host: { class: 'layout-column layout-align-center-center' }
 })
 export class LinkSizeExample {
+    protected readonly text = injectExampleText();
+
     readonly size = model<KbqDefaultSizes>('normal');
 }

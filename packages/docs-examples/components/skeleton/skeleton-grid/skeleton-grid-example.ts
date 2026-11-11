@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqSkeletonTable } from '@koobiq/components/skeleton';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Skeleton grid preset
@@ -18,4 +19,6 @@ import { KbqSkeletonTable } from '@koobiq/components/skeleton';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonGridExample {}
+export class SkeletonGridExample {
+    protected readonly text = injectExampleText();
+}

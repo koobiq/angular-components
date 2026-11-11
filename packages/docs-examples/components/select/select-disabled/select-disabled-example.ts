@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Select disabled
@@ -9,10 +10,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqSelectModule],
     template: `
         <div class="example-row">
-            <div class="kbq-form__label">For select</div>
+            <div class="kbq-form__label">{{ text().forSelect }}</div>
             <kbq-form-field>
-                <kbq-select placeholder="Placeholder" disabled [value]="selected">
-                    @for (option of options; track option) {
+                <kbq-select disabled [placeholder]="text().placeholder" [value]="selected">
+                    @for (option of options(); track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                 </kbq-select>
@@ -20,10 +21,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
         </div>
 
         <div class="example-row">
-            <div class="kbq-form__label">For options</div>
+            <div class="kbq-form__label">{{ text().forOptions }}</div>
             <kbq-form-field>
-                <kbq-select placeholder="Placeholder" [value]="selected">
-                    @for (option of options; track option) {
+                <kbq-select [placeholder]="text().placeholder" [value]="selected">
+                    @for (option of options(); track option) {
                         <kbq-option [disabled]="$odd" [value]="option">{{ option }}</kbq-option>
                     }
                 </kbq-select>
@@ -31,12 +32,12 @@ import { KbqSelectModule } from '@koobiq/components/select';
         </div>
 
         <div class="example-row">
-            <div class="kbq-form__label">For optgroup</div>
+            <div class="kbq-form__label">{{ text().forOptgroup }}</div>
             <kbq-form-field>
-                <kbq-select placeholder="Placeholder" [value]="selected">
-                    @for (group of groups; track group; let odd = $odd) {
+                <kbq-select [placeholder]="text().placeholder" [value]="selected">
+                    @for (group of groups(); track group; let odd = $odd) {
                         <kbq-optgroup [label]="group" [disabled]="odd">
-                            @for (option of options; track option) {
+                            @for (option of options(); track option) {
                                 <kbq-option [value]="option">{{ option }}</kbq-option>
                             }
                         </kbq-optgroup>
@@ -63,7 +64,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectDisabledExample {
-    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
-    readonly groups = Array.from({ length: 3 }).map((_, i) => `Group #${i}`);
+    protected readonly text = injectExampleText();
+
+    readonly options = computed(() => Array.from({ length: 5 }, (_, i) => this.text().optionN(i)));
+    readonly groups = computed(() => Array.from({ length: 3 }, (_, i) => this.text().groupN(i)));
     readonly selected = this.options[0];
 }

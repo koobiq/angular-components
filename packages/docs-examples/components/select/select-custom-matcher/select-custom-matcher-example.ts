@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title select-custom-matcher
@@ -21,7 +22,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 <i class="layout-padding-left-3xs" kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
 
-            @for (option of options; track option) {
+            @for (option of options(); track option) {
                 <kbq-option [value]="option">{{ option }}</kbq-option>
             }
         </kbq-select>
@@ -40,6 +41,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectCustomMatcherExample {
-    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    protected readonly text = injectExampleText();
+
+    readonly options = computed(() => Array.from({ length: 5 }, (_, i) => this.text().optionN(i)));
     readonly selected = this.options[0];
 }

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Popover hover
@@ -11,16 +12,16 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     imports: [KbqPopoverModule, KbqButtonModule, KbqInputModule],
     template: `
         <ng-template #customContent>
-            <div class="layout-margin-bottom-s">Интересно, что это такое?</div>
+            <div class="layout-margin-bottom-s">{{ text().wonder }}</div>
             <kbq-form-field>
-                <input kbqInput placeholder="Интересная мысль" />
+                <input kbqInput [placeholder]="text().placeholder" />
             </kbq-form-field>
         </ng-template>
 
         <ng-template #customFooter>
             <div class="layout-row layout-wrap" style="gap: 16px">
-                <button kbq-button [color]="'contrast'" (click)="kbqPopover.hide(0)">Сохранить</button>
-                <button kbq-button (click)="kbqPopover.hide(0)">Отмена</button>
+                <button kbq-button [color]="'contrast'" (click)="kbqPopover.hide(0)">{{ text().save }}</button>
+                <button kbq-button (click)="kbqPopover.hide(0)">{{ text().cancel }}</button>
             </div>
         </ng-template>
 
@@ -43,4 +44,6 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverHoverExample {}
+export class PopoverHoverExample {
+    protected readonly text = injectExampleText();
+}

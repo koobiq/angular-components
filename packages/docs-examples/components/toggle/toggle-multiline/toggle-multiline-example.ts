@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Toggle multiline example
@@ -15,11 +16,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             <kbq-toggle labelPosition="left">
                 Shake to undo
                 <kbq-hint>
-                    If you tend to share your phone by accident, you can disable
-                    <span class="kbq-text-compact-strong">Shake to Undo</span>
-                    to prevent the
-                    <span class="kbq-text-compact-strong">Undo</span>
-                    alert from appearing.
+                    {{ text().shakeToUndoHint }}
                 </kbq-hint>
             </kbq-toggle>
         </div>
@@ -37,4 +34,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         class: 'layout-align-center-center layout-row layout-margin-top-l layout-margin-bottom-l'
     }
 })
-export class ToggleMultilineExample {}
+export class ToggleMultilineExample {
+    protected readonly text = injectExampleText();
+}

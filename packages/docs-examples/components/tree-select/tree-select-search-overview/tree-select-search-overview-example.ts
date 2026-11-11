@@ -5,6 +5,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { injectExampleText } from '../l10n';
 
 export class FileNode {
     children: FileNode[];
@@ -121,7 +122,7 @@ export const DATA_OBJECT = {
                     <kbq-cleaner />
                 </kbq-form-field>
 
-                <div kbq-select-search-empty-result>Ничего не найдено</div>
+                <div kbq-select-search-empty-result>{{ text().nothingFound }}</div>
 
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
@@ -153,6 +154,8 @@ export const DATA_OBJECT = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectSearchOverviewExample implements OnInit {
+    protected readonly text = injectExampleText();
+
     selected = '';
 
     treeControl: FlatTreeControl<FileFlatNode>;

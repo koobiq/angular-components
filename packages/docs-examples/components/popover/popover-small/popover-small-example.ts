@@ -4,6 +4,7 @@ import { PopUpSizes } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
 import { KbqPopoverModule } from '@koobiq/components/popover';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title popover-small
@@ -21,5 +22,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverSmallExample {
+    protected readonly text = injectExampleText();
+
     popUpSizes = PopUpSizes;
 }

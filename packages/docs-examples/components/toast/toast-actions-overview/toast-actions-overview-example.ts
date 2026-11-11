@@ -5,6 +5,7 @@ import { KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { take } from 'rxjs/operators';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Toast actions
@@ -21,6 +22,8 @@ import { take } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastActionsOverviewExample {
+    protected readonly text = injectExampleText();
+
     readonly dropdown = viewChild.required<KbqDropdown>('dropdown');
 
     readonly toastService = inject(KbqToastService);
@@ -30,14 +33,14 @@ export class ToastActionsOverviewExample {
     }
 
     showTwoActionToast(actions: TemplateRef<any>) {
-        this.toastService.show({ title: 'Доступно обновление компонентов', actions });
+        this.toastService.show({ title: this.text().updateAvailableComponents, actions });
     }
 
     showManyActionToast(actions: TemplateRef<any>) {
         const { ref } = this.toastService.show(
             {
-                title: 'Заголовок',
-                caption: 'Подзаголовок, подробности',
+                title: this.text().title,
+                caption: this.text().subtitleDetails,
                 actions
             },
             0

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { AgGridModule } from 'ag-grid-angular';
@@ -6,6 +6,7 @@ import { AllCommunityModule, ColDef, GridApi, GridReadyEvent, ModuleRegistry } f
 import { jsPDF } from 'jspdf';
 import { autoTable } from 'jspdf-autotable';
 import writeExcelFile from 'write-excel-file/browser';
+import { injectExampleText } from '../l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -22,17 +23,17 @@ type ExportTable = {
     imports: [AgGridModule, KbqAgGridThemeModule, KbqButtonModule],
     template: `
         <div class="ag-grid-export-example-actions">
-            <button type="button" kbq-button (click)="downloadCsv()">Download CSV</button>
-            <button type="button" kbq-button (click)="downloadXlsx()">Download XLSX</button>
-            <button type="button" kbq-button (click)="downloadPdf()">Download PDF</button>
+            <button type="button" kbq-button (click)="downloadCsv()">{{ text().download('CSV') }}</button>
+            <button type="button" kbq-button (click)="downloadXlsx()">{{ text().download('XLSX') }}</button>
+            <button type="button" kbq-button (click)="downloadPdf()">{{ text().download('PDF') }}</button>
         </div>
 
         <ag-grid-angular
             kbqAgGridTheme
             kbqAgGridThemeDisableCellFocusStyles
             [alwaysMultiSort]="true"
-            [rowData]="rowData"
-            [columnDefs]="columnDefs"
+            [rowData]="rowData()"
+            [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
             [style.height.px]="300"
             [style.width.%]="100"
@@ -57,26 +58,28 @@ type ExportTable = {
 export class AgGridExportExample {
     private readonly api = signal<GridApi | null>(null);
     private readonly filename = 'example-export';
+    protected readonly text = injectExampleText();
+
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
         filter: true,
         floatingFilter: true
     };
-    protected readonly columnDefs: ColDef[] = [
-        { field: 'column0', headerName: 'Project name', width: 130 },
-        { field: 'column1', headerName: 'Column 1', width: 130 },
-        { field: 'column2', headerName: 'Column 2', width: 130 },
-        { field: 'column3', headerName: 'Column 3', width: 130 },
-        { field: 'column4', headerName: 'Column 4', width: 130 }
-    ];
-    protected readonly rowData = Array.from({ length: 20 }, (_, index) => ({
-        column0: 'Project name ' + index,
-        column1: 'Text ' + index,
-        column2: 'Text ' + index,
-        column3: 'Text ' + index,
-        column4: 'Text ' + index
-    }));
+    protected readonly columnDefs = computed<ColDef[]>(() => [
+        { field: 'column0', headerName: this.text().projectName, width: 130 },
+        ...Array.from({ length: 4 }, (_, i) => ({
+            field: 'column' + (i + 1),
+            headerName: this.text().column(i + 1),
+            width: 130
+        }))
+    ]);
+    protected readonly rowData = computed(() =>
+        Array.from({ length: 20 }, (_, index) => ({
+            column0: this.text().projectNameN(index),
+            ...Object.fromEntries(Array.from({ length: 4 }, (_, i) => ['column' + (i + 1), this.text().text(index)]))
+        }))
+    );
 
     /** Stores the grid API once the grid finishes initializing. */
     protected onGridReady({ api }: GridReadyEvent): void {

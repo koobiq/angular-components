@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     kbqAgGridLoadingOverlayConfigProvider,
@@ -15,17 +15,9 @@ import {
     IGetRowsParams,
     ModuleRegistry
 } from 'ag-grid-community';
+import { injectExampleText } from '../l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-
-const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
-    column0: 'Text ' + index,
-    column1: 'Text ' + index,
-    column2: 'Text ' + index,
-    column3: 'Text ' + index,
-    column4: 'Text ' + index,
-    column5: 'Text ' + index
-}));
 
 /**
  * @title AG Grid with loading overlay
@@ -34,7 +26,9 @@ const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
     selector: 'ag-grid-loading-overlay-example',
     imports: [AgGridModule, KbqAgGridThemeModule, FormsModule, KbqToggleModule],
     template: `
-        <kbq-toggle [(ngModel)]="loading" (ngModelChange)="onLoadingChange($event)">Show loading overlay</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading" (ngModelChange)="onLoadingChange($event)">
+            {{ text().showLoadingOverlay }}
+        </kbq-toggle>
 
         <ag-grid-angular
             kbqAgGridTheme
@@ -48,7 +42,7 @@ const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
             [kbqAgGridLoadingOverlay]="loading()"
             [datasource]="datasource()"
             [defaultColDef]="defaultColDef"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [cacheBlockSize]="20"
             [infiniteInitialRowCount]="6"
         />
@@ -70,17 +64,17 @@ const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridLoadingOverlayExample {
+    protected readonly text = injectExampleText();
+
     protected readonly loading = model(true);
     protected readonly datasource = signal<IDatasource | undefined>(undefined);
 
-    protected readonly columnDefs: ColDef[] = [
-        { field: 'column0', headerName: 'Text' },
-        { field: 'column1', headerName: 'Text' },
-        { field: 'column2', headerName: 'Text' },
-        { field: 'column3', headerName: 'Text' },
-        { field: 'column4', headerName: 'Text' },
-        { field: 'column5', headerName: 'Text' }
-    ];
+    protected readonly columnDefs = computed<ColDef[]>(() =>
+        Array.from({ length: 6 }, (_, i) => ({
+            field: 'column' + i,
+            headerName: this.text().headerText
+        }))
+    );
 
     protected readonly defaultColDef: ColDef = {
         cellRendererSelector: ({ data }: ICellRendererParams) =>
@@ -94,7 +88,18 @@ export class AgGridLoadingOverlayExample {
 
         this.datasource.set({
             getRows: ({ startRow, endRow, successCallback }: IGetRowsParams) => {
-                setTimeout(() => successCallback(ROW_DATA.slice(startRow, endRow), ROW_DATA.length), 1500);
+                setTimeout(
+                    () =>
+                        successCallback(
+                            Array.from({ length: endRow - startRow }, (_, i) =>
+                                Object.fromEntries(
+                                    Array.from({ length: 6 }, (_, c) => ['column' + c, this.text().text(startRow + i)])
+                                )
+                            ),
+                            1000
+                        ),
+                    1500
+                );
             }
         });
     }

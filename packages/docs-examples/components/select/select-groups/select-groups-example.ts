@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Select groups
@@ -10,9 +11,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
     template: `
         <kbq-form-field>
             <kbq-select [value]="selected">
-                @for (group of groups; track group) {
+                @for (group of groups(); track group) {
                     <kbq-optgroup [label]="group">
-                        @for (option of options; track option) {
+                        @for (option of options(); track option) {
                             <kbq-option [value]="option">{{ option }}</kbq-option>
                         }
                     </kbq-optgroup>
@@ -34,7 +35,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectGroupsExample {
-    readonly groups = Array.from({ length: 3 }).map((_, i) => `Group #${i}`);
-    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    protected readonly text = injectExampleText();
+
+    readonly groups = computed(() => Array.from({ length: 3 }, (_, i) => this.text().groupN(i)));
+    readonly options = computed(() => Array.from({ length: 5 }, (_, i) => this.text().optionN(i)));
     readonly selected = this.options[0];
 }

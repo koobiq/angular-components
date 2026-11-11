@@ -19,18 +19,9 @@ import {
     SelectionChangedEvent,
     SelectionColumnDef
 } from 'ag-grid-community';
+import { injectExampleText } from '../l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-
-const ROW_DATA = Array.from({ length: 1000 }, (_, index) => ({
-    id: 'ProjectName' + index,
-    column0: 'ProjectName ' + index,
-    column1: 'Text ' + index,
-    column2: 'Text ' + index,
-    column3: 'Text ' + index,
-    column4: 'Text ' + index,
-    column5: 'Text ' + index
-}));
 
 /**
  * Shape actually worth sending to a backend. `KbqAgGridInfiniteSelectionState.excludedIds` is only
@@ -60,18 +51,18 @@ type SelectionDto = {
             kbqAgGridSelectRowsByShiftArrow
             kbqAgGridSelectRowsByCtrlClick
             [alwaysMultiSort]="true"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
             [rowSelection]="rowSelection"
             [selectionColumnDef]="selectionColumnDef"
-            [kbqAgGridInfiniteSelectionDatasource]="datasource"
+            [kbqAgGridInfiniteSelectionDatasource]="datasource()"
             [getRowId]="getRowId"
             [cacheBlockSize]="10"
             (kbqAgGridInfiniteSelectionStateChange)="onSelectAllChange($event)"
             (selectionChanged)="onSelectionChanged($event)"
         />
         <div class="ag-grid-infinite-selection-example-dto">
-            <span>DTO sent to the backend:</span>
+            <span>{{ text().dtoSentToBackend }}</span>
             <pre><code>{{ selectionDto() | json }}</code></pre>
         </div>
     `,
@@ -104,20 +95,39 @@ type SelectionDto = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridInfiniteSelectionExample {
-    protected readonly columnDefs: ColDef[] = [
-        { field: 'column0', headerName: 'Project name', pinned: 'left', width: 130 },
-        { field: 'column1', headerName: 'Text', width: 130 },
-        { field: 'column2', headerName: 'Text', width: 130 },
-        { field: 'column3', headerName: 'Text', width: 130 },
-        { field: 'column4', headerName: 'Text', width: 130 },
-        { field: 'column5', headerName: 'Text', width: 130 }
-    ];
-    protected readonly datasource: IDatasource = {
-        rowCount: ROW_DATA.length,
+    protected readonly text = injectExampleText();
+
+    protected readonly columnDefs = computed<ColDef[]>(() => [
+        { field: 'column0', headerName: this.text().projectName, pinned: 'left', width: 130 },
+        ...Array.from({ length: 5 }, (_, i) => ({
+            field: 'column' + (i + 1),
+            headerName: this.text().headerText,
+            width: 130
+        }))
+    ]);
+    // The row id is the selection identity: it stays the same in every locale.
+    protected readonly datasource = computed<IDatasource>(() => ({
+        rowCount: 1000,
         getRows: ({ startRow, endRow, successCallback }: IGetRowsParams) => {
-            setTimeout(() => successCallback(ROW_DATA.slice(startRow, endRow), ROW_DATA.length), 500);
+            setTimeout(
+                () =>
+                    successCallback(
+                        Array.from({ length: endRow - startRow }, (_, i) => ({
+                            id: 'ProjectName' + (startRow + i),
+                            column0: this.text().projectNameN(startRow + i),
+                            ...Object.fromEntries(
+                                Array.from({ length: 5 }, (_, c) => [
+                                    'column' + (c + 1),
+                                    this.text().text(startRow + i)
+                                ])
+                            )
+                        })),
+                        1000
+                    ),
+                500
+            );
         }
-    };
+    }));
     protected readonly getRowId: GetRowIdFunc = ({ data }) => data.id;
     protected readonly defaultColDef: ColDef = {
         cellRendererSelector: ({ data }: ICellRendererParams) =>

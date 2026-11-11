@@ -2,15 +2,15 @@
     <kbq-button-toggle-group #group1="kbqButtonToggleGroup" [disabled]="true" [(ngModel)]="model">
         <kbq-button-toggle [value]="1">
             <i kbq-icon="kbq-circle-info_16"></i>
-            Курьером
+            {{ text().courier }}
         </kbq-button-toggle>
         <kbq-button-toggle [value]="2">
             <i kbq-icon="kbq-circle-info_16"></i>
-            Ослик Экспресс
+            {{ text().donkeyExpress }}
         </kbq-button-toggle>
         <kbq-button-toggle [value]="3">
             <i kbq-icon="kbq-circle-info_16"></i>
-            Почтой Средиземья
+            {{ text().middleEarthPost }}
         </kbq-button-toggle>
     </kbq-button-toggle-group>
 </div>
@@ -19,15 +19,15 @@
     <kbq-button-toggle-group #group2="kbqButtonToggleGroup" [disabled]="true">
         <kbq-button-toggle [value]="1">
             <i kbq-icon="kbq-circle-info_16"></i>
-            Курьером
+            {{ text().courier }}
         </kbq-button-toggle>
         <kbq-button-toggle [value]="2">
             <i kbq-icon="kbq-circle-info_16"></i>
-            Ослик Экспресс
+            {{ text().donkeyExpress }}
         </kbq-button-toggle>
         <kbq-button-toggle [value]="3">
             <i kbq-icon="kbq-circle-info_16"></i>
-            Почтой Средиземья
+            {{ text().middleEarthPost }}
         </kbq-button-toggle>
     </kbq-button-toggle-group>
 </div>

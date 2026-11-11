@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_LOCALE_SERVICE, KbqDataSizePipe, KbqDecimalPipe, KbqTableNumberPipe } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Filesize formatter Table Number
@@ -16,23 +17,23 @@ import { KbqTableModule } from '@koobiq/components/table';
         <table kbq-table>
             <thead>
                 <tr>
-                    <th>File</th>
-                    <th>Size</th>
+                    <th>{{ text().file }}</th>
+                    <th>{{ text().size }}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>File 1</td>
+                    <td>{{ text().fileN(1) }}</td>
                     <td class="kbq-tabular-normal">
                         <div>{{ 1024 * 2048 | kbqDataSize }}</div>
                     </td>
                 </tr>
                 <tr>
-                    <td>File 2</td>
+                    <td>{{ text().fileN(2) }}</td>
                     <td class="kbq-tabular-normal">{{ 1024 * 1536 | kbqDataSize }}</td>
                 </tr>
                 <tr>
-                    <td>File 3</td>
+                    <td>{{ text().fileN(3) }}</td>
                     <td class="kbq-tabular-normal">{{ 1024 * 1024 | kbqDataSize }}</td>
                 </tr>
             </tbody>
@@ -44,6 +45,8 @@ import { KbqTableModule } from '@koobiq/components/table';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilesizeFormatterTableNumberExample {
+    protected readonly text = injectExampleText();
+
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     protected readonly cdr = inject(ChangeDetectorRef);
 

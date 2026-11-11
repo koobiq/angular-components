@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Icon-button custom size
@@ -15,7 +16,7 @@ import { KbqIconButton } from '@koobiq/components/icon';
             <i
                 kbq-icon-button="kbq-magnifying-glass_24"
                 class="custom-icon-button_normal"
-                aria-label="Search"
+                [attr.aria-label]="text().search"
                 [color]="colors.Theme"
             ></i>
         </div>
@@ -27,7 +28,7 @@ import { KbqIconButton } from '@koobiq/components/icon';
                 kbq-icon-button="kbq-magnifying-glass_16"
                 class="custom-icon-button_compact"
                 size="compact"
-                aria-label="Search"
+                [attr.aria-label]="text().search"
                 [color]="colors.Theme"
             ></i>
         </div>
@@ -53,5 +54,7 @@ import { KbqIconButton } from '@koobiq/components/icon';
     }
 })
 export class IconButtonCustomSizeExample {
+    protected readonly text = injectExampleText();
+
     colors = KbqComponentColors;
 }

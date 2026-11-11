@@ -3,6 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Dropdown nested
@@ -18,4 +19,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
     templateUrl: 'dropdown-nested-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownNestedExample {}
+export class DropdownNestedExample {
+    protected readonly text = injectExampleText();
+}

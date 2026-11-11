@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Select with multiline matcher
@@ -12,8 +13,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     template: `
         <div>
             <kbq-form-field>
-                <kbq-select placeholder="Placeholder" [multiline]="true" [value]="selected" [panelWidth]="400">
-                    @for (option of options; track option) {
+                <kbq-select [placeholder]="text().placeholder" [multiline]="true" [value]="selected" [panelWidth]="400">
+                    @for (option of options(); track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                     <kbq-cleaner />
@@ -41,6 +42,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectWithMultilineMatcherExample {
-    readonly options = Array.from({ length: 10 }).map((_, i) => `Option ${i}`);
-    selected: string[] = [this.options[0], this.options[1], this.options[2], this.options[3]];
+    protected readonly text = injectExampleText();
+
+    readonly options = computed(() => Array.from({ length: 10 }, (_, i) => this.text().optionN(i)));
+    selected: string[] = [this.options()[0], this.options()[1], this.options()[2], this.options()[3]];
 }

@@ -10,6 +10,7 @@ import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KBQ_MODAL_DATA, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { take } from 'rxjs';
+import { injectExampleText } from '../l10n';
 
 type DocsFormData = {
     firstName: string;
@@ -23,14 +24,14 @@ type DocsFormData = {
         <form class="kbq-form-vertical" id="docs-form" novalidate [formGroup]="userDetailsForm" (ngSubmit)="onSubmit()">
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
-                    <div class="kbq-form__label">Name</div>
+                    <div class="kbq-form__label">{{ text().name }}</div>
                     <kbq-form-field class="kbq-form__control">
                         <input formControlName="firstName" kbqInput />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
-                    <div class="kbq-form__label">Surname</div>
+                    <div class="kbq-form__label">{{ text().surname }}</div>
                     <kbq-form-field class="kbq-form__control">
                         <input formControlName="lastName" kbqInput />
                     </kbq-form-field>
@@ -49,6 +50,8 @@ type DocsFormData = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsNameFormComponent {
+    protected readonly text = injectExampleText();
+
     protected readonly modalData = inject<DocsFormData>(KBQ_MODAL_DATA, { optional: true });
     protected readonly modalRef = inject(KbqModalRef);
     protected readonly formFieldList = viewChildren(KbqFormField);
@@ -85,17 +88,17 @@ export class DocsNameFormComponent {
         KbqButtonModule
     ],
     template: `
-        <button kbq-button color="contrast" (click)="openEmptyForm(footer)">Open empty form</button>
-        <button kbq-button color="contrast-fade" (click)="openDraftForm(footer)">Open draft</button>
+        <button kbq-button color="contrast" (click)="openEmptyForm(footer)">{{ text().openEmptyForm }}</button>
+        <button kbq-button color="contrast-fade" (click)="openDraftForm(footer)">{{ text().openDraft }}</button>
 
         <ng-template #footer>
-            <button type="submit" form="docs-form" kbq-button color="contrast">Save</button>
+            <button type="submit" form="docs-form" kbq-button color="contrast">{{ text().save }}</button>
             <button
                 kbq-button
                 color="contrast-fade"
                 (click)="modalRef.close(modalRef.getContentComponent().userDetailsForm.value)"
             >
-                Cancel
+                {{ text().cancel }}
             </button>
         </ng-template>
     `,
@@ -105,6 +108,8 @@ export class DocsNameFormComponent {
     }
 })
 export class ValidationOnOpenExample {
+    protected readonly text = injectExampleText();
+
     protected readonly modalService = inject(KbqModalService);
     protected modalRef: KbqModalRef<DocsNameFormComponent>;
 

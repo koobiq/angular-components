@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqSkeletonTree } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
+import { injectExampleText } from '../l10n';
 
 type DirectoryNode = {
     name: string;
@@ -15,19 +16,6 @@ type DirectoryFlatNode = {
     expandable: boolean;
 };
 
-const DIRECTORY: DirectoryNode[] = [
-    { name: 'security.com', children: [{ name: 'Operators' }] },
-    {
-        name: 'corp.local',
-        children: [
-            { name: 'Administrators', children: [{ name: 'a.koobiq' }] },
-            { name: 'Developers', children: [{ name: 'b.koobiq' }] },
-            { name: 'Testers', children: [{ name: 'c.koobiq' }] }
-        ]
-    },
-    { name: 'lab.local', children: [{ name: 'Guests' }] }
-];
-
 /**
  * @title Skeleton tree preset
  */
@@ -35,7 +23,7 @@ const DIRECTORY: DirectoryNode[] = [
     selector: 'skeleton-tree-example',
     imports: [KbqSkeletonTree, KbqToggleModule, FormsModule, KbqTreeModule],
     template: `
-        <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
 
         @if (loading()) {
             <kbq-skeleton-tree />
@@ -62,6 +50,8 @@ const DIRECTORY: DirectoryNode[] = [
 })
 export class SkeletonTreeExample {
     protected readonly loading = model(true);
+
+    protected readonly text = injectExampleText();
     protected readonly selected = model<string>('');
     protected readonly treeControl = new FlatTreeControl<DirectoryFlatNode>(
         (node) => node.level,
@@ -80,7 +70,9 @@ export class SkeletonTreeExample {
     );
 
     constructor() {
-        this.dataSource.data = DIRECTORY;
+        this.dataSource.data = this.directory();
+
+        effect(() => (this.dataSource.data = this.directory()));
 
         // The second node is the expanded one, as in the preset.
         const expanded = this.treeControl.dataNodes.find(({ name }) => name === 'corp.local');
@@ -92,5 +84,20 @@ export class SkeletonTreeExample {
 
     protected hasChild(_: number, node: DirectoryFlatNode): boolean {
         return node.expandable;
+    }
+
+    private directory(): DirectoryNode[] {
+        return [
+            { name: 'security.com', children: [{ name: this.text().treeGroups[0]! }] },
+            {
+                name: 'corp.local',
+                children: [
+                    { name: this.text().treeGroups[1]!, children: [{ name: 'a.koobiq' }] },
+                    { name: this.text().treeGroups[2]!, children: [{ name: 'b.koobiq' }] },
+                    { name: this.text().treeGroups[3]!, children: [{ name: 'c.koobiq' }] }
+                ]
+            },
+            { name: 'lab.local', children: [{ name: this.text().treeGroups[4]! }] }
+        ];
     }
 }

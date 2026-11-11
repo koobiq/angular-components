@@ -9,6 +9,7 @@ import {
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { timer } from 'rxjs';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Validation on submit with custom matcher
@@ -26,14 +27,14 @@ import { timer } from 'rxjs';
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>Name</kbq-label>
+                        <kbq-label>{{ text().name }}</kbq-label>
                         <input formControlName="firstName" kbqInput />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-margin-bottom-xxl">
                     <kbq-form-field>
-                        <kbq-label>Last name</kbq-label>
+                        <kbq-label>{{ text().lastName }}</kbq-label>
                         <input formControlName="lastName" kbqInput />
                     </kbq-form-field>
                 </div>
@@ -66,6 +67,8 @@ import { timer } from 'rxjs';
     }
 })
 export class ValidationOnSubmitCustomMatcherExample {
+    protected readonly text = injectExampleText();
+
     protected readonly inProgress = signal(false);
     protected readonly globalErrorForm = new FormGroup({
         firstName: new FormControl('', [Validators.minLength(5), Validators.required]),

@@ -4,7 +4,7 @@ import { DateFormatter } from '@koobiq/components/core';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { KbqLink } from '@koobiq/components/link';
-import { injectLocalizedPeriods, injectLocalizedText } from '../localized-data';
+import { injectLocalizedPeriods, injectLocalizedText } from '../l10n';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
 const createSearchPipe = (name: string): KbqPipe => ({

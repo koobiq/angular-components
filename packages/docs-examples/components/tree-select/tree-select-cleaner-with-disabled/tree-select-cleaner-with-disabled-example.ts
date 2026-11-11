@@ -3,16 +3,17 @@ import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { injectExampleText } from '../l10n';
 import {
     buildTree,
     FlatNode,
     getChildren,
     getLevel,
+    getTreeData,
     getValue,
     isExpandable,
     Node,
-    transformer,
-    TREE_DATA
+    transformer
 } from '../tree-select-cleaner-data';
 
 /** Nodes the user is not allowed to deselect. */
@@ -26,7 +27,7 @@ const lockedNodes = ['Load balancer'];
     imports: [FormsModule, KbqIconModule, KbqTreeModule, KbqTreeSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-tree-select multiple placeholder="Kept" [(ngModel)]="kept">
+            <kbq-tree-select multiple [placeholder]="text().kept" [(ngModel)]="kept">
                 <kbq-tree-selection [dataSource]="keptDataSource" [treeControl]="keptTreeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="isLocked(node)">
                         {{ keptTreeControl.getViewValue(node) }}
@@ -47,7 +48,12 @@ const lockedNodes = ['Load balancer'];
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-tree-select multiple placeholder="Cleared" [clearPredicate]="clearEverything" [(ngModel)]="cleared">
+            <kbq-tree-select
+                multiple
+                [placeholder]="text().cleared"
+                [clearPredicate]="clearEverything"
+                [(ngModel)]="cleared"
+            >
                 <kbq-tree-selection [dataSource]="clearedDataSource" [treeControl]="clearedTreeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="isLocked(node)">
                         {{ clearedTreeControl.getViewValue(node) }}
@@ -82,6 +88,8 @@ const lockedNodes = ['Load balancer'];
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectCleanerWithDisabledExample {
+    protected readonly text = injectExampleText();
+
     protected readonly kept = model(['Database', 'Load balancer', 'Message queue']);
     protected readonly cleared = model(['Database', 'Load balancer', 'Message queue']);
 
@@ -109,7 +117,7 @@ export class TreeSelectCleanerWithDisabledExample {
             new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren)
         );
 
-        dataSource.data = buildTree(TREE_DATA);
+        dataSource.data = buildTree(getTreeData(this.text()));
 
         return dataSource;
     }

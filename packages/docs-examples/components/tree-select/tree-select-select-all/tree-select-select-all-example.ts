@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { injectExampleText } from '../l10n';
 
 export class FileNode {
     children: FileNode[];
@@ -72,7 +73,7 @@ export const DATA_OBJECT = {
     ],
     template: `
         <kbq-form-field>
-            <kbq-tree-select selectAll placeholder="Placeholder" [multiple]="true">
+            <kbq-tree-select selectAll [placeholder]="text().placeholder" [multiple]="true">
                 <kbq-cleaner />
 
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
@@ -106,6 +107,8 @@ export const DATA_OBJECT = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectSelectAllExample {
+    protected readonly text = injectExampleText();
+
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
 

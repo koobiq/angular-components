@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkPrefix, KbqLinkSuffix } from '@koobiq/components/link';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Link icons
@@ -11,11 +12,11 @@ import { KbqLink, KbqLinkPrefix, KbqLinkSuffix } from '@koobiq/components/link';
     template: `
         <a kbqLink href="https://koobiq.io/en/components/link" target="_blank">
             <i kbqLinkPrefix kbq-icon="kbq-clock_16"></i>
-            Scan history
+            {{ text().scanHistory }}
         </a>
 
         <a kbqLink href="https://koobiq.io/en/components/link" target="_blank">
-            Scan report
+            {{ text().scanReport }}
             <i kbqLinkSuffix kbq-icon="kbq-file-text-o_16"></i>
         </a>
     `,
@@ -30,4 +31,6 @@ import { KbqLink, KbqLinkPrefix, KbqLinkSuffix } from '@koobiq/components/link';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinkIconsExample {}
+export class LinkIconsExample {
+    protected readonly text = injectExampleText();
+}

@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Tabs nav bar overview
@@ -9,7 +10,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     imports: [KbqTabsModule],
     template: `
         <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
-            @for (link of links; track link) {
+            @for (link of links(); track link) {
                 <a kbqTabLink [active]="activeLink === link" (click)="activeLink = link">
                     {{ link }}
                 </a>
@@ -24,6 +25,8 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsNavBarOverviewExample {
-    readonly links = ['BruteForce', 'Complex attack', 'DDos'];
+    protected readonly text = injectExampleText();
+
+    readonly links = computed(() => [this.text().bruteforce, this.text().complexAttack, this.text().ddos]);
     activeLink = this.links[0];
 }

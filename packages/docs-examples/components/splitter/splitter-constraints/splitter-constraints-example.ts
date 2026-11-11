@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqSplitter, KbqSplitterPanel } from '@koobiq/components/splitter';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Splitter constraints
@@ -58,4 +59,6 @@ import { KbqSplitter, KbqSplitterPanel } from '@koobiq/components/splitter';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitterConstraintsExample {}
+export class SplitterConstraintsExample {
+    protected readonly text = injectExampleText();
+}

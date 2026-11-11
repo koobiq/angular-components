@@ -4,7 +4,7 @@ import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from '../localized-data';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Navbar vertical app long name

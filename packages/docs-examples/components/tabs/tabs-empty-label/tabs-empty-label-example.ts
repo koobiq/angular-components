@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Tabs empty label
@@ -11,10 +12,10 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     template: `
         <div class="example-tabs-empty-label">
             <kbq-tab-group>
-                <kbq-tab label="BruteForce">
+                <kbq-tab [label]="text().bruteforce">
                     <div class="example-tabs-empty-label_tab-content">1005 incidents have been registered</div>
                 </kbq-tab>
-                <kbq-tab label="Complex Attack">
+                <kbq-tab [label]="text().complexAttack">
                     <p>
                         In cryptography, a brute-force attack consists of an attacker submitting many passwords or
                         passphrases with the hope of eventually guessing correctly. The attacker systematically checks
@@ -30,10 +31,15 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                         weaknesses in an encryption system (if any exist) that would make the task easier.
                     </p>
                 </kbq-tab>
-                <kbq-tab label="DDoS" tooltipTitle="No incidents" empty [tooltipPlacement]="PopUpPlacements.Top">
+                <kbq-tab
+                    tooltipTitle="No incidents"
+                    empty
+                    [label]="text().ddos"
+                    [tooltipPlacement]="PopUpPlacements.Top"
+                >
                     <div class="example-tabs-empty-label_tab-content">No DDoS attacks have been registered</div>
                 </kbq-tab>
-                <kbq-tab label="DoS">
+                <kbq-tab [label]="text().dos">
                     <p>
                         In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator
                         seeks to make a machine or network resource unavailable to its intended users by temporarily or
@@ -63,5 +69,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     encapsulation: ViewEncapsulation.None
 })
 export class TabsEmptyLabelExample {
+    protected readonly text = injectExampleText();
+
     readonly PopUpPlacements = PopUpPlacements;
 }

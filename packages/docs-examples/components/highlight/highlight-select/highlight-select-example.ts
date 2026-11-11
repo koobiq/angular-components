@@ -6,6 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { map, startWith } from 'rxjs/operators';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Highlight in select
@@ -22,14 +23,14 @@ import { map, startWith } from 'rxjs/operators';
     ],
     template: `
         <kbq-form-field>
-            <kbq-select placeholder="Choose a club">
+            <kbq-select [placeholder]="text().chooseClub">
                 <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [formControl]="searchControl" />
                     <kbq-cleaner />
                 </kbq-form-field>
 
-                <div kbq-select-search-empty-result>Nothing found</div>
+                <div kbq-select-search-empty-result>{{ text().nothingFound }}</div>
 
                 @for (option of filteredOptions | async; track option) {
                     <kbq-option [value]="option">
@@ -52,6 +53,8 @@ import { map, startWith } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HighlightSelectExample {
+    protected readonly text = injectExampleText();
+
     readonly options = [
         'Manchester United',
         'Manchester 62 FC',

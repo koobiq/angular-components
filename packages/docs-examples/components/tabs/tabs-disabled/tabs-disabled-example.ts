@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Tabs disabled
@@ -9,12 +10,14 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     imports: [KbqTabsModule],
     template: `
         <kbq-tab-group class="layout-margin-bottom-m">
-            <kbq-tab label="BruteForce" />
-            <kbq-tab label="Complex attack" disabled />
-            <kbq-tab label="DDoS" disabled />
-            <kbq-tab label="DoS" />
+            <kbq-tab [label]="text().bruteforce" />
+            <kbq-tab disabled [label]="text().complexAttack" />
+            <kbq-tab disabled [label]="text().ddos" />
+            <kbq-tab [label]="text().dos" />
         </kbq-tab-group>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabsDisabledExample {}
+export class TabsDisabledExample {
+    protected readonly text = injectExampleText();
+}

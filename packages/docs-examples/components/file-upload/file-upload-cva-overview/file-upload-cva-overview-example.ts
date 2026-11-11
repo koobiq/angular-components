@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title File-upload with control value accessor
@@ -16,7 +17,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <div class="kbq-form-horizontal">
             <div class="kbq-form__row layout-margin-bottom-m">
-                <label class="kbq-form__label flex-20">Single file-upload with formControl</label>
+                <label class="kbq-form__label flex-20">{{ text().singleWithFormControl }}</label>
                 <kbq-file-upload class="kbq-form__control flex-80" [formControl]="control">
                     <i kbq-icon="kbq-file-o_16"></i>
                 </kbq-file-upload>
@@ -26,5 +27,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadCvaOverviewExample {
+    protected readonly text = injectExampleText();
+
     control = new FormControl<KbqFileItem | null>(null);
 }

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Form fieldset with button
@@ -16,7 +17,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     template: `
         <kbq-fieldset>
             <legend kbqLegend>
-                A long field name that wraps to a new line and is positioned even above the button.
+                {{ text().longLegend }}
             </legend>
 
             <kbq-form-field kbqFieldsetItem>
@@ -25,11 +26,11 @@ import { KbqInputModule } from '@koobiq/components/input';
 
             <button kbq-button kbqFieldsetItem kbqStyle="outline">
                 <i kbq-icon="kbq-floppy-disk_16"></i>
-                Save
+                {{ text().save }}
             </button>
 
             <kbq-hint>
-                A long hint text under the field that wraps to a new line and even extends beneath the button.
+                {{ text().longHintButton }}
             </kbq-hint>
         </kbq-fieldset>
     `,
@@ -44,4 +45,6 @@ import { KbqInputModule } from '@koobiq/components/input';
         class: 'layout-row'
     }
 })
-export class FormFieldsetWithButtonExample {}
+export class FormFieldsetWithButtonExample {
+    protected readonly text = injectExampleText();
+}

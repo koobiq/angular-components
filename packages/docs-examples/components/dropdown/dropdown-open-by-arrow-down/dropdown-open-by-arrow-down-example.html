@@ -1,4 +1,6 @@
-<kbq-checkbox class="layout-margin-right-l" [(ngModel)]="openByArrowDown">toggle openByArrowDown</kbq-checkbox>
+<kbq-checkbox class="layout-margin-right-l" [(ngModel)]="openByArrowDown">
+    {{ text().toggleOpenByArrowDown }}
+</kbq-checkbox>
 
 <button kbq-button [kbqDropdownTriggerFor]="appDropdown" [openByArrowDown]="openByArrowDown">
     dropdown
@@ -6,7 +8,7 @@
 </button>
 
 <kbq-dropdown #appDropdown="kbqDropdown" [panelMaxWidth]="200">
-    <button kbq-dropdown-item>Text Normal</button>
+    <button kbq-dropdown-item>{{ text().textNormal }}</button>
 
     <button kbq-dropdown-item>
         <i kbq-icon="kbq-circle-info_16" [color]="'contrast'"></i>
@@ -15,13 +17,13 @@
 
     <button kbq-dropdown-item>
         Text Normal
-        <div kbqDropdownItemCaption>Caption</div>
+        <div kbqDropdownItemCaption>{{ text().caption }}</div>
     </button>
 
     <button kbq-dropdown-item>
         <i kbq-icon="kbq-circle-info_16" [color]="'contrast'"></i>
         Text Normal
-        <div kbqDropdownItemCaption>Caption</div>
+        <div kbqDropdownItemCaption>{{ text().caption }}</div>
     </button>
 
     <button kbq-dropdown-item>
@@ -36,9 +38,9 @@
 
     <kbq-divider />
 
-    <div kbqDropdownGroupHeader>Header</div>
+    <div kbqDropdownGroupHeader>{{ text().header }}</div>
 
-    <button disabled kbq-dropdown-item>Disabled</button>
+    <button disabled kbq-dropdown-item>{{ text().disabled }}</button>
 
     <kbq-divider />
 
@@ -50,5 +52,5 @@
     </button>
 
     <kbq-divider />
-    <button kbq-dropdown-item>Point 2</button>
+    <button kbq-dropdown-item>{{ text().point2 }}</button>
 </kbq-dropdown>

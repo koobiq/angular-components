@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqTableModule } from '@koobiq/components/table';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Table full width
@@ -12,4 +13,8 @@ import { KbqTableModule } from '@koobiq/components/table';
     templateUrl: 'table-full-width-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableFullWidthExample {}
+export class TableFullWidthExample {
+    protected readonly text = injectExampleText();
+
+    protected readonly rows = computed(() => this.text().rows);
+}

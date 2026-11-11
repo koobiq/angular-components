@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqMarkdown } from '@koobiq/components/markdown';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Markdown article
@@ -15,4 +16,6 @@ import { KbqMarkdown } from '@koobiq/components/markdown';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarkdownArticleExample {}
+export class MarkdownArticleExample {
+    protected readonly text = injectExampleText();
+}

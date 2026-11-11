@@ -7,7 +7,7 @@
 </ng-template>
 
 <ng-template #toastActionsTemplate let-toast>
-    <a kbqLink pseudo (click)="toast.close()">Восстановить</a>
+    <a kbqLink pseudo (click)="toast.close()">{{ text().restore }}</a>
 </ng-template>
 
 <button kbq-button (click)="showToastWithInlineLink(toastWithInlineLinkTemplate, toastActionsTemplate)">

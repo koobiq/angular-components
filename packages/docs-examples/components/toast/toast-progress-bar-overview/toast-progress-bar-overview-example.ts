@@ -3,6 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastService } from '@koobiq/components/toast';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Toast progress bar
@@ -20,23 +21,25 @@ import { KbqToastService } from '@koobiq/components/toast';
         </ng-template>
 
         <ng-template #toastStickyActionsTemplate let-toast>
-            <a kbqLink pseudo (click)="toast.close()">Отмена</a>
+            <a kbqLink pseudo (click)="toast.close()">{{ text().cancel }}</a>
         </ng-template>
 
         <button kbq-button (click)="showStickyToast(toastStickyContentTemplate, toastStickyActionsTemplate)">
-            Тост с прогресс-баром, кнопкой Отмена и без крестика
+            {{ text().toastWithProgress }}
         </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastProgressBarOverviewExample {
+    protected readonly text = injectExampleText();
+
     readonly toastService = inject(KbqToastService);
 
     showStickyToast(content: TemplateRef<any>, actions: TemplateRef<any>) {
         this.toastService.show(
             {
-                title: 'Импорт файлов',
-                caption: '12,1 МБ из 85 МБ — осталось 15 мин  ',
+                title: this.text().importFiles,
+                caption: this.text().importProgress,
                 closeButton: false,
                 content,
                 actions

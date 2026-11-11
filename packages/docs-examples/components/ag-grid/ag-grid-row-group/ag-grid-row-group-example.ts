@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import {
     KbqAgGridRowGroup,
     KbqAgGridRowGroupCollapsedStateLocalStorageStore,
@@ -11,11 +11,9 @@ import {
 import { KbqButtonModule } from '@koobiq/components/button';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry, RowSelectionOptions } from 'ag-grid-community';
+import { injectExampleText } from '../l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-
-const CATEGORIES = ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert', 'IDS/IPS Alert', 'XSS'];
-const SEVERITIES = ['Low', 'Medium', 'High', 'Critical'];
 
 /**
  * @title AG Grid with `KbqAgGridRowGroup` directive
@@ -25,8 +23,10 @@ const SEVERITIES = ['Low', 'Medium', 'High', 'Critical'];
     imports: [AgGridModule, KbqAgGridThemeModule, KbqButtonModule],
     template: `
         <div class="ag-grid-row-group-example-actions">
-            <button type="button" kbq-button (click)="rowGroup.collapseAll()">Clear collapsed state</button>
-            <button type="button" kbq-button (click)="clearSelectionState(rowGroup)">Clear selection state</button>
+            <button type="button" kbq-button (click)="rowGroup.collapseAll()">{{ text().clearCollapsedState }}</button>
+            <button type="button" kbq-button (click)="clearSelectionState(rowGroup)">
+                {{ text().clearSelectionState }}
+            </button>
         </div>
 
         <ag-grid-angular
@@ -36,10 +36,10 @@ const SEVERITIES = ['Low', 'Medium', 'High', 'Critical'];
             kbqAgGridRowGroup
             kbqAgGridRowGroupCollapsedState="example-ag-grid-row-group-collapsed-state"
             kbqAgGridRowGroupSelectionState="example-ag-grid-row-group-selection-state"
-            [kbqAgGridRowGroupRowData]="rowData"
+            [kbqAgGridRowGroupRowData]="rowData()"
             [kbqAgGridRowGroupRowId]="rowId"
             [rowSelection]="rowSelection"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
             [style.height.px]="300"
             [style.width.%]="100"
@@ -67,6 +67,8 @@ const SEVERITIES = ['Low', 'Medium', 'High', 'Critical'];
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridRowGroupExample {
+    protected readonly text = injectExampleText();
+
     protected readonly groupCols = model(['category', 'severity']);
     protected readonly rowId = (row: Record<string, unknown>): string => row.id as string;
     protected readonly defaultColDef: ColDef = {
@@ -79,30 +81,33 @@ export class AgGridRowGroupExample {
         headerCheckbox: true,
         checkboxes: true
     };
-    protected readonly columnDefs: ColDef[] = [
-        { field: 'column0', headerName: 'Column 0', width: 130 },
-        { field: 'category', headerName: 'Category', width: 130 },
-        { field: 'severity', headerName: 'Severity', width: 130 },
-        { field: 'column3', headerName: 'Column 3', width: 130 },
-        { field: 'column4', headerName: 'Column 4', width: 130 },
-        { field: 'column5', headerName: 'Column 5', width: 130 },
-        { field: 'column6', headerName: 'Column 6', width: 130 }
-    ];
+    protected readonly columnDefs = computed<ColDef[]>(() => [
+        { field: 'column0', headerName: this.text().column(0), width: 130 },
+        { field: 'category', headerName: this.text().category, width: 130 },
+        { field: 'severity', headerName: this.text().severity, width: 130 },
+        ...Array.from({ length: 4 }, (_, i) => ({
+            field: 'column' + (i + 3),
+            headerName: this.text().column(i + 3),
+            width: 130
+        }))
+    ]);
 
-    protected readonly rowData = Array.from({ length: 24 }, (_, index) => ({
-        id: String(index),
-        column0: 'Text ' + index,
-        category: CATEGORIES[index % CATEGORIES.length],
-        severity: SEVERITIES[index % SEVERITIES.length],
-        column3: 'Text ' + index,
-        column4: 'Text ' + index,
-        column5: 'Text ' + index,
-        column6: 'Text ' + index
-    }));
+    protected readonly rowData = computed(() =>
+        Array.from({ length: 24 }, (_, index) => ({
+            id: String(index),
+            column0: this.text().text(index),
+            category: this.text().categories[index % this.text().categories.length],
+            severity: this.text().severities[index % this.text().severities.length],
+            column3: this.text().text(index),
+            column4: this.text().text(index),
+            column5: this.text().text(index),
+            column6: this.text().text(index)
+        }))
+    );
 
     /** Deselects every data row, including rows hidden inside a collapsed group. */
     protected clearSelectionState(rowGroup: KbqAgGridRowGroup): void {
-        for (const row of this.rowData) {
+        for (const row of this.rowData()) {
             rowGroup.setRowSelected(row.id, false);
         }
     }

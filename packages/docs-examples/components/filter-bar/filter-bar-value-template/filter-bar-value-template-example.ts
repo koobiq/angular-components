@@ -10,7 +10,7 @@ import {
     KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
-import { injectLocalizedText } from '../localized-data';
+import { injectLocalizedText } from '../l10n';
 
 interface AgentStateNode extends Omit<KbqTreeSelectNode, 'children'> {
     children: AgentStateNode[] | null;

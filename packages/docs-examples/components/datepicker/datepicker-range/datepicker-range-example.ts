@@ -5,6 +5,7 @@ import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Datepicker range
@@ -22,7 +23,7 @@ import { DateTime } from 'luxon';
         <div class="docs-example__datepicker-range">
             <div class="kbq-form-vertical">
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label">Vacation period:</label>
+                    <label class="kbq-form__label">{{ text().vacationPeriod }}</label>
                     <div>
                         <kbq-form-field class="layout-margin-right-s" (click)="datepicker.toggle()">
                             <input [kbqDatepicker]="datepicker" />
@@ -43,6 +44,8 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerRangeExample {
+    protected readonly text = injectExampleText();
+
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     readonly minDate = this.adapter.createDate(2023, 11, 14);

@@ -4,6 +4,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Dropdown lazy load data
@@ -21,5 +22,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownLazyloadDataExample {
+    protected readonly text = injectExampleText();
+
     someValue = 'Lazy Value';
 }

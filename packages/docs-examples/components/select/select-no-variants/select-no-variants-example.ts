@@ -4,6 +4,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqForm, KbqFormElement } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Select no variants
@@ -21,7 +22,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     template: `
         <form novalidate class="kbq-form-vertical">
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Empty select</label>
+                <label class="kbq-form__label">{{ text().emptySelect }}</label>
                 <kbq-form-field>
                     <kbq-select>
                         @for (option of options; track option) {
@@ -47,6 +48,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     }
 })
 export class SelectNoVariantsExample {
+    protected readonly text = injectExampleText();
+
     options: string[];
     noOptions: boolean;
 

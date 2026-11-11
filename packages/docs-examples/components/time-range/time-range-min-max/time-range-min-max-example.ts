@@ -1,35 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
+import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimeRangeModule, KbqTimeRangeRange } from '@koobiq/components/time-range';
 import { DateTime } from 'luxon';
-import { of } from 'rxjs';
-
-type ExampleText = {
-    placeholder: string;
-    withPresets: string;
-    withoutPresets: string;
-};
-
-const ExampleLocalizedData = new InjectionToken<Record<string | 'default', ExampleText>>('ExampleLocalizedData', {
-    factory: () => ({
-        'ru-RU': {
-            placeholder: 'Период',
-            withPresets: 'С предустановками',
-            withoutPresets: 'Без предустановок'
-        },
-        default: {
-            placeholder: 'Period',
-            withPresets: 'With presets',
-            withoutPresets: 'Without presets'
-        }
-    })
-});
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Time range min max
@@ -126,10 +104,7 @@ export class TimeRangeMinMaxExample {
         { nonNullable: true }
     );
 
-    private readonly data = inject(ExampleLocalizedData);
-    private readonly localeId = toSignal(inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes || of(''));
-
-    protected readonly text = computed(() => this.data[this.localeId() || 'default'] ?? this.data.default);
+    protected readonly text = injectExampleText();
 
     protected capitalize(text: string): string {
         return text.charAt(0).toUpperCase() + text.slice(1);

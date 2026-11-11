@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import {
     KbqAgGridColumnStateLocalStorageStore,
     kbqAgGridColumnStateStoreProvider,
@@ -7,6 +7,7 @@ import {
 import { KbqButtonModule } from '@koobiq/components/button';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
+import { injectExampleText } from '../l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -17,15 +18,15 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     selector: 'ag-grid-column-state-example',
     imports: [AgGridModule, KbqAgGridThemeModule, KbqButtonModule],
     template: `
-        <button type="button" kbq-button (click)="columnState.reset()">Reset column state</button>
+        <button type="button" kbq-button (click)="columnState.reset()">{{ text().resetColumnState }}</button>
         <ag-grid-angular
             #columnState="kbqAgGridColumnState"
             kbqAgGridTheme
             kbqAgGridThemeDisableCellFocusStyles
             kbqAgGridColumnState="example-ag-grid-column-state"
             [alwaysMultiSort]="true"
-            [rowData]="rowData"
-            [columnDefs]="columnDefs"
+            [rowData]="rowData()"
+            [columnDefs]="columnDefs()"
             [style.height.px]="300"
             [style.width.%]="100"
             [defaultColDef]="defaultColDef"
@@ -45,24 +46,22 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridColumnStateExample {
+    protected readonly text = injectExampleText();
+
     readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true
     };
-    readonly columnDefs: ColDef[] = [
-        { field: 'column0', headerName: 'Column 0', width: 100 },
-        { field: 'column1', headerName: 'Column 1', width: 100 },
-        { field: 'column2', headerName: 'Column 2', width: 100 },
-        { field: 'column3', headerName: 'Column 3', width: 100 },
-        { field: 'column4', headerName: 'Column 4', width: 100 },
-        { field: 'column5', headerName: 'Column 5', width: 100 }
-    ];
-    readonly rowData = Array.from({ length: 100 }, (_, index) => ({
-        column0: 'Text ' + index,
-        column1: 'Text ' + index,
-        column2: 'Text ' + index,
-        column3: 'Text ' + index,
-        column4: 'Text ' + index,
-        column5: 'Text ' + index
-    }));
+    readonly columnDefs = computed<ColDef[]>(() =>
+        Array.from({ length: 6 }, (_, i) => ({
+            field: 'column' + i,
+            headerName: this.text().column(i),
+            width: 100
+        }))
+    );
+    readonly rowData = computed(() =>
+        Array.from({ length: 100 }, (_, index) =>
+            Object.fromEntries(Array.from({ length: 6 }, (_, i) => ['column' + i, this.text().text(index)]))
+        )
+    );
 }

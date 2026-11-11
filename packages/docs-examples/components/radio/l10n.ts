@@ -1,0 +1,88 @@
+import { computed, Signal } from '@angular/core';
+import { kbqInjectLocaleService } from '@koobiq/components/core';
+
+/** Resolves `data` for the active locale of the examples, falling back to `default` (English). */
+export const injectLocalizedText = <T>(data: Record<string, T> & { default: T }): Signal<T> => {
+    const localeService = kbqInjectLocaleService({ optional: true });
+
+    return computed(() => data[localeService?.localeId() ?? 'default'] ?? data.default);
+};
+
+/** Text shown by the radio examples. Person names stay as proper nouns; Normal/Big/Error are style names. */
+export interface ExampleText {
+    fieldLabel: string;
+    item: (index: number) => string;
+    itemDisabled: (index: number) => string;
+    textWithCaption: string;
+    professions: string[];
+    practiceOptions: { label: string; hint: string }[];
+    secondFactor: string;
+    authenticatorApp: string;
+    hardwareKey: string;
+    smsCode: string;
+    saveWithoutChoosing: string;
+    chooseSecondFactor: string;
+    save: string;
+}
+
+const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+    'ru-RU': {
+        fieldLabel: 'Подпись поля',
+        item: (index) => `Пункт ${index}`,
+        itemDisabled: (index) => `Пункт ${index} (Отключен)`,
+        textWithCaption: 'Текст с подписью',
+        professions: ['Юрист', 'Программист', 'Биолог', 'Банкир', 'Писатель'],
+        practiceOptions: [
+            {
+                label: 'Регулярное обновление программ и операционной системы',
+                hint: 'Регулярное обновление программ и операционных систем помогает устранять уязвимости и повышать защиту от потенциальных угроз'
+            },
+            {
+                label: 'Использование надёжных уникальных паролей',
+                hint: 'Надёжные уникальные пароли для каждой учётной записи повышают кибербезопасность: атаки часто используют слабые или украденные пароли'
+            },
+            {
+                label: 'Внедрение многофакторной аутентификации (MFA)',
+                hint: 'Многофакторная аутентификация требует нескольких форм подтверждения перед доступом к учётной записи, снижая риск несанкционированного доступа'
+            }
+        ],
+        secondFactor: 'Второй фактор входа',
+        authenticatorApp: 'Приложение-аутентификатор',
+        hardwareKey: 'Аппаратный ключ безопасности',
+        smsCode: 'Код в текстовом сообщении',
+        saveWithoutChoosing: 'Сохраните, не выбрав вариант, чтобы увидеть ошибку',
+        chooseSecondFactor: 'Выберите второй фактор для защиты учётной записи',
+        save: 'Сохранить'
+    },
+    default: {
+        fieldLabel: 'Field label',
+        item: (index) => `Item ${index}`,
+        itemDisabled: (index) => `Item ${index} (Disabled)`,
+        textWithCaption: 'Text with Caption',
+        professions: ['Lawyer', 'Programmer', 'Biologist', 'Banker', 'Writer'],
+        practiceOptions: [
+            {
+                label: 'Regular software and operating system updates',
+                hint: 'Updating software and operating systems regularly helps to patch vulnerabilities and enhance security measures against potential threats'
+            },
+            {
+                label: 'Using strong and unique passwords',
+                hint: 'Creating strong and unique passwords for each online account can enhance cybersecurity, as cyber attacks often exploit weak or stolen passwords'
+            },
+            {
+                label: 'Implementing multi-factor authentication (MFA)',
+                hint: 'Multi-factor authentication involves multiple identification forms before account access, reducing the risk of unauthorized access'
+            }
+        ],
+        secondFactor: 'Second sign-in factor',
+        authenticatorApp: 'Authenticator app',
+        hardwareKey: 'Hardware security key',
+        smsCode: 'Code in a text message',
+        saveWithoutChoosing: 'Save without choosing to see the error',
+        chooseSecondFactor: 'Choose a second factor to protect the account',
+        save: 'Save'
+    }
+};
+
+/** Text of the examples in the active locale. */
+export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

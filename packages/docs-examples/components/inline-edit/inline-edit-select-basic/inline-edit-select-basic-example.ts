@@ -1,13 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqFormFieldModule, KbqLabel } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
-
-const STATUSES: string[] = ['Open', 'In progress', 'Resolved', 'Closed'];
-const PRIORITIES: string[] = ['Low', 'Medium', 'High', 'Critical'];
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Inline edit select basic
@@ -28,7 +26,7 @@ const PRIORITIES: string[] = ['Low', 'Medium', 'High', 'Critical'];
     template: `
         <div class="example__section">
             <kbq-inline-edit #statusInlineEdit="kbqInlineEdit">
-                <kbq-label>Status</kbq-label>
+                <kbq-label>{{ text().status }}</kbq-label>
 
                 <div kbqInlineEditViewMode>
                     @if (status.value) {
@@ -45,7 +43,7 @@ const PRIORITIES: string[] = ['Low', 'Medium', 'High', 'Critical'];
                         [formControl]="status"
                         (selectionChange)="statusInlineEdit.commit()"
                     >
-                        @for (item of statuses; track item) {
+                        @for (item of statuses(); track item) {
                             <kbq-option [value]="item">{{ item }}</kbq-option>
                         }
                     </kbq-select>
@@ -54,7 +52,7 @@ const PRIORITIES: string[] = ['Low', 'Medium', 'High', 'Critical'];
         </div>
 
         <kbq-dl class="example__section" [vertical]="false">
-            <kbq-dt>Priority</kbq-dt>
+            <kbq-dt>{{ text().priority }}</kbq-dt>
             <kbq-dd>
                 <kbq-inline-edit #priorityInlineEdit="kbqInlineEdit">
                     <div kbqInlineEditViewMode>
@@ -72,7 +70,7 @@ const PRIORITIES: string[] = ['Low', 'Medium', 'High', 'Critical'];
                             [formControl]="priority"
                             (selectionChange)="priorityInlineEdit.commit()"
                         >
-                            @for (item of priorities; track item) {
+                            @for (item of priorities(); track item) {
                                 <kbq-option [value]="item">{{ item }}</kbq-option>
                             }
                         </kbq-select>
@@ -97,11 +95,15 @@ const PRIORITIES: string[] = ['Low', 'Medium', 'High', 'Critical'];
     }
 })
 export class InlineEditSelectBasicExample {
-    protected readonly notSetLabel = 'Not specified';
+    protected readonly text = injectExampleText();
 
-    protected readonly statuses = STATUSES;
-    protected readonly priorities = PRIORITIES;
+    protected get notSetLabel(): string {
+        return this.text().notSpecified;
+    }
 
-    protected readonly status = new FormControl<string | null>(STATUSES[0]);
-    protected readonly priority = new FormControl<string | null>(PRIORITIES[0]);
+    protected readonly statuses = computed(() => this.text().statuses);
+    protected readonly priorities = computed(() => [...this.text().severities].reverse());
+
+    protected readonly status = new FormControl<string | null>(this.statuses()[0]);
+    protected readonly priority = new FormControl<string | null>(this.priorities()[0]);
 }

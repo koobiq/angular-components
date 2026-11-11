@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqSkeletonTypography } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Skeleton typography preset
@@ -10,7 +11,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'skeleton-typography-example',
     imports: [KbqSkeletonTypography, KbqToggleModule, FormsModule],
     template: `
-        <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
 
         @if (loading()) {
             <div class="example-content">
@@ -21,8 +22,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             </div>
         } @else {
             <div class="example-content">
-                <div class="kbq-caps-compact example-secondary example-overline">Threat intelligence</div>
-                <div class="kbq-title example-title">Denial-of-service attack</div>
+                <div class="kbq-caps-compact example-secondary example-overline">{{ text().threatIntel }}</div>
+                <div class="kbq-title example-title">{{ text().dosTitle }}</div>
                 <div class="kbq-text-normal example-body">
                     In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator
                     seeks to make a machine or network resource unavailable to its intended users by temporarily or
@@ -67,4 +68,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 })
 export class SkeletonTypographyExample {
     protected readonly loading = model(true);
+
+    protected readonly text = injectExampleText();
 }

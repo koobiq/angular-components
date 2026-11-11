@@ -7,6 +7,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../l10n';
 
 const restSymbolsRegex = /[^0-9]+/g;
 
@@ -47,6 +48,8 @@ const restSymbolsRegex = /[^0-9]+/g;
     }
 })
 export class ValidationMessageGlobalWithLinksExample {
+    protected readonly text = injectExampleText();
+
     protected readonly popUpPlacements = PopUpPlacements;
 
     protected readonly inProgress = signal(false);

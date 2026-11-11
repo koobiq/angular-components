@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Accordion inactive section
@@ -10,4 +11,6 @@ import { KbqAccordionModule } from '@koobiq/components/accordion';
     templateUrl: 'accordion-inactive-section-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccordionInactiveSectionExample {}
+export class AccordionInactiveSectionExample {
+    protected readonly text = injectExampleText();
+}

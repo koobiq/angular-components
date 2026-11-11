@@ -6,8 +6,11 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
+import { injectExampleText } from '../l10n';
 
 export class FileNode {
+    protected readonly text = injectExampleText();
+
     children: FileNode[];
     name: string;
     type: any;
@@ -127,7 +130,7 @@ export const DATA_OBJECT = {
 
                 <div class="layout-row layout-align-space-between-center">
                     <span [innerHTML]="treeControl.getViewValue(node)"></span>
-                    <kbq-badge badgeColor="theme" [compact]="true">badge</kbq-badge>
+                    <kbq-badge badgeColor="theme" [compact]="true">{{ text().badge }}</kbq-badge>
                 </div>
 
                 <kbq-option-action
@@ -156,14 +159,16 @@ export const DATA_OBJECT = {
         </kbq-tree-selection>
 
         <kbq-dropdown #dropdown>
-            <button kbq-dropdown-item>action 1</button>
-            <button kbq-dropdown-item>action 2</button>
-            <button kbq-dropdown-item>action 3</button>
+            <button kbq-dropdown-item>{{ text().action(1) }}</button>
+            <button kbq-dropdown-item>{{ text().action(2) }}</button>
+            <button kbq-dropdown-item>{{ text().action(3) }}</button>
         </kbq-dropdown>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeActionButtonExample {
+    protected readonly text = injectExampleText();
+
     popUpPlacements = PopUpPlacements;
 
     treeControl: FlatTreeControl<FileFlatNode>;

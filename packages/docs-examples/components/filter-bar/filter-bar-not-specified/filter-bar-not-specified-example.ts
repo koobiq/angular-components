@@ -6,7 +6,7 @@ import {
     KbqPipeTypes,
     KbqSelectValue
 } from '@koobiq/components/filter-bar';
-import { injectLocalizedText } from '../localized-data';
+import { injectLocalizedText } from '../l10n';
 
 const ATTACK_TYPES: KbqSelectValue[] = [
     'Adversary-in-the-Middle',

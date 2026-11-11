@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KbqRelativeShortDatePipe } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 import { DateTime } from 'luxon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Table with sticky header
@@ -15,13 +16,13 @@ import { DateTime } from 'luxon';
             <table kbq-table stickyHeader style="width: 100%">
                 <thead>
                     <tr>
-                        <th>File</th>
-                        <th>Owner</th>
-                        <th>Modified</th>
+                        <th>{{ text().file }}</th>
+                        <th>{{ text().owner }}</th>
+                        <th>{{ text().modified }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for (row of rows; track row.name) {
+                    @for (row of rows(); track row.name) {
                         <tr>
                             <td>{{ row.name }}</td>
                             <td>{{ row.owner }}</td>
@@ -38,19 +39,21 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableStickyHeaderExample {
+    protected readonly text = injectExampleText();
+
     readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
     readonly value = this.adapter.today();
 
-    protected readonly rows = [
-        { name: 'document.txt', owner: 'User 1', modified: this.value },
-        { name: 'report-2023.pdf', owner: 'User 2', modified: this.value },
-        { name: 'notes.doc', owner: 'User 3', modified: this.value },
-        { name: 'archive.zip', owner: 'User 4', modified: this.value },
-        { name: 'presentation.pptx', owner: 'User 5', modified: this.value },
-        { name: 'budget.xlsx', owner: 'User 6', modified: this.value },
-        { name: 'photo.png', owner: 'User 7', modified: this.value },
-        { name: 'contract.pdf', owner: 'User 8', modified: this.value },
-        { name: 'summary.doc', owner: 'User 9', modified: this.value },
-        { name: 'backup.zip', owner: 'User 10', modified: this.value }
-    ];
+    protected readonly rows = computed(() => [
+        { name: 'document.txt', owner: this.text().userN(1), modified: this.value },
+        { name: 'report-2023.pdf', owner: this.text().userN(2), modified: this.value },
+        { name: 'notes.doc', owner: this.text().userN(3), modified: this.value },
+        { name: 'archive.zip', owner: this.text().userN(4), modified: this.value },
+        { name: 'presentation.pptx', owner: this.text().userN(5), modified: this.value },
+        { name: 'budget.xlsx', owner: this.text().userN(6), modified: this.value },
+        { name: 'photo.png', owner: this.text().userN(7), modified: this.value },
+        { name: 'contract.pdf', owner: this.text().userN(8), modified: this.value },
+        { name: 'summary.doc', owner: this.text().userN(9), modified: this.value },
+        { name: 'backup.zip', owner: this.text().userN(10), modified: this.value }
+    ]);
 }

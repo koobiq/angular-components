@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
 import { timer } from 'rxjs';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Toggle Loading
@@ -17,6 +18,8 @@ import { timer } from 'rxjs';
     }
 })
 export class ToggleLoadingExample {
+    protected readonly text = injectExampleText();
+
     protected readonly checked = signal(false);
     protected loading = false;
 

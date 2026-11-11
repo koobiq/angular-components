@@ -3,6 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Popover placement center
@@ -35,6 +36,8 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverPlacementCenterExample {
+    protected readonly text = injectExampleText();
+
     placements = PopUpPlacements;
     activePopover: KbqPopoverTrigger;
 }

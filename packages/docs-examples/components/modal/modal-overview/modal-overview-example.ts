@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Modal
@@ -9,9 +10,9 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
     selector: 'modal-overview-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="showConfirmModal()">Open Confirm Modal</button>
-        <button kbq-button (click)="showSuccessModal()">Open Success Modal</button>
-        <button kbq-button (click)="showDeleteModal()">Open Delete Modal</button>
+        <button kbq-button (click)="showConfirmModal()">{{ text().openConfirmModal }}</button>
+        <button kbq-button (click)="showSuccessModal()">{{ text().openSuccessModal }}</button>
+        <button kbq-button (click)="showDeleteModal()">{{ text().openDeleteModal }}</button>
     `,
     styles: `
         :host {
@@ -27,16 +28,18 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalOverviewExample {
+    protected readonly text = injectExampleText();
+
     private readonly modalService = inject(KbqModalService);
 
     showConfirmModal(): void {
         this.modalService.confirm({
-            kbqAriaLabel: 'Save changes',
+            kbqAriaLabel: this.text().saveChangesAria,
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
-            kbqContent: 'Save changes?',
-            kbqOkText: 'Save',
-            kbqCancelText: 'Cancel',
+            kbqContent: this.text().saveChangesContent,
+            kbqOkText: this.text().save,
+            kbqCancelText: this.text().cancel,
             kbqOkClick: () => console.log('Save'),
             kbqCancelClick: () => console.log('Cancel')
         });
@@ -44,12 +47,12 @@ export class ModalOverviewExample {
 
     showSuccessModal(): void {
         this.modalService.success({
-            kbqAriaLabel: 'Changes saved',
+            kbqAriaLabel: this.text().changesSaved,
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
-            kbqContent: 'All changes are saved!',
+            kbqContent: this.text().allChangesSaved,
             kbqOkText: 'ОК',
-            kbqCancelText: 'Cancel',
+            kbqCancelText: this.text().cancel,
             kbqOkClick: () => console.log('OK'),
             kbqCancelClick: () => console.log('Cancel')
         });
@@ -57,11 +60,11 @@ export class ModalOverviewExample {
 
     showDeleteModal(): void {
         this.modalService.delete({
-            kbqAriaLabel: 'Delete customer',
+            kbqAriaLabel: this.text().deleteCustomer,
             kbqContent:
                 'The tasks, policies and tags associated with the customer will be deleted too. Delete selected customer?',
-            kbqOkText: 'Delete',
-            kbqCancelText: 'Cancel',
+            kbqOkText: this.text().delete,
+            kbqCancelText: this.text().cancel,
             kbqWidth: '480px',
             kbqMaskClosable: true,
             kbqOkClick: () => console.log('Delete'),

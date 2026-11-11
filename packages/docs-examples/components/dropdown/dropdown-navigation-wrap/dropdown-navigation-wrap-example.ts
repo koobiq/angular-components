@@ -4,6 +4,7 @@ import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Dropdown navigation wrap
@@ -20,4 +21,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
     templateUrl: 'dropdown-navigation-wrap-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownNavigationWrapExample {}
+export class DropdownNavigationWrapExample {
+    protected readonly text = injectExampleText();
+}

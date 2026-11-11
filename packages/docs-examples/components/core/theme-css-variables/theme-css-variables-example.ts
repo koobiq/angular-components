@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqThemeService } from '@koobiq/components/core';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Theme values in your own styles
@@ -10,8 +11,10 @@ import { KbqThemeService } from '@koobiq/components/core';
     imports: [KbqButtonModule],
     template: `
         <div class="theme-css-variables-example__card">
-            <p class="theme-css-variables-example__caption">Current theme: {{ themeService.colorScheme() }}</p>
-            <button kbq-button (click)="themeService.toggle()">Switch theme</button>
+            <p class="theme-css-variables-example__caption">
+                {{ text().currentTheme }} {{ themeService.colorScheme() }}
+            </p>
+            <button kbq-button (click)="themeService.toggle()">{{ text().switchTheme }}</button>
         </div>
     `,
     styles: `
@@ -31,6 +34,8 @@ import { KbqThemeService } from '@koobiq/components/core';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ThemeCssVariablesExample {
+    protected readonly text = injectExampleText();
+
     // The app's shared service, so the switch flips the whole page — that is the point here: nothing
     // in the styles above reacts to it explicitly, the variables simply resolve to the other theme.
     protected readonly themeService = inject(KbqThemeService);

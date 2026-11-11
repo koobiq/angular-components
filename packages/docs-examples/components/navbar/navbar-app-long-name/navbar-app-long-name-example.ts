@@ -5,7 +5,7 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
-import { injectExampleText } from '../localized-data';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Navbar app long name

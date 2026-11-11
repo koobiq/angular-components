@@ -13,6 +13,7 @@ import { KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/fi
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { Observable } from 'rxjs';
+import { injectExampleText } from '../l10n';
 
 const MAX_LINE_COUNT = 100;
 
@@ -101,10 +102,10 @@ function maxLinesValidator(maxLines: number): AsyncValidatorFn {
                 }
 
                 @if (form.controls.fileUpload.hasError('fileReadError')) {
-                    <kbq-hint color="error">Failed to read file content</kbq-hint>
+                    <kbq-hint color="error">{{ text().failedToRead }}</kbq-hint>
                 }
 
-                <kbq-hint>Only TXT files with up to {{ maxLines }} lines are allowed</kbq-hint>
+                <kbq-hint>{{ text().onlyTxtWithLines(maxLines) }}</kbq-hint>
             </kbq-file-upload>
 
             <button class="layout-margin-top-m" kbq-button type="submit" [disabled]="form.pending">Submit</button>
@@ -113,6 +114,8 @@ function maxLinesValidator(maxLines: number): AsyncValidatorFn {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadSingleAsyncValidationExample {
+    protected readonly text = injectExampleText();
+
     protected readonly maxLines = MAX_LINE_COUNT;
     protected readonly errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
 

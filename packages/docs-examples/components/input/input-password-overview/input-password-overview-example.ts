@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AbstractControl, FormControl, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { PasswordValidators } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectExampleText } from '../l10n';
 
 /**
  * Allows printable ASCII only: latin letters, digits, spaces and special characters. An empty password fails too,
@@ -23,30 +24,32 @@ const latinAndSpecialSymbols = ({ value }: AbstractControl): ValidationErrors | 
         <kbq-form-field style="width: 250px">
             <input kbqInputPassword [formControl]="control" />
 
-            <kbq-password-toggle [kbqTooltipHidden]="'Показать пароль'" [kbqTooltipNotHidden]="'Скрыть пароль'" />
+            <kbq-password-toggle [kbqTooltipHidden]="text().showPassword" [kbqTooltipNotHidden]="text().hidePassword" />
 
             <kbq-reactive-password-hint [hasError]="control.hasError('minLength') || control.hasError('maxLength')">
-                От 8 до 15 символов
+                {{ text().from8to15 }}
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="control.hasError('minUppercase')">
-                Заглавная латинская буква
+                {{ text().uppercaseLatin }}
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="control.hasError('minLowercase')">
-                Строчная латинская буква
+                {{ text().lowercaseLatin }}
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="control.hasError('minNumber')">Цифра</kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="control.hasError('latinAndSpecialSymbols')">
-                Только латинские буквы, цифры, пробелы и спецсимволы
+                {{ text().latinOnly }}
             </kbq-reactive-password-hint>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputPasswordOverviewExample {
+    protected readonly text = injectExampleText();
+
     readonly control = new FormControl('', [
         PasswordValidators.minLength(8),
         PasswordValidators.maxLength(15),

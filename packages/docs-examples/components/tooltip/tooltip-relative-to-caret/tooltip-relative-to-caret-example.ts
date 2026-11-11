@@ -3,6 +3,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Tooltip relative to caret
@@ -54,4 +55,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         class: 'layout-margin-5xl layout-column layout-align-center-center layout-gap-l'
     }
 })
-export class TooltipRelativeToCaretExample {}
+export class TooltipRelativeToCaretExample {
+    protected readonly text = injectExampleText();
+}
