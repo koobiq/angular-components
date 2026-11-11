@@ -30,7 +30,7 @@ import { injectExampleText } from './l10n';
                         }
 
                         @if (noOptions) {
-                            <kbq-select-no-options>Нет вариантов выбора</kbq-select-no-options>
+                            <kbq-select-no-options>{{ text().noOptions }}</kbq-select-no-options>
                         }
                     </kbq-select>
                 </kbq-form-field>

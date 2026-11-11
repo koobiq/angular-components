@@ -38,7 +38,9 @@ const latinAndSpecialSymbols = ({ value }: AbstractControl): ValidationErrors | 
                 {{ text().lowercaseLatin }}
             </kbq-reactive-password-hint>
 
-            <kbq-reactive-password-hint [hasError]="control.hasError('minNumber')">Цифра</kbq-reactive-password-hint>
+            <kbq-reactive-password-hint [hasError]="control.hasError('minNumber')">
+                {{ text().digit }}
+            </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="control.hasError('latinAndSpecialSymbols')">
                 {{ text().latinOnly }}

@@ -58,9 +58,9 @@
         [style]="{ 'background-image': 'url(\'/assets/images/popover/hero-header.jpg\')' }"
     ></div>
     <div class="example-popover-content-custom__container">
-        <h4 class="kbq-title">Абракадабра!</h4>
-        <p>Таинственное слово, которому приписывалась чудодейственная сила</p>
-        <button kbq-button [color]="'contrast'" (click)="kbqCustomPopover.hide(0)">Сделать магию</button>
+        <h4 class="kbq-title">{{ text().magicTitle }}</h4>
+        <p>{{ text().magicText }}</p>
+        <button kbq-button [color]="'contrast'" (click)="kbqCustomPopover.hide(0)">{{ text().doMagic }}</button>
     </div>
 </ng-template>
 
@@ -73,7 +73,7 @@
         [kbqPopoverClass]="'example-popover-content-share'"
         [kbqPopoverContent]="shareContent"
     >
-        Без панели хедера
+        {{ text().withoutHeaderPanel }}
     </button>
     <button
         #kbqCustomPopover="kbqPopover"
@@ -83,6 +83,6 @@
         [kbqPopoverClass]="'example-popover-content-custom'"
         [kbqPopoverContent]="customContent"
     >
-        Нестандартные стили и отступы
+        {{ text().customStyles }}
     </button>
 </div>

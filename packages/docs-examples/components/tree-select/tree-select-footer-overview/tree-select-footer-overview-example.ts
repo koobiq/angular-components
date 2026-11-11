@@ -4,7 +4,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 export class FileNode {
     children: FileNode[];
@@ -125,7 +125,9 @@ export const DATA_OBJECT = {
                 <kbq-cleaner />
 
                 <kbq-select-footer>
-                    <a href="https://koobiq.io/en/components/tree-select" kbqLink external target="_blank">Ссылка</a>
+                    <a href="https://koobiq.io/en/components/tree-select" kbqLink external target="_blank">
+                        {{ text().link }}
+                    </a>
                 </kbq-select-footer>
             </kbq-tree-select>
         </kbq-form-field>

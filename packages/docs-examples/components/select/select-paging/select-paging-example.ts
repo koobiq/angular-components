@@ -242,7 +242,7 @@ export class SelectFacade {
                                         (click)="reloadOptions()"
                                     >
                                         <i kbq-icon="kbq-arrow-rotate-left_16"></i>
-                                        Повторить
+                                        {{ text().tryAgain }}
                                     </button>
                                 </kbq-select-error>
                             }

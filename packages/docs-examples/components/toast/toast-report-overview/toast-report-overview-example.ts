@@ -24,7 +24,7 @@ import { injectExampleText } from './l10n';
             <a kbqLink pseudo (click)="toast.close()">{{ text().restore }}</a>
         </ng-template>
 
-        <button kbq-button (click)="showToast(toastContentTemplate, toastActionsTemplate)">Отчет</button>
+        <button kbq-button (click)="showToast(toastContentTemplate, toastActionsTemplate)">{{ text().report }}</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

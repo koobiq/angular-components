@@ -10,6 +10,7 @@ export interface ExampleText {
     changesSaved: string;
     allChangesSaved: string;
     openTwoModals: string;
+    ok: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -20,7 +21,8 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         cancel: 'Отмена',
         changesSaved: 'Изменения сохранены',
         allChangesSaved: 'Все изменения сохранены!',
-        openTwoModals: 'Открыть две модалки'
+        openTwoModals: 'Открыть две модалки',
+        ok: 'ОК'
     },
     default: {
         saveChangesAria: 'Save changes',
@@ -29,7 +31,8 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         cancel: 'Cancel',
         changesSaved: 'Changes saved',
         allChangesSaved: 'All changes are saved!',
-        openTwoModals: 'Open two modals'
+        openTwoModals: 'Open two modals',
+        ok: 'OK'
     }
 };
 

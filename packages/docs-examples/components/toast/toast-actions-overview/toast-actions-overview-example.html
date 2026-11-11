@@ -1,7 +1,7 @@
 <ng-template #toastSingleActonContentTemplate>
-    Политика
+    {{ text().policy }}
     <span class="kbq-text-normal-strong">{{ text().mailServersWindows }}</span>
-    удалена
+    {{ text().captionDeleted }}
 </ng-template>
 
 <ng-template #toastSingleActonActionsTemplate let-toast>
@@ -17,7 +17,7 @@
     <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">{{ text().action(1) }}</a>
     <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">{{ text().action(2) }}</a>
     <a kbqLink pseudo role="button" [kbqDropdownTriggerFor]="dropdown">
-        Еще
+        {{ text().more }}
         <i kbqLinkSuffix kbq-icon="kbq-chevron-down-s_16"></i>
     </a>
 </ng-template>
@@ -33,7 +33,7 @@
         kbq-button
         (click)="showSingleActionToast(toastSingleActonContentTemplate, toastSingleActonActionsTemplate)"
     >
-        Одно действие
+        {{ text().singleAction }}
     </button>
     <button kbq-button (click)="showTwoActionToast(toastTwoActonActionsTemplate)">{{ text().twoActions }}</button>
     <button kbq-button (click)="showManyActionToast(toastManyActionActionsTemplate)">{{ text().manyActions }}</button>

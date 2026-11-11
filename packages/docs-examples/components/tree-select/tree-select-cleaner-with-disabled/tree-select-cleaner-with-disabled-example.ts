@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { injectExampleText } from './l10n';
 import {
     buildTree,
     FlatNode,
@@ -15,6 +14,7 @@ import {
     Node,
     transformer
 } from '../tree-select-cleaner-data';
+import { injectExampleText } from './l10n';
 
 /** Nodes the user is not allowed to deselect. */
 const lockedNodes = ['Load balancer'];

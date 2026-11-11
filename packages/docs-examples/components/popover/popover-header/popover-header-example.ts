@@ -3,7 +3,7 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqPopoverModule } from '@koobiq/components/popover';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Popover Header

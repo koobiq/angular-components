@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpSizes } from '@koobiq/components/core';
 import { KbqPopoverModule } from '@koobiq/components/popover';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Popover width

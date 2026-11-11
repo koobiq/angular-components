@@ -39,7 +39,9 @@ import { injectExampleText } from './l10n';
                     @for (option of options(); track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
-                    <kbq-select-footer class="example-select-footer-with-caption">Caption ⌥+⌘+F</kbq-select-footer>
+                    <kbq-select-footer class="example-select-footer-with-caption">
+                        {{ text().caption }} ⌥+⌘+F
+                    </kbq-select-footer>
                 </kbq-select>
             </kbq-form-field>
         </div>

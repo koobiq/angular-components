@@ -22,11 +22,11 @@ const stateSavingKey = 'sidepanel-state-saving-example';
     template: `
         <div class="example-sidepanel-state-saving__actions">
             <button kbq-button type="button" [color]="'contrast'" (click)="toggle()">
-                {{ sidepanelRef() ? 'Close sidepanel' : 'Open sidepanel' }}
+                {{ sidepanelRef() ? text().closeSidepanel : text().openSidepanel }}
             </button>
 
             <button kbq-button type="button" (click)="sidepanelService.clearSavedState(stateSavingKey)">
-                Reset saved state
+                {{ text().resetSavedState }}
             </button>
         </div>
 
@@ -34,8 +34,7 @@ const stateSavingKey = 'sidepanel-state-saving-example';
             <kbq-sidepanel-header [closeable]="true">{{ text().stateSaving }}</kbq-sidepanel-header>
             <kbq-sidepanel-body>
                 <div class="example-sidepanel-state-saving__body">
-                    Leave this panel open and reload the page — it opens again. The panel is non-modal, so nothing on
-                    the page is blocked while it comes back.
+                    {{ text().body }}
                 </div>
             </kbq-sidepanel-body>
         </ng-template>

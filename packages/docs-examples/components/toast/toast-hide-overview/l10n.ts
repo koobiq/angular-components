@@ -14,6 +14,7 @@ export interface ExampleText {
     passwordExpires: string;
     refresh: string;
     changePassword: string;
+    onCommand: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -28,7 +29,8 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         importProgress: '12,1 МБ из 85 МБ — осталось 15 мин',
         passwordExpires: 'Ваш пароль истекает через 5 дней',
         refresh: 'Обновить',
-        changePassword: 'Сменить пароль'
+        changePassword: 'Сменить пароль',
+        onCommand: 'По команде'
     },
     default: {
         importComplete: 'Import complete',
@@ -41,7 +43,8 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         importProgress: '12.1 MB of 85 MB — 15 min left',
         passwordExpires: 'Your password expires in 5 days',
         refresh: 'Refresh',
-        changePassword: 'Change password'
+        changePassword: 'Change password',
+        onCommand: 'On command'
     }
 };
 

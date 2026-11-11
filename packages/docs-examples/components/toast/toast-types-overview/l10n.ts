@@ -14,6 +14,7 @@ export interface ExampleText {
     deleted13Records: string;
     failedToAuthorize: string;
     changePassword: string;
+    retry: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -28,7 +29,8 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         refresh: 'Обновить',
         deleted13Records: 'Удалено 13 записей из журнала событий',
         failedToAuthorize: 'Не удалось авторизовать 15 агентов',
-        changePassword: 'Сменить пароль'
+        changePassword: 'Сменить пароль',
+        retry: 'Повторить'
     },
     default: {
         info: 'Information',
@@ -41,7 +43,8 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         refresh: 'Refresh',
         deleted13Records: '13 records deleted from the event log',
         failedToAuthorize: 'Failed to authorize 15 agents',
-        changePassword: 'Change password'
+        changePassword: 'Change password',
+        retry: 'Retry'
     }
 };
 

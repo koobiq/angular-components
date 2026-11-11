@@ -9,6 +9,7 @@ export interface ExampleText {
     uppercaseLatin: string;
     lowercaseLatin: string;
     latinOnly: string;
+    digit: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -18,7 +19,8 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         from8to15: 'От 8 до 15 символов',
         uppercaseLatin: 'Заглавная латинская буква',
         lowercaseLatin: 'Строчная латинская буква',
-        latinOnly: 'Только латинские буквы, цифры, пробелы и спецсимволы'
+        latinOnly: 'Только латинские буквы, цифры, пробелы и спецсимволы',
+        digit: 'Цифра'
     },
     default: {
         showPassword: 'Show password',
@@ -26,7 +28,8 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         from8to15: '8 to 15 characters',
         uppercaseLatin: 'An uppercase letter',
         lowercaseLatin: 'A lowercase letter',
-        latinOnly: 'Only latin letters, digits, spaces and special characters'
+        latinOnly: 'Only latin letters, digits, spaces and special characters',
+        digit: 'Digit'
     }
 };
 

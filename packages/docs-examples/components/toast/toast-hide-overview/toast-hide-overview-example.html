@@ -32,7 +32,7 @@
 <div style="gap: 16px" class="layout-row">
     <button kbq-button (click)="showDefaultToast(toastActionInfo)">{{ text().byTimer }}</button>
     <button kbq-button (click)="showPermanentToast(toastPermanentContentTemplate, toastPermanentActionsTemplate)">
-        По команде
+        {{ text().onCommand }}
     </button>
     <button kbq-button (click)="showWarningToast(toastActionWarning)">{{ text().hoverOrFocus }}</button>
 </div>

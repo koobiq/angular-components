@@ -261,7 +261,7 @@ export class SelectFacade {
                                         (click)="reloadOptions()"
                                     >
                                         <i kbq-icon="kbq-arrow-rotate-left_16"></i>
-                                        Повторить
+                                        {{ text().tryAgain }}
                                     </button>
                                 </kbq-select-error>
                             }
@@ -285,7 +285,7 @@ export class SelectFacade {
 
                                 @if (state.pageNotLoaded) {
                                     <kbq-select-error paging>
-                                        <span kbq-select-error-text>Не удалось показать записи</span>
+                                        <span kbq-select-error-text>{{ text().loadFailedRecords }}</span>
                                         <div>
                                             <button
                                                 kbq-button
@@ -294,7 +294,7 @@ export class SelectFacade {
                                                 (click)="reloadOptions()"
                                             >
                                                 <i kbq-icon="kbq-arrow-rotate-left_16"></i>
-                                                Повторить
+                                                {{ text().tryAgain }}
                                             </button>
                                         </div>
                                     </kbq-select-error>
