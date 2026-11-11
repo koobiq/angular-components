@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLink } from '@koobiq/components/link';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Link print
@@ -20,4 +21,6 @@ import { KbqLink } from '@koobiq/components/link';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinkPrintExample {}
+export class LinkPrintExample {
+    protected readonly text = injectExampleText();
+}

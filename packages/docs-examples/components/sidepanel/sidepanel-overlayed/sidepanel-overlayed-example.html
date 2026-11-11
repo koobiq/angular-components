@@ -1,6 +1,6 @@
 <div class="kbq-form-horizontal">
     <div class="kbq-form__row">
-        <label class="kbq-form__label">Position</label>
+        <label class="kbq-form__label">{{ text().position }}</label>
         <kbq-form-field style="min-width: 120px" class="kbq-form__control flex-10">
             <kbq-select [(value)]="position">
                 <kbq-option [value]="'right'">Right</kbq-option>
@@ -19,9 +19,9 @@
 </button>
 
 <ng-template>
-    <kbq-sidepanel-header [closeable]="true">Sidepanel Template Content</kbq-sidepanel-header>
+    <kbq-sidepanel-header [closeable]="true">{{ text().templateContent }}</kbq-sidepanel-header>
     <kbq-sidepanel-body style="padding-top: 8px; padding-bottom: 8px">
-        <div style="padding: 8px" class="kbq-subheading">Sidepanel Template Body</div>
+        <div style="padding: 8px" class="kbq-subheading">{{ text().templateBody }}</div>
 
         @for (item of array; track $index) {
             <div style="padding: 8px">
@@ -33,13 +33,13 @@
     <kbq-sidepanel-footer>
         <kbq-sidepanel-actions align="left">
             <button cdkFocusInitial kbq-button [color]="'contrast'" (click)="openAnotherSidepanel()">
-                <span>Open another sidepanel</span>
+                <span>{{ text().openAnother }}</span>
             </button>
         </kbq-sidepanel-actions>
 
         <kbq-sidepanel-actions align="right">
             <button kbq-button kbq-sidepanel-close>
-                <span>Close</span>
+                <span>{{ text().close }}</span>
             </button>
         </kbq-sidepanel-actions>
     </kbq-sidepanel-footer>

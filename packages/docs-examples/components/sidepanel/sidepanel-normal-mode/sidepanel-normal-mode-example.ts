@@ -3,6 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { take } from 'rxjs/operators';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Sidepanel normal mode
@@ -14,6 +15,8 @@ import { take } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelNormalModeExample {
+    protected readonly text = injectExampleText();
+
     private sidepanelService = inject(KbqSidepanelService);
 
     position = KbqSidepanelPosition.Right;

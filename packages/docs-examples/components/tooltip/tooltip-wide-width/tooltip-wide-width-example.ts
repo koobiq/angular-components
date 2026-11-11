@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Tooltip wide width
@@ -25,4 +26,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
     }
 })
-export class TooltipWideWidthExample {}
+export class TooltipWideWidthExample {
+    protected readonly text = injectExampleText();
+}

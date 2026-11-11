@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -15,6 +15,7 @@ import {
     KbqTimeRangeUnits
 } from '@koobiq/components/time-range';
 import { of } from 'rxjs';
+import { injectExampleText } from '../l10n';
 
 const customTypes: KbqCustomTimeRangeType[] = [
     { type: 'last3Minutes', units: { minutes: -3 }, translationType: 'minutes' },
@@ -31,13 +32,6 @@ const customTypeUnits: Record<string, KbqTimeRangeUnits> = Object.fromEntries(
 const customTypeTranslation: Record<string, KbqTimeRangeTranslationType> = Object.fromEntries(
     customTypes.map(({ type, translationType }) => [type, translationType])
 );
-
-const ExampleLocalizedData = new InjectionToken<Record<string | 'default', string>>('ExampleLocalizedData', {
-    factory: () => ({
-        'ru-RU': 'Период',
-        default: 'Period'
-    })
-});
 
 /**
  * @title Time range custom range types
@@ -106,8 +100,9 @@ export class TimeRangeCustomRangeTypesExample {
         return this.localeService?.getParams('timeRange');
     });
 
-    private readonly data = inject(ExampleLocalizedData);
-    protected readonly placeholder = computed(() => this.data[this.localeId() || 'default'] ?? this.data.default);
+    protected readonly text = injectExampleText();
+
+    protected readonly placeholder = computed(() => this.text().placeholder);
 
     protected optionLabel(type: string): string {
         const localeConfig = this.localeConfig();

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Button loading state
@@ -11,11 +12,13 @@ import { KbqComponentColors } from '@koobiq/components/core';
         KbqButtonModule
     ],
     template: `
-        <button class="kbq-progress" kbq-button [color]="colors.Contrast">Кнопка</button>
+        <button class="kbq-progress" kbq-button [color]="colors.Contrast">{{ text().button }}</button>
         &nbsp;
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonLoadingStateExample {
+    protected readonly text = injectExampleText();
+
     colors = KbqComponentColors;
 }

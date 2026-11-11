@@ -18,7 +18,7 @@ import { KbqToastStyle } from '@koobiq/components/toast';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { timer } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ExampleText, injectExampleText } from '../localized-data';
+import { ExampleText, injectExampleText } from '../l10n';
 
 /** Items per loaded page. */
 const PAGE_SIZE = 20;

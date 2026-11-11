@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectExampleText } from '../l10n';
 
 /** @title Form field with kbqPrefix and kbqSuffix */
 @Component({
@@ -10,7 +11,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     template: `
         <kbq-form-field>
             <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-            <input kbqInput placeholder="Search" [formControl]="formControl" />
+            <input kbqInput [placeholder]="text().search" [formControl]="formControl" />
             <i kbqSuffix kbq-icon="kbq-circle-info_16"></i>
             <kbq-cleaner />
         </kbq-form-field>
@@ -18,5 +19,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldWithPrefixAndSuffixExample {
+    protected readonly text = injectExampleText();
+
     readonly formControl = new FormControl();
 }

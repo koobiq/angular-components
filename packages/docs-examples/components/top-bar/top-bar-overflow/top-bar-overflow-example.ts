@@ -21,6 +21,7 @@ import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { auditTime, map } from 'rxjs/operators';
+import { injectExampleText } from '../l10n';
 
 type ExampleAction = {
     id: string;
@@ -56,7 +57,7 @@ type ExampleAction = {
         <kbq-top-bar [withShadow]="hasOverflow()">
             <div class="layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="example-kbq-top-bar__title" kbqTopBarTitle>
-                    <span class="kbq-truncate-line layout-margin-right-xs">Page</span>
+                    <span class="kbq-truncate-line layout-margin-right-xs">{{ text().page }}</span>
 
                     <span class="example-kbq-top-bar__counter">{{ 13294 | kbqNumber: '' : 'en-US' }}</span>
                 </div>
@@ -112,16 +113,18 @@ type ExampleAction = {
         <div kbqNativeScrollbar class="overflow-content-example" cdkScrollable>
             <div style="height: 600px">
                 <kbq-dl>
-                    <kbq-dt>Description</kbq-dt>
+                    <kbq-dt>{{ text().description }}</kbq-dt>
                     <kbq-dd>
                         NASA describes a case where a person accidentally ended up in an area close to a vacuum
                         (pressure below 1 Pa) due to an air leak from a spacesuit.
                     </kbq-dd>
 
-                    <kbq-dt>Status</kbq-dt>
-                    <kbq-dd><kbq-badge>Badge</kbq-badge></kbq-dd>
+                    <kbq-dt>{{ text().status }}</kbq-dt>
+                    <kbq-dd>
+                        <kbq-badge>{{ text().badge }}</kbq-badge>
+                    </kbq-dd>
 
-                    <kbq-dt>Additional Information</kbq-dt>
+                    <kbq-dt>{{ text().additionalInformation }}</kbq-dt>
                     <kbq-dd>
                         Space is an endless expanse full of mysteries and wonders. It begins beyond our atmosphere and
                         stretches to the farthest corners of the Universe. In space, there are billions of stars,
@@ -181,6 +184,8 @@ type ExampleAction = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopBarOverflowExample implements AfterViewInit {
+    protected readonly text = injectExampleText();
+
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 768px)')

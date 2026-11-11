@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Loader-overlay large
@@ -16,11 +17,13 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text
-            <kbq-loader-overlay [text]="'Загрузка данных'">
+            <kbq-loader-overlay [text]="text().loadingData">
                 <kbq-progress-spinner size="big" kbq-loader-overlay-indicator [mode]="'indeterminate'" />
             </kbq-loader-overlay>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoaderOverlayLargeExample {}
+export class LoaderOverlayLargeExample {
+    protected readonly text = injectExampleText();
+}

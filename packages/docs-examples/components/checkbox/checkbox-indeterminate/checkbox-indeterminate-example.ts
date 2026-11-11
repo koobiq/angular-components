@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Checkbox indeterminate
@@ -9,10 +10,10 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
     imports: [KbqCheckboxModule],
     template: `
         <kbq-checkbox [checked]="allSelected()" [indeterminate]="someSelected()" (change)="toggleAll()">
-            All event types
+            {{ text().allEventTypes }}
         </kbq-checkbox>
 
-        @for (eventType of eventTypes; track eventType) {
+        @for (eventType of eventTypes(); track eventType) {
             <kbq-checkbox
                 class="example-checkbox-indeterminate__child"
                 [checked]="selected().has(eventType)"
@@ -34,14 +35,16 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
     }
 })
 export class CheckboxIndeterminateExample {
-    protected readonly eventTypes = ['Malware', 'Phishing', 'Ransomware'];
-    protected readonly selected = signal(new Set([this.eventTypes[0]]));
+    protected readonly text = injectExampleText();
 
-    protected readonly allSelected = computed(() => this.selected().size === this.eventTypes.length);
+    protected readonly eventTypes = computed(() => this.text().eventTypes);
+    protected readonly selected = signal(new Set([this.eventTypes()[0]]));
+
+    protected readonly allSelected = computed(() => this.selected().size === this.eventTypes().length);
     protected readonly someSelected = computed(() => this.selected().size > 0 && !this.allSelected());
 
     protected toggleAll(): void {
-        this.selected.set(this.allSelected() ? new Set() : new Set(this.eventTypes));
+        this.selected.set(this.allSelected() ? new Set() : new Set(this.eventTypes()));
     }
 
     protected toggle(eventType: string): void {

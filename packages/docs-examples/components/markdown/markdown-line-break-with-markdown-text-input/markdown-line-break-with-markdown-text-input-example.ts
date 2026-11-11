@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqMarkdown, kbqMarkdownMarkedOptionsProvider } from '@koobiq/components/markdown';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Markdown line break
@@ -9,9 +10,11 @@ import { KbqMarkdown, kbqMarkdownMarkedOptionsProvider } from '@koobiq/component
     imports: [KbqMarkdown],
     // prettier-ignore
     template: `
-        <kbq-markdown markdownText="First line\nSecond line" />
+        <kbq-markdown [markdownText]="text().lineBreak" />
     `,
     providers: [kbqMarkdownMarkedOptionsProvider({ breaks: true })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarkdownLineBreakWithMarkdownTextInputExample {}
+export class MarkdownLineBreakWithMarkdownTextInputExample {
+    protected readonly text = injectExampleText();
+}

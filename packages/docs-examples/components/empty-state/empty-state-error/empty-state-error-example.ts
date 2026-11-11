@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Empty-state error
@@ -22,17 +23,17 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 [color]="'contrast'"
                 [fade]="true"
             ></i>
-            <h2 kbq-empty-state-title>Не удалось показать записи</h2>
+            <h2 kbq-empty-state-title>{{ text().errorTitle }}</h2>
             <div kbq-empty-state-text>
-                {{ emptyStateText }}
+                {{ text().errorText }}
             </div>
             <div kbq-empty-state-actions>
-                <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">Обновить</button>
+                <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">{{ text().refresh }}</button>
             </div>
         </kbq-empty-state>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateErrorExample {
-    emptyStateText = 'Проблема с сетью или подключением к БД. Попробуйте еще раз или обратитесь к администратору.';
+    protected readonly text = injectExampleText();
 }

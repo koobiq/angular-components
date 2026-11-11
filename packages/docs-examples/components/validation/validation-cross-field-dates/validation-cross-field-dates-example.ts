@@ -17,6 +17,7 @@ import {
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { DateTime } from 'luxon';
+import { injectExampleText } from '../l10n';
 
 /**
  * Payload the cross-field validator publishes, so that the `ErrorStateMatcher` can tell which controls a
@@ -69,7 +70,7 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>Valid from</kbq-label>
+                        <kbq-label>{{ text().validFrom }}</kbq-label>
                         <input formControlName="validFrom" [kbqDatepicker]="validFromPicker" />
                         <kbq-datepicker-toggle-icon kbqSuffix [for]="validFromPicker" />
                         <kbq-datepicker #validFromPicker />
@@ -78,13 +79,13 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
 
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>Valid until</kbq-label>
+                        <kbq-label>{{ text().validUntil }}</kbq-label>
                         <input formControlName="validUntil" [kbqDatepicker]="validUntilPicker" />
                         <kbq-datepicker-toggle-icon kbqSuffix [for]="validUntilPicker" />
                         <kbq-datepicker #validUntilPicker />
 
                         @if (form.hasError('order')) {
-                            <kbq-error>The end of the period must not precede its start</kbq-error>
+                            <kbq-error>{{ text().periodEndBeforeStart }}</kbq-error>
                         }
                     </kbq-form-field>
                 </div>
@@ -111,6 +112,8 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
     }
 })
 export class ValidationCrossFieldDatesExample {
+    protected readonly text = injectExampleText();
+
     private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     protected readonly form = new FormGroup(

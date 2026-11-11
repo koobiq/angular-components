@@ -1,31 +1,31 @@
 <ng-template #toastSingleActonContentTemplate>
     Политика
-    <span class="kbq-text-normal-strong">Почтовые серверы Windows</span>
+    <span class="kbq-text-normal-strong">{{ text().mailServersWindows }}</span>
     удалена
 </ng-template>
 
 <ng-template #toastSingleActonActionsTemplate let-toast>
-    <a kbqLink pseudo (click)="toast.close()">Восстановить</a>
+    <a kbqLink pseudo (click)="toast.close()">{{ text().restore }}</a>
 </ng-template>
 
 <ng-template #toastTwoActonActionsTemplate let-toast>
-    <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">Посмотреть</a>
-    <a kbqLink pseudo (click)="toast.close()">Отклонить</a>
+    <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">{{ text().view }}</a>
+    <a kbqLink pseudo (click)="toast.close()">{{ text().reject }}</a>
 </ng-template>
 
 <ng-template #toastManyActionActionsTemplate let-toast>
-    <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">Действие 1</a>
-    <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">Действие 2</a>
+    <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">{{ text().action(1) }}</a>
+    <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">{{ text().action(2) }}</a>
     <a kbqLink pseudo role="button" [kbqDropdownTriggerFor]="dropdown">
         Еще
         <i kbqLinkSuffix kbq-icon="kbq-chevron-down-s_16"></i>
     </a>
 </ng-template>
 <kbq-dropdown #dropdown="kbqDropdown">
-    <button kbq-dropdown-item>Второстепенное действие 1</button>
-    <button kbq-dropdown-item>Второстепенное действие 2</button>
-    <button kbq-dropdown-item>Второстепенное действие 3</button>
-    <button kbq-dropdown-item>Второстепенное действие 4</button>
+    <button kbq-dropdown-item>{{ text().secondaryAction(1) }}</button>
+    <button kbq-dropdown-item>{{ text().secondaryAction(2) }}</button>
+    <button kbq-dropdown-item>{{ text().secondaryAction(3) }}</button>
+    <button kbq-dropdown-item>{{ text().secondaryAction(4) }}</button>
 </kbq-dropdown>
 
 <div style="gap: 16px" class="layout-row">
@@ -35,6 +35,6 @@
     >
         Одно действие
     </button>
-    <button kbq-button (click)="showTwoActionToast(toastTwoActonActionsTemplate)">Два действия</button>
-    <button kbq-button (click)="showManyActionToast(toastManyActionActionsTemplate)">Много действий</button>
+    <button kbq-button (click)="showTwoActionToast(toastTwoActonActionsTemplate)">{{ text().twoActions }}</button>
+    <button kbq-button (click)="showManyActionToast(toastManyActionActionsTemplate)">{{ text().manyActions }}</button>
 </div>

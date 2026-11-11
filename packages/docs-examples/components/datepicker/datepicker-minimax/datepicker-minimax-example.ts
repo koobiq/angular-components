@@ -7,6 +7,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DateTime } from 'luxon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Datepicker minimax
@@ -26,11 +27,11 @@ import { DateTime } from 'luxon';
         <div class="docs-example__datepicker-minimax">
             <div class="kbq-form-vertical">
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label">Select a date between December 14, 2023, and August 25, 2024.</label>
+                    <label class="kbq-form__label">{{ text().minimaxHint }}</label>
                     <kbq-form-field
                         #tooltip="kbqTooltip"
                         kbqTooltipModifier="warning"
-                        [kbqTooltip]="'Only numbers'"
+                        [kbqTooltip]="text().onlyNumbers"
                         (click)="datepicker.toggle()"
                     >
                         <input
@@ -50,6 +51,8 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerMinimaxExample {
+    protected readonly text = injectExampleText();
+
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     readonly minDate = this.adapter.createDate(2023, 11, 14);

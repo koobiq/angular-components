@@ -8,6 +8,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Validation: multiple validators
@@ -20,21 +21,21 @@ import { KbqInputModule } from '@koobiq/components/input';
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>Username</kbq-label>
+                        <kbq-label>{{ text().username }}</kbq-label>
                         <input formControlName="username" kbqInput />
 
                         @if (form.controls.username.hasError('required')) {
-                            <kbq-error>Required</kbq-error>
+                            <kbq-error>{{ text().required }}</kbq-error>
                         } @else if (form.controls.username.hasError('minlength')) {
-                            <kbq-error>Minimum 5 characters</kbq-error>
+                            <kbq-error>{{ text().min5 }}</kbq-error>
                         } @else if (form.controls.username.hasError('maxlength')) {
-                            <kbq-error>Maximum 20 characters</kbq-error>
+                            <kbq-error>{{ text().max20 }}</kbq-error>
                         }
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-align-start-start">
-                    <button color="contrast" kbq-button type="submit">Submit</button>
+                    <button color="contrast" kbq-button type="submit">{{ text().submit }}</button>
                 </div>
             </div>
         </form>
@@ -53,6 +54,8 @@ import { KbqInputModule } from '@koobiq/components/input';
     }
 })
 export class ValidationBasicMultipleValidatorsExample {
+    protected readonly text = injectExampleText();
+
     protected readonly form = new FormGroup({
         username: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(20)])
     });

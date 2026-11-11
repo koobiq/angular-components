@@ -13,6 +13,7 @@ import {
     KbqUsernameModule
 } from '@koobiq/components/username';
 import { startWith } from 'rxjs';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Username search
@@ -31,10 +32,10 @@ import { startWith } from 'rxjs';
     ],
     template: `
         <div class="example__content">
-            <kbq-toggle [(ngModel)]="isCompact">Compact</kbq-toggle>
+            <kbq-toggle [(ngModel)]="isCompact">{{ text().compact }}</kbq-toggle>
 
             <kbq-form-field>
-                <kbq-select placeholder="Assignee" [(value)]="selectedUser">
+                <kbq-select [placeholder]="text().assignee" [(value)]="selectedUser">
                     <kbq-select-trigger>
                         @if (selectedUser(); as user) {
                             <kbq-username [userInfo]="user" [isCompact]="isCompact()" />
@@ -47,7 +48,7 @@ import { startWith } from 'rxjs';
                         <kbq-cleaner />
                     </kbq-form-field>
 
-                    <div kbq-select-search-empty-result>Nothing found</div>
+                    <div kbq-select-search-empty-result>{{ text().nothingFound }}</div>
 
                     @for (user of filteredUsers(); track user) {
                         <kbq-option [value]="user">
@@ -122,6 +123,8 @@ import { startWith } from 'rxjs';
     }
 })
 export class UsernameSearchExample {
+    protected readonly text = injectExampleText();
+
     private readonly formatUsername = kbqInjectUsernameFormatter();
 
     protected readonly isCompact = model(false);

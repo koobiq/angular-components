@@ -3,6 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title split-button-progress-state
@@ -17,28 +18,28 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
     ],
     template: `
         <div>
-            <div class="example-split-button-styles__header">Primary in Progress</div>
+            <div class="example-split-button-styles__header">{{ text().primaryProgress }}</div>
             <kbq-split-button>
                 <button kbq-button [class.kbq-progress]="true">
                     <i kbq-icon="kbq-plus_16"></i>
-                    Split Button
+                    {{ text().splitButton }}
                 </button>
-                <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button [attr.aria-label]="text().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
         </div>
 
         <div>
-            <div class="example-split-button-styles__header">Secondary in Progress</div>
+            <div class="example-split-button-styles__header">{{ text().secondaryProgress }}</div>
             <kbq-split-button>
                 <button kbq-button>
                     <i kbq-icon="kbq-plus_16"></i>
-                    Split Button
+                    {{ text().splitButton }}
                 </button>
                 <button
                     kbq-button
-                    aria-label="More options"
+                    [attr.aria-label]="text().moreOptions"
                     [class.kbq-progress]="true"
                     [kbqDropdownTriggerFor]="dropdown"
                 >
@@ -48,15 +49,15 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
         </div>
 
         <div>
-            <div class="example-split-button-styles__header">Completely in Progress</div>
+            <div class="example-split-button-styles__header">{{ text().completelyProgress }}</div>
             <kbq-split-button>
                 <button kbq-button [class.kbq-progress]="true">
                     <i kbq-icon="kbq-plus_16"></i>
-                    Split Button
+                    {{ text().splitButton }}
                 </button>
                 <button
                     kbq-button
-                    aria-label="More options"
+                    [attr.aria-label]="text().moreOptions"
                     [kbqDropdownTriggerFor]="dropdown"
                     [class.kbq-progress]="true"
                 >
@@ -66,9 +67,9 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
         </div>
 
         <kbq-dropdown #dropdown="kbqDropdown">
-            <button kbq-dropdown-item>Extra Action 1</button>
-            <button kbq-dropdown-item>Extra Action 2</button>
-            <button kbq-dropdown-item>Extra Action 3</button>
+            <button kbq-dropdown-item>{{ text().extraAction(1) }}</button>
+            <button kbq-dropdown-item>{{ text().extraAction(2) }}</button>
+            <button kbq-dropdown-item>{{ text().extraAction(3) }}</button>
         </kbq-dropdown>
     `,
     styles: `
@@ -89,4 +90,6 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitButtonProgressStateExample {}
+export class SplitButtonProgressStateExample {
+    protected readonly text = injectExampleText();
+}

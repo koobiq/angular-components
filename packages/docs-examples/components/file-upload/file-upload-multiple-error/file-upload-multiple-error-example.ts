@@ -10,6 +10,7 @@ import {
 import { ErrorStateMatcher, kbqErrorStateMatcherProvider } from '@koobiq/components/core';
 import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 @Injectable()
 export class CustomErrorStateMatcher implements ErrorStateMatcher {
@@ -45,5 +46,7 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleErrorExample {
+    protected readonly text = injectExampleText();
+
     protected readonly fileUpload = new FormControl<KbqFileItem | null>(null, Validators.required);
 }

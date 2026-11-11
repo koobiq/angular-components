@@ -1,6 +1,7 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     DestroyRef,
     effect,
     ElementRef,
@@ -31,6 +32,7 @@ import {
     SelectionChangedEvent,
     SelectionColumnDef
 } from 'ag-grid-community';
+import { injectExampleText } from '../l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -40,6 +42,7 @@ const ACTIONS_PANEL_HEIGHT = 72;
 type ExampleAction = {
     id: string;
     icon: string;
+    label: string;
     divider?: boolean;
 };
 
@@ -59,9 +62,9 @@ type ExampleTableItem = unknown;
             [alwaysMultiSort]="true"
             [rowSelection]="rowSelection"
             [selectionColumnDef]="selectionColumnDef"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
-            [rowData]="rowData"
+            [rowData]="rowData()"
             (firstDataRendered)="onFirstDataRendered($event)"
             (selectionChanged)="onSelectionChanged($event)"
         />
@@ -106,6 +109,8 @@ export class ExampleGrid {
     readonly panelOpened = input(false);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private api: GridApi<ExampleTableItem> | null = null;
+    protected readonly text = injectExampleText();
+
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
@@ -120,20 +125,19 @@ export class ExampleGrid {
         checkboxes: true,
         hideDisabledCheckboxes: false
     };
-    protected readonly columnDefs: ColDef[] = [
-        { field: 'column0', headerName: 'Project name', pinned: true },
-        { field: 'column1', headerName: 'Text' },
-        { field: 'column2', headerName: 'Text' },
-        { field: 'column3', headerName: 'Text' },
-        { field: 'column4', headerName: 'Text' }
-    ];
-    protected readonly rowData = Array.from({ length: 33 }, (_, index) => ({
-        column0: 'Project name ' + index,
-        column1: 'Text ' + index,
-        column2: 'Text ' + index,
-        column3: 'Text ' + index,
-        column4: 'Text ' + index
-    }));
+    protected readonly columnDefs = computed<ColDef[]>(() => [
+        { field: 'column0', headerName: this.text().projectName, pinned: true },
+        ...Array.from({ length: 4 }, (_, i) => ({
+            field: 'column' + (i + 1),
+            headerName: this.text().headerText
+        }))
+    ]);
+    protected readonly rowData = computed(() =>
+        Array.from({ length: 33 }, (_, index) => ({
+            column0: this.text().projectNameN(index),
+            ...Object.fromEntries(Array.from({ length: 4 }, (_, i) => ['column' + (i + 1), this.text().text(index)]))
+        }))
+    );
     readonly selectedItems = output<ExampleTableItem[]>();
 
     constructor() {
@@ -202,11 +206,11 @@ export class ExampleGrid {
     template: `
         <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
             <div order="99" [kbqOverflowItem]="action.Counter">
-                <div class="example-counter">Selected: {{ data().length }}</div>
+                <div class="example-counter">{{ text().selected }} {{ data().length }}</div>
                 <kbq-divider class="example-divider-vertical" [vertical]="true" />
             </div>
 
-            @for (action of actions; track action.id) {
+            @for (action of actions(); track action.id) {
                 <div [kbqOverflowItem]="action.id">
                     @if (action.divider) {
                         <kbq-divider class="example-divider-vertical" [vertical]="true" />
@@ -218,7 +222,7 @@ export class ExampleGrid {
                         (click)="onAction(action)"
                     >
                         <i kbq-icon [class]="action.icon"></i>
-                        {{ action.id }}
+                        {{ action.label }}
                     </button>
                 </div>
             }
@@ -230,7 +234,7 @@ export class ExampleGrid {
                     kbqOverflowItemsResult
                     color="contrast"
                     kbq-button
-                    aria-label="More"
+                    [attr.aria-label]="text().more"
                     [kbqDropdownTriggerFor]="dropdown"
                 >
                     <i kbq-icon="kbq-ellipsis-vertical_16"></i>
@@ -238,17 +242,17 @@ export class ExampleGrid {
             }
 
             <kbq-dropdown #dropdown="kbqDropdown">
-                <div class="example-counter-dropdown">Selected: {{ data().length }}</div>
+                <div class="example-counter-dropdown">{{ text().selected }} {{ data().length }}</div>
                 <kbq-divider />
 
-                @for (action of actions; track action.id) {
+                @for (action of actions(); track action.id) {
                     @if (hiddenItemIDs.has(action.id)) {
-                        @if (action.divider && hiddenItemIDs.has(actions[$index - 1].id)) {
+                        @if (action.divider && hiddenItemIDs.has(actions()[$index - 1].id)) {
                             <kbq-divider />
                         }
                         <button kbq-dropdown-item (click)="onAction(action)">
                             <i kbq-icon [class]="action.icon"></i>
-                            {{ action.id }}
+                            {{ action.label }}
                         </button>
                     }
                 }
@@ -293,18 +297,20 @@ export class ExampleGrid {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleActionsPanel {
-    protected readonly actions: ExampleAction[] = [
-        { id: 'Responsible', icon: 'kbq-user_16' },
-        { id: 'Link to incident', icon: 'kbq-link_16' },
-        { id: 'Remove', icon: 'kbq-trash_16', divider: true }
-    ];
+    protected readonly text = injectExampleText();
+
+    protected readonly actions = computed<ExampleAction[]>(() => [
+        { id: 'Responsible', icon: 'kbq-user_16', label: this.text().responsible },
+        { id: 'Link to incident', icon: 'kbq-link_16', label: this.text().linkToIncident },
+        { id: 'Remove', icon: 'kbq-trash_16', label: this.text().remove, divider: true }
+    ]);
     protected readonly action = { Counter: 'counter' };
     protected readonly data = inject<Signal<ExampleTableItem[]>>(KBQ_ACTIONS_PANEL_DATA);
     protected readonly actionsPanelRef = inject(KbqActionsPanelRef);
     private readonly toast = inject(KbqToastService);
 
     protected onAction(action: ExampleAction): void {
-        this.toast.show({ title: `Action initiated ${action.id}` });
+        this.toast.show({ title: this.text().actionInitiated(action.label) });
     }
 }
 

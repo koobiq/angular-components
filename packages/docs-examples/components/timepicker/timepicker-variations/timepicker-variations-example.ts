@@ -8,6 +8,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DateTime } from 'luxon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Timepicker variations
@@ -28,6 +29,8 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimepickerVariationsExample {
+    protected readonly text = injectExampleText();
+
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     value: DateTime;

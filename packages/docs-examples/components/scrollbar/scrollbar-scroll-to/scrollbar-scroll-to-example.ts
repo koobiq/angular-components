@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Scrollbar scrollTo methods
@@ -10,10 +11,10 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
     imports: [KbqScrollbar, KbqButtonModule],
     template: `
         <div class="example-buttons">
-            <button kbq-button (click)="scrollbar.scrollToTop('smooth')">Scroll top</button>
-            <button kbq-button (click)="scrollbar.scrollToBottom('smooth')">Scroll bottom</button>
-            <button kbq-button (click)="scrollbar.scrollStart('smooth')">Scroll start</button>
-            <button kbq-button (click)="scrollbar.scrollEnd('smooth')">Scroll end</button>
+            <button kbq-button (click)="scrollbar.scrollToTop('smooth')">{{ text().scrollTop }}</button>
+            <button kbq-button (click)="scrollbar.scrollToBottom('smooth')">{{ text().scrollBottom }}</button>
+            <button kbq-button (click)="scrollbar.scrollStart('smooth')">{{ text().scrollStart }}</button>
+            <button kbq-button (click)="scrollbar.scrollEnd('smooth')">{{ text().scrollEnd }}</button>
             <button
                 kbq-button
                 (click)="scrollbar.scrollToElement(scrollToElementTarget, { behavior: 'smooth', top: 16, left: 16 })"
@@ -52,7 +53,7 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
                 would theoretically take an attacker to mount a successful brute-force attack against it.[3]
             </p>
             <p>
-                <b #scrollToElementTarget>[SCROLL TO ELEMENT]</b>
+                <b #scrollToElementTarget>[{{ text().scrollToElement }}]</b>
                 When cracking passwords, this method is very fast when used to check all short passwords, but for longer
                 passwords other methods such as the dictionary attack are used because a brute-force search takes too
                 long. Longer passwords, passphrases and keys have more possible values, making them exponentially more
@@ -61,7 +62,7 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
             <p>
                 Brute-force attacks can be made less effective by implementing key stretching techniques making it more
                 difficult for an attacker to recognize when
-                <b #scrollIntoViewTarget>[SCROLL INTO VIEW]</b>
+                <b #scrollIntoViewTarget>[{{ text().scrollIntoView }}]</b>
                 the code has been cracked or by making the attacker do more work to test each guess. One of the measures
                 of the strength of an encryption system is how long it would theoretically take an attacker to mount a
                 successful brute-force attack against it.[3]
@@ -116,4 +117,6 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScrollbarScrollToExample {}
+export class ScrollbarScrollToExample {
+    protected readonly text = injectExampleText();
+}

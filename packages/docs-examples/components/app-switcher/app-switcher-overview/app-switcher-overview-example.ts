@@ -3,7 +3,7 @@ import { KbqAppSwitcherApp, KbqAppSwitcherModule, KbqAppSwitcherSite } from '@ko
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from '../localized-data';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title app-switcher

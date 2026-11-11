@@ -6,6 +6,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Inline edit disabled
@@ -47,8 +48,12 @@ import { KbqInputModule } from '@koobiq/components/input';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditDisabledExample {
+    protected readonly text = injectExampleText();
+
     protected readonly clipboard = inject(Clipboard);
-    protected readonly placeholder = 'Placeholder';
+    protected get placeholder(): string {
+        return this.text().placeholder;
+    }
     protected value =
         'Multi-factor authentication involves multiple identification forms before account access, reducing the risk of unauthorized access';
 }

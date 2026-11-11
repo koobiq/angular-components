@@ -12,6 +12,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { injectExampleText } from '../l10n';
 
 interface ExampleLocalizedText {
     breadcrumbShortening: string;
@@ -77,7 +78,7 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
                             tabindex="-1"
                         >
                             <button disabled aria-current="page" kbq-button kbqBreadcrumb>
-                                <span>Details</span>
+                                <span>{{ text().details }}</span>
                                 <i
                                     kbq-icon="kbq-circle-info_16"
                                     kbqTooltip="Info"
@@ -94,9 +95,9 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
                 <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
                     <button
                         kbqOverflowItem="filter"
-                        kbqTooltip="Filter"
                         kbq-button
-                        aria-label="Filter"
+                        [kbqTooltip]="text().filter"
+                        [attr.aria-label]="text().filter"
                         [kbqStyle]="KbqButtonStyles.Transparent"
                         [color]="KbqComponentColors.Contrast"
                         [kbqPlacement]="PopUpPlacements.Bottom"
@@ -107,8 +108,8 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
 
                     <button
                         kbqOverflowItem="share"
-                        kbqTooltip="Share"
                         kbq-button
+                        [kbqTooltip]="text().share"
                         [kbqStyle]="KbqButtonStyles.Filled"
                         [color]="KbqComponentColors.ContrastFade"
                         [kbqTooltipDisabled]="isDesktop()"
@@ -135,10 +136,10 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
 
                         <kbq-dropdown #appDropdown="kbqDropdown">
                             @if (kbqOverflowItems.hiddenItemIDs().has('filter')) {
-                                <button kbq-dropdown-item>Filter</button>
+                                <button kbq-dropdown-item>{{ text().filter }}</button>
                             }
                             @if (kbqOverflowItems.hiddenItemIDs().has('share')) {
-                                <button kbq-dropdown-item>Share</button>
+                                <button kbq-dropdown-item>{{ text().share }}</button>
                             }
                         </kbq-dropdown>
                     </div>
@@ -173,6 +174,8 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleTopBarBreadcrumbs {
+    protected readonly text = injectExampleText();
+
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')

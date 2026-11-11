@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -14,6 +14,7 @@ import {
 } from '@koobiq/components/select';
 import { BehaviorSubject, catchError, Observable, of, race, switchMap, throwError, timer } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { injectExampleText } from '../l10n';
 
 type Option = {
     id: number;
@@ -21,9 +22,13 @@ type Option = {
 };
 
 export class OptionsApiService {
+    protected readonly text = injectExampleText();
+
     private delay: number = 100;
 
-    private data = Array.from({ length: 10 }).map((_, i) => ({ id: i, label: `Option #${i}` }));
+    private readonly data = computed(() =>
+        Array.from({ length: 10 }, (_, i) => ({ id: i, label: this.text().optionN(i) }))
+    );
 
     setDelay(delay: number) {
         this.delay = delay;
@@ -36,13 +41,17 @@ export class OptionsApiService {
 
         const term = search.toLowerCase().trim();
 
-        const filtered = !term ? this.data : this.data.filter((option) => option.label.toLowerCase().includes(term));
+        const filtered = !term
+            ? this.data()
+            : this.data().filter((option) => option.label.toLowerCase().includes(term));
 
         return timer(this.delay).pipe(map(() => filtered));
     }
 }
 
 export class SelectFacade {
+    protected readonly text = injectExampleText();
+
     private readonly api = inject(OptionsApiService);
     private readonly search$ = new BehaviorSubject<string | null>(null);
 
@@ -145,12 +154,12 @@ export class SelectFacade {
                                 <kbq-select-loading />
                             }
                             @case ('empty') {
-                                <div kbq-select-search-empty-result>Ничего не найдено</div>
+                                <div kbq-select-search-empty-result>{{ text().nothingFound }}</div>
                             }
                             @case ('error') {
                                 <!--{{ state.error.message }}-->
                                 <kbq-select-error>
-                                    <span kbq-select-error-text>Не удалось показать записи</span>
+                                    <span kbq-select-error-text>{{ text().loadFailedRecords }}</span>
                                     <button
                                         kbq-button
                                         [kbqStyle]="'transparent'"
@@ -189,9 +198,11 @@ export class SelectFacade {
     }
 })
 export class SelectLoadingExample {
+    protected readonly text = injectExampleText();
+
     protected readonly facade = inject(SelectFacade);
 
-    protected selectedOption: Option = { id: 0, label: `Option #0` };
+    protected selectedOption: Option = { id: 0, label: this.text().optionN(0) };
 
     protected readonly compareWith = (a: Option | null, b: Option | null) => a?.id === b?.id;
     protected readonly virtualOptionFactory = (value: Option) => new KbqVirtualOption(value, false, value.label);

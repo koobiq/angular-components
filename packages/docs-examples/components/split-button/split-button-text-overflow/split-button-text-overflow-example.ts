@@ -4,6 +4,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title split-button-text-overflow
@@ -22,20 +23,18 @@ import { KbqTitleModule } from '@koobiq/components/title';
             <button kbq-button>
                 <i kbq-icon="kbq-plus_16"></i>
                 <span kbq-title class="kbq-truncate-line">
-                    Save engineering time with unified payments functionality. We obsess over the maze of gateways,
-                    payments rails, and financial institutions that make up the global economic landscape so that your
-                    teams can build what you need on one platform.
+                    {{ text().saveEngineering }}
                 </span>
             </button>
-            <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button [attr.aria-label]="text().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
 
         <kbq-dropdown #dropdown="kbqDropdown">
-            <button kbq-dropdown-item>Extra Action 1</button>
-            <button kbq-dropdown-item>Extra Action 2</button>
-            <button kbq-dropdown-item>Extra Action 3</button>
+            <button kbq-dropdown-item>{{ text().extraAction(1) }}</button>
+            <button kbq-dropdown-item>{{ text().extraAction(2) }}</button>
+            <button kbq-dropdown-item>{{ text().extraAction(3) }}</button>
         </kbq-dropdown>
     `,
     styles: `
@@ -48,4 +47,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitButtonTextOverflowExample {}
+export class SplitButtonTextOverflowExample {
+    protected readonly text = injectExampleText();
+}

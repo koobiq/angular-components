@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Tabs custom label
@@ -49,4 +50,6 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class TabsCustomLabelExample {}
+export class TabsCustomLabelExample {
+    protected readonly text = injectExampleText();
+}

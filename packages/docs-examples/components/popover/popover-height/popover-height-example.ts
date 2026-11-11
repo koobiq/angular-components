@@ -3,6 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Popover height
@@ -23,5 +24,7 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverHeightExample {
+    protected readonly text = injectExampleText();
+
     activePopover: KbqPopoverTrigger;
 }

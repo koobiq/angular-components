@@ -7,6 +7,7 @@ import {
     KbqUserInfo,
     KbqUsernameModule
 } from '@koobiq/components/username';
+import { injectExampleText } from '../l10n';
 
 const USERS: KbqUserInfo[] = [
     { firstName: 'Maxwell', middleName: 'Alan', lastName: 'Root', login: 'mroot', site: 'corp' },
@@ -65,6 +66,8 @@ const USERS: KbqUserInfo[] = [
     }
 })
 export class UsernameFilterBarOptionExample implements AfterViewInit {
+    protected readonly text = injectExampleText();
+
     private readonly formatUsername = kbqInjectUsernameFormatter();
     private readonly userOptionTemplate = viewChild<TemplateRef<any>>('userOption');
 
@@ -76,7 +79,7 @@ export class UsernameFilterBarOptionExample implements AfterViewInit {
         saved: false,
         pipes: [
             {
-                name: 'Assignee',
+                name: this.text().assignee,
                 type: KbqPipeTypes.Select,
                 value: null,
                 search: true,
@@ -94,7 +97,7 @@ export class UsernameFilterBarOptionExample implements AfterViewInit {
     ngAfterViewInit(): void {
         this.pipeTemplates = [
             {
-                name: 'Assignee',
+                name: this.text().assignee,
                 type: KbqPipeTypes.Select,
                 values: USERS.map((user) => ({
                     name: kbqBuildUsernameText(

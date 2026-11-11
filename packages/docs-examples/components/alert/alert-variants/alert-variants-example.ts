@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAlert, KbqAlertColors, KbqAlertStyles, KbqAlertTitle } from '@koobiq/components/alert';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Alert variants
@@ -20,14 +21,14 @@ import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
                 <kbq-alert [alertColor]="alertColors.Error">
                     <i aria-hidden="true" kbq-icon-item="kbq-triangle-exclamation_16" [color]="colors.Error"></i>
                     <div kbq-alert-title>Default</div>
-                    {{ text }}
+                    {{ text().body }}
                 </kbq-alert>
             </div>
             <div class="layout-column example-column">
                 <kbq-alert [alertColor]="alertColors.Error" [alertStyle]="alertStyles.Colored" [compact]="true">
                     <i aria-hidden="true" kbq-icon="kbq-triangle-exclamation_16" [color]="colors.Error"></i>
                     <div kbq-alert-title>Colored</div>
-                    {{ text }}
+                    {{ text().body }}
                 </kbq-alert>
             </div>
         </div>
@@ -36,9 +37,9 @@ import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertVariantsExample {
+    protected readonly text = injectExampleText();
+
     colors = KbqComponentColors;
     alertStyles = KbqAlertStyles;
     alertColors = KbqAlertColors;
-    text =
-        'If there is no heading, do not put a period at the end of the last sentence. If the message contains both body text and a heading, put a period at the end of the body text.';
 }

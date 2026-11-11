@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angula
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastService } from '@koobiq/components/toast';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Toast link
@@ -16,6 +17,8 @@ import { KbqToastService } from '@koobiq/components/toast';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastLinkOverviewExample {
+    protected readonly text = injectExampleText();
+
     readonly toastService = inject(KbqToastService);
 
     showToastWithInlineLink(caption: TemplateRef<any>, actions: TemplateRef<any>) {

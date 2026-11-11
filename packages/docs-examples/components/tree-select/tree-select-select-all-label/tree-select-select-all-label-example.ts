@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { injectExampleText } from '../l10n';
 
 export class FileNode {
     children: FileNode[];
@@ -74,11 +75,11 @@ export const DATA_OBJECT = {
     ],
     template: `
         <kbq-form-field>
-            <kbq-tree-select selectAll placeholder="Placeholder" [multiple]="true" [ngModel]="selected">
+            <kbq-tree-select selectAll [placeholder]="text().placeholder" [multiple]="true" [ngModel]="selected">
                 <!-- Projected only while every node is selected, so the rest of the time the tree-select
                      falls back to its default trigger and lists the selected nodes as usual. -->
                 @if (tree.allOptionsSelected) {
-                    <kbq-select-trigger>All nodes</kbq-select-trigger>
+                    <kbq-select-trigger>{{ text().allNodes }}</kbq-select-trigger>
                 }
 
                 <kbq-tree-selection #tree="kbqTreeSelection" [dataSource]="dataSource" [treeControl]="treeControl">
@@ -112,6 +113,8 @@ export const DATA_OBJECT = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectSelectAllLabelExample {
+    protected readonly text = injectExampleText();
+
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
 

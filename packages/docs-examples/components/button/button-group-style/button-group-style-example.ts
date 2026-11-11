@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqButtonColor, KbqButtonModule, KbqButtonStyle, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Button group style
@@ -16,7 +17,7 @@ import { KbqIcon } from '@koobiq/components/icon';
         @for (style of buttonStyles; track style) {
             <div class="layout-row layout-gap-xl">
                 <div kbq-button-group [color]="style.color" [kbqStyle]="style.appearance">
-                    @for (item of data; track item) {
+                    @for (item of data(); track item) {
                         <button kbq-button>
                             {{ item }}
                         </button>
@@ -24,8 +25,8 @@ import { KbqIcon } from '@koobiq/components/icon';
                 </div>
 
                 <div kbq-button-group [color]="style.color" [kbqStyle]="style.appearance">
-                    @for (item of data; track item) {
-                        <button kbq-button aria-label="Diamond icon">
+                    @for (item of data(); track item) {
+                        <button kbq-button [attr.aria-label]="text().diamondIcon">
                             <i kbq-icon="kbq-diamond_16"></i>
                         </button>
                     }
@@ -39,11 +40,9 @@ import { KbqIcon } from '@koobiq/components/icon';
     }
 })
 export class ButtonGroupStyleExample {
-    protected readonly data = [
-        'Archive',
-        'Report',
-        'Snooze'
-    ] as const;
+    protected readonly text = injectExampleText();
+
+    protected readonly data = computed(() => [this.text().archive, this.text().report, this.text().snooze]);
 
     protected readonly buttonStyles: { color: KbqButtonColor; appearance: KbqButtonStyle; gap?: boolean }[] = [
         { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled },

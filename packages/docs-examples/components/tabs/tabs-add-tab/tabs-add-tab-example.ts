@@ -3,6 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabLink, KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Tabs add tab
@@ -51,14 +52,16 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsAddTabExample {
+    protected readonly text = injectExampleText();
+
     private readonly injector = inject(Injector);
     private readonly tabLinks = viewChildren(KbqTabLink);
 
-    protected tabs = ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert'];
+    protected tabs = [this.text().bruteforce, this.text().complexAttack, this.text().ddos, this.text().hipsAlert];
     protected activeTab = this.tabs[0];
 
     protected addTab(): void {
-        const newTab = `Tab ${this.tabs.length + 1}`;
+        const newTab = this.text().tabN(this.tabs.length + 1);
 
         this.tabs = [...this.tabs, newTab];
         this.activeTab = newTab;

@@ -9,6 +9,7 @@ import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Inline edit menu
@@ -35,7 +36,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
             <div class="layout-flex layout-column example-content__container">
                 <kbq-inline-edit #textareaInlineEditVertical showActions (saved)="update()">
-                    <kbq-label>Style</kbq-label>
+                    <kbq-label>{{ text().style }}</kbq-label>
                     <i
                         kbqInlineEditMenu
                         kbq-icon-button="kbq-ellipsis-vertical_16"
@@ -69,7 +70,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                         [color]="'contrast-fade'"
                         (click)="form.controls.foundDate.setValue('1991')"
                     ></i>
-                    <kbq-label>Founded</kbq-label>
+                    <kbq-label>{{ text().founded }}</kbq-label>
                     <div class="example-inline-text" kbqInlineEditViewMode>
                         <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.foundDate.value }" />
                     </div>
@@ -84,7 +85,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             <span class="kbq-text-normal-strong">Horizontal list</span>
 
             <kbq-dl [vertical]="false">
-                <kbq-dt class="example-multiline-text__header">Style</kbq-dt>
+                <kbq-dt class="example-multiline-text__header">{{ text().style }}</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit #textareaInlineEditHorizontal showActions (saved)="update()">
                         <i
@@ -192,9 +193,13 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     }
 })
 export class InlineEditMenuExample {
+    protected readonly text = injectExampleText();
+
     protected readonly maxRows = 20;
     protected readonly clipboard = inject(Clipboard);
-    protected readonly placeholder = 'Placeholder';
+    protected get placeholder(): string {
+        return this.text().placeholder;
+    }
 
     protected readonly form = new FormGroup({
         style: new FormControl(

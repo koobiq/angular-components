@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Tabs with scroll
@@ -10,7 +11,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     template: `
         <div class="tabs-with-scroll-example">
             <kbq-tab-group>
-                @for (tab of tabs; track tab) {
+                @for (tab of tabs(); track tab) {
                     <kbq-tab [label]="tab" />
                 }
             </kbq-tab-group>
@@ -19,16 +20,18 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsWithScrollExample {
-    readonly tabs = [
-        'BruteForce',
-        'Complex Attack',
-        'DDoS',
-        'HIPS alert',
-        'IDS/IPS Alert',
-        'Zero-Day Exploit',
-        'XSS',
-        'Malware',
+    protected readonly text = injectExampleText();
+
+    readonly tabs = computed(() => [
+        this.text().bruteforce,
+        this.text().complexAttack,
+        this.text().ddos,
+        this.text().hipsAlert,
+        this.text().idsIpsAlert,
+        this.text().zeroDay,
+        this.text().xss,
+        this.text().malware,
         'Ransomware',
         'Phishing'
-    ];
+    ]);
 }

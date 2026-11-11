@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Tooltip
@@ -14,7 +15,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqIconModule
     ],
     template: `
-        <button kbq-button aria-label="Add" kbqTooltip="Create">
+        <button kbq-button [attr.aria-label]="text().add" [kbqTooltip]="text().create">
             <i kbq-icon="kbq-plus_16"></i>
         </button>
     `,
@@ -23,4 +24,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         class: 'layout-margin-5xl layout-row layout-align-center-center'
     }
 })
-export class TooltipOverviewExample {}
+export class TooltipOverviewExample {
+    protected readonly text = injectExampleText();
+}

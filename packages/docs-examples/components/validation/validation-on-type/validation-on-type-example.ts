@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../l10n';
 
 const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
 
@@ -19,7 +20,7 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
     template: `
         <form novalidate [formGroup]="checkOnFlyForm">
             <kbq-form-field>
-                <kbq-label>Folder name</kbq-label>
+                <kbq-label>{{ text().folderName }}</kbq-label>
                 <input
                     formControlName="folderName"
                     kbqInput
@@ -27,7 +28,7 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
                     [kbqPlacement]="popUpPlacements.Top"
                     [kbqRelativeToCaret]="true"
                     [kbqTrigger]="'manual'"
-                    [kbqTooltip]="'Letters and numbers'"
+                    [kbqTooltip]="text().lettersAndNumbers"
                     [kbqTooltipColor]="colors.Error"
                     (blur)="onBlur()"
                     (input)="onInput($event)"
@@ -35,7 +36,7 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
 
                 <kbq-cleaner />
 
-                <kbq-hint>Only letters and numbers</kbq-hint>
+                <kbq-hint>{{ text().onlyLettersAndNumbers }}</kbq-hint>
             </kbq-form-field>
         </form>
     `,
@@ -51,6 +52,8 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
     }
 })
 export class ValidationOnTypeExample {
+    protected readonly text = injectExampleText();
+
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
 
     protected readonly popUpPlacements = PopUpPlacements;

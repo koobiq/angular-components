@@ -2,6 +2,7 @@ import {
     ApplicationRef,
     ChangeDetectionStrategy,
     Component,
+    ComponentRef,
     createComponent,
     effect,
     ElementRef,
@@ -10,6 +11,7 @@ import {
     viewChild
 } from '@angular/core';
 import { KbqDynamicTranslationHelper, KbqDynamicTranslationHelperSlot } from '@koobiq/components/dynamic-translation';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Dynamic-translation with dynamic component creation
@@ -26,16 +28,21 @@ export class DynamicTranslationWithDynamicComponentCreationExample {
     private readonly renderer = inject(Renderer2);
     private readonly container = viewChild.required('container', { read: ElementRef });
 
+    protected readonly text = injectExampleText();
+
     constructor() {
-        effect(() => {
-            this.renderer.appendChild(
-                this.container().nativeElement,
-                this.createElement('[[bold:1000]] incidents have been registered.', [{ name: 'bold', tag: 'b' }])
-            );
+        effect((onCleanup) => {
+            const componentRef = this.createElement(this.text().registered, [{ name: 'bold', tag: 'b' }]);
+
+            this.renderer.appendChild(this.container().nativeElement, componentRef.location.nativeElement);
+            onCleanup(() => componentRef.destroy());
         });
     }
 
-    private createElement(text: string, slots: KbqDynamicTranslationHelperSlot[]): HTMLElement {
+    private createElement(
+        text: string,
+        slots: KbqDynamicTranslationHelperSlot[]
+    ): ComponentRef<KbqDynamicTranslationHelper> {
         const componentRef = createComponent(KbqDynamicTranslationHelper, {
             environmentInjector: this.applicationRef.injector
         });
@@ -45,6 +52,6 @@ export class DynamicTranslationWithDynamicComponentCreationExample {
         this.applicationRef.attachView(componentRef.hostView);
         componentRef.changeDetectorRef.detectChanges();
 
-        return componentRef.location.nativeElement as HTMLElement;
+        return componentRef;
     }
 }

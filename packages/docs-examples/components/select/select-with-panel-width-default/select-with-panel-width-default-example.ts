@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Select with panelWidth default
@@ -11,7 +12,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     ],
     template: `
         <kbq-form-field>
-            <kbq-select placeholder="Placeholder" [(value)]="valueFirst">
+            <kbq-select [placeholder]="text().placeholder" [(value)]="valueFirst">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
@@ -19,7 +20,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-select placeholder="Placeholder" [(value)]="valueSecond">
+            <kbq-select [placeholder]="text().placeholder" [(value)]="valueSecond">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
@@ -43,6 +44,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     }
 })
 export class SelectWithPanelWidthDefaultExample {
+    protected readonly text = injectExampleText();
+
     readonly options = [
         'Use of Alternate Authentication Data',
         'Use of Command-Line Interpreters and Scripts',

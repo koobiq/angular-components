@@ -6,6 +6,7 @@ import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { DateTime } from 'luxon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Datepicker and timepicker
@@ -23,7 +24,7 @@ import { DateTime } from 'luxon';
     template: `
         <div class="docs-example__datepicker-and-timepicker">
             <div class="kbq-form-vertical">
-                <label class="kbq-form__label">Package release date and time</label>
+                <label class="kbq-form__label">{{ text().packageRelease }}</label>
                 <div class="kbq-form__row">
                     <div>
                         <kbq-form-field class="layout-margin-right-s" (click)="datepicker.toggle()">
@@ -44,5 +45,7 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerAndTimepickerExample {
+    protected readonly text = injectExampleText();
+
     selectedDateTime: DateTime;
 }

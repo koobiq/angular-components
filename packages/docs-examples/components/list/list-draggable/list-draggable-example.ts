@@ -2,6 +2,7 @@ import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Draggable list
@@ -12,23 +13,25 @@ import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/
     template: `
         <kbq-list-selection multiple="checkbox" [draggable]="true" (dropped)="dropped($event)">
             @for (item of beforeGroup(); track item.id) {
-                <kbq-list-option [value]="item">{{ item.name }}</kbq-list-option>
+                <kbq-list-option [value]="item">{{ itemName(item) }}</kbq-list-option>
             }
-            <kbq-optgroup label="Group header">
+            <kbq-optgroup [label]="text().groupHeader">
                 @for (item of grouped(); track item.id) {
-                    <kbq-list-option [value]="item">{{ item.name }}</kbq-list-option>
+                    <kbq-list-option [value]="item">{{ itemName(item) }}</kbq-list-option>
                 }
             </kbq-optgroup>
             <!-- Decorative: a listbox owns options and groups, and a separator has nothing to announce. -->
             <kbq-divider aria-hidden="true" />
             @for (item of afterDivider(); track item.id) {
-                <kbq-list-option [draggable]="!item.pinned" [value]="item">{{ item.name }}</kbq-list-option>
+                <kbq-list-option [draggable]="!item.pinned" [value]="item">{{ itemName(item) }}</kbq-list-option>
             }
         </kbq-list-selection>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListDraggableExample {
+    protected readonly text = injectExampleText();
+
     protected readonly items = signal([
         { id: 1, name: 'Item 1' },
         { id: 2, name: 'Item 2' },
@@ -38,6 +41,10 @@ export class ListDraggableExample {
         { id: 6, name: 'Item 6' },
         { id: 7, name: 'Item 7. Sorting is prohibited', pinned: true }
     ]);
+
+    protected itemName(item: { id: number }): string {
+        return item.id === 7 ? this.text().item7Pinned : this.text().item(item.id);
+    }
 
     // The group and the divider sit at fixed positions, so the sections are plain slices and the indices
     // `dropped` reports address the array directly. An option dragged past a boundary changes section.

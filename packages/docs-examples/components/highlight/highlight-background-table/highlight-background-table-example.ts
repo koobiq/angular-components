@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqTableModule } from '@koobiq/components/table';
+import { injectExampleText } from '../l10n';
 
 type CompanyRow = {
     city: string;
@@ -25,10 +26,10 @@ type CompanyRow = {
         <table kbq-table class="highlight-table">
             <thead>
                 <tr>
-                    <th style="width: 96px">City</th>
-                    <th style="width: 124px">Company</th>
-                    <th style="width: 116px">Person</th>
-                    <th>Notes</th>
+                    <th style="width: 96px">{{ text().city }}</th>
+                    <th style="width: 124px">{{ text().company }}</th>
+                    <th style="width: 116px">{{ text().person }}</th>
+                    <th>{{ text().notes }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -64,6 +65,8 @@ type CompanyRow = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HighlightBackgroundTableExample {
+    protected readonly text = injectExampleText();
+
     protected readonly keyword = 'manc';
     protected readonly rows: CompanyRow[] = [
         {

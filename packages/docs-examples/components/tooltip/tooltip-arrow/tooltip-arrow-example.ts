@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Tooltip arrow
@@ -12,9 +13,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button kbqTooltip="Tooltip without arrow">No arrow</button>
-        <button kbq-button kbqTooltip="Tooltip with arrow" kbqPlacement="bottomRight" [kbqTooltipArrow]="true">
-            With arrow
+        <button kbq-button [kbqTooltip]="text().tooltipWithoutArrow">{{ text().noArrow }}</button>
+        <button kbq-button [kbqTooltip]="text().tooltipWithArrow" kbqPlacement="bottomRight" [kbqTooltipArrow]="true">
+            {{ text().withArrow }}
         </button>
         <button
             kbq-button
@@ -31,4 +32,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
     }
 })
-export class TooltipArrowExample {}
+export class TooltipArrowExample {
+    protected readonly text = injectExampleText();
+}

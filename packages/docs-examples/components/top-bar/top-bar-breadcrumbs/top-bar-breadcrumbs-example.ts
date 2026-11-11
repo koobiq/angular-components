@@ -11,6 +11,7 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map } from 'rxjs/operators';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title TopBar Breadcrumbs
@@ -34,7 +35,7 @@ import { map } from 'rxjs/operators';
                     <img alt="example icon" src="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
                 </div>
                 <nav class="flex" kbq-breadcrumbs size="big">
-                    <kbq-breadcrumb-item text="Dashboards" routerLink="./dashboards" />
+                    <kbq-breadcrumb-item routerLink="./dashboards" [text]="text().dashboards" />
                     <kbq-breadcrumb-item text="MEIS Dashboard" routerLink="./dashboards/dashboard123" />
                 </nav>
             </div>
@@ -43,9 +44,9 @@ import { map } from 'rxjs/operators';
                 <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
                     <button
                         kbqOverflowItem="0"
-                        kbqTooltip="Filter"
                         kbq-button
-                        aria-label="Filter"
+                        [kbqTooltip]="text().filter"
+                        [attr.aria-label]="text().filter"
                         [kbqStyle]="KbqButtonStyles.Transparent"
                         [color]="KbqComponentColors.Contrast"
                         [kbqPlacement]="PopUpPlacements.Bottom"
@@ -56,8 +57,8 @@ import { map } from 'rxjs/operators';
 
                     <button
                         kbqOverflowItem="1"
-                        kbqTooltip="Share"
                         kbq-button
+                        [kbqTooltip]="text().share"
                         [kbqStyle]="KbqButtonStyles.Filled"
                         [color]="KbqComponentColors.ContrastFade"
                         [kbqTooltipDisabled]="isDesktop()"
@@ -84,10 +85,10 @@ import { map } from 'rxjs/operators';
 
                         <kbq-dropdown #appDropdown="kbqDropdown">
                             @if (kbqOverflowItems.hiddenItemIDs().has('0')) {
-                                <button kbq-dropdown-item>Filter</button>
+                                <button kbq-dropdown-item>{{ text().filter }}</button>
                             }
                             @if (kbqOverflowItems.hiddenItemIDs().has('1')) {
-                                <button kbq-dropdown-item>Share</button>
+                                <button kbq-dropdown-item>{{ text().share }}</button>
                             }
                         </kbq-dropdown>
                     </div>
@@ -106,6 +107,8 @@ import { map } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopBarBreadcrumbsExample {
+    protected readonly text = injectExampleText();
+
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')

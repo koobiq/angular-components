@@ -18,6 +18,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
+import { injectExampleText } from '../l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -55,9 +56,9 @@ const customCopyFormatterWithHeaderRow: KbqAgGridCopyFormatter = (api) => {
             [kbqAgGridCopyFormatter]="copyFormatter()"
             [rowSelection]="rowSelection"
             [style.height.px]="300"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
-            [rowData]="rowData"
+            [rowData]="rowData()"
             (kbqAgGridCopyDone)="onCopyDone($event)"
             (firstDataRendered)="onFirstDataRendered($event)"
         />
@@ -78,6 +79,8 @@ const customCopyFormatterWithHeaderRow: KbqAgGridCopyFormatter = (api) => {
 })
 export class AgGridCopySelectedExample {
     private readonly toast = inject(KbqToastService);
+    protected readonly text = injectExampleText();
+
     protected readonly copyFormatOptions = ['TSV', 'CSV', 'JSON', 'Custom'] as const;
     protected readonly copyFormat = model<(typeof this.copyFormatOptions)[number]>('TSV');
     protected readonly copyFormatter = computed<KbqAgGridCopyFormatter | undefined>(() => {
@@ -111,62 +114,24 @@ export class AgGridCopySelectedExample {
         hideDisabledCheckboxes: false
     };
 
-    protected readonly columnDefs: ColDef[] = [
+    protected readonly columnDefs = computed<ColDef[]>(() => [
         {
             field: 'column0',
-            headerName: 'Project name',
+            headerName: this.text().projectName,
             width: 180
         },
-        {
-            field: 'column1',
-            headerName: 'Text'
-        },
-        {
-            field: 'column2',
-            headerName: 'Text'
-        },
-        {
-            field: 'column3',
-            headerName: 'Text'
-        },
-        {
-            field: 'column4',
-            headerName: 'Text'
-        },
-        {
-            field: 'column5',
-            headerName: 'Text'
-        },
-        {
-            field: 'column6',
-            headerName: 'Text'
-        },
-        {
-            field: 'column7',
-            headerName: 'Text'
-        },
-        {
-            field: 'column8',
-            headerName: 'Text'
-        },
-        {
-            field: 'column9',
-            headerName: 'Text'
-        }
-    ];
+        ...Array.from({ length: 9 }, (_, i) => ({
+            field: 'column' + (i + 1),
+            headerName: this.text().headerText
+        }))
+    ]);
 
-    protected readonly rowData = Array.from({ length: 100 }, (_, index) => ({
-        column0: 'Project name ' + index,
-        column1: 'Text ' + index,
-        column2: 'Text ' + index,
-        column3: 'Text ' + index,
-        column4: 'Text ' + index,
-        column5: 'Text ' + index,
-        column6: 'Text ' + index,
-        column7: 'Text ' + index,
-        column8: 'Text ' + index,
-        column9: 'Text ' + index
-    }));
+    protected readonly rowData = computed(() =>
+        Array.from({ length: 100 }, (_, index) => ({
+            column0: this.text().projectNameN(index),
+            ...Object.fromEntries(Array.from({ length: 9 }, (_, i) => ['column' + (i + 1), this.text().text(index)]))
+        }))
+    );
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
         api.forEachNode((node) => {
@@ -179,8 +144,8 @@ export class AgGridCopySelectedExample {
     protected onCopyDone({ success }: KbqAgGridCopyEvent): void {
         if (success) {
             this.toast.show({
-                title: 'Data copied',
-                caption: `Selected nodes have been copied to clipboard. Format: ${this.copyFormat()}`
+                title: this.text().dataCopied,
+                caption: this.text().dataCopiedCaption(this.copyFormat())
             });
         }
     }

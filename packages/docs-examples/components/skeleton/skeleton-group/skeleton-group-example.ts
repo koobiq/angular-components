@@ -5,6 +5,7 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqSkeletonGroup } from '@koobiq/components/skeleton';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Skeleton group preset
@@ -13,7 +14,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'skeleton-group-example',
     imports: [KbqSkeletonGroup, KbqToggleModule, FormsModule, KbqTagsModule, KbqLink],
     template: `
-        <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
 
         @if (loading()) {
             <kbq-skeleton-group preset="tag" />
@@ -22,13 +23,17 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             <kbq-tag-list>
                 <kbq-tag [color]="colors.ContrastFade">LDAP</kbq-tag>
                 <kbq-tag [color]="colors.Theme">Active Directory</kbq-tag>
-                <kbq-tag [color]="colors.Error">Blocked</kbq-tag>
+                <kbq-tag [color]="colors.Error">{{ text().blocked }}</kbq-tag>
             </kbq-tag-list>
             <div class="example-row">
-                <a kbqLink pseudo>Overview</a>
-                <a kbqLink pseudo>API</a>
-                <a kbqLink pseudo>Examples</a>
-                <a kbqLink pseudo>Changelog</a>
+                <a kbqLink pseudo>{{ text().groupLinks[0] }}</a>
+                /a>
+                <a kbqLink pseudo>{{ text().groupLinks[1] }}</a>
+                /a>
+                <a kbqLink pseudo>{{ text().groupLinks[2] }}</a>
+                /a>
+                <a kbqLink pseudo>{{ text().groupLinks[3] }}</a>
+                /a>
             </div>
         }
     `,
@@ -50,5 +55,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 })
 export class SkeletonGroupExample {
     protected readonly loading = model(true);
+
+    protected readonly text = injectExampleText();
     protected readonly colors = KbqComponentColors;
 }

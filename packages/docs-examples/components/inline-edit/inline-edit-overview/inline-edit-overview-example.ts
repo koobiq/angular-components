@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Inline edit overview
@@ -21,7 +22,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     ],
     template: `
         <kbq-inline-edit showActions (saved)="update()">
-            <kbq-label>Label</kbq-label>
+            <kbq-label>{{ text().label }}</kbq-label>
 
             <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;" kbqInlineEditViewMode>
                 @for (badge of displayValue(); track badge) {
@@ -32,7 +33,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </div>
             <kbq-form-field kbqInlineEditEditMode>
                 <kbq-select multiple [placeholder]="placeholder" [(ngModel)]="value">
-                    @for (option of options; track option) {
+                    @for (option of options(); track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                     <kbq-cleaner />
@@ -43,9 +44,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditOverviewExample {
-    protected readonly placeholder = 'Placeholder';
-    protected readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
-    protected value: string[] = [this.options[0]];
+    protected readonly text = injectExampleText();
+
+    protected get placeholder(): string {
+        return this.text().placeholder;
+    }
+    protected readonly options = computed(() => Array.from({ length: 10 }, (_, i) => this.text().optionN(i)));
+    protected value: string[] = [this.options()[0]];
     protected readonly displayValue = signal(this.value);
 
     protected update(): void {

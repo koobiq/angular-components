@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Breadcrumbs Truncate Tail Items
@@ -13,7 +14,7 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     ],
     template: `
         <nav class="example-breadcrumbs_truncate-last-by-length-reverse" kbq-breadcrumbs>
-            @for (breadcrumb of breadcrumbs; track breadcrumb) {
+            @for (breadcrumb of breadcrumbs(); track breadcrumb) {
                 <kbq-breadcrumb-item
                     [routerLink]="breadcrumb.url"
                     [queryParams]="{ queryParams: 'queryParams' }"
@@ -40,9 +41,11 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     encapsulation: ViewEncapsulation.None
 })
 export class BreadcrumbsTruncateTailItemsExample {
-    breadcrumbs = [
-        { label: 'Main', url: '/main' },
-        { label: 'Users', url: '/main/users' },
-        { label: 'Report №123456789', url: '/main/users/report-123456789' }
-    ];
+    protected readonly text = injectExampleText();
+
+    readonly breadcrumbs = computed(() => [
+        { label: this.text().main, url: '/main' },
+        { label: this.text().users, url: '/main/users' },
+        { label: this.text().reportNumber, url: '/main/users/report-123456789' }
+    ]);
 }

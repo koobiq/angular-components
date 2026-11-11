@@ -6,7 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
-import { createNotifications, injectExampleText } from '../localized-data';
+import { createNotifications, injectExampleText } from '../l10n';
 
 /**
  * @title notification-center-popover

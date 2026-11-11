@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqSkeletonDl } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Skeleton description list preset
@@ -11,13 +12,13 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'skeleton-dl-example',
     imports: [KbqSkeletonDl, KbqToggleModule, FormsModule, KbqDl, KbqDt, KbqDd],
     template: `
-        <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
 
         @if (loading()) {
             <kbq-skeleton-dl />
         } @else {
             <kbq-dl>
-                @for (item of items; track item.term) {
+                @for (item of items(); track item.term) {
                     <kbq-dt>{{ item.term }}</kbq-dt>
                     <kbq-dd>{{ item.value }}</kbq-dd>
                 }
@@ -36,9 +37,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 })
 export class SkeletonDlExample {
     protected readonly loading = model(true);
-    protected readonly items = [
-        { term: 'Domain', value: 'domain-LDAP-7f7d60de-d36d-46df-80b9-8f272c32ae43' },
-        { term: 'Connection type', value: 'Synchronization and authentication' },
-        { term: 'Servers', value: 'productname1.security.com:555, productname2.security.com:556' }
-    ];
+
+    protected readonly text = injectExampleText();
+    protected readonly items = computed(() => this.text().dlItems);
 }

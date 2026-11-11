@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqOverflowShadowContainer, KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Select scrolling and layering page
@@ -115,4 +116,6 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectScrollingAndLayeringPageExample {}
+export class SelectScrollingAndLayeringPageExample {
+    protected readonly text = injectExampleText();
+}

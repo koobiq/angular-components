@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Toggle With Hint
@@ -10,23 +11,21 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     imports: [KbqToggleModule, KbqFormFieldModule],
     template: `
         <div class="example-toggle-with-hint__container layout-align-center-start layout-column layout-gap-s">
-            <div>Touch</div>
+            <div>{{ text().touch }}</div>
             <kbq-toggle>
-                Tap to wake
-                <kbq-hint>Wake the screen when you tap on the display</kbq-hint>
+                {{ text().tapToWake }}
+                <kbq-hint>{{ text().tapToWakeHint }}</kbq-hint>
             </kbq-toggle>
             <kbq-toggle>
-                Shake to undo
+                {{ text().shakeToUndo }}
                 <kbq-hint>
-                    If you tend to share your phone by accident, you can disable Shake to Undo to prevent the Undo alert
-                    from appearing.
+                    {{ text().shakeToUndoHint }}
                 </kbq-hint>
             </kbq-toggle>
             <kbq-toggle>
-                Vibration
+                {{ text().vibration }}
                 <kbq-hint>
-                    When this witch is off, all vibration on your phone will be disabled, including those for
-                    earthquake, tsunami and other emergency alerts.
+                    {{ text().vibrationHint }}
                 </kbq-hint>
             </kbq-toggle>
         </div>
@@ -41,4 +40,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         class: 'layout-align-center-center layout-row layout-padding-top-l layout-padding-bottom-3xl'
     }
 })
-export class ToggleWithHintExample {}
+export class ToggleWithHintExample {
+    protected readonly text = injectExampleText();
+}

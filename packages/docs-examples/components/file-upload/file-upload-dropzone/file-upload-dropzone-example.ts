@@ -9,6 +9,7 @@ import {
 } from '@koobiq/components/file-upload';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqToggleChange, KbqToggleComponent } from '@koobiq/components/toggle';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title File-upload Dropzone
@@ -36,7 +37,7 @@ import { KbqToggleChange, KbqToggleComponent } from '@koobiq/components/toggle';
             </kbq-file-upload>
         } @else {
             <kbq-empty-state>
-                <div kbq-empty-state-text>Drop files here</div>
+                <div kbq-empty-state-text>{{ text().dropFilesHere }}</div>
             </kbq-empty-state>
         }
     `,
@@ -55,6 +56,8 @@ import { KbqToggleChange, KbqToggleComponent } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadDropzoneExample {
+    protected readonly text = injectExampleText();
+
     protected readonly isActive = signal(false);
     protected readonly files = model<KbqFileItem[]>([]);
 
@@ -68,7 +71,7 @@ export class FileUploadDropzoneExample {
             this.files.set(files.map((file) => ({ file })));
         });
 
-        this.dropzoneService.init({ title: 'Drop files here' });
+        this.dropzoneService.init({ title: this.text().dropFilesHere });
 
         this.destroyRef.onDestroy(() => {
             sub.unsubscribe();

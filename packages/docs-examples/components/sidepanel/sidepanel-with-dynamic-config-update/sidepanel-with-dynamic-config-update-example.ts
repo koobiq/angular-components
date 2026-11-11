@@ -9,6 +9,7 @@ import {
     KbqSidepanelService
 } from '@koobiq/components/sidepanel';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectExampleText } from '../l10n';
 
 type ExampleComponentData = {
     open: () => void;
@@ -18,18 +19,18 @@ type ExampleComponentData = {
     selector: 'example-sidepanel-component',
     imports: [KbqSidepanelModule, KbqButtonModule, KbqToggleModule, FormsModule],
     template: `
-        <kbq-sidepanel-header [closeable]="true">Header</kbq-sidepanel-header>
+        <kbq-sidepanel-header [closeable]="true">{{ text().header }}</kbq-sidepanel-header>
         <kbq-sidepanel-body>
-            <kbq-toggle [(ngModel)]="disableClose">Disable close</kbq-toggle>
+            <kbq-toggle [(ngModel)]="disableClose">{{ text().disableClose }}</kbq-toggle>
         </kbq-sidepanel-body>
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
                 <button kbq-button color="contrast" (click)="open()">
-                    <span>Open another sidepanel</span>
+                    <span>{{ text().openAnother }}</span>
                 </button>
 
                 <button kbq-button kbq-sidepanel-close>
-                    <span>Close</span>
+                    <span>{{ text().close }}</span>
                 </button>
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>
@@ -37,6 +38,8 @@ type ExampleComponentData = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleSidepanelComponent {
+    protected readonly text = injectExampleText();
+
     private readonly sidepanelRef = inject(KbqSidepanelRef);
     private readonly data: ExampleComponentData = inject(KBQ_SIDEPANEL_DATA);
 
@@ -60,12 +63,14 @@ export class ExampleSidepanelComponent {
     imports: [FormsModule, KbqButtonModule],
     template: `
         <button kbq-button (click)="open()">
-            <span>Open</span>
+            <span>{{ text().open }}</span>
         </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelWithDynamicConfigUpdateExample {
+    protected readonly text = injectExampleText();
+
     private readonly sidepanelService = inject(KbqSidepanelService);
 
     open() {

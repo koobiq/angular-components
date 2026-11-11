@@ -1,6 +1,7 @@
 import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Link application
@@ -10,7 +11,7 @@ import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
     imports: [KbqLink, KbqLinkSuffix, NgOptimizedImage],
     template: `
         <a kbqLink href="https://koobiq.io/en/components/link" target="_blank">
-            Scan report in AI Desktop
+            {{ text().scanReportInApp }}
             <img
                 kbqLinkSuffix
                 class="example-app-icon"
@@ -21,7 +22,7 @@ import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
             />
         </a>
 
-        <a kbqLink external href="https://koobiq.io/en/components/link" target="_blank">Scan report in AI Desktop</a>
+        <a kbqLink external href="https://koobiq.io/en/components/link" target="_blank">{{ text().scanReportInApp }}</a>
     `,
     styles: `
         :host {
@@ -38,4 +39,6 @@ import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinkApplicationExample {}
+export class LinkApplicationExample {
+    protected readonly text = injectExampleText();
+}

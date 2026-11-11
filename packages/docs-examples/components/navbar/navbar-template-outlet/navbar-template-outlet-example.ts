@@ -6,7 +6,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from '../localized-data';
+import { injectExampleText } from '../l10n';
 
 type NavbarLink = {
     icon: string;

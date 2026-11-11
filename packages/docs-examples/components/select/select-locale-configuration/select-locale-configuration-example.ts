@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Select locale configuration
@@ -10,22 +11,22 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-label>Default strings</kbq-label>
-            <kbq-select multiple selectAll placeholder="Placeholder" [value]="selected">
-                @for (option of options; track option) {
+            <kbq-label>{{ text().defaultStrings }}</kbq-label>
+            <kbq-select multiple selectAll [placeholder]="text().placeholder" [value]="selected">
+                @for (option of options(); track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
             </kbq-select>
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-label>Overridden for this instance only</kbq-label>
+            <kbq-label>{{ text().overriddenInstance }}</kbq-label>
             <!-- Keyed by locale section, so one binding also reaches the accessible name of the cleaner
                  projected into the select. Every string it does not mention keeps following the locale. -->
             <kbq-select
                 multiple
                 selectAll
-                placeholder="Placeholder"
+                [placeholder]="text().placeholder"
                 [value]="selected"
                 [localeOverrides]="{
                     select: { selectAll: 'Take everything' },
@@ -33,7 +34,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 }"
             >
                 <kbq-cleaner />
-                @for (option of options; track option) {
+                @for (option of options(); track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
             </kbq-select>
@@ -54,6 +55,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectLocaleConfigurationExample {
-    readonly options = Array.from({ length: 4 }).map((_, i) => `Option ${i + 1}`);
+    protected readonly text = injectExampleText();
+
+    readonly options = computed(() => Array.from({ length: 4 }, (_, i) => this.text().optionN(i + 1)));
     readonly selected = [this.options[0]];
 }

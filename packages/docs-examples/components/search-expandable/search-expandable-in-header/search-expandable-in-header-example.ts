@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title search-expandable-in-header
@@ -14,7 +15,9 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
     template: `
         <div class="example-search-expandable-in-header-example__panel">
             <div class="example-search-expandable-in-header-example__header">
-                <div class="example-search-expandable-in-header-example__name kbq-subheading">Panel Title</div>
+                <div class="example-search-expandable-in-header-example__name kbq-subheading">
+                    {{ text().panelTitle }}
+                </div>
                 <kbq-search-expandable [(ngModel)]="search" />
             </div>
             <div class="example-search-expandable-in-header-example__body"></div>
@@ -62,5 +65,7 @@ import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchExpandableInHeaderExample {
+    protected readonly text = injectExampleText();
+
     search: string = 'report';
 }

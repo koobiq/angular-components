@@ -11,6 +11,7 @@ import {
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ErrorStateMatcher, kbqErrorStateMatcherProvider } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectExampleText } from '../l10n';
 
 /**
  * Error state matcher that matches when a control is invalid and form is submitted.
@@ -29,14 +30,14 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     template: `
         <form [formGroup]="formGroup">
             <kbq-form-field>
-                <kbq-label>Email</kbq-label>
+                <kbq-label>{{ text().email }}</kbq-label>
                 <input formControlName="email" kbqInput placeholder="mail@koobiq.io" />
-                <kbq-hint>Error will be shown when the control is invalid and the form is submitted</kbq-hint>
+                <kbq-hint>{{ text().errorShownOnSubmit }}</kbq-hint>
                 <kbq-error>
                     @if (formGroup.get('email')?.hasError('required')) {
-                        Should enter a value
+                        {{ text().shouldEnterValue }}
                     } @else {
-                        Invalid email
+                        {{ text().invalidEmail }}
                     }
                 </kbq-error>
             </kbq-form-field>
@@ -48,6 +49,8 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample {
+    protected readonly text = injectExampleText();
+
     readonly formGroup = new FormGroup({
         email: new FormControl('', [Validators.required, Validators.email])
     });

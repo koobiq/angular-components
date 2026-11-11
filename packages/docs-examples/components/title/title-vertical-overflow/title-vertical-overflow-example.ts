@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Multiline text
@@ -16,6 +17,8 @@ import { KbqTitleModule } from '@koobiq/components/title';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleVerticalOverflowExample {
+    protected readonly text = injectExampleText();
+
     longValue =
         'A long multiline text clamped to two lines. When it does not fit into the allotted lines, the title directive shows a tooltip with the full content.';
 }

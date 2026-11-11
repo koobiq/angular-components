@@ -1,29 +1,29 @@
 <div class="layout-column layout-margin-bottom-4xl">
     <kbq-checkbox class="layout-margin-bottom-m">
         <kbq-hint>kbq-hint</kbq-hint>
-        Default
+        {{ text().default }}
     </kbq-checkbox>
     <kbq-checkbox class="layout-margin-bottom-m" [checked]="true">
         <kbq-hint>kbq-hint</kbq-hint>
-        Checked
+        {{ text().checked }}
     </kbq-checkbox>
     <kbq-checkbox class="layout-margin-bottom-m" [checked]="false">
         <kbq-hint>kbq-hint</kbq-hint>
-        Unchecked
+        {{ text().unchecked }}
     </kbq-checkbox>
 </div>
 
 <div class="layout-column">
     <kbq-checkbox class="layout-margin-bottom-m" [big]="true">
         <kbq-hint>kbq-hint</kbq-hint>
-        Default
+        {{ text().default }}
     </kbq-checkbox>
     <kbq-checkbox class="layout-margin-bottom-m" [big]="true" [checked]="true">
         <kbq-hint>kbq-hint</kbq-hint>
-        Checked
+        {{ text().checked }}
     </kbq-checkbox>
     <kbq-checkbox class="layout-margin-bottom-m" [big]="true" [checked]="false">
         <kbq-hint>kbq-hint</kbq-hint>
-        Unchecked
+        {{ text().unchecked }}
     </kbq-checkbox>
 </div>

@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Button toggle alignment
@@ -17,11 +18,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonToggleAlignmentOverviewExample {
-    group = [
-        'Курьером',
-        'Ослик Экспресс',
-        'Почтой Средиземья'
-    ];
+    protected readonly text = injectExampleText();
+
+    readonly group = computed(() => [this.text().courier, this.text().donkeyExpress, this.text().middleEarthPost]);
 
     model = 0;
 }

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Tooltip style
@@ -13,19 +14,19 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Contrast">
+        <button kbq-button [kbqTooltip]="text().tooltip" [kbqTooltipColor]="KbqComponentColors.Contrast">
             Contrast (default)
         </button>
 
-        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.ContrastFade">
+        <button kbq-button [kbqTooltip]="text().tooltip" [kbqTooltipColor]="KbqComponentColors.ContrastFade">
             Contrast Fade
         </button>
 
-        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Error">Error</button>
+        <button kbq-button [kbqTooltip]="text().tooltip" [kbqTooltipColor]="KbqComponentColors.Error">Error</button>
 
-        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Warning">Warning</button>
+        <button kbq-button [kbqTooltip]="text().tooltip" [kbqTooltipColor]="KbqComponentColors.Warning">Warning</button>
 
-        <button kbq-button kbqTooltip="Tooltip" [kbqTooltipColor]="KbqComponentColors.Theme">Theme</button>
+        <button kbq-button [kbqTooltip]="text().tooltip" [kbqTooltipColor]="KbqComponentColors.Theme">Theme</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -33,5 +34,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     }
 })
 export class TooltipStyleExample {
+    protected readonly text = injectExampleText();
+
     KbqComponentColors = KbqComponentColors;
 }

@@ -3,6 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Dropdown item with a secondary action
@@ -23,9 +24,9 @@ import { KbqTitleDirective } from '@koobiq/components/title';
                     kbq-icon-button="kbq-gear_16"
                     kbqDropdownItemAction
                     size="compact"
-                    aria-label="Rules settings"
                     target="_blank"
                     href="en/components/button"
+                    [attr.aria-label]="text().rulesSettings"
                     [color]="'contrast-fade'"
                 ></a>
             </div>
@@ -36,9 +37,9 @@ import { KbqTitleDirective } from '@koobiq/components/title';
                     kbq-icon-button="kbq-gear_16"
                     kbqDropdownItemAction
                     size="compact"
-                    aria-label="Hash sum settings"
                     target="_blank"
                     href="en/components/icon"
+                    [attr.aria-label]="text().hashSumSettings"
                     [color]="'contrast-fade'"
                 ></a>
             </div>
@@ -63,9 +64,9 @@ import { KbqTitleDirective } from '@koobiq/components/title';
                     kbq-icon-button="kbq-gear_16"
                     kbqDropdownItemAction
                     size="compact"
-                    aria-label="More actions"
                     target="_blank"
                     href="en/components/tag"
+                    [attr.aria-label]="text().moreActions"
                     [color]="'contrast-fade'"
                 ></a>
             </div>
@@ -82,4 +83,6 @@ import { KbqTitleDirective } from '@koobiq/components/title';
         '[style.height.px]': '200'
     }
 })
-export class DropdownItemActionExample {}
+export class DropdownItemActionExample {
+    protected readonly text = injectExampleText();
+}

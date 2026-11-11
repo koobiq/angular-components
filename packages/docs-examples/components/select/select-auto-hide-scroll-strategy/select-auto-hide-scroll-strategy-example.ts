@@ -3,9 +3,10 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    computed,
     DestroyRef,
-    NgZone,
     inject,
+    NgZone,
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -16,6 +17,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title select-auto-hide-scroll-strategy
@@ -25,17 +27,17 @@ import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
     imports: [CdkScrollableModule, KbqSelectModule, KbqNativeScrollbar],
     template: `
         <div class="example-select-auto-hide-scroll-strategy__container" kbqNativeScrollbar cdkScrollable>
-            <div class="example-select-auto-hide-scroll-strategy__spacer">Scroll down</div>
+            <div class="example-select-auto-hide-scroll-strategy__spacer">{{ text().scrollDown }}</div>
 
             <kbq-form-field>
                 <kbq-select [value]="selected">
-                    @for (option of options; track option) {
+                    @for (option of options(); track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                 </kbq-select>
             </kbq-form-field>
 
-            <div class="example-select-auto-hide-scroll-strategy__spacer">Scroll up</div>
+            <div class="example-select-auto-hide-scroll-strategy__spacer">{{ text().scrollUp }}</div>
         </div>
     `,
     styles: `
@@ -70,7 +72,9 @@ import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectAutoHideScrollStrategyExample implements AfterViewInit {
-    protected readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    protected readonly text = injectExampleText();
+
+    protected readonly options = computed(() => Array.from({ length: 5 }, (_, i) => this.text().optionN(i)));
     protected readonly selected = this.options[0];
 
     private readonly select = viewChild.required(KbqSelect);

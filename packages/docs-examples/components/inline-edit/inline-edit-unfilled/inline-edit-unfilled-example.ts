@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Inline edit unfilled
@@ -91,7 +92,11 @@ import { KbqInputModule } from '@koobiq/components/input';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditUnfilledExample {
-    protected readonly placeholder = 'Empty';
+    protected readonly text = injectExampleText();
+
+    protected get placeholder(): string {
+        return this.text().empty;
+    }
 
     protected readonly form = new FormGroup({
         country: new FormControl('Spain'),

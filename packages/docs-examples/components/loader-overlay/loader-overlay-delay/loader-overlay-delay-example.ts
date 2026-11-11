@@ -7,6 +7,7 @@ import { kbqDelayLoadingIndicator } from '@koobiq/components/core';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { switchMap, timer } from 'rxjs';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Loader-overlay delay
@@ -16,22 +17,22 @@ import { switchMap, timer } from 'rxjs';
     imports: [KbqLoaderOverlayModule, KbqButtonModule, KbqButtonToggleModule, KbqToggleModule, FormsModule],
     template: `
         <div class="example__controls">
-            <kbq-toggle [(ngModel)]="delay">Display delay</kbq-toggle>
+            <kbq-toggle [(ngModel)]="delay">{{ text().displayDelay }}</kbq-toggle>
 
-            <kbq-button-toggle-group aria-label="Request duration" [(ngModel)]="duration">
+            <kbq-button-toggle-group [attr.aria-label]="text().requestDuration" [(ngModel)]="duration">
                 <kbq-button-toggle [value]="200">200 ms</kbq-button-toggle>
                 <kbq-button-toggle [value]="600">600 ms</kbq-button-toggle>
                 <kbq-button-toggle [value]="2000">2 s</kbq-button-toggle>
             </kbq-button-toggle-group>
 
-            <button kbq-button [disabled]="loading()" (click)="load()">Refresh</button>
+            <button kbq-button [disabled]="loading()" (click)="load()">{{ text().refresh }}</button>
         </div>
 
         <div class="example__card">
-            <div class="kbq-text-normal">Updates</div>
+            <div class="kbq-text-normal">{{ text().updates }}</div>
             <div class="kbq-display-compact">{{ updates() }}</div>
             @if (showOverlay()) {
-                <kbq-loader-overlay size="compact" text="Updating..." />
+                <kbq-loader-overlay size="compact" [text]="text().updating" />
             }
         </div>
     `,
@@ -59,6 +60,8 @@ import { switchMap, timer } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoaderOverlayDelayExample {
+    protected readonly text = injectExampleText();
+
     private readonly destroyRef = inject(DestroyRef);
     protected readonly delay = model(true);
     protected readonly duration = model(200);

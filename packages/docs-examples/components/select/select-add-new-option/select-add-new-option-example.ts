@@ -5,6 +5,7 @@ import { KbqForm, KbqFormElement } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Select add new option
@@ -24,7 +25,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     template: `
         <form novalidate class="kbq-form-vertical">
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Login account</label>
+                <label class="kbq-form__label">{{ text().loginAccount }}</label>
                 <kbq-form-field class="kbq-form__control">
                     <kbq-select [value]="selected">
                         @for (option of options; track option) {
@@ -35,7 +36,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </div>
 
             <div class="kbq-form__row">
-                <div>Account for privilege escalation</div>
+                <div>{{ text().privilegeEscalationAccount }}</div>
                 <div class="layout-padding-top-3xs" [style.color]="'var(--kbq-foreground-contrast-secondary)'">
                     There are no suitable accounts of this type (Terminal) in Mega App
                 </div>
@@ -59,6 +60,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     }
 })
 export class SelectAddNewOptionExample {
+    protected readonly text = injectExampleText();
+
     readonly options = [
         'admin / @dm1n',
         'root / P@ssw0rd',

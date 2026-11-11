@@ -1,6 +1,6 @@
 <div class="layout-column layout-fill layout-align-center-center docs-example-vertical-margin">
     <kbq-accordion style="width: 360px">
-        @for (section of sections; track section.id) {
+        @for (section of sections(); track section.id) {
             <kbq-accordion-item [value]="section.id">
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">{{ section.title }}</button>
@@ -10,14 +10,14 @@
                          own section so the actions stay distinguishable in a screen reader element list. -->
                     <div class="kbq-accordion-header__actions">
                         <button
-                            aria-label="Run {{ section.title }}"
                             kbq-icon-button="kbq-bolt_16"
                             type="button"
+                            [attr.aria-label]="text().run(section.title)"
                         ></button>
                         <button
-                            aria-label="More actions for {{ section.title }}"
                             kbq-icon-button="kbq-ellipsis-vertical_16"
                             type="button"
+                            [attr.aria-label]="text().moreActionsFor(section.title)"
                             [kbqDropdownTriggerFor]="dropdown"
                         ></button>
                     </div>
@@ -25,13 +25,13 @@
 
                 <kbq-accordion-content>
                     <div class="layout-column layout-gap-s">
-                        <kbq-checkbox [(ngModel)]="section.enabled">Enabled</kbq-checkbox>
+                        <kbq-checkbox [(ngModel)]="section.enabled">{{ text().enabled }}</kbq-checkbox>
 
                         <kbq-form-field>
-                            <input kbqInput placeholder="Name" [(ngModel)]="section.name" />
+                            <input kbqInput [placeholder]="text().name" [(ngModel)]="section.name" />
                         </kbq-form-field>
 
-                        <button kbq-button type="button">Apply</button>
+                        <button kbq-button type="button">{{ text().apply }}</button>
                     </div>
                 </kbq-accordion-content>
             </kbq-accordion-item>
@@ -39,9 +39,9 @@
     </kbq-accordion>
 
     <kbq-dropdown #dropdown="kbqDropdown">
-        <button kbq-dropdown-item type="button">Rename</button>
-        <button kbq-dropdown-item type="button">Duplicate</button>
-        <button kbq-dropdown-item type="button">Delete</button>
+        <button kbq-dropdown-item type="button">{{ text().rename }}</button>
+        <button kbq-dropdown-item type="button">{{ text().duplicate }}</button>
+        <button kbq-dropdown-item type="button">{{ text().delete }}</button>
     </kbq-dropdown>
 </div>
 
@@ -49,5 +49,5 @@
     style="color: var(--kbq-foreground-contrast-secondary)"
     class="kbq-text-normal layout-margin-top-l layout-margin-bottom-s layout-row layout-align-center"
 >
-    Enter and Space toggle the section only while the trigger itself is focused
+    {{ text().keyboardHint }}
 </div>

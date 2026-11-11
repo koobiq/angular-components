@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOptionModule } from '@koobiq/components/core';
@@ -9,6 +9,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Inline edit controls
@@ -32,7 +33,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     template: `
         <form style="width: 100%" [formGroup]="form">
             <kbq-dl>
-                <kbq-dt>Text Field</kbq-dt>
+                <kbq-dt>{{ text().textField }}</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit>
                         <div class="example-inline-text" kbqInlineEditViewMode>
@@ -44,7 +45,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                     </kbq-inline-edit>
                 </kbq-dd>
 
-                <kbq-dt class="example-multiline-text__header">Textarea</kbq-dt>
+                <kbq-dt class="example-multiline-text__header">{{ text().textarea }}</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit #textareaInlineEdit showActions (saved)="update()">
                         <div kbqInlineEditViewMode class="example-inline-text__textarea-view">
@@ -69,7 +70,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                     </kbq-inline-edit>
                 </kbq-dd>
 
-                <kbq-dt class="example-multiline-text__header">Select Multiple</kbq-dt>
+                <kbq-dt class="example-multiline-text__header">{{ text().selectMultiple }}</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit>
                         <div
@@ -92,7 +93,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                                 [placeholder]="placeholder"
                                 [formControl]="form.controls.selectMultiple"
                             >
-                                @for (option of options; track option) {
+                                @for (option of options(); track option) {
                                     <kbq-option [value]="option">{{ option }}</kbq-option>
                                 }
                                 <kbq-cleaner />
@@ -101,7 +102,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                     </kbq-inline-edit>
                 </kbq-dd>
 
-                <kbq-dt>Select</kbq-dt>
+                <kbq-dt>{{ text().select }}</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit>
                         <div class="example-inline-text" kbqInlineEditViewMode>
@@ -109,7 +110,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                         </div>
                         <kbq-form-field kbqInlineEditEditMode>
                             <kbq-select [placeholder]="placeholder" [formControl]="form.controls.select">
-                                @for (option of options; track option) {
+                                @for (option of options(); track option) {
                                     <kbq-option [value]="option">{{ option }}</kbq-option>
                                 }
                             </kbq-select>
@@ -159,17 +160,21 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditControlsExample {
+    protected readonly text = injectExampleText();
+
     protected readonly maxRows = 20;
-    protected readonly placeholder = 'Placeholder';
-    protected readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i + 1}`);
+    protected get placeholder(): string {
+        return this.text().placeholder;
+    }
+    protected readonly options = computed(() => Array.from({ length: 10 }, (_, i) => this.text().optionN(i + 1)));
 
     protected readonly form = new FormGroup({
         input: new FormControl('Spain'),
         textarea: new FormControl(
             'Spanish football is characterized by technical skill, tactical innovation, and fierce regional rivalries.'
         ),
-        selectMultiple: new FormControl(this.options.slice(0, 5)),
-        select: new FormControl(this.options[0])
+        selectMultiple: new FormControl(this.options().slice(0, 5)),
+        select: new FormControl(this.options()[0])
     });
 
     protected readonly textareaDisplayValue = signal(this.form.controls.textarea.value);

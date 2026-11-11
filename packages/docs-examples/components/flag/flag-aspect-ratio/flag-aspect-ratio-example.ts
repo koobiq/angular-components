@@ -1,16 +1,16 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqFlag } from '@koobiq/components/flag';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { countries } from 'country-flag-icons';
 import * as flags3x2 from 'country-flag-icons/string/3x2';
+import { injectExampleText } from '../l10n';
 
-const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
-
-const getCountryName = (code: string): string => {
+const getCountryName = (regionNames: Intl.DisplayNames, code: string): string => {
     try {
         return regionNames.of(code) ?? code;
     } catch {
@@ -36,12 +36,12 @@ type Country = { code: string; name: string; svg: SafeHtml };
                 [svg]="control.value?.svg"
             />
             <kbq-select
-                placeholder="Select a country"
                 panelWidth="auto"
+                [placeholder]="text().selectCountry"
                 [formControl]="control"
                 [compareWith]="compareWith"
             >
-                @for (country of countries; track country) {
+                @for (country of countries(); track country) {
                     <kbq-option [value]="country">
                         <kbq-flag decorative class="example-flag-option" [svg]="country.svg" />
                         {{ country.name }}
@@ -72,19 +72,26 @@ type Country = { code: string; name: string; svg: SafeHtml };
     }
 })
 export class FlagAspectRatioExample {
+    protected readonly text = injectExampleText();
+
     private readonly sanitizer = inject(DomSanitizer);
+    private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
 
     // Every flag exported from country-flag-icons, resolved to a country name for display.
     // Subdivision codes are exported with underscores (GB-ENG → GB_ENG).
-    protected readonly countries: Country[] = countries
-        .map((code) => ({
-            code,
-            name: getCountryName(code),
-            svg: this.sanitizer.bypassSecurityTrustHtml(flags3x2[code.replace(/-/g, '_')])
-        }))
-        .sort((a, b) => a.name.localeCompare(b.name));
+    protected readonly countries = computed<Country[]>(() => {
+        const regionNames = new Intl.DisplayNames([this.localeService?.localeId() ?? 'en'], { type: 'region' });
 
-    protected readonly control = new FormControl<Country | null>(this.countries[0] ?? null);
+        return countries
+            .map((code) => ({
+                code,
+                name: getCountryName(regionNames, code),
+                svg: this.sanitizer.bypassSecurityTrustHtml(flags3x2[code.replace(/-/g, '_')])
+            }))
+            .sort((a, b) => a.name.localeCompare(b.name));
+    });
+
+    protected readonly control = new FormControl<Country | null>(this.countries()[0] ?? null);
 
     protected readonly compareWith = (a: Country | null, b: Country | null) => a?.code === b?.code;
 }

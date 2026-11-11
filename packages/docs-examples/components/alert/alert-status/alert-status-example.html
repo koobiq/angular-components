@@ -3,27 +3,27 @@
         <kbq-alert [alertColor]="alertColors.Info" [alertStyle]="alertStyles.Colored" [compact]="true">
             <i aria-hidden="true" kbq-icon="kbq-circle-info_16" [color]="colors.Contrast"></i>
             <!-- The severity is named in the title, so it does not rely on the icon color alone. -->
-            <div kbq-alert-title>Information</div>
-            {{ text }}
+            <div kbq-alert-title>{{ text().information }}</div>
+            {{ text().body }}
         </kbq-alert>
 
         <kbq-alert [alertColor]="alertColors.Warning" [alertStyle]="alertStyles.Colored" [compact]="true">
             <i aria-hidden="true" kbq-icon="kbq-triangle-exclamation_16" [color]="colors.Warning"></i>
-            <div kbq-alert-title>Warning</div>
-            {{ text }}
+            <div kbq-alert-title>{{ text().warning }}</div>
+            {{ text().body }}
         </kbq-alert>
     </div>
     <div class="layout-column example-column layout-gap-l">
         <kbq-alert [alertColor]="alertColors.Error" [alertStyle]="alertStyles.Colored" [compact]="true">
             <i aria-hidden="true" kbq-icon="kbq-triangle-exclamation_16" [color]="colors.Error"></i>
-            <div kbq-alert-title>Error</div>
-            {{ text }}
+            <div kbq-alert-title>{{ text().error }}</div>
+            {{ text().body }}
         </kbq-alert>
 
         <kbq-alert [alertColor]="alertColors.Success" [alertStyle]="alertStyles.Colored" [compact]="true">
             <i aria-hidden="true" kbq-icon="kbq-circle-check_16" [color]="colors.Success"></i>
-            <div kbq-alert-title>Success</div>
-            {{ text }}
+            <div kbq-alert-title>{{ text().success }}</div>
+            {{ text().body }}
         </kbq-alert>
     </div>
 </div>

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Textarea overview
@@ -9,8 +10,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     imports: [KbqTextareaModule],
     template: `
         <kbq-form-field>
-            <kbq-label>Label</kbq-label>
-            <textarea kbqTextarea placeholder="Placeholder" canGrow="false"></textarea>
+            <kbq-label>{{ text().label }}</kbq-label>
+            <textarea kbqTextarea canGrow="false" [placeholder]="text().placeholder"></textarea>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,4 +19,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         class: 'layout-margin-xl layout-row'
     }
 })
-export class TextareaOverviewExample {}
+export class TextareaOverviewExample {
+    protected readonly text = injectExampleText();
+}

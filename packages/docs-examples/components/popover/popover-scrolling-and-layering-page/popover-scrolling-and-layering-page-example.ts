@@ -4,6 +4,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOverflowShadowContainer, KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Popover scrolling and layering page
@@ -21,7 +22,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
     template: `
         <kbq-top-bar [withShadow]="scroller.overflow().top">
             <div class="layout-row layout-align-center-center" kbqTopBarContainer placement="start">
-                <span class="kbq-truncate-line" kbqTopBarTitle>Page Title</span>
+                <span class="kbq-truncate-line" kbqTopBarTitle>{{ text().pageTitle }}</span>
             </div>
 
             <div kbqTopBarSpacer></div>
@@ -100,6 +101,8 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverScrollingAndLayeringPageExample {
+    protected readonly text = injectExampleText();
+
     readonly popoverContent =
         'Think of a popover as a lightweight, floating window that is directly tethered to the element that summoned it. Unlike a modal dialog, it doesn\'t usually block interaction with the rest of the page entirely, allowing for a faster, more "in-context" workflow. It\'s often activated by clicking a button, icon, or link, and it disappears when the user moves their focus away.';
 }

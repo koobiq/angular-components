@@ -6,6 +6,7 @@ import {
     KbqCodeBlockModule
 } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Code-block with lineNumbers attribute
@@ -18,7 +19,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         FormsModule
     ],
     template: `
-        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="lineNumbers">Line numbers</kbq-toggle>
+        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="lineNumbers">{{ text().lineNumbers }}</kbq-toggle>
         <kbq-code-block canToggleSoftWrap [files]="files" [lineNumbers]="lineNumbers" />
     `,
     providers: [
@@ -31,6 +32,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockLineNumbersExample {
+    protected readonly text = injectExampleText();
+
     readonly files: KbqCodeBlockFile[] = [
         {
             content: `function getVulnerabilities() {\n\treturn ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert', 'IDS/IPS Alert', 'Zero-Day Exploit', 'XSS', 'Malware', 'Ransomware', 'Phishing'];\n};`,

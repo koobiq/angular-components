@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title popover-scroll
@@ -15,7 +16,7 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
     ],
     template: `
         <ng-template #customContent>
-            <div class="layout-margin-bottom-s">Интересно, что это такое?</div>
+            <div class="layout-margin-bottom-s">{{ text().wonder }}</div>
             <kbq-form-field>
                 <input kbqInput placeholder="Интересная мысль" />
             </kbq-form-field>
@@ -23,8 +24,8 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
 
         <ng-template #customFooter>
             <div class="layout-row layout-wrap" style="gap: 16px">
-                <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">Сохранить</button>
-                <button kbq-button (click)="activePopover.hide(0)">Отмена</button>
+                <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">{{ text().save }}</button>
+                <button kbq-button (click)="activePopover.hide(0)">{{ text().cancel }}</button>
             </div>
         </ng-template>
 
@@ -62,5 +63,7 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverScrollExample {
+    protected readonly text = injectExampleText();
+
     activePopover: KbqPopoverTrigger;
 }

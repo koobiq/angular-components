@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Select
@@ -10,7 +11,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     template: `
         <kbq-form-field>
             <kbq-select [value]="selected">
-                @for (option of options; track option) {
+                @for (option of options(); track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
             </kbq-select>
@@ -30,6 +31,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectOverviewExample {
-    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    protected readonly text = injectExampleText();
+
+    readonly options = computed(() => Array.from({ length: 5 }, (_, i) => this.text().optionN(i)));
     readonly selected = this.options[0];
 }

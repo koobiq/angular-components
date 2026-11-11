@@ -10,6 +10,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { injectExampleText } from '../l10n';
 
 interface ExampleLocalizedText {
     fullDisplay: string;
@@ -66,7 +67,7 @@ type ExampleAction = {
                     <img alt="example icon" src="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
                 </div>
                 <div class="kbq-truncate-line example-kbq-top-bar__title" kbqTopBarTitle>
-                    <span class="kbq-truncate-line layout-margin-right-xs">Page Header</span>
+                    <span class="kbq-truncate-line layout-margin-right-xs">{{ text().pageHeader }}</span>
 
                     <span class="example-kbq-top-bar__counter">{{ 10 | kbqNumber: '' : 'en-US' }}</span>
                 </div>
@@ -155,6 +156,8 @@ type ExampleAction = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleTopBar {
+    protected readonly text = injectExampleText();
+
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')

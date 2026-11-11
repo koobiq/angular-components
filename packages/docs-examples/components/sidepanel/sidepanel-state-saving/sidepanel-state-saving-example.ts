@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidepanelModule, KbqSidepanelRef, KbqSidepanelService } from '@koobiq/components/sidepanel';
+import { injectExampleText } from '../l10n';
 
 const stateSavingKey = 'sidepanel-state-saving-example';
 
@@ -30,7 +31,7 @@ const stateSavingKey = 'sidepanel-state-saving-example';
         </div>
 
         <ng-template>
-            <kbq-sidepanel-header [closeable]="true">Sidepanel state saving</kbq-sidepanel-header>
+            <kbq-sidepanel-header [closeable]="true">{{ text().stateSaving }}</kbq-sidepanel-header>
             <kbq-sidepanel-body>
                 <div class="example-sidepanel-state-saving__body">
                     Leave this panel open and reload the page — it opens again. The panel is non-modal, so nothing on
@@ -52,6 +53,8 @@ const stateSavingKey = 'sidepanel-state-saving-example';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidepanelStateSavingExample {
+    protected readonly text = injectExampleText();
+
     protected readonly sidepanelService = inject(KbqSidepanelService);
     protected readonly stateSavingKey = stateSavingKey;
     protected readonly sidepanelRef = signal<KbqSidepanelRef | null>(null);

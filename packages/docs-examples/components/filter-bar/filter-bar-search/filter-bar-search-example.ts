@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
 import { createSearchPredicate } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTypes } from '@koobiq/components/filter-bar';
-import { injectLocalizedText } from '../localized-data';
+import { injectLocalizedText } from '../l10n';
 
 interface Network {
     name: string;

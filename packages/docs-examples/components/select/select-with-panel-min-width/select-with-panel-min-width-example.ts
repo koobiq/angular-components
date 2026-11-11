@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Select with panelWidth min-width
@@ -30,6 +31,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     }
 })
 export class SelectWithPanelMinWidthExample {
+    protected readonly text = injectExampleText();
+
     readonly options = [
         'HUMINT',
         'HostIntel',

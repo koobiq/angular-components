@@ -14,7 +14,7 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { injectLocalizedText } from '../localized-data';
+import { injectLocalizedText } from '../l10n';
 
 interface ExampleFilter extends KbqFilter {
     id?: number;

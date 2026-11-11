@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqInputModule } from '@koobiq/components/input';
+import { injectExampleText } from '../l10n';
 
 /** @title Form field horizontal */
 @Component({
@@ -7,27 +8,27 @@ import { KbqInputModule } from '@koobiq/components/input';
     imports: [KbqInputModule],
     template: `
         <kbq-form-field horizontal labelClass="flex-15" contentClass="flex-85">
-            <kbq-label>Field name</kbq-label>
+            <kbq-label>{{ text().fieldName }}</kbq-label>
             <input kbqInput />
-            <kbq-hint>Hint below the field</kbq-hint>
+            <kbq-hint>{{ text().hintBelowField }}</kbq-hint>
         </kbq-form-field>
 
         <kbq-form-field horizontal>
-            <kbq-label>Field name</kbq-label>
+            <kbq-label>{{ text().fieldName }}</kbq-label>
             <input kbqInput />
-            <kbq-hint>Hint below the field</kbq-hint>
+            <kbq-hint>{{ text().hintBelowField }}</kbq-hint>
         </kbq-form-field>
 
         <kbq-form-field horizontal labelClass="flex-35" contentClass="flex-65">
-            <kbq-label>Field name</kbq-label>
+            <kbq-label>{{ text().fieldName }}</kbq-label>
             <input kbqInput />
-            <kbq-hint>Hint below the field</kbq-hint>
+            <kbq-hint>{{ text().hintBelowField }}</kbq-hint>
         </kbq-form-field>
 
         <kbq-form-field horizontal labelClass="flex-60" contentClass="flex-40">
-            <kbq-label>Field name</kbq-label>
+            <kbq-label>{{ text().fieldName }}</kbq-label>
             <input kbqInput />
-            <kbq-hint>Hint below the field</kbq-hint>
+            <kbq-hint>{{ text().hintBelowField }}</kbq-hint>
         </kbq-form-field>
     `,
     styles: `
@@ -45,4 +46,6 @@ import { KbqInputModule } from '@koobiq/components/input';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldHorizontalExample {}
+export class FormFieldHorizontalExample {
+    protected readonly text = injectExampleText();
+}

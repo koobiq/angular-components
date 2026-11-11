@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Overflow items result offset
@@ -29,7 +30,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
                 </kbq-badge>
             }
             <div class="layout-margin-right-xs" kbqOverflowItemsResult>
-                and {{ kbqOverflowItems.hiddenItemIDs().size }} more
+                {{ text().andMore(kbqOverflowItems.hiddenItemIDs().size) }}
             </div>
         </div>
     `,
@@ -59,6 +60,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverflowItemsWithOrderExample {
+    protected readonly text = injectExampleText();
+
     readonly items = Array.from({ length: 20 }, (_, i) => `Item${i}`);
     readonly badgeColor = KbqBadgeColors;
     readonly reverseOverflowOrder = model(false);

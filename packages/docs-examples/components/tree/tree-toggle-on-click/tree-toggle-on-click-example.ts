@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
+import { injectExampleText } from '../l10n';
 
 export class FileNode {
     children: FileNode[];
@@ -40,9 +41,9 @@ export function buildFileTree(countries: any, level: number): FileNode[] {
 }
 
 export const DATA_OBJECT = [
-    { name: 'Lonely leaf' },
+    { name: 'lonely-leaf' },
     {
-        name: 'Branch 1',
+        name: 'branch-1',
         children: [
             {
                 name: 'Arsenal'
@@ -62,7 +63,7 @@ export const DATA_OBJECT = [
         ]
     },
     {
-        name: 'Branch 2',
+        name: 'branch-2',
         children: [
             {
                 name: 'Atlético de Madrid'
@@ -125,6 +126,8 @@ export const DATA_OBJECT = [
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeToggleOnClickExample {
+    protected readonly text = injectExampleText();
+
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
 
@@ -178,6 +181,21 @@ export class TreeToggleOnClickExample {
     };
 
     private getViewValue = (node: FileFlatNode): string => {
-        return `${node.name}`;
+        return this.nodeName(node.name);
     };
+
+    private nodeName(name: string): string {
+        switch (name) {
+            case 'lonely-leaf':
+                return this.text().lonelyLeaf;
+            case 'branch-1':
+                return this.text().branch(1);
+            case 'branch-2':
+                return this.text().branch(2);
+            case 'disabled-node':
+                return this.text().disabledNode;
+            default:
+                return name;
+        }
+    }
 }

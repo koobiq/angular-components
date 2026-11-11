@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 const createBlobPart = (sizeInMB: number): BlobPart => {
     const chunk = 'a'.repeat(1024 * 1024);
@@ -30,5 +31,7 @@ const createMockFile = (fileName: string = 'Filename.txt', options?: FilePropert
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadSingleWithSizeExample {
+    protected readonly text = injectExampleText();
+
     control = new FormControl(createMockFile('Filename.txt', { type: 'text/plain' }));
 }

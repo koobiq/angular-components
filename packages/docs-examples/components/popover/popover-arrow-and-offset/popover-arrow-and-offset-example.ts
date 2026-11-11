@@ -6,6 +6,7 @@ import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Popover arrow and offset example
@@ -27,7 +28,7 @@ import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
             <div class="layout-row layout-align-center-center">
                 <ng-template #customContent>
                     <div [style.width.px]="400">
-                        <div class="layout-margin-bottom-s">I wonder what this?</div>
+                        <div class="layout-margin-bottom-s">{{ text().wonder }}</div>
                         <kbq-form-field>
                             <input kbqInput placeholder="Interesting thought" />
                         </kbq-form-field>
@@ -36,8 +37,8 @@ import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
 
                 <ng-template #customFooter>
                     <div class="layout-row layout-wrap layout-gap-l">
-                        <button color="contrast" kbq-button (click)="kbqPopover.hide(0)">Save</button>
-                        <button kbq-button (click)="kbqPopover.hide(0)">Cancel</button>
+                        <button color="contrast" kbq-button (click)="kbqPopover.hide(0)">{{ text().save }}</button>
+                        <button kbq-button (click)="kbqPopover.hide(0)">{{ text().cancel }}</button>
                     </div>
                 </ng-template>
 
@@ -58,17 +59,17 @@ import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
             </div>
 
             <kbq-dl [vertical]="true">
-                <kbq-dt>Arrow</kbq-dt>
+                <kbq-dt>{{ text().arrow }}</kbq-dt>
                 <kbq-dd>
                     <kbq-toggle [checked]="arrow" (change)="onArrowChange($event)" />
                 </kbq-dd>
 
-                <kbq-dt>Arrow centered</kbq-dt>
+                <kbq-dt>{{ text().arrowCentered }}</kbq-dt>
                 <kbq-dd>
                     <kbq-toggle [checked]="arrowCentered" (change)="arrowCentered = $event.checked" />
                 </kbq-dd>
 
-                <kbq-dt>Offset</kbq-dt>
+                <kbq-dt>{{ text().offset }}</kbq-dt>
                 <kbq-dd>
                     <kbq-button-toggle-group [value]="offset" (change)="onOffsetChange($event)">
                         <kbq-button-toggle [value]="-4">-4px</kbq-button-toggle>
@@ -83,6 +84,8 @@ import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverArrowAndOffsetExample implements AfterViewInit {
+    protected readonly text = injectExampleText();
+
     protected arrow = true;
     protected arrowCentered = false;
     protected offset: number | null = null;

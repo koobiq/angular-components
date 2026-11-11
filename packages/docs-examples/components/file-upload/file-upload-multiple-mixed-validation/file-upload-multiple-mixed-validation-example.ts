@@ -6,6 +6,7 @@ import { FileValidators, KbqFileTypeSpecifier, ShowOnFormSubmitErrorStateMatcher
 import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title File upload multiple mixed validation example
@@ -36,7 +37,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 </ng-template>
 
                 @if (kbqFileUpload.invalid && formMultiple.controls.fileUpload.hasError('required')) {
-                    <kbq-hint color="error">File required</kbq-hint>
+                    <kbq-hint color="error">{{ text().fileRequired }}</kbq-hint>
                 }
 
                 @for (control of fileList.controls; track $index) {
@@ -47,7 +48,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                     </kbq-hint>
                 }
 
-                <kbq-hint>Files with TXT extension are allowed</kbq-hint>
+                <kbq-hint>{{ text().filesTxtAllowed }}</kbq-hint>
             </kbq-file-upload>
             <button class="layout-margin-top-m" kbq-button type="submit">Submit</button>
         </form>
@@ -55,9 +56,13 @@ import { KbqIconModule } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleMixedValidationExample {
+    protected readonly text = injectExampleText();
+
     protected readonly customErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
     protected readonly accept: KbqFileTypeSpecifier = ['.txt'];
-    protected readonly fileExtensionMismatchErrorMessage = 'Provide valid extension';
+    protected get fileExtensionMismatchErrorMessage(): string {
+        return this.text().provideValidExtension;
+    }
     protected readonly cdr = inject(ChangeDetectorRef);
 
     protected readonly formMultiple = new FormGroup({

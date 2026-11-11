@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title File-upload multiple default
@@ -20,4 +21,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadMultipleDefaultOverviewExample {}
+export class FileUploadMultipleDefaultOverviewExample {
+    protected readonly text = injectExampleText();
+}

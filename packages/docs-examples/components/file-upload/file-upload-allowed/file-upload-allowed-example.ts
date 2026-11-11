@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIcon } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title File-upload allowed
@@ -24,4 +25,6 @@ import { KbqIcon } from '@koobiq/components/icon';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadAllowedExample {}
+export class FileUploadAllowedExample {
+    protected readonly text = injectExampleText();
+}

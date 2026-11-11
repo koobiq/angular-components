@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLink } from '@koobiq/components/link';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Link
@@ -8,7 +9,7 @@ import { KbqLink } from '@koobiq/components/link';
     selector: 'link-overview-example',
     imports: [KbqLink],
     template: `
-        <a kbqLink href="https://koobiq.io/en/components/link" target="_blank">Scan report</a>
+        <a kbqLink href="https://koobiq.io/en/components/link" target="_blank">{{ text().scanReport }}</a>
     `,
     styles: `
         :host {
@@ -20,4 +21,6 @@ import { KbqLink } from '@koobiq/components/link';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinkOverviewExample {}
+export class LinkOverviewExample {
+    protected readonly text = injectExampleText();
+}

@@ -3,6 +3,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Form fieldset
@@ -17,7 +18,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     ],
     template: `
         <kbq-fieldset>
-            <legend kbqLegend>Field group title</legend>
+            <legend kbqLegend>{{ text().fieldGroupTitle }}</legend>
 
             <kbq-form-field style="width: 96px; min-width: 96px">
                 <kbq-select panelWidth="auto" [formControl]="control">
@@ -30,14 +31,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </kbq-form-field>
 
             <kbq-form-field kbqFieldsetItem>
-                <input kbqInput placeholder="IP-address" />
+                <input kbqInput [placeholder]="text().ipAddress" />
             </kbq-form-field>
 
             <kbq-hint>
-                Hint for the first field. A long hint text below the field that wraps to a new line and spans the full
-                width of the group
+                {{ text().longHint1 }}
             </kbq-hint>
-            <kbq-hint>Hint for the second field</kbq-hint>
+            <kbq-hint>{{ text().hint2 }}</kbq-hint>
         </kbq-fieldset>
     `,
     styles: `
@@ -52,6 +52,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     }
 })
 export class FormFieldsetOverviewExample {
+    protected readonly text = injectExampleText();
+
     options = [
         'https://',
         'http://'

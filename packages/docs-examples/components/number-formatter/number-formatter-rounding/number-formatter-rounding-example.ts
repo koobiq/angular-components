@@ -3,6 +3,7 @@ import { KBQ_LOCALE_SERVICE, KbqFormattersModule, KbqLocaleService } from '@koob
 import { KbqTableModule } from '@koobiq/components/table';
 import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Number-formatter rounding
@@ -31,6 +32,8 @@ import { distinctUntilChanged } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NumberFormatterRoundingExample {
+    protected readonly text = injectExampleText();
+
     protected localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
     protected changeDetectorRef = inject(ChangeDetectorRef);
 

@@ -8,6 +8,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Dropdown open by arrow down
@@ -29,5 +30,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownOpenByArrowDownExample {
+    protected readonly text = injectExampleText();
+
     openByArrowDown = true;
 }

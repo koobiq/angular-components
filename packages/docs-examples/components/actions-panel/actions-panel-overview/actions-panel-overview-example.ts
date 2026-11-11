@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Actions panel overview
@@ -17,15 +18,15 @@ import { KbqButtonModule } from '@koobiq/components/button';
     selector: 'actions-panel-overview-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="open()">open</button>
+        <button kbq-button (click)="open()">{{ text().open }}</button>
 
         <ng-template>
-            <button color="contrast" kbq-button (click)="action('Action1')">Action 1</button>
+            <button color="contrast" kbq-button (click)="action('Action1')">{{ text().action1 }}</button>
             <button color="contrast" kbq-button class="layout-margin-left-xxs" (click)="action('Action2')">
-                Action 2
+                {{ text().action2 }}
             </button>
             <button color="contrast" kbq-button class="layout-margin-left-xxs" (click)="action('Action3')">
-                Action 3
+                {{ text().action3 }}
             </button>
         </ng-template>
     `,
@@ -42,6 +43,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionsPanelOverviewExample {
+    protected readonly text = injectExampleText();
+
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);

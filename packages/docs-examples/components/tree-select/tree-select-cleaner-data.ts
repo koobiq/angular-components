@@ -14,15 +14,20 @@ export class FlatNode {
 }
 
 /** A shallow service tree: every node the examples disable sits at the top level, where it is rendered. */
-export const TREE_DATA = {
-    Servers: {
+export const getTreeData = (names: {
+    servers: string;
+    database: string;
+    loadBalancer: string;
+    messageQueue: string;
+}) => ({
+    [names.servers]: {
         'web-01': null,
         'web-02': null
     },
-    Database: null,
-    'Load balancer': null,
-    'Message queue': null
-};
+    [names.database]: null,
+    [names.loadBalancer]: null,
+    [names.messageQueue]: null
+});
 
 export const buildTree = (value: object): Node[] =>
     Object.entries(value).map(([name, children]) => {

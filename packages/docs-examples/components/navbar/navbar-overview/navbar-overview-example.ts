@@ -6,7 +6,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
-import { injectExampleText } from '../localized-data';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Navbar

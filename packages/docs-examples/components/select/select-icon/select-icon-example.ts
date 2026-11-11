@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Select icon
@@ -22,7 +23,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
                         <i class="kbq-select__arrow" color="contrast-fade" kbq-icon="kbq-chevron-down-s_16"></i>
                     </div>
                 </kbq-select-matcher>
-                @for (option of options; track option) {
+                @for (option of options(); track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
             </kbq-select>
@@ -42,6 +43,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectIconExample {
-    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    protected readonly text = injectExampleText();
+
+    readonly options = computed(() => Array.from({ length: 5 }, (_, i) => this.text().optionN(i)));
     selected = this.options[0];
 }

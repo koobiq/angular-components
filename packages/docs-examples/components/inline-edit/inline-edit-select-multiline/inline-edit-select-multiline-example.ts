@@ -4,6 +4,7 @@ import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqFormFieldModule, KbqLabel } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { injectExampleText } from '../l10n';
 
 const COMMENTS: string[] = [
     'Issue resolved after restarting the affected service. No further action required.',
@@ -28,7 +29,7 @@ const COMMENTS: string[] = [
     template: `
         <div style="width: 280px">
             <kbq-inline-edit #inlineEdit="kbqInlineEdit">
-                <kbq-label>Resolution comment</kbq-label>
+                <kbq-label>{{ text().resolutionComment }}</kbq-label>
 
                 <div kbqInlineEditViewMode>
                     @if (control.value) {
@@ -69,6 +70,8 @@ const COMMENTS: string[] = [
     }
 })
 export class InlineEditSelectMultilineExample {
+    protected readonly text = injectExampleText();
+
     protected readonly notSetLabel = 'Not specified';
 
     protected readonly comments = COMMENTS;

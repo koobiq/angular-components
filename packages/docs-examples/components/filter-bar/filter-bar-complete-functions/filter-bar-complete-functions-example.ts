@@ -19,7 +19,7 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
-import { injectLocalizedPeriods, injectLocalizedText } from '../localized-data';
+import { injectLocalizedPeriods, injectLocalizedText } from '../l10n';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
 const createSearchPipe = (name: string): KbqPipe => ({

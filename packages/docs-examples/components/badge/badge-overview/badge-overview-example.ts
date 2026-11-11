@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Badge fill and style
@@ -14,5 +15,7 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BadgeOverviewExample {
+    protected readonly text = injectExampleText();
+
     colors = KbqBadgeColors;
 }

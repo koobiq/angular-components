@@ -14,6 +14,7 @@ import { KbqCleaner, KbqFormField, KbqPrefix } from '@koobiq/components/form-fie
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInput } from '@koobiq/components/input';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Dropdown with filter
@@ -42,7 +43,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
         <kbq-dropdown #dropdown="kbqDropdown">
             <kbq-form-field kbqDropdownSearch>
                 <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-                <input autocomplete="off" kbqInput placeholder="Search" [formControl]="control" />
+                <input autocomplete="off" kbqInput [placeholder]="text().search" [formControl]="control" />
                 <kbq-cleaner />
             </kbq-form-field>
 
@@ -61,7 +62,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
             }
 
             @if (filtered[1].length > 0) {
-                <kbq-optgroup label="Subheader for actions" />
+                <kbq-optgroup [label]="text().subheaderForActions" />
             }
 
             @for (item of filtered[1]; track item) {
@@ -87,6 +88,8 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownWithFilterExample {
+    protected readonly text = injectExampleText();
+
     private readonly groups = [
         ['New tab', 'New window'],
         ['Action one', 'Action two', 'Action three']

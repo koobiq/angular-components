@@ -5,6 +5,7 @@ import { ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title File upload single required reactive validation example
@@ -30,7 +31,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 <i kbq-icon="kbq-file-o_16"></i>
 
                 @if (kbqFileUpload.invalid && form.controls.fileUpload.hasError('required')) {
-                    <kbq-hint color="error">File required</kbq-hint>
+                    <kbq-hint color="error">{{ text().fileRequired }}</kbq-hint>
                 }
             </kbq-file-upload>
             <button class="layout-margin-top-m" kbq-button type="submit">Submit</button>
@@ -39,6 +40,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadSingleRequiredReactiveValidationExample {
+    protected readonly text = injectExampleText();
+
     protected readonly customErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
 
     protected readonly form = new FormGroup({

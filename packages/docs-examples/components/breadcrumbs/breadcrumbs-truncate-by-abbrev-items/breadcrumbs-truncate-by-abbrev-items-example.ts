@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Breadcrumbs Truncate By Abbreviation Items
@@ -18,7 +19,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     ],
     template: `
         <nav kbq-breadcrumbs>
-            @for (breadcrumb of breadcrumbs; track breadcrumb) {
+            @for (breadcrumb of breadcrumbs(); track breadcrumb) {
                 <kbq-breadcrumb-item
                     [routerLink]="breadcrumb.url"
                     [queryParams]="{ queryParams: breadcrumb }"
@@ -46,14 +47,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsTruncateByAbbrevItemsExample {
-    breadcrumbs = [
-        { longText: 'Main', url: '/main' },
-        { longText: 'Reviews', url: '/main/reviews' },
-        {
-            longText: 'Advanced Encryption Standard',
-            shortText: 'AES',
-            url: '/main/reviews/advanced-encryption-standard'
-        }
-    ];
+    protected readonly text = injectExampleText();
+
+    readonly breadcrumbs = computed(() => [
+        { longText: this.text().main, url: '/main' },
+        { longText: this.text().reviews, url: '/main/reviews' },
+        { longText: this.text().aes, shortText: 'AES', url: '/main/reviews/advanced-encryption-standard' }
+    ]);
     protected readonly PopUpPlacements = PopUpPlacements;
 }

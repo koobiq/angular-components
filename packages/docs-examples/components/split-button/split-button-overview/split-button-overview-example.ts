@@ -3,6 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title split-button
@@ -17,16 +18,16 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
     ],
     template: `
         <kbq-split-button>
-            <button kbq-button>Split Button</button>
-            <button kbq-button aria-label="More options" [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button>{{ text().splitButton }}</button>
+            <button kbq-button [attr.aria-label]="text().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
 
         <kbq-dropdown #dropdown="kbqDropdown">
-            <button kbq-dropdown-item>Extra Action 1</button>
-            <button kbq-dropdown-item>Extra Action 2</button>
-            <button kbq-dropdown-item>Extra Action 3</button>
+            <button kbq-dropdown-item>{{ text().extraAction(1) }}</button>
+            <button kbq-dropdown-item>{{ text().extraAction(2) }}</button>
+            <button kbq-dropdown-item>{{ text().extraAction(3) }}</button>
         </kbq-dropdown>
     `,
     styles: `
@@ -39,4 +40,6 @@ import { KbqSplitButtonModule } from '@koobiq/components/split-button';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitButtonOverviewExample {}
+export class SplitButtonOverviewExample {
+    protected readonly text = injectExampleText();
+}

@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqError, KbqHint } from '@koobiq/components/form-field';
+import { injectExampleText } from '../l10n';
 
 /**
  * @title Checkbox validation
@@ -13,12 +14,12 @@ import { KbqError, KbqHint } from '@koobiq/components/form-field';
     template: `
         <form class="example-checkbox-validation layout-column layout-align-start-start layout-gap-l">
             <kbq-checkbox name="agreement" required [(ngModel)]="agreement">
-                I accept the terms of the license agreement
-                <kbq-hint>Continue without accepting to see the error</kbq-hint>
-                <kbq-error>Accept the terms to continue</kbq-error>
+                {{ text().acceptTerms }}
+                <kbq-hint>{{ text().validationHint }}</kbq-hint>
+                <kbq-error>{{ text().validationError }}</kbq-error>
             </kbq-checkbox>
 
-            <button color="contrast" kbq-button type="submit">Continue</button>
+            <button color="contrast" kbq-button type="submit">{{ text().continue }}</button>
         </form>
     `,
     // A fixed width keeps the centered example in place whatever the width of the error that appears.
@@ -33,5 +34,7 @@ import { KbqError, KbqHint } from '@koobiq/components/form-field';
     }
 })
 export class CheckboxValidationExample {
+    protected readonly text = injectExampleText();
+
     protected readonly agreement = signal(false);
 }
