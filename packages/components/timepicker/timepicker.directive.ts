@@ -338,7 +338,7 @@ export class KbqTimepicker<D>
     /**
      * Whether a drag started in this field, so that its drop here is the field's own text.
      *
-     * @internal
+     * @docs-private
      */
     protected draggingOwnText = false;
 
@@ -529,7 +529,7 @@ export class KbqTimepicker<D>
      * Takes dropped text the way a paste is taken. The browser would insert it at the pointer, with no event
      * the parsing listens to.
      *
-     * @internal
+     * @docs-private
      */
     protected onDrop(event: DragEvent): void {
         event.preventDefault();

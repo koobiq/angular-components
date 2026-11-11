@@ -308,6 +308,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     readonly disabled: _angular_core.WritableSignal<boolean>;
     disabledChange: EventEmitter<boolean>;
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
+    protected draggingOwnText: boolean;
     // (undocumented)
     elementRef: ElementRef<HTMLInputElement>;
     readonly empty: _angular_core.Signal<boolean>;
@@ -358,6 +359,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     onChange(): void;
     // (undocumented)
     onContainerClick(): void;
+    protected onDrop(event: DragEvent): void;
     // (undocumented)
     onInput: () => void;
     // (undocumented)
