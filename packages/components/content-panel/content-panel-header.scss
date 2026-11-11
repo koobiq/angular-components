@@ -7,15 +7,16 @@
 
     .kbq-content-panel-header__wrapper {
         display: flex;
+        justify-content: space-between;
     }
 
     .kbq-content-panel-header__actions {
         display: flex;
-        margin-inline-start: auto;
+        justify-content: flex-end;
     }
 
     .kbq-content-panel-header__close-button {
-        margin-inline-start: var(--kbq-size-m);
+        margin-left: var(--kbq-size-m);
     }
 
     .kbq-content-panel-header-title {
