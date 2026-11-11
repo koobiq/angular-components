@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadge } from '@koobiq/components/badge';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Description list alignment

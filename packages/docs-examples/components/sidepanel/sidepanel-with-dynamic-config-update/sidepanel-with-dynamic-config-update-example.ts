@@ -9,7 +9,7 @@ import {
     KbqSidepanelService
 } from '@koobiq/components/sidepanel';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 type ExampleComponentData = {
     open: () => void;

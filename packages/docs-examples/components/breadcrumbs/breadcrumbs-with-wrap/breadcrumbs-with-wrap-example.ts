@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Breadcrumbs Wrap

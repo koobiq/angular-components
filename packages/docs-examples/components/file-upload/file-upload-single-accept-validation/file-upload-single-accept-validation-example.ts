@@ -4,7 +4,7 @@ import { FileValidators, KbqFileTypeSpecifier } from '@koobiq/components/core';
 import { KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title File upload single accept validation

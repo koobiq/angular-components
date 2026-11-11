@@ -17,7 +17,6 @@ export interface ExampleText {
     aboutScanReports: string;
     agree: string;
     licenseTerms: string;
-    disabled: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -28,8 +27,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         learnMore: 'Узнайте больше',
         aboutScanReports: 'об отчётах о сканировании',
         agree: 'Я полностью согласен',
-        licenseTerms: 'с условиями лицензионного соглашения',
-        disabled: 'Отключено'
+        licenseTerms: 'с условиями лицензионного соглашения'
     },
     default: {
         scanReportInApp: 'Scan report in AI Desktop',
@@ -38,8 +36,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         learnMore: 'Learn more',
         aboutScanReports: 'about scan reports',
         agree: 'I fully agree',
-        licenseTerms: 'with the terms of the license agreement',
-        disabled: 'Disabled'
+        licenseTerms: 'with the terms of the license agreement'
     }
 };
 

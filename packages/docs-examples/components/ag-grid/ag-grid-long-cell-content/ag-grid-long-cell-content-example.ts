@@ -9,8 +9,8 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
 import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ICellRendererParams, ModuleRegistry } from 'ag-grid-community';
 import { filter, fromEvent } from 'rxjs';
-import { injectExampleText } from '../l10n';
-import { injectExampleText as injectEventsText } from './l10n';
+
+import { injectExampleText as injectEventsText, injectExampleText } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

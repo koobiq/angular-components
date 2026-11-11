@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 @Component({
     selector: 'example-breadcrumbs',

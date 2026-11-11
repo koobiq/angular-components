@@ -14,19 +14,6 @@ export interface ExampleText {
     tooltipWithoutArrow: string;
     tooltipWithArrow: string;
     noArrow: string;
-    withArrow: string;
-    toggle: string;
-    itemLocked: string;
-    confidence: string;
-    incidentType: string;
-    detected: string;
-    updated: string;
-    extendedTypes: string[];
-    action: (index: number) => string;
-    diamond: string;
-    buttonWithTooltip: string;
-    default: string;
-    defaultWithArrow: string;
     add: string;
     create: string;
     longTooltip: string;
@@ -38,24 +25,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         tooltipWithoutArrow: 'Тултип без стрелки',
         tooltipWithArrow: 'Тултип со стрелкой',
         noArrow: 'Без стрелки',
-        withArrow: 'Со стрелкой',
-        toggle: 'переключить',
-        itemLocked: 'Этот объект заблокирован и не может быть удалён',
-        confidence: 'Уверенность',
-        incidentType: 'Тип инцидента',
-        detected: 'Обнаружен',
-        updated: 'Обновлён',
-        extendedTypes: [
-            'Заражение вредоносным ПО',
-            'Фишинговая атака',
-            'Утечка данных',
-            'Атака DoS/DDoS'
-        ],
-        action: (index) => `Действие ${index}`,
-        diamond: 'Ромб',
-        buttonWithTooltip: 'Кнопка с тултипом',
-        default: 'По умолчанию',
-        defaultWithArrow: 'По умолчанию со стрелкой',
         add: 'Добавить',
         create: 'Создать',
         longTooltip:
@@ -66,19 +35,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         tooltipWithoutArrow: 'Tooltip without arrow',
         tooltipWithArrow: 'Tooltip with arrow',
         noArrow: 'No arrow',
-        withArrow: 'With arrow',
-        toggle: 'toggle',
-        itemLocked: 'This item is locked and cannot be deleted',
-        confidence: 'Confidence',
-        incidentType: 'Incident Type',
-        detected: 'Detected',
-        updated: 'Updated',
-        extendedTypes: ['Malware Infection', 'Phishing Attack', 'Data Breach', 'DoS/DDoS Attack'],
-        action: (index) => `Action${index}`,
-        diamond: 'Diamond',
-        buttonWithTooltip: 'Button with a tooltip',
-        default: 'Default',
-        defaultWithArrow: 'Default with arrow',
         add: 'Add',
         create: 'Create',
         longTooltip:

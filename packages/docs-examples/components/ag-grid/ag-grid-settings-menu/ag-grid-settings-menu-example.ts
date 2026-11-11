@@ -12,7 +12,7 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

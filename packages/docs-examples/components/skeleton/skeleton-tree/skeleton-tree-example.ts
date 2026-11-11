@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqSkeletonTree } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 type DirectoryNode = {
     name: string;

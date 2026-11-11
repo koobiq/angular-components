@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 @Component({
     selector: 'custom-modal',

@@ -17,9 +17,6 @@ export interface ExampleText {
     kept: string;
     cleared: string;
     servers: string;
-    database: string;
-    loadBalancer: string;
-    messageQueue: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -30,10 +27,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         placeholder: 'Плейсхолдер',
         kept: 'Сохранено',
         cleared: 'Очищено',
-        servers: 'Серверы',
-        database: 'База данных',
-        loadBalancer: 'Балансировщик нагрузки',
-        messageQueue: 'Очередь сообщений'
+        servers: 'Серверы'
     },
     default: {
         nothingFound: 'Nothing found',
@@ -42,10 +36,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         placeholder: 'Placeholder',
         kept: 'Kept',
         cleared: 'Cleared',
-        servers: 'Servers',
-        database: 'Database',
-        loadBalancer: 'Load balancer',
-        messageQueue: 'Message queue'
+        servers: 'Servers'
     }
 };
 

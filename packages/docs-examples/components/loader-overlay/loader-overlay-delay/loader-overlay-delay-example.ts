@@ -7,7 +7,7 @@ import { kbqDelayLoadingIndicator } from '@koobiq/components/core';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { switchMap, timer } from 'rxjs';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Loader-overlay delay

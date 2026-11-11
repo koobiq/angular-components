@@ -17,10 +17,6 @@ export interface ExampleText {
     action: (index: number) => string;
     errorTitle: string;
     errorText: string;
-    refresh: string;
-    iconText: string;
-    noInfo: string;
-    altEmptyState: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -31,11 +27,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         noGroups: 'Нет групп',
         action: (index) => `Действие ${index}`,
         errorTitle: 'Не удалось показать записи',
-        errorText: 'Проблема с сетью или подключением к БД. Попробуйте еще раз или обратитесь к администратору.',
-        refresh: 'Обновить',
-        iconText: 'Здесь должны быть описаны действия, которые вы можете выполнить на этом экране, а также их польза.',
-        noInfo: 'Нет информации',
-        altEmptyState: 'Пустое состояние'
+        errorText: 'Проблема с сетью или подключением к БД. Попробуйте еще раз или обратитесь к администратору.'
     },
     default: {
         createGroup: 'Create group',
@@ -45,11 +37,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         action: (index) => `Action ${index}`,
         errorTitle: 'Failed to load records',
         errorText:
-            'There is a problem with the network or the database connection. Please try again or contact your administrator.',
-        refresh: 'Refresh',
-        iconText: 'This should detail the actions you can take on this screen, as well as why it’s valuable.',
-        noInfo: 'No information',
-        altEmptyState: 'Empty state'
+            'There is a problem with the network or the database connection. Please try again or contact your administrator.'
     }
 };
 

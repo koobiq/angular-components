@@ -6,7 +6,7 @@ import { AllCommunityModule, ColDef, GridApi, GridReadyEvent, ModuleRegistry } f
 import { jsPDF } from 'jspdf';
 import { autoTable } from 'jspdf-autotable';
 import writeExcelFile from 'write-excel-file/browser';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

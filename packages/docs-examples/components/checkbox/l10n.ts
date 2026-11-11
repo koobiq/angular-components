@@ -17,12 +17,6 @@ export interface ExampleText {
     multilineText: string;
     multilineHint: string;
     default: string;
-    checked: string;
-    unchecked: string;
-    acceptTerms: string;
-    validationHint: string;
-    validationError: string;
-    continue: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -35,13 +29,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
             'Я принимаю условия политики безопасности и признаю ответственность за защиту конфиденциальной информации',
         multilineHint:
             'Ознакомьтесь с нашей политикой безопасности для получения подробной информации о стандартах защиты данных и конфиденциальности. Устанавливая этот флажок, вы подтверждаете, что понимаете и согласны соблюдать все требования безопасности.',
-        default: 'По умолчанию',
-        checked: 'Отмечен',
-        unchecked: 'Не отмечен',
-        acceptTerms: 'Я принимаю условия лицензионного соглашения',
-        validationHint: 'Продолжите, не принимая условия, чтобы увидеть ошибку',
-        validationError: 'Примите условия, чтобы продолжить',
-        continue: 'Продолжить'
+        default: 'По умолчанию'
     },
     default: {
         title: 'Title',
@@ -52,13 +40,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
             'I accept the security policy terms and acknowledge the responsibility to safeguard sensitive information',
         multilineHint:
             'Please review our security policy for detailed information about data protection and privacy standards. By checking this box, you confirm that you understand and agree to comply with all security requirements.',
-        default: 'Default',
-        checked: 'Checked',
-        unchecked: 'Unchecked',
-        acceptTerms: 'I accept the terms of the license agreement',
-        validationHint: 'Continue without accepting to see the error',
-        validationError: 'Accept the terms to continue',
-        continue: 'Continue'
+        default: 'Default'
     }
 };
 

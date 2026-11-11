@@ -17,9 +17,6 @@ export interface ExampleText {
     stringContent: string;
     status: string;
     longValueMultiple: string;
-    justText: string;
-    andLongText: string;
-    longMultiline: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -30,11 +27,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         longValue: 'Длинный текст, который не помещается в контейнер и обрезается многоточием',
         stringContent: 'Содержимое тултипа в виде обычной строки',
         status: 'Статус',
-        longValueMultiple: 'Длинное значение, которое не помещается и обрезается многоточием',
-        justText: 'Просто текст',
-        andLongText: ' и длинный текст',
-        longMultiline:
-            'Длинный многострочный текст, ограниченный двумя строками. Когда он не помещается в отведённые строки, директива title показывает тултип с полным содержимым.'
+        longValueMultiple: 'Длинное значение, которое не помещается и обрезается многоточием'
     },
     default: {
         plainStringContent: 'Plain string content',
@@ -43,11 +36,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         longValue: 'A long text that does not fit into the container and is truncated with an ellipsis',
         stringContent: 'Tooltip content provided as a plain string',
         status: 'Status',
-        longValueMultiple: 'A long value that does not fit and is truncated with an ellipsis',
-        justText: 'Just a text',
-        andLongText: ' and a long text',
-        longMultiline:
-            'A long multiline text clamped to two lines. When it does not fit into the allotted lines, the title directive shows a tooltip with the full content.'
+        longValueMultiple: 'A long value that does not fit and is truncated with an ellipsis'
     }
 };
 

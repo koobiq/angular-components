@@ -11,7 +11,7 @@ import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToastService } from '@koobiq/components/toast';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Actions panel close

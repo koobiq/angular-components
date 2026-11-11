@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqSkeletonDl } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Skeleton description list preset

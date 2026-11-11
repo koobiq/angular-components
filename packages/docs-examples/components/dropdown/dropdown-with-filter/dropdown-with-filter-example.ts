@@ -14,7 +14,7 @@ import { KbqCleaner, KbqFormField, KbqPrefix } from '@koobiq/components/form-fie
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInput } from '@koobiq/components/input';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Dropdown with filter

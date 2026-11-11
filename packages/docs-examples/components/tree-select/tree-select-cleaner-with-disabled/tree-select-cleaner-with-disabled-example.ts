@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 import {
     buildTree,
     FlatNode,

@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqSkeletonAccordion } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Skeleton accordion preset

@@ -11,8 +11,8 @@ import { KbqFormField, kbqFormFieldDefaultOptionsProvider } from '@koobiq/compon
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { injectExampleText } from '../l10n';
-import { injectOptionsText } from './l10n';
+
+import { injectExampleText, injectOptionsText } from './l10n';
 
 /**
  * @title Validation required label

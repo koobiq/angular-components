@@ -7,7 +7,7 @@ import {
 import { KbqButtonModule } from '@koobiq/components/button';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, GetRowIdParams, ModuleRegistry } from 'ag-grid-community';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 

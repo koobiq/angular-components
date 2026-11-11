@@ -4,7 +4,7 @@ import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { kbqAnimationsDisabled, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon, KbqIconButton, KbqIconItem } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Alert content

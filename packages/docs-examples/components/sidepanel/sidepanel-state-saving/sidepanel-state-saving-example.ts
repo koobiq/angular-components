@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidepanelModule, KbqSidepanelRef, KbqSidepanelService } from '@koobiq/components/sidepanel';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 const stateSavingKey = 'sidepanel-state-saving-example';
 

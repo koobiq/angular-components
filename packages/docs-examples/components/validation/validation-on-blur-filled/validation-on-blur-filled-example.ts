@@ -28,7 +28,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { fromEvent, switchMap } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 const IP_PATTERN =
     /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;

@@ -17,13 +17,6 @@ export interface ExampleText {
     archive: string;
     report: string;
     snooze: string;
-    add: string;
-    minus: string;
-    plus: string;
-    more: string;
-    diamond: string;
-    diamondOptions: string;
-    diamondIcon: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -34,14 +27,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         truncatedButtonText: 'Очень длинный текст кнопки, который обрезается по ширине',
         archive: 'Архив',
         report: 'Отчёт',
-        snooze: 'Отложить',
-        add: 'Добавить',
-        minus: 'Минус',
-        plus: 'Плюс',
-        more: 'Ещё',
-        diamond: 'Ромб',
-        diamondOptions: 'Параметры ромба',
-        diamondIcon: 'Иконка ромба'
+        snooze: 'Отложить'
     },
     default: {
         button: 'Button',
@@ -50,14 +36,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         truncatedButtonText: 'Very long button text that gets truncated by width',
         archive: 'Archive',
         report: 'Report',
-        snooze: 'Snooze',
-        add: 'Add',
-        minus: 'Minus',
-        plus: 'Plus',
-        more: 'More',
-        diamond: 'Diamond',
-        diamondOptions: 'Diamond options',
-        diamondIcon: 'Diamond icon'
+        snooze: 'Snooze'
     }
 };
 

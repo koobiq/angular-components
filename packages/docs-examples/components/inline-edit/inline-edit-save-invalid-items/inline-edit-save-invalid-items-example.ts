@@ -16,7 +16,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { Observable, of, switchMap, throwError, timer } from 'rxjs';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 const ROLES = ['user:read', 'user:create', 'user:update', 'user:delete', 'audit:read'];
 /** Roles the fake server refuses to grant. */

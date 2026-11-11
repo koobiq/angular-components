@@ -17,10 +17,6 @@ export interface ExampleText {
     primaryDisabled: string;
     secondaryDisabled: string;
     completelyDisabled: string;
-    primaryProgress: string;
-    secondaryProgress: string;
-    completelyProgress: string;
-    saveEngineering: string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -31,12 +27,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         extraAction: (index) => `Дополнительное действие ${index}`,
         primaryDisabled: 'Основная отключена',
         secondaryDisabled: 'Вторичная отключена',
-        completelyDisabled: 'Полностью отключена',
-        primaryProgress: 'Основная в процессе',
-        secondaryProgress: 'Вторичная в процессе',
-        completelyProgress: 'Полностью в процессе',
-        saveEngineering:
-            'Экономьте время инженеров с единой платёжной функциональностью. Мы берём на себя лабиринт шлюзов, платёжных каналов и финансовых институтов, составляющих мировой экономический ландшафт, чтобы ваши команды могли создавать нужное на одной платформе.'
+        completelyDisabled: 'Полностью отключена'
     },
     default: {
         splitButton: 'Split Button',
@@ -45,12 +36,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         extraAction: (index) => `Extra Action ${index}`,
         primaryDisabled: 'Primary Disabled',
         secondaryDisabled: 'Secondary Disabled',
-        completelyDisabled: 'Completely Disabled',
-        primaryProgress: 'Primary in Progress',
-        secondaryProgress: 'Secondary in Progress',
-        completelyProgress: 'Completely in Progress',
-        saveEngineering:
-            'Save engineering time with unified payments functionality. We obsess over the maze of gateways, payments rails, and financial institutions that make up the global economic landscape so that your teams can build what you need on one platform.'
+        completelyDisabled: 'Completely Disabled'
     }
 };
 

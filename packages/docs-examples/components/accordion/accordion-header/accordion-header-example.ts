@@ -3,7 +3,7 @@ import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
-import { injectExampleText } from '../l10n';
+import { injectExampleText } from './l10n';
 
 /**
  * @title Accordion header
