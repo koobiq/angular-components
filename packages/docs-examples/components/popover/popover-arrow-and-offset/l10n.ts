@@ -7,6 +7,7 @@ export interface ExampleText {
     save: string;
     cancel: string;
     arrow: string;
+    arrowCentered: string;
     offset: string;
 }
 
@@ -16,6 +17,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         save: 'Сохранить',
         cancel: 'Отмена',
         arrow: 'Стрелка',
+        arrowCentered: 'Стрелка по центру',
         offset: 'Смещение'
     },
     default: {
@@ -23,6 +25,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         save: 'Save',
         cancel: 'Cancel',
         arrow: 'Arrow',
+        arrowCentered: 'Arrow centered',
         offset: 'Offset'
     }
 };
