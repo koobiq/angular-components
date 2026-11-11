@@ -25,9 +25,9 @@ import { injectExampleText } from '../l10n';
         </kbq-split-button>
 
         <kbq-dropdown #dropdown="kbqDropdown" [panelWidth]="'auto'" [panelMinWidth]="0">
-            <button kbq-dropdown-item>{{ text().extraAction(1) }}</button>
-            <button kbq-dropdown-item>{{ text().extraAction(2) }}</button>
-            <button kbq-dropdown-item>{{ text().extraAction(3) }}</button>
+            <button kbq-dropdown-item>Extra Action 1</button>
+            <button kbq-dropdown-item>Extra Action 2</button>
+            <button kbq-dropdown-item>Extra Action 3</button>
         </kbq-dropdown>
     `,
     styles: `

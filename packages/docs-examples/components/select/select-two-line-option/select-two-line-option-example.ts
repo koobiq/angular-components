@@ -38,10 +38,10 @@ export class SelectTwoLineOptionExample {
     protected readonly text = injectExampleText();
 
     readonly options = computed(() => [
-        this.text().optionN(0),
-        this.text().optionN(1),
+        'Option #0',
+        'Option #1',
         this.text().twoLong1,
-        this.text().optionN(3),
+        'Option #3',
         this.text().twoLong2
     ]);
     readonly selected = computed(() => [this.options()[0]]);

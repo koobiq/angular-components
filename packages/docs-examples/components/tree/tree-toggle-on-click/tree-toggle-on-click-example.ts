@@ -189,9 +189,9 @@ export class TreeToggleOnClickExample {
             case 'lonely-leaf':
                 return this.text().lonelyLeaf;
             case 'branch-1':
-                return this.text().branch(1);
+                return 'Branch 1';
             case 'branch-2':
-                return this.text().branch(2);
+                return 'Branch 2';
             case 'disabled-node':
                 return this.text().disabledNode;
             default:

@@ -164,7 +164,7 @@ export class AgGridLoadErrorExample {
             }
 
             const rows = Array.from({ length: endRow - startRow }, (_, i) =>
-                Object.fromEntries(Array.from({ length: 5 }, (_, c) => ['column' + c, this.text().text(startRow + i)]))
+                Object.fromEntries(Array.from({ length: 5 }, (_, c) => ['column' + c, 'Text ' + (startRow + i)]))
             );
 
             this.pageCache.set(startRow, rows);

@@ -82,12 +82,12 @@ export class AgGridRowGroupExample {
         checkboxes: true
     };
     protected readonly columnDefs = computed<ColDef[]>(() => [
-        { field: 'column0', headerName: this.text().column(0), width: 130 },
+        { field: 'column0', headerName: 'Column 0', width: 130 },
         { field: 'category', headerName: this.text().category, width: 130 },
         { field: 'severity', headerName: this.text().severity, width: 130 },
         ...Array.from({ length: 4 }, (_, i) => ({
             field: 'column' + (i + 3),
-            headerName: this.text().column(i + 3),
+            headerName: 'Column ' + (i + 3),
             width: 130
         }))
     ]);
@@ -95,13 +95,13 @@ export class AgGridRowGroupExample {
     protected readonly rowData = computed(() =>
         Array.from({ length: 24 }, (_, index) => ({
             id: String(index),
-            column0: this.text().text(index),
+            column0: 'Text ' + index,
             category: this.text().categories[index % this.text().categories.length],
             severity: this.text().severities[index % this.text().severities.length],
-            column3: this.text().text(index),
-            column4: this.text().text(index),
-            column5: this.text().text(index),
-            column6: this.text().text(index)
+            column3: 'Text ' + index,
+            column4: 'Text ' + index,
+            column5: 'Text ' + index,
+            column6: 'Text ' + index
         }))
     );
 

@@ -36,11 +36,11 @@ export class TableOverviewExample {
     protected readonly text = injectExampleText();
 
     protected readonly rows = computed(() => [
-        { client: this.text().companyN(1), event: this.text().events[0], registered: '8 Jul, 14:31' },
-        { client: this.text().companyN(2), event: this.text().events[1], registered: '4 Dec, 16:11' },
-        { client: this.text().companyN(1), event: this.text().events[2], registered: '4 Dec, 16:11' },
-        { client: this.text().companyN(3), event: this.text().events[3], registered: '4 Dec, 16:11' },
-        { client: this.text().companyN(2), event: this.text().events[4], registered: '4 Dec, 16:11' },
-        { client: this.text().companyN(1), event: this.text().events[5], registered: '4 Dec, 16:11' }
+        { client: 'Company 1', event: this.text().events[0], registered: '8 Jul, 14:31' },
+        { client: 'Company 2', event: this.text().events[1], registered: '4 Dec, 16:11' },
+        { client: 'Company 1', event: this.text().events[2], registered: '4 Dec, 16:11' },
+        { client: 'Company 3', event: this.text().events[3], registered: '4 Dec, 16:11' },
+        { client: 'Company 2', event: this.text().events[4], registered: '4 Dec, 16:11' },
+        { client: 'Company 1', event: this.text().events[5], registered: '4 Dec, 16:11' }
     ]);
 }

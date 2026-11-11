@@ -103,7 +103,7 @@ export class AgGridOverviewExample {
     protected readonly rowData = computed(() =>
         Array.from({ length: 100 }, (_, index) => ({
             column0: this.text().linkN(index),
-            ...Object.fromEntries(Array.from({ length: 9 }, (_, i) => ['column' + (i + 1), this.text().text(index)]))
+            ...Object.fromEntries(Array.from({ length: 9 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
         }))
     );
 

@@ -8,7 +8,6 @@ export interface ExampleText {
     openModal: string;
     fullyCustomModal: string;
     additionalContext: string;
-    itemN: (index: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -17,16 +16,14 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         close: 'Закрыть',
         openModal: 'Открыть модалку',
         fullyCustomModal: 'Полностью кастомная модалка',
-        additionalContext: 'Дополнительный контекст или описание диалога',
-        itemN: (index) => `Пункт №${index}`
+        additionalContext: 'Дополнительный контекст или описание диалога'
     },
     default: {
         save: 'Save',
         close: 'Close',
         openModal: 'Open Modal',
         fullyCustomModal: 'Fully custom modal',
-        additionalContext: 'Additional context or description for the dialog',
-        itemN: (index) => `Item #${index}`
+        additionalContext: 'Additional context or description for the dialog'
     }
 };
 

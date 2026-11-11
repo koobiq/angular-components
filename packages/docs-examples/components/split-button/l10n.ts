@@ -13,7 +13,6 @@ export interface ExampleText {
     splitButton: string;
     moreOptions: string;
     add: string;
-    extraAction: (index: number) => string;
     primaryDisabled: string;
     secondaryDisabled: string;
     completelyDisabled: string;
@@ -24,7 +23,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         splitButton: 'Кнопка с меню',
         moreOptions: 'Другие параметры',
         add: 'Добавить',
-        extraAction: (index) => `Дополнительное действие ${index}`,
         primaryDisabled: 'Основная отключена',
         secondaryDisabled: 'Вторичная отключена',
         completelyDisabled: 'Полностью отключена'
@@ -33,7 +31,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         splitButton: 'Split Button',
         moreOptions: 'More options',
         add: 'Add',
-        extraAction: (index) => `Extra Action ${index}`,
         primaryDisabled: 'Primary Disabled',
         secondaryDisabled: 'Secondary Disabled',
         completelyDisabled: 'Completely Disabled'

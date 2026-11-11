@@ -16,7 +16,6 @@ export interface ExampleText {
     title: string;
     copyLink: string;
     expand: string;
-    button: (index: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -26,8 +25,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         close: 'Закрыть',
         title: 'Заголовок',
         copyLink: 'Копировать ссылку',
-        expand: 'Развернуть',
-        button: (index) => `Кнопка ${index}`
+        expand: 'Развернуть'
     },
     default: {
         toggle: 'Toggle',
@@ -35,8 +33,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         close: 'Close',
         title: 'Title',
         copyLink: 'Copy link',
-        expand: 'Expand',
-        button: (index) => `Button ${index}`
+        expand: 'Expand'
     }
 };
 

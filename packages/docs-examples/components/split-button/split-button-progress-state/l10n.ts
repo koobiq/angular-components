@@ -5,7 +5,6 @@ import { injectLocalizedText } from '../l10n';
 export interface ExampleText {
     splitButton: string;
     moreOptions: string;
-    extraAction: (index: number) => string;
     primaryProgress: string;
     secondaryProgress: string;
     completelyProgress: string;
@@ -15,7 +14,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
         splitButton: 'Кнопка с меню',
         moreOptions: 'Другие параметры',
-        extraAction: (index) => `Дополнительное действие ${index}`,
         primaryProgress: 'Основная в процессе',
         secondaryProgress: 'Вторичная в процессе',
         completelyProgress: 'Полностью в процессе'
@@ -23,7 +21,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     default: {
         splitButton: 'Split Button',
         moreOptions: 'More options',
-        extraAction: (index) => `Extra Action ${index}`,
         primaryProgress: 'Primary in Progress',
         secondaryProgress: 'Secondary in Progress',
         completelyProgress: 'Completely in Progress'

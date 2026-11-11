@@ -70,14 +70,14 @@ export class AgGridExportExample {
         { field: 'column0', headerName: this.text().projectName, width: 130 },
         ...Array.from({ length: 4 }, (_, i) => ({
             field: 'column' + (i + 1),
-            headerName: this.text().column(i + 1),
+            headerName: 'Column ' + (i + 1),
             width: 130
         }))
     ]);
     protected readonly rowData = computed(() =>
         Array.from({ length: 20 }, (_, index) => ({
-            column0: this.text().projectNameN(index),
-            ...Object.fromEntries(Array.from({ length: 4 }, (_, i) => ['column' + (i + 1), this.text().text(index)]))
+            column0: 'Project name ' + index,
+            ...Object.fromEntries(Array.from({ length: 4 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
         }))
     );
 

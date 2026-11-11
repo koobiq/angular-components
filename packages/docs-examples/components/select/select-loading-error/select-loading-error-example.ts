@@ -25,9 +25,7 @@ export class OptionsApiService {
 
     private delay: number = 3000;
 
-    private readonly data = computed(() =>
-        Array.from({ length: 10 }, (_, i) => ({ id: i, label: this.text().optionN(i) }))
-    );
+    private readonly data = computed(() => Array.from({ length: 10 }, (_, i) => ({ id: i, label: 'Option #' + i })));
 
     setDelay(delay: number) {
         this.delay = delay;

@@ -33,7 +33,7 @@ export class CustomModalComponent {
 
     protected readonly modalRef = inject(KbqModalRef);
 
-    readonly items = computed(() => Array.from({ length: 30 }, (_, i) => this.text().itemN(i)));
+    readonly items = computed(() => Array.from({ length: 30 }, (_, i) => 'Item #' + i));
 }
 
 /**

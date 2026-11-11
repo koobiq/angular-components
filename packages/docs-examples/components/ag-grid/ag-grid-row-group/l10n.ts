@@ -3,8 +3,6 @@ import { injectLocalizedText } from '../l10n';
 
 /** Text of the ag-grid-row-group example. */
 export interface ExampleText {
-    text: (index: number) => string;
-    column: (index: number) => string;
     clearCollapsedState: string;
     clearSelectionState: string;
     severity: string;
@@ -15,8 +13,6 @@ export interface ExampleText {
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
-        text: (index) => `Текст ${index}`,
-        column: (index) => `Колонка ${index}`,
         clearCollapsedState: 'Очистить состояние свёрнутости',
         clearSelectionState: 'Очистить состояние выбора',
         severity: 'Важность',
@@ -25,8 +21,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         severities: ['Низкая', 'Средняя', 'Высокая', 'Критическая']
     },
     default: {
-        text: (index) => `Text ${index}`,
-        column: (index) => `Column ${index}`,
         clearCollapsedState: 'Clear collapsed state',
         clearSelectionState: 'Clear selection state',
         severity: 'Severity',

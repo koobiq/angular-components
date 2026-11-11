@@ -18,7 +18,7 @@ import { KbqToastStyle } from '@koobiq/components/toast';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { timer } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ExampleText, injectExampleText } from './l10n';
+import { injectExampleText } from './l10n';
 
 /** Items per loaded page. */
 const PAGE_SIZE = 20;
@@ -32,9 +32,9 @@ const BASE_DATE = Date.parse('2025-10-08T12:00:00Z');
 const STYLES = [KbqToastStyle.Success, KbqToastStyle.Warning, KbqToastStyle.Error, KbqToastStyle.Contrast];
 
 /** Title and caption of the notification at the 1-based `position` of the list. */
-const itemText = (text: ExampleText, position: number) => ({
-    title: text.pageItemTitle(position),
-    caption: text.pageItemCaption(Math.ceil(position / PAGE_SIZE))
+const itemText = (position: number) => ({
+    title: `Notification #${position}`,
+    caption: `Loaded with page ${Math.ceil(position / PAGE_SIZE)}`
 });
 
 type ExampleAction = {
@@ -115,12 +115,11 @@ export class NotificationCenterInfiniteScrollExample {
 
         // The loaded notifications follow a locale switch; their ids are their positions in the list.
         effect(() => {
-            const text = this.text();
             const items = this.notificationService.items;
 
             if (!items.length) return;
 
-            this.notificationService.items = items.map((item) => ({ ...item, ...itemText(text, Number(item.id)) }));
+            this.notificationService.items = items.map((item) => ({ ...item, ...itemText(Number(item.id)) }));
         });
     }
 
@@ -154,14 +153,12 @@ export class NotificationCenterInfiniteScrollExample {
     }
 
     private createPage(page: number): KbqNotificationItem[] {
-        const text = this.text();
-
         return Array.from({ length: PAGE_SIZE }, (_, index) => {
             const globalIndex = (page - 1) * PAGE_SIZE + index;
 
             return {
                 id: String(globalIndex + 1),
-                ...itemText(text, globalIndex + 1),
+                ...itemText(globalIndex + 1),
                 icon: true,
                 style: STYLES[globalIndex % STYLES.length],
                 date: new Date(BASE_DATE - globalIndex * 3600_000).toISOString()

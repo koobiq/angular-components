@@ -17,8 +17,8 @@ import { injectExampleText } from './l10n';
         <kbq-form-field>
             <kbq-select [placeholder]="text().selectOption" [formControl]="selectFormControl">
                 <kbq-cleaner />
-                <kbq-option value="1">{{ text().option(1) }}</kbq-option>
-                <kbq-option value="2">{{ text().option(2) }}</kbq-option>
+                <kbq-option value="1">Option #1</kbq-option>
+                <kbq-option value="2">Option #2</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `,

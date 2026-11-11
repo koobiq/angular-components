@@ -4,7 +4,6 @@ import { injectLocalizedText } from '../l10n';
 /** Text of the select-locale-configuration example. */
 export interface ExampleText {
     placeholder: string;
-    optionN: (index: number) => string;
     defaultStrings: string;
     overriddenInstance: string;
 }
@@ -12,13 +11,11 @@ export interface ExampleText {
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
         placeholder: 'Плейсхолдер',
-        optionN: (index) => `Вариант №${index}`,
         defaultStrings: 'Строки по умолчанию',
         overriddenInstance: 'Переопределено только для этого экземпляра'
     },
     default: {
         placeholder: 'Placeholder',
-        optionN: (index) => `Option #${index}`,
         defaultStrings: 'Default strings',
         overriddenInstance: 'Overridden for this instance only'
     }

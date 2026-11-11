@@ -34,9 +34,9 @@ export class TableDisableHoverExample {
     protected readonly text = injectExampleText();
 
     protected readonly rows = computed(() => [
-        { name: 'document.txt', owner: this.text().userN(1), modified: '27 May 2024' },
-        { name: 'report-2023.pdf', owner: this.text().userN(2), modified: '1 Dec 2023' },
-        { name: 'notes.doc', owner: this.text().userN(3), modified: '7 Mar 2024' },
-        { name: 'archive.zip', owner: this.text().userN(4), modified: '24 Aug 2022' }
+        { name: 'document.txt', owner: 'User 1', modified: '27 May 2024' },
+        { name: 'report-2023.pdf', owner: 'User 2', modified: '1 Dec 2023' },
+        { name: 'notes.doc', owner: 'User 3', modified: '7 Mar 2024' },
+        { name: 'archive.zip', owner: 'User 4', modified: '24 Aug 2022' }
     ]);
 }

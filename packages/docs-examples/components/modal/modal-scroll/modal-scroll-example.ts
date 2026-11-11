@@ -15,7 +15,7 @@ import { injectExampleText } from './l10n';
 export class CustomModalComponent {
     protected readonly text = injectExampleText();
 
-    readonly items = computed(() => Array.from({ length: 1000 }, (_, i) => this.text().itemN(i)));
+    readonly items = computed(() => Array.from({ length: 1000 }, (_, i) => 'Item #' + i));
 }
 
 /**

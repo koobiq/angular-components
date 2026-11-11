@@ -14,7 +14,6 @@ export interface ExampleText {
     mergeGroups: string;
     agentsGroupText: string;
     noGroups: string;
-    action: (index: number) => string;
     errorTitle: string;
     errorText: string;
 }
@@ -25,7 +24,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         mergeGroups: 'Объединить группы',
         agentsGroupText: 'Агенты можно объединить в группу и назначить им одни и те же политики',
         noGroups: 'Нет групп',
-        action: (index) => `Действие ${index}`,
         errorTitle: 'Не удалось показать записи',
         errorText: 'Проблема с сетью или подключением к БД. Попробуйте еще раз или обратитесь к администратору.'
     },
@@ -34,7 +32,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         mergeGroups: 'Merge groups',
         agentsGroupText: 'Agents can be grouped together and assigned the same policies.',
         noGroups: 'No Groups',
-        action: (index) => `Action ${index}`,
         errorTitle: 'Failed to load records',
         errorText:
             'There is a problem with the network or the database connection. Please try again or contact your administrator.'

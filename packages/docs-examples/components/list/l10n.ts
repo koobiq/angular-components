@@ -10,7 +10,6 @@ export const injectLocalizedText = <T>(data: Record<string, T> & { default: T })
 
 /** Text shown by the list examples. */
 export interface ExampleText {
-    item: (index: number) => string;
     item7Pinned: string;
     selected: string;
     elements: string;
@@ -21,7 +20,6 @@ export interface ExampleText {
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
-        item: (index) => `Пункт ${index}`,
         item7Pinned: 'Пункт 7. Сортировка запрещена',
         selected: 'Выбрано:',
         elements: 'Элементы',
@@ -30,7 +28,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         incidentTypes: 'Типы инцидентов'
     },
     default: {
-        item: (index) => `Item ${index}`,
         item7Pinned: 'Item 7. Sorting is prohibited',
         selected: 'Selected:',
         elements: 'Elements',

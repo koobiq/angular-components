@@ -50,7 +50,7 @@ import { injectExampleText } from '../l10n';
 export class SelectHeightExample {
     protected readonly text = injectExampleText();
 
-    readonly options = computed(() => Array.from({ length: 10 }, (_, i) => this.text().optionN(i + 1)));
+    readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + (i + 1)));
     protected readonly value = model(this.options[0]);
     protected readonly themedValue = model(this.options[0]);
 }

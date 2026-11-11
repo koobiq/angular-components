@@ -11,8 +11,6 @@ export const injectLocalizedText = <T>(data: Record<string, T> & { default: T })
 /** Text shown by the radio examples. Person names stay as proper nouns; Normal/Big/Error are style names. */
 export interface ExampleText {
     fieldLabel: string;
-    item: (index: number) => string;
-    itemDisabled: (index: number) => string;
     practiceOptions: { label: string; hint: string }[];
     authenticatorApp: string;
     hardwareKey: string;
@@ -22,8 +20,6 @@ export interface ExampleText {
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
         fieldLabel: 'Подпись поля',
-        item: (index) => `Пункт ${index}`,
-        itemDisabled: (index) => `Пункт ${index} (Отключен)`,
         practiceOptions: [
             {
                 label: 'Регулярное обновление программ и операционной системы',
@@ -44,8 +40,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     },
     default: {
         fieldLabel: 'Field label',
-        item: (index) => `Item ${index}`,
-        itemDisabled: (index) => `Item ${index} (Disabled)`,
         practiceOptions: [
             {
                 label: 'Regular software and operating system updates',

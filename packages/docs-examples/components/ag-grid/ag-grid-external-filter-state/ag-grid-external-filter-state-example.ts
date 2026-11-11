@@ -62,21 +62,21 @@ export class AgGridExternalFilterStateExample {
     readonly filter = model('');
     readonly filterPass = (node: IRowNode): boolean => node.data.filter === this.filter();
     readonly columnDefs = computed<ColDef[]>(() => [
-        { field: 'column0', headerName: this.text().column(0), width: 130 },
+        { field: 'column0', headerName: 'Column 0', width: 130 },
         { field: 'filter', headerName: this.text().filter, width: 130 },
         ...Array.from({ length: 3 }, (_, i) => ({
             field: 'column' + (i + 2),
-            headerName: this.text().column(i + 2),
+            headerName: 'Column ' + (i + 2),
             width: 130
         }))
     ]);
     readonly rowData = computed(() =>
         Array.from({ length: 100 }, (_, index) => ({
-            column0: this.text().text(index),
+            column0: 'Text ' + index,
             filter: this.options()[index % this.options().length],
-            column2: this.text().text(index),
-            column3: this.text().text(index),
-            column4: this.text().text(index)
+            column2: 'Text ' + index,
+            column3: 'Text ' + index,
+            column4: 'Text ' + index
         }))
     );
 }

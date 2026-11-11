@@ -57,6 +57,6 @@ import { injectExampleText } from './l10n';
 export class SelectLocaleConfigurationExample {
     protected readonly text = injectExampleText();
 
-    readonly options = computed(() => Array.from({ length: 4 }, (_, i) => this.text().optionN(i + 1)));
+    readonly options = computed(() => Array.from({ length: 4 }, (_, i) => 'Option #' + (i + 1)));
     readonly selected = [this.options[0]];
 }

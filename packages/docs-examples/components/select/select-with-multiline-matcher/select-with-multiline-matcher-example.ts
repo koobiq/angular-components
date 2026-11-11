@@ -44,6 +44,6 @@ import { injectExampleText } from '../l10n';
 export class SelectWithMultilineMatcherExample {
     protected readonly text = injectExampleText();
 
-    readonly options = computed(() => Array.from({ length: 10 }, (_, i) => this.text().optionN(i)));
+    readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + i));
     selected: string[] = [this.options()[0], this.options()[1], this.options()[2], this.options()[3]];
 }

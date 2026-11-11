@@ -35,6 +35,6 @@ import { injectExampleText } from '../l10n';
 export class SelectMultipleExample {
     protected readonly text = injectExampleText();
 
-    readonly options = computed(() => Array.from({ length: 10 }, (_, i) => this.text().optionN(i)));
+    readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + i));
     readonly selected = this.options().slice(0, 3);
 }

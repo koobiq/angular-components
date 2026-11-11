@@ -37,7 +37,7 @@ export class ListVirtualScrollExample {
     readonly options = computed(() =>
         Array.from({ length: 10000 }).map((_, i) => ({
             id: i,
-            label: this.text().optionN(i)
+            label: 'Option #' + i
         }))
     );
 

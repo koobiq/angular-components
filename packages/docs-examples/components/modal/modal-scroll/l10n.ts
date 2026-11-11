@@ -4,17 +4,14 @@ import { injectLocalizedText } from '../l10n';
 /** Text of the modal-scroll example. */
 export interface ExampleText {
     openModal: string;
-    itemN: (index: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
-        openModal: 'Открыть модалку',
-        itemN: (index) => `Пункт №${index}`
+        openModal: 'Открыть модалку'
     },
     default: {
-        openModal: 'Open Modal',
-        itemN: (index) => `Item #${index}`
+        openModal: 'Open Modal'
     }
 };
 

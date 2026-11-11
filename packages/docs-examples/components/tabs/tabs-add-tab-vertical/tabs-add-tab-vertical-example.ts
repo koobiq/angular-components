@@ -84,7 +84,7 @@ export class TabsAddTabVerticalExample {
     protected activeTab = this.tabs[0];
 
     protected addTab(): void {
-        const newTab = this.text().tabN(this.tabs.length + 1);
+        const newTab = 'Tab ' + (this.tabs.length + 1);
 
         this.tabs = [...this.tabs, newTab];
         this.activeTab = newTab;

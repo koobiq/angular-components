@@ -26,9 +26,7 @@ export class OptionsApiService {
 
     private delay: number = 100;
 
-    private readonly data = computed(() =>
-        Array.from({ length: 10 }, (_, i) => ({ id: i, label: this.text().optionN(i) }))
-    );
+    private readonly data = computed(() => Array.from({ length: 10 }, (_, i) => ({ id: i, label: 'Option #' + i })));
 
     setDelay(delay: number) {
         this.delay = delay;
@@ -202,7 +200,7 @@ export class SelectLoadingExample {
 
     protected readonly facade = inject(SelectFacade);
 
-    protected selectedOption: Option = { id: 0, label: this.text().optionN(0) };
+    protected selectedOption: Option = { id: 0, label: 'Option #0' };
 
     protected readonly compareWith = (a: Option | null, b: Option | null) => a?.id === b?.id;
     protected readonly virtualOptionFactory = (value: Option) => new KbqVirtualOption(value, false, value.label);

@@ -93,7 +93,7 @@ export class AgGridLoadingOverlayExample {
                         successCallback(
                             Array.from({ length: endRow - startRow }, (_, i) =>
                                 Object.fromEntries(
-                                    Array.from({ length: 6 }, (_, c) => ['column' + c, this.text().text(startRow + i)])
+                                    Array.from({ length: 6 }, (_, c) => ['column' + c, 'Text ' + (startRow + i)])
                                 )
                             ),
                             1000

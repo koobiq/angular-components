@@ -4,7 +4,6 @@ import { injectLocalizedText } from '../l10n';
 /** Text of the ag-grid-and-content-panel example. */
 export interface ExampleText {
     headerText: string;
-    text: (index: number) => string;
     more: string;
     showExample: string;
     closeWindow: string;
@@ -14,7 +13,6 @@ export interface ExampleText {
     edit: string;
     copy: string;
     delete: string;
-    button: (index: number) => string;
     reportBug: string;
     copyLink: string;
     expand: string;
@@ -24,7 +22,6 @@ export interface ExampleText {
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
         headerText: 'Текст',
-        text: (index) => `Текст ${index}`,
         more: 'Ещё',
         showExample: 'Показать пример',
         closeWindow: 'Закрыть окно',
@@ -34,7 +31,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         edit: 'Редактировать',
         copy: 'Копировать',
         delete: 'Удалить',
-        button: (index) => `Кнопка ${index}`,
         reportBug: 'Сообщить об ошибке',
         copyLink: 'Копировать ссылку',
         expand: 'Развернуть',
@@ -43,7 +39,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     },
     default: {
         headerText: 'Text',
-        text: (index) => `Text ${index}`,
         more: 'More',
         showExample: 'Show example',
         closeWindow: 'Close window',
@@ -53,7 +48,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         edit: 'Edit',
         copy: 'Copy',
         delete: 'Delete',
-        button: (index) => `Button ${index}`,
         reportBug: 'Report a bug',
         copyLink: 'Copy link',
         expand: 'Expand',

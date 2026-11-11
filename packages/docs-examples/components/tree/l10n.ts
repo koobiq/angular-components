@@ -10,27 +10,21 @@ export const injectLocalizedText = <T>(data: Record<string, T> & { default: T })
 
 /** Text shown by the tree examples. Club and country names stay as proper nouns. */
 export interface ExampleText {
-    branch: (index: number) => string;
     disabledNode: string;
     lonelyLeaf: string;
     badge: string;
-    action: (index: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
-        branch: (index) => `Ветка ${index}`,
         disabledNode: 'Отключённый узел',
         lonelyLeaf: 'Одинокий лист',
-        badge: 'бейдж',
-        action: (index) => `действие ${index}`
+        badge: 'бейдж'
     },
     default: {
-        branch: (index) => `Branch ${index}`,
         disabledNode: 'Disabled Node',
         lonelyLeaf: 'Lonely leaf',
-        badge: 'badge',
-        action: (index) => `action ${index}`
+        badge: 'badge'
     }
 };
 

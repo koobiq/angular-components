@@ -11,10 +11,7 @@ export const injectLocalizedText = <T>(data: Record<string, T> & { default: T })
 /** Text shown by the ag-grid examples. */
 export interface ExampleText {
     headerText: string;
-    text: (index: number) => string;
     projectName: string;
-    projectNameN: (index: number) => string;
-    column: (index: number) => string;
     selected: string;
     severity: string;
 }
@@ -22,19 +19,13 @@ export interface ExampleText {
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
     'ru-RU': {
         headerText: 'Текст',
-        text: (index) => `Текст ${index}`,
         projectName: 'Название проекта',
-        projectNameN: (index) => `Название проекта ${index}`,
-        column: (index) => `Колонка ${index}`,
         selected: 'Выбрано:',
         severity: 'Важность'
     },
     default: {
         headerText: 'Text',
-        text: (index) => `Text ${index}`,
         projectName: 'Project name',
-        projectNameN: (index) => `Project name ${index}`,
-        column: (index) => `Column ${index}`,
         selected: 'Selected:',
         severity: 'Severity'
     }

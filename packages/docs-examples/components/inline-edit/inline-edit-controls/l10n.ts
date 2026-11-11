@@ -8,7 +8,6 @@ export interface ExampleText {
     textarea: string;
     selectMultiple: string;
     select: string;
-    optionN: (index: number) => string;
 }
 
 const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
@@ -17,16 +16,14 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         textField: 'Текстовое поле',
         textarea: 'Текстовая область',
         selectMultiple: 'Множественный выбор',
-        select: 'Список',
-        optionN: (index) => `Вариант №${index}`
+        select: 'Список'
     },
     default: {
         placeholder: 'Placeholder',
         textField: 'Text Field',
         textarea: 'Textarea',
         selectMultiple: 'Select Multiple',
-        select: 'Select',
-        optionN: (index) => `Option #${index}`
+        select: 'Select'
     }
 };
 

@@ -74,7 +74,7 @@ import { injectExampleText } from './l10n';
 export class SelectAutoHideScrollStrategyExample implements AfterViewInit {
     protected readonly text = injectExampleText();
 
-    protected readonly options = computed(() => Array.from({ length: 5 }, (_, i) => this.text().optionN(i)));
+    protected readonly options = computed(() => Array.from({ length: 5 }, (_, i) => 'Option #' + i));
     protected readonly selected = this.options[0];
 
     private readonly select = viewChild.required(KbqSelect);
