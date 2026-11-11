@@ -186,4 +186,28 @@ describe(DocsLanguagePreferences.name, () => {
         expect(setExamplesLocale).toHaveBeenLastCalledWith('es-LA');
         expect(preferences.examplesLanguageSwitch.currentValue.id).toBe('es-LA');
     });
+
+    // The `setLocale` subscription rewrites the URL; it must run after the examples-language
+    // sync, or its navigation gets cancelled by the query-param write (e2e: the locale
+    // segment stays in place).
+    it('applies the picked docs locale after the examples language sync', () => {
+        configure('/ru/components/alert/overview');
+
+        const { items } = TestBed.inject(KBQ_LOCALE_SERVICE).locales;
+
+        localStorage.setItem('docs_examples-language', String(items.findIndex(({ id }) => id === 'ru-RU')));
+
+        const preferences = create();
+        const order: string[] = [];
+
+        setExamplesLocale.mockImplementation(() => order.push('examples'));
+        router.navigate.mockImplementation(() => order.push('navigate'));
+        setDocsLocale.mockImplementation(() => order.push('docs'));
+
+        preferences.docsLanguageSwitch.setValue(
+            preferences.docsLanguageSwitch.data.findIndex(({ id }) => id === DocsLocale.En)
+        );
+
+        expect(order).toEqual(['examples', 'navigate', 'docs']);
+    });
 });

@@ -47,9 +47,6 @@ export class DocsLanguagePreferences {
         updateSelected: true
     });
 
-    /** Docs locale before the latest switch, for deciding whether the examples language mirrors it. */
-    private docsLocaleBeforeSwitch: DocsLocale | null = null;
-
     constructor() {
         const index = this.docsLanguageSwitch.data.findIndex(
             (item) => item.id === this.docsLocaleService.getLocaleFromURL(this.location.path())
@@ -68,22 +65,17 @@ export class DocsLanguagePreferences {
             this.examplesLanguageSwitch.setValue(queryIndex);
         }
 
-        this.docsLanguageSwitch.changes.pipe(distinctUntilKeyChanged('value')).subscribe(({ value: { id } }) => {
-            this.docsLocaleBeforeSwitch = this.docsLocaleService.locale;
-
-            this.docsLocaleService.setLocale(id);
-        });
-
         // `skip(1)` drops the value replayed to a fresh subscriber, so the examples follow a switch of the
-        // docs language, not the locale the app starts with.
+        // docs language, not the locale the app starts with. Running before the `setLocale` subscription
+        // below matters: its rewrite of the URL must stay the last navigation, or the query-param write
+        // of the examples language cancels it and leaves the old locale segment in place.
         this.docsLanguageSwitch.changes
             .pipe(distinctUntilKeyChanged('value'), skip(1))
             .subscribe(({ value: { id } }) => {
-                const previous = this.docsLocaleBeforeSwitch;
-
                 // While the examples language mirrors the docs language, switching the docs switches both;
-                // a deliberately different examples language is left alone.
-                if (previous === null || this.localeService.localeId() !== examplesLocaleFor(previous)) return;
+                // a deliberately different examples language is left alone. `locale` is still the previous
+                // one here: the subscription below applies the picked locale only after this one runs.
+                if (this.localeService.localeId() !== examplesLocaleFor(this.docsLocaleService.locale)) return;
 
                 const index = this.examplesLanguageSwitch.data.findIndex((item) => item.id === examplesLocaleFor(id));
 
@@ -91,6 +83,10 @@ export class DocsLanguagePreferences {
                     this.examplesLanguageSwitch.setValue(index);
                 }
             });
+
+        this.docsLanguageSwitch.changes.pipe(distinctUntilKeyChanged('value')).subscribe(({ value: { id } }) => {
+            this.docsLocaleService.setLocale(id);
+        });
 
         this.examplesLanguageSwitch.changes.pipe(distinctUntilKeyChanged('value')).subscribe(({ value: { id } }) => {
             this.localeService.setLocale(id);
