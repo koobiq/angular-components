@@ -12,6 +12,7 @@ import { KbqSelectNoOptions } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqTreeModule, kbqTreeSelectAllValue, KbqTreeSelection } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { kbqResolveFilterBarName } from '../filter-bar-name';
 import { KbqPipeTemplate, KbqSelectValue, KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
 import { getId, KbqBasePipe } from './base-pipe';
 import { KbqMultiSelectPipeState } from './multi-select-pipe-state';
@@ -72,6 +73,19 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     /** Whether the current pipe is empty. */
     get isEmpty(): boolean {
         return this.multiSelect.isEmpty(super.isEmpty);
+    }
+
+    /**
+     * Text of the trigger and the tooltip for a single selected node, resolved from its name so both follow a
+     * translation. `KbqTreeSelect.triggerValue` is single-selection only, and a multi-node selection shows a
+     * count badge in the trigger instead.
+     *
+     * @docs-private
+     */
+    protected get displayValue(): string {
+        const selected = this.select()?.selected as KbqTreeSelectFlatNode[] | undefined;
+
+        return selected?.length === 1 ? this.resolveName(selected[0].name) : '';
     }
 
     get selectAllCheckboxState(): KbqPseudoCheckboxState {
@@ -157,13 +171,17 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
 
         // Resolve the select-all node's label on every read instead of the value baked into `name` by
         // `updateTemplates`, which only re-runs on `pipeTemplates` changes and so goes stale on a locale
-        // change. The template calls `treeControl.getViewValue(node)` directly, so reading `localeConfiguration()`
-        // here registers this view as a consumer of the filter-bar's `localeConfiguration` signal.
+        // change. Every other node resolves its own name signal here, so a translation re-renders the node,
+        // the trigger and the filter's matches without replacing the data. The template calls
+        // `treeControl.getViewValue(node)` directly, so reading `localeConfiguration()` here registers this
+        // view as a consumer of the filter-bar's `localeConfiguration` signal.
         // `FlatTreeControl` captures the accessor by reference in `KbqTreeSelectPipeBase`'s constructor,
         // before this subclass's field initializers run — hence patching the instance, not overriding
         // the inherited `getViewValue` field, which the tree would never see.
         this.treeControl.getViewValue = (node: KbqTreeSelectFlatNode): string => {
-            return node.value === kbqTreeSelectAllValue ? this.localeConfiguration().pipe.selectAll : node.name;
+            return node.value === kbqTreeSelectAllValue
+                ? this.localeConfiguration().pipe.selectAll
+                : kbqResolveFilterBarName(node.name);
         };
 
         // Patched on the instance for the same reason as `getViewValue` above: `KbqTreeSelectPipeBase`

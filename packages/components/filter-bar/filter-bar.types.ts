@@ -385,7 +385,12 @@ export interface KbqSaveFilterEvent {
 
 /** Flattened node */
 export class KbqTreeSelectFlatNode {
-    name: string;
+    /**
+     * Display name of the node: a plain string, or a `Signal<string>` that the tree resolves when it renders
+     * the node, its trigger or its type-ahead label. Selection compares `value`, and expansion is tracked per
+     * node instance, so a translated name changes neither what is selected nor which branches are open.
+     */
+    name: KbqFilterBarName;
     value: unknown;
     level: number;
     expandable: boolean;
@@ -396,7 +401,13 @@ export class KbqTreeSelectFlatNode {
 
 export interface KbqTreeSelectNode {
     children: KbqTreeSelectNode[] | null;
-    name: string;
+
+    /**
+     * Display name of the node: a plain string, or a `Signal<string>` that the tree resolves when it renders
+     * the node. Selection compares `value`, and expansion is tracked per node instance, so a signal-backed
+     * name needs no stable `id`.
+     */
+    name: KbqFilterBarName;
     value: unknown;
     /** Second line under `name` in the dropdown of the tree-select pipes. Ignored when `valueTemplate` is used. */
     caption?: string;

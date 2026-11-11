@@ -1,5 +1,5 @@
-import { AfterViewInit, Directive, OnInit, viewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AfterViewInit, Directive, effect, OnInit, Signal, untracked, viewChild } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import {
     FilterByViewValue,
@@ -9,6 +9,7 @@ import {
     KbqTreeFlattener
 } from '@koobiq/components/tree';
 import { KbqTreeSelect } from '@koobiq/components/tree-select';
+import { kbqResolveFilterBarName } from '../filter-bar-name';
 import { KbqSelectValue, KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 
@@ -32,6 +33,12 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
     dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
 
     private readonly sourceNodes = new WeakMap<KbqTreeSelectFlatNode, KbqTreeSelectNode>();
+
+    /**
+     * Flat nodes of the current data, re-emitted whenever `dataSource.data` is replaced. Read by the
+     * name-tracking effect so it follows nodes supplied after initialization.
+     */
+    private readonly flatNodes: Signal<KbqTreeSelectFlatNode[]>;
 
     /** @docs-private */
     readonly select = viewChild.required<KbqTreeSelect<KbqTreeSelectFlatNode>>(KbqTreeSelect);
@@ -64,6 +71,18 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
         // Seeds `treeControl.dataNodes`, which `expandAll()` and the search filter read: a template without
         // `values` never assigns the data, and the panel still opens onto the "no options" message.
         this.dataSource.data = [];
+
+        this.flatNodes = toSignal(this.dataSource.flattenedData, { initialValue: [] });
+
+        // The search matches view values, which follow the node-name signals. Reading every name here makes
+        // this effect their consumer, so a translation re-applies the current query rather than leaving the
+        // panel filtered by the previous labels. `flatNodes` re-emits on every data assignment, so nodes
+        // supplied after initialization are tracked too.
+        effect(() => {
+            this.flatNodes().forEach((node) => kbqResolveFilterBarName(node.name));
+
+            untracked(() => this.reapplySearch());
+        });
     }
 
     ngOnInit(): void {
@@ -166,5 +185,12 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
 
     protected getValue = (node: KbqTreeSelectFlatNode): unknown => node.value;
 
-    protected getViewValue = (node: KbqTreeSelectFlatNode): string => node.name;
+    protected getViewValue = (node: KbqTreeSelectFlatNode): string => kbqResolveFilterBarName(node.name);
+
+    /** Re-applies the active search: the view values it matches follow the node-name signals. */
+    private reapplySearch(): void {
+        const query = this.treeControl.filterQuery;
+
+        if (query) this.treeControl.applyFilter(query);
+    }
 }

@@ -1,7 +1,9 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, DebugElement, inject, TemplateRef, viewChild } from '@angular/core';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { ChangeDetectorRef, Component, DebugElement, inject, signal, TemplateRef, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { dispatchMouseEvent } from '@koobiq/components/core';
 import {
     kbqBuildTree,
     KbqFilter,
@@ -10,6 +12,7 @@ import {
     KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
+    kbqResolveFilterBarName,
     KbqSelectValue,
     KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
@@ -82,11 +85,16 @@ const createFilter = (pipes: KbqPipe[]): KbqFilter => ({
             <span class="custom-tree-option__badge">{{ option.badge }}</span>
             <span class="custom-tree-option__search">{{ search }}</span>
         </ng-template>
+
+        <ng-template #resolvedOptionTemplate let-option="option">resolved {{ resolveName(option.name) }}</ng-template>
     `
 })
 class TestComponent {
     readonly changeDetectorRef = inject(ChangeDetectorRef);
     readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
+    readonly resolvedOptionTemplate = viewChild.required<TemplateRef<any>>('resolvedOptionTemplate');
+
+    readonly resolveName = kbqResolveFilterBarName;
 
     activeFilter: KbqFilter | null = null;
 
@@ -757,6 +765,292 @@ describe('KbqPipeTreeSelectComponent', () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(applyFilterSpy).toHaveBeenCalledWith('Admin');
+        });
+    });
+
+    describe('signal-backed node names', () => {
+        const createTree = () => {
+            const branchName = signal('Management');
+            const leafName = signal('Administrator');
+
+            const values: KbqTreeSelectNode[] = [
+                {
+                    name: branchName,
+                    value: 'management',
+                    children: [
+                        { name: leafName, value: 'admin', children: null },
+                        { name: 'Operator', value: 'operator', children: null }
+                    ]
+                },
+                { name: 'Knowledge Base', value: 'kb', children: null }
+            ];
+
+            return { branchName, leafName, values };
+        };
+
+        const setTemplate = (values: KbqTreeSelectNode[], extra: Partial<KbqPipeTemplate> = {}) => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'TreeSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.TreeSelect,
+                    values,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false,
+                    ...extra
+                }
+            ];
+        };
+
+        const getTriggerValue = (): string =>
+            fixture.debugElement
+                .query(By.css('kbq-pipe-tree-select .kbq-pipe__value'))
+                .nativeElement.textContent.trim();
+
+        const getOption = (value: unknown): KbqTreeOption | undefined =>
+            getPipeComponent()
+                .select()
+                .tree()!
+                .renderedOptions.find((option) => option.value === value);
+
+        const getOptionText = (value: unknown): string =>
+            getOption(value)!.getHostElement().querySelector('.kbq-option-text')!.textContent!.trim();
+
+        const getTooltipValue = (): string =>
+            TestBed.inject(OverlayContainer)
+                .getContainerElement()
+                .querySelector('.kbq-pipe-tooltip__value')
+                ?.textContent?.trim() ?? '';
+
+        // JSDOM has no layout, so the overflow verdict the title tooltip opens from is stubbed.
+        const openTooltip = async (): Promise<void> => {
+            const trigger: HTMLElement = fixture.debugElement.query(
+                By.css('kbq-pipe-tree-select kbq-tree-select')
+            ).nativeElement;
+            const value: HTMLElement = fixture.debugElement.query(
+                By.css('kbq-pipe-tree-select .kbq-pipe__value')
+            ).nativeElement;
+
+            vi.spyOn(trigger, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(value, 'scrollWidth', 'get').mockReturnValue(200);
+
+            dispatchMouseEvent(trigger, 'mouseenter');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        const openPanel = async (): Promise<void> => {
+            getPipeComponent().select().open();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        it('should rerender node content and the trigger when a name signal changes', async () => {
+            vi.useFakeTimers();
+
+            const { branchName, leafName, values } = createTree();
+            const filter = createFilter([createPipe({ name: 'test', value: 'admin' })]);
+
+            setTemplate(values);
+            fixture.componentInstance.activeFilter = filter;
+            fixture.detectChanges();
+
+            await openPanel();
+
+            const component = getPipeComponent();
+            const branch = component.treeControl.dataNodes.find((node) => node.value === 'management')!;
+
+            expect(component.treeControl.isExpanded(branch)).toBe(true);
+            expect(getOptionText('management')).toBe('Management');
+            expect(getOptionText('admin')).toBe('Administrator');
+            expect(getTriggerValue()).toBe('Administrator');
+
+            const filterChange = vi.fn();
+            const changePipe = vi.fn();
+
+            getFilterBar().filter.subscribe(filterChange);
+            getFilterBar().onChangePipe.subscribe(changePipe);
+
+            branchName.set('Управление');
+            leafName.set('Администратор');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getOptionText('management')).toBe('Управление');
+            expect(getOptionText('admin')).toBe('Администратор');
+            expect(getTriggerValue()).toBe('Администратор');
+
+            // The label is rendering only: the value, its identity, the expansion and the filter stay put.
+            expect(component.data.value).toBe('admin');
+            expect(component.selected).toBe('admin');
+            expect(component.treeControl.isExpanded(branch)).toBe(true);
+            expect(getFilterBar().filter()).toBe(filter);
+            expect(getFilterBar().filter()!.changed).toBe(false);
+            expect(filterChange).not.toHaveBeenCalled();
+            expect(changePipe).not.toHaveBeenCalled();
+        });
+
+        it('should rerender an open tooltip when a name signal changes', async () => {
+            vi.useFakeTimers();
+
+            const { leafName, values } = createTree();
+
+            setTemplate(values);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: 'admin' })]);
+            fixture.detectChanges();
+
+            await openTooltip();
+
+            expect(getTriggerValue()).toBe('Administrator');
+            expect(getTooltipValue()).toBe('Administrator');
+
+            const changePipe = vi.fn();
+
+            getFilterBar().onChangePipe.subscribe(changePipe);
+
+            leafName.set('Администратор');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getTriggerValue()).toBe('Администратор');
+            expect(getTooltipValue()).toBe('Администратор');
+            expect(getPipeComponent().data.value).toBe('admin');
+            expect(changePipe).not.toHaveBeenCalled();
+        });
+
+        it('should reapply the current search to translated view values', async () => {
+            vi.useFakeTimers();
+
+            const { leafName, values } = createTree();
+
+            setTemplate(values);
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: null, search: true })
+            ]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+
+            component.searchControl.setValue('Administrator');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(component.treeControl.filterModel.selected.map((node) => node.value)).toEqual([
+                'management',
+                'admin'
+            ]);
+
+            leafName.set('Оператор');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // The query is untouched and now matches nothing: the search followed the new label.
+            expect(component.searchControl.value).toBe('Administrator');
+            expect(component.treeControl.filterModel.selected).toEqual([]);
+
+            leafName.set('Администратор');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // Still the same query, which the new label does not contain either.
+            expect(component.treeControl.filterModel.selected).toEqual([]);
+
+            component.searchControl.setValue('Администратор');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(component.treeControl.filterModel.selected.map((node) => node.value)).toEqual([
+                'management',
+                'admin'
+            ]);
+            expect(component.searchControl.value).toBe('Администратор');
+        });
+
+        it('should keep a leaf hidden by the search selected across a translation', async () => {
+            vi.useFakeTimers();
+
+            const { leafName, values } = createTree();
+            const filter = createFilter([createPipe({ name: 'test', value: 'admin', search: true })]);
+
+            setTemplate(values);
+            fixture.componentInstance.activeFilter = filter;
+            fixture.detectChanges();
+
+            await openPanel();
+
+            const component = getPipeComponent();
+
+            component.searchControl.setValue('Operator');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getOption('admin')).toBeUndefined();
+            expect(component.treeControl.filterModel.selected.map((node) => node.value)).toEqual([
+                'management',
+                'operator'
+            ]);
+
+            const changePipe = vi.fn();
+
+            getFilterBar().onChangePipe.subscribe(changePipe);
+
+            leafName.set('Администратор');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // Filtered out never means deselected, and the translation changes no business state.
+            expect(getOption('admin')).toBeUndefined();
+            expect(component.data.value).toBe('admin');
+            expect(component.selected).toBe('admin');
+            expect(getFilterBar().filter()).toBe(filter);
+            expect(changePipe).not.toHaveBeenCalled();
+
+            component.searchControl.setValue('');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getOption('admin')!.selected).toBe(true);
+            expect(getOptionText('admin')).toBe('Администратор');
+            expect(getTriggerValue()).toBe('Администратор');
+        });
+
+        it('should let a custom valueTemplate resolve the name signal through the public resolver', async () => {
+            vi.useFakeTimers();
+
+            const { leafName, values } = createTree();
+
+            setTemplate(values, { valueTemplate: fixture.componentInstance.resolvedOptionTemplate() });
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: 'admin' })]);
+            fixture.detectChanges();
+
+            await openPanel();
+
+            const component = getPipeComponent();
+
+            expect(getOption('admin')!.getHostElement().textContent!.trim()).toBe('resolved Administrator');
+            expect(component.select().triggerValue).toBe('Administrator');
+
+            leafName.set('Администратор');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getOption('admin')!.getHostElement().textContent!.trim()).toBe('resolved Администратор');
+            expect(getTriggerValue()).toBe('Администратор');
+            expect(component.data.value).toBe('admin');
         });
     });
 });
