@@ -47,9 +47,19 @@ The `input` type is the only one without a popover: it renders a bare input that
 
 ### Custom option content
 
-For `select`, `multiselect`, `tree-select` and `multi-tree-select`, set `valueTemplate` to customize option content. Flat pipes pass the source value as `option`; tree pipes pass the source node as `option` and the current query as `search`. Use them to render icons, multiline text, counters or other Angular content.
+For `select`, `multiselect`, `tree-select` and `multi-tree-select`, set `valueTemplate` to customize option content. Flat pipes pass the source value as `option`; tree pipes pass the source node as `option` and the current query as `search`. Use them to render icons, multiline text, counters or other Angular content. An option `name` may be a signal — a label the built-in views resolve, but your template receives the union as it is. Resolve it in the component and use that resolver in the template:
 
-Filtering still uses only `name`. Tree templates highlight matches themselves, typically with `kbqHighlightBackground` applied to `option.name` and the `search` context value; the flat pipes' context has no query. Select-all, selected values and the text-only trigger keep their standard behavior. Set `multilineOptions` to wrap long names instead of truncating them; this option works independently of `valueTemplate`. Multiline rows are taller than 32px, so fewer of them fit under `panelMaxHeight`.
+```ts
+protected readonly resolveName = kbqResolveFilterBarName;
+```
+
+```html
+<ng-template #optionTemplate let-option="option" let-search="search">
+    <span [innerHTML]="resolveName(option.name) | kbqHighlightBackground: search"></span>
+</ng-template>
+```
+
+Filtering and search use the resolved `name`. Tree templates highlight matches themselves, typically with `kbqHighlightBackground` applied to the resolved text and the `search` context value; the flat pipes' context has no query. Select-all, selected values and the text-only trigger keep their standard behavior. With a custom template, a signal-backed name still shows its resolved name in the built-in trigger and tooltip — the template owns only the option content in the panel. For `select` and `multiselect`, a string name keeps the existing behavior, where the trigger uses the text the template rendered; the `tree-select` and `multi-tree-select` triggers always resolve `node.name`, with or without a custom template. Set `multilineOptions` to wrap long names instead of truncating them; this option works independently of `valueTemplate`. Multiline rows are taller than 32px, so fewer of them fit under `panelMaxHeight`.
 
 <Example id="filter-bar-value-template" />
 
@@ -154,6 +164,16 @@ The user can quickly get search results by selecting a saved filter, without re-
 
 <Example id="filter-bar-saved-filters" />
 
+A saved filter is application data. If a pipe, an option or a date preset has a signal-backed `name`, the filter holds a function, which neither `JSON.stringify` nor `structuredClone` can represent: call `kbqFilterBarToSerializableFilter(filter)` before persisting. It returns a copy whose signal-backed `name` fields — of pipes, select options and date presets — are resolved to their current strings, and leaves the live filter untouched.
+
+Only `name` is a label. Plain objects and arrays are copied; every other value stays by reference — a business value held in a signal, a `compareWith` copied from a template or a date-adapter value keeps its identity, and JSON drops or flattens what it cannot represent exactly as it always did. A payload that `structuredClone` rejects — a function held as a business value, a DOM node — keeps the existing restriction: the helper's copy is not cloneable either, and `structuredClone(filter)` on a live filter with signal names remains unsupported.
+
+When the application hands a restored filter to `<kbq-filters>` and the user selects it, the built-in `select`, `multiselect`, `date` and `datetime` values are rehydrated from the current `pipeTemplates` by stable `id`. The trigger and the panel show the labels of the active locale while the persisted business value is preserved. An option or preset the templates no longer contain keeps its persisted value, and a custom date range passes through unchanged. A tree value needs no rehydration: its selection is the node `value`, and its label comes from the current tree.
+
+The helper resolves pipe names as well, so a persisted copy keeps the pipe names of the save time. Only the built-in values are rehydrated: a pipe `name` is part of your filter definition, so take it from `pipeTemplates` when you translate pipe names at runtime.
+
+The example below stores its saved filters through the helper and keeps the pristine versions it compares against with their labels still as signals.
+
 ### State Saving
 
 The filter bar remembers which filter is selected and the edits made to it, and restores the state after a page reload. On by default — use `[useStateSaving]="false"` to turn it off on a specific component.
@@ -168,13 +188,23 @@ Project the pipes from the value the bar reports — bind `[(filter)]`, or assig
 
 Values come back as new objects, which is what `compareWith` is for — see [Filter types](#filter-types). A filter is identified by its `name`, so one that is no longer in `filters` restores nothing. A pipe is rebuilt from the filter or from `pipeTemplates`, so one your application builds itself, outside both, is not restored — put it in `pipeTemplates` if it has to come back.
 
+The automatic state stores built-in values with the labels of the moment. Restoring resolves them to the current option or preset of the same `id`, so a stored state follows the active translation, and no signal is ever written to the storage.
+
+`saveFilterState()` / `restoreFilterState()` keep every Angular signal in the in-memory snapshot by reference — name signals and business signals alike — while copying the arrays and plain objects around them. A restored filter therefore shares those signal references: a name signal stays reactive to a later translation, and a business signal keeps its identity. A signal is kept only where the copy walks the structure — as a pipe value, or inside a plain object or an array; one held in a `Map`, a `Set` or a class instance is not walked, and `structuredClone` throws on its container. The same applies to any other value `structuredClone` rejects: a non-signal function, a DOM node or a symbol.
+
 `clearSavedState()` removes what is stored, and `hasSavedState` says whether anything is. Neither has anything to do with `saveFilterState()` / `restoreFilterState()`, which snapshot the filter in memory within one session.
 
 Keys, storage and expiry work the same for every component that persists — see [Saving component state](/en/components/core/overview#saving-component-state).
 
 ### Localization
 
-The filter bar takes its own strings — the filters menu, the reset button, pipe tooltips and the date pipe's custom-period flow — from `KbqLocaleService`. The data you pass in `pipeTemplates` and `filter` is never translated: those labels are yours to produce. The example below derives the period labels of its `datetime` pipe from the active locale with `DateFormatter.duration()`, so they follow the locale of the bar they belong to. The option list follows `pipeTemplates`, so handing the bar a new list relabels it in place. The label stored in a pipe's own value does not: `*kbqPipe` builds a pipe component once from the object it is given and ignores later changes to that binding, so the examples below rebuild their filters for it.
+The filter bar takes its own strings — the filters menu, the reset button, pipe tooltips and the date pipe's custom-period flow — from `KbqLocaleService`. The data you pass in `pipeTemplates` and `filter` is never translated: those labels are yours to produce, and `name` is where the bar reads them.
+
+A name may be a plain string or a `Signal<string>` (`KbqFilterBarName`). A signal is read by the built-in view that renders it, so changing its value relabels the pipe, its options, the period list, the trigger, the tooltip and the screen-reader announcements in place — without replacing the filter, its pipes or `pipeTemplates`, and without touching the selected values, the search query, the open panel or the `changed`/`saved` flags. The example below builds its pipes, options, period presets and tree nodes once with `computed()` labels and switches the locale with `KbqLocaleService.setLocale()`; no translation calls `filter.set`.
+
+A signal-backed name is a label, not an identity: give the pipe, option or preset a stable `id`. The bar matches a pipe to its template, a select value to its option and a date preset to its preset list by that `id`, falling back to the `name` only for a legacy string-named item. A signal-named item without an `id` is a configuration error and throws. `KbqFilter.name` is user data — the name of a saved filter — and is never translated.
+
+Custom option content is not rendered by the bar, so it resolves a signal name itself — see [Custom option content](#custom-option-content).
 
 There are three ways to control the locale. `KBQ_DEFAULT_LOCALE_ID` is the fallback (`ru-RU`) used when nothing else is provided — it is a plain constant, not an injection token, so it cannot be provided. `KBQ_LOCALE_ID` fixes the locale once, when `KbqLocaleService` is constructed; it has to be provided alongside the service itself, because the service reads the token from the injector that created it. `KbqLocaleService.setLocale()` changes the locale at runtime.
 

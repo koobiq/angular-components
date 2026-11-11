@@ -109,6 +109,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     abstract open(): void;
     protected optionCompareWith?: (o1: KbqSelectValue | null | undefined, o2: KbqSelectValue | null | undefined) => boolean;
     protected panelMaxHeight?: KbqPanelMaxHeight;
+    protected readonly resolveName: typeof kbqResolveFilterBarName;
     protected restoreTriggerFocus(): void;
     get showRemoveButton(): boolean;
     readonly stateChanges: Subject<void>;
@@ -128,8 +129,8 @@ export function kbqBuildTree<T extends KbqTreeSelectNode>(value: Record<string, 
 export interface KbqDateTimeValue {
     // (undocumented)
     end?: string;
-    // (undocumented)
-    name?: string;
+    id?: string | number;
+    name?: KbqFilterBarName;
     // (undocumented)
     start?: string;
 }
@@ -233,6 +234,9 @@ export class KbqFilterBarModule {
 }
 
 // @public
+export type KbqFilterBarName = string | Signal<string>;
+
+// @public
 export const kbqFilterBarPipesProvider: () => Provider;
 
 // @public
@@ -247,6 +251,9 @@ export interface KbqFilterBarState {
     name: string;
     pipes: KbqFilterBarPipeState[];
 }
+
+// @public
+export const kbqFilterBarToSerializableFilter: (filter: KbqFilter) => KbqFilter;
 
 // @public (undocumented)
 export class KbqFilterRefresher {
@@ -397,8 +404,7 @@ export interface KbqPipe {
     disabled: boolean;
     // (undocumented)
     id?: string | number;
-    // (undocumented)
-    name: string;
+    name: KbqFilterBarName;
     // (undocumented)
     openOnAdd?: boolean;
     // (undocumented)
@@ -426,6 +432,7 @@ export class KbqPipeAdd {
     protected readonly filterBar: _koobiq_components_filter_bar.KbqFilterBarHost;
     readonly filterTemplate: _angular_core.InputSignal<KbqFilter>;
     readonly onAddPipe: _angular_core.OutputEmitterRef<KbqPipeTemplate>;
+    protected readonly resolveName: typeof kbqResolveFilterBarName;
     readonly select: _angular_core.Signal<KbqSelect>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeAdd, "kbq-pipe-add", never, { "filterTemplate": { "alias": "filterTemplate"; "required": false; "isSignal": true; }; }, { "onAddPipe": "onAddPipe"; }, never, never, true, never>;
@@ -499,7 +506,9 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     open(): void;
     protected readonly placements: typeof PopUpPlacements;
     readonly popover: _angular_core.Signal<KbqPopoverTrigger>;
+    protected presetId(preset: KbqDateTimeValue | null | undefined): string | number | undefined;
     readonly returnButton: _angular_core.Signal<KbqButton | undefined>;
+    protected get selectedPresetId(): string | number | undefined;
     protected readonly showEndCalendar: _angular_core.WritableSignal<boolean>;
     // (undocumented)
     showList(): void;
@@ -585,6 +594,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     get allVisibleOptionsSelected(): boolean;
     get checkboxState(): KbqPseudoCheckboxState;
     compareByValue: (o1: Pick<KbqSelectValue, "id"> | null, o2: Pick<KbqSelectValue, "id"> | null) => boolean;
+    protected displayValue(select: KbqSelect): string;
     readonly filteredOptions: Signal<KbqSelectValue[]>;
     get isEmpty(): boolean;
     protected isLocked(item: KbqSelectValue): boolean;
@@ -617,6 +627,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     get allOptionsSelected(): boolean;
     get allVisibleOptionsSelected(): boolean;
     protected clearedValue(): KbqSelectValue[] | null;
+    protected get displayValue(): string;
     protected getSelectedValues(): KbqSelectValue[];
     protected getValueTemplateContext(node: KbqTreeSelectFlatNode): KbqMultiTreeSelectValueTemplateContext;
     get isEmpty(): boolean;
@@ -665,7 +676,9 @@ export class KbqPipeReadonlyComponent extends KbqBasePipe<string | null> {
 
 // @public (undocumented)
 export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit {
+    constructor();
     compareByValue: (o1: Pick<KbqSelectValue, "id"> | null, o2: Pick<KbqSelectValue, "id"> | null) => boolean;
+    protected displayValue(select: KbqSelect): string;
     readonly filteredOptions: Signal<KbqSelectValue[]>;
     get isEmpty(): boolean;
     // (undocumented)
@@ -770,6 +783,9 @@ export enum KbqPipeTypes {
     TreeSelect = "tree-select"
 }
 
+// @public
+export function kbqResolveFilterBarName(name: KbqFilterBarName | null | undefined): string;
+
 // @public (undocumented)
 export interface KbqSaveFilterError {
     // (undocumented)
@@ -802,8 +818,7 @@ export enum KbqSaveFilterStatuses {
 export interface KbqSelectValue {
     caption?: string;
     id?: string | number;
-    // (undocumented)
-    name: string;
+    name: KbqFilterBarName;
     // (undocumented)
     value: unknown;
 }
@@ -815,8 +830,7 @@ export class KbqTreeSelectFlatNode {
     expandable: boolean;
     // (undocumented)
     level: number;
-    // (undocumented)
-    name: string;
+    name: KbqFilterBarName;
     // (undocumented)
     parent?: KbqTreeSelectFlatNode;
     // (undocumented)
@@ -828,8 +842,7 @@ export interface KbqTreeSelectNode {
     caption?: string;
     // (undocumented)
     children: KbqTreeSelectNode[] | null;
-    // (undocumented)
-    name: string;
+    name: KbqFilterBarName;
     // (undocumented)
     value: unknown;
 }
@@ -859,7 +872,7 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
     onOpen(): void;
     open(): void;
     readonly searchControl: FormControl<string | null>;
-    readonly select: _angular_core.Signal<KbqTreeSelect<KbqTreeSelectFlatNode, KbqTreeSelectFlatNode>>;
+    readonly select: Signal<KbqTreeSelect<KbqTreeSelectFlatNode, KbqTreeSelectFlatNode>>;
     // (undocumented)
     protected transformer: (node: KbqTreeSelectNode, level: number, parent: KbqTreeSelectFlatNode | null) => KbqTreeSelectFlatNode;
     // (undocumented)

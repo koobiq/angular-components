@@ -39,6 +39,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **21.0.0**: the tag list cleaner removes the tags itself and leaves the disabled ones in place.
 - **21.0.0**: the move to `@koobiq/design-tokens` 4 — a new palette scale, DTCG sources and opt-in component tokens.
 - **21.1.0**: the code block loads the highlight.js core instead of the full bundle by default.
+- **21.1.0**: filter-bar names accept signals, and reading one as a string no longer compiles.
 
 ### Upgrade to 18.5.3
 
@@ -3510,6 +3511,24 @@ The migration keeps the full bundle where the code block loaded it. An applicati
 - **A configuration the root providers get through a function.** The added root provider overrides it: remove the added one. The migration reports a project that provides a configuration outside its root providers.
 - **A library that renders code blocks.** The applications that use it provide the configuration.
 - **Specs** get none of the application's providers: add the configuration to the `TestBed` of a spec that checks highlighted markup.
+
+### Filter-bar names accept signals (21.1.0)
+
+{/* migration-step-components(filter-bar) */}
+
+`name` is `KbqFilterBarName` — `string | Signal<string>` — rather than `string` on `KbqPipe`, `KbqPipeTemplate`, `KbqSelectValue`, `KbqDateTimeValue` and the tree nodes, `KbqTreeSelectNode` and `KbqTreeSelectFlatNode`; `KbqDateTimeValue` also gained an optional `id`. Writing a name is unaffected, because a string is still assignable. Reading one is source-breaking: the union is not a `string`, so `const name: string = pipe.name` and `pipe.name.trim()` no longer compile, and a custom `valueTemplate` that interpolates `data.name` renders a function once the application passes a signal.
+
+Read a `KbqFilterBarName` with `kbqResolveFilterBarName()`, which returns the string and reads the signal first. Inside a custom pipe's own template, the base class exposes the same resolver as `protected resolveName`.
+
+```typescript
+readonly name = computed(() => kbqResolveFilterBarName(this.pipe.name));
+```
+
+**A signal-backed name requires a stable `id`.** A pipe, a built-in option or a date preset whose `name` is a signal has to carry an `id`: the automatic state saving persists the resolved string and restores the item by that `id`, so without one the library throws. A tree node needs none — a tree selection is the node's `value`.
+
+`KbqFilter.name` is unchanged. It identifies a saved filter, it is application data, and it is never translated. To persist saved filters of your own, pass each through `kbqFilterBarToSerializableFilter()`, which returns a copy whose signal-backed names are the current strings and leaves every other payload by reference.
+
+A locale switch is rendering-only: a built-in view reads the name signal where it renders it, so the filter, its pipes and `pipeTemplates` stay the same objects, and no `filterChange` is emitted and no `changed` is set. Nothing here is fixed automatically — there is no schematic for this change, so every read has to be updated by hand.
 
 ### After the migration
 
