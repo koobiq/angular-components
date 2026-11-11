@@ -1,13 +1,35 @@
 import { _IdGenerator } from '@angular/cdk/a11y';
-import { AfterViewInit, Directive, ElementRef, inject, signal, untracked, viewChild } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, inject, isSignal, signal, untracked, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { DateAdapter, DateFormatter, ENTER, KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqListSelection } from '@koobiq/components/list';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
+import { kbqResolveFilterBarName } from '../filter-bar-name';
 import { KbqDateTimeValue, KbqPipeTemplate } from '../filter-bar.types';
 import { getId, KbqBasePipe } from './base-pipe';
+
+/**
+ * Stable identity of a `date` / `datetime` preset: its `id`, or its name for a legacy string-named
+ * preset. A signal-backed name cannot identify a preset — a function has no stable, serializable
+ * value — so a preset that has one without an `id` is a configuration error and throws.
+ *
+ * @internal
+ */
+export const kbqDatePresetId = (preset: KbqDateTimeValue | null | undefined): string | number | undefined => {
+    if (preset?.id !== undefined && preset?.id !== null) {
+        return preset.id;
+    }
+
+    if (isSignal(preset?.name)) {
+        throw new Error(
+            `A date preset with a signal-backed name requires a stable "id" (name: "${kbqResolveFilterBarName(preset?.name)}").`
+        );
+    }
+
+    return preset?.name;
+};
 
 /**
  * Shared implementation for the `date` and `datetime` pipes. The two pipes differ only in how a range
@@ -226,7 +248,27 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
             return this.formatRange(this.start, this.end);
         }
 
-        return this.data.value?.name ?? '';
+        return this.resolveName(this.data.value?.name);
+    }
+
+    /**
+     * Identity a period-list option selects by: the preset's stable `id`, or its name for a legacy
+     * string-named preset.
+     *
+     * @docs-private
+     */
+    protected presetId(preset: KbqDateTimeValue | null | undefined): string | number | undefined {
+        return kbqDatePresetId(preset);
+    }
+
+    /**
+     * Identity of the selected preset, matched against the values of the period-list options. A custom
+     * `{ start, end }` range has neither an id nor a name and selects no preset.
+     *
+     * @docs-private
+     */
+    protected get selectedPresetId(): string | number | undefined {
+        return kbqDatePresetId(this.data.value);
     }
 
     /** Whether the current pipe is disabled. */
@@ -353,7 +395,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     override get isEmpty(): boolean {
         if (this.data.value === null) return true;
 
-        if (this.data.value?.name) return false;
+        if (this.resolveName(this.data.value?.name)) return false;
 
         return !this.adapter.isDateInstance(this.start) || !this.adapter.isDateInstance(this.end);
     }

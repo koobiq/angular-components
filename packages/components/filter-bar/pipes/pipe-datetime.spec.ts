@@ -1,11 +1,11 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ChangeDetectorRef, Component, DebugElement, inject, LOCALE_ID } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, inject, LOCALE_ID, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, DateFormatter, dispatchKeyboardEvent, TAB } from '@koobiq/components/core';
+import { DateAdapter, DateFormatter, dispatchKeyboardEvent, dispatchMouseEvent, TAB } from '@koobiq/components/core';
 import {
     KbqFilter,
     KbqFilterBar,
@@ -1406,6 +1406,210 @@ describe('KbqPipeDatetimeComponent', () => {
             const hint = overlayContainer.querySelector('.kbq-date-period__hint');
 
             expect(hint?.textContent?.trim()).toBe(component.minIntervalErrorHint);
+        });
+    });
+
+    describe('signal-backed preset names', () => {
+        const createPresets = () => {
+            const lastDayName = signal('Последние сутки');
+
+            return {
+                lastDayName,
+                LAST_DAY: { id: 'last-day', name: lastDayName, start: { hours: -24 }, end: null },
+                LAST_WEEK: { id: 'last-week', name: 'Последние 7 дней', start: { days: -7 }, end: null }
+            };
+        };
+
+        const setTemplate = (values: unknown[]) => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+        };
+
+        const setupPipe = (filter: KbqFilter, values: unknown[]) => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            setTemplate(values);
+            fixture.componentInstance.activeFilter = filter;
+            fixture.detectChanges();
+        };
+
+        const getTriggerValue = (): string =>
+            fixture.debugElement.query(By.css('kbq-pipe-datetime .kbq-pipe__value')).nativeElement.textContent.trim();
+
+        const getSelectedOptionTexts = (): string[] =>
+            Array.from(
+                TestBed.inject(OverlayContainer)
+                    .getContainerElement()
+                    .querySelectorAll<HTMLElement>('kbq-list-option.kbq-selected')
+            ).map((option) => option.textContent!.trim());
+
+        const getTooltipValue = (): string =>
+            TestBed.inject(OverlayContainer)
+                .getContainerElement()
+                .querySelector('.kbq-pipe-tooltip__value')
+                ?.textContent?.trim() ?? '';
+
+        const openPanel = async (): Promise<void> => {
+            getPipeComponent().open();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        // JSDOM has no layout, so the overflow verdict the title tooltip opens from is stubbed.
+        const openTooltip = async (): Promise<void> => {
+            const trigger: HTMLElement = fixture.debugElement.query(By.css('kbq-pipe-datetime button')).nativeElement;
+            const value: HTMLElement = fixture.debugElement.query(
+                By.css('kbq-pipe-datetime .kbq-pipe__value')
+            ).nativeElement;
+
+            vi.spyOn(trigger, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(value, 'scrollWidth', 'get').mockReturnValue(200);
+
+            dispatchMouseEvent(trigger, 'mouseenter');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        beforeEach(() => vi.useFakeTimers());
+
+        it('should rerender the selected preset in the open list and the trigger when its name signal changes', async () => {
+            const { lastDayName, LAST_DAY, LAST_WEEK } = createPresets();
+            const filter = createFilter([createPipe({ value: LAST_DAY })]);
+
+            setupPipe(filter, [LAST_DAY, LAST_WEEK]);
+
+            await openPanel();
+
+            expect(getSelectedOptionTexts()).toEqual(['Последние сутки']);
+            expect(getTriggerValue()).toBe('Последние сутки');
+
+            const component = getPipeComponent();
+            const filterChange = vi.fn();
+            const changePipe = vi.fn();
+
+            getFilterBar().filter.subscribe(filterChange);
+            getFilterBar().onChangePipe.subscribe(changePipe);
+
+            lastDayName.set('Last day');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getSelectedOptionTexts()).toEqual(['Last day']);
+            expect(getTriggerValue()).toBe('Last day');
+            expect(component.popover().isOpen).toBe(true);
+
+            expect(component.data.value).toBe(LAST_DAY);
+            expect(component.data.value!.id).toBe('last-day');
+            expect(getFilterBar().filter()).toBe(filter);
+            expect(getFilterBar().filter()!.changed).toBe(false);
+            expect(filterChange).not.toHaveBeenCalled();
+            expect(changePipe).not.toHaveBeenCalled();
+        });
+
+        it('should rerender an open tooltip when the preset name signal changes', async () => {
+            const { lastDayName, LAST_DAY } = createPresets();
+            const filter = createFilter([createPipe({ value: LAST_DAY })]);
+
+            setupPipe(filter, [LAST_DAY]);
+
+            await openTooltip();
+
+            expect(getTriggerValue()).toBe('Последние сутки');
+            expect(getTooltipValue()).toBe('Последние сутки');
+
+            const component = getPipeComponent();
+            const changePipe = vi.fn();
+
+            getFilterBar().onChangePipe.subscribe(changePipe);
+
+            lastDayName.set('Last day');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getTooltipValue()).toBe('Last day');
+            expect(component.data.value).toBe(LAST_DAY);
+            expect(getFilterBar().filter()).toBe(filter);
+            expect(changePipe).not.toHaveBeenCalled();
+        });
+
+        it('should keep a custom range formatted identically when an unrelated preset name changes', () => {
+            const { lastDayName, LAST_DAY } = createPresets();
+            const { value } = createCustomRangeValue();
+            const filter = createFilter([createPipe({ value })]);
+
+            setupPipe(filter, [LAST_DAY]);
+
+            const component = getPipeComponent();
+            const formatted = component.formattedValue;
+            const changePipe = vi.fn();
+
+            expect(formatted).not.toBe('');
+            expect(formatted).not.toBe('Последние сутки');
+
+            getFilterBar().onChangePipe.subscribe(changePipe);
+
+            lastDayName.set('Last day');
+            fixture.detectChanges();
+
+            expect(component.formattedValue).toBe(formatted);
+            expect(component.data.value).toBe(value);
+            expect(getFilterBar().filter()).toBe(filter);
+            expect(changePipe).not.toHaveBeenCalled();
+        });
+
+        it('should keep name-based selection for a string-named preset', async () => {
+            const { lastDayName, LAST_DAY } = createPresets();
+            const LEGACY = { name: 'Legacy preset', start: { days: -3 }, end: null };
+            const filter = createFilter([createPipe({ value: LEGACY })]);
+
+            setupPipe(filter, [LEGACY, LAST_DAY]);
+
+            await openPanel();
+
+            expect(getSelectedOptionTexts()).toEqual(['Legacy preset']);
+            expect(getTriggerValue()).toBe('Legacy preset');
+
+            lastDayName.set('Last day');
+            fixture.detectChanges();
+
+            expect(getSelectedOptionTexts()).toEqual(['Legacy preset']);
+            expect(getTriggerValue()).toBe('Legacy preset');
+            expect(getPipeComponent().data.value).toBe(LEGACY);
+        });
+
+        it('should select a preset by its id even when the stored label differs', async () => {
+            const { LAST_DAY, LAST_WEEK } = createPresets();
+            const stored = { id: LAST_DAY.id, name: 'legacy label' };
+
+            setupPipe(createFilter([createPipe({ value: stored })]), [LAST_DAY, LAST_WEEK]);
+
+            await openPanel();
+
+            expect(getSelectedOptionTexts()).toEqual(['Последние сутки']);
+        });
+
+        it('should throw when a signal-named preset has no stable id', () => {
+            const signalPreset = { name: signal('Последние сутки'), start: { hours: -24 }, end: null };
+
+            setupPipe(createFilter([createPipe({ value: null })]), [signalPreset]);
+
+            expect(() => {
+                getPipeComponent().open();
+                fixture.detectChanges();
+            }).toThrowError(/signal-backed name requires a stable "id"/);
         });
     });
 });

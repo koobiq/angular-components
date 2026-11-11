@@ -154,7 +154,21 @@ export enum KbqPipeTypes {
 export type KbqPipeType = `${KbqPipeTypes}` | (string & {});
 
 export interface KbqDateTimeValue {
-    name?: string;
+    /**
+     * Display name of a preset: a plain string, or a `Signal<string>` that has to come with a stable
+     * `id`. The built-in trigger, tooltip and period list resolve it, so a translation re-renders the
+     * label without replacing the value. When the preset has no `id`, a string name keeps the legacy
+     * name-based identity; a signal-backed name without an `id` is a configuration error.
+     */
+    name?: KbqFilterBarName;
+
+    /**
+     * Stable identifier of a preset, required when `name` is a signal and used in preference to the name
+     * when both are present. Identifies the period-list selection and the persisted value independently of
+     * the translated label.
+     */
+    id?: string | number;
+
     start?: string;
     end?: string;
 }
