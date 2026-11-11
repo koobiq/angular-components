@@ -3,8 +3,11 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    computed,
+    isSignal,
     OnInit,
     Signal,
+    signal,
     untracked,
     viewChild,
     viewChildren,
@@ -26,14 +29,14 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { merge, startWith } from 'rxjs';
+import { startWith } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqSelectValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 import { KbqMultiSelectPipeState } from './multi-select-pipe-state';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
-import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
+import { kbqFilterSelectValueId, kbqFilterSelectValuesBySearch } from './select-pipe-search';
 
 @Component({
     selector: 'kbq-pipe-multi-select',
@@ -77,11 +80,24 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         { initialValue: [] as string[] }
     );
 
+    /** Updates on every pipe-template emission, so the options re-derive even for the same array reference. */
+    private readonly templatesVersion = signal(0);
+
+    /** Current search query; a signal so the options derivation follows the search control. */
+    private readonly searchQuery = toSignal(this.searchControl.valueChanges, {
+        initialValue: this.searchControl.value
+    });
+
     /**
-     * Options of the pipe template that match the search query. Follows the templates too, so options
-     * supplied after initialization render on first open.
+     * Options of the pipe template that match the search query. Follows the templates and the query,
+     * and the resolved name of every option it keeps, so a translation re-filters the list without
+     * replacing the option objects or clearing the query.
      */
-    readonly filteredOptions: Signal<KbqSelectValue[]>;
+    readonly filteredOptions: Signal<KbqSelectValue[]> = computed(() => {
+        this.templatesVersion();
+
+        return kbqFilterSelectValuesBySearch(this.values, this.searchQuery(), !this.isTemplateRef(this.valueTemplate));
+    });
 
     /** @docs-private */
     readonly select = viewChild.required(KbqSelect);
@@ -177,17 +193,12 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
         // The subscription established by `KbqBasePipe`'s constructor captured the base `updateTemplates`,
         // which refreshes `lockedValues` but knows nothing about the committed value. Subscribing again
-        // here folds the locked values in right after — including on the initial replay.
-        this.filterBar?.internalTemplatesChanges
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => this.multiSelect.normalizeValue());
-
-        this.filteredOptions = toSignal(
-            merge(this.filterBar!.internalTemplatesChanges, this.searchControl.valueChanges).pipe(
-                map(() => this.getFilteredOptions())
-            ),
-            { requireSync: true }
-        );
+        // here folds the locked values in right after — including on the initial replay. The version makes
+        // the option derivation follow every template update, even one that re-emits the same array reference.
+        this.filterBar?.internalTemplatesChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+            this.multiSelect.normalizeValue();
+            this.templatesVersion.update((version) => version + 1);
+        });
     }
 
     /** @docs-private */
@@ -275,9 +286,24 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         this.stateChanges.next();
     }
 
-    /** Comparator of selected options. Two null/absent values never match (aligned with the select pipe). */
+    /** Comparator of selected options: by stable id, since a name can be a translation. */
     compareByValue = (o1: Pick<KbqSelectValue, 'id'> | null, o2: Pick<KbqSelectValue, 'id'> | null): boolean =>
-        !!o1 && !!o2 && o1.id === o2.id;
+        !!o1 && !!o2 && kbqFilterSelectValueId(o1) === kbqFilterSelectValueId(o2);
+
+    /**
+     * Text of the trigger and the tooltip for the single selected value. Resolved from the selected
+     * option, so a name signal marks this view dirty and the text follows a translation. A custom
+     * `valueTemplate` owns the text for a plain string name; a signal name shows the resolved name
+     * instead, because the template's rendered text is not a reactive source a translation could
+     * update in the same pass.
+     *
+     * @docs-private
+     */
+    protected displayValue(select: KbqSelect): string {
+        const name = select.triggerValues[0]?.value?.name;
+
+        return this.isTemplateRef(this.valueTemplate) && !isSignal(name) ? select.triggerValue : this.resolveName(name);
+    }
 
     /** handler for select all options in select */
     selectAllHandler = (event: KeyboardEvent) => {
@@ -304,13 +330,5 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
             this.select().open();
         });
-    }
-
-    private getFilteredOptions(): KbqSelectValue[] {
-        return kbqFilterSelectValuesBySearch(
-            this.values,
-            this.searchControl.value,
-            !this.isTemplateRef(this.valueTemplate)
-        );
     }
 }

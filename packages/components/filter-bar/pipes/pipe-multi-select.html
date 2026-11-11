@@ -25,10 +25,10 @@
         [kbqPipeState]="data"
         [class]="{ 'kbq-active': select.panelOpen }"
     >
-        <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
+        <span #kbqTitleText class="kbq-pipe__name">{{ resolveName(data.name) }}</span>
         @if (select.triggerValues.length === 1) {
-            <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!select.triggerValue">
-                {{ select.triggerValue }}
+            <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!displayValue(select)">
+                {{ displayValue(select) }}
             </span>
         } @else if (
             select.triggerValues.length > 1 &&
@@ -80,7 +80,7 @@
         @let caption = optionTemplate ? null : item.caption;
 
         <!-- Without `viewValue` a captioned option derives it from `textContent`, gluing the two lines. -->
-        <kbq-option [value]="item" [disabled]="isLocked(item)" [viewValue]="caption ? item.name : ''">
+        <kbq-option [value]="item" [disabled]="isLocked(item)" [viewValue]="caption ? resolveName(item.name) : ''">
             @if (optionTemplate) {
                 <ng-container
                     [ngTemplateOutlet]="optionTemplate"
@@ -90,7 +90,7 @@
                 <!-- Each line has to clip itself, and must not stay `nowrap` under `multilineOptions`. -->
                 <div
                     [class.kbq-truncate-line]="!multilineOptions"
-                    [innerHTML]="item.name | kbqHighlightBackground: searchTokens() : true"
+                    [innerHTML]="resolveName(item.name) | kbqHighlightBackground: searchTokens() : true"
                 ></div>
                 <div
                     class="kbq-option-caption"
@@ -99,7 +99,7 @@
                 ></div>
             } @else {
                 <!-- Deliberately a bare text node: `text-overflow` does not reach a nested block box. -->
-                {{ item.name }}
+                {{ resolveName(item.name) }}
             }
         </kbq-option>
     }
@@ -110,6 +110,6 @@
 }
 
 <ng-template #pipeTooltip>
-    <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ data.name }}</div>
-    <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ select.triggerValue }}</div>
+    <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ resolveName(data.name) }}</div>
+    <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ displayValue(select) }}</div>
 </ng-template>

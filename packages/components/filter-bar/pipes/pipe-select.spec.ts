@@ -1,8 +1,18 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, DebugElement, effect, inject, TemplateRef, viewChild } from '@angular/core';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import {
+    ChangeDetectorRef,
+    Component,
+    DebugElement,
+    effect,
+    inject,
+    signal,
+    TemplateRef,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchKeyboardEvent, ENTER, ESCAPE } from '@koobiq/components/core';
+import { dispatchKeyboardEvent, dispatchMouseEvent, ENTER, ESCAPE } from '@koobiq/components/core';
 import {
     KbqFilter,
     KbqFilterBar,
@@ -10,6 +20,7 @@ import {
     KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
+    kbqResolveFilterBarName,
     KbqSelectValue
 } from '@koobiq/components/filter-bar';
 import { KbqBasePipe } from './base-pipe';
@@ -59,12 +70,16 @@ const createFilter = (pipes: KbqPipe[]): KbqFilter => ({
         </kbq-filter-bar>
 
         <ng-template #optionTemplate let-option="option">custom {{ option.name }}</ng-template>
+        <ng-template #resolvedOptionTemplate let-option="option">resolved {{ resolveName(option.name) }}</ng-template>
     `
 })
 class TestComponent {
     readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     readonly optionTemplate = viewChild.required<TemplateRef<any>>('optionTemplate');
+    readonly resolvedOptionTemplate = viewChild.required<TemplateRef<any>>('resolvedOptionTemplate');
+
+    readonly resolveName = kbqResolveFilterBarName;
 
     activeFilter: KbqFilter | null = null;
 
@@ -1164,6 +1179,394 @@ describe('KbqPipeSelectComponent', () => {
             getPipeComponent().select().openedChange.emit(false);
 
             expect(spy).toHaveBeenCalledWith(expect.objectContaining({ name: 'test' }));
+        });
+    });
+
+    describe('signal-backed value names', () => {
+        const createValues = () => {
+            const activeName = signal('Активен');
+
+            const ACTIVE: KbqSelectValue = { id: 'active', name: activeName, value: 'active' };
+            const BLOCKED: KbqSelectValue = { id: 'blocked', name: 'Заблокирован', value: 'blocked' };
+
+            return { activeName, ACTIVE, BLOCKED };
+        };
+
+        const setTemplate = (values: KbqSelectValue[], extra: Partial<KbqPipeTemplate> = {}) => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    values,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false,
+                    ...extra
+                }
+            ];
+        };
+
+        const getTriggerValue = (): string =>
+            fixture.debugElement.query(By.css('kbq-pipe-select .kbq-pipe__value')).nativeElement.textContent.trim();
+
+        const getSelectedOptionTexts = (): string[] =>
+            Array.from(document.querySelectorAll<HTMLElement>('.kbq-option.kbq-selected')).map((option) =>
+                option.textContent!.trim()
+            );
+
+        const getTooltipValue = (): string =>
+            TestBed.inject(OverlayContainer)
+                .getContainerElement()
+                .querySelector('.kbq-pipe-tooltip__value')
+                ?.textContent?.trim() ?? '';
+
+        // JSDOM has no layout, so the overflow verdict the title tooltip opens from is stubbed.
+        const openTooltip = async (): Promise<void> => {
+            const trigger: HTMLElement = fixture.debugElement.query(By.css('kbq-pipe-select kbq-select')).nativeElement;
+            const value: HTMLElement = fixture.debugElement.query(
+                By.css('kbq-pipe-select .kbq-pipe__value')
+            ).nativeElement;
+
+            vi.spyOn(trigger, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(value, 'scrollWidth', 'get').mockReturnValue(200);
+
+            // Releases a tooltip muted by an open select panel: `hide()` unmutes on `mouseleave`.
+            dispatchMouseEvent(trigger, 'mouseleave');
+            dispatchMouseEvent(trigger, 'mouseenter');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        const openPanel = async (): Promise<void> => {
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        it('should rerender the trigger, option and search when a value name signal changes', async () => {
+            vi.useFakeTimers();
+
+            const { activeName, ACTIVE, BLOCKED } = createValues();
+            const pipeValue = ACTIVE;
+            const filter = createFilter([createPipe({ name: 'test', value: pipeValue, search: true })]);
+
+            setTemplate([ACTIVE, BLOCKED]);
+            fixture.componentInstance.activeFilter = filter;
+            fixture.detectChanges();
+
+            await openPanel();
+
+            expect(getTriggerValue()).toBe('Активен');
+            expect(getSelectedOptionTexts()).toEqual(['Активен']);
+
+            const component = getPipeComponent();
+            const filterChange = vi.fn();
+            const changePipe = vi.fn();
+
+            getFilterBar().filter.subscribe(filterChange);
+            getFilterBar().onChangePipe.subscribe(changePipe);
+
+            activeName.set('Active');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getTriggerValue()).toBe('Active');
+            expect(getSelectedOptionTexts()).toEqual(['Active']);
+
+            component.searchControl.setValue('Active');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // The search matches the resolved name and keeps the typed query.
+            expect(component.filteredOptions()).toEqual([ACTIVE]);
+            expect(component.filteredOptions()[0]).toBe(ACTIVE);
+            expect(component.searchControl.value).toBe('Active');
+            expect(component.select().panelOpen).toBe(true);
+
+            // The value, its identity and the filter are untouched, and nothing announced a change.
+            expect(component.data.value).toBe(pipeValue);
+            expect(component.selected).toBe(pipeValue);
+            expect(component.data.value!.id).toBe('active');
+            expect(getFilterBar().filter()).toBe(filter);
+            expect(getFilterBar().filter()!.changed).toBe(false);
+            expect(filterChange).not.toHaveBeenCalled();
+            expect(changePipe).not.toHaveBeenCalled();
+        });
+
+        it('should rerender an open tooltip when a value name signal changes', async () => {
+            vi.useFakeTimers();
+
+            const { activeName, ACTIVE } = createValues();
+            const pipeValue = ACTIVE;
+            const filter = createFilter([createPipe({ name: 'test', value: pipeValue })]);
+
+            setTemplate([ACTIVE]);
+            fixture.componentInstance.activeFilter = filter;
+            fixture.detectChanges();
+
+            // A tooltip on the select host is muted while the select panel is open, so the panel stays closed.
+            await openTooltip();
+
+            expect(getTriggerValue()).toBe('Активен');
+            expect(getTooltipValue()).toBe('Активен');
+
+            const component = getPipeComponent();
+            const changePipe = vi.fn();
+
+            getFilterBar().onChangePipe.subscribe(changePipe);
+
+            activeName.set('Active');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getTriggerValue()).toBe('Active');
+            expect(getTooltipValue()).toBe('Active');
+            expect(component.data.value).toBe(pipeValue);
+            expect(getFilterBar().filter()).toBe(filter);
+            expect(changePipe).not.toHaveBeenCalled();
+        });
+
+        it('should filter by the translated name and keep the current query', async () => {
+            vi.useFakeTimers();
+
+            const { activeName, ACTIVE, BLOCKED } = createValues();
+
+            setTemplate([ACTIVE, BLOCKED]);
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: ACTIVE, search: true })
+            ]);
+            fixture.detectChanges();
+
+            await openPanel();
+
+            const component = getPipeComponent();
+
+            component.searchControl.setValue('Active');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // Still the old label, so the new one matches nothing yet.
+            expect(component.filteredOptions()).toEqual([]);
+
+            activeName.set('Active');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // The query typed before the translation is not touched by it.
+            expect(component.searchControl.value).toBe('Active');
+            expect(component.filteredOptions()).toEqual([ACTIVE]);
+
+            component.searchControl.setValue('Активен');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // The previous label no longer matches.
+            expect(component.filteredOptions()).toEqual([]);
+            expect(component.select().panelOpen).toBe(true);
+        });
+
+        it('should keep a value hidden by the search selected and unchanged across a translation', async () => {
+            vi.useFakeTimers();
+
+            const { activeName, ACTIVE, BLOCKED } = createValues();
+            const pipeValue = ACTIVE;
+            const filter = createFilter([createPipe({ name: 'test', value: pipeValue, search: true })]);
+
+            setTemplate([ACTIVE, BLOCKED]);
+            fixture.componentInstance.activeFilter = filter;
+            fixture.detectChanges();
+
+            await openPanel();
+
+            const component = getPipeComponent();
+
+            component.searchControl.setValue('Заблокирован');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(component.filteredOptions()).toEqual([BLOCKED]);
+
+            const changePipe = vi.fn();
+
+            getFilterBar().onChangePipe.subscribe(changePipe);
+
+            activeName.set('Active');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(component.filteredOptions()).toEqual([BLOCKED]);
+            expect(component.data.value).toBe(pipeValue);
+            expect(component.selected).toBe(pipeValue);
+            expect(getFilterBar().filter()).toBe(filter);
+            expect(component.select().panelOpen).toBe(true);
+            expect(changePipe).not.toHaveBeenCalled();
+
+            // The selected value is filtered out of the panel, but its new label is already visible.
+            expect(getTriggerValue()).toBe('Active');
+
+            // A tooltip is muted while the panel is open; closing the panel keeps the query, so the label
+            // can be checked before the search is cleared.
+            component.select().close();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            await openTooltip();
+
+            expect(getTooltipValue()).toBe('Active');
+
+            component.searchControl.setValue('');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            await openPanel();
+
+            // Filtered out never means deselected: the option comes back selected under its new label.
+            expect(getSelectedOptionTexts()).toEqual(['Active']);
+            expect(getTriggerValue()).toBe('Active');
+        });
+
+        it('should resolve a captioned signal-backed name in the view value, option text and trigger', async () => {
+            vi.useFakeTimers();
+
+            const { activeName, ACTIVE } = createValues();
+            const captioned: KbqSelectValue = { ...ACTIVE, caption: 'category.active' };
+
+            setTemplate([captioned]);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: captioned })]);
+            fixture.detectChanges();
+
+            await openPanel();
+
+            const option = getPipeComponent().select().options.first;
+
+            expect(option.viewValue).toBe('Активен');
+            expect(
+                document
+                    .querySelector('.kbq-option')!
+                    .querySelector('div:not(.kbq-option-caption)')!
+                    .textContent!.trim()
+            ).toBe('Активен');
+            expect(getTriggerValue()).toBe('Активен');
+
+            activeName.set('Active');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(option.viewValue).toBe('Active');
+            expect(
+                document
+                    .querySelector('.kbq-option')!
+                    .querySelector('div:not(.kbq-option-caption)')!
+                    .textContent!.trim()
+            ).toBe('Active');
+            expect(getTriggerValue()).toBe('Active');
+        });
+
+        it('should keep a custom compareWith matching a signal-named value across a translation', async () => {
+            vi.useFakeTimers();
+
+            const { activeName, ACTIVE } = createValues();
+            const customCompare = (
+                o1: KbqSelectValue | null | undefined,
+                o2: KbqSelectValue | null | undefined
+            ): boolean => o1?.value === o2?.value;
+            // Equal to ACTIVE only by `value`: the custom comparator, not the id, has to match it.
+            const selected: KbqSelectValue = { name: 'Другое', value: 'active' };
+
+            setTemplate([ACTIVE], { compareWith: customCompare });
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: selected })]);
+            fixture.detectChanges();
+
+            await openPanel();
+
+            const component = getPipeComponent();
+
+            expect(component.select().compareWith()).toBe(customCompare);
+            expect(getSelectedOptionTexts()).toEqual(['Активен']);
+            expect(getTriggerValue()).toBe('Активен');
+
+            const changePipe = vi.fn();
+
+            getFilterBar().onChangePipe.subscribe(changePipe);
+
+            activeName.set('Active');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(component.data.value).toBe(selected);
+            expect(getSelectedOptionTexts()).toEqual(['Active']);
+            expect(getTriggerValue()).toBe('Active');
+            expect(changePipe).not.toHaveBeenCalled();
+        });
+
+        it('should let a custom valueTemplate resolve the name signal through the public resolver', async () => {
+            vi.useFakeTimers();
+
+            const { activeName, ACTIVE } = createValues();
+
+            setTemplate([ACTIVE], { valueTemplate: fixture.componentInstance.resolvedOptionTemplate() });
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: ACTIVE })]);
+            fixture.detectChanges();
+
+            await openPanel();
+
+            const component = getPipeComponent();
+
+            // The custom template owns the option content and the select's own view value...
+            expect(component.select().triggerValue).toBe('resolved Активен');
+            expect(document.querySelector('.kbq-option')!.textContent!.trim()).toBe('resolved Активен');
+            // ...while the pipe trigger shows the name, because a signal name is not renderable text.
+            expect(getTriggerValue()).toBe('Активен');
+
+            const changePipe = vi.fn();
+
+            getFilterBar().onChangePipe.subscribe(changePipe);
+
+            activeName.set('Active');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(component.select().triggerValue).toBe('resolved Active');
+            expect(document.querySelector('.kbq-option')!.textContent!.trim()).toBe('resolved Active');
+            expect(getTriggerValue()).toBe('Active');
+            expect(component.data.value).toBe(ACTIVE);
+            expect(changePipe).not.toHaveBeenCalled();
+        });
+
+        it('should throw when a signal-backed value has no stable id', () => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            const withoutId: KbqSelectValue = { name: signal('Активен'), value: 'active' };
+
+            expect(() => getPipeComponent().compareByValue(withoutId, withoutId)).toThrow(/stable "id"/);
+        });
+
+        it('should compare signal-backed values by id rather than by name', () => {
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            const component = getPipeComponent();
+            const first: KbqSelectValue = { id: 'active', name: signal('Активен'), value: 'active' };
+            const second: KbqSelectValue = { id: 'active', name: 'Active', value: 'active' };
+
+            expect(component.compareByValue(first, second)).toBe(true);
+            expect(component.compareByValue(first, { ...second, id: 'blocked' })).toBe(false);
         });
     });
 });

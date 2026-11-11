@@ -160,9 +160,19 @@ export interface KbqDateTimeValue {
 }
 
 export interface KbqSelectValue {
-    name: string;
+    /**
+     * Display name of the option: a plain string, or a `Signal<string>` that has to come with a stable
+     * `id`. The built-in option content, trigger and search resolve it, so a translation re-renders the
+     * label without replacing the value. A custom `valueTemplate` resolves it with
+     * {@link kbqResolveFilterBarName}.
+     */
+    name: KbqFilterBarName;
     value: unknown;
-    /** Optional stable identifier used by the select/multi-select pipe comparators. */
+
+    /**
+     * Optional stable identifier used by the select/multi-select pipe comparators. Required when `name`
+     * is a signal: a function is not an identity.
+     */
     id?: string | number;
 
     /**
