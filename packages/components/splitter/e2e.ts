@@ -301,6 +301,23 @@ export class E2eSplitterNestedCrossAxis {}
 export class E2eSplitterPercentSizes {}
 
 @Component({
+    selector: 'e2e-splitter-viewport-sizes',
+    imports: [KbqSplitter, KbqSplitterPanel],
+    template: `
+        <kbq-splitter>
+            <kbq-splitter-panel data-testid="e2eSplitterPanelFirst" size="25vw">first</kbq-splitter-panel>
+            <kbq-splitter-panel data-testid="e2eSplitterPanelSecond">second</kbq-splitter-panel>
+        </kbq-splitter>
+    `,
+    styles: HOST_STYLES,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSplitterViewportSizes'
+    }
+})
+export class E2eSplitterViewportSizes {}
+
+@Component({
     selector: 'e2e-splitter-unsatisfiable-minimums',
     imports: [KbqSplitter, KbqSplitterPanel],
     template: `

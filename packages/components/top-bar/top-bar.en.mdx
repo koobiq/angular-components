@@ -6,7 +6,10 @@ Depending on the interface requirements, it may include a logo, a title, breadcr
 
 ### Page title
 
-This content option is suitable for initial screens when there is no need to display the navigation path.
+This content option is suitable for initial screens when there is no need to display the navigation path. Mark the
+title with `[kbqTopBarTitle]`: it has the same size as `size="big"` breadcrumbs, so a page that switches between the
+two keeps the bar height and the text position. Add `kbq-truncate-line` to keep a long title on one line; without it
+the title wraps and the bar grows with it.
 
 <Example id="top-bar-overview" />
 
@@ -45,13 +48,13 @@ When the panel is compressed, the breadcrumbs will adjust as follows:
 
 <Example id="top-bar-breadcrumbs-adaptive" />
 
-A more detailed explanation of breadcrumb compression is provided on the [Breadcrumbs](/en/components/breadcrumbs) page.
-
 #### Page title variant
 
 The variant using only the page title will adjust as follows:
 
 <Example id="top-bar-title-counter-adaptive" />
+
+A more detailed explanation of breadcrumb compression is provided on the [Breadcrumbs](/en/components/breadcrumbs) page.
 
 #### Scroll behavior
 
@@ -81,6 +84,7 @@ does not reach it.
 | `--kbq-top-bar-padding-vertical`          | `var(--kbq-size-m)`                        | Vertical padding of the toolbar.                                                                                                     |
 | `--kbq-top-bar-padding-horizontal`        | `var(--kbq-size-xxl)`                      | Horizontal padding of the toolbar.                                                                                                   |
 | `--kbq-top-bar-border-radius`             | `0`                                        | Corner radius of the toolbar.                                                                                                        |
+| `--kbq-top-bar-title-height`              | `var(--kbq-size-3xl)`                      | Minimum height of `[kbqTopBarTitle]`, the box of a `size="big"` breadcrumb item.                                                     |
 | `--kbq-top-bar-spacer-min-width`          | `80px`                                     | Width of `[kbqTopBarSpacer]`, the guaranteed clearance between the two sides.                                                        |
 | `--kbq-top-bar-container-start-min-width` | `0`                                        | Width the `start` container never shrinks below. Set it whenever the left-hand content has to stay readable in a narrow toolbar.     |
 | `--kbq-top-bar-container-start-gap`       | `0`                                        | Gap between the elements of the `start` container.                                                                                   |

@@ -163,7 +163,7 @@ describe('KbqTreeNodeToggle', () => {
 
         expect(toggleOf('src').disabled).toBe(false);
 
-        component.treeControl.filterNodes('a11y');
+        component.treeControl.applyFilter('a11y');
         await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
@@ -180,7 +180,7 @@ describe('KbqTreeNodeToggle', () => {
 
         expect(toggleOf('src').disabled).toBe(true);
 
-        component.treeControl.filterNodes('a11y');
+        component.treeControl.applyFilter('a11y');
         await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
@@ -190,12 +190,12 @@ describe('KbqTreeNodeToggle', () => {
     });
 
     it('should stop listening to the filter stream once the tree is gone', () => {
-        const filterValue = component.treeControl.filterValue as unknown as { observers: unknown[] };
+        const filterModel = component.treeControl.filterModel as unknown as { changed: { observers: unknown[] } };
 
-        expect(filterValue.observers.length).toBeGreaterThan(0);
+        expect(filterModel.changed.observers.length).toBeGreaterThan(0);
 
         fixture.destroy();
 
-        expect(filterValue.observers.length).toBe(0);
+        expect(filterModel.changed.observers.length).toBe(0);
     });
 });

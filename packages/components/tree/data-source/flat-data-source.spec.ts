@@ -255,8 +255,68 @@ describe('KbqTreeFlatDataSource', () => {
         dataSource.data = buildData();
         dataSource.connect(collectionViewer).subscribe((nodes) => emissions.push(names(nodes)));
 
-        control.filterNodes('draft');
+        control.applyFilter('draft');
         await Promise.resolve();
+
+        expect(emissions[emissions.length - 1]).toEqual(['root', 'documents', 'draft']);
+    });
+
+    it('should emit no nodes when a zero-match query starts with an empty filter model', async () => {
+        const emissions: string[][] = [];
+
+        dataSource.data = buildData();
+        dataSource.connect(collectionViewer).subscribe((nodes) => emissions.push(names(nodes)));
+
+        control.applyFilter('no-such-thing');
+        await Promise.resolve();
+
+        expect(emissions[emissions.length - 1]).toEqual([]);
+    });
+
+    it('should emit no nodes when an active filter is replaced by a zero-match query', async () => {
+        const emissions: string[][] = [];
+
+        dataSource.data = buildData();
+        dataSource.connect(collectionViewer).subscribe((nodes) => emissions.push(names(nodes)));
+
+        control.applyFilter('draft');
+        await Promise.resolve();
+
+        control.applyFilter('no-such-thing');
+        await Promise.resolve();
+
+        expect(emissions[emissions.length - 1]).toEqual([]);
+    });
+
+    it('should keep zero-match results rendered until reset restores the pre-filter expansion', async () => {
+        const emissions: string[][] = [];
+
+        dataSource.data = buildData();
+        control.expand(byName(control.dataNodes, 'root'));
+        dataSource.connect(collectionViewer).subscribe((nodes) => emissions.push(names(nodes)));
+
+        control.applyFilter('no-such-thing');
+        await Promise.resolve();
+
+        expect(emissions[emissions.length - 1]).toEqual([]);
+
+        control.resetFilter();
+        await Promise.resolve();
+
+        expect(emissions[emissions.length - 1]).toEqual(['root', 'documents', 'images', 'other']);
+    });
+
+    it('should re-render when the consumer mutates filterModel directly', () => {
+        const emissions: string[][] = [];
+
+        dataSource.data = buildData();
+        dataSource.connect(collectionViewer).subscribe((nodes) => emissions.push(names(nodes)));
+
+        control.filterModel.select(
+            byName(control.dataNodes, 'root'),
+            byName(control.dataNodes, 'documents'),
+            byName(control.dataNodes, 'draft')
+        );
 
         expect(emissions[emissions.length - 1]).toEqual(['root', 'documents', 'draft']);
     });
@@ -267,10 +327,15 @@ describe('KbqTreeFlatDataSource', () => {
         dataSource.data = buildData();
         dataSource.connect(collectionViewer).subscribe((nodes) => emissions.push(names(nodes)));
 
-        control.filterNodes('draft');
+        control.applyFilter('draft');
         await Promise.resolve();
 
-        control.filterNodes('');
+        expect(emissions[emissions.length - 1]).toEqual(['root', 'documents', 'draft']);
+
+        control.resetFilter();
+
+        expect(emissions[emissions.length - 1]).not.toEqual([]);
+
         await Promise.resolve();
 
         expect(emissions[emissions.length - 1]).toEqual(['root', 'other']);

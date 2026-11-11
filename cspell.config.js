@@ -13,8 +13,9 @@ const config = {
         '**/public_api_guard/**',
         // instructions for AI agents, full of code identifiers; not user-facing documentation
         '.claude/rules/**',
-        // superpowers plans and specs — AI-agent process docs, not user-facing documentation
-        'docs/superpowers/**'
+        // planning docs and agent scratch from the Superpowers skills; internal, not user-facing
+        'docs/superpowers/**',
+        '.superpowers/**'
     ],
     import: [
         'tools/cspell-locales/en.json',

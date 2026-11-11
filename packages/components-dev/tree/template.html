@@ -65,9 +65,7 @@
 >
     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
         <i kbq-icon="kbq-circle-info_16"></i>
-        <span
-            [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
-        ></span>
+        <span [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"></span>
     </kbq-tree-option>
 
     <kbq-tree-option
@@ -79,9 +77,7 @@
 
         <kbq-tree-node-toggle [node]="node" />
 
-        <span
-            [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
-        ></span>
+        <span [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"></span>
 
         <kbq-option-action
             [kbqDropdownTriggerFor]="dropdown"
@@ -104,7 +100,7 @@
             <i kbq-icon="kbq-circle-info_16"></i>
             <span
                 #kbqTitleText
-                [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
+                [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"
             ></span>
         </kbq-tree-option>
 
@@ -117,9 +113,7 @@
 
             <kbq-tree-node-toggle [node]="node" />
 
-            <span
-                [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterValue.value"
-            ></span>
+            <span [innerHTML]="treeControl.getViewValue(node) | kbqHighlightBackground: treeControl.filterQuery"></span>
 
             <kbq-option-action
                 [kbqDropdownTriggerFor]="dropdown"

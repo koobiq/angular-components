@@ -156,6 +156,7 @@ yarn run prettier                                                      # Check f
 yarn run cspell                                                        # Spell-check Markdown (dictionaries in tools/cspell-locales/{en,ru}.json)
 yarn run check-peer-deps                                               # Validate peerDependencies of the published packages
 yarn run check-tokens-data                                             # Verify the design tokens docs data matches the installed @koobiq/design-tokens
+yarn run check-docs-pages                                              # Fail when the en and ru versions of a docs page differ in structure or a link names a heading that is gone
 yarn run eslint:fix && yarn run stylelint:fix && yarn run prettier:fix # Auto-fix all
 ```
 
@@ -185,16 +186,16 @@ The guard reads the flattened typings ng-packagr writes to `dist/components/type
 
 Every pull request runs these workflows:
 
-| Workflow                          | What it runs                                                                                                                                                 |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-spec-types`, `check-tokens-data` |
-| Unit tests                        | `styles:build-all`, then `unit:all` (one Vitest run of the `angular` and `node` projects, not `mcp` — that is `mcp.yml`)                                     |
-| MCP                               | `build:mcp` on its own (needs no `@koobiq/components` build), `check-mcp-data` and `unit:mcp`                                                                |
-| E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                                             |
-| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs`, `check-llms` and `check-skills`             |
-| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs and `ssr:build`, both fail on a warning   |
-| Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label                                       |
-| License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                                                   |
+| Workflow                          | What it runs                                                                                                                                                                     |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-spec-types`, `check-tokens-data`, `check-docs-pages` |
+| Unit tests                        | `styles:build-all`, then `unit:all` (one Vitest run of the `angular` and `node` projects, not `mcp` — that is `mcp.yml`)                                                         |
+| MCP                               | `build:mcp` on its own (needs no `@koobiq/components` build), `check-mcp-data` and `unit:mcp`                                                                                    |
+| E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                                                                 |
+| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs`, `check-llms` and `check-skills`                                 |
+| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs and `ssr:build`, both fail on a warning                       |
+| Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label                                                           |
+| License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                                                                       |
 
 A docs preview is deployed to Firebase for pull requests opened from this repository.
 

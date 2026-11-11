@@ -35,12 +35,8 @@ type ExampleAction = {
     ],
     template: `
         <kbq-top-bar>
-            <div
-                class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs kbq-title kbq-truncate-line"
-                kbqTopBarContainer
-                placement="start"
-            >
-                <span class="kbq-truncate-line">Actions</span>
+            <div class="layout-row layout-align-center-center" kbqTopBarContainer placement="start">
+                <span class="kbq-truncate-line" kbqTopBarTitle>Actions</span>
             </div>
 
             <div kbqTopBarSpacer></div>

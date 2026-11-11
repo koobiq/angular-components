@@ -21,6 +21,23 @@
         min-height: var(--kbq-size-l);
     }
 
+    // Custom content in place of the icon: the navbar only reserves the square, the content
+    // positions itself inside it.
+    & > .kbq-navbar-item-content {
+        flex-shrink: 0;
+
+        width: var(--kbq-navbar-item-size-custom-content-width);
+        height: var(--kbq-navbar-item-size-custom-content-height);
+    }
+
+    // The item paints its state overlay and the keyboard focus ring for a custom trigger, so the trigger host
+    // has to sit above the overlay to stay clickable, and must not draw the browser's own outline inside it.
+    &.kbq-navbar-item_has-custom-trigger > :first-child {
+        z-index: 1;
+
+        outline: none;
+    }
+
     // Filled fade-contrast only: its background is a semi-transparent tint, so the
     // navbar icon shows through. Composite the tint over an opaque bg-tertiary substrate.
     // The outline variant is intentionally left untouched — it stays a clean transparent outline.

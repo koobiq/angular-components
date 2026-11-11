@@ -1,9 +1,14 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { Overlay, ScrollStrategy } from '@angular/cdk/overlay';
+import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, inject, signal } from '@angular/core';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { KBQ_NAVBAR_ITEM_TRIGGER, KbqNavbarItemTrigger } from './index';
 import { KbqNavbarModule } from './navbar.module';
 
 @Component({
@@ -871,3 +876,278 @@ export class E2eNavbarCollapse {}
     }
 })
 export class E2eVerticalNavbarItemClippedTitle {}
+
+/**
+ * Geometry of the two tooltips a navbar can show around one item: the one the item owns and a `kbqTooltip`
+ * nested inside it. Both inherit `offset: 0` and the `kbq-tooltip-panel_horizontal-navbar` panel class from
+ * the navbar root, and the panel class's margin is what renders the 9px gap — a unit test can read the
+ * inherited values, but only a real browser catches the nested tooltip keeping the stylesheet's own gap.
+ *
+ * The nested trigger is a `kbq-button`, like the `+` action buttons of the navbar examples: only a projected
+ * `KbqButton` marks the item `kbq-navbar-item_has-nested`, and without that class the item's own `:after`
+ * overlay covers the content and swallows its pointer events. It is right-placed like the collapsed item's
+ * own tooltip, so both gaps read on the same axis.
+ *
+ * Kept a separate route so it owns no screenshot baseline.
+ */
+@Component({
+    selector: 'e2e-navbar-tooltip-offset',
+    imports: [KbqButtonModule, KbqNavbarModule, KbqIconModule, KbqToolTipModule],
+    template: `
+        <div style="height: 320px; display: flex">
+            <kbq-vertical-navbar>
+                <kbq-navbar-container>
+                    <kbq-navbar-item data-testid="owned-tooltip-trigger">
+                        <i kbq-icon="kbq-folder_16"></i>
+                        <kbq-navbar-title>Owned tooltip</kbq-navbar-title>
+                    </kbq-navbar-item>
+
+                    <kbq-navbar-item>
+                        <button
+                            type="button"
+                            kbq-button
+                            data-testid="nested-tooltip-trigger"
+                            kbqTooltip="Nested tooltip"
+                            kbqPlacement="right"
+                            [color]="'contrast'"
+                            [kbqStyle]="'filled'"
+                        >
+                            +
+                        </button>
+                    </kbq-navbar-item>
+                </kbq-navbar-container>
+            </kbq-vertical-navbar>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNavbarTooltipOffset'
+    }
+})
+export class E2eNavbarTooltipOffset {}
+
+@Component({
+    selector: 'e2e-navbar-popup-arrow-centering',
+    imports: [KbqNavbarModule, KbqButtonModule, KbqPopoverModule, KbqToolTipModule],
+    template: `
+        <div style="padding: 160px 160px 800px">
+            <kbq-navbar aria-label="Popup arrow centering">
+                <kbq-navbar-container>
+                    <kbq-navbar-item>
+                        <button
+                            type="button"
+                            kbq-button
+                            kbqPopover
+                            kbqPopoverPlacement="bottomRight"
+                            kbqPopoverContent="Popover content with a centered arrow."
+                            kbqTrigger="click"
+                            data-testid="popover-trigger"
+                            style="width: 280px"
+                            [kbqPopoverArrow]="true"
+                            [kbqPopoverArrowCentered]="true"
+                        >
+                            Popover
+                        </button>
+                    </kbq-navbar-item>
+
+                    <kbq-navbar-item>
+                        <button
+                            type="button"
+                            kbq-button
+                            kbqPlacement="bottomRight"
+                            kbqTooltip="Tooltip content with a centered arrow."
+                            kbqTrigger="click"
+                            data-testid="tooltip-trigger"
+                            style="width: 280px"
+                            [kbqTooltipArrow]="true"
+                            [kbqTooltipArrowCentered]="true"
+                            [kbqTooltipScrollStrategy]="tooltipScrollStrategy"
+                        >
+                            Tooltip
+                        </button>
+                    </kbq-navbar-item>
+                </kbq-navbar-container>
+            </kbq-navbar>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNavbarPopupArrowCentering'
+    }
+})
+export class E2eNavbarPopupArrowCentering {
+    private readonly overlay = inject(Overlay);
+
+    // The default closes a tooltip on scroll; this scenario measures its repositioned geometry instead.
+    protected readonly tooltipScrollStrategy = (): ScrollStrategy => this.overlay.scrollStrategies.reposition();
+}
+/**
+ * Custom content marked with `kbqNavbarItemContent` in place of the item icon — a logo padded inside the reserved
+ * square and one filling it edge to edge — next to a plain icon item, in the expanded and the collapsed navbar.
+ */
+@Component({
+    selector: 'e2e-navbar-item-custom-content',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget" style="height: 220px; display: flex; gap: 20px">
+            @for (expanded of [true, false]; track expanded) {
+                <kbq-vertical-navbar
+                    [attr.data-testid]="expanded ? 'vertical-expanded' : 'vertical-collapsed'"
+                    [expanded]="expanded"
+                >
+                    <kbq-navbar-container>
+                        <a href="#" kbq-navbar-item data-testid="padded">
+                            <div kbqNavbarItemContent>
+                                <div class="e2e-custom-content-logo"></div>
+                            </div>
+                            <kbq-navbar-title>Orbit</kbq-navbar-title>
+                        </a>
+
+                        <a href="#" kbq-navbar-item data-testid="full-bleed">
+                            <div kbqNavbarItemContent>
+                                <div class="e2e-custom-content-logo e2e-custom-content-logo_full"></div>
+                            </div>
+                            <kbq-navbar-title>Orbit</kbq-navbar-title>
+                        </a>
+
+                        <a href="#" kbq-navbar-item class="kbq-active">
+                            <i kbq-icon="kbq-folder_16"></i>
+                            <kbq-navbar-title>Панель мониторинга</kbq-navbar-title>
+                        </a>
+                    </kbq-navbar-container>
+                </kbq-vertical-navbar>
+            }
+        </div>
+    `,
+    styles: `
+        .e2e-custom-content-logo {
+            width: 32px;
+            height: 32px;
+            margin: 4px;
+            border-radius: 8px;
+            background: #ec2fa2;
+        }
+
+        .e2e-custom-content-logo_full {
+            width: 40px;
+            height: 40px;
+            margin: 0;
+            border-radius: 0;
+            background: #b026ff;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNavbarItemCustomContent'
+    }
+})
+export class E2eNavbarItemCustomContent {}
+
+/**
+ * A custom interactive component provided as `KBQ_NAVBAR_ITEM_TRIGGER`: it owns a popover and the item's
+ * keyboard focus, so the item forwards focus into it and adds no click or button behavior of its own.
+ */
+@Component({
+    selector: 'e2e-notifications-trigger',
+    imports: [KbqIconModule],
+    template: `
+        <i kbq-icon="kbq-bell_16" [color]="'empty'"></i>
+    `,
+    providers: [{ provide: KBQ_NAVBAR_ITEM_TRIGGER, useExisting: forwardRef(() => E2eNotificationsTrigger) }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[attr.tabindex]': '-1',
+        '(focus)': 'hasFocusState.set(true)',
+        '(blur)': 'hasFocusState.set(false)'
+    },
+    hostDirectives: [
+        {
+            directive: KbqPopoverTrigger,
+            inputs: ['kbqPopoverContent', 'kbqPopoverHeader', 'kbqPopoverPlacement']
+        }
+    ]
+})
+class E2eNotificationsTrigger implements KbqNavbarItemTrigger {
+    private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly focusMonitor = inject(FocusMonitor);
+
+    protected readonly hasFocusState = signal(false);
+
+    get hasFocus(): boolean {
+        return this.hasFocusState();
+    }
+
+    focus(): void {
+        this.host.nativeElement.focus();
+    }
+
+    focusViaKeyboard(): void {
+        this.focusMonitor.focusVia(this.host.nativeElement, 'keyboard');
+    }
+}
+
+/**
+ * A navbar item hosting a custom interactive component next to a plain item: roving keyboard focus reaches
+ * the component, and its popover opens from the keyboard with no synthetic clicks getting in the way.
+ */
+@Component({
+    selector: 'e2e-navbar-item-custom-component',
+    imports: [KbqNavbarModule, KbqIconModule, KbqBadgeModule, E2eNotificationsTrigger],
+    template: `
+        <div data-testid="e2eScreenshotTarget" style="height: 180px; display: flex">
+            <kbq-vertical-navbar [expanded]="true">
+                <kbq-navbar-container>
+                    <kbq-navbar-item data-testid="plain-item">
+                        <i kbq-icon="kbq-folder_16"></i>
+                        <kbq-navbar-title>Tasks</kbq-navbar-title>
+                    </kbq-navbar-item>
+
+                    <kbq-navbar-item data-testid="custom-item" class="e2e-navbar-item_compact-leading">
+                        <e2e-notifications-trigger
+                            kbqNavbarItemContent
+                            kbqPopoverContent="Body of the popover"
+                            kbqPopoverHeader="Notifications"
+                            kbqPopoverPlacement="right"
+                        />
+                        <kbq-navbar-title>Notifications</kbq-navbar-title>
+                        <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                    </kbq-navbar-item>
+
+                    <kbq-navbar-item data-testid="plain-notifications" class="e2e-navbar-item_compact-leading">
+                        <span kbqNavbarItemContent class="e2e-navbar-item-leading">
+                            <i kbq-icon="kbq-bell_16" [color]="'empty'"></i>
+                        </span>
+                        <kbq-navbar-title>Notifications</kbq-navbar-title>
+                        <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
+                    </kbq-navbar-item>
+                </kbq-navbar-container>
+
+                <button kbq-navbar-toggle></button>
+            </kbq-vertical-navbar>
+        </div>
+    `,
+    styles: [
+        `
+            .e2e-navbar-item-leading {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .kbq-expanded .e2e-navbar-item-leading {
+                justify-content: flex-start;
+            }
+
+            /* A titled item has an icon-sized leading slot, so its title starts on the plain item's text axis. */
+            .e2e-navbar-item_compact-leading.kbq-expanded {
+                --kbq-navbar-item-size-custom-content-width: var(--kbq-size-l);
+                --kbq-navbar-item-size-custom-content-height: var(--kbq-size-l);
+            }
+        `
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNavbarItemCustomComponent'
+    }
+})
+export class E2eNavbarItemCustomComponent {}

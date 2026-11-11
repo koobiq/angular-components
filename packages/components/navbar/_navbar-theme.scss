@@ -1,7 +1,10 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-navbar-item($state-name) {
-    &:not(.kbq-navbar-item_has-nested) {
+    // A projected button or form field paints its own states; a custom trigger is a bare host the component
+    // styles, so the item keeps painting them for it.
+    &:not(.kbq-navbar-item_has-nested),
+    &.kbq-navbar-item_has-custom-trigger {
         &:after {
             display: block;
             background: var(--kbq-navbar-item-#{$state-name}-content-background);
@@ -15,7 +18,11 @@
     // No `!important` needed: the child combinator plus the item class already outweighs everything that
     // colours a bare icon (`.kbq-icon` and its `.kbq-icon.kbq-<color>` modifiers, at most two classes), and
     // the state variants below add a class of their own on top of this one.
-    & > .kbq-icon.kbq-empty {
+    // A titled item may keep its leading icon inside `kbqNavbarItemContent` (the 40×40 square a custom
+    // component uses), so the same state colour has to reach a nested icon.
+    & > .kbq-icon.kbq-empty,
+    & > .kbq-navbar-item-content .kbq-icon.kbq-empty,
+    &.kbq-navbar-item_has-custom-trigger > :first-child .kbq-icon.kbq-empty {
         color: var(--kbq-navbar-item-#{$state-name}-content-icon-left);
     }
 
@@ -53,7 +60,8 @@ button {
             @include kbq-navbar-item(states-hover);
         }
 
-        &.cdk-focused.cdk-keyboard-focused {
+        &.cdk-focused.cdk-keyboard-focused,
+        &.kbq-navbar-item_keyboard-focused {
             outline: none;
 
             &:after {

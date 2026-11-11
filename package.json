@@ -193,6 +193,7 @@
         "build:mcp": "yarn run build:mcp:index && tsc -p packages/mcp/tsconfig.json && node packages/mcp/scripts/copy-to-dist.cjs",
         "build:mcp:index": "tsx packages/mcp/src/indexer/build-index.ts",
         "build:mcp:data": "node packages/mcp/scripts/build-data.cjs",
+        "check-docs-pages": "ts-node --project ./tools/docs-pages/tsconfig.json ./tools/docs-pages/check-pages.ts",
         "check-mcp-data": "tsx packages/mcp/src/indexer/check-data-freshness.ts",
         "mcp:probe": "tsx packages/mcp/test/probe-stdio.ts",
         "docs": "yarn run build:components && yarn run build:components-experimental && yarn run styles:build-all && yarn run build:angular-luxon-adapter && yarn run build:angular-moment-adapter && yarn run build:tokens:data && yarn run build:docs-examples-module && yarn run build:package-docs-content && yarn run build:docs-examples && yarn run docs:start:dev",
@@ -338,7 +339,8 @@
         "check-e2e-types": "tsc -p tsconfig.playwright-spec.json --noEmit",
         "check-spec-types": "tsc -p tsconfig.spec.json --noEmit",
         "prettier": "prettier --check . --ignore-unknown",
-        "prettier:fix": "yarn run prettier --write"
+        "prettier:fix": "yarn run prettier --write",
+        "commitlint": "commitlint"
     },
     "release": {
         "packages": [
