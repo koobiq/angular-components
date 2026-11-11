@@ -114,6 +114,7 @@ describe('createCliProgram', () => {
     beforeEach(() => {
         for (const mock of Object.values(taskMocks)) {
             mock.options = undefined;
+            mock.run.mockClear();
         }
     });
 
@@ -154,6 +155,35 @@ describe('createCliProgram', () => {
         expect(error).toBeInstanceOf(CommanderError);
         expect(error?.exitCode).toBe(1);
         expect(error?.message).toContain('frobnicate');
+    });
+
+    it.each([
+        ['stage', taskMocks.stage],
+        ['stage-commit', taskMocks.stageCommit],
+        ['publish-ci', taskMocks.publishCi],
+        ['publish-dist', taskMocks.publishDist],
+        ['publish-ci-gitlab', taskMocks.publishCiGitlab],
+        ['publish-ci-github', taskMocks.publishCiGithub],
+        ['resolve-npm-tag', taskMocks.resolveNpmTag]
+    ])('should route %s to its own task', (action, mock) => {
+        parse([action]);
+
+        expect(mock.run).toHaveBeenCalledTimes(1);
+
+        for (const other of Object.values(taskMocks)) {
+            if (other !== mock) {
+                expect(other.run).not.toHaveBeenCalled();
+            }
+        }
+    });
+
+    it('should pass only projectDir and packageName to resolve-npm-tag', () => {
+        parse(['resolve-npm-tag', '-p', '/proj', '--package-name', '@koobiq/icons', '-c', 'scope']);
+
+        expect(taskMocks.resolveNpmTag.options).toEqual({
+            projectDir: '/proj',
+            packageName: '@koobiq/icons'
+        });
     });
 
     it('should map every flag into the task config', () => {

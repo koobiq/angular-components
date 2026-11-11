@@ -10,8 +10,8 @@ describe(getSemverVersionType.name, () => {
 });
 
 describe(getAllowedPublishBranches.name, () => {
-    it('should publish a major only from master', () => {
-        expect(getAllowedPublishBranches(parseVersionName('1.0.0')!)).toEqual(['master']);
+    it('should publish a major only from main', () => {
+        expect(getAllowedPublishBranches(parseVersionName('1.0.0')!)).toEqual(['main']);
     });
 
     it('should publish a minor from its line branch', () => {

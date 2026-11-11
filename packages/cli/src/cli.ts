@@ -19,15 +19,21 @@ enum CommandTypes {
     ResolveNpmTag = 'resolve-npm-tag'
 }
 
+// `Record<CommandTypes, ...>` makes a new enum member without a description a compile error,
+// so the help text cannot silently miss a command the `switch` already handles.
+const COMMAND_DESCRIPTIONS: Record<CommandTypes, string> = {
+    [CommandTypes.Stage]: 'Stage a new release (version bump and changelog)',
+    [CommandTypes.StageCommit]: 'Commit a staged release and push its tag',
+    [CommandTypes.PublishCi]: 'Publish the release from CI',
+    [CommandTypes.PublishDist]: 'Publish the release from the built dist directory',
+    [CommandTypes.PublishCIGitlab]: 'Publish the release from GitLab CI',
+    [CommandTypes.PublishCIGithub]: 'Publish the release from GitHub CI',
+    [CommandTypes.ResolveNpmTag]: 'Resolve the npm dist-tag for a package'
+};
+
 const COMMANDS = [
     'Commands:',
-    '  stage               Stage a new release (version bump and changelog)',
-    '  stage-commit        Commit a staged release and push its tag',
-    '  publish-ci          Publish the release from CI',
-    '  publish-dist        Publish the release from the built dist directory',
-    '  publish-ci-gitlab   Publish the release from GitLab CI',
-    '  publish-ci-github   Publish the release from GitHub CI',
-    '  resolve-npm-tag     Resolve the npm dist-tag for a package'
+    ...Object.values(CommandTypes).map((command) => `  ${command.padEnd(20)}${COMMAND_DESCRIPTIONS[command]}`)
 ].join('\n');
 
 export function createCliProgram(): Command {

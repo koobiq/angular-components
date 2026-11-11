@@ -1,5 +1,6 @@
 'use strict';
 
+const { execFileSync } = require('child_process');
 const { existsSync, readFileSync, statSync } = require('fs');
 const { resolve } = require('path');
 const { pathToFileURL } = require('url');
@@ -31,8 +32,17 @@ const verify = async () => {
             fail('bin/cli', 'does not start with "#!/usr/bin/env node"');
         }
 
-        if (!binCli.includes("require('../dist/cli.js')")) {
-            fail('bin/cli', "does not contain require('../dist/cli.js')");
+        // The bundle no longer self-executes (it is guarded by `require.main === module`), so
+        // bin/cli has to call `.runCliCommands()` itself — a substring check cannot tell that
+        // apart from a bin that silently exits 0 with empty stdout. Run the binary instead.
+        try {
+            const helpOutput = execFileSync(process.execPath, [binCliPath, '--help'], { encoding: 'utf8' });
+
+            if (!helpOutput.includes('koobiq-cli')) {
+                fail('bin/cli', '`--help` output does not contain "koobiq-cli"');
+            }
+        } catch (error) {
+            fail('bin/cli', `\`--help\` exited with an error: ${error.message}`);
         }
     }
 

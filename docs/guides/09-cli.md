@@ -52,42 +52,8 @@ and requires. Options are given on the command line or as environment variables:
 | `-r, --repo-name <string>`       | github repo name (default: `koobiq`)                            | `REPO_NAME`          |
 | `--package-name <string>`        | npm package name to resolve the dist-tag for                    | —                    |
 
-## Using `@koobiq/cli/release` in your own scripts
-
-If you only need the release notes for a version — for example, to post a release announcement —
-you do not need the full CLI. The `@koobiq/cli/release` entry point reads them straight out of your
-project's `CHANGELOG.md`. It throws if the file does not exist, and returns `null` if the version
-is not in it, so guard both:
-
-```ts
-import { extractReleaseNotes } from '@koobiq/cli/release';
-
-const notes = extractReleaseNotes('./CHANGELOG.md', '1.2.3');
-
-if (!notes) {
-    throw new Error('Version 1.2.3 was not found in the changelog');
-}
-
-console.log(notes.releaseTitle, notes.releaseNotes);
-```
-
-`parseTag` and `resolveChangelogPath` turn a release tag into the right changelog path. They support
-both a plain `{version}` tag and Nx's independent-release `{projectName}@{version}` tag, so the same
-code works for single-project and per-package releases:
-
-```ts
-import { extractReleaseNotes, parseTag, resolveChangelogPath } from '@koobiq/cli/release';
-
-const tag = process.env.GIT_TAG!; // e.g. '1.2.3' or '@scope/my-package@1.2.3'
-const changelogPath = resolveChangelogPath(process.cwd(), parseTag(tag));
-const notes = extractReleaseNotes(changelogPath, parseTag(tag).version);
-```
-
-`resolveChangelogPath` throws if the tag names a project but no `packages/{project}/CHANGELOG.md`
-exists for it.
-
 ## See also
 
 - [releasing-packages.md](./05-releasing-packages.md) — the full release workflow.
-- [packages/cli/README.md](../../packages/cli/README.md) — the canonical package reference, including
-  the local `npm pack` workflow.
+- [packages/cli/README.md](../../packages/cli/README.md) — the canonical package reference: reading
+  release notes from your own scripts via `@koobiq/cli/release` and the local `npm pack` workflow.
