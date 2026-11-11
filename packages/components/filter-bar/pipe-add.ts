@@ -15,6 +15,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { kbqResolveFilterBarName } from './filter-bar-name';
 import { KBQ_FILTER_BAR_HOST, KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
 import { getId } from './pipes/base-pipe';
 
@@ -52,7 +53,7 @@ import { getId } from './pipes/base-pipe';
                     (keydown.enter)="addPipeFromTemplate(option)"
                     (keydown.space)="addPipeFromTemplate(option)"
                 >
-                    {{ template.name }}
+                    {{ resolveName(template.name) }}
                 </kbq-option>
             }
         </kbq-select>
@@ -94,6 +95,14 @@ export class KbqPipeAdd {
     readonly addedPipes = computed(() => this.filterBar.filter()?.pipes.map((pipe: KbqPipe) => getId(pipe)) ?? []);
 
     /**
+     * Resolves a pipe-template name for the option list: a signal-backed name is read, so a translation
+     * change re-renders the option.
+     *
+     * @docs-private
+     */
+    protected readonly resolveName = kbqResolveFilterBarName;
+
+    /**
      * Visually-hidden live-region text announcing a newly-added pipe to assistive tech (WCAG 4.1.3).
      *
      * @docs-private
@@ -127,7 +136,7 @@ export class KbqPipeAdd {
 
             const message = this.filterBar
                 .localeConfiguration()
-                .add.addedAnnouncement.replace('{{ name }}', option.value.name);
+                .add.addedAnnouncement.replace('{{ name }}', kbqResolveFilterBarName(option.value.name));
 
             // Empty then re-fill on the next tick so an identical consecutive message still changes the
             // live-region text node and is re-announced (a same-string `set` would be an `Object.is` no-op

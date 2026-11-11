@@ -10,12 +10,14 @@ import {
     ElementRef,
     inject,
     InjectionToken,
+    isSignal,
     TemplateRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isMac, KbqFilterBarLocaleConfiguration, KbqPanelMaxHeight } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { filter, skip } from 'rxjs/operators';
+import { kbqResolveFilterBarName } from '../filter-bar-name';
 import {
     KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
     KBQ_FILTER_BAR_HOST,
@@ -28,9 +30,24 @@ import {
 /** Injection Token for providing configuration of filter-bar */
 export const KBQ_PIPE_DATA = new InjectionToken('KBQ_PIPE_DATA');
 
-/** function to get unique identifier of an element */
+/**
+ * Unique identifier of a pipe or pipe template: its `id`, or its `name` when it has none.
+ *
+ * A signal-backed name cannot identify anything — a function has no stable, serializable value — so an
+ * item with a signal name and no `id` is a configuration error and throws.
+ */
 export function getId(item: KbqPipeTemplate): KbqPipeType | string | number {
-    return item?.id ?? item?.name;
+    if (item?.id !== undefined && item?.id !== null) {
+        return item.id;
+    }
+
+    const name = item?.name;
+
+    if (isSignal(name)) {
+        throw new Error(`A pipe with a signal-backed name requires a stable "id" (pipe type: "${item?.type}").`);
+    }
+
+    return name;
 }
 
 @Directive({
@@ -151,6 +168,14 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected get noOptionsMessage(): string {
         return this.noOptionsText ?? this.localeConfiguration().pipe.noOptions;
     }
+
+    /**
+     * Resolves the pipe's display name for the trigger, tooltip and ARIA labels: a signal-backed name is
+     * read, so a translation change re-renders the text without touching the pipe data.
+     *
+     * @docs-private
+     */
+    protected readonly resolveName = kbqResolveFilterBarName;
 
     /**
      * Localized strings of the filter-bar, falling back to the defaults outside a bar.

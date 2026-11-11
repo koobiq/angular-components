@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, inject, Signal, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { createKeyboardEvent, dispatchEvent, ENTER, SPACE } from '@koobiq/components/core';
@@ -11,6 +11,7 @@ import {
     KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
+import { getId } from './pipes/base-pipe';
 
 const PIPE_TEMPLATE_ID_1 = 'TestPipeA';
 const PIPE_TEMPLATE_ID_2 = 'TestPipeB';
@@ -595,5 +596,110 @@ describe('KbqPipeAdd', () => {
 
             expect(pipeAdd.compareWith({ id: PIPE_TEMPLATE_ID_1 } as KbqPipe, PIPE_TEMPLATE_ID_2)).toBe(false);
         });
+    });
+
+    describe('signal-backed template names', () => {
+        const createSignalTemplate = (name: Signal<string>): KbqPipeTemplate => ({
+            name,
+            id: PIPE_TEMPLATE_ID_1,
+            type: KbqPipeTypes.Text,
+            cleanable: false,
+            removable: false,
+            disabled: false
+        });
+
+        const getOptionText = (index: number = 0): string =>
+            document.querySelectorAll('.kbq-option')[index].textContent!.trim();
+
+        const getLiveRegionText = (): string =>
+            fixture.debugElement
+                .query(By.directive(KbqPipeAdd))
+                .query(By.css('[aria-live="polite"]'))
+                .nativeElement.textContent.trim();
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            vi.useFakeTimers();
+        });
+
+        it('should render the current resolved name and leave the filter untouched', async () => {
+            const name = signal('Статус');
+            const filterBar = getFilterBar();
+            const filter = createFilter([]);
+
+            fixture.componentInstance.pipeTemplates = [createSignalTemplate(name)];
+            filterBar.filter.set(filter);
+            fixture.detectChanges();
+
+            const filterChange = vi.fn();
+            const addPipe = vi.fn();
+            const changePipe = vi.fn();
+
+            filterBar.filter.subscribe(filterChange);
+            getPipeAdd().onAddPipe.subscribe(addPipe);
+            filterBar.onChangePipe.subscribe(changePipe);
+
+            getPipeAdd().select().open();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getOptionText()).toBe('Статус');
+
+            name.set('Status');
+            fixture.detectChanges();
+
+            expect(getOptionText()).toBe('Status');
+            expect(filterBar.filter()).toBe(filter);
+            expect(filterBar.filter()!.changed).toBe(false);
+            expect(filterChange).not.toHaveBeenCalled();
+            expect(addPipe).not.toHaveBeenCalled();
+            expect(changePipe).not.toHaveBeenCalled();
+        });
+
+        it('should announce the added pipe with the current resolved name', async () => {
+            const name = signal('Статус');
+
+            fixture.componentInstance.pipeTemplates = [createSignalTemplate(name)];
+            fixture.detectChanges();
+
+            getPipeAdd().select().open();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            name.set('Status');
+            fixture.detectChanges();
+
+            (document.querySelectorAll('.kbq-option')[0] as HTMLElement).click();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getLiveRegionText()).toBe('Фильтр «Status» добавлен');
+            // The added pipe keeps the signal itself: the announcement and the rendering resolve it, the data does not.
+            expect(getFilterBar().filter()!.pipes[0].name).toBe(name);
+        });
+    });
+});
+
+describe('pipe identity', () => {
+    const createTemplate = (overrides: Partial<KbqPipeTemplate>): KbqPipeTemplate => ({
+        name: 'Status',
+        type: KbqPipeTypes.Text,
+        cleanable: false,
+        removable: false,
+        disabled: false,
+        ...overrides
+    });
+
+    it('should throw for a signal-backed name without a stable id', () => {
+        expect(() => getId(createTemplate({ name: signal('Status') }))).toThrow(/stable "id"/);
+    });
+
+    it('should return the id of a signal-named pipe', () => {
+        expect(getId(createTemplate({ id: 'status', name: signal('Status') }))).toBe('status');
+    });
+
+    it('should keep the legacy name fallback for a string name without an id', () => {
+        expect(getId(createTemplate({ name: 'Status' }))).toBe('Status');
     });
 });

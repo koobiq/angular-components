@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, inject, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -234,6 +234,38 @@ describe('KbqPipeInputComponent', () => {
             fixture.detectChanges();
 
             expect(getCleanerElement()).toBeNull();
+        });
+    });
+
+    describe('signal-backed name', () => {
+        beforeEach(createFixture);
+
+        it('should update the placeholder and aria-label when the name signal changes', () => {
+            const name = signal('Статус');
+            const filter = createFilter([createPipe({ name, value: null })]);
+
+            fixture.componentInstance.activeFilter = filter;
+            fixture.detectChanges();
+
+            expect(getInputElement().placeholder).toBe('Статус');
+            expect(getInputElement().getAttribute('aria-label')).toBe('Статус');
+
+            const filterChange = vi.fn();
+            const changePipe = vi.fn();
+
+            getFilterBar().filter.subscribe(filterChange);
+            getFilterBar().onChangePipe.subscribe(changePipe);
+
+            name.set('Status');
+            fixture.detectChanges();
+
+            expect(getInputElement().placeholder).toBe('Status');
+            expect(getInputElement().getAttribute('aria-label')).toBe('Status');
+
+            expect(getFilterBar().filter()).toBe(filter);
+            expect(getFilterBar().filter()!.changed).toBe(false);
+            expect(filterChange).not.toHaveBeenCalled();
+            expect(changePipe).not.toHaveBeenCalled();
         });
     });
 

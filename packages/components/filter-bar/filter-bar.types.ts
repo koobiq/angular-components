@@ -126,6 +126,16 @@ export interface KbqFiltersHost {
 /** Injection token exposing the {@link KbqFiltersHost} seam. */
 export const KBQ_FILTERS = new InjectionToken<KbqFiltersHost>('KBQ_FILTERS');
 
+/**
+ * Display name of a pipe or of one of its values: a plain string, or a `Signal<string>` that the built-in
+ * rendering reads again on every change detection.
+ *
+ * A signal-backed name is a label, not an identity: a pipe, pipe template or select value whose `name` is
+ * a signal has to declare a stable `id`, which is what identity comparisons and the persisted filter state
+ * use.
+ */
+export type KbqFilterBarName = string | Signal<string>;
+
 /** list of pipe types available out of the box */
 export enum KbqPipeTypes {
     ReadOnly = 'readonly',
@@ -175,7 +185,8 @@ export interface KbqFilter {
 }
 
 export interface KbqPipe {
-    name: string;
+    /** Display name of the pipe: a plain string, or a `Signal<string>` that has to come with a stable `id`. */
+    name: KbqFilterBarName;
     id?: string | number;
     type: KbqPipeType;
     value: unknown | null;
@@ -243,7 +254,8 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
      * Custom option content for `select` and `multiselect`, or custom leaf and branch content for
      * `tree-select` and `multi-tree-select`. Tree templates receive a {@link KbqMultiTreeSelectValueTemplateContext} with the
      * original `option` and current `search`; filtering and the trigger still use the node's `name`.
-     * Ignored by other pipe types.
+     * An option `name` may be a signal: render it with {@link kbqResolveFilterBarName} to follow the
+     * active translation. Ignored by other pipe types.
      */
     valueTemplate?: TemplateRef<any> | string;
 

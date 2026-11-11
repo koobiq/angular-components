@@ -1,8 +1,9 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { ChangeDetectorRef, Component, DebugElement, inject, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ENTER, ESCAPE } from '@koobiq/components/core';
+import { dispatchMouseEvent, ENTER, ESCAPE } from '@koobiq/components/core';
 import {
     KbqFilter,
     KbqFilterBar,
@@ -452,6 +453,68 @@ describe('KbqPipeTextComponent', () => {
             getPipeComponent().popover().visibleChange.emit(true);
 
             expect(spy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('signal-backed name', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            vi.useFakeTimers();
+        });
+
+        afterEach(() => vi.useRealTimers());
+
+        const getTriggerName = (): string =>
+            fixture.debugElement.query(By.css('kbq-pipe-text .kbq-pipe__name')).nativeElement.textContent.trim();
+
+        const getTooltipName = (): string =>
+            TestBed.inject(OverlayContainer)
+                .getContainerElement()
+                .querySelector('.kbq-pipe-tooltip__name')
+                ?.textContent?.trim() ?? '';
+
+        // JSDOM has no layout, so the overflow verdict the title tooltip opens from is stubbed.
+        const openTooltip = async (): Promise<void> => {
+            const trigger: HTMLElement = fixture.debugElement.query(By.css('kbq-pipe-text button')).nativeElement;
+            const nameElement: HTMLElement = trigger.querySelector('.kbq-pipe__name')!;
+
+            vi.spyOn(trigger, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(nameElement, 'scrollWidth', 'get').mockReturnValue(200);
+
+            dispatchMouseEvent(trigger, 'mouseenter');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        it('should rerender the trigger and tooltip when the name signal changes', async () => {
+            const name = signal('Статус');
+            const filter = createFilter([createPipe({ name, value: 'some text' })]);
+
+            fixture.componentInstance.activeFilter = filter;
+            fixture.detectChanges();
+            await openTooltip();
+
+            expect(getTriggerName()).toBe('Статус');
+            expect(getTooltipName()).toBe('Статус');
+
+            const filterChange = vi.fn();
+            const changePipe = vi.fn();
+
+            getFilterBar().filter.subscribe(filterChange);
+            getFilterBar().onChangePipe.subscribe(changePipe);
+
+            name.set('Status');
+            fixture.detectChanges();
+
+            expect(getTriggerName()).toBe('Status');
+            expect(getTooltipName()).toBe('Status');
+
+            expect(getFilterBar().filter()).toBe(filter);
+            expect(getFilterBar().filter()!.changed).toBe(false);
+            expect(filterChange).not.toHaveBeenCalled();
+            expect(changePipe).not.toHaveBeenCalled();
         });
     });
 });
