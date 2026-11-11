@@ -6,10 +6,11 @@ import {
     makeEnvironmentProviders,
     provideAppInitializer
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { KBQ_LOCALE_SERVICE, KbqThemeService } from '@koobiq/components/core';
-import { distinctUntilKeyChanged } from 'rxjs';
+import { distinctUntilKeyChanged, skip } from 'rxjs';
 import { DocsNavbarProperty } from '../components/navbar/navbar-property';
-import { DocsLocale } from '../constants/locale';
+import { DOCS_EXAMPLES_LANG_PARAM, DocsLocale } from '../constants/locale';
 import { DocsLocaleService } from './locale';
 
 /** Languages of the docs interface and of the live examples that the reader has picked. */
@@ -18,6 +19,7 @@ export class DocsLanguagePreferences {
     private readonly docsLocaleService = inject(DocsLocaleService);
     private readonly localeService = inject(KBQ_LOCALE_SERVICE);
     private readonly location = inject(Location);
+    private readonly router = inject(Router);
 
     readonly docsLanguageSwitch = new DocsNavbarProperty({
         property: 'docs_language',
@@ -51,6 +53,15 @@ export class DocsLanguagePreferences {
             this.docsLanguageSwitch.setValue(index);
         }
 
+        const queryLocale = this.getExamplesLocaleFromQuery();
+        const queryIndex = queryLocale
+            ? this.examplesLanguageSwitch.data.findIndex(({ id }) => id === queryLocale)
+            : -1;
+
+        if (queryIndex >= 0) {
+            this.examplesLanguageSwitch.setValue(queryIndex);
+        }
+
         this.docsLanguageSwitch.changes.pipe(distinctUntilKeyChanged('value')).subscribe(({ value: { id } }) => {
             this.docsLocaleService.setLocale(id);
         });
@@ -58,6 +69,24 @@ export class DocsLanguagePreferences {
         this.examplesLanguageSwitch.changes.pipe(distinctUntilKeyChanged('value')).subscribe(({ value: { id } }) => {
             this.localeService.setLocale(id);
         });
+
+        // `skip(1)` drops the value replayed to a fresh subscriber, so the param is written on a change only.
+        this.examplesLanguageSwitch.changes
+            .pipe(distinctUntilKeyChanged('value'), skip(1))
+            .subscribe(({ value: { id } }) => {
+                this.router.navigate([], {
+                    queryParams: { [DOCS_EXAMPLES_LANG_PARAM]: id },
+                    queryParamsHandling: 'merge'
+                });
+            });
+    }
+
+    private getExamplesLocaleFromQuery(): string | null {
+        const value = this.router.parseUrl(this.location.path()).queryParams[DOCS_EXAMPLES_LANG_PARAM];
+
+        return typeof value === 'string' && this.localeService.locales.items.some(({ id }) => id === value)
+            ? value
+            : null;
     }
 }
 
