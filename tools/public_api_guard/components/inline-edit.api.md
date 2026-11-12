@@ -7,6 +7,7 @@
 import * as _angular_cdk_overlay from '@angular/cdk/overlay';
 import * as _angular_core from '@angular/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ElementRef } from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
@@ -68,6 +69,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     protected readonly overlayOffsetY: _angular_core.WritableSignal<number>;
     protected readonly overlayOrigin: _angular_core.Signal<HTMLElement>;
     readonly overlayPanelClass: _angular_core.InputSignal<string | string[]>;
+    protected readonly overlayPositions: ConnectedPosition[];
     protected readonly overlayWidth: _angular_core.WritableSignal<string | number>;
     protected readonly placements: typeof PopUpPlacements;
     retrySave(): void;
