@@ -3,6 +3,7 @@ import { Dialog } from '@angular/cdk/dialog';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { ComponentType, Overlay } from '@angular/cdk/overlay';
 import { inject, Injectable, InjectionToken, Injector, OnDestroy, TemplateRef } from '@angular/core';
+import { KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS } from '@koobiq/components/overflow-items';
 import { takeUntil } from 'rxjs';
 import { KBQ_ACTIONS_PANEL_DEFAULT_CONFIG, KbqActionsPanelConfig } from './actions-panel-config';
 import { KbqActionsPanelContainer } from './actions-panel-container';
@@ -179,7 +180,14 @@ export class KbqActionsPanel implements OnDestroy {
 
                 return [
                     { provide: KbqActionsPanelRef, useValue: actionsPanelRef },
-                    { provide: KBQ_ACTIONS_PANEL_DATA, useValue: config.data }
+                    { provide: KBQ_ACTIONS_PANEL_DATA, useValue: config.data },
+                    // The panel is as wide as its content, and items hidden by `KbqOverflowItems` drop out of that
+                    // width, so the panel never grows back by itself. Observe the element that bounds it instead:
+                    // `overlayContainer`, or else the overlay host, which spans the viewport.
+                    {
+                        provide: KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS,
+                        useValue: [overlayContainer ? overlayContainer.nativeElement : dialogRef.overlayRef.hostElement]
+                    }
                 ];
             }
         });

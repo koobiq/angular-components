@@ -5,6 +5,7 @@
 ```ts
 
 import * as i0 from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqFlexWrap } from '@koobiq/components/core';
@@ -23,6 +24,9 @@ export class ElementVisibilityManager {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ElementVisibilityManager, never>;
 }
+
+// @public
+export const KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS: InjectionToken<readonly Element[]>;
 
 // @public
 export class KbqOverflowItem extends ElementVisibilityManager {
