@@ -180,7 +180,7 @@ export class DocsStackblitzWriter {
         }
 
         const depth = targetPath.split('/').length - 3;
-        const relative = depth > 0 ? `${'../'.repeat(depth)}i18n/index.ts` : './i18n/index.ts';
+        const relative = depth > 0 ? `${'../'.repeat(depth)}i18n` : './i18n';
 
         return content.replaceAll(`'${I18N_ENTRY_POINT_IMPORT}'`, `'${relative}'`);
     }
