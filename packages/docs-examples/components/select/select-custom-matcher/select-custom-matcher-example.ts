@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title select-custom-matcher
@@ -41,8 +40,6 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectCustomMatcherExample {
-    protected readonly text = injectExampleText();
-
     readonly options = computed(() => Array.from({ length: 5 }, (_, i) => 'Option #' + i));
     readonly selected = this.options[0];
 }

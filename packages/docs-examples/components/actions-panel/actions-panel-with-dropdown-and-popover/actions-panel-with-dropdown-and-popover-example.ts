@@ -12,7 +12,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Actions panel with dropdown and popover
@@ -74,9 +75,7 @@ import { injectExampleText } from './l10n';
     providers: [KbqActionsPanel],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsPanelWithDropdownAndPopoverExample {
-    protected readonly text = injectExampleText();
-
+export class ActionsPanelWithDropdownAndPopoverExample extends BaseLocalizedExample<ExampleText> {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
@@ -84,6 +83,7 @@ export class ActionsPanelWithDropdownAndPopoverExample {
     private popoverTriggerRef: KbqPopoverTrigger | null;
 
     constructor() {
+        super(TEXT);
         afterNextRender(() => this.open());
     }
 

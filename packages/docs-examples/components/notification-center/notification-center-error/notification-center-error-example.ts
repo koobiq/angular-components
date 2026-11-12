@@ -21,9 +21,10 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
-import { createNotifications } from '../l10n';
-import { injectExampleText } from './l10n';
+import { createNotifications } from '../create-notifications';
+import { ExampleText, TEXT } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -71,10 +72,8 @@ enum NavbarIcItems {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationCenterErrorExample {
+export class NotificationCenterErrorExample extends BaseLocalizedExample<ExampleText> {
     notificationService = inject(KbqNotificationCenterService);
-
-    protected readonly text = injectExampleText();
 
     private readonly actionsTemplate = viewChild<TemplateRef<unknown>>('actionsTemplate');
 
@@ -123,6 +122,7 @@ export class NotificationCenterErrorExample {
     protected readonly PopUpPlacements = PopUpPlacements;
 
     constructor() {
+        super(TEXT);
         this.notificationService.setErrorMode(true);
 
         this.notificationService.onReload.subscribe(() => {

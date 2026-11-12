@@ -1,12 +1,11 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the modal-scroll example. */
 export interface ExampleText {
     openModal: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         openModal: 'Открыть модалку'
     },
@@ -14,6 +13,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         openModal: 'Open Modal'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

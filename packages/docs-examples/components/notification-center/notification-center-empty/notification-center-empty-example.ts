@@ -11,8 +11,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -59,10 +60,8 @@ enum NavbarIcItems {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationCenterEmptyExample {
+export class NotificationCenterEmptyExample extends BaseLocalizedExample<ExampleText> {
     readonly notificationService = inject(KbqNotificationCenterService);
-
-    protected readonly text = injectExampleText();
 
     private readonly themeService = inject(KbqThemeService, { optional: true });
     protected readonly currentTheme = computed(() => this.themeService?.colorScheme() ?? 'light');
@@ -104,4 +103,8 @@ export class NotificationCenterEmptyExample {
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
+
+    constructor() {
+        super(TEXT);
+    }
 }

@@ -9,9 +9,10 @@ import {
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry, RowSelectionOptions } from 'ag-grid-community';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -66,9 +67,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridRowGroupExample {
-    protected readonly text = injectExampleText();
-
+export class AgGridRowGroupExample extends BaseLocalizedExample<ExampleText> {
     protected readonly groupCols = model(['category', 'severity']);
     protected readonly rowId = (row: Record<string, unknown>): string => row.id as string;
     protected readonly defaultColDef: ColDef = {
@@ -110,5 +109,9 @@ export class AgGridRowGroupExample {
         for (const row of this.rowData()) {
             rowGroup.setRowSelected(row.id, false);
         }
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

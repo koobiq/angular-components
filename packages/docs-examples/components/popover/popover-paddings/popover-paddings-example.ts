@@ -3,7 +3,6 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqPopoverModule } from '@koobiq/components/popover';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title popover-paddings
@@ -25,8 +24,6 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverPaddingsExample {
-    protected readonly text = injectExampleText();
-
     popUpSizes = PopUpSizes;
     popUpPlacements = PopUpPlacements;
 }

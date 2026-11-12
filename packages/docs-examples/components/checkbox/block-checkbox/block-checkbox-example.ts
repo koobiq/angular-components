@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, inject, model, output } from '@angu
 import { FormsModule } from '@angular/forms';
 import { KbqCheckable } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * EXAMPLE ONLY - not a published Koobiq component.
@@ -96,8 +97,10 @@ export class BlockCheckboxComponent {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class BlockCheckboxExample {
-    protected readonly text = injectExampleText();
-
+export class BlockCheckboxExample extends BaseLocalizedExample<ExampleText> {
     readonly checked = model(true);
+
+    constructor() {
+        super(TEXT);
+    }
 }

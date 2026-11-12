@@ -4,7 +4,8 @@ import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqHighlightBackgroundPipe, KbqTextQuery } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Autocomplete in text
@@ -50,9 +51,7 @@ import { injectExampleText } from '../l10n';
         class: 'layout-margin-5xl layout-row layout-align-center-center'
     }
 })
-export class AutocompleteTextareaExample {
-    protected readonly text = injectExampleText();
-
+export class AutocompleteTextareaExample extends BaseLocalizedExample<ExampleText> {
     protected readonly control = new FormControl('');
     protected readonly query = signal<KbqTextQuery | null>(null);
 
@@ -82,4 +81,8 @@ export class AutocompleteTextareaExample {
         'vulnerability',
         'vulnerability scan'
     ];
+
+    constructor() {
+        super(TEXT);
+    }
 }

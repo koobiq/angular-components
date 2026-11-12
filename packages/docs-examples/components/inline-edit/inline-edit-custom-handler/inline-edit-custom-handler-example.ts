@@ -5,7 +5,8 @@ import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Inline edit custom handler
@@ -46,9 +47,7 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditCustomHandlerExample {
-    protected readonly text = injectExampleText();
-
+export class InlineEditCustomHandlerExample extends BaseLocalizedExample<ExampleText> {
     protected readonly control = new FormControl<KbqFileItem | null>(null);
     protected get placeholder(): string {
         return this.text().placeholder;
@@ -61,5 +60,9 @@ export class InlineEditCustomHandlerExample {
 
     protected update(): void {
         this.displayValue.set(this.control.value);
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

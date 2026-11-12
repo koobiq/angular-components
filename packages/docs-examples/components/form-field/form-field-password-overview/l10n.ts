@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the form-field-password-overview example. */
 export interface ExampleText {
@@ -12,7 +11,7 @@ export interface ExampleText {
     shouldEnterPassword: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         password: 'Пароль',
         minLength: 'Минимальная длина',
@@ -32,6 +31,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         shouldEnterPassword: 'Should enter password'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

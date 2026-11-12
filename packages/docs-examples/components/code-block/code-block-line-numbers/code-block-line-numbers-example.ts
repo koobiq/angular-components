@@ -6,7 +6,8 @@ import {
     KbqCodeBlockModule
 } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Code-block with lineNumbers attribute
@@ -31,9 +32,7 @@ import { injectExampleText } from '../l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CodeBlockLineNumbersExample {
-    protected readonly text = injectExampleText();
-
+export class CodeBlockLineNumbersExample extends BaseLocalizedExample<ExampleText> {
     readonly files: KbqCodeBlockFile[] = [
         {
             content: `function getVulnerabilities() {\n\treturn ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert', 'IDS/IPS Alert', 'Zero-Day Exploit', 'XSS', 'Malware', 'Ransomware', 'Phishing'];\n};`,
@@ -42,4 +41,8 @@ export class CodeBlockLineNumbersExample {
     ];
 
     lineNumbers: boolean = true;
+
+    constructor() {
+        super(TEXT);
+    }
 }

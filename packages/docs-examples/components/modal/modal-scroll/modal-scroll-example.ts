@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 @Component({
     selector: 'custom-modal',
@@ -12,10 +13,12 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomModalComponent {
-    protected readonly text = injectExampleText();
-
+export class CustomModalComponent extends BaseLocalizedExample<ExampleText> {
     readonly items = computed(() => Array.from({ length: 1000 }, (_, i) => 'Item #' + i));
+
+    constructor() {
+        super(TEXT);
+    }
 }
 
 /**
@@ -29,9 +32,7 @@ export class CustomModalComponent {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalScrollExample {
-    protected readonly text = injectExampleText();
-
+export class ModalScrollExample extends BaseLocalizedExample<ExampleText> {
     private readonly modalService = inject(KbqModalService);
 
     createLongModal(): void {
@@ -44,5 +45,9 @@ export class ModalScrollExample {
             kbqOkClick: () => console.log('Yes'),
             kbqCancelClick: () => console.log('No')
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

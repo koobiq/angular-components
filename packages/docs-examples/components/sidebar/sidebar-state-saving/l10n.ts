@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the sidebar-state-saving example. */
 export interface ExampleText {
@@ -10,7 +9,7 @@ export interface ExampleText {
     stateSavingHint: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         openedContent: 'Содержимое (открыто)',
         closedContent: 'Содержимое (закрыто)',
@@ -27,6 +26,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         stateSavingHint: 'Toggle the sidebar and reload the page — it comes back the way it was left.'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

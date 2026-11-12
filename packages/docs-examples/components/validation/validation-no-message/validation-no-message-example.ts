@@ -8,7 +8,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Validation no message
@@ -58,9 +59,7 @@ import { injectExampleText } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationNoMessageExample {
-    protected readonly text = injectExampleText();
-
+export class ValidationNoMessageExample extends BaseLocalizedExample<ExampleText> {
     protected readonly form = new FormGroup({
         first: new FormControl('', [Validators.required]),
         last: new FormControl('')
@@ -78,5 +77,9 @@ export class ValidationNoMessageExample {
 
             invalidControl?.focus();
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

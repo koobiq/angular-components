@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Badge list
@@ -29,10 +30,12 @@ import { injectExampleText } from './l10n';
     styleUrls: ['badge-list-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BadgeListExample {
-    protected readonly text = injectExampleText();
-
+export class BadgeListExample extends BaseLocalizedExample<ExampleText> {
     colors = KbqBadgeColors;
 
     readonly badges = computed(() => this.text().categories.map((name) => ({ name, color: this.colors.FadeContrast })));
+
+    constructor() {
+        super(TEXT);
+    }
 }

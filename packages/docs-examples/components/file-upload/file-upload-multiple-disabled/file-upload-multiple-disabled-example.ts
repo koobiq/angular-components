@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title File-upload multiple disabled
@@ -13,6 +12,4 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadMultipleDisabledExample {
-    protected readonly text = injectExampleText();
-}
+export class FileUploadMultipleDisabledExample {}

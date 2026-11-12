@@ -1,0 +1,20 @@
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
+
+/** Text shown by the tooltip examples. Placement, color and offset names stay English as API values. */
+export interface ExampleText {
+    tooltip: string;
+    longTooltip: string;
+}
+
+export const TEXT: LocalizedText<ExampleText> = {
+    'ru-RU': {
+        tooltip: 'Тултип',
+        longTooltip:
+            'Тултип — это подсказка, которая появляется при наведении указателя или фокусе на элемент интерфейса. Тултип не может содержать интерактивные элементы.'
+    },
+    default: {
+        tooltip: 'Tooltip',
+        longTooltip:
+            'A tooltip is a hint that appears when the pointer hovers over or focuses on an interface element. A tooltip cannot contain interactive elements.'
+    }
+};

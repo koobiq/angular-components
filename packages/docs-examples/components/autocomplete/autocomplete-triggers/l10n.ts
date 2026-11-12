@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the autocomplete-triggers example. */
 export interface ExampleText {
@@ -16,7 +15,7 @@ export interface ExampleText {
     carol: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         comment: 'Комментарий',
         typeTriggers: 'Введите / для сниппета или @, чтобы упомянуть коллегу',
@@ -44,6 +43,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         carol: 'Carol White'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqMarkdown } from '@koobiq/components/markdown';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Markdown paragraph
@@ -11,6 +12,8 @@ import { injectExampleText } from './l10n';
     templateUrl: './markdown-paragraph-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarkdownParagraphExample {
-    protected readonly text = injectExampleText();
+export class MarkdownParagraphExample extends BaseLocalizedExample<ExampleText> {
+    constructor() {
+        super(TEXT);
+    }
 }

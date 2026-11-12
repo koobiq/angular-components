@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title select two line option
@@ -34,9 +35,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectTwoLineOptionExample {
-    protected readonly text = injectExampleText();
-
+export class SelectTwoLineOptionExample extends BaseLocalizedExample<ExampleText> {
     readonly options = computed(() => [
         'Option #0',
         'Option #1',
@@ -45,4 +44,8 @@ export class SelectTwoLineOptionExample {
         this.text().twoLong2
     ]);
     readonly selected = computed(() => [this.options()[0]]);
+
+    constructor() {
+        super(TEXT);
+    }
 }

@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the dl-wide example. */
 export interface ExampleText {
@@ -13,7 +12,7 @@ export interface ExampleText {
     phishingDescription: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         incidentType: 'Тип инцидента',
         malwareInfection: 'Заражение вредоносным ПО',
@@ -37,6 +36,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
             'An employee opened an attachment in a phishing email, and the file ran malicious code on the workstation.'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

@@ -1,31 +1,27 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the validation-basic-multiple-validators example. */
 export interface ExampleText {
-    username: string;
     required: string;
+    submit: string;
+    username: string;
     min5: string;
     max20: string;
-    submit: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
-        username: 'Имя пользователя',
         required: 'Обязательно',
+        submit: 'Отправить',
+        username: 'Имя пользователя',
         min5: 'Минимум 5 символов',
-        max20: 'Максимум 20 символов',
-        submit: 'Отправить'
+        max20: 'Максимум 20 символов'
     },
     default: {
-        username: 'Username',
         required: 'Required',
+        submit: 'Submit',
+        username: 'Username',
         min5: 'Minimum 5 characters',
-        max20: 'Maximum 20 characters',
-        submit: 'Submit'
+        max20: 'Maximum 20 characters'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

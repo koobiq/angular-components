@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Toggle Label Left
@@ -25,6 +26,8 @@ import { injectExampleText } from '../l10n';
         class: 'layout-align-center-center layout-row layout-gap-s layout-margin-top-xxl'
     }
 })
-export class ToggleLabelLeftExample {
-    protected readonly text = injectExampleText();
+export class ToggleLabelLeftExample extends BaseLocalizedExample<ExampleText> {
+    constructor() {
+        super(TEXT);
+    }
 }

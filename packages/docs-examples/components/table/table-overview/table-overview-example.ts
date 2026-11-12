@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqTableModule } from '@koobiq/components/table';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Table
@@ -32,9 +33,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableOverviewExample {
-    protected readonly text = injectExampleText();
-
+export class TableOverviewExample extends BaseLocalizedExample<ExampleText> {
     protected readonly rows = computed(() => [
         { client: 'Company 1', event: this.text().events[0], registered: '8 Jul, 14:31' },
         { client: 'Company 2', event: this.text().events[1], registered: '4 Dec, 16:11' },
@@ -43,4 +42,8 @@ export class TableOverviewExample {
         { client: 'Company 2', event: this.text().events[4], registered: '4 Dec, 16:11' },
         { client: 'Company 1', event: this.text().events[5], registered: '4 Dec, 16:11' }
     ]);
+
+    constructor() {
+        super(TEXT);
+    }
 }

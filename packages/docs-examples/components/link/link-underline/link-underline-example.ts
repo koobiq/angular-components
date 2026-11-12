@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqLink, KbqLinkUnderline } from '@koobiq/components/link';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Link underline
@@ -38,8 +39,10 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinkUnderlineExample {
-    protected readonly text = injectExampleText();
-
+export class LinkUnderlineExample extends BaseLocalizedExample<ExampleText> {
     readonly underline = model<KbqLinkUnderline>('always');
+
+    constructor() {
+        super(TEXT);
+    }
 }

@@ -10,6 +10,7 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -23,7 +24,7 @@ import {
     RowStyle,
     SelectionColumnDef
 } from 'ag-grid-community';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -77,9 +78,7 @@ const PINNED_RIGHT = ['column4'];
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridLoadErrorExample {
-    protected readonly text = injectExampleText();
-
+export class AgGridLoadErrorExample extends BaseLocalizedExample<ExampleText> {
     protected readonly pinnedColumns = model(true);
     protected readonly rowDividers = model(false);
 
@@ -170,5 +169,9 @@ export class AgGridLoadErrorExample {
             this.pageCache.set(startRow, rows);
             successCallback(rows, lastRow);
         }, 700);
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

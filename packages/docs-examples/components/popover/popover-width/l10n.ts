@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the popover-width example. */
 export interface ExampleText {
@@ -8,7 +7,7 @@ export interface ExampleText {
     customWidth: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         paragraph:
             'В Windows есть вещи, известные как системные переменные. Это переменные, от которых зависит функционирование Windows, потому что Windows всегда будет знать, что означают переменные и где они находятся, даже когда мы перемещаем биты и байты повсюду. Системная переменная MAX_PATH — это та, которая ограничивает имена файлов и пути к файлам до 260 символов.',
@@ -24,6 +23,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         customWidth: 'Custom width'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

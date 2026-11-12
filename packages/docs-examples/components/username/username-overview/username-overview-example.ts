@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqUserInfo, KbqUsername } from '@koobiq/components/username';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Username overview
@@ -17,8 +16,6 @@ import { injectExampleText } from '../l10n';
     }
 })
 export class UsernameOverviewExample {
-    protected readonly text = injectExampleText();
-
     userInfo: KbqUserInfo = {
         firstName: 'Maxwell',
         middleName: 'Alan',

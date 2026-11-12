@@ -4,8 +4,9 @@ import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /** @title Timepicker field validation */
 @Component({
@@ -30,9 +31,7 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimepickerFieldValidationExample {
-    protected readonly text = injectExampleText();
-
+export class TimepickerFieldValidationExample extends BaseLocalizedExample<ExampleText> {
     private readonly adapter = inject(DateAdapter<DateTime>);
     protected readonly timeFormats = TimeFormats;
 
@@ -42,6 +41,7 @@ export class TimepickerFieldValidationExample {
     protected readonly control = new FormControl<DateTime | null>(null, [Validators.required]);
 
     constructor() {
+        super(TEXT);
         afterNextRender(() => {
             this.control.markAsTouched();
             this.control.updateValueAndValidity();

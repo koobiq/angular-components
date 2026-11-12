@@ -5,9 +5,10 @@ import {
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -45,9 +46,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridColumnStateExample {
-    protected readonly text = injectExampleText();
-
+export class AgGridColumnStateExample extends BaseLocalizedExample<ExampleText> {
     readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true
@@ -64,4 +63,8 @@ export class AgGridColumnStateExample {
             Object.fromEntries(Array.from({ length: 6 }, (_, i) => ['column' + i, 'Text ' + index]))
         )
     );
+
+    constructor() {
+        super(TEXT);
+    }
 }

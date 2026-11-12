@@ -11,8 +11,8 @@ import { KbqFormField, kbqFormFieldDefaultOptionsProvider } from '@koobiq/compon
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-
-import { injectExampleText, injectOptionsText } from './l10n';
+import { BaseLocalizedExample, injectLocalizedText } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Validation required label
@@ -124,9 +124,8 @@ import { injectExampleText, injectOptionsText } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationRequiredLabelExample {
-    protected readonly text = injectExampleText();
-    protected readonly options = injectOptionsText();
+export class ValidationRequiredLabelExample extends BaseLocalizedExample<ExampleText> {
+    protected readonly options = injectLocalizedText(TEXT);
 
     protected readonly form = new FormGroup({
         firstName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
@@ -150,5 +149,9 @@ export class ValidationRequiredLabelExample {
 
             invalidControl?.focus();
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

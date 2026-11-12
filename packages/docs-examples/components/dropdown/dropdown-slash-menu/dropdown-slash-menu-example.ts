@@ -25,7 +25,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdown, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /** `Node.TEXT_NODE`, spelled out so that the example never reads a DOM global. */
 const TEXT_NODE = 3;
@@ -149,15 +150,13 @@ const MENU_KEYS = ['ArrowUp', 'ArrowDown', 'Enter', 'Escape'];
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownSlashMenuExample {
+export class DropdownSlashMenuExample extends BaseLocalizedExample<ExampleText> {
     private readonly document = inject(DOCUMENT);
     private readonly renderer = inject(Renderer2);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly editor = viewChild<ElementRef<HTMLElement>>('editor');
     private readonly menu = viewChild(KbqDropdown);
     private readonly trigger = viewChild(KbqDropdownTrigger);
-
-    protected readonly text = injectExampleText();
 
     /** The `/…` the menu filters by, as a live range, so the panel keeps up with the token as it grows. */
     private token: Range | null = null;
@@ -181,6 +180,7 @@ export class DropdownSlashMenuExample {
     protected readonly isEmpty = computed(() => this.filteredGroups().every(({ items }) => !items.length));
 
     constructor() {
+        super(TEXT);
         const destroyRef = inject(DestroyRef);
 
         afterNextRender(() => {

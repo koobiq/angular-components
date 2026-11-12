@@ -6,14 +6,17 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
-export class FileNode {
-    protected readonly text = injectExampleText();
-
+export class FileNode extends BaseLocalizedExample<ExampleText> {
     children: FileNode[];
     name: string;
     type: any;
+
+    constructor() {
+        super(TEXT);
+    }
 }
 
 /** Flat node with expandable and level information */
@@ -166,9 +169,7 @@ export const DATA_OBJECT = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeActionButtonExample {
-    protected readonly text = injectExampleText();
-
+export class TreeActionButtonExample extends BaseLocalizedExample<ExampleText> {
     popUpPlacements = PopUpPlacements;
 
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -179,6 +180,7 @@ export class TreeActionButtonExample {
     modelValue: any = '';
 
     constructor() {
+        super(TEXT);
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(

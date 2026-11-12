@@ -3,7 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Overflow items overview
@@ -56,9 +57,11 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverflowItemsOverviewExample {
-    protected readonly text = injectExampleText();
-
+export class OverflowItemsOverviewExample extends BaseLocalizedExample<ExampleText> {
     readonly items = Array.from({ length: 20 }, (_, i) => `Item${i}`);
     readonly reverseOverflowOrder = model(false);
+
+    constructor() {
+        super(TEXT);
+    }
 }

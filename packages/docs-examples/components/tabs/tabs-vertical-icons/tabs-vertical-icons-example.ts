@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Tabs vertical icons
@@ -112,7 +111,5 @@ import { injectExampleText } from '../l10n';
     encapsulation: ViewEncapsulation.None
 })
 export class TabsVerticalIconsExample {
-    protected readonly text = injectExampleText();
-
     readonly PopUpPlacements = PopUpPlacements;
 }

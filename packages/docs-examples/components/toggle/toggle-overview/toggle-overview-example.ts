@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Toggle
@@ -17,7 +16,5 @@ import { injectExampleText } from '../l10n';
     }
 })
 export class ToggleOverviewExample {
-    protected readonly text = injectExampleText();
-
     protected readonly value = signal(false);
 }

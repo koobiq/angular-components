@@ -13,8 +13,9 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqCleaner, KbqFormField, KbqPrefix } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInput } from '@koobiq/components/input';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Dropdown with filter
@@ -87,9 +88,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownWithFilterExample {
-    protected readonly text = injectExampleText();
-
+export class DropdownWithFilterExample extends BaseLocalizedExample<ExampleText> {
     private readonly groups = [
         ['New tab', 'New window'],
         ['Action one', 'Action two', 'Action three']
@@ -114,5 +113,9 @@ export class DropdownWithFilterExample {
 
     protected handleClosed(): void {
         this.control.reset();
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

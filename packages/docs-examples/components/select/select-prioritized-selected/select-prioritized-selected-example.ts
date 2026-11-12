@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, effect, signal } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Selected prioritized selected
@@ -37,13 +38,12 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectPrioritizedSelectedExample {
-    protected readonly text = injectExampleText();
-
+export class SelectPrioritizedSelectedExample extends BaseLocalizedExample<ExampleText> {
     readonly options = signal<string[]>([]);
     selected: string[] = [];
 
     constructor() {
+        super(TEXT);
         effect(() => {
             const all = Array.from({ length: 15 }, (_, i) => 'Option #' + i);
 

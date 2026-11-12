@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Select icon
@@ -43,8 +42,6 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectIconExample {
-    protected readonly text = injectExampleText();
-
     readonly options = computed(() => Array.from({ length: 5 }, (_, i) => 'Option #' + i));
     selected = this.options[0];
 }

@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the skeleton-dl example. */
 export interface ExampleText {
@@ -7,7 +6,7 @@ export interface ExampleText {
     dlItems: { term: string; value: string }[];
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         loading: 'Загрузка',
         dlItems: [
@@ -25,6 +24,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         ]
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

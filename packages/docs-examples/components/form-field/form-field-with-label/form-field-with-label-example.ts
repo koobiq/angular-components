@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /** @title Form field with kbq-label */
 @Component({
@@ -18,8 +19,10 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldWithLabelExample {
-    protected readonly text = injectExampleText();
-
+export class FormFieldWithLabelExample extends BaseLocalizedExample<ExampleText> {
     protected readonly showRequiredMarker = signal(false);
+
+    constructor() {
+        super(TEXT);
+    }
 }

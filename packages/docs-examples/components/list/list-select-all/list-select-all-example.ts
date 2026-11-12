@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
-import { injectExampleText } from '../l10n';
-import { injectExampleText as injectOptionsText } from './l10n';
+import { injectLocalizedText } from '@koobiq/docs-examples/i18n';
+import { TEXT } from './l10n';
 
 /**
  * @title List select all
@@ -48,9 +48,9 @@ import { injectExampleText as injectOptionsText } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListSelectAllExample {
-    protected readonly text = injectExampleText();
+    protected readonly text = injectLocalizedText(TEXT);
 
-    private readonly optionsText = injectOptionsText();
+    private readonly optionsText = injectLocalizedText(TEXT);
 
     protected readonly options = computed(() => this.optionsText().options);
 

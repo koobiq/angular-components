@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Description list vertical
@@ -44,8 +45,10 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DlVerticalExample {
-    protected readonly text = injectExampleText();
-
+export class DlVerticalExample extends BaseLocalizedExample<ExampleText> {
     protected readonly vertical = model(true);
+
+    constructor() {
+        super(TEXT);
+    }
 }

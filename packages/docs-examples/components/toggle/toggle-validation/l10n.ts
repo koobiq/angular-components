@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the toggle-validation example. */
 export interface ExampleText {
@@ -8,7 +7,7 @@ export interface ExampleText {
     backupRequired: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         automaticBackup: 'Автоматическое резервное копирование',
         turnOffHint: 'Выключите, чтобы увидеть ошибку',
@@ -20,6 +19,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         backupRequired: 'Required by the security policy of your organization'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

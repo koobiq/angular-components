@@ -13,6 +13,7 @@ import {
     KbqSelectModule,
     minimumTimeToDisplayLoading
 } from '@koobiq/components/select';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import {
     BehaviorSubject,
     catchError,
@@ -28,7 +29,7 @@ import {
     timer
 } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 type Option = {
     id: number;
@@ -50,9 +51,7 @@ type SelectState =
 const PAGE_SIZE = 20;
 const DELAY = 1000;
 
-export class OptionsApiService {
-    protected readonly text = injectExampleText();
-
+export class OptionsApiService extends BaseLocalizedExample<ExampleText> {
     private readonly data = computed(() => Array.from({ length: 100 }, (_, i) => ({ id: i, label: 'Option #' + i })));
 
     getOptions(
@@ -73,6 +72,10 @@ export class OptionsApiService {
         const hasMore = end < filtered.length;
 
         return timer(delay).pipe(map(() => ({ data: pageData, hasMore })));
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }
 
@@ -279,9 +282,7 @@ export class SelectFacade {
         class: 'layout-margin-5xl layout-column layout-align-center-center'
     }
 })
-export class SelectPagingExample implements OnDestroy {
-    protected readonly text = injectExampleText();
-
+export class SelectPagingExample extends BaseLocalizedExample<ExampleText> implements OnDestroy {
     protected readonly facade = inject(SelectFacade);
 
     protected selectedOption: Option = { id: 0, label: 'Option #0' };
@@ -323,6 +324,7 @@ export class SelectPagingExample implements OnDestroy {
     }
 
     constructor() {
+        super(TEXT);
         this.searchControl.valueChanges
             .pipe(takeUntilDestroyed())
             .subscribe((value) => this.facade.setSearch(value ?? ''));

@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the sidepanel-state-saving example. */
 export interface ExampleText {
@@ -10,7 +9,7 @@ export interface ExampleText {
     body: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         stateSaving: 'Сохранение состояния панели',
         openSidepanel: 'Открыть панель',
@@ -26,6 +25,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         body: 'Leave this panel open and reload the page — it opens again. The panel is non-modal, so nothing on the page is blocked while it comes back.'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

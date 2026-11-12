@@ -6,7 +6,8 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 type NavbarLink = {
     icon: string;
@@ -30,9 +31,7 @@ type NavbarLink = {
     templateUrl: 'navbar-template-outlet-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarTemplateOutletExample {
-    protected readonly text = injectExampleText();
-
+export class NavbarTemplateOutletExample extends BaseLocalizedExample<ExampleText> {
     readonly popUpPlacements = PopUpPlacements;
     readonly colors = KbqComponentColors;
     /** Position of the selected app in `text().apps`, so the selection survives a locale switch. */
@@ -46,4 +45,8 @@ export class NavbarTemplateOutletExample {
 
     /** Bottom navbar link rendered from the same reusable template. */
     readonly profile = computed<NavbarLink>(() => ({ icon: 'kbq-user_16', label: this.text().profile }));
+
+    constructor() {
+        super(TEXT);
+    }
 }

@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Select groups
@@ -35,8 +34,6 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectGroupsExample {
-    protected readonly text = injectExampleText();
-
     readonly groups = computed(() => Array.from({ length: 3 }, (_, i) => 'Group #' + i));
     readonly options = computed(() => Array.from({ length: 5 }, (_, i) => 'Option #' + i));
     readonly selected = this.options[0];

@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormsModule, KbqNormalizeWhitespace } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Input number
@@ -81,9 +82,11 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputNumberOverviewExample {
-    protected readonly text = injectExampleText();
-
+export class InputNumberOverviewExample extends BaseLocalizedExample<ExampleText> {
     value = '';
     integerValue = '';
+
+    constructor() {
+        super(TEXT);
+    }
 }

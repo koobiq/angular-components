@@ -6,7 +6,8 @@ import {
     KbqPipeTypes,
     KbqSelectValue
 } from '@koobiq/components/filter-bar';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 const ATTACK_TYPES: KbqSelectValue[] = [
     'Adversary-in-the-Middle',
@@ -48,9 +49,8 @@ const ATTACK_TYPES: KbqSelectValue[] = [
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterBarNotSpecifiedExample {
+export class FilterBarNotSpecifiedExample extends BaseLocalizedExample<ExampleText> {
     /** Text the example owns; the option is worded to agree with the name of the filter. */
-    protected readonly text = injectExampleText();
 
     /** Objects whose attack type is not set: the first option of the list. */
     private readonly notSpecified = computed<KbqSelectValue>(() => ({
@@ -95,4 +95,8 @@ export class FilterBarNotSpecifiedExample {
             }
         ]
     }));
+
+    constructor() {
+        super(TEXT);
+    }
 }

@@ -16,7 +16,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -173,9 +174,7 @@ type ExampleAction = {
     providers: [KbqActionsPanel],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsPanelCustomCounterExample {
-    protected readonly text = injectExampleText();
-
+export class ActionsPanelCustomCounterExample extends BaseLocalizedExample<ExampleText> {
     protected readonly actions = computed<ExampleAction[]>(() => [
         { id: 'Responsible', icon: 'kbq-user_16', label: this.text().responsible },
         { id: 'Link to incident', icon: 'kbq-link_16', label: this.text().linkToIncident },
@@ -190,6 +189,7 @@ export class ActionsPanelCustomCounterExample {
     private actionsPanelRef: KbqActionsPanelRef | null;
 
     constructor() {
+        super(TEXT);
         afterNextRender(() => this.open());
     }
 

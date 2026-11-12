@@ -6,7 +6,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { of, skip } from 'rxjs';
 import { enUSFileUploadLocaleData } from '../en-US';
 import { esLAFileUploadLocaleData } from '../es-LA';
-import { injectExampleText } from '../l10n';
 import { ptBRFileUploadLocaleData } from '../pt-BR';
 import { ruRUFileUploadLocaleData } from '../ru-RU';
 import { tkTMFileUploadLocaleData } from '../tk-TM';
@@ -38,8 +37,6 @@ const localeData: Record<string, KbqMultipleFileUploadLocaleConfiguration> = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleCustomTextOverviewExample {
-    protected readonly text = injectExampleText();
-
     private readonly exampleDefaultLocale = 'en-US';
     protected readonly localeId = toSignal(
         inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes.pipe(skip(1)) ?? of(this.exampleDefaultLocale),

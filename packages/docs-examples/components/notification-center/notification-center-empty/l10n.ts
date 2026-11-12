@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the notification-center-empty example. */
 export interface ExampleText {
@@ -19,7 +18,7 @@ export interface ExampleText {
     emptyState: { image: string; title: string; text: string };
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         appName: 'Короткое название',
         assets: 'Активы',
@@ -61,6 +60,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         emptyState: { image: 'Empty state', title: 'No items', text: 'No objects have been added here yet' }
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

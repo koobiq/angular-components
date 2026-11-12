@@ -1,5 +1,5 @@
-import { Signal } from '@angular/core';
-import { ExampleNotificationText, injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { ExampleNotificationText } from '../create-notifications';
 
 /** Text of the notification-center-popover example. */
 export interface ExampleText {
@@ -12,7 +12,7 @@ export interface ExampleText {
     list: ExampleNotificationText[];
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         issues: 'Задачи',
         action1: 'Действие 1',
@@ -140,6 +140,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         ]
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

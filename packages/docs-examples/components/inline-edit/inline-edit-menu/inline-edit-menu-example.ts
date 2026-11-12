@@ -9,7 +9,8 @@ import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Inline edit menu
@@ -192,9 +193,7 @@ import { injectExampleText } from './l10n';
         class: 'layout-flex layout-column layout-gap-m'
     }
 })
-export class InlineEditMenuExample {
-    protected readonly text = injectExampleText();
-
+export class InlineEditMenuExample extends BaseLocalizedExample<ExampleText> {
     protected readonly maxRows = 20;
     protected readonly clipboard = inject(Clipboard);
     protected get placeholder(): string {
@@ -212,5 +211,9 @@ export class InlineEditMenuExample {
 
     protected update(): void {
         this.displayValue.set(this.form.controls.style.value);
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

@@ -1,12 +1,11 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the ag-grid-row-selection-state example. */
 export interface ExampleText {
     resetSelectionState: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         resetSelectionState: 'Сбросить состояние выбора'
     },
@@ -14,6 +13,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         resetSelectionState: 'Reset selection state'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

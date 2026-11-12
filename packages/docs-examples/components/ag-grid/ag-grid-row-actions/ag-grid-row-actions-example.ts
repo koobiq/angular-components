@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { KBQ_AG_GRID_ROW_ACTIONS_PARAMS, KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToastService } from '@koobiq/components/toast';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -11,7 +12,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -35,12 +36,10 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleRowActionsComponent {
+export class ExampleRowActionsComponent extends BaseLocalizedExample<ExampleText> {
     private readonly clipboard = inject(Clipboard);
     private readonly toast = inject(KbqToastService);
     private readonly params = inject(KBQ_AG_GRID_ROW_ACTIONS_PARAMS);
-
-    protected readonly text = injectExampleText();
 
     protected copy(): void {
         this.clipboard.copy(JSON.stringify(this.params.data));
@@ -50,6 +49,10 @@ export class ExampleRowActionsComponent {
     protected delete(): void {
         this.params.api.applyTransaction({ remove: [this.params.data] });
         this.toast.show({ title: this.text().rowArchived(this.params.rowIndex ?? 0) });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }
 
@@ -79,9 +82,7 @@ export class ExampleRowActionsComponent {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridRowActionsExample {
-    protected readonly text = injectExampleText();
-
+export class AgGridRowActionsExample extends BaseLocalizedExample<ExampleText> {
     protected readonly rowActionsComponent = ExampleRowActionsComponent;
 
     protected readonly defaultColDef: ColDef = {
@@ -122,5 +123,9 @@ export class AgGridRowActionsExample {
                 node.setSelected(true);
             }
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

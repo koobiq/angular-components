@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Icon-button size
@@ -37,8 +38,10 @@ import { injectExampleText } from '../l10n';
         class: 'layout-row layout-align-left-center layout-gap-3xl'
     }
 })
-export class IconButtonSizeExample {
-    protected readonly text = injectExampleText();
-
+export class IconButtonSizeExample extends BaseLocalizedExample<ExampleText> {
     colors = KbqComponentColors;
+
+    constructor() {
+        super(TEXT);
+    }
 }

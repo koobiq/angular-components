@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonColor, KbqButtonModule, KbqButtonStyle, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Button group vertical
@@ -32,9 +33,7 @@ import { injectExampleText } from './l10n';
         class: 'layout-row layout-align-center-center layout-gap-xl'
     }
 })
-export class ButtonGroupVerticalExample {
-    protected readonly text = injectExampleText();
-
+export class ButtonGroupVerticalExample extends BaseLocalizedExample<ExampleText> {
     protected readonly buttonStyles: { color: KbqButtonColor; appearance: KbqButtonStyle; gap?: boolean }[] = [
         { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled },
         { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Filled },
@@ -43,4 +42,8 @@ export class ButtonGroupVerticalExample {
         { color: KbqComponentColors.Theme, appearance: KbqButtonStyles.Transparent },
         { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Transparent }
     ];
+
+    constructor() {
+        super(TEXT);
+    }
 }

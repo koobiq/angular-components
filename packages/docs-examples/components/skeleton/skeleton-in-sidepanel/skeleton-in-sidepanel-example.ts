@@ -5,8 +5,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqSkeletonDl, KbqSkeletonGroup, KbqSkeletonTable } from '@koobiq/components/skeleton';
 import { KbqTableModule } from '@koobiq/components/table';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { merge, Subscription, tap, timer } from 'rxjs';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 type Detail = { term: string; value: string };
 
@@ -120,9 +121,7 @@ const SERVERS: Server[] = Array.from({ length: 6 }, (_, index) => ({
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonInSidepanelExample {
-    protected readonly text = injectExampleText();
-
+export class SkeletonInSidepanelExample extends BaseLocalizedExample<ExampleText> {
     private readonly sidepanel = inject(KbqSidepanelService);
     private loading = Subscription.EMPTY;
 
@@ -130,6 +129,7 @@ export class SkeletonInSidepanelExample {
     protected readonly servers = signal<Server[] | null>(null);
 
     constructor() {
+        super(TEXT);
         inject(DestroyRef).onDestroy(() => this.loading.unsubscribe());
     }
 

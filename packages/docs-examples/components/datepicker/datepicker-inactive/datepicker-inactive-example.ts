@@ -5,8 +5,9 @@ import { DateAdapter, KbqFormsModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Datepicker inactive
@@ -46,14 +47,13 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatepickerInactiveExample {
-    protected readonly text = injectExampleText();
-
+export class DatepickerInactiveExample extends BaseLocalizedExample<ExampleText> {
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     selectedDate: DateTime;
 
     constructor() {
+        super(TEXT);
         this.selectedDate = this.adapter.createDate(1989, 11, 13);
     }
 }

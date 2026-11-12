@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the input-number-overview example. */
 export interface ExampleText {
@@ -10,7 +9,7 @@ export interface ExampleText {
     integer: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         numberWithBounds: 'С разделением групп разрядов, с мин. и макс. ограничением',
         hintBounds: 'От −12 000 до 12 000',
@@ -26,6 +25,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         integer: 'Integer value'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

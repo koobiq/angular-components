@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /** @title Form field with kbqPrefix and kbqSuffix */
 @Component({
@@ -18,8 +19,10 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldWithPrefixAndSuffixExample {
-    protected readonly text = injectExampleText();
-
+export class FormFieldWithPrefixAndSuffixExample extends BaseLocalizedExample<ExampleText> {
     readonly formControl = new FormControl();
+
+    constructor() {
+        super(TEXT);
+    }
 }

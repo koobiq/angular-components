@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the ag-grid-loading-overlay example. */
 export interface ExampleText {
@@ -7,7 +6,7 @@ export interface ExampleText {
     showLoadingOverlay: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         headerText: 'Текст',
         showLoadingOverlay: 'Показать оверлей загрузки'
@@ -17,6 +16,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         showLoadingOverlay: 'Show loading overlay'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

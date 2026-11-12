@@ -5,8 +5,9 @@ import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { map, startWith } from 'rxjs/operators';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Highlight in select
@@ -52,9 +53,7 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HighlightSelectExample {
-    protected readonly text = injectExampleText();
-
+export class HighlightSelectExample extends BaseLocalizedExample<ExampleText> {
     readonly options = [
         'Manchester United',
         'Manchester 62 FC',
@@ -75,5 +74,9 @@ export class HighlightSelectExample {
         return query
             ? this.options.filter((option) => option.toLowerCase().includes(query.toLowerCase()))
             : this.options;
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

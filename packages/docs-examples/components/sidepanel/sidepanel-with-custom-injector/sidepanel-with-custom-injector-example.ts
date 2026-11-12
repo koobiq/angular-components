@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, InjectionToken, Injector } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/sidepanel';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 export const EXAMPLE_SIDEPANEL_TOKEN = new InjectionToken<{ name: string; role: string }>('SidepanelUser');
 
@@ -22,10 +23,12 @@ export const EXAMPLE_SIDEPANEL_TOKEN = new InjectionToken<{ name: string; role: 
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleSidepanelWithCustomInjectorContent {
-    protected readonly text = injectExampleText();
-
+export class ExampleSidepanelWithCustomInjectorContent extends BaseLocalizedExample<ExampleText> {
     protected readonly user = inject(EXAMPLE_SIDEPANEL_TOKEN);
+
+    constructor() {
+        super(TEXT);
+    }
 }
 
 /**
@@ -41,9 +44,7 @@ export class ExampleSidepanelWithCustomInjectorContent {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelWithCustomInjectorExample {
-    protected readonly text = injectExampleText();
-
+export class SidepanelWithCustomInjectorExample extends BaseLocalizedExample<ExampleText> {
     private readonly injector = inject(Injector);
     private readonly sidepanelService = inject(KbqSidepanelService);
 
@@ -59,5 +60,9 @@ export class SidepanelWithCustomInjectorExample {
                 ]
             })
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

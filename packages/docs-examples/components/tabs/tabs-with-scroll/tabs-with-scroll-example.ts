@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Tabs with scroll
@@ -19,9 +20,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabsWithScrollExample {
-    protected readonly text = injectExampleText();
-
+export class TabsWithScrollExample extends BaseLocalizedExample<ExampleText> {
     readonly tabs = computed(() => [
         this.text().bruteforce,
         this.text().complexAttack,
@@ -34,4 +33,8 @@ export class TabsWithScrollExample {
         'Ransomware',
         'Phishing'
     ]);
+
+    constructor() {
+        super(TEXT);
+    }
 }

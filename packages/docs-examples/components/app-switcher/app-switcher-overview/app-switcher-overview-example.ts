@@ -3,7 +3,8 @@ import { KbqAppSwitcherApp, KbqAppSwitcherModule, KbqAppSwitcherSite } from '@ko
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title app-switcher
@@ -33,9 +34,7 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppSwitcherOverviewExample {
-    protected readonly text = injectExampleText();
-
+export class AppSwitcherOverviewExample extends BaseLocalizedExample<ExampleText> {
     SVGIcon: string = `
         <svg fill="none" height="24" viewBox="0 0 32 32" width="24" xmlns="http://www.w3.org/2000/svg">
             <path clip-rule="evenodd"
@@ -95,4 +94,8 @@ export class AppSwitcherOverviewExample {
         }
     ];
     selectedApp: KbqAppSwitcherApp = this.sites[0].apps[1];
+
+    constructor() {
+        super(TEXT);
+    }
 }

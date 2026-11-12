@@ -5,7 +5,8 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title List action button
@@ -56,13 +57,15 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListActionButtonExample {
-    protected readonly text = injectExampleText();
-
+export class ListActionButtonExample extends BaseLocalizedExample<ExampleText> {
     selected = [];
     protected readonly PopUpPlacements = PopUpPlacements;
 
     getText(text: string | number): string {
         return `Item ${text}`;
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

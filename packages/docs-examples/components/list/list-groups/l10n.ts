@@ -1,5 +1,10 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
+
+/** Security categories of the groups example. */
+export interface ExampleText {
+    securityControls: string;
+    categories: { categoryName: string; disabled?: boolean; securityItems: SecurityItem[] }[];
+}
 
 /** One security control of the groups example. */
 export interface SecurityItem {
@@ -7,13 +12,9 @@ export interface SecurityItem {
     displayName: string;
 }
 
-/** Security categories of the groups example. */
-export interface ExampleText {
-    categories: { categoryName: string; disabled?: boolean; securityItems: SecurityItem[] }[];
-}
-
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
+        securityControls: 'Средства защиты',
         categories: [
             {
                 categoryName: 'Сетевая безопасность',
@@ -50,6 +51,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         ]
     },
     default: {
+        securityControls: 'Security controls',
         categories: [
             {
                 categoryName: 'Network Security',
@@ -86,6 +88,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         ]
     }
 };
-
-/** Security categories of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

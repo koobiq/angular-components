@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Checkbox indeterminate
@@ -34,9 +35,7 @@ import { injectExampleText } from '../l10n';
         class: 'layout-column layout-align-start-start'
     }
 })
-export class CheckboxIndeterminateExample {
-    protected readonly text = injectExampleText();
-
+export class CheckboxIndeterminateExample extends BaseLocalizedExample<ExampleText> {
     protected readonly eventTypes = computed(() => this.text().eventTypes);
     protected readonly selected = signal(new Set([this.eventTypes()[0]]));
 
@@ -57,5 +56,9 @@ export class CheckboxIndeterminateExample {
 
             return next;
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

@@ -5,7 +5,8 @@ import { KbqFormFieldModule, KbqLabel } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqUserInfo, KbqUsername } from '@koobiq/components/username';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 const USERS: KbqUserInfo[] = [
     {
@@ -78,12 +79,14 @@ const USERS: KbqUserInfo[] = [
         class: 'layout-column layout-align-center-center'
     }
 })
-export class InlineEditSelectExample {
-    protected readonly text = injectExampleText();
-
+export class InlineEditSelectExample extends BaseLocalizedExample<ExampleText> {
     protected readonly notSetLabel = 'Not specified';
 
     protected readonly users = USERS;
 
     protected readonly control = new FormControl<KbqUserInfo | null>(this.users[0]);
+
+    constructor() {
+        super(TEXT);
+    }
 }

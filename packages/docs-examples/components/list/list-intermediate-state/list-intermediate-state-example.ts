@@ -11,9 +11,10 @@ import { KbqListModule, KbqListSelectionChange } from '@koobiq/components/list';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { KbqUsernameModule } from '@koobiq/components/username';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 interface ExampleUser {
     lastName: string;
@@ -58,9 +59,7 @@ interface ExampleUser {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListIntermediateStateExample {
-    protected readonly text = injectExampleText();
-
+export class ListIntermediateStateExample extends BaseLocalizedExample<ExampleText> {
     PopUpSizes = PopUpSizes;
     PopUpPlacements = PopUpPlacements;
 
@@ -234,6 +233,7 @@ export class ListIntermediateStateExample {
     readonly popover = viewChild.required(KbqPopoverTrigger);
 
     constructor() {
+        super(TEXT);
         this.filteredUsers = merge(
             of(this.users),
             this.searchControl.valueChanges.pipe(map((value) => this.getFilteredUsers(value)))

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title select-scrolling-and-layering
@@ -24,6 +23,4 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectScrollingAndLayeringExample {
-    protected readonly text = injectExampleText();
-}
+export class SelectScrollingAndLayeringExample {}

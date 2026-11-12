@@ -7,8 +7,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Timepicker variations
@@ -28,9 +29,7 @@ import { injectExampleText } from '../l10n';
     styleUrls: ['timepicker-variations-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimepickerVariationsExample {
-    protected readonly text = injectExampleText();
-
+export class TimepickerVariationsExample extends BaseLocalizedExample<ExampleText> {
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     value: DateTime;
@@ -39,6 +38,7 @@ export class TimepickerVariationsExample {
     protected readonly TimeFormats = TimeFormats;
 
     constructor() {
+        super(TEXT);
         this.value = this.adapter.today();
     }
 }

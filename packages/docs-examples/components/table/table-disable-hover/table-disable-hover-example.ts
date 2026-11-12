@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqTableModule } from '@koobiq/components/table';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Table without hover
@@ -30,13 +31,15 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableDisableHoverExample {
-    protected readonly text = injectExampleText();
-
+export class TableDisableHoverExample extends BaseLocalizedExample<ExampleText> {
     protected readonly rows = computed(() => [
         { name: 'document.txt', owner: 'User 1', modified: '27 May 2024' },
         { name: 'report-2023.pdf', owner: 'User 2', modified: '1 Dec 2023' },
         { name: 'notes.doc', owner: 'User 3', modified: '7 Mar 2024' },
         { name: 'archive.zip', owner: 'User 4', modified: '24 Aug 2022' }
     ]);
+
+    constructor() {
+        super(TEXT);
+    }
 }

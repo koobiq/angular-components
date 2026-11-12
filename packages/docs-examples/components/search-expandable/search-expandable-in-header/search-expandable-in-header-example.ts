@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title search-expandable-in-header
@@ -64,8 +65,10 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SearchExpandableInHeaderExample {
-    protected readonly text = injectExampleText();
-
+export class SearchExpandableInHeaderExample extends BaseLocalizedExample<ExampleText> {
     search: string = 'report';
+
+    constructor() {
+        super(TEXT);
+    }
 }

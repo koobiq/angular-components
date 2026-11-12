@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the modal-full-custom example. */
 export interface ExampleText {
@@ -10,7 +9,7 @@ export interface ExampleText {
     additionalContext: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         save: 'Сохранить',
         close: 'Закрыть',
@@ -26,6 +25,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         additionalContext: 'Additional context or description for the dialog'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

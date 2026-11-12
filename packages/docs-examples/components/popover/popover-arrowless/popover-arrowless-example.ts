@@ -3,7 +3,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpSizes } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Popover arrowless
@@ -49,9 +50,11 @@ import { injectExampleText } from '../l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class PopoverArrowlessExample {
-    protected readonly text = injectExampleText();
-
+export class PopoverArrowlessExample extends BaseLocalizedExample<ExampleText> {
     colors = KbqComponentColors;
     protected readonly popoverSize = PopUpSizes.Large;
+
+    constructor() {
+        super(TEXT);
+    }
 }

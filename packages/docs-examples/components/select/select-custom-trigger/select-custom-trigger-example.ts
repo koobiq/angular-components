@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title select-custom-trigger
@@ -27,8 +26,6 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectCustomTriggerExample {
-    protected readonly text = injectExampleText();
-
     readonly options = computed(() => Array.from({ length: 5 }, (_, i) => 'Option #' + i));
     readonly selected = this.options[0];
 }

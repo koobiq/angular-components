@@ -1,31 +1,27 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the sidebar-with-splitter example. */
 export interface ExampleText {
     openedContent: string;
     closedContent: string;
     mainContent: string;
-    toggleModel: string;
     toggle: string;
+    toggleModel: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         openedContent: 'Содержимое (открыто)',
         closedContent: 'Содержимое (закрыто)',
         mainContent: 'Основное содержимое',
-        toggleModel: 'Переключить модель',
-        toggle: 'Переключить'
+        toggle: 'Переключить',
+        toggleModel: 'Переключить модель'
     },
     default: {
         openedContent: 'Opened content',
         closedContent: 'Closed content',
         mainContent: 'Main content',
-        toggleModel: 'Toggle model',
-        toggle: 'Toggle'
+        toggle: 'Toggle',
+        toggleModel: 'Toggle model'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

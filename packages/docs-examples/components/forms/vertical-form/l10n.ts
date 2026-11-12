@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the vertical-form example. */
 export interface ExampleText {
@@ -12,7 +11,7 @@ export interface ExampleText {
     longLabel: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         fieldLabel: 'Подпись поля',
         hintUnderField: 'Подсказка под полем',
@@ -32,6 +31,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         longLabel: 'A long field name that spans several lines and may wrap to a new line'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

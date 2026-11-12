@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Vertical form
@@ -17,8 +18,10 @@ import { injectExampleText } from './l10n';
     templateUrl: 'vertical-form-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VerticalFormExample {
-    protected readonly text = injectExampleText();
-
+export class VerticalFormExample extends BaseLocalizedExample<ExampleText> {
     value: any;
+
+    constructor() {
+        super(TEXT);
+    }
 }

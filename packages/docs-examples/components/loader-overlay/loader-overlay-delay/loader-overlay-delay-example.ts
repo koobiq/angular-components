@@ -6,8 +6,9 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { kbqDelayLoadingIndicator } from '@koobiq/components/core';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { switchMap, timer } from 'rxjs';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Loader-overlay delay
@@ -59,9 +60,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoaderOverlayDelayExample {
-    protected readonly text = injectExampleText();
-
+export class LoaderOverlayDelayExample extends BaseLocalizedExample<ExampleText> {
     private readonly destroyRef = inject(DestroyRef);
     protected readonly delay = model(true);
     protected readonly duration = model(200);
@@ -84,5 +83,9 @@ export class LoaderOverlayDelayExample {
                 this.updates.update((value) => value + 1);
                 this.loading.set(false);
             });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

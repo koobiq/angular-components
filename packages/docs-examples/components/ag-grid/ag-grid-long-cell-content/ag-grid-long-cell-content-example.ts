@@ -6,11 +6,11 @@ import { PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import { KbqPopoverModule } from '@koobiq/components/popover';
+import { BaseLocalizedExample, injectLocalizedText } from '@koobiq/docs-examples/i18n';
 import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ICellRendererParams, ModuleRegistry } from 'ag-grid-community';
 import { filter, fromEvent } from 'rxjs';
-
-import { injectExampleText as injectEventsText, injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -83,12 +83,13 @@ const onCellEnter = (cell: HTMLElement, destroyRef: DestroyRef, callback: (event
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularComp {
+export class ExampleOverflowBadgesCellRenderer
+    extends BaseLocalizedExample<ExampleText>
+    implements ICellRendererAngularComp
+{
     // Only the collapsed cell has the directive, hence the optional query.
     private readonly overflowItems = viewChild(KbqOverflowItems);
     private readonly destroyRef = inject(DestroyRef);
-
-    protected readonly text = injectExampleText();
 
     protected readonly hosts = signal<string[]>([]);
     protected readonly collapsed = signal(true);
@@ -107,6 +108,10 @@ export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularCo
         this.hosts.set(params.value ?? []);
 
         return true;
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }
 
@@ -168,11 +173,12 @@ export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularCo
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleOverflowLinksCellRenderer implements ICellRendererAngularComp {
+export class ExampleOverflowLinksCellRenderer
+    extends BaseLocalizedExample<ExampleText>
+    implements ICellRendererAngularComp
+{
     private readonly overflowItems = viewChild.required(KbqOverflowItems);
     private readonly destroyRef = inject(DestroyRef);
-
-    protected readonly text = injectExampleText();
 
     protected readonly popUpSizes = PopUpSizes;
     protected readonly popUpPlacements = PopUpPlacements;
@@ -200,6 +206,10 @@ export class ExampleOverflowLinksCellRenderer implements ICellRendererAngularCom
             (ids ?? []).map((id) => ({ id, url: `https://attack.mitre.org/techniques/${id.replace('.', '/')}/` }))
         );
     }
+
+    constructor() {
+        super(TEXT);
+    }
 }
 
 /**
@@ -220,7 +230,7 @@ export class ExampleOverflowLinksCellRenderer implements ICellRendererAngularCom
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridLongCellContentExample {
-    private readonly events = injectEventsText();
+    private readonly events = injectLocalizedText(TEXT);
 
     protected readonly columnDefs = computed<ColDef<ExampleRowData>[]>(() => [
         {

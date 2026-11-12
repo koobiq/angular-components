@@ -12,7 +12,6 @@ import {
 } from '@koobiq/components/file-upload';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
 import { BehaviorSubject } from 'rxjs';
-import { injectExampleText } from '../l10n';
 
 /**
  @title File upload primitive
@@ -117,8 +116,6 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadPrimitiveExample {
-    protected readonly text = injectExampleText();
-
     readonly list = viewChild.required(KbqFileList);
 
     onFileClicked({ target }: Event) {

@@ -1,12 +1,11 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the empty-state-icon example. */
 export interface ExampleText {
     iconText: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         iconText: 'Здесь должны быть описаны действия, которые вы можете выполнить на этом экране, а также их польза.'
     },
@@ -14,6 +13,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         iconText: 'This should detail the actions you can take on this screen, as well as why it’s valuable.'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

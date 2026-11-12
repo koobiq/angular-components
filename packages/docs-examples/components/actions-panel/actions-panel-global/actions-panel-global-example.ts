@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } from '@angular/core';
 import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Actions panel opened globally
@@ -33,9 +34,7 @@ import { injectExampleText } from '../l10n';
     providers: [KbqActionsPanel],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsPanelGlobalExample {
-    protected readonly text = injectExampleText();
-
+export class ActionsPanelGlobalExample extends BaseLocalizedExample<ExampleText> {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly templateRef = viewChild.required(TemplateRef);
     private actionsPanelRef?: KbqActionsPanelRef | null;
@@ -52,5 +51,9 @@ export class ActionsPanelGlobalExample {
         this.actionsPanelRef = this.actionsPanel.open(this.templateRef());
 
         this.actionsPanelRef.afterClosed.subscribe(() => (this.actionsPanelRef = null));
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

@@ -7,7 +7,8 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Dropdown disabled
@@ -27,8 +28,10 @@ import { injectExampleText } from './l10n';
     templateUrl: 'dropdown-disabled-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownDisabledExample {
-    protected readonly text = injectExampleText();
-
+export class DropdownDisabledExample extends BaseLocalizedExample<ExampleText> {
     disabled = false;
+
+    constructor() {
+        super(TEXT);
+    }
 }

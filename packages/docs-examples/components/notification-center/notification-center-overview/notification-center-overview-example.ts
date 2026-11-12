@@ -12,9 +12,10 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
-import { createNotifications } from '../l10n';
-import { injectExampleText } from './l10n';
+import { createNotifications } from '../create-notifications';
+import { ExampleText, TEXT } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -59,10 +60,8 @@ enum NavbarIcItems {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationCenterOverviewExample {
+export class NotificationCenterOverviewExample extends BaseLocalizedExample<ExampleText> {
     notificationService = inject(KbqNotificationCenterService);
-
-    protected readonly text = injectExampleText();
 
     private readonly actionsTemplate = viewChild<TemplateRef<unknown>>('actionsTemplate');
     private readonly captionTemplate = viewChild<TemplateRef<unknown>>('captionTemplate');
@@ -109,6 +108,7 @@ export class NotificationCenterOverviewExample {
     protected readonly PopUpPlacements = PopUpPlacements;
 
     constructor() {
+        super(TEXT);
         // Rebuilt on a locale switch to follow the language; the stable ids keep the read state.
         effect(() => {
             const actions = this.actionsTemplate();

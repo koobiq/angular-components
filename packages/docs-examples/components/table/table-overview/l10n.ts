@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the table-overview example. */
 export interface ExampleText {
@@ -9,7 +8,7 @@ export interface ExampleText {
     registered: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         events: [
             'Кража учётных данных',
@@ -30,6 +29,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         registered: 'Registered'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

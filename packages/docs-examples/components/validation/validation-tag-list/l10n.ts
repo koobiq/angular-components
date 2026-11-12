@@ -1,31 +1,27 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the validation-tag-list example. */
 export interface ExampleText {
     required: string;
+    submit: string;
     onlyLatinLetters: string;
     invalidTags: string;
-    submit: string;
     newTag: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         required: 'Обязательно',
+        submit: 'Отправить',
         onlyLatinLetters: 'Только латинские буквы',
         invalidTags: 'Недопустимые теги:',
-        submit: 'Отправить',
         newTag: 'Новый тег...'
     },
     default: {
         required: 'Required',
+        submit: 'Submit',
         onlyLatinLetters: 'Provide only latin letters',
         invalidTags: 'Invalid tags:',
-        submit: 'Submit',
         newTag: 'New tag...'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

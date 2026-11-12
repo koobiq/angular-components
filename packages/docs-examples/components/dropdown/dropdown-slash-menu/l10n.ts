@@ -1,11 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
-
-/** One block of the slash menu. */
-export interface ExampleBlock {
-    name: string;
-    icon: string;
-}
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Editor and menu groups of the slash-menu example. */
 export interface ExampleText {
@@ -16,7 +9,13 @@ export interface ExampleText {
     groups: { label: string; items: ExampleBlock[] }[];
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+/** One block of the slash menu. */
+export interface ExampleBlock {
+    name: string;
+    icon: string;
+}
+
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         editorLabel: 'Текст статьи',
         nothingFound: 'Ничего не найдено',
@@ -70,6 +69,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         ]
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

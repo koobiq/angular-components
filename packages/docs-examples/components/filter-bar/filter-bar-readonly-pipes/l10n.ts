@@ -1,5 +1,12 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
+
+/** Text of the readonly-pipes example: it has no counterpart in the library's locale data. */
+export interface ExampleText {
+    /** The text search pipe: the first pipe in every filter, always present, never removable. */
+    search: string;
+    user: string;
+    readonlyPipes: ExampleReadonlyPipe[];
+}
 
 /** One readonly pipe of the example: a name fixed by the object and its current value. */
 export interface ExampleReadonlyPipe {
@@ -7,14 +14,7 @@ export interface ExampleReadonlyPipe {
     value: string;
 }
 
-/** Text of the readonly-pipes example: it has no counterpart in the library's locale data. */
-export interface ExampleText {
-    search: string;
-    user: string;
-    readonlyPipes: ExampleReadonlyPipe[];
-}
-
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         search: 'Поиск',
         user: 'Пользователь',
@@ -36,6 +36,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         ]
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

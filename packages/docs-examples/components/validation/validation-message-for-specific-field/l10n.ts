@@ -1,31 +1,27 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the validation-message-for-specific-field example. */
 export interface ExampleText {
+    required: string;
+    submit: string;
     errorAboveHint: string;
     errorReplacesHint: string;
-    required: string;
     hintUnderField: string;
-    submit: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
+        required: 'Обязательно',
+        submit: 'Отправить',
         errorAboveHint: 'Сообщение об ошибке отображается над подсказкой',
         errorReplacesHint: 'Сообщение об ошибке заменяет подсказку',
-        required: 'Обязательно',
-        hintUnderField: 'Подсказка под полем',
-        submit: 'Отправить'
+        hintUnderField: 'Подсказка под полем'
     },
     default: {
+        required: 'Required',
+        submit: 'Submit',
         errorAboveHint: 'The error message appears above the hint',
         errorReplacesHint: 'The error message replaces the hint',
-        required: 'Required',
-        hintUnderField: 'Hint under the field',
-        submit: 'Submit'
+        hintUnderField: 'Hint under the field'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

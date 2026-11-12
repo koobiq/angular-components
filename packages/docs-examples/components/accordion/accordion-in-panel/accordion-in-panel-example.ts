@@ -7,7 +7,8 @@ import {
     KbqSidepanelService,
     KbqSidepanelSize
 } from '@koobiq/components/sidepanel';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Accordion in panel
@@ -18,9 +19,7 @@ import { injectExampleText } from './l10n';
     templateUrl: 'accordion-in-panel-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccordionInPanelExample {
-    protected readonly text = injectExampleText();
-
+export class AccordionInPanelExample extends BaseLocalizedExample<ExampleText> {
     private sidepanelService = inject(KbqSidepanelService);
 
     position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
@@ -33,5 +32,9 @@ export class AccordionInPanelExample {
             position: this.position,
             size: this.size
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

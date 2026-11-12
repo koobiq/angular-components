@@ -1,5 +1,16 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
+
+/** Event rows and column headers of the long-cell-content example. */
+export interface ExampleText {
+    events: ExampleEvent[];
+    eventHeader: string;
+    hostsHeader: string;
+    techniquesHeader: string;
+    statusHeader: string;
+    collapseLink: string;
+    moreCount: (count: number) => string;
+    allCount: (count: number) => string;
+}
 
 /** One event of the long-cell-content example grid. */
 export interface ExampleEvent {
@@ -9,20 +20,7 @@ export interface ExampleEvent {
     status: string;
 }
 
-/** Event rows and column headers of the long-cell-content example. */
-export interface ExampleText {
-    events: ExampleEvent[];
-    eventHeader: string;
-    hostsHeader: string;
-    techniquesHeader: string;
-    statusHeader: string;
-
-    collapseLink: string;
-    moreCount: (count: number) => string;
-    allCount: (count: number) => string;
-}
-
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         events: [
             {
@@ -142,6 +140,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         allCount: (count) => `All ${count}`
     }
 };
-
-/** Event rows of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

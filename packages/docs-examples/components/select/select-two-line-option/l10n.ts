@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the select-two-line-option example. */
 export interface ExampleText {
@@ -7,7 +6,7 @@ export interface ExampleText {
     twoLong2: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         twoLong1: 'Вариант №2 с очень длинной подписью, которая не помещается в одну строку панели',
         twoLong2:
@@ -18,6 +17,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         twoLong2: 'Option #4 with another quite long label that also has to wrap onto the next line'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

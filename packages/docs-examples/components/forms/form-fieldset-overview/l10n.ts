@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the form-fieldset-overview example. */
 export interface ExampleText {
@@ -9,7 +8,7 @@ export interface ExampleText {
     hint2: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         fieldGroupTitle: 'Название группы полей',
         ipAddress: 'IP-адрес',
@@ -25,6 +24,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         hint2: 'Hint for the second field'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

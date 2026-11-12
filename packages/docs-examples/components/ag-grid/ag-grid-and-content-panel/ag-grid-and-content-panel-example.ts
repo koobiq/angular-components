@@ -8,6 +8,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -20,7 +21,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -51,12 +52,10 @@ type ExampleRowData = Record<string, string>;
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleGrid {
+export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
     readonly cellClicked = output<CellClickedEvent>();
     readonly cellFocused = output<CellFocusedEvent>();
     readonly cellKeyDown = output<CellKeyDownEvent | FullWidthCellKeyDownEvent>();
-
-    protected readonly text = injectExampleText();
 
     protected readonly defaultColDef: ColDef = {
         sortable: true,
@@ -92,6 +91,10 @@ export class ExampleGrid {
                 node.setSelected(true);
             }
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }
 
@@ -274,9 +277,7 @@ export class ExampleGrid {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleContentPanel {
-    protected readonly text = injectExampleText();
-
+export class ExampleContentPanel extends BaseLocalizedExample<ExampleText> {
     protected readonly modalRef = inject(KbqModalRef);
 
     protected readonly componentColors = KbqComponentColors;
@@ -301,6 +302,10 @@ export class ExampleContentPanel {
             this.opened.set(true);
         }
     }
+
+    constructor() {
+        super(TEXT);
+    }
 }
 
 /**
@@ -322,9 +327,7 @@ export class ExampleContentPanel {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridAndContentPanelExample {
-    protected readonly text = injectExampleText();
-
+export class AgGridAndContentPanelExample extends BaseLocalizedExample<ExampleText> {
     private readonly modal = inject(KbqModalService);
 
     openModal(): void {
@@ -333,5 +336,9 @@ export class AgGridAndContentPanelExample {
             kbqWidth: '90vw',
             kbqClosable: false
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

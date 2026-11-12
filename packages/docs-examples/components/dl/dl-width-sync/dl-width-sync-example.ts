@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqDivider } from '@koobiq/components/divider';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Description list shared width
@@ -44,8 +45,10 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DlWidthSyncExample {
-    protected readonly text = injectExampleText();
-
+export class DlWidthSyncExample extends BaseLocalizedExample<ExampleText> {
     protected readonly dtWidth = model(160);
+
+    constructor() {
+        super(TEXT);
+    }
 }

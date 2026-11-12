@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Toggle Disabled
@@ -18,8 +19,10 @@ import { injectExampleText } from '../l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ToggleDisabledExample {
-    protected readonly text = injectExampleText();
-
+export class ToggleDisabledExample extends BaseLocalizedExample<ExampleText> {
     protected readonly value = signal(false);
+
+    constructor() {
+        super(TEXT);
+    }
 }

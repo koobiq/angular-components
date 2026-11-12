@@ -3,7 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqError, KbqHint } from '@koobiq/components/form-field';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Checkbox validation
@@ -33,8 +34,10 @@ import { injectExampleText } from './l10n';
         class: 'layout-align-center-center layout-row layout-padding-l'
     }
 })
-export class CheckboxValidationExample {
-    protected readonly text = injectExampleText();
-
+export class CheckboxValidationExample extends BaseLocalizedExample<ExampleText> {
     protected readonly agreement = signal(false);
+
+    constructor() {
+        super(TEXT);
+    }
 }

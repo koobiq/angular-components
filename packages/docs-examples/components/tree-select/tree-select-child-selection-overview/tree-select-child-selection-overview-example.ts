@@ -10,7 +10,6 @@ import {
     KbqTreeSelection
 } from '@koobiq/components/tree';
 import { KbqTreeSelect, KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { injectExampleText } from '../l10n';
 
 export class FileNode {
     children: FileNode[];
@@ -139,8 +138,6 @@ export const DATA_OBJECT = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectChildSelectionOverviewExample {
-    protected readonly text = injectExampleText();
-
     readonly select = viewChild.required(KbqTreeSelect);
     readonly tree = viewChild.required(KbqTreeSelection);
 

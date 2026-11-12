@@ -1,16 +1,15 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the modal-overview example. */
 export interface ExampleText {
-    openConfirmModal: string;
-    openSuccessModal: string;
-    openDeleteModal: string;
     saveChangesAria: string;
     saveChangesContent: string;
     save: string;
     cancel: string;
     changesSaved: string;
+    openConfirmModal: string;
+    openSuccessModal: string;
+    openDeleteModal: string;
     allChangesSaved: string;
     deleteCustomer: string;
     delete: string;
@@ -18,16 +17,16 @@ export interface ExampleText {
     deleteContent: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
-        openConfirmModal: 'Открыть Confirm-модалку',
-        openSuccessModal: 'Открыть Success-модалку',
-        openDeleteModal: 'Открыть Delete-модалку',
         saveChangesAria: 'Сохранить изменения',
         saveChangesContent: 'Сохранить изменения?',
         save: 'Сохранить',
         cancel: 'Отмена',
         changesSaved: 'Изменения сохранены',
+        openConfirmModal: 'Открыть Confirm-модалку',
+        openSuccessModal: 'Открыть Success-модалку',
+        openDeleteModal: 'Открыть Delete-модалку',
         allChangesSaved: 'Все изменения сохранены!',
         deleteCustomer: 'Удалить клиента',
         delete: 'Удалить',
@@ -36,14 +35,14 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
             'Задачи, политики и метки, связанные с заказчиком, также будут удалены. Удалить выбранного заказчика?'
     },
     default: {
-        openConfirmModal: 'Open Confirm Modal',
-        openSuccessModal: 'Open Success Modal',
-        openDeleteModal: 'Open Delete Modal',
         saveChangesAria: 'Save changes',
         saveChangesContent: 'Save changes?',
         save: 'Save',
         cancel: 'Cancel',
         changesSaved: 'Changes saved',
+        openConfirmModal: 'Open Confirm Modal',
+        openSuccessModal: 'Open Success Modal',
+        openDeleteModal: 'Open Delete Modal',
         allChangesSaved: 'All changes are saved!',
         deleteCustomer: 'Delete customer',
         delete: 'Delete',
@@ -52,6 +51,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
             'The tasks, policies and tags associated with the customer will be deleted too. Delete selected customer?'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

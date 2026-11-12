@@ -1,34 +1,30 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the sidepanel-overlayed example. */
 export interface ExampleText {
     close: string;
-    openAnother: string;
     open: string;
     position: string;
     templateContent: string;
     templateBody: string;
+    openAnother: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         close: 'Закрыть',
-        openAnother: 'Открыть другую панель',
         open: 'Открыть',
         position: 'Позиция',
         templateContent: 'Содержимое шаблона панели',
-        templateBody: 'Тело шаблона панели'
+        templateBody: 'Тело шаблона панели',
+        openAnother: 'Открыть другую панель'
     },
     default: {
         close: 'Close',
-        openAnother: 'Open another sidepanel',
         open: 'Open',
         position: 'Position',
         templateContent: 'Sidepanel Template Content',
-        templateBody: 'Sidepanel Template Body'
+        templateBody: 'Sidepanel Template Body',
+        openAnother: 'Open another sidepanel'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

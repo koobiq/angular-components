@@ -1,13 +1,14 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Incident type options of the select-all example. */
 export interface ExampleText {
+    incidentTypes: string;
     options: string[];
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
+        incidentTypes: 'Типы инцидентов',
         options: [
             'Компрометация учётной записи',
             'Утечка данных',
@@ -20,6 +21,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         ]
     },
     default: {
+        incidentTypes: 'Incident types',
         options: [
             'Account Compromise',
             'Data Breach',
@@ -32,6 +34,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         ]
     }
 };
-
-/** Options of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the toast-multiline example. */
 export interface ExampleText {
@@ -10,7 +9,7 @@ export interface ExampleText {
     multilineContent: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         refresh: 'Обновить',
         showToast: 'Показать тост',
@@ -28,6 +27,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
             'Includes: \n#1 - Very important changes\n#2 - Less important changes\n#3 - Not important changes at all'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { injectExampleText } from '../l10n';
 
 const createBlobPart = (sizeInMB: number): BlobPart => {
     const chunk = 'a'.repeat(1024 * 1024);
@@ -40,8 +39,6 @@ const createMockFile = (fileName: string = 'Filename.txt', options?: FilePropert
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadMultipleWithMaxHeightExample {
-    protected readonly text = injectExampleText();
-
     files: KbqFileItem[] = [
         { file: createMockFile('project_alpha.txt', { size: 1 }) },
         { file: createMockFile('report_final.docx', { size: 2 }) },

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, ViewEncapsulation } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Tabs with scroll vertical
@@ -21,9 +22,7 @@ import { injectExampleText } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class TabsWithScrollVerticalExample {
-    protected readonly text = injectExampleText();
-
+export class TabsWithScrollVerticalExample extends BaseLocalizedExample<ExampleText> {
     readonly tabs = computed(() => [
         this.text().bruteforce,
         this.text().complexAttack,
@@ -36,4 +35,8 @@ export class TabsWithScrollVerticalExample {
         'Ransomware',
         'Phishing'
     ]);
+
+    constructor() {
+        super(TEXT);
+    }
 }

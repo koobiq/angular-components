@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the split-button-text-overflow example. */
 export interface ExampleText {
@@ -7,7 +6,7 @@ export interface ExampleText {
     saveEngineering: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         moreOptions: 'Другие параметры',
         saveEngineering:
@@ -19,6 +18,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
             'Save engineering time with unified payments functionality. We obsess over the maze of gateways, payments rails, and financial institutions that make up the global economic landscape so that your teams can build what you need on one platform.'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

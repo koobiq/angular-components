@@ -10,6 +10,7 @@ import {
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqToggleModule } from '@koobiq/components/toggle';
+import { BaseLocalizedExample, injectLocalizedText } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -22,8 +23,7 @@ import {
     RowSelectionOptions,
     SELECTION_COLUMN_ID
 } from 'ag-grid-community';
-
-import { injectExampleText, injectExampleText as injectIncidentsText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -86,11 +86,13 @@ type ExampleRowData = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleRowDetailComponent {
-    protected readonly text = injectExampleText();
-
+export class ExampleRowDetailComponent extends BaseLocalizedExample<ExampleText> {
     protected readonly params = inject(KBQ_AG_GRID_ROW_DETAIL_PARAMS);
     protected readonly data = this.params.data as ExampleRowData;
+
+    constructor() {
+        super(TEXT);
+    }
 }
 
 /**
@@ -145,8 +147,8 @@ export class ExampleRowDetailComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridRowDetailExample {
-    protected readonly text = injectExampleText();
-    private readonly incidents = injectIncidentsText();
+    protected readonly text = injectLocalizedText(TEXT);
+    private readonly incidents = injectLocalizedText(TEXT);
 
     protected readonly multipleExpand = signal(false);
     protected readonly filled = signal(false);

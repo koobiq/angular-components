@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -8,7 +9,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -40,9 +41,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridRowDraggingExample {
-    protected readonly text = injectExampleText();
-
+export class AgGridRowDraggingExample extends BaseLocalizedExample<ExampleText> {
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
@@ -82,5 +81,9 @@ export class AgGridRowDraggingExample {
                 node.setSelected(true);
             }
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

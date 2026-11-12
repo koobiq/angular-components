@@ -13,8 +13,9 @@ import {
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { Observable, of, switchMap, throwError, timer } from 'rxjs';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 const TAKEN_NAMES = ['Admins', 'Support'];
 
@@ -137,9 +138,7 @@ class ExampleSaveError extends Error {
         class: 'layout-flex layout-column'
     }
 })
-export class InlineEditSaveErrorExample {
-    protected readonly text = injectExampleText();
-
+export class InlineEditSaveErrorExample extends BaseLocalizedExample<ExampleText> {
     protected readonly takenNames = TAKEN_NAMES.join(', ');
 
     protected readonly nameControl = new FormControl('Security team', {
@@ -239,5 +238,9 @@ export class InlineEditSaveErrorExample {
                     : of(null)
             )
         );
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

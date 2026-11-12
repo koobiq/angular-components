@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the filesize-formatter-overview example. */
 export interface ExampleText {
@@ -14,7 +13,7 @@ export interface ExampleText {
     default10: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         sizeInBits: 'Размер в битах',
         numbersBehindDecimalPoint: 'Знаков после запятой',
@@ -38,6 +37,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         default10: 'Default (10)'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

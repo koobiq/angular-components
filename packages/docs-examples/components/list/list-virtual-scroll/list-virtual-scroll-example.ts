@@ -4,7 +4,8 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title List with virtual-scroll
@@ -31,9 +32,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListVirtualScrollExample {
-    protected readonly text = injectExampleText();
-
+export class ListVirtualScrollExample extends BaseLocalizedExample<ExampleText> {
     readonly options = computed(() =>
         Array.from({ length: 10000 }).map((_, i) => ({
             id: i,
@@ -42,4 +41,8 @@ export class ListVirtualScrollExample {
     );
 
     selected = [];
+
+    constructor() {
+        super(TEXT);
+    }
 }

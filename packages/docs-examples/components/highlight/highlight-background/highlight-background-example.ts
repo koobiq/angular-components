@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Highlight with background color
@@ -24,8 +23,6 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HighlightBackgroundExample {
-    protected readonly text = injectExampleText();
-
     readonly keyword = 'cub';
     readonly title = 'Cube';
     readonly content =

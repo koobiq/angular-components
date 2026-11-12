@@ -9,8 +9,9 @@ import {
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KBQ_MODAL_DATA, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { take } from 'rxjs';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 type DocsFormData = {
     firstName: string;
@@ -49,9 +50,7 @@ type DocsFormData = {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsNameFormComponent {
-    protected readonly text = injectExampleText();
-
+export class DocsNameFormComponent extends BaseLocalizedExample<ExampleText> {
     protected readonly modalData = inject<DocsFormData>(KBQ_MODAL_DATA, { optional: true });
     protected readonly modalRef = inject(KbqModalRef);
     protected readonly formFieldList = viewChildren(KbqFormField);
@@ -74,6 +73,10 @@ export class DocsNameFormComponent {
 
             invalidControl?.focus();
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }
 
@@ -107,9 +110,7 @@ export class DocsNameFormComponent {
         class: 'layout-margin-5xl layout-align-center-center layout-row layout-gap-l'
     }
 })
-export class ValidationOnOpenExample {
-    protected readonly text = injectExampleText();
-
+export class ValidationOnOpenExample extends BaseLocalizedExample<ExampleText> {
     protected readonly modalService = inject(KbqModalService);
     protected modalRef: KbqModalRef<DocsNameFormComponent>;
 
@@ -139,5 +140,9 @@ export class ValidationOnOpenExample {
         this.modalRef.afterOpen.pipe(take(1)).subscribe(() => {
             this.modalRef.getElement().getElementsByTagName('button').item(0)?.click();
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

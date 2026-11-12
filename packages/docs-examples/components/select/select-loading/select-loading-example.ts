@@ -12,18 +12,17 @@ import {
     KbqSelectModule,
     minimumTimeToDisplayLoading
 } from '@koobiq/components/select';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { BehaviorSubject, catchError, Observable, of, race, switchMap, throwError, timer } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 type Option = {
     id: number;
     label: string;
 };
 
-export class OptionsApiService {
-    protected readonly text = injectExampleText();
-
+export class OptionsApiService extends BaseLocalizedExample<ExampleText> {
     private delay: number = 100;
 
     private readonly data = computed(() => Array.from({ length: 10 }, (_, i) => ({ id: i, label: 'Option #' + i })));
@@ -45,11 +44,13 @@ export class OptionsApiService {
 
         return timer(this.delay).pipe(map(() => filtered));
     }
+
+    constructor() {
+        super(TEXT);
+    }
 }
 
-export class SelectFacade {
-    protected readonly text = injectExampleText();
-
+export class SelectFacade extends BaseLocalizedExample<ExampleText> {
     private readonly api = inject(OptionsApiService);
     private readonly search$ = new BehaviorSubject<string | null>(null);
 
@@ -101,6 +102,10 @@ export class SelectFacade {
         }),
         startWith({ status: 'error', error: { message: 'error message' } } as const)
     );
+
+    constructor() {
+        super(TEXT);
+    }
 }
 
 /**
@@ -195,9 +200,7 @@ export class SelectFacade {
         class: 'layout-margin-5xl layout-column layout-align-center-center'
     }
 })
-export class SelectLoadingExample {
-    protected readonly text = injectExampleText();
-
+export class SelectLoadingExample extends BaseLocalizedExample<ExampleText> {
     protected readonly facade = inject(SelectFacade);
 
     protected selectedOption: Option = { id: 0, label: 'Option #0' };
@@ -224,6 +227,7 @@ export class SelectLoadingExample {
     }
 
     constructor() {
+        super(TEXT);
         this.searchControl.valueChanges
             .pipe(takeUntilDestroyed())
             .subscribe((value) => this.facade.setSearch(value ?? ''));

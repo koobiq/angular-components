@@ -7,9 +7,10 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, IRowNode, ModuleRegistry } from 'ag-grid-community';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -55,9 +56,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridExternalFilterStateExample {
-    protected readonly text = injectExampleText();
-
+export class AgGridExternalFilterStateExample extends BaseLocalizedExample<ExampleText> {
     readonly options = computed(() => this.text().categories);
     readonly filter = model('');
     readonly filterPass = (node: IRowNode): boolean => node.data.filter === this.filter();
@@ -79,4 +78,8 @@ export class AgGridExternalFilterStateExample {
             column4: 'Text ' + index
         }))
     );
+
+    constructor() {
+        super(TEXT);
+    }
 }

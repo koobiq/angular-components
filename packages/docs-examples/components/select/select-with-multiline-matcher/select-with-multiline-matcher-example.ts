@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Select with multiline matcher
@@ -41,9 +42,11 @@ import { injectExampleText } from '../l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectWithMultilineMatcherExample {
-    protected readonly text = injectExampleText();
-
+export class SelectWithMultilineMatcherExample extends BaseLocalizedExample<ExampleText> {
     readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + i));
     selected: string[] = [this.options()[0], this.options()[1], this.options()[2], this.options()[3]];
+
+    constructor() {
+        super(TEXT);
+    }
 }

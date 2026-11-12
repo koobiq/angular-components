@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the radio-validation example. */
 export interface ExampleText {
@@ -11,7 +10,7 @@ export interface ExampleText {
     save: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         authenticatorApp: 'Приложение-аутентификатор',
         hardwareKey: 'Аппаратный ключ безопасности',
@@ -29,6 +28,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         save: 'Save'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

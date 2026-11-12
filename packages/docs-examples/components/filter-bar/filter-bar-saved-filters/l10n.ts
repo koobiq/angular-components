@@ -1,15 +1,15 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the saved-filters example: it has no counterpart in the library's locale data. */
 export interface ExampleText {
+    /** The text search pipe: the first pipe in every filter, always present, never removable. */
     search: string;
     retry: string;
     deleteError: string;
     saveError: (name: string) => string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         search: 'Поиск',
         retry: 'Повторить',
@@ -23,6 +23,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         saveError: (name: string) => `Could not save the filter: ${name}`
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

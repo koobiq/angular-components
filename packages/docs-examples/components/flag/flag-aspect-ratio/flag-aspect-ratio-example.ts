@@ -6,9 +6,10 @@ import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqFlag } from '@koobiq/components/flag';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { countries } from 'country-flag-icons';
 import * as flags3x2 from 'country-flag-icons/string/3x2';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 const getCountryName = (regionNames: Intl.DisplayNames, code: string): string => {
     try {
@@ -71,9 +72,7 @@ type Country = { code: string; name: string; svg: SafeHtml };
         class: 'layout-row layout-align-center-center layout-padding-l'
     }
 })
-export class FlagAspectRatioExample {
-    protected readonly text = injectExampleText();
-
+export class FlagAspectRatioExample extends BaseLocalizedExample<ExampleText> {
     private readonly sanitizer = inject(DomSanitizer);
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
 
@@ -94,4 +93,8 @@ export class FlagAspectRatioExample {
     protected readonly control = new FormControl<Country | null>(this.countries()[0] ?? null);
 
     protected readonly compareWith = (a: Country | null, b: Country | null) => a?.code === b?.code;
+
+    constructor() {
+        super(TEXT);
+    }
 }

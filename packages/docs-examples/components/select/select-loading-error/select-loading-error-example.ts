@@ -11,18 +11,17 @@ import {
     KbqSelectModule,
     minimumTimeToDisplayLoading
 } from '@koobiq/components/select';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { BehaviorSubject, catchError, Observable, of, race, switchMap, throwError, timer } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 type Option = {
     id: number;
     label: string;
 };
 
-export class OptionsApiService {
-    protected readonly text = injectExampleText();
-
+export class OptionsApiService extends BaseLocalizedExample<ExampleText> {
     private delay: number = 3000;
 
     private readonly data = computed(() => Array.from({ length: 10 }, (_, i) => ({ id: i, label: 'Option #' + i })));
@@ -43,6 +42,10 @@ export class OptionsApiService {
             : this.data().filter((option) => option.label.toLowerCase().includes(term));
 
         return timer(this.delay).pipe(map(() => filtered));
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }
 
@@ -168,9 +171,7 @@ export class SelectFacade {
         class: 'layout-margin-5xl layout-column layout-align-center-center'
     }
 })
-export class SelectLoadingErrorExample {
-    protected readonly text = injectExampleText();
-
+export class SelectLoadingErrorExample extends BaseLocalizedExample<ExampleText> {
     protected readonly facade = inject(SelectFacade);
 
     readonly state$ = this.facade.state$;
@@ -192,6 +193,7 @@ export class SelectLoadingErrorExample {
     }
 
     constructor() {
+        super(TEXT);
         this.searchControl.valueChanges
             .pipe(takeUntilDestroyed())
             .subscribe((value) => this.facade.setSearch(value ?? ''));

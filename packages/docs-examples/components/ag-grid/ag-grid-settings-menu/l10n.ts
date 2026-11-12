@@ -1,10 +1,9 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the ag-grid-settings-menu example. */
 export interface ExampleText {
-    affectedHost: string;
     severity: string;
+    affectedHost: string;
     status: string;
     sourceIp: string;
     incidentId: string;
@@ -17,10 +16,10 @@ export interface ExampleText {
     attackTypes: string[];
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
-        affectedHost: 'Затронутый узел',
         severity: 'Важность',
+        affectedHost: 'Затронутый узел',
         status: 'Статус',
         sourceIp: 'IP-адрес источника',
         incidentId: 'ID инцидента',
@@ -33,8 +32,8 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         attackTypes: ['Подбор пароля', 'Фишинг', 'Сканирование портов', 'Вредоносное ПО', 'DNS-туннелирование']
     },
     default: {
-        affectedHost: 'Affected host',
         severity: 'Severity',
+        affectedHost: 'Affected host',
         status: 'Status',
         sourceIp: 'Source IP',
         incidentId: 'Incident ID',
@@ -47,6 +46,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         attackTypes: ['Brute force', 'Phishing', 'Port scan', 'Malware', 'DNS tunneling']
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

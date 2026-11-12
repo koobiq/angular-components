@@ -6,8 +6,9 @@ import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimeRangeModule, KbqTimeRangeRange } from '@koobiq/components/time-range';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Time range min max
@@ -85,7 +86,7 @@ import { injectExampleText } from '../l10n';
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }
 })
-export class TimeRangeMinMaxExample {
+export class TimeRangeMinMaxExample extends BaseLocalizedExample<ExampleText> {
     protected readonly dateAdapter = inject<DateAdapter<DateTime>>(DateAdapter);
     protected readonly dateFormatter = inject(DateFormatter);
 
@@ -104,9 +105,11 @@ export class TimeRangeMinMaxExample {
         { nonNullable: true }
     );
 
-    protected readonly text = injectExampleText();
-
     protected capitalize(text: string): string {
         return text.charAt(0).toUpperCase() + text.slice(1);
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

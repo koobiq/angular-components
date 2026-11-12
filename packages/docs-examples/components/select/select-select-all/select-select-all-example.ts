@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Select all
@@ -32,9 +33,11 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectSelectAllExample {
-    protected readonly text = injectExampleText();
-
+export class SelectSelectAllExample extends BaseLocalizedExample<ExampleText> {
     readonly options = computed(() => Array.from({ length: 6 }, (_, i) => 'Option #' + (i + 1)));
     readonly selected = [this.options[1]];
+
+    constructor() {
+        super(TEXT);
+    }
 }

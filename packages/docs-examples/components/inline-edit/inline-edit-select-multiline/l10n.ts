@@ -1,12 +1,11 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the inline-edit-select-multiline example. */
 export interface ExampleText {
     resolutionComment: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         resolutionComment: 'Комментарий к решению'
     },
@@ -14,6 +13,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         resolutionComment: 'Resolution comment'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Tab list with selection by tab id
@@ -27,9 +28,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabsActiveTabIdExample {
-    protected readonly text = injectExampleText();
-
+export class TabsActiveTabIdExample extends BaseLocalizedExample<ExampleText> {
     readonly tabs = [
         { tabId: 'files', icon: 'kbq-folder-open_16', label: this.text().files },
         { tabId: 'settings', icon: 'kbq-gear_16', label: this.text().settings },
@@ -37,4 +36,8 @@ export class TabsActiveTabIdExample {
     ];
 
     selectedTabId: string = 'settings';
+
+    constructor() {
+        super(TEXT);
+    }
 }

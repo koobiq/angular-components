@@ -5,7 +5,6 @@ import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Datepicker required
@@ -31,7 +30,5 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatepickerRequiredExample {
-    protected readonly text = injectExampleText();
-
     date: DateTime | null = null;
 }

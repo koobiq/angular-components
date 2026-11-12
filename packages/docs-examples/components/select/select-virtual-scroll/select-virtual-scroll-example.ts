@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { KbqVirtualOption } from '@koobiq/components/core';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from '../l10n';
 
 type OptionItem = { id: number; label: string };
 
@@ -43,8 +42,6 @@ type OptionItem = { id: number; label: string };
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectVirtualScrollExample {
-    protected readonly text = injectExampleText();
-
     readonly options: OptionItem[] = Array.from({ length: 10000 }).map((_, i) => ({ id: i, label: `Option #${i}` }));
     readonly virtualScrollViewport = viewChild.required(CdkVirtualScrollViewport);
 

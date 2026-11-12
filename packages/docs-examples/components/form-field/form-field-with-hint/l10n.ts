@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the form-field-with-hint example. */
 export interface ExampleText {
@@ -7,7 +6,7 @@ export interface ExampleText {
     maxChars: (max: number, count: number) => string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         articleTitle: 'Заголовок статьи',
         maxChars: (max, count) => `Максимум ${max} символов (${count}/${max})`
@@ -17,6 +16,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         maxChars: (max, count) => `Max ${max} chars (${count}/${max})`
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

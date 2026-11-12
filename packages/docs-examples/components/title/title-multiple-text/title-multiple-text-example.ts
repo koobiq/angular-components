@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Multiple text elements
@@ -19,9 +20,11 @@ import { injectExampleText } from '../l10n';
     styleUrls: ['./title-multiple-text-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleMultipleTextExample {
-    protected readonly text = injectExampleText();
-
+export class TitleMultipleTextExample extends BaseLocalizedExample<ExampleText> {
     name = this.text().status;
     value = this.text().longValueMultiple;
+
+    constructor() {
+        super(TEXT);
+    }
 }

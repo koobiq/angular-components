@@ -5,7 +5,8 @@ import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqFormFieldModule, KbqLabel } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Inline edit select basic
@@ -94,9 +95,7 @@ import { injectExampleText } from './l10n';
         class: 'layout-column layout-align-center-center layout-gap-l'
     }
 })
-export class InlineEditSelectBasicExample {
-    protected readonly text = injectExampleText();
-
+export class InlineEditSelectBasicExample extends BaseLocalizedExample<ExampleText> {
     protected get notSetLabel(): string {
         return this.text().notSpecified;
     }
@@ -106,4 +105,8 @@ export class InlineEditSelectBasicExample {
 
     protected readonly status = new FormControl<string | null>(this.statuses()[0]);
     protected readonly priority = new FormControl<string | null>(this.priorities()[0]);
+
+    constructor() {
+        super(TEXT);
+    }
 }

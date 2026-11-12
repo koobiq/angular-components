@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Tooltip style
@@ -33,8 +34,10 @@ import { injectExampleText } from '../l10n';
         class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
     }
 })
-export class TooltipStyleExample {
-    protected readonly text = injectExampleText();
-
+export class TooltipStyleExample extends BaseLocalizedExample<ExampleText> {
     KbqComponentColors = KbqComponentColors;
+
+    constructor() {
+        super(TEXT);
+    }
 }

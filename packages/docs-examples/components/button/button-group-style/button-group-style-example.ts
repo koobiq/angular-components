@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqButtonColor, KbqButtonModule, KbqButtonStyle, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Button group style
@@ -39,9 +40,7 @@ import { injectExampleText } from './l10n';
         class: 'layout-column layout-align-center-center layout-gap-xl'
     }
 })
-export class ButtonGroupStyleExample {
-    protected readonly text = injectExampleText();
-
+export class ButtonGroupStyleExample extends BaseLocalizedExample<ExampleText> {
     protected readonly data = computed(() => [this.text().archive, this.text().report, this.text().snooze]);
 
     protected readonly buttonStyles: { color: KbqButtonColor; appearance: KbqButtonStyle; gap?: boolean }[] = [
@@ -52,4 +51,8 @@ export class ButtonGroupStyleExample {
         { color: KbqComponentColors.Theme, appearance: KbqButtonStyles.Transparent },
         { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Transparent }
     ];
+
+    constructor() {
+        super(TEXT);
+    }
 }

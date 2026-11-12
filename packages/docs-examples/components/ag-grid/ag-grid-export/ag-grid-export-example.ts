@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, GridApi, GridReadyEvent, ModuleRegistry } from 'ag-grid-community';
 import { jsPDF } from 'jspdf';
 import { autoTable } from 'jspdf-autotable';
 import writeExcelFile from 'write-excel-file/browser';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -55,10 +56,9 @@ type ExportTable = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridExportExample {
+export class AgGridExportExample extends BaseLocalizedExample<ExampleText> {
     private readonly api = signal<GridApi | null>(null);
     private readonly filename = 'example-export';
-    protected readonly text = injectExampleText();
 
     protected readonly defaultColDef: ColDef = {
         sortable: true,
@@ -131,5 +131,9 @@ export class AgGridExportExample {
         });
 
         return { headers, rows };
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }
