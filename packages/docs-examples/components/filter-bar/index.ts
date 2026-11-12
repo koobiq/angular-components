@@ -7,6 +7,8 @@ import { FilterBarInactiveFilterExample } from './filter-bar-inactive-filter/fil
 import { FilterBarLocalizationExample } from './filter-bar-localization/filter-bar-localization-example';
 import { FilterBarLockedOptionsExample } from './filter-bar-locked-options/filter-bar-locked-options-example';
 import { FilterBarMasterCheckboxExample } from './filter-bar-master-checkbox/filter-bar-master-checkbox-example';
+import { FilterBarNoOptionsExample } from './filter-bar-no-options/filter-bar-no-options-example';
+import { FilterBarNotSpecifiedExample } from './filter-bar-not-specified/filter-bar-not-specified-example';
 import { FilterBarOverviewExample } from './filter-bar-overview/filter-bar-overview-example';
 import { FilterBarPanelMaxHeightExample } from './filter-bar-panel-max-height/filter-bar-panel-max-height-example';
 import { FilterBarPipeTypesExample } from './filter-bar-pipe-types/filter-bar-pipe-types-example';
@@ -28,6 +30,8 @@ export {
     FilterBarLocalizationExample,
     FilterBarLockedOptionsExample,
     FilterBarMasterCheckboxExample,
+    FilterBarNoOptionsExample,
+    FilterBarNotSpecifiedExample,
     FilterBarOverviewExample,
     FilterBarPanelMaxHeightExample,
     FilterBarPipeTypesExample,
@@ -56,10 +60,12 @@ const EXAMPLES = [
     FilterBarReadonlyPipeExample,
     FilterBarReadonlyPipesExample,
     FilterBarMasterCheckboxExample,
+    FilterBarNotSpecifiedExample,
     FilterBarLockedOptionsExample,
     FilterBarInactiveFilterExample,
     FilterBarSearchInPipesExample,
     FilterBarPanelMaxHeightExample,
+    FilterBarNoOptionsExample,
     FilterBarLocalizationExample
 ];
 

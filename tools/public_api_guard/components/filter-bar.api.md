@@ -94,6 +94,7 @@ export const KBQ_FILTER_BAR_CONFIGURATION: InjectionToken<{
         applyButton: string;
         emptySearchResult: string;
         selectAll: string;
+        noOptions: string;
     };
     datePipe: {
         customPeriod: string;
@@ -147,6 +148,7 @@ export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
         applyButton: string;
         emptySearchResult: string;
         selectAll: string;
+        noOptions: string;
     };
     datePipe: {
         customPeriod: string;
@@ -181,6 +183,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected readonly elementRef: ElementRef<HTMLElement>;
     protected readonly filterBar: KbqFilterBarHost | null;
     protected readonly focusMonitor: FocusMonitor;
+    protected focusTrigger(): void;
     get isEmpty(): boolean;
     isMac: boolean;
     isTemplateRef(value: unknown): boolean;
@@ -188,6 +191,9 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected lockedValues?: unknown[];
     // (undocumented)
     ngAfterViewInit(): void;
+    protected get noOptions(): boolean;
+    protected get noOptionsMessage(): string;
+    protected noOptionsText?: string;
     onClear(): void;
     onRemove(): void;
     abstract open(): void;
@@ -283,6 +289,7 @@ export class KbqFilterBar implements KbqFilterBarHost {
             applyButton: string;
             emptySearchResult: string;
             selectAll: string;
+            noOptions: string;
         };
         datePipe: {
             customPeriod: string;
@@ -413,6 +420,7 @@ class KbqFilterRefresher {
             applyButton: string;
             emptySearchResult: string;
             selectAll: string;
+            noOptions: string;
         };
         datePipe: {
             customPeriod: string;
@@ -646,6 +654,7 @@ export class KbqPipeButton {
         applyButton: string;
         emptySearchResult: string;
         selectAll: string;
+        noOptions: string;
     };
     protected readonly pipe: KbqBasePipe<any>;
     readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -920,6 +929,7 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
     maxInterval?: unknown;
     minDateTime?: unknown;
     minInterval?: unknown;
+    noOptionsText?: string;
     panelMaxHeight?: KbqPanelMaxHeight;
     // (undocumented)
     values?: unknown[];

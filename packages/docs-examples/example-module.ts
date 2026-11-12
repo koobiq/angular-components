@@ -2527,6 +2527,32 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-master-checkbox-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-no-options": {
+    "packagePath": "components/filter-bar/filter-bar-no-options",
+    "title": "filter-bar-no-options",
+    "componentName": "FilterBarNoOptionsExample",
+    "files": [
+      "filter-bar-no-options-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "filter-bar-no-options-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-no-options-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-not-specified": {
+    "packagePath": "components/filter-bar/filter-bar-not-specified",
+    "title": "filter-bar-not-specified",
+    "componentName": "FilterBarNotSpecifiedExample",
+    "files": [
+      "filter-bar-not-specified-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "filter-bar-not-specified-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-not-specified-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-overview": {
     "packagePath": "components/filter-bar/filter-bar-overview",
     "title": "filter bar",
@@ -8168,6 +8194,10 @@ return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-locked-options':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-master-checkbox':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-no-options':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-not-specified':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-overview':
 return import('@koobiq/docs-examples/components/filter-bar');

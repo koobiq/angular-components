@@ -7,6 +7,7 @@
     [class]="{ 'kbq-active': select.panelOpen }"
     [panelClass]="'kbq-pipe-multiselect__panel'"
     [panelMaxHeight]="panelMaxHeight"
+    [searchMinOptionsThreshold]="noOptions ? 1 : undefined"
     [selectAllHandler]="selectAllHandler"
     [tabIndex]="-1"
     [value]="selected"
@@ -34,6 +35,7 @@
             </kbq-badge>
         }
     </button>
+    <!-- Stays rendered without options, hidden by `searchMinOptionsThreshold`: the select wires its search up once. -->
     @if (data.search) {
         <kbq-form-field noBorders kbqSelectSearch>
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
@@ -52,7 +54,11 @@
 
     <div kbq-select-search-empty-result>{{ localeData.pipe.emptySearchResult }}</div>
 
-    @if (data.selectAll && !select.isEmptySearchResult) {
+    @if (noOptions) {
+        <kbq-select-no-options>{{ noOptionsMessage }}</kbq-select-no-options>
+    }
+
+    @if (data.selectAll && !noOptions && !select.isEmptySearchResult) {
         <kbq-option
             [class.kbq-selected]="allVisibleOptionsSelected"
             [selectable]="false"

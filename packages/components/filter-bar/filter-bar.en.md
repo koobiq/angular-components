@@ -98,6 +98,20 @@ The value caps the scrollable list only, and the list's own padding is added on 
 
 <!-- example(filter-bar-panel-max-height) -->
 
+### Parameter not specified
+
+The dropdown can offer a way to find objects whose parameter has no value. The option goes at the top of the list and is localized. Its wording can be chosen to agree with the name of the filter.
+
+<!-- example(filter-bar-not-specified) -->
+
+### No available values
+
+Do not show the filter when there are definitely no values to choose from. If the filter cannot be hidden, a hint has to appear on click.
+
+<!-- example(filter-bar-no-options) -->
+
+The hint replaces the list of a `select`, `multiselect`, `tree-select` or `multi-tree-select` pipe whose template has no `values`; the search field and "Select all" are hidden. Its text comes from the localization — to word it after the filter, pass `noOptionsText` in the pipe template. The option is ignored by other pipe types.
+
 ### Inactive filter
 
 The filter value cannot be changed or deleted.
