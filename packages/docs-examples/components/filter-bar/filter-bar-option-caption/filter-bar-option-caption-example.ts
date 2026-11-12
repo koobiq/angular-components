@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
     KbqFilter,
     KbqFilterBarModule,
@@ -43,7 +43,7 @@ const TREE_EVENTS: KbqTreeSelectNode[] = [
         KbqFilterBarModule
     ],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates()" [(filter)]="activeFilter">
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter">
             @for (pipe of activeFilter.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
@@ -54,7 +54,7 @@ const TREE_EVENTS: KbqTreeSelectNode[] = [
 export class FilterBarOptionCaptionExample {
     activeFilter: KbqFilter = this.getDefaultFilter();
 
-    readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
+    readonly pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Single line',
             id: 'SingleLine',
@@ -114,7 +114,7 @@ export class FilterBarOptionCaptionExample {
             removable: false,
             disabled: false
         }
-    ]);
+    ];
 
     getDefaultFilter(): KbqFilter {
         return {

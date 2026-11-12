@@ -76,7 +76,7 @@ export class ExampleRowActionsComponent extends BaseLocalizedExample<ExampleTran
             [style.height.px]="300"
             [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
-            [rowData]="rowData()"
+            [rowData]="rowData"
             (firstDataRendered)="onFirstDataRendered($event)"
         />
     `,
@@ -110,12 +110,10 @@ export class AgGridRowActionsExample extends BaseLocalizedExample<ExampleTransla
         }))
     ]);
 
-    protected readonly rowData = computed(() =>
-        Array.from({ length: 100 }, (_, index) => ({
-            column0: 'Project name ' + index,
-            ...Object.fromEntries(Array.from({ length: 9 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
-        }))
-    );
+    protected readonly rowData = Array.from({ length: 100 }, (_, index) => ({
+        column0: 'Project name ' + index,
+        ...Object.fromEntries(Array.from({ length: 9 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
+    }));
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
         api.forEachNode((node) => {

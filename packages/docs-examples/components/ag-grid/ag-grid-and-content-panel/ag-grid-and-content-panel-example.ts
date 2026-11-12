@@ -1,5 +1,5 @@
 import { ENTER } from '@angular/cdk/keycodes';
-import { ChangeDetectionStrategy, Component, inject, model, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, model, output, signal } from '@angular/core';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
@@ -41,9 +41,9 @@ type ExampleRowData = Record<string, string>;
             [alwaysMultiSort]="true"
             [rowSelection]="rowSelection"
             [style.height]="'100%'"
-            [columnDefs]="columnDefs"
+            [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
-            [rowData]="rowData"
+            [rowData]="rowData()"
             (firstDataRendered)="onFirstDataRendered($event)"
             (cellClicked)="cellClicked.emit($event)"
             (cellFocused)="cellFocused.emit($event)"
@@ -70,20 +70,22 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleTranslation> {
         hideDisabledCheckboxes: false
     };
 
-    private readonly _columnDefs: ColDef[] = Array.from({ length: 20 }, (_, index) => ({
-        headerName: this.t().headerText,
-        field: 'column' + index
-    }));
+    protected readonly columnDefs = computed<ColDef[]>(() =>
+        Array.from({ length: 20 }, (_, index) => ({
+            headerName: this.t().headerText,
+            field: 'column' + index
+        }))
+    );
 
-    protected readonly columnDefs: ColDef[] = this._columnDefs;
+    protected readonly rowData = computed<ExampleRowData[]>(() =>
+        Array.from({ length: 100 }, (_, index) => {
+            return this.columnDefs().reduce((prev, _cur, i) => {
+                prev['column' + i] = `${this.t().headerText} ${index}`;
 
-    protected readonly rowData: ExampleRowData[] = Array.from({ length: 100 }, (_, index) => {
-        return this._columnDefs.reduce((prev, _cur, i) => {
-            prev['column' + i] = `${this.t().headerText} ${index}`;
-
-            return prev;
-        }, {} as ExampleRowData);
-    });
+                return prev;
+            }, {} as ExampleRowData);
+        })
+    );
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
         api.forEachNode((node) => {

@@ -56,7 +56,7 @@ type SelectionDto = {
             [defaultColDef]="defaultColDef"
             [rowSelection]="rowSelection"
             [selectionColumnDef]="selectionColumnDef"
-            [kbqAgGridInfiniteSelectionDatasource]="datasource()"
+            [kbqAgGridInfiniteSelectionDatasource]="datasource"
             [getRowId]="getRowId"
             [cacheBlockSize]="10"
             (kbqAgGridInfiniteSelectionStateChange)="onSelectAllChange($event)"
@@ -105,7 +105,7 @@ export class AgGridInfiniteSelectionExample extends BaseLocalizedExample<Example
         }))
     ]);
     // The row id is the selection identity: it stays the same in every locale.
-    protected readonly datasource = computed<IDatasource>(() => ({
+    protected readonly datasource: IDatasource = {
         rowCount: 1000,
         getRows: ({ startRow, endRow, successCallback }: IGetRowsParams) => {
             setTimeout(
@@ -126,7 +126,7 @@ export class AgGridInfiniteSelectionExample extends BaseLocalizedExample<Example
                 500
             );
         }
-    }));
+    };
     protected readonly getRowId: GetRowIdFunc = ({ data }) => data.id;
     protected readonly defaultColDef: ColDef = {
         cellRendererSelector: ({ data }: ICellRendererParams) =>

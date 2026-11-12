@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
     KbqAgGridRowFocusStateLocalStorageStore,
     kbqAgGridRowFocusStateStoreProvider,
@@ -27,8 +27,8 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             kbqAgGridThemeDisableCellFocusStyles
             kbqAgGridRowFocusState="example-ag-grid-row-focus-state"
             [getRowId]="getRowId"
-            [rowData]="rowData()"
-            [columnDefs]="columnDefs()"
+            [rowData]="rowData"
+            [columnDefs]="columnDefs"
             [style.height.px]="300"
             [style.width.%]="100"
         />
@@ -48,17 +48,13 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGridRowFocusStateExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly getRowId = (params: GetRowIdParams): string => params.data.column0;
-    protected readonly columnDefs = computed<ColDef[]>(() =>
-        Array.from({ length: 5 }, (_, i) => ({
-            field: 'column' + i,
-            headerName: 'Column ' + i,
-            width: 130
-        }))
-    );
-    protected readonly rowData = computed(() =>
-        Array.from({ length: 100 }, (_, index) =>
-            Object.fromEntries(Array.from({ length: 5 }, (_, i) => ['column' + i, 'Text ' + index]))
-        )
+    protected readonly columnDefs: ColDef[] = Array.from({ length: 5 }, (_, i) => ({
+        field: 'column' + i,
+        headerName: 'Column ' + i,
+        width: 130
+    }));
+    protected readonly rowData = Array.from({ length: 100 }, (_, index) =>
+        Object.fromEntries(Array.from({ length: 5 }, (_, i) => ['column' + i, 'Text ' + index]))
     );
 
     constructor() {

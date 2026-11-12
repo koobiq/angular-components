@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOptionModule } from '@koobiq/components/core';
@@ -94,7 +94,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
                                 [placeholder]="placeholder"
                                 [formControl]="form.controls.selectMultiple"
                             >
-                                @for (option of options(); track option) {
+                                @for (option of options; track option) {
                                     <kbq-option [value]="option">{{ option }}</kbq-option>
                                 }
                                 <kbq-cleaner />
@@ -111,7 +111,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
                         </div>
                         <kbq-form-field kbqInlineEditEditMode>
                             <kbq-select [placeholder]="placeholder" [formControl]="form.controls.select">
-                                @for (option of options(); track option) {
+                                @for (option of options; track option) {
                                     <kbq-option [value]="option">{{ option }}</kbq-option>
                                 }
                             </kbq-select>
@@ -165,15 +165,15 @@ export class InlineEditControlsExample extends BaseLocalizedExample<ExampleTrans
     protected get placeholder(): string {
         return this.t().placeholder;
     }
-    protected readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + (i + 1)));
+    protected readonly options = Array.from({ length: 10 }, (_, i) => 'Option #' + (i + 1));
 
     protected readonly form = new FormGroup({
         input: new FormControl('Spain'),
         textarea: new FormControl(
             'Spanish football is characterized by technical skill, tactical innovation, and fierce regional rivalries.'
         ),
-        selectMultiple: new FormControl(this.options().slice(0, 5)),
-        select: new FormControl(this.options()[0])
+        selectMultiple: new FormControl(this.options.slice(0, 5)),
+        select: new FormControl(this.options[0])
     });
 
     protected readonly textareaDisplayValue = signal(this.form.controls.textarea.value);

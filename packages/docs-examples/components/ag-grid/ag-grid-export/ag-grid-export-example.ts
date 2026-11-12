@@ -33,7 +33,7 @@ type ExportTable = {
             kbqAgGridTheme
             kbqAgGridThemeDisableCellFocusStyles
             [alwaysMultiSort]="true"
-            [rowData]="rowData()"
+            [rowData]="rowData"
             [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
             [style.height.px]="300"
@@ -74,12 +74,10 @@ export class AgGridExportExample extends BaseLocalizedExample<ExampleTranslation
             width: 130
         }))
     ]);
-    protected readonly rowData = computed(() =>
-        Array.from({ length: 20 }, (_, index) => ({
-            column0: 'Project name ' + index,
-            ...Object.fromEntries(Array.from({ length: 4 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
-        }))
-    );
+    protected readonly rowData = Array.from({ length: 20 }, (_, index) => ({
+        column0: 'Project name ' + index,
+        ...Object.fromEntries(Array.from({ length: 4 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
+    }));
 
     /** Stores the grid API once the grid finishes initializing. */
     protected onGridReady({ api }: GridReadyEvent): void {

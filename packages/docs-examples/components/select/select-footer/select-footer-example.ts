@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -20,7 +20,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
             <div class="kbq-form__label">{{ t().button }}</div>
             <kbq-form-field class="example-select-field">
                 <kbq-select [value]="selected">
-                    @for (option of options(); track option) {
+                    @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                     <kbq-select-footer>
@@ -37,7 +37,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
             <div class="kbq-form__label">{{ t().caption }}</div>
             <kbq-form-field class="example-select-field">
                 <kbq-select [value]="selected">
-                    @for (option of options(); track option) {
+                    @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                     <kbq-select-footer class="example-select-footer-with-caption">
@@ -51,7 +51,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
             <div class="kbq-form__label">{{ t().link }}</div>
             <kbq-form-field class="example-select-field">
                 <kbq-select [value]="selected">
-                    @for (option of options(); track option) {
+                    @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                     <kbq-select-footer>
@@ -85,7 +85,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
 export class SelectFooterExample extends BaseLocalizedExample<ExampleTranslation> {
     // Enough options to overflow the panel's default 256px — exactly eight rows fit — so the footer is
     // seen doing its job: staying put while the list scrolls under it.
-    protected readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + i));
+    protected readonly options = Array.from({ length: 10 }, (_, i) => 'Option #' + i);
     protected readonly selected = this.options[0];
 
     constructor() {

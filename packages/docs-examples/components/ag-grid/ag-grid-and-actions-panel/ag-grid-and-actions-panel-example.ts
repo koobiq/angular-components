@@ -65,7 +65,7 @@ type ExampleTableItem = unknown;
             [selectionColumnDef]="selectionColumnDef"
             [columnDefs]="columnDefs()"
             [defaultColDef]="defaultColDef"
-            [rowData]="rowData()"
+            [rowData]="rowData"
             (firstDataRendered)="onFirstDataRendered($event)"
             (selectionChanged)="onSelectionChanged($event)"
         />
@@ -132,12 +132,10 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleTranslation> {
             headerName: this.t().headerText
         }))
     ]);
-    protected readonly rowData = computed(() =>
-        Array.from({ length: 33 }, (_, index) => ({
-            column0: 'Project name ' + index,
-            ...Object.fromEntries(Array.from({ length: 4 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
-        }))
-    );
+    protected readonly rowData = Array.from({ length: 33 }, (_, index) => ({
+        column0: 'Project name ' + index,
+        ...Object.fromEntries(Array.from({ length: 4 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
+    }));
     readonly selectedItems = output<ExampleTableItem[]>();
 
     constructor() {

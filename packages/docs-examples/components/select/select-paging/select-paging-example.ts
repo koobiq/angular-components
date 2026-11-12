@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -52,7 +52,7 @@ const PAGE_SIZE = 20;
 const DELAY = 1000;
 
 export class OptionsApiService extends BaseLocalizedExample<ExampleTranslation> {
-    private readonly data = computed(() => Array.from({ length: 100 }, (_, i) => ({ id: i, label: 'Option #' + i })));
+    private readonly data = Array.from({ length: 100 }, (_, i) => ({ id: i, label: 'Option #' + i }));
 
     getOptions(
         search: string,
@@ -62,9 +62,7 @@ export class OptionsApiService extends BaseLocalizedExample<ExampleTranslation> 
     ): Observable<PagedResult> {
         const term = search.toLowerCase().trim();
 
-        const filtered = !term
-            ? this.data()
-            : this.data().filter((option) => option.label.toLowerCase().includes(term));
+        const filtered = !term ? this.data : this.data.filter((option) => option.label.toLowerCase().includes(term));
 
         const start = page * pageSize;
         const end = start + pageSize;
