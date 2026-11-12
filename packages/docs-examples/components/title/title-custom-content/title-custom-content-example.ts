@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
@@ -16,13 +16,13 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     template: `
         <div class="example-title-custom-content">
             <div class="kbq-subheading">{{ t().plainStringContent }}</div>
-            <div class="example-title-custom-content__row kbq-text-normal" [kbq-title]="stringContent">
-                {{ longValue }}
+            <div class="example-title-custom-content__row kbq-text-normal" [kbq-title]="stringContent()">
+                {{ longValue() }}
             </div>
 
             <div class="kbq-subheading">{{ t().richTemplateContent }}</div>
             <div class="example-title-custom-content__row kbq-text-normal" [kbq-title]="templateContent">
-                {{ longValue }}
+                {{ longValue() }}
             </div>
         </div>
 
@@ -37,8 +37,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleCustomContentExample extends BaseLocalizedExample<ExampleTranslation> {
-    longValue = this.t().longValue;
-    stringContent = this.t().stringContent;
+    readonly longValue = computed(() => this.t().longValue);
+    readonly stringContent = computed(() => this.t().stringContent);
 
     constructor() {
         super(TRANSLATIONS);

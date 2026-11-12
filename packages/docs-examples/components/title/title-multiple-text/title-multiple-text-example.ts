@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { ExampleTranslation, TRANSLATIONS } from './l10n';
@@ -12,8 +12,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     template: `
         <div class="example-title-multiple-text" kbq-title>
             <div #kbqTitleContainer class="example-title-multiple-text__row">
-                <span #kbqTitleText class="example-title-multiple-text__name kbq-text-normal">{{ name }}:</span>
-                <span #kbqTitleText class="example-title-multiple-text__value kbq-text-normal">{{ value }}</span>
+                <span #kbqTitleText class="example-title-multiple-text__name kbq-text-normal">{{ name() }}:</span>
+                <span #kbqTitleText class="example-title-multiple-text__value kbq-text-normal">{{ value() }}</span>
             </div>
         </div>
     `,
@@ -21,8 +21,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleMultipleTextExample extends BaseLocalizedExample<ExampleTranslation> {
-    name = this.t().status;
-    value = this.t().longValueMultiple;
+    readonly name = computed(() => this.t().status);
+    readonly value = computed(() => this.t().longValueMultiple);
 
     constructor() {
         super(TRANSLATIONS);

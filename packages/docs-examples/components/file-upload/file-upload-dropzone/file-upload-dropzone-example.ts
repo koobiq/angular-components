@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, model, signal, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    effect,
+    inject,
+    model,
+    signal,
+    viewChild
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
@@ -71,7 +80,7 @@ export class FileUploadDropzoneExample extends BaseLocalizedExample<ExampleTrans
             this.files.set(files.map((file) => ({ file })));
         });
 
-        this.dropzoneService.init({ title: this.t().dropFilesHere });
+        effect(() => this.dropzoneService.init({ title: this.t().dropFilesHere }));
 
         this.destroyRef.onDestroy(() => {
             sub.unsubscribe();

@@ -1,4 +1,13 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, inject, Injector, viewChildren } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    inject,
+    Injector,
+    viewChildren
+} from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
@@ -79,8 +88,33 @@ export class TabsAddTabVerticalExample extends BaseLocalizedExample<ExampleTrans
     private readonly injector = inject(Injector);
     private readonly tabLinks = viewChildren(KbqTabLink);
 
-    protected tabs = [this.t().bruteforce, this.t().complexAttack, this.t().ddos, this.t().hipsAlert];
-    protected activeTab = this.tabs[0];
+    private readonly defaultTabs = computed(() => [
+        this.t().bruteforce,
+        this.t().complexAttack,
+        this.t().ddos,
+        this.t().hipsAlert
+    ]);
+
+    protected tabs: string[] = [];
+    protected activeTab: string = '';
+
+    constructor() {
+        super(TRANSLATIONS);
+        effect(() => {
+            // Rebuild the localized tabs on a locale switch, keeping the tabs added at runtime.
+            const base = this.defaultTabs();
+            const added = this.tabs.filter((tab) => !this.baseTabs.includes(tab));
+
+            this.baseTabs = base;
+            this.tabs = [...base, ...added];
+
+            if (!this.tabs.includes(this.activeTab)) {
+                this.activeTab = this.tabs[0];
+            }
+        });
+    }
+
+    private baseTabs: string[] = [];
 
     protected addTab(): void {
         const newTab = 'Tab ' + (this.tabs.length + 1);
@@ -100,9 +134,5 @@ export class TabsAddTabVerticalExample extends BaseLocalizedExample<ExampleTrans
         if (this.tabs.length > 0) {
             this.activeTab = this.tabs[Math.max(0, index - 1)];
         }
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }
