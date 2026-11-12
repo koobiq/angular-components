@@ -167,10 +167,15 @@ export class E2eToastStates implements AfterViewInit {
  */
 @Component({
     selector: 'e2e-toast-interaction',
-    imports: [KbqButtonModule],
+    imports: [KbqButtonModule, KbqLink],
     template: `
         <button kbq-button data-testid="e2eShowToast" (click)="show(2000)">Show</button>
         <button kbq-button data-testid="e2eShowStickyToast" (click)="show(0)">Show sticky</button>
+        <button kbq-button data-testid="e2eShowLongActionsToast" (click)="showLongActions()">Show long actions</button>
+        <ng-template #longActions>
+            <a kbqLink pseudo data-testid="e2eToastActionOpen">Open additional details</a>
+            <a kbqLink pseudo data-testid="e2eToastActionDismiss">Do not show this again</a>
+        </ng-template>
         <button kbq-button data-testid="e2eOpenOverlay" (click)="openOverlay()">Open overlay</button>
         <button
             #closeOnScrollOrigin
@@ -209,6 +214,7 @@ export class E2eToastInteraction {
     private readonly viewContainerRef = inject(ViewContainerRef);
     private readonly overlayContent = viewChild.required<TemplateRef<unknown>>('overlayContent');
     private readonly anchoredOverlayContent = viewChild.required<TemplateRef<unknown>>('anchoredOverlayContent');
+    private readonly longActions = viewChild.required<TemplateRef<unknown>>('longActions');
     private readonly closeOnScrollOrigin = viewChild.required('closeOnScrollOrigin', { read: ElementRef });
     private overlayRef: OverlayRef | null = null;
     private anchoredOverlayRef: OverlayRef | null = null;
@@ -270,5 +276,17 @@ export class E2eToastInteraction {
         );
 
         this.lastToast = ref.location.nativeElement;
+    }
+
+    protected showLongActions(): void {
+        this.toastService.show(
+            {
+                style: KbqToastStyle.Warning,
+                title: 'Toast with long actions',
+                caption: 'Caption text for the long-actions case',
+                actions: this.longActions()
+            },
+            0
+        );
     }
 }
