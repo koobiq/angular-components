@@ -14,9 +14,17 @@
         color: var(--kbq-hint-text);
     }
 
-    // A disabled hint drops its color, except the error one: an error has to read as an error under a disabled control
-    // too. `:where` leaves the specificity of the colors as it was.
-    .kbq-hint:where(:not(.kbq-hint_disabled)) {
+    // A disabled control greys out what the hint's `color` leaves uncolored. The colors come after this rule with the
+    // same specificity, so a color set on the hint wins over the state of its control.
+    .kbq-hint.kbq-hint_disabled {
+        color: var(--kbq-hint-states-disabled-text);
+
+        & .kbq-icon.kbq-empty {
+            color: var(--kbq-hint-states-disabled-icon);
+        }
+    }
+
+    .kbq-hint {
         &.kbq-contrast-fade {
             @include _kbq-hint-color(fill-text-on, fade-contrast);
         }
@@ -27,6 +35,10 @@
 
         &.kbq-warning {
             @include _kbq-hint-color(fill-text-on, warning);
+        }
+
+        &.kbq-error {
+            @include _kbq-hint-color(fill-text-on, error);
         }
 
         &.kbq-hint_fill-text-off {
@@ -41,23 +53,16 @@
             &.kbq-warning {
                 @include _kbq-hint-color(fill-text-off, warning);
             }
+
+            &.kbq-error {
+                @include _kbq-hint-color(fill-text-off, error);
+            }
         }
     }
 
-    .kbq-hint.kbq-error {
-        @include _kbq-hint-color(fill-text-on, error);
-
-        &.kbq-hint_fill-text-off {
-            @include _kbq-hint-color(fill-text-off, error);
-        }
-    }
-
-    .kbq-hint.kbq-hint_disabled:not(.kbq-error) {
+    // `fillTextOff` leaves the text uncolored, so a disabled control greys it out and the icon keeps the color.
+    .kbq-hint.kbq-hint_disabled.kbq-hint_fill-text-off {
         color: var(--kbq-hint-states-disabled-text);
-
-        & .kbq-icon {
-            color: var(--kbq-hint-states-disabled-icon);
-        }
     }
 }
 

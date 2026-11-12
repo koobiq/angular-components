@@ -25,9 +25,10 @@ export interface KbqHintParentConfig {
     fillTextOff?: Signal<boolean>;
 
     /**
-     * Whether the control is disabled. Its hints are then shown in the disabled color, whatever their `color` except
-     * the error one. A hint has no `disabled` of its own: it is not interactive, so only the state of its control
-     * applies.
+     * Whether the control is disabled. Its hints then show in the disabled color what no `color` paints: a hint
+     * without `color` with its icons that have no color of their own, and the text of a hint with `fillTextOff`. A
+     * color set on the hint or on its icon wins. A hint has no `disabled` of its own: it is not interactive, so only the
+     * state of its control applies.
      */
     disabled?: Signal<boolean>;
 }
