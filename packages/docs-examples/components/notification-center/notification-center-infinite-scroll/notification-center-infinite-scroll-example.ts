@@ -33,10 +33,7 @@ const BASE_DATE = Date.parse('2025-10-08T12:00:00Z');
 const STYLES = [KbqToastStyle.Success, KbqToastStyle.Warning, KbqToastStyle.Error, KbqToastStyle.Contrast];
 
 /** Title and caption of the notification at the 1-based `position` of the list. */
-const itemText = (position: number) => ({
-    title: `Notification #${position}`,
-    caption: `Loaded with page ${Math.ceil(position / PAGE_SIZE)}`
-});
+type ItemText = { title: string; caption: string };
 
 type ExampleAction = {
     id: string;
@@ -77,6 +74,11 @@ enum NavbarIcItems {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationCenterInfiniteScrollExample extends BaseLocalizedExample<ExampleTranslation> {
+    private readonly itemText = (position: number): ItemText => ({
+        title: this.t().pageItemTitle(position),
+        caption: this.t().pageItemCaption(Math.ceil(position / PAGE_SIZE))
+    });
+
     protected readonly notificationService = inject(KbqNotificationCenterService);
 
     private readonly destroyRef = inject(DestroyRef);
@@ -119,7 +121,7 @@ export class NotificationCenterInfiniteScrollExample extends BaseLocalizedExampl
 
             if (!items.length) return;
 
-            this.notificationService.items = items.map((item) => ({ ...item, ...itemText(Number(item.id)) }));
+            this.notificationService.items = items.map((item) => ({ ...item, ...this.itemText(Number(item.id)) }));
         });
     }
 
@@ -158,7 +160,7 @@ export class NotificationCenterInfiniteScrollExample extends BaseLocalizedExampl
 
             return {
                 id: String(globalIndex + 1),
-                ...itemText(globalIndex + 1),
+                ...this.itemText(globalIndex + 1),
                 icon: true,
                 style: STYLES[globalIndex % STYLES.length],
                 date: new Date(BASE_DATE - globalIndex * 3600_000).toISOString()
