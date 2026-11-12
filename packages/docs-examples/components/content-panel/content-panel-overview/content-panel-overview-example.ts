@@ -14,8 +14,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
         <kbq-content-panel-container #panel="kbqContentPanelContainer" width="350" maxWidth="450" minWidth="250">
             <div class="example-content-panel-container__content">
                 <button kbq-button (click)="panel.toggle()">Toggle</button>
-                <button kbq-button [disabled]="panel.isOpened()" (click)="panel.open()">Open</button>
-                <button kbq-button [disabled]="!panel.isOpened()" (click)="panel.close()">Close</button>
+                <button kbq-button (click)="panel.open()">Open</button>
+                <button kbq-button (click)="panel.close()">Close</button>
             </div>
 
             <kbq-content-panel>

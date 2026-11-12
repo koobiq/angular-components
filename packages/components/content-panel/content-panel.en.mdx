@@ -30,10 +30,30 @@ Keys, storage and expiry work the same for every component that persists — see
 
 ### Keyboard interaction
 
-By default, the `ESCAPE` key closes the panel, but you can disable this behavior using the `disableCloseByEscape` attribute:
+By default, the `ESCAPE` key closes the panel while the focus is inside `kbq-content-panel-container`: in the panel itself or in the content next to it. You can disable this behavior using the `disableCloseByEscape` attribute:
 
 ```html
 <kbq-content-panel-container disableCloseByEscape>
     <kbq-content-panel>...</kbq-content-panel>
 </kbq-content-panel-container>
 ```
+
+To close the panel with the `ESCAPE` key wherever the focus is on the page, listen for the key on `document` and call `close()`:
+
+<Example id="content-panel-close-on-escape" />
+
+### Confirming close
+
+To keep unsaved changes, pass `beforeClose` a function that decides whether the panel closes. The close button, the `ESCAPE` key and the `close()` and `toggle()` methods ask it. The panel closes only when it returns `true`, or a promise or an observable of `true`: any other answer keeps it open. Declare it as an arrow function: it is called without `this`.
+
+<Example id="content-panel-before-close" />
+
+A bound `opened` closes the panel without the check. Selecting another row or leaving the page does not close the panel, so call the same function yourself: in the row handler and in [`canDeactivate`](https://angular.dev/api/router/CanDeactivateFn):
+
+```ts
+const routes: Routes = [
+    { path: 'products', component: ProductsPage, canDeactivate: [(page: ProductsPage) => page.confirmDiscard()] }
+];
+```
+
+`canDeactivate` does not catch closing the tab, which takes `beforeunload`.

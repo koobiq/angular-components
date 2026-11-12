@@ -510,7 +510,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'content-panel',
                     hasApi: true,
                     apiId: 'content-panel',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-11-25')
                 },
                 {
                     id: DocsStructureItemId.Core,

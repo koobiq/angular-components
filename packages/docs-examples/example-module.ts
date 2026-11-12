@@ -1387,6 +1387,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "code-block-with-tabs-example.ts",
     "importPath": "components/code-block"
   },
+  "content-panel-before-close": {
+    "packagePath": "components/content-panel/content-panel-before-close",
+    "title": "Content panel before close",
+    "componentName": "ContentPanelBeforeCloseExample",
+    "files": [
+      "content-panel-before-close-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "content-panel-before-close-example",
+    "primaryFile": "content-panel-before-close-example.ts",
+    "importPath": "components/content-panel"
+  },
+  "content-panel-close-on-escape": {
+    "packagePath": "components/content-panel/content-panel-close-on-escape",
+    "title": "Content panel close on escape",
+    "componentName": "ContentPanelCloseOnEscapeExample",
+    "files": [
+      "content-panel-close-on-escape-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "content-panel-close-on-escape-example",
+    "primaryFile": "content-panel-close-on-escape-example.ts",
+    "importPath": "components/content-panel"
+  },
   "content-panel-overview": {
     "packagePath": "components/content-panel/content-panel-overview",
     "title": "Content panel overview",
@@ -8183,6 +8207,8 @@ export type LiveExampleId =
   | 'code-block-with-soft-wrap'
   | 'code-block-with-tabs-and-shadow'
   | 'code-block-with-tabs'
+  | 'content-panel-before-close'
+  | 'content-panel-close-on-escape'
   | 'content-panel-overview'
   | 'content-panel-state-saving'
   | 'theme-css-variables'
