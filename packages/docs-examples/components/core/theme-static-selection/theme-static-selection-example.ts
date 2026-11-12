@@ -6,6 +6,11 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
+/** A custom theme with a locale-independent `name` and a label that follows the examples locale. */
+interface ExampleThemeConfig extends KbqThemeConfig {
+    label: string;
+}
+
 /**
  * @title Theme static selection
  */
@@ -14,12 +19,12 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     imports: [KbqButtonModule, KbqDropdownModule, KbqIconModule],
     template: `
         <button kbq-button [kbqDropdownTriggerFor]="menu">
-            {{ theme.staticTheme() ?? t().pickTheme }}
+            {{ themeLabel() }}
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         <kbq-dropdown #menu="kbqDropdown">
-            @for (t of customThemes(); track t.name) {
-                <button kbq-dropdown-item (click)="theme.selectTheme(t.name)">{{ t.name }}</button>
+            @for (option of customThemes(); track option.name) {
+                <button kbq-dropdown-item (click)="theme.selectTheme(option.name)">{{ option.label }}</button>
             }
         </kbq-dropdown>
     `,
@@ -30,10 +35,17 @@ export class ThemeStaticSelectionExample extends BaseLocalizedExample<ExampleTra
      * Custom names pinned to the library's own light/dark classes (`KbqThemeSelector`) — reusing them, rather
      * than inventing unstyled classes, keeps the docs page's own styling intact when this example is live.
      */
-    protected readonly customThemes = computed<KbqThemeConfig[]>(() => [
-        { name: this.t().day, className: KbqThemeSelector.Light, colorScheme: 'light' },
-        { name: this.t().night, className: KbqThemeSelector.Dark, colorScheme: 'dark' }
+    // `name` is the stable identifier `KbqThemeService` works with; the label shown next to it follows the locale.
+    protected readonly customThemes = computed<ExampleThemeConfig[]>(() => [
+        { name: 'day', label: this.t().day, className: KbqThemeSelector.Light, colorScheme: 'light' },
+        { name: 'night', label: this.t().night, className: KbqThemeSelector.Dark, colorScheme: 'dark' }
     ]);
+
+    protected readonly themeLabel = computed(() => {
+        const name = this.theme.staticTheme();
+
+        return this.customThemes().find((option) => option.name === name)?.label ?? name ?? this.t().pickTheme;
+    });
 
     // Uses the app's single, shared `KbqThemeService` rather than a locally-provided instance — a second
     // instance would apply its own resolved class to the same `<body>`, fighting the app's real theme for
