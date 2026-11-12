@@ -497,6 +497,19 @@ describe('KbqFilterBar', () => {
             expect(filterBar.filter()!.pipes[0].name).toBe('restored');
         });
 
+        it('should preserve keyed select values through snapshots without functions', () => {
+            const filterBar = getFilterBar();
+            const keyedValue = { name: 'Status', nameKey: 'filters.status', id: '1', value: 'status' };
+
+            filterBar.filter.set(createFilter([createPipe({ type: KbqPipeTypes.Select, value: keyedValue })]));
+
+            filterBar.saveFilterState();
+            filterBar.restoreFilterState();
+
+            expect(filterBar.filter()!.pipes[0].value).toEqual(keyedValue);
+            expect(JSON.stringify(filterBar.filter()!.pipes[0].value)).not.toContain('function');
+        });
+
         it('should not wipe the current filter when there is nothing to restore', () => {
             const filterBar = getFilterBar();
 

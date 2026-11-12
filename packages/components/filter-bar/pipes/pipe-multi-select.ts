@@ -3,8 +3,10 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    computed,
     OnInit,
     Signal,
+    signal,
     untracked,
     viewChild,
     viewChildren,
@@ -26,14 +28,14 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { merge, startWith } from 'rxjs';
+import { startWith } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqSelectValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 import { KbqMultiSelectPipeState } from './multi-select-pipe-state';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
-import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
+import { kbqFilterSelectValueNameKey, kbqFilterSelectValuesBySearch } from './select-pipe-search';
 
 @Component({
     selector: 'kbq-pipe-multi-select',
@@ -77,11 +79,29 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         { initialValue: [] as string[] }
     );
 
+    /** Updates on every pipe-template emission, so the options re-derive even for the same array reference. */
+    private readonly templatesVersion = signal(0);
+
+    /** Current search query; a signal so the options derivation follows the search control. */
+    private readonly searchQuery = toSignal(this.searchControl.valueChanges, {
+        initialValue: this.searchControl.value
+    });
+
     /**
-     * Options of the pipe template that match the search query. Follows the templates too, so options
-     * supplied after initialization render on first open.
+     * Options of the pipe template that match the search query. Follows the templates and the query,
+     * and the resolved name of every option it keeps, so a translation re-filters the list without
+     * replacing the option objects or clearing the query.
      */
-    readonly filteredOptions: Signal<KbqSelectValue[]>;
+    readonly filteredOptions: Signal<KbqSelectValue[]> = computed(() => {
+        this.templatesVersion();
+
+        return kbqFilterSelectValuesBySearch(
+            this.values,
+            this.searchQuery(),
+            !this.isTemplateRef(this.valueTemplate),
+            (value) => this.optionName(value)
+        );
+    });
 
     /** @docs-private */
     readonly select = viewChild.required(KbqSelect);
@@ -184,17 +204,12 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
         // The subscription established by `KbqBasePipe`'s constructor captured the base `updateTemplates`,
         // which refreshes `lockedValues` but knows nothing about the committed value. Subscribing again
-        // here folds the locked values in right after — including on the initial replay.
-        this.filterBar?.internalTemplatesChanges
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => this.multiSelect.normalizeValue());
-
-        this.filteredOptions = toSignal(
-            merge(this.filterBar!.internalTemplatesChanges, this.searchControl.valueChanges).pipe(
-                map(() => this.getFilteredOptions())
-            ),
-            { requireSync: true }
-        );
+        // here folds the locked values in right after — including on the initial replay. The version also
+        // makes the option derivation follow every template update, even one that re-emits the same array.
+        this.filterBar?.internalTemplatesChanges.pipe(takeUntilDestroyed()).subscribe(() => {
+            this.multiSelect.normalizeValue();
+            this.templatesVersion.update((version) => version + 1);
+        });
     }
 
     /** @docs-private */
@@ -282,6 +297,34 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         this.stateChanges.next();
     }
 
+    /** Resolved display name of a select option. */
+    protected optionName(item: KbqSelectValue): string {
+        return this.resolveName(item, 'select-option', kbqFilterSelectValueNameKey(item, this.values));
+    }
+
+    /**
+     * Selected values the trigger shows. Normally the values behind `select.triggerValues`; when the
+     * committed value contains any value with its own `nameKey`, the committed values are returned
+     * instead so restored keyed values stay visible even when no current option matches them. Missing
+     * unkeyed legacy values stay invisible, exactly as before this feature.
+     */
+    protected displayValues(select: KbqSelect): KbqSelectValue[] {
+        const committed = this.data.value;
+
+        if (Array.isArray(committed) && committed.some((value) => value.nameKey)) {
+            return committed;
+        }
+
+        return select.triggerValues.map((option) => option.value as KbqSelectValue);
+    }
+
+    /** Text of the trigger and tooltip for a single selected value. */
+    protected displayValue(select: KbqSelect): string {
+        const value = this.displayValues(select)[0];
+
+        return value ? this.optionName(value) : '';
+    }
+
     /** Comparator of selected options. Two null/absent values never match (aligned with the select pipe). */
     compareByValue = (o1: Pick<KbqSelectValue, 'id'> | null, o2: Pick<KbqSelectValue, 'id'> | null): boolean =>
         !!o1 && !!o2 && o1.id === o2.id;
@@ -311,13 +354,5 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
             this.select().open();
         });
-    }
-
-    private getFilteredOptions(): KbqSelectValue[] {
-        return kbqFilterSelectValuesBySearch(
-            this.values,
-            this.searchControl.value,
-            !this.isTemplateRef(this.valueTemplate)
-        );
     }
 }

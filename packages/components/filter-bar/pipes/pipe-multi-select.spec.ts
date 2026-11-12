@@ -1,11 +1,13 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, DebugElement, inject, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, inject, signal, TemplateRef, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
+    KbqFilterBarNameResolver,
+    kbqFilterBarNameResolverProvider,
     KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
@@ -1826,6 +1828,156 @@ describe('KbqPipeMultiSelectComponent', () => {
             component.onClear();
 
             expect(component.data.value).toEqual([]);
+        });
+    });
+
+    describe('name resolution', () => {
+        const translations = signal<Record<string, string>>({
+            'filters.status': 'Status',
+            'filters.active': 'Active'
+        });
+
+        const resolver: KbqFilterBarNameResolver = ({ key, fallback }) => translations()[key] ?? fallback;
+
+        const keyedValues: KbqSelectValue[] = [
+            { name: 'Status', nameKey: 'filters.status', id: '1', value: 'status' },
+            { name: 'Active', nameKey: 'filters.active', id: '2', value: 'active' }
+        ];
+
+        beforeEach(() => {
+            translations.set({ 'filters.status': 'Status', 'filters.active': 'Active' });
+
+            TestBed.configureTestingModule({
+                imports: [KbqFilterBarModule, TestComponent],
+                providers: [kbqFilterBarNameResolverProvider(resolver)]
+            })
+                .overrideComponent(KbqPipeMultiSelectComponent, {
+                    set: {
+                        providers: [{ provide: KbqBasePipe, useExisting: KbqPipeMultiSelectComponent }]
+                    }
+                })
+                .compileComponents();
+
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        const pipe = (): KbqPipeMultiSelectComponent => getPipeComponent();
+
+        it('should resolve option and trigger names through the resolver', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: keyedValues,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [keyedValues[0]] })]);
+            fixture.detectChanges();
+
+            expect((pipe() as any).optionName(keyedValues[0])).toBe('Status');
+            expect((pipe() as any).displayValue(pipe().select())).toBe('Status');
+        });
+
+        it('should update the trigger without replacing the value or emitting change events', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: keyedValues,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [keyedValues[0]] })]);
+            fixture.detectChanges();
+
+            const original = pipe().data.value;
+            const filterChange = vi.fn();
+            const onChangePipe = vi.fn();
+
+            getFilterBar().filter.subscribe(filterChange);
+            getFilterBar().onChangePipe.subscribe(onChangePipe);
+
+            translations.set({ 'filters.status': 'Stato', 'filters.active': 'Active' });
+            fixture.detectChanges();
+
+            expect((pipe() as any).displayValue(pipe().select())).toBe('Stato');
+            expect(pipe().data.value).toBe(original);
+            expect(filterChange).not.toHaveBeenCalled();
+            expect(onChangePipe).not.toHaveBeenCalled();
+        });
+
+        it('should borrow a key from a unique same-id template option', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: keyedValues,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            const legacyValue: KbqSelectValue = { name: 'Status', id: '1', value: 'status' };
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [legacyValue] })]);
+            fixture.detectChanges();
+
+            expect((pipe() as any).optionName(legacyValue)).toBe('Status');
+        });
+
+        it('should keep the stored fallback for duplicate id matches', () => {
+            const duplicates: KbqSelectValue[] = [
+                { name: 'Status', nameKey: 'filters.status', id: '1', value: 'a' },
+                { name: 'Status', nameKey: 'filters.status', id: '1', value: 'b' }
+            ];
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: duplicates,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            const legacyValue: KbqSelectValue = { name: 'Status', id: '1', value: 'a' };
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [legacyValue] })]);
+            fixture.detectChanges();
+
+            expect((pipe() as any).optionName(legacyValue)).toBe('Status');
+        });
+
+        it('should count and show a restored keyed value missing from current options', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: [keyedValues[1]],
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            const restored: KbqSelectValue = { name: 'Status', nameKey: 'filters.status', id: '9', value: 'status' };
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: [restored] })]);
+            fixture.detectChanges();
+
+            expect((pipe() as any).displayValues(pipe().select())).toEqual([restored]);
+            expect((pipe() as any).displayValue(pipe().select())).toBe('Status');
         });
     });
 });
