@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 import { createComponent, provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
@@ -19,6 +20,8 @@ bootstrapApplication(KoobiqDocsExample, {
         const switcher = createComponent(DocsLanguageSwitcher, { environmentInjector: appRef.injector });
 
         appRef.attachView(switcher.hostView);
-        document.getElementById('docs-language-switcher')?.appendChild(switcher.location.nativeElement);
+        const host = appRef.injector.get(DOCUMENT).getElementById('docs-language-switcher');
+
+        host?.appendChild(switcher.location.nativeElement);
     })
     .catch((err) => console.error(err));
