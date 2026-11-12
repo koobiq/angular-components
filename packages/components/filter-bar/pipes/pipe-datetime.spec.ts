@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ChangeDetectorRef, Component, DebugElement, inject, LOCALE_ID } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, inject, LOCALE_ID, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -10,6 +10,8 @@ import {
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
+    KbqFilterBarNameResolver,
+    kbqFilterBarNameResolverProvider,
     KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes
@@ -82,6 +84,10 @@ describe('KbqPipeDatetimeComponent', () => {
     let filterBarDebugElement: DebugElement;
     let adapter: DateAdapter<DateTime>;
 
+    const translations = signal<Record<string, string>>({ 'filters.lastDay': 'Last day' });
+
+    const resolver = vi.fn<KbqFilterBarNameResolver>(({ key, fallback }) => translations()[key] ?? fallback);
+
     const originalStructuredClone = window.structuredClone;
 
     beforeAll(() => {
@@ -99,7 +105,8 @@ describe('KbqPipeDatetimeComponent', () => {
             imports: [KbqFilterBarModule, KbqLuxonDateModule, TestComponent],
             providers: [
                 { provide: LOCALE_ID, useValue: 'ru-RU' },
-                DateFormatter
+                DateFormatter,
+                kbqFilterBarNameResolverProvider(resolver)
             ]
         })
             .overrideComponent(KbqPipeDatetimeComponent, {
@@ -1406,6 +1413,100 @@ describe('KbqPipeDatetimeComponent', () => {
             const hint = overlayContainer.querySelector('.kbq-date-period__hint');
 
             expect(hint?.textContent?.trim()).toBe(component.minIntervalErrorHint);
+        });
+    });
+
+    describe('name resolution', () => {
+        const keyedPresets = [{ name: 'Last day', nameKey: 'filters.lastDay', start: { days: -1 }, end: null }];
+
+        beforeEach(() => {
+            translations.set({ 'filters.lastDay': 'Last day' });
+
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        const pipe = (): KbqPipeDatetimeComponent<DateTime> => getPipeComponent();
+
+        it('should resolve preset names and update without changing the value or emitting events', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: keyedPresets,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: keyedPresets[0] })]);
+            fixture.detectChanges();
+
+            const component = pipe();
+
+            expect(asInternal(component).presetName(keyedPresets[0])).toBe('Last day');
+
+            const original = component.data.value;
+            const filterChange = vi.fn();
+
+            getFilterBar().filter.subscribe(filterChange);
+            filterChange.mockClear();
+
+            translations.set({ 'filters.lastDay': 'Последний день' });
+            fixture.detectChanges();
+
+            expect(asInternal(component).presetName(keyedPresets[0])).toBe('Последний день');
+            expect(component.data.value).toBe(original);
+            expect(filterChange).not.toHaveBeenCalled();
+        });
+
+        it('should keep the stored fallback for unkeyed presets without invoking the resolver', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: [{ name: 'Last day', start: { days: -1 }, end: null }],
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ value: { name: 'Last day', start: { days: -1 }, end: null } })
+            ]);
+            fixture.detectChanges();
+
+            const component = pipe();
+
+            expect(asInternal(component).presetName(component.data.value)).toBe('Last day');
+            expect(resolver).not.toHaveBeenCalled();
+        });
+
+        it('should keep the stored fallback for duplicate-name presets', () => {
+            const duplicates = [
+                { name: 'Last day', nameKey: 'filters.lastDay', start: { days: -1 }, end: null },
+                { name: 'Last day', nameKey: 'filters.lastDay', start: { days: -2 }, end: null }
+            ];
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: duplicates,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            const legacy = { name: 'Last day', start: { days: -1 }, end: null };
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: legacy })]);
+            fixture.detectChanges();
+
+            expect(asInternal(pipe()).presetName(legacy)).toBe('Last day');
         });
     });
 });

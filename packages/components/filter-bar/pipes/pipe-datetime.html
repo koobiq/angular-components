@@ -45,7 +45,7 @@
 
                     @for (item of values; track item) {
                         <kbq-list-option [value]="item.name" (click)="onSelect(item)" (keydown.enter)="onSelect(item)">
-                            {{ item.name }}
+                            {{ presetName(item) }}
                         </kbq-list-option>
                     }
                 </kbq-list-selection>

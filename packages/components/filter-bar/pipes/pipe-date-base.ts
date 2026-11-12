@@ -10,6 +10,24 @@ import { KbqDateTimeValue, KbqPipeTemplate } from '../filter-bar.types';
 import { getId, KbqBasePipe } from './base-pipe';
 
 /**
+ * Stable translation key of a date preset: its own nonempty `nameKey`, or the key borrowed from the
+ * single current preset with the same stable `name`. Returns `undefined` for zero/duplicate matches,
+ * a missing name, or no key on either side.
+ */
+const kbqDatePresetNameKey = (
+    preset: KbqDateTimeValue,
+    presets: KbqDateTimeValue[] | undefined
+): string | undefined => {
+    if (preset.nameKey) return preset.nameKey;
+
+    if (!presets || !preset.name) return undefined;
+
+    const matches = presets.filter((item) => item.name === preset.name);
+
+    return matches.length === 1 ? matches[0].nameKey : undefined;
+};
+
+/**
  * Shared implementation for the `date` and `datetime` pipes. The two pipes differ only in how a range
  * is formatted and in their default start/end values, exposed here as the {@link formatRange},
  * {@link getDefaultStart} and {@link getDefaultEnd} hooks. Everything else — the period list / custom
@@ -220,13 +238,20 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         return this.formatter.durationLong(start, start.plus(interval), units);
     }
 
+    /** Resolved display name of a period preset. */
+    protected presetName(preset: KbqDateTimeValue | null | undefined): string {
+        if (!preset) return '';
+
+        return this.resolveName(preset, 'date-preset', kbqDatePresetNameKey(preset, this.values));
+    }
+
     /** formatted value for period */
     get formattedValue(): string {
         if (this.start && this.end) {
             return this.formatRange(this.start, this.end);
         }
 
-        return this.data.value?.name ?? '';
+        return this.presetName(this.data.value);
     }
 
     /** Whether the current pipe is disabled. */
@@ -353,7 +378,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     override get isEmpty(): boolean {
         if (this.data.value === null) return true;
 
-        if (this.data.value?.name) return false;
+        if (this.presetName(this.data.value)) return false;
 
         return !this.adapter.isDateInstance(this.start) || !this.adapter.isDateInstance(this.end);
     }
