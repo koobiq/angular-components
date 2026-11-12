@@ -4,7 +4,7 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastService } from '@koobiq/components/toast';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Toast progress bar
@@ -22,23 +22,23 @@ import { ExampleText, TEXT } from './l10n';
         </ng-template>
 
         <ng-template #toastStickyActionsTemplate let-toast>
-            <a kbqLink pseudo (click)="toast.close()">{{ text().cancel }}</a>
+            <a kbqLink pseudo (click)="toast.close()">{{ t().cancel }}</a>
         </ng-template>
 
         <button kbq-button (click)="showStickyToast(toastStickyContentTemplate, toastStickyActionsTemplate)">
-            {{ text().toastWithProgress }}
+            {{ t().toastWithProgress }}
         </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastProgressBarOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class ToastProgressBarOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly toastService = inject(KbqToastService);
 
     showStickyToast(content: TemplateRef<any>, actions: TemplateRef<any>) {
         this.toastService.show(
             {
-                title: this.text().importFiles,
-                caption: this.text().importProgress,
+                title: this.t().importFiles,
+                caption: this.t().importProgress,
                 closeButton: false,
                 content,
                 actions
@@ -48,6 +48,6 @@ export class ToastProgressBarOverviewExample extends BaseLocalizedExample<Exampl
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

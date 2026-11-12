@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the tooltip-arrow example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     tooltipWithoutArrow: string;
     tooltipWithArrow: string;
     noArrow: string;
@@ -10,7 +10,7 @@ export interface ExampleText {
     centeredArrow: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         tooltipWithoutArrow: 'Тултип без стрелки',
         tooltipWithArrow: 'Тултип со стрелкой',

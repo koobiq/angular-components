@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title tooltip-hide-with-timeout
@@ -17,7 +17,7 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         @for (item of [1, 2, 3, 4, 5, 6]; track item) {
-            <button kbq-button [kbqTooltip]="'Action' + item" [attr.aria-label]="text().diamond">
+            <button kbq-button [kbqTooltip]="'Action' + item" [attr.aria-label]="t().diamond">
                 <i kbq-icon="kbq-diamond_16"></i>
             </button>
         }
@@ -27,8 +27,8 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-m'
     }
 })
-export class TooltipHideWithTimeoutExample extends BaseLocalizedExample<ExampleText> {
+export class TooltipHideWithTimeoutExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

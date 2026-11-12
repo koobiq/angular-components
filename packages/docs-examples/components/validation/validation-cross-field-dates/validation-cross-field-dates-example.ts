@@ -18,7 +18,7 @@ import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * Payload the cross-field validator publishes, so that the `ErrorStateMatcher` can tell which controls a
@@ -71,7 +71,7 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>{{ text().validFrom }}</kbq-label>
+                        <kbq-label>{{ t().validFrom }}</kbq-label>
                         <input formControlName="validFrom" [kbqDatepicker]="validFromPicker" />
                         <kbq-datepicker-toggle-icon kbqSuffix [for]="validFromPicker" />
                         <kbq-datepicker #validFromPicker />
@@ -80,13 +80,13 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
 
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>{{ text().validUntil }}</kbq-label>
+                        <kbq-label>{{ t().validUntil }}</kbq-label>
                         <input formControlName="validUntil" [kbqDatepicker]="validUntilPicker" />
                         <kbq-datepicker-toggle-icon kbqSuffix [for]="validUntilPicker" />
                         <kbq-datepicker #validUntilPicker />
 
                         @if (form.hasError('order')) {
-                            <kbq-error>{{ text().periodEndBeforeStart }}</kbq-error>
+                            <kbq-error>{{ t().periodEndBeforeStart }}</kbq-error>
                         }
                     </kbq-form-field>
                 </div>
@@ -112,7 +112,7 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationCrossFieldDatesExample extends BaseLocalizedExample<ExampleText> {
+export class ValidationCrossFieldDatesExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     protected readonly form = new FormGroup(
@@ -131,6 +131,6 @@ export class ValidationCrossFieldDatesExample extends BaseLocalizedExample<Examp
     );
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

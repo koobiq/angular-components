@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs overview
@@ -27,15 +27,15 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BreadcrumbsOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class BreadcrumbsOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly breadcrumbs = computed(() => [
-        { label: this.text().main, url: '/main' },
-        { label: this.text().standards, url: '/main/standards' },
-        { label: this.text().aes, url: '/main/standards/advanced-encryption-standard' },
-        { label: this.text().edit, url: '/main/standards/advanced-encryption-standard/edit' }
+        { label: this.t().main, url: '/main' },
+        { label: this.t().standards, url: '/main/standards' },
+        { label: this.t().aes, url: '/main/standards/advanced-encryption-standard' },
+        { label: this.t().edit, url: '/main/standards/advanced-encryption-standard/edit' }
     ]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

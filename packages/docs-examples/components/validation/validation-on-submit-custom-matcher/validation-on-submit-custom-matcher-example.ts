@@ -10,7 +10,7 @@ import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { timer } from 'rxjs';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Validation on submit with custom matcher
@@ -28,14 +28,14 @@ import { ExampleText, TEXT } from './l10n';
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>{{ text().name }}</kbq-label>
+                        <kbq-label>{{ t().name }}</kbq-label>
                         <input formControlName="firstName" kbqInput />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-margin-bottom-xxl">
                     <kbq-form-field>
-                        <kbq-label>{{ text().lastName }}</kbq-label>
+                        <kbq-label>{{ t().lastName }}</kbq-label>
                         <input formControlName="lastName" kbqInput />
                     </kbq-form-field>
                 </div>
@@ -67,7 +67,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-column'
     }
 })
-export class ValidationOnSubmitCustomMatcherExample extends BaseLocalizedExample<ExampleText> {
+export class ValidationOnSubmitCustomMatcherExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly inProgress = signal(false);
     protected readonly globalErrorForm = new FormGroup({
         firstName: new FormControl('', [Validators.minLength(5), Validators.required]),
@@ -98,6 +98,6 @@ export class ValidationOnSubmitCustomMatcherExample extends BaseLocalizedExample
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

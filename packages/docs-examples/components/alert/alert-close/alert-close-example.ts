@@ -3,7 +3,7 @@ import { KbqAlert, KbqAlertCloseButton } from '@koobiq/components/alert';
 import { kbqAnimationsDisabled, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Alert close
@@ -26,11 +26,11 @@ import { ExampleText, TEXT } from './l10n';
                 (closed)="state = false"
             >
                 <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
-                {{ text().closeHint }}
+                {{ t().closeHint }}
                 <button
                     kbq-alert-close-button
                     kbq-icon-button="kbq-xmark-s_16"
-                    [attr.aria-label]="text().close"
+                    [attr.aria-label]="t().close"
                     [color]="colors.ContrastFade"
                 ></button>
             </kbq-alert>
@@ -59,12 +59,12 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AlertCloseExample extends BaseLocalizedExample<ExampleText> {
+export class AlertCloseExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly animationsDisabled = kbqAnimationsDisabled();
     colors = KbqComponentColors;
     state = true;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

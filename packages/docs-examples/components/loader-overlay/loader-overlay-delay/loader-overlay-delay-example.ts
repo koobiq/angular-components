@@ -8,7 +8,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { switchMap, timer } from 'rxjs';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Loader-overlay delay
@@ -18,22 +18,22 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqLoaderOverlayModule, KbqButtonModule, KbqButtonToggleModule, KbqToggleModule, FormsModule],
     template: `
         <div class="example__controls">
-            <kbq-toggle [(ngModel)]="delay">{{ text().displayDelay }}</kbq-toggle>
+            <kbq-toggle [(ngModel)]="delay">{{ t().displayDelay }}</kbq-toggle>
 
-            <kbq-button-toggle-group [attr.aria-label]="text().requestDuration" [(ngModel)]="duration">
+            <kbq-button-toggle-group [attr.aria-label]="t().requestDuration" [(ngModel)]="duration">
                 <kbq-button-toggle [value]="200">200 ms</kbq-button-toggle>
                 <kbq-button-toggle [value]="600">600 ms</kbq-button-toggle>
                 <kbq-button-toggle [value]="2000">2 s</kbq-button-toggle>
             </kbq-button-toggle-group>
 
-            <button kbq-button [disabled]="loading()" (click)="load()">{{ text().refresh }}</button>
+            <button kbq-button [disabled]="loading()" (click)="load()">{{ t().refresh }}</button>
         </div>
 
         <div class="example__card">
-            <div class="kbq-text-normal">{{ text().updates }}</div>
+            <div class="kbq-text-normal">{{ t().updates }}</div>
             <div class="kbq-display-compact">{{ updates() }}</div>
             @if (showOverlay()) {
-                <kbq-loader-overlay size="compact" [text]="text().updating" />
+                <kbq-loader-overlay size="compact" [text]="t().updating" />
             }
         </div>
     `,
@@ -60,7 +60,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoaderOverlayDelayExample extends BaseLocalizedExample<ExampleText> {
+export class LoaderOverlayDelayExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly destroyRef = inject(DestroyRef);
     protected readonly delay = model(true);
     protected readonly duration = model(200);
@@ -86,6 +86,6 @@ export class LoaderOverlayDelayExample extends BaseLocalizedExample<ExampleText>
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

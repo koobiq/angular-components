@@ -11,7 +11,7 @@ import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koob
 import { KbqToastStyle } from '@koobiq/components/toast';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { createNotifications } from '../create-notifications';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /** Id prefix of the notifications pushed with the button, so a locale switch can find them. */
 const PUSHED_ID = 'pushed-';
@@ -50,7 +50,7 @@ enum NavbarIcItems {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationCenterPushExample extends BaseLocalizedExample<ExampleText> {
+export class NotificationCenterPushExample extends BaseLocalizedExample<ExampleTranslation> {
     notificationService = inject(KbqNotificationCenterService);
 
     private readonly actionsTemplate = viewChild<TemplateRef<unknown>>('actionsTemplate');
@@ -63,11 +63,11 @@ export class NotificationCenterPushExample extends BaseLocalizedExample<ExampleT
     protected readonly KbqButtonStyles = KbqButtonStyles;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         // Rebuilt on a locale switch to follow the language: the stable ids keep the read state, and the
         // notifications pushed with the button stay in the list.
         effect(() => {
-            const text = this.text();
+            const text = this.t();
             const actions = this.actionsTemplate();
 
             if (!actions) return;
@@ -85,7 +85,7 @@ export class NotificationCenterPushExample extends BaseLocalizedExample<ExampleT
     }
 
     pushNotification() {
-        const text = this.text();
+        const text = this.t();
 
         this.notificationService.push({
             id: `${PUSHED_ID}${++pushedCount}`,

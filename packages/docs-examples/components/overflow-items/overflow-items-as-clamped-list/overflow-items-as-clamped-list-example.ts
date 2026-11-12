@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Overflow items as clamped list
@@ -31,7 +31,7 @@ import { ExampleText, TEXT } from './l10n';
                 </span>
             }
             <span kbqOverflowItemsResult [kbqTooltip]="template" [kbqTooltipArrow]="false">
-                {{ text().andMore(kbqOverflowItems.hiddenItemIDs().size) }}
+                {{ t().andMore(kbqOverflowItems.hiddenItemIDs().size) }}
             </span>
 
             <ng-template #template>
@@ -75,10 +75,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverflowItemsAsClampedListExample extends BaseLocalizedExample<ExampleText> {
-    protected readonly countries = computed(() => this.text().countries);
+export class OverflowItemsAsClampedListExample extends BaseLocalizedExample<ExampleTranslation> {
+    protected readonly countries = computed(() => this.t().countries);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

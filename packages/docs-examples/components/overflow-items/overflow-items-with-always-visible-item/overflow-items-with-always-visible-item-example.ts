@@ -4,7 +4,7 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Overflow items with always visible item
@@ -24,7 +24,7 @@ import { ExampleText, TEXT } from './l10n';
                     {{ item.id }}
                 </kbq-badge>
             }
-            <div kbqOverflowItemsResult>{{ text().andMore(kbqOverflowItems.hiddenItemIDs().size) }}</div>
+            <div kbqOverflowItemsResult>{{ t().andMore(kbqOverflowItems.hiddenItemIDs().size) }}</div>
         </div>
     `,
     styles: `
@@ -51,7 +51,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverflowItemsWithAlwaysVisibleItemExample extends BaseLocalizedExample<ExampleText> {
+export class OverflowItemsWithAlwaysVisibleItemExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly items = Array.from({ length: 20 }, (_, i) => ({
         id: `Item${i}`,
         alwaysVisible: i === 3
@@ -59,6 +59,6 @@ export class OverflowItemsWithAlwaysVisibleItemExample extends BaseLocalizedExam
     readonly badgeColor = KbqBadgeColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -5,7 +5,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Navbar vertical app long name
@@ -21,11 +21,11 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'navbar-vertical-app-long-name-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarVerticalAppLongNameExample extends BaseLocalizedExample<ExampleText> {
+export class NavbarVerticalAppLongNameExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly popUpPlacements = PopUpPlacements;
     readonly colors = KbqComponentColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

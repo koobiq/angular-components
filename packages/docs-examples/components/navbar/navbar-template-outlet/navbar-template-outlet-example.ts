@@ -7,7 +7,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type NavbarLink = {
     icon: string;
@@ -31,22 +31,22 @@ type NavbarLink = {
     templateUrl: 'navbar-template-outlet-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarTemplateOutletExample extends BaseLocalizedExample<ExampleText> {
+export class NavbarTemplateOutletExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly popUpPlacements = PopUpPlacements;
     readonly colors = KbqComponentColors;
-    /** Position of the selected app in `text().apps`, so the selection survives a locale switch. */
+    /** Position of the selected app in `t().apps`, so the selection survives a locale switch. */
     readonly selectedApp = signal(0);
 
     /** Uniform navbar links rendered from a single reusable template. */
     readonly items = computed<readonly NavbarLink[]>(() => [
-        { icon: 'kbq-stop_16', label: this.text().dashboards, active: true },
-        { icon: 'kbq-stop_16', label: this.text().tasks }
+        { icon: 'kbq-stop_16', label: this.t().dashboards, active: true },
+        { icon: 'kbq-stop_16', label: this.t().tasks }
     ]);
 
     /** Bottom navbar link rendered from the same reusable template. */
-    readonly profile = computed<NavbarLink>(() => ({ icon: 'kbq-user_16', label: this.text().profile }));
+    readonly profile = computed<NavbarLink>(() => ({ icon: 'kbq-user_16', label: this.t().profile }));
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

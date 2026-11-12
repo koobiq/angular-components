@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the ag-grid-infinite-selection example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     headerText: string;
     projectName: string;
     dtoSentToBackend: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         headerText: 'Текст',
         projectName: 'Название проекта',

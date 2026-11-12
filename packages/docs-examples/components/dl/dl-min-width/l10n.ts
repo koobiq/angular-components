@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the dl-min-width example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     incidentType: string;
     malwareInfection: string;
     identifier: string;
@@ -12,7 +12,7 @@ export interface ExampleText {
     phishingDescription: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         incidentType: 'Тип инцидента',
         malwareInfection: 'Заражение вредоносным ПО',

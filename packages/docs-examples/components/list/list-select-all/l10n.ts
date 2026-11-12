@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Incident type options of the select-all example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     incidentTypes: string;
     options: string[];
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         incidentTypes: 'Типы инцидентов',
         options: [

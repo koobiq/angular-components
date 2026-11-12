@@ -6,7 +6,7 @@ import { KbqFormFieldModule, KbqLabel } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit select basic
@@ -27,7 +27,7 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <div class="example__section">
             <kbq-inline-edit #statusInlineEdit="kbqInlineEdit">
-                <kbq-label>{{ text().status }}</kbq-label>
+                <kbq-label>{{ t().status }}</kbq-label>
 
                 <div kbqInlineEditViewMode>
                     @if (status.value) {
@@ -53,7 +53,7 @@ import { ExampleText, TEXT } from './l10n';
         </div>
 
         <kbq-dl class="example__section" [vertical]="false">
-            <kbq-dt>{{ text().priority }}</kbq-dt>
+            <kbq-dt>{{ t().priority }}</kbq-dt>
             <kbq-dd>
                 <kbq-inline-edit #priorityInlineEdit="kbqInlineEdit">
                     <div kbqInlineEditViewMode>
@@ -95,18 +95,18 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-column layout-align-center-center layout-gap-l'
     }
 })
-export class InlineEditSelectBasicExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditSelectBasicExample extends BaseLocalizedExample<ExampleTranslation> {
     protected get notSetLabel(): string {
-        return this.text().notSpecified;
+        return this.t().notSpecified;
     }
 
-    protected readonly statuses = computed(() => this.text().statuses);
-    protected readonly priorities = computed(() => [...this.text().severities].reverse());
+    protected readonly statuses = computed(() => this.t().statuses);
+    protected readonly priorities = computed(() => [...this.t().severities].reverse());
 
     protected readonly status = new FormControl<string | null>(this.statuses()[0]);
     protected readonly priority = new FormControl<string | null>(this.priorities()[0]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

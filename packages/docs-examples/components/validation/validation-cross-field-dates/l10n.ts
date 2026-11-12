@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the validation-cross-field-dates example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     validFrom: string;
     validUntil: string;
     periodEndBeforeStart: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         validFrom: 'Действует с',
         validUntil: 'Действует до',

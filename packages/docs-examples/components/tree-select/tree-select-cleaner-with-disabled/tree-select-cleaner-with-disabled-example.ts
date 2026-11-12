@@ -15,7 +15,7 @@ import {
     Node,
     transformer
 } from '../tree-select-cleaner-data';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /** Nodes the user is not allowed to deselect. */
 const lockedNodes = ['Load balancer'];
@@ -28,7 +28,7 @@ const lockedNodes = ['Load balancer'];
     imports: [FormsModule, KbqIconModule, KbqTreeModule, KbqTreeSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-tree-select multiple [placeholder]="text().kept" [(ngModel)]="kept">
+            <kbq-tree-select multiple [placeholder]="t().kept" [(ngModel)]="kept">
                 <kbq-tree-selection [dataSource]="keptDataSource" [treeControl]="keptTreeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="isLocked(node)">
                         {{ keptTreeControl.getViewValue(node) }}
@@ -51,7 +51,7 @@ const lockedNodes = ['Load balancer'];
         <kbq-form-field>
             <kbq-tree-select
                 multiple
-                [placeholder]="text().cleared"
+                [placeholder]="t().cleared"
                 [clearPredicate]="clearEverything"
                 [(ngModel)]="cleared"
             >
@@ -88,7 +88,7 @@ const lockedNodes = ['Load balancer'];
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeSelectCleanerWithDisabledExample extends BaseLocalizedExample<ExampleText> {
+export class TreeSelectCleanerWithDisabledExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly kept = model(['Database', 'Load balancer', 'Message queue']);
     protected readonly cleared = model(['Database', 'Load balancer', 'Message queue']);
 
@@ -116,12 +116,12 @@ export class TreeSelectCleanerWithDisabledExample extends BaseLocalizedExample<E
             new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren)
         );
 
-        dataSource.data = buildTree(getTreeData(this.text()));
+        dataSource.data = buildTree(getTreeData(this.t()));
 
         return dataSource;
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

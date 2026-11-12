@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the sidepanel-normal-mode example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     position: string;
     templateContent: string;
     templateBody: string;
@@ -11,7 +11,7 @@ export interface ExampleText {
     openSidepanel: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         position: 'Позиция',
         templateContent: 'Содержимое шаблона панели',

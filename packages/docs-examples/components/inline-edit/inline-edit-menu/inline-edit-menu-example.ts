@@ -10,7 +10,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit menu
@@ -37,7 +37,7 @@ import { ExampleText, TEXT } from './l10n';
 
             <div class="layout-flex layout-column example-content__container">
                 <kbq-inline-edit #textareaInlineEditVertical showActions (saved)="update()">
-                    <kbq-label>{{ text().style }}</kbq-label>
+                    <kbq-label>{{ t().style }}</kbq-label>
                     <i
                         kbqInlineEditMenu
                         kbq-icon-button="kbq-ellipsis-vertical_16"
@@ -71,7 +71,7 @@ import { ExampleText, TEXT } from './l10n';
                         [color]="'contrast-fade'"
                         (click)="form.controls.foundDate.setValue('1991')"
                     ></i>
-                    <kbq-label>{{ text().founded }}</kbq-label>
+                    <kbq-label>{{ t().founded }}</kbq-label>
                     <div class="example-inline-text" kbqInlineEditViewMode>
                         <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.foundDate.value }" />
                     </div>
@@ -86,7 +86,7 @@ import { ExampleText, TEXT } from './l10n';
             <span class="kbq-text-normal-strong">Horizontal list</span>
 
             <kbq-dl [vertical]="false">
-                <kbq-dt class="example-multiline-text__header">{{ text().style }}</kbq-dt>
+                <kbq-dt class="example-multiline-text__header">{{ t().style }}</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit #textareaInlineEditHorizontal showActions (saved)="update()">
                         <i
@@ -193,11 +193,11 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-flex layout-column layout-gap-m'
     }
 })
-export class InlineEditMenuExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditMenuExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly maxRows = 20;
     protected readonly clipboard = inject(Clipboard);
     protected get placeholder(): string {
-        return this.text().placeholder;
+        return this.t().placeholder;
     }
 
     protected readonly form = new FormGroup({
@@ -214,6 +214,6 @@ export class InlineEditMenuExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

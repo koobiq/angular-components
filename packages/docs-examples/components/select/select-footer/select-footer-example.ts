@@ -3,7 +3,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Select footer
@@ -17,7 +17,7 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <div class="example-row">
-            <div class="kbq-form__label">{{ text().button }}</div>
+            <div class="kbq-form__label">{{ t().button }}</div>
             <kbq-form-field class="example-select-field">
                 <kbq-select [value]="selected">
                     @for (option of options(); track option) {
@@ -34,21 +34,21 @@ import { ExampleText, TEXT } from './l10n';
         </div>
 
         <div class="example-row">
-            <div class="kbq-form__label">{{ text().caption }}</div>
+            <div class="kbq-form__label">{{ t().caption }}</div>
             <kbq-form-field class="example-select-field">
                 <kbq-select [value]="selected">
                     @for (option of options(); track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                     <kbq-select-footer class="example-select-footer-with-caption">
-                        {{ text().caption }} ⌥+⌘+F
+                        {{ t().caption }} ⌥+⌘+F
                     </kbq-select-footer>
                 </kbq-select>
             </kbq-form-field>
         </div>
 
         <div class="example-row">
-            <div class="kbq-form__label">{{ text().link }}</div>
+            <div class="kbq-form__label">{{ t().link }}</div>
             <kbq-form-field class="example-select-field">
                 <kbq-select [value]="selected">
                     @for (option of options(); track option) {
@@ -82,13 +82,13 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectFooterExample extends BaseLocalizedExample<ExampleText> {
+export class SelectFooterExample extends BaseLocalizedExample<ExampleTranslation> {
     // Enough options to overflow the panel's default 256px — exactly eight rows fit — so the footer is
     // seen doing its job: staying put while the list scrolls under it.
     protected readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + i));
     protected readonly selected = this.options[0];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

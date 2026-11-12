@@ -4,7 +4,7 @@ import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqSkeletonDl } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton description list preset
@@ -13,7 +13,7 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'skeleton-dl-example',
     imports: [KbqSkeletonDl, KbqToggleModule, FormsModule, KbqDl, KbqDt, KbqDd],
     template: `
-        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         @if (loading()) {
             <kbq-skeleton-dl />
@@ -36,12 +36,12 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonDlExample extends BaseLocalizedExample<ExampleText> {
+export class SkeletonDlExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly loading = model(true);
 
-    protected readonly items = computed(() => this.text().dlItems);
+    protected readonly items = computed(() => this.t().dlItems);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

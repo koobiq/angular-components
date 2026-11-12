@@ -14,7 +14,7 @@
     (kbqPopoverVisibleChange)="onVisibleChange($event)"
 >
     <i kbq-icon="kbq-user_16"></i>
-    {{ text().assignUsers }}
+    {{ t().assignUsers }}
     <i kbq-icon="kbq-chevron-down_16"></i>
 </button>
 
@@ -22,7 +22,7 @@
     <div style="border-bottom: 1px solid var(--kbq-line-contrast-less)" [style.width.px]="400">
         <kbq-form-field class="layout-padding-vertical-xxs" noBorders>
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-            <input kbqInput autocomplete="off" [placeholder]="text().user" [formControl]="searchControl" />
+            <input kbqInput autocomplete="off" [placeholder]="t().user" [formControl]="searchControl" />
         </kbq-form-field>
     </div>
 </ng-template>
@@ -32,7 +32,7 @@
         <kbq-list-selection
             class="layout-padding-horizontal-xxs layout-padding-vertical-xxs"
             multiple="checkbox"
-            [attr.aria-label]="text().assignUsers"
+            [attr.aria-label]="t().assignUsers"
             [(ngModel)]="selected"
             (selectionChange)="onSelectionChange($event)"
         >
@@ -46,7 +46,7 @@
 
         @if (!(filteredUsers | async)?.length) {
             <kbq-empty-state style="margin-top: 132px">
-                <span kbq-empty-state-text>{{ text().nothingFound }}</span>
+                <span kbq-empty-state-text>{{ t().nothingFound }}</span>
             </kbq-empty-state>
         }
     </kbq-scrollbar>
@@ -57,7 +57,7 @@
         class="layout-row layout-gap-l layout-padding-vertical-l layout-padding-horizontal-xxl"
         style="border-top: 1px solid var(--kbq-line-contrast-less)"
     >
-        <button kbq-button [color]="'contrast'" (click)="onApply()">{{ text().apply }}</button>
-        <button kbq-button (click)="popover().hide(0)">{{ text().cancel }}</button>
+        <button kbq-button [color]="'contrast'" (click)="onApply()">{{ t().apply }}</button>
+        <button kbq-button (click)="popover().hide(0)">{{ t().cancel }}</button>
     </div>
 </ng-template>

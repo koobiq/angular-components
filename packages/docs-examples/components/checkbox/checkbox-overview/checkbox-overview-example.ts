@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Checkbox
@@ -16,8 +16,8 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'checkbox-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CheckboxOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class CheckboxOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

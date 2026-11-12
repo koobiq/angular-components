@@ -6,7 +6,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type SearchResult = {
     title: string;
@@ -32,10 +32,10 @@ type SearchResult = {
             <kbq-fieldset>
                 <kbq-form-field kbqFieldsetItem>
                     <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-                    <input kbqInput [placeholder]="text().search" [formControl]="control" />
+                    <input kbqInput [placeholder]="t().search" [formControl]="control" />
                 </kbq-form-field>
                 <button kbqFieldsetItem kbq-button [color]="colors.Contrast" (click)="applySearch()">
-                    {{ text().search }}
+                    {{ t().search }}
                 </button>
             </kbq-fieldset>
         </div>
@@ -65,7 +65,7 @@ type SearchResult = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HighlightBackgroundComplexExample extends BaseLocalizedExample<ExampleText> {
+export class HighlightBackgroundComplexExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly colors = KbqComponentColors;
     protected readonly control = new FormControl('cube');
     protected readonly query = signal(this.control.value);
@@ -105,6 +105,6 @@ export class HighlightBackgroundComplexExample extends BaseLocalizedExample<Exam
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

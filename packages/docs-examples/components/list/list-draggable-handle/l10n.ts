@@ -1,11 +1,11 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Fruit names of the drag-handle example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     fruits: string[];
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         fruits: ['Банан', 'Вишня', 'Грейпфрут', 'Манго']
     },

@@ -12,7 +12,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title TopBar Breadcrumbs
@@ -36,7 +36,7 @@ import { ExampleText, TEXT } from './l10n';
                     <img alt="example icon" src="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
                 </div>
                 <nav class="flex" kbq-breadcrumbs size="big">
-                    <kbq-breadcrumb-item routerLink="./dashboards" [text]="text().dashboards" />
+                    <kbq-breadcrumb-item routerLink="./dashboards" [text]="t().dashboards" />
                     <kbq-breadcrumb-item text="MEIS Dashboard" routerLink="./dashboards/dashboard123" />
                 </nav>
             </div>
@@ -46,8 +46,8 @@ import { ExampleText, TEXT } from './l10n';
                     <button
                         kbqOverflowItem="0"
                         kbq-button
-                        [kbqTooltip]="text().filter"
-                        [attr.aria-label]="text().filter"
+                        [kbqTooltip]="t().filter"
+                        [attr.aria-label]="t().filter"
                         [kbqStyle]="KbqButtonStyles.Transparent"
                         [color]="KbqComponentColors.Contrast"
                         [kbqPlacement]="PopUpPlacements.Bottom"
@@ -59,7 +59,7 @@ import { ExampleText, TEXT } from './l10n';
                     <button
                         kbqOverflowItem="1"
                         kbq-button
-                        [kbqTooltip]="text().share"
+                        [kbqTooltip]="t().share"
                         [kbqStyle]="KbqButtonStyles.Filled"
                         [color]="KbqComponentColors.ContrastFade"
                         [kbqTooltipDisabled]="isDesktop()"
@@ -86,10 +86,10 @@ import { ExampleText, TEXT } from './l10n';
 
                         <kbq-dropdown #appDropdown="kbqDropdown">
                             @if (kbqOverflowItems.hiddenItemIDs().has('0')) {
-                                <button kbq-dropdown-item>{{ text().filter }}</button>
+                                <button kbq-dropdown-item>{{ t().filter }}</button>
                             }
                             @if (kbqOverflowItems.hiddenItemIDs().has('1')) {
-                                <button kbq-dropdown-item>{{ text().share }}</button>
+                                <button kbq-dropdown-item>{{ t().share }}</button>
                             }
                         </kbq-dropdown>
                     </div>
@@ -107,7 +107,7 @@ import { ExampleText, TEXT } from './l10n';
     providers: [kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarBreadcrumbsExample extends BaseLocalizedExample<ExampleText> {
+export class TopBarBreadcrumbsExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -123,6 +123,6 @@ export class TopBarBreadcrumbsExample extends BaseLocalizedExample<ExampleText> 
     protected readonly PopUpPlacements = PopUpPlacements;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

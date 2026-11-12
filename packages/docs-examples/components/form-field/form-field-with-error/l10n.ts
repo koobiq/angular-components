@@ -1,14 +1,14 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the form-field-with-error example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     email: string;
     shouldEnterValue: string;
     invalidEmail: string;
     enterEmail: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         email: 'Эл. почта',
         shouldEnterValue: 'Введите значение',

@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title tooltip-interactive
@@ -17,15 +17,15 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <div class="layout-column" style="gap: 16px; align-items: flex-start">
-            <button kbq-button [kbqTooltip]="text().tooltip" [hideWithTimeout]="true">
-                {{ text().buttonWithTooltip }}
+            <button kbq-button [kbqTooltip]="t().tooltip" [hideWithTimeout]="true">
+                {{ t().buttonWithTooltip }}
             </button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TooltipInteractiveExample extends BaseLocalizedExample<ExampleText> {
+export class TooltipInteractiveExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

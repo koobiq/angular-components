@@ -11,8 +11,8 @@ import { KbqFormField, kbqFormFieldDefaultOptionsProvider } from '@koobiq/compon
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { BaseLocalizedExample, injectLocalizedText } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { BaseLocalizedExample, injectTranslation } from '@koobiq/docs-examples/i18n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Validation required label
@@ -33,37 +33,37 @@ import { ExampleText, TEXT } from './l10n';
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
-                        <kbq-label>{{ text().name }}</kbq-label>
+                        <kbq-label>{{ t().name }}</kbq-label>
                         <input formControlName="firstName" kbqInput />
 
-                        <kbq-error>{{ text().required }}</kbq-error>
+                        <kbq-error>{{ t().required }}</kbq-error>
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
-                        <kbq-label>{{ text().lastName }}</kbq-label>
+                        <kbq-label>{{ t().lastName }}</kbq-label>
                         <input formControlName="lastName" kbqInput />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
-                        <kbq-label>{{ text().patronymic }}</kbq-label>
-                        <input formControlName="thirdName" kbqInput [placeholder]="text().optional" />
+                        <kbq-label>{{ t().patronymic }}</kbq-label>
+                        <input formControlName="thirdName" kbqInput [placeholder]="t().optional" />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
-                        <kbq-label>{{ text().email }}</kbq-label>
+                        <kbq-label>{{ t().email }}</kbq-label>
                         <input formControlName="email" kbqInput type="email" />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
-                        <kbq-label>{{ text().requestReason }}</kbq-label>
+                        <kbq-label>{{ t().requestReason }}</kbq-label>
                         <kbq-select formControlName="reason">
                             @for (option of options().reasons; track option.value) {
                                 <kbq-option [value]="option.value">
@@ -76,7 +76,7 @@ import { ExampleText, TEXT } from './l10n';
 
                 <div class="kbq-form__row">
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
-                        <kbq-label>{{ text().estimation }}</kbq-label>
+                        <kbq-label>{{ t().estimation }}</kbq-label>
                         <kbq-select formControlName="estimation">
                             @for (option of options().estimations; track option.value) {
                                 <kbq-option [value]="option.value">
@@ -85,13 +85,13 @@ import { ExampleText, TEXT } from './l10n';
                             }
                         </kbq-select>
 
-                        <kbq-error>{{ text().required }}</kbq-error>
+                        <kbq-error>{{ t().required }}</kbq-error>
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-margin-bottom-xxl">
                     <kbq-form-field horizontal labelClass="flex-25" contentClass="flex-75">
-                        <kbq-label>{{ text().comment }}</kbq-label>
+                        <kbq-label>{{ t().comment }}</kbq-label>
                         <textarea formControlName="comment" kbqTextarea></textarea>
                     </kbq-form-field>
                 </div>
@@ -99,7 +99,7 @@ import { ExampleText, TEXT } from './l10n';
                 <div class="kbq-form__row">
                     <div class="flex-25"></div>
                     <div class="flex-75">
-                        <button color="contrast" kbq-button type="submit">{{ text().submit }}</button>
+                        <button color="contrast" kbq-button type="submit">{{ t().submit }}</button>
                     </div>
                 </div>
             </div>
@@ -124,8 +124,8 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationRequiredLabelExample extends BaseLocalizedExample<ExampleText> {
-    protected readonly options = injectLocalizedText(TEXT);
+export class ValidationRequiredLabelExample extends BaseLocalizedExample<ExampleTranslation> {
+    protected readonly options = injectTranslation(TRANSLATIONS);
 
     protected readonly form = new FormGroup({
         firstName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
@@ -152,6 +152,6 @@ export class ValidationRequiredLabelExample extends BaseLocalizedExample<Example
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

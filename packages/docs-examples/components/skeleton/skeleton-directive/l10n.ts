@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the skeleton-directive example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     loading: string;
     dosTitle: string;
     readMore: string;
@@ -10,7 +10,7 @@ export interface ExampleText {
     report: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         loading: 'Загрузка',
         dosTitle: 'Атака отказа в обслуживании',

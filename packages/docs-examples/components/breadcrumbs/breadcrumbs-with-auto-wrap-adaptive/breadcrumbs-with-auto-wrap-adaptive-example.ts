@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 @Component({
     selector: 'example-breadcrumbs',
@@ -35,17 +35,17 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleBreadcrumbs extends BaseLocalizedExample<ExampleText> {
+export class ExampleBreadcrumbs extends BaseLocalizedExample<ExampleTranslation> {
     readonly breadcrumbs = computed(() => [
-        { label: this.text().main, url: '/main' },
-        { label: this.text().standards, url: '/main/standards' },
-        { label: this.text().aes, url: '/main/standards/advanced-encryption-standard' },
-        { label: this.text().edit, url: '/main/standards/advanced-encryption-standard/edit' },
-        { label: this.text().test, url: '/main/standards/advanced-encryption-standard/edit/test' }
+        { label: this.t().main, url: '/main' },
+        { label: this.t().standards, url: '/main/standards' },
+        { label: this.t().aes, url: '/main/standards/advanced-encryption-standard' },
+        { label: this.t().edit, url: '/main/standards/advanced-encryption-standard/edit' },
+        { label: this.t().test, url: '/main/standards/advanced-encryption-standard/edit/test' }
     ]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 

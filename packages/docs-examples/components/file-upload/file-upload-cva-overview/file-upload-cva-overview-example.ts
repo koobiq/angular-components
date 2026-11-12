@@ -3,7 +3,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title File-upload with control value accessor
@@ -18,7 +18,7 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <div class="kbq-form-horizontal">
             <div class="kbq-form__row layout-margin-bottom-m">
-                <label class="kbq-form__label flex-20">{{ text().singleWithFormControl }}</label>
+                <label class="kbq-form__label flex-20">{{ t().singleWithFormControl }}</label>
                 <kbq-file-upload class="kbq-form__control flex-80" [formControl]="control">
                     <i kbq-icon="kbq-file-o_16"></i>
                 </kbq-file-upload>
@@ -27,10 +27,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadCvaOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class FileUploadCvaOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     control = new FormControl<KbqFileItem | null>(null);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

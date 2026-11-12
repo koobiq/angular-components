@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the toast-hide-overview example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     cancel: string;
     agentUpdateAvailable: string;
     version20315: string;
@@ -16,7 +16,7 @@ export interface ExampleText {
     onCommand: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         cancel: 'Отмена',
         agentUpdateAvailable: 'Доступно обновление агента',

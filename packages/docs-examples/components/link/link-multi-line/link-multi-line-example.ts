@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkPrefix } from '@koobiq/components/link';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Link multi-line
@@ -12,10 +12,10 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqLink, KbqLinkPrefix, KbqIconModule],
     template: `
         <p class="example-text">
-            {{ text().agree }}
+            {{ t().agree }}
             <a kbqLink external href="https://koobiq.io/en/components/link" target="_blank">
                 <i kbqLinkPrefix kbq-icon="kbq-scroll-o_16"></i>
-                {{ text().licenseTerms }}
+                {{ t().licenseTerms }}
             </a>
         </p>
     `,
@@ -34,8 +34,8 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinkMultiLineExample extends BaseLocalizedExample<ExampleText> {
+export class LinkMultiLineExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

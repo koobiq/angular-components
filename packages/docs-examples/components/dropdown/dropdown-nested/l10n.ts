@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the dropdown-nested example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     columns: string;
     alignIntent: string;
     borderLines: string;
@@ -23,7 +23,7 @@ export interface ExampleText {
     searchSettings: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         columns: 'Колонки',
         alignIntent: 'Выравнивание и отступы',

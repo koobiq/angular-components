@@ -4,7 +4,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title select-custom-tag-content
@@ -14,7 +14,7 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqSelectModule, KbqTagsModule, KbqIconModule],
     template: `
         <kbq-form-field>
-            <kbq-select multiple [placeholder]="text().placeholder" [(value)]="selected">
+            <kbq-select multiple [placeholder]="t().placeholder" [(value)]="selected">
                 @for (name of severityNames(); track name) {
                     <kbq-option [value]="name">{{ name }}</kbq-option>
                 }
@@ -55,16 +55,16 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectCustomTagContentExample extends BaseLocalizedExample<ExampleText> {
+export class SelectCustomTagContentExample extends BaseLocalizedExample<ExampleTranslation> {
     /**
      * Per-value tag appearance — the built-in markup paints every tag with the same color.
      * Only these four colors are themed for `kbq-tag`.
      */
     readonly severities = computed<Record<string, { color: KbqComponentColors; icon: string }>>(() => ({
-        [this.text().severities[0]]: { color: KbqComponentColors.Error, icon: 'kbq-circle-xmark_16' },
-        [this.text().severities[1]]: { color: KbqComponentColors.Warning, icon: 'kbq-triangle-exclamation_16' },
-        [this.text().severities[2]]: { color: KbqComponentColors.Theme, icon: 'kbq-circle-info_16' },
-        [this.text().severities[3]]: { color: KbqComponentColors.ContrastFade, icon: 'kbq-circle-info_16' }
+        [this.t().severities[0]]: { color: KbqComponentColors.Error, icon: 'kbq-circle-xmark_16' },
+        [this.t().severities[1]]: { color: KbqComponentColors.Warning, icon: 'kbq-triangle-exclamation_16' },
+        [this.t().severities[2]]: { color: KbqComponentColors.Theme, icon: 'kbq-circle-info_16' },
+        [this.t().severities[3]]: { color: KbqComponentColors.ContrastFade, icon: 'kbq-circle-info_16' }
     }));
 
     /** List of options — the keys of `severities`, computed once so the template doesn't rebuild it. */
@@ -74,6 +74,6 @@ export class SelectCustomTagContentExample extends BaseLocalizedExample<ExampleT
     selected = this.severityNames().slice(0, 3);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

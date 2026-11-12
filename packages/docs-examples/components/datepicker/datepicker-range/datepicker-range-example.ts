@@ -6,7 +6,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Datepicker range
@@ -24,7 +24,7 @@ import { ExampleText, TEXT } from './l10n';
         <div class="docs-example__datepicker-range">
             <div class="kbq-form-vertical">
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label">{{ text().vacationPeriod }}</label>
+                    <label class="kbq-form__label">{{ t().vacationPeriod }}</label>
                     <div>
                         <kbq-form-field class="layout-margin-right-s" (click)="datepicker.toggle()">
                             <input [kbqDatepicker]="datepicker" />
@@ -44,13 +44,13 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatepickerRangeExample extends BaseLocalizedExample<ExampleText> {
+export class DatepickerRangeExample extends BaseLocalizedExample<ExampleTranslation> {
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     readonly minDate = this.adapter.createDate(2023, 11, 14);
     readonly maxDate = this.adapter.createDate(2024, 7, 25);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

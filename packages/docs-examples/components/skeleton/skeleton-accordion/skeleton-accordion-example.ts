@@ -4,7 +4,7 @@ import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqSkeletonAccordion } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton accordion preset
@@ -13,7 +13,7 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'skeleton-accordion-example',
     imports: [KbqSkeletonAccordion, KbqToggleModule, FormsModule, KbqAccordionModule],
     template: `
-        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         @if (loading()) {
             <kbq-skeleton-accordion />
@@ -38,12 +38,12 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonAccordionExample extends BaseLocalizedExample<ExampleText> {
+export class SkeletonAccordionExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly loading = model(true);
 
-    protected readonly sections = computed(() => this.text().accordionSections);
+    protected readonly sections = computed(() => this.t().accordionSections);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

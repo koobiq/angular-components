@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the cleaner-with-disabled example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     nothingFound: string;
     deletedItems: (count: number) => string;
     allNodes: string;
@@ -14,7 +14,7 @@ export interface ExampleText {
     messageQueue: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         nothingFound: 'Ничего не найдено',
         deletedItems: (count) => `Удалено элементов: ${count} — удалите их из выбора`,

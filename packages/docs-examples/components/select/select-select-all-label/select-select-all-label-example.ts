@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Select all label
@@ -11,7 +11,7 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-select #select="kbqSelect" multiple selectAll [placeholder]="text().placeholder" [value]="selected">
+            <kbq-select #select="kbqSelect" multiple selectAll [placeholder]="t().placeholder" [value]="selected">
                 <!-- Projected only while everything is selected, so the rest of the time the select falls
                      back to its default trigger and lists the selected options as usual. -->
                 @if (select.allOptionsSelected) {
@@ -37,11 +37,11 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectSelectAllLabelExample extends BaseLocalizedExample<ExampleText> {
+export class SelectSelectAllLabelExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly options = computed(() => Array.from({ length: 6 }, (_, i) => 'Option #' + (i + 1)));
     readonly selected = [...this.options()];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

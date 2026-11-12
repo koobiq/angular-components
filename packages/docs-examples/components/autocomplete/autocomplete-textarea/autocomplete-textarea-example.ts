@@ -5,7 +5,7 @@ import { KbqHighlightBackgroundPipe, KbqTextQuery } from '@koobiq/components/cor
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Autocomplete in text
@@ -21,10 +21,10 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <kbq-form-field>
-            <kbq-label>{{ text().incidentDescription }}</kbq-label>
+            <kbq-label>{{ t().incidentDescription }}</kbq-label>
             <textarea
                 kbqTextarea
-                [placeholder]="text().typePrefixes"
+                [placeholder]="t().typePrefixes"
                 [formControl]="control"
                 [kbqAutocomplete]="auto"
                 [kbqAutocompleteRelativeToCaret]="true"
@@ -51,7 +51,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-5xl layout-row layout-align-center-center'
     }
 })
-export class AutocompleteTextareaExample extends BaseLocalizedExample<ExampleText> {
+export class AutocompleteTextareaExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly control = new FormControl('');
     protected readonly query = signal<KbqTextQuery | null>(null);
 
@@ -83,6 +83,6 @@ export class AutocompleteTextareaExample extends BaseLocalizedExample<ExampleTex
     ];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

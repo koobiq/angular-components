@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the actions-panel-adaptive example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     open: string;
     responsible: string;
     /** Prefix of the selected records counter; the count follows after a space. */
@@ -15,7 +15,7 @@ export interface ExampleText {
     adaptiveAll: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         open: 'открыть',
         responsible: 'Ответственный',

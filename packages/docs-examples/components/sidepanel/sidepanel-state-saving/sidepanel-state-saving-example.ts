@@ -10,7 +10,7 @@ import {
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidepanelModule, KbqSidepanelRef, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 const stateSavingKey = 'sidepanel-state-saving-example';
 
@@ -23,19 +23,19 @@ const stateSavingKey = 'sidepanel-state-saving-example';
     template: `
         <div class="example-sidepanel-state-saving__actions">
             <button kbq-button type="button" [color]="'contrast'" (click)="toggle()">
-                {{ sidepanelRef() ? text().closeSidepanel : text().openSidepanel }}
+                {{ sidepanelRef() ? t().closeSidepanel : t().openSidepanel }}
             </button>
 
             <button kbq-button type="button" (click)="sidepanelService.clearSavedState(stateSavingKey)">
-                {{ text().resetSavedState }}
+                {{ t().resetSavedState }}
             </button>
         </div>
 
         <ng-template>
-            <kbq-sidepanel-header [closeable]="true">{{ text().stateSaving }}</kbq-sidepanel-header>
+            <kbq-sidepanel-header [closeable]="true">{{ t().stateSaving }}</kbq-sidepanel-header>
             <kbq-sidepanel-body>
                 <div class="example-sidepanel-state-saving__body">
-                    {{ text().body }}
+                    {{ t().body }}
                 </div>
             </kbq-sidepanel-body>
         </ng-template>
@@ -52,7 +52,7 @@ const stateSavingKey = 'sidepanel-state-saving-example';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelStateSavingExample extends BaseLocalizedExample<ExampleText> {
+export class SidepanelStateSavingExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly sidepanelService = inject(KbqSidepanelService);
     protected readonly stateSavingKey = stateSavingKey;
     protected readonly sidepanelRef = signal<KbqSidepanelRef | null>(null);
@@ -60,7 +60,7 @@ export class SidepanelStateSavingExample extends BaseLocalizedExample<ExampleTex
     private readonly template = viewChild.required(TemplateRef);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         // Once the view exists, so the template is there to open.
         afterNextRender(() => {
             if (this.sidepanelService.wasOpen(stateSavingKey)) this.open();

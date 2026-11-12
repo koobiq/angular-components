@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Badge content
@@ -15,22 +15,22 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <div class="layout-row layout-gap-l">
-            <kbq-badge [badgeColor]="colors.Success">{{ text().normal }}</kbq-badge>
+            <kbq-badge [badgeColor]="colors.Success">{{ t().normal }}</kbq-badge>
             <kbq-badge [badgeColor]="colors.Success">
-                {{ text().normal }}
+                {{ t().normal }}
                 <div class="kbq-badge-caption">0.8</div>
             </kbq-badge>
             <kbq-badge [badgeColor]="colors.Success">
                 <i kbq-icon="kbq-cloud-o_16"></i>
-                {{ text().normal }}
+                {{ t().normal }}
             </kbq-badge>
             <kbq-badge [badgeColor]="colors.Success">
-                {{ text().normal }}
+                {{ t().normal }}
                 <i kbq-icon="kbq-cloud-o_16"></i>
             </kbq-badge>
             <kbq-badge [badgeColor]="colors.Success">
                 <i kbq-icon="kbq-cloud-o_16"></i>
-                {{ text().normal }}
+                {{ t().normal }}
                 <div class="kbq-badge-caption">0.8</div>
                 <i kbq-icon="kbq-cloud-o_16"></i>
             </kbq-badge>
@@ -38,10 +38,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BadgeContentExample extends BaseLocalizedExample<ExampleText> {
+export class BadgeContentExample extends BaseLocalizedExample<ExampleTranslation> {
     colors = KbqBadgeColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -2,7 +2,7 @@ import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/co
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Textarea error state
@@ -12,10 +12,10 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqTextareaModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
-            <kbq-label>{{ text().label }}</kbq-label>
-            <textarea kbqTextarea [placeholder]="text().placeholder" [formControl]="control"></textarea>
-            <kbq-hint>{{ text().hint10 }}</kbq-hint>
-            <kbq-error>{{ text().min10 }}</kbq-error>
+            <kbq-label>{{ t().label }}</kbq-label>
+            <textarea kbqTextarea [placeholder]="t().placeholder" [formControl]="control"></textarea>
+            <kbq-hint>{{ t().hint10 }}</kbq-hint>
+            <kbq-error>{{ t().min10 }}</kbq-error>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,11 +23,11 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-xl layout-row'
     }
 })
-export class TextareaErrorStateExample extends BaseLocalizedExample<ExampleText> {
+export class TextareaErrorStateExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly control = new FormControl('', [Validators.minLength(10), Validators.required]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         afterNextRender(() => {
             this.control.markAsTouched();
             this.control.updateValueAndValidity();

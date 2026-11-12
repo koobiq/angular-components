@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the dropdown-item-action example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     rulesSettings: string;
     hashSumSettings: string;
     moreActions: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         rulesSettings: 'Настройки правил',
         hashSumSettings: 'Настройки хеш-суммы',

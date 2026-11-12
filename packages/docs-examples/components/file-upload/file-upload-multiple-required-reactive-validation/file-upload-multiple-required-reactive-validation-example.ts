@@ -6,7 +6,7 @@ import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title File upload multiple required reactive validation example
@@ -34,7 +34,7 @@ import { ExampleText, TEXT } from './l10n';
                     <i kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
                 @if (kbqFileUpload.invalid && formMultiple.controls.fileUpload.hasError('required')) {
-                    <kbq-hint color="error">{{ text().fileRequired }}</kbq-hint>
+                    <kbq-hint color="error">{{ t().fileRequired }}</kbq-hint>
                 }
                 @if (
                     kbqFileUpload.invalid && formMultiple.controls.fileUpload.getError('minlength');
@@ -50,7 +50,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadMultipleRequiredReactiveValidationExample extends BaseLocalizedExample<ExampleText> {
+export class FileUploadMultipleRequiredReactiveValidationExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly customErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
 
     protected readonly formMultiple = new FormGroup({
@@ -62,6 +62,6 @@ export class FileUploadMultipleRequiredReactiveValidationExample extends BaseLoc
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -5,7 +5,7 @@ import { KbqTextQuery } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 interface Suggestion {
     /** What the option shows. */
@@ -27,10 +27,10 @@ interface Suggestion {
     ],
     template: `
         <kbq-form-field>
-            <kbq-label>{{ text().comment }}</kbq-label>
+            <kbq-label>{{ t().comment }}</kbq-label>
             <textarea
                 kbqTextarea
-                [placeholder]="text().typeTriggers"
+                [placeholder]="t().typeTriggers"
                 [formControl]="control"
                 [kbqAutocomplete]="auto"
                 [kbqAutocompleteRelativeToCaret]="true"
@@ -56,7 +56,7 @@ interface Suggestion {
         class: 'layout-margin-5xl layout-row layout-align-center-center'
     }
 })
-export class AutocompleteTriggersExample extends BaseLocalizedExample<ExampleText> {
+export class AutocompleteTriggersExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly control = new FormControl('');
     protected readonly triggers = ['/', '@'];
     protected readonly query = signal<KbqTextQuery | null>(null);
@@ -77,18 +77,18 @@ export class AutocompleteTriggersExample extends BaseLocalizedExample<ExampleTex
     protected readonly insertText = (suggestion: Suggestion): string => suggestion.insert;
 
     protected readonly snippets = computed<Suggestion[]>(() => [
-        { label: this.text().closedLabel, insert: this.text().closedInsert },
-        { label: this.text().escalateLabel, insert: this.text().escalateInsert },
-        { label: this.text().signLabel, insert: this.text().signInsert }
+        { label: this.t().closedLabel, insert: this.t().closedInsert },
+        { label: this.t().escalateLabel, insert: this.t().escalateInsert },
+        { label: this.t().signLabel, insert: this.t().signInsert }
     ]);
 
     protected readonly colleagues = computed<Suggestion[]>(() => [
-        { label: this.text().alice, insert: '@alice' },
-        { label: this.text().bob, insert: '@bob' },
-        { label: this.text().carol, insert: '@carol' }
+        { label: this.t().alice, insert: '@alice' },
+        { label: this.t().bob, insert: '@bob' },
+        { label: this.t().carol, insert: '@carol' }
     ]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

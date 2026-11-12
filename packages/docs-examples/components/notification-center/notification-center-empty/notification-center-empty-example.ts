@@ -13,7 +13,7 @@ import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koob
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -60,7 +60,7 @@ enum NavbarIcItems {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationCenterEmptyExample extends BaseLocalizedExample<ExampleText> {
+export class NotificationCenterEmptyExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly notificationService = inject(KbqNotificationCenterService);
 
     private readonly themeService = inject(KbqThemeService, { optional: true });
@@ -90,7 +90,7 @@ export class NotificationCenterEmptyExample extends BaseLocalizedExample<Example
             id: '1',
             color: KbqComponentColors.Contrast,
             style: KbqButtonStyles.Filled,
-            text: this.text().primaryAction
+            text: this.t().primaryAction
         },
         {
             id: '2',
@@ -105,6 +105,6 @@ export class NotificationCenterEmptyExample extends BaseLocalizedExample<Example
     protected readonly PopUpPlacements = PopUpPlacements;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

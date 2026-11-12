@@ -1,14 +1,14 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the button toggle examples. */
-export interface ExampleText {
+export interface ExampleTranslation {
     courier: string;
     donkeyExpress: string;
     middleEarthPost: string;
     deliveryMethod: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         courier: 'Курьером',
         donkeyExpress: 'Ослик Экспресс',

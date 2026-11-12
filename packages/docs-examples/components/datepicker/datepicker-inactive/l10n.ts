@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the datepicker examples. */
-export interface ExampleText {
+export interface ExampleTranslation {
     disabledEmptyField: string;
     readOnlyField: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         disabledEmptyField: 'Отключённое пустое поле',
         readOnlyField: 'Поле только для чтения с данными'

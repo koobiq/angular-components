@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Modal sizes
@@ -29,18 +29,18 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalSizesExample extends BaseLocalizedExample<ExampleText> {
+export class ModalSizesExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly modalService = inject(KbqModalService);
 
     readonly modalSize = ModalSize;
 
     showModal(kbqSize: ModalSize): void {
         this.modalService.confirm({
-            kbqAriaLabel: this.text().saveChangesAria,
+            kbqAriaLabel: this.t().saveChangesAria,
             kbqSize,
-            kbqContent: this.text().saveChangesContent,
-            kbqOkText: this.text().save,
-            kbqCancelText: this.text().cancel,
+            kbqContent: this.t().saveChangesContent,
+            kbqOkText: this.t().save,
+            kbqCancelText: this.t().cancel,
             kbqOkClick: () => console.log('Save'),
             kbqCancelClick: () => console.log('Cancel')
         });
@@ -48,17 +48,17 @@ export class ModalSizesExample extends BaseLocalizedExample<ExampleText> {
 
     showCustomModal(): void {
         this.modalService.confirm({
-            kbqAriaLabel: this.text().saveChangesAria,
+            kbqAriaLabel: this.t().saveChangesAria,
             kbqWidth: '600px',
-            kbqContent: this.text().saveChangesContent,
-            kbqOkText: this.text().save,
-            kbqCancelText: this.text().cancel,
+            kbqContent: this.t().saveChangesContent,
+            kbqOkText: this.t().save,
+            kbqCancelText: this.t().cancel,
             kbqOkClick: () => console.log('Save'),
             kbqCancelClick: () => console.log('Cancel')
         });
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

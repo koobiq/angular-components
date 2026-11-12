@@ -1,14 +1,14 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the checkbox-validation example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     acceptTerms: string;
     validationHint: string;
     validationError: string;
     continue: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         acceptTerms: 'Я принимаю условия лицензионного соглашения',
         validationHint: 'Продолжите, не принимая условия, чтобы увидеть ошибку',

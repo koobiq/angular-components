@@ -12,7 +12,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToastService } from '@koobiq/components/toast';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Actions panel close
@@ -21,12 +21,12 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'actions-panel-close-example',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
-        <button kbq-button (click)="open()">{{ text().open }}</button>
+        <button kbq-button (click)="open()">{{ t().open }}</button>
 
         <ng-template let-data>
-            <button color="contrast" kbq-button (click)="onAction(text().executeAndClose)">
+            <button color="contrast" kbq-button (click)="onAction(t().executeAndClose)">
                 <i kbq-icon="kbq-user_16"></i>
-                {{ text().executeAndClose }}
+                {{ t().executeAndClose }}
             </button>
         </ng-template>
     `,
@@ -42,7 +42,7 @@ import { ExampleText, TEXT } from './l10n';
     providers: [KbqActionsPanel],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsPanelCloseExample extends BaseLocalizedExample<ExampleText> {
+export class ActionsPanelCloseExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
@@ -50,7 +50,7 @@ export class ActionsPanelCloseExample extends BaseLocalizedExample<ExampleText> 
     private actionsPanelRef: KbqActionsPanelRef | null;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         afterNextRender(() => this.open());
     }
 
@@ -73,7 +73,7 @@ export class ActionsPanelCloseExample extends BaseLocalizedExample<ExampleText> 
     }
 
     protected onAction(action: string): void {
-        this.toast.show({ title: this.text().actionInitiated(action) });
+        this.toast.show({ title: this.t().actionInitiated(action) });
         this.actionsPanelRef?.close();
     }
 }

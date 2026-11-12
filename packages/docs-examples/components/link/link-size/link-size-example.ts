@@ -4,7 +4,7 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqLink } from '@koobiq/components/link';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Link size
@@ -21,7 +21,7 @@ import { ExampleText, TEXT } from './l10n';
 
         <div class="example-stage layout-row layout-align-center-center">
             <a kbqLink href="https://koobiq.io/en/components/link" target="_blank" [size]="size()">
-                {{ text().scanReport }}
+                {{ t().scanReport }}
             </a>
         </div>
     `,
@@ -33,10 +33,10 @@ import { ExampleText, TEXT } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: { class: 'layout-column layout-align-center-center' }
 })
-export class LinkSizeExample extends BaseLocalizedExample<ExampleText> {
+export class LinkSizeExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly size = model<KbqDefaultSizes>('normal');
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

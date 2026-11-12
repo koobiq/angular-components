@@ -5,7 +5,7 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs selectable text
@@ -76,15 +76,15 @@ import { ExampleText, TEXT } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BreadcrumbsSelectableTextExample extends BaseLocalizedExample<ExampleText> {
+export class BreadcrumbsSelectableTextExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly clipboard = inject(Clipboard, { optional: true });
 
     readonly breadcrumbs = computed(() => [
-        { label: this.text().informationSecurity, url: '/information-security' },
-        { label: this.text().accessControl, url: '/information-security/access-control' },
-        { label: this.text().authorization, url: '/information-security/access-control/authorization' },
+        { label: this.t().informationSecurity, url: '/information-security' },
+        { label: this.t().accessControl, url: '/information-security/access-control' },
+        { label: this.t().authorization, url: '/information-security/access-control/authorization' },
         { label: 'RBAC', url: '/information-security/access-control/authorization/rbac' },
-        { label: this.text().roles, url: '/information-security/access-control/authorization/rbac/roles' }
+        { label: this.t().roles, url: '/information-security/access-control/authorization/rbac/roles' }
     ]);
 
     protected copyToClipboard(event: MouseEvent, text: string): void {
@@ -94,6 +94,6 @@ export class BreadcrumbsSelectableTextExample extends BaseLocalizedExample<Examp
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

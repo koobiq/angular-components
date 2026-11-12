@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the scrollbar examples. */
-export interface ExampleText {
+export interface ExampleTranslation {
     scrollTop: string;
     scrollBottom: string;
     scrollStart: string;
@@ -10,7 +10,7 @@ export interface ExampleText {
     scrollIntoView: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         scrollTop: 'Наверх',
         scrollBottom: 'Вниз',

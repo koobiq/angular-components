@@ -4,7 +4,7 @@ import { KbqSkeletonTabs } from '@koobiq/components/skeleton';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton tabs preset
@@ -13,7 +13,7 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'skeleton-tabs-example',
     imports: [KbqSkeletonTabs, KbqToggleModule, FormsModule, KbqTabsModule],
     template: `
-        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         @if (loading()) {
             <kbq-skeleton-tabs contentLines="4" count="5" />
@@ -54,12 +54,12 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonTabsExample extends BaseLocalizedExample<ExampleText> {
+export class SkeletonTabsExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly loading = model(true);
 
-    protected readonly tabs = computed(() => this.text().tabs);
+    protected readonly tabs = computed(() => this.t().tabs);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

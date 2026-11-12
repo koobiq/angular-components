@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Select with panelWidth default
@@ -13,7 +13,7 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <kbq-form-field>
-            <kbq-select [placeholder]="text().placeholder" [(value)]="valueFirst">
+            <kbq-select [placeholder]="t().placeholder" [(value)]="valueFirst">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
@@ -21,7 +21,7 @@ import { ExampleText, TEXT } from './l10n';
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-select [placeholder]="text().placeholder" [(value)]="valueSecond">
+            <kbq-select [placeholder]="t().placeholder" [(value)]="valueSecond">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
@@ -44,7 +44,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-l layout-align-center-center layout-row layout-gap-l'
     }
 })
-export class SelectWithPanelWidthDefaultExample extends BaseLocalizedExample<ExampleText> {
+export class SelectWithPanelWidthDefaultExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly options = [
         'Use of Alternate Authentication Data',
         'Use of Command-Line Interpreters and Scripts',
@@ -57,6 +57,6 @@ export class SelectWithPanelWidthDefaultExample extends BaseLocalizedExample<Exa
     protected readonly valueSecond = model(this.options[1]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

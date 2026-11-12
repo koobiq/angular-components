@@ -10,7 +10,7 @@ import {
 } from '@koobiq/components/sidepanel';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type ExampleComponentData = {
     open: () => void;
@@ -20,25 +20,25 @@ type ExampleComponentData = {
     selector: 'example-sidepanel-component',
     imports: [KbqSidepanelModule, KbqButtonModule, KbqToggleModule, FormsModule],
     template: `
-        <kbq-sidepanel-header [closeable]="true">{{ text().header }}</kbq-sidepanel-header>
+        <kbq-sidepanel-header [closeable]="true">{{ t().header }}</kbq-sidepanel-header>
         <kbq-sidepanel-body>
-            <kbq-toggle [(ngModel)]="disableClose">{{ text().disableClose }}</kbq-toggle>
+            <kbq-toggle [(ngModel)]="disableClose">{{ t().disableClose }}</kbq-toggle>
         </kbq-sidepanel-body>
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
                 <button kbq-button color="contrast" (click)="open()">
-                    <span>{{ text().openAnother }}</span>
+                    <span>{{ t().openAnother }}</span>
                 </button>
 
                 <button kbq-button kbq-sidepanel-close>
-                    <span>{{ text().close }}</span>
+                    <span>{{ t().close }}</span>
                 </button>
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleSidepanelComponent extends BaseLocalizedExample<ExampleText> {
+export class ExampleSidepanelComponent extends BaseLocalizedExample<ExampleTranslation> {
     private readonly sidepanelRef = inject(KbqSidepanelRef);
     private readonly data: ExampleComponentData = inject(KBQ_SIDEPANEL_DATA);
 
@@ -46,7 +46,7 @@ export class ExampleSidepanelComponent extends BaseLocalizedExample<ExampleText>
     protected readonly open = this.data.open;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         toObservable(this.disableClose)
             .pipe(takeUntilDestroyed())
             .subscribe((value) => {
@@ -63,12 +63,12 @@ export class ExampleSidepanelComponent extends BaseLocalizedExample<ExampleText>
     imports: [FormsModule, KbqButtonModule],
     template: `
         <button kbq-button (click)="open()">
-            <span>{{ text().open }}</span>
+            <span>{{ t().open }}</span>
         </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelWithDynamicConfigUpdateExample extends BaseLocalizedExample<ExampleText> {
+export class SidepanelWithDynamicConfigUpdateExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly sidepanelService = inject(KbqSidepanelService);
 
     open() {
@@ -78,6 +78,6 @@ export class SidepanelWithDynamicConfigUpdateExample extends BaseLocalizedExampl
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

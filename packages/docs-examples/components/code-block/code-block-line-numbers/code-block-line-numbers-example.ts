@@ -7,7 +7,7 @@ import {
 } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Code-block with lineNumbers attribute
@@ -20,7 +20,7 @@ import { ExampleText, TEXT } from './l10n';
         FormsModule
     ],
     template: `
-        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="lineNumbers">{{ text().lineNumbers }}</kbq-toggle>
+        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="lineNumbers">{{ t().lineNumbers }}</kbq-toggle>
         <kbq-code-block canToggleSoftWrap [files]="files" [lineNumbers]="lineNumbers" />
     `,
     providers: [
@@ -32,7 +32,7 @@ import { ExampleText, TEXT } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CodeBlockLineNumbersExample extends BaseLocalizedExample<ExampleText> {
+export class CodeBlockLineNumbersExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly files: KbqCodeBlockFile[] = [
         {
             content: `function getVulnerabilities() {\n\treturn ['BruteForce', 'Complex Attack', 'DDoS', 'HIPS alert', 'IDS/IPS Alert', 'Zero-Day Exploit', 'XSS', 'Malware', 'Ransomware', 'Phishing'];\n};`,
@@ -43,6 +43,6 @@ export class CodeBlockLineNumbersExample extends BaseLocalizedExample<ExampleTex
     lineNumbers: boolean = true;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

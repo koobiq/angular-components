@@ -9,7 +9,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Dropdown open by arrow down
@@ -30,10 +30,10 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'dropdown-open-by-arrow-down-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownOpenByArrowDownExample extends BaseLocalizedExample<ExampleText> {
+export class DropdownOpenByArrowDownExample extends BaseLocalizedExample<ExampleTranslation> {
     openByArrowDown = true;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

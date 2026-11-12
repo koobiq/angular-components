@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title search-expandable-in-header
@@ -17,7 +17,7 @@ import { ExampleText, TEXT } from './l10n';
         <div class="example-search-expandable-in-header-example__panel">
             <div class="example-search-expandable-in-header-example__header">
                 <div class="example-search-expandable-in-header-example__name kbq-subheading">
-                    {{ text().panelTitle }}
+                    {{ t().panelTitle }}
                 </div>
                 <kbq-search-expandable [(ngModel)]="search" />
             </div>
@@ -65,10 +65,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SearchExpandableInHeaderExample extends BaseLocalizedExample<ExampleText> {
+export class SearchExpandableInHeaderExample extends BaseLocalizedExample<ExampleTranslation> {
     search: string = 'report';
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

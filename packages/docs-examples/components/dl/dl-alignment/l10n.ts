@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the dl-alignment example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     identifier: string;
     status: string;
     new: string;
@@ -13,7 +13,7 @@ export interface ExampleText {
     tagWorkstation: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         identifier: 'Идентификатор',
         status: 'Статус',

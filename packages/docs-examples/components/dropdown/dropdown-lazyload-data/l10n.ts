@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the dropdown-lazyload-data example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     someInfo: string;
     value: string;
     dropdownTrigger: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         someInfo: 'Информация',
         value: 'Значение:',

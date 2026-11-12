@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the sidebar-state-saving example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     openedContent: string;
     closedContent: string;
     toggle: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     stateSavingHint: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         openedContent: 'Содержимое (открыто)',
         closedContent: 'Содержимое (закрыто)',

@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the modal-multiple example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     saveChangesAria: string;
     saveChangesContent: string;
     save: string;
@@ -12,7 +12,7 @@ export interface ExampleText {
     ok: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         saveChangesAria: 'Сохранить изменения',
         saveChangesContent: 'Сохранить изменения?',

@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the autocomplete examples. */
-export interface ExampleText {
+export interface ExampleTranslation {
     incidentDescription: string;
     typePrefixes: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         incidentDescription: 'Описание инцидента',
         typePrefixes: 'Введите fire, thr или vul'

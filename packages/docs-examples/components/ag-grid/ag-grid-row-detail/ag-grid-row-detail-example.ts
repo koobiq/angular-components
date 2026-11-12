@@ -10,7 +10,7 @@ import {
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { BaseLocalizedExample, injectLocalizedText } from '@koobiq/docs-examples/i18n';
+import { BaseLocalizedExample, injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -23,7 +23,7 @@ import {
     RowSelectionOptions,
     SELECTION_COLUMN_ID
 } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -48,17 +48,17 @@ type ExampleRowData = {
     template: `
         <div class="example-row-detail-card">
             <kbq-dl>
-                <kbq-dt>{{ text().description }}</kbq-dt>
+                <kbq-dt>{{ t().description }}</kbq-dt>
                 <kbq-dd>{{ data.description }}</kbq-dd>
 
-                <kbq-dt>{{ text().affectedHost }}</kbq-dt>
+                <kbq-dt>{{ t().affectedHost }}</kbq-dt>
                 <kbq-dd>{{ data.host }}</kbq-dd>
 
-                <kbq-dt>{{ text().detectedBy }}</kbq-dt>
+                <kbq-dt>{{ t().detectedBy }}</kbq-dt>
                 <kbq-dd>{{ data.detector }}</kbq-dd>
             </kbq-dl>
 
-            <button kbq-button type="button" (click)="params.collapse()">{{ text().collapse }}</button>
+            <button kbq-button type="button" (click)="params.collapse()">{{ t().collapse }}</button>
         </div>
     `,
     styles: `
@@ -86,12 +86,12 @@ type ExampleRowData = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleRowDetailComponent extends BaseLocalizedExample<ExampleText> {
+export class ExampleRowDetailComponent extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly params = inject(KBQ_AG_GRID_ROW_DETAIL_PARAMS);
     protected readonly data = this.params.data as ExampleRowData;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -103,8 +103,8 @@ export class ExampleRowDetailComponent extends BaseLocalizedExample<ExampleText>
     imports: [AgGridModule, KbqAgGridThemeModule, FormsModule, KbqToggleModule],
     template: `
         <div class="example-row-detail-options">
-            <kbq-toggle [(ngModel)]="multipleExpand">{{ text().expandMultipleRows }}</kbq-toggle>
-            <kbq-toggle [(ngModel)]="filled">{{ text().fillExpandedRows }}</kbq-toggle>
+            <kbq-toggle [(ngModel)]="multipleExpand">{{ t().expandMultipleRows }}</kbq-toggle>
+            <kbq-toggle [(ngModel)]="filled">{{ t().fillExpandedRows }}</kbq-toggle>
         </div>
 
         <ag-grid-angular
@@ -147,8 +147,8 @@ export class ExampleRowDetailComponent extends BaseLocalizedExample<ExampleText>
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridRowDetailExample {
-    protected readonly text = injectLocalizedText(TEXT);
-    private readonly incidents = injectLocalizedText(TEXT);
+    protected readonly t = injectTranslation(TRANSLATIONS);
+    private readonly incidents = injectTranslation(TRANSLATIONS);
 
     protected readonly multipleExpand = signal(false);
     protected readonly filled = signal(false);
@@ -165,14 +165,14 @@ export class AgGridRowDetailExample {
 
     // Wider than the grid, so that scrolling it horizontally shows the expanded part staying in place.
     protected readonly columnDefs = computed<ColDef<ExampleRowData>[]>(() => [
-        { field: 'event', headerName: this.text().event, width: 200 },
-        { field: 'severity', headerName: this.text().severity, width: 110 },
-        { field: 'status', headerName: this.text().status, width: 120 },
-        { field: 'sourceIp', headerName: this.text().sourceIp, width: 140 },
-        { field: 'destinationIp', headerName: this.text().destinationIp, width: 140 },
-        { field: 'protocol', headerName: this.text().protocol, width: 110 },
-        { field: 'port', headerName: this.text().port, width: 90 },
-        { field: 'technique', headerName: this.text().mitreTechnique, width: 150 }
+        { field: 'event', headerName: this.t().event, width: 200 },
+        { field: 'severity', headerName: this.t().severity, width: 110 },
+        { field: 'status', headerName: this.t().status, width: 120 },
+        { field: 'sourceIp', headerName: this.t().sourceIp, width: 140 },
+        { field: 'destinationIp', headerName: this.t().destinationIp, width: 140 },
+        { field: 'protocol', headerName: this.t().protocol, width: 110 },
+        { field: 'port', headerName: this.t().port, width: 90 },
+        { field: 'technique', headerName: this.t().mitreTechnique, width: 150 }
     ]);
 
     protected readonly rowData = computed<ExampleRowData[]>(() => this.incidents().incidents);

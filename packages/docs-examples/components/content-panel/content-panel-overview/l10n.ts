@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the content-panel-overview example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     toggle: string;
     open: string;
     close: string;
@@ -11,7 +11,7 @@ export interface ExampleText {
     dosText: (index: number) => string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         toggle: 'Переключить',
         open: 'Открыть',

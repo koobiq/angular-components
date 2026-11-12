@@ -7,7 +7,7 @@ import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title File upload multiple mixed validation example
@@ -38,7 +38,7 @@ import { ExampleText, TEXT } from './l10n';
                 </ng-template>
 
                 @if (kbqFileUpload.invalid && formMultiple.controls.fileUpload.hasError('required')) {
-                    <kbq-hint color="error">{{ text().fileRequired }}</kbq-hint>
+                    <kbq-hint color="error">{{ t().fileRequired }}</kbq-hint>
                 }
 
                 @for (control of fileList.controls; track $index) {
@@ -49,18 +49,18 @@ import { ExampleText, TEXT } from './l10n';
                     </kbq-hint>
                 }
 
-                <kbq-hint>{{ text().filesTxtAllowed }}</kbq-hint>
+                <kbq-hint>{{ t().filesTxtAllowed }}</kbq-hint>
             </kbq-file-upload>
             <button class="layout-margin-top-m" kbq-button type="submit">Submit</button>
         </form>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadMultipleMixedValidationExample extends BaseLocalizedExample<ExampleText> {
+export class FileUploadMultipleMixedValidationExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly customErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
     protected readonly accept: KbqFileTypeSpecifier = ['.txt'];
     protected get fileExtensionMismatchErrorMessage(): string {
-        return this.text().provideValidExtension;
+        return this.t().provideValidExtension;
     }
     protected readonly cdr = inject(ChangeDetectorRef);
 
@@ -74,7 +74,7 @@ export class FileUploadMultipleMixedValidationExample extends BaseLocalizedExamp
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.fileList.statusChanges.pipe(takeUntilDestroyed()).subscribe(() => {
             this.fileList.controls.forEach((control) => {
                 if (control?.value && 'hasError' in control.value) {

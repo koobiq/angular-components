@@ -4,7 +4,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title split-button-progress-state
@@ -19,28 +19,28 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <div>
-            <div class="example-split-button-styles__header">{{ text().primaryProgress }}</div>
+            <div class="example-split-button-styles__header">{{ t().primaryProgress }}</div>
             <kbq-split-button>
                 <button kbq-button [class.kbq-progress]="true">
                     <i kbq-icon="kbq-plus_16"></i>
-                    {{ text().splitButton }}
+                    {{ t().splitButton }}
                 </button>
-                <button kbq-button [attr.aria-label]="text().moreOptions" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
         </div>
 
         <div>
-            <div class="example-split-button-styles__header">{{ text().secondaryProgress }}</div>
+            <div class="example-split-button-styles__header">{{ t().secondaryProgress }}</div>
             <kbq-split-button>
                 <button kbq-button>
                     <i kbq-icon="kbq-plus_16"></i>
-                    {{ text().splitButton }}
+                    {{ t().splitButton }}
                 </button>
                 <button
                     kbq-button
-                    [attr.aria-label]="text().moreOptions"
+                    [attr.aria-label]="t().moreOptions"
                     [class.kbq-progress]="true"
                     [kbqDropdownTriggerFor]="dropdown"
                 >
@@ -50,15 +50,15 @@ import { ExampleText, TEXT } from './l10n';
         </div>
 
         <div>
-            <div class="example-split-button-styles__header">{{ text().completelyProgress }}</div>
+            <div class="example-split-button-styles__header">{{ t().completelyProgress }}</div>
             <kbq-split-button>
                 <button kbq-button [class.kbq-progress]="true">
                     <i kbq-icon="kbq-plus_16"></i>
-                    {{ text().splitButton }}
+                    {{ t().splitButton }}
                 </button>
                 <button
                     kbq-button
-                    [attr.aria-label]="text().moreOptions"
+                    [attr.aria-label]="t().moreOptions"
                     [kbqDropdownTriggerFor]="dropdown"
                     [class.kbq-progress]="true"
                 >
@@ -91,8 +91,8 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitButtonProgressStateExample extends BaseLocalizedExample<ExampleText> {
+export class SplitButtonProgressStateExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

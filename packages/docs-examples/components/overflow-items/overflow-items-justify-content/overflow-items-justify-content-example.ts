@@ -4,7 +4,7 @@ import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Overflow items justify content
@@ -28,7 +28,7 @@ import { ExampleText, TEXT } from './l10n';
                 </kbq-badge>
             }
             <div class="layout-margin-right-xs" kbqOverflowItemsResult>
-                {{ text().andMore(kbqOverflowItems.hiddenItemIDs().size) }}
+                {{ t().andMore(kbqOverflowItems.hiddenItemIDs().size) }}
             </div>
         </div>
     `,
@@ -61,12 +61,12 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverflowItemsJustifyContentExample extends BaseLocalizedExample<ExampleText> {
+export class OverflowItemsJustifyContentExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly items = Array.from({ length: 7 }, (_, i) => `Item${i}`);
     readonly justifyContentOptions = ['center', 'start', 'end', 'space-between', 'space-around'] as const;
     readonly justifyContent = model(this.justifyContentOptions[0]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

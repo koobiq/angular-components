@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Select locale configuration
@@ -12,8 +12,8 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-label>{{ text().defaultStrings }}</kbq-label>
-            <kbq-select multiple selectAll [placeholder]="text().placeholder" [value]="selected">
+            <kbq-label>{{ t().defaultStrings }}</kbq-label>
+            <kbq-select multiple selectAll [placeholder]="t().placeholder" [value]="selected">
                 @for (option of options(); track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
@@ -21,13 +21,13 @@ import { ExampleText, TEXT } from './l10n';
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-label>{{ text().overriddenInstance }}</kbq-label>
+            <kbq-label>{{ t().overriddenInstance }}</kbq-label>
             <!-- Keyed by locale section, so one binding also reaches the accessible name of the cleaner
                  projected into the select. Every string it does not mention keeps following the locale. -->
             <kbq-select
                 multiple
                 selectAll
-                [placeholder]="text().placeholder"
+                [placeholder]="t().placeholder"
                 [value]="selected"
                 [localeOverrides]="{
                     select: { selectAll: 'Take everything' },
@@ -55,11 +55,11 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectLocaleConfigurationExample extends BaseLocalizedExample<ExampleText> {
+export class SelectLocaleConfigurationExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly options = computed(() => Array.from({ length: 4 }, (_, i) => 'Option #' + (i + 1)));
     readonly selected = [this.options[0]];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

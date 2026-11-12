@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the onpaste-off example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     createTag: string;
     notFound: string;
     newTag: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         createTag: 'Создать: ',
         notFound: 'Ничего не найдено',

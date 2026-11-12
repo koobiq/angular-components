@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the breadcrumbs-with-auto-wrap-adaptive example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     main: string;
     standards: string;
     aes: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     test: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         main: 'Главная',
         standards: 'Стандарты',

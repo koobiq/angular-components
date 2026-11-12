@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Select with multiline matcher
@@ -14,7 +14,7 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <div>
             <kbq-form-field>
-                <kbq-select [placeholder]="text().placeholder" [multiline]="true" [value]="selected" [panelWidth]="400">
+                <kbq-select [placeholder]="t().placeholder" [multiline]="true" [value]="selected" [panelWidth]="400">
                     @for (option of options(); track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
@@ -42,11 +42,11 @@ import { ExampleText, TEXT } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectWithMultilineMatcherExample extends BaseLocalizedExample<ExampleText> {
+export class SelectWithMultilineMatcherExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + i));
     selected: string[] = [this.options()[0], this.options()[1], this.options()[2], this.options()[3]];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

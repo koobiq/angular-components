@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Popover common
@@ -13,16 +13,16 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqPopoverModule, KbqButtonModule, KbqInputModule],
     template: `
         <ng-template #customContent>
-            <div class="layout-margin-bottom-s">{{ text().wonder }}</div>
+            <div class="layout-margin-bottom-s">{{ t().wonder }}</div>
             <kbq-form-field>
-                <input kbqInput [placeholder]="text().placeholder" />
+                <input kbqInput [placeholder]="t().placeholder" />
             </kbq-form-field>
         </ng-template>
 
         <ng-template #customFooter>
             <div class="layout-row layout-wrap" style="gap: 16px">
-                <button kbq-button [color]="'contrast'" (click)="kbqPopover.hide(0)">{{ text().save }}</button>
-                <button kbq-button (click)="kbqPopover.hide(0)">{{ text().cancel }}</button>
+                <button kbq-button [color]="'contrast'" (click)="kbqPopover.hide(0)">{{ t().save }}</button>
+                <button kbq-button (click)="kbqPopover.hide(0)">{{ t().cancel }}</button>
             </div>
         </ng-template>
 
@@ -34,7 +34,7 @@ import { ExampleText, TEXT } from './l10n';
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
         >
-            {{ text().open }}
+            {{ t().open }}
         </button>
     `,
     styles: `
@@ -47,8 +47,8 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-row layout-align-center'
     }
 })
-export class PopoverOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class PopoverOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

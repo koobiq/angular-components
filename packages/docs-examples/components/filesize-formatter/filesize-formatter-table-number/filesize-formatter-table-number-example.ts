@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_LOCALE_SERVICE, KbqDataSizePipe, KbqDecimalPipe, KbqTableNumberPipe } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Filesize formatter Table Number
@@ -18,8 +18,8 @@ import { ExampleText, TEXT } from './l10n';
         <table kbq-table>
             <thead>
                 <tr>
-                    <th>{{ text().file }}</th>
-                    <th>{{ text().size }}</th>
+                    <th>{{ t().file }}</th>
+                    <th>{{ t().size }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,12 +45,12 @@ import { ExampleText, TEXT } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilesizeFormatterTableNumberExample extends BaseLocalizedExample<ExampleText> {
+export class FilesizeFormatterTableNumberExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     protected readonly cdr = inject(ChangeDetectorRef);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(() => this.cdr.markForCheck());
     }
 }

@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Basic Toast
@@ -16,29 +16,29 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <ng-template #toastAction let-toast>
-            <a kbqLink pseudo (click)="toast.close()">{{ text().refresh }}</a>
+            <a kbqLink pseudo (click)="toast.close()">{{ t().refresh }}</a>
         </ng-template>
 
         <div class="demo-block">
-            <button class="example-button" kbq-button (click)="showToast(toastAction)">{{ text().showToast }}</button>
+            <button class="example-button" kbq-button (click)="showToast(toastAction)">{{ t().showToast }}</button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class ToastOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly toastService = inject(KbqToastService);
 
     showToast(actions: TemplateRef<any>) {
         this.toastService.show({
             style: KbqToastStyle.Success,
-            title: this.text().agentUpdateAvailable,
-            caption: this.text().version20315,
+            title: this.t().agentUpdateAvailable,
+            caption: this.t().version20315,
             actions,
             closeButton: true
         });
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

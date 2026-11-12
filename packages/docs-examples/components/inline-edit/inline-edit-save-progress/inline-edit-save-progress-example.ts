@@ -6,7 +6,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { Observable, timer } from 'rxjs';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit save progress
@@ -32,7 +32,7 @@ import { ExampleText, TEXT } from './l10n';
         </div>
 
         <kbq-inline-edit showActions [saveHandler]="save">
-            <kbq-label>{{ text().name }}</kbq-label>
+            <kbq-label>{{ t().name }}</kbq-label>
 
             <!-- View mode renders the control itself: editing closes before the server answers. -->
             <div class="example-inline-text" kbqInlineEditViewMode>
@@ -48,7 +48,7 @@ import { ExampleText, TEXT } from './l10n';
         </kbq-inline-edit>
 
         <kbq-inline-edit [saveHandler]="save">
-            <kbq-label>{{ text().description }}</kbq-label>
+            <kbq-label>{{ t().description }}</kbq-label>
 
             <div class="example-inline-text" kbqInlineEditViewMode>
                 @if (descriptionControl.value) {
@@ -79,9 +79,9 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-flex layout-column'
     }
 })
-export class InlineEditSaveProgressExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditSaveProgressExample extends BaseLocalizedExample<ExampleTranslation> {
     protected get placeholder(): string {
-        return this.text().placeholder;
+        return this.t().placeholder;
     }
     protected readonly delayOptions = [100, 250, 500, 3000];
     protected readonly delay = signal(500);
@@ -97,6 +97,6 @@ export class InlineEditSaveProgressExample extends BaseLocalizedExample<ExampleT
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

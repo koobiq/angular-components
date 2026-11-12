@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the popover-height example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     save: string;
     cancel: string;
     withoutScroll: string;
@@ -11,7 +11,7 @@ export interface ExampleText {
     metadataHint: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         save: 'Сохранить',
         cancel: 'Отмена',

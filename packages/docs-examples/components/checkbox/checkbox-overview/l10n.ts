@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the checkbox-overview example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     default: string;
     checked: string;
     unchecked: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         default: 'По умолчанию',
         checked: 'Отмечен',

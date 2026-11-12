@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/c
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Draggable list
@@ -16,7 +16,7 @@ import { ExampleText, TEXT } from './l10n';
             @for (item of beforeGroup(); track item.id) {
                 <kbq-list-option [value]="item">{{ itemName(item) }}</kbq-list-option>
             }
-            <kbq-optgroup [label]="text().groupHeader">
+            <kbq-optgroup [label]="t().groupHeader">
                 @for (item of grouped(); track item.id) {
                     <kbq-list-option [value]="item">{{ itemName(item) }}</kbq-list-option>
                 }
@@ -30,7 +30,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListDraggableExample extends BaseLocalizedExample<ExampleText> {
+export class ListDraggableExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly items = signal([
         { id: 1, name: 'Item 1' },
         { id: 2, name: 'Item 2' },
@@ -42,7 +42,7 @@ export class ListDraggableExample extends BaseLocalizedExample<ExampleText> {
     ]);
 
     protected itemName(item: { id: number }): string {
-        return item.id === 7 ? this.text().item7Pinned : 'Item ' + item.id;
+        return item.id === 7 ? this.t().item7Pinned : 'Item ' + item.id;
     }
 
     // The group and the divider sit at fixed positions, so the sections are plain slices and the indices
@@ -60,6 +60,6 @@ export class ListDraggableExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

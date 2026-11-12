@@ -21,7 +21,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
 import { injectLocalizedPeriods } from '../localized-periods';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
 const createSearchPipe = (name: string): KbqPipe => ({
@@ -106,7 +106,7 @@ const createNumberedPipes = (): KbqPipe[] => [
     providers: [DateFormatter],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterBarCompleteFunctionsExample extends BaseLocalizedExample<ExampleText> {
+export class FilterBarCompleteFunctionsExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly adapter = inject(DateAdapter<DateTime>);
 
     /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
@@ -228,7 +228,7 @@ export class FilterBarCompleteFunctionsExample extends BaseLocalizedExample<Exam
     onChangeFilter(filter: KbqFilter | null) {
         console.log('filter to change: ', filter);
 
-        alert(this.text().changeAlert);
+        alert(this.t().changeAlert);
 
         filter!.changed = true;
         this.activeFilter.set(filter);
@@ -237,7 +237,7 @@ export class FilterBarCompleteFunctionsExample extends BaseLocalizedExample<Exam
     onResetFilter(filter: KbqFilter | null) {
         console.log('filter to reset: ', filter);
 
-        alert(this.text().resetAlert);
+        alert(this.t().resetAlert);
 
         filter!.changed = false;
         this.activeFilter.set(filter);
@@ -246,7 +246,7 @@ export class FilterBarCompleteFunctionsExample extends BaseLocalizedExample<Exam
     onDeleteFilter(filter: KbqFilter | null) {
         console.log('filter to delete: ', filter);
 
-        alert(this.text().deleteAlert);
+        alert(this.t().deleteAlert);
 
         this.filters.update((filters) => filters.filter(({ name }) => name !== filter?.name));
 
@@ -254,7 +254,7 @@ export class FilterBarCompleteFunctionsExample extends BaseLocalizedExample<Exam
     }
 
     createFilters(): KbqFilter[] {
-        const { search, undefinedOption, legitimateAction } = this.text();
+        const { search, undefinedOption, legitimateAction } = this.t();
         // A factory, not a shared object: the pipes below would otherwise alias one value across two
         // filters, which a save/restore round-trip silently un-shares.
         const undefinedValue = () => ({ name: undefinedOption, id: '1' });
@@ -596,6 +596,6 @@ export class FilterBarCompleteFunctionsExample extends BaseLocalizedExample<Exam
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -8,7 +8,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, GetRowIdParams, ModuleRegistry } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -19,7 +19,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     selector: 'ag-grid-row-focus-state-example',
     imports: [AgGridModule, KbqAgGridThemeModule, KbqButtonModule],
     template: `
-        <button type="button" kbq-button (click)="rowFocusState.reset()">{{ text().resetFocusState }}</button>
+        <button type="button" kbq-button (click)="rowFocusState.reset()">{{ t().resetFocusState }}</button>
 
         <ag-grid-angular
             #rowFocusState="kbqAgGridRowFocusState"
@@ -46,7 +46,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridRowFocusStateExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridRowFocusStateExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly getRowId = (params: GetRowIdParams): string => params.data.column0;
     protected readonly columnDefs = computed<ColDef[]>(() =>
         Array.from({ length: 5 }, (_, i) => ({
@@ -62,6 +62,6 @@ export class AgGridRowFocusStateExample extends BaseLocalizedExample<ExampleText
     );
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

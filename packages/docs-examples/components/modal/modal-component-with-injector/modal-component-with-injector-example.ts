@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, Injectable, Injector } from
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 @Injectable()
 export class ComponentLevelService {
@@ -18,19 +18,19 @@ export class ComponentLevelService {
         KbqButtonModule
     ],
     template: `
-        <kbq-modal-title>{{ text().title }}</kbq-modal-title>
-        <kbq-modal-body>{{ text().subtitle }}</kbq-modal-body>
+        <kbq-modal-title>{{ t().title }}</kbq-modal-title>
+        <kbq-modal-body>{{ t().subtitle }}</kbq-modal-body>
 
         <div kbq-modal-footer>
             <button kbq-button [color]="'contrast'" (click)="customService.action()">
                 Call method from injected service
             </button>
-            <button kbq-button autofocus (click)="destroyModal('close')">{{ text().close }}</button>
+            <button kbq-button autofocus (click)="destroyModal('close')">{{ t().close }}</button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomModalComponent extends BaseLocalizedExample<ExampleText> {
+export class CustomModalComponent extends BaseLocalizedExample<ExampleTranslation> {
     private readonly modalRef = inject(KbqModalRef);
     protected readonly customService = inject(ComponentLevelService);
 
@@ -39,7 +39,7 @@ export class CustomModalComponent extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -50,12 +50,12 @@ export class CustomModalComponent extends BaseLocalizedExample<ExampleText> {
     selector: 'modal-component-with-injector-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="openModal()">{{ text().openModal }}</button>
+        <button kbq-button (click)="openModal()">{{ t().openModal }}</button>
     `,
     providers: [ComponentLevelService],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalComponentWithInjectorExample extends BaseLocalizedExample<ExampleText> {
+export class ModalComponentWithInjectorExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly modalService = inject(KbqModalService);
     private readonly injector = inject(Injector);
 
@@ -78,6 +78,6 @@ export class ModalComponentWithInjectorExample extends BaseLocalizedExample<Exam
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

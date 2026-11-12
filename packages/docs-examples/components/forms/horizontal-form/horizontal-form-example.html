@@ -1,40 +1,40 @@
 <div class="kbq-text-big">
     <form novalidate class="kbq-form-horizontal">
         <div class="kbq-form__row">
-            <label class="kbq-form__label flex-20">{{ text().fieldLabel }}</label>
+            <label class="kbq-form__label flex-20">{{ t().fieldLabel }}</label>
             <kbq-form-field class="kbq-form__control flex-80">
                 <input kbqInput name="input" [(ngModel)]="value" />
 
-                <kbq-hint>{{ text().hintUnderField }}</kbq-hint>
+                <kbq-hint>{{ t().hintUnderField }}</kbq-hint>
             </kbq-form-field>
         </div>
 
         <div class="kbq-form__row">
-            <label class="kbq-form__label flex-20">{{ text().commonLabel }}</label>
+            <label class="kbq-form__label flex-20">{{ t().commonLabel }}</label>
             <kbq-form-field class="kbq-form__control flex-50">
                 <input kbqInput name="input" [(ngModel)]="value" />
 
-                <kbq-hint>{{ text().hintUnderField }}</kbq-hint>
+                <kbq-hint>{{ t().hintUnderField }}</kbq-hint>
             </kbq-form-field>
             <kbq-form-field class="kbq-form__control flex-30">
                 <input kbqInput name="input" [(ngModel)]="value" />
 
-                <kbq-hint>{{ text().hintUnderField }}</kbq-hint>
+                <kbq-hint>{{ t().hintUnderField }}</kbq-hint>
             </kbq-form-field>
         </div>
 
         <div class="kbq-form__row">
-            <label class="kbq-form__label flex-20">{{ text().exfiltration }}</label>
+            <label class="kbq-form__label flex-20">{{ t().exfiltration }}</label>
             <kbq-form-field class="kbq-form__control flex-80">
                 <input kbqInput name="input" [(ngModel)]="value" />
             </kbq-form-field>
         </div>
 
         <div class="kbq-form__fieldset">
-            <div class="kbq-form__legend">{{ text().lateralMovement }}</div>
+            <div class="kbq-form__legend">{{ t().lateralMovement }}</div>
 
             <div class="kbq-form__row">
-                <label class="kbq-form__label flex-20">{{ text().execution }}</label>
+                <label class="kbq-form__label flex-20">{{ t().execution }}</label>
                 <kbq-form-field class="kbq-form__control flex-80">
                     <input kbqInput name="input" [(ngModel)]="value" />
                 </kbq-form-field>
@@ -42,12 +42,12 @@
 
             <div class="kbq-form__row">
                 <label class="kbq-form__label flex-20">
-                    {{ text().longLabel }}
+                    {{ t().longLabel }}
                 </label>
                 <kbq-form-field class="kbq-form__control">
                     <input kbqInput name="input" [(ngModel)]="value" />
 
-                    <kbq-hint style="white-space: nowrap">{{ text().hintUnderField }}</kbq-hint>
+                    <kbq-hint style="white-space: nowrap">{{ t().hintUnderField }}</kbq-hint>
                 </kbq-form-field>
             </div>
         </div>

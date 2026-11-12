@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the popover-width example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     paragraph: string;
     secondParagraph: string;
     customWidth: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         paragraph:
             'В Windows есть вещи, известные как системные переменные. Это переменные, от которых зависит функционирование Windows, потому что Windows всегда будет знать, что означают переменные и где они находятся, даже когда мы перемещаем биты и байты повсюду. Системная переменная MAX_PATH — это та, которая ограничивает имена файлов и пути к файлам до 260 символов.',

@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Scrollbar with virtual scroll
@@ -12,7 +12,7 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'scrollbar-virtual-scroll-example',
     imports: [KbqScrollbarViewport, ScrollingModule, KbqButtonModule],
     template: `
-        <button kbq-button (click)="addItems()">{{ text().addItems }}</button>
+        <button kbq-button (click)="addItems()">{{ t().addItems }}</button>
 
         <cdk-virtual-scroll-viewport kbqScrollbarViewport class="example-scrollbar" itemSize="32">
             <div *cdkVirtualFor="let item of items()" class="example-item">{{ item }}</div>
@@ -42,7 +42,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScrollbarVirtualScrollExample extends BaseLocalizedExample<ExampleText> {
+export class ScrollbarVirtualScrollExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly items = signal(Array.from({ length: 100 }).map((_, i) => `Item #${i}`));
 
     protected addItems(): void {
@@ -53,6 +53,6 @@ export class ScrollbarVirtualScrollExample extends BaseLocalizedExample<ExampleT
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

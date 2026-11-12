@@ -4,7 +4,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /** @title Form field with kbq-hint */
 @Component({
@@ -12,19 +12,19 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
-            <kbq-label>{{ text().articleTitle }}</kbq-label>
-            <input kbqInput [placeholder]="text().articleTitle" [formControl]="formControl" [maxlength]="maxLength" />
-            <kbq-hint>{{ text().maxChars(maxLength, count()) }}</kbq-hint>
+            <kbq-label>{{ t().articleTitle }}</kbq-label>
+            <input kbqInput [placeholder]="t().articleTitle" [formControl]="formControl" [maxlength]="maxLength" />
+            <kbq-hint>{{ t().maxChars(maxLength, count()) }}</kbq-hint>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldWithHintExample extends BaseLocalizedExample<ExampleText> {
+export class FormFieldWithHintExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly formControl = new FormControl();
     readonly maxLength = 25;
     readonly count = toSignal(this.formControl.valueChanges.pipe(map((v) => v.length)), { initialValue: 0 });
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

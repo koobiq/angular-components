@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the autocomplete-with-footer example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     label: string;
     withFooterHint: string;
     link: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         label: 'Метка',
         withFooterHint: 'Автодополнение с футером',

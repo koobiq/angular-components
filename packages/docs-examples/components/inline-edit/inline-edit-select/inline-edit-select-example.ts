@@ -6,7 +6,7 @@ import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqUserInfo, KbqUsername } from '@koobiq/components/username';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 const USERS: KbqUserInfo[] = [
     {
@@ -37,7 +37,7 @@ const USERS: KbqUserInfo[] = [
     template: `
         <div style="width: 250px">
             <kbq-inline-edit #inlineEdit="kbqInlineEdit">
-                <kbq-label>{{ text().assignee }}</kbq-label>
+                <kbq-label>{{ t().assignee }}</kbq-label>
 
                 <div kbqInlineEditViewMode class="example-inline-select__view">
                     @if (control.value) {
@@ -79,7 +79,7 @@ const USERS: KbqUserInfo[] = [
         class: 'layout-column layout-align-center-center'
     }
 })
-export class InlineEditSelectExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditSelectExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly notSetLabel = 'Not specified';
 
     protected readonly users = USERS;
@@ -87,6 +87,6 @@ export class InlineEditSelectExample extends BaseLocalizedExample<ExampleText> {
     protected readonly control = new FormControl<KbqUserInfo | null>(this.users[0]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

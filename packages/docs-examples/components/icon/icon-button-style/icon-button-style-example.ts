@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Icon-button style
@@ -21,7 +21,7 @@ import { ExampleText, TEXT } from './l10n';
                 <i
                     kbq-icon-button="kbq-magnifying-glass_16"
                     size="compact"
-                    [attr.aria-label]="text().search"
+                    [attr.aria-label]="t().search"
                     [color]="color"
                 ></i>
             </div>
@@ -50,7 +50,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-row layout-align-left-center layout-gap-3xl'
     }
 })
-export class IconButtonStyleExample extends BaseLocalizedExample<ExampleText> {
+export class IconButtonStyleExample extends BaseLocalizedExample<ExampleTranslation> {
     colors = [
         KbqComponentColors.Theme,
         KbqComponentColors.Contrast,
@@ -61,6 +61,6 @@ export class IconButtonStyleExample extends BaseLocalizedExample<ExampleText> {
     ];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

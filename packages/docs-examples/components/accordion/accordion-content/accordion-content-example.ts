@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Accordion content
@@ -14,10 +14,10 @@ import { ExampleText, TEXT } from './l10n';
     styleUrls: ['accordion-content-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccordionContentExample extends BaseLocalizedExample<ExampleText> {
+export class AccordionContentExample extends BaseLocalizedExample<ExampleTranslation> {
     image: boolean = false;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

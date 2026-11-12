@@ -3,7 +3,7 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqTableModule } from '@koobiq/components/table';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Badge table
@@ -18,10 +18,10 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'badge-table-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BadgeTableExample extends BaseLocalizedExample<ExampleText> {
+export class BadgeTableExample extends BaseLocalizedExample<ExampleTranslation> {
     colors = KbqBadgeColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

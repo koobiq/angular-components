@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Checkbox indeterminate
@@ -11,7 +11,7 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqCheckboxModule],
     template: `
         <kbq-checkbox [checked]="allSelected()" [indeterminate]="someSelected()" (change)="toggleAll()">
-            {{ text().allEventTypes }}
+            {{ t().allEventTypes }}
         </kbq-checkbox>
 
         @for (eventType of eventTypes(); track eventType) {
@@ -35,8 +35,8 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-column layout-align-start-start'
     }
 })
-export class CheckboxIndeterminateExample extends BaseLocalizedExample<ExampleText> {
-    protected readonly eventTypes = computed(() => this.text().eventTypes);
+export class CheckboxIndeterminateExample extends BaseLocalizedExample<ExampleTranslation> {
+    protected readonly eventTypes = computed(() => this.t().eventTypes);
     protected readonly selected = signal(new Set([this.eventTypes()[0]]));
 
     protected readonly allSelected = computed(() => this.selected().size === this.eventTypes().length);
@@ -59,6 +59,6 @@ export class CheckboxIndeterminateExample extends BaseLocalizedExample<ExampleTe
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

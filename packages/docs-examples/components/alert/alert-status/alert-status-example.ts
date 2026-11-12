@@ -3,7 +3,7 @@ import { KbqAlert, KbqAlertColors, KbqAlertStyles, KbqAlertTitle } from '@koobiq
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Alert status
@@ -19,12 +19,12 @@ import { ExampleText, TEXT } from './l10n';
     styleUrls: ['alert-status-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AlertStatusExample extends BaseLocalizedExample<ExampleText> {
+export class AlertStatusExample extends BaseLocalizedExample<ExampleTranslation> {
     colors = KbqComponentColors;
     alertStyles = KbqAlertStyles;
     alertColors = KbqAlertColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

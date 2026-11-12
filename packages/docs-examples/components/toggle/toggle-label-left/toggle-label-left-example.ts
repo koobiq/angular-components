@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Toggle Label Left
@@ -11,9 +11,9 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqToggleModule],
     template: `
         <div class="example-toggle-label-left__container layout-align-center-start layout-column layout-gap-s">
-            <kbq-toggle labelPosition="left" [checked]="true">{{ text().tapToWake }}</kbq-toggle>
-            <kbq-toggle labelPosition="left">{{ text().shakeToUndo }}</kbq-toggle>
-            <kbq-toggle labelPosition="left">{{ text().vibration }}</kbq-toggle>
+            <kbq-toggle labelPosition="left" [checked]="true">{{ t().tapToWake }}</kbq-toggle>
+            <kbq-toggle labelPosition="left">{{ t().shakeToUndo }}</kbq-toggle>
+            <kbq-toggle labelPosition="left">{{ t().vibration }}</kbq-toggle>
         </div>
     `,
     styles: `
@@ -26,8 +26,8 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-align-center-center layout-row layout-gap-s layout-margin-top-xxl'
     }
 })
-export class ToggleLabelLeftExample extends BaseLocalizedExample<ExampleText> {
+export class ToggleLabelLeftExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Tooltip arrow
@@ -14,18 +14,18 @@ import { ExampleText, TEXT } from './l10n';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button [kbqTooltip]="text().tooltipWithoutArrow">{{ text().noArrow }}</button>
-        <button kbq-button kbqPlacement="bottomRight" [kbqTooltip]="text().tooltipWithArrow" [kbqTooltipArrow]="true">
-            {{ text().withArrow }}
+        <button kbq-button [kbqTooltip]="t().tooltipWithoutArrow">{{ t().noArrow }}</button>
+        <button kbq-button kbqPlacement="bottomRight" [kbqTooltip]="t().tooltipWithArrow" [kbqTooltipArrow]="true">
+            {{ t().withArrow }}
         </button>
         <button
             kbq-button
             kbqPlacement="bottomRight"
-            [kbqTooltip]="text().tooltipWithCenteredArrow"
+            [kbqTooltip]="t().tooltipWithCenteredArrow"
             [kbqTooltipArrow]="true"
             [kbqTooltipArrowCentered]="true"
         >
-            {{ text().centeredArrow }}
+            {{ t().centeredArrow }}
         </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,8 +33,8 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
     }
 })
-export class TooltipArrowExample extends BaseLocalizedExample<ExampleText> {
+export class TooltipArrowExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

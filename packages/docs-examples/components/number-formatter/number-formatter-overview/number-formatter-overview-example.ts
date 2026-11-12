@@ -11,7 +11,7 @@ import { KbqTableModule } from '@koobiq/components/table';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Number-formatter
@@ -27,7 +27,7 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <kbq-form-field style="margin-bottom: 16px; max-width: 200px">
-            <input kbqNormalizeWhitespace kbqNumberInput [placeholder]="text().number" [(ngModel)]="value" />
+            <input kbqNormalizeWhitespace kbqNumberInput [placeholder]="t().number" [(ngModel)]="value" />
         </kbq-form-field>
 
         <table kbq-table disableHover>
@@ -51,7 +51,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NumberFormatterOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class NumberFormatterOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     protected localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
     protected changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -59,7 +59,7 @@ export class NumberFormatterOverviewExample extends BaseLocalizedExample<Example
     protected readonly digitsInfoList = ['', '5.5-5', '4.5-5', '4.0-2', '4.0-2-false', '4.0-0'];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.localeService.changes
             .pipe(distinctUntilChanged(), delay(0))
             .subscribe(() => this.changeDetectorRef.markForCheck());

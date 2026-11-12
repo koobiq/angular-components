@@ -14,7 +14,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Filesize formatter
@@ -35,7 +35,7 @@ import { ExampleText, TEXT } from './l10n';
         <form class="kbq-form-vertical" novalidate>
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label">{{ text().sizeInBits }}</label>
+                    <label class="kbq-form__label">{{ t().sizeInBits }}</label>
                     <kbq-form-field class="kbq-form__control">
                         <input kbqNumberInput kbqNormalizeWhitespace [min]="0" [formControl]="bytesControl" />
                         <kbq-stepper />
@@ -43,10 +43,10 @@ import { ExampleText, TEXT } from './l10n';
                 </div>
 
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label">{{ text().numbersBehindDecimalPoint }}</label>
+                    <label class="kbq-form__label">{{ t().numbersBehindDecimalPoint }}</label>
                     <kbq-form-field class="kbq-form__control">
                         <kbq-select [formControl]="precisionControl">
-                            <kbq-option [value]="2">{{ text().default2 }}</kbq-option>
+                            <kbq-option [value]="2">{{ t().default2 }}</kbq-option>
                             <kbq-option [value]="0">0</kbq-option>
                             <kbq-option [value]="1">1</kbq-option>
                             <kbq-option [value]="2">2</kbq-option>
@@ -57,7 +57,7 @@ import { ExampleText, TEXT } from './l10n';
 
                 <div class="kbq-form__row">
                     <label class="kbq-form__label">
-                        {{ text().base }}
+                        {{ t().base }}
                         <i
                             kbq-icon="kbq-circle-question_16"
                             [color]="'contrast-fade'"
@@ -68,7 +68,7 @@ import { ExampleText, TEXT } from './l10n';
                     </label>
                     <kbq-form-field class="kbq-form__control">
                         <kbq-select [formControl]="unitSystemNameControl">
-                            <kbq-option [value]="kbqMeasurementSystem.SI">{{ text().default10 }}</kbq-option>
+                            <kbq-option [value]="kbqMeasurementSystem.SI">{{ t().default10 }}</kbq-option>
                             <kbq-option [value]="kbqMeasurementSystem.IEC">2</kbq-option>
                             <kbq-option [value]="kbqMeasurementSystem.SI">10</kbq-option>
                         </kbq-select>
@@ -84,21 +84,21 @@ import { ExampleText, TEXT } from './l10n';
         </div>
 
         <ng-template #tooltipText>
-            <div>{{ text().base10 }}</div>
+            <div>{{ t().base10 }}</div>
             <div>
                 <span>
                     <span>1&nbsp;KB = 10</span>
                     <sup>3</sup>
                 </span>
-                {{ text().siStandard }}
+                {{ t().siStandard }}
             </div>
-            <div>{{ text().base2 }}</div>
+            <div>{{ t().base2 }}</div>
             <div>
                 <span>
                     <span>1&nbsp;KiB = 2</span>
                     <sup>10</sup>
                 </span>
-                {{ text().iec }}
+                {{ t().iec }}
             </div>
         </ng-template>
     `,
@@ -137,7 +137,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'example-filesize-formatter__container layout-gap-3xl layout-margin-bottom-s'
     }
 })
-export class FilesizeFormatterOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class FilesizeFormatterOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     protected readonly cdr = inject(ChangeDetectorRef);
     protected readonly precisionControl = new FormControl(2, { nonNullable: true });
@@ -150,7 +150,7 @@ export class FilesizeFormatterOverviewExample extends BaseLocalizedExample<Examp
     protected readonly popUpPlacements = PopUpPlacements;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(() => this.cdr.markForCheck());
     }
 }

@@ -9,15 +9,15 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
     selector: 'example-ag-grid-status-bar',
     template: `
-        <div>{{ text().totalRows }} {{ totalRows() }}</div>
-        <div>{{ text().selected }} {{ selectedRows() }}</div>
+        <div>{{ t().totalRows }} {{ totalRows() }}</div>
+        <div>{{ t().selected }} {{ selectedRows() }}</div>
     `,
     styles: `
         :host {
@@ -31,7 +31,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleAgGridStatusBarComponent extends BaseLocalizedExample<ExampleText> {
+export class ExampleAgGridStatusBarComponent extends BaseLocalizedExample<ExampleTranslation> {
     private readonly params = inject(KBQ_AG_GRID_STATUS_BAR_PARAMS);
     private readonly destroyRef = inject(DestroyRef);
 
@@ -39,7 +39,7 @@ export class ExampleAgGridStatusBarComponent extends BaseLocalizedExample<Exampl
     protected readonly selectedRows = signal(0);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         const { api } = this.params;
 
         const updateTotal = (): void => this.totalRows.set(api.getDisplayedRowCount());
@@ -85,7 +85,7 @@ export class ExampleAgGridStatusBarComponent extends BaseLocalizedExample<Exampl
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridStatusBarExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridStatusBarExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly statusBarComponent = ExampleAgGridStatusBarComponent;
 
     protected readonly defaultColDef: ColDef = {
@@ -104,12 +104,12 @@ export class AgGridStatusBarExample extends BaseLocalizedExample<ExampleText> {
     protected readonly columnDefs = computed<ColDef[]>(() => [
         {
             field: 'column0',
-            headerName: this.text().projectName,
+            headerName: this.t().projectName,
             width: 180
         },
         ...Array.from({ length: 9 }, (_, i) => ({
             field: 'column' + (i + 1),
-            headerName: this.text().headerText
+            headerName: this.t().headerText
         }))
     ]);
 
@@ -129,6 +129,6 @@ export class AgGridStatusBarExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

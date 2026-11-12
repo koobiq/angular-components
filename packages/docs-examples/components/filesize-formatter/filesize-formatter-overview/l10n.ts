@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the filesize-formatter-overview example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     sizeInBits: string;
     numbersBehindDecimalPoint: string;
     default2: string;
@@ -13,7 +13,7 @@ export interface ExampleText {
     default10: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         sizeInBits: 'Размер в битах',
         numbersBehindDecimalPoint: 'Знаков после запятой',

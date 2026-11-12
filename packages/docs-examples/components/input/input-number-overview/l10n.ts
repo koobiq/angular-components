@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the input-number-overview example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     numberWithBounds: string;
     hintBounds: string;
     numberWithSeparator: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     integer: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         numberWithBounds: 'С разделением групп разрядов, с мин. и макс. ограничением',
         hintBounds: 'От −12 000 до 12 000',

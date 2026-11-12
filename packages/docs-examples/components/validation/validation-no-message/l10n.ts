@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the validation-no-message example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     comment: string;
     submit: string;
     address: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         comment: 'Комментарий',
         submit: 'Отправить',

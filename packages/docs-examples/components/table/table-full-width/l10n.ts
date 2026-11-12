@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Incident rows and headers of the full-width example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     incident: string;
     description: string;
     type: string;
@@ -15,7 +15,7 @@ export interface ExampleIncident {
     type: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         incident: 'Инцидент',
         description: 'Описание или длинный заголовок, который переносится на следующую строку',

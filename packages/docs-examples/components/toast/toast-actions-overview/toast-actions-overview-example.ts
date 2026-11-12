@@ -6,7 +6,7 @@ import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { take } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Toast actions
@@ -22,7 +22,7 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'toast-actions-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastActionsOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class ToastActionsOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly dropdown = viewChild.required<KbqDropdown>('dropdown');
 
     readonly toastService = inject(KbqToastService);
@@ -32,14 +32,14 @@ export class ToastActionsOverviewExample extends BaseLocalizedExample<ExampleTex
     }
 
     showTwoActionToast(actions: TemplateRef<any>) {
-        this.toastService.show({ title: this.text().updateAvailableComponents, actions });
+        this.toastService.show({ title: this.t().updateAvailableComponents, actions });
     }
 
     showManyActionToast(actions: TemplateRef<any>) {
         const { ref } = this.toastService.show(
             {
-                title: this.text().title,
-                caption: this.text().subtitleDetails,
+                title: this.t().title,
+                caption: this.t().subtitleDetails,
                 actions
             },
             0
@@ -51,6 +51,6 @@ export class ToastActionsOverviewExample extends BaseLocalizedExample<ExampleTex
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

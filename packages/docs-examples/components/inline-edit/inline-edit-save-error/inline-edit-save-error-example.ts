@@ -15,7 +15,7 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { Observable, of, switchMap, throwError, timer } from 'rxjs';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 const TAKEN_NAMES = ['Admins', 'Support'];
 
@@ -47,13 +47,13 @@ class ExampleSaveError extends Error {
     ],
     template: `
         <p class="example-intro layout-margin-top-none layout-margin-bottom-l">
-            {{ text().saveErrorIntro1 }}
+            {{ t().saveErrorIntro1 }}
             <span class="kbq-text-normal-strong">{{ takenNames }}</span>
-            {{ text().saveErrorIntro2 }}
+            {{ t().saveErrorIntro2 }}
         </p>
 
         <kbq-inline-edit #nameEdit showActions [saveHandler]="saveName" (modeChange)="onModeChange($event, nameEdit)">
-            <kbq-label>{{ text().name }}</kbq-label>
+            <kbq-label>{{ t().name }}</kbq-label>
 
             <div class="example-inline-text" kbqInlineEditViewMode>{{ nameControl.value }}</div>
             <kbq-form-field kbqInlineEditEditMode>
@@ -67,7 +67,7 @@ class ExampleSaveError extends Error {
             [saveHandler]="saveDescription"
             (modeChange)="onModeChange($event, descriptionEdit)"
         >
-            <kbq-label>{{ text().description }}</kbq-label>
+            <kbq-label>{{ t().description }}</kbq-label>
 
             <div class="example-inline-text" kbqInlineEditViewMode>{{ descriptionControl.value }}</div>
             <kbq-form-field kbqInlineEditEditMode>
@@ -76,26 +76,26 @@ class ExampleSaveError extends Error {
         </kbq-inline-edit>
 
         <ng-template #nameTitle>
-            {{ text().couldntUpdate }}
+            {{ t().couldntUpdate }}
             <span class="kbq-text-normal-strong">Name</span>
         </ng-template>
 
         <ng-template #descriptionTitle>
-            {{ text().couldntUpdate }}
+            {{ t().couldntUpdate }}
             <span class="kbq-text-normal-strong">Description</span>
         </ng-template>
 
         <!-- The failure is not about the value, so the same value is worth sending again. -->
         <ng-template #retryActions let-toast>
-            <a kbqLink pseudo (click)="retry(toast)">{{ text().retry }}</a>
+            <a kbqLink pseudo (click)="retry(toast)">{{ t().retry }}</a>
             /a>
         </ng-template>
 
         <!-- The server rejected the value, so the user either fixes it or drops it. -->
         <ng-template #rejectedActions let-toast>
-            <a kbqLink pseudo class="layout-margin-right-m" (click)="edit(toast)">{{ text().edit }}</a>
+            <a kbqLink pseudo class="layout-margin-right-m" (click)="edit(toast)">{{ t().edit }}</a>
             /a>
-            <a kbqLink pseudo (click)="discard(toast)">{{ text().discardChanges }}</a>
+            <a kbqLink pseudo (click)="discard(toast)">{{ t().discardChanges }}</a>
             /a>
         </ng-template>
 
@@ -105,7 +105,7 @@ class ExampleSaveError extends Error {
                 type="button"
                 kbq-toast-close-button
                 kbq-icon-button="kbq-xmark-s_16"
-                [attr.aria-label]="text().close"
+                [attr.aria-label]="t().close"
                 (click)="discard(toast)"
             ></button>
         </ng-template>
@@ -138,7 +138,7 @@ class ExampleSaveError extends Error {
         class: 'layout-flex layout-column'
     }
 })
-export class InlineEditSaveErrorExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditSaveErrorExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly takenNames = TAKEN_NAMES.join(', ');
 
     protected readonly nameControl = new FormControl('Security team', {
@@ -241,6 +241,6 @@ export class InlineEditSaveErrorExample extends BaseLocalizedExample<ExampleText
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

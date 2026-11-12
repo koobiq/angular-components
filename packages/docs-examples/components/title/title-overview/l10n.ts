@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the title-overview example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     justText: string;
     andLongText: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         justText: 'Просто текст',
         andLongText: ' и длинный текст'

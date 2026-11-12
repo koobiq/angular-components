@@ -4,7 +4,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabLink, KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Tabs add tab
@@ -52,11 +52,11 @@ import { ExampleText, TEXT } from './l10n';
     styleUrls: ['./tabs-add-tab-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabsAddTabExample extends BaseLocalizedExample<ExampleText> {
+export class TabsAddTabExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly injector = inject(Injector);
     private readonly tabLinks = viewChildren(KbqTabLink);
 
-    protected tabs = [this.text().bruteforce, this.text().complexAttack, this.text().ddos, this.text().hipsAlert];
+    protected tabs = [this.t().bruteforce, this.t().complexAttack, this.t().ddos, this.t().hipsAlert];
     protected activeTab = this.tabs[0];
 
     protected addTab(): void {
@@ -80,6 +80,6 @@ export class TabsAddTabExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

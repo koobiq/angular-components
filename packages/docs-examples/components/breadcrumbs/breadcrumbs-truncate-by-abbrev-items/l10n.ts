@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the breadcrumbs-truncate-by-abbrev-items example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     main: string;
     aes: string;
     reviews: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         main: 'Главная',
         aes: 'Стандарт расширенного шифрования',

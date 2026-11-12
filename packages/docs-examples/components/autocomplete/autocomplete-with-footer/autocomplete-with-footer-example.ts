@@ -7,7 +7,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Autocomplete with footer
@@ -23,8 +23,8 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <kbq-form-field>
-            <kbq-label>{{ text().label }}</kbq-label>
-            <kbq-hint>{{ text().withFooterHint }}</kbq-hint>
+            <kbq-label>{{ t().label }}</kbq-label>
+            <kbq-hint>{{ t().withFooterHint }}</kbq-hint>
             <input
                 #trigger="kbqAutocompleteTrigger"
                 kbqInput
@@ -38,7 +38,7 @@ import { ExampleText, TEXT } from './l10n';
                     </kbq-option>
                 }
                 <kbq-autocomplete-footer>
-                    <a kbqLink external (click)="trigger.closePanel()">{{ text().link }}</a>
+                    <a kbqLink external (click)="trigger.closePanel()">{{ t().link }}</a>
                 </kbq-autocomplete-footer>
             </kbq-autocomplete>
             <kbq-cleaner />
@@ -57,7 +57,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AutocompleteWithFooterExample extends BaseLocalizedExample<ExampleText> {
+export class AutocompleteWithFooterExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly options = computed(() => Array.from({ length: 100 }, (_, i) => 'Option #' + (i + 1)));
     readonly control = new FormControl('');
     readonly filteredOptions = toSignal(
@@ -72,6 +72,6 @@ export class AutocompleteWithFooterExample extends BaseLocalizedExample<ExampleT
     );
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

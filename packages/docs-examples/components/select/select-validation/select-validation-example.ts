@@ -2,7 +2,7 @@ import { afterNextRender, ChangeDetectionStrategy, Component, computed } from '@
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Select validation
@@ -14,7 +14,7 @@ import { ExampleText, TEXT } from './l10n';
         <div class="kbq-form-vertical layout-column">
             <div class="kbq-form__label">Valid</div>
             <kbq-form-field>
-                <kbq-select [placeholder]="text().placeholder">
+                <kbq-select [placeholder]="t().placeholder">
                     @for (option of options(); track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
@@ -23,10 +23,10 @@ import { ExampleText, TEXT } from './l10n';
         </div>
 
         <div class="kbq-form-vertical layout-column">
-            <div class="kbq-form__label">{{ text().invalid }}</div>
+            <div class="kbq-form__label">{{ t().invalid }}</div>
             <kbq-form-field>
-                <kbq-select [placeholder]="text().placeholder" [formControl]="invalidControl">
-                    <kbq-option [value]="null">{{ text().none }}</kbq-option>
+                <kbq-select [placeholder]="t().placeholder" [formControl]="invalidControl">
+                    <kbq-option [value]="null">{{ t().none }}</kbq-option>
                     @for (option of options(); track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
@@ -46,12 +46,12 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectValidationExample extends BaseLocalizedExample<ExampleText> {
+export class SelectValidationExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + i));
     readonly invalidControl = new FormControl(null, Validators.required);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         afterNextRender(() => {
             this.invalidControl.markAsTouched();
             this.invalidControl.updateValueAndValidity();

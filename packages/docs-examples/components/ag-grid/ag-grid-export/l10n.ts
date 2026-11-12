@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the ag-grid-export example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     projectName: string;
     download: (format: string) => string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         projectName: 'Название проекта',
         download: (format) => `Скачать ${format}`

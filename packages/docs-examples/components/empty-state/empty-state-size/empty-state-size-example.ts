@@ -6,7 +6,7 @@ import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Empty-state size
@@ -30,22 +30,22 @@ import { ExampleText, TEXT } from './l10n';
         </div>
 
         <kbq-empty-state style="min-height: 216px" [size]="size()">
-            <h2 kbq-empty-state-title>{{ text().noGroups }}</h2>
-            <div kbq-empty-state-text>{{ text().agentsGroupText }}</div>
+            <h2 kbq-empty-state-title>{{ t().noGroups }}</h2>
+            <div kbq-empty-state-text>{{ t().agentsGroupText }}</div>
             <div kbq-empty-state-actions>
                 <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">
                     <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
-                    {{ text().createGroup }}
+                    {{ t().createGroup }}
                 </button>
             </div>
         </kbq-empty-state>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmptyStateSizeExample extends BaseLocalizedExample<ExampleText> {
+export class EmptyStateSizeExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly size = model<KbqDefaultSizes>('compact');
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

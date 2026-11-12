@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Badge fill and style
@@ -15,10 +15,10 @@ import { ExampleText, TEXT } from './l10n';
     styleUrls: ['badge-overview-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BadgeOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class BadgeOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     colors = KbqBadgeColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

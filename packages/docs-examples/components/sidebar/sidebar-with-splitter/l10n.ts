@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the sidebar-with-splitter example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     openedContent: string;
     closedContent: string;
     mainContent: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     toggleModel: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         openedContent: 'Содержимое (открыто)',
         closedContent: 'Содержимое (закрыто)',

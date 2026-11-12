@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Textarea with maxRows attribute
@@ -13,8 +13,8 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqTextareaModule, FormsModule, KbqInputModule],
     template: `
         <kbq-form-field>
-            <kbq-label>{{ text().label }}</kbq-label>
-            <textarea kbqTextarea [placeholder]="text().placeholder" [maxRows]="5" [(ngModel)]="value"></textarea>
+            <kbq-label>{{ t().label }}</kbq-label>
+            <textarea kbqTextarea [placeholder]="t().placeholder" [maxRows]="5" [(ngModel)]="value"></textarea>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,10 +22,10 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-xl layout-row'
     }
 })
-export class TextareaMaxRowsExample extends BaseLocalizedExample<ExampleText> {
-    protected readonly value = model(this.text().dosText);
+export class TextareaMaxRowsExample extends BaseLocalizedExample<ExampleTranslation> {
+    protected readonly value = model(this.t().dosText);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

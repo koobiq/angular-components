@@ -5,7 +5,7 @@ import { KbqForm, KbqFormElement } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Select no variants
@@ -23,7 +23,7 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <form novalidate class="kbq-form-vertical">
             <div class="kbq-form__row">
-                <label class="kbq-form__label">{{ text().emptySelect }}</label>
+                <label class="kbq-form__label">{{ t().emptySelect }}</label>
                 <kbq-form-field>
                     <kbq-select>
                         @for (option of options; track option) {
@@ -31,7 +31,7 @@ import { ExampleText, TEXT } from './l10n';
                         }
 
                         @if (noOptions) {
-                            <kbq-select-no-options>{{ text().noOptions }}</kbq-select-no-options>
+                            <kbq-select-no-options>{{ t().noOptions }}</kbq-select-no-options>
                         }
                     </kbq-select>
                 </kbq-form-field>
@@ -48,12 +48,12 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-5xl layout-column layout-align-center-center'
     }
 })
-export class SelectNoVariantsExample extends BaseLocalizedExample<ExampleText> {
+export class SelectNoVariantsExample extends BaseLocalizedExample<ExampleTranslation> {
     options: string[];
     noOptions: boolean;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.loadOptions();
     }
 

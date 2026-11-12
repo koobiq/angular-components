@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqThemeService } from '@koobiq/components/core';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Theme values in your own styles
@@ -12,10 +12,8 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqButtonModule],
     template: `
         <div class="theme-css-variables-example__card">
-            <p class="theme-css-variables-example__caption">
-                {{ text().currentTheme }} {{ themeService.colorScheme() }}
-            </p>
-            <button kbq-button (click)="themeService.toggle()">{{ text().switchTheme }}</button>
+            <p class="theme-css-variables-example__caption">{{ t().currentTheme }} {{ themeService.colorScheme() }}</p>
+            <button kbq-button (click)="themeService.toggle()">{{ t().switchTheme }}</button>
         </div>
     `,
     styles: `
@@ -34,12 +32,12 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ThemeCssVariablesExample extends BaseLocalizedExample<ExampleText> {
+export class ThemeCssVariablesExample extends BaseLocalizedExample<ExampleTranslation> {
     // The app's shared service, so the switch flips the whole page — that is the point here: nothing
     // in the styles above reacts to it explicitly, the variables simply resolve to the other theme.
     protected readonly themeService = inject(KbqThemeService);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

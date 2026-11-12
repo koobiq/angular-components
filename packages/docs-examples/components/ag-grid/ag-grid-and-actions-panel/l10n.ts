@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the ag-grid-and-actions-panel example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     headerText: string;
     projectName: string;
     selected: string;
@@ -12,7 +12,7 @@ export interface ExampleText {
     actionInitiated: (action: string) => string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         headerText: 'Текст',
         projectName: 'Название проекта',

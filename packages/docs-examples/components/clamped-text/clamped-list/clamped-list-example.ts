@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, model } from '@angular/co
 import { KbqClampedList, KbqClampedListTrigger } from '@koobiq/components/clamped-text';
 import { KbqLink } from '@koobiq/components/link';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Clamped-list
@@ -43,12 +43,12 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ClampedListExample extends BaseLocalizedExample<ExampleText> {
+export class ClampedListExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly collapsed = model(true);
 
-    protected readonly countries = computed(() => this.text().countries);
+    protected readonly countries = computed(() => this.t().countries);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -12,7 +12,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * Error state matcher that matches when a control is invalid and form is submitted.
@@ -31,19 +31,19 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     template: `
         <form [formGroup]="formGroup">
             <kbq-form-field>
-                <kbq-label>{{ text().email }}</kbq-label>
+                <kbq-label>{{ t().email }}</kbq-label>
                 <input
                     formControlName="email"
                     kbqInput
                     placeholder="mail@koobiq.io"
                     [errorStateMatcher]="customErrorStateMatcher"
                 />
-                <kbq-hint>{{ text().errorShownOnSubmit }}</kbq-hint>
+                <kbq-hint>{{ t().errorShownOnSubmit }}</kbq-hint>
                 <kbq-error>
                     @if (formGroup.get('email')?.hasError('required')) {
-                        {{ text().shouldEnterValue }}
+                        {{ t().shouldEnterValue }}
                     } @else {
-                        {{ text().invalidEmail }}
+                        {{ t().invalidEmail }}
                     }
                 </kbq-error>
             </kbq-form-field>
@@ -53,13 +53,13 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldWithCustomErrorStateMatcherSetByAttributeExample extends BaseLocalizedExample<ExampleText> {
+export class FormFieldWithCustomErrorStateMatcherSetByAttributeExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly formGroup = new FormGroup({
         email: new FormControl('', [Validators.required, Validators.email])
     });
     readonly customErrorStateMatcher = new CustomErrorStateMatcher();
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

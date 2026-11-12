@@ -4,7 +4,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { take } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Sidepanel normal mode
@@ -15,7 +15,7 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'sidepanel-normal-mode-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelNormalModeExample extends BaseLocalizedExample<ExampleText> {
+export class SidepanelNormalModeExample extends BaseLocalizedExample<ExampleTranslation> {
     private sidepanelService = inject(KbqSidepanelService);
 
     position = KbqSidepanelPosition.Right;
@@ -47,6 +47,6 @@ export class SidepanelNormalModeExample extends BaseLocalizedExample<ExampleText
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

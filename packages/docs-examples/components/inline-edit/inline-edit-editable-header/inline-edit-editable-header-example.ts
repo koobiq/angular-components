@@ -3,7 +3,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit editable header
@@ -76,10 +76,10 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-flex layout-column layout-gap-s'
     }
 })
-export class InlineEditEditableHeaderExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditEditableHeaderExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly maxRows = 5;
     protected get placeholder(): string {
-        return this.text().placeholder;
+        return this.t().placeholder;
     }
     protected readonly control = new FormControl('Spain', { nonNullable: true });
     protected readonly displayValue = signal(this.control.value);
@@ -105,6 +105,6 @@ export class InlineEditEditableHeaderExample extends BaseLocalizedExample<Exampl
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

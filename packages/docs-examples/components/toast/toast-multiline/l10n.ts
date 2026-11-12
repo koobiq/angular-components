@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the toast-multiline example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     refresh: string;
     showToast: string;
     multilineTitle: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     multilineContent: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         refresh: 'Обновить',
         showToast: 'Показать тост',

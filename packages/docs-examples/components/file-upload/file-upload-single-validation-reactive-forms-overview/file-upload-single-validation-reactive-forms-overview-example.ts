@@ -5,7 +5,7 @@ import { KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 const MAX_FILE_SIZE = 5 * 2 ** 20;
 
@@ -30,21 +30,21 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
                 }
 
                 @if (formGroup.get('fileControl')?.hasError('maxFileSize')) {
-                    <kbq-hint color="error">{{ text().sizeMustNotExceed }}</kbq-hint>
+                    <kbq-hint color="error">{{ t().sizeMustNotExceed }}</kbq-hint>
                 }
 
-                <kbq-hint>{{ text().sizeNotExceed5mb }}</kbq-hint>
+                <kbq-hint>{{ t().sizeNotExceed5mb }}</kbq-hint>
             </kbq-file-upload>
         </form>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadSingleValidationReactiveFormsOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class FileUploadSingleValidationReactiveFormsOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     formGroup = new FormGroup({
         fileControl: new FormControl(null, FileValidators.maxFileSize(MAX_FILE_SIZE))
     });
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

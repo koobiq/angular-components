@@ -4,7 +4,7 @@ import { KbqComponentColors, KbqThemeService } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Empty-state content
@@ -24,16 +24,16 @@ import { ExampleText, TEXT } from './l10n';
                         src="https://koobiq.io/assets/images/{{ currentTheme() }}/empty_192.webp"
                         height="192"
                         width="192"
-                        [attr.alt]="text().altEmptyState"
+                        [attr.alt]="t().altEmptyState"
                         [srcset]="srcSet()"
                     />
                 </div>
-                <h2 kbq-empty-state-title>{{ text().noGroups }}</h2>
-                <div kbq-empty-state-text>{{ text().agentsGroupText }}</div>
+                <h2 kbq-empty-state-title>{{ t().noGroups }}</h2>
+                <div kbq-empty-state-text>{{ t().agentsGroupText }}</div>
                 <div kbq-empty-state-actions>
                     <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
                         <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
-                        {{ text().createGroup }}
+                        {{ t().createGroup }}
                     </button>
                 </div>
             </kbq-empty-state>
@@ -44,16 +44,16 @@ import { ExampleText, TEXT } from './l10n';
                         src="https://koobiq.io/assets/images/{{ currentTheme() }}/empty_192.webp"
                         width="80"
                         height="80"
-                        [attr.alt]="text().altEmptyState"
+                        [attr.alt]="t().altEmptyState"
                         [srcset]="srcSet()"
                     />
                 </div>
-                <h2 kbq-empty-state-title>{{ text().noGroups }}</h2>
-                <div kbq-empty-state-text>{{ text().agentsGroupText }}</div>
+                <h2 kbq-empty-state-title>{{ t().noGroups }}</h2>
+                <div kbq-empty-state-text>{{ t().agentsGroupText }}</div>
                 <div kbq-empty-state-actions>
                     <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
                         <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
-                        {{ text().createGroup }}
+                        {{ t().createGroup }}
                     </button>
                 </div>
             </kbq-empty-state>
@@ -61,7 +61,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmptyStateContentExample extends BaseLocalizedExample<ExampleText> {
+export class EmptyStateContentExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly colors = KbqComponentColors;
     readonly styles = KbqButtonStyles;
     private readonly themeService = inject(KbqThemeService, { optional: true });
@@ -74,6 +74,6 @@ export class EmptyStateContentExample extends BaseLocalizedExample<ExampleText> 
     });
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

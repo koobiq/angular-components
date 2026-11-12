@@ -16,7 +16,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 const LATIN_PATTERN = /^[a-zA-Z]+$/;
 
@@ -59,7 +59,7 @@ const latinValidator = (): ValidatorFn => {
                     }
                     <input
                         autocomplete="off"
-                        [placeholder]="text().newTag"
+                        [placeholder]="t().newTag"
                         [kbqTagInputFor]="inputTagList"
                         [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
                         (kbqTagInputTokenEnd)="reactiveInputOnCreate($event)"
@@ -68,18 +68,18 @@ const latinValidator = (): ValidatorFn => {
 
                 @if (inputTagList.errorState()) {
                     @if (tags.hasError('required')) {
-                        <kbq-error>{{ text().required }}</kbq-error>
+                        <kbq-error>{{ t().required }}</kbq-error>
                     }
 
                     @if (tags.getError('latin'); as error) {
-                        <kbq-error>{{ text().invalidTags }} {{ error.invalidTags.join(', ') }}</kbq-error>
+                        <kbq-error>{{ t().invalidTags }} {{ error.invalidTags.join(', ') }}</kbq-error>
                     }
                 }
 
-                <kbq-hint>{{ text().onlyLatinLetters }}</kbq-hint>
+                <kbq-hint>{{ t().onlyLatinLetters }}</kbq-hint>
             </kbq-form-field>
 
-            <button type="submit" kbq-button>{{ text().submit }}</button>
+            <button type="submit" kbq-button>{{ t().submit }}</button>
         </form>
     `,
     providers: [
@@ -90,7 +90,7 @@ const latinValidator = (): ValidatorFn => {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationTagListExample extends BaseLocalizedExample<ExampleText> implements OnInit {
+export class ValidationTagListExample extends BaseLocalizedExample<ExampleTranslation> implements OnInit {
     protected readonly reactiveForm: FormGroup;
     protected readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -101,7 +101,7 @@ export class ValidationTagListExample extends BaseLocalizedExample<ExampleText> 
     private readonly formBuilder = inject(FormBuilder);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.reactiveForm = this.formBuilder.group({
             reactiveTypeaheadValue: this.formBuilder.control([], [Validators.required, latinValidator()])
         });

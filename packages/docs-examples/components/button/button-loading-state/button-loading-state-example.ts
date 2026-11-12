@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Button loading state
@@ -13,15 +13,15 @@ import { ExampleText, TEXT } from './l10n';
         KbqButtonModule
     ],
     template: `
-        <button class="kbq-progress" kbq-button [color]="colors.Contrast">{{ text().button }}</button>
+        <button class="kbq-progress" kbq-button [color]="colors.Contrast">{{ t().button }}</button>
         &nbsp;
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ButtonLoadingStateExample extends BaseLocalizedExample<ExampleText> {
+export class ButtonLoadingStateExample extends BaseLocalizedExample<ExampleTranslation> {
     colors = KbqComponentColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

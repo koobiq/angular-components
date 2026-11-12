@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the loader-overlay-background example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     backgroundContent: string;
     backgroundContentFade: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         backgroundContent:
             'Содержимое под оверлеем становится едва различимым, будто скрыто в тумане. Интерфейс остаётся узнаваемым, пока идёт загрузка, но основные действия временно недоступны.',

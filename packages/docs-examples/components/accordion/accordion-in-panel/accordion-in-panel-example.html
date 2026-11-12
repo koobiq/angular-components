@@ -1,38 +1,38 @@
-<button kbq-button (click)="openPanel()">{{ text().openPanel }}</button>
+<button kbq-button (click)="openPanel()">{{ t().openPanel }}</button>
 
 <ng-template #template>
-    <kbq-sidepanel-header [closeable]="true">{{ text().panel }}</kbq-sidepanel-header>
+    <kbq-sidepanel-header [closeable]="true">{{ t().panel }}</kbq-sidepanel-header>
 
     <kbq-sidepanel-body class="layout-padding-left-l">
         <kbq-accordion>
             <kbq-accordion-item>
-                <button kbq-accordion-trigger type="button">{{ text().profile }}</button>
+                <button kbq-accordion-trigger type="button">{{ t().profile }}</button>
                 <kbq-accordion-content>
-                    {{ text().content }}
+                    {{ t().content }}
                 </kbq-accordion-content>
             </kbq-accordion-item>
             <kbq-accordion-item>
-                <button kbq-accordion-trigger type="button">{{ text().specifications }}</button>
+                <button kbq-accordion-trigger type="button">{{ t().specifications }}</button>
                 <kbq-accordion-content>
-                    {{ text().content }}
+                    {{ t().content }}
                 </kbq-accordion-content>
             </kbq-accordion-item>
             <kbq-accordion-item>
-                <button kbq-accordion-trigger type="button">{{ text().servers }}</button>
+                <button kbq-accordion-trigger type="button">{{ t().servers }}</button>
                 <kbq-accordion-content>
-                    {{ text().content }}
+                    {{ t().content }}
                 </kbq-accordion-content>
             </kbq-accordion-item>
             <kbq-accordion-item>
-                <button kbq-accordion-trigger type="button">{{ text().data }}</button>
+                <button kbq-accordion-trigger type="button">{{ t().data }}</button>
                 <kbq-accordion-content>
-                    {{ text().content }}
+                    {{ t().content }}
                 </kbq-accordion-content>
             </kbq-accordion-item>
             <kbq-accordion-item>
-                <button kbq-accordion-trigger type="button">{{ text().note }}</button>
+                <button kbq-accordion-trigger type="button">{{ t().note }}</button>
                 <kbq-accordion-content>
-                    {{ text().content }}
+                    {{ t().content }}
                 </kbq-accordion-content>
             </kbq-accordion-item>
         </kbq-accordion>

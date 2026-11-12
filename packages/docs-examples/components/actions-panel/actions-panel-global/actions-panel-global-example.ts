@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChild } fr
 import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Actions panel opened globally
@@ -11,15 +11,15 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'actions-panel-global-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="open()">{{ text().open }}</button>
+        <button kbq-button (click)="open()">{{ t().open }}</button>
 
         <ng-template>
-            <button color="contrast" kbq-button (click)="action('Action1')">{{ text().action1 }}</button>
+            <button color="contrast" kbq-button (click)="action('Action1')">{{ t().action1 }}</button>
             <button color="contrast" kbq-button class="layout-margin-left-xxs" (click)="action('Action2')">
-                {{ text().action2 }}
+                {{ t().action2 }}
             </button>
             <button color="contrast" kbq-button class="layout-margin-left-xxs" (click)="action('Action3')">
-                {{ text().action3 }}
+                {{ t().action3 }}
             </button>
         </ng-template>
     `,
@@ -34,7 +34,7 @@ import { ExampleText, TEXT } from './l10n';
     providers: [KbqActionsPanel],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsPanelGlobalExample extends BaseLocalizedExample<ExampleText> {
+export class ActionsPanelGlobalExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly templateRef = viewChild.required(TemplateRef);
     private actionsPanelRef?: KbqActionsPanelRef | null;
@@ -54,6 +54,6 @@ export class ActionsPanelGlobalExample extends BaseLocalizedExample<ExampleText>
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

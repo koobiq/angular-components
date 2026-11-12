@@ -3,7 +3,7 @@ import { AbstractControl, FormsModule, NG_VALIDATORS, ValidationErrors, Validato
 import { PasswordValidators } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /** Template-driven forms take validators from directives, so this one hands `PasswordValidators` to `ngModel`. */
 @Directive({
@@ -37,7 +37,7 @@ class ExamplePasswordRules implements Validator {
     ],
     template: `
         <kbq-form-field style="width: 250px">
-            <kbq-label>{{ text().password }}</kbq-label>
+            <kbq-label>{{ t().password }}</kbq-label>
 
             <input #passwordModel="ngModel" examplePasswordRules kbqInputPassword [(ngModel)]="password" />
 
@@ -46,32 +46,32 @@ class ExamplePasswordRules implements Validator {
             <kbq-reactive-password-hint
                 [hasError]="passwordModel.hasError('minLength') || passwordModel.hasError('maxLength')"
             >
-                {{ text().from8to15 }}
+                {{ t().from8to15 }}
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="passwordModel.hasError('minUppercase')">
-                {{ text().uppercaseLatin }}
+                {{ t().uppercaseLatin }}
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="passwordModel.hasError('minLowercase')">
-                {{ text().lowercaseLatin }}
+                {{ t().lowercaseLatin }}
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="passwordModel.hasError('minNumber')">
-                {{ text().digit }}
+                {{ t().digit }}
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="passwordModel.hasError('minSpecial')">
-                {{ text().special }}
+                {{ t().special }}
             </kbq-reactive-password-hint>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputPasswordTemplateDrivenExample extends BaseLocalizedExample<ExampleText> {
+export class InputPasswordTemplateDrivenExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly password = signal('');
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the select-add-new-option example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     loginAccount: string;
     privilegeEscalationAccount: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         loginAccount: 'Учётная запись',
         privilegeEscalationAccount: 'Учётная запись для повышения привилегий'

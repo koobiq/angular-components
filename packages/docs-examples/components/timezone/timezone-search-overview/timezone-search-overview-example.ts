@@ -20,7 +20,7 @@ import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { merge, Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { timezones } from '../timezone-data';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /** `offsetFormatter` renders the sign with U+2212 (minus sign), which a normal keyboard can't type. */
 function normalizeOffsetDash(value: string): string {
@@ -50,7 +50,7 @@ function normalizeOffsetDash(value: string): string {
                     <kbq-cleaner />
                 </kbq-form-field>
 
-                <div kbq-select-search-empty-result>{{ text().nothingFound }}</div>
+                <div kbq-select-search-empty-result>{{ t().nothingFound }}</div>
 
                 @for (group of filteredOptions$ | async; track group) {
                     <kbq-optgroup [label]="group.countryName">
@@ -68,7 +68,7 @@ function normalizeOffsetDash(value: string): string {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimezoneSearchOverviewExample extends BaseLocalizedExample<ExampleText> implements OnInit {
+export class TimezoneSearchOverviewExample extends BaseLocalizedExample<ExampleTranslation> implements OnInit {
     filteredOptions$: Observable<KbqTimezoneGroup[]>;
     searchControl: FormControl = new FormControl();
     selected = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -79,7 +79,7 @@ export class TimezoneSearchOverviewExample extends BaseLocalizedExample<ExampleT
     private readonly configuration = kbqInjectLocaleConfiguration('timezone', KBQ_TIMEZONE_LOCALE_CONFIGURATION);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.data = timezones.map(({ associatedZones, ...zone }) => ({
             ...zone,
             cities: Array.isArray(associatedZones)

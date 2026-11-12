@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqClampedText } from '@koobiq/components/clamped-text';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Clamped-text external state
@@ -14,11 +14,11 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <div class="layout-margin-bottom-l">
             <kbq-clamped-text [(isCollapsed)]="collapsed">
-                {{ text().ddosText }}
+                {{ t().ddosText }}
             </kbq-clamped-text>
         </div>
 
-        <kbq-toggle [(ngModel)]="collapsed">{{ text().collapsed }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="collapsed">{{ t().collapsed }}</kbq-toggle>
     `,
     styles: `
         :host > div {
@@ -31,10 +31,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ClampedTextExternalStateExample extends BaseLocalizedExample<ExampleText> {
+export class ClampedTextExternalStateExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly collapsed = model(false);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

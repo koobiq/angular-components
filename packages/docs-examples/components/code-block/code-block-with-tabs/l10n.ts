@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the code block examples. Code samples and file names stay as-is. */
-export interface ExampleText {
+export interface ExampleTranslation {
     lineNumbers: string;
     filled: string;
     hideTabs: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         lineNumbers: 'Нумерация строк',
         filled: 'Заливка',

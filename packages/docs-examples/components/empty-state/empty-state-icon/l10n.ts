@@ -1,11 +1,11 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the empty-state-icon example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     iconText: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         iconText: 'Здесь должны быть описаны действия, которые вы можете выполнить на этом экране, а также их польза.'
     },

@@ -20,7 +20,7 @@ import {
     SelectionChangedEvent,
     SelectionColumnDef
 } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -63,7 +63,7 @@ type SelectionDto = {
             (selectionChanged)="onSelectionChanged($event)"
         />
         <div class="ag-grid-infinite-selection-example-dto">
-            <span>{{ text().dtoSentToBackend }}</span>
+            <span>{{ t().dtoSentToBackend }}</span>
             <pre><code>{{ selectionDto() | json }}</code></pre>
         </div>
     `,
@@ -95,12 +95,12 @@ type SelectionDto = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridInfiniteSelectionExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridInfiniteSelectionExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly columnDefs = computed<ColDef[]>(() => [
-        { field: 'column0', headerName: this.text().projectName, pinned: 'left', width: 130 },
+        { field: 'column0', headerName: this.t().projectName, pinned: 'left', width: 130 },
         ...Array.from({ length: 5 }, (_, i) => ({
             field: 'column' + (i + 1),
-            headerName: this.text().headerText,
+            headerName: this.t().headerText,
             width: 130
         }))
     ]);
@@ -173,6 +173,6 @@ export class AgGridInfiniteSelectionExample extends BaseLocalizedExample<Example
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

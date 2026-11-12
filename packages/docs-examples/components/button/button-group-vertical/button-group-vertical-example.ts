@@ -3,7 +3,7 @@ import { KbqButtonColor, KbqButtonModule, KbqButtonStyle, KbqButtonStyles } from
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Button group vertical
@@ -18,10 +18,10 @@ import { ExampleText, TEXT } from './l10n';
         @for (style of buttonStyles; track style) {
             <div class="layout-row layout-gap-xl">
                 <div kbq-button-group [orientation]="'vertical'" [color]="style.color" [kbqStyle]="style.appearance">
-                    <button kbq-button [attr.aria-label]="text().plus">
+                    <button kbq-button [attr.aria-label]="t().plus">
                         <i kbq-icon="kbq-plus_16"></i>
                     </button>
-                    <button kbq-button [attr.aria-label]="text().minus">
+                    <button kbq-button [attr.aria-label]="t().minus">
                         <i kbq-icon="kbq-minus_16"></i>
                     </button>
                 </div>
@@ -33,7 +33,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-row layout-align-center-center layout-gap-xl'
     }
 })
-export class ButtonGroupVerticalExample extends BaseLocalizedExample<ExampleText> {
+export class ButtonGroupVerticalExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly buttonStyles: { color: KbqButtonColor; appearance: KbqButtonStyle; gap?: boolean }[] = [
         { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled },
         { color: KbqComponentColors.ContrastFade, appearance: KbqButtonStyles.Filled },
@@ -44,6 +44,6 @@ export class ButtonGroupVerticalExample extends BaseLocalizedExample<ExampleText
     ];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

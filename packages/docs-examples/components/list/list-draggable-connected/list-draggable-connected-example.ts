@@ -1,8 +1,8 @@
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
 import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
-import { injectLocalizedText } from '@koobiq/docs-examples/i18n';
-import { TEXT } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 type Metric = { id: number };
 
@@ -44,13 +44,13 @@ type Metric = { id: number };
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListDraggableConnectedExample {
-    protected readonly text = injectLocalizedText(TEXT);
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
     protected metricName(id: number): string {
         return this.metricsText().metrics[id - 1];
     }
 
-    private readonly metricsText = injectLocalizedText(TEXT);
+    private readonly metricsText = injectTranslation(TRANSLATIONS);
 
     protected readonly availableMetrics = signal<Metric[]>([{ id: 1 }, { id: 2 }, { id: 3 }]);
 

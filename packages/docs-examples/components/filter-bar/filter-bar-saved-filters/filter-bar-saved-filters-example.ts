@@ -15,7 +15,7 @@ import {
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 interface ExampleFilter extends KbqFilter {
     id?: number;
@@ -77,13 +77,13 @@ const createSearchPipe = (name: string): KbqPipe => ({
         </ng-template>
 
         <ng-template #errorToastActions let-toast>
-            <a kbqLink [pseudo]="true" (click)="toast.close()">{{ text().retry }}</a>
+            <a kbqLink [pseudo]="true" (click)="toast.close()">{{ t().retry }}</a>
         </ng-template>
     `,
     providers: [DateFormatter],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterBarSavedFiltersExample extends BaseLocalizedExample<ExampleText> {
+export class FilterBarSavedFiltersExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly toastService = inject(KbqToastService);
 
     readonly errorToastActionsTemplate = viewChild.required<TemplateRef<any>>('errorToastActions');
@@ -91,7 +91,7 @@ export class FilterBarSavedFiltersExample extends BaseLocalizedExample<ExampleTe
 
     /** Resolves a period `nameKey`; the `name` stays the stable English fallback. */
     protected readonly nameResolver: KbqFilterBarNameResolver = ({ key, fallback }) =>
-        this.text().periods[key] ?? fallback;
+        this.t().periods[key] ?? fallback;
 
     /** Stable periods; the saved-filter data below is never rebuilt for a locale change. */
     private readonly period = (nameKey: string, name: string, start: Record<string, number>): ExamplePeriod => ({
@@ -205,7 +205,7 @@ export class FilterBarSavedFiltersExample extends BaseLocalizedExample<ExampleTe
                 title: this.toastErrorTitleTemplate(),
                 closeButton: true,
                 actions: this.errorToastActionsTemplate(),
-                text: this.text().deleteError,
+                text: this.t().deleteError,
                 filter
             } as KbqToastData);
         } else {
@@ -218,7 +218,7 @@ export class FilterBarSavedFiltersExample extends BaseLocalizedExample<ExampleTe
     onSaveFilter({ filter, filterBar, status }: KbqSaveFilterEvent & { filter: ExampleFilter }) {
         setTimeout(() => {
             if (filter.id === 2) {
-                filterBar.filters()?.filterSavedUnsuccessfully({ text: this.text().saveError(filter.name) });
+                filterBar.filters()?.filterSavedUnsuccessfully({ text: this.t().saveError(filter.name) });
             } else if (status === KbqSaveFilterStatuses.NewFilter) {
                 this.saveNewFilter(filter, filterBar);
             } else if (status === KbqSaveFilterStatuses.NewName) {
@@ -306,7 +306,7 @@ export class FilterBarSavedFiltersExample extends BaseLocalizedExample<ExampleTe
                 changed: true,
                 saved: true,
                 pipes: [
-                    createSearchPipe(this.text().search),
+                    createSearchPipe(this.t().search),
                     {
                         name: 'Period',
                         value: this.last7days,
@@ -344,7 +344,7 @@ export class FilterBarSavedFiltersExample extends BaseLocalizedExample<ExampleTe
                 changed: false,
                 saved: true,
                 pipes: [
-                    createSearchPipe(this.text().search),
+                    createSearchPipe(this.t().search),
                     {
                         name: 'Period',
                         value: this.lastYear,
@@ -386,7 +386,7 @@ export class FilterBarSavedFiltersExample extends BaseLocalizedExample<ExampleTe
                 changed: false,
                 saved: true,
                 pipes: [
-                    createSearchPipe(this.text().search),
+                    createSearchPipe(this.t().search),
                     {
                         name: 'Period',
                         value: this.last30days,
@@ -437,7 +437,7 @@ export class FilterBarSavedFiltersExample extends BaseLocalizedExample<ExampleTe
                 changed: false,
                 saved: true,
                 pipes: [
-                    createSearchPipe(this.text().search),
+                    createSearchPipe(this.t().search),
                     {
                         name: 'Period',
                         value: this.last7days,
@@ -485,7 +485,7 @@ export class FilterBarSavedFiltersExample extends BaseLocalizedExample<ExampleTe
             changed: false,
             saved: false,
             pipes: [
-                createSearchPipe(this.text().search),
+                createSearchPipe(this.t().search),
                 {
                     name: 'Date',
                     value: this.last24h,
@@ -501,6 +501,6 @@ export class FilterBarSavedFiltersExample extends BaseLocalizedExample<ExampleTe
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

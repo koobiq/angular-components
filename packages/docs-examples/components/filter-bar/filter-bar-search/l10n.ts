@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shared by the filter-bar examples. */
-export interface ExampleText {
+export interface ExampleTranslation {
     /** The text search pipe: the first pipe in every filter, always present, never removable. */
     search: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         search: 'Поиск'
     },

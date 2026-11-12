@@ -11,7 +11,7 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 interface AgentStateNode extends Omit<KbqTreeSelectNode, 'children'> {
     children: AgentStateNode[] | null;
@@ -76,9 +76,9 @@ interface AgentStateValue extends KbqSelectValue {
     styleUrls: ['filter-bar-value-template-example.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterBarValueTemplateExample extends BaseLocalizedExample<ExampleText> {
+export class FilterBarValueTemplateExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly values = computed<AgentStateNode[]>(() => {
-        const text = this.text();
+        const text = this.t();
 
         return [
             {
@@ -105,7 +105,7 @@ export class FilterBarValueTemplateExample extends BaseLocalizedExample<ExampleT
     });
 
     private readonly flatValues = computed<AgentStateValue[]>(() => {
-        const text = this.text();
+        const text = this.t();
 
         return [
             { name: '4.3.0.269', value: '4.3.0.269', icon: 'kbq-check_16', color: 'success', count: 0 },
@@ -242,6 +242,6 @@ export class FilterBarValueTemplateExample extends BaseLocalizedExample<ExampleT
     };
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

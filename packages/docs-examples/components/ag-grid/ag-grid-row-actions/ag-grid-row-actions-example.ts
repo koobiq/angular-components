@@ -12,7 +12,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -36,23 +36,23 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleRowActionsComponent extends BaseLocalizedExample<ExampleText> {
+export class ExampleRowActionsComponent extends BaseLocalizedExample<ExampleTranslation> {
     private readonly clipboard = inject(Clipboard);
     private readonly toast = inject(KbqToastService);
     private readonly params = inject(KBQ_AG_GRID_ROW_ACTIONS_PARAMS);
 
     protected copy(): void {
         this.clipboard.copy(JSON.stringify(this.params.data));
-        this.toast.show({ title: this.text().rowCopied(this.params.rowIndex ?? 0) });
+        this.toast.show({ title: this.t().rowCopied(this.params.rowIndex ?? 0) });
     }
 
     protected delete(): void {
         this.params.api.applyTransaction({ remove: [this.params.data] });
-        this.toast.show({ title: this.text().rowArchived(this.params.rowIndex ?? 0) });
+        this.toast.show({ title: this.t().rowArchived(this.params.rowIndex ?? 0) });
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -82,7 +82,7 @@ export class ExampleRowActionsComponent extends BaseLocalizedExample<ExampleText
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridRowActionsExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridRowActionsExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly rowActionsComponent = ExampleRowActionsComponent;
 
     protected readonly defaultColDef: ColDef = {
@@ -101,12 +101,12 @@ export class AgGridRowActionsExample extends BaseLocalizedExample<ExampleText> {
     protected readonly columnDefs = computed<ColDef[]>(() => [
         {
             field: 'column0',
-            headerName: this.text().projectName,
+            headerName: this.t().projectName,
             width: 180
         },
         ...Array.from({ length: 9 }, (_, i) => ({
             field: 'column' + (i + 1),
-            headerName: this.text().headerText
+            headerName: this.t().headerText
         }))
     ]);
 
@@ -126,6 +126,6 @@ export class AgGridRowActionsExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

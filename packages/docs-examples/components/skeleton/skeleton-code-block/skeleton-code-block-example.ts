@@ -8,7 +8,7 @@ import {
 import { KbqSkeleton } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton in place of a code block
@@ -17,7 +17,7 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'skeleton-code-block-example',
     imports: [KbqSkeleton, KbqCodeBlockModule, KbqToggleModule, FormsModule],
     template: `
-        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         @if (loading()) {
             <kbq-skeleton [style.height.px]="98" />
@@ -42,7 +42,7 @@ import { ExampleText, TEXT } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonCodeBlockExample extends BaseLocalizedExample<ExampleText> {
+export class SkeletonCodeBlockExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly loading = model(true);
 
     protected readonly files: KbqCodeBlockFile[] = [
@@ -53,6 +53,6 @@ export class SkeletonCodeBlockExample extends BaseLocalizedExample<ExampleText> 
     ];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

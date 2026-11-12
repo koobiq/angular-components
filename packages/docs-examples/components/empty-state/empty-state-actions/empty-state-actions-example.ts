@@ -3,7 +3,7 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Empty-state actions
@@ -16,25 +16,25 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <kbq-empty-state style="min-height: 216px">
-            <div kbq-empty-state-text>{{ text().agentsGroupText }}</div>
+            <div kbq-empty-state-text>{{ t().agentsGroupText }}</div>
             <div class="layout-row layout-align-center" kbq-empty-state-actions style="min-width: 340px">
                 <button class="layout-margin-right-s" kbq-button [color]="colors.Contrast" [kbqStyle]="styles.Filled">
-                    {{ text().createGroup }}
+                    {{ t().createGroup }}
                 </button>
 
                 <button kbq-button [color]="colors.ContrastFade" [kbqStyle]="styles.Filled">
-                    {{ text().mergeGroups }}
+                    {{ t().mergeGroups }}
                 </button>
             </div>
         </kbq-empty-state>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmptyStateActionsExample extends BaseLocalizedExample<ExampleText> {
+export class EmptyStateActionsExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly styles = KbqButtonStyles;
     readonly colors = KbqComponentColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

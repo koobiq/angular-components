@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the accordion examples. Feature-toggle labels (Icon, Caption, Badge) stay English as demo metadata. */
-export interface ExampleText {
+export interface ExampleTranslation {
     content: string;
     profile: string;
     specifications: string;
@@ -10,7 +10,7 @@ export interface ExampleText {
     note: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         content: 'Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона',
         profile: 'Профиль',

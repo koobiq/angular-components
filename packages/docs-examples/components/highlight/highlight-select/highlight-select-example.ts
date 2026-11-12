@@ -7,7 +7,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { map, startWith } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Highlight in select
@@ -24,14 +24,14 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <kbq-form-field>
-            <kbq-select [placeholder]="text().chooseClub">
+            <kbq-select [placeholder]="t().chooseClub">
                 <kbq-form-field noBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input kbqInput type="text" [formControl]="searchControl" />
                     <kbq-cleaner />
                 </kbq-form-field>
 
-                <div kbq-select-search-empty-result>{{ text().nothingFound }}</div>
+                <div kbq-select-search-empty-result>{{ t().nothingFound }}</div>
 
                 @for (option of filteredOptions | async; track option) {
                     <kbq-option [value]="option">
@@ -53,7 +53,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HighlightSelectExample extends BaseLocalizedExample<ExampleText> {
+export class HighlightSelectExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly options = [
         'Manchester United',
         'Manchester 62 FC',
@@ -77,6 +77,6 @@ export class HighlightSelectExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

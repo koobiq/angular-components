@@ -1,14 +1,14 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the tabs-active-tab-id example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     files: string;
     settings: string;
     tasks: string;
     contentForId: (id: string) => string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         files: 'Файлы',
         settings: 'Настройки',

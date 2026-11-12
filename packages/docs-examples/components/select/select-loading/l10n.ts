@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the select examples. Account names, network addresses and durations stay as-is. */
-export interface ExampleText {
+export interface ExampleTranslation {
     nothingFound: string;
     loadFailedRecords: string;
     tryAgain: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         nothingFound: 'Ничего не найдено',
         loadFailedRecords: 'Не удалось показать записи',

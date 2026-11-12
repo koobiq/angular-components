@@ -3,7 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { KbqFlag } from '@koobiq/components/flag';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import * as flags3x2 from 'country-flag-icons/string/3x2';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Flag overview
@@ -29,7 +29,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-column layout-align-center-center layout-gap-m'
     }
 })
-export class FlagOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class FlagOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly sanitizer = inject(DomSanitizer);
 
     // A mix of flags, including several that are prone to blending into light or dark backgrounds.
@@ -39,12 +39,12 @@ export class FlagOverviewExample extends BaseLocalizedExample<ExampleText> {
     protected readonly countries = computed(() =>
         this.countryCodes.map((code, index) => ({
             code,
-            name: this.text().overviewCountries[index],
+            name: this.t().overviewCountries[index],
             svg: this.sanitizer.bypassSecurityTrustHtml(flags3x2[code])
         }))
     );
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqLink, KbqLinkUnderline } from '@koobiq/components/link';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Link underline
@@ -20,7 +20,7 @@ import { ExampleText, TEXT } from './l10n';
 
         <div class="example-stage">
             <a kbqLink href="https://koobiq.io/en/components/link" target="_blank" [underline]="underline()">
-                {{ text().scanReport }}
+                {{ t().scanReport }}
             </a>
         </div>
     `,
@@ -39,10 +39,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinkUnderlineExample extends BaseLocalizedExample<ExampleText> {
+export class LinkUnderlineExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly underline = model<KbqLinkUnderline>('always');
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

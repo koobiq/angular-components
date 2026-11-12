@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Sidepanel overlayed
@@ -14,7 +14,7 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: './sidepanel-overlayed-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelOverlayedExample extends BaseLocalizedExample<ExampleText> {
+export class SidepanelOverlayedExample extends BaseLocalizedExample<ExampleTranslation> {
     protected position = KbqSidepanelPosition.Right;
 
     protected readonly overlaysCount = 2;
@@ -43,6 +43,6 @@ export class SidepanelOverlayedExample extends BaseLocalizedExample<ExampleText>
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

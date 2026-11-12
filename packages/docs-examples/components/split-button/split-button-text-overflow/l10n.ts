@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the split-button-text-overflow example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     moreOptions: string;
     saveEngineering: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         moreOptions: 'Другие параметры',
         saveEngineering:

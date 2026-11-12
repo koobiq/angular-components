@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Button group content
@@ -43,7 +43,7 @@ import { ExampleText, TEXT } from './l10n';
 
         <div kbq-button-group>
             @for (item of data(); track item) {
-                <button kbq-button class="kbq-dropdown-trigger" [attr.aria-label]="text().diamondOptions">
+                <button kbq-button class="kbq-dropdown-trigger" [attr.aria-label]="t().diamondOptions">
                     <i kbq-icon="kbq-diamond_16"></i>
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
@@ -52,7 +52,7 @@ import { ExampleText, TEXT } from './l10n';
 
         <div kbq-button-group>
             @for (item of data(); track item) {
-                <button kbq-button [attr.aria-label]="text().diamond">
+                <button kbq-button [attr.aria-label]="t().diamond">
                     <i kbq-icon="kbq-diamond_16"></i>
                 </button>
             }
@@ -63,10 +63,10 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-column layout-align-center-center layout-gap-l'
     }
 })
-export class ButtonGroupContentExample extends BaseLocalizedExample<ExampleText> {
-    protected readonly data = computed(() => [this.text().archive, this.text().report, this.text().snooze]);
+export class ButtonGroupContentExample extends BaseLocalizedExample<ExampleTranslation> {
+    protected readonly data = computed(() => [this.t().archive, this.t().report, this.t().snooze]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, ViewEncapsulation } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Tabs with scroll vertical
@@ -13,7 +13,7 @@ import { ExampleText, TEXT } from './l10n';
         <div class="example-tabs-with-scroll-vertical">
             <kbq-tab-group vertical>
                 @for (tab of tabs(); track tab) {
-                    <kbq-tab [label]="tab">{{ text().tabContent(tab) }}</kbq-tab>
+                    <kbq-tab [label]="tab">{{ t().tabContent(tab) }}</kbq-tab>
                 }
             </kbq-tab-group>
         </div>
@@ -22,21 +22,21 @@ import { ExampleText, TEXT } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class TabsWithScrollVerticalExample extends BaseLocalizedExample<ExampleText> {
+export class TabsWithScrollVerticalExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly tabs = computed(() => [
-        this.text().bruteforce,
-        this.text().complexAttack,
-        this.text().ddos,
-        this.text().hipsAlert,
-        this.text().idsIpsAlert,
-        this.text().zeroDay,
-        this.text().xss,
-        this.text().malware,
+        this.t().bruteforce,
+        this.t().complexAttack,
+        this.t().ddos,
+        this.t().hipsAlert,
+        this.t().idsIpsAlert,
+        this.t().zeroDay,
+        this.t().xss,
+        this.t().malware,
         'Ransomware',
         'Phishing'
     ]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

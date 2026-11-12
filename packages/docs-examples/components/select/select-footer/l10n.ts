@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the select-footer example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     button: string;
     caption: string;
     link: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         button: 'Кнопка',
         caption: 'Подпись',

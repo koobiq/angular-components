@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 @Component({
     selector: 'example-sidepanel-disable-close-content',
     imports: [KbqSidepanelModule, KbqButtonModule],
     template: `
-        <kbq-sidepanel-header [closeable]="true">{{ text().sidepanel }}</kbq-sidepanel-header>
+        <kbq-sidepanel-header [closeable]="true">{{ t().sidepanel }}</kbq-sidepanel-header>
         <kbq-sidepanel-body>
             Clicking the backdrop or pressing Escape won't close this sidepanel. Use the button below or the close icon
             in the header instead.
@@ -16,16 +16,16 @@ import { ExampleText, TEXT } from './l10n';
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
                 <button kbq-button color="contrast" kbq-sidepanel-close>
-                    <span>{{ text().close }}</span>
+                    <span>{{ t().close }}</span>
                 </button>
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleSidepanelDisableCloseContent extends BaseLocalizedExample<ExampleText> {
+export class ExampleSidepanelDisableCloseContent extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -37,12 +37,12 @@ export class ExampleSidepanelDisableCloseContent extends BaseLocalizedExample<Ex
     imports: [KbqButtonModule],
     template: `
         <button kbq-button (click)="open()">
-            <span>{{ text().open }}</span>
+            <span>{{ t().open }}</span>
         </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelDisableCloseExample extends BaseLocalizedExample<ExampleText> {
+export class SidepanelDisableCloseExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly sidepanelService = inject(KbqSidepanelService);
 
     open() {
@@ -53,6 +53,6 @@ export class SidepanelDisableCloseExample extends BaseLocalizedExample<ExampleTe
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

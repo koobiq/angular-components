@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the core examples. */
-export interface ExampleText {
+export interface ExampleTranslation {
     currentTheme: string;
     switchTheme: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         currentTheme: 'Текущая тема:',
         switchTheme: 'Переключить тему'

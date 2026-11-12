@@ -10,7 +10,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, IRowNode, ModuleRegistry } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -22,7 +22,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     imports: [AgGridModule, KbqAgGridThemeModule, FormsModule, KbqFormFieldModule, KbqSelectModule],
     template: `
         <kbq-form-field [style.width.px]="300">
-            <kbq-select [placeholder]="text().externalFilter" [(ngModel)]="filter">
+            <kbq-select [placeholder]="t().externalFilter" [(ngModel)]="filter">
                 <kbq-cleaner (click)="externalFilterState.reset()" />
                 @for (option of options(); track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
@@ -56,13 +56,13 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridExternalFilterStateExample extends BaseLocalizedExample<ExampleText> {
-    readonly options = computed(() => this.text().categories);
+export class AgGridExternalFilterStateExample extends BaseLocalizedExample<ExampleTranslation> {
+    readonly options = computed(() => this.t().categories);
     readonly filter = model('');
     readonly filterPass = (node: IRowNode): boolean => node.data.filter === this.filter();
     readonly columnDefs = computed<ColDef[]>(() => [
         { field: 'column0', headerName: 'Column 0', width: 130 },
-        { field: 'filter', headerName: this.text().filter, width: 130 },
+        { field: 'filter', headerName: this.t().filter, width: 130 },
         ...Array.from({ length: 3 }, (_, i) => ({
             field: 'column' + (i + 2),
             headerName: 'Column ' + (i + 2),
@@ -80,6 +80,6 @@ export class AgGridExternalFilterStateExample extends BaseLocalizedExample<Examp
     );
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

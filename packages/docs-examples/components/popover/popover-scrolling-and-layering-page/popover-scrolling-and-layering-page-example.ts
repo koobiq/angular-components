@@ -5,7 +5,7 @@ import { KbqOverflowShadowContainer, KbqOverlayLayer } from '@koobiq/components/
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Popover scrolling and layering page
@@ -23,7 +23,7 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <kbq-top-bar [withShadow]="scroller.overflow().top">
             <div class="layout-row layout-align-center-center" kbqTopBarContainer placement="start">
-                <span class="kbq-truncate-line" kbqTopBarTitle>{{ text().pageTitle }}</span>
+                <span class="kbq-truncate-line" kbqTopBarTitle>{{ t().pageTitle }}</span>
             </div>
 
             <div kbqTopBarSpacer></div>
@@ -101,11 +101,11 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverScrollingAndLayeringPageExample extends BaseLocalizedExample<ExampleText> {
+export class PopoverScrollingAndLayeringPageExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly popoverContent =
         'Think of a popover as a lightweight, floating window that is directly tethered to the element that summoned it. Unlike a modal dialog, it doesn\'t usually block interaction with the rest of the page entirely, allowing for a faster, more "in-context" workflow. It\'s often activated by clicking a button, icon, or link, and it disappears when the user moves their focus away.';
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

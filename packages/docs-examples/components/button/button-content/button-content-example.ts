@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Button content
@@ -18,19 +18,19 @@ import { ExampleText, TEXT } from './l10n';
         <div class="example-content__button-group">
             <div class="example-button">
                 <div class="example-label kbq-text-compact">Text</div>
-                <button kbq-button [color]="colors.Contrast">{{ text().button }}</button>
+                <button kbq-button [color]="colors.Contrast">{{ t().button }}</button>
             </div>
             <div class="example-button">
                 <div class="example-label kbq-text-compact">Icon+Text</div>
                 <button kbq-button [color]="colors.Contrast">
                     <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
-                    {{ text().button }}
+                    {{ t().button }}
                 </button>
             </div>
             <div class="example-button">
                 <div class="example-label kbq-text-compact">Text+Icon</div>
                 <button kbq-button [color]="colors.Contrast">
-                    {{ text().button }}
+                    {{ t().button }}
                     <i kbqButtonSuffix kbq-icon="kbq-plus_16"></i>
                 </button>
             </div>
@@ -38,7 +38,7 @@ import { ExampleText, TEXT } from './l10n';
                 <div class="example-label kbq-text-compact">Icon+Text+Icon</div>
                 <button kbq-button [color]="colors.Contrast">
                     <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
-                    {{ text().button }}
+                    {{ t().button }}
                     <i kbqButtonSuffix kbq-icon="kbq-plus_16"></i>
                 </button>
             </div>
@@ -46,7 +46,7 @@ import { ExampleText, TEXT } from './l10n';
                 <div class="example-label kbq-text-compact">Slots (order-independent)</div>
                 <button kbq-button [color]="colors.Contrast">
                     <i kbqButtonSuffix kbq-icon="kbq-plus_16"></i>
-                    {{ text().button }}
+                    {{ t().button }}
                     <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
                 </button>
             </div>
@@ -55,10 +55,10 @@ import { ExampleText, TEXT } from './l10n';
     styleUrls: ['button-content-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ButtonContentExample extends BaseLocalizedExample<ExampleText> {
+export class ButtonContentExample extends BaseLocalizedExample<ExampleTranslation> {
     colors = KbqComponentColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

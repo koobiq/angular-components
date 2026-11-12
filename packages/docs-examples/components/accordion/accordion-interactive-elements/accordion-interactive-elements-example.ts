@@ -8,7 +8,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type ExampleSection = {
     id: string;
@@ -35,14 +35,14 @@ type ExampleSection = {
     templateUrl: 'accordion-interactive-elements-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccordionInteractiveElementsExample extends BaseLocalizedExample<ExampleText> {
+export class AccordionInteractiveElementsExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly sections = computed<ExampleSection[]>(() => [
-        { id: 'section-1', title: this.text().profile, enabled: true, name: '' },
-        { id: 'section-2', title: this.text().specifications, enabled: false, name: '' },
-        { id: 'section-3', title: this.text().servers, enabled: false, name: '' }
+        { id: 'section-1', title: this.t().profile, enabled: true, name: '' },
+        { id: 'section-2', title: this.t().specifications, enabled: false, name: '' },
+        { id: 'section-3', title: this.t().servers, enabled: false, name: '' }
     ]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

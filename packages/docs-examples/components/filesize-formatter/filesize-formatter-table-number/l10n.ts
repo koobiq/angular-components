@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the filesize-formatter-table-number example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     file: string;
     size: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         file: 'Файл',
         size: 'Размер'

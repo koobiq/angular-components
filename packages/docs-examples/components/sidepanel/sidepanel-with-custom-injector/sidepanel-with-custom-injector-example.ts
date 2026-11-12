@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, InjectionToken, Injector } 
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 export const EXAMPLE_SIDEPANEL_TOKEN = new InjectionToken<{ name: string; role: string }>('SidepanelUser');
 
@@ -10,24 +10,24 @@ export const EXAMPLE_SIDEPANEL_TOKEN = new InjectionToken<{ name: string; role: 
     selector: 'example-sidepanel-with-custom-injector-content',
     imports: [KbqSidepanelModule, KbqButtonModule],
     template: `
-        <kbq-sidepanel-header [closeable]="true">{{ text().userInfo }}</kbq-sidepanel-header>
+        <kbq-sidepanel-header [closeable]="true">{{ t().userInfo }}</kbq-sidepanel-header>
         <kbq-sidepanel-body>
-            <p>{{ text().name }} {{ user.name }}</p>
-            <p>{{ text().role }} {{ user.role }}</p>
+            <p>{{ t().name }} {{ user.name }}</p>
+            <p>{{ t().role }} {{ user.role }}</p>
         </kbq-sidepanel-body>
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
-                <button kbq-button kbq-sidepanel-close>{{ text().close }}</button>
+                <button kbq-button kbq-sidepanel-close>{{ t().close }}</button>
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleSidepanelWithCustomInjectorContent extends BaseLocalizedExample<ExampleText> {
+export class ExampleSidepanelWithCustomInjectorContent extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly user = inject(EXAMPLE_SIDEPANEL_TOKEN);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -39,12 +39,12 @@ export class ExampleSidepanelWithCustomInjectorContent extends BaseLocalizedExam
     imports: [KbqButtonModule],
     template: `
         <button kbq-button (click)="open()">
-            <span>{{ text().open }}</span>
+            <span>{{ t().open }}</span>
         </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelWithCustomInjectorExample extends BaseLocalizedExample<ExampleText> {
+export class SidepanelWithCustomInjectorExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly injector = inject(Injector);
     private readonly sidepanelService = inject(KbqSidepanelService);
 
@@ -55,7 +55,7 @@ export class SidepanelWithCustomInjectorExample extends BaseLocalizedExample<Exa
                 providers: [
                     {
                         provide: EXAMPLE_SIDEPANEL_TOKEN,
-                        useValue: { name: 'John Doe', role: this.text().administrator }
+                        useValue: { name: 'John Doe', role: this.t().administrator }
                     }
                 ]
             })
@@ -63,6 +63,6 @@ export class SidepanelWithCustomInjectorExample extends BaseLocalizedExample<Exa
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

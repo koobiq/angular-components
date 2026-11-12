@@ -6,7 +6,7 @@ import { KbqSkeletonGroup } from '@koobiq/components/skeleton';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton group preset
@@ -15,7 +15,7 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'skeleton-group-example',
     imports: [KbqSkeletonGroup, KbqToggleModule, FormsModule, KbqTagsModule, KbqLink],
     template: `
-        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         @if (loading()) {
             <kbq-skeleton-group preset="tag" />
@@ -24,16 +24,16 @@ import { ExampleText, TEXT } from './l10n';
             <kbq-tag-list>
                 <kbq-tag [color]="colors.ContrastFade">LDAP</kbq-tag>
                 <kbq-tag [color]="colors.Theme">Active Directory</kbq-tag>
-                <kbq-tag [color]="colors.Error">{{ text().blocked }}</kbq-tag>
+                <kbq-tag [color]="colors.Error">{{ t().blocked }}</kbq-tag>
             </kbq-tag-list>
             <div class="example-row">
-                <a kbqLink pseudo>{{ text().groupLinks[0] }}</a>
+                <a kbqLink pseudo>{{ t().groupLinks[0] }}</a>
                 /a>
-                <a kbqLink pseudo>{{ text().groupLinks[1] }}</a>
+                <a kbqLink pseudo>{{ t().groupLinks[1] }}</a>
                 /a>
-                <a kbqLink pseudo>{{ text().groupLinks[2] }}</a>
+                <a kbqLink pseudo>{{ t().groupLinks[2] }}</a>
                 /a>
-                <a kbqLink pseudo>{{ text().groupLinks[3] }}</a>
+                <a kbqLink pseudo>{{ t().groupLinks[3] }}</a>
                 /a>
             </div>
         }
@@ -54,12 +54,12 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonGroupExample extends BaseLocalizedExample<ExampleText> {
+export class SkeletonGroupExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly loading = model(true);
 
     protected readonly colors = KbqComponentColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

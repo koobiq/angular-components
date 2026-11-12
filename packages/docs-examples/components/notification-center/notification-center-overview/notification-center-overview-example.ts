@@ -15,7 +15,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
 import { createNotifications } from '../create-notifications';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -60,7 +60,7 @@ enum NavbarIcItems {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationCenterOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class NotificationCenterOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     notificationService = inject(KbqNotificationCenterService);
 
     private readonly actionsTemplate = viewChild<TemplateRef<unknown>>('actionsTemplate');
@@ -93,7 +93,7 @@ export class NotificationCenterOverviewExample extends BaseLocalizedExample<Exam
             id: '1',
             color: KbqComponentColors.Contrast,
             style: KbqButtonStyles.Filled,
-            text: this.text().primaryAction
+            text: this.t().primaryAction
         },
         {
             id: '2',
@@ -108,7 +108,7 @@ export class NotificationCenterOverviewExample extends BaseLocalizedExample<Exam
     protected readonly PopUpPlacements = PopUpPlacements;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         // Rebuilt on a locale switch to follow the language; the stable ids keep the read state.
         effect(() => {
             const actions = this.actionsTemplate();
@@ -116,7 +116,7 @@ export class NotificationCenterOverviewExample extends BaseLocalizedExample<Exam
             if (!actions) return;
 
             this.notificationService.items = createNotifications(
-                this.text().list,
+                this.t().list,
                 { actions, caption: this.captionTemplate() },
                 this.notificationService.items
             );

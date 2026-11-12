@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Menu tree of the recursive-template example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     items: DropdownItem[];
 }
 
@@ -11,7 +11,7 @@ export interface DropdownItem {
     children?: DropdownItem[];
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         items: [
             { label: 'Уровень 1 - Настройки безопасности' },

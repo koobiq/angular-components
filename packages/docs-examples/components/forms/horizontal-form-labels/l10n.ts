@@ -1,11 +1,11 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the horizontal-form-labels example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     customFraction: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         customFraction: 'Произвольная (напр., 1/3 от ширины)'
     },

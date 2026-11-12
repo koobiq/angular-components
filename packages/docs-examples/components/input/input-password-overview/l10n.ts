@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the input-password-overview example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     showPassword: string;
     hidePassword: string;
     from8to15: string;
@@ -11,7 +11,7 @@ export interface ExampleText {
     digit: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         showPassword: 'Показать пароль',
         hidePassword: 'Скрыть пароль',

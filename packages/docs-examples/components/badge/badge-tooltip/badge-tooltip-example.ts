@@ -3,7 +3,7 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Badge tooltip
@@ -20,7 +20,7 @@ import { ExampleText, TEXT } from './l10n';
                 [badgeColor]="colors.FadeContrast"
                 [kbqPlacement]="PopUpPlacements.Top"
                 [kbqTooltipArrow]="false"
-                [kbqTooltip]="text().dosTooltip"
+                [kbqTooltip]="t().dosTooltip"
             >
                 DoS
             </kbq-badge>
@@ -29,11 +29,11 @@ import { ExampleText, TEXT } from './l10n';
     styleUrls: ['badge-tooltip-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BadgeTooltipExample extends BaseLocalizedExample<ExampleText> {
+export class BadgeTooltipExample extends BaseLocalizedExample<ExampleTranslation> {
     colors = KbqBadgeColors;
     protected readonly PopUpPlacements = PopUpPlacements;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

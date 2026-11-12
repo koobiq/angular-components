@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /** @title Form field with kbq-label */
 @Component({
@@ -13,16 +13,16 @@ import { ExampleText, TEXT } from './l10n';
         <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="showRequiredMarker">Show required marker</kbq-toggle>
 
         <kbq-form-field [showRequiredMarker]="showRequiredMarker()">
-            <kbq-label>{{ text().label }}</kbq-label>
-            <input kbqInput required [placeholder]="text().clickLabelForFocus" />
+            <kbq-label>{{ t().label }}</kbq-label>
+            <input kbqInput required [placeholder]="t().clickLabelForFocus" />
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldWithLabelExample extends BaseLocalizedExample<ExampleText> {
+export class FormFieldWithLabelExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly showRequiredMarker = signal(false);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

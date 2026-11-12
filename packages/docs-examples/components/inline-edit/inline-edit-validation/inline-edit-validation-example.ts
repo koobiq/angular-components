@@ -6,7 +6,7 @@ import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 const IP_PATTERN =
     /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
@@ -26,8 +26,8 @@ const restSymbolsRegex = /[^0-9.]+/g;
         KbqToolTipModule
     ],
     template: `
-        <kbq-inline-edit [validationTooltip]="text().errorMessage" [tooltipPlacement]="tooltipPlacement">
-            <kbq-label>{{ text().notEmpty }}</kbq-label>
+        <kbq-inline-edit [validationTooltip]="t().errorMessage" [tooltipPlacement]="tooltipPlacement">
+            <kbq-label>{{ t().notEmpty }}</kbq-label>
 
             <div class="example-inline-text" kbqInlineEditViewMode>
                 @if (!inputControl.value) {
@@ -43,8 +43,8 @@ const restSymbolsRegex = /[^0-9.]+/g;
             </kbq-form-field>
         </kbq-inline-edit>
 
-        <kbq-inline-edit [validationTooltip]="text().invalidIpRfc" [tooltipPlacement]="tooltipPlacement">
-            <kbq-label>{{ text().ipAddress }}</kbq-label>
+        <kbq-inline-edit [validationTooltip]="t().invalidIpRfc" [tooltipPlacement]="tooltipPlacement">
+            <kbq-label>{{ t().ipAddress }}</kbq-label>
 
             <div class="example-inline-text" kbqInlineEditViewMode>
                 @if (!ipAddressControl.value) {
@@ -82,12 +82,12 @@ const restSymbolsRegex = /[^0-9.]+/g;
         class: 'layout-flex layout-column'
     }
 })
-export class InlineEditValidationExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditValidationExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
     protected readonly tooltipPlacement = PopUpPlacements.BottomLeft;
     protected readonly tooltipColor = KbqComponentColors.Warning;
     protected get placeholder(): string {
-        return this.text().placeholder;
+        return this.t().placeholder;
     }
 
     protected readonly ipAddressControl = new FormControl<string>('192.168.0.2', {
@@ -122,6 +122,6 @@ export class InlineEditValidationExample extends BaseLocalizedExample<ExampleTex
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

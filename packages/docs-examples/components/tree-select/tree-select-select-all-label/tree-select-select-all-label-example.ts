@@ -4,7 +4,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 export class FileNode {
     children: FileNode[];
@@ -76,11 +76,11 @@ export const DATA_OBJECT = {
     ],
     template: `
         <kbq-form-field>
-            <kbq-tree-select selectAll [placeholder]="text().placeholder" [multiple]="true" [ngModel]="selected">
+            <kbq-tree-select selectAll [placeholder]="t().placeholder" [multiple]="true" [ngModel]="selected">
                 <!-- Projected only while every node is selected, so the rest of the time the tree-select
                      falls back to its default trigger and lists the selected nodes as usual. -->
                 @if (tree.allOptionsSelected) {
-                    <kbq-select-trigger>{{ text().allNodes }}</kbq-select-trigger>
+                    <kbq-select-trigger>{{ t().allNodes }}</kbq-select-trigger>
                 }
 
                 <kbq-tree-selection #tree="kbqTreeSelection" [dataSource]="dataSource" [treeControl]="treeControl">
@@ -113,7 +113,7 @@ export const DATA_OBJECT = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeSelectSelectAllLabelExample extends BaseLocalizedExample<ExampleText> {
+export class TreeSelectSelectAllLabelExample extends BaseLocalizedExample<ExampleTranslation> {
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
 
@@ -123,7 +123,7 @@ export class TreeSelectSelectAllLabelExample extends BaseLocalizedExample<Exampl
     readonly selected: string[];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(

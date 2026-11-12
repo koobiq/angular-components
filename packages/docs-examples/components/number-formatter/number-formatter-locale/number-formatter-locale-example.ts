@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFormattersModule } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Number-formatter forced locale
@@ -14,7 +14,7 @@ import { ExampleText, TEXT } from './l10n';
         <table kbq-table disableHover>
             <thead>
                 <tr>
-                    <th>{{ text().locale }}</th>
+                    <th>{{ t().locale }}</th>
                     <th>kbqNumber</th>
                     <th>kbqRoundNumber</th>
                 </tr>
@@ -32,11 +32,11 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NumberFormatterLocaleExample extends BaseLocalizedExample<ExampleText> {
+export class NumberFormatterLocaleExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly value = 1234567.89;
     protected readonly locales = ['ru-RU', 'en-US', 'es-LA', 'pt-BR'];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

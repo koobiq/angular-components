@@ -17,7 +17,7 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -40,18 +40,18 @@ type ExampleAction = {
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button (click)="open()">{{ text().open }}</button>
+        <button kbq-button (click)="open()">{{ t().open }}</button>
 
         <ng-template let-data>
             <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
                 <div order="99" [kbqOverflowItem]="action.Counter">
                     <div class="example-counter">
-                        <div class="kbq-text-normal-medium">{{ text().selected }} {{ data.selected }}</div>
+                        <div class="kbq-text-normal-medium">{{ t().selected }} {{ data.selected }}</div>
                         <span
                             class="example-counter-extra kbq-text-normal"
                             tabindex="0"
-                            [attr.aria-label]="text().totalInGroupsAria(data.counter)"
-                            [kbqTooltip]="text().totalInGroups"
+                            [attr.aria-label]="t().totalInGroupsAria(data.counter)"
+                            [kbqTooltip]="t().totalInGroups"
                             [kbqTooltipOffset]="22"
                         >
                             +{{ data.counter }}
@@ -85,7 +85,7 @@ type ExampleAction = {
                     kbqOverflowItemsResult
                     color="contrast"
                     kbq-button
-                    [attr.aria-label]="text().more"
+                    [attr.aria-label]="t().more"
                     [kbqDropdownTriggerFor]="dropdown"
                 >
                     <i kbq-icon="kbq-ellipsis-vertical_16"></i>
@@ -94,12 +94,12 @@ type ExampleAction = {
 
             <kbq-dropdown #dropdown="kbqDropdown">
                 <div class="example-counter-dropdown">
-                    <div>{{ text().selected }} {{ data.selected }}</div>
+                    <div>{{ t().selected }} {{ data.selected }}</div>
                     <span
                         class="example-counter-extra kbq-text-normal"
                         tabindex="0"
-                        [attr.aria-label]="text().totalInGroupsAria(data.counter)"
-                        [kbqTooltip]="text().totalInGroups"
+                        [attr.aria-label]="t().totalInGroupsAria(data.counter)"
+                        [kbqTooltip]="t().totalInGroups"
                         [kbqTooltipOffset]="22"
                     >
                         +{{ data.counter }}
@@ -174,11 +174,11 @@ type ExampleAction = {
     providers: [KbqActionsPanel],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsPanelCustomCounterExample extends BaseLocalizedExample<ExampleText> {
+export class ActionsPanelCustomCounterExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly actions = computed<ExampleAction[]>(() => [
-        { id: 'Responsible', icon: 'kbq-user_16', label: this.text().responsible },
-        { id: 'Link to incident', icon: 'kbq-link_16', label: this.text().linkToIncident },
-        { id: 'Remove', icon: 'kbq-trash_16', label: this.text().remove, divider: true }
+        { id: 'Responsible', icon: 'kbq-user_16', label: this.t().responsible },
+        { id: 'Link to incident', icon: 'kbq-link_16', label: this.t().linkToIncident },
+        { id: 'Remove', icon: 'kbq-trash_16', label: this.t().remove, divider: true }
     ]);
     protected readonly action = { Counter: 'counter' };
 
@@ -189,7 +189,7 @@ export class ActionsPanelCustomCounterExample extends BaseLocalizedExample<Examp
     private actionsPanelRef: KbqActionsPanelRef | null;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         afterNextRender(() => this.open());
     }
 
@@ -212,6 +212,6 @@ export class ActionsPanelCustomCounterExample extends BaseLocalizedExample<Examp
     }
 
     protected onAction(action: ExampleAction): void {
-        this.toast.show({ title: this.text().actionInitiated(action.label) });
+        this.toast.show({ title: this.t().actionInitiated(action.label) });
     }
 }

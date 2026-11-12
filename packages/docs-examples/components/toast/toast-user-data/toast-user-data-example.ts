@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Toast user data
@@ -17,7 +17,7 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'toast-user-data-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastUserDataExample extends BaseLocalizedExample<ExampleText> {
+export class ToastUserDataExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly toastService = inject(KbqToastService);
 
     showToast(actions: TemplateRef<any>) {
@@ -28,16 +28,16 @@ export class ToastUserDataExample extends BaseLocalizedExample<ExampleText> {
 
         this.toastService.show(<ExtendedUserData>{
             style: KbqToastStyle.Success,
-            title: this.text().agentUpdateAvailable,
-            caption: this.text().version20315,
+            title: this.t().agentUpdateAvailable,
+            caption: this.t().version20315,
             actions,
             closeButton: true,
             userData: 'AnyUserData',
-            userButtonName: this.text().update
+            userButtonName: this.t().update
         });
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

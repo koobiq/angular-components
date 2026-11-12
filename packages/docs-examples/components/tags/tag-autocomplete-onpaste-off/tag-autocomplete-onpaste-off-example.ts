@@ -10,7 +10,7 @@ import { KbqTagInput, KbqTagInputEvent, KbqTagsModule, kbqTagsDefaultOptionsProv
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
 
@@ -42,7 +42,10 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
     providers: [kbqTagsDefaultOptionsProvider({ separatorKeyCodes: [ENTER], addOnPaste: false })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TagAutocompleteOnpasteOffExample extends BaseLocalizedExample<ExampleText> implements AfterViewInit {
+export class TagAutocompleteOnpasteOffExample
+    extends BaseLocalizedExample<ExampleTranslation>
+    implements AfterViewInit
+{
     readonly tagInput = viewChild.required<ElementRef<HTMLInputElement>>('tagInput');
     readonly tagInputDirective = viewChild.required('tagInput', { read: KbqTagInput });
 
@@ -144,6 +147,6 @@ export class TagAutocompleteOnpasteOffExample extends BaseLocalizedExample<Examp
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

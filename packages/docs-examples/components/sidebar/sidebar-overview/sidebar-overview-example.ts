@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Sidebar overview
@@ -17,23 +17,23 @@ import { ExampleText, TEXT } from './l10n';
             [position]="position.Left"
             (stateChanged)="onStateChanged($event, position.Left)"
         >
-            <div kbq-sidebar-opened width="170px">{{ text().leftOpenedContent }}</div>
-            <div kbq-sidebar-closed width="44px">{{ text().leftClosedContent }}</div>
+            <div kbq-sidebar-opened width="170px">{{ t().leftOpenedContent }}</div>
+            <div kbq-sidebar-closed width="44px">{{ t().leftClosedContent }}</div>
         </kbq-sidebar>
 
         <main>
-            <div>{{ text().mainContent }}</div>
+            <div>{{ t().mainContent }}</div>
             <div>
-                <button kbq-button (click)="toggleLeft()">{{ text().toggleLeftModel }}</button>
+                <button kbq-button (click)="toggleLeft()">{{ t().toggleLeftModel }}</button>
             </div>
             <div>
-                <button kbq-button (click)="leftSidebar.toggle()">{{ text().toggleLeft }}</button>
+                <button kbq-button (click)="leftSidebar.toggle()">{{ t().toggleLeft }}</button>
             </div>
             <div>
-                <button kbq-button (click)="toggleRight()">{{ text().toggleRightModel }}</button>
+                <button kbq-button (click)="toggleRight()">{{ t().toggleRightModel }}</button>
             </div>
             <div>
-                <button kbq-button (click)="rightSidebar.toggle()">{{ text().toggleRight }}</button>
+                <button kbq-button (click)="rightSidebar.toggle()">{{ t().toggleRight }}</button>
             </div>
         </main>
 
@@ -43,8 +43,8 @@ import { ExampleText, TEXT } from './l10n';
             [position]="position.Right"
             (stateChanged)="onStateChanged($event, position.Right)"
         >
-            <div kbq-sidebar-opened width="170px">{{ text().rightOpenedContent }}</div>
-            <div kbq-sidebar-closed width="44px">{{ text().rightClosedContent }}</div>
+            <div kbq-sidebar-opened width="170px">{{ t().rightOpenedContent }}</div>
+            <div kbq-sidebar-closed width="44px">{{ t().rightClosedContent }}</div>
         </kbq-sidebar>
     `,
     styles: `
@@ -78,7 +78,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidebarOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class SidebarOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly position = SidebarPositions;
 
     leftOpened = true;
@@ -97,6 +97,6 @@ export class SidebarOverviewExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

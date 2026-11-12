@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the alert-content example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     close: string;
     uploadFailedTitle: string;
     linkSentence: string;
@@ -19,7 +19,7 @@ export interface ExampleText {
     paragraph2: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         close: 'Закрыть',
         uploadFailedTitle: 'Не удалось загрузить файл',

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 @Component({
     selector: 'custom-modal',
@@ -13,11 +13,11 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomModalComponent extends BaseLocalizedExample<ExampleText> {
+export class CustomModalComponent extends BaseLocalizedExample<ExampleTranslation> {
     readonly items = computed(() => Array.from({ length: 1000 }, (_, i) => 'Item #' + i));
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -28,11 +28,11 @@ export class CustomModalComponent extends BaseLocalizedExample<ExampleText> {
     selector: 'modal-scroll-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="createLongModal()">{{ text().openModal }}</button>
+        <button kbq-button (click)="createLongModal()">{{ t().openModal }}</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalScrollExample extends BaseLocalizedExample<ExampleText> {
+export class ModalScrollExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly modalService = inject(KbqModalService);
 
     createLongModal(): void {
@@ -48,6 +48,6 @@ export class ModalScrollExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

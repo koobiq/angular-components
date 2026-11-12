@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqLink } from '@koobiq/components/link';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Description list with long text
@@ -14,7 +14,7 @@ import { ExampleText, TEXT } from './l10n';
         <kbq-dl resizable [dtMinWidth]="100" [ddMinWidth]="200">
             <kbq-dt>security.incident.description</kbq-dt>
             <kbq-dd>
-                {{ text().longDescription }}
+                {{ t().longDescription }}
             </kbq-dd>
 
             <kbq-dt>process.parent.executable.file_name</kbq-dt>
@@ -47,8 +47,8 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DlLongTextExample extends BaseLocalizedExample<ExampleText> {
+export class DlLongTextExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

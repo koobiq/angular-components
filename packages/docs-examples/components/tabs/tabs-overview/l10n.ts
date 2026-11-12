@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the tabs-overview example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     bruteforce: string;
     complexAttack: string;
     ddos: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     tabContent: (name: string) => string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         bruteforce: 'Подбор пароля',
         complexAttack: 'Сложная атака',

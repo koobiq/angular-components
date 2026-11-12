@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the ag-grid-external-filter-state example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     externalFilter: string;
     filter: string;
     categories: string[];
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         externalFilter: 'Внешний фильтр',
         filter: 'Фильтр',

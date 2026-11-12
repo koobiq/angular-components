@@ -12,7 +12,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Autocomplete smart search
@@ -31,9 +31,9 @@ import { ExampleText, TEXT } from './l10n';
         <div class="kbq-form kbq-form-vertical">
             <div class="kbq-form__row">
                 <label class="kbq-form__label">
-                    {{ text().try }}
+                    {{ t().try }}
                     <strong>republic african</strong>
-                    {{ text().or }}
+                    {{ t().or }}
                     <strong>korea south</strong>
                 </label>
                 <kbq-form-field>
@@ -54,7 +54,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AutocompleteSearchSmartExample extends BaseLocalizedExample<ExampleText> implements OnInit {
+export class AutocompleteSearchSmartExample extends BaseLocalizedExample<ExampleTranslation> implements OnInit {
     // The suggested queries in the label are English, so the options they match stay English in every locale.
     options = [
         'United Kingdom',
@@ -87,6 +87,6 @@ export class AutocompleteSearchSmartExample extends BaseLocalizedExample<Example
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

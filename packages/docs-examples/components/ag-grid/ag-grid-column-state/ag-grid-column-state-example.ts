@@ -8,7 +8,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -19,7 +19,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     selector: 'ag-grid-column-state-example',
     imports: [AgGridModule, KbqAgGridThemeModule, KbqButtonModule],
     template: `
-        <button type="button" kbq-button (click)="columnState.reset()">{{ text().resetColumnState }}</button>
+        <button type="button" kbq-button (click)="columnState.reset()">{{ t().resetColumnState }}</button>
         <ag-grid-angular
             #columnState="kbqAgGridColumnState"
             kbqAgGridTheme
@@ -46,7 +46,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridColumnStateExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridColumnStateExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true
@@ -65,6 +65,6 @@ export class AgGridColumnStateExample extends BaseLocalizedExample<ExampleText> 
     );
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

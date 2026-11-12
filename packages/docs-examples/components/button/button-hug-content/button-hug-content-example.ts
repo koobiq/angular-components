@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Button hug content
@@ -14,22 +14,22 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <button class="example-hug-content__button" kbq-button [color]="colors.Contrast">
-            {{ text().buttonText }}
+            {{ t().buttonText }}
         </button>
         &nbsp;
         <br />
         <button class="example-hug-content__button" kbq-button [color]="colors.Contrast">
-            {{ text().longButtonText }}
+            {{ t().longButtonText }}
         </button>
         &nbsp;
     `,
     styleUrls: ['button-hug-content-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ButtonHugContentExample extends BaseLocalizedExample<ExampleText> {
+export class ButtonHugContentExample extends BaseLocalizedExample<ExampleTranslation> {
     colors = KbqComponentColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

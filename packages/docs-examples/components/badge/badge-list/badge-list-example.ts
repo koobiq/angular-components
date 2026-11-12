@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Badge list
@@ -13,13 +13,13 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <div class="badge-list-example">
-            <div class="example-badge-list__label kbq-text-compact">{{ text().horizontal }}</div>
+            <div class="example-badge-list__label kbq-text-compact">{{ t().horizontal }}</div>
             <div class="example-badge-list__list">
                 @for (badge of badges(); track badge) {
                     <kbq-badge [badgeColor]="badge.color">{{ badge.name }}</kbq-badge>
                 }
             </div>
-            <div class="example-badge-list__label layout-margin-top-l kbq-text-compact">{{ text().vertical }}</div>
+            <div class="example-badge-list__label layout-margin-top-l kbq-text-compact">{{ t().vertical }}</div>
             <div class="example-badge-list__list example-badge-list__list_vertical">
                 @for (badge of badges(); track badge) {
                     <kbq-badge [badgeColor]="badge.color">{{ badge.name }}</kbq-badge>
@@ -30,12 +30,12 @@ import { ExampleText, TEXT } from './l10n';
     styleUrls: ['badge-list-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BadgeListExample extends BaseLocalizedExample<ExampleText> {
+export class BadgeListExample extends BaseLocalizedExample<ExampleTranslation> {
     colors = KbqBadgeColors;
 
-    readonly badges = computed(() => this.text().categories.map((name) => ({ name, color: this.colors.FadeContrast })));
+    readonly badges = computed(() => this.t().categories.map((name) => ({ name, color: this.colors.FadeContrast })));
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

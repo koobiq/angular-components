@@ -3,7 +3,7 @@ import { KbqAlert, KbqAlertControl, KbqAlertTitle } from '@koobiq/components/ale
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Alert size
@@ -23,8 +23,8 @@ import { ExampleText, TEXT } from './l10n';
     styleUrls: ['alert-overview-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AlertOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class AlertOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

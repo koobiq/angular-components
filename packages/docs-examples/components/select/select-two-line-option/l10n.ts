@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the select-two-line-option example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     twoLong1: string;
     twoLong2: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         twoLong1: 'Вариант №2 с очень длинной подписью, которая не помещается в одну строку панели',
         twoLong2:

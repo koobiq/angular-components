@@ -10,7 +10,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
-import { ADAPTIVE_TEXT, AdaptiveText, ExampleText, TEXT } from './l10n';
+import { ADAPTIVE_TRANSLATIONS, AdaptiveTranslation, ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -39,7 +39,7 @@ type ExampleAction = {
                     <img alt="example icon" src="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
                 </div>
                 <div class="kbq-truncate-line example-kbq-top-bar__title" kbqTopBarTitle>
-                    <span class="kbq-truncate-line layout-margin-right-xs">{{ text().pageHeader }}</span>
+                    <span class="kbq-truncate-line layout-margin-right-xs">{{ t().pageHeader }}</span>
 
                     <span class="example-kbq-top-bar__counter">{{ 10 | kbqNumber: '' : 'en-US' }}</span>
                 </div>
@@ -127,9 +127,9 @@ type ExampleAction = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleTopBar extends BaseLocalizedExample<ExampleText> {
+export class ExampleTopBar extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 
     readonly isDesktop = toSignal(
@@ -161,17 +161,17 @@ export class ExampleTopBar extends BaseLocalizedExample<ExampleText> {
     imports: [ExampleTopBar],
     template: `
         <div class="example-text layout-margin-bottom-l">
-            {{ text().fullDisplay }}
+            {{ t().fullDisplay }}
         </div>
         <example-top-bar [style.width.px]="680" />
 
         <div class="example-text layout-margin-bottom-l layout-margin-top-3xl">
-            {{ text().truncatedTitle }}
+            {{ t().truncatedTitle }}
         </div>
         <example-top-bar [style.width.px]="437" />
 
         <div class="example-text layout-margin-bottom-l layout-margin-top-3xl">
-            {{ text().compressRight }}
+            {{ t().compressRight }}
         </div>
         <example-top-bar [style.width.px]="314" />
     `,
@@ -182,8 +182,8 @@ export class ExampleTopBar extends BaseLocalizedExample<ExampleText> {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarTitleCounterAdaptiveExample extends BaseLocalizedExample<AdaptiveText> {
+export class TopBarTitleCounterAdaptiveExample extends BaseLocalizedExample<AdaptiveTranslation> {
     constructor() {
-        super(ADAPTIVE_TEXT);
+        super(ADAPTIVE_TRANSLATIONS);
     }
 }

@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the list-intermediate-state example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     assignUsers: string;
     user: string;
     nothingFound: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     cancel: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         assignUsers: 'Назначить пользователей',
         user: 'Пользователь',

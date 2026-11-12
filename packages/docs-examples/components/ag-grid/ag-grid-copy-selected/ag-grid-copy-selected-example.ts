@@ -19,7 +19,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -78,7 +78,7 @@ const customCopyFormatterWithHeaderRow: KbqAgGridCopyFormatter = (api) => {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridCopySelectedExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridCopySelectedExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly toast = inject(KbqToastService);
 
     protected readonly copyFormatOptions = ['TSV', 'CSV', 'JSON', 'Custom'] as const;
@@ -117,12 +117,12 @@ export class AgGridCopySelectedExample extends BaseLocalizedExample<ExampleText>
     protected readonly columnDefs = computed<ColDef[]>(() => [
         {
             field: 'column0',
-            headerName: this.text().projectName,
+            headerName: this.t().projectName,
             width: 180
         },
         ...Array.from({ length: 9 }, (_, i) => ({
             field: 'column' + (i + 1),
-            headerName: this.text().headerText
+            headerName: this.t().headerText
         }))
     ]);
 
@@ -144,13 +144,13 @@ export class AgGridCopySelectedExample extends BaseLocalizedExample<ExampleText>
     protected onCopyDone({ success }: KbqAgGridCopyEvent): void {
         if (success) {
             this.toast.show({
-                title: this.text().dataCopied,
-                caption: this.text().dataCopiedCaption(this.copyFormat())
+                title: this.t().dataCopied,
+                caption: this.t().dataCopiedCaption(this.copyFormat())
             });
         }
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

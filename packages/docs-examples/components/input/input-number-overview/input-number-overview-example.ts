@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqFormsModule, KbqNormalizeWhitespace } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Input number
@@ -21,7 +21,7 @@ import { ExampleText, TEXT } from './l10n';
             <div class="kbq-form-horizontal">
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-40" for="number-with-bounds">
-                        {{ text().numberWithBounds }}
+                        {{ t().numberWithBounds }}
                     </label>
                     <kbq-form-field class="kbq-form__control flex-60">
                         <input
@@ -34,13 +34,13 @@ import { ExampleText, TEXT } from './l10n';
                         />
                         <kbq-stepper />
 
-                        <kbq-hint>{{ text().hintBounds }}</kbq-hint>
+                        <kbq-hint>{{ t().hintBounds }}</kbq-hint>
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-40" for="number-with-separator">
-                        {{ text().numberWithSeparator }}
+                        {{ t().numberWithSeparator }}
                     </label>
                     <kbq-form-field class="kbq-form__control flex-60">
                         <input id="number-with-separator" kbqNumberInput kbqNormalizeWhitespace [(ngModel)]="value" />
@@ -50,7 +50,7 @@ import { ExampleText, TEXT } from './l10n';
 
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-40" for="number-without-separator">
-                        {{ text().numberWithoutSeparator }}
+                        {{ t().numberWithoutSeparator }}
                     </label>
                     <kbq-form-field class="kbq-form__control flex-60">
                         <input
@@ -65,7 +65,7 @@ import { ExampleText, TEXT } from './l10n';
                 </div>
 
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label flex-40" for="number-integer">{{ text().integer }}</label>
+                    <label class="kbq-form__label flex-40" for="number-integer">{{ t().integer }}</label>
                     <kbq-form-field class="kbq-form__control flex-60">
                         <input
                             id="number-integer"
@@ -82,11 +82,11 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputNumberOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class InputNumberOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     value = '';
     integerValue = '';
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

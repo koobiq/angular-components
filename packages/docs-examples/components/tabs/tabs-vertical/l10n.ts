@@ -1,14 +1,14 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the tabs-vertical example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     complexAttack: string;
     hipsAlert: string;
     idsIpsAlert: string;
     vulnExploitation: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         complexAttack: 'Сложная атака',
         hipsAlert: 'HIPS-алерт',

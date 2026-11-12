@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Description list vertical
@@ -17,21 +17,21 @@ import { ExampleText, TEXT } from './l10n';
         </div>
 
         <kbq-dl [vertical]="vertical()">
-            <kbq-dt>{{ text().incidentType }}</kbq-dt>
-            <kbq-dd>{{ text().malwareInfection }}</kbq-dd>
+            <kbq-dt>{{ t().incidentType }}</kbq-dt>
+            <kbq-dd>{{ t().malwareInfection }}</kbq-dd>
 
-            <kbq-dt>{{ text().identifier }}</kbq-dt>
+            <kbq-dt>{{ t().identifier }}</kbq-dt>
             <kbq-dd>INC-2026-125-78253</kbq-dd>
 
-            <kbq-dt>{{ text().status }}</kbq-dt>
-            <kbq-dd>{{ text().new }}</kbq-dd>
+            <kbq-dt>{{ t().status }}</kbq-dt>
+            <kbq-dd>{{ t().new }}</kbq-dd>
 
-            <kbq-dt>{{ text().assignee }}</kbq-dt>
+            <kbq-dt>{{ t().assignee }}</kbq-dt>
             <kbq-dd>John Smith</kbq-dd>
 
-            <kbq-dt>{{ text().description }}</kbq-dt>
+            <kbq-dt>{{ t().description }}</kbq-dt>
             <kbq-dd>
-                {{ text().phishingDescription }}
+                {{ t().phishingDescription }}
             </kbq-dd>
         </kbq-dl>
     `,
@@ -45,10 +45,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DlVerticalExample extends BaseLocalizedExample<ExampleText> {
+export class DlVerticalExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly vertical = model(true);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqSkeletonTypography } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton typography preset
@@ -12,7 +12,7 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'skeleton-typography-example',
     imports: [KbqSkeletonTypography, KbqToggleModule, FormsModule],
     template: `
-        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         @if (loading()) {
             <div class="example-content">
@@ -23,8 +23,8 @@ import { ExampleText, TEXT } from './l10n';
             </div>
         } @else {
             <div class="example-content">
-                <div class="kbq-caps-compact example-secondary example-overline">{{ text().threatIntel }}</div>
-                <div class="kbq-title example-title">{{ text().dosTitle }}</div>
+                <div class="kbq-caps-compact example-secondary example-overline">{{ t().threatIntel }}</div>
+                <div class="kbq-title example-title">{{ t().dosTitle }}</div>
                 <div class="kbq-text-normal example-body">
                     In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator
                     seeks to make a machine or network resource unavailable to its intended users by temporarily or
@@ -67,10 +67,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonTypographyExample extends BaseLocalizedExample<ExampleText> {
+export class SkeletonTypographyExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly loading = model(true);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

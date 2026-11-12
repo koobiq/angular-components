@@ -9,7 +9,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit customized design
@@ -29,7 +29,7 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <kbq-inline-edit>
-            <kbq-label>{{ text().link }}</kbq-label>
+            <kbq-label>{{ t().link }}</kbq-label>
 
             <div class="example-inline-text example-inline-text_link" kbqInlineEditViewMode>
                 @if (!linkControl.value) {
@@ -122,11 +122,11 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-flex layout-column'
     }
 })
-export class InlineEditCustomizedDesignExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditCustomizedDesignExample extends BaseLocalizedExample<ExampleTranslation> {
     protected get placeholder(): string {
-        return this.text().placeholder;
+        return this.t().placeholder;
     }
-    protected readonly options = signal<string[]>(this.text().severities);
+    protected readonly options = signal<string[]>(this.t().severities);
 
     protected readonly linkControl = new FormControl('https://github.com/koobiq/icons');
     protected readonly badgeControl = new FormControl([this.options()[0]], { nonNullable: true });
@@ -154,6 +154,6 @@ export class InlineEditCustomizedDesignExample extends BaseLocalizedExample<Exam
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

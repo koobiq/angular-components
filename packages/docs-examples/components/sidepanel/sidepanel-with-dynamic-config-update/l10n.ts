@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the sidepanel-with-dynamic-config-update example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     close: string;
     open: string;
     header: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     openAnother: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         close: 'Закрыть',
         open: 'Открыть',

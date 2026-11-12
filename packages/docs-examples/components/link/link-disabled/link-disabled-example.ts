@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Link disabled
@@ -12,11 +12,11 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'link-disabled-example',
     imports: [KbqLink, KbqToggleModule, FormsModule],
     template: `
-        <kbq-toggle [(ngModel)]="disabled">{{ text().disabled }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="disabled">{{ t().disabled }}</kbq-toggle>
 
         <div class="example-stage">
             <a kbqLink href="https://koobiq.io/en/components/link" target="_blank" [disabled]="disabled()">
-                {{ text().scanReport }}
+                {{ t().scanReport }}
             </a>
         </div>
     `,
@@ -35,10 +35,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinkDisabledExample extends BaseLocalizedExample<ExampleText> {
+export class LinkDisabledExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly disabled = model(true);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

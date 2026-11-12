@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Toggle With Hint
@@ -12,21 +12,21 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqToggleModule, KbqFormFieldModule],
     template: `
         <div class="example-toggle-with-hint__container layout-align-center-start layout-column layout-gap-s">
-            <div>{{ text().touch }}</div>
+            <div>{{ t().touch }}</div>
             <kbq-toggle>
-                {{ text().tapToWake }}
-                <kbq-hint>{{ text().tapToWakeHint }}</kbq-hint>
+                {{ t().tapToWake }}
+                <kbq-hint>{{ t().tapToWakeHint }}</kbq-hint>
             </kbq-toggle>
             <kbq-toggle>
-                {{ text().shakeToUndo }}
+                {{ t().shakeToUndo }}
                 <kbq-hint>
-                    {{ text().shakeToUndoHint }}
+                    {{ t().shakeToUndoHint }}
                 </kbq-hint>
             </kbq-toggle>
             <kbq-toggle>
-                {{ text().vibration }}
+                {{ t().vibration }}
                 <kbq-hint>
-                    {{ text().vibrationHint }}
+                    {{ t().vibrationHint }}
                 </kbq-hint>
             </kbq-toggle>
         </div>
@@ -41,8 +41,8 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-align-center-center layout-row layout-padding-top-l layout-padding-bottom-3xl'
     }
 })
-export class ToggleWithHintExample extends BaseLocalizedExample<ExampleText> {
+export class ToggleWithHintExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

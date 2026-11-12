@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the form-field-password-overview example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     password: string;
     minLength: string;
     uppercase: string;
@@ -11,7 +11,7 @@ export interface ExampleText {
     shouldEnterPassword: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         password: 'Пароль',
         minLength: 'Минимальная длина',

@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Tooltip disabled
@@ -12,7 +12,7 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'tooltip-disabled-example',
     imports: [KbqToolTipModule, KbqButtonModule, KbqIconModule],
     template: `
-        <div [kbqTooltip]="text().itemLocked" [forDisabledComponent]="button">
+        <div [kbqTooltip]="t().itemLocked" [forDisabledComponent]="button">
             <button #button kbq-button [disabled]="true">
                 <i kbq-icon="kbq-trash_16"></i>
                 Delete
@@ -24,8 +24,8 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-5xl layout-row layout-align-center-center'
     }
 })
-export class TooltipDisabledExample extends BaseLocalizedExample<ExampleText> {
+export class TooltipDisabledExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -6,7 +6,7 @@ import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { switchMap, timer } from 'rxjs';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Toast hide
@@ -22,15 +22,15 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'toast-hide-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastHideOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class ToastHideOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     progress: boolean;
 
     readonly toastService = inject(KbqToastService);
 
     showDefaultToast(actions: TemplateRef<any>) {
         this.toastService.show({
-            title: this.text().agentUpdateAvailable,
-            caption: this.text().version20315,
+            title: this.t().agentUpdateAvailable,
+            caption: this.t().version20315,
             actions
         });
     }
@@ -39,8 +39,8 @@ export class ToastHideOverviewExample extends BaseLocalizedExample<ExampleText> 
         this.progress = true;
         const { ref } = this.toastService.show(
             {
-                title: this.text().importFiles,
-                caption: this.text().importProgress,
+                title: this.t().importFiles,
+                caption: this.t().importProgress,
                 closeButton: false,
                 content,
                 actions
@@ -60,10 +60,10 @@ export class ToastHideOverviewExample extends BaseLocalizedExample<ExampleText> 
     }
 
     showWarningToast(actions: TemplateRef<any>) {
-        this.toastService.show({ style: KbqToastStyle.Warning, caption: this.text().passwordExpires, actions });
+        this.toastService.show({ style: KbqToastStyle.Warning, caption: this.t().passwordExpires, actions });
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

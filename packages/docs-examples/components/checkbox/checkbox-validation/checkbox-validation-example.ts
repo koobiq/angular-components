@@ -4,7 +4,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqError, KbqHint } from '@koobiq/components/form-field';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Checkbox validation
@@ -15,12 +15,12 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <form class="example-checkbox-validation layout-column layout-align-start-start layout-gap-l">
             <kbq-checkbox name="agreement" required [(ngModel)]="agreement">
-                {{ text().acceptTerms }}
-                <kbq-hint>{{ text().validationHint }}</kbq-hint>
-                <kbq-error>{{ text().validationError }}</kbq-error>
+                {{ t().acceptTerms }}
+                <kbq-hint>{{ t().validationHint }}</kbq-hint>
+                <kbq-error>{{ t().validationError }}</kbq-error>
             </kbq-checkbox>
 
-            <button color="contrast" kbq-button type="submit">{{ text().continue }}</button>
+            <button color="contrast" kbq-button type="submit">{{ t().continue }}</button>
         </form>
     `,
     // A fixed width keeps the centered example in place whatever the width of the error that appears.
@@ -34,10 +34,10 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-align-center-center layout-row layout-padding-l'
     }
 })
-export class CheckboxValidationExample extends BaseLocalizedExample<ExampleText> {
+export class CheckboxValidationExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly agreement = signal(false);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

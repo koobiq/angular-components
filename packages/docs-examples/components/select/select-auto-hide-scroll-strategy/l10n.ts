@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the select-auto-hide-scroll-strategy example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     scrollDown: string;
     scrollUp: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         scrollDown: 'Прокрутите вниз',
         scrollUp: 'Прокрутите вверх'

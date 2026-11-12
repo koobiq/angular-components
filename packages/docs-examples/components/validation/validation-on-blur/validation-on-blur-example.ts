@@ -29,7 +29,7 @@ import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip'
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { fromEvent, switchMap } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 const IP_PATTERN =
     /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
@@ -81,7 +81,7 @@ class ExampleResetTouchedOnFirstInput {
     ],
     template: `
         <kbq-form-field style="width: 320px;">
-            <kbq-label>{{ text().ipv4Address }}</kbq-label>
+            <kbq-label>{{ t().ipv4Address }}</kbq-label>
             <input
                 kbqInput
                 exampleResetTouchedOnFirstInput
@@ -90,13 +90,13 @@ class ExampleResetTouchedOnFirstInput {
                 [kbqPlacement]="popUpPlacements.Top"
                 [kbqRelativeToCaret]="true"
                 [kbqTrigger]="'manual'"
-                [kbqTooltip]="text().numbersAndDots"
+                [kbqTooltip]="t().numbersAndDots"
                 [kbqTooltipColor]="colors.Error"
                 (blur)="onBlur()"
                 (input)="onInput($event)"
             />
 
-            <kbq-error>{{ text().invalidIp }}</kbq-error>
+            <kbq-error>{{ t().invalidIp }}</kbq-error>
 
             <kbq-cleaner />
         </kbq-form-field>
@@ -109,7 +109,7 @@ class ExampleResetTouchedOnFirstInput {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationOnBlurExample extends BaseLocalizedExample<ExampleText> {
+export class ValidationOnBlurExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
 
     protected readonly ipAddressControl = new FormControl('', [Validators.pattern(IP_PATTERN)]);
@@ -138,6 +138,6 @@ export class ValidationOnBlurExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

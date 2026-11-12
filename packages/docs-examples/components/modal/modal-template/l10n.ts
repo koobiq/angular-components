@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the modal-template example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     openModal: string;
     dosText: string;
     moreOptions: string;
@@ -10,7 +10,7 @@ export interface ExampleText {
     openLargeModal: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         openModal: 'Открыть модалку',
         dosText:

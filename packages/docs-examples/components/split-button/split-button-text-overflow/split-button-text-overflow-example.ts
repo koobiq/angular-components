@@ -5,7 +5,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title split-button-text-overflow
@@ -24,10 +24,10 @@ import { ExampleText, TEXT } from './l10n';
             <button kbq-button>
                 <i kbq-icon="kbq-plus_16"></i>
                 <span kbq-title class="kbq-truncate-line">
-                    {{ text().saveEngineering }}
+                    {{ t().saveEngineering }}
                 </span>
             </button>
-            <button kbq-button [attr.aria-label]="text().moreOptions" [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
@@ -48,8 +48,8 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitButtonTextOverflowExample extends BaseLocalizedExample<ExampleText> {
+export class SplitButtonTextOverflowExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

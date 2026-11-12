@@ -5,7 +5,7 @@ import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTabLink, KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Tabs add tab vertical
@@ -75,11 +75,11 @@ import { ExampleText, TEXT } from './l10n';
     styleUrls: ['./tabs-add-tab-vertical-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabsAddTabVerticalExample extends BaseLocalizedExample<ExampleText> {
+export class TabsAddTabVerticalExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly injector = inject(Injector);
     private readonly tabLinks = viewChildren(KbqTabLink);
 
-    protected tabs = [this.text().bruteforce, this.text().complexAttack, this.text().ddos, this.text().hipsAlert];
+    protected tabs = [this.t().bruteforce, this.t().complexAttack, this.t().ddos, this.t().hipsAlert];
     protected activeTab = this.tabs[0];
 
     protected addTab(): void {
@@ -103,6 +103,6 @@ export class TabsAddTabVerticalExample extends BaseLocalizedExample<ExampleText>
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

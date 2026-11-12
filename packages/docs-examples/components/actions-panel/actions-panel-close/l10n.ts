@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the actions-panel-close example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     open: string;
     actionInitiated: (action: string) => string;
     executeAndClose: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         open: 'открыть',
         actionInitiated: (action) => `Действие ${action} инициировано`,

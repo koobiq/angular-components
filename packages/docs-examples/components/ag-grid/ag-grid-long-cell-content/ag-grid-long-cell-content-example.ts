@@ -6,11 +6,11 @@ import { PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import { KbqPopoverModule } from '@koobiq/components/popover';
-import { BaseLocalizedExample, injectLocalizedText } from '@koobiq/docs-examples/i18n';
+import { BaseLocalizedExample, injectTranslation } from '@koobiq/docs-examples/i18n';
 import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ICellRendererParams, ModuleRegistry } from 'ag-grid-community';
 import { filter, fromEvent } from 'rxjs';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -47,7 +47,7 @@ const onCellEnter = (cell: HTMLElement, destroyRef: DestroyRef, callback: (event
                     <kbq-badge class="layout-margin-right-xxs" [kbqOverflowItem]="host">{{ host }}</kbq-badge>
                 }
                 <a kbqLink pseudo kbqOverflowItemsResult (click)="collapsed.set(false)">
-                    {{ text().moreCount(overflow.hiddenItemIDs().size) }}
+                    {{ t().moreCount(overflow.hiddenItemIDs().size) }}
                 </a>
             </div>
         } @else {
@@ -56,7 +56,7 @@ const onCellEnter = (cell: HTMLElement, destroyRef: DestroyRef, callback: (event
                     <kbq-badge class="layout-margin-right-xxs">{{ host }}</kbq-badge>
                 }
             </div>
-            <a kbqLink pseudo (click)="collapsed.set(true)">{{ text().collapseLink }}</a>
+            <a kbqLink pseudo (click)="collapsed.set(true)">{{ t().collapseLink }}</a>
         }
     `,
     styles: `
@@ -84,7 +84,7 @@ const onCellEnter = (cell: HTMLElement, destroyRef: DestroyRef, callback: (event
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleOverflowBadgesCellRenderer
-    extends BaseLocalizedExample<ExampleText>
+    extends BaseLocalizedExample<ExampleTranslation>
     implements ICellRendererAngularComp
 {
     // Only the collapsed cell has the directive, hence the optional query.
@@ -111,7 +111,7 @@ export class ExampleOverflowBadgesCellRenderer
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -145,7 +145,7 @@ export class ExampleOverflowBadgesCellRenderer
                 [kbqPopoverArrow]="false"
                 [(kbqPopoverVisible)]="popoverVisible"
             >
-                {{ text().allCount(techniques().length) }}
+                {{ t().allCount(techniques().length) }}
             </a>
         </div>
 
@@ -174,7 +174,7 @@ export class ExampleOverflowBadgesCellRenderer
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleOverflowLinksCellRenderer
-    extends BaseLocalizedExample<ExampleText>
+    extends BaseLocalizedExample<ExampleTranslation>
     implements ICellRendererAngularComp
 {
     private readonly overflowItems = viewChild.required(KbqOverflowItems);
@@ -208,7 +208,7 @@ export class ExampleOverflowLinksCellRenderer
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -230,7 +230,7 @@ export class ExampleOverflowLinksCellRenderer
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridLongCellContentExample {
-    private readonly events = injectLocalizedText(TEXT);
+    private readonly events = injectTranslation(TRANSLATIONS);
 
     protected readonly columnDefs = computed<ColDef<ExampleRowData>[]>(() => [
         {

@@ -7,11 +7,11 @@
 </div>
 
 <ng-template>
-    <kbq-sidepanel-header [closeable]="true">{{ text().templateContent }}</kbq-sidepanel-header>
+    <kbq-sidepanel-header [closeable]="true">{{ t().templateContent }}</kbq-sidepanel-header>
     <kbq-sidepanel-body
         style="--kbq-sidepanel-size-content-padding-top: 8px; --kbq-sidepanel-size-content-padding-bottom: 8px"
     >
-        <div style="padding: 8px" class="kbq-subheading">{{ text().templateBody }}</div>
+        <div style="padding: 8px" class="kbq-subheading">{{ t().templateBody }}</div>
 
         @for (item of array; track $index) {
             <div style="padding: 8px">
@@ -23,12 +23,12 @@
     <kbq-sidepanel-footer>
         <kbq-sidepanel-actions align="left">
             <button cdkFocusInitial kbq-button [color]="'contrast'">
-                <span>{{ text().button }}</span>
+                <span>{{ t().button }}</span>
             </button>
         </kbq-sidepanel-actions>
 
         <kbq-sidepanel-actions align="right">
-            <span>{{ text().action }}</span>
+            <span>{{ t().action }}</span>
         </kbq-sidepanel-actions>
     </kbq-sidepanel-footer>
 </ng-template>

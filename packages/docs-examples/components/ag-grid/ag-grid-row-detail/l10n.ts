@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Incident rows of the row-detail example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     severity: string;
     incidents: ExampleIncident[];
     expandMultipleRows: string;
@@ -35,7 +35,7 @@ export interface ExampleIncident {
     description: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         severity: 'Важность',
         incidents: [

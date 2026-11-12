@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the inline-edit-save-error example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     name: string;
     description: string;
     edit: string;
@@ -13,7 +13,7 @@ export interface ExampleText {
     saveErrorIntro2: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         name: 'Имя',
         description: 'Описание',

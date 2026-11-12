@@ -10,7 +10,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -31,10 +31,10 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridLoadTextExampleLoadingText
-    extends BaseLocalizedExample<ExampleText>
+    extends BaseLocalizedExample<ExampleTranslation>
     implements ICellRendererAngularComp
 {
-    protected readonly label = computed(() => this.text().loading);
+    protected readonly label = computed(() => this.t().loading);
 
     agInit(): void {}
 
@@ -43,7 +43,7 @@ export class AgGridLoadTextExampleLoadingText
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -75,13 +75,13 @@ export class AgGridLoadTextExampleLoadingText
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridLoadTextExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridLoadTextExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly loadingTextRenderer = AgGridLoadTextExampleLoadingText;
 
     protected readonly columnDefs = computed(() =>
         Array.from({ length: 3 }, (_, i) => ({
             field: 'column' + i,
-            headerName: this.text().headerText
+            headerName: this.t().headerText
         }))
     );
 
@@ -96,7 +96,7 @@ export class AgGridLoadTextExample extends BaseLocalizedExample<ExampleText> {
                             Object.fromEntries(
                                 Array.from({ length: 3 }, (_, c) => [
                                     'column' + c,
-                                    this.text().headerText + ' ' + (startRow + i)
+                                    this.t().headerText + ' ' + (startRow + i)
                                 ])
                             )
                         ),
@@ -110,6 +110,6 @@ export class AgGridLoadTextExample extends BaseLocalizedExample<ExampleText> {
     protected readonly isFullWidthRow = ({ rowNode }: IsFullWidthRowParams): boolean => rowNode.data === undefined;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the tooltip-interactive example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     tooltip: string;
     buttonWithTooltip: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         tooltip: 'Тултип',
         buttonWithTooltip: 'Кнопка с тултипом'

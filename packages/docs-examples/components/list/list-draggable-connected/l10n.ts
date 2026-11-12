@@ -1,11 +1,11 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Metric names of the connected-lists example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     metrics: string[];
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         metrics: ['Загрузка ЦП', 'Использование памяти', 'Дисковые операции', 'Сетевой трафик']
     },

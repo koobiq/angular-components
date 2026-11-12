@@ -5,7 +5,7 @@ import { KbqLink } from '@koobiq/components/link';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 export class FileNode {
     children: FileNode[];
@@ -127,7 +127,7 @@ export const DATA_OBJECT = {
 
                 <kbq-select-footer>
                     <a href="https://koobiq.io/en/components/tree-select" kbqLink external target="_blank">
-                        {{ text().link }}
+                        {{ t().link }}
                     </a>
                 </kbq-select-footer>
             </kbq-tree-select>
@@ -135,7 +135,7 @@ export const DATA_OBJECT = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeSelectFooterOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class TreeSelectFooterOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     selected = '';
 
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -144,7 +144,7 @@ export class TreeSelectFooterOverviewExample extends BaseLocalizedExample<Exampl
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(

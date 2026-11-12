@@ -3,7 +3,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PasswordValidators } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /** @title Form field password overview */
 @Component({
@@ -11,12 +11,12 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqInputModule, ReactiveFormsModule],
     template: `
         <kbq-form-field>
-            <input kbqInputPassword [placeholder]="text().password" [formControl]="formControl" />
+            <input kbqInputPassword [placeholder]="t().password" [formControl]="formControl" />
 
             <kbq-password-toggle />
 
             <kbq-reactive-password-hint [hasError]="formControl.hasError('minLength')">
-                {{ text().minLength }}
+                {{ t().minLength }}
                 @let minLength = formControl.getError('minLength');
                 @if (minLength) {
                     ({{ minLength.actual }}/{{ minLength.min }})
@@ -24,7 +24,7 @@ import { ExampleText, TEXT } from './l10n';
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="formControl.hasError('minUppercase')">
-                {{ text().uppercase }}
+                {{ t().uppercase }}
                 @let minUppercaseError = formControl.getError('minUppercase');
                 @if (minUppercaseError) {
                     ({{ minUppercaseError.actual }}/{{ minUppercaseError.min }})
@@ -32,7 +32,7 @@ import { ExampleText, TEXT } from './l10n';
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="formControl.hasError('minLowercase')">
-                {{ text().lowercase }}
+                {{ t().lowercase }}
                 @let minLowercaseError = formControl.getError('minLowercase');
                 @if (minLowercaseError) {
                     ({{ minLowercaseError.actual }}/{{ minLowercaseError.min }})
@@ -40,7 +40,7 @@ import { ExampleText, TEXT } from './l10n';
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="formControl.hasError('minNumber')">
-                {{ text().number }}
+                {{ t().number }}
                 @let minNumberError = formControl.getError('minNumber');
                 @if (minNumberError) {
                     ({{ minNumberError.actual }}/{{ minNumberError.min }})
@@ -48,7 +48,7 @@ import { ExampleText, TEXT } from './l10n';
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="formControl.hasError('minSpecial')">
-                {{ text().special }}
+                {{ t().special }}
                 @let minSpecialError = formControl.getError('minSpecial');
                 @if (minSpecialError) {
                     ({{ minSpecialError.actual }}/{{ minSpecialError.min }})
@@ -56,13 +56,13 @@ import { ExampleText, TEXT } from './l10n';
             </kbq-reactive-password-hint>
 
             @if (formControl.hasError('required')) {
-                <kbq-error>{{ text().shouldEnterPassword }}</kbq-error>
+                <kbq-error>{{ t().shouldEnterPassword }}</kbq-error>
             }
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldPasswordOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class FormFieldPasswordOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly formControl = new FormControl('', [
         Validators.required,
         PasswordValidators.minLength(8),
@@ -73,6 +73,6 @@ export class FormFieldPasswordOverviewExample extends BaseLocalizedExample<Examp
     ]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

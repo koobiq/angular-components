@@ -6,7 +6,7 @@ import { KbqSkeletonFormField } from '@koobiq/components/skeleton';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton form field preset
@@ -22,7 +22,7 @@ import { ExampleText, TEXT } from './l10n';
         KbqTextareaModule
     ],
     template: `
-        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         @if (loading()) {
             <kbq-skeleton-form-field horizontal hint labelClass="flex-30" contentClass="flex-70" />
@@ -30,18 +30,18 @@ import { ExampleText, TEXT } from './l10n';
             <kbq-skeleton-form-field control="textarea" hint />
         } @else {
             <kbq-form-field horizontal labelClass="flex-30" contentClass="flex-70">
-                <kbq-label>{{ text().serverAddress }}</kbq-label>
+                <kbq-label>{{ t().serverAddress }}</kbq-label>
                 <input kbqInput value="productname1.security.com" />
-                <kbq-hint>{{ text().domainHint }}</kbq-hint>
+                <kbq-hint>{{ t().domainHint }}</kbq-hint>
             </kbq-form-field>
             <kbq-form-field>
-                <kbq-label>{{ text().port }}</kbq-label>
+                <kbq-label>{{ t().port }}</kbq-label>
                 <input kbqInput value="636" />
-                <kbq-hint>{{ text().ldapsPortHint }}</kbq-hint>
+                <kbq-hint>{{ t().ldapsPortHint }}</kbq-hint>
             </kbq-form-field>
             <kbq-form-field>
-                <kbq-label>{{ text().description }}</kbq-label>
-                <textarea kbqTextarea>{{ text().directoryDescription }}</textarea>
+                <kbq-label>{{ t().description }}</kbq-label>
+                <textarea kbqTextarea>{{ t().directoryDescription }}</textarea>
                 <kbq-hint>Shown in the list of servers</kbq-hint>
             </kbq-form-field>
         }
@@ -56,10 +56,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonFormFieldExample extends BaseLocalizedExample<ExampleText> {
+export class SkeletonFormFieldExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly loading = model(true);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -1,8 +1,8 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 import { ExampleNotificationText } from '../create-notifications';
 
 /** Text of the notification-center-error example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     appName: string;
     assets: string;
     issues: string;
@@ -23,7 +23,7 @@ export interface ExampleText {
     list: ExampleNotificationText[];
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         appName: 'Короткое название',
         assets: 'Активы',

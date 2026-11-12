@@ -24,7 +24,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
 import { createNotifications } from '../create-notifications';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -72,7 +72,7 @@ enum NavbarIcItems {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationCenterErrorExample extends BaseLocalizedExample<ExampleText> {
+export class NotificationCenterErrorExample extends BaseLocalizedExample<ExampleTranslation> {
     notificationService = inject(KbqNotificationCenterService);
 
     private readonly actionsTemplate = viewChild<TemplateRef<unknown>>('actionsTemplate');
@@ -107,7 +107,7 @@ export class NotificationCenterErrorExample extends BaseLocalizedExample<Example
             id: '1',
             color: KbqComponentColors.Contrast,
             style: KbqButtonStyles.Filled,
-            text: this.text().primaryAction
+            text: this.t().primaryAction
         },
         {
             id: '2',
@@ -122,7 +122,7 @@ export class NotificationCenterErrorExample extends BaseLocalizedExample<Example
     protected readonly PopUpPlacements = PopUpPlacements;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.notificationService.setErrorMode(true);
 
         this.notificationService.onReload.subscribe(() => {
@@ -138,7 +138,7 @@ export class NotificationCenterErrorExample extends BaseLocalizedExample<Example
             if (!this.loaded() || !actions) return;
 
             this.notificationService.items = createNotifications(
-                this.text().list,
+                this.t().list,
                 { actions },
                 this.notificationService.items
             );

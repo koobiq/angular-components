@@ -4,7 +4,7 @@ import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
 
@@ -21,7 +21,7 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
     template: `
         <form novalidate [formGroup]="checkOnFlyForm">
             <kbq-form-field>
-                <kbq-label>{{ text().folderName }}</kbq-label>
+                <kbq-label>{{ t().folderName }}</kbq-label>
                 <input
                     formControlName="folderName"
                     kbqInput
@@ -29,7 +29,7 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
                     [kbqPlacement]="popUpPlacements.Top"
                     [kbqRelativeToCaret]="true"
                     [kbqTrigger]="'manual'"
-                    [kbqTooltip]="text().lettersAndNumbers"
+                    [kbqTooltip]="t().lettersAndNumbers"
                     [kbqTooltipColor]="colors.Error"
                     (blur)="onBlur()"
                     (input)="onInput($event)"
@@ -37,7 +37,7 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
 
                 <kbq-cleaner />
 
-                <kbq-hint>{{ text().onlyLettersAndNumbers }}</kbq-hint>
+                <kbq-hint>{{ t().onlyLettersAndNumbers }}</kbq-hint>
             </kbq-form-field>
         </form>
     `,
@@ -52,7 +52,7 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationOnTypeExample extends BaseLocalizedExample<ExampleText> {
+export class ValidationOnTypeExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
 
     protected readonly popUpPlacements = PopUpPlacements;
@@ -84,6 +84,6 @@ export class ValidationOnTypeExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

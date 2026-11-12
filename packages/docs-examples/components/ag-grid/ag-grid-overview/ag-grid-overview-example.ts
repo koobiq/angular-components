@@ -12,7 +12,7 @@ import {
     RowSelectionOptions,
     SelectionColumnDef
 } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -68,7 +68,7 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
@@ -89,19 +89,19 @@ export class AgGridOverviewExample extends BaseLocalizedExample<ExampleText> {
     protected readonly columnDefs = computed<ColDef[]>(() => [
         {
             field: 'column0',
-            headerName: this.text().link,
+            headerName: this.t().link,
             cellRenderer: ExampleLinkCellRenderer,
             pinned: true
         },
         ...Array.from({ length: 9 }, (_, i) => ({
             field: 'column' + (i + 1),
-            headerName: this.text().headerText
+            headerName: this.t().headerText
         }))
     ]);
 
     protected readonly rowData = computed(() =>
         Array.from({ length: 100 }, (_, index) => ({
-            column0: this.text().linkN(index),
+            column0: this.t().linkN(index),
             ...Object.fromEntries(Array.from({ length: 9 }, (_, i) => ['column' + (i + 1), 'Text ' + index]))
         }))
     );
@@ -115,6 +115,6 @@ export class AgGridOverviewExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

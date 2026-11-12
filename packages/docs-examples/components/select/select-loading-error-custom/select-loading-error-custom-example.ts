@@ -6,7 +6,7 @@ import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 const delayBeforeShowError = 3000;
 
@@ -27,7 +27,7 @@ const delayBeforeShowError = 3000;
     template: `
         <form novalidate class="kbq-form-vertical">
             <div class="kbq-form__row">
-                <label class="kbq-form__label">{{ text().customErrorState }}</label>
+                <label class="kbq-form__label">{{ t().customErrorState }}</label>
                 <kbq-form-field>
                     <kbq-select (opened)="loadOptions()" (closed)="reset()">
                         @if (loading()) {
@@ -43,10 +43,10 @@ const delayBeforeShowError = 3000;
                                     [color]="'contrast'"
                                     [fade]="true"
                                 ></i>
-                                <div kbq-empty-state-text>{{ text().failedToLoadLocations }}</div>
+                                <div kbq-empty-state-text>{{ t().failedToLoadLocations }}</div>
                                 <div kbq-empty-state-actions>
                                     <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">
-                                        {{ text().tryAgain }}
+                                        {{ t().tryAgain }}
                                     </button>
                                 </div>
                             </kbq-empty-state>
@@ -66,7 +66,7 @@ const delayBeforeShowError = 3000;
         class: 'layout-margin-5xl layout-column layout-align-center-center'
     }
 })
-export class SelectLoadingErrorCustomExample extends BaseLocalizedExample<ExampleText> {
+export class SelectLoadingErrorCustomExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly error = signal(false);
     readonly loading = signal(true);
 
@@ -83,6 +83,6 @@ export class SelectLoadingErrorCustomExample extends BaseLocalizedExample<Exampl
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

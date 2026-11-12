@@ -8,7 +8,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 const restSymbolsRegex = /[^0-9]+/g;
 
@@ -48,7 +48,7 @@ const restSymbolsRegex = /[^0-9]+/g;
         class: 'layout-margin-5xl layout-align-center-center layout-column'
     }
 })
-export class ValidationMessageGlobalWithLinksExample extends BaseLocalizedExample<ExampleText> {
+export class ValidationMessageGlobalWithLinksExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly popUpPlacements = PopUpPlacements;
 
     protected readonly inProgress = signal(false);
@@ -101,6 +101,6 @@ export class ValidationMessageGlobalWithLinksExample extends BaseLocalizedExampl
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

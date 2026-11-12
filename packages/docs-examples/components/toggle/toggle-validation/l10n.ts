@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the toggle-validation example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     automaticBackup: string;
     turnOffHint: string;
     backupRequired: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         automaticBackup: 'Автоматическое резервное копирование',
         turnOffHint: 'Выключите, чтобы увидеть ошибку',

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Modal
@@ -11,9 +11,9 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'modal-overview-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="showConfirmModal()">{{ text().openConfirmModal }}</button>
-        <button kbq-button (click)="showSuccessModal()">{{ text().openSuccessModal }}</button>
-        <button kbq-button (click)="showDeleteModal()">{{ text().openDeleteModal }}</button>
+        <button kbq-button (click)="showConfirmModal()">{{ t().openConfirmModal }}</button>
+        <button kbq-button (click)="showSuccessModal()">{{ t().openSuccessModal }}</button>
+        <button kbq-button (click)="showDeleteModal()">{{ t().openDeleteModal }}</button>
     `,
     styles: `
         :host {
@@ -28,17 +28,17 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class ModalOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly modalService = inject(KbqModalService);
 
     showConfirmModal(): void {
         this.modalService.confirm({
-            kbqAriaLabel: this.text().saveChangesAria,
+            kbqAriaLabel: this.t().saveChangesAria,
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
-            kbqContent: this.text().saveChangesContent,
-            kbqOkText: this.text().save,
-            kbqCancelText: this.text().cancel,
+            kbqContent: this.t().saveChangesContent,
+            kbqOkText: this.t().save,
+            kbqCancelText: this.t().cancel,
             kbqOkClick: () => console.log('Save'),
             kbqCancelClick: () => console.log('Cancel')
         });
@@ -46,12 +46,12 @@ export class ModalOverviewExample extends BaseLocalizedExample<ExampleText> {
 
     showSuccessModal(): void {
         this.modalService.success({
-            kbqAriaLabel: this.text().changesSaved,
+            kbqAriaLabel: this.t().changesSaved,
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
-            kbqContent: this.text().allChangesSaved,
-            kbqOkText: this.text().ok,
-            kbqCancelText: this.text().cancel,
+            kbqContent: this.t().allChangesSaved,
+            kbqOkText: this.t().ok,
+            kbqCancelText: this.t().cancel,
             kbqOkClick: () => console.log('OK'),
             kbqCancelClick: () => console.log('Cancel')
         });
@@ -59,10 +59,10 @@ export class ModalOverviewExample extends BaseLocalizedExample<ExampleText> {
 
     showDeleteModal(): void {
         this.modalService.delete({
-            kbqAriaLabel: this.text().deleteCustomer,
-            kbqContent: this.text().deleteContent,
-            kbqOkText: this.text().delete,
-            kbqCancelText: this.text().cancel,
+            kbqAriaLabel: this.t().deleteCustomer,
+            kbqContent: this.t().deleteContent,
+            kbqOkText: this.t().delete,
+            kbqCancelText: this.t().cancel,
             kbqWidth: '480px',
             kbqMaskClosable: true,
             kbqOkClick: () => console.log('Delete'),
@@ -71,6 +71,6 @@ export class ModalOverviewExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

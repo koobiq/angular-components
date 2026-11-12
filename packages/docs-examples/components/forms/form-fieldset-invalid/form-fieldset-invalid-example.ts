@@ -2,7 +2,7 @@ import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/co
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Form fieldset
@@ -17,25 +17,25 @@ import { ExampleText, TEXT } from './l10n';
         <form [formGroup]="form">
             <kbq-fieldset>
                 <kbq-form-field kbqFieldsetItem>
-                    <input kbqInput [placeholder]="text().surname" [formControl]="form.controls.surname" />
+                    <input kbqInput [placeholder]="t().surname" [formControl]="form.controls.surname" />
                 </kbq-form-field>
 
                 <kbq-form-field kbqFieldsetItem>
-                    <input kbqInput [placeholder]="text().name" [formControl]="form.controls.name" />
+                    <input kbqInput [placeholder]="t().name" [formControl]="form.controls.name" />
                 </kbq-form-field>
 
                 <kbq-form-field kbqFieldsetItem>
-                    <input kbqInput [placeholder]="text().patronymic" [formControl]="form.controls.patronymic" />
+                    <input kbqInput [placeholder]="t().patronymic" [formControl]="form.controls.patronymic" />
                 </kbq-form-field>
 
                 @if (form.controls.surname.hasError('required')) {
-                    <kbq-error>{{ text().errorMessage(text().surname, text().first) }}</kbq-error>
+                    <kbq-error>{{ t().errorMessage(t().surname, t().first) }}</kbq-error>
                 }
                 @if (form.controls.name.hasError('required')) {
-                    <kbq-error>{{ text().errorMessage(text().name, text().second) }}</kbq-error>
+                    <kbq-error>{{ t().errorMessage(t().name, t().second) }}</kbq-error>
                 }
                 @if (form.controls.patronymic.hasError('required')) {
-                    <kbq-error>{{ text().errorMessage(text().patronymic, text().third) }}</kbq-error>
+                    <kbq-error>{{ t().errorMessage(t().patronymic, t().third) }}</kbq-error>
                 }
             </kbq-fieldset>
         </form>
@@ -51,7 +51,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-row'
     }
 })
-export class FormFieldsetInvalidExample extends BaseLocalizedExample<ExampleText> {
+export class FormFieldsetInvalidExample extends BaseLocalizedExample<ExampleTranslation> {
     form = new FormGroup({
         surname: new FormControl('', Validators.required),
         name: new FormControl('', Validators.required),
@@ -59,7 +59,7 @@ export class FormFieldsetInvalidExample extends BaseLocalizedExample<ExampleText
     });
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         afterNextRender(() =>
             Object.values(this.form.controls).forEach((control) => {
                 control.markAsTouched();

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqTableModule } from '@koobiq/components/table';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Table without hover
@@ -13,9 +13,9 @@ import { ExampleText, TEXT } from './l10n';
         <table kbq-table disableHover>
             <thead>
                 <tr>
-                    <th>{{ text().file }}</th>
-                    <th>{{ text().owner }}</th>
-                    <th>{{ text().modified }}</th>
+                    <th>{{ t().file }}</th>
+                    <th>{{ t().owner }}</th>
+                    <th>{{ t().modified }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,7 +31,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableDisableHoverExample extends BaseLocalizedExample<ExampleText> {
+export class TableDisableHoverExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly rows = computed(() => [
         { name: 'document.txt', owner: 'User 1', modified: '27 May 2024' },
         { name: 'report-2023.pdf', owner: 'User 2', modified: '1 Dec 2023' },
@@ -40,6 +40,6 @@ export class TableDisableHoverExample extends BaseLocalizedExample<ExampleText> 
     ]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

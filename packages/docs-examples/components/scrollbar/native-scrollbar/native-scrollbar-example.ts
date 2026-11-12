@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Native scrollbar example
@@ -12,13 +12,13 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <div kbqNativeScrollbar class="example-scrollbar">
             <p>
-                {{ text().bruteForce1 }}
+                {{ t().bruteForce1 }}
             </p>
             <p>
-                {{ text().bruteForce2 }}
+                {{ t().bruteForce2 }}
             </p>
             <p>
-                {{ text().bruteForce3 }}
+                {{ t().bruteForce3 }}
             </p>
         </div>
     `,
@@ -45,8 +45,8 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NativeScrollbarExample extends BaseLocalizedExample<ExampleText> {
+export class NativeScrollbarExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

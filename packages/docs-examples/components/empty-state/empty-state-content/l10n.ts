@@ -1,14 +1,14 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the empty-state-content example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     createGroup: string;
     agentsGroupText: string;
     noGroups: string;
     altEmptyState: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         createGroup: 'Создать группу',
         agentsGroupText: 'Агенты можно объединить в группу и назначить им одни и те же политики',

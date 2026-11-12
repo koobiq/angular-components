@@ -1,11 +1,11 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the tooltip-disabled example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     itemLocked: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         itemLocked: 'Этот объект заблокирован и не может быть удалён'
     },

@@ -15,14 +15,14 @@ import {
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { BehaviorSubject, catchError, Observable, of, race, switchMap, throwError, timer } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type Option = {
     id: number;
     label: string;
 };
 
-export class OptionsApiService extends BaseLocalizedExample<ExampleText> {
+export class OptionsApiService extends BaseLocalizedExample<ExampleTranslation> {
     private delay: number = 100;
 
     private readonly data = computed(() => Array.from({ length: 10 }, (_, i) => ({ id: i, label: 'Option #' + i })));
@@ -46,11 +46,11 @@ export class OptionsApiService extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
-export class SelectFacade extends BaseLocalizedExample<ExampleText> {
+export class SelectFacade extends BaseLocalizedExample<ExampleTranslation> {
     private readonly api = inject(OptionsApiService);
     private readonly search$ = new BehaviorSubject<string | null>(null);
 
@@ -104,7 +104,7 @@ export class SelectFacade extends BaseLocalizedExample<ExampleText> {
     );
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -157,12 +157,12 @@ export class SelectFacade extends BaseLocalizedExample<ExampleText> {
                                 <kbq-select-loading />
                             }
                             @case ('empty') {
-                                <div kbq-select-search-empty-result>{{ text().nothingFound }}</div>
+                                <div kbq-select-search-empty-result>{{ t().nothingFound }}</div>
                             }
                             @case ('error') {
                                 <!--{{ state.error.message }}-->
                                 <kbq-select-error>
-                                    <span kbq-select-error-text>{{ text().loadFailedRecords }}</span>
+                                    <span kbq-select-error-text>{{ t().loadFailedRecords }}</span>
                                     <button
                                         kbq-button
                                         [kbqStyle]="'transparent'"
@@ -170,7 +170,7 @@ export class SelectFacade extends BaseLocalizedExample<ExampleText> {
                                         (click)="reloadOptions()"
                                     >
                                         <i kbq-icon="kbq-arrow-rotate-left_16"></i>
-                                        {{ text().tryAgain }}
+                                        {{ t().tryAgain }}
                                     </button>
                                 </kbq-select-error>
                             }
@@ -200,7 +200,7 @@ export class SelectFacade extends BaseLocalizedExample<ExampleText> {
         class: 'layout-margin-5xl layout-column layout-align-center-center'
     }
 })
-export class SelectLoadingExample extends BaseLocalizedExample<ExampleText> {
+export class SelectLoadingExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly facade = inject(SelectFacade);
 
     protected selectedOption: Option = { id: 0, label: 'Option #0' };
@@ -227,7 +227,7 @@ export class SelectLoadingExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.searchControl.valueChanges
             .pipe(takeUntilDestroyed())
             .subscribe((value) => this.facade.setSearch(value ?? ''));

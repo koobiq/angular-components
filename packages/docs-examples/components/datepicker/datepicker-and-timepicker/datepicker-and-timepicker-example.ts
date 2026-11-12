@@ -7,7 +7,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Datepicker and timepicker
@@ -25,7 +25,7 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <div class="docs-example__datepicker-and-timepicker">
             <div class="kbq-form-vertical">
-                <label class="kbq-form__label">{{ text().packageRelease }}</label>
+                <label class="kbq-form__label">{{ t().packageRelease }}</label>
                 <div class="kbq-form__row">
                     <div>
                         <kbq-form-field class="layout-margin-right-s" (click)="datepicker.toggle()">
@@ -45,10 +45,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatepickerAndTimepickerExample extends BaseLocalizedExample<ExampleText> {
+export class DatepickerAndTimepickerExample extends BaseLocalizedExample<ExampleTranslation> {
     selectedDateTime: DateTime;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

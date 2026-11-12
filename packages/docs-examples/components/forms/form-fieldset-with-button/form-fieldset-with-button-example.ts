@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Form fieldset with button
@@ -18,7 +18,7 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <kbq-fieldset>
             <legend kbqLegend>
-                {{ text().longLegend }}
+                {{ t().longLegend }}
             </legend>
 
             <kbq-form-field kbqFieldsetItem>
@@ -27,11 +27,11 @@ import { ExampleText, TEXT } from './l10n';
 
             <button kbq-button kbqFieldsetItem kbqStyle="outline">
                 <i kbq-icon="kbq-floppy-disk_16"></i>
-                {{ text().save }}
+                {{ t().save }}
             </button>
 
             <kbq-hint>
-                {{ text().longHintButton }}
+                {{ t().longHintButton }}
             </kbq-hint>
         </kbq-fieldset>
     `,
@@ -46,8 +46,8 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-row'
     }
 })
-export class FormFieldsetWithButtonExample extends BaseLocalizedExample<ExampleText> {
+export class FormFieldsetWithButtonExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

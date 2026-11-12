@@ -29,7 +29,7 @@ import {
     timer
 } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type Option = {
     id: number;
@@ -51,7 +51,7 @@ type SelectState =
 const PAGE_SIZE = 20;
 const DELAY = 1000;
 
-export class OptionsApiService extends BaseLocalizedExample<ExampleText> {
+export class OptionsApiService extends BaseLocalizedExample<ExampleTranslation> {
     private readonly data = computed(() => Array.from({ length: 100 }, (_, i) => ({ id: i, label: 'Option #' + i })));
 
     getOptions(
@@ -75,7 +75,7 @@ export class OptionsApiService extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -231,11 +231,11 @@ export class SelectFacade {
                                 <kbq-select-loading />
                             }
                             @case ('empty') {
-                                <div kbq-select-search-empty-result>{{ text().nothingFound }}</div>
+                                <div kbq-select-search-empty-result>{{ t().nothingFound }}</div>
                             }
                             @case ('error') {
                                 <kbq-select-error>
-                                    <span kbq-select-error-text>{{ text().loadFailedRecords }}</span>
+                                    <span kbq-select-error-text>{{ t().loadFailedRecords }}</span>
                                     <button
                                         kbq-button
                                         [kbqStyle]="'transparent'"
@@ -243,7 +243,7 @@ export class SelectFacade {
                                         (click)="reloadOptions()"
                                     >
                                         <i kbq-icon="kbq-arrow-rotate-left_16"></i>
-                                        {{ text().tryAgain }}
+                                        {{ t().tryAgain }}
                                     </button>
                                 </kbq-select-error>
                             }
@@ -260,7 +260,7 @@ export class SelectFacade {
                                     <kbq-option [disabled]="true">
                                         <div class="layout-row layout-align-start-center">
                                             <kbq-progress-spinner [mode]="'indeterminate'" />
-                                            <span class="layout-padding-left-s">{{ text().loading }}</span>
+                                            <span class="layout-padding-left-s">{{ t().loading }}</span>
                                         </div>
                                     </kbq-option>
                                 }
@@ -282,7 +282,7 @@ export class SelectFacade {
         class: 'layout-margin-5xl layout-column layout-align-center-center'
     }
 })
-export class SelectPagingExample extends BaseLocalizedExample<ExampleText> implements OnDestroy {
+export class SelectPagingExample extends BaseLocalizedExample<ExampleTranslation> implements OnDestroy {
     protected readonly facade = inject(SelectFacade);
 
     protected selectedOption: Option = { id: 0, label: 'Option #0' };
@@ -324,7 +324,7 @@ export class SelectPagingExample extends BaseLocalizedExample<ExampleText> imple
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.searchControl.valueChanges
             .pipe(takeUntilDestroyed())
             .subscribe((value) => this.facade.setSearch(value ?? ''));
