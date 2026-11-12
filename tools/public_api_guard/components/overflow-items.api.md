@@ -5,6 +5,7 @@
 ```ts
 
 import * as _angular_core from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { KbqFlexWrap } from '@koobiq/components/core';
 import { KbqOrientation } from '@koobiq/components/core';
 
@@ -19,6 +20,9 @@ export class ElementVisibilityManager {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<ElementVisibilityManager, never>;
 }
+
+// @public
+export const KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS: InjectionToken<readonly Element[]>;
 
 // @public
 export class KbqOverflowItem extends ElementVisibilityManager {
