@@ -1,7 +1,8 @@
 import { Location } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
-import { DefaultUrlSerializer, Router } from '@angular/router';
+import { DefaultUrlSerializer, NavigationEnd, Router } from '@angular/router';
 import { KBQ_LOCALE_SERVICE, kbqLocaleServiceProvider } from '@koobiq/components/core';
+import { Subject } from 'rxjs';
 import type { Mock, MockInstance } from 'vitest';
 import { DocsLocale } from '../constants/locale';
 import { DocsLocaleService } from './locale';
@@ -10,7 +11,13 @@ import { DocsLanguagePreferences } from './preferences';
 describe(DocsLanguagePreferences.name, () => {
     let setDocsLocale: Mock;
     let setExamplesLocale: MockInstance;
-    let router: { navigate: Mock; parseUrl: (url: string) => ReturnType<DefaultUrlSerializer['parse']> };
+    let router: {
+        navigate: Mock;
+        parseUrl: (url: string) => ReturnType<DefaultUrlSerializer['parse']>;
+        events: Subject<NavigationEnd>;
+    };
+    let urlState: { path: string };
+    let events: Subject<NavigationEnd>;
 
     /** Configures the app at the given URL, the preferences not created yet. */
     const configure = (path: string): void => {
@@ -18,7 +25,9 @@ describe(DocsLanguagePreferences.name, () => {
 
         const serializer = new DefaultUrlSerializer();
 
-        router = { navigate: vi.fn(), parseUrl: (url: string) => serializer.parse(url) };
+        urlState = { path };
+        events = new Subject();
+        router = { navigate: vi.fn(), parseUrl: (url: string) => serializer.parse(url), events };
 
         let currentDocsLocale =
             Object.values(DocsLocale).find((locale) => path.startsWith(`/${locale}/`)) ?? DocsLocale.Ru;
@@ -26,7 +35,7 @@ describe(DocsLanguagePreferences.name, () => {
         TestBed.configureTestingModule({
             providers: [
                 kbqLocaleServiceProvider(),
-                { provide: Location, useValue: { path: () => path } },
+                { provide: Location, useValue: { path: () => urlState.path } },
                 { provide: Router, useValue: router },
                 {
                     provide: DocsLocaleService,
@@ -220,5 +229,51 @@ describe(DocsLanguagePreferences.name, () => {
 
         expect(preferences.examplesLanguageSwitch.currentValue.id).toBe('en-US');
         expect(setExamplesLocale).toHaveBeenLastCalledWith('en-US');
+    });
+
+    // Browser back/forward restores a URL with an examples language: it applies, so the address bar and
+    // the rendered examples never disagree. The URL already carries the param, so no rewrite follows.
+    it('applies the examples language from the URL on browser navigation', () => {
+        configure('/examples/select-overview');
+
+        const preferences = create();
+
+        urlState.path = '/examples/select-overview?examples-lang=es-LA';
+        events.next(new NavigationEnd(1, urlState.path, urlState.path));
+
+        expect(setExamplesLocale).toHaveBeenLastCalledWith('es-LA');
+        expect(preferences.examplesLanguageSwitch.currentValue.id).toBe('es-LA');
+        expect(router.navigate).not.toHaveBeenCalled();
+    });
+
+    it('ignores a browser navigation to the language already picked', () => {
+        configure('/examples/select-overview?examples-lang=ru-RU');
+
+        create();
+
+        events.next(
+            new NavigationEnd(
+                1,
+                '/components/button/overview?examples-lang=ru-RU',
+                '/components/button/overview?examples-lang=ru-RU'
+            )
+        );
+
+        expect(setExamplesLocale).toHaveBeenCalledTimes(1);
+    });
+
+    // A page without the param carries no intent: the stored pick stands.
+    it('keeps the picked examples language when the URL has no param', () => {
+        configure('/examples/select-overview');
+
+        const preferences = create();
+        const esIndex = preferences.examplesLanguageSwitch.data.findIndex(({ id }) => id === 'es-LA');
+
+        preferences.examplesLanguageSwitch.setValue(esIndex);
+
+        events.next(new NavigationEnd(1, '/components/button/overview', '/components/button/overview'));
+
+        expect(preferences.examplesLanguageSwitch.currentValue.id).toBe('es-LA');
+        expect(setExamplesLocale).toHaveBeenCalledTimes(2);
     });
 });
