@@ -17,6 +17,14 @@ const pasteFromClipboard = async (page: Page, textarea: Locator, text: string) =
     await page.keyboard.press('ControlOrMeta+v');
 };
 
+/** How many rows fit between the top and the bottom padding. */
+const visibleRows = (textarea: Locator): Promise<number> =>
+    textarea.evaluate((el: HTMLTextAreaElement) => {
+        const { lineHeight, paddingTop, paddingBottom } = getComputedStyle(el);
+
+        return (el.clientHeight - parseFloat(paddingTop) - parseFloat(paddingBottom)) / parseFloat(lineHeight);
+    });
+
 test.describe('KbqTextareaModule', () => {
     test.use({ permissions: ['clipboard-read', 'clipboard-write'] });
 
@@ -28,6 +36,17 @@ test.describe('KbqTextareaModule', () => {
             await expect(getComponent(page)).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(getComponent(page)).toHaveScreenshot('01-dark.png');
+        });
+
+        test('should fit three rows in a resizable textarea', async ({ page }) => {
+            await page.goto('/E2eTextareaStates');
+            const textarea = page.getByTestId('resizable_textarea');
+
+            await expect(textarea).toBeVisible();
+            // Read once: the height comes from the stylesheet and does not change after the first render.
+            const rows = await visibleRows(textarea);
+
+            expect(rows).toBe(3);
         });
     });
 
@@ -102,6 +121,19 @@ test.describe('KbqTextareaModule', () => {
                 'line1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10'
             );
             expect(await getHeight(textarea)).toBe(atMaxRowsHeight);
+        });
+
+        test('should show whole rows once maxRows is reached', async ({ page }) => {
+            await page.goto('/E2eTextareaGrowMaxRows');
+            const textarea = getTextarea(page);
+
+            await pasteFromClipboard(
+                page,
+                textarea,
+                'line1\nline2\nline3\nline4\nline5\nline6\nline7\nline8\nline9\nline10'
+            );
+            await expect(textarea).toContainClass('kbq-textarea_max-row-limit-reached');
+            await expect.poll(() => visibleRows(textarea)).toBe(5);
         });
     });
 

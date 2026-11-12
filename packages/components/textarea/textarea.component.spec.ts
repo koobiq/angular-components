@@ -1,4 +1,4 @@
-﻿import { Component, Provider, Type, viewChild } from '@angular/core';
+﻿import { Component, Provider, Type, signal, viewChild } from '@angular/core';
 import {
     ComponentFixture,
     ComponentFixtureAutoDetect,
@@ -19,7 +19,7 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/components/core';
+import { KBQ_WINDOW, createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { Observable, map, timer } from 'rxjs';
 import {
@@ -49,6 +49,36 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 
     return TestBed.createComponent<T>(component);
 }
+
+/** jsdom answers `line-height: normal` for every element, so the row limit is unreachable in a unit test without this. */
+const measuredLineHeight = (lineHeight: number, padding = 0): Provider => ({
+    provide: KBQ_WINDOW,
+    useValue: {
+        ...window,
+        getComputedStyle: (element: Element) => ({
+            ...window.getComputedStyle(element),
+            lineHeight: `${lineHeight}px`,
+            height: `${lineHeight}px`,
+            paddingTop: `${padding}px`,
+            paddingBottom: `${padding}px`
+        })
+    }
+});
+
+/** The growth arithmetic measures a detached clone, so the stub has to sit on the prototype. */
+const mockScrollHeight = (scrollHeight: number): (() => void) => {
+    const original = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'scrollHeight');
+
+    Object.defineProperty(HTMLTextAreaElement.prototype, 'scrollHeight', {
+        get: () => scrollHeight,
+        configurable: true
+    });
+
+    return () => {
+        if (original) Object.defineProperty(HTMLTextAreaElement.prototype, 'scrollHeight', original);
+        else delete (HTMLTextAreaElement.prototype as any).scrollHeight;
+    };
+};
 
 const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement =>
     fixture.debugElement.query(By.css('button[type="submit"]')).nativeElement;
@@ -153,12 +183,13 @@ class TextareaControlWithAsyncValidators {
     imports: [KbqTextareaModule, FormsModule],
     template: `
         <kbq-form-field>
-            <textarea kbqTextarea [canGrow]="true" [maxRows]="3" [(ngModel)]="value"></textarea>
+            <textarea kbqTextarea [canGrow]="canGrow()" [maxRows]="3" [(ngModel)]="value"></textarea>
         </kbq-form-field>
     `
 })
 class KbqTextareaGrowWithMaxRows {
     readonly textarea = viewChild.required(KbqTextarea);
+    readonly canGrow = signal(true);
     value: string = 'line1\nline2';
 }
 
@@ -367,6 +398,74 @@ describe('KbqTextarea', () => {
 
             expect(growSpy).toHaveBeenCalledTimes(1);
         }));
+
+        it('should clamp the height and mark the limit once maxRows is exceeded', fakeAsync(() => {
+            const restore = mockScrollHeight(200);
+
+            try {
+                const fixture = createComponent(KbqTextareaGrowWithMaxRows, [], [measuredLineHeight(20, 5)]);
+
+                fixture.detectChanges();
+                flush();
+
+                const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
+                const element = getTextareaElement(fixture);
+
+                textarea.grow();
+                fixture.detectChanges();
+
+                // Clamped to `maxRows` lines and the vertical padding rather than to the measured content height.
+                expect(element.style.minHeight).toBe('70px');
+                expect(element.classList.contains('kbq-textarea_max-row-limit-reached')).toBe(true);
+            } finally {
+                restore();
+            }
+        }));
+
+        it('should drop the grown height and the row limit once canGrow is turned off', fakeAsync(() => {
+            const restore = mockScrollHeight(200);
+
+            try {
+                const fixture = createComponent(KbqTextareaGrowWithMaxRows, [], [measuredLineHeight(20, 5)]);
+
+                fixture.detectChanges();
+                flush();
+
+                const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
+                const element = getTextareaElement(fixture);
+
+                textarea.grow();
+                fixture.detectChanges();
+
+                expect(element.style.minHeight).toBe('70px');
+
+                fixture.componentInstance.canGrow.set(false);
+                fixture.detectChanges();
+                textarea.grow();
+                fixture.detectChanges();
+
+                // The stylesheet floor applies again, and the resize handle that the limit class hides comes back.
+                expect(element.style.minHeight).toBe('');
+                expect(textarea.maxRowLimitReached).toBe(false);
+                expect(element.classList.contains('kbq-textarea_max-row-limit-reached')).toBe(false);
+            } finally {
+                restore();
+            }
+        }));
+
+        it('should keep a min-height it did not set while canGrow is off', () => {
+            const fixture = createComponent(KbqTextareaGrowOff);
+
+            fixture.detectChanges();
+
+            const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
+            const element = getTextareaElement(fixture);
+
+            element.style.minHeight = '120px';
+            textarea.grow();
+
+            expect(element.style.minHeight).toBe('120px');
+        });
     });
 
     describe('ErrorStateMatcher', () => {
