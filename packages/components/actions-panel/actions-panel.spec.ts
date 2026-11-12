@@ -1,3 +1,4 @@
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { OverlayContainer, ScrollStrategy } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { SpyLocation } from '@angular/common/testing';
@@ -6,6 +7,7 @@ import {
     Component,
     ElementRef,
     inject,
+    Injector,
     Provider,
     TemplateRef,
     Type,
@@ -13,7 +15,8 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { lastValueFrom } from 'rxjs';
+import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
+import { lastValueFrom, NEVER } from 'rxjs';
 import { KBQ_ACTIONS_PANEL_DATA, KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR, KbqActionsPanel } from './actions-panel';
 import { KbqActionsPanelConfig, kbqActionsPanelDefaultConfigProvider } from './actions-panel-config';
 import { KbqActionsPanelRef } from './actions-panel-ref';
@@ -101,6 +104,28 @@ export class ActionsPanelController {
 
     close<R = string>(result?: R): void {
         this.actionsPanel.close(result);
+    }
+}
+
+@Component({
+    selector: 'actions-panel-overflow-items',
+    imports: [KbqOverflowItemsModule],
+    template: `
+        <ng-template #actionsPanel>
+            <div kbqOverflowItems></div>
+        </ng-template>
+    `,
+    providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ActionsPanelOverflowItems {
+    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    private readonly template = viewChild.required('actionsPanel', { read: TemplateRef });
+
+    open(config?: KbqActionsPanelConfig): KbqActionsPanelRef {
+        return this.actionsPanel.open(this.template(), config);
     }
 }
 
@@ -466,5 +491,25 @@ describe(KbqActionsPanelModule.name, () => {
         componentInstance.openFromTemplate({ overlayContainer, maxWidth: '999px' });
 
         expect(getOverlayPaneElement().style.maxWidth).toBe('800px');
+    });
+
+    it.each([
+        ['in the viewport', false],
+        ['in an overlayContainer', true]
+    ])('should make KbqOverflowItems inside it observe the element that bounds it %s', (_, scoped) => {
+        // `NEVER` as a real observer: one that completes would flush the debounced recalculation on destroy. The mock
+        // reaches only the panel content, since the panel observes `overlayContainer` itself to sync its max-width.
+        const observe = jest.fn().mockReturnValue(NEVER);
+        const { componentInstance } = createComponent(ActionsPanelOverflowItems);
+        const { elementRef } = componentInstance;
+        const injector = Injector.create({
+            parent: TestBed.inject(Injector),
+            providers: [{ provide: SharedResizeObserver, useValue: { observe } }]
+        });
+        const { overlayRef } = componentInstance.open(
+            scoped ? { overlayContainer: elementRef, injector } : { injector }
+        );
+
+        expect(observe).toHaveBeenCalledWith(scoped ? elementRef.nativeElement : overlayRef.hostElement);
     });
 });
