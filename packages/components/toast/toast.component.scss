@@ -86,6 +86,7 @@
 
 .kbq-toast__actions {
     display: flex;
+    flex-wrap: wrap;
 
     padding-top: var(--kbq-toast-size-button-stack-padding-top);
 
