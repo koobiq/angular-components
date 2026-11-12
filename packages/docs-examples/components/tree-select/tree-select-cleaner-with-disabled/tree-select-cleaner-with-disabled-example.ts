@@ -1,13 +1,13 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import {
-    buildTree,
     FlatNode,
     getChildren,
+    getLabel,
     getLevel,
     getTreeData,
     getValue,
@@ -17,8 +17,8 @@ import {
 } from '../tree-select-cleaner-data';
 import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
-/** Nodes the user is not allowed to deselect. */
-const lockedNodes = ['Load balancer'];
+/** Ids of the nodes the user is not allowed to deselect. */
+const lockedNodes = ['loadBalancer'];
 
 /**
  * @title Tree-select cleaner with disabled nodes
@@ -89,12 +89,12 @@ const lockedNodes = ['Load balancer'];
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectCleanerWithDisabledExample extends BaseLocalizedExample<ExampleTranslation> {
-    protected readonly kept = model(['Database', 'Load balancer', 'Message queue']);
-    protected readonly cleared = model(['Database', 'Load balancer', 'Message queue']);
+    protected readonly kept = model(['database', 'loadBalancer', 'messageQueue']);
+    protected readonly cleared = model(['database', 'loadBalancer', 'messageQueue']);
 
     // Each tree-select needs its own control and data source: they share neither selection nor expansion.
-    protected readonly keptTreeControl = new FlatTreeControl<FlatNode>(getLevel, isExpandable, getValue, getValue);
-    protected readonly clearedTreeControl = new FlatTreeControl<FlatNode>(getLevel, isExpandable, getValue, getValue);
+    protected readonly keptTreeControl = new FlatTreeControl<FlatNode>(getLevel, isExpandable, getValue, getLabel);
+    protected readonly clearedTreeControl = new FlatTreeControl<FlatNode>(getLevel, isExpandable, getValue, getLabel);
 
     protected readonly keptDataSource = this.createDataSource(this.keptTreeControl);
     protected readonly clearedDataSource = this.createDataSource(this.clearedTreeControl);
@@ -103,7 +103,7 @@ export class TreeSelectCleanerWithDisabledExample extends BaseLocalizedExample<E
     protected readonly clearEverything = (_node: FlatNode) => true;
 
     protected isLocked(node: FlatNode): boolean {
-        return lockedNodes.includes(node.name);
+        return lockedNodes.includes(node.id);
     }
 
     protected hasChild(_: number, node: FlatNode): boolean {
@@ -116,12 +116,15 @@ export class TreeSelectCleanerWithDisabledExample extends BaseLocalizedExample<E
             new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren)
         );
 
-        dataSource.data = buildTree(getTreeData(this.t()));
-
         return dataSource;
     }
 
     constructor() {
         super(TRANSLATIONS);
+        effect(() => {
+            // The nodes are keyed by stable ids, so a rebuild on a locale switch keeps the selection.
+            this.keptDataSource.data = getTreeData(this.t());
+            this.clearedDataSource.data = getTreeData(this.t());
+        });
     }
 }
