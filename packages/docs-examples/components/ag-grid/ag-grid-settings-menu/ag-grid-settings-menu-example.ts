@@ -51,9 +51,7 @@ export class AgGridSettingsMenuExample extends BaseLocalizedExample<ExampleTrans
         { id: 'normal', label: this.t().normal, rowHeight: 40 }
     ]);
 
-    private readonly densityId = signal('normal');
-
-    protected readonly density = computed(() => this.densities().find(({ id }) => id === this.densityId())!);
+    protected readonly density = signal(this.densities()[1]);
 
     protected readonly settingsMenuItems = computed<KbqAgGridSettingsMenuItems>(() => [
         kbqAgGridSettingsMenuColumnsItem(),
@@ -69,9 +67,9 @@ export class AgGridSettingsMenuExample extends BaseLocalizedExample<ExampleTrans
             items: this.densities().map((density) => ({
                 id: density.id,
                 label: density.label,
-                checked: computed(() => this.densityId() === density.id),
+                checked: computed(() => this.density() === density),
                 keepOpen: true,
-                action: () => this.densityId.set(density.id)
+                action: () => this.density.set(density)
             }))
         }
     ]);
