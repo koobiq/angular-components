@@ -33,11 +33,7 @@ type ExampleAction = {
         <button kbq-button (click)="open()">open</button>
 
         <ng-template let-data>
-            <div
-                #kbqOverflowItems="kbqOverflowItems"
-                kbqOverflowItems
-                [additionalResizeObserverTargets]="additionalResizeObserverTargets"
-            >
+            <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
                 <div order="99" [kbqOverflowItem]="action.Counter">
                     <div class="example-counter">Selected: {{ data.length }}</div>
                     <kbq-divider class="example-divider-vertical" [vertical]="true" />
@@ -137,7 +133,6 @@ export class ExampleActionsPanel {
         { id: 'Archive', icon: 'kbq-box-archive-arrow-down_16' }
     ];
     protected readonly action = { Counter: 'counter' };
-    protected readonly additionalResizeObserverTargets = this.elementRef.nativeElement;
 
     constructor() {
         afterNextRender(() => this.open());
