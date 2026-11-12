@@ -1508,5 +1508,109 @@ describe('KbqPipeDatetimeComponent', () => {
 
             expect(asInternal(pipe()).presetName(legacy)).toBe('Last day');
         });
+
+        it('should keep the stored fallback for a zero-name match', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: keyedPresets,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            const legacy = { name: 'Today', start: { days: 0 }, end: null };
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: legacy })]);
+            fixture.detectChanges();
+
+            expect(asInternal(pipe()).presetName(legacy)).toBe('Today');
+        });
+
+        it('should translate a keyed preset absent from current values', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: [],
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            const keyed = keyedPresets[0];
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: keyed })]);
+            fixture.detectChanges();
+
+            expect(asInternal(pipe()).presetName(keyed)).toBe('Last day');
+        });
+
+        it('should not resolve a custom range through the preset resolver', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: keyedPresets,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            const range = { start: '2025-10-01T00:00:00.000Z', end: '2025-10-02T00:00:00.000Z' };
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: range })]);
+            fixture.detectChanges();
+
+            expect(asInternal(pipe()).formattedValue).toBeTruthy();
+            expect(resolver).not.toHaveBeenCalledWith(expect.objectContaining({ kind: 'date-preset' }));
+        });
+
+        it('should respect an empty resolver result in isEmpty', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: keyedPresets,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: keyedPresets[0] })]);
+            fixture.detectChanges();
+
+            resolver.mockReturnValueOnce('');
+
+            expect(pipe().isEmpty).toBe(true);
+        });
+
+        it('should render the resolved name in the trigger', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Datetime',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Datetime,
+                    values: keyedPresets,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: keyedPresets[0] })]);
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelector('.kbq-pipe__value').textContent.trim()).toBe('Last day');
+
+            translations.set({ 'filters.lastDay': 'Последний день' });
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelector('.kbq-pipe__value').textContent.trim()).toBe('Последний день');
+        });
     });
 });

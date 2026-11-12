@@ -510,6 +510,19 @@ describe('KbqFilterBar', () => {
             expect(JSON.stringify(filterBar.filter()!.pipes[0].value)).not.toContain('function');
         });
 
+        it('should preserve keyed date presets through snapshots without functions', () => {
+            const filterBar = getFilterBar();
+            const keyedPreset = { name: 'Last day', nameKey: 'filters.lastDay', start: { days: -1 }, end: null };
+
+            filterBar.filter.set(createFilter([createPipe({ type: KbqPipeTypes.Date, value: keyedPreset })]));
+
+            filterBar.saveFilterState();
+            filterBar.restoreFilterState();
+
+            expect(filterBar.filter()!.pipes[0].value).toEqual(keyedPreset);
+            expect(JSON.stringify(filterBar.filter()!.pipes[0].value)).not.toContain('function');
+        });
+
         it('should not wipe the current filter when there is nothing to restore', () => {
             const filterBar = getFilterBar();
 
