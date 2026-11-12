@@ -34,26 +34,26 @@ The unprefixed and `ImpurePipe` flavours are deprecated and will be removed in 2
 
 #### The pipes
 
-| Pipe                       | Input        | Arguments                                      | DateFormatter method    |
-| -------------------------- | ------------ | ---------------------------------------------- | ----------------------- |
-| `kbqAbsoluteShortDate`     | date         | `currYear?: boolean`                           | `absoluteShortDate`     |
-| `kbqAbsoluteLongDate`      | date         | `currYear?: boolean`                           | `absoluteLongDate`      |
-| `kbqAbsoluteShortDateTime` | date         | `options?: DateTimeOptions`                    | `absoluteShortDateTime` |
-| `kbqAbsoluteLongDateTime`  | date         | `options?: DateTimeOptions`                    | `absoluteLongDateTime`  |
-| `kbqRelativeShortDate`     | date         | —                                              | `relativeShortDate`     |
-| `kbqRelativeLongDate`      | date         | —                                              | `relativeLongDate`      |
-| `kbqRelativeShortDateTime` | date         | `options?: DateTimeOptions`                    | `relativeShortDateTime` |
-| `kbqRelativeLongDateTime`  | date         | `options?: DateTimeOptions`                    | `relativeLongDateTime`  |
-| `kbqRangeShortDate`        | `[from, to]` | —                                              | `rangeShortDate`        |
-| `kbqRangeLongDate`         | `[from, to]` | —                                              | `rangeLongDate`         |
-| `kbqRangeShortDateTime`    | `[from, to]` | `options?: DateTimeOptions`                    | `rangeShortDateTime`    |
-| `kbqRangeMiddleDateTime`   | `[from, to]` | `options?: DateTimeOptions`                    | `rangeMiddleDateTime`   |
-| `kbqRangeLongDateTime`     | `[from, to]` | `options?: DateTimeOptions`                    | `rangeLongDateTime`     |
-| `kbqDurationShortest`      | `[from, to]` | `options?: DateTimeOptions`                    | `durationShortest`      |
-| `kbqDurationShort`         | `[from, to]` | `units?: DurationUnit[]`, `fraction?: boolean` | `durationShort`         |
-| `kbqDurationLong`          | `[from, to]` | `units?: DurationUnit[]`, `fraction?: boolean` | `durationLong`          |
+| Pipe                       | Input        | Arguments                                          | DateFormatter method    |
+| -------------------------- | ------------ | -------------------------------------------------- | ----------------------- |
+| `kbqAbsoluteShortDate`     | date         | `currYear?: boolean`                               | `absoluteShortDate`     |
+| `kbqAbsoluteLongDate`      | date         | `currYear?: boolean`                               | `absoluteLongDate`      |
+| `kbqAbsoluteShortDateTime` | date         | `options?: DateTimeOptions`                        | `absoluteShortDateTime` |
+| `kbqAbsoluteLongDateTime`  | date         | `options?: DateTimeOptions`                        | `absoluteLongDateTime`  |
+| `kbqRelativeShortDate`     | date         | `options?: Pick<DateTimeOptions, 'sentenceStart'>` | `relativeShortDate`     |
+| `kbqRelativeLongDate`      | date         | `options?: Pick<DateTimeOptions, 'sentenceStart'>` | `relativeLongDate`      |
+| `kbqRelativeShortDateTime` | date         | `options?: DateTimeOptions`                        | `relativeShortDateTime` |
+| `kbqRelativeLongDateTime`  | date         | `options?: DateTimeOptions`                        | `relativeLongDateTime`  |
+| `kbqRangeShortDate`        | `[from, to]` | —                                                  | `rangeShortDate`        |
+| `kbqRangeLongDate`         | `[from, to]` | —                                                  | `rangeLongDate`         |
+| `kbqRangeShortDateTime`    | `[from, to]` | `options?: DateTimeOptions`                        | `rangeShortDateTime`    |
+| `kbqRangeMiddleDateTime`   | `[from, to]` | `options?: DateTimeOptions`                        | `rangeMiddleDateTime`   |
+| `kbqRangeLongDateTime`     | `[from, to]` | `options?: DateTimeOptions`                        | `rangeLongDateTime`     |
+| `kbqDurationShortest`      | `[from, to]` | `options?: DateTimeOptions`                        | `durationShortest`      |
+| `kbqDurationShort`         | `[from, to]` | `units?: DurationUnit[]`, `fraction?: boolean`     | `durationShort`         |
+| `kbqDurationLong`          | `[from, to]` | `units?: DurationUnit[]`, `fraction?: boolean`     | `durationLong`          |
 
-`DateTimeOptions` is `{ seconds?: boolean; milliseconds?: boolean; currYear?: boolean }`. `kbqDurationShortest` uses only `seconds` (`true` by default) and `milliseconds` from it.
+`DateTimeOptions` is `{ seconds?: boolean; milliseconds?: boolean; currYear?: boolean; sentenceStart?: boolean }`; `sentenceStart` is read by the relative formats only. `kbqDurationShortest` uses only `seconds` (`true` by default) and `milliseconds` from it.
 
 ```html
 <div>{{ [task.startedAt, task.finishedAt] | kbqDurationShortest }}</div>
@@ -188,6 +188,8 @@ On the very first visit there is no cookie yet, and the page renders with the fa
 #### Relative date
 
 <Example id="relative-date-formatter" />
+
+By default, a relative date starts with a capital letter — it can open a sentence. When the date appears mid-sentence, pass `{ sentenceStart: false }` to the pipe or the formatter to lowercase the relative word ("Updated yesterday, 14:48"). The absolute part of the same format is not affected.
 
 #### Date range
 
