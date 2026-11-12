@@ -14,7 +14,7 @@ import {
 } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 export class FileNode {
     id: string;
@@ -137,13 +137,13 @@ export const DATA_OBJECT = {
 
             <!-- Visible textual reason for the error state: shown even if a red tag was collapsed into the overflow counter -->
             @if (deletedCount > 0) {
-                <kbq-hint>{{ text().deletedItems(deletedCount) }}</kbq-hint>
+                <kbq-hint>{{ t().deletedItems(deletedCount) }}</kbq-hint>
             }
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeSelectDeletedNodesExample extends BaseLocalizedExample<ExampleText> {
+export class TreeSelectDeletedNodesExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly defaultErrorStateMatcher = inject(ErrorStateMatcher);
 
@@ -175,7 +175,7 @@ export class TreeSelectDeletedNodesExample extends BaseLocalizedExample<ExampleT
     private readonly backendDeletedIds = ['Downloads/November', 'Downloads/October'];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         // The tree resolves nodes by their stable id (not the display name).

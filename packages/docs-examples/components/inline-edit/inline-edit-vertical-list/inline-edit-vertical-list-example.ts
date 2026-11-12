@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit vertical list
@@ -20,7 +20,7 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <form [formGroup]="form">
             <kbq-inline-edit>
-                <kbq-label>{{ text().country }}</kbq-label>
+                <kbq-label>{{ t().country }}</kbq-label>
 
                 <div class="example-inline-text" kbqInlineEditViewMode>
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.country.value }" />
@@ -31,7 +31,7 @@ import { ExampleText, TEXT } from './l10n';
             </kbq-inline-edit>
 
             <kbq-inline-edit>
-                <kbq-label>{{ text().capital }}</kbq-label>
+                <kbq-label>{{ t().capital }}</kbq-label>
 
                 <div class="example-inline-text" kbqInlineEditViewMode>
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.capital.value }" />
@@ -42,7 +42,7 @@ import { ExampleText, TEXT } from './l10n';
             </kbq-inline-edit>
 
             <kbq-inline-edit>
-                <kbq-label>{{ text().currency }}</kbq-label>
+                <kbq-label>{{ t().currency }}</kbq-label>
 
                 <div class="example-inline-text" kbqInlineEditViewMode>
                     <ng-container *ngTemplateOutlet="view; context: { $implicit: form.controls.currency.value }" />
@@ -74,9 +74,9 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditVerticalListExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditVerticalListExample extends BaseLocalizedExample<ExampleTranslation> {
     protected get placeholder(): string {
-        return this.text().placeholder;
+        return this.t().placeholder;
     }
 
     protected readonly form = new FormGroup({
@@ -86,6 +86,6 @@ export class InlineEditVerticalListExample extends BaseLocalizedExample<ExampleT
     });
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

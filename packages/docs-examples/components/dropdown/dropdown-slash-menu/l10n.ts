@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Editor and menu groups of the slash-menu example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     editorLabel: string;
     nothingFound: string;
     closeMenu: string;
@@ -15,7 +15,7 @@ export interface ExampleBlock {
     icon: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         editorLabel: 'Текст статьи',
         nothingFound: 'Ничего не найдено',

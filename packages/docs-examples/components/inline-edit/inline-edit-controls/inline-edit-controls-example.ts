@@ -10,7 +10,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit controls
@@ -34,7 +34,7 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <form style="width: 100%" [formGroup]="form">
             <kbq-dl>
-                <kbq-dt>{{ text().textField }}</kbq-dt>
+                <kbq-dt>{{ t().textField }}</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit>
                         <div class="example-inline-text" kbqInlineEditViewMode>
@@ -46,7 +46,7 @@ import { ExampleText, TEXT } from './l10n';
                     </kbq-inline-edit>
                 </kbq-dd>
 
-                <kbq-dt class="example-multiline-text__header">{{ text().textarea }}</kbq-dt>
+                <kbq-dt class="example-multiline-text__header">{{ t().textarea }}</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit #textareaInlineEdit showActions (saved)="update()">
                         <div kbqInlineEditViewMode class="example-inline-text__textarea-view">
@@ -71,7 +71,7 @@ import { ExampleText, TEXT } from './l10n';
                     </kbq-inline-edit>
                 </kbq-dd>
 
-                <kbq-dt class="example-multiline-text__header">{{ text().selectMultiple }}</kbq-dt>
+                <kbq-dt class="example-multiline-text__header">{{ t().selectMultiple }}</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit>
                         <div
@@ -103,7 +103,7 @@ import { ExampleText, TEXT } from './l10n';
                     </kbq-inline-edit>
                 </kbq-dd>
 
-                <kbq-dt>{{ text().select }}</kbq-dt>
+                <kbq-dt>{{ t().select }}</kbq-dt>
                 <kbq-dd>
                     <kbq-inline-edit>
                         <div class="example-inline-text" kbqInlineEditViewMode>
@@ -160,10 +160,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditControlsExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditControlsExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly maxRows = 20;
     protected get placeholder(): string {
-        return this.text().placeholder;
+        return this.t().placeholder;
     }
     protected readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + (i + 1)));
 
@@ -183,6 +183,6 @@ export class InlineEditControlsExample extends BaseLocalizedExample<ExampleText>
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

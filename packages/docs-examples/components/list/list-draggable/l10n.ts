@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the list-draggable example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     item7Pinned: string;
     groupHeader: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         item7Pinned: 'Пункт 7. Сортировка запрещена',
         groupHeader: 'Заголовок группы'

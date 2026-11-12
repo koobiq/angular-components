@@ -6,7 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Navbar vertical
@@ -23,13 +23,13 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'navbar-vertical-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarVerticalExample extends BaseLocalizedExample<ExampleText> {
+export class NavbarVerticalExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly popUpPlacements = PopUpPlacements;
     readonly colors = KbqComponentColors;
-    /** Position of the selected app in `text().apps`, so the selection survives a locale switch. */
+    /** Position of the selected app in `t().apps`, so the selection survives a locale switch. */
     readonly selectedApp = signal(0);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

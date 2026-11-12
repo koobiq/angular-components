@@ -5,7 +5,7 @@ import { ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqError, KbqHint } from '@koobiq/components/form-field';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Radio validation
@@ -24,15 +24,15 @@ import { ExampleText, TEXT } from './l10n';
                     formControlName="secondFactor"
                     [errorStateMatcher]="errorStateMatcher"
                 >
-                    <kbq-radio-button value="authenticator">{{ text().authenticatorApp }}</kbq-radio-button>
-                    <kbq-radio-button value="security-key">{{ text().hardwareKey }}</kbq-radio-button>
-                    <kbq-radio-button value="sms">{{ text().smsCode }}</kbq-radio-button>
-                    <kbq-hint>{{ text().saveWithoutChoosing }}</kbq-hint>
-                    <kbq-error>{{ text().chooseSecondFactor }}</kbq-error>
+                    <kbq-radio-button value="authenticator">{{ t().authenticatorApp }}</kbq-radio-button>
+                    <kbq-radio-button value="security-key">{{ t().hardwareKey }}</kbq-radio-button>
+                    <kbq-radio-button value="sms">{{ t().smsCode }}</kbq-radio-button>
+                    <kbq-hint>{{ t().saveWithoutChoosing }}</kbq-hint>
+                    <kbq-error>{{ t().chooseSecondFactor }}</kbq-error>
                 </kbq-radio-group>
             </div>
 
-            <button color="contrast" kbq-button type="submit">{{ text().save }}</button>
+            <button color="contrast" kbq-button type="submit">{{ t().save }}</button>
         </form>
     `,
     // A fixed width keeps the centered example in place when the error, wider than the options, appears.
@@ -46,7 +46,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-align-center-center layout-row layout-padding-l'
     }
 })
-export class RadioValidationExample extends BaseLocalizedExample<ExampleText> {
+export class RadioValidationExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly form = new FormGroup({
         secondFactor: new FormControl<string | null>(null, Validators.required)
     });
@@ -54,6 +54,6 @@ export class RadioValidationExample extends BaseLocalizedExample<ExampleText> {
     protected readonly errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

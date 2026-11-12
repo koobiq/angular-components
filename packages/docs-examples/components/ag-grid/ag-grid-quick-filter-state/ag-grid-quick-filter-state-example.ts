@@ -10,7 +10,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -22,7 +22,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     imports: [AgGridModule, KbqAgGridThemeModule, FormsModule, KbqFormFieldModule, KbqInputModule],
     template: `
         <kbq-form-field [style.width.px]="300">
-            <input kbqInput [placeholder]="text().quickFilter" [(ngModel)]="filter" />
+            <input kbqInput [placeholder]="t().quickFilter" [(ngModel)]="filter" />
             <kbq-cleaner (click)="quickFilterState.reset()" />
         </kbq-form-field>
 
@@ -52,7 +52,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridQuickFilterStateExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridQuickFilterStateExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly filter = model('');
     readonly columnDefs = computed<ColDef[]>(() =>
         Array.from({ length: 6 }, (_, i) => ({
@@ -68,6 +68,6 @@ export class AgGridQuickFilterStateExample extends BaseLocalizedExample<ExampleT
     );
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

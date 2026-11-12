@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqListModule } from '@koobiq/components/list';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title List multiple keyboard
@@ -11,7 +11,7 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'list-multiple-keyboard-example',
     imports: [KbqListModule, FormsModule],
     template: `
-        <kbq-list-selection multiple="keyboard" [attr.aria-label]="text().items" [(ngModel)]="selected">
+        <kbq-list-selection multiple="keyboard" [attr.aria-label]="t().items" [(ngModel)]="selected">
             <kbq-list-option disabled [value]="'Item 1'">Item 1</kbq-list-option>
             <kbq-list-option [value]="'Item 2'">Item 2</kbq-list-option>
             <kbq-list-option [value]="'Item 3'">Item 3</kbq-list-option>
@@ -24,14 +24,14 @@ import { ExampleText, TEXT } from './l10n';
             <kbq-list-option [value]="'Item 10'">Item 10</kbq-list-option>
         </kbq-list-selection>
         <br />
-        <div>{{ text().selected }} {{ selected }}</div>
+        <div>{{ t().selected }} {{ selected }}</div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListMultipleKeyboardExample extends BaseLocalizedExample<ExampleText> {
+export class ListMultipleKeyboardExample extends BaseLocalizedExample<ExampleTranslation> {
     selected = [];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

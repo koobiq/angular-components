@@ -6,7 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Popover close
@@ -18,22 +18,22 @@ import { ExampleText, TEXT } from './l10n';
     styleUrls: ['popover-close-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverCloseExample extends BaseLocalizedExample<ExampleText> {
+export class PopoverCloseExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly members = computed<Record<string, string>[]>(() => [
-        { name: 'Alex Unipraise', role: this.text().editor },
-        { name: 'Serge Vox', role: this.text().editor },
-        { name: 'Rick Brick', role: this.text().viewer },
-        { name: 'Viber Curly', role: this.text().viewer },
-        { name: 'Jackie Ckang', role: this.text().viewer },
-        { name: 'Robert Skinner', role: this.text().viewer },
-        { name: 'Woodie Hoodie', role: this.text().viewer },
-        { name: 'Alex Buckmaster', role: this.text().viewer },
-        { name: 'Chris Glasser', role: this.text().viewer },
-        { name: 'Corina McCoy', role: this.text().viewer }
+        { name: 'Alex Unipraise', role: this.t().editor },
+        { name: 'Serge Vox', role: this.t().editor },
+        { name: 'Rick Brick', role: this.t().viewer },
+        { name: 'Viber Curly', role: this.t().viewer },
+        { name: 'Jackie Ckang', role: this.t().viewer },
+        { name: 'Robert Skinner', role: this.t().viewer },
+        { name: 'Woodie Hoodie', role: this.t().viewer },
+        { name: 'Alex Buckmaster', role: this.t().viewer },
+        { name: 'Chris Glasser', role: this.t().viewer },
+        { name: 'Corina McCoy', role: this.t().viewer }
     ]);
     protected readonly componentColors = KbqComponentColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

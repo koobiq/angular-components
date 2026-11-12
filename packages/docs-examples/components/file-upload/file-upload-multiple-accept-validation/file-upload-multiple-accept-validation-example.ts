@@ -5,7 +5,7 @@ import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title File upload multiple accept validation
@@ -28,7 +28,7 @@ import { ExampleText, TEXT } from './l10n';
                 }
             </ng-template>
 
-            <kbq-hint>{{ text().filesTxtAllowed }}</kbq-hint>
+            <kbq-hint>{{ t().filesTxtAllowed }}</kbq-hint>
 
             @for (control of fileList.controls; track $index) {
                 <kbq-hint color="error">
@@ -41,16 +41,16 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadMultipleAcceptValidationExample extends BaseLocalizedExample<ExampleText> {
+export class FileUploadMultipleAcceptValidationExample extends BaseLocalizedExample<ExampleTranslation> {
     protected accept: KbqFileTypeSpecifier = ['.txt'];
     protected get fileExtensionMismatchErrorMessage(): string {
-        return this.text().provideValidExtension;
+        return this.t().provideValidExtension;
     }
 
     protected readonly fileList = new FormArray<FormControl<KbqFileItem | null>>([]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.fileList.statusChanges.subscribe(() => {
             this.fileList.controls.forEach((control) => {
                 if (control?.value && 'hasError' in control.value) {

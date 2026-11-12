@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqDivider } from '@koobiq/components/divider';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Description list shared width
@@ -12,26 +12,26 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqDl, KbqDt, KbqDd, KbqDivider],
     template: `
         <kbq-dl resizable [(dtWidth)]="dtWidth">
-            <kbq-dt>{{ text().incidentType }}</kbq-dt>
-            <kbq-dd>{{ text().malwareInfection }}</kbq-dd>
+            <kbq-dt>{{ t().incidentType }}</kbq-dt>
+            <kbq-dd>{{ t().malwareInfection }}</kbq-dd>
 
-            <kbq-dt>{{ text().identifier }}</kbq-dt>
+            <kbq-dt>{{ t().identifier }}</kbq-dt>
             <kbq-dd>INC-2026-125-78253</kbq-dd>
 
-            <kbq-dt>{{ text().assignee }}</kbq-dt>
+            <kbq-dt>{{ t().assignee }}</kbq-dt>
             <kbq-dd>John Smith</kbq-dd>
         </kbq-dl>
 
         <kbq-divider />
 
         <kbq-dl resizable [(dtWidth)]="dtWidth">
-            <kbq-dt>{{ text().incidentType }}</kbq-dt>
-            <kbq-dd>{{ text().bruteForceAttack }}</kbq-dd>
+            <kbq-dt>{{ t().incidentType }}</kbq-dt>
+            <kbq-dd>{{ t().bruteForceAttack }}</kbq-dd>
 
-            <kbq-dt>{{ text().identifier }}</kbq-dt>
+            <kbq-dt>{{ t().identifier }}</kbq-dt>
             <kbq-dd>INC-2026-13-44357</kbq-dd>
 
-            <kbq-dt>{{ text().assignee }}</kbq-dt>
+            <kbq-dt>{{ t().assignee }}</kbq-dt>
             <kbq-dd>Jane Doe</kbq-dd>
         </kbq-dl>
     `,
@@ -45,10 +45,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DlWidthSyncExample extends BaseLocalizedExample<ExampleText> {
+export class DlWidthSyncExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly dtWidth = model(160);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

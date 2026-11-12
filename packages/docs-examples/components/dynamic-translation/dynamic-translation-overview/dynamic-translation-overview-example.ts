@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqDynamicTranslationModule } from '@koobiq/components/dynamic-translation';
 import { KbqLink } from '@koobiq/components/link';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Dynamic translation overview example
@@ -11,7 +11,7 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'dynamic-translation-overview-example',
     imports: [KbqDynamicTranslationModule, KbqLink],
     template: `
-        <kbq-dynamic-translation [text]="text().message">
+        <kbq-dynamic-translation [text]="t().message">
             <a
                 *kbqDynamicTranslationSlot="'link'; let context"
                 kbqLink
@@ -24,8 +24,8 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DynamicTranslationOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class DynamicTranslationOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the top-bar-overflow example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     page: string;
     description: string;
     status: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     badge: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         page: 'Страница',
         description: 'Описание',

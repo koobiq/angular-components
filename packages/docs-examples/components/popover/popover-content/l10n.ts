@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the popover-content example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     shareProject: string;
     email: string;
     sendInvite: string;
@@ -15,7 +15,7 @@ export interface ExampleText {
     doMagic: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         shareProject: 'Поделиться проектом',
         email: 'Эл. почта',

@@ -7,7 +7,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Datepicker inactive
@@ -25,7 +25,7 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <div class="docs-example__datepicker-inactive kbq-form-vertical">
             <div class="kbq-form__row">
-                <label class="kbq-form__label">{{ text().disabledEmptyField }}</label>
+                <label class="kbq-form__label">{{ t().disabledEmptyField }}</label>
                 <kbq-form-field>
                     <input [disabled]="true" [kbqDatepicker]="emptyDatepicker" [placeholder]="''" />
                     <kbq-datepicker-toggle-icon kbqSuffix [for]="emptyDatepicker" />
@@ -36,7 +36,7 @@ import { ExampleText, TEXT } from './l10n';
             <br />
 
             <div class="kbq-form__row">
-                <label class="kbq-form__label">{{ text().readOnlyField }}</label>
+                <label class="kbq-form__label">{{ t().readOnlyField }}</label>
                 <kbq-form-field>
                     <input [disabled]="true" [kbqDatepicker]="datepicker" [ngModel]="selectedDate" />
                     <kbq-datepicker-toggle-icon kbqSuffix [for]="datepicker" />
@@ -47,13 +47,13 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatepickerInactiveExample extends BaseLocalizedExample<ExampleText> {
+export class DatepickerInactiveExample extends BaseLocalizedExample<ExampleTranslation> {
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     selectedDate: DateTime;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.selectedDate = this.adapter.createDate(1989, 11, 13);
     }
 }

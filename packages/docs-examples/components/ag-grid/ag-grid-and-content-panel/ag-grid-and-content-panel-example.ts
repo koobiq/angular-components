@@ -21,7 +21,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -52,7 +52,7 @@ type ExampleRowData = Record<string, string>;
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
+export class ExampleGrid extends BaseLocalizedExample<ExampleTranslation> {
     readonly cellClicked = output<CellClickedEvent>();
     readonly cellFocused = output<CellFocusedEvent>();
     readonly cellKeyDown = output<CellKeyDownEvent | FullWidthCellKeyDownEvent>();
@@ -71,7 +71,7 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
     };
 
     private readonly _columnDefs: ColDef[] = Array.from({ length: 20 }, (_, index) => ({
-        headerName: this.text().headerText,
+        headerName: this.t().headerText,
         field: 'column' + index
     }));
 
@@ -79,7 +79,7 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
 
     protected readonly rowData: ExampleRowData[] = Array.from({ length: 100 }, (_, index) => {
         return this._columnDefs.reduce((prev, _cur, i) => {
-            prev['column' + i] = `${this.text().headerText} ${index}`;
+            prev['column' + i] = `${this.t().headerText} ${index}`;
 
             return prev;
         }, {} as ExampleRowData);
@@ -94,7 +94,7 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -111,14 +111,14 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
     ],
     template: `
         <kbq-modal-title class="example-modal-title">
-            <div>{{ text().clickRowHint }}</div>
+            <div>{{ t().clickRowHint }}</div>
             <div class="example-modal-title-actions">
                 <button kbq-button [color]="componentColors.Contrast" (click)="modalRef.close()">
-                    {{ text().closeWindow }}
+                    {{ t().closeWindow }}
                 </button>
                 <button
                     kbq-button
-                    [attr.aria-label]="text().more"
+                    [attr.aria-label]="t().more"
                     [color]="componentColors.Contrast"
                     [kbqStyle]="buttonStyles.Transparent"
                 >
@@ -138,7 +138,7 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
                         @for (_i of [0, 1, 2, 3]; track $index) {
                             <button
                                 kbq-button
-                                [attr.aria-label]="text().reportBug"
+                                [attr.aria-label]="t().reportBug"
                                 [class.kbq-active]="$first"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
@@ -149,14 +149,14 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
                     </kbq-content-panel-aside>
                     <kbq-content-panel-header>
                         <div class="example-content-header-title" kbqContentPanelHeaderTitle>
-                            <span>{{ text().selectedRow(selectedRowIndex()) }}</span>
+                            <span>{{ t().selectedRow(selectedRowIndex()) }}</span>
                             <kbq-badge [badgeColor]="badgeColors.FadeError">8,6</kbq-badge>
                             <a kbqLink pseudo>July 21, 2025 2:29 PM</a>
                         </div>
                         <div class="example-content-header-actions" kbqContentPanelHeaderActions>
                             <button
                                 kbq-button
-                                [attr.aria-label]="text().copyLink"
+                                [attr.aria-label]="t().copyLink"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
                             >
@@ -164,7 +164,7 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
                             </button>
                             <button
                                 kbq-button
-                                [attr.aria-label]="text().expand"
+                                [attr.aria-label]="t().expand"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
                             >
@@ -172,32 +172,32 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
                             </button>
                             <button
                                 kbq-button
-                                [attr.aria-label]="text().more"
+                                [attr.aria-label]="t().more"
                                 [color]="componentColors.Contrast"
                                 [kbqStyle]="buttonStyles.Transparent"
                             >
                                 <i kbq-icon="kbq-ellipsis-vertical_16"></i>
                             </button>
                         </div>
-                        <div class="example-content-header-caption">{{ text().caption }}</div>
+                        <div class="example-content-header-caption">{{ t().caption }}</div>
                         <div class="example-content-header-buttons">
                             <button kbq-button [color]="componentColors.ContrastFade">
                                 <i kbq-icon="kbq-pencil_16"></i>
-                                {{ text().edit }}
+                                {{ t().edit }}
                             </button>
                             <button kbq-button [color]="componentColors.ContrastFade">
                                 <i kbq-icon="kbq-square-multiple-o_16"></i>
-                                {{ text().copy }}
+                                {{ t().copy }}
                             </button>
                             <button kbq-button [color]="componentColors.ContrastFade">
                                 <i kbq-icon="kbq-trash_16"></i>
-                                {{ text().delete }}
+                                {{ t().delete }}
                             </button>
                         </div>
                     </kbq-content-panel-header>
                     <kbq-content-panel-body class="example-content-panel-body">
                         @for (_i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
-                            <p>{{ text().dosText($index) }}</p>
+                            <p>{{ t().dosText($index) }}</p>
                         }
                     </kbq-content-panel-body>
                     <kbq-content-panel-footer>
@@ -277,7 +277,7 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleContentPanel extends BaseLocalizedExample<ExampleText> {
+export class ExampleContentPanel extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly modalRef = inject(KbqModalRef);
 
     protected readonly componentColors = KbqComponentColors;
@@ -304,7 +304,7 @@ export class ExampleContentPanel extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -315,7 +315,7 @@ export class ExampleContentPanel extends BaseLocalizedExample<ExampleText> {
     selector: 'ag-grid-and-content-panel-example',
     imports: [KbqButtonModule, KbqModalModule],
     template: `
-        <button kbq-button (click)="openModal()">{{ text().showExample }}</button>
+        <button kbq-button (click)="openModal()">{{ t().showExample }}</button>
     `,
     styles: `
         :host {
@@ -327,7 +327,7 @@ export class ExampleContentPanel extends BaseLocalizedExample<ExampleText> {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridAndContentPanelExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridAndContentPanelExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly modal = inject(KbqModalService);
 
     openModal(): void {
@@ -339,6 +339,6 @@ export class AgGridAndContentPanelExample extends BaseLocalizedExample<ExampleTe
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

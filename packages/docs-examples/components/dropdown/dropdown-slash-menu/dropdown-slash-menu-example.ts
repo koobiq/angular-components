@@ -26,7 +26,7 @@ import {
 import { KbqDropdown, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /** `Node.TEXT_NODE`, spelled out so that the example never reads a DOM global. */
 const TEXT_NODE = 3;
@@ -56,10 +56,10 @@ const MENU_KEYS = ['ArrowUp', 'ArrowDown', 'Enter', 'Escape'];
             class="example-editor kbq-text-normal"
             contenteditable="plaintext-only"
             role="textbox"
-            [attr.aria-label]="text().editorLabel"
+            [attr.aria-label]="t().editorLabel"
             (keydown)="handleKeydown($event)"
         >
-            {{ text().editorText }}
+            {{ t().editorText }}
         </div>
 
         <!--
@@ -95,11 +95,11 @@ const MENU_KEYS = ['ArrowUp', 'ArrowDown', 'Enter', 'Escape'];
             }
 
             @if (isEmpty()) {
-                <button disabled kbq-dropdown-item>{{ text().nothingFound }}</button>
+                <button disabled kbq-dropdown-item>{{ t().nothingFound }}</button>
             }
 
             <kbq-dropdown-footer class="example-slash-menu__footer">
-                <span>{{ text().closeMenu }}</span>
+                <span>{{ t().closeMenu }}</span>
                 <span class="example-slash-menu__hotkey">Esc</span>
             </kbq-dropdown-footer>
         </kbq-dropdown>
@@ -150,7 +150,7 @@ const MENU_KEYS = ['ArrowUp', 'ArrowDown', 'Enter', 'Escape'];
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownSlashMenuExample extends BaseLocalizedExample<ExampleText> {
+export class DropdownSlashMenuExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly document = inject(DOCUMENT);
     private readonly renderer = inject(Renderer2);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -171,7 +171,7 @@ export class DropdownSlashMenuExample extends BaseLocalizedExample<ExampleText> 
     protected readonly filteredGroups = computed(() => {
         const matches = createSearchPredicate(this.query());
 
-        return this.text().groups.map(({ label, items }) => ({
+        return this.t().groups.map(({ label, items }) => ({
             label,
             items: items.filter(({ name }) => matches(name))
         }));
@@ -180,7 +180,7 @@ export class DropdownSlashMenuExample extends BaseLocalizedExample<ExampleText> 
     protected readonly isEmpty = computed(() => this.filteredGroups().every(({ items }) => !items.length));
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         const destroyRef = inject(DestroyRef);
 
         afterNextRender(() => {

@@ -3,7 +3,7 @@ import { AbstractControl, FormControl, ReactiveFormsModule, ValidationErrors } f
 import { PasswordValidators } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * Allows printable ASCII only: latin letters, digits, spaces and special characters. An empty password fails too,
@@ -25,32 +25,32 @@ const latinAndSpecialSymbols = ({ value }: AbstractControl): ValidationErrors | 
         <kbq-form-field style="width: 250px">
             <input kbqInputPassword [formControl]="control" />
 
-            <kbq-password-toggle [kbqTooltipHidden]="text().showPassword" [kbqTooltipNotHidden]="text().hidePassword" />
+            <kbq-password-toggle [kbqTooltipHidden]="t().showPassword" [kbqTooltipNotHidden]="t().hidePassword" />
 
             <kbq-reactive-password-hint [hasError]="control.hasError('minLength') || control.hasError('maxLength')">
-                {{ text().from8to15 }}
+                {{ t().from8to15 }}
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="control.hasError('minUppercase')">
-                {{ text().uppercaseLatin }}
+                {{ t().uppercaseLatin }}
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="control.hasError('minLowercase')">
-                {{ text().lowercaseLatin }}
+                {{ t().lowercaseLatin }}
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="control.hasError('minNumber')">
-                {{ text().digit }}
+                {{ t().digit }}
             </kbq-reactive-password-hint>
 
             <kbq-reactive-password-hint [hasError]="control.hasError('latinAndSpecialSymbols')">
-                {{ text().latinOnly }}
+                {{ t().latinOnly }}
             </kbq-reactive-password-hint>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputPasswordOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class InputPasswordOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly control = new FormControl('', [
         PasswordValidators.minLength(8),
         PasswordValidators.maxLength(15),
@@ -61,6 +61,6 @@ export class InputPasswordOverviewExample extends BaseLocalizedExample<ExampleTe
     ]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

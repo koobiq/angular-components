@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Sidebar state saving
@@ -13,18 +13,18 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <!-- No opened binding: the sidebar owns its state, which is what lets it persist. -->
         <kbq-sidebar #sidebar="kbqSidebar" stateSavingKey="sidebar-state-saving-example" [position]="position.Left">
-            <div kbq-sidebar-opened width="170px">{{ text().openedContent }}</div>
-            <div kbq-sidebar-closed width="44px">{{ text().closedContent }}</div>
+            <div kbq-sidebar-opened width="170px">{{ t().openedContent }}</div>
+            <div kbq-sidebar-closed width="44px">{{ t().closedContent }}</div>
         </kbq-sidebar>
 
         <main>
-            <div>{{ text().stateSavingHint }}</div>
+            <div>{{ t().stateSavingHint }}</div>
             <div>
-                <button kbq-button type="button" (click)="sidebar.toggle()">{{ text().toggle }}</button>
+                <button kbq-button type="button" (click)="sidebar.toggle()">{{ t().toggle }}</button>
             </div>
             <div>
                 <button kbq-button type="button" (click)="sidebar.clearSavedState()">
-                    {{ text().resetSavedState }}
+                    {{ t().resetSavedState }}
                 </button>
             </div>
         </main>
@@ -60,10 +60,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidebarStateSavingExample extends BaseLocalizedExample<ExampleText> {
+export class SidebarStateSavingExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly position = SidebarPositions;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

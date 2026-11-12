@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Loader-overlay fixed-top
@@ -21,15 +21,15 @@ import { ExampleText, TEXT } from './l10n';
             <kbq-loader-overlay fixed-top>
                 <kbq-progress-spinner kbq-loader-overlay-indicator size="big" [mode]="'indeterminate'" />
 
-                <div kbq-loader-overlay-text>{{ text().creatingReport }}</div>
-                <div kbq-loader-overlay-caption>{{ text().reportProgress }}</div>
+                <div kbq-loader-overlay-text>{{ t().creatingReport }}</div>
+                <div kbq-loader-overlay-caption>{{ t().reportProgress }}</div>
             </kbq-loader-overlay>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoaderOverlayFixedTopExample extends BaseLocalizedExample<ExampleText> {
+export class LoaderOverlayFixedTopExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

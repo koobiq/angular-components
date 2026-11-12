@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Popover at the click point
@@ -11,7 +11,7 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'popover-relative-to-pointer-example',
     imports: [KbqButtonModule, KbqPopoverModule],
     template: `
-        <ng-template #owner let-owner>{{ text().informationAbout(owner) }}</ng-template>
+        <ng-template #owner let-owner>{{ t().informationAbout(owner) }}</ng-template>
 
         <button
             type="button"
@@ -37,7 +37,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverRelativeToPointerExample extends BaseLocalizedExample<ExampleText> {
+export class PopoverRelativeToPointerExample extends BaseLocalizedExample<ExampleTranslation> {
     protected selectedOwner = 'Ivan Ivanov';
 
     protected selectOwner(event: MouseEvent): void {
@@ -51,6 +51,6 @@ export class PopoverRelativeToPointerExample extends BaseLocalizedExample<Exampl
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

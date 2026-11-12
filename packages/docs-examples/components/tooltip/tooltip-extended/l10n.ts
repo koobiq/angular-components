@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the tooltip-extended example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     confidence: string;
     incidentType: string;
     detected: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     extendedTypes: string[];
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         confidence: 'Уверенность',
         incidentType: 'Тип инцидента',

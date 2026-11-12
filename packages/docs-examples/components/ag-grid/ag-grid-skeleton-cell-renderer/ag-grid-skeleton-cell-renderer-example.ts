@@ -10,7 +10,7 @@ import {
     IGetRowsParams,
     ModuleRegistry
 } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -51,11 +51,11 @@ const getRandomInt = (min: number, max: number): number => {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridSkeletonCellRendererExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridSkeletonCellRendererExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly columnDefs = computed<ColDef[]>(() =>
         Array.from({ length: 6 }, (_, i) => ({
             field: 'column' + i,
-            headerName: this.text().headerText
+            headerName: this.t().headerText
         }))
     );
     readonly datasource = computed<IDatasource>(() => ({
@@ -81,6 +81,6 @@ export class AgGridSkeletonCellRendererExample extends BaseLocalizedExample<Exam
     };
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

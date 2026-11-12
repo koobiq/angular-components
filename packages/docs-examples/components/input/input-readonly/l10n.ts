@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the input-readonly example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     placeholder: string;
     showPassword: string;
     hidePassword: string;
@@ -11,7 +11,7 @@ export interface ExampleText {
     number: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         placeholder: 'Плейсхолдер',
         showPassword: 'Показать пароль',

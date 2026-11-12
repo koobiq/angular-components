@@ -4,7 +4,7 @@ import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Overflow items overview
@@ -20,7 +20,7 @@ import { ExampleText, TEXT } from './l10n';
         <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems [reverseOverflowOrder]="reverseOverflowOrder()">
             @if (reverseOverflowOrder()) {
                 <div class="layout-margin-right-xs" kbqOverflowItemsResult>
-                    {{ text().andMore(kbqOverflowItems.hiddenItemIDs().size) }}
+                    {{ t().andMore(kbqOverflowItems.hiddenItemIDs().size) }}
                 </div>
             }
             @for (item of items; track item) {
@@ -29,7 +29,7 @@ import { ExampleText, TEXT } from './l10n';
                 </kbq-badge>
             }
             @if (!reverseOverflowOrder()) {
-                <div kbqOverflowItemsResult>{{ text().andMore(kbqOverflowItems.hiddenItemIDs().size) }}</div>
+                <div kbqOverflowItemsResult>{{ t().andMore(kbqOverflowItems.hiddenItemIDs().size) }}</div>
             }
         </div>
     `,
@@ -57,11 +57,11 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverflowItemsOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class OverflowItemsOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly items = Array.from({ length: 20 }, (_, i) => `Item${i}`);
     readonly reverseOverflowOrder = model(false);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

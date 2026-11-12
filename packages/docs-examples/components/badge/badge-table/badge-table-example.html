@@ -8,23 +8,23 @@
     </thead>
     <tbody>
         <tr>
-            <td>{{ text().value }}</td>
+            <td>{{ t().value }}</td>
             <td>
-                <kbq-badge [badgeColor]="colors.FadeContrast">{{ text().badge }}</kbq-badge>
+                <kbq-badge [badgeColor]="colors.FadeContrast">{{ t().badge }}</kbq-badge>
             </td>
-            <td>{{ text().phishingResource }}</td>
+            <td>{{ t().phishingResource }}</td>
         </tr>
         <tr>
             <td>
-                <a kbqLink href="https://koobiq.io/en/components/badge">{{ text().link }}</a>
+                <a kbqLink href="https://koobiq.io/en/components/badge">{{ t().link }}</a>
                 &nbsp;
-                <kbq-badge [badgeColor]="colors.FadeContrast" [compact]="true">{{ text().badge }}</kbq-badge>
+                <kbq-badge [badgeColor]="colors.FadeContrast" [compact]="true">{{ t().badge }}</kbq-badge>
             </td>
             <td>
-                {{ text().processListAttempt }}
+                {{ t().processListAttempt }}
             </td>
             <td>
-                <kbq-badge [badgeColor]="colors.FadeSuccess" [outline]="true">{{ text().badge }}</kbq-badge>
+                <kbq-badge [badgeColor]="colors.FadeSuccess" [outline]="true">{{ t().badge }}</kbq-badge>
             </td>
         </tr>
     </tbody>

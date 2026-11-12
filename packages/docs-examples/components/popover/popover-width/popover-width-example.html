@@ -1,13 +1,13 @@
 <ng-template #customContent>
-    {{ text().paragraph }}
+    {{ t().paragraph }}
 </ng-template>
 
 <ng-template #customLargeContent>
     <p>
-        {{ text().paragraph }}
+        {{ t().paragraph }}
     </p>
     <p>
-        {{ text().secondParagraph }}
+        {{ t().secondParagraph }}
     </p>
 </ng-template>
 
@@ -42,8 +42,8 @@
         [kbqPopoverHasCloseButton]="true"
         [kbqPopoverClass]="'popover-width-custom-example'"
         [kbqPopoverContent]="customContent"
-        [kbqPopoverHeader]="text().customWidth"
+        [kbqPopoverHeader]="t().customWidth"
     >
-        {{ text().customWidth }}
+        {{ t().customWidth }}
     </button>
 </div>

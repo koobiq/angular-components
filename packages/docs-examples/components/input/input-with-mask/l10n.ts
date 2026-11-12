@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the input-with-mask example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     ipAddress: string;
     macAddress: string;
     ipv6Address: string;
@@ -16,7 +16,7 @@ export interface ExampleText {
     invalidLicense: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         ipAddress: 'IP-адрес',
         macAddress: 'MAC-адрес',

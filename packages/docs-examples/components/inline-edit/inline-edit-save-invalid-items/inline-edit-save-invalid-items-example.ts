@@ -17,7 +17,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { Observable, of, switchMap, throwError, timer } from 'rxjs';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 const ROLES = ['user:read', 'user:create', 'user:update', 'user:delete', 'audit:read'];
 /** Roles the fake server refuses to grant. */
@@ -50,9 +50,9 @@ class ExampleRolesError extends Error {
     ],
     template: `
         <p class="example-intro layout-margin-top-none layout-margin-bottom-l">
-            {{ text().invalidItemsIntro1 }}
+            {{ t().invalidItemsIntro1 }}
             <span class="kbq-text-normal-strong">{{ forbiddenRoles }}</span>
-            {{ text().invalidItemsIntro2 }}
+            {{ t().invalidItemsIntro2 }}
         </p>
 
         <kbq-inline-edit
@@ -62,7 +62,7 @@ class ExampleRolesError extends Error {
             (saveError)="showToast($event)"
             (modeChange)="onModeChange($event)"
         >
-            <kbq-label>{{ text().roles }}</kbq-label>
+            <kbq-label>{{ t().roles }}</kbq-label>
 
             <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;" kbqInlineEditViewMode>
                 @for (role of control.value; track role) {
@@ -106,14 +106,14 @@ class ExampleRolesError extends Error {
         </kbq-inline-edit>
 
         <ng-template #title>
-            {{ text().couldntUpdate }}
+            {{ t().couldntUpdate }}
             <span class="kbq-text-normal-strong">Roles</span>
         </ng-template>
 
         <ng-template #actions let-toast>
-            <a kbqLink pseudo class="layout-margin-right-m" (click)="edit(toast)">{{ text().edit }}</a>
+            <a kbqLink pseudo class="layout-margin-right-m" (click)="edit(toast)">{{ t().edit }}</a>
             /a>
-            <a kbqLink pseudo (click)="discard(toast)">{{ text().discardChanges }}</a>
+            <a kbqLink pseudo (click)="discard(toast)">{{ t().discardChanges }}</a>
             /a>
         </ng-template>
 
@@ -123,7 +123,7 @@ class ExampleRolesError extends Error {
                 type="button"
                 kbq-toast-close-button
                 kbq-icon-button="kbq-xmark-s_16"
-                [attr.aria-label]="text().close"
+                [attr.aria-label]="t().close"
                 (click)="discard(toast)"
             ></button>
         </ng-template>
@@ -139,9 +139,9 @@ class ExampleRolesError extends Error {
         class: 'layout-flex layout-column'
     }
 })
-export class InlineEditSaveInvalidItemsExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditSaveInvalidItemsExample extends BaseLocalizedExample<ExampleTranslation> {
     protected get placeholder(): string {
-        return this.text().placeholder;
+        return this.t().placeholder;
     }
     protected readonly roles = ROLES;
     protected readonly badgeColors = KbqBadgeColors;
@@ -163,7 +163,7 @@ export class InlineEditSaveInvalidItemsExample extends BaseLocalizedExample<Exam
     private toastId: number | null = null;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         // Editing the value drops the marks: they belong to the values that were sent.
         this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => this.rejectedRoles.set([]));
     }
@@ -222,7 +222,7 @@ export class InlineEditSaveInvalidItemsExample extends BaseLocalizedExample<Exam
             switchMap(() =>
                 rejected.length
                     ? throwError(
-                          () => new ExampleRolesError(rejected, this.text().theseRolesNotAvailable(rejected.join(', ')))
+                          () => new ExampleRolesError(rejected, this.t().theseRolesNotAvailable(rejected.join(', ')))
                       )
                     : of(value)
             )

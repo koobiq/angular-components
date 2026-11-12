@@ -1,14 +1,14 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the list-action-button example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     selected: string;
     elements: string;
     longElementName: string;
     badge: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         selected: 'Выбрано:',
         elements: 'Элементы',

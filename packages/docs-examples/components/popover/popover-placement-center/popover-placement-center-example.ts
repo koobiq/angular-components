@@ -4,7 +4,7 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Popover placement center
@@ -36,11 +36,11 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverPlacementCenterExample extends BaseLocalizedExample<ExampleText> {
+export class PopoverPlacementCenterExample extends BaseLocalizedExample<ExampleTranslation> {
     placements = PopUpPlacements;
     activePopover: KbqPopoverTrigger;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -1,23 +1,23 @@
 <ng-template #toastSingleActonContentTemplate>
-    {{ text().policy }}
-    <span class="kbq-text-normal-strong">{{ text().mailServersWindows }}</span>
-    {{ text().captionDeleted }}
+    {{ t().policy }}
+    <span class="kbq-text-normal-strong">{{ t().mailServersWindows }}</span>
+    {{ t().captionDeleted }}
 </ng-template>
 
 <ng-template #toastSingleActonActionsTemplate let-toast>
-    <a kbqLink pseudo (click)="toast.close()">{{ text().restore }}</a>
+    <a kbqLink pseudo (click)="toast.close()">{{ t().restore }}</a>
 </ng-template>
 
 <ng-template #toastTwoActonActionsTemplate let-toast>
-    <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">{{ text().view }}</a>
-    <a kbqLink pseudo (click)="toast.close()">{{ text().reject }}</a>
+    <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">{{ t().view }}</a>
+    <a kbqLink pseudo (click)="toast.close()">{{ t().reject }}</a>
 </ng-template>
 
 <ng-template #toastManyActionActionsTemplate let-toast>
     <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">Action 1</a>
     <a kbqLink pseudo class="layout-margin-right-m" (click)="toast.close()">Action 2</a>
     <a kbqLink pseudo role="button" [kbqDropdownTriggerFor]="dropdown">
-        {{ text().more }}
+        {{ t().more }}
         <i kbqLinkSuffix kbq-icon="kbq-chevron-down-s_16"></i>
     </a>
 </ng-template>
@@ -33,8 +33,8 @@
         kbq-button
         (click)="showSingleActionToast(toastSingleActonContentTemplate, toastSingleActonActionsTemplate)"
     >
-        {{ text().singleAction }}
+        {{ t().singleAction }}
     </button>
-    <button kbq-button (click)="showTwoActionToast(toastTwoActonActionsTemplate)">{{ text().twoActions }}</button>
-    <button kbq-button (click)="showManyActionToast(toastManyActionActionsTemplate)">{{ text().manyActions }}</button>
+    <button kbq-button (click)="showTwoActionToast(toastTwoActonActionsTemplate)">{{ t().twoActions }}</button>
+    <button kbq-button (click)="showManyActionToast(toastManyActionActionsTemplate)">{{ t().manyActions }}</button>
 </div>

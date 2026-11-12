@@ -5,7 +5,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Input readonly
@@ -20,25 +20,25 @@ import { ExampleText, TEXT } from './l10n';
         FormsModule
     ],
     template: `
-        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="readonly">{{ text().readonly }}</kbq-toggle>
+        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="readonly">{{ t().readonly }}</kbq-toggle>
 
         <kbq-form-field class="layout-margin-bottom-m">
-            <kbq-label>{{ text().text }}</kbq-label>
+            <kbq-label>{{ t().text }}</kbq-label>
             <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-            <input kbqInput [placeholder]="text().placeholder" [readonly]="readonly()" [(ngModel)]="textValue" />
+            <input kbqInput [placeholder]="t().placeholder" [readonly]="readonly()" [(ngModel)]="textValue" />
             <kbq-cleaner />
         </kbq-form-field>
 
         <kbq-form-field class="layout-margin-bottom-m">
-            <kbq-label>{{ text().number }}</kbq-label>
-            <input kbqNumberInput [placeholder]="text().placeholder" [readonly]="readonly()" [(ngModel)]="number" />
+            <kbq-label>{{ t().number }}</kbq-label>
+            <input kbqNumberInput [placeholder]="t().placeholder" [readonly]="readonly()" [(ngModel)]="number" />
             <kbq-stepper />
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-label>{{ text().password }}</kbq-label>
+            <kbq-label>{{ t().password }}</kbq-label>
             <input kbqInputPassword [readonly]="readonly()" [(ngModel)]="password" />
-            <kbq-password-toggle [kbqTooltipHidden]="text().showPassword" [kbqTooltipNotHidden]="text().hidePassword" />
+            <kbq-password-toggle [kbqTooltipHidden]="t().showPassword" [kbqTooltipNotHidden]="t().hidePassword" />
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,13 +46,13 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-xl layout-column'
     }
 })
-export class InputReadonlyExample extends BaseLocalizedExample<ExampleText> {
+export class InputReadonlyExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly readonly = model(true);
     protected readonly textValue = model('Text');
     protected readonly number = model<number | null>(42);
     protected readonly password = model('Pa$$w0rd');
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

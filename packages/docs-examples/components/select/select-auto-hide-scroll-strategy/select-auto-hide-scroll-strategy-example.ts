@@ -18,7 +18,7 @@ import {
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title select-auto-hide-scroll-strategy
@@ -28,7 +28,7 @@ import { ExampleText, TEXT } from './l10n';
     imports: [CdkScrollableModule, KbqSelectModule, KbqNativeScrollbar],
     template: `
         <div class="example-select-auto-hide-scroll-strategy__container" kbqNativeScrollbar cdkScrollable>
-            <div class="example-select-auto-hide-scroll-strategy__spacer">{{ text().scrollDown }}</div>
+            <div class="example-select-auto-hide-scroll-strategy__spacer">{{ t().scrollDown }}</div>
 
             <kbq-form-field>
                 <kbq-select [value]="selected">
@@ -38,7 +38,7 @@ import { ExampleText, TEXT } from './l10n';
                 </kbq-select>
             </kbq-form-field>
 
-            <div class="example-select-auto-hide-scroll-strategy__spacer">{{ text().scrollUp }}</div>
+            <div class="example-select-auto-hide-scroll-strategy__spacer">{{ t().scrollUp }}</div>
         </div>
     `,
     styles: `
@@ -72,7 +72,10 @@ import { ExampleText, TEXT } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectAutoHideScrollStrategyExample extends BaseLocalizedExample<ExampleText> implements AfterViewInit {
+export class SelectAutoHideScrollStrategyExample
+    extends BaseLocalizedExample<ExampleTranslation>
+    implements AfterViewInit
+{
     protected readonly options = computed(() => Array.from({ length: 5 }, (_, i) => 'Option #' + i));
     protected readonly selected = this.options[0];
 
@@ -90,6 +93,6 @@ export class SelectAutoHideScrollStrategyExample extends BaseLocalizedExample<Ex
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

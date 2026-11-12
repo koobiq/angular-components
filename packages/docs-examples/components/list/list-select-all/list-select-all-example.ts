@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
-import { injectLocalizedText } from '@koobiq/docs-examples/i18n';
-import { TEXT } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title List select all
@@ -18,7 +18,7 @@ import { TEXT } from './l10n';
                     class="layout-padding-horizontal-xxs"
                     multiple="checkbox"
                     selectAll
-                    [attr.aria-label]="text().incidentTypes"
+                    [attr.aria-label]="t().incidentTypes"
                     [(ngModel)]="selected"
                 >
                     @for (option of options(); track option) {
@@ -48,9 +48,9 @@ import { TEXT } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListSelectAllExample {
-    protected readonly text = injectLocalizedText(TEXT);
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    private readonly optionsText = injectLocalizedText(TEXT);
+    private readonly optionsText = injectTranslation(TRANSLATIONS);
 
     protected readonly options = computed(() => this.optionsText().options);
 

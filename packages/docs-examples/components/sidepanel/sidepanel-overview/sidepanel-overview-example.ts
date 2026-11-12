@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Sidepanel modal mode
@@ -14,7 +14,7 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'sidepanel-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class SidepanelOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     private sidepanelService = inject(KbqSidepanelService);
 
     position = KbqSidepanelPosition.Right;
@@ -32,6 +32,6 @@ export class SidepanelOverviewExample extends BaseLocalizedExample<ExampleText> 
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

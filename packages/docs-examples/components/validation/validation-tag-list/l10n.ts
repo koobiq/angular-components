@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the validation-tag-list example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     required: string;
     submit: string;
     onlyLatinLetters: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     newTag: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         required: 'Обязательно',
         submit: 'Отправить',

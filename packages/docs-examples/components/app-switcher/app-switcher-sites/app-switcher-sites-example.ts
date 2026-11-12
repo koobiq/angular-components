@@ -4,7 +4,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /** @title app-switcher-sites */
 @Component({
@@ -16,16 +16,16 @@ import { ExampleText, TEXT } from './l10n';
         KbqToolTipModule
     ],
     template: `
-        {{ text().app }} {{ selectedApp.name }}
+        {{ t().app }} {{ selectedApp.name }}
         <br />
-        {{ text().site }} {{ selectedSite.name }}
+        {{ t().site }} {{ selectedSite.name }}
         <br />
         <br />
         <button
             kbq-button
             kbqAppSwitcher
-            [attr.aria-label]="text().allApps"
-            [kbqTooltip]="text().allApps"
+            [attr.aria-label]="t().allApps"
+            [kbqTooltip]="t().allApps"
             [sites]="sites"
             [(selectedSite)]="selectedSite"
             [(selectedApp)]="selectedApp"
@@ -35,7 +35,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppSwitcherSitesExample extends BaseLocalizedExample<ExampleText> {
+export class AppSwitcherSitesExample extends BaseLocalizedExample<ExampleTranslation> {
     SVGIcon: string = `
         <svg fill="none" height="24" viewBox="0 0 32 32" width="24" xmlns="http://www.w3.org/2000/svg">
             <path clip-rule="evenodd"
@@ -429,6 +429,6 @@ export class AppSwitcherSitesExample extends BaseLocalizedExample<ExampleText> {
     selectedApp: KbqAppSwitcherApp = this.sites[0].apps[0];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

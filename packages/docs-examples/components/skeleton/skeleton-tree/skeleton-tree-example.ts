@@ -4,7 +4,7 @@ import { KbqSkeletonTree } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type DirectoryNode = {
     name: string;
@@ -24,7 +24,7 @@ type DirectoryFlatNode = {
     selector: 'skeleton-tree-example',
     imports: [KbqSkeletonTree, KbqToggleModule, FormsModule, KbqTreeModule],
     template: `
-        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         @if (loading()) {
             <kbq-skeleton-tree />
@@ -49,7 +49,7 @@ type DirectoryFlatNode = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonTreeExample extends BaseLocalizedExample<ExampleText> {
+export class SkeletonTreeExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly loading = model(true);
 
     protected readonly selected = model<string>('');
@@ -70,7 +70,7 @@ export class SkeletonTreeExample extends BaseLocalizedExample<ExampleText> {
     );
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.dataSource.data = this.directory();
 
         effect(() => (this.dataSource.data = this.directory()));
@@ -89,16 +89,16 @@ export class SkeletonTreeExample extends BaseLocalizedExample<ExampleText> {
 
     private directory(): DirectoryNode[] {
         return [
-            { name: 'security.com', children: [{ name: this.text().treeGroups[0]! }] },
+            { name: 'security.com', children: [{ name: this.t().treeGroups[0]! }] },
             {
                 name: 'corp.local',
                 children: [
-                    { name: this.text().treeGroups[1]!, children: [{ name: 'a.koobiq' }] },
-                    { name: this.text().treeGroups[2]!, children: [{ name: 'b.koobiq' }] },
-                    { name: this.text().treeGroups[3]!, children: [{ name: 'c.koobiq' }] }
+                    { name: this.t().treeGroups[1]!, children: [{ name: 'a.koobiq' }] },
+                    { name: this.t().treeGroups[2]!, children: [{ name: 'b.koobiq' }] },
+                    { name: this.t().treeGroups[3]!, children: [{ name: 'c.koobiq' }] }
                 ]
             },
-            { name: 'lab.local', children: [{ name: this.text().treeGroups[4]! }] }
+            { name: 'lab.local', children: [{ name: this.t().treeGroups[4]! }] }
         ];
     }
 }

@@ -1,11 +1,11 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the tooltip-hide-with-timeout example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     diamond: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         diamond: 'Ромб'
     },

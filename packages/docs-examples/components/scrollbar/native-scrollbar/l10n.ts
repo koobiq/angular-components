@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the native-scrollbar example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     bruteForce1: string;
     bruteForce2: string;
     bruteForce3: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         bruteForce1:
             'В криптографии атака полным перебором (исчерпывающий поиск ключа) — это криптоаналитическая атака, при которой злоумышленник перебирает множество возможных ключей или паролей в надежде рано или поздно угадать верный. Теоретически этот метод можно использовать для взлома любого шифрования, не являющегося абсолютно стойким. Однако в правильно спроектированной криптосистеме вероятность успешного угадывания ключа пренебрежимо мала.',

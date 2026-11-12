@@ -6,7 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit overview
@@ -23,7 +23,7 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <kbq-inline-edit showActions (saved)="update()">
-            <kbq-label>{{ text().label }}</kbq-label>
+            <kbq-label>{{ t().label }}</kbq-label>
 
             <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;" kbqInlineEditViewMode>
                 @for (badge of displayValue(); track badge) {
@@ -44,9 +44,9 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     protected get placeholder(): string {
-        return this.text().placeholder;
+        return this.t().placeholder;
     }
     protected readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + i));
     protected value: string[] = [this.options()[0]];
@@ -57,6 +57,6 @@ export class InlineEditOverviewExample extends BaseLocalizedExample<ExampleText>
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

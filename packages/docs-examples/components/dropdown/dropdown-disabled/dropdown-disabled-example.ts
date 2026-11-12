@@ -8,7 +8,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Dropdown disabled
@@ -28,10 +28,10 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'dropdown-disabled-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownDisabledExample extends BaseLocalizedExample<ExampleText> {
+export class DropdownDisabledExample extends BaseLocalizedExample<ExampleTranslation> {
     disabled = false;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

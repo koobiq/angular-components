@@ -16,7 +16,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToastService } from '@koobiq/components/toast';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -34,7 +34,7 @@ type ExampleAction = {
         KbqDividerModule
     ],
     template: `
-        <button kbq-button (click)="open()">{{ text().open }}</button>
+        <button kbq-button (click)="open()">{{ t().open }}</button>
 
         <ng-template let-data>
             <div
@@ -43,7 +43,7 @@ type ExampleAction = {
                 [additionalResizeObserverTargets]="additionalResizeObserverTargets"
             >
                 <div order="99" [kbqOverflowItem]="action.Counter">
-                    <div class="example-counter">{{ text().selected }} {{ data.length }}</div>
+                    <div class="example-counter">{{ t().selected }} {{ data.length }}</div>
                     <kbq-divider class="example-divider-vertical" [vertical]="true" />
                 </div>
 
@@ -67,7 +67,7 @@ type ExampleAction = {
                         kbqOverflowItemsResult
                         color="contrast"
                         kbq-button
-                        [attr.aria-label]="text().more"
+                        [attr.aria-label]="t().more"
                         [kbqDropdownTriggerFor]="dropdown"
                     >
                         <i kbq-icon="kbq-ellipsis-vertical_16"></i>
@@ -75,7 +75,7 @@ type ExampleAction = {
                 }
 
                 <kbq-dropdown #dropdown="kbqDropdown">
-                    <div class="example-counter-dropdown">{{ text().selected }} {{ data.length }}</div>
+                    <div class="example-counter-dropdown">{{ t().selected }} {{ data.length }}</div>
                     <kbq-divider />
 
                     @for (action of actions(); track action.id) {
@@ -128,7 +128,7 @@ type ExampleAction = {
     providers: [KbqActionsPanel],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleActionsPanel extends BaseLocalizedExample<ExampleText> {
+export class ExampleActionsPanel extends BaseLocalizedExample<ExampleTranslation> {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
@@ -136,15 +136,15 @@ export class ExampleActionsPanel extends BaseLocalizedExample<ExampleText> {
     private readonly toast = inject(KbqToastService);
 
     protected readonly actions = computed<ExampleAction[]>(() => [
-        { id: 'Responsible', icon: 'kbq-user_16', label: this.text().responsible },
-        { id: 'Status', icon: 'kbq-arrow-right-s_16', label: this.text().status },
-        { id: 'Archive', icon: 'kbq-box-archive-arrow-down_16', label: this.text().archive }
+        { id: 'Responsible', icon: 'kbq-user_16', label: this.t().responsible },
+        { id: 'Status', icon: 'kbq-arrow-right-s_16', label: this.t().status },
+        { id: 'Archive', icon: 'kbq-box-archive-arrow-down_16', label: this.t().archive }
     ]);
     protected readonly action = { Counter: 'counter' };
     protected readonly additionalResizeObserverTargets = this.elementRef.nativeElement;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         afterNextRender(() => this.open());
     }
 
@@ -167,7 +167,7 @@ export class ExampleActionsPanel extends BaseLocalizedExample<ExampleText> {
     }
 
     protected onAction(action: ExampleAction): void {
-        this.toast.show({ title: this.text().actionInitiated(action.label) });
+        this.toast.show({ title: this.t().actionInitiated(action.label) });
     }
 }
 
@@ -178,13 +178,13 @@ export class ExampleActionsPanel extends BaseLocalizedExample<ExampleText> {
     selector: 'actions-panel-adaptive-example',
     imports: [ExampleActionsPanel],
     template: `
-        <div>{{ text().adaptiveFirst }}</div>
+        <div>{{ t().adaptiveFirst }}</div>
         <example-actions-panel [style.width.px]="377" />
 
-        <div>{{ text().adaptiveThen }}</div>
+        <div>{{ t().adaptiveThen }}</div>
         <example-actions-panel [style.width.px]="308" />
 
-        <div>{{ text().adaptiveAll }}</div>
+        <div>{{ t().adaptiveAll }}</div>
         <example-actions-panel [style.width.px]="89" />
     `,
     styles: `
@@ -202,8 +202,8 @@ export class ExampleActionsPanel extends BaseLocalizedExample<ExampleText> {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsPanelAdaptiveExample extends BaseLocalizedExample<ExampleText> {
+export class ActionsPanelAdaptiveExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

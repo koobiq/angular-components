@@ -1,11 +1,11 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the inline-edit-unfilled example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     empty: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         empty: 'Пусто'
     },

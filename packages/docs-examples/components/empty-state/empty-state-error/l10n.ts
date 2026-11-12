@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the empty-state-error example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     errorTitle: string;
     errorText: string;
     refresh: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         errorTitle: 'Не удалось показать записи',
         errorText: 'Проблема с сетью или подключением к БД. Попробуйте еще раз или обратитесь к администратору.',

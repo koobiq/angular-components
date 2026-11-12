@@ -5,7 +5,7 @@ import { KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title File upload single accept validation
@@ -28,16 +28,16 @@ import { ExampleText, TEXT } from './l10n';
                 }
 
                 @if (formGroup.get('fileControl')?.hasError('fileExtensionMismatch')) {
-                    <kbq-hint color="error">{{ text().provideValidExtension }}</kbq-hint>
+                    <kbq-hint color="error">{{ t().provideValidExtension }}</kbq-hint>
                 }
 
-                <kbq-hint>{{ text().fileTxtAllowed }}</kbq-hint>
+                <kbq-hint>{{ t().fileTxtAllowed }}</kbq-hint>
             </kbq-file-upload>
         </form>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadSingleAcceptValidationExample extends BaseLocalizedExample<ExampleText> {
+export class FileUploadSingleAcceptValidationExample extends BaseLocalizedExample<ExampleTranslation> {
     protected accept: KbqFileTypeSpecifier = ['.txt'];
 
     protected readonly formGroup = new FormGroup({
@@ -45,6 +45,6 @@ export class FileUploadSingleAcceptValidationExample extends BaseLocalizedExampl
     });
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

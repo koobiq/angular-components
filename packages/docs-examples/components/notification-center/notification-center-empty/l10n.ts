@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the notification-center-empty example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     appName: string;
     assets: string;
     issues: string;
@@ -18,7 +18,7 @@ export interface ExampleText {
     emptyState: { image: string; title: string; text: string };
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         appName: 'Короткое название',
         assets: 'Активы',

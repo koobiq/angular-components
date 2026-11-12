@@ -1,11 +1,11 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the radio examples. Person names stay as proper nouns; Normal/Big/Error are style names. */
-export interface ExampleText {
+export interface ExampleTranslation {
     fieldLabel: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         fieldLabel: 'Подпись поля'
     },

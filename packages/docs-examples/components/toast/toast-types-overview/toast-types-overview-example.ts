@@ -4,7 +4,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Toast types
@@ -19,34 +19,34 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'toast-types-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastTypesOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class ToastTypesOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly toastService = inject(KbqToastService);
 
     showContrastToast(actions: TemplateRef<any>) {
         this.toastService.show({
-            title: this.text().agentUpdateAvailable,
-            caption: this.text().version20315,
+            title: this.t().agentUpdateAvailable,
+            caption: this.t().version20315,
             actions
         });
     }
 
     showSuccessToast() {
-        this.toastService.show({ style: KbqToastStyle.Success, caption: this.text().deleted13Records });
+        this.toastService.show({ style: KbqToastStyle.Success, caption: this.t().deleted13Records });
     }
 
     showWarningToast(actions: TemplateRef<any>) {
-        this.toastService.show({ style: KbqToastStyle.Warning, caption: this.text().passwordExpires, actions });
+        this.toastService.show({ style: KbqToastStyle.Warning, caption: this.t().passwordExpires, actions });
     }
 
     showErrorToast(actions: TemplateRef<any>) {
         this.toastService.show({
             style: KbqToastStyle.Error,
-            caption: this.text().failedToAuthorize,
+            caption: this.t().failedToAuthorize,
             actions
         });
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

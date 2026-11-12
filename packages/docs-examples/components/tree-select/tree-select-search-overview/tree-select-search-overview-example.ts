@@ -6,7 +6,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 export class FileNode {
     children: FileNode[];
@@ -123,7 +123,7 @@ export const DATA_OBJECT = {
                     <kbq-cleaner />
                 </kbq-form-field>
 
-                <div kbq-select-search-empty-result>{{ text().nothingFound }}</div>
+                <div kbq-select-search-empty-result>{{ t().nothingFound }}</div>
 
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
@@ -154,7 +154,7 @@ export const DATA_OBJECT = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeSelectSearchOverviewExample extends BaseLocalizedExample<ExampleText> implements OnInit {
+export class TreeSelectSearchOverviewExample extends BaseLocalizedExample<ExampleTranslation> implements OnInit {
     selected = '';
 
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -165,7 +165,7 @@ export class TreeSelectSearchOverviewExample extends BaseLocalizedExample<Exampl
     searchControl: FormControl = new FormControl();
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(

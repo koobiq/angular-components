@@ -9,7 +9,7 @@ import {
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Validation message for specific field
@@ -27,30 +27,30 @@ import { ExampleText, TEXT } from './l10n';
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>{{ text().errorAboveHint }}</kbq-label>
+                        <kbq-label>{{ t().errorAboveHint }}</kbq-label>
                         <input formControlName="first" kbqInput />
 
-                        <kbq-error>{{ text().required }}</kbq-error>
+                        <kbq-error>{{ t().required }}</kbq-error>
 
-                        <kbq-hint>{{ text().hintUnderField }}</kbq-hint>
+                        <kbq-hint>{{ t().hintUnderField }}</kbq-hint>
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-margin-bottom-xxl">
                     <kbq-form-field>
-                        <kbq-label>{{ text().errorReplacesHint }}</kbq-label>
+                        <kbq-label>{{ t().errorReplacesHint }}</kbq-label>
                         <input #input="kbqInput" formControlName="last" kbqInput />
 
                         @if (input.errorState()) {
-                            <kbq-error>{{ text().required }}</kbq-error>
+                            <kbq-error>{{ t().required }}</kbq-error>
                         } @else {
-                            <kbq-hint>{{ text().hintUnderField }}</kbq-hint>
+                            <kbq-hint>{{ t().hintUnderField }}</kbq-hint>
                         }
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-align-start-start">
-                    <button color="contrast" kbq-button type="submit">{{ text().submit }}</button>
+                    <button color="contrast" kbq-button type="submit">{{ t().submit }}</button>
                 </div>
             </div>
         </form>
@@ -69,7 +69,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationMessageForSpecificFieldExample extends BaseLocalizedExample<ExampleText> {
+export class ValidationMessageForSpecificFieldExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly form = new FormGroup({
         first: new FormControl('', [Validators.required]),
         last: new FormControl('', [Validators.required])
@@ -90,6 +90,6 @@ export class ValidationMessageForSpecificFieldExample extends BaseLocalizedExamp
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

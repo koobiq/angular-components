@@ -13,7 +13,7 @@ import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { MaskitoDirective } from '@maskito/angular';
 import { MaskitoOptions, MaskitoPlugin, maskitoUpdateElement } from '@maskito/core';
 import { maskitoNumberOptionsGenerator, maskitoWithPlaceholder } from '@maskito/kit';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Input with mask
@@ -28,51 +28,51 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <kbq-form-field>
-            <kbq-label>{{ text().ipAddress }}</kbq-label>
+            <kbq-label>{{ t().ipAddress }}</kbq-label>
             <input kbqInput placeholder="192.168.0.1" [maskito]="ipAddressMask" [formControl]="ipAddressControl" />
-            <kbq-hint>{{ text().format }} 192.168.0.1</kbq-hint>
-            <kbq-error>{{ text().invalidIp }}</kbq-error>
+            <kbq-hint>{{ t().format }} 192.168.0.1</kbq-hint>
+            <kbq-error>{{ t().invalidIp }}</kbq-error>
             <kbq-cleaner />
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-label>{{ text().macAddress }}</kbq-label>
+            <kbq-label>{{ t().macAddress }}</kbq-label>
             <input
                 kbqInput
                 placeholder="AA:BB:CC:DD:EE:FF"
                 [maskito]="macAddressMask"
                 [formControl]="macAddressControl"
             />
-            <kbq-hint>{{ text().format }} AA:BB:CC:DD:EE:FF</kbq-hint>
-            <kbq-error>{{ text().invalidMac }}</kbq-error>
+            <kbq-hint>{{ t().format }} AA:BB:CC:DD:EE:FF</kbq-hint>
+            <kbq-error>{{ t().invalidMac }}</kbq-error>
             <kbq-cleaner />
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-label>{{ text().ipv6Address }}</kbq-label>
+            <kbq-label>{{ t().ipv6Address }}</kbq-label>
             <input
                 kbqInput
                 placeholder="2001:0db8:85a3:0000:0000:8a2e:0370:7334"
                 [maskito]="ipv6AddressMask"
                 [formControl]="ipv6AddressControl"
             />
-            <kbq-hint>{{ text().format }} 2001:0db8:85a3:0000:0000:8a2e:0370:7334</kbq-hint>
-            <kbq-error>{{ text().invalidIpv6 }}</kbq-error>
+            <kbq-hint>{{ t().format }} 2001:0db8:85a3:0000:0000:8a2e:0370:7334</kbq-hint>
+            <kbq-error>{{ t().invalidIpv6 }}</kbq-error>
             <kbq-cleaner />
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-label>{{ text().port }}</kbq-label>
+            <kbq-label>{{ t().port }}</kbq-label>
             <input kbqInput placeholder="8080" [maskito]="portMask" [formControl]="portControl" />
-            <kbq-hint>{{ text().range }}</kbq-hint>
-            <kbq-hint>{{ text().useArrows }}</kbq-hint>
+            <kbq-hint>{{ t().range }}</kbq-hint>
+            <kbq-hint>{{ t().useArrows }}</kbq-hint>
             <kbq-cleaner />
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-label>{{ text().licenseKey }}</kbq-label>
+            <kbq-label>{{ t().licenseKey }}</kbq-label>
             <input kbqInput placeholder="XXXX-XXXX-XXXX-XXXX" [maskito]="licenseMask" [formControl]="licenseControl" />
-            <kbq-error>{{ text().invalidLicense }}</kbq-error>
+            <kbq-error>{{ t().invalidLicense }}</kbq-error>
             <kbq-cleaner />
         </kbq-form-field>
     `,
@@ -90,7 +90,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputWithMaskExample extends BaseLocalizedExample<ExampleText> {
+export class InputWithMaskExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly ipAddressControl = new FormControl('192.168.0.1', [this.ipAddressValidator()]);
     readonly macAddressControl = new FormControl('AA:BB:CC:DD:EE:FF', [
         Validators.pattern(/^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/)
@@ -290,6 +290,6 @@ export class InputWithMaskExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 export class FileNode {
     children: FileNode[];
@@ -126,7 +126,7 @@ export const DATA_OBJECT = [
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeToggleOnClickExample extends BaseLocalizedExample<ExampleText> {
+export class TreeToggleOnClickExample extends BaseLocalizedExample<ExampleTranslation> {
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
 
@@ -135,7 +135,7 @@ export class TreeToggleOnClickExample extends BaseLocalizedExample<ExampleText> 
     modelValue: any = '';
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(
@@ -187,13 +187,13 @@ export class TreeToggleOnClickExample extends BaseLocalizedExample<ExampleText> 
     private nodeName(name: string): string {
         switch (name) {
             case 'lonely-leaf':
-                return this.text().lonelyLeaf;
+                return this.t().lonelyLeaf;
             case 'branch-1':
                 return 'Branch 1';
             case 'branch-2':
                 return 'Branch 2';
             case 'disabled-node':
-                return this.text().disabledNode;
+                return this.t().disabledNode;
             default:
                 return name;
         }

@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title List with virtual-scroll
@@ -14,9 +14,9 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'list-virtual-scroll-example',
     imports: [KbqListModule, FormsModule, ScrollingModule, JsonPipe, KbqScrollbarViewport],
     template: `
-        <div>{{ text().selected }} {{ selected | json }}</div>
+        <div>{{ t().selected }} {{ selected | json }}</div>
         <br />
-        <kbq-list-selection style="height: 200px" multiple [attr.aria-label]="text().items" [(ngModel)]="selected">
+        <kbq-list-selection style="height: 200px" multiple [attr.aria-label]="t().items" [(ngModel)]="selected">
             <cdk-virtual-scroll-viewport
                 kbqScrollbarViewport
                 style="height: 100%"
@@ -32,7 +32,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListVirtualScrollExample extends BaseLocalizedExample<ExampleText> {
+export class ListVirtualScrollExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly options = computed(() =>
         Array.from({ length: 10000 }).map((_, i) => ({
             id: i,
@@ -43,6 +43,6 @@ export class ListVirtualScrollExample extends BaseLocalizedExample<ExampleText> 
     selected = [];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

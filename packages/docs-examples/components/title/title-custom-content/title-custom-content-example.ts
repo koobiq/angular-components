@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Custom tooltip content
@@ -15,12 +15,12 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <div class="example-title-custom-content">
-            <div class="kbq-subheading">{{ text().plainStringContent }}</div>
+            <div class="kbq-subheading">{{ t().plainStringContent }}</div>
             <div class="example-title-custom-content__row kbq-text-normal" [kbq-title]="stringContent">
                 {{ longValue }}
             </div>
 
-            <div class="kbq-subheading">{{ text().richTemplateContent }}</div>
+            <div class="kbq-subheading">{{ t().richTemplateContent }}</div>
             <div class="example-title-custom-content__row kbq-text-normal" [kbq-title]="templateContent">
                 {{ longValue }}
             </div>
@@ -29,18 +29,18 @@ import { ExampleText, TEXT } from './l10n';
         <ng-template #templateContent>
             <div class="example-title-custom-content__tooltip">
                 <i kbq-icon="kbq-circle-info_16" style="color: var(--kbq-icon-white)"></i>
-                <span>{{ text().richTooltip }}</span>
+                <span>{{ t().richTooltip }}</span>
             </div>
         </ng-template>
     `,
     styleUrls: ['./title-custom-content-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleCustomContentExample extends BaseLocalizedExample<ExampleText> {
-    longValue = this.text().longValue;
-    stringContent = this.text().stringContent;
+export class TitleCustomContentExample extends BaseLocalizedExample<ExampleTranslation> {
+    longValue = this.t().longValue;
+    stringContent = this.t().stringContent;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

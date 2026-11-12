@@ -6,7 +6,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Navbar app long name
@@ -23,10 +23,10 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'navbar-app-long-name-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarAppLongNameExample extends BaseLocalizedExample<ExampleText> {
+export class NavbarAppLongNameExample extends BaseLocalizedExample<ExampleTranslation> {
     popUpPlacements = PopUpPlacements;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -3,7 +3,7 @@ import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqTableModule } from '@koobiq/components/table';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type CompanyRow = {
     city: string;
@@ -27,10 +27,10 @@ type CompanyRow = {
         <table kbq-table class="highlight-table">
             <thead>
                 <tr>
-                    <th style="width: 96px">{{ text().city }}</th>
-                    <th style="width: 124px">{{ text().company }}</th>
-                    <th style="width: 116px">{{ text().person }}</th>
-                    <th>{{ text().notes }}</th>
+                    <th style="width: 96px">{{ t().city }}</th>
+                    <th style="width: 124px">{{ t().company }}</th>
+                    <th style="width: 116px">{{ t().person }}</th>
+                    <th>{{ t().notes }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,7 +65,7 @@ type CompanyRow = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HighlightBackgroundTableExample extends BaseLocalizedExample<ExampleText> {
+export class HighlightBackgroundTableExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly keyword = 'manc';
     protected readonly rows: CompanyRow[] = [
         {
@@ -107,6 +107,6 @@ export class HighlightBackgroundTableExample extends BaseLocalizedExample<Exampl
     ];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

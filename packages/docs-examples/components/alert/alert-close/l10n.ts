@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the alert examples. */
-export interface ExampleText {
+export interface ExampleTranslation {
     close: string;
     closeHint: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         close: 'Закрыть',
         closeHint: 'Алерт закрывается крестиком в углу; не дублируйте это кнопкой под текстом сообщения'

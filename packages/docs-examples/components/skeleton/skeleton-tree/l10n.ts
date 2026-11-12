@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the skeleton-tree example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     loading: string;
     treeGroups: string[];
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         loading: 'Загрузка',
         treeGroups: ['Операторы', 'Администраторы', 'Разработчики', 'Тестировщики', 'Гости']

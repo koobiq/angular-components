@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Tabs empty label
@@ -13,10 +13,10 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <div class="example-tabs-empty-label">
             <kbq-tab-group>
-                <kbq-tab [label]="text().bruteforce">
+                <kbq-tab [label]="t().bruteforce">
                     <div class="example-tabs-empty-label_tab-content">1005 incidents have been registered</div>
                 </kbq-tab>
-                <kbq-tab [label]="text().complexAttack">
+                <kbq-tab [label]="t().complexAttack">
                     <p>
                         In cryptography, a brute-force attack consists of an attacker submitting many passwords or
                         passphrases with the hope of eventually guessing correctly. The attacker systematically checks
@@ -32,15 +32,10 @@ import { ExampleText, TEXT } from './l10n';
                         weaknesses in an encryption system (if any exist) that would make the task easier.
                     </p>
                 </kbq-tab>
-                <kbq-tab
-                    tooltipTitle="No incidents"
-                    empty
-                    [label]="text().ddos"
-                    [tooltipPlacement]="PopUpPlacements.Top"
-                >
+                <kbq-tab tooltipTitle="No incidents" empty [label]="t().ddos" [tooltipPlacement]="PopUpPlacements.Top">
                     <div class="example-tabs-empty-label_tab-content">No DDoS attacks have been registered</div>
                 </kbq-tab>
-                <kbq-tab [label]="text().dos">
+                <kbq-tab [label]="t().dos">
                     <p>
                         In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator
                         seeks to make a machine or network resource unavailable to its intended users by temporarily or
@@ -69,10 +64,10 @@ import { ExampleText, TEXT } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class TabsEmptyLabelExample extends BaseLocalizedExample<ExampleText> {
+export class TabsEmptyLabelExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly PopUpPlacements = PopUpPlacements;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

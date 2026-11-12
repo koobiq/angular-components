@@ -17,14 +17,14 @@
                 <label class="kbq-form__label">Post Back URL</label>
                 <kbq-form-field class="kbq-form__control">
                     <input kbqInput name="input" />
-                    <kbq-hint>{{ text().postBackHint }}</kbq-hint>
+                    <kbq-hint>{{ t().postBackHint }}</kbq-hint>
                 </kbq-form-field>
             </div>
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Identity Provider Metadata</label>
                 <kbq-form-field class="kbq-form__control">
                     <input kbqInput name="input" />
-                    <kbq-hint>{{ text().metadataHint }}</kbq-hint>
+                    <kbq-hint>{{ t().metadataHint }}</kbq-hint>
                 </kbq-form-field>
             </div>
         </div>
@@ -50,7 +50,7 @@
                 <label class="kbq-form__label">Post Back URL</label>
                 <kbq-form-field class="kbq-form__control">
                     <input kbqInput name="input" />
-                    <kbq-hint>{{ text().postBackHint }}</kbq-hint>
+                    <kbq-hint>{{ t().postBackHint }}</kbq-hint>
                 </kbq-form-field>
             </div>
             <div class="kbq-form__row">
@@ -63,7 +63,7 @@
                 <label class="kbq-form__label">Identity Provider Metadata</label>
                 <kbq-form-field class="kbq-form__control">
                     <input kbqInput name="input" />
-                    <kbq-hint>{{ text().metadataHint }}</kbq-hint>
+                    <kbq-hint>{{ t().metadataHint }}</kbq-hint>
                 </kbq-form-field>
             </div>
         </div>
@@ -72,8 +72,8 @@
 
 <ng-template #customFooter>
     <div style="gap: 16px" class="layout-row layout-wrap">
-        <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">{{ text().save }}</button>
-        <button kbq-button (click)="activePopover.hide(0)">{{ text().cancel }}</button>
+        <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">{{ t().save }}</button>
+        <button kbq-button (click)="activePopover.hide(0)">{{ t().cancel }}</button>
     </div>
 </ng-template>
 
@@ -87,7 +87,7 @@
         [kbqPopoverHeader]="'SSO-connection'"
         (click)="activePopover = kbqNoScrollPopover"
     >
-        {{ text().withoutScroll }}
+        {{ t().withoutScroll }}
     </button>
     <button
         #kbqAutoHeightPopover="kbqPopover"
@@ -98,7 +98,7 @@
         [kbqPopoverHeader]="'SSO-connection'"
         (click)="activePopover = kbqAutoHeightPopover"
     >
-        {{ text().defaultHeight }}
+        {{ t().defaultHeight }}
     </button>
     <button
         #kbqCustomHeightPopover="kbqPopover"
@@ -110,6 +110,6 @@
         [kbqPopoverHeader]="'SSO-connection'"
         (click)="activePopover = kbqCustomHeightPopover"
     >
-        {{ text().customHeight }}
+        {{ t().customHeight }}
     </button>
 </div>

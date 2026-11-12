@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the form-field-with-label example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     label: string;
     clickLabelForFocus: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         label: 'Метка',
         clickLabelForFocus: 'Нажмите на метку для автофокуса'

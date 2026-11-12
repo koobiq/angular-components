@@ -1,12 +1,12 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the skeleton-dl example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     loading: string;
     dlItems: { term: string; value: string }[];
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         loading: 'Загрузка',
         dlItems: [

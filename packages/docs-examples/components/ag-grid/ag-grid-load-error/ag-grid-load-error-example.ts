@@ -24,7 +24,7 @@ import {
     RowStyle,
     SelectionColumnDef
 } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -59,9 +59,9 @@ const PINNED_RIGHT = ['column4'];
 
         <div class="layout-row layout-gap-xl">
             <kbq-toggle [(ngModel)]="pinnedColumns" (ngModelChange)="applyPinned()">
-                {{ text().pinnedColumns }}
+                {{ t().pinnedColumns }}
             </kbq-toggle>
-            <kbq-toggle [(ngModel)]="rowDividers">{{ text().rowDividers }}</kbq-toggle>
+            <kbq-toggle [(ngModel)]="rowDividers">{{ t().rowDividers }}</kbq-toggle>
         </div>
     `,
     styles: `
@@ -78,7 +78,7 @@ const PINNED_RIGHT = ['column4'];
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridLoadErrorExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridLoadErrorExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly pinnedColumns = model(true);
     protected readonly rowDividers = model(false);
 
@@ -107,7 +107,7 @@ export class AgGridLoadErrorExample extends BaseLocalizedExample<ExampleText> {
     protected readonly columnDefs = computed<ColDef[]>(() =>
         Array.from({ length: 5 }, (_, i) => ({
             field: 'column' + i,
-            headerName: this.text().headerText,
+            headerName: this.t().headerText,
             width: 130,
             pinned: i === 0 ? ('left' as const) : i === 4 ? ('right' as const) : undefined
         }))
@@ -172,6 +172,6 @@ export class AgGridLoadErrorExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

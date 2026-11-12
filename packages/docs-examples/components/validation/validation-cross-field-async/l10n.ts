@@ -1,14 +1,14 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the validation-cross-field-async example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     currentPassword: string;
     newPassword: string;
     passwordTooSimilar: string;
     checkingWithServer: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         currentPassword: 'Текущий пароль',
         newPassword: 'Новый пароль',

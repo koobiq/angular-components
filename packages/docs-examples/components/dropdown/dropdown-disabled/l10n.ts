@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the dropdown-disabled example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     textNormal: string;
     caption: string;
     header: string;
@@ -12,7 +12,7 @@ export interface ExampleText {
     toggleDisabledState: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         textNormal: 'Обычный текст',
         caption: 'Подпись',

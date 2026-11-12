@@ -7,7 +7,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Autocomplete
@@ -25,7 +25,7 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <div class="kbq-form kbq-form-vertical">
             <div class="kbq-form__row">
-                <label class="kbq-form__label">{{ text().enterCountries }}</label>
+                <label class="kbq-form__label">{{ t().enterCountries }}</label>
                 <kbq-form-field>
                     <input kbqInput type="text" [formControl]="control" [kbqAutocomplete]="auto" />
 
@@ -44,8 +44,8 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AutocompleteOverviewExample extends BaseLocalizedExample<ExampleText> implements OnInit {
-    protected readonly options = computed(() => this.text().countries);
+export class AutocompleteOverviewExample extends BaseLocalizedExample<ExampleTranslation> implements OnInit {
+    protected readonly options = computed(() => this.t().countries);
 
     control = new FormControl('');
     filteredOptions: Observable<string[]>;
@@ -64,6 +64,6 @@ export class AutocompleteOverviewExample extends BaseLocalizedExample<ExampleTex
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -1,11 +1,11 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the button examples. */
-export interface ExampleText {
+export interface ExampleTranslation {
     truncatedButtonText: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         truncatedButtonText: 'Очень длинный текст кнопки, который обрезается по ширине'
     },

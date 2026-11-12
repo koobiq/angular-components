@@ -7,7 +7,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Navbar
@@ -25,10 +25,10 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'navbar-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class NavbarOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     popUpPlacements = PopUpPlacements;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

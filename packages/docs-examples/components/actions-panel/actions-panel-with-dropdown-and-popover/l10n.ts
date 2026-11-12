@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the actions-panel-with-dropdown-and-popover example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     open: string;
     protection: string;
     enable: string;
@@ -12,7 +12,7 @@ export interface ExampleText {
     cancel: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         open: 'открыть',
         protection: 'Защита',

@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the validation-on-type example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     folderName: string;
     onlyLettersAndNumbers: string;
     lettersAndNumbers: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         folderName: 'Имя папки',
         onlyLettersAndNumbers: 'Только буквы и цифры',

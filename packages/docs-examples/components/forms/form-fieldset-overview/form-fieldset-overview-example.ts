@@ -4,7 +4,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Form fieldset
@@ -19,7 +19,7 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <kbq-fieldset>
-            <legend kbqLegend>{{ text().fieldGroupTitle }}</legend>
+            <legend kbqLegend>{{ t().fieldGroupTitle }}</legend>
 
             <kbq-form-field style="width: 96px; min-width: 96px">
                 <kbq-select panelWidth="auto" [formControl]="control">
@@ -32,13 +32,13 @@ import { ExampleText, TEXT } from './l10n';
             </kbq-form-field>
 
             <kbq-form-field kbqFieldsetItem>
-                <input kbqInput [placeholder]="text().ipAddress" />
+                <input kbqInput [placeholder]="t().ipAddress" />
             </kbq-form-field>
 
             <kbq-hint>
-                {{ text().longHint1 }}
+                {{ t().longHint1 }}
             </kbq-hint>
-            <kbq-hint>{{ text().hint2 }}</kbq-hint>
+            <kbq-hint>{{ t().hint2 }}</kbq-hint>
         </kbq-fieldset>
     `,
     styles: `
@@ -52,7 +52,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-row'
     }
 })
-export class FormFieldsetOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class FormFieldsetOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     options = [
         'https://',
         'http://'
@@ -61,6 +61,6 @@ export class FormFieldsetOverviewExample extends BaseLocalizedExample<ExampleTex
     control = new FormControl(this.options[0]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

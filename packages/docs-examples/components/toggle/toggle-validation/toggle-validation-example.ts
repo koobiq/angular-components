@@ -3,7 +3,7 @@ import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqError, KbqHint } from '@koobiq/components/form-field';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Toggle validation
@@ -13,9 +13,9 @@ import { ExampleText, TEXT } from './l10n';
     imports: [ReactiveFormsModule, KbqToggleModule, KbqHint, KbqError],
     template: `
         <kbq-toggle class="example-toggle-validation" [formControl]="backup">
-            {{ text().automaticBackup }}
-            <kbq-hint>{{ text().turnOffHint }}</kbq-hint>
-            <kbq-error>{{ text().backupRequired }}</kbq-error>
+            {{ t().automaticBackup }}
+            <kbq-hint>{{ t().turnOffHint }}</kbq-hint>
+            <kbq-error>{{ t().backupRequired }}</kbq-error>
         </kbq-toggle>
     `,
     // A fixed width keeps the centered example in place when the error, wider than the label, appears.
@@ -29,10 +29,10 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-align-center-center layout-row layout-padding-l'
     }
 })
-export class ToggleValidationExample extends BaseLocalizedExample<ExampleText> {
+export class ToggleValidationExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly backup = new FormControl(true, { nonNullable: true, validators: Validators.requiredTrue });
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

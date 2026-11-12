@@ -9,7 +9,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -41,7 +41,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridRowDraggingExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridRowDraggingExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
@@ -58,13 +58,13 @@ export class AgGridRowDraggingExample extends BaseLocalizedExample<ExampleText> 
     protected readonly columnDefs = computed<ColDef[]>(() => [
         {
             field: 'column0',
-            headerName: this.text().projectName,
+            headerName: this.t().projectName,
             width: 180,
             rowDrag: true
         },
         ...Array.from({ length: 9 }, (_, i) => ({
             field: 'column' + (i + 1),
-            headerName: this.text().headerText
+            headerName: this.t().headerText
         }))
     ]);
 
@@ -84,6 +84,6 @@ export class AgGridRowDraggingExample extends BaseLocalizedExample<ExampleText> 
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

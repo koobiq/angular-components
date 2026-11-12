@@ -8,7 +8,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -19,7 +19,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     selector: 'ag-grid-filter-state-example',
     imports: [AgGridModule, KbqAgGridThemeModule, KbqButtonModule],
     template: `
-        <button type="button" kbq-button (click)="filterState.reset()">{{ text().resetFilterState }}</button>
+        <button type="button" kbq-button (click)="filterState.reset()">{{ t().resetFilterState }}</button>
 
         <ag-grid-angular
             #filterState="kbqAgGridFilterState"
@@ -47,7 +47,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridFilterStateExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridFilterStateExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly defaultColDef: ColDef = {
         filter: true,
         floatingFilter: true
@@ -66,6 +66,6 @@ export class AgGridFilterStateExample extends BaseLocalizedExample<ExampleText> 
     );
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

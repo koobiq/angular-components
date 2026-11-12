@@ -5,7 +5,7 @@ import { KbqFormFieldModule, KbqLabel } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 const COMMENTS: string[] = [
     'Issue resolved after restarting the affected service. No further action required.',
@@ -30,7 +30,7 @@ const COMMENTS: string[] = [
     template: `
         <div style="width: 280px">
             <kbq-inline-edit #inlineEdit="kbqInlineEdit">
-                <kbq-label>{{ text().resolutionComment }}</kbq-label>
+                <kbq-label>{{ t().resolutionComment }}</kbq-label>
 
                 <div kbqInlineEditViewMode>
                     @if (control.value) {
@@ -70,7 +70,7 @@ const COMMENTS: string[] = [
         class: 'layout-column layout-align-center-center'
     }
 })
-export class InlineEditSelectMultilineExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditSelectMultilineExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly notSetLabel = 'Not specified';
 
     protected readonly comments = COMMENTS;
@@ -78,6 +78,6 @@ export class InlineEditSelectMultilineExample extends BaseLocalizedExample<Examp
     protected readonly control = new FormControl<string | null>(COMMENTS[0]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

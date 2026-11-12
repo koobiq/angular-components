@@ -7,7 +7,7 @@ import { KbqSkeletonDl, KbqSkeletonGroup, KbqSkeletonTable } from '@koobiq/compo
 import { KbqTableModule } from '@koobiq/components/table';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { merge, Subscription, tap, timer } from 'rxjs';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type Detail = { term: string; value: string };
 
@@ -42,7 +42,7 @@ const SERVERS: Server[] = Array.from({ length: 6 }, (_, index) => ({
         KbqTableModule
     ],
     template: `
-        <button kbq-button (click)="open(template)">{{ text().openSidepanel }}</button>
+        <button kbq-button (click)="open(template)">{{ t().openSidepanel }}</button>
 
         <ng-template #template>
             <kbq-sidepanel-header [closeable]="true">LDAP-7f7d60de-d36d-46df-80b9-8f272c32ae45</kbq-sidepanel-header>
@@ -121,7 +121,7 @@ const SERVERS: Server[] = Array.from({ length: 6 }, (_, index) => ({
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonInSidepanelExample extends BaseLocalizedExample<ExampleText> {
+export class SkeletonInSidepanelExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly sidepanel = inject(KbqSidepanelService);
     private loading = Subscription.EMPTY;
 
@@ -129,7 +129,7 @@ export class SkeletonInSidepanelExample extends BaseLocalizedExample<ExampleText
     protected readonly servers = signal<Server[] | null>(null);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         inject(DestroyRef).onDestroy(() => this.loading.unsubscribe());
     }
 

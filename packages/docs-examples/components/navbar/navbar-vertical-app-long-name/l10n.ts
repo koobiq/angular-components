@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the navbar examples. */
-export interface ExampleText {
+export interface ExampleTranslation {
     longAppName: string;
     dashboards: string;
     tasks: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     profile: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         longAppName: 'Очень длинное название меню с переносом строки и усечением многоточием',
         dashboards: 'Дашборды',

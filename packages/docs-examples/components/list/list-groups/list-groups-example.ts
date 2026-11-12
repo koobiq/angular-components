@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqListModule } from '@koobiq/components/list';
-import { injectLocalizedText } from '@koobiq/docs-examples/i18n';
-import { TEXT } from './l10n';
+import { injectTranslation } from '@koobiq/docs-examples/i18n';
+import { TRANSLATIONS } from './l10n';
 
 /**
  * @title List groups
@@ -10,7 +10,7 @@ import { TEXT } from './l10n';
     selector: 'list-groups-example',
     imports: [KbqListModule],
     template: `
-        <kbq-list-selection [attr.aria-label]="text().securityControls">
+        <kbq-list-selection [attr.aria-label]="t().securityControls">
             @for (category of securityCategories(); track category) {
                 <kbq-optgroup [disabled]="category.disabled" [label]="category.categoryName">
                     @for (securityItem of category.securityItems; track securityItem.id) {
@@ -26,9 +26,9 @@ import { TEXT } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListGroupsExample {
-    protected readonly text = injectLocalizedText(TEXT);
+    protected readonly t = injectTranslation(TRANSLATIONS);
 
-    private readonly groupsText = injectLocalizedText(TEXT);
+    private readonly groupsText = injectTranslation(TRANSLATIONS);
 
     readonly securityCategories = computed(() => this.groupsText().categories);
 }

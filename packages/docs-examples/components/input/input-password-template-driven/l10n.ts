@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the input-password-template-driven example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     from8to15: string;
     uppercaseLatin: string;
     lowercaseLatin: string;
@@ -10,7 +10,7 @@ export interface ExampleText {
     special: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         from8to15: 'От 8 до 15 символов',
         uppercaseLatin: 'Заглавная латинская буква',

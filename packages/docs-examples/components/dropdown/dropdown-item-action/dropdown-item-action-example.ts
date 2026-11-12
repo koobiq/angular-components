@@ -4,7 +4,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Dropdown item with a secondary action
@@ -27,7 +27,7 @@ import { ExampleText, TEXT } from './l10n';
                     size="compact"
                     target="_blank"
                     href="en/components/button"
-                    [attr.aria-label]="text().rulesSettings"
+                    [attr.aria-label]="t().rulesSettings"
                     [color]="'contrast-fade'"
                 ></a>
             </div>
@@ -40,7 +40,7 @@ import { ExampleText, TEXT } from './l10n';
                     size="compact"
                     target="_blank"
                     href="en/components/icon"
-                    [attr.aria-label]="text().hashSumSettings"
+                    [attr.aria-label]="t().hashSumSettings"
                     [color]="'contrast-fade'"
                 ></a>
             </div>
@@ -67,7 +67,7 @@ import { ExampleText, TEXT } from './l10n';
                     size="compact"
                     target="_blank"
                     href="en/components/tag"
-                    [attr.aria-label]="text().moreActions"
+                    [attr.aria-label]="t().moreActions"
                     [color]="'contrast-fade'"
                 ></a>
             </div>
@@ -84,8 +84,8 @@ import { ExampleText, TEXT } from './l10n';
         '[style.height.px]': '200'
     }
 })
-export class DropdownItemActionExample extends BaseLocalizedExample<ExampleText> {
+export class DropdownItemActionExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

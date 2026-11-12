@@ -6,7 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit custom handler
@@ -28,7 +28,7 @@ import { ExampleText, TEXT } from './l10n';
             [setValueHandler]="setValueHandler"
             (saved)="update()"
         >
-            <kbq-label>{{ text().label }}</kbq-label>
+            <kbq-label>{{ t().label }}</kbq-label>
 
             <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;" kbqInlineEditViewMode>
                 @let value = displayValue();
@@ -47,10 +47,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditCustomHandlerExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditCustomHandlerExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly control = new FormControl<KbqFileItem | null>(null);
     protected get placeholder(): string {
-        return this.text().placeholder;
+        return this.t().placeholder;
     }
     protected readonly displayValue = signal(this.control.value);
 
@@ -63,6 +63,6 @@ export class InlineEditCustomHandlerExample extends BaseLocalizedExample<Example
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

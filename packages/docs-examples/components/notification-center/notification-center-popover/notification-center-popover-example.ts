@@ -8,7 +8,7 @@ import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { createNotifications } from '../create-notifications';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title notification-center-popover
@@ -36,13 +36,13 @@ import { ExampleText, TEXT } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationCenterPopoverExample extends BaseLocalizedExample<ExampleText> {
+export class NotificationCenterPopoverExample extends BaseLocalizedExample<ExampleTranslation> {
     notificationService = inject(KbqNotificationCenterService);
 
     private readonly actionsTemplate = viewChild<TemplateRef<unknown>>('actionsTemplate');
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         // Rebuilt on a locale switch to follow the language; the stable ids keep the read state.
         effect(() => {
             const actions = this.actionsTemplate();
@@ -50,7 +50,7 @@ export class NotificationCenterPopoverExample extends BaseLocalizedExample<Examp
             if (!actions) return;
 
             this.notificationService.items = createNotifications(
-                this.text().list,
+                this.t().list,
                 { actions },
                 this.notificationService.items
             );

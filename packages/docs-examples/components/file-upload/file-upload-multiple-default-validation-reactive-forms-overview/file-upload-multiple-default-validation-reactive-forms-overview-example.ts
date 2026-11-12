@@ -5,7 +5,7 @@ import { KbqFileItem, KbqMultipleFileUploadComponent } from '@koobiq/components/
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 const MAX_FILE_SIZE = 5 * 2 ** 20;
 
@@ -35,7 +35,7 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
                 }
             </ng-template>
 
-            <kbq-hint>{{ text().sizeNotExceed5mb }}</kbq-hint>
+            <kbq-hint>{{ t().sizeNotExceed5mb }}</kbq-hint>
 
             @for (control of fileList.controls; track $index) {
                 <kbq-hint color="error">
@@ -48,13 +48,13 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadMultipleDefaultValidationReactiveFormsOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class FileUploadMultipleDefaultValidationReactiveFormsOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     maxFileSizeErrorMessage = 'The file size has exceeded the limit';
 
     fileList = new FormArray<FormControl<KbqFileItem | null>>([]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.fileList.statusChanges.subscribe(() => {
             this.fileList.controls.forEach((control) => {
                 if (control?.value && 'hasError' in control.value) {

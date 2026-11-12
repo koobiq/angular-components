@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the accordion-state-saving example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     content: string;
     delivery: string;
     payment: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     resetSavedState: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         content: 'Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона',
         delivery: 'Доставка',

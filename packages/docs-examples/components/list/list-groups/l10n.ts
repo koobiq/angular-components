@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Security categories of the groups example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     securityControls: string;
     categories: { categoryName: string; disabled?: boolean; securityItems: SecurityItem[] }[];
 }
@@ -12,7 +12,7 @@ export interface SecurityItem {
     displayName: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         securityControls: 'Средства защиты',
         categories: [

@@ -3,7 +3,7 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Button group custom content
@@ -30,7 +30,7 @@ import { ExampleText, TEXT } from './l10n';
                 {{ data()[2] }}
             </button>
 
-            <button kbq-button [attr.aria-label]="text().more">
+            <button kbq-button [attr.aria-label]="t().more">
                 <i kbq-icon="kbq-ellipsis-vertical_16"></i>
             </button>
         </div>
@@ -40,13 +40,13 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-column layout-align-center-center layout-gap-l'
     }
 })
-export class ButtonGroupCustomContentExample extends BaseLocalizedExample<ExampleText> {
-    protected readonly data = computed(() => [this.text().archive, this.text().report, this.text().snooze]);
+export class ButtonGroupCustomContentExample extends BaseLocalizedExample<ExampleTranslation> {
+    protected readonly data = computed(() => [this.t().archive, this.t().report, this.t().snooze]);
 
     protected readonly color = KbqComponentColors.ContrastFade;
     protected readonly style = KbqButtonStyles.Filled;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

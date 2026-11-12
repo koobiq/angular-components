@@ -5,7 +5,7 @@ import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit unfilled
@@ -92,9 +92,9 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditUnfilledExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditUnfilledExample extends BaseLocalizedExample<ExampleTranslation> {
     protected get placeholder(): string {
-        return this.text().empty;
+        return this.t().empty;
     }
 
     protected readonly form = new FormGroup({
@@ -104,6 +104,6 @@ export class InlineEditUnfilledExample extends BaseLocalizedExample<ExampleText>
     });
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

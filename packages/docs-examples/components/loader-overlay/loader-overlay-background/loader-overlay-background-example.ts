@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqLoaderOverlayModule, KbqLoaderOverlaySurface } from '@koobiq/components/loader-overlay';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Loader-overlay background
@@ -135,9 +135,9 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoaderOverlayBackgroundExample extends BaseLocalizedExample<ExampleText> {
-    protected readonly content = computed(() => this.text().backgroundContent);
-    protected readonly contentFade = computed(() => this.text().backgroundContentFade);
+export class LoaderOverlayBackgroundExample extends BaseLocalizedExample<ExampleTranslation> {
+    protected readonly content = computed(() => this.t().backgroundContent);
+    protected readonly contentFade = computed(() => this.t().backgroundContentFade);
 
     protected readonly surfaces: ReadonlyArray<{
         value: KbqLoaderOverlaySurface;
@@ -151,6 +151,6 @@ export class LoaderOverlayBackgroundExample extends BaseLocalizedExample<Example
     ];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

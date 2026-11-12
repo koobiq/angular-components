@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Select with panelWidth auto
@@ -13,7 +13,7 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <kbq-form-field>
-            <kbq-select [placeholder]="text().placeholder" [panelWidth]="'auto'" [(value)]="value">
+            <kbq-select [placeholder]="t().placeholder" [panelWidth]="'auto'" [(value)]="value">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
@@ -30,7 +30,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-l layout-align-center-center layout-row'
     }
 })
-export class SelectWithPanelWidthAutoExample extends BaseLocalizedExample<ExampleText> {
+export class SelectWithPanelWidthAutoExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly options = [
         'Active Scanning',
         'Business Intelligence Gathering',
@@ -44,6 +44,6 @@ export class SelectWithPanelWidthAutoExample extends BaseLocalizedExample<Exampl
     protected readonly value = model(this.options[0]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

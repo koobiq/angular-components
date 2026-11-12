@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Textarea with canGrow attribute
@@ -15,13 +15,8 @@ import { ExampleText, TEXT } from './l10n';
         <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="canGrow">canGrow</kbq-toggle>
 
         <kbq-form-field>
-            <kbq-label>{{ text().label }}</kbq-label>
-            <textarea
-                kbqTextarea
-                [placeholder]="text().placeholder"
-                [canGrow]="canGrow()"
-                [(ngModel)]="value"
-            ></textarea>
+            <kbq-label>{{ t().label }}</kbq-label>
+            <textarea kbqTextarea [placeholder]="t().placeholder" [canGrow]="canGrow()" [(ngModel)]="value"></textarea>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,11 +24,11 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-xl layout-column'
     }
 })
-export class TextareaCanGrowExample extends BaseLocalizedExample<ExampleText> {
+export class TextareaCanGrowExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly canGrow = model(true);
-    protected readonly value = model(this.text().dosText);
+    protected readonly value = model(this.t().dosText);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

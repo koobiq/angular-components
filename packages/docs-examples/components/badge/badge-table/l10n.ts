@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the badge-table example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     badge: string;
     value: string;
     link: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     processListAttempt: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         badge: 'Бейдж',
         value: 'Значение',

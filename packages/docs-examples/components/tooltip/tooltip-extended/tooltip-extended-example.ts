@@ -7,7 +7,7 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqTableModule } from '@koobiq/components/table';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Tooltip extended
@@ -70,16 +70,16 @@ import { ExampleText, TEXT } from './l10n';
             <div
                 class="layout-row layout-gap-xs layout-padding-top-m layout-padding-bottom-s layout-padding-left-l layout-padding-right-l"
             >
-                <span class="kbq-text-normal-strong">{{ text().confidence }}</span>
+                <span class="kbq-text-normal-strong">{{ t().confidence }}</span>
                 <span class="kbq-mono-normal" style="color: var(--kbq-foreground-warning)">0,0001</span>
             </div>
             <kbq-divider />
             <table kbq-table class="layout-padding-bottom-l">
                 <thead>
                     <tr>
-                        <th class="layout-padding-left-l">{{ text().incidentType }}</th>
-                        <th>{{ text().detected }}</th>
-                        <th class="layout-padding-right-l">{{ text().updated }}</th>
+                        <th class="layout-padding-left-l">{{ t().incidentType }}</th>
+                        <th>{{ t().detected }}</th>
+                        <th class="layout-padding-right-l">{{ t().updated }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -131,33 +131,33 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-5xl layout-column layout-align-center-start layout-gap-l'
     }
 })
-export class TooltipExtendedExample extends BaseLocalizedExample<ExampleText> {
+export class TooltipExtendedExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly extendedTooltipPreferredColor = KbqComponentColors.ContrastFade;
 
     protected readonly data = [
         {
-            type: this.text().extendedTypes[0],
+            type: this.t().extendedTypes[0],
             detected: 'Feb 18, 15:30',
             updated: 'Feb 18, 15:33'
         },
         {
-            type: this.text().extendedTypes[1],
+            type: this.t().extendedTypes[1],
             detected: 'Feb 18, 15:33',
             updated: 'Feb 18, 15:33'
         },
         {
-            type: this.text().extendedTypes[2],
+            type: this.t().extendedTypes[2],
             detected: 'Feb 18, 15:33',
             updated: 'Feb 18, 15:33'
         },
         {
-            type: this.text().extendedTypes[3],
+            type: this.t().extendedTypes[3],
             detected: 'Feb 18, 15:33',
             updated: 'Feb 18, 15:33'
         }
     ];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

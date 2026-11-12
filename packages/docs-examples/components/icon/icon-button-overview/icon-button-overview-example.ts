@@ -4,7 +4,7 @@ import { KbqCheckbox } from '@koobiq/components/checkbox';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Icon-button
@@ -16,7 +16,7 @@ import { ExampleText, TEXT } from './l10n';
         <div class="layout-margin-bottom-l">
             <i
                 kbq-icon-button="kbq-magnifying-glass_16"
-                [attr.aria-label]="text().search"
+                [attr.aria-label]="t().search"
                 [color]="colors.Theme"
                 [disabled]="disabled()"
             ></i>
@@ -26,11 +26,11 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class IconButtonOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class IconButtonOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly disabled = model(false);
     colors = KbqComponentColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

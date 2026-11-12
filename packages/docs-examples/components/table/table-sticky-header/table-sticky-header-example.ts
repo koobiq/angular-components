@@ -4,7 +4,7 @@ import { DateAdapter, DateFormatter, KbqRelativeShortDatePipe } from '@koobiq/co
 import { KbqTableModule } from '@koobiq/components/table';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Table with sticky header
@@ -17,9 +17,9 @@ import { ExampleText, TEXT } from './l10n';
             <table kbq-table stickyHeader style="width: 100%">
                 <thead>
                     <tr>
-                        <th>{{ text().file }}</th>
-                        <th>{{ text().owner }}</th>
-                        <th>{{ text().modified }}</th>
+                        <th>{{ t().file }}</th>
+                        <th>{{ t().owner }}</th>
+                        <th>{{ t().modified }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,7 +39,7 @@ import { ExampleText, TEXT } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableStickyHeaderExample extends BaseLocalizedExample<ExampleText> {
+export class TableStickyHeaderExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
     readonly value = this.adapter.today();
 
@@ -57,6 +57,6 @@ export class TableStickyHeaderExample extends BaseLocalizedExample<ExampleText> 
     ]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

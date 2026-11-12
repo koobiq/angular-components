@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the textarea examples. */
-export interface ExampleText {
+export interface ExampleTranslation {
     disabled: string;
     label: string;
     placeholder: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         disabled: 'Отключено',
         label: 'Метка',

@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the navbar examples. */
-export interface ExampleText {
+export interface ExampleTranslation {
     allApps: string;
     /** Applications listed in the "all apps" menu. */
     apps: string[];
@@ -15,7 +15,7 @@ export interface ExampleText {
     pageText: string[];
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         allApps: 'Все приложения',
         apps: ['Управление пользователями', 'База знаний', 'Секретные заметки'],

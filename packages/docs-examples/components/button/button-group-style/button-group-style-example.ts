@@ -3,7 +3,7 @@ import { KbqButtonColor, KbqButtonModule, KbqButtonStyle, KbqButtonStyles } from
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Button group style
@@ -27,7 +27,7 @@ import { ExampleText, TEXT } from './l10n';
 
                 <div kbq-button-group [color]="style.color" [kbqStyle]="style.appearance">
                     @for (item of data(); track item) {
-                        <button kbq-button [attr.aria-label]="text().diamondIcon">
+                        <button kbq-button [attr.aria-label]="t().diamondIcon">
                             <i kbq-icon="kbq-diamond_16"></i>
                         </button>
                     }
@@ -40,8 +40,8 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-column layout-align-center-center layout-gap-xl'
     }
 })
-export class ButtonGroupStyleExample extends BaseLocalizedExample<ExampleText> {
-    protected readonly data = computed(() => [this.text().archive, this.text().report, this.text().snooze]);
+export class ButtonGroupStyleExample extends BaseLocalizedExample<ExampleTranslation> {
+    protected readonly data = computed(() => [this.t().archive, this.t().report, this.t().snooze]);
 
     protected readonly buttonStyles: { color: KbqButtonColor; appearance: KbqButtonStyle; gap?: boolean }[] = [
         { color: KbqComponentColors.Contrast, appearance: KbqButtonStyles.Filled },
@@ -53,6 +53,6 @@ export class ButtonGroupStyleExample extends BaseLocalizedExample<ExampleText> {
     ];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

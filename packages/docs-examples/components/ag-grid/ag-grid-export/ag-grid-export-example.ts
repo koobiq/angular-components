@@ -7,7 +7,7 @@ import { AllCommunityModule, ColDef, GridApi, GridReadyEvent, ModuleRegistry } f
 import { jsPDF } from 'jspdf';
 import { autoTable } from 'jspdf-autotable';
 import writeExcelFile from 'write-excel-file/browser';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -24,9 +24,9 @@ type ExportTable = {
     imports: [AgGridModule, KbqAgGridThemeModule, KbqButtonModule],
     template: `
         <div class="ag-grid-export-example-actions">
-            <button type="button" kbq-button (click)="downloadCsv()">{{ text().download('CSV') }}</button>
-            <button type="button" kbq-button (click)="downloadXlsx()">{{ text().download('XLSX') }}</button>
-            <button type="button" kbq-button (click)="downloadPdf()">{{ text().download('PDF') }}</button>
+            <button type="button" kbq-button (click)="downloadCsv()">{{ t().download('CSV') }}</button>
+            <button type="button" kbq-button (click)="downloadXlsx()">{{ t().download('XLSX') }}</button>
+            <button type="button" kbq-button (click)="downloadPdf()">{{ t().download('PDF') }}</button>
         </div>
 
         <ag-grid-angular
@@ -56,7 +56,7 @@ type ExportTable = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridExportExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridExportExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly api = signal<GridApi | null>(null);
     private readonly filename = 'example-export';
 
@@ -67,7 +67,7 @@ export class AgGridExportExample extends BaseLocalizedExample<ExampleText> {
         floatingFilter: true
     };
     protected readonly columnDefs = computed<ColDef[]>(() => [
-        { field: 'column0', headerName: this.text().projectName, width: 130 },
+        { field: 'column0', headerName: this.t().projectName, width: 130 },
         ...Array.from({ length: 4 }, (_, i) => ({
             field: 'column' + (i + 1),
             headerName: 'Column ' + (i + 1),
@@ -134,6 +134,6 @@ export class AgGridExportExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

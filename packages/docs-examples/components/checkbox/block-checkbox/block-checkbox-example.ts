@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqCheckable } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * EXAMPLE ONLY - not a published Koobiq component.
@@ -88,8 +88,8 @@ export class BlockCheckboxComponent {
     imports: [KbqIconModule, BlockCheckboxComponent, FormsModule],
     template: `
         <block-checkbox-component [(ngModel)]="checked">
-            <span block-checkbox-title>{{ text().title }}</span>
-            <div>{{ text().loremIpsum }}</div>
+            <span block-checkbox-title>{{ t().title }}</span>
+            <div>{{ t().loremIpsum }}</div>
         </block-checkbox-component>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -97,10 +97,10 @@ export class BlockCheckboxComponent {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class BlockCheckboxExample extends BaseLocalizedExample<ExampleText> {
+export class BlockCheckboxExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly checked = model(true);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

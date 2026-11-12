@@ -16,7 +16,7 @@ import {
     IGetRowsParams,
     ModuleRegistry
 } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -28,7 +28,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     imports: [AgGridModule, KbqAgGridThemeModule, FormsModule, KbqToggleModule],
     template: `
         <kbq-toggle [(ngModel)]="loading" (ngModelChange)="onLoadingChange($event)">
-            {{ text().showLoadingOverlay }}
+            {{ t().showLoadingOverlay }}
         </kbq-toggle>
 
         <ag-grid-angular
@@ -64,14 +64,14 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     providers: [kbqAgGridLoadingOverlayConfigProvider({ rows: 6, cols: 3, firstColWidth: '148px' })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridLoadingOverlayExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridLoadingOverlayExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly loading = model(true);
     protected readonly datasource = signal<IDatasource | undefined>(undefined);
 
     protected readonly columnDefs = computed<ColDef[]>(() =>
         Array.from({ length: 6 }, (_, i) => ({
             field: 'column' + i,
-            headerName: this.text().headerText
+            headerName: this.t().headerText
         }))
     );
 
@@ -104,6 +104,6 @@ export class AgGridLoadingOverlayExample extends BaseLocalizedExample<ExampleTex
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

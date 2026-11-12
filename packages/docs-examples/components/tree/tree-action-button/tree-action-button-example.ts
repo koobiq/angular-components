@@ -7,15 +7,15 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
-export class FileNode extends BaseLocalizedExample<ExampleText> {
+export class FileNode extends BaseLocalizedExample<ExampleTranslation> {
     children: FileNode[];
     name: string;
     type: any;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -133,7 +133,7 @@ export const DATA_OBJECT = {
 
                 <div class="layout-row layout-align-space-between-center">
                     <span [innerHTML]="treeControl.getViewValue(node)"></span>
-                    <kbq-badge badgeColor="theme" [compact]="true">{{ text().badge }}</kbq-badge>
+                    <kbq-badge badgeColor="theme" [compact]="true">{{ t().badge }}</kbq-badge>
                 </div>
 
                 <kbq-option-action
@@ -169,7 +169,7 @@ export const DATA_OBJECT = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeActionButtonExample extends BaseLocalizedExample<ExampleText> {
+export class TreeActionButtonExample extends BaseLocalizedExample<ExampleTranslation> {
     popUpPlacements = PopUpPlacements;
 
     treeControl: FlatTreeControl<FileFlatNode>;
@@ -180,7 +180,7 @@ export class TreeActionButtonExample extends BaseLocalizedExample<ExampleText> {
     modelValue: any = '';
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(

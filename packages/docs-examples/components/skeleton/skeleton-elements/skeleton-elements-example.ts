@@ -14,7 +14,7 @@ import {
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton element presets
@@ -36,7 +36,7 @@ import { ExampleText, TEXT } from './l10n';
         KbqTagsModule
     ],
     template: `
-        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         <div class="example-row">
             @if (loading()) {
@@ -46,14 +46,14 @@ import { ExampleText, TEXT } from './l10n';
                 <kbq-skeleton-icon />
                 <kbq-skeleton-link />
             } @else {
-                <button kbq-button color="contrast">{{ text().start }}</button>
-                <kbq-badge [badgeColor]="badgeColors.FadeSuccess">{{ text().active }}</kbq-badge>
+                <button kbq-button color="contrast">{{ t().start }}</button>
+                <kbq-badge [badgeColor]="badgeColors.FadeSuccess">{{ t().active }}</kbq-badge>
                 <kbq-tag>
                     LDAP
                     <i kbqTagRemove kbq-icon-button="kbq-xmark-s_16"></i>
                 </kbq-tag>
                 <i aria-label="Edit" kbq-icon-button="kbq-pencil_16"></i>
-                <a kbqLink pseudo>{{ text().history }}</a>
+                <a kbqLink pseudo>{{ t().history }}</a>
             }
         </div>
     `,
@@ -73,12 +73,12 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonElementsExample extends BaseLocalizedExample<ExampleText> {
+export class SkeletonElementsExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly loading = model(true);
 
     protected readonly badgeColors = KbqBadgeColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

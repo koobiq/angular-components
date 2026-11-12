@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Button toggle tooltip
@@ -35,16 +35,16 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ButtonToggleTooltipOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class ButtonToggleTooltipOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly group = computed(() => [
-        this.text().longToggleText,
-        this.text().donkeyExpress,
-        this.text().middleEarthPost
+        this.t().longToggleText,
+        this.t().donkeyExpress,
+        this.t().middleEarthPost
     ]);
 
     model = 1;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -6,7 +6,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title List action button
@@ -17,12 +17,12 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <kbq-list-selection
             style="width: 400px"
-            [attr.aria-label]="text().elements"
+            [attr.aria-label]="t().elements"
             [autoSelect]="false"
             [(ngModel)]="selected"
         >
             <kbq-list-option [value]="'An element with a very very very long name'">
-                <div>{{ text().longElementName }}</div>
+                <div>{{ t().longElementName }}</div>
 
                 <kbq-option-action
                     [kbqDropdownTriggerFor]="dropdown"
@@ -35,7 +35,7 @@ import { ExampleText, TEXT } from './l10n';
                     <div class="layout-row layout-align-space-between">
                         Item {{ item }}
                         <kbq-badge style="align-self: center" badgeColor="theme" [compact]="true">
-                            {{ text().badge }}
+                            {{ t().badge }}
                         </kbq-badge>
                     </div>
                     <kbq-option-action
@@ -47,7 +47,7 @@ import { ExampleText, TEXT } from './l10n';
             }
         </kbq-list-selection>
         <br />
-        <div>{{ text().selected }} {{ selected }}</div>
+        <div>{{ t().selected }} {{ selected }}</div>
 
         <kbq-dropdown #dropdown>
             <button kbq-dropdown-item>item 1</button>
@@ -57,7 +57,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListActionButtonExample extends BaseLocalizedExample<ExampleText> {
+export class ListActionButtonExample extends BaseLocalizedExample<ExampleTranslation> {
     selected = [];
     protected readonly PopUpPlacements = PopUpPlacements;
 
@@ -66,6 +66,6 @@ export class ListActionButtonExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

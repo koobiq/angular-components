@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the toast-actions-overview example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     restore: string;
     mailServersWindows: string;
     view: string;
@@ -17,7 +17,7 @@ export interface ExampleText {
     policy: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         restore: 'Восстановить',
         mailServersWindows: 'Почтовые серверы Windows',

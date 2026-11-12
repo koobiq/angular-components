@@ -5,7 +5,7 @@ import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Alert dynamic
@@ -21,7 +21,7 @@ import { ExampleText, TEXT } from './l10n';
         KbqIconButton
     ],
     template: `
-        <button #trigger kbq-button (click)="visible.set(true)">{{ text().showAlert }}</button>
+        <button #trigger kbq-button (click)="visible.set(true)">{{ t().showAlert }}</button>
 
         @if (visible()) {
             <!-- role="alert" makes assistive technology announce the alert when it is inserted. -->
@@ -34,11 +34,11 @@ import { ExampleText, TEXT } from './l10n';
                 (closed)="dismiss()"
             >
                 <i aria-hidden="true" kbq-icon="kbq-triangle-exclamation_16" [color]="colors.Error"></i>
-                {{ text().saveFailed }}
+                {{ t().saveFailed }}
                 <button
                     kbq-alert-close-button
                     kbq-icon-button="kbq-xmark-s_16"
-                    [attr.aria-label]="text().close"
+                    [attr.aria-label]="t().close"
                     [color]="colors.ContrastFade"
                 ></button>
             </kbq-alert>
@@ -49,7 +49,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-column layout-align-start-start'
     }
 })
-export class AlertDynamicExample extends BaseLocalizedExample<ExampleText> {
+export class AlertDynamicExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly focusMonitor = inject(FocusMonitor);
 
     protected readonly colors = KbqComponentColors;
@@ -69,6 +69,6 @@ export class AlertDynamicExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

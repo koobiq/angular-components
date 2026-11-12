@@ -1,14 +1,14 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the toast-link-overview example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     restore: string;
     request: string;
     assignedToYou: string;
     withInlineLink: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         restore: 'Восстановить',
         request: 'Запрос',

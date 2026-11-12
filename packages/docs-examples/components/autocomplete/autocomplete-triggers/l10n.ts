@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the autocomplete-triggers example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     comment: string;
     typeTriggers: string;
     closedLabel: string;
@@ -15,7 +15,7 @@ export interface ExampleText {
     carol: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         comment: 'Комментарий',
         typeTriggers: 'Введите / для сниппета или @, чтобы упомянуть коллегу',

@@ -4,7 +4,7 @@ import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Accordion header
@@ -15,7 +15,7 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'accordion-header-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccordionHeaderExample extends BaseLocalizedExample<ExampleText> {
+export class AccordionHeaderExample extends BaseLocalizedExample<ExampleTranslation> {
     icon: boolean = false;
     caption: boolean = false;
     leftBadge: boolean = false;
@@ -23,6 +23,6 @@ export class AccordionHeaderExample extends BaseLocalizedExample<ExampleText> {
     actions: boolean = false;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

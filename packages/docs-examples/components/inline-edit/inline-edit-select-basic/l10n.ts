@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the inline-edit-select-basic example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     status: string;
     statuses: string[];
     severities: string[];
@@ -9,7 +9,7 @@ export interface ExampleText {
     notSpecified: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         status: 'Статус',
         statuses: ['Открыт', 'В работе', 'Решён', 'Закрыт'],

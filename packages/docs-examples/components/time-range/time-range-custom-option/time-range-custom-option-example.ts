@@ -12,7 +12,7 @@ import {
     KbqTimeRangeModule
 } from '@koobiq/components/time-range';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 export function customTypesFactory<D>(adapter: DateAdapter<D>): KbqCustomTimeRangeType[] {
     const currentYear = adapter.startOf(adapter.today(), 'year');
@@ -109,10 +109,10 @@ export function customTypesFactory<D>(adapter: DateAdapter<D>): KbqCustomTimeRan
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }
 })
-export class TimeRangeCustomOptionExample extends BaseLocalizedExample<ExampleText> {
-    protected readonly placeholder = computed(() => this.text().placeholder);
+export class TimeRangeCustomOptionExample extends BaseLocalizedExample<ExampleTranslation> {
+    protected readonly placeholder = computed(() => this.t().placeholder);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

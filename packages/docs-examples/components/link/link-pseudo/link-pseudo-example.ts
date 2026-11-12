@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLink } from '@koobiq/components/link';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Link pseudo
@@ -10,7 +10,7 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'link-pseudo-example',
     imports: [KbqLink],
     template: `
-        <span kbqLink>{{ text().scanReport }}</span>
+        <span kbqLink>{{ t().scanReport }}</span>
     `,
     styles: `
         :host {
@@ -22,8 +22,8 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinkPseudoExample extends BaseLocalizedExample<ExampleText> {
+export class LinkPseudoExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

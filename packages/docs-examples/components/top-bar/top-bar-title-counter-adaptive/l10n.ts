@@ -1,11 +1,11 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the example-top-bar component. */
-export interface ExampleText {
+export interface ExampleTranslation {
     pageHeader: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         pageHeader: 'Заголовок страницы'
     },
@@ -15,13 +15,13 @@ export const TEXT: LocalizedText<ExampleText> = {
 };
 
 /** Descriptions of the adaptive title behavior shown by the example. */
-export interface AdaptiveText {
+export interface AdaptiveTranslation {
     fullDisplay: string;
     truncatedTitle: string;
     compressRight: string;
 }
 
-export const ADAPTIVE_TEXT: LocalizedText<AdaptiveText> = {
+export const ADAPTIVE_TRANSLATIONS: Translations<AdaptiveTranslation> = {
     'ru-RU': {
         fullDisplay: 'Когда есть свободное пространство заголовок и действия отображаются полностью',
         truncatedTitle:

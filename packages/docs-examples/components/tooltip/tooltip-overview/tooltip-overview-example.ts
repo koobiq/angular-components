@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Tooltip
@@ -16,7 +16,7 @@ import { ExampleText, TEXT } from './l10n';
         KbqIconModule
     ],
     template: `
-        <button kbq-button [attr.aria-label]="text().add" [kbqTooltip]="text().create">
+        <button kbq-button [attr.aria-label]="t().add" [kbqTooltip]="t().create">
             <i kbq-icon="kbq-plus_16"></i>
         </button>
     `,
@@ -25,8 +25,8 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-5xl layout-row layout-align-center-center'
     }
 })
-export class TooltipOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class TooltipOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

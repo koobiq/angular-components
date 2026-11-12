@@ -8,7 +8,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, GetRowIdParams, ModuleRegistry, RowSelectionOptions } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -19,7 +19,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     selector: 'ag-grid-row-selection-state-example',
     imports: [AgGridModule, KbqAgGridThemeModule, KbqButtonModule],
     template: `
-        <button type="button" kbq-button (click)="rowSelectionState.reset()">{{ text().resetSelectionState }}</button>
+        <button type="button" kbq-button (click)="rowSelectionState.reset()">{{ t().resetSelectionState }}</button>
 
         <ag-grid-angular
             #rowSelectionState="kbqAgGridRowSelectionState"
@@ -48,7 +48,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridRowSelectionStateExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridRowSelectionStateExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly getRowId = (params: GetRowIdParams): string => params.data.column0;
     protected readonly defaultColDef: ColDef = {
         sortable: true,
@@ -73,6 +73,6 @@ export class AgGridRowSelectionStateExample extends BaseLocalizedExample<Example
     );
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

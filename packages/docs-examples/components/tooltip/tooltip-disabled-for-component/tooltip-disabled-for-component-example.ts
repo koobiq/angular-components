@@ -4,7 +4,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Tooltip disabled
@@ -13,10 +13,10 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'tooltip-disabled-for-component-example',
     imports: [KbqToolTipModule, KbqButtonModule, KbqIconModule, KbqLink],
     template: `
-        <button kbq-button (click)="disableState = !disableState">{{ text().toggle }}</button>
+        <button kbq-button (click)="disableState = !disableState">{{ t().toggle }}</button>
 
         <div kbqTooltip="kbq-button" [forDisabledComponent]="button">
-            <button #button kbq-button [attr.aria-label]="text().add" [disabled]="disableState">
+            <button #button kbq-button [attr.aria-label]="t().add" [disabled]="disableState">
                 <i kbq-icon="kbq-plus_16"></i>
             </button>
         </div>
@@ -31,7 +31,7 @@ import { ExampleText, TEXT } from './l10n';
                 kbqLink
                 href="https://koobiq.io"
                 target="_blank"
-                [kbqTooltip]="text().create"
+                [kbqTooltip]="t().create"
                 [disabled]="disableState"
             >
                 kbq-link
@@ -43,10 +43,10 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
     }
 })
-export class TooltipDisabledForComponentExample extends BaseLocalizedExample<ExampleText> {
+export class TooltipDisabledForComponentExample extends BaseLocalizedExample<ExampleTranslation> {
     disableState: boolean = false;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

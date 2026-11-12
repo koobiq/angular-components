@@ -20,7 +20,7 @@ import {
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * Payload every cross-field validator below publishes, so that a single `ErrorStateMatcher` can tell which
@@ -101,48 +101,48 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher(
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>{{ text().currentPassword }}</kbq-label>
+                        <kbq-label>{{ t().currentPassword }}</kbq-label>
                         <input formControlName="currentPassword" kbqInputPassword />
                         <kbq-password-toggle />
 
                         @if (form.controls.currentPassword.hasError('required')) {
-                            <kbq-error>{{ text().required }}</kbq-error>
+                            <kbq-error>{{ t().required }}</kbq-error>
                         }
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>{{ text().newPassword }}</kbq-label>
+                        <kbq-label>{{ t().newPassword }}</kbq-label>
                         <input formControlName="newPassword" kbqInputPassword />
                         <kbq-password-toggle />
 
                         @if (form.controls.newPassword.hasError('required')) {
-                            <kbq-error>{{ text().required }}</kbq-error>
+                            <kbq-error>{{ t().required }}</kbq-error>
                         } @else if (form.controls.newPassword.hasError('minLength')) {
-                            <kbq-error>{{ text().min8 }}</kbq-error>
+                            <kbq-error>{{ t().min8 }}</kbq-error>
                         } @else if (form.hasError('distinct')) {
-                            <kbq-error>{{ text().passwordMustDiffer }}</kbq-error>
+                            <kbq-error>{{ t().passwordMustDiffer }}</kbq-error>
                         }
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>{{ text().confirmNewPassword }}</kbq-label>
+                        <kbq-label>{{ t().confirmNewPassword }}</kbq-label>
                         <input formControlName="confirmPassword" kbqInputPassword />
                         <kbq-password-toggle />
 
                         @if (form.controls.confirmPassword.hasError('required')) {
-                            <kbq-error>{{ text().required }}</kbq-error>
+                            <kbq-error>{{ t().required }}</kbq-error>
                         } @else if (form.hasError('matchAll')) {
-                            <kbq-error>{{ text().passwordsDoNotMatch }}</kbq-error>
+                            <kbq-error>{{ t().passwordsDoNotMatch }}</kbq-error>
                         }
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-align-start-start">
-                    <button color="contrast" kbq-button type="submit">{{ text().changePassword }}</button>
+                    <button color="contrast" kbq-button type="submit">{{ t().changePassword }}</button>
                 </div>
             </div>
         </form>
@@ -160,7 +160,7 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher(
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationCrossFieldPasswordExample extends BaseLocalizedExample<ExampleText> {
+export class ValidationCrossFieldPasswordExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly form = new FormGroup(
         {
             currentPassword: new FormControl('', Validators.required),
@@ -204,6 +204,6 @@ export class ValidationCrossFieldPasswordExample extends BaseLocalizedExample<Ex
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

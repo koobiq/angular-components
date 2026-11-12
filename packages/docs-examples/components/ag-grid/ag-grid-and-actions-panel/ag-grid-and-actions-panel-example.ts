@@ -33,7 +33,7 @@ import {
     SelectionChangedEvent,
     SelectionColumnDef
 } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -106,7 +106,7 @@ type ExampleTableItem = unknown;
         '[class.example-grid_actions-panel-opened]': 'panelOpened()'
     }
 })
-export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
+export class ExampleGrid extends BaseLocalizedExample<ExampleTranslation> {
     readonly panelOpened = input(false);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private api: GridApi<ExampleTableItem> | null = null;
@@ -126,10 +126,10 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
         hideDisabledCheckboxes: false
     };
     protected readonly columnDefs = computed<ColDef[]>(() => [
-        { field: 'column0', headerName: this.text().projectName, pinned: true },
+        { field: 'column0', headerName: this.t().projectName, pinned: true },
         ...Array.from({ length: 4 }, (_, i) => ({
             field: 'column' + (i + 1),
-            headerName: this.text().headerText
+            headerName: this.t().headerText
         }))
     ]);
     protected readonly rowData = computed(() =>
@@ -141,7 +141,7 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
     readonly selectedItems = output<ExampleTableItem[]>();
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         effect(() => {
             if (!this.panelOpened()) return;
             if (this.getScrollBottomOffset() > ACTIONS_PANEL_HEIGHT) return;
@@ -207,7 +207,7 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
     template: `
         <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
             <div order="99" [kbqOverflowItem]="action.Counter">
-                <div class="example-counter">{{ text().selected }} {{ data().length }}</div>
+                <div class="example-counter">{{ t().selected }} {{ data().length }}</div>
                 <kbq-divider class="example-divider-vertical" [vertical]="true" />
             </div>
 
@@ -235,7 +235,7 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
                     kbqOverflowItemsResult
                     color="contrast"
                     kbq-button
-                    [attr.aria-label]="text().more"
+                    [attr.aria-label]="t().more"
                     [kbqDropdownTriggerFor]="dropdown"
                 >
                     <i kbq-icon="kbq-ellipsis-vertical_16"></i>
@@ -243,7 +243,7 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
             }
 
             <kbq-dropdown #dropdown="kbqDropdown">
-                <div class="example-counter-dropdown">{{ text().selected }} {{ data().length }}</div>
+                <div class="example-counter-dropdown">{{ t().selected }} {{ data().length }}</div>
                 <kbq-divider />
 
                 @for (action of actions(); track action.id) {
@@ -297,11 +297,11 @@ export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleActionsPanel extends BaseLocalizedExample<ExampleText> {
+export class ExampleActionsPanel extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly actions = computed<ExampleAction[]>(() => [
-        { id: 'Responsible', icon: 'kbq-user_16', label: this.text().responsible },
-        { id: 'Link to incident', icon: 'kbq-link_16', label: this.text().linkToIncident },
-        { id: 'Remove', icon: 'kbq-trash_16', label: this.text().remove, divider: true }
+        { id: 'Responsible', icon: 'kbq-user_16', label: this.t().responsible },
+        { id: 'Link to incident', icon: 'kbq-link_16', label: this.t().linkToIncident },
+        { id: 'Remove', icon: 'kbq-trash_16', label: this.t().remove, divider: true }
     ]);
     protected readonly action = { Counter: 'counter' };
     protected readonly data = inject<Signal<ExampleTableItem[]>>(KBQ_ACTIONS_PANEL_DATA);
@@ -309,11 +309,11 @@ export class ExampleActionsPanel extends BaseLocalizedExample<ExampleText> {
     private readonly toast = inject(KbqToastService);
 
     protected onAction(action: ExampleAction): void {
-        this.toast.show({ title: this.text().actionInitiated(action.label) });
+        this.toast.show({ title: this.t().actionInitiated(action.label) });
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 

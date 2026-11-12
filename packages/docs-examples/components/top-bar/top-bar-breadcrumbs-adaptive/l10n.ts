@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the example-top-bar-breadcrumbs component. */
-export interface ExampleText {
+export interface ExampleTranslation {
     details: string;
     filter: string;
     share: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         details: 'Детали',
         filter: 'Фильтр',
@@ -21,14 +21,14 @@ export const TEXT: LocalizedText<ExampleText> = {
 };
 
 /** Descriptions of the adaptive breadcrumb behavior shown by the example. */
-export interface AdaptiveText {
+export interface AdaptiveTranslation {
     breadcrumbShortening: string;
     leftmostHidden: string;
     currentItemTruncation: string;
     rightSideCompression: string;
 }
 
-export const ADAPTIVE_TEXT: LocalizedText<AdaptiveText> = {
+export const ADAPTIVE_TRANSLATIONS: Translations<AdaptiveTranslation> = {
     'ru-RU': {
         breadcrumbShortening:
             'За основу берется автоматическое сокращение хлебных крошек, когда средние пункты скрываются при отсутствии свободного пространства.',

@@ -1,14 +1,14 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the splitter examples. Constraint hints (min, snap) stay English as CSS mechanics. */
-export interface ExampleText {
+export interface ExampleTranslation {
     sidebarCollapsed: string;
     terminalCollapsed: string;
     dragLeftToCollapse: string;
     dragBottomToCollapse: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         sidebarCollapsed: 'Панель свёрнута',
         terminalCollapsed: 'Терминал свёрнут',

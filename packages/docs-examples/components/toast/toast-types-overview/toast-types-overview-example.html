@@ -5,18 +5,18 @@
 </ng-template>
 
 <ng-template #toastActionInfo let-toast>
-    <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: text().refresh }" />
+    <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: t().refresh }" />
 </ng-template>
 <ng-template #toastActionWarning let-toast>
-    <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: text().changePassword }" />
+    <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: t().changePassword }" />
 </ng-template>
 <ng-template #toastActionError let-toast>
-    <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: text().retry }" />
+    <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: t().retry }" />
 </ng-template>
 
 <div style="gap: 16px" class="layout-row">
-    <button kbq-button (click)="showContrastToast(toastActionInfo)">{{ text().info }}</button>
-    <button kbq-button (click)="showSuccessToast()">{{ text().success }}</button>
-    <button kbq-button (click)="showWarningToast(toastActionWarning)">{{ text().warning }}</button>
-    <button kbq-button (click)="showErrorToast(toastActionError)">{{ text().error }}</button>
+    <button kbq-button (click)="showContrastToast(toastActionInfo)">{{ t().info }}</button>
+    <button kbq-button (click)="showSuccessToast()">{{ t().success }}</button>
+    <button kbq-button (click)="showWarningToast(toastActionWarning)">{{ t().warning }}</button>
+    <button kbq-button (click)="showErrorToast(toastActionError)">{{ t().error }}</button>
 </div>

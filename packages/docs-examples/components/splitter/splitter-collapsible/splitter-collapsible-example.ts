@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqSplitter, KbqSplitterPanel } from '@koobiq/components/splitter';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Splitter collapsible panel
@@ -12,15 +12,15 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'splitter-collapsible-example',
     imports: [KbqSplitter, KbqSplitterPanel, KbqToggleModule, FormsModule],
     template: `
-        <kbq-toggle [(ngModel)]="sidebarCollapsed">{{ text().sidebarCollapsed }}</kbq-toggle>
-        <kbq-toggle [(ngModel)]="terminalCollapsed">{{ text().terminalCollapsed }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="sidebarCollapsed">{{ t().sidebarCollapsed }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="terminalCollapsed">{{ t().terminalCollapsed }}</kbq-toggle>
 
         <kbq-splitter class="example-splitter layout-margin-top-l">
             <kbq-splitter-panel minSize="125" size="150" maxSize="200" collapsible [(collapsed)]="sidebarCollapsed">
                 <div class="example-splitter-panel-content">
                     Sidebar
                     @if (!sidebarCollapsed()) {
-                        <small>{{ text().dragLeftToCollapse }}</small>
+                        <small>{{ t().dragLeftToCollapse }}</small>
                     }
                 </div>
             </kbq-splitter-panel>
@@ -39,7 +39,7 @@ import { ExampleText, TEXT } from './l10n';
                         <div class="example-splitter-panel-content">
                             Terminal
                             @if (!terminalCollapsed()) {
-                                <small>{{ text().dragBottomToCollapse }}</small>
+                                <small>{{ t().dragBottomToCollapse }}</small>
                             }
                         </div>
                     </kbq-splitter-panel>
@@ -80,11 +80,11 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitterCollapsibleExample extends BaseLocalizedExample<ExampleText> {
+export class SplitterCollapsibleExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly terminalCollapsed = model(false);
     protected readonly sidebarCollapsed = model(false);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

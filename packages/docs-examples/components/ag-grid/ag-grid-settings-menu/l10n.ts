@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the ag-grid-settings-menu example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     severity: string;
     affectedHost: string;
     status: string;
@@ -16,7 +16,7 @@ export interface ExampleText {
     attackTypes: string[];
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         severity: 'Важность',
         affectedHost: 'Затронутый узел',

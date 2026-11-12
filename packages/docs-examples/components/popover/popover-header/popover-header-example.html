@@ -1,32 +1,32 @@
 <ng-template #customContent>
     <p style="margin-top: 0">
-        {{ text().intro }}
+        {{ t().intro }}
     </p>
     <kbq-dl class="kbq-dl_wide">
-        <kbq-dt>{{ text().dtYellow }}</kbq-dt>
-        <kbq-dd>{{ text().ddSand }}</kbq-dd>
+        <kbq-dt>{{ t().dtYellow }}</kbq-dt>
+        <kbq-dd>{{ t().ddSand }}</kbq-dd>
 
-        <kbq-dt>{{ text().dtGreen }}</kbq-dt>
-        <kbq-dd>{{ text().ddForest }}</kbq-dd>
+        <kbq-dt>{{ t().dtGreen }}</kbq-dt>
+        <kbq-dd>{{ t().ddForest }}</kbq-dd>
 
-        <kbq-dt>{{ text().dtMany }}</kbq-dt>
-        <kbq-dd>{{ text().ddMany }}</kbq-dd>
+        <kbq-dt>{{ t().dtMany }}</kbq-dt>
+        <kbq-dd>{{ t().ddMany }}</kbq-dd>
 
-        <kbq-dt>{{ text().dtFloor }}</kbq-dt>
+        <kbq-dt>{{ t().dtFloor }}</kbq-dt>
         <kbq-dd>
-            <kbq-badge [badgeColor]="badgeColors.FadeContrast">{{ text().ddBadge }}</kbq-badge>
+            <kbq-badge [badgeColor]="badgeColors.FadeContrast">{{ t().ddBadge }}</kbq-badge>
         </kbq-dd>
 
-        <kbq-dt>{{ text().dtStacked }}</kbq-dt>
-        <kbq-dd>{{ text().ddAlive }}</kbq-dd>
+        <kbq-dt>{{ t().dtStacked }}</kbq-dt>
+        <kbq-dd>{{ t().ddAlive }}</kbq-dd>
 
-        <kbq-dt>{{ text().dtAdults }}</kbq-dt>
-        <kbq-dd>{{ text().ddDream }}</kbq-dd>
+        <kbq-dt>{{ t().dtAdults }}</kbq-dt>
+        <kbq-dd>{{ t().ddDream }}</kbq-dd>
     </kbq-dl>
 </ng-template>
 
 <ng-template #customFooter>
-    <button kbq-button (click)="kbqPopover.hide()">{{ text().close }}</button>
+    <button kbq-button (click)="kbqPopover.hide()">{{ t().close }}</button>
 </ng-template>
 
 <div style="gap: 16px" class="layout-row layout-wrap">
@@ -35,9 +35,9 @@
         kbqPopover
         [kbqPopoverHasCloseButton]="true"
         [kbqPopoverContent]="customContent"
-        [kbqPopoverHeader]="text().popoverTitle"
+        [kbqPopoverHeader]="t().popoverTitle"
     >
-        {{ text().onlyHeader }}
+        {{ t().onlyHeader }}
     </button>
     <button
         #kbqPopover="kbqPopover"
@@ -46,7 +46,7 @@
         [kbqPopoverContent]="customContent"
         [kbqPopoverFooter]="customFooter"
     >
-        {{ text().onlyFooter }}
+        {{ t().onlyFooter }}
     </button>
-    <button kbq-button kbqPopover [kbqPopoverContent]="customContent">{{ text().plain }}</button>
+    <button kbq-button kbqPopover [kbqPopoverContent]="customContent">{{ t().plain }}</button>
 </div>

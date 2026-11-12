@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the validation-on-blur example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     ipv4Address: string;
     invalidIp: string;
     numbersAndDots: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         ipv4Address: 'IPv4-адрес',
         invalidIp: 'IP-адрес не соответствует стандарту RFC',

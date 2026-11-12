@@ -8,7 +8,7 @@ import {
     KbqUsernameModule
 } from '@koobiq/components/username';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 const USERS: KbqUserInfo[] = [
     { firstName: 'Maxwell', middleName: 'Alan', lastName: 'Root', login: 'mroot', site: 'corp' },
@@ -66,7 +66,7 @@ const USERS: KbqUserInfo[] = [
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class UsernameFilterBarOptionExample extends BaseLocalizedExample<ExampleText> implements AfterViewInit {
+export class UsernameFilterBarOptionExample extends BaseLocalizedExample<ExampleTranslation> implements AfterViewInit {
     private readonly formatUsername = kbqInjectUsernameFormatter();
     private readonly userOptionTemplate = viewChild<TemplateRef<any>>('userOption');
 
@@ -78,7 +78,7 @@ export class UsernameFilterBarOptionExample extends BaseLocalizedExample<Example
         saved: false,
         pipes: [
             {
-                name: this.text().assignee,
+                name: this.t().assignee,
                 type: KbqPipeTypes.Select,
                 value: null,
                 search: true,
@@ -96,7 +96,7 @@ export class UsernameFilterBarOptionExample extends BaseLocalizedExample<Example
     ngAfterViewInit(): void {
         this.pipeTemplates = [
             {
-                name: this.text().assignee,
+                name: this.t().assignee,
                 type: KbqPipeTypes.Select,
                 values: USERS.map((user) => ({
                     name: kbqBuildUsernameText(
@@ -115,6 +115,6 @@ export class UsernameFilterBarOptionExample extends BaseLocalizedExample<Example
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

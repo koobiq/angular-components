@@ -4,7 +4,7 @@ import { KbqComponentColors, PopUpSizes } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Popover arrowless
@@ -19,7 +19,7 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <ng-template #customContent>
             <div [style.width.px]="400">
-                <div class="layout-margin-bottom-s">{{ text().wonder }}</div>
+                <div class="layout-margin-bottom-s">{{ t().wonder }}</div>
                 <kbq-form-field>
                     <input kbqInput placeholder="Interesting thought" />
                 </kbq-form-field>
@@ -28,8 +28,8 @@ import { ExampleText, TEXT } from './l10n';
 
         <ng-template #customFooter>
             <div class="layout-row layout-wrap layout-gap-l">
-                <button color="contrast" kbq-button (click)="kbqPopover.hide(0)">{{ text().save }}</button>
-                <button kbq-button (click)="kbqPopover.hide(0)">{{ text().cancel }}</button>
+                <button color="contrast" kbq-button (click)="kbqPopover.hide(0)">{{ t().save }}</button>
+                <button kbq-button (click)="kbqPopover.hide(0)">{{ t().cancel }}</button>
             </div>
         </ng-template>
 
@@ -50,11 +50,11 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class PopoverArrowlessExample extends BaseLocalizedExample<ExampleText> {
+export class PopoverArrowlessExample extends BaseLocalizedExample<ExampleTranslation> {
     colors = KbqComponentColors;
     protected readonly popoverSize = PopUpSizes.Large;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

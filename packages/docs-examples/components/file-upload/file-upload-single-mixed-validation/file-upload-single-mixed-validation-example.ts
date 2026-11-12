@@ -6,7 +6,7 @@ import { KbqFileItem, KbqSingleFileUploadComponent } from '@koobiq/components/fi
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title File upload single mixed validation example
@@ -32,21 +32,21 @@ import { ExampleText, TEXT } from './l10n';
                 <i kbq-icon="kbq-file-o_16"></i>
 
                 @if (kbqFileUpload.invalid && form.controls.fileUpload.hasError('required')) {
-                    <kbq-hint color="error">{{ text().fileRequired }}</kbq-hint>
+                    <kbq-hint color="error">{{ t().fileRequired }}</kbq-hint>
                 }
 
                 @if (form.controls.fileUpload.hasError('fileExtensionMismatch')) {
-                    <kbq-hint color="error">{{ text().provideValidExtension }}</kbq-hint>
+                    <kbq-hint color="error">{{ t().provideValidExtension }}</kbq-hint>
                 }
 
-                <kbq-hint>{{ text().filesTxtAllowed }}</kbq-hint>
+                <kbq-hint>{{ t().filesTxtAllowed }}</kbq-hint>
             </kbq-file-upload>
             <button class="layout-margin-top-m" kbq-button type="submit">Submit</button>
         </form>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadSingleMixedValidationExample extends BaseLocalizedExample<ExampleText> {
+export class FileUploadSingleMixedValidationExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly customErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
     protected readonly accept: KbqFileTypeSpecifier = ['.txt'];
 
@@ -62,6 +62,6 @@ export class FileUploadSingleMixedValidationExample extends BaseLocalizedExample
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

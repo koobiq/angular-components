@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title popover-scroll
@@ -17,16 +17,16 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <ng-template #customContent>
-            <div class="layout-margin-bottom-s">{{ text().wonder }}</div>
+            <div class="layout-margin-bottom-s">{{ t().wonder }}</div>
             <kbq-form-field>
-                <input kbqInput [placeholder]="text().placeholder" />
+                <input kbqInput [placeholder]="t().placeholder" />
             </kbq-form-field>
         </ng-template>
 
         <ng-template #customFooter>
             <div class="layout-row layout-wrap" style="gap: 16px">
-                <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">{{ text().save }}</button>
-                <button kbq-button (click)="activePopover.hide(0)">{{ text().cancel }}</button>
+                <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">{{ t().save }}</button>
+                <button kbq-button (click)="activePopover.hide(0)">{{ t().cancel }}</button>
             </div>
         </ng-template>
 
@@ -40,7 +40,7 @@ import { ExampleText, TEXT } from './l10n';
                 [kbqPopoverFooter]="customFooter"
                 (click)="activePopover = kbqNoClosePopover"
             >
-                {{ text().noCloseOnScroll }}
+                {{ t().noCloseOnScroll }}
             </button>
             <button
                 #kbqClosePopover="kbqPopover"
@@ -52,7 +52,7 @@ import { ExampleText, TEXT } from './l10n';
                 [kbqPopoverFooter]="customFooter"
                 (click)="activePopover = kbqClosePopover"
             >
-                {{ text().closeOnScroll }}
+                {{ t().closeOnScroll }}
             </button>
         </div>
     `,
@@ -63,10 +63,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverScrollExample extends BaseLocalizedExample<ExampleText> {
+export class PopoverScrollExample extends BaseLocalizedExample<ExampleTranslation> {
     activePopover: KbqPopoverTrigger;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

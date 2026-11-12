@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 @Component({
     selector: 'custom-modal',
@@ -12,8 +12,8 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <kbq-modal-title>
-            {{ text().fullyCustomModal }}
-            <kbq-modal-caption>{{ text().additionalContext }}</kbq-modal-caption>
+            {{ t().fullyCustomModal }}
+            <kbq-modal-caption>{{ t().additionalContext }}</kbq-modal-caption>
         </kbq-modal-title>
 
         <kbq-modal-body>
@@ -23,19 +23,19 @@ import { ExampleText, TEXT } from './l10n';
         </kbq-modal-body>
 
         <div kbq-modal-footer>
-            <button kbq-button [color]="'contrast'" (click)="modalRef.close()">{{ text().save }}</button>
-            <button kbq-button autofocus (click)="modalRef.close()">{{ text().close }}</button>
+            <button kbq-button [color]="'contrast'" (click)="modalRef.close()">{{ t().save }}</button>
+            <button kbq-button autofocus (click)="modalRef.close()">{{ t().close }}</button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomModalComponent extends BaseLocalizedExample<ExampleText> {
+export class CustomModalComponent extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly modalRef = inject(KbqModalRef);
 
     readonly items = computed(() => Array.from({ length: 30 }, (_, i) => 'Item #' + i));
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -46,11 +46,11 @@ export class CustomModalComponent extends BaseLocalizedExample<ExampleText> {
     selector: 'modal-full-custom-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="openModal()">{{ text().openModal }}</button>
+        <button kbq-button (click)="openModal()">{{ t().openModal }}</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalFullCustomExample extends BaseLocalizedExample<ExampleText> {
+export class ModalFullCustomExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly modalService = inject(KbqModalService);
 
     openModal(): void {
@@ -60,6 +60,6 @@ export class ModalFullCustomExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

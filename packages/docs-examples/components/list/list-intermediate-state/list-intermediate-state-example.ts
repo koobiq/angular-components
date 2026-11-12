@@ -14,7 +14,7 @@ import { KbqUsernameModule } from '@koobiq/components/username';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 interface ExampleUser {
     lastName: string;
@@ -59,7 +59,7 @@ interface ExampleUser {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListIntermediateStateExample extends BaseLocalizedExample<ExampleText> {
+export class ListIntermediateStateExample extends BaseLocalizedExample<ExampleTranslation> {
     PopUpSizes = PopUpSizes;
     PopUpPlacements = PopUpPlacements;
 
@@ -233,7 +233,7 @@ export class ListIntermediateStateExample extends BaseLocalizedExample<ExampleTe
     readonly popover = viewChild.required(KbqPopoverTrigger);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.filteredUsers = merge(
             of(this.users),
             this.searchControl.valueChanges.pipe(map((value) => this.getFilteredUsers(value)))

@@ -1,14 +1,14 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the button-group-style example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     archive: string;
     report: string;
     snooze: string;
     diamondIcon: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         archive: 'Архив',
         report: 'Отчёт',

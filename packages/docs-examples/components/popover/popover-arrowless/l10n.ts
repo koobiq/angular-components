@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the popover examples. Member names stay as proper nouns. */
-export interface ExampleText {
+export interface ExampleTranslation {
     wonder: string;
     save: string;
     cancel: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         wonder: 'Интересно, что это такое?',
         save: 'Сохранить',

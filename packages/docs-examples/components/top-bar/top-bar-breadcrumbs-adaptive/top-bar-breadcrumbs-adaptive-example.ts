@@ -12,7 +12,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
-import { ADAPTIVE_TEXT, AdaptiveText, ExampleText, TEXT } from './l10n';
+import { ADAPTIVE_TRANSLATIONS, AdaptiveTranslation, ExampleTranslation, TRANSLATIONS } from './l10n';
 
 @Component({
     selector: 'example-top-bar-breadcrumbs',
@@ -43,7 +43,7 @@ import { ADAPTIVE_TEXT, AdaptiveText, ExampleText, TEXT } from './l10n';
                             tabindex="-1"
                         >
                             <button disabled aria-current="page" kbq-button kbqBreadcrumb>
-                                <span>{{ text().details }}</span>
+                                <span>{{ t().details }}</span>
                                 <i
                                     kbq-icon="kbq-circle-info_16"
                                     kbqTooltip="Info"
@@ -61,8 +61,8 @@ import { ADAPTIVE_TEXT, AdaptiveText, ExampleText, TEXT } from './l10n';
                     <button
                         kbqOverflowItem="filter"
                         kbq-button
-                        [kbqTooltip]="text().filter"
-                        [attr.aria-label]="text().filter"
+                        [kbqTooltip]="t().filter"
+                        [attr.aria-label]="t().filter"
                         [kbqStyle]="KbqButtonStyles.Transparent"
                         [color]="KbqComponentColors.Contrast"
                         [kbqPlacement]="PopUpPlacements.Bottom"
@@ -74,7 +74,7 @@ import { ADAPTIVE_TEXT, AdaptiveText, ExampleText, TEXT } from './l10n';
                     <button
                         kbqOverflowItem="share"
                         kbq-button
-                        [kbqTooltip]="text().share"
+                        [kbqTooltip]="t().share"
                         [kbqStyle]="KbqButtonStyles.Filled"
                         [color]="KbqComponentColors.ContrastFade"
                         [kbqTooltipDisabled]="isDesktop()"
@@ -101,10 +101,10 @@ import { ADAPTIVE_TEXT, AdaptiveText, ExampleText, TEXT } from './l10n';
 
                         <kbq-dropdown #appDropdown="kbqDropdown">
                             @if (kbqOverflowItems.hiddenItemIDs().has('filter')) {
-                                <button kbq-dropdown-item>{{ text().filter }}</button>
+                                <button kbq-dropdown-item>{{ t().filter }}</button>
                             }
                             @if (kbqOverflowItems.hiddenItemIDs().has('share')) {
-                                <button kbq-dropdown-item>{{ text().share }}</button>
+                                <button kbq-dropdown-item>{{ t().share }}</button>
                             }
                         </kbq-dropdown>
                     </div>
@@ -138,9 +138,9 @@ import { ADAPTIVE_TEXT, AdaptiveText, ExampleText, TEXT } from './l10n';
     providers: [kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleTopBarBreadcrumbs extends BaseLocalizedExample<ExampleText> {
+export class ExampleTopBarBreadcrumbs extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 
     readonly isDesktop = toSignal(
@@ -166,22 +166,22 @@ export class ExampleTopBarBreadcrumbs extends BaseLocalizedExample<ExampleText> 
     imports: [ExampleTopBarBreadcrumbs],
     template: `
         <div class="layout-margin-bottom-l">
-            {{ text().breadcrumbShortening }}
+            {{ t().breadcrumbShortening }}
         </div>
         <example-top-bar-breadcrumbs />
 
         <div class="layout-margin-top-3xl layout-margin-bottom-l">
-            {{ text().leftmostHidden }}
+            {{ t().leftmostHidden }}
         </div>
         <example-top-bar-breadcrumbs [style.width.px]="500" />
 
         <div class="layout-margin-top-3xl layout-margin-bottom-l">
-            {{ text().currentItemTruncation }}
+            {{ t().currentItemTruncation }}
         </div>
         <example-top-bar-breadcrumbs [style.width.px]="400" />
 
         <div class="layout-margin-top-3xl layout-margin-bottom-l">
-            {{ text().rightSideCompression }}
+            {{ t().rightSideCompression }}
         </div>
         <example-top-bar-breadcrumbs [style.width.px]="342" />
     `,
@@ -193,8 +193,8 @@ export class ExampleTopBarBreadcrumbs extends BaseLocalizedExample<ExampleText> 
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarBreadcrumbsAdaptiveExample extends BaseLocalizedExample<AdaptiveText> {
+export class TopBarBreadcrumbsAdaptiveExample extends BaseLocalizedExample<AdaptiveTranslation> {
     constructor() {
-        super(ADAPTIVE_TEXT);
+        super(ADAPTIVE_TRANSLATIONS);
     }
 }

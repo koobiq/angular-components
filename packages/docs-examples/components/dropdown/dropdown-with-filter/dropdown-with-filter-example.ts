@@ -15,7 +15,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInput } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Dropdown with filter
@@ -44,7 +44,7 @@ import { ExampleText, TEXT } from './l10n';
         <kbq-dropdown #dropdown="kbqDropdown">
             <kbq-form-field kbqDropdownSearch>
                 <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-                <input autocomplete="off" kbqInput [placeholder]="text().search" [formControl]="control" />
+                <input autocomplete="off" kbqInput [placeholder]="t().search" [formControl]="control" />
                 <kbq-cleaner />
             </kbq-form-field>
 
@@ -63,7 +63,7 @@ import { ExampleText, TEXT } from './l10n';
             }
 
             @if (filtered[1].length > 0) {
-                <kbq-optgroup [label]="text().subheaderForActions" />
+                <kbq-optgroup [label]="t().subheaderForActions" />
             }
 
             @for (item of filtered[1]; track item) {
@@ -88,7 +88,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownWithFilterExample extends BaseLocalizedExample<ExampleText> {
+export class DropdownWithFilterExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly groups = [
         ['New tab', 'New window'],
         ['Action one', 'Action two', 'Action three']
@@ -116,6 +116,6 @@ export class DropdownWithFilterExample extends BaseLocalizedExample<ExampleText>
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

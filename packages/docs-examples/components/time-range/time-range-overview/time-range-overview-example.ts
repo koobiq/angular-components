@@ -4,7 +4,7 @@ import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { KbqTimeRange, KbqTimeRangeRange, KbqTimeRangeType } from '@koobiq/components/time-range';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Time range overview
@@ -17,7 +17,7 @@ import { ExampleText, TEXT } from './l10n';
         LuxonDateModule
     ],
     template: `
-        <span>{{ text().events }}</span>
+        <span>{{ t().events }}</span>
         <kbq-time-range [formControl]="control" [availableTimeRangeTypes]="availableTimeRangeTypes" />
     `,
     providers: [
@@ -28,7 +28,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-flex layout-row layout-align-center-center layout-gap-xxs'
     }
 })
-export class TimeRangeOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class TimeRangeOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly control = new FormControl<KbqTimeRangeRange>(
         {
             type: 'last5Minutes'
@@ -56,6 +56,6 @@ export class TimeRangeOverviewExample extends BaseLocalizedExample<ExampleText> 
     ];
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

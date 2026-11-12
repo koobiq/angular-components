@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the split-button-progress-state example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     splitButton: string;
     moreOptions: string;
     primaryProgress: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     completelyProgress: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         splitButton: 'Кнопка с меню',
         moreOptions: 'Другие параметры',

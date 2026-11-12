@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the inline-edit-controls example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     placeholder: string;
     textField: string;
     textarea: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     select: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         placeholder: 'Плейсхолдер',
         textField: 'Текстовое поле',

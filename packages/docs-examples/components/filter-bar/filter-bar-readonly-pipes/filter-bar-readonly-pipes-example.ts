@@ -6,7 +6,7 @@ import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes }
 import { KbqLink } from '@koobiq/components/link';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { injectLocalizedPeriods } from '../localized-periods';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
 const createSearchPipe = (name: string): KbqPipe => ({
@@ -48,10 +48,10 @@ const createSearchPipe = (name: string): KbqPipe => ({
         <br />
 
         <kbq-dl [verticalBreakpoint]="590">
-            <kbq-dt>{{ text().user }}</kbq-dt>
-            <kbq-dd><span kbqLink (click)="setUser(text().user, 'rturov')">rturov</span></kbq-dd>
+            <kbq-dt>{{ t().user }}</kbq-dt>
+            <kbq-dd><span kbqLink (click)="setUser(t().user, 'rturov')">rturov</span></kbq-dd>
 
-            @for (item of text().readonlyPipes; track item) {
+            @for (item of t().readonlyPipes; track item) {
                 <kbq-dt>{{ item.name }}</kbq-dt>
                 <kbq-dd>
                     <span kbqLink (click)="addPipe(item.name, item.value)">{{ item.value }}</span>
@@ -62,7 +62,7 @@ const createSearchPipe = (name: string): KbqPipe => ({
     providers: [DateFormatter],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterBarReadonlyPipesExample extends BaseLocalizedExample<ExampleText> {
+export class FilterBarReadonlyPipesExample extends BaseLocalizedExample<ExampleTranslation> {
     /** Text the example owns: it has no counterpart in the library's locale data. */
 
     /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
@@ -158,9 +158,9 @@ export class FilterBarReadonlyPipesExample extends BaseLocalizedExample<ExampleT
             changed: false,
             saved: false,
             pipes: [
-                createSearchPipe(this.text().search),
+                createSearchPipe(this.t().search),
                 {
-                    name: this.text().user,
+                    name: this.t().user,
                     value: null,
                     type: KbqPipeTypes.ReadOnly,
 
@@ -208,6 +208,6 @@ export class FilterBarReadonlyPipesExample extends BaseLocalizedExample<ExampleT
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

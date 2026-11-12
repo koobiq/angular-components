@@ -7,7 +7,7 @@ import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker'
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Timepicker validation symbols
@@ -17,7 +17,7 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqToolTipModule, KbqIconModule, FormsModule, KbqTimepickerModule, LuxonDateModule],
     template: `
         <div class="docs-row">
-            <kbq-form-field #tooltip="kbqTooltip" kbqTooltipModifier="warning" [kbqTooltip]="text().onlyNumbers">
+            <kbq-form-field #tooltip="kbqTooltip" kbqTooltipModifier="warning" [kbqTooltip]="t().onlyNumbers">
                 <i kbq-icon="kbq-clock_16" kbqPrefix></i>
                 <input kbqTimepicker [format]="timeFormats.HHmm" [kbqValidationTooltip]="tooltip" [(ngModel)]="time" />
             </kbq-form-field>
@@ -25,7 +25,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimepickerOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class TimepickerOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     timeFormats = TimeFormats;
@@ -33,7 +33,7 @@ export class TimepickerOverviewExample extends BaseLocalizedExample<ExampleText>
     time: DateTime;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.time = this.adapter.today().startOf('hour');
     }
 }

@@ -6,7 +6,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqSkeletonCheckable } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton checkable preset
@@ -22,7 +22,7 @@ import { ExampleText, TEXT } from './l10n';
         KbqFormFieldModule
     ],
     template: `
-        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         @if (loading()) {
             <kbq-skeleton-checkable hint />
@@ -31,7 +31,7 @@ import { ExampleText, TEXT } from './l10n';
         } @else {
             <kbq-checkbox>
                 Synchronize every hour
-                <kbq-hint>{{ text().syncHint }}</kbq-hint>
+                <kbq-hint>{{ t().syncHint }}</kbq-hint>
             </kbq-checkbox>
             <kbq-radio-group name="protocol">
                 <kbq-radio-button [checked]="true" [value]="'ldaps'">LDAPS</kbq-radio-button>
@@ -40,7 +40,7 @@ import { ExampleText, TEXT } from './l10n';
             </kbq-radio-group>
             <kbq-toggle>
                 Notify the administrators
-                <kbq-hint>{{ text().notifyHint }}</kbq-hint>
+                <kbq-hint>{{ t().notifyHint }}</kbq-hint>
             </kbq-toggle>
         }
     `,
@@ -55,10 +55,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonCheckableExample extends BaseLocalizedExample<ExampleText> {
+export class SkeletonCheckableExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly loading = model(true);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

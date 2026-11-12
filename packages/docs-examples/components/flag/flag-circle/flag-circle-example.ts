@@ -3,7 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { KbqFlag } from '@koobiq/components/flag';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import * as flags1x1 from 'country-flag-icons/string/1x1';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Circular flags
@@ -26,7 +26,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-row layout-align-center-center layout-gap-m'
     }
 })
-export class FlagCircleExample extends BaseLocalizedExample<ExampleText> {
+export class FlagCircleExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly sanitizer = inject(DomSanitizer);
 
     private readonly countryCodes = ['AO', 'MY', 'UY'];
@@ -34,12 +34,12 @@ export class FlagCircleExample extends BaseLocalizedExample<ExampleText> {
     protected readonly countries = computed(() =>
         this.countryCodes.map((code, index) => ({
             code,
-            name: this.text().circleCountries[index],
+            name: this.t().circleCountries[index],
             svg: this.sanitizer.bypassSecurityTrustHtml(flags1x1[code])
         }))
     );
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
 import { Direction, KbqSplitterModule } from '@koobiq/components/splitter/deprecated';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Sidebar with splitter
@@ -20,17 +20,17 @@ import { ExampleText, TEXT } from './l10n';
                 [position]="position.Left"
                 (stateChanged)="onStateChanged($event)"
             >
-                <div kbq-sidebar-opened minWidth="170px" width="170px" maxWidth="50%">{{ text().openedContent }}</div>
-                <div kbq-sidebar-closed width="44px">{{ text().closedContent }}</div>
+                <div kbq-sidebar-opened minWidth="170px" width="170px" maxWidth="50%">{{ t().openedContent }}</div>
+                <div kbq-sidebar-closed width="44px">{{ t().closedContent }}</div>
             </kbq-sidebar>
 
             <main kbq-splitter-area>
-                <div>{{ text().mainContent }}</div>
+                <div>{{ t().mainContent }}</div>
                 <div>
-                    <button kbq-button (click)="toggle()">{{ text().toggleModel }}</button>
+                    <button kbq-button (click)="toggle()">{{ t().toggleModel }}</button>
                 </div>
                 <div>
-                    <button kbq-button (click)="sidebar.toggle()">{{ text().toggle }}</button>
+                    <button kbq-button (click)="sidebar.toggle()">{{ t().toggle }}</button>
                 </div>
             </main>
         </kbq-splitter>
@@ -70,7 +70,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidebarWithSplitterExample extends BaseLocalizedExample<ExampleText> {
+export class SidebarWithSplitterExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly direction = Direction;
     readonly position = SidebarPositions;
 
@@ -85,6 +85,6 @@ export class SidebarWithSplitterExample extends BaseLocalizedExample<ExampleText
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

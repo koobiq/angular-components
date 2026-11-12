@@ -6,7 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /** @title Timepicker field validation */
 @Component({
@@ -17,21 +17,21 @@ import { ExampleText, TEXT } from './l10n';
             <i kbq-icon="kbq-clock_16" kbqPrefix></i>
             <input kbqTimepicker [max]="max" [min]="min" [formControl]="control" [format]="timeFormats.HHmm" />
             @if (control.hasError('required')) {
-                <kbq-error>{{ text().required }}</kbq-error>
+                <kbq-error>{{ t().required }}</kbq-error>
             }
             <!-- Component built-in validation -->
             @if (control.hasError('kbqTimepickerLowerThenMin')) {
-                <kbq-error>{{ text().minIs(min.toFormat(timeFormats.HHmm)) }}</kbq-error>
+                <kbq-error>{{ t().minIs(min.toFormat(timeFormats.HHmm)) }}</kbq-error>
             }
             <!-- Component built-in validation -->
             @if (control.hasError('kbqTimepickerHigherThenMax')) {
-                <kbq-error>{{ text().maxIs(max.toFormat(timeFormats.HHmm)) }}</kbq-error>
+                <kbq-error>{{ t().maxIs(max.toFormat(timeFormats.HHmm)) }}</kbq-error>
             }
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimepickerFieldValidationExample extends BaseLocalizedExample<ExampleText> {
+export class TimepickerFieldValidationExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly adapter = inject(DateAdapter<DateTime>);
     protected readonly timeFormats = TimeFormats;
 
@@ -41,7 +41,7 @@ export class TimepickerFieldValidationExample extends BaseLocalizedExample<Examp
     protected readonly control = new FormControl<DateTime | null>(null, [Validators.required]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         afterNextRender(() => {
             this.control.markAsTouched();
             this.control.updateValueAndValidity();

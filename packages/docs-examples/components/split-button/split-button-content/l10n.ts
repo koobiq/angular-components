@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the split-button examples. Style names (Filled Contrast) stay English as API names. */
-export interface ExampleText {
+export interface ExampleTranslation {
     splitButton: string;
     moreOptions: string;
     add: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         splitButton: 'Кнопка с меню',
         moreOptions: 'Другие параметры',

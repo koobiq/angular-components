@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Button group overview
@@ -24,13 +24,13 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-column layout-align-center-center layout-gap-xl'
     }
 })
-export class ButtonGroupOverviewExample extends BaseLocalizedExample<ExampleText> {
-    protected readonly data = computed(() => [this.text().archive, this.text().report, this.text().snooze]);
+export class ButtonGroupOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
+    protected readonly data = computed(() => [this.t().archive, this.t().report, this.t().snooze]);
 
     protected readonly color = KbqComponentColors.ContrastFade;
     protected readonly style = KbqButtonStyles.Filled;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

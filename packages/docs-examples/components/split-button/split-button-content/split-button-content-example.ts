@@ -4,7 +4,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSplitButtonModule } from '@koobiq/components/split-button';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title split-button-content
@@ -21,25 +21,25 @@ import { ExampleText, TEXT } from './l10n';
         <kbq-split-button>
             <button kbq-button>
                 <i kbqButtonPrefix kbq-icon="kbq-plus_16"></i>
-                {{ text().splitButton }}
+                {{ t().splitButton }}
             </button>
-            <button kbq-button [attr.aria-label]="text().moreOptions" [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
 
         <kbq-split-button>
-            <button kbq-button>{{ text().splitButton }}</button>
-            <button kbq-button [attr.aria-label]="text().moreOptions" [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button>{{ t().splitButton }}</button>
+            <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
 
         <kbq-split-button>
-            <button kbq-button [attr.aria-label]="text().add">
+            <button kbq-button [attr.aria-label]="t().add">
                 <i kbq-icon="kbq-plus_16"></i>
             </button>
-            <button kbq-button [attr.aria-label]="text().moreOptions" [kbqDropdownTriggerFor]="dropdown">
+            <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </kbq-split-button>
@@ -62,8 +62,8 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SplitButtonContentExample extends BaseLocalizedExample<ExampleText> {
+export class SplitButtonContentExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

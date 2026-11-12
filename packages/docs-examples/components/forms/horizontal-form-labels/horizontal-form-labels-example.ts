@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Horizontal form labels
@@ -19,10 +19,10 @@ import { ExampleText, TEXT } from './l10n';
     styleUrls: ['horizontal-form-labels-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HorizontalFormLabelsExample extends BaseLocalizedExample<ExampleText> {
+export class HorizontalFormLabelsExample extends BaseLocalizedExample<ExampleTranslation> {
     value: any;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -7,7 +7,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimeRangeModule } from '@koobiq/components/time-range';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Time range as form field
@@ -46,10 +46,10 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }
 })
-export class TimeRangeAsFormFieldExample extends BaseLocalizedExample<ExampleText> {
-    protected readonly placeholder = computed(() => this.text().placeholder);
+export class TimeRangeAsFormFieldExample extends BaseLocalizedExample<ExampleTranslation> {
+    protected readonly placeholder = computed(() => this.t().placeholder);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

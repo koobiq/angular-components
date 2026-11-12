@@ -14,7 +14,7 @@ import {
 } from '@koobiq/components/username';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { startWith } from 'rxjs';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Username search
@@ -33,10 +33,10 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <div class="example__content">
-            <kbq-toggle [(ngModel)]="isCompact">{{ text().compact }}</kbq-toggle>
+            <kbq-toggle [(ngModel)]="isCompact">{{ t().compact }}</kbq-toggle>
 
             <kbq-form-field>
-                <kbq-select [placeholder]="text().assignee" [(value)]="selectedUser">
+                <kbq-select [placeholder]="t().assignee" [(value)]="selectedUser">
                     <kbq-select-trigger>
                         @if (selectedUser(); as user) {
                             <kbq-username [userInfo]="user" [isCompact]="isCompact()" />
@@ -49,7 +49,7 @@ import { ExampleText, TEXT } from './l10n';
                         <kbq-cleaner />
                     </kbq-form-field>
 
-                    <div kbq-select-search-empty-result>{{ text().nothingFound }}</div>
+                    <div kbq-select-search-empty-result>{{ t().nothingFound }}</div>
 
                     @for (user of filteredUsers(); track user) {
                         <kbq-option [value]="user">
@@ -123,7 +123,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-align-center-center layout-row layout-margin-5xl'
     }
 })
-export class UsernameSearchExample extends BaseLocalizedExample<ExampleText> {
+export class UsernameSearchExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly formatUsername = kbqInjectUsernameFormatter();
 
     protected readonly isCompact = model(false);
@@ -158,6 +158,6 @@ export class UsernameSearchExample extends BaseLocalizedExample<ExampleText> {
     });
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

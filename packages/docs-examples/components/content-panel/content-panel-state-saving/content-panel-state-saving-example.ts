@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqContentPanelContainer, KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Content panel state saving
@@ -19,18 +19,18 @@ import { ExampleText, TEXT } from './l10n';
             width="350"
         >
             <div class="example-content-panel-container__content">
-                <button kbq-button (click)="panel.toggle()">{{ text().toggle }}</button>
+                <button kbq-button (click)="panel.toggle()">{{ t().toggle }}</button>
                 <button kbq-button type="button" (click)="container().clearSavedState()">
-                    {{ text().resetSavedState }}
+                    {{ t().resetSavedState }}
                 </button>
             </div>
 
             <kbq-content-panel>
                 <kbq-content-panel-header>
-                    <div kbqContentPanelHeaderTitle>{{ text().title }}</div>
+                    <div kbqContentPanelHeaderTitle>{{ t().title }}</div>
                 </kbq-content-panel-header>
                 <kbq-content-panel-body>
-                    <p>{{ text().stateSavingHint }}</p>
+                    <p>{{ t().stateSavingHint }}</p>
                 </kbq-content-panel-body>
             </kbq-content-panel>
         </kbq-content-panel-container>
@@ -44,10 +44,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContentPanelStateSavingExample extends BaseLocalizedExample<ExampleText> {
+export class ContentPanelStateSavingExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly container = viewChild.required(KbqContentPanelContainer);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

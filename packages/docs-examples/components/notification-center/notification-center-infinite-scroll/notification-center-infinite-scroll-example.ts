@@ -19,7 +19,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { timer } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /** Items per loaded page. */
 const PAGE_SIZE = 20;
@@ -76,7 +76,7 @@ enum NavbarIcItems {
     providers: [{ provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationCenterInfiniteScrollExample extends BaseLocalizedExample<ExampleText> {
+export class NotificationCenterInfiniteScrollExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly notificationService = inject(KbqNotificationCenterService);
 
     private readonly destroyRef = inject(DestroyRef);
@@ -91,7 +91,7 @@ export class NotificationCenterInfiniteScrollExample extends BaseLocalizedExampl
             id: '1',
             color: KbqComponentColors.Contrast,
             style: KbqButtonStyles.Filled,
-            text: this.text().primaryAction
+            text: this.t().primaryAction
         },
         {
             id: '2',
@@ -105,7 +105,7 @@ export class NotificationCenterInfiniteScrollExample extends BaseLocalizedExampl
     protected selected: NavbarIcItems = NavbarIcItems.Assets;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         // Initial page loads immediately; subsequent pages are appended on scroll.
         this.appendPage(this.currentPage + 1);
 

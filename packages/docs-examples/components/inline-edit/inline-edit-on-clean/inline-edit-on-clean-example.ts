@@ -4,7 +4,7 @@ import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Inline edit on clean
@@ -52,9 +52,9 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditOnCleanExample extends BaseLocalizedExample<ExampleText> {
+export class InlineEditOnCleanExample extends BaseLocalizedExample<ExampleTranslation> {
     protected get placeholder(): string {
-        return this.text().placeholder;
+        return this.t().placeholder;
     }
     protected readonly control = { label: 'Label', control: new FormControl('Default value', { nonNullable: true }) };
 
@@ -65,6 +65,6 @@ export class InlineEditOnCleanExample extends BaseLocalizedExample<ExampleText> 
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

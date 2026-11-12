@@ -12,7 +12,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, ModuleRegistry, RowSelectionOptions } from 'ag-grid-community';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -24,9 +24,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     imports: [AgGridModule, KbqAgGridThemeModule, KbqButtonModule],
     template: `
         <div class="ag-grid-row-group-example-actions">
-            <button type="button" kbq-button (click)="rowGroup.collapseAll()">{{ text().clearCollapsedState }}</button>
+            <button type="button" kbq-button (click)="rowGroup.collapseAll()">{{ t().clearCollapsedState }}</button>
             <button type="button" kbq-button (click)="clearSelectionState(rowGroup)">
-                {{ text().clearSelectionState }}
+                {{ t().clearSelectionState }}
             </button>
         </div>
 
@@ -67,7 +67,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridRowGroupExample extends BaseLocalizedExample<ExampleText> {
+export class AgGridRowGroupExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly groupCols = model(['category', 'severity']);
     protected readonly rowId = (row: Record<string, unknown>): string => row.id as string;
     protected readonly defaultColDef: ColDef = {
@@ -82,8 +82,8 @@ export class AgGridRowGroupExample extends BaseLocalizedExample<ExampleText> {
     };
     protected readonly columnDefs = computed<ColDef[]>(() => [
         { field: 'column0', headerName: 'Column 0', width: 130 },
-        { field: 'category', headerName: this.text().category, width: 130 },
-        { field: 'severity', headerName: this.text().severity, width: 130 },
+        { field: 'category', headerName: this.t().category, width: 130 },
+        { field: 'severity', headerName: this.t().severity, width: 130 },
         ...Array.from({ length: 4 }, (_, i) => ({
             field: 'column' + (i + 3),
             headerName: 'Column ' + (i + 3),
@@ -95,8 +95,8 @@ export class AgGridRowGroupExample extends BaseLocalizedExample<ExampleText> {
         Array.from({ length: 24 }, (_, index) => ({
             id: String(index),
             column0: 'Text ' + index,
-            category: this.text().categories[index % this.text().categories.length],
-            severity: this.text().severities[index % this.text().severities.length],
+            category: this.t().categories[index % this.t().categories.length],
+            severity: this.t().severities[index % this.t().severities.length],
             column3: 'Text ' + index,
             column4: 'Text ' + index,
             column5: 'Text ' + index,
@@ -112,6 +112,6 @@ export class AgGridRowGroupExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -3,7 +3,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Tabs vertical
@@ -55,15 +55,15 @@ import { ExampleText, TEXT } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class TabsVerticalExample extends BaseLocalizedExample<ExampleText> {
+export class TabsVerticalExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly tabs = computed(() => [
-        this.text().complexAttack,
-        this.text().hipsAlert,
-        this.text().idsIpsAlert,
-        this.text().vulnExploitation
+        this.t().complexAttack,
+        this.t().hipsAlert,
+        this.t().idsIpsAlert,
+        this.t().vulnExploitation
     ]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

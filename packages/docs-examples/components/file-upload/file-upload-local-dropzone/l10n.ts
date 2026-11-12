@@ -1,11 +1,11 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the file-upload-local-dropzone example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     dragOnSidepanel: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         dragOnSidepanel: 'Перетащите файлы на боковую панель'
     },

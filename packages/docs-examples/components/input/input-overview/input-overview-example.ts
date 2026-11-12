@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Input
@@ -19,7 +19,7 @@ import { ExampleText, TEXT } from './l10n';
         <kbq-form-field>
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [autoColor]="true"></i>
 
-            <input kbqInput [placeholder]="text().placeholder" [(ngModel)]="value" />
+            <input kbqInput [placeholder]="t().placeholder" [(ngModel)]="value" />
 
             <kbq-cleaner />
         </kbq-form-field>
@@ -31,17 +31,17 @@ import { ExampleText, TEXT } from './l10n';
         <kbq-form-field noBorders>
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [autoColor]="true"></i>
 
-            <input kbqInput [placeholder]="text().placeholder" [(ngModel)]="value" />
+            <input kbqInput [placeholder]="t().placeholder" [(ngModel)]="value" />
 
             <kbq-cleaner />
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class InputOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     value = '';
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

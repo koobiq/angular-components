@@ -2,34 +2,34 @@
     <div class="layout-column example-column">
         <kbq-alert>
             <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
-            <div kbq-alert-title>{{ text().uploadFailedTitle }}</div>
-            {{ text().linkSentence }}
+            <div kbq-alert-title>{{ t().uploadFailedTitle }}</div>
+            {{ t().linkSentence }}
             <a href="https://koobiq.io/en/components/link" kbqLink>
-                {{ text().linkText }}
+                {{ t().linkText }}
                 <span kbqLinkSuffix>.</span>
             </a>
             <button kbq-alert-control kbq-button class="example-overview__button" [color]="colors.Contrast">
-                {{ text().chooseAnotherFile }}
+                {{ t().chooseAnotherFile }}
             </button>
             <button kbq-alert-control kbq-button [color]="colors.Theme" [kbqStyle]="'transparent'">
-                {{ text().replace }}
+                {{ t().replace }}
             </button>
         </kbq-alert>
     </div>
     <div class="layout-column example-column">
         <kbq-alert [compact]="true">
             <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
-            <div kbq-alert-title>{{ text().uploadFailedTitle }}</div>
-            {{ text().linkSentence }}
+            <div kbq-alert-title>{{ t().uploadFailedTitle }}</div>
+            {{ t().linkSentence }}
             <a href="https://koobiq.io/en/components/link" kbqLink>
-                {{ text().linkText }}
+                {{ t().linkText }}
                 <span kbqLinkSuffix>.</span>
             </a>
             <button kbq-alert-control kbq-button class="example-overview__button" [color]="colors.Contrast">
-                {{ text().chooseAnotherFile }}
+                {{ t().chooseAnotherFile }}
             </button>
             <button kbq-alert-control kbq-button [color]="colors.Theme" [kbqStyle]="'transparent'">
-                {{ text().replace }}
+                {{ t().replace }}
             </button>
         </kbq-alert>
     </div>
@@ -39,22 +39,22 @@
     <div class="layout-column example-column">
         <kbq-alert>
             <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
-            {{ text().updateAgentFailed }}
+            {{ t().updateAgentFailed }}
             <span class="kbq-text-normal-strong">ekb-mail-server</span>
-            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">{{ text().retry }}</button>
+            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">{{ t().retry }}</button>
             <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">
-                {{ text().installDifferentVersion }}
+                {{ t().installDifferentVersion }}
             </button>
         </kbq-alert>
     </div>
     <div class="layout-column example-column">
         <kbq-alert [compact]="true">
             <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
-            {{ text().updateAgentFailed }}
+            {{ t().updateAgentFailed }}
             <span class="kbq-text-normal-strong">ekb-mail-server</span>
-            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">{{ text().retry }}</button>
+            <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">{{ t().retry }}</button>
             <button kbq-alert-control kbq-button [kbqStyle]="'transparent'">
-                {{ text().installDifferentVersion }}
+                {{ t().installDifferentVersion }}
             </button>
         </kbq-alert>
     </div>
@@ -69,12 +69,12 @@
                 (closed)="firstState = false"
             >
                 <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
-                {{ text().moduleConfigured }}
-                <a href="https://koobiq.io" kbqLink>{{ text().hypervisors }}</a>
+                {{ t().moduleConfigured }}
+                <a href="https://koobiq.io" kbqLink>{{ t().hypervisors }}</a>
                 <button
                     kbq-alert-close-button
                     kbq-icon-button="kbq-xmark-s_16"
-                    [attr.aria-label]="text().close"
+                    [attr.aria-label]="t().close"
                     [color]="colors.ContrastFade"
                 ></button>
             </kbq-alert>
@@ -89,12 +89,12 @@
                 (closed)="secondState = false"
             >
                 <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
-                {{ text().moduleConfigured }}
-                <a href="https://koobiq.io" kbqLink>{{ text().hypervisors }}</a>
+                {{ t().moduleConfigured }}
+                <a href="https://koobiq.io" kbqLink>{{ t().hypervisors }}</a>
                 <button
                     kbq-alert-close-button
                     kbq-icon-button="kbq-xmark-s_16"
-                    [attr.aria-label]="text().close"
+                    [attr.aria-label]="t().close"
                     [color]="colors.ContrastFade"
                 ></button>
             </kbq-alert>
@@ -106,13 +106,13 @@
     <div class="layout-column example-column">
         <kbq-alert>
             <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
-            {{ text().recoveryCheck }}
+            {{ t().recoveryCheck }}
         </kbq-alert>
     </div>
     <div class="layout-column example-column">
         <kbq-alert [compact]="true">
             <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
-            {{ text().recoveryCheck }}
+            {{ t().recoveryCheck }}
         </kbq-alert>
     </div>
 </div>
@@ -121,13 +121,13 @@
     <div class="layout-column example-column">
         <kbq-alert>
             <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
-            {{ text().shortText }}
+            {{ t().shortText }}
         </kbq-alert>
     </div>
     <div class="layout-column example-column">
         <kbq-alert [compact]="true">
             <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
-            {{ text().shortText }}
+            {{ t().shortText }}
         </kbq-alert>
     </div>
 </div>
@@ -136,20 +136,20 @@
     <div class="layout-column example-column">
         <kbq-alert>
             <p>
-                {{ text().paragraph1 }}
+                {{ t().paragraph1 }}
             </p>
             <p>
-                {{ text().paragraph2 }}
+                {{ t().paragraph2 }}
             </p>
         </kbq-alert>
     </div>
     <div class="layout-column example-column">
         <kbq-alert [compact]="true">
             <p>
-                {{ text().paragraph1 }}
+                {{ t().paragraph1 }}
             </p>
             <p>
-                {{ text().paragraph2 }}
+                {{ t().paragraph2 }}
             </p>
         </kbq-alert>
     </div>

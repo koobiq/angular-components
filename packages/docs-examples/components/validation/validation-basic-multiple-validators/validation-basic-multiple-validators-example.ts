@@ -9,7 +9,7 @@ import {
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Validation: multiple validators
@@ -22,21 +22,21 @@ import { ExampleText, TEXT } from './l10n';
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>{{ text().username }}</kbq-label>
+                        <kbq-label>{{ t().username }}</kbq-label>
                         <input formControlName="username" kbqInput />
 
                         @if (form.controls.username.hasError('required')) {
-                            <kbq-error>{{ text().required }}</kbq-error>
+                            <kbq-error>{{ t().required }}</kbq-error>
                         } @else if (form.controls.username.hasError('minlength')) {
-                            <kbq-error>{{ text().min5 }}</kbq-error>
+                            <kbq-error>{{ t().min5 }}</kbq-error>
                         } @else if (form.controls.username.hasError('maxlength')) {
-                            <kbq-error>{{ text().max20 }}</kbq-error>
+                            <kbq-error>{{ t().max20 }}</kbq-error>
                         }
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-align-start-start">
-                    <button color="contrast" kbq-button type="submit">{{ text().submit }}</button>
+                    <button color="contrast" kbq-button type="submit">{{ t().submit }}</button>
                 </div>
             </div>
         </form>
@@ -54,7 +54,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationBasicMultipleValidatorsExample extends BaseLocalizedExample<ExampleText> {
+export class ValidationBasicMultipleValidatorsExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly form = new FormGroup({
         username: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(20)])
     });
@@ -70,6 +70,6 @@ export class ValidationBasicMultipleValidatorsExample extends BaseLocalizedExamp
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

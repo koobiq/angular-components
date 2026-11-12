@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the dropdown-open-by-arrow-down example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     textNormal: string;
     caption: string;
     header: string;
@@ -10,7 +10,7 @@ export interface ExampleText {
     toggleOpenByArrowDown: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         textNormal: 'Обычный текст',
         caption: 'Подпись',

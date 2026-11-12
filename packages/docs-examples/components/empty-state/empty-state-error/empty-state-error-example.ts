@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Empty-state error
@@ -24,19 +24,19 @@ import { ExampleText, TEXT } from './l10n';
                 [color]="'contrast'"
                 [fade]="true"
             ></i>
-            <h2 kbq-empty-state-title>{{ text().errorTitle }}</h2>
+            <h2 kbq-empty-state-title>{{ t().errorTitle }}</h2>
             <div kbq-empty-state-text>
-                {{ text().errorText }}
+                {{ t().errorText }}
             </div>
             <div kbq-empty-state-actions>
-                <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">{{ text().refresh }}</button>
+                <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">{{ t().refresh }}</button>
             </div>
         </kbq-empty-state>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmptyStateErrorExample extends BaseLocalizedExample<ExampleText> {
+export class EmptyStateErrorExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

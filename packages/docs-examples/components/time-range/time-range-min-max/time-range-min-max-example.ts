@@ -8,7 +8,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimeRangeModule, KbqTimeRangeRange } from '@koobiq/components/time-range';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Time range min max
@@ -26,7 +26,7 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <ng-template #titleValue let-context>
             @if (!context.type) {
-                <span kbqTimeRangeTitlePlaceholder>{{ text().placeholder }}</span>
+                <span kbqTimeRangeTitlePlaceholder>{{ t().placeholder }}</span>
             } @else if (context.type === 'range') {
                 {{
                     dateFormatter.rangeLongDate(
@@ -45,7 +45,7 @@ import { ExampleText, TEXT } from './l10n';
                     <ng-container *ngTemplateOutlet="titleValue; context: { $implicit: context }" />
                 </kbq-time-range-title-as-control>
                 <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
-                <kbq-hint>{{ text().withPresets }}</kbq-hint>
+                <kbq-hint>{{ t().withPresets }}</kbq-hint>
             </kbq-form-field>
         </ng-template>
 
@@ -55,7 +55,7 @@ import { ExampleText, TEXT } from './l10n';
                     <ng-container *ngTemplateOutlet="titleValue; context: { $implicit: context }" />
                 </kbq-time-range-title-as-control>
                 <i kbq-icon="kbq-chevron-down-s_16" kbqSuffix [color]="'contrast-fade'"></i>
-                <kbq-hint>{{ text().withoutPresets }}</kbq-hint>
+                <kbq-hint>{{ t().withoutPresets }}</kbq-hint>
             </kbq-form-field>
         </ng-template>
 
@@ -86,7 +86,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }
 })
-export class TimeRangeMinMaxExample extends BaseLocalizedExample<ExampleText> {
+export class TimeRangeMinMaxExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly dateAdapter = inject<DateAdapter<DateTime>>(DateAdapter);
     protected readonly dateFormatter = inject(DateFormatter);
 
@@ -110,6 +110,6 @@ export class TimeRangeMinMaxExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

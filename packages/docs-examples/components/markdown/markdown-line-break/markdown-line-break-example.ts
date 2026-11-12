@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqMarkdown } from '@koobiq/components/markdown';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Markdown line break
@@ -12,8 +12,8 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: './markdown-line-break-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarkdownLineBreakExample extends BaseLocalizedExample<ExampleText> {
+export class MarkdownLineBreakExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

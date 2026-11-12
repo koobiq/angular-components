@@ -4,7 +4,7 @@ import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Content panel overview
@@ -15,18 +15,18 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <kbq-content-panel-container #panel="kbqContentPanelContainer" width="350" maxWidth="450" minWidth="250">
             <div class="example-content-panel-container__content">
-                <button kbq-button (click)="panel.toggle()">{{ text().toggle }}</button>
-                <button kbq-button [disabled]="panel.isOpened()" (click)="panel.open()">{{ text().open }}</button>
-                <button kbq-button [disabled]="!panel.isOpened()" (click)="panel.close()">{{ text().close }}</button>
+                <button kbq-button (click)="panel.toggle()">{{ t().toggle }}</button>
+                <button kbq-button [disabled]="panel.isOpened()" (click)="panel.open()">{{ t().open }}</button>
+                <button kbq-button [disabled]="!panel.isOpened()" (click)="panel.close()">{{ t().close }}</button>
             </div>
 
             <kbq-content-panel>
                 <kbq-content-panel-header>
-                    <div kbqContentPanelHeaderTitle>{{ text().title }}</div>
+                    <div kbqContentPanelHeaderTitle>{{ t().title }}</div>
                     <div kbqContentPanelHeaderActions>
                         <button
                             kbq-button
-                            [attr.aria-label]="text().copyLink"
+                            [attr.aria-label]="t().copyLink"
                             [color]="componentColors.Contrast"
                             [kbqStyle]="buttonStyles.Transparent"
                         >
@@ -34,7 +34,7 @@ import { ExampleText, TEXT } from './l10n';
                         </button>
                         <button
                             kbq-button
-                            [attr.aria-label]="text().expand"
+                            [attr.aria-label]="t().expand"
                             [color]="componentColors.Contrast"
                             [kbqStyle]="buttonStyles.Transparent"
                         >
@@ -44,7 +44,7 @@ import { ExampleText, TEXT } from './l10n';
                 </kbq-content-panel-header>
                 <kbq-content-panel-body>
                     @for (_i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
-                        <p>{{ text().dosText($index) }}</p>
+                        <p>{{ t().dosText($index) }}</p>
                     }
                 </kbq-content-panel-body>
                 <kbq-content-panel-footer>
@@ -71,11 +71,11 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContentPanelOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class ContentPanelOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly componentColors = KbqComponentColors;
     protected readonly buttonStyles = KbqButtonStyles;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

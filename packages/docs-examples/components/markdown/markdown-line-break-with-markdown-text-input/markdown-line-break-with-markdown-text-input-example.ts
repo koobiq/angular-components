@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqMarkdown, kbqMarkdownMarkedOptionsProvider } from '@koobiq/components/markdown';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Markdown line break
@@ -11,13 +11,13 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqMarkdown],
     // prettier-ignore
     template: `
-        <kbq-markdown [markdownText]="text().lineBreak" />
+        <kbq-markdown [markdownText]="t().lineBreak" />
     `,
     providers: [kbqMarkdownMarkedOptionsProvider({ breaks: true })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarkdownLineBreakWithMarkdownTextInputExample extends BaseLocalizedExample<ExampleText> {
+export class MarkdownLineBreakWithMarkdownTextInputExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

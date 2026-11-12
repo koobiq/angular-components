@@ -8,7 +8,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title File-upload indeterminate loading
@@ -32,7 +32,7 @@ import { ExampleText, TEXT } from './l10n';
         </kbq-file-upload>
 
         @if (isLoading) {
-            <p class="kbq-text-big">{{ text().immediatelyLoad }}</p>
+            <p class="kbq-text-big">{{ t().immediatelyLoad }}</p>
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,7 +40,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-column layout-gap-l'
     }
 })
-export class FileUploadIndeterminateLoadingOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class FileUploadIndeterminateLoadingOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     isLoading: boolean;
 
     onFileChange(file: KbqFileItem | null) {
@@ -75,6 +75,6 @@ export class FileUploadIndeterminateLoadingOverviewExample extends BaseLocalized
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

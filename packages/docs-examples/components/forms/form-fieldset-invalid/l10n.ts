@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the form-fieldset-invalid example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     surname: string;
     name: string;
     patronymic: string;
@@ -11,7 +11,7 @@ export interface ExampleText {
     third: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         surname: 'Фамилия',
         name: 'Имя',

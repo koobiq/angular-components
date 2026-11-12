@@ -6,7 +6,7 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqEllipsisCenterModule } from '@koobiq/components/ellipsis-center';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs Truncate Center Items
@@ -22,10 +22,10 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <nav class="example-breadcrumbs_truncate-last-by-center" size="compact" kbq-breadcrumbs>
-            <kbq-breadcrumb-item routerLink="./groups" [text]="text().groups" />
-            <kbq-breadcrumb-item routerLink="./users" [text]="text().users" />
+            <kbq-breadcrumb-item routerLink="./groups" [text]="t().groups" />
+            <kbq-breadcrumb-item routerLink="./users" [text]="t().users" />
 
-            <kbq-breadcrumb-item [text]="text().reportDated">
+            <kbq-breadcrumb-item [text]="t().reportDated">
                 <ng-container *kbqBreadcrumbView>
                     <a routerLink="./report" tabindex="-1">
                         <button aria-current="page" disabled kbq-button kbqBreadcrumb>
@@ -54,10 +54,10 @@ import { ExampleText, TEXT } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class BreadcrumbsTruncateCenterItemsExample extends BaseLocalizedExample<ExampleText> {
+export class BreadcrumbsTruncateCenterItemsExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly PopUpPlacements = PopUpPlacements;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

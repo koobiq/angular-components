@@ -10,7 +10,7 @@ import {
 import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Actions panel overview
@@ -19,15 +19,15 @@ import { ExampleText, TEXT } from './l10n';
     selector: 'actions-panel-overview-example',
     imports: [KbqButtonModule],
     template: `
-        <button kbq-button (click)="open()">{{ text().open }}</button>
+        <button kbq-button (click)="open()">{{ t().open }}</button>
 
         <ng-template>
-            <button color="contrast" kbq-button (click)="action('Action1')">{{ text().action1 }}</button>
+            <button color="contrast" kbq-button (click)="action('Action1')">{{ t().action1 }}</button>
             <button color="contrast" kbq-button class="layout-margin-left-xxs" (click)="action('Action2')">
-                {{ text().action2 }}
+                {{ t().action2 }}
             </button>
             <button color="contrast" kbq-button class="layout-margin-left-xxs" (click)="action('Action3')">
-                {{ text().action3 }}
+                {{ t().action3 }}
             </button>
         </ng-template>
     `,
@@ -43,14 +43,14 @@ import { ExampleText, TEXT } from './l10n';
     providers: [KbqActionsPanel],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsPanelOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class ActionsPanelOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
     private actionsPanelRef?: KbqActionsPanelRef | null;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         afterNextRender(() => this.open());
     }
 

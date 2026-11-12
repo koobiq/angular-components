@@ -14,7 +14,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_DROPDOWN_PANEL, KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 @Directive({
     selector: '[exampleDropdownOutlet]'
@@ -87,10 +87,10 @@ export class ExampleDropdownPortal implements OnInit {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownRecursiveTemplateExample extends BaseLocalizedExample<ExampleText> {
-    readonly items = computed(() => this.text().items);
+export class DropdownRecursiveTemplateExample extends BaseLocalizedExample<ExampleTranslation> {
+    readonly items = computed(() => this.t().items);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

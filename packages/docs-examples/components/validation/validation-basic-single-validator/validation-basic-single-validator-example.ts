@@ -9,7 +9,7 @@ import {
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Validation: single validator
@@ -22,15 +22,15 @@ import { ExampleText, TEXT } from './l10n';
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <kbq-form-field>
-                        <kbq-label>{{ text().name }}</kbq-label>
+                        <kbq-label>{{ t().name }}</kbq-label>
                         <input formControlName="name" kbqInput />
 
-                        <kbq-error>{{ text().required }}</kbq-error>
+                        <kbq-error>{{ t().required }}</kbq-error>
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row layout-align-start-start">
-                    <button color="contrast" kbq-button type="submit">{{ text().submit }}</button>
+                    <button color="contrast" kbq-button type="submit">{{ t().submit }}</button>
                 </div>
             </div>
         </form>
@@ -48,7 +48,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationBasicSingleValidatorExample extends BaseLocalizedExample<ExampleText> {
+export class ValidationBasicSingleValidatorExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly form = new FormGroup({
         name: new FormControl('', [Validators.required])
     });
@@ -64,6 +64,6 @@ export class ValidationBasicSingleValidatorExample extends BaseLocalizedExample<
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

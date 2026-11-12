@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Icon-button size
@@ -14,7 +14,7 @@ import { ExampleText, TEXT } from './l10n';
         <div>
             <div class="kbq-text-compact layout-margin-bottom-m icon-button-style-example__style-label">Normal</div>
 
-            <i kbq-icon-button="kbq-magnifying-glass_24" [attr.aria-label]="text().search" [color]="colors.Theme"></i>
+            <i kbq-icon-button="kbq-magnifying-glass_24" [attr.aria-label]="t().search" [color]="colors.Theme"></i>
         </div>
 
         <div>
@@ -23,7 +23,7 @@ import { ExampleText, TEXT } from './l10n';
             <i
                 kbq-icon-button="kbq-magnifying-glass_16"
                 size="compact"
-                [attr.aria-label]="text().search"
+                [attr.aria-label]="t().search"
                 [color]="colors.Theme"
             ></i>
         </div>
@@ -38,10 +38,10 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-row layout-align-left-center layout-gap-3xl'
     }
 })
-export class IconButtonSizeExample extends BaseLocalizedExample<ExampleText> {
+export class IconButtonSizeExample extends BaseLocalizedExample<ExampleTranslation> {
     colors = KbqComponentColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -22,7 +22,7 @@ import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Validation on submit
@@ -48,7 +48,7 @@ import { ExampleText, TEXT } from './l10n';
             >
                 <kbq-alert class="example-alert" alertColor="error" alertStyle="colored" [compact]="true">
                     <i color="error" kbq-icon="kbq-circle-info_16"></i>
-                    {{ text().serverError }}
+                    {{ t().serverError }}
                 </kbq-alert>
             </div>
 
@@ -62,14 +62,14 @@ import { ExampleText, TEXT } from './l10n';
                 <div class="kbq-form__fieldset">
                     <div class="kbq-form__row">
                         <kbq-form-field>
-                            <kbq-label>{{ text().name }}</kbq-label>
+                            <kbq-label>{{ t().name }}</kbq-label>
                             <input formControlName="firstName" kbqInput />
                         </kbq-form-field>
                     </div>
 
                     <div class="kbq-form__row layout-margin-bottom-xxl">
                         <kbq-form-field>
-                            <kbq-label>{{ text().lastName }}</kbq-label>
+                            <kbq-label>{{ t().lastName }}</kbq-label>
                             <input formControlName="lastName" kbqInput />
                         </kbq-form-field>
                     </div>
@@ -86,7 +86,7 @@ import { ExampleText, TEXT } from './l10n';
                             (keydown.space)="submitOrigin = 'keyboard'"
                             (mouseleave)="submitOrigin = 'mouse'"
                         >
-                            {{ text().submit }}
+                            {{ t().submit }}
                         </button>
                     </div>
                 </div>
@@ -140,7 +140,10 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-column'
     }
 })
-export class ValidationOnSubmitExample extends BaseLocalizedExample<ExampleText> implements AfterViewInit, OnDestroy {
+export class ValidationOnSubmitExample
+    extends BaseLocalizedExample<ExampleTranslation>
+    implements AfterViewInit, OnDestroy
+{
     protected readonly alertContainer = viewChild<ElementRef<HTMLDivElement>>('alertContainer');
 
     protected readonly showServerErrors = signal(false);
@@ -201,6 +204,6 @@ export class ValidationOnSubmitExample extends BaseLocalizedExample<ExampleText>
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

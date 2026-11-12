@@ -4,7 +4,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Button overview
@@ -24,7 +24,7 @@ import { ExampleText, TEXT } from './l10n';
             [color]="colors.Contrast"
             [disabled]="isDisabled"
         >
-            {{ text().button }}
+            {{ t().button }}
         </button>
         <br />
         <kbq-checkbox [(ngModel)]="isDisabled">disabled</kbq-checkbox>
@@ -33,12 +33,12 @@ import { ExampleText, TEXT } from './l10n';
     styleUrls: ['button-overview-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ButtonOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class ButtonOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     colors = KbqComponentColors;
     isDisabled = false;
     hasProgress = false;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -1,14 +1,14 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the validation-message-global example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     name: string;
     lastName: string;
     submit: string;
     serverError: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         name: 'Имя',
         lastName: 'Фамилия',

@@ -7,7 +7,7 @@ import {
 } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Code-block with filled attribute
@@ -21,10 +21,10 @@ import { ExampleText, TEXT } from './l10n';
     ],
     template: `
         <kbq-toggle class="layout-margin-bottom-m layout-margin-right-m" [(ngModel)]="filled">
-            {{ text().filled }}
+            {{ t().filled }}
         </kbq-toggle>
         <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="alwaysShowActionbar">
-            {{ text().alwaysShowActionbar }}
+            {{ t().alwaysShowActionbar }}
         </kbq-toggle>
 
         <kbq-code-block [files]="files" [filled]="filled()" [alwaysShowActionbar]="alwaysShowActionbar()" />
@@ -38,7 +38,7 @@ import { ExampleText, TEXT } from './l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CodeBlockWithFilledExample extends BaseLocalizedExample<ExampleText> {
+export class CodeBlockWithFilledExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly files: KbqCodeBlockFile[] = [
         {
             language: 'bash',
@@ -50,6 +50,6 @@ export class CodeBlockWithFilledExample extends BaseLocalizedExample<ExampleText
     readonly alwaysShowActionbar = model(false);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

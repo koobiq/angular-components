@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqClampedText } from '@koobiq/components/clamped-text';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Clamped-text overview
@@ -12,7 +12,7 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <div class="layout-margin-bottom-l">
             <kbq-clamped-text>
-                {{ text().ddosText }}
+                {{ t().ddosText }}
             </kbq-clamped-text>
         </div>
     `,
@@ -27,8 +27,8 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ClampedTextOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class ClampedTextOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -250,7 +250,7 @@ describe(DocsStackblitzWriter.name, () => {
                 if (url.startsWith('assets/stackblitz/')) {
                     request.flush(readTemplateFile(url.slice('assets/stackblitz/'.length)));
                 } else if (url === `docs-content/examples-source/${EXAMPLE_PACKAGE_PATH}/basic-button-example.ts`) {
-                    request.flush(`import { LocalizedText } from '@koobiq/docs-examples/i18n';`);
+                    request.flush(`import { Translations } from '@koobiq/docs-examples/i18n';`);
                 } else {
                     request.flush('file content');
                 }

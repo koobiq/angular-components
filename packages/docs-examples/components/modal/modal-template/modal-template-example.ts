@@ -5,7 +5,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { KbqSplitButton } from '@koobiq/components/split-button';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Modal template
@@ -19,29 +19,29 @@ import { ExampleText, TEXT } from './l10n';
         KbqDropdownModule
     ],
     template: `
-        <button kbq-button (click)="createModal(title, content, footer, sizes.Small)">{{ text().openModal }}</button>
+        <button kbq-button (click)="createModal(title, content, footer, sizes.Small)">{{ t().openModal }}</button>
 
         <ng-template #title>DoS attack</ng-template>
 
         <ng-template #content>
-            {{ text().dosText }}
+            {{ t().dosText }}
 
             <kbq-split-button class="layout-margin-top-m">
                 <button kbq-button (click)="createModal(title, content, footer)">Open next modal</button>
-                <button kbq-button [attr.aria-label]="text().moreOptions" [kbqDropdownTriggerFor]="dropdown">
+                <button kbq-button [attr.aria-label]="t().moreOptions" [kbqDropdownTriggerFor]="dropdown">
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
             </kbq-split-button>
 
             <kbq-dropdown #dropdown="kbqDropdown">
                 <button kbq-dropdown-item (click)="createModal(title, content, footer, sizes.Small)">
-                    {{ text().openSmallModal }}
+                    {{ t().openSmallModal }}
                 </button>
                 <button kbq-dropdown-item (click)="createModal(title, content, footer, sizes.Medium)">
-                    {{ text().openMediumModal }}
+                    {{ t().openMediumModal }}
                 </button>
                 <button kbq-dropdown-item (click)="createModal(title, content, footer, sizes.Large)">
-                    {{ text().openLargeModal }}
+                    {{ t().openLargeModal }}
                 </button>
             </kbq-dropdown>
         </ng-template>
@@ -67,7 +67,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalTemplateExample extends BaseLocalizedExample<ExampleText> {
+export class ModalTemplateExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly modalService = inject(KbqModalService);
 
     modalRef: KbqModalRef;
@@ -94,6 +94,6 @@ export class ModalTemplateExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

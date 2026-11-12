@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the saved-filters example: it has no counterpart in the library's locale data. */
-export interface ExampleText {
+export interface ExampleTranslation {
     /** The text search pipe: the first pipe in every filter, always present, never removable. */
     search: string;
     retry: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     saveError: (name: string) => string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         search: 'Поиск',
         retry: 'Повторить',

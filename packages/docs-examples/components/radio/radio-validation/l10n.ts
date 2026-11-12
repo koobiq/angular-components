@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the radio-validation example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     authenticatorApp: string;
     hardwareKey: string;
     smsCode: string;
@@ -10,7 +10,7 @@ export interface ExampleText {
     save: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         authenticatorApp: 'Приложение-аутентификатор',
         hardwareKey: 'Аппаратный ключ безопасности',

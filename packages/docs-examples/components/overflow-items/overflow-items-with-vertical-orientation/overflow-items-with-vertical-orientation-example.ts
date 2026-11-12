@@ -4,7 +4,7 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Overflow items with vertical orientation
@@ -26,7 +26,7 @@ import { ExampleText, TEXT } from './l10n';
             >
                 @if (reverseOverflowOrder()) {
                     <div kbqOverflowItemsResult class="layout-margin-bottom-xs">
-                        {{ text().andMore(kbqOverflowItems.hiddenItemIDs().size) }}
+                        {{ t().andMore(kbqOverflowItems.hiddenItemIDs().size) }}
                     </div>
                 }
                 @for (item of items; track item.id) {
@@ -40,7 +40,7 @@ import { ExampleText, TEXT } from './l10n';
                     </kbq-badge>
                 }
                 @if (!reverseOverflowOrder()) {
-                    <div kbqOverflowItemsResult>{{ text().andMore(kbqOverflowItems.hiddenItemIDs().size) }}</div>
+                    <div kbqOverflowItemsResult>{{ t().andMore(kbqOverflowItems.hiddenItemIDs().size) }}</div>
                 }
             </div>
         </div>
@@ -75,7 +75,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverflowItemsWithVerticalOrientationExample extends BaseLocalizedExample<ExampleText> {
+export class OverflowItemsWithVerticalOrientationExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly items = Array.from({ length: 20 }, (_, i) => ({
         id: `Item${i}`,
         alwaysVisible: i === 8
@@ -84,6 +84,6 @@ export class OverflowItemsWithVerticalOrientationExample extends BaseLocalizedEx
     readonly badgeColor = KbqBadgeColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

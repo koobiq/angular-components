@@ -4,7 +4,7 @@ import { KbqThemeConfig, KbqThemeSelector, KbqThemeService } from '@koobiq/compo
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Theme static selection
@@ -14,7 +14,7 @@ import { ExampleText, TEXT } from './l10n';
     imports: [KbqButtonModule, KbqDropdownModule, KbqIconModule],
     template: `
         <button kbq-button [kbqDropdownTriggerFor]="menu">
-            {{ theme.staticTheme() ?? text().pickTheme }}
+            {{ theme.staticTheme() ?? t().pickTheme }}
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         <kbq-dropdown #menu="kbqDropdown">
@@ -25,14 +25,14 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ThemeStaticSelectionExample extends BaseLocalizedExample<ExampleText> implements OnDestroy {
+export class ThemeStaticSelectionExample extends BaseLocalizedExample<ExampleTranslation> implements OnDestroy {
     /**
      * Custom names pinned to the library's own light/dark classes (`KbqThemeSelector`) — reusing them, rather
      * than inventing unstyled classes, keeps the docs page's own styling intact when this example is live.
      */
     protected readonly customThemes = computed<KbqThemeConfig[]>(() => [
-        { name: this.text().day, className: KbqThemeSelector.Light, colorScheme: 'light' },
-        { name: this.text().night, className: KbqThemeSelector.Dark, colorScheme: 'dark' }
+        { name: this.t().day, className: KbqThemeSelector.Light, colorScheme: 'light' },
+        { name: this.t().night, className: KbqThemeSelector.Dark, colorScheme: 'dark' }
     ]);
 
     // Uses the app's single, shared `KbqThemeService` rather than a locally-provided instance — a second
@@ -44,7 +44,7 @@ export class ThemeStaticSelectionExample extends BaseLocalizedExample<ExampleTex
     private readonly previousStaticTheme = this.theme.staticTheme();
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
         this.theme.setThemes([...this.previousThemes, ...this.customThemes()]);
     }
 

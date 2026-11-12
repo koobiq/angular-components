@@ -8,7 +8,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Datepicker minimax
@@ -28,11 +28,11 @@ import { ExampleText, TEXT } from './l10n';
         <div class="docs-example__datepicker-minimax">
             <div class="kbq-form-vertical">
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label">{{ text().minimaxHint }}</label>
+                    <label class="kbq-form__label">{{ t().minimaxHint }}</label>
                     <kbq-form-field
                         #tooltip="kbqTooltip"
                         kbqTooltipModifier="warning"
-                        [kbqTooltip]="text().onlyNumbers"
+                        [kbqTooltip]="t().onlyNumbers"
                         (click)="datepicker.toggle()"
                     >
                         <input
@@ -51,7 +51,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatepickerMinimaxExample extends BaseLocalizedExample<ExampleText> {
+export class DatepickerMinimaxExample extends BaseLocalizedExample<ExampleTranslation> {
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     readonly minDate = this.adapter.createDate(2023, 11, 14);
@@ -62,6 +62,6 @@ export class DatepickerMinimaxExample extends BaseLocalizedExample<ExampleText> 
     date: DateTime | null = null;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

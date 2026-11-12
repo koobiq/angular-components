@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Tooltip style
@@ -15,29 +15,29 @@ import { ExampleText, TEXT } from './l10n';
         KbqToolTipModule
     ],
     template: `
-        <button kbq-button [kbqTooltip]="text().tooltip" [kbqTooltipColor]="KbqComponentColors.Contrast">
+        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Contrast">
             Contrast (default)
         </button>
 
-        <button kbq-button [kbqTooltip]="text().tooltip" [kbqTooltipColor]="KbqComponentColors.ContrastFade">
+        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.ContrastFade">
             Contrast Fade
         </button>
 
-        <button kbq-button [kbqTooltip]="text().tooltip" [kbqTooltipColor]="KbqComponentColors.Error">Error</button>
+        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Error">Error</button>
 
-        <button kbq-button [kbqTooltip]="text().tooltip" [kbqTooltipColor]="KbqComponentColors.Warning">Warning</button>
+        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Warning">Warning</button>
 
-        <button kbq-button [kbqTooltip]="text().tooltip" [kbqTooltipColor]="KbqComponentColors.Theme">Theme</button>
+        <button kbq-button [kbqTooltip]="t().tooltip" [kbqTooltipColor]="KbqComponentColors.Theme">Theme</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'layout-margin-5xl layout-row layout-align-center-center layout-gap-l'
     }
 })
-export class TooltipStyleExample extends BaseLocalizedExample<ExampleText> {
+export class TooltipStyleExample extends BaseLocalizedExample<ExampleTranslation> {
     KbqComponentColors = KbqComponentColors;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

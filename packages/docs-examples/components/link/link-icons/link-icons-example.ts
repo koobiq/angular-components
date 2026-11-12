@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkPrefix, KbqLinkSuffix } from '@koobiq/components/link';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Link icons
@@ -13,11 +13,11 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <a kbqLink href="https://koobiq.io/en/components/link" target="_blank">
             <i kbqLinkPrefix kbq-icon="kbq-clock_16"></i>
-            {{ text().scanHistory }}
+            {{ t().scanHistory }}
         </a>
 
         <a kbqLink href="https://koobiq.io/en/components/link" target="_blank">
-            {{ text().scanReport }}
+            {{ t().scanReport }}
             <i kbqLinkSuffix kbq-icon="kbq-file-text-o_16"></i>
         </a>
     `,
@@ -32,8 +32,8 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinkIconsExample extends BaseLocalizedExample<ExampleText> {
+export class LinkIconsExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

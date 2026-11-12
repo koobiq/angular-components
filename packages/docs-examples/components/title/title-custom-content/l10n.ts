@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the title examples. */
-export interface ExampleText {
+export interface ExampleTranslation {
     plainStringContent: string;
     richTemplateContent: string;
     richTooltip: string;
@@ -9,7 +9,7 @@ export interface ExampleText {
     stringContent: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         plainStringContent: 'Обычная строка',
         richTemplateContent: 'Шаблон с разметкой',

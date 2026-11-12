@@ -1,8 +1,8 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 import { ExampleNotificationText } from '../create-notifications';
 
 /** Text of the notification-center-popover example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     issues: string;
     action1: string;
     action2: string;
@@ -12,7 +12,7 @@ export interface ExampleText {
     list: ExampleNotificationText[];
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         issues: 'Задачи',
         action1: 'Действие 1',

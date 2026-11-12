@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the form-fieldset-with-button example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     longLegend: string;
     save: string;
     longHintButton: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         longLegend: 'Длинное имя поля, которое переносится на новую строку и располагается даже над кнопкой.',
         save: 'Сохранить',

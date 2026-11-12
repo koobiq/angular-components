@@ -4,7 +4,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Flag is not a language
@@ -15,7 +15,7 @@ import { ExampleText, TEXT } from './l10n';
     template: `
         <kbq-form-field>
             <i kbqPrefix color="contrast-fade" kbq-icon="kbq-globe_16"></i>
-            <kbq-select [placeholder]="text().selectLanguage" [formControl]="control">
+            <kbq-select [placeholder]="t().selectLanguage" [formControl]="control">
                 @for (language of languages; track language) {
                     <kbq-option [value]="language">{{ language }}</kbq-option>
                 }
@@ -32,7 +32,7 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-row layout-align-center-center layout-padding-l'
     }
 })
-export class FlagLanguageExample extends BaseLocalizedExample<ExampleText> {
+export class FlagLanguageExample extends BaseLocalizedExample<ExampleTranslation> {
     // Languages are picked with a neutral icon, not a flag: one language spans several countries.
     // Language names stay in their own tongue by convention.
     protected readonly languages = ['English (UK)', 'English (US)', 'Español', 'Français', 'Русский', 'हिन्दी', '中文'];
@@ -40,6 +40,6 @@ export class FlagLanguageExample extends BaseLocalizedExample<ExampleText> {
     protected readonly control = new FormControl(this.languages[0]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

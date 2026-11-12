@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, ViewEncapsulation } from 
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Breadcrumbs Truncate Tail Items
@@ -41,14 +41,14 @@ import { ExampleText, TEXT } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class BreadcrumbsTruncateTailItemsExample extends BaseLocalizedExample<ExampleText> {
+export class BreadcrumbsTruncateTailItemsExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly breadcrumbs = computed(() => [
-        { label: this.text().main, url: '/main' },
-        { label: this.text().users, url: '/main/users' },
-        { label: this.text().reportNumber, url: '/main/users/report-123456789' }
+        { label: this.t().main, url: '/main' },
+        { label: this.t().users, url: '/main/users' },
+        { label: this.t().reportNumber, url: '/main/users/report-123456789' }
     ]);
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

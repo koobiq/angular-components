@@ -6,7 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Navbar vertical open over
@@ -23,10 +23,10 @@ import { ExampleText, TEXT } from './l10n';
     templateUrl: 'navbar-vertical-open-over-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarVerticalOpenOverExample extends BaseLocalizedExample<ExampleText> {
+export class NavbarVerticalOpenOverExample extends BaseLocalizedExample<ExampleTranslation> {
     popUpPlacements = PopUpPlacements;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

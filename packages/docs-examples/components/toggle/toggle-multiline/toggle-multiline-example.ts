@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Toggle multiline example
@@ -17,7 +17,7 @@ import { ExampleText, TEXT } from './l10n';
             <kbq-toggle labelPosition="left">
                 Shake to undo
                 <kbq-hint>
-                    {{ text().shakeToUndoHint }}
+                    {{ t().shakeToUndoHint }}
                 </kbq-hint>
             </kbq-toggle>
         </div>
@@ -35,8 +35,8 @@ import { ExampleText, TEXT } from './l10n';
         class: 'layout-align-center-center layout-row layout-margin-top-l layout-margin-bottom-l'
     }
 })
-export class ToggleMultilineExample extends BaseLocalizedExample<ExampleText> {
+export class ToggleMultilineExample extends BaseLocalizedExample<ExampleTranslation> {
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

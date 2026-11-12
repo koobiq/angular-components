@@ -11,7 +11,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KBQ_MODAL_DATA, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { take } from 'rxjs';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type DocsFormData = {
     firstName: string;
@@ -25,14 +25,14 @@ type DocsFormData = {
         <form class="kbq-form-vertical" id="docs-form" novalidate [formGroup]="userDetailsForm" (ngSubmit)="onSubmit()">
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
-                    <div class="kbq-form__label">{{ text().name }}</div>
+                    <div class="kbq-form__label">{{ t().name }}</div>
                     <kbq-form-field class="kbq-form__control">
                         <input formControlName="firstName" kbqInput />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
-                    <div class="kbq-form__label">{{ text().surname }}</div>
+                    <div class="kbq-form__label">{{ t().surname }}</div>
                     <kbq-form-field class="kbq-form__control">
                         <input formControlName="lastName" kbqInput />
                     </kbq-form-field>
@@ -50,7 +50,7 @@ type DocsFormData = {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsNameFormComponent extends BaseLocalizedExample<ExampleText> {
+export class DocsNameFormComponent extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly modalData = inject<DocsFormData>(KBQ_MODAL_DATA, { optional: true });
     protected readonly modalRef = inject(KbqModalRef);
     protected readonly formFieldList = viewChildren(KbqFormField);
@@ -76,7 +76,7 @@ export class DocsNameFormComponent extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }
 
@@ -91,17 +91,17 @@ export class DocsNameFormComponent extends BaseLocalizedExample<ExampleText> {
         KbqButtonModule
     ],
     template: `
-        <button kbq-button color="contrast" (click)="openEmptyForm(footer)">{{ text().openEmptyForm }}</button>
-        <button kbq-button color="contrast-fade" (click)="openDraftForm(footer)">{{ text().openDraft }}</button>
+        <button kbq-button color="contrast" (click)="openEmptyForm(footer)">{{ t().openEmptyForm }}</button>
+        <button kbq-button color="contrast-fade" (click)="openDraftForm(footer)">{{ t().openDraft }}</button>
 
         <ng-template #footer>
-            <button type="submit" form="docs-form" kbq-button color="contrast">{{ text().save }}</button>
+            <button type="submit" form="docs-form" kbq-button color="contrast">{{ t().save }}</button>
             <button
                 kbq-button
                 color="contrast-fade"
                 (click)="modalRef.close(modalRef.getContentComponent().userDetailsForm.value)"
             >
-                {{ text().cancel }}
+                {{ t().cancel }}
             </button>
         </ng-template>
     `,
@@ -110,7 +110,7 @@ export class DocsNameFormComponent extends BaseLocalizedExample<ExampleText> {
         class: 'layout-margin-5xl layout-align-center-center layout-row layout-gap-l'
     }
 })
-export class ValidationOnOpenExample extends BaseLocalizedExample<ExampleText> {
+export class ValidationOnOpenExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly modalService = inject(KbqModalService);
     protected modalRef: KbqModalRef<DocsNameFormComponent>;
 
@@ -143,6 +143,6 @@ export class ValidationOnOpenExample extends BaseLocalizedExample<ExampleText> {
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

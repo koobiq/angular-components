@@ -1,14 +1,14 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text shown by the breadcrumbs examples. Acronyms (RBAC, ABAC, AES) and hashes stay as-is. */
-export interface ExampleText {
+export interface ExampleTranslation {
     informationSecurity: string;
     accessControl: string;
     authorization: string;
     roles: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         informationSecurity: 'Информационная безопасность',
         accessControl: 'Контроль доступа',

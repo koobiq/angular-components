@@ -7,7 +7,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSkeleton } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Skeleton directive
@@ -24,11 +24,11 @@ import { ExampleText, TEXT } from './l10n';
         KbqIconModule
     ],
     template: `
-        <kbq-toggle [(ngModel)]="loading">{{ text().loading }}</kbq-toggle>
+        <kbq-toggle [(ngModel)]="loading">{{ t().loading }}</kbq-toggle>
 
         <div class="example-heading">
             <div class="kbq-title">
-                <span [kbqSkeleton]="loading()">{{ text().dosTitle }}</span>
+                <span [kbqSkeleton]="loading()">{{ t().dosTitle }}</span>
             </div>
             <kbq-badge [badgeColor]="badgeColors.FadeError" [compact]="true" [kbqSkeleton]="loading()">
                 Critical
@@ -52,11 +52,11 @@ import { ExampleText, TEXT } from './l10n';
             </span>
         </div>
         <div class="example-actions">
-            <button kbq-button color="contrast" [kbqSkeleton]="loading()">{{ text().readMore }}</button>
+            <button kbq-button color="contrast" [kbqSkeleton]="loading()">{{ t().readMore }}</button>
             <div kbq-button-group>
-                <button kbq-button [kbqSkeleton]="loading()">{{ text().block }}</button>
-                <button kbq-button [kbqSkeleton]="loading()">{{ text().ignore }}</button>
-                <button kbq-button [kbqSkeleton]="loading()">{{ text().report }}</button>
+                <button kbq-button [kbqSkeleton]="loading()">{{ t().block }}</button>
+                <button kbq-button [kbqSkeleton]="loading()">{{ t().ignore }}</button>
+                <button kbq-button [kbqSkeleton]="loading()">{{ t().report }}</button>
             </div>
         </div>
     `,
@@ -87,7 +87,7 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonDirectiveExample extends BaseLocalizedExample<ExampleText> {
+export class SkeletonDirectiveExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly loading = model(true);
 
     protected readonly badgeColors = KbqBadgeColors;
@@ -95,6 +95,6 @@ export class SkeletonDirectiveExample extends BaseLocalizedExample<ExampleText> 
     protected readonly alertStyles = KbqAlertStyles;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

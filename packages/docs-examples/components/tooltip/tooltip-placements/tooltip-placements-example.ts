@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Tooltip placements
@@ -84,10 +84,10 @@ import { ExampleText, TEXT } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TooltipPlacementsExample extends BaseLocalizedExample<ExampleText> {
-    tooltipText = this.text().longTooltip;
+export class TooltipPlacementsExample extends BaseLocalizedExample<ExampleTranslation> {
+    tooltipText = this.t().longTooltip;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

@@ -5,7 +5,7 @@ import { kbqAnimationsDisabled, KbqComponentColors } from '@koobiq/components/co
 import { KbqIcon, KbqIconButton, KbqIconItem } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkSuffix } from '@koobiq/components/link';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Alert content
@@ -29,13 +29,13 @@ import { ExampleText, TEXT } from './l10n';
     styleUrls: ['alert-content-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AlertContentExample extends BaseLocalizedExample<ExampleText> {
+export class AlertContentExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly animationsDisabled = kbqAnimationsDisabled();
     colors = KbqComponentColors;
     firstState = true;
     secondState = true;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

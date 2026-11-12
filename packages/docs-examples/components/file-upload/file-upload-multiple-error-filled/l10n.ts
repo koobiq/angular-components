@@ -1,13 +1,13 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the file-upload-multiple-error-filled example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     provideValidExtension: string;
     noMoreThan1mb: string;
     sizeLimitExceeded: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         provideValidExtension: 'Укажите допустимое расширение',
         noMoreThan1mb: 'Не более 1 МБ',

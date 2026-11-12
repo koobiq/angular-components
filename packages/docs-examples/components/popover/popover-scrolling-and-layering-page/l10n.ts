@@ -1,11 +1,11 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the popover-scrolling-and-layering-page example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     pageTitle: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         pageTitle: 'Заголовок страницы'
     },

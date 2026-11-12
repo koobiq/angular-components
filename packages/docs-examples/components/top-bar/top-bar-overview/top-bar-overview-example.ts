@@ -10,7 +10,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -40,7 +40,7 @@ type ExampleAction = {
                 <div class="layout-row layout-margin-right-l flex-none">
                     <img alt="example icon" src="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
                 </div>
-                <div class="kbq-truncate-line" kbqTopBarTitle>{{ text().dashboards }}</div>
+                <div class="kbq-truncate-line" kbqTopBarTitle>{{ t().dashboards }}</div>
             </div>
 
             <div kbqTopBarSpacer></div>
@@ -101,7 +101,7 @@ type ExampleAction = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarOverviewExample extends BaseLocalizedExample<ExampleText> {
+export class TopBarOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -141,6 +141,6 @@ export class TopBarOverviewExample extends BaseLocalizedExample<ExampleText> {
     protected readonly PopUpPlacements = PopUpPlacements;
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

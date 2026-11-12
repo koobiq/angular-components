@@ -5,7 +5,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagInput, KbqTagInputEvent, KbqTagsModule, kbqTagsDefaultOptionsProvider } from '@koobiq/components/tags';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
-import { ExampleText, TEXT } from './l10n';
+import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
 /**
  * @title Tag input onpaste off
@@ -23,7 +23,7 @@ import { ExampleText, TEXT } from './l10n';
     providers: [kbqTagsDefaultOptionsProvider({ separatorKeyCodes: [ENTER], addOnPaste: false })],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TagInputOnpasteOffExample extends BaseLocalizedExample<ExampleText> {
+export class TagInputOnpasteOffExample extends BaseLocalizedExample<ExampleTranslation> {
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
 
     control = new FormControl();
@@ -58,6 +58,6 @@ export class TagInputOnpasteOffExample extends BaseLocalizedExample<ExampleText>
     }
 
     constructor() {
-        super(TEXT);
+        super(TRANSLATIONS);
     }
 }

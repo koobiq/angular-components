@@ -1,7 +1,7 @@
-import { LocalizedText } from '@koobiq/docs-examples/i18n';
+import { Translations } from '@koobiq/docs-examples/i18n';
 
 /** Text of the skeleton-form-field example. */
-export interface ExampleText {
+export interface ExampleTranslation {
     loading: string;
     serverAddress: string;
     domainHint: string;
@@ -11,7 +11,7 @@ export interface ExampleText {
     directoryDescription: string;
 }
 
-export const TEXT: LocalizedText<ExampleText> = {
+export const TRANSLATIONS: Translations<ExampleTranslation> = {
     'ru-RU': {
         loading: 'Загрузка',
         serverAddress: 'Адрес сервера',
