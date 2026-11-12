@@ -1,37 +1,27 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqSelectModule } from '@koobiq/components/select';
 
 /** Language switcher mounted into the header of the generated project by `main.ts`. */
 @Component({
     selector: 'docs-language-switcher',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
-        <select
-            [value]="localeService.localeId()"
-            (change)="localeService.setLocale(($event.target as HTMLSelectElement).value)"
-            aria-label="Examples language"
-        >
-            @for (item of localeService.locales.items; track item.id) {
-                <option [value]="item.id">{{ item.name }}</option>
-            }
-        </select>
+        <kbq-form-field>
+            <kbq-select [value]="localeService.localeId()" (valueChange)="localeService.setLocale($event)">
+                @for (item of localeService.locales.items; track item.id) {
+                    <kbq-option [value]="item.id">{{ item.name }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
     `,
     styles: `
         :host {
             display: block;
         }
-
-        select {
-            height: 32px;
-            padding: 0 var(--kbq-size-s);
-            font: inherit;
-            color: var(--kbq-foreground-contrast);
-            background: var(--kbq-background-bg);
-            border: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
-            border-radius: var(--kbq-size-m);
-            cursor: pointer;
-        }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsLanguageSwitcher {
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE);

@@ -260,7 +260,7 @@ describe(DocsStackblitzWriter.name, () => {
         const { files } = openProject.mock.calls[0][0];
 
         expect(files['src/example/i18n/index.ts']).toBeDefined();
-        expect(files['src/example/basic-button-example.ts']).toContain(`from './i18n/index.ts'`);
+        expect(files['src/example/basic-button-example.ts']).toContain(`from './i18n'`);
         expect(Object.values(files).join()).not.toContain('@koobiq/docs-examples/i18n');
     });
 
