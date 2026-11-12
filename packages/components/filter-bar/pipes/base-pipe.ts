@@ -370,8 +370,8 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     }
 
     /**
-     * Resolved display name of the pipe, delegating to {@link resolveName} with kind `'pipe'` and the key
-     * returned by {@link pipeNameKey}.
+     * Resolved display name of the pipe, delegating to `resolveName` with kind `'pipe'` and the key
+     * returned by `pipeNameKey`.
      */
     protected get pipeName(): string {
         return this.resolveName(this.data, 'pipe', this.pipeNameKey());
