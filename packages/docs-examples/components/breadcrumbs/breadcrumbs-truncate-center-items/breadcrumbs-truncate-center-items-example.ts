@@ -30,7 +30,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
                     <a routerLink="./report" tabindex="-1">
                         <button aria-current="page" disabled kbq-button kbqBreadcrumb>
                             <span
-                                kbqEllipsisCenter="Report dated 28.08.2018"
+                                [kbqEllipsisCenter]="t().reportDated"
                                 [minVisibleLength]="15"
                                 [charWidth]="5"
                                 [kbqPlacementPriority]="PopUpPlacements.Bottom"

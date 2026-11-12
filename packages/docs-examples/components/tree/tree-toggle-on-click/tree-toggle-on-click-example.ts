@@ -87,7 +87,7 @@ export const DATA_OBJECT = [
         ]
     },
     {
-        name: 'Disabled Node'
+        name: 'disabled-node'
     }
 ];
 
@@ -119,7 +119,7 @@ export const DATA_OBJECT = [
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'Disabled Node'">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'disabled-node'">
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
         </kbq-tree-selection>
