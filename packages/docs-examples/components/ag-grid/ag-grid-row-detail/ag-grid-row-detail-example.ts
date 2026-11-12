@@ -148,7 +148,6 @@ export class ExampleRowDetailComponent extends BaseLocalizedExample<ExampleTrans
 })
 export class AgGridRowDetailExample {
     protected readonly t = injectTranslation(TRANSLATIONS);
-    private readonly incidents = injectTranslation(TRANSLATIONS);
 
     protected readonly multipleExpand = signal(false);
     protected readonly filled = signal(false);
@@ -175,7 +174,7 @@ export class AgGridRowDetailExample {
         { field: 'technique', headerName: this.t().mitreTechnique, width: 150 }
     ]);
 
-    protected readonly rowData = computed<ExampleRowData[]>(() => this.incidents().incidents);
+    protected readonly rowData = computed<ExampleRowData[]>(() => this.t().incidents);
 
     /**
      * Clicking a cell expands and collapses its row. The expanded part is not a cell, so clicking

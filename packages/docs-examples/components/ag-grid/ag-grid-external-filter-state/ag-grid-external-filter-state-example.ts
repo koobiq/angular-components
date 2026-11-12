@@ -24,7 +24,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
         <kbq-form-field [style.width.px]="300">
             <kbq-select [placeholder]="t().externalFilter" [(ngModel)]="filter">
                 <kbq-cleaner (click)="externalFilterState.reset()" />
-                @for (option of options(); track option) {
+                @for (option of options; track option) {
                     <kbq-option [value]="option">{{ t().categories[option] }}</kbq-option>
                 }
             </kbq-select>
@@ -35,7 +35,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             kbqAgGridTheme
             kbqAgGridExternalFilterState="example-ag-grid-external-filter-state"
             [alwaysMultiSort]="true"
-            [rowData]="rowData()"
+            [rowData]="rowData"
             [columnDefs]="columnDefs()"
             [style.height.px]="300"
             [style.width.%]="100"
@@ -57,9 +57,10 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridExternalFilterStateExample extends BaseLocalizedExample<ExampleTranslation> {
-    readonly options = computed(() => this.t().categories.map((_, index) => index));
-    readonly filter = model(-1);
-    readonly filterPass = (node: IRowNode): boolean => node.data.filter === this.t().categories[this.filter()];
+    // Option values and the row field are category indexes, so the filter state survives a locale switch.
+    readonly options = this.t().categories.map((_, index) => index);
+    readonly filter = model<number | null>(null);
+    readonly filterPass = (node: IRowNode): boolean => node.data.filter === this.filter();
     readonly columnDefs = computed<ColDef[]>(() => [
         { field: 'column0', headerName: 'Column 0', width: 130 },
         { field: 'filter', headerName: this.t().filter, width: 130 },
@@ -69,15 +70,13 @@ export class AgGridExternalFilterStateExample extends BaseLocalizedExample<Examp
             width: 130
         }))
     ]);
-    readonly rowData = computed(() =>
-        Array.from({ length: 100 }, (_, index) => ({
-            column0: 'Text ' + index,
-            filter: this.options()[index % this.options().length],
-            column2: 'Text ' + index,
-            column3: 'Text ' + index,
-            column4: 'Text ' + index
-        }))
-    );
+    readonly rowData = Array.from({ length: 100 }, (_, index) => ({
+        column0: 'Text ' + index,
+        filter: index % this.options.length,
+        column2: 'Text ' + index,
+        column3: 'Text ' + index,
+        column4: 'Text ' + index
+    }));
 
     constructor() {
         super(TRANSLATIONS);
