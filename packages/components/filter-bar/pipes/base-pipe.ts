@@ -389,9 +389,8 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 
         const templates = this.filterBar?.pipeTemplates() ?? [];
         const matches = templates.filter((t) => getId(t) === getId(this.data) && t.type === this.data.type);
-        const withKey = matches.filter((t) => t.nameKey);
 
-        return withKey.length === 1 ? withKey[0].nameKey : undefined;
+        return matches.length === 1 ? matches[0].nameKey : undefined;
     }
 
     /**

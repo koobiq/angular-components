@@ -1980,6 +1980,34 @@ describe('KbqPipeMultiSelectComponent', () => {
             expect((pipe() as any).displayValue(pipe().select())).toBe('Status');
         });
 
+        it('should hide an unkeyed legacy value when a keyed value is restored alongside it', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'MultiSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.MultiSelect,
+                    values: [keyedValues[1]],
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            const unkeyedLegacy: KbqSelectValue = { name: 'Old', id: 'stale', value: 'old' };
+            const keyedRestored: KbqSelectValue = {
+                name: 'Status',
+                nameKey: 'filters.status',
+                id: '9',
+                value: 'status'
+            };
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ value: [unkeyedLegacy, keyedRestored] })
+            ]);
+            fixture.detectChanges();
+
+            expect((pipe() as any).displayValues(pipe().select())).toEqual([keyedRestored]);
+        });
+
         it('should keep the stored fallback for a zero-id match', () => {
             fixture.componentInstance.pipeTemplates = [
                 {

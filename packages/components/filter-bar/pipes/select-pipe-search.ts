@@ -16,7 +16,7 @@ export const kbqFilterSelectValueNameKey = (
 
     const matches = values.filter((item) => item.id === value.id);
 
-    return matches.length === 1 ? matches[0].nameKey : undefined;
+    return matches.length === 1 ? matches[0].nameKey || undefined : undefined;
 };
 
 /**

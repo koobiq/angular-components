@@ -16,10 +16,10 @@ export type KbqFilterBarNameKind = 'pipe' | 'pipe-template' | 'select-option' | 
  *
  * The `source` is the original object that carries the name; `pipe` is the active pipe (or the pipe
  * template) the name belongs to. `fallback` is the human-readable name already on the source, and
- * `key` is the optional translation key a resolver may use to look up a localized string.
+ * `key` is the translation key a resolver may use to look up a localized string.
  */
 export interface KbqFilterBarNameContext {
-    /** Optional key a resolver can use to localize or map the name. */
+    /** Translation key a resolver can use to localize or map the name. */
     key: string;
 
     /** Human-readable name to use when the resolver returns a nullish value. */

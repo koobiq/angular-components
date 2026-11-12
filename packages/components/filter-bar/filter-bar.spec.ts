@@ -1004,6 +1004,30 @@ describe('pipeNameKey legacy lookup', () => {
         expect(pipe.exposePipeNameKey()).toBeUndefined();
     });
 
+    it('should return undefined when a duplicate match is keyed and another is not', () => {
+        const { pipe } = initPipe({}, [
+            {
+                name: 'Status',
+                id: 'status',
+                type: KbqPipeTypes.Select,
+                nameKey: 'filters.status',
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Status',
+                id: 'status',
+                type: KbqPipeTypes.Select,
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]);
+
+        expect(pipe.exposePipeNameKey()).toBeUndefined();
+    });
+
     it('should return undefined when no template matches', () => {
         const { pipe } = initPipe({}, [
             {

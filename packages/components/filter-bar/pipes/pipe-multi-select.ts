@@ -304,15 +304,19 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /**
      * Selected values the trigger shows. Normally the values behind `select.triggerValues`; when the
-     * committed value contains any value with its own `nameKey`, the committed values are returned
-     * instead so restored keyed values stay visible even when no current option matches them. Missing
-     * unkeyed legacy values stay invisible, exactly as before this feature.
+     * committed value contains any value with its own `nameKey`, the keyed committed values are returned
+     * (so restored keyed values stay visible even when no current option matches them), together with any
+     * unkeyed committed value that still matches a current option. Missing unkeyed legacy values stay
+     * invisible, exactly as before this feature.
      */
     protected displayValues(select: KbqSelect): KbqSelectValue[] {
         const committed = this.data.value;
 
         if (Array.isArray(committed) && committed.some((value) => value.nameKey)) {
-            return committed;
+            const triggerValues = select.triggerValues.map((option) => option.value as KbqSelectValue);
+            const triggerIds = new Set(triggerValues.map((value) => value.id));
+
+            return committed.filter((value) => value.nameKey || (value.id != null && triggerIds.has(value.id)));
         }
 
         return select.triggerValues.map((option) => option.value as KbqSelectValue);

@@ -702,5 +702,31 @@ describe('KbqPipeAdd', () => {
             // The announcement should NOT change because locale changes alone produce no announcement
             expect(liveRegion.nativeElement.textContent.trim()).toBe(textAfterAdd);
         });
+
+        it('should fall back to the template name when it has no nameKey', async () => {
+            resolver.mockImplementation(() => 'TRANSLATED');
+
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Plain pipe',
+                    id: PIPE_TEMPLATE_ID_1,
+                    type: KbqPipeTypes.Text,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.detectChanges();
+
+            const pipeAdd = getPipeAdd();
+
+            pipeAdd.select().open();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const options = document.querySelectorAll('.kbq-option');
+
+            expect(options[0].textContent).toContain('Plain pipe');
+        });
     });
 });

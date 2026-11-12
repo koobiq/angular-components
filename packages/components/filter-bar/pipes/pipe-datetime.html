@@ -32,7 +32,7 @@
                 <kbq-list-selection
                     #listSelection
                     [autoSelect]="false"
-                    [attr.aria-label]="data.name"
+                    [attr.aria-label]="pipeName"
                     [ngModel]="data.value?.name"
                 >
                     <kbq-list-option (click)="showPeriod()" (keydown.enter)="showPeriod()">

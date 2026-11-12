@@ -64,11 +64,6 @@ interface DemoPeriodValue {
 
             <kbq-filter-reset (onResetFilter)="onResetFilter()" />
         </kbq-filter-bar>
-
-        <!-- A tree template receives the source node, so it resolves the name itself through its key. -->
-        <ng-template #treeOption let-option="option" let-search="search">
-            <span [innerHTML]="resolveKey(option.nameKey, option.name) | kbqHighlightBackground: search"></span>
-        </ng-template>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -116,11 +111,6 @@ export class LocalizationDemoBar {
     /** One resolver for every pipe, option, preset and node label in this bar. */
     protected readonly nameResolver: KbqFilterBarNameResolver = ({ key, fallback }) =>
         this.translations()[key] ?? fallback;
-
-    /** Resolves a stable `nameKey` for a custom template, falling back to the plain name. */
-    protected resolveKey(key: string | undefined, fallback: string): string {
-        return key ? (this.translations()[key] ?? fallback) : fallback;
-    }
 
     /** Periods of the `date` pipe. The `name` is the stable fallback identity; `nameKey` is translated. */
     private readonly datePresets: DemoPeriodValue[] = [
