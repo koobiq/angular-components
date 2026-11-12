@@ -7,7 +7,7 @@ import {
     provideAppInitializer
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { KBQ_LOCALE_SERVICE, KbqThemeService } from '@koobiq/components/core';
+import { KBQ_LOCALE_SERVICE, KBQ_WINDOW, KbqThemeService } from '@koobiq/components/core';
 import { distinctUntilKeyChanged, skip } from 'rxjs';
 import { DocsNavbarProperty } from '../components/navbar/navbar-property';
 import { DOCS_EXAMPLES_LANG_PARAM, DocsLocale } from '../constants/locale';
@@ -23,6 +23,17 @@ export class DocsLanguagePreferences {
     private readonly localeService = inject(KBQ_LOCALE_SERVICE);
     private readonly location = inject(Location);
     private readonly router = inject(Router);
+    private readonly window = inject(KBQ_WINDOW);
+
+    // Field initializers run in declaration order: this reads the storage before the switches below
+    // persist their initial value, which is the only way to tell a stored pick from a fresh reader.
+    private readonly initiallyStoredExamplesLanguage = this.hasStoredExamplesLanguage();
+
+    /** Whether the examples language mirrors the docs language at the moment of a docs switch. */
+    private mirrorExamples = false;
+
+    /** Guards the mirror-driven examples switch so it does not write the URL param itself. */
+    private mirroringExamples = false;
 
     readonly docsLanguageSwitch = new DocsNavbarProperty({
         property: 'docs_language',
@@ -48,9 +59,8 @@ export class DocsLanguagePreferences {
     });
 
     constructor() {
-        const index = this.docsLanguageSwitch.data.findIndex(
-            (item) => item.id === this.docsLocaleService.getLocaleFromURL(this.location.path())
-        );
+        const docsLocale = this.docsLocaleService.getLocaleFromURL(this.location.path());
+        const index = this.docsLanguageSwitch.data.findIndex((item) => item.id === docsLocale);
 
         if (index >= 0) {
             this.docsLanguageSwitch.setValue(index);
@@ -63,29 +73,43 @@ export class DocsLanguagePreferences {
 
         if (queryIndex >= 0) {
             this.examplesLanguageSwitch.setValue(queryIndex);
+        } else if (!this.initiallyStoredExamplesLanguage) {
+            // No URL or stored pick: the examples start from the docs language, so a fresh reader
+            // on /ru/ gets Russian examples rather than the first language of the list.
+            const examplesIndex = this.examplesLanguageSwitch.data.findIndex(
+                (item) => item.id === examplesLocaleFor(this.docsLanguageSwitch.currentValue.id)
+            );
+
+            if (examplesIndex >= 0) {
+                this.examplesLanguageSwitch.setValue(examplesIndex);
+            }
         }
 
         // `skip(1)` drops the value replayed to a fresh subscriber, so the examples follow a switch of the
-        // docs language, not the locale the app starts with. Running before the `setLocale` subscription
-        // below matters: its rewrite of the URL must stay the last navigation, or the query-param write
-        // of the examples language cancels it and leaves the old locale segment in place.
+        // docs language, not the locale the app starts with. The mirrored examples language is passed to
+        // `setLocale` below, which rewrites the locale segment and the query param in one navigation.
         this.docsLanguageSwitch.changes
             .pipe(distinctUntilKeyChanged('value'), skip(1))
             .subscribe(({ value: { id } }) => {
                 // While the examples language mirrors the docs language, switching the docs switches both;
                 // a deliberately different examples language is left alone. `locale` is still the previous
                 // one here: the subscription below applies the picked locale only after this one runs.
-                if (this.localeService.localeId() !== examplesLocaleFor(this.docsLocaleService.locale)) return;
+                this.mirrorExamples =
+                    this.localeService.localeId() === examplesLocaleFor(this.docsLocaleService.locale);
+
+                if (!this.mirrorExamples) return;
 
                 const index = this.examplesLanguageSwitch.data.findIndex((item) => item.id === examplesLocaleFor(id));
 
                 if (index >= 0) {
+                    this.mirroringExamples = true;
                     this.examplesLanguageSwitch.setValue(index);
+                    this.mirroringExamples = false;
                 }
             });
 
         this.docsLanguageSwitch.changes.pipe(distinctUntilKeyChanged('value')).subscribe(({ value: { id } }) => {
-            this.docsLocaleService.setLocale(id);
+            this.docsLocaleService.setLocale(id, this.mirrorExamples ? examplesLocaleFor(id) : undefined);
         });
 
         this.examplesLanguageSwitch.changes.pipe(distinctUntilKeyChanged('value')).subscribe(({ value: { id } }) => {
@@ -93,14 +117,28 @@ export class DocsLanguagePreferences {
         });
 
         // `skip(1)` drops the value replayed to a fresh subscriber, so the param is written on a change only.
+        // A mirror switch is written by the `setLocale` navigation instead, to keep a single history entry.
         this.examplesLanguageSwitch.changes
             .pipe(distinctUntilKeyChanged('value'), skip(1))
             .subscribe(({ value: { id } }) => {
+                if (this.mirroringExamples) return;
+
                 this.router.navigate([], {
                     queryParams: { [DOCS_EXAMPLES_LANG_PARAM]: id },
-                    queryParamsHandling: 'merge'
+                    queryParamsHandling: 'merge',
+                    preserveFragment: true
                 });
             });
+    }
+
+    // Storage throws where it is blocked, which `DocsNavbarProperty` already swallows; a throw here would
+    // be just as fatal at startup, so this mirrors its safe read.
+    private hasStoredExamplesLanguage(): boolean {
+        try {
+            return this.window.localStorage.getItem('docs_examples-language') !== null;
+        } catch {
+            return false;
+        }
     }
 
     private getExamplesLocaleFromQuery(): string | null {

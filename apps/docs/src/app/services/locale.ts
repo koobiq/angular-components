@@ -3,7 +3,7 @@ import { Directive, inject, Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { PRIMARY_OUTLET, Router } from '@angular/router';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { DOCS_DEFAULT_LOCALE, DOCS_SUPPORTED_LOCALES, DocsLocale } from '../constants/locale';
+import { DOCS_DEFAULT_LOCALE, DOCS_EXAMPLES_LANG_PARAM, DOCS_SUPPORTED_LOCALES, DocsLocale } from '../constants/locale';
 import { docsTranslate, DocsTranslationKey } from './i18n';
 
 export const docsIsRuLocale = (locale: DocsLocale): boolean => locale === DocsLocale.Ru;
@@ -36,8 +36,12 @@ export class DocsLocaleService {
     /**
      * Sets the current locale code and emits the change to subscribers.
      * Updates URL with the new locale code, if URL doesn't contain locale, navigation will be skipped.
+     *
+     * `examplesLocale` is the examples language that mirrors the picked one; passing it rewrites the locale
+     * segment and the `?examples-lang=` param in a single navigation, so the two never race each other and
+     * the fragment survives.
      */
-    setLocale(locale: DocsLocale): void {
+    setLocale(locale: DocsLocale, examplesLocale?: string): void {
         if (!this.isSupportedLocale(locale)) {
             throw new Error(`[DocsLocaleService] Unsupported locale: ${locale}`);
         }
@@ -59,7 +63,10 @@ export class DocsLocaleService {
         const commands = primarySegments.map((segment, index) => (index === 0 ? locale : segment.path));
 
         this.router.navigate(['/', ...commands], {
-            queryParams: urlTree.queryParams,
+            queryParams:
+                examplesLocale != null
+                    ? { ...urlTree.queryParams, [DOCS_EXAMPLES_LANG_PARAM]: examplesLocale }
+                    : urlTree.queryParams,
             fragment: urlTree.fragment ?? undefined
         });
     }

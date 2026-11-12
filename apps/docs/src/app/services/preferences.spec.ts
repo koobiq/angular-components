@@ -36,9 +36,9 @@ describe(DocsLanguagePreferences.name, () => {
                         },
                         getLocaleFromURL: (url: string) =>
                             Object.values(DocsLocale).find((locale) => url.startsWith(`/${locale}/`)) ?? null,
-                        setLocale: (locale: DocsLocale) => {
+                        setLocale: (locale: DocsLocale, _examplesLocale?: string) => {
                             currentDocsLocale = locale;
-                            setDocsLocale(locale);
+                            setDocsLocale(locale, _examplesLocale);
                         }
                     }
                 }
@@ -72,7 +72,7 @@ describe(DocsLanguagePreferences.name, () => {
         localStorage.setItem('docs_language', '1');
         create();
 
-        expect(setDocsLocale).toHaveBeenLastCalledWith(DocsLocale.En);
+        expect(setDocsLocale).toHaveBeenLastCalledWith(DocsLocale.En, undefined);
     });
 
     it('prefers the locale of the URL to the saved one', () => {
@@ -81,7 +81,7 @@ describe(DocsLanguagePreferences.name, () => {
 
         const preferences = create();
 
-        expect(setDocsLocale).toHaveBeenLastCalledWith(DocsLocale.Ru);
+        expect(setDocsLocale).toHaveBeenLastCalledWith(DocsLocale.Ru, undefined);
         expect(preferences.docsLanguageSwitch.currentValue.id).toBe(DocsLocale.Ru);
     });
 
@@ -129,22 +129,22 @@ describe(DocsLanguagePreferences.name, () => {
 
         const preferences = create();
 
-        expect(preferences.examplesLanguageSwitch.currentValue.id).toBe(
-            TestBed.inject(KBQ_LOCALE_SERVICE).locales.items[0].id
-        );
+        // Unknown param: the examples fall back to the docs language (Русский is the default switch value).
+        expect(preferences.examplesLanguageSwitch.currentValue.id).toBe('ru-RU');
     });
 
     it('writes the examples language to the query param when it changes', () => {
         configure('/examples/select-overview');
 
         const preferences = create();
-        const ruIndex = preferences.examplesLanguageSwitch.data.findIndex(({ id }) => id === 'ru-RU');
+        const esIndex = preferences.examplesLanguageSwitch.data.findIndex(({ id }) => id === 'es-LA');
 
-        preferences.examplesLanguageSwitch.setValue(ruIndex);
+        preferences.examplesLanguageSwitch.setValue(esIndex);
 
         expect(router.navigate).toHaveBeenCalledWith([], {
-            queryParams: { 'examples-lang': 'ru-RU' },
-            queryParamsHandling: 'merge'
+            queryParams: { 'examples-lang': 'es-LA' },
+            queryParamsHandling: 'merge',
+            preserveFragment: true
         });
     });
 
@@ -163,10 +163,9 @@ describe(DocsLanguagePreferences.name, () => {
 
         expect(setExamplesLocale).toHaveBeenLastCalledWith('en-US');
         expect(preferences.examplesLanguageSwitch.currentValue.id).toBe('en-US');
-        expect(router.navigate).toHaveBeenLastCalledWith([], {
-            queryParams: { 'examples-lang': 'en-US' },
-            queryParamsHandling: 'merge'
-        });
+        // The mirror switch is written by the setLocale navigation, not by a separate one here.
+        expect(setDocsLocale).toHaveBeenLastCalledWith(DocsLocale.En, 'en-US');
+        expect(router.navigate).not.toHaveBeenCalled();
     });
 
     it('keeps a deliberately different examples language when the docs language changes', () => {
@@ -185,11 +184,12 @@ describe(DocsLanguagePreferences.name, () => {
 
         expect(setExamplesLocale).toHaveBeenLastCalledWith('es-LA');
         expect(preferences.examplesLanguageSwitch.currentValue.id).toBe('es-LA');
+        expect(setDocsLocale).toHaveBeenLastCalledWith(DocsLocale.En, undefined);
     });
 
-    // The `setLocale` subscription rewrites the URL; it must run after the examples-language
-    // sync, or its navigation gets cancelled by the query-param write (e2e: the locale
-    // segment stays in place).
+    // The examples sync runs before `setLocale` applies the picked docs locale, so the locale
+    // service sees the mirrored examples language when `setLocale` builds the single navigation
+    // that rewrites both the locale segment and the query param.
     it('applies the picked docs locale after the examples language sync', () => {
         configure('/ru/components/alert/overview');
 
@@ -208,6 +208,17 @@ describe(DocsLanguagePreferences.name, () => {
             preferences.docsLanguageSwitch.data.findIndex(({ id }) => id === DocsLocale.En)
         );
 
-        expect(order).toEqual(['examples', 'navigate', 'docs']);
+        expect(order).toEqual(['examples', 'docs']);
+    });
+
+    // Without a URL or stored pick the examples start from the docs language: a fresh reader on /ru/
+    // gets Russian examples instead of the first language of the list.
+    it('starts the examples language from the docs language without a stored pick', () => {
+        configure('/en/components/alert/overview');
+
+        const preferences = create();
+
+        expect(preferences.examplesLanguageSwitch.currentValue.id).toBe('en-US');
+        expect(setExamplesLocale).toHaveBeenLastCalledWith('en-US');
     });
 });
