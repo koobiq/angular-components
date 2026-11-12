@@ -191,8 +191,11 @@ export class KbqTextarea
     private valueAccessor: { value: any };
 
     private lineHeight: number = 0;
-    private minHeight: number = 0;
+    private verticalPadding: number = 0;
     private rowsCount: number;
+
+    /** The `min-height` growth wrote last, so that turning growth off removes it and keeps a consumer's own. */
+    private grownMinHeight = '';
 
     constructor(
         protected elementRef: ElementRef<HTMLTextAreaElement>,
@@ -231,7 +234,7 @@ export class KbqTextarea
                 10
             );
 
-            this.minHeight = this.lineHeight + paddingTop + paddingBottom;
+            this.verticalPadding = paddingTop + paddingBottom;
             this.freeRowsHeight = this.freeRowsHeight ?? this.lineHeight;
         });
 
@@ -286,11 +289,21 @@ export class KbqTextarea
 
     /** Grow textarea height to avoid vertical scroll  */
     grow = () => {
-        if (!this.isBrowser || !this._canGrow) return;
+        if (!this.isBrowser) return;
+
+        const textarea = this.elementRef.nativeElement;
+
+        // A resizable textarea ignores maxRows and takes its floor from the stylesheet, not from the grown height.
+        if (!this._canGrow) {
+            if (textarea.style.minHeight === this.grownMinHeight) textarea.style.minHeight = '';
+
+            this.grownMinHeight = '';
+            this.rowsCount = 0;
+
+            return;
+        }
 
         this.ngZone.runOutsideAngular(() => {
-            const textarea = this.elementRef.nativeElement;
-
             const clone = textarea.cloneNode(false) as HTMLTextAreaElement;
 
             this.renderer.appendChild(this.renderer.parentNode(textarea), clone);
@@ -300,15 +313,19 @@ export class KbqTextarea
 
             clone.style.minHeight = '0'; // this line is important to height recalculation
 
-            const height = Math.max(this.minHeight, +clone.scrollHeight + diff + this.freeRowsHeight);
+            const height = Math.max(
+                this.lineHeight + this.verticalPadding,
+                +clone.scrollHeight + diff + this.freeRowsHeight
+            );
 
             clone.remove();
 
             this.rowsCount = Math.floor(height / this.lineHeight);
 
             textarea.style.minHeight = coerceCssPixelValue(
-                this.maxRowLimitReached ? this.maxRows * this.lineHeight : height
+                this.maxRowLimitReached ? this.maxRows * this.lineHeight + this.verticalPadding : height
             );
+            this.grownMinHeight = textarea.style.minHeight;
         });
     };
 
