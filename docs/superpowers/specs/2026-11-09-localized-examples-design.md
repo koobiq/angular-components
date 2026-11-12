@@ -1,16 +1,18 @@
-# Localized docs examples rollout (DS-4922)
+# Localized docs examples (DS-4922)
 
 ## Intent and why
 
-The docs site already has an "examples language" picker (footer) that switches the locale of the live examples. Only 4 components — `navbar`, `app-switcher`, `filter-bar`, `notification-center` — actually localize their example text (done in DS-4306). Every other example shows hardcoded English regardless of the picker.
+The docs site has an "examples language" picker that switches the locale of the live examples. Before this change only a handful of components localized their example text; every other example showed hardcoded English regardless of the picker.
 
-DS-4922 rolls this mechanism out to all examples: each example reads its user-facing strings from per-component localized data, translated for `ru-RU` and falling back to English for every other locale. The selected examples language is also persisted in the URL query string so a link can carry it.
+DS-4922 rolls the mechanism out to all examples: each example reads its user-facing strings from localized data translated for `ru-RU`, falling back to English for every other locale, and the picked language is carried in the URL (`?examples-lang=<id>`) and in localStorage.
 
 ## Goals
 
-- Every docs example renders its user-facing strings through `injectExampleText()`, so the footer picker re-renders it.
+- Every docs example renders its user-facing strings from its own `l10n.ts`, following the examples language picker.
 - Only `ru-RU` is translated; other locale ids get the English `default` entry.
-- The examples language is reflected in and read from the URL (`?examples-lang=<id>`).
+- The examples language is reflected in and read from the URL: at startup, and on browser back/forward.
+- Until the reader picks a different examples language, it follows the docs interface language.
+- A generated StackBlitz project can switch the examples language too (switcher in the project header).
 
 ## Non-goals
 
@@ -20,61 +22,54 @@ DS-4922 rolls this mechanism out to all examples: each example reads its user-fa
 
 ## Anti-goals
 
-- Breaking StackBlitz (examples must stay self-contained; the shared file must be reachable).
+- Breaking StackBlitz: an example's project must compile from its own files plus `localImportFiles`, and must not show imports the reader cannot resolve.
 - Breaking SSR / prerender (localStorage is unavailable on the server).
-- Duplicating the helper across ~67 component folders.
+- Duplicating the localization helper across component folders.
 
 ## Constraints
 
-- StackBlitz bundles only an example's own files plus `localImportFiles` (relative imports), fetched from `dist/docs-content/examples-source/`. Relative imports that stay inside the component's own entry point (`../l10n`) are picked up automatically; an import crossing entry-point boundaries is not buildable (see Approaches).
-- The generator `tools/example-module/resolve-local-imports.ts` already follows `./`, `../`, `../../` imports recursively and records them in `localImportFiles`.
+- Each component folder of `packages/docs-examples` is its own ng-packagr secondary entry point; cross-entry-point imports must go through an alias, never a relative path.
+- StackBlitz bundles only an example's own files plus `localImportFiles`, fetched from `dist/docs-content/examples-source/`; the generator `tools/example-module/resolve-local-imports.ts` follows `./`, `../` imports recursively.
 - Shipped locale ids: `ru-RU` (library default), `en-US`, `es-LA`, `pt-BR`, `tk-TM`.
 
 ## Approaches considered
 
-1. **Per-component duplicated helper (chosen).** Each component's `l10n.ts` keeps its own copy of `injectLocalizedText` (~5 lines), as DS-4306 did for its 4 components. Relative imports stay inside the component's entry point, so ng-packagr, the docs source viewer, StackBlitz and the MCP server all work unchanged. Cost: the same ~5 lines repeated per component (~67 at full rollout).
-2. **Shared helper file + per-component data.** Rejected: every component folder of `docs-examples` is its own ng-packagr secondary entry point, and a relative import crossing that boundary (`../i18n`) fails `yarn run build:docs-examples` with `Cannot destructure property 'pos' of 'file.referencedFiles[index]'`. A separate `@koobiq/docs-examples/components/i18n` entry point with an alias import does build (verified), but the alias is unresolvable for every consumer of the raw sources — the StackBlitz writer and the MCP indexer would each need a special case (fetch the file, rewrite the import), and the docs source viewer would show an import a reader cannot resolve.
-3. **Full centralization of the data too.** Rejected — there is no shared dictionary; each component's text is its own.
+1. **Per-component duplicated helper.** Implemented first (as DS-4306 did for its components): each `l10n.ts` kept its own copy of the helper. Rejected in review: the helper is infrastructure and duplicating it in every folder violates the single-responsibility split between mechanism and data.
+2. **Shared entry point, special-cased consumers (chosen).** `packages/docs-examples/i18n/` is a secondary entry point (`@koobiq/docs-examples/i18n`, same shape as `loader/`), imported by alias. It builds with ng-packagr, but the alias is unresolvable for consumers of the raw sources, so three small special cases carry the file: `resolve-local-imports.ts` records the alias in `localImportFiles`; `package-docs-content.ts` copies `i18n/` into `examples-source/`; the StackBlitz writer places the file inside the generated project and rewrites the specifier to a relative `./i18n`. The MCP indexer and the llms sources resolve `../` paths against the repo and needed no change.
+3. **Centralized data.** Rejected — there is no shared dictionary; each example's text is its own.
 
 ## Design
 
-### The helper
+### The shared i18n entry point
 
-`injectLocalizedText` resolves a locale-keyed record for the active locale, falling back to `default` (English):
+`packages/docs-examples/i18n/index.ts` holds the whole localization mechanism of the examples:
 
-```ts
-export const injectLocalizedText = <T>(data: Record<string, T> & { default: T }): Signal<T> => {
-    const localeService = kbqInjectLocaleService({ optional: true });
+- `Translations<T>` — the locale-keyed record type (`default` is the fallback, English);
+- `injectTranslation(translations)` — a signal with the entry for the active locale;
+- `BaseLocalizedExample<T>` — base class: the derived component passes its record to `super()` and reads it as `this.t`.
 
-    return computed(() => data[localeService?.localeId() ?? 'default'] ?? data.default);
-};
-```
+### Per-example data
 
-Each component's `l10n.ts` carries its own copy (approach 1). `i18n` is the mechanism (how examples support several locales); the per-component dictionaries below are the `l10n` content (the actual translations).
+Every example has its own `l10n.ts` with exactly two things: the `ExampleTranslation` interface and the `TRANSLATIONS` record. There are no section-level files: an example is self-contained, which keeps its StackBlitz project free of shared files.
 
-### Per-component data
+The example component extends `BaseLocalizedExample<ExampleTranslation>` and passes `TRANSLATIONS` to `super()`; templates read `{{ t().someKey }}`. The escape hatch for a class that cannot extend the base (a second localized field, a differently named one) is a field initialized with `injectTranslation(TRANSLATIONS)`.
 
-Each component keeps `packages/docs-examples/components/<component>/l10n.ts` (renamed from `localized-data.ts`), self-contained: its own copy of `injectLocalizedText`, its `ExampleText` interface and `injectExampleText()` with `ru-RU` and `default` entries.
+Naming follows the Transloco convention (`ExampleTranslation` = strings of one locale, `TRANSLATIONS` = the record, field `t`), agreed in review.
 
-The existing 4 files (`navbar`, `app-switcher`, `filter-bar`, `notification-center`) are renamed to `l10n.ts` and keep their local `injectLocalizedText`. `filter-bar` keeps its `injectLocalizedPeriods`, which stays component-specific.
+Shared non-text logic that several examples of one component use — the filter-bar period lists, the notification-center demo list — lives in its own file (`localized-periods.ts`, `create-notifications.ts`) and is picked up by the same `localImportFiles` mechanism.
 
-After changing any example or adding a `l10n.ts` import, run `yarn run build:docs-examples-module` to regenerate `example-module.ts` and `loader/index.ts` so `localImportFiles` carries the new relative imports.
+### StackBlitz
 
-### queryParams
+The writer inlines the i18n entry point into every generated project (see approach 2) and rewrites the alias to a relative import. The header of the generated project mounts a language switcher (`src/language-switcher.ts`, a `KbqSelect` of the shipped locales) via `createComponent`, so a StackBlitz reader can switch the examples language the same way as on the docs site.
 
-- Param name `examples-lang`, value = a locale id (e.g. `?examples-lang=ru-RU`).
-- Precedence on load: `?examples-lang` (if a valid locale) → localStorage (`docs_examples-language`) → current default (`en-US`).
-- On picker change: `localeService.setLocale(id)` (existing), write `?examples-lang=<id>` via `router.navigate` with `queryParamsHandling: 'merge'`, and keep localStorage as today.
-- The existing `DocsLocaleService.setLocale` already forwards query params and the fragment when the interface locale changes, so `examples-lang` survives an interface-language switch.
+### The examples language: URL, storage, and the docs language
+
+- Precedence on load: `?examples-lang` (if a valid locale) → localStorage → the docs interface language.
+- Browser back/forward restores a URL that can carry a different language: `NavigationEnd` applies the param when it differs from the current pick, so the address bar and the rendered examples never disagree. A URL without the param carries no intent and leaves the pick alone.
+- On a direct pick the param is written with `router.navigate` (`queryParamsHandling: 'merge'`, `preserveFragment`), skipped when the URL already shows it — otherwise the write would add a duplicate history entry.
+- While the examples language mirrors the docs language, switching the docs language changes both in a single navigation: `DocsLocaleService.setLocale(locale, examplesLocale)` rewrites the locale segment and the param together, preserving the fragment. "Mirrors" is computed at the moment of the switch from the current values, not stored as a mode, so returning the two languages to a match restores the follow behavior.
 - The read on startup mirrors how `DocsLocaleService` reads the path locale from `Location` (the router has not finished navigating during `provideAppInitializer`), extended to `router.parseUrl(...).queryParams`.
 
-### Rollout
+### Conventions
 
-Incremental, component by component (or in small groups), each in its own change: refactor + queryParams first, then the pilot components, then the rest. This keeps every PR reviewable.
-
-Pilot components: `button` and `validation`.
-
-## What is left to the builder
-
-- Exact query-param read/write plumbing in `DocsLanguagePreferences` / `DocsNavbarProperty` (initial-value override vs. post-construction sync), and whether to preserve the param across ordinary internal navigation.
-- The per-component `ExampleText` shapes and the Russian translations themselves.
+Recorded in `.claude/rules/docs-examples.md`: labels that carry no meaning (a button that is just "Button 1") stay hardcoded English demo metadata; text a Russian and an English reader must read differently (word order, plural forms, counters) goes to `l10n.ts`. Option values that state flows compare (filter values, selection sets, theme ids) use locale-independent keys with localized labels.
