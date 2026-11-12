@@ -29,9 +29,6 @@ export class DocsLanguagePreferences {
     // persist their initial value, which is the only way to tell a stored pick from a fresh reader.
     private readonly initiallyStoredExamplesLanguage = this.hasStoredExamplesLanguage();
 
-    /** Whether the examples language mirrors the docs language at the moment of a docs switch. */
-    private mirrorExamples = false;
-
     /** Guards the mirror-driven examples switch so it does not write the URL param itself. */
     private mirroringExamples = false;
 
@@ -85,32 +82,37 @@ export class DocsLanguagePreferences {
             }
         }
 
+        // Applies the locale the app starts with: the merged subscription below skips the value replayed
+        // to a fresh subscriber, so a real switch of the docs language is what triggers the examples sync
+        // and the locale navigation.
+        this.docsLocaleService.setLocale(this.docsLanguageSwitch.currentValue.id, undefined);
+
         // `skip(1)` drops the value replayed to a fresh subscriber, so the examples follow a switch of the
-        // docs language, not the locale the app starts with. The mirrored examples language is passed to
-        // `setLocale` below, which rewrites the locale segment and the query param in one navigation.
+        // docs language, not the locale the app starts with. While the examples language mirrors the docs
+        // language, switching the docs switches both; a deliberately different examples language is left
+        // alone. `locale` is still the previous one here: the examples sync runs before `setLocale` applies
+        // the picked docs locale, so the mirrored examples language is passed to it and the locale segment
+        // and the query param are rewritten in one navigation.
         this.docsLanguageSwitch.changes
             .pipe(distinctUntilKeyChanged('value'), skip(1))
             .subscribe(({ value: { id } }) => {
-                // While the examples language mirrors the docs language, switching the docs switches both;
-                // a deliberately different examples language is left alone. `locale` is still the previous
-                // one here: the subscription below applies the picked locale only after this one runs.
-                this.mirrorExamples =
+                const mirrorExamples =
                     this.localeService.localeId() === examplesLocaleFor(this.docsLocaleService.locale);
 
-                if (!this.mirrorExamples) return;
+                if (mirrorExamples) {
+                    const index = this.examplesLanguageSwitch.data.findIndex(
+                        (item) => item.id === examplesLocaleFor(id)
+                    );
 
-                const index = this.examplesLanguageSwitch.data.findIndex((item) => item.id === examplesLocaleFor(id));
-
-                if (index >= 0) {
-                    this.mirroringExamples = true;
-                    this.examplesLanguageSwitch.setValue(index);
-                    this.mirroringExamples = false;
+                    if (index >= 0) {
+                        this.mirroringExamples = true;
+                        this.examplesLanguageSwitch.setValue(index);
+                        this.mirroringExamples = false;
+                    }
                 }
-            });
 
-        this.docsLanguageSwitch.changes.pipe(distinctUntilKeyChanged('value')).subscribe(({ value: { id } }) => {
-            this.docsLocaleService.setLocale(id, this.mirrorExamples ? examplesLocaleFor(id) : undefined);
-        });
+                this.docsLocaleService.setLocale(id, mirrorExamples ? examplesLocaleFor(id) : undefined);
+            });
 
         this.examplesLanguageSwitch.changes.pipe(distinctUntilKeyChanged('value')).subscribe(({ value: { id } }) => {
             this.localeService.setLocale(id);
