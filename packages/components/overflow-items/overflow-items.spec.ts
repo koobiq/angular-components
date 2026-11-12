@@ -3,9 +3,14 @@ import { ChangeDetectionStrategy, Component, DebugElement, Provider, signal, Typ
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqFlexWrap, KbqOrientation } from '@koobiq/components/core';
-import { EMPTY, Subject } from 'rxjs';
+import { EMPTY, NEVER, Subject } from 'rxjs';
 import { KbqOverflowItemsModule } from './module';
-import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from './overflow-items';
+import {
+    KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS,
+    KbqOverflowItem,
+    KbqOverflowItems,
+    KbqOverflowItemsResult
+} from './overflow-items';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
@@ -237,6 +242,35 @@ describe('KbqOverflowItems', () => {
             tick();
 
             expect(observeSpy).toHaveBeenCalledWith(document.body);
+        }));
+
+        it('should recalculate when a target provided through KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS resizes', fakeAsync(() => {
+            const target = document.createElement('div');
+            const targetResize = new Subject<void>();
+            // `NEVER` as a real observer: one that completes would flush the debounced recalculation on destroy.
+            const observeSpy = jest.fn((element: Element) => (element === target ? targetResize : NEVER));
+
+            const fixture = createComponent(TestOverflowItemsAdditionalTargets, [
+                { provide: SharedResizeObserver, useValue: { observe: observeSpy } },
+                { provide: KBQ_OVERFLOW_ITEMS_RESIZE_OBSERVER_TARGETS, useValue: [target] }
+            ]);
+
+            tick();
+
+            // The token adds to the input rather than replacing its `document.body` default.
+            expect(observeSpy).toHaveBeenCalledWith(document.body);
+
+            const changesSpy = jest.fn();
+
+            fixture.debugElement
+                .query(By.directive(KbqOverflowItems))
+                .injector.get(KbqOverflowItems)
+                .changes.subscribe(changesSpy);
+
+            targetResize.next();
+            tick();
+
+            expect(changesSpy).toHaveBeenCalledTimes(1);
         }));
 
         it('should observe new target when input changes dynamically', fakeAsync(() => {
