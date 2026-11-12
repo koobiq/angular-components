@@ -187,5 +187,65 @@ describe(SCHEMATIC_NAME, () => {
         it('fails on a custom data file that does not exist', async () => {
             await expect(run({ customDataPath: 'missing.json' })).rejects.toThrow("Unable to find 'missing.json'");
         });
+
+        it('escapes custom mapping keys that contain regex metacharacters', async () => {
+            appTree.create('/icons.json', JSON.stringify([{ replace: 'old.16', replaceWith: 'new_16' }]));
+            appTree.overwrite(templatePath, '<i kbq-icon="kbq-old.16"></i><i kbq-icon="kbq-oldX16"></i>');
+
+            const tree = await run({ customDataPath: 'icons.json' });
+
+            expect(tree.readText(templatePath)).toBe('<i kbq-icon="kbq-new_16"></i><i kbq-icon="kbq-oldX16"></i>');
+        });
+
+        it('does not throw on custom mapping keys with an unbalanced parenthesis', async () => {
+            appTree.create('/icons.json', JSON.stringify([{ replace: 'old(16', replaceWith: 'new_16' }]));
+            appTree.overwrite(templatePath, '<i kbq-icon="kbq-old(16"></i>');
+
+            await expect(run({ customDataPath: 'icons.json' })).resolves.toBeTruthy();
+        });
+    });
+
+    it('is idempotent and does not mutate already-current icon names', async () => {
+        const project = projects.get(projects.keys().next().value!)!;
+        const { templatePath } = getProjectContentPaths(project, appTree);
+        const template = '<i kbq-icon="kbq-chevrons-compress_16"></i>\n<i kbq-icon="kbq-compress_16"></i>';
+
+        appTree.overwrite(templatePath, template);
+
+        const firstRun = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: projects.keys().next().value!, fix: true, allowed: ['.html'] } satisfies Schema,
+            appTree
+        );
+
+        const secondRun = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: projects.keys().next().value!, fix: true, allowed: ['.html'] } satisfies Schema,
+            firstRun
+        );
+
+        expect(firstRun.readText(templatePath)).toBe(
+            '<i kbq-icon="kbq-chevrons-compress_16"></i>\n<i kbq-icon="kbq-chevrons-compress_16"></i>'
+        );
+        expect(secondRun.readText(templatePath)).toBe(firstRun.readText(templatePath));
+    });
+
+    it('does not report already-current icon names as deprecated', async () => {
+        const project = projects.get(projects.keys().next().value!)!;
+        const { templatePath } = getProjectContentPaths(project, appTree);
+
+        appTree.overwrite(templatePath, '<i kbq-icon="kbq-chevrons-compress_16"></i>');
+
+        const messages: string[] = [];
+
+        runner.logger.subscribe(({ message }) => messages.push(message));
+
+        await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: projects.keys().next().value!, fix: false, allowed: ['.html'] } satisfies Schema,
+            appTree
+        );
+
+        expect(messages.some((message) => message.includes('compress_16'))).toBe(false);
     });
 });
