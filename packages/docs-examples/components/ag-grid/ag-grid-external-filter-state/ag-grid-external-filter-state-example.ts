@@ -25,7 +25,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             <kbq-select [placeholder]="t().externalFilter" [(ngModel)]="filter">
                 <kbq-cleaner (click)="externalFilterState.reset()" />
                 @for (option of options(); track option) {
-                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                    <kbq-option [value]="option">{{ t().categories[option] }}</kbq-option>
                 }
             </kbq-select>
         </kbq-form-field>
@@ -57,9 +57,9 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridExternalFilterStateExample extends BaseLocalizedExample<ExampleTranslation> {
-    readonly options = computed(() => this.t().categories);
-    readonly filter = model('');
-    readonly filterPass = (node: IRowNode): boolean => node.data.filter === this.filter();
+    readonly options = computed(() => this.t().categories.map((_, index) => index));
+    readonly filter = model(-1);
+    readonly filterPass = (node: IRowNode): boolean => node.data.filter === this.t().categories[this.filter()];
     readonly columnDefs = computed<ColDef[]>(() => [
         { field: 'column0', headerName: 'Column 0', width: 130 },
         { field: 'filter', headerName: this.t().filter, width: 130 },

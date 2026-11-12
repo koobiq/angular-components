@@ -17,8 +17,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         @for (eventType of eventTypes(); track eventType) {
             <kbq-checkbox
                 class="example-checkbox-indeterminate__child"
-                [checked]="selected().has(eventType)"
-                (change)="toggle(eventType)"
+                [checked]="selected().has($index)"
+                (change)="toggle($index)"
             >
                 {{ eventType }}
             </kbq-checkbox>
@@ -37,21 +37,21 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
 })
 export class CheckboxIndeterminateExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly eventTypes = computed(() => this.t().eventTypes);
-    protected readonly selected = signal(new Set([this.eventTypes()[0]]));
+    protected readonly selected = signal(new Set([0]));
 
     protected readonly allSelected = computed(() => this.selected().size === this.eventTypes().length);
     protected readonly someSelected = computed(() => this.selected().size > 0 && !this.allSelected());
 
     protected toggleAll(): void {
-        this.selected.set(this.allSelected() ? new Set() : new Set(this.eventTypes()));
+        this.selected.set(this.allSelected() ? new Set() : new Set(this.eventTypes().map((_, index) => index)));
     }
 
-    protected toggle(eventType: string): void {
+    protected toggle(index: number): void {
         this.selected.update((selected) => {
             const next = new Set(selected);
 
-            if (!next.delete(eventType)) {
-                next.add(eventType);
+            if (!next.delete(index)) {
+                next.add(index);
             }
 
             return next;
