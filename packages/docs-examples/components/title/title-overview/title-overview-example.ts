@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
@@ -16,7 +16,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     template: `
         <div class="example-title-overview-container example-title-overview-container-responsive">
             <div class="example-title-overview-child wide kbq-text-big" kbq-title>
-                {{ longValue }}
+                {{ longValue() }}
             </div>
         </div>
     `,
@@ -24,9 +24,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleOverviewExample extends BaseLocalizedExample<ExampleTranslation> {
-    defaultValue = this.t().justText;
-    longValue = `${this.defaultValue}` + this.t().andLongText.repeat(6);
-    field = this.defaultValue;
+    readonly defaultValue = computed(() => this.t().justText);
+    readonly longValue = computed(() => `${this.defaultValue()}` + this.t().andLongText.repeat(6));
+    field = this.defaultValue();
 
     onAddText() {
         this.field = `${this.field}` + this.t().andLongText.repeat(3);

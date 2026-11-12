@@ -1,5 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDivider } from '@koobiq/components/divider';
@@ -83,7 +83,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
                     </tr>
                 </thead>
                 <tbody>
-                    @for (row of data; track $index) {
+                    @for (row of data(); track $index) {
                         <tr>
                             <td class="layout-padding-left-l">{{ row.type }}</td>
                             <td class="kbq-tabular-normal">{{ row.detected }}</td>
@@ -134,7 +134,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
 export class TooltipExtendedExample extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly extendedTooltipPreferredColor = KbqComponentColors.ContrastFade;
 
-    protected readonly data = [
+    protected readonly data = computed(() => [
         {
             type: this.t().extendedTypes[0],
             detected: 'Feb 18, 15:30',
@@ -155,7 +155,7 @@ export class TooltipExtendedExample extends BaseLocalizedExample<ExampleTranslat
             detected: 'Feb 18, 15:33',
             updated: 'Feb 18, 15:33'
         }
-    ];
+    ]);
 
     constructor() {
         super(TRANSLATIONS);

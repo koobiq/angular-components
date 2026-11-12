@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, effect, TemplateRef, viewChild } from '@angular/core';
 import { KbqHighlightBackgroundPipe, tokenizeSearchQuery } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import {
@@ -93,6 +93,19 @@ export class UsernameFilterBarOptionExample extends BaseLocalizedExample<Example
 
     protected readonly tokenizeSearchQuery = tokenizeSearchQuery;
 
+    constructor() {
+        super(TRANSLATIONS);
+        effect(() => {
+            const assignee = this.t().assignee;
+
+            this.activeFilter.pipes[0].name = assignee;
+
+            if (this.pipeTemplates.length) {
+                this.pipeTemplates[0].name = assignee;
+            }
+        });
+    }
+
     ngAfterViewInit(): void {
         this.pipeTemplates = [
             {
@@ -112,9 +125,5 @@ export class UsernameFilterBarOptionExample extends BaseLocalizedExample<Example
                 disabled: false
             }
         ];
-    }
-
-    constructor() {
-        super(TRANSLATIONS);
     }
 }
