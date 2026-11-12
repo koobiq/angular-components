@@ -3,7 +3,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabLink, KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Tabs add tab
@@ -51,9 +52,7 @@ import { injectExampleText } from './l10n';
     styleUrls: ['./tabs-add-tab-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabsAddTabExample {
-    protected readonly text = injectExampleText();
-
+export class TabsAddTabExample extends BaseLocalizedExample<ExampleText> {
     private readonly injector = inject(Injector);
     private readonly tabLinks = viewChildren(KbqTabLink);
 
@@ -78,5 +77,9 @@ export class TabsAddTabExample {
         if (this.tabs.length > 0) {
             this.activeTab = this.tabs[Math.max(0, index - 1)];
         }
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

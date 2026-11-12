@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the dl-alignment example. */
 export interface ExampleText {
@@ -14,7 +13,7 @@ export interface ExampleText {
     tagWorkstation: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         identifier: 'Идентификатор',
         status: 'Статус',
@@ -38,6 +37,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         tagWorkstation: 'Workstation'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

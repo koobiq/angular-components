@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqRadioModule } from '@koobiq/components/radio';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Radio group
@@ -26,6 +27,8 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RadioGroupExample {
-    protected readonly text = injectExampleText();
+export class RadioGroupExample extends BaseLocalizedExample<ExampleText> {
+    constructor() {
+        super(TEXT);
+    }
 }

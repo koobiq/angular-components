@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the checkbox-validation example. */
 export interface ExampleText {
@@ -9,7 +8,7 @@ export interface ExampleText {
     continue: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         acceptTerms: 'Я принимаю условия лицензионного соглашения',
         validationHint: 'Продолжите, не принимая условия, чтобы увидеть ошибку',
@@ -23,6 +22,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         continue: 'Continue'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

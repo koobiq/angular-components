@@ -3,7 +3,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
 
@@ -51,9 +52,7 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationOnTypeExample {
-    protected readonly text = injectExampleText();
-
+export class ValidationOnTypeExample extends BaseLocalizedExample<ExampleText> {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
 
     protected readonly popUpPlacements = PopUpPlacements;
@@ -82,5 +81,9 @@ export class ValidationOnTypeExample {
 
     protected onBlur(): void {
         this.tooltip()?.hide();
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

@@ -8,8 +8,9 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { timer } from 'rxjs';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Validation on submit with custom matcher
@@ -66,9 +67,7 @@ import { injectExampleText } from '../l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-column'
     }
 })
-export class ValidationOnSubmitCustomMatcherExample {
-    protected readonly text = injectExampleText();
-
+export class ValidationOnSubmitCustomMatcherExample extends BaseLocalizedExample<ExampleText> {
     protected readonly inProgress = signal(false);
     protected readonly globalErrorForm = new FormGroup({
         firstName: new FormControl('', [Validators.minLength(5), Validators.required]),
@@ -96,5 +95,9 @@ export class ValidationOnSubmitCustomMatcherExample {
 
             invalidControl?.focus();
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

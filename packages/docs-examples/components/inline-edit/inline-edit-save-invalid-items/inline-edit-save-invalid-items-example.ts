@@ -15,8 +15,9 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToastComponent, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { Observable, of, switchMap, throwError, timer } from 'rxjs';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 const ROLES = ['user:read', 'user:create', 'user:update', 'user:delete', 'audit:read'];
 /** Roles the fake server refuses to grant. */
@@ -138,9 +139,7 @@ class ExampleRolesError extends Error {
         class: 'layout-flex layout-column'
     }
 })
-export class InlineEditSaveInvalidItemsExample {
-    protected readonly text = injectExampleText();
-
+export class InlineEditSaveInvalidItemsExample extends BaseLocalizedExample<ExampleText> {
     protected get placeholder(): string {
         return this.text().placeholder;
     }
@@ -164,6 +163,7 @@ export class InlineEditSaveInvalidItemsExample {
     private toastId: number | null = null;
 
     constructor() {
+        super(TEXT);
         // Editing the value drops the marks: they belong to the values that were sent.
         this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => this.rejectedRoles.set([]));
     }

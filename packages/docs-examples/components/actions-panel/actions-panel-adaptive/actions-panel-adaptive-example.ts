@@ -15,7 +15,8 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToastService } from '@koobiq/components/toast';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -123,9 +124,7 @@ type ExampleAction = {
     providers: [KbqActionsPanel],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleActionsPanel {
-    protected readonly text = injectExampleText();
-
+export class ExampleActionsPanel extends BaseLocalizedExample<ExampleText> {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly templateRef = viewChild.required(TemplateRef);
@@ -140,6 +139,7 @@ export class ExampleActionsPanel {
     protected readonly action = { Counter: 'counter' };
 
     constructor() {
+        super(TEXT);
         afterNextRender(() => this.open());
     }
 
@@ -197,6 +197,8 @@ export class ExampleActionsPanel {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsPanelAdaptiveExample {
-    protected readonly text = injectExampleText();
+export class ActionsPanelAdaptiveExample extends BaseLocalizedExample<ExampleText> {
+    constructor() {
+        super(TEXT);
+    }
 }

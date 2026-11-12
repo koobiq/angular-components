@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 @Component({
     selector: 'custom-modal',
@@ -28,12 +29,14 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomModalComponent {
-    protected readonly text = injectExampleText();
-
+export class CustomModalComponent extends BaseLocalizedExample<ExampleText> {
     protected readonly modalRef = inject(KbqModalRef);
 
     readonly items = computed(() => Array.from({ length: 30 }, (_, i) => 'Item #' + i));
+
+    constructor() {
+        super(TEXT);
+    }
 }
 
 /**
@@ -47,14 +50,16 @@ export class CustomModalComponent {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalFullCustomExample {
-    protected readonly text = injectExampleText();
-
+export class ModalFullCustomExample extends BaseLocalizedExample<ExampleText> {
     private readonly modalService = inject(KbqModalService);
 
     openModal(): void {
         this.modalService.open({
             kbqComponent: CustomModalComponent
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

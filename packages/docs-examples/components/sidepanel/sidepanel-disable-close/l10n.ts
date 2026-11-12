@@ -1,25 +1,21 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the sidepanel-disable-close example. */
 export interface ExampleText {
-    sidepanel: string;
     close: string;
     open: string;
+    sidepanel: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
-        sidepanel: 'Панель',
         close: 'Закрыть',
-        open: 'Открыть'
+        open: 'Открыть',
+        sidepanel: 'Панель'
     },
     default: {
-        sidepanel: 'Sidepanel',
         close: 'Close',
-        open: 'Open'
+        open: 'Open',
+        sidepanel: 'Sidepanel'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

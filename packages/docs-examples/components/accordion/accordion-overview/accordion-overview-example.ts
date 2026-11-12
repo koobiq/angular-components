@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Accordion
@@ -11,6 +12,8 @@ import { injectExampleText } from '../l10n';
     templateUrl: 'accordion-overview-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccordionOverviewExample {
-    protected readonly text = injectExampleText();
+export class AccordionOverviewExample extends BaseLocalizedExample<ExampleText> {
+    constructor() {
+        super(TEXT);
+    }
 }

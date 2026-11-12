@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Description list vertical breakpoint
@@ -50,6 +51,8 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DlVerticalBreakpointExample {
-    protected readonly text = injectExampleText();
+export class DlVerticalBreakpointExample extends BaseLocalizedExample<ExampleText> {
+    constructor() {
+        super(TEXT);
+    }
 }

@@ -1,22 +1,18 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the file-upload-single-accept-validation example. */
 export interface ExampleText {
-    fileTxtAllowed: string;
     provideValidExtension: string;
+    fileTxtAllowed: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
-        fileTxtAllowed: 'Разрешён файл с расширением TXT',
-        provideValidExtension: 'Укажите допустимое расширение'
+        provideValidExtension: 'Укажите допустимое расширение',
+        fileTxtAllowed: 'Разрешён файл с расширением TXT'
     },
     default: {
-        fileTxtAllowed: 'File with TXT extension is allowed',
-        provideValidExtension: 'Provide valid extension'
+        provideValidExtension: 'Provide valid extension',
+        fileTxtAllowed: 'File with TXT extension is allowed'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

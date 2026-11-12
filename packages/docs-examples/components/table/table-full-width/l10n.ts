@@ -1,12 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
-
-/** One incident row of the full-width example. */
-export interface ExampleIncident {
-    id: string;
-    description: string;
-    type: string;
-}
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Incident rows and headers of the full-width example. */
 export interface ExampleText {
@@ -16,7 +8,14 @@ export interface ExampleText {
     rows: ExampleIncident[];
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+/** One incident row of the full-width example. */
+export interface ExampleIncident {
+    id: string;
+    description: string;
+    type: string;
+}
+
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         incident: 'Инцидент',
         description: 'Описание или длинный заголовок, который переносится на следующую строку',
@@ -76,6 +75,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         ]
     }
 };
-
-/** Incident rows of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

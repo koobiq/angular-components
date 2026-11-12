@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Native scrollbar example
@@ -44,6 +45,8 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NativeScrollbarExample {
-    protected readonly text = injectExampleText();
+export class NativeScrollbarExample extends BaseLocalizedExample<ExampleText> {
+    constructor() {
+        super(TEXT);
+    }
 }

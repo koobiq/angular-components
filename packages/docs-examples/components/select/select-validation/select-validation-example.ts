@@ -1,7 +1,8 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Select validation
@@ -45,13 +46,12 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectValidationExample {
-    protected readonly text = injectExampleText();
-
+export class SelectValidationExample extends BaseLocalizedExample<ExampleText> {
     readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + i));
     readonly invalidControl = new FormControl(null, Validators.required);
 
     constructor() {
+        super(TEXT);
         afterNextRender(() => {
             this.invalidControl.markAsTouched();
             this.invalidControl.updateValueAndValidity();

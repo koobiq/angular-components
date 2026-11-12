@@ -21,6 +21,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToastService } from '@koobiq/components/toast';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -32,7 +33,7 @@ import {
     SelectionChangedEvent,
     SelectionColumnDef
 } from 'ag-grid-community';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -105,11 +106,10 @@ type ExampleTableItem = unknown;
         '[class.example-grid_actions-panel-opened]': 'panelOpened()'
     }
 })
-export class ExampleGrid {
+export class ExampleGrid extends BaseLocalizedExample<ExampleText> {
     readonly panelOpened = input(false);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private api: GridApi<ExampleTableItem> | null = null;
-    protected readonly text = injectExampleText();
 
     protected readonly defaultColDef: ColDef = {
         sortable: true,
@@ -141,6 +141,7 @@ export class ExampleGrid {
     readonly selectedItems = output<ExampleTableItem[]>();
 
     constructor() {
+        super(TEXT);
         effect(() => {
             if (!this.panelOpened()) return;
             if (this.getScrollBottomOffset() > ACTIONS_PANEL_HEIGHT) return;
@@ -296,9 +297,7 @@ export class ExampleGrid {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleActionsPanel {
-    protected readonly text = injectExampleText();
-
+export class ExampleActionsPanel extends BaseLocalizedExample<ExampleText> {
     protected readonly actions = computed<ExampleAction[]>(() => [
         { id: 'Responsible', icon: 'kbq-user_16', label: this.text().responsible },
         { id: 'Link to incident', icon: 'kbq-link_16', label: this.text().linkToIncident },
@@ -311,6 +310,10 @@ export class ExampleActionsPanel {
 
     protected onAction(action: ExampleAction): void {
         this.toast.show({ title: this.text().actionInitiated(action.label) });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }
 

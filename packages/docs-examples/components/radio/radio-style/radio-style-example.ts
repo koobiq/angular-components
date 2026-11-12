@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqRadioModule } from '@koobiq/components/radio';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Radio style
@@ -48,7 +47,5 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RadioStyleExample {
-    protected readonly text = injectExampleText();
-
     protected readonly colors = KbqComponentColors;
 }

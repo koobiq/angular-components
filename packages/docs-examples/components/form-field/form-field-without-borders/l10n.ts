@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the form-field-without-borders example. */
 export interface ExampleText {
@@ -7,7 +6,7 @@ export interface ExampleText {
     formFieldWithoutBorders: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         shouldEnterValue: 'Введите значение',
         formFieldWithoutBorders: 'Поле без границ'
@@ -17,6 +16,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         formFieldWithoutBorders: 'Form field without borders'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

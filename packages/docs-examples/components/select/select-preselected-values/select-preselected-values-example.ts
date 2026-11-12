@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Selected preselected values
@@ -38,9 +39,11 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectPreselectedValuesExample {
-    protected readonly text = injectExampleText();
-
+export class SelectPreselectedValuesExample extends BaseLocalizedExample<ExampleText> {
     readonly options = computed(() => Array.from({ length: 15 }, (_, i) => 'Option #' + i));
     control = new FormControl(['Option #101', 'Option #102']);
+
+    constructor() {
+        super(TEXT);
+    }
 }

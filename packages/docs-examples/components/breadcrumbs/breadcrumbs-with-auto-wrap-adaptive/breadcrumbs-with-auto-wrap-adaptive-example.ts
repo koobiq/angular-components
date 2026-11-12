@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 @Component({
     selector: 'example-breadcrumbs',
@@ -34,9 +35,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleBreadcrumbs {
-    protected readonly text = injectExampleText();
-
+export class ExampleBreadcrumbs extends BaseLocalizedExample<ExampleText> {
     readonly breadcrumbs = computed(() => [
         { label: this.text().main, url: '/main' },
         { label: this.text().standards, url: '/main/standards' },
@@ -44,6 +43,10 @@ export class ExampleBreadcrumbs {
         { label: this.text().edit, url: '/main/standards/advanced-encryption-standard/edit' },
         { label: this.text().test, url: '/main/standards/advanced-encryption-standard/edit/test' }
     ]);
+
+    constructor() {
+        super(TEXT);
+    }
 }
 
 /**

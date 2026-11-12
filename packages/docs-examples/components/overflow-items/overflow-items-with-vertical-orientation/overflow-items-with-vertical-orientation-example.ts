@@ -3,7 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Overflow items with vertical orientation
@@ -74,13 +75,15 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverflowItemsWithVerticalOrientationExample {
-    protected readonly text = injectExampleText();
-
+export class OverflowItemsWithVerticalOrientationExample extends BaseLocalizedExample<ExampleText> {
     readonly items = Array.from({ length: 20 }, (_, i) => ({
         id: `Item${i}`,
         alwaysVisible: i === 8
     }));
     readonly reverseOverflowOrder = model(false);
     readonly badgeColor = KbqBadgeColors;
+
+    constructor() {
+        super(TEXT);
+    }
 }

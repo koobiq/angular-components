@@ -3,7 +3,8 @@ import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Breadcrumbs custom-template
@@ -39,9 +40,7 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BreadcrumbsCustomTemplateExample {
-    protected readonly text = injectExampleText();
-
+export class BreadcrumbsCustomTemplateExample extends BaseLocalizedExample<ExampleText> {
     readonly breadcrumbs = computed(() => [
         { label: this.text().informationSecurity, url: '/information-security' },
         { label: this.text().accessControl, url: '/information-security/access-control' },
@@ -49,4 +48,8 @@ export class BreadcrumbsCustomTemplateExample {
         { label: 'RBAC', url: '/information-security/access-control/authorization/rbac' },
         { label: this.text().roles, url: '/information-security/access-control/authorization/rbac/roles' }
     ]);
+
+    constructor() {
+        super(TEXT);
+    }
 }

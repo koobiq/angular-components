@@ -5,7 +5,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 const IP_PATTERN =
     /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
@@ -81,9 +82,7 @@ const restSymbolsRegex = /[^0-9.]+/g;
         class: 'layout-flex layout-column'
     }
 })
-export class InlineEditValidationExample {
-    protected readonly text = injectExampleText();
-
+export class InlineEditValidationExample extends BaseLocalizedExample<ExampleText> {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
     protected readonly tooltipPlacement = PopUpPlacements.BottomLeft;
     protected readonly tooltipColor = KbqComponentColors.Warning;
@@ -120,5 +119,9 @@ export class InlineEditValidationExample {
                 setTimeout(() => tooltip.hide(), 3000);
             }
         }
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

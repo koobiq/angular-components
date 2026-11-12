@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqListModule } from '@koobiq/components/list';
-import { injectExampleText } from '../l10n';
-import { injectExampleText as injectGroupsText } from './l10n';
+import { injectLocalizedText } from '@koobiq/docs-examples/i18n';
+import { TEXT } from './l10n';
 
 /**
  * @title List groups
@@ -26,9 +26,9 @@ import { injectExampleText as injectGroupsText } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListGroupsExample {
-    protected readonly text = injectExampleText();
+    protected readonly text = injectLocalizedText(TEXT);
 
-    private readonly groupsText = injectGroupsText();
+    private readonly groupsText = injectLocalizedText(TEXT);
 
     readonly securityCategories = computed(() => this.groupsText().categories);
 }

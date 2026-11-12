@@ -6,7 +6,8 @@ import {
     KbqSidepanelService,
     KbqSidepanelSize
 } from '@koobiq/components/sidepanel';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Sidepanel sizes
@@ -20,9 +21,7 @@ import { injectExampleText } from '../l10n';
     templateUrl: 'sidepanel-sizes-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelSizesExample {
-    protected readonly text = injectExampleText();
-
+export class SidepanelSizesExample extends BaseLocalizedExample<ExampleText> {
     private sidepanelService = inject(KbqSidepanelService);
 
     readonly template = viewChild.required(TemplateRef);
@@ -49,5 +48,9 @@ export class SidepanelSizesExample {
             position: KbqSidepanelPosition.Right,
             size: KbqSidepanelSize.Large
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

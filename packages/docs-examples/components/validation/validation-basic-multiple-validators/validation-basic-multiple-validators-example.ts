@@ -8,7 +8,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Validation: multiple validators
@@ -53,9 +54,7 @@ import { injectExampleText } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationBasicMultipleValidatorsExample {
-    protected readonly text = injectExampleText();
-
+export class ValidationBasicMultipleValidatorsExample extends BaseLocalizedExample<ExampleText> {
     protected readonly form = new FormGroup({
         username: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(20)])
     });
@@ -68,5 +67,9 @@ export class ValidationBasicMultipleValidatorsExample {
                 .find((f) => f.invalid)
                 ?.focus();
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

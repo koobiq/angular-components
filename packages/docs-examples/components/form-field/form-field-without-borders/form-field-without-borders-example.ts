@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /** @title Form field without borders */
 @Component({
@@ -15,8 +16,10 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldWithoutBordersExample {
-    protected readonly text = injectExampleText();
-
+export class FormFieldWithoutBordersExample extends BaseLocalizedExample<ExampleText> {
     readonly formControl = new FormControl('', [Validators.required]);
+
+    constructor() {
+        super(TEXT);
+    }
 }

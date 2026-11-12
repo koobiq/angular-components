@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Loader-overlay size
@@ -33,7 +32,5 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoaderOverlaySizeExample {
-    protected readonly text = injectExampleText();
-
     readonly size = model<KbqDefaultSizes>('compact');
 }

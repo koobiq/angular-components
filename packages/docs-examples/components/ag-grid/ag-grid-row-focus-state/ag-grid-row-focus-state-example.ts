@@ -5,9 +5,10 @@ import {
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import { AllCommunityModule, ColDef, GetRowIdParams, ModuleRegistry } from 'ag-grid-community';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -45,9 +46,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridRowFocusStateExample {
-    protected readonly text = injectExampleText();
-
+export class AgGridRowFocusStateExample extends BaseLocalizedExample<ExampleText> {
     protected readonly getRowId = (params: GetRowIdParams): string => params.data.column0;
     protected readonly columnDefs = computed<ColDef[]>(() =>
         Array.from({ length: 5 }, (_, i) => ({
@@ -61,4 +60,8 @@ export class AgGridRowFocusStateExample {
             Object.fromEntries(Array.from({ length: 5 }, (_, i) => ['column' + i, 'Text ' + index]))
         )
     );
+
+    constructor() {
+        super(TEXT);
+    }
 }

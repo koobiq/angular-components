@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Sidebar state saving
@@ -59,8 +60,10 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidebarStateSavingExample {
-    protected readonly text = injectExampleText();
-
+export class SidebarStateSavingExample extends BaseLocalizedExample<ExampleText> {
     readonly position = SidebarPositions;
+
+    constructor() {
+        super(TEXT);
+    }
 }

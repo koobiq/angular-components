@@ -11,7 +11,6 @@ import {
     KbqTreeOption
 } from '@koobiq/components/tree';
 import { KbqTreeSelect, KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { injectExampleText } from '../l10n';
 
 export class FileNode {
     children: FileNode[];
@@ -159,8 +158,6 @@ export const DATA_OBJECT = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectCustomMatcherWithInputExample {
-    protected readonly text = injectExampleText();
-
     selected = 'docs';
 
     treeControl: FlatTreeControl<FileFlatNode>;

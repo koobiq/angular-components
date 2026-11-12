@@ -4,7 +4,8 @@ import { KbqAlert, KbqAlertCloseButton } from '@koobiq/components/alert';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Alert dynamic
@@ -48,10 +49,8 @@ import { injectExampleText } from '../l10n';
         class: 'layout-column layout-align-start-start'
     }
 })
-export class AlertDynamicExample {
+export class AlertDynamicExample extends BaseLocalizedExample<ExampleText> {
     private readonly focusMonitor = inject(FocusMonitor);
-
-    protected readonly text = injectExampleText();
 
     protected readonly colors = KbqComponentColors;
     protected readonly visible = signal(false);
@@ -67,5 +66,9 @@ export class AlertDynamicExample {
         if (trigger) {
             this.focusMonitor.focusVia(trigger, 'keyboard');
         }
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

@@ -6,7 +6,8 @@ import {
     KbqCodeBlockModule
 } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Code-block with filled attribute
@@ -37,9 +38,7 @@ import { injectExampleText } from '../l10n';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CodeBlockWithFilledExample {
-    protected readonly text = injectExampleText();
-
+export class CodeBlockWithFilledExample extends BaseLocalizedExample<ExampleText> {
     readonly files: KbqCodeBlockFile[] = [
         {
             language: 'bash',
@@ -49,4 +48,8 @@ export class CodeBlockWithFilledExample {
 
     readonly filled = model(true);
     readonly alwaysShowActionbar = model(false);
+
+    constructor() {
+        super(TEXT);
+    }
 }

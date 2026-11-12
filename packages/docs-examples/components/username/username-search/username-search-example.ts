@@ -12,8 +12,9 @@ import {
     KbqUserInfo,
     KbqUsernameModule
 } from '@koobiq/components/username';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { startWith } from 'rxjs';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Username search
@@ -122,9 +123,7 @@ import { injectExampleText } from '../l10n';
         class: 'layout-align-center-center layout-row layout-margin-5xl'
     }
 })
-export class UsernameSearchExample {
-    protected readonly text = injectExampleText();
-
+export class UsernameSearchExample extends BaseLocalizedExample<ExampleText> {
     private readonly formatUsername = kbqInjectUsernameFormatter();
 
     protected readonly isCompact = model(false);
@@ -157,4 +156,8 @@ export class UsernameSearchExample {
             )
         );
     });
+
+    constructor() {
+        super(TEXT);
+    }
 }

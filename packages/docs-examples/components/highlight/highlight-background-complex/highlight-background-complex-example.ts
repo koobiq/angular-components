@@ -5,7 +5,8 @@ import { KbqComponentColors, KbqHighlightBackgroundPipe } from '@koobiq/componen
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 type SearchResult = {
     title: string;
@@ -64,9 +65,7 @@ type SearchResult = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HighlightBackgroundComplexExample {
-    protected readonly text = injectExampleText();
-
+export class HighlightBackgroundComplexExample extends BaseLocalizedExample<ExampleText> {
     protected readonly colors = KbqComponentColors;
     protected readonly control = new FormControl('cube');
     protected readonly query = signal(this.control.value);
@@ -103,5 +102,9 @@ export class HighlightBackgroundComplexExample {
 
     protected applySearch(): void {
         this.query.set(this.control.value);
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the list-draggable example. */
 export interface ExampleText {
@@ -7,7 +6,7 @@ export interface ExampleText {
     groupHeader: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         item7Pinned: 'Пункт 7. Сортировка запрещена',
         groupHeader: 'Заголовок группы'
@@ -17,6 +16,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         groupHeader: 'Group header'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

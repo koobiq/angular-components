@@ -4,7 +4,8 @@ import { FileValidators } from '@koobiq/components/core';
 import { KbqSingleFileUploadComponent } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 const MAX_FILE_SIZE = 5 * 2 ** 20;
 
@@ -38,10 +39,12 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadSingleValidationReactiveFormsOverviewExample {
-    protected readonly text = injectExampleText();
-
+export class FileUploadSingleValidationReactiveFormsOverviewExample extends BaseLocalizedExample<ExampleText> {
     formGroup = new FormGroup({
         fileControl: new FormControl(null, FileValidators.maxFileSize(MAX_FILE_SIZE))
     });
+
+    constructor() {
+        super(TEXT);
+    }
 }

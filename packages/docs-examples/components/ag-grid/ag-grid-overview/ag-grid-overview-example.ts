@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqLink } from '@koobiq/components/link';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -11,7 +12,7 @@ import {
     RowSelectionOptions,
     SelectionColumnDef
 } from 'ag-grid-community';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -67,9 +68,7 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridOverviewExample {
-    protected readonly text = injectExampleText();
-
+export class AgGridOverviewExample extends BaseLocalizedExample<ExampleText> {
     protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
@@ -113,5 +112,9 @@ export class AgGridOverviewExample {
                 node.setSelected(true);
             }
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

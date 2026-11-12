@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KbqFlag } from '@koobiq/components/flag';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import * as flags1x1 from 'country-flag-icons/string/1x1';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Circular flags
@@ -25,9 +26,7 @@ import { injectExampleText } from '../l10n';
         class: 'layout-row layout-align-center-center layout-gap-m'
     }
 })
-export class FlagCircleExample {
-    protected readonly text = injectExampleText();
-
+export class FlagCircleExample extends BaseLocalizedExample<ExampleText> {
     private readonly sanitizer = inject(DomSanitizer);
 
     private readonly countryCodes = ['AO', 'MY', 'UY'];
@@ -39,4 +38,8 @@ export class FlagCircleExample {
             svg: this.sanitizer.bypassSecurityTrustHtml(flags1x1[code])
         }))
     );
+
+    constructor() {
+        super(TEXT);
+    }
 }

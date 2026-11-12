@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAlert, KbqAlertControl, KbqAlertTitle } from '@koobiq/components/alert';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Alert size
@@ -22,6 +23,8 @@ import { injectExampleText } from './l10n';
     styleUrls: ['alert-overview-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AlertOverviewExample {
-    protected readonly text = injectExampleText();
+export class AlertOverviewExample extends BaseLocalizedExample<ExampleText> {
+    constructor() {
+        super(TEXT);
+    }
 }

@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the ag-grid-load-error example. */
 export interface ExampleText {
@@ -8,7 +7,7 @@ export interface ExampleText {
     rowDividers: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         headerText: 'Текст',
         pinnedColumns: 'Закреплённые колонки',
@@ -20,6 +19,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         rowDividers: 'Row dividers'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

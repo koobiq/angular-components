@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the content-panel-state-saving example. */
 export interface ExampleText {
@@ -9,7 +8,7 @@ export interface ExampleText {
     stateSavingHint: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         toggle: 'Переключить',
         title: 'Заголовок',
@@ -25,6 +24,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
             'Open the panel and drag its left edge, then reload the page — the panel comes back open and at the width it was left. Double-clicking the edge restores the declared width, and that is remembered too.'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

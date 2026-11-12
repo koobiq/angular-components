@@ -4,7 +4,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqForm, KbqFormElement } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Select no variants
@@ -47,13 +48,12 @@ import { injectExampleText } from './l10n';
         class: 'layout-margin-5xl layout-column layout-align-center-center'
     }
 })
-export class SelectNoVariantsExample {
-    protected readonly text = injectExampleText();
-
+export class SelectNoVariantsExample extends BaseLocalizedExample<ExampleText> {
     options: string[];
     noOptions: boolean;
 
     constructor() {
+        super(TEXT);
         this.loadOptions();
     }
 

@@ -5,7 +5,8 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSkeletonFormField } from '@koobiq/components/skeleton';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Skeleton form field preset
@@ -55,8 +56,10 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonFormFieldExample {
+export class SkeletonFormFieldExample extends BaseLocalizedExample<ExampleText> {
     protected readonly loading = model(true);
 
-    protected readonly text = injectExampleText();
+    constructor() {
+        super(TEXT);
+    }
 }

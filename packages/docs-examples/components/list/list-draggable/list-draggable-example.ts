@@ -2,7 +2,8 @@ import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Draggable list
@@ -29,9 +30,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListDraggableExample {
-    protected readonly text = injectExampleText();
-
+export class ListDraggableExample extends BaseLocalizedExample<ExampleText> {
     protected readonly items = signal([
         { id: 1, name: 'Item 1' },
         { id: 2, name: 'Item 2' },
@@ -58,5 +57,9 @@ export class ListDraggableExample {
         moveItemInArray(items, previousIndex, currentIndex);
 
         this.items.set(items);
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

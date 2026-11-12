@@ -13,7 +13,8 @@ import {
     KbqTreeModule
 } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 export class FileNode {
     id: string;
@@ -142,9 +143,7 @@ export const DATA_OBJECT = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeSelectDeletedNodesExample {
-    protected readonly text = injectExampleText();
-
+export class TreeSelectDeletedNodesExample extends BaseLocalizedExample<ExampleText> {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly defaultErrorStateMatcher = inject(ErrorStateMatcher);
 
@@ -176,6 +175,7 @@ export class TreeSelectDeletedNodesExample {
     private readonly backendDeletedIds = ['Downloads/November', 'Downloads/October'];
 
     constructor() {
+        super(TEXT);
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         // The tree resolves nodes by their stable id (not the display name).

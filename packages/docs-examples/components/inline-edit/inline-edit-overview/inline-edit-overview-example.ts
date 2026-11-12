@@ -5,7 +5,8 @@ import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Inline edit overview
@@ -43,9 +44,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditOverviewExample {
-    protected readonly text = injectExampleText();
-
+export class InlineEditOverviewExample extends BaseLocalizedExample<ExampleText> {
     protected get placeholder(): string {
         return this.text().placeholder;
     }
@@ -55,5 +54,9 @@ export class InlineEditOverviewExample {
 
     protected update(): void {
         this.displayValue.set(this.value);
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

@@ -3,7 +3,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Popover height
@@ -23,8 +24,10 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverHeightExample {
-    protected readonly text = injectExampleText();
-
+export class PopoverHeightExample extends BaseLocalizedExample<ExampleText> {
     activePopover: KbqPopoverTrigger;
+
+    constructor() {
+        super(TEXT);
+    }
 }

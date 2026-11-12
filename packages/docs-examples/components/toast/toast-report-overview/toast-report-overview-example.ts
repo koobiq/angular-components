@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angula
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Toast report
@@ -28,12 +29,14 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastReportOverviewExample {
-    protected readonly text = injectExampleText();
-
+export class ToastReportOverviewExample extends BaseLocalizedExample<ExampleText> {
     readonly toastService = inject(KbqToastService);
 
     showToast(caption: TemplateRef<any>, actions: TemplateRef<any>) {
         this.toastService.show({ style: KbqToastStyle.Success, caption, actions }, 0);
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

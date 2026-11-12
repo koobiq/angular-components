@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the modal-caption example. */
 export interface ExampleText {
@@ -11,7 +10,7 @@ export interface ExampleText {
     longDialogTitle: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         cancel: 'Отмена',
         stringCaption: 'Строковая подпись',
@@ -30,6 +29,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         longDialogTitle: 'Dialog title Dialog title Dialog title Dialog title g title Dialog titl g title Dialog titl'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

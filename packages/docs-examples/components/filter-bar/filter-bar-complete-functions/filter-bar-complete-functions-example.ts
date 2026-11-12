@@ -18,9 +18,10 @@ import {
     KbqSaveFilterEvent
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { injectLocalizedPeriods } from '../l10n';
-import { injectExampleText } from './l10n';
+import { injectLocalizedPeriods } from '../localized-periods';
+import { ExampleText, TEXT } from './l10n';
 
 /** Text search is the first pipe in every filter: always present, never removable. */
 const createSearchPipe = (name: string): KbqPipe => ({
@@ -105,14 +106,13 @@ const createNumberedPipes = (): KbqPipe[] => [
     providers: [DateFormatter],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterBarCompleteFunctionsExample {
+export class FilterBarCompleteFunctionsExample extends BaseLocalizedExample<ExampleText> {
     protected readonly adapter = inject(DateAdapter<DateTime>);
 
     /** Period labels follow the active locale, so everything built out of them is rebuilt with it. */
     protected readonly periods = injectLocalizedPeriods();
 
     /** Text the example owns: it has no counterpart in the library's locale data. */
-    protected readonly text = injectExampleText();
 
     // Read as a signal, not resolved in `ngAfterViewInit`: the templates below are rebuilt whenever the
     // locale changes, so they have to be able to pick the query up on any pass, not only the first.
@@ -593,5 +593,9 @@ export class FilterBarCompleteFunctionsExample {
                 pipes: [createSearchPipe(search), ...createNumberedPipes()]
             }
         ];
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

@@ -3,7 +3,8 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Empty-state align
@@ -42,9 +43,11 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmptyStateAlignExample {
-    protected readonly text = injectExampleText();
-
+export class EmptyStateAlignExample extends BaseLocalizedExample<ExampleText> {
     readonly colors = KbqComponentColors;
     readonly styles = KbqButtonStyles;
+
+    constructor() {
+        super(TEXT);
+    }
 }

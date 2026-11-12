@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Badge tooltip
@@ -28,9 +29,11 @@ import { injectExampleText } from './l10n';
     styleUrls: ['badge-tooltip-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BadgeTooltipExample {
-    protected readonly text = injectExampleText();
-
+export class BadgeTooltipExample extends BaseLocalizedExample<ExampleText> {
     colors = KbqBadgeColors;
     protected readonly PopUpPlacements = PopUpPlacements;
+
+    constructor() {
+        super(TEXT);
+    }
 }

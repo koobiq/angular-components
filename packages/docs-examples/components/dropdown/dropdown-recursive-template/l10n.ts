@@ -1,5 +1,9 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
+
+/** Menu tree of the recursive-template example. */
+export interface ExampleText {
+    items: DropdownItem[];
+}
 
 /** One node of the recursive menu. */
 export interface DropdownItem {
@@ -7,12 +11,7 @@ export interface DropdownItem {
     children?: DropdownItem[];
 }
 
-/** Menu tree of the recursive-template example. */
-export interface ExampleText {
-    items: DropdownItem[];
-}
-
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         items: [
             { label: 'Уровень 1 - Настройки безопасности' },
@@ -82,6 +81,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         ]
     }
 };
-
-/** Menu tree of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

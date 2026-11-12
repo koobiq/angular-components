@@ -2,8 +2,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /** @title Form field with kbq-hint */
 @Component({
@@ -18,10 +19,12 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldWithHintExample {
-    protected readonly text = injectExampleText();
-
+export class FormFieldWithHintExample extends BaseLocalizedExample<ExampleText> {
     readonly formControl = new FormControl();
     readonly maxLength = 25;
     readonly count = toSignal(this.formControl.valueChanges.pipe(map((v) => v.length)), { initialValue: 0 });
+
+    constructor() {
+        super(TEXT);
+    }
 }

@@ -5,8 +5,9 @@ import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLink } from '@koobiq/components/link';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Autocomplete with footer
@@ -56,9 +57,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AutocompleteWithFooterExample {
-    protected readonly text = injectExampleText();
-
+export class AutocompleteWithFooterExample extends BaseLocalizedExample<ExampleText> {
     readonly options = computed(() => Array.from({ length: 100 }, (_, i) => 'Option #' + (i + 1)));
     readonly control = new FormControl('');
     readonly filteredOptions = toSignal(
@@ -71,4 +70,8 @@ export class AutocompleteWithFooterExample {
         ),
         { initialValue: this.options() }
     );
+
+    constructor() {
+        super(TEXT);
+    }
 }

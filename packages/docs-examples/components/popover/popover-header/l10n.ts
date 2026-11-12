@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the popover-header example: a cube-building rhyme and the demo labels. */
 export interface ExampleText {
@@ -23,7 +22,7 @@ export interface ExampleText {
     plain: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         intro: 'Жёлтые кубики — это песок, кубик зелёный — весенний лесок, синие кубики — это река. Кубиков много — река широка. Кубик на кубик — растут этажи: учатся строить UI малыши.',
         dtYellow: 'Желтые кубики',
@@ -65,6 +64,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         plain: 'No header or footer'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

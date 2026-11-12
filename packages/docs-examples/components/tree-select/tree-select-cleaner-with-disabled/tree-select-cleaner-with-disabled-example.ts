@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import {
     buildTree,
     FlatNode,
@@ -14,7 +15,7 @@ import {
     Node,
     transformer
 } from '../tree-select-cleaner-data';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /** Nodes the user is not allowed to deselect. */
 const lockedNodes = ['Load balancer'];
@@ -87,9 +88,7 @@ const lockedNodes = ['Load balancer'];
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeSelectCleanerWithDisabledExample {
-    protected readonly text = injectExampleText();
-
+export class TreeSelectCleanerWithDisabledExample extends BaseLocalizedExample<ExampleText> {
     protected readonly kept = model(['Database', 'Load balancer', 'Message queue']);
     protected readonly cleared = model(['Database', 'Load balancer', 'Message queue']);
 
@@ -120,5 +119,9 @@ export class TreeSelectCleanerWithDisabledExample {
         dataSource.data = buildTree(getTreeData(this.text()));
 
         return dataSource;
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

@@ -18,7 +18,7 @@ import {
     KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectLocalizedText } from '../l10n';
+import { injectLocalizedText } from '@koobiq/docs-examples/i18n';
 
 /**
  * The date pipe resolves `DateAdapter` and `DateFormatter` through the element injector, so both must be

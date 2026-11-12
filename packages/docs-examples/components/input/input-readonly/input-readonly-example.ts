@@ -4,7 +4,8 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Input readonly
@@ -45,11 +46,13 @@ import { injectExampleText } from './l10n';
         class: 'layout-margin-xl layout-column'
     }
 })
-export class InputReadonlyExample {
-    protected readonly text = injectExampleText();
-
+export class InputReadonlyExample extends BaseLocalizedExample<ExampleText> {
     protected readonly readonly = model(true);
     protected readonly textValue = model('Text');
     protected readonly number = model<number | null>(42);
     protected readonly password = model('Pa$$w0rd');
+
+    constructor() {
+        super(TEXT);
+    }
 }

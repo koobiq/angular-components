@@ -5,7 +5,8 @@ import { KbqForm, KbqFormElement } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 const delayBeforeShowError = 3000;
 
@@ -65,9 +66,7 @@ const delayBeforeShowError = 3000;
         class: 'layout-margin-5xl layout-column layout-align-center-center'
     }
 })
-export class SelectLoadingErrorCustomExample {
-    protected readonly text = injectExampleText();
-
+export class SelectLoadingErrorCustomExample extends BaseLocalizedExample<ExampleText> {
     readonly error = signal(false);
     readonly loading = signal(true);
 
@@ -81,5 +80,9 @@ export class SelectLoadingErrorCustomExample {
     protected reset() {
         this.loading.set(true);
         this.error.set(false);
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

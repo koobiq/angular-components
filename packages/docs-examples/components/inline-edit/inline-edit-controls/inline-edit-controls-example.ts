@@ -9,7 +9,8 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Inline edit controls
@@ -159,9 +160,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditControlsExample {
-    protected readonly text = injectExampleText();
-
+export class InlineEditControlsExample extends BaseLocalizedExample<ExampleText> {
     protected readonly maxRows = 20;
     protected get placeholder(): string {
         return this.text().placeholder;
@@ -181,5 +180,9 @@ export class InlineEditControlsExample {
 
     protected update() {
         this.textareaDisplayValue.set(this.form.controls.textarea.value);
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

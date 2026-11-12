@@ -3,7 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqSkeletonTree } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 type DirectoryNode = {
     name: string;
@@ -48,10 +49,9 @@ type DirectoryFlatNode = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonTreeExample {
+export class SkeletonTreeExample extends BaseLocalizedExample<ExampleText> {
     protected readonly loading = model(true);
 
-    protected readonly text = injectExampleText();
     protected readonly selected = model<string>('');
     protected readonly treeControl = new FlatTreeControl<DirectoryFlatNode>(
         (node) => node.level,
@@ -70,6 +70,7 @@ export class SkeletonTreeExample {
     );
 
     constructor() {
+        super(TEXT);
         this.dataSource.data = this.directory();
 
         effect(() => (this.dataSource.data = this.directory()));

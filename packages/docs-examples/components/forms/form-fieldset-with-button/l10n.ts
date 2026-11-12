@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the form-fieldset-with-button example. */
 export interface ExampleText {
@@ -8,7 +7,7 @@ export interface ExampleText {
     longHintButton: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         longLegend: 'Длинное имя поля, которое переносится на новую строку и располагается даже над кнопкой.',
         save: 'Сохранить',
@@ -21,6 +20,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         longHintButton: 'A long hint text under the field that wraps to a new line and even extends beneath the button.'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

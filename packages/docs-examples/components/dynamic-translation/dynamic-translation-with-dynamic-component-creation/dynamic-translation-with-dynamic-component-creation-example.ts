@@ -11,7 +11,8 @@ import {
     viewChild
 } from '@angular/core';
 import { KbqDynamicTranslationHelper, KbqDynamicTranslationHelperSlot } from '@koobiq/components/dynamic-translation';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Dynamic-translation with dynamic component creation
@@ -23,14 +24,13 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DynamicTranslationWithDynamicComponentCreationExample {
+export class DynamicTranslationWithDynamicComponentCreationExample extends BaseLocalizedExample<ExampleText> {
     private readonly applicationRef = inject(ApplicationRef);
     private readonly renderer = inject(Renderer2);
     private readonly container = viewChild.required('container', { read: ElementRef });
 
-    protected readonly text = injectExampleText();
-
     constructor() {
+        super(TEXT);
         effect((onCleanup) => {
             const componentRef = this.createElement(this.text().registered, [{ name: 'bold', tag: 'b' }]);
 

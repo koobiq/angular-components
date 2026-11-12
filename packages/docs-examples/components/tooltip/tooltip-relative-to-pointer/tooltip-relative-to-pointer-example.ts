@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Tooltip relative to pointer
@@ -22,6 +21,4 @@ import { injectExampleText } from '../l10n';
         class: 'layout-margin-5xl layout-row layout-align-center-center'
     }
 })
-export class TooltipRelativeToPointerExample {
-    protected readonly text = injectExampleText();
-}
+export class TooltipRelativeToPointerExample {}

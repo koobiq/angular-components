@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqSplitter, KbqSplitterOrientation, KbqSplitterPanel } from '@koobiq/components/splitter';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Splitter orientation
@@ -58,8 +57,6 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SplitterOrientationExample {
-    protected readonly text = injectExampleText();
-
     protected readonly orientations: KbqSplitterOrientation[] = ['horizontal', 'vertical'];
     protected readonly orientation = model<KbqSplitterOrientation>('vertical');
 }

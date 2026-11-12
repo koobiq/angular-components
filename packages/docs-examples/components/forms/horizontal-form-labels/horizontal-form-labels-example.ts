@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Horizontal form labels
@@ -18,8 +19,10 @@ import { injectExampleText } from './l10n';
     styleUrls: ['horizontal-form-labels-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HorizontalFormLabelsExample {
-    protected readonly text = injectExampleText();
-
+export class HorizontalFormLabelsExample extends BaseLocalizedExample<ExampleText> {
     value: any;
+
+    constructor() {
+        super(TEXT);
+    }
 }

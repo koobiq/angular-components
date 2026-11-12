@@ -3,7 +3,8 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqPopoverModule } from '@koobiq/components/popover';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Popover Header
@@ -21,8 +22,10 @@ import { injectExampleText } from './l10n';
     templateUrl: 'popover-header-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverHeaderExample {
-    protected readonly text = injectExampleText();
-
+export class PopoverHeaderExample extends BaseLocalizedExample<ExampleText> {
     badgeColors = KbqBadgeColors;
+
+    constructor() {
+        super(TEXT);
+    }
 }

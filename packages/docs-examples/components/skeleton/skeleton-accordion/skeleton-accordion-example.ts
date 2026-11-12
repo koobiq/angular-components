@@ -3,7 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqSkeletonAccordion } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Skeleton accordion preset
@@ -37,9 +38,12 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonAccordionExample {
+export class SkeletonAccordionExample extends BaseLocalizedExample<ExampleText> {
     protected readonly loading = model(true);
 
-    protected readonly text = injectExampleText();
     protected readonly sections = computed(() => this.text().accordionSections);
+
+    constructor() {
+        super(TEXT);
+    }
 }

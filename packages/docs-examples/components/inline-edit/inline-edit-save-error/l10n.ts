@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the inline-edit-save-error example. */
 export interface ExampleText {
@@ -14,7 +13,7 @@ export interface ExampleText {
     saveErrorIntro2: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         name: 'Имя',
         description: 'Описание',
@@ -40,6 +39,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
             'as the name to have the value rejected. Saving the description fails on the first attempt and succeeds on retry.'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

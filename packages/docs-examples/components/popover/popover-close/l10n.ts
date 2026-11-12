@@ -1,13 +1,12 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the popover-close example. */
 export interface ExampleText {
-    hybridRemote: string;
     shareProject: string;
     email: string;
     sendInvite: string;
     members: string;
+    hybridRemote: string;
     editor: string;
     viewer: string;
     videoConferencing: string;
@@ -19,13 +18,13 @@ export interface ExampleText {
     closeShare: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
-        hybridRemote: 'Гибридно-удалённая работа для всех с уникальной аудиотехнологией',
         shareProject: 'Поделиться проектом',
         email: 'Эл. почта',
         sendInvite: 'Отправить приглашение',
         members: 'Участники',
+        hybridRemote: 'Гибридно-удалённая работа для всех с уникальной аудиотехнологией',
         editor: 'Редактор',
         viewer: 'Читатель',
         videoConferencing:
@@ -41,11 +40,11 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         closeShare: 'Крестик в углу в окне «Поделиться»'
     },
     default: {
-        hybridRemote: 'Making hybrid‑remote inclusive with unique audio technology',
         shareProject: 'Share project',
         email: 'Email',
         sendInvite: 'Send invite',
         members: 'Members',
+        hybridRemote: 'Making hybrid‑remote inclusive with unique audio technology',
         editor: 'Editor',
         viewer: 'Viewer',
         videoConferencing: 'Traditional video conferencing can make remote colleagues feel like second-class citizens',
@@ -60,6 +59,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         closeShare: 'Close button in the corner in the Share window'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

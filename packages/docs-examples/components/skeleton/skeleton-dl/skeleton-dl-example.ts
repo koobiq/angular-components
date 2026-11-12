@@ -3,7 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqDd, KbqDl, KbqDt } from '@koobiq/components/dl';
 import { KbqSkeletonDl } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Skeleton description list preset
@@ -35,9 +36,12 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonDlExample {
+export class SkeletonDlExample extends BaseLocalizedExample<ExampleText> {
     protected readonly loading = model(true);
 
-    protected readonly text = injectExampleText();
     protected readonly items = computed(() => this.text().dlItems);
+
+    constructor() {
+        super(TEXT);
+    }
 }

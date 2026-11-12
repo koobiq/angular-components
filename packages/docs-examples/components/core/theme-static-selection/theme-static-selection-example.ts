@@ -3,7 +3,8 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqThemeConfig, KbqThemeSelector, KbqThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Theme static selection
@@ -24,9 +25,7 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ThemeStaticSelectionExample implements OnDestroy {
-    protected readonly text = injectExampleText();
-
+export class ThemeStaticSelectionExample extends BaseLocalizedExample<ExampleText> implements OnDestroy {
     /**
      * Custom names pinned to the library's own light/dark classes (`KbqThemeSelector`) — reusing them, rather
      * than inventing unstyled classes, keeps the docs page's own styling intact when this example is live.
@@ -45,6 +44,7 @@ export class ThemeStaticSelectionExample implements OnDestroy {
     private readonly previousStaticTheme = this.theme.staticTheme();
 
     constructor() {
+        super(TEXT);
         this.theme.setThemes([...this.previousThemes, ...this.customThemes()]);
     }
 

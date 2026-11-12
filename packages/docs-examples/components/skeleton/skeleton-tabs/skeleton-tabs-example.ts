@@ -3,7 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { KbqSkeletonTabs } from '@koobiq/components/skeleton';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Skeleton tabs preset
@@ -53,9 +54,12 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonTabsExample {
+export class SkeletonTabsExample extends BaseLocalizedExample<ExampleText> {
     protected readonly loading = model(true);
 
-    protected readonly text = injectExampleText();
     protected readonly tabs = computed(() => this.text().tabs);
+
+    constructor() {
+        super(TEXT);
+    }
 }

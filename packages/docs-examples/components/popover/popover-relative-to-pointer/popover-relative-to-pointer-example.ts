@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqPopoverModule } from '@koobiq/components/popover';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Popover at the click point
@@ -36,9 +37,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverRelativeToPointerExample {
-    protected readonly text = injectExampleText();
-
+export class PopoverRelativeToPointerExample extends BaseLocalizedExample<ExampleText> {
     protected selectedOwner = 'Ivan Ivanov';
 
     protected selectOwner(event: MouseEvent): void {
@@ -49,5 +48,9 @@ export class PopoverRelativeToPointerExample {
         if (owner) {
             this.selectedOwner = owner;
         }
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

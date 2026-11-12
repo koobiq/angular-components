@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Sidebar overview
@@ -77,9 +78,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidebarOverviewExample {
-    protected readonly text = injectExampleText();
-
+export class SidebarOverviewExample extends BaseLocalizedExample<ExampleText> {
     readonly position = SidebarPositions;
 
     leftOpened = true;
@@ -95,5 +94,9 @@ export class SidebarOverviewExample {
 
     onStateChanged(opened: boolean, position: SidebarPositions): void {
         console.log(`Sidebar ${position} onStateChanged: `, opened);
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

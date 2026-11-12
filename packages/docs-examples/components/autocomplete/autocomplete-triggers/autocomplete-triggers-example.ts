@@ -4,7 +4,8 @@ import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqTextQuery } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 interface Suggestion {
     /** What the option shows. */
@@ -55,9 +56,7 @@ interface Suggestion {
         class: 'layout-margin-5xl layout-row layout-align-center-center'
     }
 })
-export class AutocompleteTriggersExample {
-    protected readonly text = injectExampleText();
-
+export class AutocompleteTriggersExample extends BaseLocalizedExample<ExampleText> {
     protected readonly control = new FormControl('');
     protected readonly triggers = ['/', '@'];
     protected readonly query = signal<KbqTextQuery | null>(null);
@@ -88,4 +87,8 @@ export class AutocompleteTriggersExample {
         { label: this.text().bob, insert: '@bob' },
         { label: this.text().carol, insert: '@carol' }
     ]);
+
+    constructor() {
+        super(TEXT);
+    }
 }

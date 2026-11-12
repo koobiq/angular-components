@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the empty-state-error example. */
 export interface ExampleText {
@@ -8,7 +7,7 @@ export interface ExampleText {
     refresh: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         errorTitle: 'Не удалось показать записи',
         errorText: 'Проблема с сетью или подключением к БД. Попробуйте еще раз или обратитесь к администратору.',
@@ -21,6 +20,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         refresh: 'Refresh'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

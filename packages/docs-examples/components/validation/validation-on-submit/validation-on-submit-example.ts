@@ -21,7 +21,8 @@ import {
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Validation on submit
@@ -139,9 +140,7 @@ import { injectExampleText } from './l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-column'
     }
 })
-export class ValidationOnSubmitExample implements AfterViewInit, OnDestroy {
-    protected readonly text = injectExampleText();
-
+export class ValidationOnSubmitExample extends BaseLocalizedExample<ExampleText> implements AfterViewInit, OnDestroy {
     protected readonly alertContainer = viewChild<ElementRef<HTMLDivElement>>('alertContainer');
 
     protected readonly showServerErrors = signal(false);
@@ -199,5 +198,9 @@ export class ValidationOnSubmitExample implements AfterViewInit, OnDestroy {
 
             invalidControl?.focus();
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

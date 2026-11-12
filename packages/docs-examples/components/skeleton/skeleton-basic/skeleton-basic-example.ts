@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqSkeleton } from '@koobiq/components/skeleton';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Skeleton basic block
@@ -23,6 +22,4 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SkeletonBasicExample {
-    protected readonly text = injectExampleText();
-}
+export class SkeletonBasicExample {}

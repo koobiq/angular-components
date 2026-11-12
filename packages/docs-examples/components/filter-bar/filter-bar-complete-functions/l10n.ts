@@ -1,8 +1,8 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the complete-functions example: it has no counterpart in the library's locale data. */
 export interface ExampleText {
+    /** The text search pipe: the first pipe in every filter, always present, never removable. */
     search: string;
     undefinedOption: string;
     legitimateAction: string;
@@ -11,7 +11,7 @@ export interface ExampleText {
     deleteAlert: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         search: 'Поиск',
         undefinedOption: 'Не определен',
@@ -29,6 +29,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         deleteAlert: 'The filter has to be deleted'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

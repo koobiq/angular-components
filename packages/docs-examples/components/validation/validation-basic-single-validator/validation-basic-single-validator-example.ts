@@ -8,7 +8,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Validation: single validator
@@ -47,9 +48,7 @@ import { injectExampleText } from '../l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationBasicSingleValidatorExample {
-    protected readonly text = injectExampleText();
-
+export class ValidationBasicSingleValidatorExample extends BaseLocalizedExample<ExampleText> {
     protected readonly form = new FormGroup({
         name: new FormControl('', [Validators.required])
     });
@@ -62,5 +61,9 @@ export class ValidationBasicSingleValidatorExample {
                 .find((f) => f.invalid)
                 ?.focus();
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

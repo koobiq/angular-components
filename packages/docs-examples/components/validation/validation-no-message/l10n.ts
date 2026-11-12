@@ -1,25 +1,21 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the validation-no-message example. */
 export interface ExampleText {
-    address: string;
     comment: string;
     submit: string;
+    address: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
-        address: 'Адрес',
         comment: 'Комментарий',
-        submit: 'Отправить'
+        submit: 'Отправить',
+        address: 'Адрес'
     },
     default: {
-        address: 'Address',
         comment: 'Comment',
-        submit: 'Submit'
+        submit: 'Submit',
+        address: 'Address'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

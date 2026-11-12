@@ -4,7 +4,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Inline edit content alignment
@@ -107,9 +108,7 @@ import { injectExampleText } from '../l10n';
         class: 'layout-flex layout-column'
     }
 })
-export class InlineEditContentAlignmentExample {
-    protected readonly text = injectExampleText();
-
+export class InlineEditContentAlignmentExample extends BaseLocalizedExample<ExampleText> {
     protected get placeholder(): string {
         return this.text().placeholder;
     }
@@ -119,4 +118,8 @@ export class InlineEditContentAlignmentExample {
         capital: new FormControl('Madrid'),
         currency: new FormControl('Euro')
     });
+
+    constructor() {
+        super(TEXT);
+    }
 }

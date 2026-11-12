@@ -6,7 +6,6 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { BehaviorSubject, Observable, timer } from 'rxjs';
-import { injectExampleText } from '../l10n';
 
 interface INodeResponse {
     id: string;
@@ -203,8 +202,6 @@ export class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectLazyloadExample {
-    protected readonly text = injectExampleText();
-
     private dataService = inject(LazyLoadDataService);
 
     selected = '';

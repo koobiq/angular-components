@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the alert-content example. */
 export interface ExampleText {
@@ -20,7 +19,7 @@ export interface ExampleText {
     paragraph2: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         close: 'Закрыть',
         uploadFailedTitle: 'Не удалось загрузить файл',
@@ -60,6 +59,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
             'Try to state the key idea in the first sentence of the paragraph, then expand on it in more detail and back it up with examples. That way the reader can skim the text diagonally and immediately see what each part is about. Sometimes the first sentences of a paragraph are set in bold — these are called run-in headings.'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

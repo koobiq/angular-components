@@ -2,8 +2,8 @@ import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqListModule, KbqListSelectionDroppedEvent } from '@koobiq/components/list';
-import { injectExampleText } from '../l10n';
-import { injectExampleText as injectFruitsText } from './l10n';
+import { injectLocalizedText } from '@koobiq/docs-examples/i18n';
+import { TEXT } from './l10n';
 
 /**
  * @title Draggable list with a handle
@@ -24,13 +24,13 @@ import { injectExampleText as injectFruitsText } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListDraggableHandleExample {
-    protected readonly text = injectExampleText();
+    protected readonly text = injectLocalizedText(TEXT);
 
     protected fruitName(id: number): string {
         return this.fruitsText().fruits[id - 1];
     }
 
-    private readonly fruitsText = injectFruitsText();
+    private readonly fruitsText = injectLocalizedText(TEXT);
 
     protected readonly items = signal([{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }]);
 

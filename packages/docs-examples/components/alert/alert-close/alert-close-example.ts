@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAlert, KbqAlertCloseButton } from '@koobiq/components/alert';
 import { kbqAnimationsDisabled, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Alert close
@@ -58,10 +59,12 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AlertCloseExample {
-    protected readonly text = injectExampleText();
-
+export class AlertCloseExample extends BaseLocalizedExample<ExampleText> {
     protected readonly animationsDisabled = kbqAnimationsDisabled();
     colors = KbqComponentColors;
     state = true;
+
+    constructor() {
+        super(TEXT);
+    }
 }

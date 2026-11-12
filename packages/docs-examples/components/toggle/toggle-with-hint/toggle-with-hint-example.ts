@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Toggle With Hint
@@ -40,6 +41,8 @@ import { injectExampleText } from '../l10n';
         class: 'layout-align-center-center layout-row layout-padding-top-l layout-padding-bottom-3xl'
     }
 })
-export class ToggleWithHintExample {
-    protected readonly text = injectExampleText();
+export class ToggleWithHintExample extends BaseLocalizedExample<ExampleText> {
+    constructor() {
+        super(TEXT);
+    }
 }

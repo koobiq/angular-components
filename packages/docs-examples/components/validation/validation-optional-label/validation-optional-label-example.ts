@@ -8,7 +8,8 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Validation optional label
@@ -65,9 +66,7 @@ import { injectExampleText } from '../l10n';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationOptionalLabelExample {
-    protected readonly text = injectExampleText();
-
+export class ValidationOptionalLabelExample extends BaseLocalizedExample<ExampleText> {
     protected readonly form = new FormGroup({
         firstName: new FormControl('', Validators.required),
         lastName: new FormControl('', Validators.required),
@@ -85,5 +84,9 @@ export class ValidationOptionalLabelExample {
 
             invalidControl?.focus();
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

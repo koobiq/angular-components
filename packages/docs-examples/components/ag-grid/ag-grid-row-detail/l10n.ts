@@ -1,5 +1,23 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
+
+/** Incident rows of the row-detail example. */
+export interface ExampleText {
+    severity: string;
+    incidents: ExampleIncident[];
+    expandMultipleRows: string;
+    fillExpandedRows: string;
+    collapse: string;
+    description: string;
+    affectedHost: string;
+    detectedBy: string;
+    event: string;
+    status: string;
+    sourceIp: string;
+    destinationIp: string;
+    protocol: string;
+    port: string;
+    mitreTechnique: string;
+}
 
 /** One incident of the row-detail example grid. */
 export interface ExampleIncident {
@@ -17,28 +35,9 @@ export interface ExampleIncident {
     description: string;
 }
 
-/** Incident rows of the row-detail example. */
-export interface ExampleText {
-    incidents: ExampleIncident[];
-
-    expandMultipleRows: string;
-    fillExpandedRows: string;
-    collapse: string;
-    description: string;
-    affectedHost: string;
-    detectedBy: string;
-    event: string;
-    severity: string;
-    status: string;
-    sourceIp: string;
-    destinationIp: string;
-    protocol: string;
-    port: string;
-    mitreTechnique: string;
-}
-
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
+        severity: 'Важность',
         incidents: [
             {
                 id: 'INC-1001',
@@ -160,7 +159,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         affectedHost: 'Затронутый узел',
         detectedBy: 'Обнаружено',
         event: 'Событие',
-        severity: 'Важность',
         status: 'Статус',
         sourceIp: 'IP-адрес источника',
         destinationIp: 'IP-адрес назначения',
@@ -169,6 +167,7 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         mitreTechnique: 'Техника MITRE'
     },
     default: {
+        severity: 'Severity',
         incidents: [
             {
                 id: 'INC-1001',
@@ -290,7 +289,6 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         affectedHost: 'Affected host',
         detectedBy: 'Detected by',
         event: 'Event',
-        severity: 'Severity',
         status: 'Status',
         sourceIp: 'Source IP',
         destinationIp: 'Destination IP',
@@ -299,6 +297,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         mitreTechnique: 'MITRE technique'
     }
 };
-
-/** Incident rows of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

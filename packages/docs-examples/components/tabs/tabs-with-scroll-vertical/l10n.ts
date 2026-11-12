@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the tabs-with-scroll-vertical example. */
 export interface ExampleText {
@@ -14,7 +13,7 @@ export interface ExampleText {
     tabContent: (name: string) => string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         bruteforce: 'Подбор пароля',
         complexAttack: 'Сложная атака',
@@ -38,6 +37,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         tabContent: (name) => `${name} tab content`
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

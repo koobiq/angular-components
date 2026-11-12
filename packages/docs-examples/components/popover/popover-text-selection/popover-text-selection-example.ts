@@ -6,7 +6,6 @@ import { KbqCaretRect, kbqCreateCaretOrigin, kbqGetSelectionRect } from '@koobiq
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { debounceTime, fromEvent } from 'rxjs';
-import { injectExampleText } from '../l10n';
 
 /** `Node.TEXT_NODE`, spelled out so that the example never reads a DOM global. */
 const TEXT_NODE = 3;
@@ -104,8 +103,6 @@ type Format = (typeof FORMATS)[number];
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopoverTextSelectionExample {
-    protected readonly text = injectExampleText();
-
     private readonly document = inject(DOCUMENT);
     private readonly textRef = viewChild<ElementRef<HTMLElement>>('text');
     private readonly popover = viewChild(KbqPopoverTrigger);

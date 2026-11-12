@@ -1,10 +1,9 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the toast-actions-overview example. */
 export interface ExampleText {
-    mailServersWindows: string;
     restore: string;
+    mailServersWindows: string;
     view: string;
     reject: string;
     twoActions: string;
@@ -18,10 +17,10 @@ export interface ExampleText {
     policy: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
-        mailServersWindows: 'Почтовые серверы Windows',
         restore: 'Восстановить',
+        mailServersWindows: 'Почтовые серверы Windows',
         view: 'Посмотреть',
         reject: 'Отклонить',
         twoActions: 'Два действия',
@@ -35,8 +34,8 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         policy: 'Политика'
     },
     default: {
-        mailServersWindows: 'Windows mail servers',
         restore: 'Restore',
+        mailServersWindows: 'Windows mail servers',
         view: 'View',
         reject: 'Reject',
         twoActions: 'Two actions',
@@ -50,6 +49,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         policy: 'Policy'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

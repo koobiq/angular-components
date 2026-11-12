@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the modal-multiple example. */
 export interface ExampleText {
@@ -13,7 +12,7 @@ export interface ExampleText {
     ok: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         saveChangesAria: 'Сохранить изменения',
         saveChangesContent: 'Сохранить изменения?',
@@ -35,6 +34,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         ok: 'OK'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

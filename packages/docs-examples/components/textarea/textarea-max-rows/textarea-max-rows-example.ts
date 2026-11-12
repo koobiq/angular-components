@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Textarea with maxRows attribute
@@ -21,8 +22,10 @@ import { injectExampleText } from '../l10n';
         class: 'layout-margin-xl layout-row'
     }
 })
-export class TextareaMaxRowsExample {
-    protected readonly text = injectExampleText();
-
+export class TextareaMaxRowsExample extends BaseLocalizedExample<ExampleText> {
     protected readonly value = model(this.text().dosText);
+
+    constructor() {
+        super(TEXT);
+    }
 }

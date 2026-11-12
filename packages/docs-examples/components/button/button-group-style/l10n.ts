@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the button-group-style example. */
 export interface ExampleText {
@@ -9,7 +8,7 @@ export interface ExampleText {
     diamondIcon: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         archive: 'Архив',
         report: 'Отчёт',
@@ -23,6 +22,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         diamondIcon: 'Diamond icon'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

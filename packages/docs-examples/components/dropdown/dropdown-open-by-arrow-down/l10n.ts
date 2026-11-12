@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the dropdown-open-by-arrow-down example. */
 export interface ExampleText {
@@ -11,7 +10,7 @@ export interface ExampleText {
     toggleOpenByArrowDown: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         textNormal: 'Обычный текст',
         caption: 'Подпись',
@@ -29,6 +28,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         toggleOpenByArrowDown: 'toggle openByArrowDown'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

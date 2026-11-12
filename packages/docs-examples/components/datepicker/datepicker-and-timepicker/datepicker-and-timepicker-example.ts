@@ -5,8 +5,9 @@ import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Datepicker and timepicker
@@ -44,8 +45,10 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatepickerAndTimepickerExample {
-    protected readonly text = injectExampleText();
-
+export class DatepickerAndTimepickerExample extends BaseLocalizedExample<ExampleText> {
     selectedDateTime: DateTime;
+
+    constructor() {
+        super(TEXT);
+    }
 }

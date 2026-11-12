@@ -5,7 +5,8 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Empty-state size
@@ -41,8 +42,10 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmptyStateSizeExample {
-    protected readonly text = injectExampleText();
-
+export class EmptyStateSizeExample extends BaseLocalizedExample<ExampleText> {
     readonly size = model<KbqDefaultSizes>('compact');
+
+    constructor() {
+        super(TEXT);
+    }
 }

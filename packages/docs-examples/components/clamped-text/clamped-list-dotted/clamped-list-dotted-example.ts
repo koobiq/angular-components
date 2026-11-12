@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import { KbqClampedList, KbqClampedListTrigger } from '@koobiq/components/clamped-text';
 import { KbqLink } from '@koobiq/components/link';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Clamped-list dotted
@@ -66,9 +67,12 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ClampedListDottedExample {
+export class ClampedListDottedExample extends BaseLocalizedExample<ExampleText> {
     protected readonly collapsed = model(true);
-    protected readonly text = injectExampleText();
 
     protected readonly countries = computed(() => this.text().countries);
+
+    constructor() {
+        super(TEXT);
+    }
 }

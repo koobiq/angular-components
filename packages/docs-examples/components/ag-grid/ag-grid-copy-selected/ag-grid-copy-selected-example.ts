@@ -10,6 +10,7 @@ import {
 } from '@koobiq/ag-grid-angular-theme';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToastService } from '@koobiq/components/toast';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -18,7 +19,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -77,9 +78,8 @@ const customCopyFormatterWithHeaderRow: KbqAgGridCopyFormatter = (api) => {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridCopySelectedExample {
+export class AgGridCopySelectedExample extends BaseLocalizedExample<ExampleText> {
     private readonly toast = inject(KbqToastService);
-    protected readonly text = injectExampleText();
 
     protected readonly copyFormatOptions = ['TSV', 'CSV', 'JSON', 'Custom'] as const;
     protected readonly copyFormat = model<(typeof this.copyFormatOptions)[number]>('TSV');
@@ -148,5 +148,9 @@ export class AgGridCopySelectedExample {
                 caption: this.text().dataCopiedCaption(this.copyFormat())
             });
         }
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

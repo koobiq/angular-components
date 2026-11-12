@@ -4,7 +4,6 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { injectExampleText } from '../l10n';
 
 export class FileNode {
     children: FileNode[];
@@ -134,8 +133,6 @@ export const DATA_OBJECT = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectCustomTriggerExample {
-    protected readonly text = injectExampleText();
-
     selected = 'docs';
 
     treeControl: FlatTreeControl<FileFlatNode>;

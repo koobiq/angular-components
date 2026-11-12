@@ -5,7 +5,8 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Popover close
@@ -17,9 +18,7 @@ import { injectExampleText } from './l10n';
     styleUrls: ['popover-close-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverCloseExample {
-    protected readonly text = injectExampleText();
-
+export class PopoverCloseExample extends BaseLocalizedExample<ExampleText> {
     readonly members = computed<Record<string, string>[]>(() => [
         { name: 'Alex Unipraise', role: this.text().editor },
         { name: 'Serge Vox', role: this.text().editor },
@@ -33,4 +32,8 @@ export class PopoverCloseExample {
         { name: 'Corina McCoy', role: this.text().viewer }
     ]);
     protected readonly componentColors = KbqComponentColors;
+
+    constructor() {
+        super(TEXT);
+    }
 }

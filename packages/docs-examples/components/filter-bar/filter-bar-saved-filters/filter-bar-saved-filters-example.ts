@@ -14,7 +14,8 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 interface ExampleFilter extends KbqFilter {
     id?: number;
@@ -82,14 +83,11 @@ const createSearchPipe = (name: string): KbqPipe => ({
     providers: [DateFormatter],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterBarSavedFiltersExample {
+export class FilterBarSavedFiltersExample extends BaseLocalizedExample<ExampleText> {
     readonly toastService = inject(KbqToastService);
 
     readonly errorToastActionsTemplate = viewChild.required<TemplateRef<any>>('errorToastActions');
     readonly toastErrorTitleTemplate = viewChild.required<TemplateRef<any>>('toastErrorTitleTemplate');
-
-    /** Text the example owns: it has no counterpart in the library's locale data. */
-    protected readonly text = injectExampleText();
 
     /** Resolves a period `nameKey`; the `name` stays the stable English fallback. */
     protected readonly nameResolver: KbqFilterBarNameResolver = ({ key, fallback }) =>
@@ -500,5 +498,9 @@ export class FilterBarSavedFiltersExample {
                 }
             ]
         };
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

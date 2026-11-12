@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the accordion-header example. */
 export interface ExampleText {
@@ -8,7 +7,7 @@ export interface ExampleText {
     toggleSectionHint: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         sectionTitle: 'Текст',
         content: 'Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона',
@@ -20,6 +19,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         toggleSectionHint: 'Sections are collapsed and expanded by clicking anywhere on the section'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angula
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title toast-multiline
@@ -24,9 +25,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastMultilineExample {
-    protected readonly text = injectExampleText();
-
+export class ToastMultilineExample extends BaseLocalizedExample<ExampleText> {
     readonly toastService = inject(KbqToastService);
 
     showToast(actions: TemplateRef<any>) {
@@ -38,5 +37,9 @@ export class ToastMultilineExample {
             actions,
             closeButton: true
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

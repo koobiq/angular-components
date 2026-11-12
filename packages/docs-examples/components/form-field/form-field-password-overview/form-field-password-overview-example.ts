@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PasswordValidators } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /** @title Form field password overview */
 @Component({
@@ -61,9 +62,7 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldPasswordOverviewExample {
-    protected readonly text = injectExampleText();
-
+export class FormFieldPasswordOverviewExample extends BaseLocalizedExample<ExampleText> {
     readonly formControl = new FormControl('', [
         Validators.required,
         PasswordValidators.minLength(8),
@@ -72,4 +71,8 @@ export class FormFieldPasswordOverviewExample {
         PasswordValidators.minNumber(2),
         PasswordValidators.minSpecial(2)
     ]);
+
+    constructor() {
+        super(TEXT);
+    }
 }

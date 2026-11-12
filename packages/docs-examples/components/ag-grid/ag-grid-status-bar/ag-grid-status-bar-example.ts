@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { KBQ_AG_GRID_STATUS_BAR_PARAMS, KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -8,7 +9,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -30,16 +31,15 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleAgGridStatusBarComponent {
+export class ExampleAgGridStatusBarComponent extends BaseLocalizedExample<ExampleText> {
     private readonly params = inject(KBQ_AG_GRID_STATUS_BAR_PARAMS);
     private readonly destroyRef = inject(DestroyRef);
-
-    protected readonly text = injectExampleText();
 
     protected readonly totalRows = signal(0);
     protected readonly selectedRows = signal(0);
 
     constructor() {
+        super(TEXT);
         const { api } = this.params;
 
         const updateTotal = (): void => this.totalRows.set(api.getDisplayedRowCount());
@@ -85,9 +85,7 @@ export class ExampleAgGridStatusBarComponent {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridStatusBarExample {
-    protected readonly text = injectExampleText();
-
+export class AgGridStatusBarExample extends BaseLocalizedExample<ExampleText> {
     protected readonly statusBarComponent = ExampleAgGridStatusBarComponent;
 
     protected readonly defaultColDef: ColDef = {
@@ -128,5 +126,9 @@ export class AgGridStatusBarExample {
                 node.setSelected(true);
             }
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

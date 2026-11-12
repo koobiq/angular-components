@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Button fixed content
@@ -27,8 +28,10 @@ import { injectExampleText } from '../l10n';
     styleUrls: ['button-fixed-content-example.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ButtonFixedContentExample {
-    protected readonly text = injectExampleText();
-
+export class ButtonFixedContentExample extends BaseLocalizedExample<ExampleText> {
     colors = KbqComponentColors;
+
+    constructor() {
+        super(TEXT);
+    }
 }

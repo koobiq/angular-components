@@ -6,6 +6,7 @@ import {
     KbqAgGridSkeletonCellRenderer,
     KbqAgGridThemeModule
 } from '@koobiq/ag-grid-angular-theme';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -19,7 +20,7 @@ import {
     SelectionChangedEvent,
     SelectionColumnDef
 } from 'ag-grid-community';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -94,9 +95,7 @@ type SelectionDto = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridInfiniteSelectionExample {
-    protected readonly text = injectExampleText();
-
+export class AgGridInfiniteSelectionExample extends BaseLocalizedExample<ExampleText> {
     protected readonly columnDefs = computed<ColDef[]>(() => [
         { field: 'column0', headerName: this.text().projectName, pinned: 'left', width: 130 },
         ...Array.from({ length: 5 }, (_, i) => ({
@@ -171,5 +170,9 @@ export class AgGridInfiniteSelectionExample {
                 .map((node) => node.id)
                 .filter((id) => id !== undefined)
         );
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

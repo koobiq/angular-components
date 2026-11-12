@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the validation-on-type example. */
 export interface ExampleText {
@@ -8,7 +7,7 @@ export interface ExampleText {
     lettersAndNumbers: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         folderName: 'Имя папки',
         onlyLettersAndNumbers: 'Только буквы и цифры',
@@ -20,6 +19,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         lettersAndNumbers: 'Letters and numbers'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

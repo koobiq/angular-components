@@ -8,7 +8,8 @@ import { KbqLink } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Inline edit customized design
@@ -121,9 +122,7 @@ import { injectExampleText } from './l10n';
         class: 'layout-flex layout-column'
     }
 })
-export class InlineEditCustomizedDesignExample {
-    protected readonly text = injectExampleText();
-
+export class InlineEditCustomizedDesignExample extends BaseLocalizedExample<ExampleText> {
     protected get placeholder(): string {
         return this.text().placeholder;
     }
@@ -152,5 +151,9 @@ export class InlineEditCustomizedDesignExample {
 
             return tags;
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

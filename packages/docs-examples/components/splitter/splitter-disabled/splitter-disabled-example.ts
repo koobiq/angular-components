@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqSplitter, KbqSplitterPanel } from '@koobiq/components/splitter';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Splitter disabled
@@ -53,7 +52,5 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SplitterDisabledExample {
-    protected readonly text = injectExampleText();
-
     protected readonly disabled = signal(true);
 }

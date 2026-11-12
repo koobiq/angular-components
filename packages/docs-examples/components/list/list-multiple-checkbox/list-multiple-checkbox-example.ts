@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqListModule } from '@koobiq/components/list';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title List multiple checkbox
@@ -27,8 +28,10 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListMultipleCheckboxExample {
-    protected readonly text = injectExampleText();
-
+export class ListMultipleCheckboxExample extends BaseLocalizedExample<ExampleText> {
     selected = [];
+
+    constructor() {
+        super(TEXT);
+    }
 }

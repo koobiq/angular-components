@@ -13,7 +13,8 @@ import {
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_DROPDOWN_PANEL, KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 @Directive({
     selector: '[exampleDropdownOutlet]'
@@ -86,8 +87,10 @@ export class ExampleDropdownPortal implements OnInit {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownRecursiveTemplateExample {
-    protected readonly text = injectExampleText();
-
+export class DropdownRecursiveTemplateExample extends BaseLocalizedExample<ExampleText> {
     readonly items = computed(() => this.text().items);
+
+    constructor() {
+        super(TEXT);
+    }
 }

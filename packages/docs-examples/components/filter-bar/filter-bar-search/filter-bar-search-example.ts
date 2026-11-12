@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
 import { createSearchPredicate } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTypes } from '@koobiq/components/filter-bar';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 interface Network {
     name: string;
@@ -60,7 +61,7 @@ const createSearchPipe = (name: string): KbqPipe => ({
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterBarSearchExample {
+export class FilterBarSearchExample extends BaseLocalizedExample<ExampleText> {
     readonly networks: Network[] = [
         { name: '10.125.123.0/24 - all', description: 'Development network' },
         { name: '10.125.10.0/24 - admin', description: 'Admin network' },
@@ -69,8 +70,6 @@ export class FilterBarSearchExample {
         { name: '192.168.1.0/24 - lab', description: 'Testing laboratory' },
         { name: 'Café Wi-Fi guest network', description: 'Guest cafe wireless network' }
     ];
-
-    protected readonly text = injectExampleText();
 
     // Rebuilt whenever the locale changes: `*kbqPipe` builds a pipe component once from the object it is
     // given and ignores later changes to that binding, so the relabelled pipe only reaches the screen as
@@ -99,5 +98,9 @@ export class FilterBarSearchExample {
             saved: false,
             pipes: [createSearchPipe(this.text().search)]
         };
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

@@ -16,9 +16,10 @@ import {
 } from '@koobiq/components/notification-center';
 import { KbqToastStyle } from '@koobiq/components/toast';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { timer } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /** Items per loaded page. */
 const PAGE_SIZE = 20;
@@ -75,10 +76,8 @@ enum NavbarIcItems {
     providers: [{ provide: KbqNotificationCenterService, useClass: KbqNotificationCenterService }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationCenterInfiniteScrollExample {
+export class NotificationCenterInfiniteScrollExample extends BaseLocalizedExample<ExampleText> {
     protected readonly notificationService = inject(KbqNotificationCenterService);
-
-    protected readonly text = injectExampleText();
 
     private readonly destroyRef = inject(DestroyRef);
 
@@ -106,6 +105,7 @@ export class NotificationCenterInfiniteScrollExample {
     protected selected: NavbarIcItems = NavbarIcItems.Assets;
 
     constructor() {
+        super(TEXT);
         // Initial page loads immediately; subsequent pages are appended on scroll.
         this.appendPage(this.currentPage + 1);
 

@@ -8,8 +8,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { map } from 'rxjs/operators';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 type ExampleAction = {
     id: string;
@@ -100,9 +101,7 @@ type ExampleAction = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarOverviewExample {
-    protected readonly text = injectExampleText();
-
+export class TopBarOverviewExample extends BaseLocalizedExample<ExampleText> {
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -140,4 +139,8 @@ export class TopBarOverviewExample {
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
+
+    constructor() {
+        super(TEXT);
+    }
 }

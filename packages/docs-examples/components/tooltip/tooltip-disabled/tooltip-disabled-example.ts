@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Tooltip disabled
@@ -23,6 +24,8 @@ import { injectExampleText } from './l10n';
         class: 'layout-margin-5xl layout-row layout-align-center-center'
     }
 })
-export class TooltipDisabledExample {
-    protected readonly text = injectExampleText();
+export class TooltipDisabledExample extends BaseLocalizedExample<ExampleText> {
+    constructor() {
+        super(TEXT);
+    }
 }

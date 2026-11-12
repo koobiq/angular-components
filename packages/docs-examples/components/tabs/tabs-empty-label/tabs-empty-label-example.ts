@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Tabs empty label
@@ -68,8 +69,10 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class TabsEmptyLabelExample {
-    protected readonly text = injectExampleText();
-
+export class TabsEmptyLabelExample extends BaseLocalizedExample<ExampleText> {
     readonly PopUpPlacements = PopUpPlacements;
+
+    constructor() {
+        super(TEXT);
+    }
 }

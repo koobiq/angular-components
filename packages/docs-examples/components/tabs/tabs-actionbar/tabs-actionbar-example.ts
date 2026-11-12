@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Tabs actionbar
@@ -44,8 +43,6 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsActionbarExample {
-    protected readonly text = injectExampleText();
-
     readonly dashboards = new Array(2).fill(0).map((_, index) => `Dashboard ${index}`);
     activeDashboard = this.dashboards[0];
 

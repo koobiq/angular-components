@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/sidepanel';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 @Component({
     selector: 'example-sidepanel-disable-close-content',
@@ -22,8 +23,10 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleSidepanelDisableCloseContent {
-    protected readonly text = injectExampleText();
+export class ExampleSidepanelDisableCloseContent extends BaseLocalizedExample<ExampleText> {
+    constructor() {
+        super(TEXT);
+    }
 }
 
 /**
@@ -39,9 +42,7 @@ export class ExampleSidepanelDisableCloseContent {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelDisableCloseExample {
-    protected readonly text = injectExampleText();
-
+export class SidepanelDisableCloseExample extends BaseLocalizedExample<ExampleText> {
     private readonly sidepanelService = inject(KbqSidepanelService);
 
     open() {
@@ -49,5 +50,9 @@ export class SidepanelDisableCloseExample {
             hasBackdrop: true,
             disableClose: true
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

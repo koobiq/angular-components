@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqRadioModule } from '@koobiq/components/radio';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Radio size
@@ -46,6 +45,4 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RadioOverviewExample {
-    protected readonly text = injectExampleText();
-}
+export class RadioOverviewExample {}

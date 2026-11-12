@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqInputModule } from '@koobiq/components/input';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /** @title Form field with kbq-error */
 @Component({
@@ -23,8 +24,10 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldWithErrorExample {
-    protected readonly text = injectExampleText();
-
+export class FormFieldWithErrorExample extends BaseLocalizedExample<ExampleText> {
     readonly formControl = new FormControl('', [Validators.required, Validators.email]);
+
+    constructor() {
+        super(TEXT);
+    }
 }

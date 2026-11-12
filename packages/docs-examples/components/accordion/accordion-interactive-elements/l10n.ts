@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the accordion-interactive-elements example. */
 export interface ExampleText {
@@ -17,7 +16,7 @@ export interface ExampleText {
     keyboardHint: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         profile: 'Профиль',
         specifications: 'Характеристики',
@@ -47,6 +46,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         keyboardHint: 'Enter and Space toggle the section only while the trigger itself is focused'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

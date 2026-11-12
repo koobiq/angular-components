@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the validation-message-global example. */
 export interface ExampleText {
@@ -9,7 +8,7 @@ export interface ExampleText {
     serverError: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         name: 'Имя',
         lastName: 'Фамилия',
@@ -23,6 +22,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         serverError: 'The server didn’t respond while sending data. Please try again.'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

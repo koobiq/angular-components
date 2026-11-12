@@ -5,7 +5,6 @@ import {
     KbqSingleFileUploadComponent
 } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title File-upload single
@@ -27,8 +26,6 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadSingleWithSignalExample {
-    protected readonly text = injectExampleText();
-
     readonly file = signal<KbqFileItem | null>(null);
     readonly files = signal<KbqFileItem[]>([]);
 

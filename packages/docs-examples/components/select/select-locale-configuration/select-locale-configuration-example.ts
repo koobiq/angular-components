@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Select locale configuration
@@ -54,9 +55,11 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectLocaleConfigurationExample {
-    protected readonly text = injectExampleText();
-
+export class SelectLocaleConfigurationExample extends BaseLocalizedExample<ExampleText> {
     readonly options = computed(() => Array.from({ length: 4 }, (_, i) => 'Option #' + (i + 1)));
     readonly selected = [this.options[0]];
+
+    constructor() {
+        super(TEXT);
+    }
 }

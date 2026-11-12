@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
 import {
     AllCommunityModule,
@@ -9,7 +10,7 @@ import {
     ModuleRegistry,
     RowSelectionOptions
 } from 'ag-grid-community';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -29,15 +30,20 @@ ModuleRegistry.registerModules([AllCommunityModule]);
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridLoadTextExampleLoadingText implements ICellRendererAngularComp {
-    protected readonly text = injectExampleText();
-
+export class AgGridLoadTextExampleLoadingText
+    extends BaseLocalizedExample<ExampleText>
+    implements ICellRendererAngularComp
+{
     protected readonly label = computed(() => this.text().loading);
 
     agInit(): void {}
 
     refresh(): boolean {
         return true;
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }
 
@@ -69,9 +75,7 @@ export class AgGridLoadTextExampleLoadingText implements ICellRendererAngularCom
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridLoadTextExample {
-    protected readonly text = injectExampleText();
-
+export class AgGridLoadTextExample extends BaseLocalizedExample<ExampleText> {
     protected readonly loadingTextRenderer = AgGridLoadTextExampleLoadingText;
 
     protected readonly columnDefs = computed(() =>
@@ -104,4 +108,8 @@ export class AgGridLoadTextExample {
     }));
 
     protected readonly isFullWidthRow = ({ rowNode }: IsFullWidthRowParams): boolean => rowNode.data === undefined;
+
+    constructor() {
+        super(TEXT);
+    }
 }

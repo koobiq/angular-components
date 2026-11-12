@@ -6,7 +6,8 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 import { KbqTitleDirective } from '@koobiq/components/title';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 interface CustomModalData {
     title: string;
@@ -95,15 +96,17 @@ interface CustomModalData {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomModalComponent {
-    protected readonly text = injectExampleText();
-
+export class CustomModalComponent extends BaseLocalizedExample<ExampleText> {
     private readonly modalRef = inject(KbqModalRef);
 
     readonly data = inject<CustomModalData>(KBQ_MODAL_DATA);
 
     destroyModal(action: 'save' | 'close') {
         this.modalRef.destroy(action);
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }
 
@@ -118,9 +121,7 @@ export class CustomModalComponent {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalComponentExample {
-    protected readonly text = injectExampleText();
-
+export class ModalComponentExample extends BaseLocalizedExample<ExampleText> {
     private readonly modalService = inject(KbqModalService);
 
     modalRef: KbqModalRef<CustomModalComponent, 'save' | 'close'>;
@@ -141,5 +142,9 @@ export class ModalComponentExample {
         this.modalRef.afterClose.subscribe((action) => {
             console.log(`[afterClose] emitted, chosen action: ${action}`);
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the tooltip-extended example. */
 export interface ExampleText {
@@ -10,7 +9,7 @@ export interface ExampleText {
     extendedTypes: string[];
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         confidence: 'Уверенность',
         incidentType: 'Тип инцидента',
@@ -31,6 +30,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         extendedTypes: ['Malware Infection', 'Phishing Attack', 'Data Breach', 'DoS/DDoS Attack']
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

@@ -4,8 +4,9 @@ import { DateAdapter, KbqFormsModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Datepicker range
@@ -43,11 +44,13 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DatepickerRangeExample {
-    protected readonly text = injectExampleText();
-
+export class DatepickerRangeExample extends BaseLocalizedExample<ExampleText> {
     private adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     readonly minDate = this.adapter.createDate(2023, 11, 14);
     readonly maxDate = this.adapter.createDate(2024, 7, 25);
+
+    constructor() {
+        super(TEXT);
+    }
 }

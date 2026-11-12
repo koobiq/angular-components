@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the file-upload-single-async-validation example. */
 export interface ExampleText {
@@ -7,7 +6,7 @@ export interface ExampleText {
     onlyTxtWithLines: (maxLines: number) => string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         failedToRead: 'Не удалось прочитать содержимое файла',
         onlyTxtWithLines: (maxLines) => `Разрешены только TXT-файлы до ${maxLines} строк`
@@ -17,6 +16,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         onlyTxtWithLines: (maxLines) => `Only TXT files with up to ${maxLines} lines are allowed`
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

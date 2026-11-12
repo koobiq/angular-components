@@ -4,7 +4,8 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqUserInfo, KbqUsername, KbqUsernameMode, KbqUsernameStyle } from '@koobiq/components/username';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Username playground
@@ -61,9 +62,7 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UsernamePlaygroundExample {
-    protected readonly text = injectExampleText();
-
+export class UsernamePlaygroundExample extends BaseLocalizedExample<ExampleText> {
     userInfo: KbqUserInfo = {
         firstName: 'Maxwell',
         middleName: 'Alan',
@@ -77,4 +76,8 @@ export class UsernamePlaygroundExample {
 
     modes: KbqUsernameMode[] = ['inline', 'stacked', 'text'];
     types: KbqUsernameStyle[] = ['default', 'error', 'accented', 'inherit'];
+
+    constructor() {
+        super(TEXT);
+    }
 }

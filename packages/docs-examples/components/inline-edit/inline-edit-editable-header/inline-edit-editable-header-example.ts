@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component, ElementRef, signal, viewChild } fro
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Inline edit editable header
@@ -75,9 +76,7 @@ import { injectExampleText } from '../l10n';
         class: 'layout-flex layout-column layout-gap-s'
     }
 })
-export class InlineEditEditableHeaderExample {
-    protected readonly text = injectExampleText();
-
+export class InlineEditEditableHeaderExample extends BaseLocalizedExample<ExampleText> {
     protected readonly maxRows = 5;
     protected get placeholder(): string {
         return this.text().placeholder;
@@ -103,5 +102,9 @@ export class InlineEditEditableHeaderExample {
         setTimeout(() => {
             this.control.setValue(this.control.value.replace(/\n/g, ' '));
         });
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

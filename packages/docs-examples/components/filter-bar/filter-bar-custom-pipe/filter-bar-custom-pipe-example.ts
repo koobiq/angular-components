@@ -28,7 +28,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { injectLocalizedPeriods } from '../l10n';
+import { injectLocalizedPeriods } from '../localized-periods';
 
 @Component({
     selector: 'color-pipe',

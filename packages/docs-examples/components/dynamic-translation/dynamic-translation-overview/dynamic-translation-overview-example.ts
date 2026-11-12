@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqDynamicTranslationModule } from '@koobiq/components/dynamic-translation';
 import { KbqLink } from '@koobiq/components/link';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Dynamic translation overview example
@@ -23,6 +24,8 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DynamicTranslationOverviewExample {
-    protected readonly text = injectExampleText();
+export class DynamicTranslationOverviewExample extends BaseLocalizedExample<ExampleText> {
+    constructor() {
+        super(TEXT);
+    }
 }

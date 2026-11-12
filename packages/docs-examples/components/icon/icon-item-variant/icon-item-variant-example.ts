@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Icon Item Variant
@@ -28,7 +27,5 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconItemVariantExample {
-    protected readonly text = injectExampleText();
-
     colors = KbqComponentColors;
 }

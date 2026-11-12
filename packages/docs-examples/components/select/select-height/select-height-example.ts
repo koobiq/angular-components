@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Select height
@@ -48,8 +47,6 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectHeightExample {
-    protected readonly text = injectExampleText();
-
     readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + (i + 1)));
     protected readonly value = model(this.options[0]);
     protected readonly themedValue = model(this.options[0]);

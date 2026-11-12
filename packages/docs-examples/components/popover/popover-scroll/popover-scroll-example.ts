@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title popover-scroll
@@ -62,8 +63,10 @@ import { injectExampleText } from './l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PopoverScrollExample {
-    protected readonly text = injectExampleText();
-
+export class PopoverScrollExample extends BaseLocalizedExample<ExampleText> {
     activePopover: KbqPopoverTrigger;
+
+    constructor() {
+        super(TEXT);
+    }
 }

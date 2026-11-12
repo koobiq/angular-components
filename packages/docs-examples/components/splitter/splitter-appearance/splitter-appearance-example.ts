@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqSplitter, KbqSplitterAppearance, KbqSplitterPanel } from '@koobiq/components/splitter';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Splitter appearance
@@ -58,8 +57,6 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SplitterAppearanceExample {
-    protected readonly text = injectExampleText();
-
     protected readonly appearances: KbqSplitterAppearance[] = ['divider', 'transparent', 'handle'];
     protected readonly appearance = model<KbqSplitterAppearance>('handle');
 }

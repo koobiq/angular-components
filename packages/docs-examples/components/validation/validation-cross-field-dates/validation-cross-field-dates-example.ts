@@ -16,8 +16,9 @@ import {
 } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { DateTime } from 'luxon';
-import { injectExampleText } from './l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * Payload the cross-field validator publishes, so that the `ErrorStateMatcher` can tell which controls a
@@ -111,9 +112,7 @@ const exampleCrossFieldMatcher = new ShowOnCrossFieldErrorStateMatcher((_key, va
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     }
 })
-export class ValidationCrossFieldDatesExample {
-    protected readonly text = injectExampleText();
-
+export class ValidationCrossFieldDatesExample extends BaseLocalizedExample<ExampleText> {
     private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
 
     protected readonly form = new FormGroup(
@@ -130,4 +129,8 @@ export class ValidationCrossFieldDatesExample {
             )
         }
     );
+
+    constructor() {
+        super(TEXT);
+    }
 }

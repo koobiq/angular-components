@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidepanelModule, KbqSidepanelRef, KbqSidepanelService } from '@koobiq/components/sidepanel';
-import { injectExampleText } from './l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 const stateSavingKey = 'sidepanel-state-saving-example';
 
@@ -51,9 +52,7 @@ const stateSavingKey = 'sidepanel-state-saving-example';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SidepanelStateSavingExample {
-    protected readonly text = injectExampleText();
-
+export class SidepanelStateSavingExample extends BaseLocalizedExample<ExampleText> {
     protected readonly sidepanelService = inject(KbqSidepanelService);
     protected readonly stateSavingKey = stateSavingKey;
     protected readonly sidepanelRef = signal<KbqSidepanelRef | null>(null);
@@ -61,6 +60,7 @@ export class SidepanelStateSavingExample {
     private readonly template = viewChild.required(TemplateRef);
 
     constructor() {
+        super(TEXT);
         // Once the view exists, so the template is there to open.
         afterNextRender(() => {
             if (this.sidepanelService.wasOpen(stateSavingKey)) this.open();

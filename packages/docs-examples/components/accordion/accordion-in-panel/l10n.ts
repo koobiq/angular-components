@@ -1,40 +1,36 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the accordion-in-panel example. */
 export interface ExampleText {
     content: string;
-    panel: string;
-    openPanel: string;
     profile: string;
     specifications: string;
     servers: string;
     data: string;
     note: string;
+    panel: string;
+    openPanel: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         content: 'Данный текст используется для иллюстрации внутреннего содержимого секции аккордеона',
-        panel: 'Панель',
-        openPanel: 'Открыть панель с аккордеоном',
         profile: 'Профиль',
         specifications: 'Характеристики',
         servers: 'Сервера',
         data: 'Данные',
-        note: 'Заметка'
+        note: 'Заметка',
+        panel: 'Панель',
+        openPanel: 'Открыть панель с аккордеоном'
     },
     default: {
         content: 'This text illustrates the inner content of the accordion section',
-        panel: 'Panel',
-        openPanel: 'Open panel with accordion',
         profile: 'Profile',
         specifications: 'Specifications',
         servers: 'Servers',
         data: 'Data',
-        note: 'Note'
+        note: 'Note',
+        panel: 'Panel',
+        openPanel: 'Open panel with accordion'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);

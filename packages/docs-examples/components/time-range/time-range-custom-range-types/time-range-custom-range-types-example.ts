@@ -14,8 +14,9 @@ import {
     KbqTimeRangeType,
     KbqTimeRangeUnits
 } from '@koobiq/components/time-range';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { of } from 'rxjs';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 const customTypes: KbqCustomTimeRangeType[] = [
     { type: 'last3Minutes', units: { minutes: -3 }, translationType: 'minutes' },
@@ -87,7 +88,7 @@ const customTypeTranslation: Record<string, KbqTimeRangeTranslationType> = Objec
         class: 'layout-flex layout-row layout-align-center-center layout-gap-3xl'
     }
 })
-export class TimeRangeCustomRangeTypesExample {
+export class TimeRangeCustomRangeTypesExample extends BaseLocalizedExample<ExampleText> {
     protected readonly dateAdapter = inject(DateAdapter);
     protected readonly dateFormatter = inject(DateFormatter);
 
@@ -99,8 +100,6 @@ export class TimeRangeCustomRangeTypesExample {
 
         return this.localeService?.getParams('timeRange');
     });
-
-    protected readonly text = injectExampleText();
 
     protected readonly placeholder = computed(() => this.text().placeholder);
 
@@ -120,5 +119,9 @@ export class TimeRangeCustomRangeTypesExample {
             false,
             localeConfig.durationTemplate.option
         );
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

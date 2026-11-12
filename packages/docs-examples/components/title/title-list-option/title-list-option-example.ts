@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { injectExampleText } from '../l10n';
 
 /**
  * @title Two-line list options
@@ -37,8 +36,6 @@ import { injectExampleText } from '../l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleListOptionExample {
-    protected readonly text = injectExampleText();
-
     selected = [];
     servers = [
         {

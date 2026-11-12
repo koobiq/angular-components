@@ -5,7 +5,8 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Navbar vertical
@@ -22,11 +23,13 @@ import { injectExampleText } from '../l10n';
     templateUrl: 'navbar-vertical-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarVerticalExample {
-    protected readonly text = injectExampleText();
-
+export class NavbarVerticalExample extends BaseLocalizedExample<ExampleText> {
     readonly popUpPlacements = PopUpPlacements;
     readonly colors = KbqComponentColors;
     /** Position of the selected app in `text().apps`, so the selection survives a locale switch. */
     readonly selectedApp = signal(0);
+
+    constructor() {
+        super(TEXT);
+    }
 }

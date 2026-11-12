@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
-import { injectExampleText } from '../l10n';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Accordion sections
@@ -12,6 +13,8 @@ import { injectExampleText } from '../l10n';
     templateUrl: 'accordion-sections-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccordionSectionsExample {
-    protected readonly text = injectExampleText();
+export class AccordionSectionsExample extends BaseLocalizedExample<ExampleText> {
+    constructor() {
+        super(TEXT);
+    }
 }

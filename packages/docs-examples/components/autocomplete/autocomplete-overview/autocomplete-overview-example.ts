@@ -4,9 +4,10 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqFormsModule, KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
+import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { injectExampleText } from '../l10n';
+import { ExampleText, TEXT } from './l10n';
 
 /**
  * @title Autocomplete
@@ -43,9 +44,7 @@ import { injectExampleText } from '../l10n';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AutocompleteOverviewExample implements OnInit {
-    protected readonly text = injectExampleText();
-
+export class AutocompleteOverviewExample extends BaseLocalizedExample<ExampleText> implements OnInit {
     protected readonly options = computed(() => this.text().countries);
 
     control = new FormControl('');
@@ -62,5 +61,9 @@ export class AutocompleteOverviewExample implements OnInit {
         const filterValue = value ? value.toLowerCase() : '';
 
         return this.options().filter((option) => option.toLowerCase().includes(filterValue));
+    }
+
+    constructor() {
+        super(TEXT);
     }
 }

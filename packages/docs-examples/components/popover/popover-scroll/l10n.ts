@@ -1,5 +1,4 @@
-import { Signal } from '@angular/core';
-import { injectLocalizedText } from '../l10n';
+import { LocalizedText } from '@koobiq/docs-examples/i18n';
 
 /** Text of the popover-scroll example. */
 export interface ExampleText {
@@ -11,7 +10,7 @@ export interface ExampleText {
     closeOnScroll: string;
 }
 
-const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
+export const TEXT: LocalizedText<ExampleText> = {
     'ru-RU': {
         wonder: 'Интересно, что это такое?',
         save: 'Сохранить',
@@ -29,6 +28,3 @@ const TEXT: Record<string, ExampleText> & { default: ExampleText } = {
         closeOnScroll: 'Closes on scroll'
     }
 };
-
-/** Text of the example in the active locale. */
-export const injectExampleText = (): Signal<ExampleText> => injectLocalizedText(TEXT);
