@@ -8,7 +8,7 @@ Koobiq solves this with `ErrorStateMatcher`.
 
 `ErrorStateMatcher` is a pure display policy. It reads the control's existing errors and the form's submission state, then answers a single question: **should the error be visible right now?**
 
-Validators and the `FormControl` remain unchanged — `ErrorStateMatcher` never adds or removes errors. It only decides when `kbq-form-field` should reveal the `<kbq-error>` children and apply the `kbq-invalid` CSS class.
+Validators and the `FormControl` remain unchanged — `ErrorStateMatcher` never adds or removes errors. It only decides when `kbq-form-field` should reveal the `<kbq-error>` children and apply the `kbq-form-field_invalid` CSS class.
 
 In other words, **errors belong to the `FormControl`**. For a required field that starts empty, `control.hasError('required')` returns `true` as soon as the control is created. `ErrorStateMatcher` only decides when to tell the user about it.
 

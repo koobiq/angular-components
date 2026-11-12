@@ -300,7 +300,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     /**
      * Whether the `closed` being emitted closes the panels this one is nested in too, see `closeChain`.
      *
-     * @internal
+     * @docs-private
      */
     closingChain = false;
 
@@ -783,7 +783,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      * Emits `closed` for an activated item, which closes every panel up to the root. Its reason follows the focus
      * origin, so after keyboard navigation it is the `'keydown'` that Escape reports for closing one panel alone.
      *
-     * @internal
+     * @docs-private
      */
     closeChain(reason: DropdownCloseReason): void {
         this.closingChain = true;

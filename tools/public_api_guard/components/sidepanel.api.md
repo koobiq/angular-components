@@ -60,8 +60,7 @@ export class KbqSidepanelBody {
 export class KbqSidepanelClose {
     constructor();
     readonly kbqSidepanelClose: i0.InputSignal<any>;
-    // (undocumented)
-    readonly sidepanelRef: KbqSidepanelRef<any, any>;
+    get sidepanelRef(): KbqSidepanelRef;
     readonly sidepanelResult: i0.InputSignal<any>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelClose, "button[kbq-sidepanel-close], button[kbqSidepanelClose]", never, { "sidepanelResult": { "alias": "kbq-sidepanel-close"; "required": false; "isSignal": true; }; "kbqSidepanelClose": { "alias": "kbqSidepanelClose"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
@@ -94,6 +93,10 @@ export class KbqSidepanelConfig<D = any> {
 // @public (undocumented)
 export class KbqSidepanelContainerComponent extends BasePortalOutlet implements OnDestroy {
     protected readonly animationsDisabled: boolean;
+    // Warning: (ae-forgotten-export) The symbol "KbqSidepanelAnimationState" needs to be exported by the entry point koobiq-components-sidepanel.d.ts
+    readonly animationState: i0.WritableSignal<KbqSidepanelAnimationState>;
+    // Warning: (ae-forgotten-export) The symbol "KbqSidepanelAnimationEvent" needs to be exported by the entry point koobiq-components-sidepanel.d.ts
+    readonly animationStateChanged: Subject<KbqSidepanelAnimationEvent>;
     get ariaLabelledBy(): string | null;
     set ariaLabelledBy(value: string | null);
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
@@ -106,11 +109,14 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     // (undocumented)
     ngOnDestroy(): void;
     readonly portalOutlet: i0.Signal<CdkPortalOutlet>;
+    setAnimationState(state: KbqSidepanelAnimationState): void;
     setAriaLabelledBy(id: string): void;
     setWithIndent(withIndent: boolean): void;
     // (undocumented)
     sidepanelConfig: KbqSidepanelConfig<any>;
     get size(): string;
+    protected readonly stateOpacity: i0.Signal<number | null>;
+    protected readonly stateTransform: i0.Signal<string | null>;
     get trapFocus(): boolean;
     get trapFocusAutoCapture(): boolean;
     get withIndent(): boolean;

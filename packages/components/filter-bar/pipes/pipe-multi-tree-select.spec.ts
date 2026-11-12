@@ -13,6 +13,7 @@ import {
     KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes,
+    KbqSelectValue,
     KbqTreeSelectNode
 } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -211,6 +212,90 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
         }),
         values: TREE_DATA,
         createFixture: () => TestBed.createComponent(TestComponent)
+    });
+
+    describe('onOpen', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        describe('with defaultExpanded: false', () => {
+            it('should not expand all nodes on open', () => {
+                fixture.componentInstance.activeFilter = createFilter([
+                    createPipe({ name: 'test', value: null, defaultExpanded: false })
+                ]);
+                fixture.detectChanges();
+
+                const component = getPipeComponent();
+                const expandAllSpy = vi.spyOn(component.treeControl, 'expandAll');
+
+                component.onOpen();
+
+                expect(expandAllSpy).not.toHaveBeenCalled();
+                expect(component.treeControl.expansionModel.selected).toEqual([]);
+            });
+
+            it('should expand the ancestors of the selected leaves', () => {
+                // 'value 2' is the 'Operator' leaf under the 'Management and Configuration' branch.
+                fixture.componentInstance.activeFilter = createFilter([
+                    createPipe({ name: 'test', value: ['value 2'], defaultExpanded: false })
+                ]);
+                fixture.detectChanges();
+
+                const component = getPipeComponent();
+
+                component.onOpen();
+
+                const expanded = component.treeControl.expansionModel.selected;
+
+                expect(expanded.length).toBeGreaterThan(0);
+                expect(expanded.every((node) => node.expandable)).toBe(true);
+
+                const otherBranch = component.treeControl.dataNodes.find(
+                    (node) => node.level === 0 && node.name === 'Knowledge Base'
+                );
+
+                expect(component.treeControl.isExpanded(otherBranch!)).toBe(false);
+            });
+
+            it('should expand the ancestors of the committed value rather than a stale selection snapshot', () => {
+                fixture.componentInstance.activeFilter = createFilter([
+                    createPipe({ name: 'test', value: null, defaultExpanded: false })
+                ]);
+                fixture.detectChanges();
+
+                const component = getPipeComponent();
+
+                // A user-made selection commits to `data.value` but does not refresh the pipe's internal
+                // selection snapshot, so reading the snapshot here would expand nothing. The entries are
+                // raw node values at runtime, though the pipe types them as `KbqSelectValue`.
+                component.data.value = ['value 2' as unknown as KbqSelectValue];
+                component.onOpen();
+
+                const expanded = component.treeControl.expansionModel.selected;
+
+                expect(expanded.map((node) => node.name)).toEqual(['Management and Configuration']);
+            });
+
+            it('should not expand anything when only the select-all node is in the model', () => {
+                fixture.componentInstance.activeFilter = createFilter([
+                    createPipe({
+                        name: 'test',
+                        value: [kbqTreeSelectAllValue],
+                        selectAll: true,
+                        defaultExpanded: false
+                    })
+                ]);
+                fixture.detectChanges();
+
+                const component = getPipeComponent();
+
+                component.onOpen();
+
+                expect(component.treeControl.expansionModel.selected).toEqual([]);
+            });
+        });
     });
 
     describe('isEmpty', () => {
@@ -447,6 +532,146 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             expect(component.allOptionsSelected).toBe(true);
             expect(component.selectedAllEqualsSelectedNothing).toBe(true);
             expect(component.data.value).toEqual([]);
+        });
+    });
+
+    describe('selectAllCounter', () => {
+        const getOptions = (): HTMLElement[] => Array.from(document.querySelectorAll<HTMLElement>('.kbq-tree-option'));
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        it('should not render the counter when the flag is absent', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getOptions()[0].querySelector('.kbq-pipe-select-all__counter')).toBeNull();
+        });
+
+        it('should render the counter with the total number of leaves', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true, selectAllCounter: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getOptions()[0].querySelector('.kbq-pipe-select-all__counter')!.textContent!.trim()).toBe('10');
+        });
+
+        it('should render the counter when the tree is collapsed by default', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true, selectAllCounter: true, defaultExpanded: false })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // A collapsed tree renders the select-all row and the root rows only, not all ten leaves.
+            expect(getOptions().length).toBeLessThan(10);
+            expect(getOptions()[0].querySelector('.kbq-pipe-select-all__counter')!.textContent!.trim()).toBe('10');
+        });
+
+        it('should count only the leaves matching the search', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], search: true, selectAll: true, selectAllCounter: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            getPipeComponent().searchControl.setValue('Admin');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getOptions()[0].querySelector('.kbq-pipe-select-all__counter')!.textContent!.trim()).toBe('3');
+        });
+
+        it('should not count the locked leaves', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.pipeTemplates = [
+                { ...fixture.componentInstance.pipeTemplates[0], lockedValues: ['value 0'] }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true, selectAllCounter: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getOptions()[0].querySelector('.kbq-pipe-select-all__counter')!.textContent!.trim()).toBe('9');
+
+            fixture.componentInstance.pipeTemplates = [
+                { ...fixture.componentInstance.pipeTemplates[0], lockedValues: ['value 1', 'value 2'] }
+            ];
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getOptions()[0].querySelector('.kbq-pipe-select-all__counter')!.textContent!.trim()).toBe('8');
+        });
+
+        it('should not render the counter when the template has no options', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.pipeTemplates = [
+                { ...fixture.componentInstance.pipeTemplates[0], values: undefined }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], selectAll: true, selectAllCounter: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(document.querySelector('.kbq-pipe-select-all__counter')).toBeNull();
+        });
+
+        it('should hide the select-all row when the search matches nothing', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: [], search: true, selectAll: true, selectAllCounter: true })
+            ]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            getPipeComponent().searchControl.setValue('zzz');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getOptions().length).toBe(0);
+            expect(document.querySelector('.kbq-pipe-select-all__counter')).toBeNull();
         });
     });
 
@@ -1176,12 +1401,12 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const filterNodesSpy = vi.spyOn(component.treeControl, 'filterNodes');
+            const applyFilterSpy = vi.spyOn(component.treeControl, 'applyFilter');
 
             component.searchControl.setValue('Admin');
             await vi.runOnlyPendingTimersAsync();
 
-            expect(filterNodesSpy).toHaveBeenCalledWith('Admin');
+            expect(applyFilterSpy).toHaveBeenCalledWith('Admin');
         });
     });
 

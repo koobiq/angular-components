@@ -1,4 +1,4 @@
-﻿import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -513,7 +513,7 @@ export class KbqTreeSelection<T = any, K = T>
                 .map((option) => option.data)
         );
 
-        const candidates = this.treeControl.filterValue.value?.length
+        const candidates = this.treeControl.hasActiveFilter
             ? this.renderedOptions.map((option) => option.data)
             : (this.treeControl.dataNodes ?? []);
 
@@ -836,11 +836,7 @@ export class KbqTreeSelection<T = any, K = T>
     ngAfterContentInit(): void {
         super.ngAfterContentInit();
 
-        if (this.platform.isBrowser) {
-            this.unorderedOptions.changes
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(this.updateRenderedOptions);
-        }
+        this.unorderedOptions.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateRenderedOptions);
 
         this.keyManager = new FocusKeyManager<KbqTreeOption<T>>(this.renderedOptions)
             .withVerticalOrientation(true)
@@ -1670,7 +1666,10 @@ export class KbqTreeSelection<T = any, K = T>
         this.renderedOptions.reset(orderedOptions);
         this.renderedOptions.notifyOnChanges();
 
-        this.updateScrollSize();
+        // The list above is for the server too: an embedding `KbqTreeSelect` reads it for the tags it renders.
+        if (this.platform.isBrowser) {
+            this.updateScrollSize();
+        }
     };
 
     private getSortedNodes(viewContainer: ViewContainerRef): T[] {

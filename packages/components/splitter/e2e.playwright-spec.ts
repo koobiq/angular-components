@@ -424,6 +424,19 @@ test.describe('KbqSplitter', () => {
         });
     });
 
+    test.describe('viewport sizes', () => {
+        test('should follow the viewport while the splitter keeps its own size', async ({ page }) => {
+            await page.setViewportSize({ width: 1200, height: 720 });
+            await page.goto('/E2eSplitterViewportSizes');
+
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(300);
+
+            await page.setViewportSize({ width: 1000, height: 720 });
+
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(250);
+        });
+    });
+
     test.describe('nested across the other axis', () => {
         // The outer splitter is vertical and disabled, the nested one horizontal and enabled — so nothing here
         // passes unless each splitter's styles reach its own panels only.

@@ -877,6 +877,17 @@ describe('KbqRadio', () => {
             expect(errorElement()!.compareDocumentPosition(hint) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
         });
 
+        // A server-rendered page reaches the browser through its HTML parser, where a block element in the markup
+        // would close a `<p>` around the control and fail hydration.
+        it('should leave its markup inside a paragraph, with the error and the hint shown', () => {
+            fixture.componentInstance.form.controls.delivery.markAsTouched();
+            fixture.detectChanges();
+
+            const markup = `<p>${group.outerHTML}</p>`;
+
+            expect(new DOMParser().parseFromString(markup, 'text/html').body.innerHTML).toBe(markup);
+        });
+
         it('should mark the group whose labels come before the buttons', () => {
             fixture.componentInstance.labelPosition = 'before';
             fixture.detectChanges();

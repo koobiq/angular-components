@@ -161,6 +161,13 @@ export class KbqSelectChange {
 /** Options for the `kbq-select` that can be configured using the `KBQ_SELECT_OPTIONS` injection token. */
 export type KbqSelectOptions = Partial<{
     /**
+     * Whether option text wraps onto multiple lines. When `panelWidth` is nullish, the panel matches the trigger
+     * width; an explicit `panelWidth` takes precedence. Not supported with `cdk-virtual-scroll-viewport`: the panel
+     * modifier and automatic width fallback are not applied. Defaults to `false`.
+     */
+    multilineOptions: boolean;
+
+    /**
      * Width of the panel. If set to `auto`, the panel will match the trigger width.
      * If set to null or an empty string, the panel will grow to match the longest option's text.
      */
@@ -591,6 +598,16 @@ export class KbqSelect
     readonly multiline = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /**
+     * Whether option text wraps onto multiple lines. When `panelWidth` is nullish, the panel matches the trigger
+     * width; an explicit `panelWidth` takes precedence. Not supported with `cdk-virtual-scroll-viewport`: the panel
+     * modifier and automatic width fallback are not applied. Defaults to `false`.
+     */
+    readonly multilineOptions = input<boolean, boolean | string | null | undefined>(
+        this.defaultOptions?.multilineOptions ?? false,
+        { transform: booleanAttribute }
+    );
+
+    /**
      * Controls when the search functionality is displayed based on the number of available options.
      *
      * Automatically enables search hiding if value provided, even if `defaultOptions.searchMinOptionsThreshold` is provided.
@@ -920,11 +937,11 @@ export class KbqSelect
     private readonly resolvedAriaLabelValue = computed(
         () => this.ariaLabel() ?? (this.ariaLabelledby ? null : this.placeholder() || null)
     );
-    /** @internal */
+    /** @docs-private */
     protected readonly disabledAttribute = computed(() => this.disabled() || null);
-    /** @internal */
+    /** @docs-private */
     protected readonly disabledClass = computed(() => this.disabled());
-    /** @internal */
+    /** @docs-private */
     protected readonly invalidClass = computed(() => this.errorState());
 
     private readonly focusedValue = signal(false);
@@ -1223,6 +1240,32 @@ export class KbqSelect
 
     constructor() {
         super();
+
+        let widthInputsInitialized = false;
+
+        // The overlay width bindings are plain fields, so refresh them after render rather than in this effect.
+        effect(() => {
+            this.getEffectivePanelWidth();
+            this.panelMinWidth();
+
+            if (!widthInputsInitialized) {
+                widthInputsInitialized = true;
+
+                return;
+            }
+
+            if (!untracked(() => this.panelOpen)) return;
+
+            afterNextRender(
+                () => {
+                    if (!untracked(() => this.panelOpen)) return;
+
+                    this.updatePanelWidth();
+                    this._changeDetectorRef.markForCheck();
+                },
+                { injector: this.injector }
+            );
+        });
 
         // A different comparator means a different set of options can match the value.
         let comparatorBound = false;
@@ -1545,6 +1588,18 @@ export class KbqSelect
         untracked(() => this.attachPanel());
     }
 
+    private updatePanelWidth(): void {
+        this.updateOverlayWidth(
+            this.getEffectivePanelWidth(),
+            this.panelMinWidth(),
+            this.overlayOrigin ?? this.elementRef
+        );
+    }
+
+    private getEffectivePanelWidth(): KbqPanelWidth {
+        return this.panelWidth() ?? (this.multilineOptions() && !this.withVirtualScroll ? 'auto' : null);
+    }
+
     private attachPanel(): void {
         const trigger = this.trigger();
 
@@ -1566,7 +1621,7 @@ export class KbqSelect
             this.overlayOrigin = this.parentFormField.getConnectedOverlayOrigin();
         }
 
-        this.updateOverlayWidth(this.panelWidth(), this.panelMinWidth(), this.overlayOrigin ?? this.elementRef);
+        this.updatePanelWidth();
 
         this.panelOpen = true;
 
@@ -1779,13 +1834,20 @@ export class KbqSelect
     }
 
     /**
-     * Returns the full set of classes for the panel: base class, theme and custom `panelClass`.
+     * Returns the full set of classes for the panel: base class, multiline modifier, theme and custom `panelClass`.
      *
-     * Only the theme is read per change detection — it comes from the form field, which does not expose
-     * its color as a signal — while the `panelClass` expansion is memoised.
+     * The theme comes from the form field, which does not expose its color as a signal, while the `panelClass`
+     * expansion is memoised.
      */
     protected getPanelClasses(): string {
-        return ['kbq-select__panel', this.getPanelTheme(), this.customPanelClasses()].filter(Boolean).join(' ');
+        return [
+            'kbq-select__panel',
+            this.multilineOptions() && !this.withVirtualScroll ? 'kbq-select__panel_multiline' : '',
+            this.getPanelTheme(),
+            this.customPanelClasses()
+        ]
+            .filter(Boolean)
+            .join(' ');
     }
 
     /** Focuses the select element. */

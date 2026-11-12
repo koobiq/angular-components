@@ -14,8 +14,6 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <loader-overlay-overview-example />
         <hr />
-        <loader-overlay-fixed-top-example />
-        <hr />
         <loader-overlay-default-example />
         <hr />
         <loader-overlay-large-example />

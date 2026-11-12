@@ -427,7 +427,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'button',
                     hasApi: true,
                     apiId: 'button',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-11-23')
                 },
                 {
                     id: DocsStructureItemId.ButtonToggle,
@@ -666,7 +667,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'input',
                     hasExamples: true,
-                    isUpdated: expiresAt('2026-11-13')
+                    isUpdated: expiresAt('2026-11-19')
                 },
                 {
                     id: DocsStructureItemId.FileUpload,
@@ -811,7 +812,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'navbar',
                     hasApi: true,
                     apiId: 'navbar',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-23')
                 },
                 {
                     id: DocsStructureItemId.NotificationCenter,
@@ -847,7 +849,7 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'popover',
                     hasExamples: true,
-                    isUpdated: expiresAt('2026-11-16')
+                    isUpdated: expiresAt('2026-11-19')
                 },
                 {
                     id: DocsStructureItemId.ProgressBar,
@@ -919,7 +921,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'select',
                     hasApi: true,
                     apiId: 'select',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-19')
                 },
                 {
                     id: DocsStructureItemId.SearchExpandable,
@@ -979,7 +982,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'splitter',
                     hasApi: true,
                     apiId: 'splitter',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-11-23')
                 },
                 {
                     id: DocsStructureItemId.SplitButton,
@@ -1159,7 +1163,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'tooltip',
                     hasApi: true,
                     apiId: 'tooltip',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-19')
                 },
                 {
                     id: DocsStructureItemId.TopBar,
@@ -1232,7 +1237,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'date',
                     hasApi: false,
                     apiId: 'date-formatter',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-11-25')
                 },
                 {
                     id: DocsStructureItemId.FilesizeFormatter,

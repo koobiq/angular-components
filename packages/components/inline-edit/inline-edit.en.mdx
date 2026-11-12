@@ -22,10 +22,7 @@ In a horizontal list, you can adjust the column width of the parameter name and 
 
 Parameters should never appear as blank in view mode. Instead, use placeholder text to signal that a field can be edited.
 
-By default, the system displays _“Not filled”_, but it’s better to use contextual messages for clarity. Examples:
-
-- _Responsible: Not assigned_
-- _End date: Not specified_
+By default, the system displays _“Not filled”_, but it’s better to use contextual messages for clarity. For example: _Responsible: Not assigned_, _End date: Not specified_.
 
 For fields without labels, the placeholder can include the field name, e.g., _Description: Not provided_, _Operator: Not set_, _Incident type: Not defined_.
 
@@ -39,11 +36,11 @@ The error message is opt-in. Pass `validationTooltip` to get the red tooltip the
 
 Validation is run against the control itself rather than against its error styling, so a value the user never touched is rejected as well — a select that commits from `(selectionChange)` cannot write an invalid option through.
 
+<Example id="inline-edit-validation" />
+
 When certain characters are always invalid (e.g., letters in an IP address), block their input directly. Prevented characters do not appear, and a yellow tooltip explains why.
 
 If the user clears a value, you can substitute either a default value or the last valid entry to avoid errors.
-
-<Example id="inline-edit-validation" />
 
 ### Saving to a server
 
@@ -79,12 +76,7 @@ When the server rejects part of the value rather than all of it, match the rejec
 
 ### Action menu
 
-On hover or focus, an action button or menu can appear on the right side of the field, offering options such as:
-
-- Copy text
-- Add value to filter
-- Clear field
-- Fill from template
+On hover or focus, an action button or menu can appear on the right side of the field: copy text, add value to filter, clear field, fill from template.
 
 These actions are visually separated from the main value and placed in the top-right corner. When the menu is open, both the highlight and the icon remain visible.
 

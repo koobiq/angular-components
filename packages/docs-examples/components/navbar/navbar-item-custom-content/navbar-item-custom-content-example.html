@@ -1,0 +1,27 @@
+<div style="height: 480px" class="layout-row">
+    <kbq-vertical-navbar [expanded]="true">
+        <kbq-navbar-container>
+            <a href="#" kbq-navbar-item>
+                <div kbqNavbarItemContent>
+                    <div
+                        style="
+                            width: 32px;
+                            height: 32px;
+                            margin: 4px;
+                            border-radius: 8px;
+                            background: linear-gradient(135deg, #ec2fa2, #b026ff);
+                        "
+                    ></div>
+                </div>
+                <kbq-navbar-title>Orbit</kbq-navbar-title>
+            </a>
+
+            <a href="#" kbq-navbar-item class="kbq-active">
+                <i kbq-icon="kbq-folder_16" color="contrast"></i>
+                <kbq-navbar-title>Dashboards</kbq-navbar-title>
+            </a>
+        </kbq-navbar-container>
+
+        <button kbq-navbar-toggle></button>
+    </kbq-vertical-navbar>
+</div>

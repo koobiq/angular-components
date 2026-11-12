@@ -1,10 +1,16 @@
-// Matches popover.scss: the 24px arrow inset plus half of its 12px layout size.
-const ARROW_CENTER_INSET = 30;
-
-export const getPopoverArrowShift = (
+/**
+ * Calculates the translation that points a pop-up arrow at a viewport point, clamped to the panel's arrow inset.
+ *
+ * @param placement - Resolved CSS placement of the panel.
+ * @param panelRect - Panel rectangle in viewport coordinates.
+ * @param point - Target point in viewport coordinates.
+ * @param arrowCenterInset - Distance from a panel edge to the arrow center, in pixels.
+ */
+export const kbqGetPopUpArrowShift = (
     placement: string,
     panelRect: DOMRect,
-    point: { x: number; y: number }
+    point: { x: number; y: number },
+    arrowCenterInset: number
 ): { x: number; y: number } => {
     const horizontal =
         placement === 'top' ||
@@ -26,12 +32,12 @@ export const getPopoverArrowShift = (
     const alignedToStart = horizontal ? placement.endsWith('-left') : placement.endsWith('-top');
     const alignedToEnd = horizontal ? placement.endsWith('-right') : placement.endsWith('-bottom');
     const defaultCenter = alignedToStart
-        ? panelStart + ARROW_CENTER_INSET
+        ? panelStart + arrowCenterInset
         : alignedToEnd
-          ? panelEnd - ARROW_CENTER_INSET
+          ? panelEnd - arrowCenterInset
           : panelCenter;
-    const min = panelStart + ARROW_CENTER_INSET;
-    const max = panelEnd - ARROW_CENTER_INSET;
+    const min = panelStart + arrowCenterInset;
+    const max = panelEnd - arrowCenterInset;
     const pointCenter = min > max ? panelCenter : Math.min(Math.max(point[axis], min), max);
     const shift = pointCenter - defaultCenter;
 

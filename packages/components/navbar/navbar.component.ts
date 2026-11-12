@@ -45,6 +45,7 @@ import {
     KbqNavbarItem,
     KbqNavbarRectangleElement
 } from './navbar-item.component';
+import { kbqNavbarTooltipOptionsProvider } from './navbar-tooltip-defaults';
 import { getOuterWidth } from './outer-width';
 
 @Directive()
@@ -249,6 +250,7 @@ export class KbqNavbarContainer {}
         './navbar-divider.scss',
         './navbar-tokens.scss'
     ],
+    providers: [kbqNavbarTooltipOptionsProvider],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

@@ -1,4 +1,5 @@
 import { Dialog } from '@angular/cdk/dialog';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { OverlayContainer, ScrollStrategy } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { SpyLocation } from '@angular/common/testing';
@@ -25,8 +26,9 @@ import {
     KbqLocaleService,
     ruRULocaleData
 } from '@koobiq/components/core';
+import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, NEVER } from 'rxjs';
 import { KBQ_ACTIONS_PANEL_DATA, KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR, KbqActionsPanel } from './actions-panel';
 import { KbqActionsPanelConfig, kbqActionsPanelDefaultConfigProvider } from './actions-panel-config';
 import { KbqActionsPanelRef } from './actions-panel-ref';
@@ -163,6 +165,28 @@ class ActionsPanelLiveContent {
 
     open(): void {
         this.actionsPanel.open(this.template());
+    }
+}
+
+@Component({
+    selector: 'actions-panel-overflow-items',
+    imports: [KbqOverflowItemsModule],
+    template: `
+        <ng-template #actionsPanel>
+            <div kbqOverflowItems></div>
+        </ng-template>
+    `,
+    providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ActionsPanelOverflowItems {
+    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    private readonly template = viewChild.required('actionsPanel', { read: TemplateRef });
+
+    open(config?: KbqActionsPanelConfig): KbqActionsPanelRef {
+        return this.actionsPanel.open(this.template(), config);
     }
 }
 
@@ -971,5 +995,21 @@ describe(KbqActionsPanelModule.name, () => {
         await lastValueFrom(actionsPanelRef.afterClosed);
 
         expect(hostElement.querySelector(`.${KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR}`)).toBeNull();
+    });
+
+    it.each([
+        ['in the viewport', false],
+        ['in an overlayContainer', true]
+    ])('should make KbqOverflowItems inside it observe the overlay host %s', (_, scoped) => {
+        // `NEVER` as a real observer: one that completes would flush the debounced recalculation on destroy.
+        const observe = vi.fn().mockReturnValue(NEVER);
+        const { componentInstance } = createComponent(ActionsPanelOverflowItems, [
+            { provide: SharedResizeObserver, useValue: { observe } }
+        ]);
+        const { overlayRef } = componentInstance.open(
+            scoped ? { overlayContainer: componentInstance.elementRef } : undefined
+        );
+
+        expect(observe).toHaveBeenCalledWith(overlayRef.hostElement);
     });
 });

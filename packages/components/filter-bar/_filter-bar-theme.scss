@@ -30,6 +30,13 @@
         }
     }
 
+    .kbq-pipe-multiselect__panel,
+    .kbq-pipe-multi-tree-select__panel {
+        .kbq-pipe-select-all__counter {
+            color: var(--kbq-foreground-contrast-secondary);
+        }
+    }
+
     .kbq-pipe.kbq-pipe_removable,
     .kbq-pipe.kbq-pipe_cleanable:not(.kbq-pipe_empty) {
         .kbq-button.cdk-keyboard-focused::after {

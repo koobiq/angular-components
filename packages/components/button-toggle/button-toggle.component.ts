@@ -405,9 +405,9 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
     /**
      * Reports the new value of a selected toggle, which changes the value of the group, as an interaction would.
      *
-     * @internal
+     * @docs-private
      */
-    followToggleValue(toggle: KbqButtonToggle, previous: unknown): void {
+    followToggleValue(toggle: KbqButtonToggle, previous: KbqButtonToggle['value']): void {
         if (this.destroyed || !this.selectionModel?.isSelected(toggle)) return;
 
         this.renamePendingValue(previous, toggle.value);

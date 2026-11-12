@@ -88,15 +88,15 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: Provider = {
             assistive technology announces the alert as it appears, then the hints of the group.
         -->
         @if (showError() || hints().length) {
-            <div class="kbq-radio-group__subscript">
+            <span class="kbq-radio-group__subscript">
                 @if (showError()) {
-                    <div class="kbq-radio-group__error" [id]="errorId">
+                    <span class="kbq-radio-group__error" [id]="errorId">
                         <ng-content select="kbq-error" />
-                    </div>
+                    </span>
                 }
 
                 <ng-content select="kbq-hint" />
-            </div>
+            </span>
         }
     `,
     providers: [KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR],
@@ -243,7 +243,7 @@ export class KbqRadioGroup
     /**
      * Value of `aria-invalid`: set whenever the group is painted as invalid.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly ariaInvalid = computed(() => (this.errorState() || this.color() === 'error' ? 'true' : null));
 
@@ -253,21 +253,21 @@ export class KbqRadioGroup
     /**
      * Whether the projected `kbq-error` is shown. Without one, nothing is rendered under the options.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly showError = computed(() => this.errorState() && !!this.error());
 
     /**
      * Id of the element wrapping the projected `kbq-error`.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly errorId = inject(_IdGenerator).getId('kbq-radio-group-error-');
 
     /**
      * Hints of the group itself, shown under the options. The hints of the buttons are their own.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly hints = contentChildren(KbqHint, { descendants: false });
 
@@ -646,7 +646,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
     /**
      * Whether the button takes the big size of its group.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly big = computed(() => !!this.radioGroup?.big());
 

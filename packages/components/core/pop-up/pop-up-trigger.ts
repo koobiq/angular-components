@@ -277,6 +277,9 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      */
     abstract arrow: boolean;
 
+    /** Whether the arrow points at the origin center while the panel keeps its placement. Defaults to `false`. */
+    arrowCentered = false;
+
     /**
      * Space/comma-separated list of trigger events (`hover`, `focus`, `click`, `keydown`); implemented by the subclass.
      *
@@ -433,6 +436,9 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      * @docs-private
      */
     protected origin: KbqOverlayOrigin | null = null;
+
+    /** Origin currently applied to the position strategy; `null` follows the configured origin or host. */
+    private activeOrigin: FlexibleConnectedPositionStrategyOrigin | null = null;
 
     /**
      * Hide pop-up with timeout. Need if you want to show pop-up after leaving trigger
@@ -682,7 +688,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      * Re-evaluates the delayed hide of `hideWithTimeout` after the pointer has entered or left the trigger or the
      * pop-up. Called by the pop-up, a separate class.
      *
-     * @internal
+     * @docs-private
      */
     handleHoverChange(): void {
         if (!this.hoverHideArmed) return;
@@ -758,7 +764,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         // Create connected position strategy that listens for scroll events to reposition.
         this.strategy = this.overlay
             .position()
-            .flexibleConnectedTo(this.getResolvedOrigin())
+            .flexibleConnectedTo(this.getActiveOrigin())
             .withTransformOriginOn(this.originSelector)
             .withFlexibleDimensions(false)
             .withPositions([...EXTENDED_OVERLAY_POSITIONS])
@@ -785,7 +791,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
      * @docs-private
      */
     resetOrigin() {
-        this.strategy.setOrigin(this.getResolvedOrigin());
+        this.setOrigin(null);
     }
 
     /**
@@ -799,19 +805,35 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     updateOrigin(origin: KbqOverlayOrigin | null): void {
         this.origin = origin;
 
-        if (!this.strategy) return;
-
         // Told to the strategy even while the pop-up is closed: the overlay is created once and reused, so an
         // origin bound between two opens would otherwise never reach it.
-        this.strategy.setOrigin(this.getResolvedOrigin());
+        this.setOrigin(this.getResolvedOrigin());
 
-        if (!this.overlayRef?.hasAttached()) return;
+        if (!this.strategy || !this.overlayRef?.hasAttached()) return;
 
         // Through `updatePosition()`, because the new positions it applies clear the position locked in by
         // `withLockedPosition()`. Re-applying the last position instead would keep the pop-up on the placement
         // picked for the previous origin, with no chance to flip.
         this.updatePosition();
         this.overlayRef.updatePosition();
+    }
+
+    /** Sets and records the origin applied to the position strategy. @docs-private */
+    protected setOrigin(origin: FlexibleConnectedPositionStrategyOrigin | null): void {
+        this.activeOrigin = origin;
+
+        if (this.strategy) {
+            this.strategy.setOrigin(origin ?? this.getResolvedOrigin());
+        }
+    }
+
+    /**
+     * The origin currently applied to the position strategy, or the configured origin while none was set.
+     *
+     * @docs-private
+     */
+    protected getActiveOrigin(): FlexibleConnectedPositionStrategyOrigin {
+        return this.activeOrigin ?? this.getResolvedOrigin();
     }
 
     /**
@@ -890,7 +912,12 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
 
         if (this.trigger.includes(PopUpTriggers.Keydown)) {
             this.listeners.set('keydown', (event) => {
-                if (event instanceof KeyboardEvent && [ENTER, SPACE].includes(event.keyCode)) {
+                // With a click listener, a native button activates itself for Enter/Space. Opening here as well
+                // can make CDK treat that click as outside the panel that the timer just opened and close it again.
+                const opensNatively =
+                    this.getNativeElement().tagName === 'BUTTON' && this.trigger.includes(PopUpTriggers.Click);
+
+                if (event instanceof KeyboardEvent && [ENTER, SPACE].includes(event.keyCode) && !opensNatively) {
                     // Recorded the way `createListener` does it for every other trigger. Without it the show
                     // is still attributed to whichever event ran last, and a stale `focus` there makes the
                     // tooltip's keyboard-origin gate swallow the show outright. The event itself carries the
@@ -966,6 +993,18 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         return this.externalNativeElement || this.elementRef.nativeElement;
     }
 
+    /** Point the arrow should follow, or `null` when trigger-centered arrows are disabled. @docs-private */
+    getArrowPoint(): { x: number; y: number } | null {
+        return this.arrowCentered ? this.getOriginCenter() : null;
+    }
+
+    /** Center of the active origin in viewport coordinates. @docs-private */
+    protected getOriginCenter(): { x: number; y: number } {
+        const { x, y, width, height } = kbqGetOverlayOriginSize(this.getActiveOrigin());
+
+        return { x: x + width / 2, y: y + height / 2 };
+    }
+
     /**
      * Sets an external element to anchor and measure the pop-up against instead of the host element.
      *
@@ -1000,12 +1039,12 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
 
     /**
      * Size of what the pop-up is positioned against: a corner placement shifts the pop-up so that its arrow still
-     * points at an anchor narrower than the arrow's inset. The host element by default.
+     * points at an anchor narrower than the arrow's inset. The active origin by default.
      *
      * @docs-private
      */
     protected getAnchorSize(): { width: number; height: number } {
-        return this.origin ? kbqGetOverlayOriginSize(this.origin) : this.getNativeElement().getBoundingClientRect();
+        return kbqGetOverlayOriginSize(this.getActiveOrigin());
     }
 
     /**

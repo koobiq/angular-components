@@ -173,8 +173,10 @@ describe('KbqNotificationCenter', () => {
             const triggerElement = debugElement.query(By.css('button')).nativeElement as HTMLElement;
 
             dispatchKeyboardEvent(triggerElement, 'keydown', ENTER, undefined, 'Enter');
+            // A native button dispatches click for the key as well; jsdom only sends the keyboard event.
+            triggerElement.click();
             fixture.detectChanges();
-            // The keydown defers the show to a timer, and the show schedules the panel's own.
+            // The show schedules the panel's own timer.
             await vi.runOnlyPendingTimersAsync();
             await vi.runOnlyPendingTimersAsync();
 

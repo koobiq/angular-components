@@ -2,9 +2,7 @@ Every language has its own norms for writing numbers: the decimal separator, dig
 
 ### Digit grouping
 
-In large numbers, digits are grouped in threes, counting from the right. Use the `kbqNumber` pipe in text and `kbqTableNumber` in tables. The pipes differ in the threshold at which grouping starts.
-
-The examples below follow the norms of the Russian locale: a thin space as the group separator, and a threshold in text. In other locales the pipes use the separator of that locale and always separate digit groups.
+In large numbers, digits are grouped in threes, counting from the right. Use the `kbqNumber` pipe in text and `kbqTableNumber` in tables. The pipes differ in the threshold at which grouping starts. The numbers below follow the Russian locale; other locales use their own separator and always separate digit groups.
 
 `kbqNumber` groups digits in numbers from 10&#8239;000 up, that is, starting from five digits: 1234, 56&#8239;789, 987&#8239;654, 1&#8239;000&#8239;000&#8239;000. In running text, a short number reads more naturally without a separator.
 

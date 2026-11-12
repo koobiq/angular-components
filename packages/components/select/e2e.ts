@@ -134,6 +134,42 @@ export class E2eMultiSelectStates {}
 export class E2eMultilineSelectStates {}
 
 @Component({
+    selector: 'e2e-select-multiline-options',
+    imports: [KbqSelectModule],
+    template: `
+        <kbq-form-field style="width: 200px">
+            <kbq-select
+                data-testid="e2eSelect"
+                [multilineOptions]="multilineOptions()"
+                (toggleMultilineOptions)="toggleMultilineOptions()"
+            >
+                <kbq-option data-testid="e2eOption-short" [value]="'short'">Short option</kbq-option>
+                <kbq-option data-testid="e2eOption-long" [value]="'long'">
+                    Long option text with spaces and SupercalifragilisticexpialidociousUnbrokenToken
+                </kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 16px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eSelectMultilineOptions'
+    }
+})
+export class E2eSelectMultilineOptions {
+    readonly multilineOptions = signal(true);
+
+    toggleMultilineOptions(): void {
+        this.multilineOptions.update((value) => !value);
+    }
+}
+
+@Component({
     selector: 'e2e-select-selection-state',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `

@@ -33,14 +33,14 @@ export class KbqAccordionTriggerDirective {
     /**
      * Value of `aria-expanded`.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly expanded = computed(() => this.item.expanded);
 
     /**
      * Value of `data-state`.
      *
-     * @internal
+     * @docs-private
      */
     protected readonly dataState = computed(() => this.item.dataState);
 

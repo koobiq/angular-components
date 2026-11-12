@@ -288,6 +288,7 @@ export class KbqStepper {
     constructor();
     // Warning: (ae-forgotten-export) The symbol "KbqStepperControl" needs to be exported by the entry point koobiq-components-form-field.d.ts
     protected readonly control: Signal<KbqStepperControl>;
+    protected readonly inactive: Signal<boolean>;
     protected readonly mouseUp: Subject<void>;
     onStepDown(event: MouseEvent): void;
     onStepUp(event: MouseEvent): void;

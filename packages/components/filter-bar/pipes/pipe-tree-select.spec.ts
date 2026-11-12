@@ -455,6 +455,86 @@ describe('KbqPipeTreeSelectComponent', () => {
 
             expect(expandAllSpy).toHaveBeenCalled();
         });
+
+        describe('with defaultExpanded: false', () => {
+            it('should not expand all nodes on open', () => {
+                fixture.componentInstance.activeFilter = createFilter([
+                    createPipe({ name: 'test', value: null, defaultExpanded: false })
+                ]);
+                fixture.detectChanges();
+
+                const component = getPipeComponent();
+                const expandAllSpy = vi.spyOn(component.treeControl, 'expandAll');
+
+                component.onOpen();
+
+                expect(expandAllSpy).not.toHaveBeenCalled();
+                expect(component.treeControl.expansionModel.selected).toEqual([]);
+            });
+
+            it('should expand only the ancestors of the selected node', () => {
+                // 'value 2' is the 'Operator' leaf under the 'Management and Configuration' branch; a plain
+                // string survives the structuredClone mock, so the select matches it by value.
+                fixture.componentInstance.activeFilter = createFilter([
+                    createPipe({ name: 'test', value: 'value 2', defaultExpanded: false })
+                ]);
+                fixture.detectChanges();
+
+                const component = getPipeComponent();
+
+                component.onOpen();
+
+                const expanded = component.treeControl.expansionModel.selected;
+
+                expect(expanded.length).toBeGreaterThan(0);
+                expect(expanded.every((node) => node.expandable)).toBe(true);
+
+                const otherBranch = component.treeControl.dataNodes.find(
+                    (node) => node.level === 0 && node.name === 'Knowledge Base'
+                );
+
+                expect(component.treeControl.isExpanded(otherBranch!)).toBe(false);
+            });
+
+            it('should open collapsed when the selected value is not in the tree', () => {
+                fixture.componentInstance.activeFilter = createFilter([
+                    createPipe({
+                        name: 'test',
+                        value: { name: 'ghost', value: 'no-such-value' },
+                        defaultExpanded: false
+                    })
+                ]);
+                fixture.detectChanges();
+
+                const component = getPipeComponent();
+
+                component.onOpen();
+
+                expect(component.treeControl.expansionModel.selected).toEqual([]);
+            });
+
+            it('should return to the collapsed state after the search is cleared', async () => {
+                vi.useFakeTimers();
+
+                fixture.componentInstance.activeFilter = createFilter([
+                    createPipe({ name: 'test', value: null, defaultExpanded: false, search: true })
+                ]);
+                fixture.detectChanges();
+
+                const component = getPipeComponent();
+
+                component.onOpen();
+                component.searchControl.setValue('Admin');
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(component.treeControl.expansionModel.selected.length).toBeGreaterThan(0);
+
+                component.searchControl.setValue('');
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(component.treeControl.expansionModel.selected).toEqual([]);
+            });
+        });
     });
 
     describe('hasChild', () => {
@@ -671,12 +751,12 @@ describe('KbqPipeTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const filterNodesSpy = vi.spyOn(component.treeControl, 'filterNodes');
+            const applyFilterSpy = vi.spyOn(component.treeControl, 'applyFilter');
 
             component.searchControl.setValue('Admin');
             await vi.runOnlyPendingTimersAsync();
 
-            expect(filterNodesSpy).toHaveBeenCalledWith('Admin');
+            expect(applyFilterSpy).toHaveBeenCalledWith('Admin');
         });
     });
 });

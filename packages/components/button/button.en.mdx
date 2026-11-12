@@ -1,33 +1,35 @@
-koobiq buttons are available using native `<button>` or `<a>` elements.
-
-### Variants
-
-There are two button variants, each applied as an attribute:
-
-- basic buttons;
-- icon buttons.
-
-#### Basic buttons
-
-Basic `kbq-button` buttons are rectangular buttons containing text only.
+Used to trigger actions.
 
 <Example id="button-overview" />
 
-![Button states](./assets/images/Basic_buttons.png)
-Basic button's states
+### Fill and Style
 
-#### Icon buttons
+<Example id="button-fill-and-style" />
 
-Icon buttons consist of an icon and can contain text.
-To create an icon button, add the `<i kbq-icon="icon_name"></i>` element within `<button kbq-icon-button>` where `"icon_name"` is the name of a Koobiq icon. For example:
+<Example id="button-fill-and-style-only-icon" />
 
-Add any text before or after the `<i>` element to place a button label to the right or to the left of the icon.
+### Content
 
-### Colors
+<Example id="button-content" />
 
-koobiq provides three button colors, applied using the `color` property with possible values `theme`, `secondary`, and `error`.
+When a button holds only an icon, give it a name with `aria-label` or `aria-labelledby`. Use [Icon Button](/en/components/icon-button) if you need an icon button without a background.
 
-### Progress indication
+### Corner cases
 
-If processing an action takes more than 1-2 seconds, the progress indication ("loading") can be used. This shows that the system takes action, and the user won't wonder whether the button is working or not.
-To enable the button progress indication, use `class="kbq-progress"` which can be combined with other properties.
+Depending on the content requirements, a button can take the following width values:
+
+Hug — the button width depends on the length of the text inside and equals the text width plus the side paddings up to the button edges.
+
+<Example id="button-hug-content" />
+
+Fixed — the button width is fixed and does not depend on the length of the text. If the text does not fit, it is truncated with an ellipsis. Do not forget about the inner paddings.
+
+<Example id="button-fixed-content" />
+
+Fill — the button adapts to the width of the block it is placed in. If the width of the block changes (for example, of a modal window), the width of the button changes too. The text inside such a button behaves the same way as in Fixed.
+
+<Example id="button-fill-content" />
+
+If processing an action takes more than 1–2 seconds, the progress indication ("loading") can be used. It shows that the system is processing data.
+
+<Example id="button-loading-state" />

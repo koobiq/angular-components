@@ -22,22 +22,22 @@
         (click)="onInputClick($event)"
         (keydown.enter)="onEnterKeydown($event)"
     />
-    <div class="kbq-toggle-bar-container">
-        <div
+    <span class="kbq-toggle-bar-container">
+        <span
             class="kbq-toggle-bar"
             [class.kbq-animations-disabled]="animationsDisabled"
             [class.kbq-progress]="loading()"
         >
-            <div
+            <span
                 class="kbq-toggle__circle"
                 [class]="`kbq-toggle__circle_${currentCheckState()}`"
                 [class.kbq-animations-disabled]="animationsDisabled"
-            ></div>
-            <div class="kbq-toggle__thumb" [class.kbq-animations-disabled]="animationsDisabled"></div>
-        </div>
-    </div>
+            ></span>
+            <span class="kbq-toggle__thumb" [class.kbq-animations-disabled]="animationsDisabled"></span>
+        </span>
+    </span>
 
-    <div
+    <span
         class="kbq-toggle__content"
         [class.kbq-toggle__content_left]="labelPosition() === 'left'"
         [class.kbq-toggle__content_right]="labelPosition() === 'right'"
@@ -51,14 +51,14 @@
             error stays out of its name and is announced as it appears.
         -->
         @if (showError()) {
-            <div class="kbq-toggle__error" [id]="errorId">
+            <span class="kbq-toggle__error" [id]="errorId">
                 <ng-content select="kbq-error" />
-            </div>
+            </span>
         }
 
         <!-- Hidden from the accessible name computation of the enclosing label; exposed as the input's description. -->
-        <div class="kbq-toggle__hint" aria-hidden="true" [id]="hintId">
+        <span class="kbq-toggle__hint" aria-hidden="true" [id]="hintId">
             <ng-content select="kbq-hint" />
-        </div>
-    </div>
+        </span>
+    </span>
 </label>

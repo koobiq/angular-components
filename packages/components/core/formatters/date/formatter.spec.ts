@@ -616,6 +616,115 @@ describe('Date formatter (imports and providing)', () => {
         });
     });
 
+    describe('kbq relative pipes with sentenceStart', () => {
+        @Component({
+            selector: 'kbq-sentence-case-host',
+            imports: [
+                KbqRelativeLongDatePipe,
+                KbqRelativeLongDateTimePipe,
+                KbqRelativeShortDatePipe,
+                KbqRelativeShortDateTimePipe
+            ],
+            template: `
+                <span id="long">{{ value() | kbqRelativeLongDate: options() }}</span>
+                <span id="short">{{ value() | kbqRelativeShortDate: options() }}</span>
+                <span id="longTime">{{ value() | kbqRelativeLongDateTime: options() }}</span>
+                <span id="shortTime">{{ value() | kbqRelativeShortDateTime: options() }}</span>
+            `,
+            changeDetection: ChangeDetectionStrategy.OnPush
+        })
+        class SentenceCaseHostComponent {
+            readonly value = signal<DateTime | null>(null);
+            readonly options = signal<{ sentenceStart?: boolean } | undefined>(undefined);
+        }
+
+        let fixture: ComponentFixture<SentenceCaseHostComponent>;
+        let dateFormatter: DateFormatter<DateTime>;
+        let testAdapter: LuxonDateAdapter;
+        let today: DateTime;
+        let value: SentenceCaseHostComponent['value'];
+        let options: SentenceCaseHostComponent['options'];
+
+        const read = (fixture: ComponentFixture<unknown>, id: string): string =>
+            fixture.nativeElement.querySelector(`#${id}`).textContent.trim();
+
+        const runChangeDetection = () => refresh(fixture);
+
+        beforeEach(() => {
+            TestBed.resetTestingModule();
+            TestBed.configureTestingModule({
+                imports: [SentenceCaseHostComponent, KbqFormattersModule, KbqLuxonDateModule],
+                providers: [
+                    { provide: KBQ_LOCALE_ID, useValue: 'ru-RU' },
+                    { provide: KBQ_LOCALE_DATA, useValue: KBQ_DEFAULT_LOCALE_DATA_FACTORY() },
+                    { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
+                ]
+            });
+
+            fixture = TestBed.createComponent(SentenceCaseHostComponent);
+            value = fixture.componentInstance.value;
+            options = fixture.componentInstance.options;
+        });
+
+        beforeEach(inject([DateAdapter, DateFormatter], (a: LuxonDateAdapter, f: DateFormatter<DateTime>) => {
+            testAdapter = a;
+            dateFormatter = f;
+
+            // Pin "today" so the relative-word branches are deterministic; the same override the
+            // 'published @koobiq/date-formatter' suite above relies on.
+            today = testAdapter.createDateTime(2026, 5, 15, 0, 0, 0, 0);
+            testAdapter.today = () => today;
+        }));
+
+        it('lowercases the relative word mid-sentence', () => {
+            const yesterday = testAdapter.addCalendarDays(today, -1);
+
+            value.set(yesterday);
+            options.set({ sentenceStart: false });
+            runChangeDetection();
+
+            // parity with the formatter call
+            expect(read(fixture, 'long')).toBe(dateFormatter.relativeLongDate(yesterday, { sentenceStart: false }));
+            expect(read(fixture, 'long')).toBe('вчера, 00:00');
+            expect(read(fixture, 'short')).toBe(dateFormatter.relativeShortDate(yesterday, { sentenceStart: false }));
+            expect(read(fixture, 'short')).toBe('вчера, 00:00');
+        });
+
+        it('toggles back when the option is cleared', () => {
+            value.set(testAdapter.addCalendarDays(today, -1));
+            runChangeDetection();
+            expect(read(fixture, 'long')).toBe('Вчера, 00:00');
+
+            options.set({ sentenceStart: false });
+            runChangeDetection();
+            expect(read(fixture, 'long')).toBe('вчера, 00:00');
+
+            options.set(undefined);
+            runChangeDetection();
+            expect(read(fixture, 'long')).toBe('Вчера, 00:00');
+        });
+
+        it('leaves the date branch unchanged', () => {
+            // date three days out — the absolute branch, which the flag must not touch
+            const date3 = testAdapter.addCalendarDays(today, 3);
+
+            value.set(date3);
+            options.set({ sentenceStart: false });
+            runChangeDetection();
+
+            expect(read(fixture, 'long')).toBe(dateFormatter.relativeLongDate(date3));
+        });
+
+        it('renders an empty string for a missing value', () => {
+            // value null, flag set
+            options.set({ sentenceStart: false });
+
+            expect(() => runChangeDetection()).not.toThrow();
+
+            ['long', 'short', 'longTime', 'shortTime'].forEach((id) => expect(read(fixture, id)).toBe(''));
+        });
+    });
+
     describe('Duration date pipes', () => {
         @Component({
             selector: 'kbq-duration-pipes-host',

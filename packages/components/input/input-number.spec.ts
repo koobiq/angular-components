@@ -75,7 +75,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
     ],
     template: `
         <kbq-form-field>
-            <input kbqNumberInput [disabled]="disabled" [(ngModel)]="value" />
+            <input kbqNumberInput [disabled]="disabled" [readonly]="readonly" [(ngModel)]="value" />
             <kbq-stepper (stepUp)="stepUp()" (stepDown)="stepDown()" />
         </kbq-form-field>
     `
@@ -83,6 +83,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 class NumberInputTestComponent {
     value: number | null = null;
     disabled = false;
+    readonly = false;
 
     stepUp = vi.fn().mockImplementation(() => true);
     stepDown = vi.fn().mockImplementation(() => false);
@@ -283,7 +284,14 @@ class NumberInputWithMask {
     ],
     template: `
         <kbq-form-field>
-            <input kbqNumberInput [step]="step" [bigStep]="bigStep" [integer]="true" [(ngModel)]="value" />
+            <input
+                kbqNumberInput
+                [step]="step"
+                [bigStep]="bigStep"
+                [integer]="true"
+                [readonly]="readonly"
+                [(ngModel)]="value"
+            />
             <kbq-stepper />
         </kbq-form-field>
     `
@@ -292,6 +300,7 @@ class NumberInputWithInteger {
     localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE, { optional: true })!;
 
     value: number | null = null;
+    readonly = false;
     step: number = 1;
     bigStep: number = 5;
 
@@ -528,6 +537,77 @@ describe('KbqNumberInput', () => {
         fixture.detectChanges();
 
         expect(fixture.componentInstance.value).toEqual(initialValue);
+    });
+
+    describe('readonly', () => {
+        it('should disable the stepper and block its steps', async () => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(NumberInputTestComponent);
+
+            fixture.componentInstance.value = 5;
+            fixture.componentInstance.readonly = true;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const [iconUp, iconDown] = stepper.queryAll(By.css('.kbq-icon'));
+
+            expect(iconUp.nativeElement.classList).toContain('kbq-disabled');
+            expect(iconDown.nativeElement.classList).toContain('kbq-disabled');
+
+            dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
+            dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(fixture.componentInstance.value).toBe(5);
+            expect(fixture.componentInstance.stepUp).not.toHaveBeenCalled();
+            expect(fixture.componentInstance.stepDown).not.toHaveBeenCalled();
+        });
+
+        it('should not step the value with arrow keys', async () => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(NumberInputTestComponent);
+
+            fixture.componentInstance.value = 5;
+            fixture.componentInstance.readonly = true;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+            dispatchKeyboardEvent(inputElement, 'keydown', UP_ARROW);
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(fixture.componentInstance.value).toBe(5);
+            expect(inputElement.value).toBe('5');
+        });
+
+        it('should not write a pasted value in integer mode', async () => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(NumberInputWithInteger);
+
+            fixture.componentInstance.value = 5;
+            fixture.componentInstance.readonly = true;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
+
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: { getData: () => '7.5' }
+            });
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(fixture.componentInstance.value).toBe(5);
+            expect(inputElementDebug.nativeElement.value).toBe('5');
+        });
     });
 
     it('should connect a stepper added after form-field initialization', async () => {

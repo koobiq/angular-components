@@ -453,6 +453,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarSearchInPipesExample);
         case 'filter-bar-search':
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarSearchExample);
+        case 'filter-bar-select-all-counter':
+            return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarSelectAllCounterExample);
         case 'filter-bar-state-saving':
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarStateSavingExample);
         case 'filter-bar-uniq-pipes':
@@ -585,6 +587,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/input').then((m) => m.InputPasswordOverviewExample);
         case 'input-password-template-driven':
             return import('@koobiq/docs-examples/components/input').then((m) => m.InputPasswordTemplateDrivenExample);
+        case 'input-readonly':
+            return import('@koobiq/docs-examples/components/input').then((m) => m.InputReadonlyExample);
         case 'input-with-mask':
             return import('@koobiq/docs-examples/components/input').then((m) => m.InputWithMaskExample);
         case 'layout-flex-alignment':
@@ -651,8 +655,6 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayDefaultExample);
         case 'loader-overlay-delay':
             return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayDelayExample);
-        case 'loader-overlay-fixed-top':
-            return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayFixedTopExample);
         case 'loader-overlay-large':
             return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayLargeExample);
         case 'loader-overlay-overview':
@@ -709,6 +711,10 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/modal').then((m) => m.ModalTemplateExample);
         case 'navbar-app-long-name':
             return import('@koobiq/docs-examples/components/navbar').then((m) => m.NavbarAppLongNameExample);
+        case 'navbar-item-custom-component':
+            return import('@koobiq/docs-examples/components/navbar').then((m) => m.NavbarItemCustomComponentExample);
+        case 'navbar-item-custom-content':
+            return import('@koobiq/docs-examples/components/navbar').then((m) => m.NavbarItemCustomContentExample);
         case 'navbar-item-suffix':
             return import('@koobiq/docs-examples/components/navbar').then((m) => m.NavbarItemSuffixExample);
         case 'navbar-overview':

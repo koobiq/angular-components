@@ -34,7 +34,7 @@ export class KbqTopBarModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTopBarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTopBarModule, never, [typeof KbqTopBar, typeof KbqTopBarContainer, typeof KbqTopBarSpacer], [typeof KbqTopBar, typeof KbqTopBarContainer, typeof KbqTopBarSpacer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTopBarModule, never, [typeof KbqTopBar, typeof KbqTopBarContainer, typeof KbqTopBarSpacer, typeof KbqTopBarTitle], [typeof KbqTopBar, typeof KbqTopBarContainer, typeof KbqTopBarSpacer, typeof KbqTopBarTitle]>;
 }
 
 // @public
@@ -43,6 +43,14 @@ export class KbqTopBarSpacer {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTopBarSpacer, "[kbqTopBarSpacer]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTopBarSpacer, never>;
+}
+
+// @public
+export class KbqTopBarTitle {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTopBarTitle, "[kbqTopBarTitle]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTopBarTitle, never>;
 }
 
 // (No @packageDocumentation comment for this package)

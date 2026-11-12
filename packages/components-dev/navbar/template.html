@@ -236,6 +236,20 @@
         </kbq-navbar-container>
 
         <kbq-navbar-container>
+            <a href="#" kbq-navbar-item>
+                <div kbqNavbarItemContent>
+                    <div class="dev-navbar-custom-content-logo"></div>
+                </div>
+                <span kbq-navbar-title>Orbit</span>
+            </a>
+
+            <a href="#" kbq-navbar-item>
+                <div kbqNavbarItemContent>
+                    <div class="dev-navbar-custom-content-logo dev-navbar-custom-content-logo_full"></div>
+                </div>
+                <span kbq-navbar-title>Orbit full-bleed</span>
+            </a>
+
             <!-- Second asynchronous navbar-item -->
             @if (permission$ | async) {
                 <button kbq-navbar-item>

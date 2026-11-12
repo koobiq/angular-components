@@ -1,3 +1,4 @@
+import type { Rule } from 'eslint';
 import { jsdoc } from 'eslint-plugin-jsdoc';
 
 /** Tags the API tab shows, in the order a block keeps them. */
@@ -23,6 +24,63 @@ const jsDocTagHints = {
 };
 
 /**
+ * A member of a class, interface, type literal or enum: the nodes the `forbid` rules below apply their hiding-tag
+ * checks to, without the private-member exclusions, which get their own message.
+ */
+const memberNodes =
+    ':matches(PropertyDefinition, MethodDefinition, AccessorProperty, TSAbstractPropertyDefinition, TSAbstractMethodDefinition, TSAbstractAccessorProperty, TSParameterProperty, TSPropertySignature, TSMethodSignature, TSIndexSignature, TSCallSignatureDeclaration, TSConstructSignatureDeclaration, TSEnumMember)';
+
+/** The message of `forbid-internal-tag-on-member`, shared with the line-comment rule below. */
+const internalTagOnMemberMessage =
+    'Use `@internal` only on a whole declaration; use `@docs-private` to keep a member in typings but out of the docs.';
+
+/** The message of `forbid-hiding-tag-on-private-member`, shared with the line-comment rule below. */
+const internalTagOnPrivateMemberMessage =
+    'A private member is not in the docs anyway: drop `@docs-private` or `@internal`.';
+
+/**
+ * TypeScript strips a declaration when any comment in front of it contains `@internal`, `//` line comments included,
+ * while a `forbid` rule parses only JSDoc blocks and never sees a line comment: this rule closes that gap on members,
+ * reusing the forbid messages so both comment forms read the same.
+ */
+const forbidInternalLineCommentOnMember: Rule.RuleModule = {
+    meta: {
+        type: 'suggestion',
+        docs: {
+            description:
+                'Disallows a `// @internal` line comment on a member of a class, interface, type literal or enum.'
+        },
+        schema: []
+    },
+    create(context) {
+        return {
+            [memberNodes](node) {
+                const internalLineComment = context.sourceCode
+                    .getCommentsBefore(node)
+                    .find(({ type, value }) => type === 'Line' && value.includes('@internal'));
+
+                if (!internalLineComment) {
+                    return;
+                }
+
+                const { accessibility, key } = node as unknown as {
+                    accessibility?: string;
+                    key?: { type: string };
+                };
+
+                context.report({
+                    node,
+                    message:
+                        accessibility === 'private' || key?.type === 'PrivateIdentifier'
+                            ? internalTagOnPrivateMemberMessage
+                            : internalTagOnMemberMessage
+                });
+            }
+        };
+    }
+};
+
+/**
  * JSDoc of the published Angular packages: packages/components and packages/components-experimental, which the docs
  * site and llms-full.txt are generated from, and the two date adapters, which are to join them. TypeScript takes any
  * `@word` after a space for a tag, in the middle of a line too, and hides the text after it in that tag, so a tag the
@@ -41,6 +99,13 @@ export const publishedJsDocConfig = jsdoc({
         '**/*.playwright-spec.ts',
         '**/e2e.ts'
     ],
+    plugins: {
+        kbq: {
+            rules: {
+                'forbid-internal-line-comment-on-member': forbidInternalLineCommentOnMember
+            }
+        }
+    },
     settings: {
         mode: 'typescript'
     },
@@ -55,7 +120,17 @@ export const publishedJsDocConfig = jsdoc({
                         context:
                             ':matches(PropertyDefinition, MethodDefinition, AccessorProperty, TSParameterProperty)[accessibility="private"], :matches(PropertyDefinition, MethodDefinition, AccessorProperty)[key.type="PrivateIdentifier"]',
                         comment: `JsdocBlock:has(JsdocTag[tag=${hidingJsDocTag}]), JsdocBlock[description=/@docs-private\\s*$/]`,
-                        message: 'A private member is not in the docs anyway: drop `@docs-private` or `@internal`.'
+                        message: internalTagOnPrivateMemberMessage
+                    }
+                ]
+            },
+            'internal-tag-on-member': {
+                description: 'Disallows @internal on a member of a class, interface, type literal or enum.',
+                contexts: [
+                    {
+                        comment: 'JsdocBlock:has(JsdocTag[tag="internal"])',
+                        context: `${memberNodes}:not([accessibility="private"]):not([key.type="PrivateIdentifier"])`,
+                        message: internalTagOnMemberMessage
                     }
                 ]
             }
@@ -135,6 +210,10 @@ export const publishedJsDocConfig = jsdoc({
         // a rule of its own rather than an entry above: `no-restricted-syntax` takes the first entry whose comment
         // matches a block and only then checks its context, so an entry with a context would swallow the ones after it
         'jsdoc/forbid-hiding-tag-on-private-member': 1,
+        'jsdoc/forbid-internal-tag-on-member': 1,
+        // a rule of its own rather than a `forbid` one above: those parse only JSDoc blocks, but TypeScript also
+        // strips a declaration for a `// @internal` line comment, which takes the raw comments before a member
+        'kbq/forbid-internal-line-comment-on-member': 1,
         // `/*` with a tag in it: meant as JSDoc, but TypeScript does not read it
         'jsdoc/no-bad-blocks': 1,
         // an empty block documents nothing, so the fix removes it

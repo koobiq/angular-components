@@ -9,6 +9,7 @@ import {
     ElementRef,
     inject,
     input,
+    isDevMode,
     linkedSignal,
     signal,
     untracked,
@@ -25,9 +26,6 @@ import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { getKbqInputUnsupportedTypeError, KBQ_NUMBER_INPUT_UNSUPPORTED_TYPE_MESSAGE } from './input-errors';
 import { KbqNumberInput } from './input-number';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
-
-// `typeof ngDevMode` is the guard the build optimizer folds away in production bundles.
-declare const ngDevMode: boolean | undefined;
 
 const isObject = (value: unknown): value is object => typeof value === 'object' && value !== null;
 
@@ -56,8 +54,9 @@ const KBQ_INPUT_INVALID_TYPES = [
         // Native input properties that are overwritten by Angular inputs need to be synced with
         // the native input element. Otherwise property bindings for those don't work.
         '[attr.id]': 'id()',
-        '[attr.placeholder]': 'placeholder()',
+        '[attr.placeholder]': 'readonly() ? null : placeholder()',
         '[attr.disabled]': 'disabled() || null',
+        '[readonly]': 'readonly()',
         '[attr.aria-invalid]': 'errorState()',
         '[required]': 'required()',
         '(blur)': 'onBlur()',
@@ -145,6 +144,12 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
      * @docs-private
      */
     readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
+
+    /**
+     * Whether the input is read-only: its value can be selected and copied, but not changed. A read-only
+     * input shows no placeholder. Defaults to `false`.
+     */
+    readonly readonly = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
     /** @docs-private */
     readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
@@ -350,7 +355,7 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
             throw getKbqInputUnsupportedTypeError(type);
         }
 
-        if (this.numberInput && type === 'number' && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+        if (this.numberInput && type === 'number' && isDevMode()) {
             // eslint-disable-next-line no-console
             console.warn(KBQ_NUMBER_INPUT_UNSUPPORTED_TYPE_MESSAGE);
         }

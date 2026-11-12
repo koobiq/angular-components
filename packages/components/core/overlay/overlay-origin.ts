@@ -15,18 +15,25 @@ export const kbqIsElementOrigin = (origin: KbqOverlayOrigin): boolean =>
     'getBoundingClientRect' in origin;
 
 /** Resolves a Koobiq origin into the value a connected position strategy accepts. */
-export const kbqResolveOverlayOrigin = (origin: KbqOverlayOrigin): FlexibleConnectedPositionStrategyOrigin =>
-    origin instanceof CdkOverlayOrigin ? origin.elementRef : origin;
+export const kbqResolveOverlayOrigin = (
+    origin: KbqOverlayOrigin | FlexibleConnectedPositionStrategyOrigin
+): FlexibleConnectedPositionStrategyOrigin => (origin instanceof CdkOverlayOrigin ? origin.elementRef : origin);
 
-/** Size of an overlay origin, for the offsets that keep an arrow pointing at an anchor narrower than itself. */
-export const kbqGetOverlayOriginSize = (origin: KbqOverlayOrigin): Pick<KbqCaretRect, 'width' | 'height'> => {
+/** Rectangle of an overlay origin in viewport coordinates, for measurements and arrow alignment. */
+export const kbqGetOverlayOriginSize = (
+    origin: KbqOverlayOrigin | FlexibleConnectedPositionStrategyOrigin
+): Pick<KbqCaretRect, 'x' | 'y' | 'width' | 'height'> => {
     const resolved = kbqResolveOverlayOrigin(origin);
     const element = (resolved as ElementRef<HTMLElement>).nativeElement ?? (resolved as HTMLElement | KbqCaretRect);
 
     // Duck typing rather than `instanceof Element`, which is not defined on the server.
-    if ('getBoundingClientRect' in element) return element.getBoundingClientRect();
+    if ('getBoundingClientRect' in element) {
+        const { left, top, width, height } = element.getBoundingClientRect();
 
-    const { width, height } = element;
+        return { x: left, y: top, width, height };
+    }
 
-    return { width, height };
+    const { x, y, width = 0, height = 0 } = element;
+
+    return { x, y, width, height };
 };

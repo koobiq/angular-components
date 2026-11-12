@@ -30,6 +30,7 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: Provider;
 // @public (undocumented)
 export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnInit, AfterViewInit, OnDestroy {
     constructor();
+    protected readonly big: _angular_core.Signal<boolean>;
     readonly change: _angular_core.OutputEmitterRef<KbqRadioChange>;
     get checked(): boolean;
     set checked(value: boolean);
@@ -91,6 +92,7 @@ export class KbqRadioChange {
 // @public
 export class KbqRadioGroup extends KbqColorDirective implements AfterContentChecked, OnChanges, OnInit, DoCheck, AfterContentInit, ControlValueAccessor, CanUpdateErrorState {
     constructor();
+    protected readonly ariaInvalid: _angular_core.Signal<"true" | null>;
     // (undocumented)
     readonly big: _angular_core.InputSignal<boolean>;
     readonly change: _angular_core.OutputEmitterRef<KbqRadioChange>;
@@ -101,9 +103,11 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentChec
     set disabled(value: boolean);
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     emitChangeEvent(): void;
+    protected readonly errorId: string;
     readonly errorState: _angular_core.Signal<boolean>;
     readonly errorStateMatcher: _angular_core.InputSignal<ErrorStateMatcher | undefined>;
     focus(origin?: FocusOrigin): void;
+    protected readonly hints: _angular_core.Signal<readonly KbqHint[]>;
     readonly labelPosition: _angular_core.InputSignalWithTransform<"before" | "after", "before" | "after">;
     markRadiosForCheck(): void;
     readonly name: _angular_core.InputSignal<string>;
@@ -125,6 +129,7 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentChec
     set selected(selected: KbqRadioButton | null);
     readonly selectedInput: _angular_core.InputSignal<KbqRadioButton | null | undefined>;
     setDisabledState(isDisabled: boolean): void;
+    protected readonly showError: _angular_core.Signal<boolean>;
     touch(): void;
     updateErrorState(): void;
     get value(): any;

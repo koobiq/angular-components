@@ -1,70 +1,69 @@
-Search fields in the kit's components leave matching entirely to the consumer, and the default reach-for is substring search.
+Substring search works for simple queries, but it does not find a value whose query parts are separated by other characters. For example, the query `10.125 all` does not find `10.125.123.0/24 - all`, even though both fragments are in the value.
 
-Substring search breaks down on multi-word queries. For example, the query `10.125 all` won't find `10.125.123.0/24 - all` — the string doesn't contain it as one continuous substring. Yet that's exactly what the user meant.
+Smart search splits a multi-word query into tokens and looks for each token separately. That is why it finds the values that match the query.
 
-Below are the principles we implemented for search in the kit. Their reference implementation is `normalizeSearchValue`, `tokenizeSearchQuery` and `createSearchPredicate` from `@koobiq/components/core`. The implementation is opt-in and doesn't change how any component behaves by default — wire it into your own filtering code the same way you'd wire up a substring search today.
+The `normalizeSearchValue`, `tokenizeSearchQuery` and `createSearchPredicate` functions from `@koobiq/components/core` implement these principles. The implementation is opt-in and does not change how components behave by default. You can add it to your own filtering logic.
 
-### Case shouldn't matter
+### Case
 
-A case-sensitive search skips matches purely because of a case difference, even though the strings are otherwise identical. Comparison treats `WORLD`, `world` and `World` as the same value.
+A case-sensitive search treats strings as different because of a difference in case, even though they mean the same. For comparison, `WORLD`, `world` and `World` are reduced to one value.
 
-### Trimming the ends, not the middle
+### Spaces at the edges
 
-Only the ends of a string are trimmed. Whitespace in the middle of a value is left untouched: collapsing it could turn two separate words into one and change what a phrase means.
+The algorithm removes spaces at the start and end of the entered string. Inner spaces are kept: removing or collapsing them can change the meaning of a phrase.
 
-### Tokenizing the query, matching every token
+### Query tokens
 
-A multi-word query is split into independent tokens that are matched separately; a value counts as a match only if every token is found (AND across tokens). This is what actually fixes the motivating example: `10.125` and `all` are each substrings of `10.125.123.0/24 - all`, even though the two-word query never appears there as one continuous run.
+A multi-word query is split into independent tokens. A value counts as a match only if all the tokens are found in it.
 
-Tokens wrapped in double quotes are a single unbreakable phrase. This lets a query require an exact run of characters, spaces included, when plain tokenizing isn't precise enough.
+The order of tokens does not matter. For example, the queries `10.125 all` and `all 10.125` find the value `10.125.123.0/24 - all`.
 
-### Diacritics are folded, not ignored
+Text in double quotes counts as one token. The spaces inside it take part in the comparison, so a quoted query requires an exact match of the phrase.
 
-<div class="kbq-callout">
-<div class="kbq-callout__header">What a diacritic is</div>
-<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+There is no minimum token length. For example, the token `a` finds `all`.
 
-A diacritic is a mark added above, below, or through a letter. It indicates pronunciation — for example, the accent in `é`, the umlaut in `ü`, or the cedilla in `ç`. Such a mark can be separated from its base letter with Unicode normalization (`é` → `e` plus a separate floating accent), then stripped.
+### Diacritics
 
-</div>
-</div>
+Diacritics are marks above, below or inside letters. They include, for example, the marks in `é`, `ü` and `ç`.
 
-Users often don't type accents, and data doesn't always carry them consistently either. That's why `cafe` and `café` should find each other — no matter which one was typed and which one was stored.
+Smart search separates diacritics from the base letters and compares the result without them. So the value `Café Wi-Fi` is found by the queries `cafe` and `café`, whichever of them is typed.
 
-A diacritic is folded down to its base letter rather than stripped along with everything else. Punctuation like `/`, `-` and `.` is left untouched, so IP ranges and similar values aren't mangled by the same pass.
+Punctuation is not removed. The characters `/`, `-` and `.` are kept, so IP ranges and similar values stay unchanged.
 
-Highlighting the match, if your UI does that, needs to know about the folding too — a highlighter that compares literally has nothing to mark on a folded hit, since the token and the value differ by exactly the accent that made them match. `kbqHighlightBackground`/`kbqHighlightBold` take a `foldDiacritics` argument for this: pass `true` when the keywords were matched with folding (e.g. via `createSearchPredicate`), and searching `cafe` will mark `Café` rather than leave it bare, as the examples below do.
+Match highlighting also has to take diacritic folding into account. The `kbqHighlightBackground` and `kbqHighlightBold` functions have a `foldDiacritics` argument. Pass `true` to it if the keywords were matched with folding, for example through `createSearchPredicate`. The query `cafe` then highlights `Café`.
 
-### A token can be checked against several fields at once
+### Search across several fields
 
-Which fields belong in a search is a decision for the calling code, not the matching logic itself: it depends on the shape of the data. A token counts as found if it matches any one of several fields (OR across fields, AND across tokens):
+Which fields take part in a search is decided by the calling code. It depends on the structure of the data.
+
+A token counts as found if it matches at least one field. All tokens have to be found in at least one of the fields:
 
 ```ts
 const matches = createSearchPredicate('10.125 guest');
+
 matches(['10.125.11.0/24', 'guest network']); // true — "10.125" is found in the first field, "guest" in the second
-matches(['10.125.11.0/24', 'production']); // false — "guest" isn't found in either field
+matches(['10.125.11.0/24', 'production']); // false — "guest" is not found in any field
 ```
 
-### Relevance ranking
+### Ranking results
 
-The matching logic only answers "does it match" — it doesn't rank results. Ranking can be added on top when result order matters, for example by a separate scoring library used alongside `createSearchPredicate`/`tokenizeSearchQuery`:
+The matching logic determines whether a value matches the query, but does not rank the results.
+
+To order the results by relevance, add a separate ranking algorithm:
 
 ```ts
 const tokens = tokenizeSearchQuery(query);
 options.filter(createSearchPredicate(query)).sort(rankByRelevance(tokens));
 ```
 
-### What's intentionally out of scope
+### Limitations
 
 {/* cspell:disable-next-line */}
 
-Typo tolerance isn't part of these principles — for example, edit-distance matching where `developr` finds `developer`. It's a separate and much larger problem. If a product genuinely needs it, reach for a dedicated fuzzy-search library rather than extending this matching logic.
+Smart search does not correct typos. For example, the query `developr` does not find `developer`.
 
-### Examples by component
+Edit-distance search is a separate task. A dedicated fuzzy-search library suits it better than extending your own matching logic.
 
-Live examples and code live on each component's own page:
+### Examples
 
-- [Select](/en/components/select/overview#list-with-search)
-- [Tree-select](/en/components/tree-select/examples#smart-search)
-- [Filter-bar](/en/components/filter-bar/examples#smart-search)
-- [Timezone](/en/components/timezone/examples#smart-search)
+The component pages show how to enable smart search: [Autocomplete](/en/components/autocomplete/overview#search), [Dropdown](/en/components/dropdown/overview#menu-search), [Filter bar](/en/components/filter-bar/overview#search), [Select](/en/components/select/overview#list-with-search), [Tag autocomplete](/en/components/tag-autocomplete/overview#search), [Timezone](/en/components/timezone/overview#search), [Tree select](/en/components/tree-select/examples#smart-search).
