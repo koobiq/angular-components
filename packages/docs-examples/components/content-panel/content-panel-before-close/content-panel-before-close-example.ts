@@ -62,6 +62,11 @@ export class ContentPanelBeforeCloseExample {
 
     protected readonly name = new FormControl('John Smith', { nonNullable: true });
 
+    constructor() {
+        // Starts with an edit nobody saved, so closing the panel asks at once.
+        this.name.markAsDirty();
+    }
+
     protected readonly confirmDiscard = (): boolean | Promise<boolean> => {
         if (this.name.pristine) return true;
 
