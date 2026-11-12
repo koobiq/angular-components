@@ -1326,5 +1326,74 @@ describe('KbqPipeSelectComponent', () => {
             expect((pipe() as any).displayValues(pipe().select())).toEqual([restored]);
             expect((pipe() as any).displayValue(pipe().select())).toBe('Status');
         });
+
+        it('should re-filter open search results when translations change without clearing the query', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    values: keyedValues,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            pipe().searchControl.setValue('Status');
+            fixture.detectChanges();
+
+            expect(pipe().filteredOptions()).toEqual([keyedValues[0]]);
+
+            const query = pipe().searchControl.value;
+
+            translations.set({ 'filters.status': 'Stato', 'filters.active': 'Active' });
+            fixture.detectChanges();
+
+            expect(pipe().filteredOptions()).toEqual([]);
+            expect(pipe().searchControl.value).toBe(query);
+        });
+
+        it('should resolve a keyed selected value over the custom-template text', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    values: keyedValues,
+                    valueTemplate: fixture.componentInstance.optionTemplate(),
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: keyedValues[0] })]);
+            fixture.detectChanges();
+
+            // A keyed value resolves through the resolver instead of the custom template's own text.
+            expect((pipe() as any).displayValue(pipe().select())).toBe('Status');
+        });
+
+        it('should keep the stored fallback for a zero-id match', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'Select',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.Select,
+                    values: keyedValues,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            const legacyValue: KbqSelectValue = { name: 'Status', id: 'missing', value: 'status' };
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: legacyValue })]);
+            fixture.detectChanges();
+
+            expect((pipe() as any).optionName(legacyValue)).toBe('Status');
+        });
     });
 });

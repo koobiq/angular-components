@@ -149,7 +149,10 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     protected displayValue(select: KbqSelect): string {
         const value = this.displayValues(select)[0];
 
-        return value ? this.optionName(value) : '';
+        if (!value) return '';
+
+        // Without a key the trigger keeps its existing behavior — including a custom template's text.
+        return kbqFilterSelectValueNameKey(value, this.values) ? this.optionName(value) : select.triggerValue;
     }
 
     /** Comparator of selected options */
