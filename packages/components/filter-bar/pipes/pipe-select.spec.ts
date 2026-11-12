@@ -1356,7 +1356,9 @@ describe('KbqPipeSelectComponent', () => {
             expect(pipe().searchControl.value).toBe(query);
         });
 
-        it('should resolve a keyed selected value over the custom-template text', () => {
+        it('should keep the custom-template trigger for unkeyed values and resolve keyed values', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.pipeTemplates = [
                 {
                     name: 'Select',
@@ -1369,6 +1371,19 @@ describe('KbqPipeSelectComponent', () => {
                     disabled: false
                 }
             ];
+
+            const unkeyed: KbqSelectValue = { name: 'Status', id: '1', value: 'status' };
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: unkeyed })]);
+            fixture.detectChanges();
+
+            openSelect();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            // Without a key the trigger keeps the custom template's own text.
+            expect(pipe().select().triggerValue).toBe('custom Status');
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: keyedValues[0] })]);
             fixture.detectChanges();
 
