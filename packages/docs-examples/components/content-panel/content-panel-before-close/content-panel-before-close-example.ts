@@ -24,6 +24,7 @@ import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
             #panel="kbqContentPanelContainer"
             maxWidth="450"
             minWidth="250"
+            opened
             width="350"
             [beforeClose]="confirmDiscard"
         >
@@ -59,7 +60,7 @@ import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 export class ContentPanelBeforeCloseExample {
     private readonly modal = inject(KbqModalService);
 
-    protected readonly name = new FormControl('');
+    protected readonly name = new FormControl('John Smith', { nonNullable: true });
 
     protected readonly confirmDiscard = (): boolean | Promise<boolean> => {
         if (this.name.pristine) return true;
