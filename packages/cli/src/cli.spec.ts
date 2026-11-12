@@ -170,10 +170,8 @@ describe('createCliProgram', () => {
 
         expect(mock.run).toHaveBeenCalledTimes(1);
 
-        for (const other of Object.values(taskMocks)) {
-            if (other !== mock) {
-                expect(other.run).not.toHaveBeenCalled();
-            }
+        for (const other of Object.values(taskMocks).filter((other) => other !== mock)) {
+            expect(other.run).not.toHaveBeenCalled();
         }
     });
 
