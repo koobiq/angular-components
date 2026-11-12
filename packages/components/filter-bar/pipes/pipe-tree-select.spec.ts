@@ -799,7 +799,7 @@ describe('KbqPipeTreeSelectComponent', () => {
 
         const pipe = (): KbqPipeTreeSelectComponent => getPipeComponent();
 
-        it('should resolve node names through the resolver and update without changing selection', () => {
+        it('should resolve node names and update without changing selection, expansion, data source, or events', () => {
             fixture.componentInstance.pipeTemplates = [
                 {
                     name: 'TreeSelect',
@@ -811,21 +811,89 @@ describe('KbqPipeTreeSelectComponent', () => {
                     disabled: false
                 }
             ];
-            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'status' })]);
+            const value: KbqSelectValue = { name: 'Status', value: 'status' };
+
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value })]);
             fixture.detectChanges();
 
             const component = pipe();
             const statusNode = component.treeControl.dataNodes.find((node) => node.value === 'status')!;
+            const originalDataSource = component.dataSource;
+
+            component.treeControl.expand(statusNode);
+            fixture.detectChanges();
+
+            const filterChange = vi.fn();
+
+            getFilterBar().filter.subscribe(filterChange);
+            filterChange.mockClear();
 
             expect(component.treeControl.getViewValue(statusNode)).toBe('Status');
-
-            const original = component.data.value;
+            expect(component.treeControl.isExpanded(statusNode)).toBe(true);
 
             translations.set({ 'filters.status': 'Stato', 'filters.active': 'Attivo' });
             fixture.detectChanges();
 
             expect(component.treeControl.getViewValue(statusNode)).toBe('Stato');
-            expect(component.data.value).toBe(original);
+            expect(component.data.value).toBe(value);
+            expect(component.dataSource).toBe(originalDataSource);
+            expect(component.treeControl.isExpanded(statusNode)).toBe(true);
+            expect(filterChange).not.toHaveBeenCalled();
+        });
+
+        it('should preserve the search query and re-apply the filter when translations change', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'TreeSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.TreeSelect,
+                    values: keyedTree,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            const component = pipe();
+
+            component.searchControl.setValue('Status');
+            fixture.detectChanges();
+
+            expect(component.treeControl.filterQuery).toBe('Status');
+
+            const applyFilterSpy = vi.spyOn(component.treeControl, 'applyFilter');
+
+            applyFilterSpy.mockClear();
+
+            translations.set({ 'filters.status': 'Stato', 'filters.active': 'Attivo' });
+            fixture.detectChanges();
+
+            expect(component.treeControl.filterQuery).toBe('Status');
+            expect(applyFilterSpy).toHaveBeenCalled();
+        });
+
+        it('should expose the source node with its nameKey to a custom template', () => {
+            fixture.componentInstance.pipeTemplates = [
+                {
+                    name: 'TreeSelect',
+                    id: PIPE_TEMPLATE_ID,
+                    type: KbqPipeTypes.TreeSelect,
+                    values: keyedTree,
+                    valueTemplate: fixture.componentInstance.optionTemplate(),
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ];
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
+            fixture.detectChanges();
+
+            const component = pipe();
+            const statusNode = component.treeControl.dataNodes.find((node) => node.value === 'status')!;
+
+            expect((component as any).getSourceNode(statusNode).nameKey).toBe('filters.status');
         });
 
         it('should keep the stored fallback for unkeyed nodes without invoking the resolver', () => {
