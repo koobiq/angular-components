@@ -20,7 +20,7 @@
         [kbqPipeState]="data"
         [class]="{ 'kbq-active': select.panelOpen }"
     >
-        <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
+        <span #kbqTitleText class="kbq-pipe__name">{{ pipeName }}</span>
         <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!select.triggerValue">
             {{ select.triggerValue }}
         </span>
@@ -83,6 +83,6 @@
 }
 
 <ng-template #pipeTooltip>
-    <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ data.name }}</div>
+    <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ pipeName }}</div>
     <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ select.triggerValue }}</div>
 </ng-template>

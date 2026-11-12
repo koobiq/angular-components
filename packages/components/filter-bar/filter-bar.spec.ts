@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Component, computed, DebugElement, effect, inject, viewChild } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    computed,
+    DebugElement,
+    Directive,
+    effect,
+    inject,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -11,16 +20,19 @@ import {
 import {
     KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
     KBQ_FILTER_BAR_LOCALE_CONFIGURATION,
+    KBQ_FILTER_BAR_NAME_RESOLVER,
     KbqFilter,
     KbqFilterBar,
     kbqFilterBarLocaleConfigurationProvider,
     KbqFilterBarModule,
+    KbqFilterBarNameResolver,
     KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
 import { KbqSearchExpandable, KbqSearchExpandableModule } from '@koobiq/components/search-expandable';
 import { BehaviorSubject } from 'rxjs';
+import { KBQ_PIPE_DATA, KbqBasePipe } from './pipes/base-pipe';
 
 const PIPE_TEMPLATE_ID = 'TestText';
 
@@ -846,6 +858,272 @@ describe('KbqFilterBar', () => {
 
             expect(filterResetElement.textContent?.trim()).toBe('Locale B reset');
         });
+    });
+});
+
+describe('pipeNameKey legacy lookup', () => {
+    @Directive({
+        selector: '[test-name-key-pipe]',
+        providers: [{ provide: KBQ_PIPE_DATA, useValue: {} }]
+    })
+    class NameKeyTestPipe extends KbqBasePipe<unknown> {
+        open(): void {}
+
+        exposePipeNameKey(): string | undefined {
+            return this.pipeNameKey();
+        }
+
+        get pipeNamePublic(): string {
+            return this.pipeName;
+        }
+    }
+
+    @Component({
+        selector: 'test-name-key-app',
+        imports: [KbqFilterBarModule, NameKeyTestPipe],
+        template: `
+            <kbq-filter-bar [pipeTemplates]="templates">
+                <div test-name-key-pipe></div>
+            </kbq-filter-bar>
+        `
+    })
+    class NameKeyApp {
+        templates: KbqPipeTemplate[] = [];
+    }
+
+    let resolver: ReturnType<typeof vi.fn<KbqFilterBarNameResolver>>;
+
+    beforeEach(() => {
+        resolver = vi.fn(({ fallback }: { fallback: string }) => fallback);
+
+        TestBed.configureTestingModule({
+            imports: [KbqFilterBarModule, NameKeyApp]
+        })
+            .overrideProvider(KBQ_FILTER_BAR_NAME_RESOLVER, { useValue: resolver })
+            .compileComponents();
+    });
+
+    const initPipe = (
+        pipeOverrides: Partial<KbqPipe> = {},
+        templates: KbqPipeTemplate[] = []
+    ): { pipe: NameKeyTestPipe } => {
+        TestBed.overrideProvider(KBQ_PIPE_DATA, {
+            useValue: {
+                name: 'Stored fallback',
+                id: 'status',
+                type: KbqPipeTypes.Select,
+                value: null,
+                search: false,
+                cleanable: false,
+                removable: false,
+                disabled: false,
+                ...pipeOverrides
+            }
+        });
+
+        const fixture = TestBed.createComponent(NameKeyApp);
+
+        fixture.componentInstance.templates = templates;
+        fixture.detectChanges();
+
+        const pipeDirective = fixture.debugElement.query(By.directive(NameKeyTestPipe))!.injector.get(NameKeyTestPipe);
+
+        return { pipe: pipeDirective };
+    };
+
+    it('should return own key when the pipe has nameKey', () => {
+        const { pipe } = initPipe({ nameKey: 'filters.own' });
+
+        expect(pipe.exposePipeNameKey()).toBe('filters.own');
+    });
+
+    it('should return unique template key when no own key', () => {
+        const { pipe } = initPipe({}, [
+            {
+                name: 'Status',
+                id: 'status',
+                type: KbqPipeTypes.Select,
+                nameKey: 'filters.status',
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]);
+
+        expect(pipe.exposePipeNameKey()).toBe('filters.status');
+    });
+
+    it('should return undefined for duplicate template matches', () => {
+        const { pipe } = initPipe({}, [
+            {
+                name: 'Status',
+                id: 'status',
+                type: KbqPipeTypes.Select,
+                nameKey: 'filters.status',
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Status',
+                id: 'status',
+                type: KbqPipeTypes.Select,
+                nameKey: 'filters.status.v2',
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]);
+
+        expect(pipe.exposePipeNameKey()).toBeUndefined();
+    });
+
+    it('should return undefined when no template matches', () => {
+        const { pipe } = initPipe({}, [
+            {
+                name: 'Other',
+                id: 'other',
+                type: KbqPipeTypes.Select,
+                nameKey: 'filters.other',
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]);
+
+        expect(pipe.exposePipeNameKey()).toBeUndefined();
+    });
+
+    it('should resolve pipeName with own key', () => {
+        resolver.mockImplementation(({ key }: { key: string }) => {
+            if (key === 'filters.own') return 'Translated own key';
+
+            return undefined;
+        });
+        const { pipe } = initPipe({ nameKey: 'filters.own' });
+
+        expect(pipe.pipeNamePublic).toBe('Translated own key');
+    });
+
+    it('should resolve pipeName with unique template key', () => {
+        resolver.mockImplementation(({ key }: { key: string }) => {
+            if (key === 'filters.status') return 'Translated template key';
+
+            return undefined;
+        });
+        const { pipe } = initPipe({}, [
+            {
+                name: 'Status',
+                id: 'status',
+                type: KbqPipeTypes.Select,
+                nameKey: 'filters.status',
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]);
+
+        expect(pipe.pipeNamePublic).toBe('Translated template key');
+    });
+
+    it('should fall back to stored name with duplicate template matches', () => {
+        const { pipe } = initPipe({}, [
+            {
+                name: 'Status',
+                id: 'status',
+                type: KbqPipeTypes.Select,
+                nameKey: 'filters.status',
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Status',
+                id: 'status',
+                type: KbqPipeTypes.Select,
+                nameKey: 'filters.status.v2',
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]);
+
+        expect(pipe.pipeNamePublic).toBe('Stored fallback');
+    });
+
+    it('should fall back to stored name without template match', () => {
+        const { pipe } = initPipe({}, [
+            {
+                name: 'Other',
+                id: 'other',
+                type: KbqPipeTypes.Select,
+                nameKey: 'filters.other',
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]);
+
+        expect(pipe.pipeNamePublic).toBe('Stored fallback');
+    });
+
+    it('should keep automatic state shape as { id, value } per pipe', () => {
+        const store = new InMemoryStateStore();
+
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+        TestBed.overrideProvider(KBQ_PIPE_DATA, {
+            useValue: {
+                name: 'Status',
+                nameKey: 'filters.status',
+                id: 'status',
+                type: KbqPipeTypes.Select,
+                value: null,
+                search: false,
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        });
+
+        const fixture = TestBed.createComponent(NameKeyApp);
+
+        fixture.detectChanges();
+
+        const filterBar = fixture.debugElement.query(By.directive(KbqFilterBar)).componentInstance as KbqFilterBar;
+
+        filterBar.filter.set({
+            name: 'Test',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: false,
+            pipes: [
+                {
+                    name: 'Status',
+                    nameKey: 'filters.status',
+                    id: 'status',
+                    type: KbqPipeTypes.Select,
+                    value: null,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                } as KbqPipe
+            ]
+        });
+        fixture.detectChanges();
+
+        // Trigger persistence through onChangePipe
+        filterBar.onChangePipe.emit(filterBar.filter()!.pipes[0]);
+        fixture.detectChanges();
+
+        // Persistence keeps { id, value } per pipe — nameKey is NOT serialized
+        const key = store.keys()[0];
+
+        expect(key).toBeDefined();
+        const state = store.getState(key) as { pipes: { id: string; value: unknown }[] };
+
+        expect(state).not.toBeNull();
+        expect(state.pipes).toEqual([{ id: 'status', value: null }]);
     });
 });
 

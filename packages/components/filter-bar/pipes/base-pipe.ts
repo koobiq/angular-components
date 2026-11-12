@@ -370,6 +370,31 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     }
 
     /**
+     * Resolved display name of the pipe, delegating to {@link resolveName} with kind `'pipe'` and the key
+     * returned by {@link pipeNameKey}.
+     */
+    protected get pipeName(): string {
+        return this.resolveName(this.data, 'pipe', this.pipeNameKey());
+    }
+
+    /**
+     * Returns the pipe's own nonempty `nameKey`. Otherwise examines only the filter bar's pipe templates
+     * with the same `getId()` and `type`; exactly one match supplies its key, while zero or duplicate
+     * matches return `undefined`.
+     */
+    protected pipeNameKey(): string | undefined {
+        const ownKey = this.data.nameKey;
+
+        if (ownKey) return ownKey;
+
+        const templates = this.filterBar?.pipeTemplates() ?? [];
+        const matches = templates.filter((t) => getId(t) === getId(this.data) && t.type === this.data.type);
+        const withKey = matches.filter((t) => t.nameKey);
+
+        return withKey.length === 1 ? withKey[0].nameKey : undefined;
+    }
+
+    /**
      * Every pipe opens untracked: called from a consumer's `effect()`, the state read on the way would make the
      * effect run again on every open and close.
      *

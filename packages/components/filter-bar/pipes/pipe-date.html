@@ -13,9 +13,9 @@
     [kbqPopoverDefaultPaddings]="false"
     [kbqPopoverPlacement]="placements.BottomLeft"
     [kbqPopoverPlacementPriority]="[placements.BottomLeft, placements.TopLeft]"
-    [kbqPopoverAriaLabel]="data.name"
+    [kbqPopoverAriaLabel]="pipeName"
 >
-    <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
+    <span #kbqTitleText class="kbq-pipe__name">{{ pipeName }}</span>
     <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!formattedValue">
         {{ formattedValue }}
     </span>
@@ -32,7 +32,7 @@
                 <kbq-list-selection
                     #listSelection
                     [autoSelect]="false"
-                    [attr.aria-label]="data.name"
+                    [attr.aria-label]="pipeName"
                     [ngModel]="data.value?.name"
                 >
                     <kbq-list-option (click)="showPeriod()" (keydown.enter)="showPeriod()">
@@ -158,6 +158,6 @@
 </ng-template>
 
 <ng-template #pipeTooltip>
-    <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ data.name }}</div>
+    <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ pipeName }}</div>
     <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ formattedValue }}</div>
 </ng-template>
