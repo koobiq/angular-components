@@ -6,9 +6,9 @@ import {
     makeEnvironmentProviders,
     provideAppInitializer
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { KBQ_LOCALE_SERVICE, KBQ_WINDOW, KbqThemeService } from '@koobiq/components/core';
-import { distinctUntilKeyChanged, skip } from 'rxjs';
+import { distinctUntilKeyChanged, filter, skip } from 'rxjs';
 import { DocsNavbarProperty } from '../components/navbar/navbar-property';
 import { DOCS_EXAMPLES_LANG_PARAM, DocsLocale } from '../constants/locale';
 import { DocsLocaleService } from './locale';
@@ -63,7 +63,7 @@ export class DocsLanguagePreferences {
             this.docsLanguageSwitch.setValue(index);
         }
 
-        const queryLocale = this.getExamplesLocaleFromQuery();
+        const queryLocale = this.getExamplesLocaleFromUrl(this.location.path());
         const queryIndex = queryLocale
             ? this.examplesLanguageSwitch.data.findIndex(({ id }) => id === queryLocale)
             : -1;
@@ -119,11 +119,13 @@ export class DocsLanguagePreferences {
         });
 
         // `skip(1)` drops the value replayed to a fresh subscriber, so the param is written on a change only.
-        // A mirror switch is written by the `setLocale` navigation instead, to keep a single history entry.
+        // A mirror switch is written by the `setLocale` navigation instead, to keep a single history entry;
+        // a browser navigation already shows the param — writing it again would add a duplicate history entry.
         this.examplesLanguageSwitch.changes
             .pipe(distinctUntilKeyChanged('value'), skip(1))
             .subscribe(({ value: { id } }) => {
                 if (this.mirroringExamples) return;
+                if (this.getExamplesLocaleFromUrl(this.location.path()) === id) return;
 
                 this.router.navigate([], {
                     queryParams: { [DOCS_EXAMPLES_LANG_PARAM]: id },
@@ -131,6 +133,25 @@ export class DocsLanguagePreferences {
                     preserveFragment: true
                 });
             });
+
+        // Browser back/forward restores a URL that can carry a different examples language: apply it, so
+        // the address bar and the rendered examples never disagree. A missing param leaves the picked
+        // language alone — storage, not the URL, is the source of truth after the start.
+        this.router.events
+            .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+            .subscribe(({ urlAfterRedirects }) => this.applyExamplesLanguageFromURL(urlAfterRedirects));
+    }
+
+    private applyExamplesLanguageFromURL(url: string): void {
+        const locale = this.getExamplesLocaleFromUrl(url);
+
+        if (!locale || this.examplesLanguageSwitch.currentValue.id === locale) return;
+
+        const index = this.examplesLanguageSwitch.data.findIndex(({ id }) => id === locale);
+
+        if (index >= 0) {
+            this.examplesLanguageSwitch.setValue(index);
+        }
     }
 
     // Storage throws where it is blocked, which `DocsNavbarProperty` already swallows; a throw here would
@@ -143,8 +164,8 @@ export class DocsLanguagePreferences {
         }
     }
 
-    private getExamplesLocaleFromQuery(): string | null {
-        const value = this.router.parseUrl(this.location.path()).queryParams[DOCS_EXAMPLES_LANG_PARAM];
+    private getExamplesLocaleFromUrl(url: string): string | null {
+        const value = this.router.parseUrl(url).queryParams[DOCS_EXAMPLES_LANG_PARAM];
 
         return typeof value === 'string' && this.localeService.locales.items.some(({ id }) => id === value)
             ? value
