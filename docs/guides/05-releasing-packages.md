@@ -17,6 +17,8 @@ are still supported.
     yarn run release:stage:commit
     ```
 
+    The CLI's commands and options are documented in [packages/cli/README.md](../../packages/cli/README.md).
+
     The CLI walks through the release and asks for confirmation at each step that needs it:
 
     - (**needs confirmation**) choose the bump: major, minor or patch

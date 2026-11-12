@@ -183,7 +183,7 @@
         "build:components-experimental": "ng build components-experimental",
         "build:docs-examples-module": "ts-node --project ./tools/example-module/tsconfig.json ./tools/example-module/index.ts",
         "build:docs-examples": "ng build docs-examples",
-        "build:cli": "rimraf dist/cli packages/cli/dist/release && rollup -c ./packages/cli/rollup.config.js && tsc -p packages/cli/tsconfig.release.json && node ./packages/cli/scripts/copy-meta-to-dist.js",
+        "build:cli": "rimraf dist/cli packages/cli/dist/release && rollup -c ./packages/cli/rollup.config.js && tsc -p packages/cli/tsconfig.release.json && node ./packages/cli/scripts/copy-meta-to-dist.js && node ./packages/cli/scripts/verify-build-output.js",
         "build:tokens:data": "node ./tools/tokens/docs/index.mjs",
         "build:docs-content": "yarn run docs:generate-seo-descriptions && yarn run build:docs-pages && yarn run docs:api-gen && yarn run docs:generate-llms",
         "build:docs-pages": "ts-node --project ./tools/docs-pages/tsconfig.json ./tools/docs-pages/generate-docs-pages.ts",
