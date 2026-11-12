@@ -226,6 +226,9 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** @docs-private */
     toggleSelectionAll(emitEvent: boolean = true) {
+        // With nothing to toggle, the toggle would still commit an empty value and announce a change.
+        if (this.noOptions) return;
+
         this.selectionAllInProgress = true;
 
         if (this.allVisibleOptionsSelected) {
@@ -271,6 +274,10 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** opens select */
     override open() {
+        // Without options the search is hidden and nothing in the panel takes the focus: the trigger has to,
+        // or Escape never reaches the select.
+        if (this.noOptions) this.focusTrigger();
+
         this.select().open();
     }
 
