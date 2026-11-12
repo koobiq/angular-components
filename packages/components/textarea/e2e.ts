@@ -11,7 +11,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     template: `
         <kbq-form-field>
             <kbq-label>Label | empty</kbq-label>
-            <textarea kbqTextarea placeholder="Placeholder" canGrow="false"></textarea>
+            <textarea kbqTextarea data-testid="resizable_textarea" placeholder="Placeholder" canGrow="false"></textarea>
             <kbq-hint>Hint</kbq-hint>
         </kbq-form-field>
 
