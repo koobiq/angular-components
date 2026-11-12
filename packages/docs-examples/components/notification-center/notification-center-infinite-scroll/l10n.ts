@@ -14,6 +14,10 @@ export interface ExampleTranslation {
     issueStatuses: { open: string; inProgress: string; complete: string; closed: string };
     securitySections: { identity: string; membersAndGuests: string; dataRetention: string };
     pageTitle: string;
+    /** Title of the generated notification at the given 1-based position. */
+    pageItemTitle: (position: number) => string;
+    /** Caption of the generated notification: which page loaded it. */
+    pageItemCaption: (page: number) => string;
     primaryAction: string;
     emptyState: { image: string; title: string; text: string };
 }
@@ -36,6 +40,8 @@ export const TRANSLATIONS: Translations<ExampleTranslation> = {
             dataRetention: 'Хранение данных'
         },
         pageTitle: 'Заголовок страницы',
+        pageItemTitle: (position) => `Уведомление №${position}`,
+        pageItemCaption: (page) => `Загружено со страницы ${page}`,
         primaryAction: 'Основное действие',
         emptyState: { image: 'Пустое состояние', title: 'Нет объектов', text: 'Здесь пока нет добавленных объектов' }
     },
@@ -56,6 +62,8 @@ export const TRANSLATIONS: Translations<ExampleTranslation> = {
             dataRetention: 'Data retention'
         },
         pageTitle: 'Page Title',
+        pageItemTitle: (position) => `Notification #${position}`,
+        pageItemCaption: (page) => `Loaded with page ${page}`,
         primaryAction: 'Primary Action',
         emptyState: { image: 'Empty state', title: 'No items', text: 'No objects have been added here yet' }
     }
