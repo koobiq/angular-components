@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     KBQ_FILTER_BAR_HOST,
+    KBQ_FILTER_BAR_NAME_RESOLVER,
     KbqDateTimeValue,
     KbqFilterBar,
     KbqFilterBarModule,
@@ -116,8 +117,11 @@ describe('KbqFilterBarNameResolver', () => {
 
     it('should fall back to the context fallback when the resolver returns nullish', () => {
         inputResolver.mockReturnValue(undefined);
+        diResolver.mockReturnValue('DI status');
 
         expect(filterBar.resolveName(context)).toBe('Status');
+        expect(inputResolver).toHaveBeenCalledWith(context);
+        expect(diResolver).not.toHaveBeenCalled();
     });
 
     it('should allow an empty string from the resolver', () => {
@@ -258,11 +262,16 @@ describe('KbqFilterBarNameResolver', () => {
 describe('KbqBasePipe.resolveName', () => {
     let fixture: ComponentFixture<TestBasePipeComponent>;
     let pipeDirective: TestBasePipeDirective;
+    let diResolver: ReturnType<typeof vi.fn<KbqFilterBarNameResolver>>;
 
     beforeEach(() => {
+        diResolver = vi.fn();
+
         TestBed.configureTestingModule({
             imports: [KbqFilterBarModule, TestBasePipeComponent]
-        }).compileComponents();
+        })
+            .overrideProvider(KBQ_FILTER_BAR_NAME_RESOLVER, { useValue: diResolver })
+            .compileComponents();
 
         fixture = TestBed.createComponent(TestBasePipeComponent);
         fixture.detectChanges();
@@ -303,12 +312,30 @@ describe('KbqBasePipe.resolveName', () => {
             pipe: createPipe({ value: 'value1' }),
             source
         });
+        expect(diResolver).not.toHaveBeenCalled();
     });
 
-    it('should fall back to source.name when the host resolver returns nullish', () => {
+    it('should fall back to the DI resolver when the host resolver returns nullish', () => {
         const source: KbqSelectValue = { name: 'Active', value: 'active', nameKey: 'filters.status' };
 
         pipeDirective.host!.resolveName = vi.fn().mockReturnValue(undefined);
+        diResolver.mockReturnValue('DI status');
+
+        expect(pipeDirective.exposeResolveName(source, 'select-option')).toBe('DI status');
+        expect(diResolver).toHaveBeenCalledWith({
+            key: 'filters.status',
+            fallback: 'Active',
+            kind: 'select-option',
+            pipe: createPipe({ value: 'value1' }),
+            source
+        });
+    });
+
+    it('should fall back to source.name when both resolvers return nullish', () => {
+        const source: KbqSelectValue = { name: 'Active', value: 'active', nameKey: 'filters.status' };
+
+        pipeDirective.host!.resolveName = vi.fn().mockReturnValue(undefined);
+        diResolver.mockReturnValue(undefined);
 
         expect(pipeDirective.exposeResolveName(source, 'select-option')).toBe('Active');
     });
