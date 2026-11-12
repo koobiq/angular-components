@@ -1,6 +1,6 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
@@ -24,7 +24,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
                 minBufferPx="300"
                 maxBufferPx="300"
             >
-                <kbq-list-option *cdkVirtualFor="let option of options()" [value]="option">
+                <kbq-list-option *cdkVirtualFor="let option of options" [value]="option">
                     {{ option.label }}
                 </kbq-list-option>
             </cdk-virtual-scroll-viewport>
@@ -33,12 +33,10 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListVirtualScrollExample extends BaseLocalizedExample<ExampleTranslation> {
-    readonly options = computed(() =>
-        Array.from({ length: 10000 }).map((_, i) => ({
-            id: i,
-            label: 'Option #' + i
-        }))
-    );
+    readonly options = Array.from({ length: 10000 }).map((_, i) => ({
+        id: i,
+        label: 'Option #' + i
+    }));
 
     selected = [];
 

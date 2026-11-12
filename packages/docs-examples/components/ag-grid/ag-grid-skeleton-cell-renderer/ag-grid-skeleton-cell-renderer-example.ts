@@ -35,7 +35,7 @@ const getRandomInt = (min: number, max: number): number => {
             rowModelType="infinite"
             [alwaysMultiSort]="true"
             [columnDefs]="columnDefs()"
-            [datasource]="datasource()"
+            [datasource]="datasource"
             [defaultColDef]="defaultColDef"
             [cacheBlockSize]="7"
             [cacheOverflowSize]="7"
@@ -58,7 +58,7 @@ export class AgGridSkeletonCellRendererExample extends BaseLocalizedExample<Exam
             headerName: this.t().headerText
         }))
     );
-    readonly datasource = computed<IDatasource>(() => ({
+    readonly datasource: IDatasource = {
         rowCount: 1000,
         getRows: ({ startRow, endRow, successCallback }: IGetRowsParams) => {
             setTimeout(
@@ -74,7 +74,7 @@ export class AgGridSkeletonCellRendererExample extends BaseLocalizedExample<Exam
                 getRandomInt(500, 2000)
             );
         }
-    }));
+    };
     readonly defaultColDef: ColDef = {
         cellRendererSelector: ({ data }: ICellRendererParams) =>
             data === undefined ? { component: KbqAgGridSkeletonCellRenderer } : undefined

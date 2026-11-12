@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
@@ -14,7 +14,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         <kbq-form-field>
             <kbq-label>{{ t().defaultStrings }}</kbq-label>
             <kbq-select multiple selectAll [placeholder]="t().placeholder" [value]="selected">
-                @for (option of options(); track option) {
+                @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
             </kbq-select>
@@ -35,7 +35,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
                 }"
             >
                 <kbq-cleaner />
-                @for (option of options(); track option) {
+                @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
             </kbq-select>
@@ -56,7 +56,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectLocaleConfigurationExample extends BaseLocalizedExample<ExampleTranslation> {
-    readonly options = computed(() => Array.from({ length: 4 }, (_, i) => 'Option #' + (i + 1)));
+    readonly options = Array.from({ length: 4 }, (_, i) => 'Option #' + (i + 1));
     readonly selected = [this.options[0]];
 
     constructor() {

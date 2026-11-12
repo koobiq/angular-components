@@ -3,7 +3,6 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
-    computed,
     DestroyRef,
     inject,
     NgZone,
@@ -32,7 +31,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
 
             <kbq-form-field>
                 <kbq-select [value]="selected">
-                    @for (option of options(); track option) {
+                    @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                 </kbq-select>
@@ -76,7 +75,7 @@ export class SelectAutoHideScrollStrategyExample
     extends BaseLocalizedExample<ExampleTranslation>
     implements AfterViewInit
 {
-    protected readonly options = computed(() => Array.from({ length: 5 }, (_, i) => 'Option #' + i));
+    protected readonly options = Array.from({ length: 5 }, (_, i) => 'Option #' + i);
     protected readonly selected = this.options[0];
 
     private readonly select = viewChild.required(KbqSelect);

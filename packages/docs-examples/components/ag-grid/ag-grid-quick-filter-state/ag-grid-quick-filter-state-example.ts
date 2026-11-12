@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     KbqAgGridQuickFilterStateLocalStorageStore,
@@ -32,8 +32,8 @@ ModuleRegistry.registerModules([AllCommunityModule]);
             kbqAgGridThemeDisableCellFocusStyles
             kbqAgGridQuickFilterState="example-ag-grid-quick-filter-state"
             [alwaysMultiSort]="true"
-            [rowData]="rowData()"
-            [columnDefs]="columnDefs()"
+            [rowData]="rowData"
+            [columnDefs]="columnDefs"
             [style.height.px]="300"
             [style.width.%]="100"
             [(kbqAgGridQuickFilterStateValue)]="filter"
@@ -54,17 +54,13 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class AgGridQuickFilterStateExample extends BaseLocalizedExample<ExampleTranslation> {
     readonly filter = model('');
-    readonly columnDefs = computed<ColDef[]>(() =>
-        Array.from({ length: 6 }, (_, i) => ({
-            field: 'column' + i,
-            headerName: 'Column ' + i,
-            width: 130
-        }))
-    );
-    readonly rowData = computed(() =>
-        Array.from({ length: 100 }, (_, index) =>
-            Object.fromEntries(Array.from({ length: 6 }, (_, i) => ['column' + i, 'Text ' + index]))
-        )
+    readonly columnDefs: ColDef[] = Array.from({ length: 6 }, (_, i) => ({
+        field: 'column' + i,
+        headerName: 'Column ' + i,
+        width: 130
+    }));
+    readonly rowData = Array.from({ length: 100 }, (_, index) =>
+        Object.fromEntries(Array.from({ length: 6 }, (_, i) => ['column' + i, 'Text ' + index]))
     );
 
     constructor() {

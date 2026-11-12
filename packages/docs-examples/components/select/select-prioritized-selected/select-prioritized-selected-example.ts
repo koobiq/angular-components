@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { ExampleTranslation, TRANSLATIONS } from './l10n';
@@ -44,15 +44,13 @@ export class SelectPrioritizedSelectedExample extends BaseLocalizedExample<Examp
 
     constructor() {
         super(TRANSLATIONS);
-        effect(() => {
-            const all = Array.from({ length: 15 }, (_, i) => 'Option #' + i);
+        const all = Array.from({ length: 15 }, (_, i) => 'Option #' + i);
 
-            if (!this.selected.length) {
-                this.selected = [all.at(-1)!, all.at(-2)!];
-            }
+        if (!this.selected.length) {
+            this.selected = [all.at(-1)!, all.at(-2)!];
+        }
 
-            this.options.set(this.selected.concat(all.filter((option) => !this.selected.includes(option))));
-        });
+        this.options.set(this.selected.concat(all.filter((option) => !this.selected.includes(option))));
     }
 
     openedChange(isOpened: boolean): void {

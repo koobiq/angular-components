@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { ExampleTranslation, TRANSLATIONS } from './l10n';
@@ -14,7 +14,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
             <div class="kbq-form__label">{{ t().forSelect }}</div>
             <kbq-form-field>
                 <kbq-select disabled [placeholder]="t().placeholder" [value]="selected">
-                    @for (option of options(); track option) {
+                    @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                 </kbq-select>
@@ -25,7 +25,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
             <div class="kbq-form__label">{{ t().forOptions }}</div>
             <kbq-form-field>
                 <kbq-select [placeholder]="t().placeholder" [value]="selected">
-                    @for (option of options(); track option) {
+                    @for (option of options; track option) {
                         <kbq-option [disabled]="$odd" [value]="option">{{ option }}</kbq-option>
                     }
                 </kbq-select>
@@ -36,9 +36,9 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
             <div class="kbq-form__label">{{ t().forOptgroup }}</div>
             <kbq-form-field>
                 <kbq-select [placeholder]="t().placeholder" [value]="selected">
-                    @for (group of groups(); track group; let odd = $odd) {
+                    @for (group of groups; track group; let odd = $odd) {
                         <kbq-optgroup [label]="group" [disabled]="odd">
-                            @for (option of options(); track option) {
+                            @for (option of options; track option) {
                                 <kbq-option [value]="option">{{ option }}</kbq-option>
                             }
                         </kbq-optgroup>
@@ -65,8 +65,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectDisabledExample extends BaseLocalizedExample<ExampleTranslation> {
-    readonly options = computed(() => Array.from({ length: 5 }, (_, i) => 'Option #' + i));
-    readonly groups = computed(() => Array.from({ length: 3 }, (_, i) => 'Group #' + i));
+    readonly options = Array.from({ length: 5 }, (_, i) => 'Option #' + i);
+    readonly groups = Array.from({ length: 3 }, (_, i) => 'Group #' + i);
     readonly selected = this.options[0];
 
     constructor() {

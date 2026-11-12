@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -24,7 +24,7 @@ type Option = {
 export class OptionsApiService extends BaseLocalizedExample<ExampleTranslation> {
     private delay: number = 3000;
 
-    private readonly data = computed(() => Array.from({ length: 10 }, (_, i) => ({ id: i, label: 'Option #' + i })));
+    private readonly data = Array.from({ length: 10 }, (_, i) => ({ id: i, label: 'Option #' + i }));
 
     setDelay(delay: number) {
         this.delay = delay;
@@ -37,9 +37,7 @@ export class OptionsApiService extends BaseLocalizedExample<ExampleTranslation> 
 
         const term = search.toLowerCase().trim();
 
-        const filtered = !term
-            ? this.data()
-            : this.data().filter((option) => option.label.toLowerCase().includes(term));
+        const filtered = !term ? this.data : this.data.filter((option) => option.label.toLowerCase().includes(term));
 
         return timer(this.delay).pipe(map(() => filtered));
     }

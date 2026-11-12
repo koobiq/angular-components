@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
@@ -58,17 +58,15 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AutocompleteWithFooterExample extends BaseLocalizedExample<ExampleTranslation> {
-    readonly options = computed(() => Array.from({ length: 100 }, (_, i) => 'Option #' + (i + 1)));
+    readonly options = Array.from({ length: 100 }, (_, i) => 'Option #' + (i + 1));
     readonly control = new FormControl('');
     readonly filteredOptions = toSignal(
         this.control.valueChanges.pipe(
             debounceTime(300),
             distinctUntilChanged(),
-            map((value) =>
-                this.options().filter((option) => option.toLowerCase().includes((value ?? '').toLowerCase()))
-            )
+            map((value) => this.options.filter((option) => option.toLowerCase().includes((value ?? '').toLowerCase())))
         ),
-        { initialValue: this.options() }
+        { initialValue: this.options }
     );
 
     constructor() {

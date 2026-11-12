@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqCleaner } from '@koobiq/components/form-field';
@@ -34,7 +34,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
             </div>
             <kbq-form-field kbqInlineEditEditMode>
                 <kbq-select multiple [placeholder]="placeholder" [(ngModel)]="value">
-                    @for (option of options(); track option) {
+                    @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                     <kbq-cleaner />
@@ -48,8 +48,8 @@ export class InlineEditOverviewExample extends BaseLocalizedExample<ExampleTrans
     protected get placeholder(): string {
         return this.t().placeholder;
     }
-    protected readonly options = computed(() => Array.from({ length: 10 }, (_, i) => 'Option #' + i));
-    protected value: string[] = [this.options()[0]];
+    protected readonly options = Array.from({ length: 10 }, (_, i) => 'Option #' + i);
+    protected value: string[] = [this.options[0]];
     protected readonly displayValue = signal(this.value);
 
     protected update(): void {

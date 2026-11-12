@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
 import { ExampleTranslation, TRANSLATIONS } from './l10n';
@@ -18,7 +18,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
                     <kbq-select-trigger>All options</kbq-select-trigger>
                 }
 
-                @for (option of options(); track option) {
+                @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
             </kbq-select>
@@ -38,8 +38,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectSelectAllLabelExample extends BaseLocalizedExample<ExampleTranslation> {
-    readonly options = computed(() => Array.from({ length: 6 }, (_, i) => 'Option #' + (i + 1)));
-    readonly selected = [...this.options()];
+    readonly options = Array.from({ length: 6 }, (_, i) => 'Option #' + (i + 1));
+    readonly selected = [...this.options];
 
     constructor() {
         super(TRANSLATIONS);

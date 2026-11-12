@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 import { BaseLocalizedExample } from '@koobiq/docs-examples/i18n';
@@ -17,7 +17,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
         </kbq-modal-title>
 
         <kbq-modal-body>
-            @for (item of items(); track item) {
+            @for (item of items; track item) {
                 <p>{{ item }}</p>
             }
         </kbq-modal-body>
@@ -32,7 +32,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
 export class CustomModalComponent extends BaseLocalizedExample<ExampleTranslation> {
     protected readonly modalRef = inject(KbqModalRef);
 
-    readonly items = computed(() => Array.from({ length: 30 }, (_, i) => 'Item #' + i));
+    readonly items = Array.from({ length: 30 }, (_, i) => 'Item #' + i);
 
     constructor() {
         super(TRANSLATIONS);
