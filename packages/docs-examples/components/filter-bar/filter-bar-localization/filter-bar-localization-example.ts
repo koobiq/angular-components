@@ -1,16 +1,25 @@
-import { ChangeDetectionStrategy, Component, computed, linkedSignal, Provider } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Provider } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     DateAdapter,
     DateFormatter,
+    KbqHighlightModule,
     kbqInjectLocaleService,
     kbqLocaleIDProvider,
     kbqLocaleServiceProvider
 } from '@koobiq/components/core';
-import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import {
+    KbqFilter,
+    KbqFilterBarModule,
+    KbqFilterBarNameResolver,
+    KbqPipeTemplate,
+    KbqPipeTypes,
+    KbqSelectValue,
+    KbqTreeSelectNode
+} from '@koobiq/components/filter-bar';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { injectLocalizedPeriods } from '../localized-data';
+import { injectLocalizedText } from '../localized-data';
 
 /**
  * The date pipe resolves `DateAdapter` and `DateFormatter` through the element injector, so both must be
@@ -21,22 +30,33 @@ import { injectLocalizedPeriods } from '../localized-data';
  */
 const scopedDateProviders: Provider[] = [{ provide: DateAdapter, useClass: LuxonDateAdapter }, DateFormatter];
 
+/** A period preset as the `date` / `datetime` pipes read it: `start` is an offset from today. */
+interface DemoPeriodValue {
+    name: string;
+    nameKey: string;
+    start: Record<string, number>;
+    end: null;
+}
+
 /**
  * The bar itself, identical in every variant. `KbqFilterBar` is the only component that reads
  * `KBQ_LOCALE_SERVICE` — its sub-components and pipes take their strings from the bar — so whichever
  * ancestor provides the service localizes the whole thing.
  *
- * The data is a different matter: the bar never translates what it is handed, so the period labels are
- * built here out of the active locale, and every variant below gets its own instance of them.
+ * The data is a different matter: the bar never translates the labels it is handed. Every label below is
+ * therefore stable — an English `name` fallback plus a serializable `nameKey` — and the filter and the
+ * templates that hold those labels are created once. A locale change only updates the resolver's signal,
+ * so the selected values, the filter identity and the open panels stay as they are; nothing is rebuilt and
+ * `filter` is never replaced for a translation.
  */
 @Component({
     selector: 'localization-demo-bar',
-    imports: [KbqFilterBarModule],
+    imports: [KbqFilterBarModule, KbqHighlightModule],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates()" [(filter)]="filter">
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [nameResolver]="nameResolver" [(filter)]="filter">
             <kbq-filters [filters]="savedFilters" />
 
-            @for (pipe of filter().pipes; track pipe) {
+            @for (pipe of filter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
 
@@ -44,70 +64,167 @@ const scopedDateProviders: Provider[] = [{ provide: DateAdapter, useClass: Luxon
 
             <kbq-filter-reset (onResetFilter)="onResetFilter()" />
         </kbq-filter-bar>
+
+        <!-- A tree template receives the source node, so it resolves the name itself through its key. -->
+        <ng-template #treeOption let-option="option" let-search="search">
+            <span [innerHTML]="resolveKey(option.nameKey, option.name) | kbqHighlightBackground: search"></span>
+        </ng-template>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LocalizationDemoBar {
-    private readonly periods = injectLocalizedPeriods();
+    /** Text the example owns: a pipe or option label has no counterpart in the library's locale data. */
+    private readonly translations = injectLocalizedText({
+        'ru-RU': {
+            'filters.period': 'Период',
+            'filters.date': 'Дата',
+            'filters.status': 'Статус',
+            'filters.tags': 'Теги',
+            'filters.tree': 'Платформа',
+            'filters.multiTree': 'Платформы',
+            'filters.active': 'Активен',
+            'filters.blocked': 'Заблокирован',
+            'filters.alpha': 'Альфа',
+            'filters.beta': 'Бета',
+            'filters.platform': 'Платформа',
+            'filters.web': 'Веб',
+            'filters.mobile': 'Мобильные',
+            'filters.last24h': 'Последние 24 часа',
+            'filters.last7days': 'Последние 7 дней',
+            'filters.last30days': 'Последние 30 дней'
+        },
+        default: {
+            'filters.period': 'Period',
+            'filters.date': 'Date',
+            'filters.status': 'Status',
+            'filters.tags': 'Tags',
+            'filters.tree': 'Platform',
+            'filters.multiTree': 'Platforms',
+            'filters.active': 'Active',
+            'filters.blocked': 'Blocked',
+            'filters.alpha': 'Alpha',
+            'filters.beta': 'Beta',
+            'filters.platform': 'Platform',
+            'filters.web': 'Web',
+            'filters.mobile': 'Mobile',
+            'filters.last24h': 'Last 24 hours',
+            'filters.last7days': 'Last 7 days',
+            'filters.last30days': 'Last 30 days'
+        }
+    });
 
-    protected readonly savedFilters: KbqFilter[] = [];
+    /** One resolver for every pipe, option, preset and node label in this bar. */
+    protected readonly nameResolver: KbqFilterBarNameResolver = ({ key, fallback }) =>
+        this.translations()[key] ?? fallback;
 
-    // Rebuilt whenever the locale changes: `*kbqPipe` builds a pipe component once from the object it is
-    // given and ignores later changes to that binding, so the relabelled period only reaches the screen
-    // as a new pipe object. Pipes write their value in place, so every bar needs its own instance anyway.
-    protected readonly filter = linkedSignal(() => this.createFilter());
+    /** Resolves a stable `nameKey` for a custom template, falling back to the plain name. */
+    protected resolveKey(key: string | undefined, fallback: string): string {
+        return key ? (this.translations()[key] ?? fallback) : fallback;
+    }
 
-    protected readonly pipeTemplates = computed<KbqPipeTemplate[]>(() => [
+    /** Periods of the `date` pipe. The `name` is the stable fallback identity; `nameKey` is translated. */
+    private readonly datePresets: DemoPeriodValue[] = [
+        this.periodPreset('filters.last7days', 'Last 7 days', { days: -7 }),
+        this.periodPreset('filters.last30days', 'Last 30 days', { days: -30 })
+    ];
+
+    /** Periods of the `datetime` pipe. */
+    private readonly periodPresets: DemoPeriodValue[] = [
+        this.periodPreset('filters.last24h', 'Last 24 hours', { hours: -24 }),
+        this.periodPreset('filters.last7days', 'Last 7 days', { days: -7 })
+    ];
+
+    private readonly statusValues: KbqSelectValue[] = [
+        { name: 'Active', nameKey: 'filters.active', id: 'active', value: 'active' },
+        { name: 'Blocked', nameKey: 'filters.blocked', id: 'blocked', value: 'blocked' }
+    ];
+
+    private readonly tagValues: KbqSelectValue[] = [
+        { name: 'Alpha', nameKey: 'filters.alpha', id: 'alpha', value: 'alpha' },
+        { name: 'Beta', nameKey: 'filters.beta', id: 'beta', value: 'beta' }
+    ];
+
+    private readonly treeValues: KbqTreeSelectNode[] = [
+        {
+            name: 'Platform',
+            nameKey: 'filters.platform',
+            value: 'platform',
+            children: [
+                { name: 'Web', nameKey: 'filters.web', value: 'web', children: null },
+                { name: 'Mobile', nameKey: 'filters.mobile', value: 'mobile', children: null }
+            ]
+        }
+    ];
+
+    /** Built once; never rebuilt for a locale. Every label above is stable data. */
+    protected readonly pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Period',
+            nameKey: 'filters.period',
             type: KbqPipeTypes.Datetime,
-            // The three periods this example has always offered; the point here is the controls
-            // around them, not the list.
-            values: [
-                this.periods.pick({ unit: 'hours', amount: -24 }),
-                this.periods.pick({ unit: 'days', amount: -7 }),
-                this.periods.pick({ unit: 'days', amount: -30 })
-            ],
+            values: this.periodPresets,
             cleanable: false,
             removable: false,
             disabled: false
         },
         {
+            name: 'Date',
+            nameKey: 'filters.date',
+            type: KbqPipeTypes.Date,
+            values: this.datePresets,
+            cleanable: false,
+            removable: true,
+            disabled: false
+        },
+        {
             name: 'Status',
+            nameKey: 'filters.status',
             type: KbqPipeTypes.Select,
-            values: [
-                { name: 'Option 1', id: '1' },
-                { name: 'Option 2', id: '2' },
-                { name: 'Option 3', id: '3' }
-            ],
+            values: this.statusValues,
+            search: true,
             cleanable: false,
             removable: true,
             disabled: false
         },
         {
             name: 'Tags',
+            nameKey: 'filters.tags',
             type: KbqPipeTypes.MultiSelect,
-            selectAll: true,
-            values: [
-                { name: 'Option 1', id: '1' },
-                { name: 'Option 2', id: '2' },
-                { name: 'Option 3', id: '3' }
-            ],
+            values: this.tagValues,
+            search: true,
             cleanable: false,
             removable: true,
             disabled: false
         },
         {
-            name: 'Text',
-            type: KbqPipeTypes.Text,
+            name: 'Platform',
+            nameKey: 'filters.tree',
+            type: KbqPipeTypes.TreeSelect,
+            values: this.treeValues,
+            search: true,
+            cleanable: false,
+            removable: true,
+            disabled: false
+        },
+        {
+            name: 'Platforms',
+            nameKey: 'filters.multiTree',
+            type: KbqPipeTypes.MultiTreeSelect,
+            values: this.treeValues,
+            search: true,
             cleanable: false,
             removable: true,
             disabled: false
         }
-    ]);
+    ];
+
+    protected readonly savedFilters: KbqFilter[] = [];
+
+    /** Created once. A reset is a user action, not a translation: it may replace the filter. */
+    protected filter: KbqFilter | null = this.createFilter();
 
     protected onResetFilter(): void {
-        this.filter.set(this.createFilter());
+        this.filter = this.createFilter();
     }
 
     private createFilter(): KbqFilter {
@@ -120,14 +237,49 @@ export class LocalizationDemoBar {
             pipes: [
                 {
                     name: 'Period',
+                    nameKey: 'filters.period',
                     type: KbqPipeTypes.Datetime,
-                    value: this.periods.pick({ unit: 'hours', amount: -24 }),
+                    value: this.periodPresets[0],
                     cleanable: false,
                     removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'Status',
+                    nameKey: 'filters.status',
+                    type: KbqPipeTypes.Select,
+                    value: this.statusValues[0],
+                    search: true,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'Tags',
+                    nameKey: 'filters.tags',
+                    type: KbqPipeTypes.MultiSelect,
+                    value: [this.tagValues[0]],
+                    search: true,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'Platforms',
+                    nameKey: 'filters.multiTree',
+                    type: KbqPipeTypes.MultiTreeSelect,
+                    value: ['web'],
+                    search: true,
+                    cleanable: false,
+                    removable: true,
                     disabled: false
                 }
             ]
         };
+    }
+
+    private periodPreset(key: string, name: string, start: Record<string, number>): DemoPeriodValue {
+        return { name, nameKey: key, start, end: null };
     }
 }
 
