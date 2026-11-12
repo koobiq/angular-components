@@ -6,6 +6,7 @@
 
 import * as _angular_core from '@angular/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ElementRef } from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -67,6 +68,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     protected readonly overlayDir: _angular_core.Signal<CdkConnectedOverlay>;
     protected overlayOrigin: HTMLElement;
     readonly overlayPanelClass: _angular_core.InputSignal<string | string[]>;
+    protected readonly overlayPositions: ConnectedPosition[];
     protected readonly overlayWidth: _angular_core.WritableSignal<string | number>;
     protected readonly placements: typeof PopUpPlacements;
     protected readonly regionItems: _angular_core.Signal<readonly KbqFocusRegionItem[]>;
