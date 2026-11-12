@@ -30,8 +30,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
                 <kbq-label>{{ t().status }}</kbq-label>
 
                 <div kbqInlineEditViewMode>
-                    @if (status.value) {
-                        {{ status.value }}
+                    @if (status.value !== null) {
+                        {{ statuses()[status.value] }}
                     } @else {
                         <span kbqInlineEditPlaceholder>{{ notSetLabel }}</span>
                     }
@@ -45,7 +45,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
                         (selectionChange)="statusInlineEdit.commit()"
                     >
                         @for (item of statuses(); track item) {
-                            <kbq-option [value]="item">{{ item }}</kbq-option>
+                            <kbq-option [value]="$index">{{ item }}</kbq-option>
                         }
                     </kbq-select>
                 </kbq-form-field>
@@ -57,8 +57,8 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
             <kbq-dd>
                 <kbq-inline-edit #priorityInlineEdit="kbqInlineEdit">
                     <div kbqInlineEditViewMode>
-                        @if (priority.value) {
-                            {{ priority.value }}
+                        @if (priority.value !== null) {
+                            {{ priorities()[priority.value] }}
                         } @else {
                             <span kbqInlineEditPlaceholder>{{ notSetLabel }}</span>
                         }
@@ -72,7 +72,7 @@ import { ExampleTranslation, TRANSLATIONS } from './l10n';
                             (selectionChange)="priorityInlineEdit.commit()"
                         >
                             @for (item of priorities(); track item) {
-                                <kbq-option [value]="item">{{ item }}</kbq-option>
+                                <kbq-option [value]="$index">{{ item }}</kbq-option>
                             }
                         </kbq-select>
                     </kbq-form-field>
@@ -103,8 +103,8 @@ export class InlineEditSelectBasicExample extends BaseLocalizedExample<ExampleTr
     protected readonly statuses = computed(() => this.t().statuses);
     protected readonly priorities = computed(() => [...this.t().severities].reverse());
 
-    protected readonly status = new FormControl<string | null>(this.statuses()[0]);
-    protected readonly priority = new FormControl<string | null>(this.priorities()[0]);
+    protected readonly status = new FormControl<number | null>(0);
+    protected readonly priority = new FormControl<number | null>(0);
 
     constructor() {
         super(TRANSLATIONS);
