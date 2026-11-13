@@ -3523,6 +3523,12 @@ The migration keeps the full bundle where the code block loaded it. An applicati
 - **A library that renders code blocks.** The applications that use it provide the configuration.
 - **Specs** get none of the application's providers: add the configuration to the `TestBed` of a spec that checks highlighted markup.
 
+### Focusable content panel (21.1.0)
+
+{/* migration-step-components(content-panel) */}
+
+`kbq-content-panel-container` gets `tabindex="-1"`, so that the `ESCAPE` key closes the panel after a click on text inside the container. After such a click `document.activeElement` is therefore the container rather than `body`: code that compares it with `body` and `:focus-within` styles on the ancestors of the container see the difference.
+
 ### After the migration
 
 The migration is regex-based and does not rewrite aliased imports, local variables, or re-exports — **review the diff before committing**, rebuild the project and run your tests. The full lists of breaking changes are on the [Angular 21 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-21-breaking-changes.en.md) and [Angular 20 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.en.md) pages.

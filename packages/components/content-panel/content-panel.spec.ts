@@ -636,6 +636,60 @@ describe(`${KbqContentPanelModule.name} beforeClose`, () => {
         expect(openedChange).toHaveBeenCalledWith(false);
     });
 
+    it('should take a close that a listener of a close allowed asynchronously requests', async () => {
+        const beforeClose = vi
+            .fn<KbqContentPanelBeforeClose>()
+            .mockReturnValueOnce(Promise.resolve(true))
+            .mockReturnValue(true);
+        const fixture = await setup(beforeClose);
+        const container = fixture.componentInstance.container();
+        let reopened = false;
+
+        container.openedChange.subscribe((opened) => {
+            if (opened || reopened) return;
+
+            reopened = true;
+            container.open();
+            container.close();
+        });
+        container.close();
+        await settle(fixture);
+
+        expect(beforeClose).toHaveBeenCalledTimes(2);
+        expect(fixture.componentInstance.opened()).toBe(false);
+    });
+
+    it('should open the panel by toggle() without asking', async () => {
+        const beforeClose = vi.fn(() => false);
+        const fixture = await setup(beforeClose);
+        const { componentInstance } = fixture;
+
+        componentInstance.opened.set(false);
+        await fixture.whenStable();
+        componentInstance.container().toggle();
+        await fixture.whenStable();
+
+        expect(beforeClose).not.toHaveBeenCalled();
+        expect(componentInstance.opened()).toBe(true);
+    });
+
+    it.each<[string, KbqContentPanelBeforeClose, boolean]>([
+        ['allows', () => true, true],
+        ['vetoes', () => false, false],
+        ['answers asynchronously', () => new Subject<boolean>(), true]
+    ])('should spend ESCAPE only on a close or a question, when it %s', async (_name, beforeClose, spent) => {
+        const fixture = await setup(beforeClose);
+        const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+        const page = vi.fn();
+
+        document.addEventListener('keydown', page);
+        getContentPanelContainerElement(fixture.debugElement).dispatchEvent(escape);
+        document.removeEventListener('keydown', page);
+
+        expect(escape.defaultPrevented).toBe(spent);
+        expect(page).toHaveBeenCalledTimes(spent ? 0 : 1);
+    });
+
     it('should not ask about a closed panel', async () => {
         const beforeClose = vi.fn(() => false);
         const fixture = await setup(beforeClose);

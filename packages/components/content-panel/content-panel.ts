@@ -238,7 +238,8 @@ const normalizeContentPanelState = (parsed: unknown): KbqContentPanelState | nul
 
 /**
  * Decides whether a content panel closes: only `true`, or a promise or an observable of it, closes the panel. Any
- * other answer keeps it open, an observable that completes with no value and an error included.
+ * other answer keeps it open, an observable that completes with no value and an error included. An error the function
+ * throws reaches the caller of `close()`, and an asynchronous one goes to the `ErrorHandler`.
  */
 export type KbqContentPanelBeforeClose = () => boolean | Promise<boolean> | Observable<boolean>;
 
@@ -531,29 +532,36 @@ export class KbqContentPanelContainer implements OnInit {
      * and with an asynchronous one once it answers: `openedChange` reports the close.
      */
     close(): void {
-        untracked(() => {
-            if (this.closeRequest || this.askingBeforeClose || !this.openedState()) return;
+        untracked(() => this.requestClose());
+    }
 
-            const answer = this.askBeforeClose();
+    /** Closes the panel or starts asking `beforeClose`, and tells whether it did either. */
+    private requestClose(): boolean {
+        if (this.closeRequest) return true;
 
-            if (typeof answer !== 'object' || answer === null) {
-                this.closeIfAllowed(answer);
+        if (this.askingBeforeClose || !this.openedState()) return false;
 
-                return;
-            }
+        const answer = this.askBeforeClose();
 
-            // A request the panel dropped by closing meanwhile is not answered.
-            const request: Promise<void> = Promise.resolve(answer)
-                .then((allowed) => {
-                    if (request === this.closeRequest) this.closeIfAllowed(allowed);
-                })
-                .catch((error: unknown) => this.errorHandler.handleError(error))
-                .finally(() => {
-                    if (request === this.closeRequest) this.closeRequest = undefined;
-                });
+        if (typeof answer !== 'object' || answer === null) return this.closeIfAllowed(answer);
 
-            this.closeRequest = request;
-        });
+        // A request the panel dropped by closing meanwhile is not answered.
+        const request: Promise<void> = Promise.resolve(answer)
+            .then((allowed) => {
+                if (request !== this.closeRequest) return;
+
+                // Over before the panel closes, so that a listener of the close can request the next one.
+                this.closeRequest = undefined;
+                this.closeIfAllowed(allowed);
+            })
+            .catch((error: unknown) => this.errorHandler.handleError(error))
+            .finally(() => {
+                if (request === this.closeRequest) this.closeRequest = undefined;
+            });
+
+        this.closeRequest = request;
+
+        return true;
     }
 
     /** Asks `beforeClose`, with an observable answer reduced to its first value. Without it the panel closes. */
@@ -575,13 +583,15 @@ export class KbqContentPanelContainer implements OnInit {
         }
     }
 
-    private closeIfAllowed(allowed: unknown): void {
+    private closeIfAllowed(allowed: boolean): boolean {
         // Only an explicit `true` closes, so an answer lost on the way, such as a dismissed confirmation, keeps the
         // changes. It can also come after the panel left the page, and an output of a destroyed component throws on
         // emit.
-        if (allowed !== true || this.destroyRef.destroyed) return;
+        if (allowed !== true || this.destroyRef.destroyed) return false;
 
         if (this.openedState()) this.setOpened(false);
+
+        return true;
     }
 
     private setOpened(opened: boolean): void {
@@ -636,9 +646,10 @@ export class KbqContentPanelContainer implements OnInit {
 
         if (!this.openedState() || this.disableClose() || this.disableCloseByEscape()) return;
 
+        // A synchronous veto leaves the key to the listeners further up, such as a dialog the panel sits in.
+        if (!this.requestClose()) return;
+
         event.preventDefault();
         event.stopPropagation();
-
-        this.close();
     }
 }

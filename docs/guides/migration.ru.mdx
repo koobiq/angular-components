@@ -3530,6 +3530,12 @@ ng g @koobiq/components:code-block-highlight-js-core --project "<your project>"
 - **Библиотека, которая показывает блоки кода.** Конфигурацию задают приложения, которые ее используют.
 - **Тесты** не получают провайдеров приложения: добавьте конфигурацию в `TestBed` теста, который проверяет подсвеченную разметку.
 
+### Фокусируемая контент-панель (21.1.0)
+
+{/* migration-step-components(content-panel) */}
+
+`kbq-content-panel-container` получил `tabindex="-1"`, чтобы клавиша `ESCAPE` закрывала панель после клика по тексту внутри контейнера. Поэтому после такого клика `document.activeElement` указывает на контейнер, а не на `body`: это видно коду, который сравнивает его с `body`, и стилям `:focus-within` у предков контейнера.
+
 ### После миграции
 
 Миграция работает на регулярных выражениях и не переписывает алиасные импорты, локальные переменные и ре-экспорты — **проверьте диф перед коммитом**, пересоберите проект и прогоните тесты. Полные списки ломающих изменений — на страницах [Ломающие изменения — Angular 21](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-21-breaking-changes.ru.md) и [Ломающие изменения — Angular 20](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.ru.md).

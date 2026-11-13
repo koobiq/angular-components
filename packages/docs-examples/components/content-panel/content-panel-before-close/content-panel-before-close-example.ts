@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
+import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 /**
  * @title Content panel before close
@@ -71,17 +72,27 @@ export class ContentPanelBeforeCloseExample {
         if (this.name.pristine) return true;
 
         return new Promise((resolve) => {
-            this.modal.confirm({
+            const modal = this.modal.create({
                 kbqAriaLabel: 'Discard changes',
+                kbqSize: ModalSize.Small,
                 kbqContent: 'Discard unsaved changes?',
-                kbqOkText: 'Discard',
-                kbqCancelText: 'Keep editing',
-                kbqOkClick: () => {
-                    this.name.reset();
-                    resolve(true);
-                },
-                kbqCancelClick: () => resolve(false)
+                kbqFooter: [
+                    {
+                        label: 'Discard',
+                        type: KbqComponentColors.Contrast,
+                        onClick: () => {
+                            this.name.reset();
+                            resolve(true);
+                            modal.close();
+                        }
+                    },
+                    // The focus goes to the choice that loses nothing.
+                    { label: 'Keep editing', autoFocus: true, onClick: () => modal.close() }
+                ]
             });
+
+            // Keep editing, ESCAPE and the close button: a Discard has already answered.
+            modal.afterClose.subscribe(() => resolve(false));
         });
     };
 }
