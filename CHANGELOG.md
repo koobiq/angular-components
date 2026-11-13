@@ -1,3 +1,16 @@
+## 20.3.5 (2026-11-13)
+
+### Koobiq
+
+ * bug fix  **actions-panel,overflow-items:** bring hidden actions back when the panel gets room to grow ([#DS-5859](https://github.com/koobiq/angular-components/issues/issue/DS-5859)) ([#2360](https://github.com/koobiq/angular-components/issues/2360)) ([f7d1cf5](https://github.com/koobiq/angular-components/commit/f7d1cf506f969e81621f551032a3ffd90b01df9c))
+ * bug fix  **content-panel:** fit the card to the panel and keep the close button at the end of the header ([#DS-5503](https://github.com/koobiq/angular-components/issues/issue/DS-5503)) ([#2351](https://github.com/koobiq/angular-components/issues/2351)) ([ea1643f](https://github.com/koobiq/angular-components/commit/ea1643f88237c582937dd5d48dfab2fa524a9be8))
+ * bug fix  **inline-edit:** keep panel anchored to origin when viewport is tight ([#DS-5857](https://github.com/koobiq/angular-components/issues/issue/DS-5857)) ([#2358](https://github.com/koobiq/angular-components/issues/2358)) ([37ec08a](https://github.com/koobiq/angular-components/commit/37ec08ae3f5ccbfcdcf114cbec592dcbbeea42e2))
+ * bug fix  **notification-center:** use card surface for loading overlay ([#DS-5825](https://github.com/koobiq/angular-components/issues/issue/DS-5825)) ([#2319](https://github.com/koobiq/angular-components/issues/2319)) ([90d161a](https://github.com/koobiq/angular-components/commit/90d161af252450d10771c1a46bdf0801af5f3df5))
+ * bug fix  **search-expandable:** re-render the button after the bound control is enabled or disabled ([#DS-5725](https://github.com/koobiq/angular-components/issues/issue/DS-5725)) ([#2299](https://github.com/koobiq/angular-components/issues/2299)) ([5ad554e](https://github.com/koobiq/angular-components/commit/5ad554e810a1dc973e0355b774e0bdc55097a121))
+ * bug fix  **textarea:** fit three rows in a resizable textarea and whole rows at `maxRows` ([#DS-5648](https://github.com/koobiq/angular-components/issues/issue/DS-5648)) ([#2364](https://github.com/koobiq/angular-components/issues/2364)) ([d0f050a](https://github.com/koobiq/angular-components/commit/d0f050a964d01fc560307219dbef7b89b8c04713))
+ * bug fix  **tree:** roll the checkbox state up through each ancestor once ([#DS-5779](https://github.com/koobiq/angular-components/issues/issue/DS-5779)) ([#2224](https://github.com/koobiq/angular-components/issues/2224)) ([d8af076](https://github.com/koobiq/angular-components/commit/d8af076c97010ed4ea84b6feaa51bb18892cd481))
+ * feature  **filter-bar,tree-select:** "no options" message in the dropdown of pipes without values ([#DS-5858](https://github.com/koobiq/angular-components/issues/issue/DS-5858)) ([#2353](https://github.com/koobiq/angular-components/issues/2353)) ([85f35b3](https://github.com/koobiq/angular-components/commit/85f35b3fccc5e7e3c62c832fcf2756c557491965))
+
 ## 20.3.4 (2026-10-23)
 
 ### Koobiq
