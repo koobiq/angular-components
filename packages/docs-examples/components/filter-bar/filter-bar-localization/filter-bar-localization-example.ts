@@ -4,7 +4,6 @@ import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     DateAdapter,
     DateFormatter,
-    KbqHighlightModule,
     kbqInjectLocaleService,
     kbqLocaleIDProvider,
     kbqLocaleServiceProvider
@@ -51,7 +50,7 @@ interface DemoPeriodValue {
  */
 @Component({
     selector: 'localization-demo-bar',
-    imports: [KbqFilterBarModule, KbqHighlightModule],
+    imports: [KbqFilterBarModule],
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates" [nameResolver]="nameResolver" [(filter)]="filter">
             <kbq-filters [filters]="savedFilters" />
