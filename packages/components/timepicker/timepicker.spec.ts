@@ -29,6 +29,7 @@ import {
     DateAdapter,
     ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
+    KbqDateTimezoneService,
     LEFT_ARROW,
     ONE,
     SPACE,
@@ -1481,6 +1482,288 @@ describe(KbqTimepicker.name, () => {
         });
     });
 
+    describe('text that is not a time', () => {
+        const setup = (host: Type<TimepickerWithFormControl> = TimepickerWithFormControl) => {
+            const fixture = createStandaloneComponent(host);
+            const { control, timepicker } = fixture.componentInstance;
+            const debugElement = fixture.debugElement.query(By.directive(KbqTimepicker));
+            const input: HTMLInputElement = debugElement.nativeElement;
+            const values: (string | null)[] = [];
+            const incorrectInput = vi.fn();
+
+            control.valueChanges.subscribe((value) => values.push(value?.toFormat('HH:mm') ?? null));
+            timepicker().incorrectInput.subscribe(incorrectInput);
+
+            return {
+                control,
+                input,
+                values,
+                incorrectInput,
+                paste: (text: string) =>
+                    debugElement.triggerEventHandler('paste', {
+                        preventDefault: () => null,
+                        clipboardData: { getData: () => text }
+                    }),
+                drop: (text: string) => {
+                    const preventDefault = vi.fn();
+
+                    debugElement.triggerEventHandler('drop', { preventDefault, dataTransfer: { getData: () => text } });
+
+                    return preventDefault;
+                },
+                // An edit that comes with no keydown - an undo, an IME, autofill - followed by leaving the field.
+                writeAndBlur: (text: string) => {
+                    dispatchFakeEvent(input, 'focus');
+                    input.value = text;
+                    dispatchFakeEvent(input, 'blur');
+                }
+            };
+        };
+
+        it.each(['abc', '--', '1a2b3c4d5'])('should reject the pasted text "%s"', (text) => {
+            const { control, input, values, incorrectInput, paste } = setup();
+
+            paste(text);
+
+            expect(input.value).toBe('10:30');
+            expect(control.value?.toFormat('HH:mm')).toBe('10:30');
+            expect(values).toEqual([]);
+            expect(incorrectInput).toHaveBeenCalledTimes(1);
+        });
+
+        it('should not report an empty paste as incorrect input', () => {
+            const { input, incorrectInput, paste } = setup();
+
+            paste('');
+
+            expect(input.value).toBe('10:30');
+            expect(incorrectInput).not.toHaveBeenCalled();
+        });
+
+        it('should take a dropped time in place of the native insertion', () => {
+            const { control, input, values, incorrectInput, drop } = setup();
+
+            const preventDefault = drop('19:01');
+
+            expect(preventDefault).toHaveBeenCalledTimes(1);
+            expect(input.value).toBe('19:01');
+            expect(control.value?.toFormat('HH:mm')).toBe('19:01');
+            expect(values).toEqual(['19:01']);
+            expect(incorrectInput).not.toHaveBeenCalled();
+        });
+
+        it('should reject dropped text that is not a time', () => {
+            const { control, input, values, incorrectInput, drop } = setup();
+
+            const preventDefault = drop('abc');
+
+            expect(preventDefault).toHaveBeenCalledTimes(1);
+            expect(input.value).toBe('10:30');
+            expect(control.value?.toFormat('HH:mm')).toBe('10:30');
+            expect(values).toEqual([]);
+            expect(incorrectInput).toHaveBeenCalledTimes(1);
+        });
+
+        it('should ignore text dragged within the field itself', () => {
+            const { input, values, incorrectInput, drop } = setup();
+
+            dispatchFakeEvent(input, 'dragstart');
+            drop('10');
+
+            expect(input.value).toBe('10:30');
+            expect(values).toEqual([]);
+            expect(incorrectInput).not.toHaveBeenCalled();
+
+            dispatchFakeEvent(input, 'dragend');
+            drop('19:01');
+
+            expect(input.value).toBe('19:01');
+        });
+
+        it('should focus the field on a drop, which marks the control as touched', () => {
+            const { control, input, drop } = setup();
+
+            expect(control.touched).toBe(false);
+
+            drop('19:01');
+
+            expect(document.activeElement).toBe(input);
+            expect(control.touched).toBe(true);
+        });
+
+        it('should mark the control as touched by a drop into a window that is not active', () => {
+            const { control, input, drop } = setup();
+
+            // What `focus()` amounts to there: the element becomes active and no event fires.
+            vi.spyOn(input, 'focus').mockImplementation(() => undefined);
+
+            drop('19:01');
+
+            expect(control.touched).toBe(true);
+        });
+
+        it('should ignore a drop on a disabled field', () => {
+            const { control, input, values, incorrectInput, drop } = setup();
+
+            control.disable();
+            values.length = 0;
+
+            drop('19:01');
+
+            expect(input.value).toBe('10:30');
+            expect(control.value?.toFormat('HH:mm')).toBe('10:30');
+            expect(values).toEqual([]);
+            expect(incorrectInput).not.toHaveBeenCalled();
+        });
+
+        it.each([
+            ['12:30 pm', '12:30'],
+            ['12:30 am', '00:30'],
+            ['1:30 pm', '13:30'],
+            ['1:30 am', '01:30']
+        ])('should read "%s" on the same day', (text, time) => {
+            const { control, paste } = setup();
+
+            paste(text);
+
+            expect(control.value?.toFormat('yyyy-MM-dd HH:mm')).toBe(`2024-05-17 ${time}`);
+        });
+
+        it.each(['13:30 pm', '19:30 pm', '19:30 am'])('should reject the 12-hour time "%s"', (text) => {
+            const { control, input, incorrectInput, paste } = setup();
+
+            paste(text);
+
+            expect(input.value).toBe('10:30');
+            expect(control.value?.toFormat('HH:mm')).toBe('10:30');
+            expect(incorrectInput).toHaveBeenCalledTimes(1);
+        });
+
+        it('should tell a control that commits on blur on the first blur', () => {
+            const { control, writeAndBlur } = setup(TimepickerWithFormControlOnBlur);
+
+            writeAndBlur('abc');
+
+            expect(control.value).toBeNull();
+            expect(control.errors).toEqual({ kbqTimepickerParse: { text: 'abc' } });
+        });
+
+        it('should commit a completed time to a control that commits on blur', () => {
+            const { control, input, writeAndBlur } = setup(TimepickerWithFormControlOnBlur);
+
+            writeAndBlur('7');
+
+            expect(input.value).toBe('07:00');
+            expect(control.value?.toFormat('HH:mm')).toBe('07:00');
+        });
+
+        it('should not take a time entered over it for an erased text in a control that commits on blur', () => {
+            const { control, writeAndBlur } = setup(TimepickerWithFormControlOnBlur);
+
+            writeAndBlur('abc');
+            writeAndBlur('7');
+
+            expect(control.value?.toFormat('HH:mm')).toBe('07:00');
+            expect(control.errors).toBeNull();
+        });
+
+        it('should tell the form again of an error dropped by a validation run while focused', () => {
+            const { control, input, writeAndBlur } = setup();
+
+            writeAndBlur('abc');
+            dispatchFakeEvent(input, 'focus');
+            control.updateValueAndValidity();
+
+            expect(control.errors).toBeNull();
+
+            dispatchFakeEvent(input, 'blur');
+
+            expect(control.errors).toEqual({ kbqTimepickerParse: { text: 'abc' } });
+        });
+
+        it('should keep the text and its error when the time zone changes', () => {
+            const { control, input, writeAndBlur } = setup();
+
+            writeAndBlur('abc');
+            TestBed.inject(KbqDateTimezoneService).setTimezone('Asia/Tokyo');
+
+            expect(input.value).toBe('abc');
+            expect(control.errors).toEqual({ kbqTimepickerParse: { text: 'abc' } });
+        });
+
+        it.each([
+            ['abc', 'abc'],
+            ['', '']
+        ])('should drop the value without a form when the text is "%s"', (text, rendered) => {
+            const fixture = createStandaloneComponent(TimepickerWithoutBindings);
+            const { timepicker } = fixture.componentInstance;
+            const input = getTimepickerElement(fixture);
+
+            dispatchFakeEvent(input, 'focus');
+            input.value = '10:30';
+            dispatchFakeEvent(input, 'blur');
+
+            expect(timepicker().value()).not.toBeNull();
+
+            dispatchFakeEvent(input, 'focus');
+            input.value = text;
+            dispatchFakeEvent(input, 'blur');
+
+            expect(input.value).toBe(rendered);
+            expect(timepicker().value()).toBeNull();
+        });
+
+        it('should tell the form once, on blur', () => {
+            const { control, input, values, writeAndBlur } = setup();
+
+            writeAndBlur('abc');
+
+            expect(input.value).toBe('abc');
+            expect(control.value).toBeNull();
+            expect(control.errors).toEqual({ kbqTimepickerParse: { text: 'abc' } });
+            expect(values).toEqual([null]);
+
+            // Every emission restarts the async validators of the form.
+            writeAndBlur('abc');
+
+            expect(values).toEqual([null]);
+        });
+
+        it('should tell the form again after a value written in between', () => {
+            const { control, values, writeAndBlur } = setup();
+
+            writeAndBlur('abc');
+            control.setValue(DateTime.fromISO('2024-05-17T11:00:00'));
+            writeAndBlur('abc');
+
+            expect(control.value).toBeNull();
+            expect(control.hasError('kbqTimepickerParse')).toBe(true);
+            expect(values).toEqual([null, '11:00', null]);
+        });
+
+        it('should drop the parse error once the text is erased', () => {
+            const { control, values, writeAndBlur } = setup();
+
+            writeAndBlur('abc');
+            writeAndBlur('');
+
+            expect(control.value).toBeNull();
+            expect(control.errors).toBeNull();
+            expect(values).toEqual([null, null]);
+        });
+
+        it('should take a time entered over it', () => {
+            const { control, input, writeAndBlur } = setup();
+
+            writeAndBlur('abc');
+            writeAndBlur('7');
+
+            expect(input.value).toBe('07:00');
+            expect(control.value?.toFormat('HH:mm')).toBe('07:00');
+            expect(control.errors).toBeNull();
+        });
+    });
+
     describe('cleaner', () => {
         it('should follow the value written by a form control and by a binding', async () => {
             const fixture = createStandaloneComponent(TimepickerWithCleaner);
@@ -1544,6 +1827,34 @@ class TimepickerWithCleaner {
     readonly timepickers = viewChildren(KbqTimepicker);
     readonly control = new FormControl<DateTime | null>(DateTime.fromISO('2024-05-17T10:30:00'));
     readonly value = signal<DateTime | null>(DateTime.fromISO('2024-05-17T10:30:00'));
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+    template: `
+        <kbq-form-field>
+            <input kbqTimepicker [formControl]="control" />
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TimepickerWithFormControl {
+    readonly timepicker = viewChild.required(KbqTimepicker);
+    readonly control = new FormControl<DateTime | null>(DateTime.fromISO('2024-05-17T10:30:00'));
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+    template: `
+        <kbq-form-field>
+            <input kbqTimepicker [formControl]="control" />
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TimepickerWithFormControlOnBlur {
+    readonly timepicker = viewChild.required(KbqTimepicker);
+    readonly control = new FormControl<DateTime | null>(DateTime.fromISO('2024-05-17T10:30:00'), { updateOn: 'blur' });
 }
 
 /** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */

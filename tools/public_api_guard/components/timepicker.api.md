@@ -62,6 +62,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     controlType: string;
     readonly disabled: _angular_core.WritableSignal<boolean>;
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
+    protected draggingOwnText: boolean;
     readonly empty: _angular_core.Signal<boolean>;
     readonly errorState: _angular_core.Signal<boolean>;
     readonly errorStateMatcher: _angular_core.InputSignal<ErrorStateMatcher | undefined>;
@@ -97,6 +98,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     // (undocumented)
     onBlur(): void;
     onContainerClick(): void;
+    protected onDrop(event: DragEvent): void;
     // (undocumented)
     onInput: () => void;
     // (undocumented)
